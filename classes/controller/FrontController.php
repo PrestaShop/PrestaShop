@@ -1239,17 +1239,15 @@ class FrontControllerCore extends Controller
      */
     public function getLayout()
     {
-        $layout = 'layouts/layout-full-width.tpl';
+        $entity = $this->php_self;
 
-        if ($this->display_column_left && $this->display_column_right) {
-            $layout = 'layouts/layout-both-columns.tpl';
-        } elseif ($this->display_column_left) {
-            $layout = 'layouts/layout-left-column.tpl';
-        } elseif ($this->display_column_right) {
-            $layout = 'layouts/layout-right-column.tpl';
+        $layout_name = $this->context->shop->theme->theme_settings['default_layout'];
+        if ($this->context->shop->theme->settings['page_layouts'][$this->php_self]) {
+            $layout_name = $this->context->shop->theme->settings['page_layouts'][$this->php_self];
         }
 
-        $entity = $this->php_self;
+        $layout = 'layouts/'.$layout_name.'.tpl';
+
         $id_item = (int)Tools::getValue('id_'.$entity);
 
         $layout_override_dir  = $this->getOverrideThemeDir();

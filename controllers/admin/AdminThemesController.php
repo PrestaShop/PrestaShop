@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
 
 /**
@@ -49,7 +49,11 @@ class AdminThemesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->theme_manager = new ThemeManager(_PS_ALL_THEMES_DIR_, new AdapterConfiguration());
+        // TODO StarterTheme: handle multistore
+        $this->theme_manager = new ThemeManager();
+        $this->theme_manager->setConfigurator(
+            new AdapterConfiguration($this->context->shop)
+        );
     }
 
     public function init()
@@ -68,93 +72,6 @@ class AdminThemesControllerCore extends AdminController
         }
 
         libxml_use_internal_errors(true);
-
-        // Download user themes from Addons
-        if ($this->logged_on_addons) {
-            $this->downloadAddonsThemes();
-        }
-
-        // Employee languages used for link and utm_source
-        $lang = new Language($this->context->language->id);
-        $iso_lang_uc = strtoupper($lang->iso_code);
-
-        $this->fields_options = array(
-            'appearance' => array(
-                'title' => $this->l('Your current theme'),
-                'icon' => 'icon-html5',
-                'tabs' => array(
-                    'logo' => $this->l('Logo'),
-                    'logo2' => $this->l('Invoice & Email Logos'),
-                    'icons' => $this->l('Icons'),
-                    ),
-                'fields' => array(
-                    'PS_LOGO' => array(
-                        'title' => $this->l('Header logo'),
-                        'hint' => $this->l('Will appear on main page. Recommended height: 52px. Maximum height on default theme: 65px.'),
-                        'type' => 'file',
-                        'name' => 'PS_LOGO',
-                        'tab' => 'logo',
-                        'thumb' => _PS_IMG_.Configuration::get('PS_LOGO')
-                    ),
-                    'PS_LOGO_MAIL' => array(
-                        'title' => $this->l('Mail logo'),
-                        'desc' => ((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: if no email logo is available, the main logo will be used instead.').'</span><br />' : ''),
-                        'hint' => $this->l('Will appear on email headers. If undefined, the header logo will be used.'),
-                        'type' => 'file',
-                        'name' => 'PS_LOGO_MAIL',
-                        'tab' => 'logo2',
-                        'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL') : _PS_IMG_.Configuration::get('PS_LOGO')
-                    ),
-                    'PS_LOGO_INVOICE' => array(
-                        'title' => $this->l('Invoice logo'),
-                        'desc' => ((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: if no invoice logo is available, the main logo will be used instead.').'</span><br />' : ''),
-                        'hint' => $this->l('Will appear on invoice headers.').' '.$this->l('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'),
-                        'type' => 'file',
-                        'name' => 'PS_LOGO_INVOICE',
-                        'tab' => 'logo2',
-                        'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE') : _PS_IMG_.Configuration::get('PS_LOGO')
-                    ),
-                    'PS_FAVICON' => array(
-                        'title' => $this->l('Favicon'),
-                        'hint' => $this->l('Will appear in the address bar of your web browser.'),
-                        'type' => 'file',
-                        'name' => 'PS_FAVICON',
-                        'tab' => 'icons',
-                        'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').(Tools::getValue('conf') ? sprintf('?%04d', rand(0, 9999)) : '')
-                    ),
-                ),
-                'after_tabs' => array(
-                    'cur_theme' => $this->context->shop->theme,
-                ),
-                'submit' => array('title' => $this->l('Save')),
-                'buttons' => array(
-                    'storeLink' => array(
-                        'title' => $this->l('Visit the theme catalog'),
-                        'icon' => 'process-icon-themes',
-                        'href' => 'http://addons.prestashop.com/en/3-templates-prestashop'
-                        .'?utm_source=back-office&utm_medium=theme-button'
-                        .'&utm_campaign=back-office-'.$iso_lang_uc
-                        .'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download'),
-                        'js' => 'return !window.open(this.href)'
-                    )
-                )
-            ),
-        );
-        $other_themes = $this->theme_manager->getFilteredThemes([$this->context->shop->theme->directory]);
-        if (!empty($other_themes)) {
-            $this->fields_options['theme'] = array(
-                'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
-                'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
-                'fields' => array(
-                    'theme_for_shop' => array(
-                        'type' => 'theme',
-                        'themes' => $other_themes,
-                        'can_display_themes' => $this->can_display_themes,
-                        'no_multishop_checkbox' => true
-                    ),
-                ),
-            );
-        }
     }
 
     public function downloadAddonsThemes()
@@ -320,11 +237,7 @@ class AdminThemesControllerCore extends AdminController
     public function postProcess()
     {
         if (Tools::isSubmit('switchTheme')) {
-            $theme_dir = urldecode(Tools::getValue('theme_directory'));
-            $this->theme_manager
-                ->setShop($this->context->shop)
-                ->setConfigurator(new AdapterConfiguration($this->context->shop))
-                ->switchTheme($theme_dir);
+            // todo
         }
 
         return parent::postProcess();
@@ -483,6 +396,95 @@ class AdminThemesControllerCore extends AdminController
      */
     public function renderOptions()
     {
+        // Download user themes from Addons
+        if ($this->logged_on_addons) {
+            $this->downloadAddonsThemes();
+        }
+
+        // Employee languages used for link and utm_source
+        $lang = new Language($this->context->language->id);
+        $iso_lang_uc = strtoupper($lang->iso_code);
+
+        $this->fields_options = array(
+            'appearance' => array(
+                'title' => $this->l('Your current theme'),
+                'icon' => 'icon-html5',
+                'tabs' => array(
+                    'logo' => $this->l('Logo'),
+                    'logo2' => $this->l('Invoice & Email Logos'),
+                    'icons' => $this->l('Icons'),
+                    ),
+                'fields' => array(
+                    'PS_LOGO' => array(
+                        'title' => $this->l('Header logo'),
+                        'hint' => $this->l('Will appear on main page. Recommended height: 52px. Maximum height on default theme: 65px.'),
+                        'type' => 'file',
+                        'name' => 'PS_LOGO',
+                        'tab' => 'logo',
+                        'thumb' => _PS_IMG_.Configuration::get('PS_LOGO')
+                    ),
+                    'PS_LOGO_MAIL' => array(
+                        'title' => $this->l('Mail logo'),
+                        'desc' => ((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: if no email logo is available, the main logo will be used instead.').'</span><br />' : ''),
+                        'hint' => $this->l('Will appear on email headers. If undefined, the header logo will be used.'),
+                        'type' => 'file',
+                        'name' => 'PS_LOGO_MAIL',
+                        'tab' => 'logo2',
+                        'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL') : _PS_IMG_.Configuration::get('PS_LOGO')
+                    ),
+                    'PS_LOGO_INVOICE' => array(
+                        'title' => $this->l('Invoice logo'),
+                        'desc' => ((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: if no invoice logo is available, the main logo will be used instead.').'</span><br />' : ''),
+                        'hint' => $this->l('Will appear on invoice headers.').' '.$this->l('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'),
+                        'type' => 'file',
+                        'name' => 'PS_LOGO_INVOICE',
+                        'tab' => 'logo2',
+                        'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE') : _PS_IMG_.Configuration::get('PS_LOGO')
+                    ),
+                    'PS_FAVICON' => array(
+                        'title' => $this->l('Favicon'),
+                        'hint' => $this->l('Will appear in the address bar of your web browser.'),
+                        'type' => 'file',
+                        'name' => 'PS_FAVICON',
+                        'tab' => 'icons',
+                        'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').(Tools::getValue('conf') ? sprintf('?%04d', rand(0, 9999)) : '')
+                    ),
+                ),
+                'after_tabs' => array(
+                    'cur_theme' => $this->context->shop->theme,
+                ),
+                'submit' => array('title' => $this->l('Save')),
+                'buttons' => array(
+                    'storeLink' => array(
+                        'title' => $this->l('Visit the theme catalog'),
+                        'icon' => 'process-icon-themes',
+                        'href' => 'http://addons.prestashop.com/en/3-templates-prestashop'
+                        .'?utm_source=back-office&utm_medium=theme-button'
+                        .'&utm_campaign=back-office-'.$iso_lang_uc
+                        .'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download'),
+                        'js' => 'return !window.open(this.href)'
+                    )
+                )
+            ),
+        );
+
+        $other_themes = $this->theme_manager->getThemeListExcluding([$this->context->shop->theme->name]);
+        if (!empty($other_themes)) {
+            $this->fields_options['theme'] = array(
+                'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
+                'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
+                'fields' => array(
+                    'theme_for_shop' => array(
+                        'type' => 'theme',
+                        'themes' => $other_themes,
+                        'can_display_themes' => $this->can_display_themes,
+                        'no_multishop_checkbox' => true
+                    ),
+                ),
+            );
+        }
+
+
         if (isset($this->display) && method_exists($this, 'render'.$this->display)) {
             return $this->{'render'.$this->display}();
         }
@@ -517,11 +519,10 @@ class AdminThemesControllerCore extends AdminController
 
     public function initConfigureLayouts()
     {
-        $pages = Meta::getPages();
-
         $this->context->smarty->assign([
-            'pages' => $pages,
-            'available_layouts' => $this->context->shop->theme->layouts,
+            'pages' => Meta::getAllMeta($this->context->language->id),
+            'page_layouts' => $this->context->shop->theme->settings['page_layouts'],
+            'available_layouts' => $this->context->shop->theme->meta['available_layouts'],
         ]);
 
         $this->setTemplate('controllers/themes/configurelayouts.tpl');
@@ -529,6 +530,8 @@ class AdminThemesControllerCore extends AdminController
 
     public function processSubmitConfigureLayouts()
     {
-        //        $this->context->shop->theme->setXXX(Tools::getValue('layouts'));
+        $this->context->shop->theme->setPageLayouts(Tools::getValue('layouts'));
+        $this->theme_manager->saveTheme($this->context->shop->theme);
+        Tools::clearCache();
     }
 }
