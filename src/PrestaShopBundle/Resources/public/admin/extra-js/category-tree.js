@@ -25,11 +25,26 @@
 
 (function ($) {
 	$.fn.categorytree = function (settings) {
-		var isMethodCall = (typeof settings == 'string'), // is this a method call like $().jstree("open_node")
+		var isMethodCall = (typeof settings == 'string'), // is this a method call like $().categorytree("unselect")
 			returnValue = this;
 		// if a method call execute the method on all selected instances
 		if(isMethodCall) {
-			// Put here code when called like $(item).categorytree('method');
+			switch (settings) {
+				case 'unselect':
+					$('div.radio > label > input:radio', this).prop('checked', false);
+					// TODO: add a callback method feature?
+					break;
+				case 'unfold':
+					$("ul", this).show();
+					$("li", this).has("ul").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_less.gif')");
+					break;
+				case 'fold':
+					$("ul ul", this).hide();
+					$("li", this).has("ul").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_more.gif')");
+					break;
+				default:
+					throw 'Unknown method';
+			}
 		}
 		// initialize tree
 		else {

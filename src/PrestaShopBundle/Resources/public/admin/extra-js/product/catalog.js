@@ -26,7 +26,6 @@
 $(document).ready(function() {
 	var form = $('form#product_catalog_list');
 
-
 	/*
 	 * Tree behavior: collapse/expand system and radio button change event.
 	 */
@@ -37,6 +36,10 @@ $(document).ready(function() {
 			$('form#product_catalog_list').submit();
 		}
 	});
+	$("div#product_catalog_category_tree_filter input:button, div#product_catalog_category_tree_filter ul").on('click', function() {
+		categoryFilterButtons();
+	});
+	categoryFilterButtons();
 
 	/*
 	 * Click on a column header ordering icon to change orderBy / orderWay (location.href redirection)
@@ -133,9 +136,37 @@ function updateFilterMenu() {
 }
 
 function productCategoryFilterReset(div) {
-	$('div#product_catalog_category_tree_filter div.radio > label > input:radio').prop('checked', false);
+	$("div.form-wrapper", div).categorytree('unselect');
 	$('form#product_catalog_list input[name="filter_category"]').val('');
 	$('form#product_catalog_list').submit();
+}
+
+function productCategoryFilterExpand(div, btn) {
+	$('div.form-wrapper', div).categorytree('unfold');
+	$(btn).hide();
+}
+
+function productCategoryFilterCollapse(div, btn) {
+	$('div.form-wrapper', div).categorytree('fold');
+	$(btn).hide();
+}
+
+function categoryFilterButtons() {
+	if ($("div#product_catalog_category_tree_filter ul ul:visible").size() == 0) {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_collapse"]').hide();
+	} else {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_collapse"]').show();
+	}
+	if ($("div#product_catalog_category_tree_filter ul ul:hidden").size() == 0) {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_expand"]').hide();
+	} else {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_expand"]').show();
+	}
+	if ($("div#product_catalog_category_tree_filter ul input:checked").size() == 0) {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_reset"]').hide();
+	} else {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_reset"]').show();
+	}
 }
 
 function productColumnFilterReset(tr) {
