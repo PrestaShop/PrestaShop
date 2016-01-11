@@ -25,7 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
-use PrestaShop\PrestaShop\Core\Business\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 
 /**
  * @since 1.5.0
