@@ -68,7 +68,7 @@ class ProductControllerCore extends FrontController
         if (Tools::getValue('live_edit')) {
             return;
         }
-        if (Validate::isLoadedObject($this->product)) {
+        if (!Tools::getValue('noredirect') && Validate::isLoadedObject($this->product) && $this->product->active) {
             parent::canonicalRedirection($this->context->link->getProductLink($this->product));
         }
     }
