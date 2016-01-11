@@ -37,4 +37,27 @@ class AddonListFilter
      * @var $status AddonListFilterStatus Specify if you want enabled only, disabled only or all addons
      */
     public $status;
+
+    /**
+     * @var array Names of all the addons to exclude from result
+     */
+    public $exclude = [];
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function setExclude(array $exclude)
+    {
+        $this->exclude = $exclude;
+        return $this;
+    }
 }

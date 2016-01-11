@@ -1,98 +1,194 @@
 <?php
-
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-use \PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 
-class ThemeManager
+class ThemeManager implements AddonManagerInterface
 {
-    private $all_themes_dir = '';
-    private $configurator = null;
-    private $shop = null;
-    private $themes = [];
+    private $configurator;
+    private $themes;
 
-    public function __construct($all_themes_dir)
+    /**
+     * Add new theme from zipball. This will unzip the file and move the content
+     * to the right locations.
+     * A theme can bundle modules, resources, docuementation, email templates and so on.
+     *
+     * @param string $source The source can be a module name (installed from either local disk or addons.prestashop.com).
+     * or a location (url or path to the zip file)
+     * @return bool true for success
+     */
+    public function install($source)
     {
-        $this->all_themes_dir = $all_themes_dir;
-        $this->setThemes();
+        return true;
     }
 
-    private function setThemes()
+    /**
+     * Remove all theme files, resources, documentation and specific modules
+     *
+     * @param Addon $theme The source can be a module name (installed from either local disk or addons.prestashop.com).
+     * or a location (url or path to the zip file)
+     * @return bool true for success
+     */
+    public function uninstall($name)
     {
-        $themes = [];
-        $all_config_files = glob($this->all_themes_dir.'/*/config/theme.json');
+        return true;
+    }
 
-        foreach ($all_config_files as $file) {
-            $config = json_decode(file_get_contents($file));
-            $themes[$config->directory] = $config;
+    /**
+    * Download new files from source, backup old files, replace files with new ones
+    * and execute all necessary migration scripts form current version to the new one.
+    *
+    * @param Addon $theme the theme you want to upgrade
+    * @param string $version the version you want to up upgrade to
+    * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
+    * @return bool true for success
+    */
+    public function upgrade($name, $version, $source = null)
+    {
+        return true;
+    }
+
+    /**
+     * Actions to perform when switching from another theme to this one.
+     * Example:
+     * 	- update configuration
+     * 	- enable/disable modules
+     *
+     * @param  string $name The theme name to enable
+     * @return bool         True for success
+     */
+    public function enable($name)
+    {
+        return true;
+    }
+
+    /**
+     * Actions to perform when switchig from this theme to another one.
+     *
+     * @param  string $name The theme name to enable
+     * @return bool         True for success
+     */
+    public function disable($name)
+    {
+        return true;
+    }
+
+    /**
+     * Actions to perform to restaure default settings
+     *
+     * @param  string $name The theme name to reset
+     * @return bool         True for success
+     */
+    public function reset($name)
+    {
+        return true;
+    }
+
+    public function getInstanceByName($name)
+    {
+        $theme = $this->getJsonConfig($name, 'theme.json');
+
+        if (isset($theme)) {
+            $theme->settings = $this->getJsonConfig($name, 'settings.json');
         }
 
-        $this->themes = $themes;
+        return $theme;
     }
 
-    public function setShop(\Shop $shop)
+    public function getThemeList()
     {
-        $this->shop = $shop;
-        return $this;
-    }
+        if (!isset($this->themes)) {
+            $this->themes = $this->getAddonList(new AddonListFilter());
+        }
 
-    public function setConfigurator(ConfigurationInterface $configurator)
-    {
-        $this->$configurator = $configurator;
-        return $this;
-    }
-
-    public function getThemes()
-    {
         return $this->themes;
     }
 
-    public function getFilteredThemes(array $to_be_removed = [])
+    public function getThemeListExcluding(array $exclude)
     {
-        $themes = $this->themes;
-        foreach ($to_be_removed as $directory) {
-            unset($themes[$directory]);
+        $filter = (new AddonListFilter())
+            ->setExclude($exclude);
+
+        return $this->getAddonList($filter);
+    }
+
+    public function getAddonList(AddonListFilter $filter)
+    {
+        $filter->setType(AddonListFilterType::THEME);
+
+        if (!isset($filter->status)) {
+            $filter->setStatus(AddonListFilterStatus::ALL);
+        }
+
+        $themes = $this->getThemeOnDisk();
+
+        foreach ($filter->exclude as $name) {
+            unset($themes[$name]);
         }
 
         return $themes;
     }
 
-    public function switchTheme(string $theme_dir)
+    public function setConfigurator(ConfigurationInterface $configurator)
     {
-        $success = true;
-        $theme = $this->themes[$theme_dir];
-
-        $success &= $this->updateConfiguration($theme_dir);
-        $success &= $this->updateModules($theme_dir);
-
-        if ($success) {
-            $this->shop->theme_directory = $theme_directory;
-            return $this->shop->save();
-        } else {
-            return false;
-        }
+        $this->configurator = $configurator;
+        return $this;
     }
 
-    private function updateConfiguration($theme_dir)
+    private function getJsonConfig($theme_name, $filename)
     {
-        $success = true;
-        $config_file = $this->all_themes_dir.$theme_dir.'/config/configuration.json';
+        $file = $this->configurator->get('_PS_ALL_THEMES_DIR_')
+                .$theme_name
+                .'/config/'.$filename;
 
-        if (!file_exists($config_file)) {
-            return true;
+        if (file_exists($file)) {
+            return json_decode(file_get_contents($file));
         }
 
-        $theme_config = json_decode(file_get_contents($config_file), true);
-
-        foreach ($theme_config as $key => $value) {
-            $success &= $this->configurator->set($key, $value);
-        }
-
-        return $success;
+        return null;
     }
 
-    private function updateModules($theme_dir)
+    private function getThemeOnDisk()
     {
-        return true;
+        $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/', GLOB_ONLYDIR);
+
+        $themes = [];
+        foreach ($all_theme_dirs as $dir) {
+            $name = basename($dir);
+            $theme = $this->getInstanceByName($name);
+            if (isset($theme)) {
+                $themes[$name] = $theme;
+            }
+        }
+
+        return $themes;
     }
 }
