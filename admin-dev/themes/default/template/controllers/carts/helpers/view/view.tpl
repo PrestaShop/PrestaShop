@@ -97,7 +97,7 @@
 					{if isset($customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery])}
 						<tr>
 							<td>{$product.image}</td>
-							<td><a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&amp;id_product={$product.id_product}&amp;updateproduct">
+							<td><a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product.id_product, 'updateproduct' => 1])|escape:'html':'UTF-8'}">
 										<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
 									{if $product.reference}{l s='Ref:'} {$product.reference}{/if}
 									{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}
@@ -147,7 +147,7 @@
 						<tr>
 							<td>{$product.image}</td>
 							<td>
-								<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&amp;id_product={$product.id_product}&amp;updateproduct">
+								<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product.id_product, 'updateproduct' => 1])|escape:'html':'UTF-8'}">
 									<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
 									{if $product.reference}{l s='Ref:'} {$product.reference}{/if}
 									{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}

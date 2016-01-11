@@ -87,7 +87,7 @@ class AdminCmsContentControllerCore extends AdminController
     {
         $this->initTabModuleList();
         $this->renderPageHeaderToolbar();
-        
+
         $this->admin_cms_categories->token = $this->token;
         $this->admin_cms->token = $this->token;
 
@@ -118,7 +118,7 @@ class AdminCmsContentControllerCore extends AdminController
                 'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
                 'page_header_toolbar_title' => $this->toolbar_title,
             ));
-            
+
             $this->content .= $this->admin_cms_categories->renderList();
             $this->admin_cms->id_cms_category = $id_cms_category;
             $this->content .= $this->admin_cms->renderList();
@@ -195,33 +195,10 @@ class AdminCmsContentControllerCore extends AdminController
 
     public function postProcess()
     {
-        /*if (Tools::isSubmit('submitDelcms')
-            || Tools::isSubmit('previewSubmitAddcmsAndPreview')
-            || Tools::isSubmit('submitAddcms')
-            || Tools::isSubmit('submitBulkdeletecms')
-            || Tools::isSubmit('deletecms')
-            || Tools::isSubmit('viewcms')
-            || (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms'))
-            || (Tools::isSubmit('way') && Tools::isSubmit('id_cms')) && (Tools::isSubmit('position'))
-            || Tools::isSubmit('submitFiltercms')
-            || $this->context->cookie->{'submitFiltercms'} !== false
-            || Tools::getValue('cmsOrderby')
-            || Tools::getValue('cmsOrderway'))*/
-            $this->admin_cms->postProcess();
-        /*elseif (Tools::isSubmit('submitDelcms_category')
-            || Tools::isSubmit('submitAddcms_categoryAndBackToParent')
-            || Tools::isSubmit('submitBulkdeletecms_category')
-            || Tools::isSubmit('submitAddcms_category')
-            || Tools::isSubmit('deletecms_category')
-            || (Tools::isSubmit('statuscms_category') && Tools::isSubmit('id_cms_category'))
-            || (Tools::isSubmit('position') && Tools::isSubmit('id_cms_category_to_move'))
-            || Tools::isSubmit('submitFiltercms_category')
-            || $this->context->cookie->{'submitFiltercms_category'} !== false
-            || Tools::getValue('cms_categoryOrderby')
-            || Tools::getValue('cms_categoryOrderway'))*/
-                $this->admin_cms_categories->postProcess();
-      //else
-            parent::postProcess();
+        $this->admin_cms->postProcess();
+        $this->admin_cms_categories->postProcess();
+
+        parent::postProcess();
 
         if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && count($this->admin_cms_categories->errors))
             || Tools::isSubmit('updatecms_category')

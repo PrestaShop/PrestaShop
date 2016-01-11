@@ -58,7 +58,7 @@
             {assign var='rowspan_total' value=$rowspan_total+1}
         {/if}
 
-        {if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+        {if $total_shipping_tax_exc <= 0 && (!isset($isVirtualCart) || !$isVirtualCart) && $free_ship}
             {assign var='rowspan_total' value=$rowspan_total+1}
         {else}
             {if $use_taxes && $total_shipping_tax_exc != $total_shipping}
@@ -77,13 +77,6 @@
                 <tr class="cart_total_price">
                     <td rowspan="{$rowspan_total}" colspan="3" id="cart_voucher" class="cart_voucher">
                         {if $voucherAllowed}
-                            {if isset($errors_discount) && $errors_discount}
-                                <ul class="alert alert-danger">
-                                    {foreach $errors_discount as $k=>$error}
-                                        <li>{$error|escape:'html':'UTF-8'}</li>
-                                    {/foreach}
-                                </ul>
-                            {/if}
                             <form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
                                 <fieldset>
                                     <h4>{l s='Vouchers'}</h4>
@@ -109,13 +102,6 @@
                 <tr class="cart_total_price">
                     <td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
                         {if $voucherAllowed}
-                            {if isset($errors_discount) && $errors_discount}
-                                <ul class="alert alert-danger">
-                                    {foreach $errors_discount as $k=>$error}
-                                        <li>{$error|escape:'html':'UTF-8'}</li>
-                                    {/foreach}
-                                </ul>
-                            {/if}
                             <form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
                                 <fieldset>
                                     <h4>{l s='Vouchers'}</h4>
@@ -142,13 +128,6 @@
             <tr class="cart_total_price">
                 <td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
                     {if $voucherAllowed}
-                        {if isset($errors_discount) && $errors_discount}
-                            <ul class="alert alert-danger">
-                                {foreach $errors_discount as $k=>$error}
-                                    <li>{$error|escape:'html':'UTF-8'}</li>
-                                {/foreach}
-                            </ul>
-                        {/if}
                         <form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
                             <fieldset>
                                 <h4>{l s='Vouchers'}</h4>
@@ -193,10 +172,10 @@
                 {/if}
             </td>
         </tr>
-        {if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+        {if $total_shipping_tax_exc <= 0 && (!isset($isVirtualCart) || !$isVirtualCart)}
             <tr class="cart_total_delivery{if !$opc && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
                 <td colspan="{$col_span_subtotal}" class="text-right">{l s='Total shipping'}</td>
-                <td colspan="2" class="price" id="total_shipping">{l s='Free Shipping!'}</td>
+                <td colspan="2" class="price" id="total_shipping">{l s='Free shipping!'}</td>
             </tr>
         {else}
             {if $use_taxes && $total_shipping_tax_exc != $total_shipping}

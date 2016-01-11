@@ -14,11 +14,11 @@
 				<input class="form-control" type="text" name="product_rule_group_{$product_rule_group_id|intval}_quantity" value="{$product_rule_group_quantity|intval}" />
 			</div>
 			<div class="col-lg-7">
-				<p class="form-control-static">{l s='product(s) matching the following rules:'}</p>
+				<label  class="control-label pull-left">{l s='product(s) matching the following rules:'}</label>
 			</div>
 		</div>
 
-		
+
 
 		<div class="form-group">
 

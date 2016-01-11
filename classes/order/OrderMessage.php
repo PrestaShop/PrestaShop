@@ -52,7 +52,7 @@ class OrderMessageCore extends ObjectModel
     );
 
     protected $webserviceParameters = array(
-            'fields' => array(
+        'fields' => array(
             'id' => array('sqlId' => 'id_discount_type', 'xlink_resource' => 'order_message_lang'),
             'date_add' => array('sqlId' => 'date_add')
         )
@@ -61,10 +61,10 @@ class OrderMessageCore extends ObjectModel
     public static function getOrderMessages($id_lang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT om.id_order_message, oml.name, oml.message
-		FROM '._DB_PREFIX_.'order_message om
-		LEFT JOIN '._DB_PREFIX_.'order_message_lang oml ON (oml.id_order_message = om.id_order_message)
-		WHERE oml.id_lang = '.(int)$id_lang.'
-		ORDER BY name ASC');
+        SELECT om.id_order_message, oml.name, oml.message
+        FROM '._DB_PREFIX_.'order_message om
+        LEFT JOIN '._DB_PREFIX_.'order_message_lang oml ON (oml.id_order_message = om.id_order_message)
+        WHERE oml.id_lang = '.(int)$id_lang.'
+        ORDER BY name ASC');
     }
 }

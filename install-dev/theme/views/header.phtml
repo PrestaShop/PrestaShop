@@ -10,9 +10,11 @@
 	<meta name="robots" content="noindex" />
 	<link rel="shortcut icon" href="theme/img/favicon.ico" />
 	<link rel="stylesheet" type="text/css" media="all" href="theme/view.css" />
-	<?php if ( ($this->language->getLanguage()->getMetaInformation('is_rtl')) == 'true'): ?>
+
+	<?php if (($this->language->getLanguage()->getMetaInformation('is_rtl')) == 'true'): ?>
 		<link rel="stylesheet" type="text/css" media="all" href="theme/rtl.css" />
 	<?php endif; ?>
+
 	<script type="text/javascript" src="../js/jquery/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="../js/jquery/plugins/jquery.chosen.js"></script>
 	<script type="text/javascript" src="theme/js/install.js"></script>
@@ -54,9 +56,9 @@
 
 <!--This comment is necessary!
 
-	Purpose is to make some strings available for translation, 
+	Purpose is to make some strings available for translation,
 	that would not be 'seen' by the translations parser otherwise.
-	
+
 	$this->l('menu_welcome');
 	$this->l('menu_license');
 	$this->l('menu_system');

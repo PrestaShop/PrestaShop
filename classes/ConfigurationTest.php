@@ -71,7 +71,9 @@ class ConfigurationTestCore
             'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache/',
             'translations_dir' => 'translations',
             'customizable_products_dir' => 'upload',
-            'virtual_products_dir' => 'download'
+            'virtual_products_dir' => 'download',
+            'app_cache_dir' => 'app/cache',
+            'app_logs_dir' => 'app/logs',
         );
 
         if (!defined('_PS_HOST_MODE_')) {
@@ -104,11 +106,9 @@ class ConfigurationTestCore
         return array(
             'new_phpversion' => false,
             'fopen' => false,
-            'register_globals' => false,
             'gz' => false,
             'mcrypt' => false,
             'mbstring' => false,
-            'magicquotes' => false,
             'dom' => false,
             'pdo_mysql' => false,
         );
@@ -157,11 +157,6 @@ class ConfigurationTestCore
         return extension_loaded('pdo_mysql');
     }
 
-    public static function test_magicquotes()
-    {
-        return !get_magic_quotes_gpc();
-    }
-
     public static function test_upload()
     {
         return ini_get('file_uploads');
@@ -185,11 +180,6 @@ class ConfigurationTestCore
     public static function test_gd()
     {
         return function_exists('imagecreatetruecolor');
-    }
-
-    public static function test_register_globals()
-    {
-        return !ini_get('register_globals');
     }
 
     public static function test_gz()
@@ -300,6 +290,16 @@ class ConfigurationTestCore
     }
 
     public static function test_translations_dir($dir)
+    {
+        return ConfigurationTest::test_dir($dir, true);
+    }
+
+    public static function test_app_cache_dir($dir)
+    {
+        return ConfigurationTest::test_dir($dir, true);
+    }
+
+    public static function test_app_logs_dir($dir)
     {
         return ConfigurationTest::test_dir($dir, true);
     }

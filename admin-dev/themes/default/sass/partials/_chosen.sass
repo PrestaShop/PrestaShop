@@ -20,7 +20,7 @@ $chosen-focus-box-shadow: 0 1px 1px rgba(0, 0, 0, .075) inset, 0 0 8px rgba(82, 
 $chosen-focus-transition: border linear .2s, box-shadow linear .2s
 $chosen-height: $input-height-base
 $chosen-multi-height: $input-height-base + 6px
-$chosen-sprite-path: 'chosen-sprite.png'
+$chosen-sprite-path: '../img/chosen-sprite.png'
 
 .chosen-select
 	width: 100%
@@ -74,7 +74,7 @@ $chosen-sprite-path: 'chosen-sprite.png'
 			&.active-result
 				cursor: pointer
 				display: list-item
-			&.highlighted 
+			&.highlighted
 				background-color: $link-color
 				color: white
 				em
@@ -106,8 +106,8 @@ $chosen-sprite-path: 'chosen-sprite.png'
 		span
 			background: url($chosen-sprite-path) no-repeat -22px -3px
 
-.chosen-container-single 
-	.chosen-single 
+.chosen-container-single
+	.chosen-single
 		background-color: $chosen-background
 		border: 1px solid $chosen-border
 		color: $gray
@@ -148,7 +148,7 @@ $chosen-sprite-path: 'chosen-sprite.png'
 			top: 0
 			width: 18px
 			@include right(0)
-			b 
+			b
 				@extend .icon
 				@extend .icon-caret-down
 				font-size: 14px
@@ -222,7 +222,7 @@ $chosen-sprite-path: 'chosen-sprite.png'
 			margin: 0
 			padding: 0
 			white-space: nowrap
-			input 
+			input
 				background: transparent !important
 				border: 0 !important
 				color: $gray
@@ -295,10 +295,10 @@ $chosen-sprite-path: 'chosen-sprite.png'
 		.search-field input
 			color: #111 !important
 
-.chosen-disabled 
+.chosen-disabled
 	cursor: default
 	opacity: 0.5 !important
-	.chosen-single 
+	.chosen-single
 		cursor: default
 	.chosen-choices .search-choice .search-choice-close
 		cursor: default
@@ -319,7 +319,7 @@ $chosen-sprite-path: 'chosen-sprite.png'
 			left: 26px
 			right: auto
 	.chosen-choices
-		.search-field input 
+		.search-field input
 			direction: rtl
 		li
 			float: right

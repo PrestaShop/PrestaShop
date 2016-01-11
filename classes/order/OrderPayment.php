@@ -90,11 +90,13 @@ class OrderPaymentCore extends ObjectModel
      */
     public static function getByOrderReference($order_reference)
     {
-        return ObjectModel::hydrateCollection('OrderPayment',
-            Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'order_payment`
-			WHERE `order_reference` = \''.pSQL($order_reference).'\'')
+        return ObjectModel::hydrateCollection(
+            'OrderPayment',
+            Db::getInstance()->executeS(
+                'SELECT *
+			    FROM `'._DB_PREFIX_.'order_payment`
+			    WHERE `order_reference` = \''.pSQL($order_reference).'\''
+            )
         );
     }
 

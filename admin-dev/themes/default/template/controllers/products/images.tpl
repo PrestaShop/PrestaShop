@@ -173,6 +173,7 @@
 				return $1 ? $1 + path : $0;
 			});
 			line = line.replace(/image_path/g, path);
+			line = line.replace(/\.jpg"\s/g, '.jpg?time=' + new Date().getTime() + '" ');
 			line = line.replace(/image_position/g, position);
 			line = line.replace(/legend/g, legend);
 			line = line.replace(/icon-check-empty/g, cover);
@@ -205,7 +206,7 @@
 				}
 				else
 					assoc = false;
-				imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc, "{$image->legend[$default_language]|@addcslashes:'\"'}");
+				imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc, "{$image->legend[$default_language]|escape:'htmlall'}");
 			{/foreach}
 			{literal}
 			var originalOrder = false;

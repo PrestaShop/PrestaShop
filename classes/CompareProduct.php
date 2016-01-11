@@ -136,23 +136,15 @@ class CompareProductCore extends ObjectModel
      * @param string $period
      * @return void
      */
-    public static function cleanCompareProducts($period = 'week')
+    public static function cleanCompareProducts($period = null)
     {
-        if ($period === 'week') {
-            $interval = '1 WEEK';
-        } elseif ($period === 'month') {
-            $interval = '1 MONTH';
-        } elseif ($period === 'year') {
-            $interval = '1 YEAR';
-        } else {
-            return;
+        if ($period !== null) {
+            Tools::displayParameterAsDeprecated('period');
         }
 
-        if ($interval != null) {
-            Db::getInstance()->execute('
-			DELETE cp, c FROM `'._DB_PREFIX_.'compare_product` cp, `'._DB_PREFIX_.'compare` c
-			WHERE cp.date_upd < DATE_SUB(NOW(), INTERVAL 1 WEEK) AND c.`id_compare`=cp.`id_compare`');
-        }
+        Db::getInstance()->execute('
+        DELETE cp, c FROM `'._DB_PREFIX_.'compare_product` cp, `'._DB_PREFIX_.'compare` c
+        WHERE cp.date_upd < DATE_SUB(NOW(), INTERVAL 1 WEEK) AND c.`id_compare`=cp.`id_compare`');
     }
 
     /**

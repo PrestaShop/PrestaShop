@@ -275,9 +275,9 @@ class ImageCore extends ObjectModel
 			WHERE `id_product` = '.(int)$id_product
         ) &&
         Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'image` i, `'._DB_PREFIX_.'image_shop` image_shop
+			UPDATE `'._DB_PREFIX_.'image_shop` image_shop
 			SET image_shop.`cover` = NULL
-			WHERE image_shop.id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).') AND image_shop.id_image = i.id_image AND i.`id_product` = '.(int)$id_product
+			WHERE image_shop.id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).') AND image_shop.`id_product` = '.(int)$id_product
         ));
     }
 
@@ -290,10 +290,23 @@ class ImageCore extends ObjectModel
     public static function getCover($id_product)
     {
         return Db::getInstance()->getRow('
-			SELECT * FROM `'._DB_PREFIX_.'image` i'.
-            Shop::addSqlAssociation('image', 'i').'
-			WHERE i.`id_product` = '.(int)$id_product.'
+			SELECT * FROM `'._DB_PREFIX_.'image_shop` image_shop
+			WHERE image_shop.`id_product` = '.(int)$id_product.'
 			AND image_shop.`cover`= 1');
+    }
+
+    /**
+     *Get global product cover
+     *
+     * @param int $id_product Product ID
+     * @return bool result
+     */
+    public static function getGlobalCover($id_product)
+    {
+        return Db::getInstance()->getRow('
+			SELECT * FROM `'._DB_PREFIX_.'image` i
+			WHERE i.`id_product` = '.(int)$id_product.'
+			AND i.`cover`= 1');
     }
 
     /**
@@ -379,41 +392,6 @@ class ImageCore extends ObjectModel
         }
         $query = rtrim($query, ', ');
         return DB::getInstance()->execute($query);
-    }
-
-    /**
-     * Reposition image
-     *
-     * @param int $position Position
-     * @param bool $direction Direction
-     * @deprecated since version 1.5.0.1 use Image::updatePosition() instead
-     */
-    public function positionImage($position, $direction)
-    {
-        Tools::displayAsDeprecated();
-
-        $position = (int)$position;
-        $direction = (int)$direction;
-
-        // temporary position
-        $high_position = Image::getHighestPosition($this->id_product) + 1;
-
-        Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'image`
-		SET `position` = '.(int)$high_position.'
-		WHERE `id_product` = '.(int)$this->id_product.'
-		AND `position` = '.($direction ? $position - 1 : $position + 1));
-
-        Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'image`
-		SET `position` = `position`'.($direction ? '-1' : '+1').'
-		WHERE `id_image` = '.(int)$this->id);
-
-        Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'image`
-		SET `position` = '.$this->position.'
-		WHERE `id_product` = '.(int)$this->id_product.'
-		AND `position` = '.(int)$high_position);
     }
 
     /**
@@ -751,10 +729,6 @@ class ImageCore extends ObjectModel
      */
     public static function testFileSystem()
     {
-        $safe_mode = Tools::getSafeModeStatus();
-        if ($safe_mode) {
-            return false;
-        }
         $folder1 = _PS_PROD_IMG_DIR_.'testfilesystem/';
         $test_folder = $folder1.'testsubfolder/';
         // check if folders are already existing from previous failed test
@@ -773,6 +747,7 @@ class ImageCore extends ObjectModel
         }
         @rmdir($test_folder);
         @rmdir($folder1);
+
         if (file_exists($folder1)) {
             return false;
         }

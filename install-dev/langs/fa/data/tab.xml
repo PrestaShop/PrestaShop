@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
   <tab id="Dashboard" name="پیشخوان"/>
   <tab id="CMS_Pages" name="صفحات مدیریت محتوا"/>
@@ -58,7 +58,7 @@
   <tab id="Taxes" name="مالیات"/>
   <tab id="Tax_Rules" name="قوانین مالیاتی"/>
   <tab id="Translations" name="ترجمه‌ها"/>
-  <tab id="Modules_1" name="ماژول‌ها"/>
+  <tab id="Modules_1" name="ماژول ها و سرویس ها"/>
   <tab id="Modules_Themes_Catalog" name="کاتالوگ ماژول‌ها و قالب‌ها"/>
   <tab id="Positions" name="جایگاه‌ها"/>
   <tab id="Payment" name="پرداخت"/>

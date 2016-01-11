@@ -12,7 +12,7 @@ $(document).ready(function() {
 		var wrapper_id = $(this).parent().attr("id");
 
 		$.post(
-			"ajax.php",
+			baseAdminDir+"ajax.php",
 			{
 				"updateElementEmployee" : "1",
 				"updateElementEmployeeType" : $(this).parent().attr('data-type')
@@ -35,7 +35,7 @@ function getPush(refresh)
 	$.ajax({
 		type: 'POST',
 		headers: {"cache-control": "no-cache"},
-		url: 'ajax.php?rand=' + new Date().getTime(),
+		url: baseAdminDir+'ajax.php?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType : 'json',
@@ -49,7 +49,7 @@ function getPush(refresh)
 				// Add orders notifications to the list
 				html = "";
 				$.each(json.order.results, function(property, value) {
-					html += "<a href='index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "'>";
+					html += "<a href='"+baseAdminDir+"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "'>";
 					html += "<p>" + order_number_msg + "&nbsp;<strong>#" + parseInt(value.id_order) + "</strong></p>";
 					html += "<p class='pull-right'>" + total_msg + "&nbsp;<span class='total badge badge-success'>" + value.total_paid + "</span></p>";
 					html += "<p>" + from_msg + "&nbsp;<strong>" + value.customer_name + "</strong></p>";
@@ -67,7 +67,7 @@ function getPush(refresh)
 				// Add customers notifications to the list
 				html = "";
 				$.each(json.customer.results, function(property, value) {
-					html += "<a href='index.php?tab=AdminCustomers&token=" + token_admin_customers + "&viewcustomer&id_customer=" + parseInt(value.id_customer) + "'>";
+					html += "<a href='"+baseAdminDir+"index.php?tab=AdminCustomers&token=" + token_admin_customers + "&viewcustomer&id_customer=" + parseInt(value.id_customer) + "'>";
 					html += "<p>" + customer_name_msg + "&nbsp;<strong>#" + value.customer_name + "</strong></p>";
 					html += "<small class='text-muted'><i class='icon-time'></i> " +  moment(value.update_date).fromNow() + " </small>";
 					html += "</a>";
@@ -83,7 +83,7 @@ function getPush(refresh)
 				// Add messages notifications to the list
 				html = "";
 				$.each(json.customer_message.results, function(property, value) {
-					html += "<a href='index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "'>";
+					html += "<a href='"+baseAdminDir+"index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "'>";
 					html += "<p>" + from_msg + "&nbsp;<strong>" + value.customer_name + "</strong></p>";
 					html += "<small class='text-muted'><i class='icon-time'></i> " +  moment(value.update_date).fromNow() + " </small>";
 					html += "</a>";

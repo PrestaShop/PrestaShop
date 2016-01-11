@@ -269,12 +269,12 @@
 										{hook h="displayProductPriceBlock" product=$product type="price"}
 									{/if}
 								{/strip}</p>
-								<p id="reduction_percent" {if !$product->specificPrice || $product->specificPrice.reduction_type != 'percentage'} style="display:none;"{/if}>{strip}
+								<p id="reduction_percent" {if $productPriceWithoutReduction <= 0 || !$product->specificPrice || $product->specificPrice.reduction_type != 'percentage'} style="display:none;"{/if}>{strip}
 									<span id="reduction_percent_display">
 										{if $product->specificPrice && $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPrice.reduction*100}%{/if}
 									</span>
 								{/strip}</p>
-								<p id="reduction_amount" {if !$product->specificPrice || $product->specificPrice.reduction_type != 'amount' || $product->specificPrice.reduction|floatval ==0} style="display:none"{/if}>{strip}
+								<p id="reduction_amount" {if $productPriceWithoutReduction <= 0 || !$product->specificPrice || $product->specificPrice.reduction_type != 'amount' || $product->specificPrice.reduction|floatval ==0} style="display:none"{/if}>{strip}
 									<span id="reduction_amount_display">
 									{if $product->specificPrice && $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|floatval !=0}
 										-{convertPrice price=$productPriceWithoutReduction|floatval-$productPrice|floatval}
@@ -284,7 +284,7 @@
 								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction)} class="hidden"{/if}>{strip}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										{hook h="displayProductPriceBlock" product=$product type="old_price"}
-										<span id="old_price_display"><span class="price">{if $productPriceWithoutReduction > $productPrice}{convertPrice price=$productPriceWithoutReduction|floatval}{/if}</span>{if $tax_enabled && $display_tax_label == 1} {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}</span>
+										<span id="old_price_display"><span class="price">{if $productPriceWithoutReduction > $productPrice}{convertPrice price=$productPriceWithoutReduction|floatval}{/if}</span>{if $productPriceWithoutReduction > $productPrice && $tax_enabled && $display_tax_label == 1} {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}</span>
 									{/if}
 								{/strip}</p>
 								{if $priceDisplay == 2}
@@ -528,13 +528,17 @@
 											{if $accessory.show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 											<span class="price">
 												{if $priceDisplay != 1}
-												{displayWtPrice p=$accessory.price}{else}{displayWtPrice p=$accessory.price_tax_exc}
+													{displayWtPrice p=$accessory.price}
+												{else}
+													{displayWtPrice p=$accessory.price_tax_exc}
 												{/if}
+												{hook h="displayProductPriceBlock" product=$accessory type="price"}
 											</span>
 											{/if}
+											{hook h="displayProductPriceBlock" product=$accessory type="after_price"}
 										</div>
 										<div class="clearfix" style="margin-top:5px">
-											{if !$PS_CATALOG_MODE && ($accessory.allow_oosp || $accessory.quantity > 0)}
+											{if !$PS_CATALOG_MODE && ($accessory.allow_oosp || $accessory.quantity > 0) && isset($add_prod_display) && $add_prod_display == 1}
 												<div class="no-print">
 													<a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}" data-id-product="{$accessory.id_product|intval}" title="{l s='Add to cart'}">
 														<span>{l s='Add to cart'}</span>
@@ -717,7 +721,7 @@
 {addJsDef oosHookJsCodeFunctions=Array()}
 {addJsDef productHasAttributes=isset($groups)|boolval}
 {addJsDef productPriceTaxExcluded=($product->getPriceWithoutReduct(true)|default:'null' - $product->ecotax)|floatval}
-{addJsDef productPriceTaxIncluded=($product->getPriceWithoutReduct(false)|default:'null' - $product->ecotax)|floatval}
+{addJsDef productPriceTaxIncluded=($product->getPriceWithoutReduct(false)|default:'null' - $product->ecotax * (1 + $ecotaxTax_rate / 100))|floatval}
 {addJsDef productBasePriceTaxExcluded=($product->getPrice(false, null, 6, null, false, false) - $product->ecotax)|floatval}
 {addJsDef productBasePriceTaxExcl=($product->getPrice(false, null, 6, null, false, false)|floatval)}
 {addJsDef productBasePriceTaxIncl=($product->getPrice(true, null, 6, null, false, false)|floatval)}

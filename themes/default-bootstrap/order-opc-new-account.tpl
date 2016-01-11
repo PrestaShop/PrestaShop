@@ -22,6 +22,7 @@
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
 					<button type="submit" id="SubmitLogin" name="SubmitLogin" class="button btn btn-default button-medium"><span><i class="icon-lock left"></i>{l s='Sign in'}</span></button>
 				</p>
+				{$HOOK_AUTHENTICATE_FORM_BOTTOM}
 			</div>
 		</fieldset>
 	</form>
@@ -58,6 +59,7 @@
 					<input type="hidden" id="opc_id_customer" name="opc_id_customer" value="{if isset($guestInformations) && isset($guestInformations.id_customer) && $guestInformations.id_customer}{$guestInformations.id_customer}{else}0{/if}" />
 					<input type="hidden" id="opc_id_address_delivery" name="opc_id_address_delivery" value="{if isset($guestInformations) && isset($guestInformations.id_address_delivery) && $guestInformations.id_address_delivery}{$guestInformations.id_address_delivery}{else}0{/if}" />
 					<input type="hidden" id="opc_id_address_invoice" name="opc_id_address_invoice" value="{if isset($guestInformations) && isset($guestInformations.id_address_delivery) && $guestInformations.id_address_delivery}{$guestInformations.id_address_delivery}{else}0{/if}" />
+					<p class="required"><sup>*</sup>{l s='Required field'}</p>
 					<div class="required text form-group">
 						<label for="email">{l s='Email'} <sup>*</sup></label>
 						<input type="email" class="text form-control validate" id="email" name="email" data-validate="isEmail" value="{if isset($guestInformations) && isset($guestInformations.email) && $guestInformations.email}{$guestInformations.email}{/if}" />
@@ -246,17 +248,18 @@
 						<label for="other">{l s='Additional information'}</label>
 						<textarea class="form-control" name="other" id="other" cols="26" rows="7"></textarea>
 					</div>
-					{if isset($one_phone_at_least) && $one_phone_at_least}
-						<p class="inline-infos required is_customer_param">{l s='You must register at least one phone number.'}</p>
-					{/if}
 					<div class="form-group is_customer_param">
-						<label for="phone">{l s='Home phone'}</label>
-						<input type="text" class="text form-control validate" name="phone" id="phone"  data-validate="isPhoneNumber" value="{if isset($guestInformations) && isset($guestInformations.phone) && $guestInformations.phone}{$guestInformations.phone}{/if}" />
+						<label for="phone">{l s='Home phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>**</sup>{/if}</label>
+						<input type="text" class="text form-control validate" name="phone" id="phone" data-validate="isPhoneNumber" value="{if isset($guestInformations) && isset($guestInformations.phone) && $guestInformations.phone}{$guestInformations.phone}{/if}" />
 					</div>
 					<div class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}form-group">
-						<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
+						<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>**</sup>{/if}</label>
 						<input type="text" class="text form-control validate" name="phone_mobile" id="phone_mobile" data-validate="isPhoneNumber" value="{if isset($guestInformations) && isset($guestInformations.phone_mobile) && $guestInformations.phone_mobile}{$guestInformations.phone_mobile}{/if}" />
 					</div>
+					{if isset($one_phone_at_least) && $one_phone_at_least}
+						{assign var="atLeastOneExists" value=true}
+						<p class="inline-infos required">** {l s='You must register at least one phone number.'}</p>
+					{/if}
 					<input type="hidden" name="alias" id="alias" value="{l s='My address'}"/>
 
 					<div class="checkbox">
@@ -274,7 +277,7 @@
 						{if $field_name eq "company"}
 						<div class="form-group">
 							<label for="company_invoice">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
-							<input type="text" class="text form-control validate" id="company_invoice" name="company_invoice"  data-validate="isName" value="{if isset($guestInformations) && isset($guestInformations.company_invoice) && $guestInformations.company_invoice}{$guestInformations.company_invoice}{/if}" />
+							<input type="text" class="text form-control validate" id="company_invoice" name="company_invoice" data-validate="isName" value="{if isset($guestInformations) && isset($guestInformations.company_invoice) && $guestInformations.company_invoice}{$guestInformations.company_invoice}{/if}" />
 						</div>
 						{elseif $field_name eq "vat_number"}
 						<div id="vat_number_block_invoice" class="is_customer_param" style="display:none;">

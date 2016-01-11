@@ -1,0 +1,3 @@
+# include Admin, Front and other dependent bundles
+_admin_routing:
+    resource: "@PrestaShopBundle/Resources/config/routing_admin.yml"

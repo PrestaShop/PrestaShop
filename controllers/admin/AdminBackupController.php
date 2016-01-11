@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+@ini_set('max_execution_time', 0);
 /**
  * @property PrestaShopBackup $object
  */
@@ -41,10 +42,10 @@ class AdminBackupControllerCore extends AdminController
         parent::__construct();
 
         $this->fields_list = array(
-            'date' => array('title' => $this->l('Date'), 'type' => 'datetime'),
-            'age' => array('title' => $this->l('Age')),
-            'filename' => array('title' => $this->l('File name')),
-            'filesize' => array('title' => $this->l('File size'), 'class' => 'fixed-width-sm')
+            'date' => array('title' => $this->l('Date'), 'type' => 'datetime', 'class' => 'fixed-width-lg', 'orderby' => false, 'search' => false),
+            'age' => array('title' => $this->l('Age'), 'orderby' => false, 'search' => false),
+            'filename' => array('title' => $this->l('File name'), 'orderby' => false, 'search' => false),
+            'filesize' => array('title' => $this->l('File size'), 'class' => 'fixed-width-sm', 'orderby' => false, 'search' => false)
         );
 
         $this->bulk_actions = array('delete' => array(
@@ -194,9 +195,11 @@ class AdminBackupControllerCore extends AdminController
         if (!Validate::isTableOrIdentifier($this->table)) {
             die('filter is corrupted');
         }
+
         if (empty($order_by)) {
             $order_by = Tools::getValue($this->table.'Orderby', $this->_defaultOrderBy);
         }
+
         if (empty($order_way)) {
             $order_way = Tools::getValue($this->table.'Orderway', 'ASC');
         }
@@ -230,9 +233,10 @@ class AdminBackupControllerCore extends AdminController
         $this->context->cookie->{$this->table.'_pagination'} = $limit;
 
         /* Determine offset from current page */
-        if (!empty($_POST['submitFilter'.$this->table]) &&    is_numeric($_POST['submitFilter'.$this->table])) {
-            $start = (int)$_POST['submitFilter'.$this->table] - 1 * $limit;
+        if (!empty($_POST['submitFilter'.$this->list_id]) && is_numeric($_POST['submitFilter'.$this->list_id])) {
+            $start = (int)$_POST['submitFilter'.$this->list_id] - 1 * $limit;
         }
+
         $this->_lang = (int)$id_lang;
         $this->_orderBy = $order_by;
         $this->_orderWay = strtoupper($order_way);

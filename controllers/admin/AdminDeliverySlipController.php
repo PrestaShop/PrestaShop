@@ -49,7 +49,7 @@ class AdminDeliverySlipControllerCore extends AdminController
                         'type' => 'text'
                     ),
                     'PS_PDF_IMG_DELIVERY' => array(
-                        'title' => $this->l('Enable product image on Delivery-slip'),
+                        'title' => $this->l('Enable product image'),
                         'hint' => $this->l('Adds an image before product name on Delivery-slip'),
                         'validation' => 'isBool',
                         'cast' => 'intval',

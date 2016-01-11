@@ -60,6 +60,12 @@ class MetaCore extends ObjectModel
             die(Tools::displayError('Cannot scan root directory'));
         }
 
+        if (!$override_files = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'front' . DIRECTORY_SEPARATOR, 'php', '', true)) {
+            die(Tools::displayError('Cannot scan "override" directory'));
+        }
+
+        $files = array_values(array_unique(array_merge($files, $override_files)));
+
         // Exclude pages forbidden
         $exlude_pages = array(
             'category', 'changecurrency', 'cms', 'footer', 'header',
@@ -195,8 +201,8 @@ class MetaCore extends ObjectModel
      */
     public static function getMetaTags($id_lang, $page_name, $title = '')
     {
-        global $maintenance;
-        if (!(isset($maintenance) && (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))))) {
+        if (!(!Configuration::get('PS_SHOP_ENABLE')
+            && !in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))) {
             if ($page_name == 'product' && ($id_product = Tools::getValue('id_product'))) {
                 return Meta::getProductMetas($id_product, $id_lang, $page_name);
             } elseif ($page_name == 'category' && ($id_category = Tools::getValue('id_category'))) {

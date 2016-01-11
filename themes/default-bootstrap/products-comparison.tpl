@@ -188,7 +188,7 @@
 {/if}
 <ul class="footer_link">
 	<li>
-		<a class="button lnk_view btn btn-default" href="{$base_dir}">
+		<a class="button lnk_view btn btn-default" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}">
 			<span><i class="icon-chevron-left left"></i>{l s='Continue Shopping'}</span>
 		</a>
 	</li>

@@ -58,7 +58,7 @@
 {else}
 <div class="form-group">
 	<div class="col-sm-6">
-		<input id="{$id|escape:'html':'UTF-8'}" type="file" name="{$name|escape:'html':'UTF-8'}"{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
+		<input id="{$id|escape:'html':'UTF-8'}" type="file" name="{$name|escape:'html':'UTF-8'}{if isset ($multiple) && $multiple}[]{/if}"{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
 		<div class="dummyfile input-group">
 			<span class="input-group-addon"><i class="icon-file"></i></span>
 			<input id="{$id|escape:'html':'UTF-8'}-name" type="text" name="filename" readonly />

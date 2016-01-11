@@ -73,7 +73,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         return array();
     }
 
-    protected static function createCombinations($list)
+    public static function createCombinations($list)
     {
         if (count($list) <= 1) {
             return count($list) ? array_map(create_function('$v', 'return (array($v));'), $list[0]) : $list;

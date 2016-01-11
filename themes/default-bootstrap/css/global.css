@@ -5709,7 +5709,9 @@ body {
   font-size: 13px;
   color: #777; }
   body.content_only {
-    background: none; }
+    background: none;
+    min-width: 0px;
+  }
 
 textarea {
   resize: none; }
@@ -6229,6 +6231,8 @@ table.table_block td {
     border-bottom-width: 1px;
     color: #333;
     vertical-align: middle; }
+  .table td ul, .table td ol {
+    margin-bottom: 0 !important; }
   .table td a.color-myaccount {
     color: #777;
     text-decoration: underline; }
@@ -6594,7 +6598,8 @@ table.table_block td {
   .block .products-block li .product-content {
     overflow: hidden; }
     .block .products-block li .product-content h5 {
-      margin: -3px 0 0 0; }
+      position: relative;
+      top: -11px; }
 .block .products-block .product-name {
   font-size: 15px;
   line-height: 18px; }
@@ -7640,6 +7645,10 @@ a.price_discount_delete {
   border: 1px solid #999999;
   background: #fff; }
 
+.order_carrier_logo {
+  max-width: 65px;
+  max-height: 65px; }
+
 #order_carrier .title_block {
   padding: 0 15px;
   height: 29px;
@@ -8398,8 +8407,7 @@ div.star.star_hover:after {
 #facebook_block .facebook-fanbox {
   background: #fff;
   border: 1px solid #aaaaaa;
-  display: inline-block;
-  max-width: 100%; }
+  padding-bottom: 10px; }
 
 #cmsinfo_block {
   border-left: 1px solid #d9d9d9; }

@@ -24,7 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once(dirname(__FILE__).'/defines.inc.php');
+$currentDir = dirname(__FILE__);
+
+/* Custom defines made by users */
+if (is_file($currentDir.'/defines_custom.inc.php')) {
+    include_once($currentDir.'/defines_custom.inc.php');
+}
+require_once($currentDir.'/defines.inc.php');
+
 $start_time = microtime(true);
 
 /* SSL configuration */
@@ -32,19 +39,23 @@ define('_PS_SSL_PORT_', 443);
 
 /* Improve PHP configuration to prevent issues */
 ini_set('default_charset', 'utf-8');
-ini_set('magic_quotes_runtime', 0);
-ini_set('magic_quotes_sybase', 0);
 
 /* correct Apache charset (except if it's too late */
 if (!headers_sent()) {
     header('Content-Type: text/html; charset=utf-8');
 }
 
+/* in dev mode - check if composer was executed */
+if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
+        !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'))) {
+    die('Error : please install <a href="https://getcomposer.org/">composer</a> or execute "./getcomposer.sh"<br/>Then run "php composer.phar install"');
+}
+
 /* No settings file? goto installer... */
 if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-    if (file_exists(dirname(__FILE__).'/../install')) {
+    if (file_exists($currentDir.'/../install')) {
         header('Location: install/');
-    } elseif (file_exists(dirname(__FILE__).'/../install-dev')) {
+    } elseif (file_exists($currentDir.'/../install-dev')) {
         header('Location: install-dev/');
     } else {
         die('Error: "install" directory is missing');
@@ -56,7 +67,7 @@ if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'bootstrap.php';
+require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 /* Custom config made by users */
 if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
@@ -116,7 +127,7 @@ define('_THEME_NAME_', $theme_name);
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
-require_once(dirname(__FILE__).'/defines_uri.inc.php');
+require_once($currentDir.'/defines_uri.inc.php');
 
 global $_MODULES;
 $_MODULES = array();
@@ -254,5 +265,5 @@ if (!defined('_MEDIA_SERVER_3_')) {
 }
 
 /* Get smarty */
-require_once(dirname(__FILE__).'/smarty.config.inc.php');
+require_once($currentDir.'/smarty.config.inc.php');
 $context->smarty = $smarty;

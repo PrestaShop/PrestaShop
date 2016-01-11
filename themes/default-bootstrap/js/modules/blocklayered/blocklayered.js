@@ -93,17 +93,12 @@ $(document).ready(function()
 	});
 
 	// Click on label
-	$('#layered_block_left label:not(.layered_color) a').on({
-		click: function(e) {
-			e.preventDefault();
-			var disable = $(this).parent().parent().find('input').attr('disabled');
-			if (disable == ''
-			|| typeof(disable) == 'undefined'
-			|| disable == false)
-			{
-				$(this).parent().parent().find('input').click();
-				reloadContent();
-			}
+	$(document).on('click', '#layered_block_left label:not(.layered_color) a', function(e) {
+		e.preventDefault();
+		var disable = $(this).parent().parent().find('input').attr('disabled');
+		if (disable == '' || typeof(disable) == 'undefined' || disable == false)
+		{
+			$(this).parent().parent().find('input').click();
 		}
 	});
 
@@ -119,17 +114,17 @@ $(document).ready(function()
 		hideFilterValueAction(this);
 	});
 
-	$('.selectProductSort').unbind('change').bind('change', function(event) {
+	$(document).off('change', '.selectProductSort').on('change', '.selectProductSort', function(e) {
 		$('.selectProductSort').val($(this).val());
 
 		if($('#layered_form').length > 0)
-			reloadContent(true);
+			reloadContent('forceSlide');
 	});
 
-	$(document).off('change', '#layered_form select[name=n]').on('change', '#layered_form select[name=n]', function(e)
+	$(document).off('change', 'select[name="n"]').on('change', 'select[name="n"]', function(e)
 	{
 		$('select[name=n]').val($(this).val());
-		reloadContent(true);
+		reloadContent('forceSlide');
 	});
 
 	paginationButton(false);
@@ -492,6 +487,9 @@ function reloadContent(params_plus)
 		cache: false, // @todo see a way to use cache and to add a timestamps parameter to refresh cache each 10 minutes for example
 		success: function(result)
 		{
+			if (typeof(result) === 'undefined')
+				return;
+
 			if (result.meta_description != '')
 				$('meta[name="description"]').attr('content', result.meta_description);
 

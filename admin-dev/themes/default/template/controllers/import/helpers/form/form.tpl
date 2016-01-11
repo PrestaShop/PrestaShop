@@ -463,7 +463,7 @@
 			$('#csv_file_uploader').toggle();
 		})
 		//show selected csv if exists
-		var selected = '{$csv_selected}';
+		var selected = '{$csv_selected|@addcslashes:'\''}';
 		if(selected){
 			$('#csv_file_selected').show();
 			$('#csv_file_uploader').hide();

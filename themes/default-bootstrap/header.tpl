@@ -61,7 +61,7 @@
 		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 		<![endif]-->
 	</head>
-	<body{if isset($page_name)} id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if isset($body_classes) && $body_classes|@count} {implode value=$body_classes separator=' '}{/if}{if $hide_left_column} hide-left-column{else} show-left-column{/if}{if $hide_right_column} hide-right-column{else} hide-right-column{/if}{if isset($content_only) && $content_only} content_only{/if} lang_{$lang_iso}">
+	<body{if isset($page_name)} id="{$page_name|escape:'html':'UTF-8'}"{/if} class="{if isset($page_name)}{$page_name|escape:'html':'UTF-8'}{/if}{if isset($body_classes) && $body_classes|@count} {' '|implode:$body_classes}{/if}{if $hide_left_column} hide-left-column{else} show-left-column{/if}{if $hide_right_column} hide-right-column{else} show-right-column{/if}{if isset($content_only) && $content_only} content_only{/if} lang_{$lang_iso}">
 	{if !isset($content_only) || !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
 			<div id="restricted-country">
@@ -71,20 +71,26 @@
 		<div id="page">
 			<div class="header-container">
 				<header id="header">
-					<div class="banner">
-						<div class="container">
-							<div class="row">
-								{hook h="displayBanner"}
+					{capture name='displayBanner'}{hook h='displayBanner'}{/capture}
+					{if $smarty.capture.displayBanner}
+						<div class="banner">
+							<div class="container">
+								<div class="row">
+									{$smarty.capture.displayBanner}
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="nav">
-						<div class="container">
-							<div class="row">
-								<nav>{hook h="displayNav"}</nav>
+					{/if}
+					{capture name='displayNav'}{hook h='displayNav'}{/capture}
+					{if $smarty.capture.displayNav}
+						<div class="nav">
+							<div class="container">
+								<div class="row">
+									<nav>{$smarty.capture.displayNav}</nav>
+								</div>
 							</div>
 						</div>
-					</div>
+					{/if}
 					<div>
 						<div class="container">
 							<div class="row">
@@ -105,7 +111,10 @@
 						{include file="$tpl_dir./breadcrumb.tpl"}
 					{/if}
 					<div id="slider_row" class="row">
-						<div id="top_column" class="center_column col-xs-12 col-sm-12">{hook h="displayTopColumn"}</div>
+						{capture name='displayTopColumn'}{hook h='displayTopColumn'}{/capture}
+						{if $smarty.capture.displayTopColumn}
+							<div id="top_column" class="center_column col-xs-12 col-sm-12">{$smarty.capture.displayTopColumn}</div>
+						{/if}
 					</div>
 					<div class="row">
 						{if isset($left_column_size) && !empty($left_column_size)}

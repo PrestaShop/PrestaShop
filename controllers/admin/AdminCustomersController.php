@@ -249,8 +249,8 @@ class AdminCustomersControllerCore extends AdminController
                 /** @var Customer $customer */
                 if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer)) {
                     array_pop($this->toolbar_title);
+                    $this->toolbar_title[] = sprintf($this->l('Information about Customer: %s'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
                 }
-                    $this->toolbar_title[] = sprintf('Information about Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
                 break;
             case 'add':
             case 'edit':
@@ -763,14 +763,17 @@ class AdminCustomersControllerCore extends AdminController
         for ($i = 0; $i < $total_carts; $i++) {
             $cart = new Cart((int)$carts[$i]['id_cart']);
             $this->context->cart = $cart;
-            $summary = $cart->getSummaryDetails();
             $currency = new Currency((int)$carts[$i]['id_currency']);
+            $this->context->currency = $currency;
+            $summary = $cart->getSummaryDetails();
             $carrier = new Carrier((int)$carts[$i]['id_carrier']);
             $carts[$i]['id_cart'] = sprintf('%06d', $carts[$i]['id_cart']);
             $carts[$i]['date_add'] = Tools::displayDate($carts[$i]['date_add'], null, true);
             $carts[$i]['total_price'] = Tools::displayPrice($summary['total_price'], $currency);
             $carts[$i]['name'] = $carrier->name;
         }
+
+        $this->context->currency = Currency::getDefaultCurrency();
 
         $sql = 'SELECT DISTINCT cp.id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
 				FROM '._DB_PREFIX_.'cart_product cp
@@ -1092,7 +1095,7 @@ class AdminCustomersControllerCore extends AdminController
             $to_return = array('found' => false);
         }
 
-        $this->content = Tools::jsonEncode($to_return);
+        $this->content = json_encode($to_return);
     }
 
     /**

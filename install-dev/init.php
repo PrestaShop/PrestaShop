@@ -80,9 +80,6 @@ if (!@ini_get('date.timezone')) {
     @date_default_timezone_set('UTC');
 }
 
-// Some hosting still have magic_quotes_runtime configured
-ini_set('magic_quotes_runtime', 0);
-
 // Try to improve memory limit if it's under 64M
 $current_memory_limit = psinstall_get_memory_limit();
 if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('64M')) {

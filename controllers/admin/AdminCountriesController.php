@@ -222,7 +222,7 @@ class AdminCountriesControllerCore extends AdminController
                     'label' => $this->l('Default currency'),
                     'name' => 'id_currency',
                     'options' => array(
-                        'query' => Currency::getCurrencies(),
+                        'query' => Currency::getCurrencies(false, true, true),
                         'id' => 'id_currency',
                         'name' => 'name',
                         'default' => array(
@@ -398,12 +398,12 @@ class AdminCountriesControllerCore extends AdminController
     public function postProcess()
     {
         if (!Tools::getValue('id_'.$this->table)) {
-            if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Country::getByIso(Tools::getValue('iso_code'))) {
+            if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && (int)Country::getByIso(Tools::getValue('iso_code'))) {
                 $this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
             }
         } elseif (Validate::isLanguageIsoCode(Tools::getValue('iso_code'))) {
-            $id_country = Country::getByIso(Tools::getValue('iso_code'));
-            if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table)) {
+            $id_country = (int)Country::getByIso(Tools::getValue('iso_code'));
+            if ($id_country != 0 && $id_country != Tools::getValue('id_'.$this->table)) {
                 $this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
             }
         }

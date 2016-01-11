@@ -308,6 +308,7 @@ class AdminImportControllerCore extends AdminController
                     'condition' => 'new',
                     'available_date' => date('Y-m-d'),
                     'date_add' => date('Y-m-d H:i:s'),
+                    'date_upd' => date('Y-m-d H:i:s'),
                     'customizable' => 0,
                     'uploadable_files' => 0,
                     'text_fields' => 0,
@@ -332,6 +333,7 @@ class AdminImportControllerCore extends AdminController
                     'firstname' => array('label' => $this->l('First Name *')),
                     'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
                     'optin' => array('label' => $this->l('Opt-in (0/1)')),
+                    'date_add' => array('label' => $this->l('Registration date (yyyy-mm-dd)')),
                     'group' => array('label' => $this->l('Groups (x,y,z...)')),
                     'id_default_group' => array('label' => $this->l('Default group ID')),
                     'id_shop' => array(
@@ -664,7 +666,7 @@ class AdminImportControllerCore extends AdminController
             $_FILES['file']['filename'] = $filename_prefix.str_replace('\0', '', $_FILES['file']['name']);
         }
 
-        die(Tools::jsonEncode($_FILES));
+        die(json_encode($_FILES));
     }
 
     public function renderView()
@@ -1043,15 +1045,14 @@ class AdminImportControllerCore extends AdminController
             break;
         }
 
-        $url = str_replace(' ', '%20', trim($url));
-        $url = urldecode($url);
+        $url = urldecode(trim($url));
         $parced_url = parse_url($url);
 
         if (isset($parced_url['path'])) {
             $uri = ltrim($parced_url['path'], '/');
             $parts = explode('/', $uri);
             foreach ($parts as &$part) {
-                $part = urlencode($part);
+                $part = rawurlencode($part);
             }
             unset($part);
             $parced_url['path'] = '/'.implode('/', $parts);
@@ -1069,16 +1070,15 @@ class AdminImportControllerCore extends AdminController
 
         $url = http_build_url('', $parced_url);
 
-        // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-        if (!ImageManager::checkImageMemoryLimit($url)) {
-            return false;
-        }
-
         $orig_tmpfile = $tmpfile;
 
-        // 'file_exists' doesn't work on distant file, and getimagesize makes the import slower.
-        // Just hide the warning, the processing will be the same.
         if (Tools::copy($url, $tmpfile)) {
+            // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+            if (!ImageManager::checkImageMemoryLimit($tmpfile)) {
+                @unlink($tmpfile);
+                return false;
+            }
+
             $tgt_width = $tgt_height = 0;
             $src_width = $src_height = 0;
             $error = 0;
@@ -1099,6 +1099,14 @@ class AdminImportControllerCore extends AdminController
                         // the last image should not be added in the candidate list if it's bigger than the original image
                         if ($tgt_width <= $src_width && $tgt_height <= $src_height) {
                             $path_infos[] = array($tgt_width, $tgt_height, $path.'-'.stripslashes($image_type['name']).'.jpg');
+                        }
+                        if ($entity == 'products') {
+                            if (is_file(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$id_entity.'.jpg')) {
+                                unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$id_entity.'.jpg');
+                            }
+                            if (is_file(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$id_entity.'_'.(int)Context::getContext()->shop->id.'.jpg')) {
+                                unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$id_entity.'_'.(int)Context::getContext()->shop->id.'.jpg');
+                            }
                         }
                     }
                     if (in_array($image_type['id_image_type'], $watermark_types)) {
@@ -1190,6 +1198,7 @@ class AdminImportControllerCore extends AdminController
                     if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                         ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add()) {
                         $category->id_parent = $category_to_create->id;
+                        Cache::clean('Category::searchByName_'.$category->parent);
                     } else {
                         $this->errors[] = sprintf(
                             Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
@@ -1531,10 +1540,25 @@ class AdminImportControllerCore extends AdminController
                     }
                 }
                 $product->id_category = array_values(array_unique($product->id_category));
+
+                // Will update default category if category column is not ignored AND if there is categories that are set in the import file row.
+                if (isset($product->id_category[0])) {
+                    $product->id_category_default = (int)$product->id_category[0];
+                } else {
+                    $defaultProductShop = new Shop($product->id_shop_default);
+                    $product->id_category_default = Category::getRootCategory(null, Validate::isLoadedObject($defaultProductShop)?$defaultProductShop:null)->id;
+                }
             }
 
+            // Will update default category if there is none set here. Home if no category at all.
             if (!isset($product->id_category_default) || !$product->id_category_default) {
-                $product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : (int)Configuration::get('PS_HOME_CATEGORY');
+                // this if will avoid ereasing default category if category column is not present in the CSV file (or ignored)
+                if (isset($product->id_category[0])) {
+                    $product->id_category_default = (int)$product->id_category[0];
+                } else {
+                    $defaultProductShop = new Shop($product->id_shop_default);
+                    $product->id_category_default = Category::getRootCategory(null, Validate::isLoadedObject($defaultProductShop)?$defaultProductShop:null)->id;
+                }
             }
 
             $link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
@@ -1722,7 +1746,8 @@ class AdminImportControllerCore extends AdminController
                         $specific_price->price = -1;
                         $specific_price->id_customer = 0;
                         $specific_price->from_quantity = 1;
-                        $specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? $info['reduction_price'] : $info['reduction_percent'] / 100;
+
+                        $specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? (float)str_replace(',', '.', $info['reduction_price']) : $info['reduction_percent'] / 100;
                         $specific_price->reduction_type = (isset($info['reduction_price']) && $info['reduction_price']) ? 'amount' : 'percentage';
                         $specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
                         $specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
@@ -2450,6 +2475,7 @@ class AdminImportControllerCore extends AdminController
             }
 
             $customer_exist = false;
+            $autodate = true;
 
             if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']) && Validate::isLoadedObject($customer)) {
                 $current_id_customer = (int)$customer->id;
@@ -2497,6 +2523,10 @@ class AdminImportControllerCore extends AdminController
                 }
             } elseif (empty($info['group']) && isset($customer->id) && $customer->id) {
                 $customer_groups = array(0 => Configuration::get('PS_CUSTOMER_GROUP'));
+            }
+
+            if (isset($info['date_add']) && !empty($info['date_add'])) {
+                $autodate = false;
             }
 
             AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
@@ -2560,7 +2590,7 @@ class AdminImportControllerCore extends AdminController
                                 $customer->id = (int)$current_id_customer;
                                 $res &= $customer->update();
                             } else {
-                                $res &= $customer->add();
+                                $res &= $customer->add($autodate);
                                 if (isset($addresses)) {
                                     foreach ($addresses as $address) {
                                         $address['id_customer'] = $customer->id;
@@ -2580,7 +2610,7 @@ class AdminImportControllerCore extends AdminController
                             $customer->id = (int)$current_id_customer;
                             $res &= $customer->update();
                         } else {
-                            $res &= $customer->add();
+                            $res &= $customer->add($autodate);
                             if (isset($addresses)) {
                                 foreach ($addresses as $address) {
                                     $address['id_customer'] = $customer->id;
@@ -2660,8 +2690,8 @@ class AdminImportControllerCore extends AdminController
                     $address->id_country = (int)$address->country;
                 }
             } elseif (isset($address->country) && is_string($address->country) && !empty($address->country)) {
-                if ($id_country = Country::getIdByName(null, $address->country)) {
-                    $address->id_country = (int)$id_country;
+                if ($id_country = (int)Country::getIdByName(null, $address->country)) {
+                    $address->id_country = $id_country;
                 } else {
                     $country = new Country();
                     $country->active = 1;

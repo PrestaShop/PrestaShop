@@ -107,7 +107,7 @@
 					{assign var='rowspan_total' value=$rowspan_total+1}
 				{/if}
 
-				{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+				{if $total_shipping_tax_exc <= 0 && (!isset($isVirtualCart) || !$isVirtualCart) && $free_ship}
 					{assign var='rowspan_total' value=$rowspan_total+1}
 				{else}
 					{if $use_taxes && $total_shipping_tax_exc != $total_shipping}
@@ -126,13 +126,6 @@
 						<tr class="cart_total_price">
 							<td rowspan="{$rowspan_total}" colspan="3" id="cart_voucher" class="cart_voucher">
 								{if $voucherAllowed}
-									{if isset($errors_discount) && $errors_discount}
-										<ul class="alert alert-danger">
-											{foreach $errors_discount as $k=>$error}
-												<li>{$error|escape:'html':'UTF-8'}</li>
-											{/foreach}
-										</ul>
-									{/if}
 									<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 										<fieldset>
 											<h4>{l s='Vouchers'}</h4>
@@ -158,13 +151,6 @@
 						<tr class="cart_total_price">
 							<td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
 								{if $voucherAllowed}
-									{if isset($errors_discount) && $errors_discount}
-										<ul class="alert alert-danger">
-											{foreach $errors_discount as $k=>$error}
-												<li>{$error|escape:'html':'UTF-8'}</li>
-											{/foreach}
-										</ul>
-									{/if}
 									<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 										<fieldset>
 											<h4>{l s='Vouchers'}</h4>
@@ -191,13 +177,6 @@
 					<tr class="cart_total_price">
 						<td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
 							{if $voucherAllowed}
-								{if isset($errors_discount) && $errors_discount}
-									<ul class="alert alert-danger">
-										{foreach $errors_discount as $k=>$error}
-											<li>{$error|escape:'html':'UTF-8'}</li>
-										{/foreach}
-									</ul>
-								{/if}
 								<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 									<fieldset>
 										<h4>{l s='Vouchers'}</h4>
@@ -242,10 +221,10 @@
 						{/if}
 					</td>
 				</tr>
-				{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+				{if $total_shipping_tax_exc <= 0 && (!isset($isVirtualCart) || !$isVirtualCart) && $free_ship}
 					<tr class="cart_total_delivery{if !$opc && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
 						<td colspan="{$col_span_subtotal}" class="text-right">{l s='Total shipping'}</td>
-						<td colspan="2" class="price" id="total_shipping">{l s='Free Shipping!'}</td>
+						<td colspan="2" class="price" id="total_shipping">{l s='Free shipping!'}</td>
 					</tr>
 				{else}
 					{if $use_taxes && $total_shipping_tax_exc != $total_shipping}
@@ -333,7 +312,7 @@
 					{* Display the product line *}
 					{include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 					{* Then the customized datas ones*}
-					{if isset($customizedDatas.$productId.$productAttributeId)}
+					{if isset($customizedDatas.$productId.$productAttributeId[$product.id_address_delivery])}
 						{foreach $customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] as $id_customization=>$customization}
 							<tr
 								id="product_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"
@@ -436,10 +415,11 @@
 					{include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 				{/foreach}
 			</tbody>
+
 			{if sizeof($discounts)}
 				<tbody>
 					{foreach $discounts as $discount}
-					{if (float)$discount.value_real == 0}
+					{if ((float)$discount.value_real == 0 && $discount.free_shipping != 1) || ((float)$discount.value_real == 0 && $discount.code == '')}
 						{continue}
 					{/if}
 						<tr class="cart_discount {if $discount@last}last_item{elseif $discount@first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">
@@ -494,8 +474,7 @@
 		{$addresses_style.phone_mobile = 'address_phone_mobile'}
 		{$addresses_style.alias = 'address_title'}
 	{/if}
-
-	{if !$advanced_payment_api && ((!empty($delivery_option) && !isset($virtualCart)) OR $delivery->id || $invoice->id) && !$opc}
+	{if !$advanced_payment_api && ((!empty($delivery_option) && (!isset($isVirtualCart) || !$isVirtualCart)) OR $delivery->id || $invoice->id) && !$opc}
 		<div class="order_delivery clearfix row">
 			{if !isset($formattedAddresses) || (count($formattedAddresses.invoice) == 0 && count($formattedAddresses.delivery) == 0) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
 				{if $delivery->id}

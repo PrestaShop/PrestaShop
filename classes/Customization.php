@@ -132,21 +132,21 @@ class CustomizationCore extends ObjectModel
 
     public static function getLabel($id_customization, $id_lang, $id_shop = null)
     {
-        if (!$id_customization || !$id_lang) {
+        if (!(int)$id_customization || !(int)$id_lang) {
             return false;
         }
-        if (Shop::isFeatureActive() && !$id_shop) {
+        if (Shop::isFeatureActive() && !(int)$id_shop) {
             $id_shop = (int)Context::getContext()->shop->id;
         }
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `name`
 		FROM `'._DB_PREFIX_.'customization_field_lang`
-		WHERE `id_customization_field` = '.(int)($id_customization).($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').'
-		AND `id_lang` = '.(int)($id_lang)
+		WHERE `id_customization_field` = '.(int)$id_customization.((int)$id_shop ? ' AND cfl.`id_shop` = '.(int)$id_shop : '').'
+		AND `id_lang` = '.(int)$id_lang
         );
 
-        return $result['name'];
+        return $result;
     }
 
     public static function retrieveQuantitiesFromIds($ids_customizations)

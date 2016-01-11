@@ -43,6 +43,7 @@
 		var help_class_name = '{$controller_name|@addcslashes:'\''}';
 		var iso_user = '{$iso_user|@addcslashes:'\''}';
 		var full_language_code = '{$full_language_code|@addcslashes:'\''}';
+		var full_cldr_language_code = '{$full_cldr_language_code|@addcslashes:'\''}';
 		var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
 		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_|@addcslashes:'\''}';
 		var roundMode = {$round_mode|intval};
@@ -146,7 +147,7 @@
 									</span>
 								</div>
 								<div class="notifs_panel_footer">
-									<a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
+									<a href="{$baseAdminUrl}index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
 								</div>
 							</section>
 						</div>
@@ -171,7 +172,7 @@
 									</span>
 								</div>
 								<div class="notifs_panel_footer">
-									<a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a>
+									<a href="{$baseAdminUrl}index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a>
 								</div>
 							</section>
 						</div>
@@ -196,7 +197,7 @@
 									</span>
 								</div>
 								<div class="notifs_panel_footer">
-									<a href="index.php?controller=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
+									<a href="{$baseAdminUrl}index.php?controller=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
 								</div>
 							</section>
 						</div>
@@ -210,7 +211,7 @@
 						<ul class="dropdown-menu">
 							{foreach $quick_access as $quick}
 								<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
-									<a href="{$quick.link|escape:'html':'UTF-8'}"{if $quick.new_window} class="_blank"{/if}>
+									<a href="{$baseAdminUrl}{$quick.link|escape:'html':'UTF-8'}"{if $quick.new_window} class="_blank"{/if}>
 										{if isset($quick.icon)}
 											<i class="icon-{$quick.icon} icon-fw"></i>
 										{else}
@@ -337,8 +338,6 @@
 							{/if}
 							<li class="divider"></li>
 							<li><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
-							<li class="divider"></li>
-							<li class="version"><span>Prestashop<sup>TM</sup> {$version|escape:'html':'UTF-8'}</span></li>
 						</ul>
 					</li>
 				</ul>
@@ -355,7 +354,7 @@
 	<div id="main">
 		{include file='nav.tpl'}
 
-		<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
+		<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}{if !isset($page_header_toolbar)} no-header-toolbar{/if}">
 			{if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
 			{if isset($modal_module_list)}{$modal_module_list}{/if}
 

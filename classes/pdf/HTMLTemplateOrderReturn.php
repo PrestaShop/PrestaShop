@@ -117,7 +117,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
     {
         $this->assignCommonHeaderData();
         $this->smarty->assign(array(
-            'header' => $this->l('Order return'),
+            'header' => HTMLTemplateOrderReturn::l('Order return'),
         ));
 
         return $this->smarty->fetch($this->getTemplate('header'));

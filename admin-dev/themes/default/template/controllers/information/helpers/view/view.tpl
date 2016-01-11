@@ -128,6 +128,9 @@
 				<p>
 					<strong>{l s='MySQL engine:'}</strong> {$database.engine|escape:'html':'UTF-8'}
 				</p>
+				<p>
+					<strong>{l s='MySQL driver:'}</strong> {$database.driver|escape:'html':'UTF-8'}
+				</p>
 			</div>
 		</div>
 		{/if}

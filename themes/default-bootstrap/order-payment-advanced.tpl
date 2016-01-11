@@ -53,6 +53,7 @@
 <p class="alert alert-warning">{l s='This store has not accepted your new order.'}</p>
 {else}
     <p id="emptyCartWarning" class="alert alert-warning unvisible">{l s='Your shopping cart is empty.'}</p>
+    <div id="HOOK_TOP_PAYMENT">{$HOOK_TOP_PAYMENT}</div>
     <h2>{l s='Payment Options'}</h2>
     <!-- HOOK_ADVANCED_PAYMENT -->
     <div id="HOOK_ADVANCED_PAYMENT">

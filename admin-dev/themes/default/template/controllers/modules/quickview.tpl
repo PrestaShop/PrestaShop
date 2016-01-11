@@ -27,7 +27,13 @@
 		<img src="{$image}" alt="{$displayName}" class="img-thumbnail" />
 		{if isset($badges)}
 			{foreach $badges as $badge}
-				<img src="{$badge}" alt="" class="clearfix quickview-badge" />
+				{if is_array($badge)}
+					{foreach $badge as $_badge}
+						<img src="{$_badge}" alt="" class="clearfix quickview-badge" />
+					{/foreach}
+				{else}
+					<img src="{$badge}" alt="" class="clearfix quickview-badge" />
+				{/if}
 			{/foreach}
 		{/if}
 	</div>
@@ -63,10 +69,36 @@
 			<p class="text-justify">{$additional_description}</p>
 		{/if}
 		<hr />
-		{if $is_addons_partner}
+		{if $installed}
+			<div class="btn-group-action pull-right">
+				{if $options|count > 0}
+				<div class="btn-group">
+					{assign var=option value=$options[0]}
+					{$option}
+					{if $options|count > 1}
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+						<span class="caret">&nbsp;</span>
+					</button>
+					<ul class="dropdown-menu pull-right">
+
+					{foreach $options key=key item=option}
+						{if $key != 0}
+							{if strpos($option, 'title="divider"') !== false}
+								<li class="divider"></li>
+							{else}
+								<li>{$option}</li>
+							{/if}
+						{/if}
+					{/foreach}
+					</ul>
+					{/if}
+				</div>
+				{/if}
+			</div>
+		{elseif $is_addons_partner}
 			<a class="btn btn-success btn-lg pull-right" href="{$url}">{l s='Install module'}</a>
 		{else}
-			<a class="btn btn-success btn-lg pull-right" href="{$url}" onclick="return !window.open(this.href);">{l s='View on PrestaShop Addons'}</a>
+			<a class="btn btn-success btn-lg pull-right" href="{$url}" onclick="return !window.open(this.href, '_blank');">{l s='View on PrestaShop Addons'}</a>
 		{/if}
 	</div>
 </div>

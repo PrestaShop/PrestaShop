@@ -74,7 +74,6 @@ return array(
     'Recursive write permissions for %1$s user on %2$s' => 'Yazma izinlerini yenilemelisiniz %1$s kullanıcının %2$s',
     'Recommended PHP parameters' => 'Önerilen PHP parametreleri',
     'Cannot open external URLs' => 'Harici URL ler açılamıyor',
-    'PHP register_globals option is enabled' => 'PHP register_globals seçeneği etkinleştirildiğinde',
     'GZIP compression is not activated' => 'GZIP sıkıştırma aktif değil',
     'Mcrypt extension is not enabled' => 'Mcrypt uzantısı etkinleştirilmemiştir',
     'Mbstring extension is not enabled' => 'Mbstrin uzantısı getkinleştirilmemiştir ',

@@ -47,8 +47,8 @@ class AdminCartRulesControllerCore extends AdminController
             'priority' => array('title' => $this->l('Priority'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'code' => array('title' => $this->l('Code'), 'class' => 'fixed-width-sm'),
             'quantity' => array('title' => $this->l('Quantity'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'date_to' => array('title' => $this->l('Expiration date'), 'type' => 'datetime'),
-            'active' => array('title' => $this->l('Status'), 'active' => 'status', 'type' => 'bool', 'orderby' => false),
+            'date_to' => array('title' => $this->l('Expiration date'), 'type' => 'datetime', 'class' => 'fixed-width-lg'),
+            'active' => array('title' => $this->l('Status'), 'active' => 'status', 'type' => 'bool', 'align' => 'center', 'class' => 'fixed-width-xs', 'orderby' => false),
         );
 
         parent::__construct();
@@ -119,7 +119,7 @@ class AdminCartRulesControllerCore extends AdminController
                 }
             }
         }
-        echo Tools::jsonEncode(array('html' => $html, 'next_link' => $next_link));
+        echo json_encode(array('html' => $html, 'next_link' => $next_link));
     }
 
     public function setMedia()
@@ -227,8 +227,19 @@ class AdminCartRulesControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('An action is required for this cart rule.');
             }
         }
-
         return parent::postProcess();
+    }
+
+    public function processDelete()
+    {
+        $res = parent::processDelete();
+        if (Tools::isSubmit('delete'.$this->table)) {
+            $back = urldecode(Tools::getValue('back', ''));
+            if (!empty($back)) {
+                $this->redirect_after = $back;
+            }
+        }
+        return $res;
     }
 
     protected function afterUpdate($current_object)
@@ -529,12 +540,12 @@ class AdminCartRulesControllerCore extends AdminController
 			)
 			ORDER BY `firstname`, `lastname` ASC
 			LIMIT 50');
-            die(Tools::jsonEncode($customers));
+            die(json_encode($customers));
         }
         // Both product filter (free product and product discount) search for products
         if (Tools::isSubmit('giftProductFilter') || Tools::isSubmit('reductionProductFilter')) {
             $products = Product::searchByName(Context::getContext()->language->id, trim(Tools::getValue('q')));
-            die(Tools::jsonEncode($products));
+            die(json_encode($products));
         }
     }
 
@@ -577,17 +588,12 @@ class AdminCartRulesControllerCore extends AdminController
     public function ajaxProcessSearchProducts()
     {
         $array = $this->searchProducts(Tools::getValue('product_search'));
-        $this->content = trim(Tools::jsonEncode($array));
+        $this->content = trim(json_encode($array));
     }
 
     public function renderForm()
     {
         $limit = 40;
-        $back = Tools::safeOutput(Tools::getValue('back', ''));
-        if (empty($back)) {
-            $back = self::$currentIndex.'&token='.$this->token;
-        }
-
         $this->toolbar_btn['save-and-stay'] = array(
             'href' => '#',
             'desc' => $this->l('Save and Stay')
@@ -711,6 +717,6 @@ class AdminCartRulesControllerCore extends AdminController
         if ($vouchers = CartRule::getCartsRuleByCode(Tools::getValue('q'), (int)$this->context->language->id, true)) {
             $found = true;
         }
-        echo Tools::jsonEncode(array('found' => $found, 'vouchers' => $vouchers));
+        echo json_encode(array('found' => $found, 'vouchers' => $vouchers));
     }
 }

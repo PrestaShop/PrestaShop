@@ -151,7 +151,7 @@
 				else
 					$('#message_forward_email').hide(200);
 			});
-			$('teaxtrea[name=message_forward]').click(function(){
+			$('textarea[name=message_forward]').click(function(){
 				if($(this).val() == '{l s='You can add a comment here.'}')
 				{
 					$(this).val('');

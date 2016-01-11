@@ -100,6 +100,9 @@
     <hook id="actionCustomerAccountAdd" live_edit="0">
       <name>actionCustomerAccountAdd</name><title>Successful customer account creation</title><description>This hook is called when a new customer creates an account successfully</description>
     </hook>
+    <hook id="actionCustomerAccountUpdate" live_edit="0">
+      <name>actionCustomerAccountUpdate</name><title>Successful customer account update</title><description>This hook is called when a customer updates its account successfully</description>
+    </hook>
     <hook id="displayCustomerAccount" live_edit="0">
       <name>displayCustomerAccount</name><title>Customer account displayed in Front Office</title><description>This hook displays new elements on the customer account page</description>
     </hook>
@@ -118,6 +121,12 @@
     <hook id="displayShoppingCartFooter" live_edit="0">
       <name>displayShoppingCartFooter</name><title>Shopping cart footer</title><description>This hook displays some specific information on the shopping cart's page</description>
     </hook>
+    <hook id="displayCreateAccountEmailFormBottom" live_edit="0">
+      <name>displayCreateAccountEmailFormBottom</name><title>Customer authentication form</title><description>This hook displays some information on the bottom of the email form</description>
+    </hook>
+    <hook id="displayAuthenticateFormBottom" live_edit="0">
+      <name>displayAuthenticateFormBottom</name><title>Customer authentication form</title><description>This hook displays some information on the bottom of the authentication form</description>
+    </hook>    
     <hook id="displayCustomerAccountForm" live_edit="0">
       <name>displayCustomerAccountForm</name><title>Customer account creation form</title><description>This hook displays some information on the form to create a customer account</description>
     </hook>

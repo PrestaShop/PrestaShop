@@ -106,7 +106,7 @@ class EasySwift
   public function __construct(Swift_Connection $connection, $domain=null)
   {
     try {
-      $this->swift = new Swift($connection, $domain, Swift::ENABLE_LOGGING);
+      $this->swift = new SwiftPs($connection, $domain, Swift::ENABLE_LOGGING);
       Swift_ClassLoader::load("Swift_Plugin_EasySwiftResponseTracker");
       $this->swift->attachPlugin(new Swift_Plugin_EasySwiftResponseTracker($this), "_ResponseTracker");
     } catch (Swift_ConnectionException $e) {

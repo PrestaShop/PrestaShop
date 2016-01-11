@@ -62,9 +62,9 @@ class SearchControllerCore extends FrontController
                 foreach ($searchResults as &$product) {
                     $product['product_link'] = $this->context->link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
                 }
+                Hook::exec('actionSearch', array('expr' => $query, 'total' => count($searchResults)));
             }
-
-            $this->ajaxDie(Tools::jsonEncode($searchResults));
+            $this->ajaxDie(json_encode($searchResults));
         }
 
         //Only controller content initialization when the user use the normal search

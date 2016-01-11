@@ -26,7 +26,7 @@
 	{if isset($header)}{$header}{/if}
 	<div id="block_category_tree"{if !$is_category_filter} style="display:none"{/if}>
 		{if isset($nodes)}
-		<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
+		<ul id="{$id|escape:'html':'UTF-8'}" class="cattree tree">
 			{$nodes}
 		</ul>
 		{/if}
@@ -34,12 +34,11 @@
 </div>
 <script type="text/javascript">
 	var currentToken="{$token|@addslashes}";
-	var idTree="{$id|escape:'html':'UTF-8'}";
 	var treeClickFunc = function() {
-						location.href = location.href.replace(
-						/&id_category=[0-9]*/, "")+"&id_category="
-						+$(this).val();
-				};
+		var newURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+		var queryString = window.location.search.replace(/&id_category=[0-9]*/, "") + "&id_category=" + $(this).val();
+		location.href = newURL+queryString; // hash part is dropped: window.location.hash
+	};
 	{if isset($use_checkbox) && $use_checkbox == true}
 		function checkAllAssociatedCategories($tree)
 		{

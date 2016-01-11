@@ -24,8 +24,8 @@
 *}
 
 <li class="favoriteproducts">
-	<a 
-	href="{$link->getModuleLink('favoriteproducts', 'account')|escape:'html':'UTF-8'}" 
+	<a
+	href="{$link->getModuleLink('favoriteproducts', 'account', [], true)|escape:'html':'UTF-8'}"
 	title="{l s='My favorite products.' mod='favoriteproducts'}">
 		{if !$in_footer}
 			<i class="icon-heart-empty"></i>

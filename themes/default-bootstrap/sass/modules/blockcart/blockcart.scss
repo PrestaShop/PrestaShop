@@ -343,7 +343,8 @@
 		padding: 30px 30px 30px 30px;
 		overflow: hidden;
 		position: static;
-		h2 {
+		.title {
+			display: block;
 			font: 400 23px/29px $font-family;
 			color: #46a74e;
 			margin-bottom: 22px;
@@ -408,7 +409,8 @@
 			border-left: none;
 			border-top: 1px solid $base-border-color;
 		}
-		h2 {
+		.title {
+			display: block;
 			font: 400 23px/29px $font-family;
 			color: $base-text-color;
 			border-bottom: 1px solid $base-border-color;

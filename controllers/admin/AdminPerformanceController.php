@@ -93,6 +93,25 @@ class AdminPerformanceControllerCore extends AdminController
                     'hint' => $this->l('Should be enabled except for debugging.')
                 ),
                 array(
+                    'type' => 'switch',
+                    'label' => $this->l('Multi-front optimizations'),
+                    'name' => 'smarty_local',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'smarty_local_1',
+                            'value' => 1,
+                            'label' => $this->l('Yes'),
+                        ),
+                        array(
+                            'id' => 'smarty_local_0',
+                            'value' => 0,
+                            'label' => $this->l('No')
+                        )
+                    ),
+                    'hint' => $this->l('Should be enabled if you want to avoid to store the smarty cache on NFS.')
+                ),
+                array(
                     'type' => 'radio',
                     'label' => $this->l('Caching type'),
                     'name' => 'smarty_caching_type',
@@ -135,6 +154,7 @@ class AdminPerformanceControllerCore extends AdminController
 
         $this->fields_value['smarty_force_compile'] = Configuration::get('PS_SMARTY_FORCE_COMPILE');
         $this->fields_value['smarty_cache'] = Configuration::get('PS_SMARTY_CACHE');
+        $this->fields_value['smarty_local'] = Configuration::get('PS_SMARTY_LOCAL');
         $this->fields_value['smarty_caching_type'] = Configuration::get('PS_SMARTY_CACHING_TYPE');
         $this->fields_value['smarty_clear_cache'] = Configuration::get('PS_SMARTY_CLEAR_CACHE');
         $this->fields_value['smarty_console'] = Configuration::get('PS_SMARTY_CONSOLE');
@@ -514,8 +534,12 @@ class AdminPerformanceControllerCore extends AdminController
         $phpdoc_langs = array('en', 'zh', 'fr', 'de', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr');
         $php_lang = in_array($this->context->language->iso_code, $phpdoc_langs) ? $this->context->language->iso_code : 'en';
 
-        $warning_memcached = ' '.$this->l('(you must install the [a]Memcache PECL extension[/a])');
-        $warning_memcached = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">', $warning_memcached);
+        $warning_memcache = ' '.$this->l('(you must install the [a]Memcache PECL extension[/a])');
+        $warning_memcache = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">', $warning_memcache);
+        $warning_memcache = str_replace('[/a]', '</a>', $warning_memcache);
+
+        $warning_memcached = ' '.$this->l('(you must install the [a]Memcached PECL extension[/a])');
+        $warning_memcached = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcached.installation.php" target="_blank">', $warning_memcached);
         $warning_memcached = str_replace('[/a]', '</a>', $warning_memcached);
 
         $warning_apc = ' '.$this->l('(you must install the [a]APC PECL extension[/a])');
@@ -570,7 +594,7 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'CacheMemcache',
                             'value' => 'CacheMemcache',
-                            'label' => $this->l('Memcached via PHP::Memcache').(extension_loaded('memcache') ? '' : $warning_memcached)
+                            'label' => $this->l('Memcached via PHP::Memcache').(extension_loaded('memcache') ? '' : $warning_memcache)
                         ),
                         array(
                             'id' => 'CacheMemcached',
@@ -657,7 +681,7 @@ class AdminPerformanceControllerCore extends AdminController
         parent::initPageHeaderToolbar();
 
         $this->page_header_toolbar_btn['clear_cache'] = array(
-            'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1',
+            'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1&empty_sf2_cache=1',
             'desc' => $this->l('Clear cache'),
             'icon' => 'process-icon-eraser'
         );
@@ -721,6 +745,7 @@ class AdminPerformanceControllerCore extends AdminController
                 Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
                 Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type'));
                 Configuration::updateValue('PS_SMARTY_CLEAR_CACHE', Tools::getValue('smarty_clear_cache'));
+                Configuration::updateValue('PS_SMARTY_LOCAL', Tools::getValue('smarty_local', 0));
                 $redirectAdmin = true;
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
@@ -971,6 +996,15 @@ class AdminPerformanceControllerCore extends AdminController
             Tools::generateIndex();
         }
 
+        if ((bool)Tools::getValue('empty_sf2_cache')) {
+            $redirectAdmin = true;
+
+            $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+            $sf2Refresh->addCacheClear();
+            $sf2Refresh->addAsseticDump();
+            $sf2Refresh->execute();
+        }
+
         if (Tools::isSubmit('submitAddconfiguration')) {
             Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
             Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
@@ -993,17 +1027,30 @@ class AdminPerformanceControllerCore extends AdminController
         if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_server') {
             $host = pSQL(Tools::getValue('sHost', ''));
             $port = (int)Tools::getValue('sPort', 0);
+            $type = Tools::getValue('type', '');
 
             if ($host != '' && $port != 0) {
                 $res = 0;
 
-                if (function_exists('memcache_get_server_status') &&
-                    function_exists('memcache_connect') &&
-                    @fsockopen($host, $port)) {
-                    $memcache = @memcache_connect($host, $port);
-                    $res = @memcache_get_server_status($memcache, $host, $port);
+                if ($type == 'memcached') {
+                    if (extension_loaded('memcached') &&
+                        @fsockopen($host, $port)
+                    ) {
+                        $memcache = new Memcached();
+                        $memcache->addServer($host, $port);
+
+                        $res =  in_array('255.255.255', $memcache->getVersion(), true) === false;
+                    }
+                } else {
+                    if (function_exists('memcache_get_server_status') &&
+                        function_exists('memcache_connect') &&
+                        @fsockopen($host, $port)
+                    ) {
+                        $memcache = @memcache_connect($host, $port);
+                        $res      = @memcache_get_server_status($memcache, $host, $port);
+                    }
                 }
-                die(Tools::jsonEncode(array($res)));
+                die(json_encode(array($res)));
             }
         }
         die;

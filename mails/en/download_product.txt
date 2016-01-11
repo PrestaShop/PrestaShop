@@ -9,7 +9,7 @@ Thank you for your order with the reference {order_name} from
 You have {nbproducts} product(s) now available for download using the
 following link(s):
 
-{virtualproducts} 		 
+{virtualProducts}		 
 
 You can review your order and download your invoice from the
 "Order history" [{history_url}] section of your

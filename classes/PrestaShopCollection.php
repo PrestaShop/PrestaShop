@@ -356,7 +356,9 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         }
 
         $this->results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query);
-        $this->results = ObjectModel::hydrateCollection($this->classname, $this->results, $this->id_lang);
+        if ($this->results && is_array($this->results)) {
+            $this->results = ObjectModel::hydrateCollection($this->classname, $this->results, $this->id_lang);
+        }
 
         return $this;
     }
@@ -568,7 +570,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             } else {
                 $current_def['complete_field'] = $current_def['field'];
             }
-            $current_def['complete_foreign_field'] = $association.'.'.$current_def['field'];
+            $current_def['complete_foreign_field'] = $association.'.'.$current_def['foreign_field'];
 
             $definition['is_lang'] = $is_lang;
             $definition['asso'] = $current_def;

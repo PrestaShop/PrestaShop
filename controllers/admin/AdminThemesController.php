@@ -516,17 +516,20 @@ class AdminThemesControllerCore extends AdminController
         }
 
         $customer_themes_list = file_get_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST);
-        if (!empty($customer_themes_list) && $customer_themes_list_xml = simplexml_load_string($customer_themes_list)) {
+        if (!empty($customer_themes_list) && $customer_themes_list_xml = @simplexml_load_string($customer_themes_list)) {
             foreach ($customer_themes_list_xml->theme as $addons_theme) {
                 //get addons theme if folder does not exist
                 $ids_themes = Tools::unSerialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
 
                 if (!is_array($ids_themes) || (is_array($ids_themes) && !in_array((string)$addons_theme->id, $ids_themes))) {
-                    $zip_content = Tools::addonsRequest('module', array(
-                        'id_module' => pSQL($addons_theme->id),
-                        'username_addons' => pSQL(trim($this->context->cookie->username_addons)),
-                        'password_addons' => pSQL(trim($this->context->cookie->password_addons)))
-                        );
+                    $zip_content = Tools::addonsRequest(
+                        'module',
+                        array(
+                            'id_module' => pSQL($addons_theme->id),
+                            'username_addons' => pSQL(trim($this->context->cookie->username_addons)),
+                            'password_addons' => pSQL(trim($this->context->cookie->password_addons))
+                        )
+                    );
 
                     $uniqid = uniqid();
                     $sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
@@ -842,7 +845,7 @@ class AdminThemesControllerCore extends AdminController
         if (is_dir($server_path.$file)) {
             $dir = scandir($server_path.$file);
             foreach ($dir as $row) {
-                if ($row != '.' && $row != '..') {
+                if ($row[0] != '.') {
                     $this->archiveThisFile($obj, $row, $server_path.$file.'/', $archive_path.$file.'/');
                 }
             }
@@ -888,6 +891,10 @@ class AdminThemesControllerCore extends AdminController
             }
 
             $zip->close();
+
+            if (!is_file(_PS_CACHE_DIR_.$zip_file_name)) {
+                $this->errors[] = $this->l(sprintf('Could not create %1s', _PS_CACHE_DIR_.$zip_file_name));
+            }
 
             if (!$this->errors) {
                 if (ob_get_length() > 0) {
@@ -1386,7 +1393,7 @@ class AdminThemesControllerCore extends AdminController
 
     private function checkXmlFields($xml_file)
     {
-        if (!file_exists($xml_file) || !$xml = simplexml_load_file($xml_file)) {
+        if (!file_exists($xml_file) || !$xml = @simplexml_load_file($xml_file)) {
             return false;
         }
         if (!$xml['version'] || !$xml['name']) {
@@ -1411,24 +1418,14 @@ class AdminThemesControllerCore extends AdminController
         return true;
     }
 
+    /**
+     * @deprecated 1.6.1.1 Use Tools::recurseCopy($src, $dst) instead
+     * @param string $src is the path of the directory to copy
+     * @param string $dst is the path where you want to copy
+     */
     private function recurseCopy($src, $dst)
     {
-        if (!$dir = opendir($src)) {
-            return;
-        }
-        if (!file_exists($dst)) {
-            mkdir($dst);
-        }
-        while (($file = readdir($dir)) !== false) {
-            if (strncmp($file, '.', 1) != 0) {
-                if (is_dir($src.'/'.$file)) {
-                    self::recurseCopy($src.'/'.$file, $dst.'/'.$file);
-                } elseif (is_readable($src.'/'.$file) && $file != 'Thumbs.db' && $file != '.DS_Store' && substr($file, -1) != '~') {
-                    copy($src.'/'.$file, $dst.'/'.$file);
-                }
-            }
-        }
-        closedir($dir);
+        return Tools::recurseCopy($src, $dst);
     }
 
     public function processImportTheme()
@@ -1581,10 +1578,10 @@ class AdminThemesControllerCore extends AdminController
     }
 
     /**
-     * @param SimpleXMLElement	$xml
-     * @param bool 				$theme_dir only used if the theme directory to import is already located on the shop
+     * @param SimpleXMLElement $xml
+     * @param bool $theme_dir only used if the theme directory to import is already located on the shop
      *
-     * @return array|string		return array of themes on success, otherwise the error as a string is returned
+     * @return array|string return array of themes on success, otherwise the error as a string is returned
      */
     protected function importThemeXmlConfig(SimpleXMLElement $xml, $theme_dir = false)
     {
@@ -1972,7 +1969,7 @@ class AdminThemesControllerCore extends AdminController
      */
     private function getNativeModule($type = 0)
     {
-        $xml = simplexml_load_string(Tools::file_get_contents(_PS_API_URL_.'/xml/modules_list_16.xml'));
+        $xml = @simplexml_load_string(Tools::file_get_contents(_PS_API_URL_.'/xml/modules_list_16.xml'));
 
         if ($xml) {
             $natives = array();
@@ -2168,9 +2165,9 @@ class AdminThemesControllerCore extends AdminController
 
         $xml = false;
         if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml')) {
-            $xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
+            $xml = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
         } elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/default.xml')) {
-            $xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
+            $xml = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
         }
 
         if ($xml) {
@@ -2297,7 +2294,12 @@ class AdminThemesControllerCore extends AdminController
                     $old_xml_name = $shop_theme->directory.'.xml';
                 }
 
-                $shop_xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$old_xml_name);
+                $shop_xml = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$old_xml_name);
+
+                if (!$shop_xml) {
+                    continue;
+                }
+
                 $theme_shop_module = $this->getModules($shop_xml);
 
                 $to_shop_uninstall = array_merge($theme_shop_module['to_install'], $theme_shop_module['to_enable']);
@@ -2436,9 +2438,9 @@ class AdminThemesControllerCore extends AdminController
 
         $xml = false;
         if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml')) {
-            $xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
+            $xml = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
         } elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/default.xml')) {
-            $xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
+            $xml = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
         }
 
         if ($xml) {
@@ -2696,6 +2698,7 @@ class AdminThemesControllerCore extends AdminController
                 }
             }
             Configuration::updateValue($field_name, $logo_name, false, $id_shop_group, $id_shop);
+            Hook::exec('actionAdminThemesControllerUpdate_optionsAfter');
             @unlink($tmp_name);
         }
     }
@@ -2740,10 +2743,8 @@ class AdminThemesControllerCore extends AdminController
             // Check ico validity
             if ($error = ImageManager::validateIconUpload($_FILES[$name])) {
                 $this->errors[] = $error;
-            }
-
-            // Copy new ico
-            elseif (!copy($_FILES[$name]['tmp_name'], $dest)) {
+            } elseif (!copy($_FILES[$name]['tmp_name'], $dest)) {
+                // Copy new ico
                 $this->errors[] = sprintf(Tools::displayError('An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".'), $_FILES[$name]['tmp_name'], $dest);
             }
         }

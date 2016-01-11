@@ -232,7 +232,7 @@ class CategoryCore extends ObjectModel
     public function toggleStatus()
     {
         $result = parent::toggleStatus();
-        Hook::exec('actionCategoryUpdate');
+        Hook::exec('actionCategoryUpdate', array('category' => $this));
         return $result;
     }
 
@@ -332,7 +332,7 @@ class CategoryCore extends ObjectModel
 
         $this->clearCache();
 
-        $all_cat = $this->getAllChildren();
+        $deleted_children = $all_cat = $this->getAllChildren();
         $all_cat[] = $this;
         foreach ($all_cat as $cat) {
             /** @var Category $cat */
@@ -356,7 +356,7 @@ class CategoryCore extends ObjectModel
             Category::regenerateEntireNtree();
         }
 
-        Hook::exec('actionCategoryDelete', array('category' => $this));
+        Hook::exec('actionCategoryDelete', array('category' => $this, 'deleted_children' => $deleted_children));
 
         return true;
     }
@@ -657,6 +657,8 @@ class CategoryCore extends ObjectModel
 		GROUP BY c.`id_category`
 		ORDER BY `level_depth` ASC, category_shop.`position` ASC');
 
+        $formated_medium = ImageType::getFormatedName('medium');
+
         foreach ($result as &$row) {
             $row['id_image'] = Tools::file_exists_cache(_PS_CAT_IMG_DIR_.$row['id_category'].'.jpg') ? (int)$row['id_category'] : Language::getIsoById($id_lang).'-default';
             $row['legend'] = 'no picture';
@@ -769,8 +771,7 @@ class CategoryCore extends ObjectModel
 					AND cp.`id_category` = '.(int)$this->id
                     .($active ? ' AND product_shop.`active` = 1' : '')
                     .($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
-                    .($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '')
-                    .' GROUP BY cp.id_product';
+                    .($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT '.(int)$random_number_products;
@@ -1246,12 +1247,12 @@ class CategoryCore extends ObjectModel
 
     public function cleanGroups()
     {
-        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` = '.(int)$this->id);
+        return Db::getInstance()->delete('category_group', 'id_category = '.(int)$this->id);
     }
 
     public function cleanAssoProducts()
     {
-        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` = '.(int)$this->id);
+        return Db::getInstance()->delete('category_product', 'id_category = '.(int)$this->id);
     }
 
     public function addGroups($groups)
@@ -1347,12 +1348,12 @@ class CategoryCore extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$res = Db::getInstance()->executeS('
-			SELECT cp.`id_category`, category_shop.`position`, cp.`id_parent`
-			FROM `'._DB_PREFIX_.'category` cp
-			'.Shop::addSqlAssociation('category', 'cp').'
-			WHERE cp.`id_parent` = '.(int)$this->id_parent.'
-			ORDER BY category_shop.`position` ASC'
-        )) {
+            SELECT cp.`id_category`, category_shop.`position`, cp.`id_parent`
+            FROM `'._DB_PREFIX_.'category` cp
+            '.Shop::addSqlAssociation('category', 'cp').'
+            WHERE cp.`id_parent` = '.(int)$this->id_parent.'
+            ORDER BY category_shop.`position` ASC')
+            ) {
             return false;
         }
 
@@ -1369,19 +1370,23 @@ class CategoryCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         $result = (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-			SET category_shop.`position`= category_shop.`position` '.($way ? '- 1' : '+ 1').'
-			WHERE category_shop.`position`
-			'.($way
+            UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
+            SET c.`position`= c.`position` '.($way ? '- 1' : '+ 1').',
+            category_shop.`position`= category_shop.`position` '.($way ? '- 1' : '+ 1').',
+            c.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE category_shop.`position`
+            '.($way
                 ? '> '.(int)$moved_category['position'].' AND category_shop.`position` <= '.(int)$position
                 : '< '.(int)$moved_category['position'].' AND category_shop.`position` >= '.(int)$position).'
-			AND c.`id_parent`='.(int)$moved_category['id_parent'])
+            AND c.`id_parent`='.(int)$moved_category['id_parent'])
         && Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-			SET category_shop.`position` = '.(int)$position.'
-			WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
-			AND c.`id_category`='.(int)$moved_category['id_category']));
-        Hook::exec('actionCategoryUpdate');
+            UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
+            SET c.`position` = '.(int)$position.',
+            category_shop.`position` = '.(int)$position.',
+            c.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
+            AND c.`id_category`='.(int)$moved_category['id_category']));
+        Hook::exec('actionCategoryUpdate', array('category' => new Category($moved_category['id_category'])));
         return $result;
     }
 
@@ -1401,17 +1406,19 @@ class CategoryCore extends ObjectModel
 
         $return = true;
         $result = Db::getInstance()->executeS('
-		SELECT c.`id_category`
-		FROM `'._DB_PREFIX_.'category` c
-		'.Shop::addSqlAssociation('category', 'c').'
-		WHERE c.`id_parent` = '.(int)$id_category_parent.'
-		ORDER BY category_shop.`position`');
+        SELECT c.`id_category`
+        FROM `'._DB_PREFIX_.'category` c
+        '.Shop::addSqlAssociation('category', 'c').'
+        WHERE c.`id_parent` = '.(int)$id_category_parent.'
+        ORDER BY category_shop.`position`');
         $count = count($result);
         for ($i = 0; $i < $count; $i++) {
             $return &= Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-			SET category_shop.`position` = '.(int)($i).'
-			WHERE c.`id_parent` = '.(int)$id_category_parent.' AND c.`id_category` = '.(int)$result[$i]['id_category']);
+            UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
+            SET c.`position` = '.(int)($i).',
+            category_shop.`position` = '.(int)($i).',
+            c.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE c.`id_parent` = '.(int)$id_category_parent.' AND c.`id_category` = '.(int)$result[$i]['id_category']);
         }
         return $return;
     }
@@ -1428,26 +1435,28 @@ class CategoryCore extends ObjectModel
         if ((int)Db::getInstance()->getValue('
 				SELECT COUNT(c.`id_category`)
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
+				ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				WHERE c.`id_parent` = '.(int)$id_category_parent) === 1) {
             return 0;
         } else {
             return (1 + (int)Db::getInstance()->getValue('
 				SELECT MAX(cs.`position`)
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
+				ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				WHERE c.`id_parent` = '.(int)$id_category_parent));
         }
     }
 
     public static function getUrlRewriteInformations($id_category)
     {
-        return Db::getInstance()->executeS('
-			SELECT l.`id_lang`, c.`link_rewrite`
-			FROM `'._DB_PREFIX_.'category_lang` AS c
-			LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
-			WHERE c.`id_category` = '.(int)$id_category.'
-			AND l.`active` = 1'
+        return Db::getInstance()->executeS(
+            'SELECT l.`id_lang`, c.`link_rewrite`
+            FROM `'._DB_PREFIX_.'category_lang` AS c
+            LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
+            WHERE c.`id_category` = '.(int)$id_category.'
+            AND l.`active` = 1'
         );
     }
 
@@ -1776,7 +1785,7 @@ class CategoryCore extends ObjectModel
      */
     public static function deleteCategoriesFromShop($id_shop)
     {
-        return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_shop` WHERE `id_shop` = '.(int)$id_shop);
+        return Db::getInstance()->delete('category_shop', 'id_shop = '.(int)$id_shop);
     }
 
     /**

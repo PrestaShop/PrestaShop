@@ -70,7 +70,7 @@
                                                                 <td class="delivery_option_logo">
                                                                     {foreach $option.carrier_list as $carrier}
                                                                         {if $carrier.logo}
-                                                                            <img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
+                                                                            <img class="order_carrier_logo" src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
                                                                         {elseif !$option.unique_carrier}
                                                                             {$carrier.instance->name|escape:'htmlall':'UTF-8'}
                                                                             {if !$carrier@last} - {/if}
@@ -129,7 +129,7 @@
                                                                     {assign var="first" value=current($option.carrier_list)}
                                                                     <td class="delivery_option_logo{if $first.product_list[0].carrier_list[0] eq 0} hide{/if}">
                                                                         {if $first.logo}
-                                                                            <img src="{$first.logo|escape:'htmlall':'UTF-8'}" alt="{$first.instance->name|escape:'htmlall':'UTF-8'}"/>
+                                                                            <img class="order_carrier_logo" src="{$first.logo|escape:'htmlall':'UTF-8'}" alt="{$first.instance->name|escape:'htmlall':'UTF-8'}"/>
                                                                         {elseif !$option.unique_carrier}
                                                                             {$first.instance->name|escape:'htmlall':'UTF-8'}
                                                                         {/if}
@@ -200,7 +200,7 @@
                                                                         <tr>
                                                                             <td class="delivery_option_logo{if $carrier.product_list[0].carrier_list[0] eq 0} hide{/if}">
                                                                                 {if $carrier.logo}
-                                                                                    <img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
+                                                                                    <img class="order_carrier_logo" src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
                                                                                 {elseif !$option.unique_carrier}
                                                                                     {$carrier.instance->name|escape:'htmlall':'UTF-8'}
                                                                                 {/if}

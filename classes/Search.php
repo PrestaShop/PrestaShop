@@ -109,21 +109,6 @@ class SearchCore
         if ($indexation) {
             $string = preg_replace('/[._-]+/', ' ', $string);
         } else {
-            $string = preg_replace('/[._]+/', '', $string);
-            $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
-            $string = preg_replace('/[._]+/', '', $string);
-            $string = preg_replace('/[^\s]-+/', '', $string);
-        }
-
-        $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
-        if (!empty($blacklist)) {
-            $string = preg_replace('/(?<=\s)('.$blacklist.')(?=\s)/Su', '', $string);
-            $string = preg_replace('/^('.$blacklist.')(?=\s)/Su', '', $string);
-            $string = preg_replace('/(?<=\s)('.$blacklist.')$/Su', '', $string);
-            $string = preg_replace('/^('.$blacklist.')$/Su', '', $string);
-        }
-
-        if (!$indexation) {
             $words = explode(' ', $string);
             $processed_words = array();
             // search for aliases for each word of the query
@@ -136,6 +121,18 @@ class SearchCore
                 }
             }
             $string = implode(' ', $processed_words);
+            $string = preg_replace('/[._]+/', '', $string);
+            $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
+            $string = preg_replace('/[._]+/', '', $string);
+            $string = preg_replace('/[^\s]-+/', '', $string);
+        }
+
+        $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
+        if (!empty($blacklist)) {
+            $string = preg_replace('/(?<=\s)('.$blacklist.')(?=\s)/Su', '', $string);
+            $string = preg_replace('/^('.$blacklist.')(?=\s)/Su', '', $string);
+            $string = preg_replace('/(?<=\s)('.$blacklist.')$/Su', '', $string);
+            $string = preg_replace('/^('.$blacklist.')$/Su', '', $string);
         }
 
         // If the language is constituted with symbol and there is no "words", then split every chars
@@ -167,7 +164,8 @@ class SearchCore
             }
         }
 
-        $string = trim(preg_replace('/\s+/', ' ', $string));
+        $string = Tools::replaceAccentedChars(trim(preg_replace('/\s+/', ' ', $string)));
+
         return $string;
     }
 
@@ -197,8 +195,7 @@ class SearchCore
 
         foreach ($words as $key => $word) {
             if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN')) {
-                $word = str_replace('%', '\\%', $word);
-                $word = str_replace('_', '\\_', $word);
+                $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
                 $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
                 $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
 
@@ -567,8 +564,6 @@ class SearchCore
             foreach ($words as $word) {
                 if (!empty($word)) {
                     $word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
-                    // Remove accents
-                    $word = Tools::replaceAccentedChars($word);
 
                     if (!isset($product_array[$word])) {
                         $product_array[$word] = 0;
@@ -747,7 +742,7 @@ class SearchCore
     public static function removeProductsSearchIndex($products)
     {
         if (is_array($products) && !empty($products)) {
-            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', array_map('intval', $products)).')');
+            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', array_unique(array_map('intval', $products))).')');
             ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', array_map('intval', $products)).')');
         }
     }

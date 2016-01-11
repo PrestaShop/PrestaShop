@@ -57,7 +57,7 @@ class AdminMarketingControllerCore extends AdminController
     public function renderView()
     {
         $this->tpl_view_vars = array(
-            'modules_list' => $this->renderModulesList(),
+            'modules_list' => $this->renderModulesList('back-office,AdminMarketing,index'),
         );
         return parent::renderView();
     }

@@ -108,6 +108,9 @@ class IdentityControllerCore extends FrontController
                     $this->context->cookie->customer_lastname = $this->customer->lastname;
                     $this->context->cookie->customer_firstname = $this->customer->firstname;
                     $this->context->smarty->assign('confirmation', 1);
+                    Hook::exec('actionCustomerAccountUpdate', array(
+                            'customer' => $this->customer
+                        ));
                 } else {
                     $this->errors[] = Tools::displayError('The information cannot be updated.');
                 }

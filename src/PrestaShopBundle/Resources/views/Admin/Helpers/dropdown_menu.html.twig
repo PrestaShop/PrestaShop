@@ -1,0 +1,27 @@
+<div class="{{ div_style|default("btn-group dropdown") }}">
+    {% if default_item is defined %}
+        <a href="{{ default_item.href|default("#") }}" title="{{ default_item.title|default(default_item.label|default("")) }}" class="btn btn-default" {% if disabled is defined and disabled == true %}disabled="disabled"{% endif %}>
+            <i class="{{ default_item.icon|default("icon-pencil") }}"></i>&nbsp;{{ default_item.label|default("No label") }}
+        </a>
+    {% endif %}
+    <button {% if button_id %}id="{{ button_id }}"{% endif %} class="btn btn-default dropdown-toggle" {% if disabled is defined and disabled == true %}disabled="disabled"{% endif %} data-toggle="dropdown">
+        {{ menu_label|default("") }}&nbsp;
+        <i class="{{ menu_icon|default("icon-caret-down") }}"></i>&nbsp;
+    </button>
+    <ul class="dropdown-menu">
+        {% for entry in items %}
+            {% if entry.divider is defined and entry.divider==true %}
+                <li class="divider"></li>
+            {% else %}
+                <li>
+                    <a href="{{ entry.href|default("#") }}"
+                        {% if entry.onclick is defined %}onclick="{{ entry.onclick }}"{% endif %}
+                        {% if entry.target is defined %}target="{{ entry.target }}"{% endif %}>
+                        <i class="{{ entry.icon|default("") }}"></i>
+                        {{ entry.label|default("No label") }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>

@@ -22,6 +22,7 @@
                     {if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'html':'UTF-8'}" />{/if}
                     <button type="submit" id="SubmitLogin" name="SubmitLogin" data-adv-api="1" class="button btn btn-default button-medium"><span><i class="icon-lock left"></i>{l s='Sign in'}</span></button>
                 </p>
+                {$HOOK_AUTHENTICATE_FORM_BOTTOM}
             </div>
         </fieldset>
     </form>

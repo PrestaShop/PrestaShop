@@ -136,10 +136,10 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     {
         $query = new DbQuery();
         $query->select('
-			SUM(price_with_order_discount_te) as base_te,
-			tax_rate,
-			SUM(tax_value_with_order_discount) as total_tax_value
-		');
+            SUM(price_with_order_discount_te) as base_te,
+            tax_rate,
+            SUM(tax_value_with_order_discount) as total_tax_value
+        ');
         $query->from('supply_order_detail');
         $query->where('id_supply_order = '.(int)$this->supply_order->id);
         $query->groupBy('tax_rate');

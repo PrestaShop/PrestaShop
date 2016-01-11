@@ -143,7 +143,7 @@
  */
 
 
-svg {
+#dashboard svg {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -157,11 +157,11 @@ svg {
 }
 
 
-svg text {
+#dashboard svg text {
   font: normal 12px Arial;
 }
 
-svg .title {
+#dashboard svg .title {
  font: bold 14px Arial;
 }
 

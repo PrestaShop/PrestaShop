@@ -70,6 +70,7 @@
 						</button>
 						<input type="hidden" class="hidden" name="SubmitCreate" value="{l s='Create an account'}" />
 					</div>
+					{$HOOK_CREATE_ACCOUNT_EMAIL_FORM_BOTTOM}
 				</div>
 			</form>
 		</div>
@@ -95,6 +96,7 @@
 							</span>
 						</button>
 					</p>
+					{$HOOK_AUTHENTICATE_FORM_BOTTOM}
 				</div>
 			</form>
 		</div>
@@ -104,6 +106,7 @@
 			<div class="box">
 				<div id="opc_account_form" style="display: block; ">
 					<h3 class="page-heading bottom-indent">{l s='Instant checkout'}</h3>
+					<p class="required"><sup>*</sup>{l s='Required field'}</p>
 					<!-- Account -->
 					<div class="required form-group">
 						<label for="guest_email">{l s='Email address'} <sup>*</sup></label>
@@ -428,6 +431,7 @@
 		{$HOOK_CREATE_ACCOUNT_TOP}
 		<div class="account_creation">
 			<h3 class="page-subheading">{l s='Your personal information'}</h3>
+			<p class="required"><sup>*</sup>{l s='Required field'}</p>
 			<div class="clearfix">
 				<label>{l s='Title'}</label>
 				<br />
@@ -630,17 +634,18 @@
 					<label for="other">{l s='Additional information'}</label>
 					<textarea class="form-control" name="other" id="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{/if}</textarea>
 				</p>
-				{if isset($one_phone_at_least) && $one_phone_at_least}
-					<p class="inline-infos">{l s='You must register at least one phone number.'}</p>
-				{/if}
 				<p class="form-group">
-					<label for="phone">{l s='Home phone'}</label>
+					<label for="phone">{l s='Home phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>**</sup>{/if}</label>
 					<input type="text" class="form-control" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}" />
 				</p>
 				<p class="{if isset($one_phone_at_least) && $one_phone_at_least}required {/if}form-group">
-					<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>*</sup>{/if}</label>
+					<label for="phone_mobile">{l s='Mobile phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>**</sup>{/if}</label>
 					<input type="text" class="form-control" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 				</p>
+				{if isset($one_phone_at_least) && $one_phone_at_least}
+					{assign var="atLeastOneExists" value=true}
+					<p class="inline-infos required">** {l s='You must register at least one phone number.'}</p>
+				{/if}
 				<p class="required form-group" id="address_alias">
 					<label for="alias">{l s='Assign an address alias for future reference.'} <sup>*</sup></label>
 					<input type="text" class="form-control" name="alias" id="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else}{l s='My address'}{/if}" />

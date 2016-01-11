@@ -34,7 +34,7 @@
 
 		<div class="row">
 			<div class="col-sm-2" style="text-align: center;">
-				<img id="untrusted-module-logo" class="" src="" alt="">
+				<img id="untrusted-module-logo" class="" src="" alt="" style="max-width:96px;">
 			</div>
 			<div class="col-sm-10">
 				<table class="table">

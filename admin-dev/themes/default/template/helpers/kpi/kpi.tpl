@@ -38,10 +38,10 @@
 		<span cLass="subtitle">{$subtitle|escape}</span>
 		<span class="value">{$value|escape|replace:'&amp;':'&'}</span>
 	</div>
-	
+
 </{if isset($href) && $href}a{else}div{/if}>
 
-{if isset($source) && $source != ''}
+{if isset($source) && $source != '' && isset($refresh) && $refresh != ''}
 <script>
 	function refresh_{$id|replace:'-':'_'|addslashes}()
 	{
@@ -55,7 +55,10 @@
 				if (!jsonData.has_errors)
 				{
 					if (jsonData.value != undefined)
+					{
 						$('#{$id|addslashes} .value').html(jsonData.value);
+						$('#{$id|addslashes}').attr('data-original-title', jsonData.tooltip);
+					}
 					if (jsonData.data != undefined)
 					{
 						$("#{$id|addslashes} .boxchart svg").remove();
@@ -65,9 +68,6 @@
 			}
 		});
 	}
-	{if isset($refresh) && $refresh != ''}
-		refresh_{$id|replace:'-':'_'|addslashes}();
-	{/if}
 </script>
 {/if}
 
@@ -98,7 +98,7 @@
 			.attr("width", 4)
 			.attr("height", y);
 	}
-	
+
 	{if $data}
 		set_d3_{$id|replace:'-':'_'|addslashes}($.parseJSON("{$data|addslashes}"));
 	{/if}

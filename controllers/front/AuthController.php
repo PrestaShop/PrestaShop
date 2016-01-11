@@ -144,6 +144,8 @@ class AuthControllerCore extends FrontController
 
         // Call a hook to display more information on form
         $this->context->smarty->assign(array(
+            'HOOK_AUTHENTICATE_FORM_BOTTOM' => Hook::exec('displayAuthenticateFormBottom'),
+            'HOOK_CREATE_ACCOUNT_EMAIL_FORM_BOTTOM' => Hook::exec('displayCreateAccountEmailFormBottom'),
             'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
             'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
         ));
@@ -164,7 +166,7 @@ class AuthControllerCore extends FrontController
                 'page' => $this->context->smarty->fetch($this->template),
                 'token' => Tools::getToken(false)
             );
-            $this->ajaxDie(Tools::jsonEncode($return));
+            $this->ajaxDie(json_encode($return));
         }
     }
 
@@ -266,10 +268,14 @@ class AuthControllerCore extends FrontController
      */
     protected function processSubmitLogin()
     {
-        Hook::exec('actionBeforeAuthentication');
+        /* @deprecated deprecated since 1.6.1.1 */
+        // Hook::exec('actionBeforeAuthentication');
+        Hook::exec('actionAuthenticationBefore');
+
+        $email = trim(Tools::getValue('email'));
         $passwd = trim(Tools::getValue('passwd'));
         $_POST['passwd'] = null;
-        $email = trim(Tools::getValue('email'));
+
         if (empty($email)) {
             $this->errors[] = Tools::displayError('An email address required.');
         } elseif (!Validate::isEmail($email)) {
@@ -321,18 +327,19 @@ class AuthControllerCore extends FrontController
                 $this->context->cookie->write();
                 $this->context->cart->autosetProductAddress();
 
-                Hook::exec('actionAuthentication');
+                Hook::exec('actionAuthentication', array('customer' => $this->context->customer));
 
                 // Login information have changed, so we check if the cart rules still apply
                 CartRule::autoRemoveFromCart($this->context);
                 CartRule::autoAddToCart($this->context);
 
-                if (!$this->ajax && $back = Tools::getValue('back')) {
-                    if ($back == Tools::secureReferrer(Tools::getValue('back'))) {
+                if (!$this->ajax) {
+                    $back = Tools::getValue('back', 'my-account');
+
+                    if ($back == Tools::secureReferrer($back)) {
                         Tools::redirect(html_entity_decode($back));
                     }
 
-                    $back = $back ? $back : 'my-account';
                     Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : $back));
                 }
             }
@@ -343,7 +350,7 @@ class AuthControllerCore extends FrontController
                 'errors' => $this->errors,
                 'token' => Tools::getToken(false)
             );
-            $this->ajaxDie(Tools::jsonEncode($return));
+            $this->ajaxDie(json_encode($return));
         } else {
             $this->context->smarty->assign('authentification_error', $this->errors);
         }
@@ -358,15 +365,22 @@ class AuthControllerCore extends FrontController
      */
     protected function processCustomerNewsletter(&$customer)
     {
+        $blocknewsletter = Module::isInstalled('blocknewsletter') && $module_newsletter = Module::getInstanceByName('blocknewsletter');
+        if ($blocknewsletter && $module_newsletter->active && !Tools::getValue('newsletter')) {
+            if (is_callable(array($module_newsletter, 'isNewsletterRegistered')) && $module_newsletter->isNewsletterRegistered(Tools::getValue('email')) == $module_newsletter::GUEST_REGISTERED) {
+
+                /* Force newsletter registration as customer as already registred as guest */
+                $_POST['newsletter'] = true;
+            }
+        }
+
         if (Tools::getValue('newsletter')) {
+            $customer->newsletter = true;
             $customer->ip_registration_newsletter = pSQL(Tools::getRemoteAddr());
             $customer->newsletter_date_add = pSQL(date('Y-m-d H:i:s'));
-
-            if ($module_newsletter = Module::getInstanceByName('blocknewsletter')) {
-                /** @var Blocknewsletter $module_newsletter */
-                if ($module_newsletter->active) {
-                    $module_newsletter->confirmSubscription(Tools::getValue('email'));
-                }
+            /** @var Blocknewsletter $module_newsletter */
+            if ($blocknewsletter && $module_newsletter->active) {
+                $module_newsletter->confirmSubscription(Tools::getValue('email'));
             }
         }
     }
@@ -376,7 +390,10 @@ class AuthControllerCore extends FrontController
      */
     protected function processSubmitAccount()
     {
-        Hook::exec('actionBeforeSubmitAccount');
+        /* @deprecated deprecated since 1.6.1.1 */
+        // Hook::exec('actionBeforeSubmitAccount');
+        Hook::exec('actionSubmitAccountBefore');
+
         $this->create_account = true;
         if (Tools::isSubmit('submitAccount')) {
             $this->context->smarty->assign('email_create', 1);
@@ -433,9 +450,7 @@ class AuthControllerCore extends FrontController
 
         if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !Tools::isSubmit('submitGuestAccount')) {
             if (!count($this->errors)) {
-                if (Tools::isSubmit('newsletter')) {
-                    $this->processCustomerNewsletter($customer);
-                }
+                $this->processCustomerNewsletter($customer);
 
                 $customer->firstname = Tools::ucwords($customer->firstname);
                 $customer->birthday = (empty($_POST['years']) ? '' : (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days'));
@@ -472,7 +487,7 @@ class AuthControllerCore extends FrontController
                                 'id_address_invoice' => $this->context->cart->id_address_invoice,
                                 'token' => Tools::getToken(false)
                             );
-                            $this->ajaxDie(Tools::jsonEncode($return));
+                            $this->ajaxDie(json_encode($return));
                         }
 
                         if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back)) {
@@ -562,9 +577,8 @@ class AuthControllerCore extends FrontController
             if (Customer::customerExists(Tools::getValue('email'))) {
                 $this->errors[] = Tools::displayError('An account using this email address has already been registered. Please enter a valid password or request a new one. ', false);
             }
-            if (Tools::isSubmit('newsletter')) {
-                $this->processCustomerNewsletter($customer);
-            }
+
+            $this->processCustomerNewsletter($customer);
 
             $customer->birthday = (empty($_POST['years']) ? '' : (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days'));
             if (!Validate::isBirthDate($customer->birthday)) {
@@ -646,7 +660,7 @@ class AuthControllerCore extends FrontController
                                 'id_address_invoice' => $this->context->cart->id_address_invoice,
                                 'token' => Tools::getToken(false)
                             );
-                            $this->ajaxDie(Tools::jsonEncode($return));
+                            $this->ajaxDie(json_encode($return));
                         }
                         // if registration type is in two steps, we redirect to register address
                         if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount')) {
@@ -686,7 +700,7 @@ class AuthControllerCore extends FrontController
                     'isSaved' => false,
                     'id_customer' => 0
                 );
-                $this->ajaxDie(Tools::jsonEncode($return));
+                $this->ajaxDie(json_encode($return));
             }
             $this->context->smarty->assign('account_error', $this->errors);
         }
@@ -697,11 +711,11 @@ class AuthControllerCore extends FrontController
      */
     protected function processSubmitCreate()
     {
-        if (!Validate::isEmail($email = Tools::getValue('email_create')) || empty($email)) {
+        if (!Validate::isEmail($email = trim(Tools::getValue('email_create'))) || empty($email)) {
             $this->errors[] = Tools::displayError('Invalid email address.');
         } elseif (Customer::customerExists($email)) {
             $this->errors[] = Tools::displayError('An account using this email address has already been registered. Please enter a valid password or request a new one. ', false);
-            $_POST['email'] = Tools::getValue('email_create');
+            $_POST['email'] = trim(Tools::getValue('email_create'));
             unset($_POST['email_create']);
         } else {
             $this->create_account = true;
@@ -753,7 +767,7 @@ class AuthControllerCore extends FrontController
                 '{firstname}' => $customer->firstname,
                 '{lastname}' => $customer->lastname,
                 '{email}' => $customer->email,
-                '{passwd}' => Tools::getValue('passwd')),
+            ),
             $customer->email,
             $customer->firstname.' '.$customer->lastname
         );

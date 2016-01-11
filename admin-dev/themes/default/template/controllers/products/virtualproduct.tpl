@@ -128,7 +128,7 @@
 					<label class="control-label col-lg-3 required">{l s='Number of days'}</label>
 					<div class="col-lg-3">
 						<input type="text" id="virtual_product_nb_days" name="virtual_product_nb_days" value="{if !$product->productDownload->nb_days_accessible}0{else}{$product->productDownload->nb_days_accessible|htmlentities}{/if}" class="" size="4" />
-						<p class="help-block">{l s='Number of days this file can be accessed by customers. Set to zero for unlimited access.'})</p>
+						<p class="help-block">{l s='Number of days this file can be accessed by customers. Set to zero for unlimited access.'}</p>
 					</div>
 				</div>
 				{* Feature not implemented *}

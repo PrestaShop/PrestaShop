@@ -127,7 +127,6 @@ class ReferrerCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $employee
-     * @param Context $context
      */
     public function getStatsVisits($id_product, $employee)
     {
@@ -151,7 +150,7 @@ class ReferrerCore extends ObjectModel
 			LEFT JOIN '._DB_PREFIX_.'connections_page cp ON cp.id_connections = c.id_connections
 			'.$join.'
 			WHERE 1'.
-            ((isset($employee->stats_date_from) && isset($employee->stats_date_from))? ' AND cs.date_add BETWEEN \''.pSQL($employee->stats_date_from).' 00:00:00\' AND \''.pSQL($employee->stats_date_to).' 23:59:59\'' : '').
+            ((isset($employee->stats_date_from) && isset($employee->stats_date_to))? ' AND cs.date_add BETWEEN \''.pSQL($employee->stats_date_from).' 00:00:00\' AND \''.pSQL($employee->stats_date_to).' 23:59:59\'' : '').
             Shop::addSqlRestriction(false, 'rs').
             Shop::addSqlRestriction(false, 'c').
             ' AND rc.id_referrer = '.(int)$this->id.
@@ -164,7 +163,6 @@ class ReferrerCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $employee
-     * @param Context $context
      */
     public function getRegistrations($id_product, $employee)
     {
@@ -351,6 +349,6 @@ class ReferrerCore extends ObjectModel
             'percent_fee' => Tools::displayPrice($stats_sales['sales'] * $referrer->percent_fee / 100, $currency),
         );
 
-        die('['.Tools::jsonEncode($json_array).']');
+        die('['.json_encode($json_array).']');
     }
 }
