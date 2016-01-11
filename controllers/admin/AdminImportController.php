@@ -1241,6 +1241,12 @@ class AdminImportControllerCore extends AdminController
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
+
+            if (count($line) == 1 && $line[0] == null) {
+                $this->warnings[] = $this->l('There is an empty row in the file that won\'t be imported.');
+                continue;
+            }
+
             $info = AdminImportController::getMaskedRow($line);
 
             $this->categoryImportOne(
@@ -1501,17 +1507,18 @@ class AdminImportControllerCore extends AdminController
             $accessories = $crossStepsVariables['accessories'];
         }
 
-        $accessories = array();
-        if ($crossStepsVariables !== false && array_key_exists('accessories', $crossStepsVariables)) {
-            $accessories = $crossStepsVariables['accessories'];
-        }
-
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
+
+            if (count($line) == 1 && $line[0] == null) {
+                $this->warnings[] = $this->l('There is an empty row in the file that won\'t be imported.');
+                continue;
+            }
+
             $info = AdminImportController::getMaskedRow($line);
 
             $this->productImportOne(
@@ -2309,13 +2316,16 @@ class AdminImportControllerCore extends AdminController
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
-            if (count($line) == 1 && empty($line[0])) {
-                continue;
-            }
 
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
+
+            if (count($line) == 1 && $line[0] == null) {
+                $this->warnings[] = $this->l('There is an empty row in the file that won\'t be imported.');
+                continue;
+            }
+
             $info = AdminImportController::getMaskedRow($line);
             $info = array_map('trim', $info);
 
@@ -2783,6 +2793,12 @@ class AdminImportControllerCore extends AdminController
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
+
+            if (count($line) == 1 && $line[0] == null) {
+                $this->warnings[] = $this->l('There is an empty row in the file that won\'t be imported.');
+                continue;
+            }
+
             $info = AdminImportController::getMaskedRow($line);
 
             $this->customerImportOne(
@@ -3019,6 +3035,12 @@ class AdminImportControllerCore extends AdminController
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
+
+            if (count($line) == 1 && $line[0] == null) {
+                $this->warnings[] = $this->l('There is an empty row in the file that won\'t be imported.');
+                continue;
+            }
+
             $info = AdminImportController::getMaskedRow($line);
 
             $this->addressImportOne(
@@ -3270,6 +3292,12 @@ class AdminImportControllerCore extends AdminController
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
+
+            if (count($line) == 1 && $line[0] == null) {
+                $this->warnings[] = $this->l('There is an empty row in the file that won\'t be imported.');
+                continue;
+            }
+
             $info = AdminImportController::getMaskedRow($line);
 
             $this->manufacturerImportOne(
@@ -3377,8 +3405,17 @@ class AdminImportControllerCore extends AdminController
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
+
+            if (count($line) == 1 && $line[0] == null) {
+                $this->warnings[] = $this->l('There is an empty row in the file that won\'t be imported.');
+                continue;
+            }
+
             $info = AdminImportController::getMaskedRow($line);
 
+            if ($offset > 0) {
+                $this->toto = true;
+            }
 
             $this->supplierImportOne(
                 $info,
@@ -3477,6 +3514,12 @@ class AdminImportControllerCore extends AdminController
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
+
+            if (count($line) == 1 && $line[0] == null) {
+                $this->warnings[] = $this->l('There is an empty row in the file that won\'t be imported.');
+                continue;
+            }
+
             $info = AdminImportController::getMaskedRow($line);
 
             $this->aliasImportOne(
@@ -3547,6 +3590,12 @@ class AdminImportControllerCore extends AdminController
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
+
+            if (count($line) == 1 && $line[0] == null) {
+                $this->warnings[] = $this->l('There is an empty row in the file that won\'t be imported.');
+                continue;
+            }
+
             $info = AdminImportController::getMaskedRow($line);
 
             $this->storeContactImportOne(
@@ -4403,30 +4452,35 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (!$validateOnly && (bool)$results['isFinished'] && !isset($results['oneMoreStep']) && (bool)Tools::getValue('sendemail')) {
-            unset($this->context->cookie->csv_selected); // remove CSV selection file if finished with no error.
+            // Mail::Send() can sometimes throw an error...
+            try {
+                unset($this->context->cookie->csv_selected); // remove CSV selection file if finished with no error.
 
-            $templateVars = array(
-                            '{firstname}' => $this->context->employee->firstname,
-                            '{lastname}' => $this->context->employee->lastname,
-                            '{filename}' => Tools::getValue('csv')
-                        );
-            // Mail send in last step because in case of failure, does NOT throw an error, just die(msg); instead :(
-            $mailSuccess = @Mail::Send(
-                (int)$this->context->employee->id_lang,
-                'import',
-                Mail::l('Import complete', (int)$this->context->employee->id_lang),
-                $templateVars,
-                $this->context->employee->email,
-                $this->context->employee->firstname.' '.$this->context->employee->lastname,
-                null,
-                null,
-                null,
-                null,
-                _PS_MAIL_DIR_,
-                false, // do not die in failed! Warn only, it's not an import error, because import finished in fact.
-                (int)$this->context->shop->id
-            );
-            if (!$mailSuccess) {
+                $templateVars = array(
+                    '{firstname}' => $this->context->employee->firstname,
+                    '{lastname}' => $this->context->employee->lastname,
+                    '{filename}' => Tools::getValue('csv')
+                );
+                // Mail send in last step because in case of failure, does NOT throw an error.
+                $mailSuccess = @Mail::Send(
+                    (int)$this->context->employee->id_lang,
+                    'import',
+                    Mail::l('Import complete', (int)$this->context->employee->id_lang),
+                    $templateVars,
+                    $this->context->employee->email,
+                    $this->context->employee->firstname . ' ' . $this->context->employee->lastname,
+                    null,
+                    null,
+                    null,
+                    null,
+                    _PS_MAIL_DIR_,
+                    false, // do not die in failed! Warn only, it's not an import error, because import finished in fact.
+                    (int)$this->context->shop->id
+                );
+                if (!$mailSuccess) {
+                    $results['warnings'][] = $this->l('The confirmation email couldn\'t be sent, but the import is successfull. Yay!');
+                }
+            } catch (\Exception $e) {
                 $results['warnings'][] = $this->l('The confirmation email couldn\'t be sent, but the import is successfull. Yay!');
             }
         }
