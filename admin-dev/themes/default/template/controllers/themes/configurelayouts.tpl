@@ -49,7 +49,9 @@
                 <td>
                   <select name="layouts[{$page_key}]" id="">
                     {foreach $available_layouts as $layout}
-                      <option value="{$layout}">{$layout}</option>
+                      <option value="{$layout}" {if $page_layouts->{$page_key} == $layout}selected="selected"{/if}>
+                        {$layout}
+                      </option>
                     {/foreach}
                   </select>
                 </td>
