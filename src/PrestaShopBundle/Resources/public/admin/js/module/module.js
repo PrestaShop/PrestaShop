@@ -61,9 +61,10 @@ var AdminModule = function() {
 
     this.doDropdownSort = function(typeSort) {
         var availableSorts = [
-                                'sort-by-author',
-                                'sort-by-price',
-                                'sort-by-name'
+                                'sort-by-price-asc',
+                                'sort-by-price-desc',
+                                'sort-by-name',
+                                'sort-by-scoring'
                             ];
 
         var selector = (
@@ -77,25 +78,38 @@ var AdminModule = function() {
         }
 
         var dataAttr = null;
+        var sortOrder = 'asc';
+        var sortKind = 'alpha';
+
         switch (typeSort) {
             case availableSorts[0]:
-                dataAttr = ['data-author', 'data-tech-name'];
+                dataAttr = ['data-price', 'data-tech-name'];
+                sortKind = 'num';
                 break;
             case availableSorts[1]:
                 dataAttr = ['data-price', 'data-tech-name'];
+                sortOrder = 'desc';
+                sortKind = 'num';
                 break;
             case availableSorts[2]:
                 dataAttr = ['data-name', 'data-tech-name'];
+                break;
+            case availableSorts[3]:
+                dataAttr = ['data-scoring', 'data-tech-name'];
+                sortKind = 'num';
                 break;
         }
 
         var arrayToSort = {};
         var keysToSort = [];
 
-        $(selector).each(function(index, value){
+        $(selector).each(function(index, value) {
             var selectorObject = $(this);
             var uniqueID = '';
-            $.each(dataAttr, function (index, value){
+            $.each(dataAttr, function (index, value) {
+                if (uniqueID !== '') {
+                    uniqueID += '#'; // Explode separator
+                }
                 uniqueID += selectorObject.attr(value);
             });
             arrayToSort[uniqueID] = $(this);
@@ -103,7 +117,20 @@ var AdminModule = function() {
         });
 
         var keysArrayLength = keysToSort.length;
-        keysToSort.sort();
+
+        if (sortKind == 'alpha') {
+            keysToSort.sort();
+        } else {
+            keysToSort.sort(function(elem1, elem2) {
+                var elem1Formatted = parseFloat(elem1.substring(0, elem1.indexOf('#')));
+                var elem2Formatted = parseFloat(elem2.substring(0, elem2.indexOf('#')));
+                if (sortOrder == 'asc') {
+                    return elem1Formatted - elem2Formatted;
+                } else {
+                    return elem2Formatted - elem1Formatted;
+                }
+            });
+        }
         var _this = this;
 
         $(this.moduleGridSelector).fadeOut(function(){

@@ -13,7 +13,7 @@
     <div class="row">
         {% for module in modules %}
                 <div class="module-item-{{display_type}} {{col_lg}}" data-id="{{ module.id }}" data-name="{{ module.displayName }}"
-                data-logo="{{ module.media.img }}" data-author="{{ module.author }}" data-version="{{ module.version }}" data-description="{{ module.description }}"
+                data-scoring="{{module.scoring}}" data-logo="{{ module.media.img }}" data-author="{{ module.author }}" data-version="{{ module.version }}" data-description="{{ module.description }}"
                 data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" data-type="{{module.productType}}" data-price="{{module.price.EUR}}">
                      <div class="module-item-wrapper-{{display_type}}">
                         <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">
