@@ -110,6 +110,10 @@ function getFormattedHookList($hookList, $folder)
 
     foreach ($hookList as $hook) {
         $line = explode(':', $hook, 2);
+        if (count($line) !== 2) {
+            echo "Warning, could not parse hook in:\n$hook\n\n";
+            continue;
+        }
         $list[getHookName($line[1])][formatFilePath($line[0], $folder)] = formatFilePath($line[0], $folder);
         ksort($list[getHookName($line[1])]);
     }
