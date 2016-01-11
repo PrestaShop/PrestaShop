@@ -688,9 +688,16 @@ var combinations = (function() {
 
 			/** get product cover image */
 			if(productCoverImageElem.length == 1){
-				productDefaultImageUrl = productCoverImageElem.parent().find('.dz-image').css('background-image')
-					.replace(/^url\(["']?/, '')
-					.replace(/["']?\)$/, '');
+				var imgElem = productCoverImageElem.parent().find('.dz-image');
+
+				/** Dropzone.js workaround : If this is a fresh upload image, look up for an img, else find a background url*/
+				if(imgElem.find('img').length){
+					productDefaultImageUrl = imgElem.find('img').attr('src');
+				} else {
+					productDefaultImageUrl = imgElem.css('background-image')
+						.replace(/^url\(["']?/, '')
+						.replace(/["']?\)$/, '');
+				}
 			}
 
 			$.each($('#form .combination-form'), function(key, elem){

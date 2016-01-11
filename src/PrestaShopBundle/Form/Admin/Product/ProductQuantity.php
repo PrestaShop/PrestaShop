@@ -70,7 +70,7 @@ class ProductQuantity extends CommonAbstractType
                 'class' => 'tokenfield',
                 'data-limit' => 20,
                 'data-minLength' => 1,
-                'placeholder' => $this->translator->trans('Enter each attribute to create combinations here. E.g. Size M, Color Blue', [], 'AdminProducts'),
+                'placeholder' => $this->translator->trans('Type something...', [], 'AdminProducts'),
                 'data-prefetch' => $this->router->generate('admin_attribute_get_all'),
                 'data-action' => $this->router->generate('admin_attribute_generator'),
             ],
