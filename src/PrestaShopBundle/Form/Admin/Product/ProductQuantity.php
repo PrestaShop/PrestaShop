@@ -70,7 +70,7 @@ class ProductQuantity extends CommonAbstractType
                 'class' => 'tokenfield',
                 'data-limit' => 20,
                 'data-minLength' => 1,
-                'placeholder' => $this->translator->trans('Type something...', [], 'AdminProducts'),
+                'placeholder' => $this->translator->trans('Enter each attribute to create combinations here. E.g. Size M, Color Blue', [], 'AdminProducts'),
                 'data-prefetch' => $this->router->generate('admin_attribute_get_all'),
                 'data-action' => $this->router->generate('admin_attribute_generator'),
             ],
@@ -147,8 +147,10 @@ class ProductQuantity extends CommonAbstractType
                     '1' => $this->translator->trans('Allow orders', [], 'AdminProducts'),
                     '2' => $defaultChoiceLabel,
                 ),
-                'expanded' => false,
-                'required' => true,
+
+                'expanded' => true,
+                'required' => false,
+                'empty_value' => false,
                 'label' => $this->translator->trans('When out of stock', [], 'AdminProducts')
             ));
 
@@ -172,6 +174,7 @@ class ProductQuantity extends CommonAbstractType
                 ),
                 'expanded' => false,
                 'required' => true,
+                'empty_value' => false,
                 'label' => $this->translator->trans('Pack quantities', [], 'AdminProducts')
             ));
         });

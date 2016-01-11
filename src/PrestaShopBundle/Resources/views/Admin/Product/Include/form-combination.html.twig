@@ -1,90 +1,103 @@
-<div class="form-group">
-    <div class="col-xs-12">
-        <label class="control-label"></label>
-        {{ form_widget(form.attribute_default) }}
-    </div>
-</div>
-<div class="form-group">
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_reference.vars.label }}</label>
-        {{ form_widget(form.attribute_reference) }}
-    </div>
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_ean13.vars.label }}</label>
-        {{ form_widget(form.attribute_ean13) }}
-    </div>
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_isbn.vars.label }}</label>
-        {{ form_widget(form.attribute_isbn) }}
-    </div>
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_upc.vars.label }}</label>
-        {{ form_widget(form.attribute_upc) }}
-    </div>
-</div>
-<div class="form-group">
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_wholesale_price.vars.label|raw }}</label>
-        {{ form_widget(form.attribute_wholesale_price) }}
-    </div>
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_price_impact.vars.label }}</label>
-        {{ form_widget(form.attribute_price_impact) }}
-    </div>
+<tr class="combination" id="attribute_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" data-index="{{ loop_index is defined ? loop_index : '__loop_index__' }}">
+    <td class="img"></td>
+    <td>{{ form.vars.value.name }}</td>
+    <td class="attribute-weight">{{ form.vars.value.attribute_weight }} {{ 'PS_WEIGHT_UNIT'|configuration }}</td>
+    <td class="attribute-price-display">{{ form.vars.value.attribute_price_display }}</td>
+    <td class="attribute-quantity"><input type="text" value="{{ form.vars.value.attribute_quantity }}" style="width:70px"></td>
+    <td class="text-right">
+        <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-default btn-sm btn-open">{{ trans('Edit', [], 'AdminProducts') }}</a>
+        <a href="{{ path('admin_delete_attribute', {'idAttribute': form.vars.value.id_product_attribute, 'idProduct': id_product}) }}" class="btn btn-default btn-sm delete" data="{{ form.vars.value.id_product_attribute }}">{{ trans('Delete', [], 'AdminProducts') }}</a>
 
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_price.vars.label }}</label>
-        {{ form_widget(form.attribute_price) }}
-    </div>
+        <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide">
+            <div class="panel col-xs-12">
+                <div class="panel-heading">
+                    <button type="button" class="btn btn-default btn-back"><i class="icon-arrow-left"></i> {{ trans('Back', [], 'AdminTabs') }}</button> <span class="title">{{ form.vars.value.name }}</span>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="control-label"></label>
+                        {{ form_widget(form.attribute_default) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_wholesale_price.vars.label|raw }}</label>
+                        {{ form_widget(form.attribute_wholesale_price) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_priceTI.vars.label }}</label>
+                        {{ form_widget(form.attribute_priceTI) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_quantity.vars.label }}</label>
+                        {{ form_widget(form.attribute_quantity) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_price_impact.vars.label }}</label>
+                        {{ form_widget(form.attribute_price_impact) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_price.vars.label }}</label>
+                        {{ form_widget(form.attribute_price) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_weight_impact.vars.label }}</label>
+                        {{ form_widget(form.attribute_weight_impact) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_weight.vars.label }}</label>
+                        {{ form_widget(form.attribute_weight) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_unit_impact.vars.label }}</label>
+                        {{ form_widget(form.attribute_unit_impact) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_unity.vars.label }}</label>
+                        {{ form_widget(form.attribute_unity) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_minimal_quantity.vars.label }}</label>
+                        {{ form_widget(form.attribute_minimal_quantity) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_reference.vars.label }}</label>
+                        {{ form_widget(form.attribute_reference) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_ean13.vars.label }}</label>
+                        {{ form_widget(form.attribute_ean13) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_isbn.vars.label }}</label>
+                        {{ form_widget(form.attribute_isbn) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_upc.vars.label }}</label>
+                        {{ form_widget(form.attribute_upc) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.available_date_attribute.vars.label }}</label>
+                        {{ form_widget(form.available_date_attribute) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">{{ form.id_image_attr.vars.label }}</label>
+                    {{ form_widget(form.id_image_attr) }}
+                </div>
 
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_priceTI.vars.label }}</label>
-        {{ form_widget(form.attribute_priceTI) }}
-    </div>
-</div>
-<div class="form-group">
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_weight_impact.vars.label }}</label>
-        {{ form_widget(form.attribute_weight_impact) }}
-    </div>
-
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_weight.vars.label }}</label>
-        {{ form_widget(form.attribute_weight) }}
-    </div>
-</div>
-<div class="form-group">
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_unit_impact.vars.label }}</label>
-        {{ form_widget(form.attribute_unit_impact) }}
-    </div>
-
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_unity.vars.label }}</label>
-        {{ form_widget(form.attribute_unity) }}
-    </div>
-
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_minimal_quantity.vars.label }}</label>
-        {{ form_widget(form.attribute_minimal_quantity) }}
-    </div>
-</div>
-<div class="form-group">
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.available_date_attribute.vars.label }}</label>
-        {{ form_widget(form.available_date_attribute) }}
-    </div>
-
-    <div class="col-xs-2 pull-left">
-        <label class="control-label">{{ form.attribute_quantity.vars.label }}</label>
-        {{ form_widget(form.attribute_quantity) }}
-    </div>
-</div>
-<div class="form-group">
-
-    <label class="control-label">{{ form.id_image_attr.vars.label }}</label>
-    {{ form_widget(form.id_image_attr) }}
-
-</div>
-
-{{ form_widget(form.id_product_attribute) }}
+                {{ form_widget(form.id_product_attribute) }}
+            </div>
+        </div>
+    </td>
+</tr>

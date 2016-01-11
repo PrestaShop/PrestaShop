@@ -85,9 +85,15 @@
             var limit = {{ limit }};
 
             //remove collection item
-            $(document).on( 'click', '#{{ form.vars.id }}-data a.delete', function() {
-                $(this).parent().remove();
-                return false;
+            $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
+                e.preventDefault();
+                var _this = $(this);
+
+                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                    onContinue: function(){
+                        _this.parent().remove();
+                    }
+                }).show();
             });
 
             //define source
@@ -182,9 +188,15 @@
     <script>
         $( document ).ready(function() {
             //remove collection item
-            $(document).on( 'click', '#{{ form.vars.id }}-data a.delete', function() {
-                $(this).parent().remove();
-                return false;
+            $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
+                e.preventDefault();
+                var _this = $(this);
+
+                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                    onContinue: function(){
+                        _this.parent().remove();
+                    }
+                }).show();
             });
 
             $('#{{ form.vars.id }}-curPackItemAdd').click(function(e){
