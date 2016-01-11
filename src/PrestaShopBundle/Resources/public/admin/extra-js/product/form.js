@@ -671,6 +671,20 @@ var combinations = (function() {
 			$(document).on('click', '#accordion_combinations .btn-open', function(e) {
 				e.preventDefault();
 				var contentElem = $($(this).attr('href'));
+
+				/** create combinations navigation */
+				var navElem = contentElem.find('.nav');
+				var id_attribute = contentElem.attr('data');
+				var prevCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').prev().attr('data');
+				var nextCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').next().attr('data');
+				navElem.find('.prev, .next').hide();
+				if(prevCombinationId){
+					navElem.find('.prev').attr('data', prevCombinationId).show();
+				}
+				if(nextCombinationId){
+					navElem.find('.next').attr('data', nextCombinationId).show();
+				}
+
 				contentElem.insertBefore('#form-nav').removeClass('hide').show();
 				$('#form-nav, #form_content').hide();
 			});
@@ -680,6 +694,13 @@ var combinations = (function() {
 				e.preventDefault();
 				$(this).closest('.combination-form').hide();
 				$('#form-nav, #form_content').show();
+			});
+
+			/** switch combination form */
+			$(document).on('click', '#form .combination-form .nav button', function(e) {
+				e.preventDefault();
+				$('.combination-form').hide();
+				$('#accordion_combinations .combination[data="' + $(this).attr('data') + '"] .btn-open').click();
 			});
 		},
 		'refreshDefaultImage': function() {
