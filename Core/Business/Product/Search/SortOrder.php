@@ -20,6 +20,16 @@ class SortOrder
         ;
     }
 
+    public static function random()
+    {
+        return new static('', '', 'random');
+    }
+
+    public function isRandom()
+    {
+        return $this->getDirection() === 'random';
+    }
+
     public function toArray()
     {
         return [
@@ -78,9 +88,9 @@ class SortOrder
     public function setDirection($dir)
     {
         $direction = strtolower($dir);
-        if (!in_array($direction, ['asc', 'desc'])) {
+        if (!in_array($direction, ['asc', 'desc', 'random'])) {
             throw new Exception(sprintf(
-                'Invalid SortOrder direction `%s`. Expecting one of: `ASC`, `DESC`.',
+                'Invalid SortOrder direction `%s`. Expecting one of: `ASC`, `DESC`, or `RANDOM`.',
                 $dir
             ));
         }
