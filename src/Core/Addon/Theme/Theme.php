@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use PrestaShop\PrestaShop\Core\Business\Addon\AddonInterface;
+
 class Theme implements AddonInterface
 {
     public function onInstall()
