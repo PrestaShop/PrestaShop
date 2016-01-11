@@ -2,12 +2,24 @@
 
 namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
 
+use Context;
+
 class ProductSearchContext
 {
     private $id_shop;
     private $id_lang;
     private $id_currency;
     private $id_customer;
+
+    public function __construct(Context $context = null)
+    {
+        if ($context) {
+            $this->id_shop = $context->shop->id;
+            $this->id_lang = $context->language->id;
+            $this->id_currency = $context->currency->id;
+            $this->id_customer = $context->customer->id;
+        }
+    }
 
     public function setIdShop($id_shop)
     {
