@@ -93,15 +93,15 @@
 				{/if}
 
 				<hr />
-				<h4>{l s='Configure your theme'}</h4>
+				<h4>{l s='Configure your page layouts'}</h4>
 				<div class="row">
 					<div class="col-sm-8">
-						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. This setting is mostly for advanced users.'}</p>
+						<p>{l s='Each page can use a different layouts, choose it among the layout bundled in your theme.'}</p>
 					</div>
 					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="TODO">
-							<i class="icon icon-cog"></i>
-							{l s='Advanced settings'}
+						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')}&configureLayouts">
+							<i class="icon icon-file"></i>
+							{l s='Choose layouts'}
 						</a>
 					</div>
 				</div>
