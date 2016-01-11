@@ -9,14 +9,14 @@
 )) %}
 
 {% block stylesheets %}
-    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/*' filter='cssrewrite' %}
-    <link rel="stylesheet" href="{{ asset_url|admin_asset_path }}" />
+    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/*' filter='cssrewrite' package='admin' output='css/admin-layout.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/*' %}
-    <script src="{{ asset_url|admin_asset_path }}"></script>
+    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/*' package='admin' output='js/admin-layout.js' %}
+    <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
 

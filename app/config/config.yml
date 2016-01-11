@@ -9,6 +9,12 @@ parameters:
     locale: en
 
 framework:
+    assets:
+        version: '1.7.0'
+        packages:
+            admin:
+                base_path: '/../web'
+
     #esi:             ~
     #translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
@@ -21,7 +27,6 @@ framework:
     #serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
-        assets_version: 1.7.0
     default_locale:  "%locale%"
     trusted_hosts:   ~
     trusted_proxies: ~

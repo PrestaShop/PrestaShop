@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="col-lg-12 text-center">
-    {% image '@PrestaShopBundle/Resources/public/admin/images/create_product.png' %} <img src="{{ asset_url }}" alt="{{ trans('Create a new product', [], 'AdminProducts') }}" /> {% endimage %}
+    {% image '@PrestaShopBundle/Resources/public/admin/images/create_product.png' package='admin' %} <img src="{{ asset_url }}" alt="{{ trans('Create a new product', [], 'AdminProducts') }}" /> {% endimage %}
     <br/>
     <a class="btn btn-primary" href="{{ path('admin_product_new') }}">{{ trans('Add your first product', [], 'AdminProducts') }}</a>
     <br/><br/>
