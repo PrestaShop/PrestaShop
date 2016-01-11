@@ -1,6 +1,6 @@
 {
-  "name" : "Starter Theme",
-  "directory" : "StarterTheme",
+  "name" : "StarterTheme",
+  "display_name" : "Starter Theme",
   "version" : "1.0.0",
   "author" : {
     "name" : "PrestaShop",
