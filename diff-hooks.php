@@ -3,7 +3,7 @@
 $path_to_16 = $argv[1];
 $path_to_17 = $argv[2];
 
-$grep = "grep -ri --exclude-dir={.git,admin,bin,cache,modules,tests,vendor} --exclude={'diff-hooks.php','diff-hooks.html'}";
+$grep = "grep -ri --exclude-dir=.git --exclude-dir=bin --exclude-dir=cache --exclude-dir=modules --exclude-dir=tests --exclude-dir=vendor --exclude=diff-hooks.php --exclude=diff-hooks.html";
 
 exec("$grep 'hook h=' ".$path_to_16."/themes", $hookHIn16);
 exec("$grep 'hook h=' ".$path_to_17."/themes", $hookHIn17);
@@ -115,6 +115,11 @@ function getFormattedHookList($hookList, $folder)
         if (count($line) !== 2) {
             echo "Warning, could not parse hook in:\n$hook\n\n";
             continue;
+        }
+        if (preg_match('/diff/', $line[0])) {
+            var_dump($line);
+            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            die();
         }
         $list[getHookName($line[1])][formatFilePath($line[0], $folder)] = formatFilePath($line[0], $folder);
         ksort($list[getHookName($line[1])]);
