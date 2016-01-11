@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-abstract class AbstractTheme implements AddonInterface
+class Theme implements AddonInterface
 {
     public function onInstall()
     {
