@@ -107,10 +107,10 @@ class LinkCore
 
         // NOTE : get base link moved after object loading and check if id_shop not explicit and config on
         $ssl = null;
-        if(is_null($id_shop) && $ssl = Configuration::get('PS_SHOP_FORCE_DEFAULT')) {
+        if(is_null($id_shop) && Configuration::get('PS_SHOP_FORCE_DEFAULT')) {
         	$id_shop = $product->id_shop_default;
         	// NOTE : get shop SSL parameter based on required shop
-        	$ssl = $ssl = Configuration::get('PS_SSL_ENABLED', null, Shop::getGroupFromShop($id_shop), $id_shop);
+        	$ssl = Configuration::get('PS_SSL_ENABLED', null, Shop::getGroupFromShop($id_shop), $id_shop);
         }
         // NOTE : SSL parameter shop added (was null) - @TODO : should be handled in getBaseLink
         $url = $this->getBaseLink($id_shop, $ssl, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
@@ -185,10 +185,10 @@ class LinkCore
 
         // NOTE : get base link moved after object loading and check if id_shop not explicit and config on
         $ssl = null;
-        if(is_null($id_shop) && $ssl = Configuration::get('PS_SHOP_FORCE_DEFAULT')) {
+        if(is_null($id_shop) && Configuration::get('PS_SHOP_FORCE_DEFAULT')) {
         	$id_shop = $category->id_shop_default;
         	// NOTE : get shop SSL parameter based on required shop
-        	$ssl = $ssl = Configuration::get('PS_SSL_ENABLED', null, Shop::getGroupFromShop($id_shop), $id_shop);
+        	$ssl = Configuration::get('PS_SSL_ENABLED', null, Shop::getGroupFromShop($id_shop), $id_shop);
         }
         // NOTE : SSL parameter shop added (was null) - @TODO : should be handled in getBaseLink
         $url = $this->getBaseLink($id_shop, $ssl, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
