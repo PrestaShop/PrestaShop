@@ -726,7 +726,7 @@ $(document).ready(function()
 	if (typeof formToMove != 'undefined' && typeof formDestination != 'undefined' )
 	{
 		$('<hr style="margin 24px 0;" />').appendTo('#'+formDestination)
-		$('#theme_fieldset_'+formToMove+' .form-wrapper').appendTo('#'+formDestination);
+		$('#configuration_fieldset_'+formToMove+' .form-wrapper').appendTo('#'+formDestination);
 	}
 
 	$('select.chosen').each(function(k, item){
@@ -1196,7 +1196,7 @@ function sendBulkAction(form, action)
 }
 
 /**
- * Searches for current controller and current CRUD action. This data can be used to know from where an ajax call is done (source tracking for example). 
+ * Searches for current controller and current CRUD action. This data can be used to know from where an ajax call is done (source tracking for example).
  * Action is 'index' by default.
  * For instance, only used for back-office.
  * @param force_action optional string to override action part of the result.
@@ -1209,12 +1209,12 @@ function getControllerActionMap(force_action) {
 
 	for (i = 0 ; i < vars.length; i++) {
 		pair = vars[i].split("=");
-		
+
 		if (pair[0] == "token")
 			continue;
 		if (pair[0] == "controller")
 			controller = pair[1];
-		
+
 		if (pair.length == 1) {
 			if (pair[0].indexOf("add") != -1)
 				action = "new";
@@ -1226,10 +1226,10 @@ function getControllerActionMap(force_action) {
 				action = "delete";
 		}
 	}
-	
+
 	if (force_action !== undefined)
 		action = force_action;
-	
+
 	if (typeof help_class_name != 'undefined')
 		controller = help_class_name;
 

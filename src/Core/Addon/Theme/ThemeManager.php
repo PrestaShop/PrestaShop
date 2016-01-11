@@ -87,6 +87,9 @@ class ThemeManager implements AddonManagerInterface
      */
     public function enable($name)
     {
+        // Check theme is existing and valid
+        // Check employee rights
+        // Check
         return true;
     }
 
@@ -114,16 +117,8 @@ class ThemeManager implements AddonManagerInterface
 
     public function getInstanceByName($name)
     {
-        $theme = new Theme();
-        $properties = $this->getJsonConfig($name, 'theme.json');
-
-        if (isset($properties)) {
-            $properties->settings = $this->getJsonConfig($name, 'settings.json');
-        }
-
-        foreach ($properties as $prop => $value) {
-            $theme->{$prop} = $value;
-        }
+        $dir = $this->configurator->get('_PS_ALL_THEMES_DIR_').$name;
+        $theme = new Theme($dir);
 
         return $theme;
     }
@@ -168,26 +163,13 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
-    private function getJsonConfig($theme_name, $filename)
-    {
-        $file = $this->configurator->get('_PS_ALL_THEMES_DIR_')
-                .$theme_name
-                .'/config/'.$filename;
-
-        if (file_exists($file)) {
-            return json_decode(file_get_contents($file));
-        }
-
-        return null;
-    }
-
     private function getThemeOnDisk()
     {
-        $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/', GLOB_ONLYDIR);
+        $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/config/theme.json');
 
         $themes = [];
         foreach ($all_theme_dirs as $dir) {
-            $name = basename($dir);
+            $name = basename(substr($dir, 0, -strlen('config/theme.json')));
             $theme = $this->getInstanceByName($name);
             if (isset($theme)) {
                 $themes[$name] = $theme;
