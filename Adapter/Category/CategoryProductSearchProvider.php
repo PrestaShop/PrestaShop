@@ -30,14 +30,28 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
         ProductSearchQuery $query,
         $type = 'products'
     ) {
-        return $this->category->getProducts(
-            $context->getIdLang(),
-            $query->getPage(),
-            $query->getResultsPerPage(),
-            $query->getSortOrder()->toLegacyOrderBy(),
-            $query->getSortOrder()->toLegacyOrderWay(),
-            $type !== 'products'
-        );
+        if ($query->getSortOrder()->isRandom()) {
+            return $this->category->getProducts(
+                $context->getIdLang(),
+                1,
+                $query->getResultsPerPage(),
+                null,
+                null,
+                $type !== 'products',
+                true,
+                true,
+                $query->getResultsPerPage()
+            );
+        } else {
+            return $this->category->getProducts(
+                $context->getIdLang(),
+                $query->getPage(),
+                $query->getResultsPerPage(),
+                $query->getSortOrder()->toLegacyOrderBy(),
+                $query->getSortOrder()->toLegacyOrderWay(),
+                $type !== 'products'
+            );
+        }
     }
 
     public function runQuery(
