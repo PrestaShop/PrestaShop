@@ -3,11 +3,13 @@
 $path_to_16 = $argv[1];
 $path_to_17 = $argv[2];
 
-exec("grep -ri --exclude-dir={.git,admin,bin,cache,modules,tests,vendor} --exclude={'diff-hooks.php','diff-hooks.html'} 'hook h=' ".$path_to_16."/themes", $hookHIn16);
-exec("grep -ri --exclude-dir={.git,admin,bin,cache,modules,tests,vendor} --exclude={'diff-hooks.php','diff-hooks.html'} 'hook h=' ".$path_to_17."/themes", $hookHIn17);
+$grep = "grep -ri --exclude-dir={.git,admin,bin,cache,modules,tests,vendor} --exclude={'diff-hooks.php','diff-hooks.html'}";
 
-exec("grep -ri --exclude-dir={.git,admin,bin,cache,modules,tests,vendor} --exclude={'diff-hooks.php','diff-hooks.html'} 'Hook::exec' ".$path_to_16, $hookExecIn16);
-exec("grep -ri --exclude-dir={.git,admin,bin,cache,modules,tests,vendor} --exclude={'diff-hooks.php','diff-hooks.html'} 'Hook::exec' ".$path_to_17, $hookExecIn17);
+exec("$grep 'hook h=' ".$path_to_16."/themes", $hookHIn16);
+exec("$grep 'hook h=' ".$path_to_17."/themes", $hookHIn17);
+
+exec("$grep 'Hook::exec' ".$path_to_16, $hookExecIn16);
+exec("$grep 'Hook::exec' ".$path_to_17, $hookExecIn17);
 
 $hooks16 = array_merge(getFormattedHookList($hookHIn16, $path_to_16), getFormattedHookList($hookExecIn16, $path_to_16));
 $hooks17 = array_merge(getFormattedHookList($hookHIn17, $path_to_17), getFormattedHookList($hookExecIn17, $path_to_17));
