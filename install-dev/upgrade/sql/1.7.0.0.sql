@@ -69,4 +69,4 @@ DROP TABLE `PREFIX_theme_meta`;
 DROP TABLE `PREFIX_theme_specific`;
 
 ALTER TABLE `PREFIX_shop` DROP COLUMN `id_theme`;
-ALTER TABLE `PREFIX_shop` ADD COLUMN `theme_directory` VARCHAR(255) AFTER `id_category`;
+ALTER TABLE `PREFIX_shop` ADD COLUMN `theme_name` VARCHAR(255) AFTER `id_category`;

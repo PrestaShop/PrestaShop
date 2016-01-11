@@ -2051,7 +2051,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
   `id_shop_group` int(11) unsigned NOT NULL,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,
   `id_category` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `theme_directory` varchar(255) NOT NULL DEFAULT '',
+  `theme_name` varchar(255) NOT NULL DEFAULT '',
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_shop`),
