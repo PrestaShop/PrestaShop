@@ -114,10 +114,15 @@ class ThemeManager implements AddonManagerInterface
 
     public function getInstanceByName($name)
     {
-        $theme = $this->getJsonConfig($name, 'theme.json');
+        $theme = new Theme();
+        $properties = $this->getJsonConfig($name, 'theme.json');
 
-        if (isset($theme)) {
-            $theme->settings = $this->getJsonConfig($name, 'settings.json');
+        if (isset($properties)) {
+            $properties->settings = $this->getJsonConfig($name, 'settings.json');
+        }
+
+        foreach ($properties as $prop => $value) {
+            $theme->{$prop} = $value;
         }
 
         return $theme;
