@@ -116,11 +116,6 @@ function getFormattedHookList($hookList, $folder)
             echo "Warning, could not parse hook in:\n$hook\n\n";
             continue;
         }
-        if (preg_match('/diff/', $line[0])) {
-            var_dump($line);
-            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-            die();
-        }
         $list[getHookName($line[1])][formatFilePath($line[0], $folder)] = formatFilePath($line[0], $folder);
         ksort($list[getHookName($line[1])]);
     }
