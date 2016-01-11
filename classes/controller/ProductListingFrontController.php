@@ -19,44 +19,6 @@ use PrestaShop\PrestaShop\Core\Business\Product\Search\FacetsRendererInterface;
 abstract class ProductListingFrontControllerCore extends ProductPresentingFrontController
 {
     /**
-     * This method is used by "prepareProductForTemplate" to add missing fields
-     * to the product array.
-     * The minimal fields that must be contained in $rawProduct is "id_product".
-     * You should not need to use this method directly.
-     *
-     * @internal
-     * @param array $rawProduct an associative array with at least the "id_product" key
-     * @return array
-     */
-    private function addMissingProductFields(array $rawProduct)
-    {
-        $id_shop = (int)$this->getProductSearchContext()->getIdShop();
-        $id_lang = (int)$this->getProductSearchContext()->getIdLang();
-        $id_product = (int)$rawProduct['id_product'];
-        $prefix = _DB_PREFIX_;
-
-        $nb_days_new_product = (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
-        if (!Validate::isUnsignedInt($nb_days_new_product)) {
-            $nb_days_new_product = 20;
-        }
-        $now = date('Y-m-d') . ' 00:00:00';
-
-        $sql = "SELECT
-                    p.*,
-                    pl.*,
-                    (DATE_SUB('$now', INTERVAL $nb_days_new_product DAY) > 0) as new
-                FROM {$prefix}product p
-                INNER JOIN {$prefix}product_lang pl
-                    ON pl.id_product = p.id_product
-                    AND pl.id_shop = $id_shop
-                    AND pl.id_lang = $id_lang
-                    AND p.id_product = $id_product";
-
-        $rows = Db::getInstance()->executeS($sql);
-        return array_merge($rows[0], $rawProduct);
-    }
-
-    /**
      * Takes an associative array with at least the "id_product" key
      * and returns an array containing all information necessary for
      * rendering the product in the template.
@@ -66,15 +28,9 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     private function prepareProductForTemplate(array $rawProduct)
     {
-        $enrichedProduct = $this->addMissingProductFields(
-            $rawProduct
-        );
-
-        $product = Product::getProductProperties(
-            $this->getProductSearchContext()->getIdLang(),
-            $enrichedProduct,
-            $this->context
-        );
+        $product = (new ProductAssembler($this->context))
+            ->assembleProduct($rawProduct)
+        ;
 
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
