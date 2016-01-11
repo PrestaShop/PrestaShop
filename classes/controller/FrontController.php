@@ -1239,14 +1239,14 @@ class FrontControllerCore extends Controller
      */
     public function getLayout()
     {
-        $layout = 'layout/layout-full-width.tpl';
+        $layout = 'layouts/layout-full-width.tpl';
 
         if ($this->display_column_left && $this->display_column_right) {
-            $layout = 'layout/layout-both-columns.tpl';
+            $layout = 'layouts/layout-both-columns.tpl';
         } elseif ($this->display_column_left) {
-            $layout = 'layout/layout-left-column.tpl';
+            $layout = 'layouts/layout-left-column.tpl';
         } elseif ($this->display_column_right) {
-            $layout = 'layout/layout-right-column.tpl';
+            $layout = 'layouts/layout-right-column.tpl';
         }
 
         $entity = $this->php_self;
