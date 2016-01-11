@@ -19,7 +19,8 @@
     {"type": "vcs", "url": "https://github.com/prestashop/blocksearch"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockstore"},
     {"type": "vcs", "url": "https://github.com/prestashop/blocksupplier"},
-    {"type": "vcs", "url": "https://github.com/prestashop/blocklayered"}
+    {"type": "vcs", "url": "https://github.com/prestashop/blocklayered"},
+    {"type": "vcs", "url": "https://github.com/prestashop/homefeatured"}
   ],
   "require": {
     "php": ">=5.4",
@@ -78,7 +79,7 @@
     "prestashop/dashproducts": "dev-master",
     "prestashop/graphnvd3": "dev-master",
     "prestashop/gridhtml": "dev-master",
-    "prestashop/homefeatured": "dev-master",
+    "prestashop/homefeatured": "dev-feat/starter-theme",
     "prestashop/homeslider": "dev-master",
     "prestashop/pagesnotfound": "dev-master",
     "prestashop/paymentexample": "dev-master",
