@@ -31,7 +31,7 @@ class Configuration implements \PrestaShop\PrestaShop\Core\ConfigurationInterfac
 {
     private $shop;
 
-    public function __construct(Shop $shop = null)
+    public function __construct(\Shop $shop = null)
     {
         if (is_null($shop)) {
             $this->shop = \Context::getContext()->shop;
