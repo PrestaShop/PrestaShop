@@ -28,9 +28,15 @@
                         <label class="control-label">{{ form.attribute_priceTI.vars.label }}</label>
                         {{ form_widget(form.attribute_priceTI) }}
                     </div>
+                </div>
+                <div class="form-group">
                     <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.attribute_quantity.vars.label }}</label>
                         {{ form_widget(form.attribute_quantity) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_minimal_quantity.vars.label }}</label>
+                        {{ form_widget(form.attribute_minimal_quantity) }}
                     </div>
                 </div>
                 <div class="form-group">
@@ -61,10 +67,6 @@
                     <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.attribute_unity.vars.label }}</label>
                         {{ form_widget(form.attribute_unity) }}
-                    </div>
-                    <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_minimal_quantity.vars.label }}</label>
-                        {{ form_widget(form.attribute_minimal_quantity) }}
                     </div>
                 </div>
                 <div class="form-group">
