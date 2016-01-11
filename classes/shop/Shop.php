@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Business\Addon\Theme\ThemeManager;
+
 /**
  * @since 1.5.0
  */
@@ -36,7 +39,7 @@ class ShopCore extends ObjectModel
     public $id_category;
 
     /** @var string directory name of the selected theme */
-    public $theme_directory;
+    public $theme_name;
 
     /** @var string Shop name */
     public $name;
@@ -70,7 +73,7 @@ class ShopCore extends ObjectModel
             'deleted' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'name' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
             'id_category' =>    array('type' => self::TYPE_INT, 'required' => true),
-            'theme_directory' =>    array('type' => self::TYPE_STRING),
+            'theme_name' =>    array('type' => self::TYPE_STRING, 'validate' => 'isThemeName'),
             'id_shop_group' =>    array('type' => self::TYPE_INT, 'required' => true),
         ),
     );
@@ -112,6 +115,8 @@ class ShopCore extends ObjectModel
     const SHARE_ORDER = 'share_order';
     const SHARE_STOCK = 'share_stock';
 
+    private $configurator = null;
+
     /**
      * On shop instance, get its URL data
      *
@@ -122,6 +127,9 @@ class ShopCore extends ObjectModel
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, $id_lang, $id_shop);
+
+        $this->configurator = new Configurator($this);
+
         if ($this->id) {
             $this->setUrl();
             $this->setTheme();
@@ -458,15 +466,15 @@ class ShopCore extends ObjectModel
      */
     public function setTheme()
     {
-        $this->theme = json_decode(file_get_contents(
-            _PS_ALL_THEMES_DIR_.$this->theme_directory.'/config/theme.json'
-        ));
+        $this->theme = (new ThemeManager())
+                        ->setConfigurator($this->configurator)
+                        ->getInstanceByName($this->theme_name);
     }
 
     /**
     * Get theme directory name
     *
-    * @return string $this->theme->theme_directory
+    * @return string $this->theme->theme_name
     */
     public function getTheme()
     {
@@ -679,7 +687,7 @@ class ShopCore extends ObjectModel
                     'id_shop_group' =>    $row['id_shop_group'],
                     'name' =>            $row['shop_name'],
                     'id_category' =>    $row['id_category'],
-                    'theme_directory' => $row['theme_directory'],
+                    'theme_name' => $row['theme_name'],
                     'domain' =>            $row['domain'],
                     'domain_ssl' =>        $row['domain_ssl'],
                     'uri' =>            $row['physical_uri'].$row['virtual_uri'],

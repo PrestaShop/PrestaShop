@@ -39,7 +39,7 @@
 										<div class="action-overlay"></div>
 										<div class="action-buttons">
 											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;switchTheme&amp;theme_directory={$theme->directory|urlencode}" class="btn btn-default">
+												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;enableTheme&amp;theme_name={$theme->name|urlencode}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
 
@@ -48,7 +48,7 @@
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;theme_directory={$theme->directory|urlencode}" title="Delete this theme" class="delete">
+														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;theme_name={$theme->name|urlencode}" title="Delete this theme" class="delete">
 															<i class="icon-trash"></i> {l s='Delete this theme'}
 														</a>
 													</li>
@@ -57,7 +57,7 @@
 											</div>
 										</div>
 									</div>
-									<img class="center-block img-thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->name}" />
+									<img class="center-block img-thumbnail" src="../themes/{$theme->name}/preview.png" alt="{$theme->name}" />
 								</div>
 							</div>
 						</div>
@@ -80,7 +80,7 @@
 
 			<div class="col-md-3">
 				<a href="{$base_url}" class="_blank">
-					<img class="center-block img-thumbnail" src="../themes/{$cur_theme->directory}/preview.jpg" alt="{$cur_theme->name}" />
+					<img class="center-block img-thumbnail" src="../themes/{$cur_theme->name}/preview.png" alt="{$cur_theme->name}" />
 				</a>
 			</div>
 
