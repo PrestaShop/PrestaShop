@@ -1107,4 +1107,9 @@ class ValidateCore
     {
         return (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id));
     }
+
+    public static function isThemeName($theme_name)
+    {
+        return (bool)preg_match('/^[0-9A-Za-z-_]{3,255}$/u', $theme_name);
+    }
 }

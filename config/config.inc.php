@@ -119,8 +119,7 @@ try {
 } catch (PrestaShopException $e) {
     $e->displayMessage();
 }
-define('_THEME_DIR_NAME_', $context->shop->theme->directory);
-define('_THEME_NAME_', _THEME_DIR_NAME_); // Legacy
+define('_THEME_NAME_', $context->shop->theme->name);
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
