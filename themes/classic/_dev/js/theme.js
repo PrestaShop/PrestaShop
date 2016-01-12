@@ -23,7 +23,9 @@ for (var i in EventEmitter.prototype) {
 }
 
 $(document).ready(() => {
-  let dropDown = new DropDown();
-  let topMenu = new TopMenu();
+  let dropDownEl = $('.js-drop-down');
+  let topMenuEl = $('.js-top-menu > li');
+  let dropDown = new DropDown(dropDownEl).init();
+  let topMenu = new TopMenu(topMenuEl).init();
   psShowHide();
 });
