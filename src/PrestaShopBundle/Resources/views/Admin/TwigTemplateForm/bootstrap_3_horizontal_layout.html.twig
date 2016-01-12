@@ -1,5 +1,4 @@
 {% use "PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_3_layout.html.twig" %}
-
 {% block form_start -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-horizontal')|trim}) %}
     {{- parent() -}}
