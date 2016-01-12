@@ -33,8 +33,15 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 
 class ThemeManager implements AddonManagerInterface
 {
+    private $shop;
     private $configurator;
     private $themes;
+
+    public function __construct(\Shop $shop, ConfigurationInterface $configurator)
+    {
+        $this->shop = $shop;
+        $this->configurator = $configurator;
+    }
 
     /**
      * Add new theme from zipball. This will unzip the file and move the content
@@ -155,12 +162,6 @@ class ThemeManager implements AddonManagerInterface
         }
 
         return $themes;
-    }
-
-    public function setConfigurator(ConfigurationInterface $configurator)
-    {
-        $this->configurator = $configurator;
-        return $this;
     }
 
     private function getThemeOnDisk()

@@ -466,8 +466,7 @@ class ShopCore extends ObjectModel
      */
     public function setTheme()
     {
-        $this->theme = (new ThemeManager())
-                        ->setConfigurator($this->configurator)
+        $this->theme = (new ThemeManager($this, $this->configurator))
                         ->getInstanceByName($this->theme_name);
     }
 
