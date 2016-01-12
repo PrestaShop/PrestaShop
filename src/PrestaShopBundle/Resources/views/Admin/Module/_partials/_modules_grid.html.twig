@@ -1,4 +1,5 @@
 {#{ dump(modules) }#}
+{# Display type ENUM : 'grid' / 'list' #}
 {% if display_type is not defined %}
     {% set display_type = 'grid' %}
 {% endif %}
@@ -12,63 +13,14 @@
 <div id="modules-{{display_type}}">
     <div class="row">
         {% for module in modules %}
-                <div class="module-item-{{display_type}} {{col_lg}}" data-id="{{ module.id }}" data-name="{{ module.displayName }}"
-                data-scoring="{{module.scoring}}" data-logo="{{ module.media.img }}" data-author="{{ module.author }}" data-version="{{ module.version }}" data-description="{{ module.description }}"
-                data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" data-type="{{module.productType}}" data-price="{{module.price.EUR}}">
-                     <div class="module-item-wrapper-{{display_type}}">
-                        <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">
-                            <img class="module-logo-thumb-{{display_type}}" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
-                            <div class="text-ellipsis module-name-{{display_type}}" data-toggle="tooltip" data-placement="top" title="{{ module.displayName }}">
-                                {{ module.displayName }}
-                            </div>
-                            <div class="text-ellipsis x-small-text module-version-author-{{display_type}}">
-                                {% if module.productType == "service" %}
-                                    Service by {{ module.author }}
-                                {% else %}
-                                    v{{ module.version }} by {{ module.author }}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="module-quick-description-{{display_type}} no-padding">
-                            {{ module.description|raw }}
-                            {% if module.fullDescription is defined and module.description|length < module.fullDescription|length %}
-                                ...
-                            {% endif %}
-                            <div class="module-read-more-{{display_type}}">
-                                <a class="module-read-more-{{display_type}}-btn" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">Read More</a>
-                            </div>
-                        </div>
-                        <div class="module-quick-action-{{display_type}} clearfix">
-                            <div class="pull-right btn-group">
-                                {% for module_action, module_url in module.urls %}
-                                    {% if module.url_active is not defined or module.url_active  == module_action %}
-                                        <a class="btn btn-default  btn-xs light-button {% if module_action  != 'configure' %}module-install-btn{% endif %}" href="{{module_url}}">{{module_action|capitalize}}</a>
-                                    {% endif %}
-                                {% endfor %}
-                                {% if module.url is defined and  module.url_active is not defined or module.url_active  == '' %}
-                                    <a class="btn btn-default btn-xs light-button" href="{{module.url}}">{% if module.price.EUR > 0 %}{{module.price.EUR}}{% else %}Discover{% endif %}</a>
-                                {% endif %}
-                                <button type="button" class="btn btn-default dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <span class="caret"></span>
-                                  <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                {% for module_action, module_url in module.urls %}
-                                    <li><a href="{{module_url}}" class="{% if module_action  != 'configure' %}module-install-btn{% endif %}">{{module_action|capitalize}}</a></li>
-                                {% endfor %}
-                                </ul>
-
-                                <div class="loader module-install-loader">
-                                    <svg class="circular" viewBox="25 25 50 50">
-                                        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
-                                   </svg>
-                                </div>
-
-                            </div>
-                        </div>
-                        {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_read_more.html.twig' with { 'module': module } %}
-                    </div>
-                </div>
+            {# Module Card #}
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_card.html.twig'
+                with {
+                    'module': module,
+                    'display_type': display_type,
+                    'col_lg': col_lg
+                }
+            %}
         {% endfor %}
     </div>
 </div>
