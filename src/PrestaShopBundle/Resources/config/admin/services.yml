@@ -30,6 +30,8 @@ services:
     # Legacy context service, transitional
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
+    prestashop.adapter.legacy.logger:
+        class: PrestaShop\PrestaShop\Adapter\LegacyLogger
     # Adapter services that decorates interfaced services
     prestashop.adapter.admin.data_provider.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider

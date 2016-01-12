@@ -1,6 +1,6 @@
 imports:
     - { resource: admin/services.yml }
-
+    
 services:
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
@@ -17,6 +17,15 @@ services:
         calls:
             - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
             - [addSubscriber, ["@prestashop.adapter.legacy.block.helper.subscriber"]]
+            
+            
+    # EVENT HANDLER
+    prestashop.handler.log:
+        class: PrestaShopBundle\Service\LogHandler\LogHandler
+        arguments:
+            - @service_container 
+        tags:
+            - { name: addon_log_handler }
 
 
     # ADAPTERS (prestashop.adapter.*)

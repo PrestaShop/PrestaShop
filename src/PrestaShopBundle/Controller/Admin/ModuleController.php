@@ -146,7 +146,15 @@ class ModuleController extends Controller
         $ret = array();
         if (method_exists($this, $action)) {
             // ToDo : Check if allowed to call this action
-            $ret[$module] = $this->{$action}($module);
+            try {
+                $ret[$module] = $this->{$action}($module);
+            } catch (Exception $e) {
+                $ret[$module]['status'] = false;
+                $ret[$module]['msg'] = sprintf('Exception thrown by addon %s on %s. %s', $module, $request->attributes->get('action'), $e->getMessage());
+
+                $logger = $this->get('logger');
+                $logger->error($ret[$module]['msg']);
+            }
         } else {
             $ret[$module]['status'] = false;
             $ret[$module]['msg'] = 'Invalid action';
