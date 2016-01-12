@@ -1,8 +1,8 @@
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-{block name="head_seo"}
-  <title>{block name="head_seo_title"}{$page.title}{/block}</title>
+{block name='head_seo'}
+  <title>{block name='head_seo_title'}{$page.title}{/block}</title>
   <meta name="description" content="{block name='head_seo_description'}{$page.description}{/block}" />
   <meta name="keywords" content="{block name='head_seo_keywords'}{$page.keywords}{/block}" />
   {if $page.canonical}
@@ -27,6 +27,6 @@
   {/foreach}
 {/if}
 
-{block name="hook_header"}
+{block name='hook_header'}
   {hook h='displayHeader'}
 {/block}
