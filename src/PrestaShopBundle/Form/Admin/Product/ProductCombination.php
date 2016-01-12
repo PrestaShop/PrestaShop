@@ -103,6 +103,15 @@ class ProductCombination extends CommonAbstractType
             'label' => $this->translator->trans('(tax incl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
+        ->add('attribute_ecotax', 'money', array(
+            'required' => false,
+            'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
+        ))
         ->add('attribute_weight', 'number', array(
             'required' => false,
             'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts')

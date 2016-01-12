@@ -758,6 +758,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'attribute_price' => $combination['price'],
             'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->contextShop->currency->iso_code),
             'attribute_priceTI' => '',
+            'attribute_ecotax' => $combination['ecotax'],
             'attribute_weight_impact' => $attribute_weight_impact,
             'attribute_weight' => $combination['weight'],
             'attribute_unit_impact' => $attribute_unity_price_impact,

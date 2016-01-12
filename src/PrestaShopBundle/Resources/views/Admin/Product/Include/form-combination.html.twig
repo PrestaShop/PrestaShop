@@ -80,6 +80,10 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <div class="col-xs-2 pull-left {% if 'PS_USE_ECOTAX'|configuration != 1 %}hide{% endif %}">
+                        <label class="control-label">{{ form.attribute_ecotax.vars.label }}</label>
+                        {{ form_widget(form.attribute_ecotax) }}
+                    </div>
                     <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.available_date_attribute.vars.label }}</label>
                         {{ form_widget(form.available_date_attribute) }}
