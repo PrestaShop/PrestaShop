@@ -42,11 +42,11 @@ $(document).ready(function() {
 	attachmentProduct.init();
 	imagesProduct.init();
 	priceCalculation.init();
-	displayFieldsManger.refresh();
+	displayFieldsManager.refresh();
 
 	/** Type product fields display management */
 	$('#form_step1_type_product').change(function(){
-		displayFieldsManger.refresh();
+		displayFieldsManager.refresh();
 	});
 });
 
@@ -54,7 +54,7 @@ $(document).ready(function() {
 /**
  * Manage show or hide fields
  */
-var displayFieldsManger = (function() {
+var displayFieldsManager = (function() {
 
 	var typeProduct = $('#form_step1_type_product');
 	var showVariationsSelector = $('#show_variations_selector');
@@ -403,10 +403,10 @@ var stock = (function() {
 
 			/** if GSA activation change on 'depend on stock', update quantities fields */
 			$('#form_step3_depends_on_stock_0, #form_step3_depends_on_stock_1, #form_step3_advanced_stock_management').on('change', function(e) {
-				displayFieldsManger.refresh();
+				displayFieldsManager.refresh();
 				warehouseCombinations.refresh();
 			});
-			displayFieldsManger.refresh();
+			displayFieldsManager.refresh();
 		}
 	};
 })();
@@ -476,7 +476,7 @@ var combinationGenerator = (function() {
 				.replace(/__loop_index__/g, combinationsLength);
 
 			$('#accordion_combinations').prepend(newForm);
-			displayFieldsManger.refresh();
+			displayFieldsManager.refresh();
 			combinations.refreshImagesCombination();
 		};
 
@@ -555,7 +555,7 @@ var combinations = (function() {
 					success: function(response) {
 						combinationElem.remove();
 						showSuccessMessage(response.message);
-						displayFieldsManger.refresh();
+						displayFieldsManager.refresh();
 					},
 					error: function(response){
 						showErrorMessage(jQuery.parseJSON(response.responseText).message);
@@ -613,7 +613,7 @@ var combinations = (function() {
 			/** Combinations fields display management */
 			$('#combinations').hide();
 			$('#show_variations_selector input').change(function(){
-				displayFieldsManger.refresh();
+				displayFieldsManager.refresh();
 
 				if($(this).val() == 0){
 					//if combination(s) exists, alert user for deleting it
@@ -621,7 +621,7 @@ var combinations = (function() {
 						modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null,{
 							onCancel: function(){
 								$('#show_variations_selector input[value="1"]').attr('checked', true);
-								displayFieldsManger.refresh();
+								displayFieldsManager.refresh();
 							},
 							onContinue: function(){
 								$.ajax({
@@ -629,7 +629,7 @@ var combinations = (function() {
 									url: $('#accordion_combinations').attr('data-action-delete-all') + '/' + $('#form_id_product').val(),
 									success: function(response){
 										$('#accordion_combinations .combination').remove();
-										displayFieldsManger.refresh();
+										displayFieldsManager.refresh();
 									}, error: function(response){
 										showErrorMessage(jQuery.parseJSON(response.responseText).message);
 									},
