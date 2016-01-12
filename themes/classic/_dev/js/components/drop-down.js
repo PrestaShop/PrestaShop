@@ -14,9 +14,8 @@ export default class DropDown {
 
       currentMenu.find('ul').toggleClass('active');
 
-      $('html').on('click', function() {
+      $('html').one('click', function() {
         currentMenu.find('ul').toggleClass('active');
-        $(this).off();
       });
     });
   }
