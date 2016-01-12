@@ -78,6 +78,15 @@ admin_product_mass_edit_action:
     requirements:
         action: sort
 
+admin_product_export_action:
+    path:     /export.{_format}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::exportAction
+        _format: csv
+    requirements:
+        _format: csv
+
 admin_product_virtual_save_action:
     path:     /product/virtual/form/save/{idProduct}
     methods:  [POST]

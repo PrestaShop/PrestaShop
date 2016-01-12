@@ -41,6 +41,7 @@ use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShopBundle\Service\Csv;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
@@ -210,7 +211,6 @@ class ProductController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'categories' => $categories->createView(),
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
-                'export_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminProducts', true, ['exportproduct' => 1]), // TODO: to reimplement in sF controller
                 'import_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminImport', true, ['import_type' => 'products']),
                 'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
             )
@@ -672,6 +672,45 @@ class ProductController extends FrameworkBundleAdminController
             $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
             return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
         }
+    }
+
+    public function exportAction($_format)
+    {
+        // init vars
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        /* @var $productProvider ProductInterfaceProvider */
+        $csvTools = $this->container->get('prestashop.csv');
+        /* @var $csvTools Csv */
+
+        $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
+        $orderBy = $persistedFilterParameters['last_orderBy'];
+        $sortOrder = $persistedFilterParameters['last_sortOrder'];
+
+        // prepare callback to fetch data from DB
+        $dataCallback = function ($offset, $limit) use ($productProvider, $orderBy, $sortOrder) {
+            return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, array(), true, false);
+        };
+
+        // export CSV
+        $csvTools->exportData(
+            $dataCallback,
+            [   'id_product' => 'ID',
+                'image' => 'Image',
+                'name' => 'Name',
+                'reference' => 'Reference',
+                'name_category' => 'Category',
+                'price' => 'Base price',
+                'price_final' => 'Final price',
+                'sav_quantity' => 'Quantity',
+                'badge_danger' => 'Status',
+                'position' => 'Position',
+            ],
+            100,
+            'product_'.date('Y-m-d_His').'.csv',
+            30*60, // 30 minutes of download max!
+            true // TODO: windows CRLF, to make dynamic or always ON?
+        );
+        // exportData will "die" at the end of its process.
     }
 
     /**

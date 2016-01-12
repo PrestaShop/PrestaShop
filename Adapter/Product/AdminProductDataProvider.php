@@ -139,14 +139,16 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     /* (non-PHPdoc)
      * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::combinePersistentCatalogProductFilter()
      */
-    public function combinePersistentCatalogProductFilter($paramsIn = array())
+    public function combinePersistentCatalogProductFilter($paramsIn = array(), $avoidPersistence = false)
     {
         // retrieve persisted filter parameters
         $persistedParams = $this->getPersistedFilterParameters();
         // merge with new values
         $paramsOut = array_merge($persistedParams, (array)$paramsIn);
         // persist new values
-        $this->persistFilterParameters($paramsOut);
+        if (!$avoidPersistence) {
+            $this->persistFilterParameters($paramsOut);
+        }
         // return new values
         return $paramsOut;
     }
@@ -154,12 +156,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     /* (non-PHPdoc)
      * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::getCatalogProductList()
      */
-    public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array())
+    public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array(), $avoidPersistence = false, $formatCldr = true)
     {
         $filterParams = $this->combinePersistentCatalogProductFilter(array_merge(
             $post,
             ['last_offset' => $offset, 'last_limit' => $limit, 'last_orderBy' => $orderBy, 'last_sortOrder' => $sortOrder]
-        ));
+        ), $avoidPersistence);
 
         $showPositionColumn = $this->isCategoryFiltered();
         if ($orderBy == 'position_ordering' && $showPositionColumn) {
@@ -293,12 +295,14 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         // post treatment
         $currency = new \CurrencyCore(\Configuration::get('PS_CURRENCY_DEFAULT'));
         foreach ($products as &$product) {
-            $product['price'] = \ToolsCore::displayPrice($product['price'], $currency);
             $product['total'] = $total; // total product count (filtered)
             $product['price_final'] = \ProductCore::getPriceStatic($product['id_product'], true, null,
-                    (int)\Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
-                    true, null, null, null, $nothing, true, true);
-            $product['price_final'] = \ToolsCore::displayPrice($product['price_final'], $currency);
+                (int)\Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
+                true, null, null, null, $nothing, true, true);
+            if ($formatCldr) {
+                $product['price'] = \ToolsCore::displayPrice($product['price'], $currency);
+                $product['price_final'] = \ToolsCore::displayPrice($product['price_final'], $currency);
+            }
             $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
         }
 

@@ -47,7 +47,7 @@
             {{ trans("Products", {}, 'AdminProducts') }} {% if has_category_filter == true and activate_drag_and_drop == true %} {{ trans("(ordering)", {}, 'AdminProducts') }} {%else%} {% if has_filter == true %} {{ trans("(filtered)", {}, 'AdminProducts') }} {% endif %} {% endif %}
             <span class="badge">{% if has_filter == true %}{{ product_count_filtered }} / {% endif %}{{ product_count }}</span>
             <span class="panel-heading-action">
-                <a id="desc-product-export" class="list-toolbar-btn" href="{{ export_link }}">
+                <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
                     <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Export", {}, 'AdminTab') }}" data-html="true" data-placement="top">
                         <i class="process-icon-export"></i>
                     </span>
