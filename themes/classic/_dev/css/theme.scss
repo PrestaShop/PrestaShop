@@ -65,6 +65,18 @@
   .breadcrumb{
     text-transform: uppercase;
     background: transparent;
+    ol{
+      padding-left: 0;
+    }
+    li{
+      display: inline;
+      &:after{
+        content:">";
+      }
+      &:last-child:after{
+        content:"";
+      }
+    }
     a{
       color: $gray-light;
     }
