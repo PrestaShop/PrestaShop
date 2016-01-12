@@ -1,11 +1,11 @@
-{extends file="customer/page.tpl"}
+{extends file='customer/page.tpl'}
 
-{block name="page_title"}
-  {l s="Return Merchandise Authorization (RMA)"}
+{block name='page_title'}
+  {l s='Return Merchandise Authorization (RMA)'}
 {/block}
 
-{block name="page_content"}
-  <h2>{l s="Here is a list of pending merchandise returns"}</h2>
+{block name='page_content'}
+  <h2>{l s='Here is a list of pending merchandise returns'}</h2>
 
   {if isset($errorMsg) && $errorMsg}
     <form action="{$urls.pages.authentication}" method="post">
@@ -13,7 +13,7 @@
       <section class="form-fields">
 
         <label>
-          <span>{l s="Please provide an explanation for your RMA:"}</span>
+          <span>{l s='Please provide an explanation for your RMA:'}</span>
            <textarea cols="67" rows="3" name="returnText"></textarea>
         </label>
 
@@ -29,7 +29,7 @@
         {/foreach}
         <input type="hidden" name="id_order" value="{$id_order}"/>
 
-        <button type="submit">{l s="Make an RMA slip"}</button>
+        <button type="submit">{l s='Make an RMA slip'}</button>
       </footer>
 
     </form>
@@ -39,11 +39,11 @@
     <table>
       <thead>
         <tr>
-          <th>{l s="Return"}</th>
-          <th>{l s="Order"}</th>
-          <th>{l s="Package status"}</th>
-          <th>{l s="Date issued"}</th>
-          <th>{l s="Return slip"}</th>
+          <th>{l s='Return'}</th>
+          <th>{l s='Order'}</th>
+          <th>{l s='Package status'}</th>
+          <th>{l s='Date issued'}</th>
+          <th>{l s='Return slip'}</th>
         </tr>
       </thead>
       <tbody>
@@ -55,7 +55,7 @@
             <td>{$return.return_date}</td>
             <td>
               {if $return.print_url}
-                <a href="{$return.print_url}">{l s="Print out"}</a>
+                <a href="{$return.print_url}">{l s='Print out'}</a>
               {else}
                 --
               {/if}

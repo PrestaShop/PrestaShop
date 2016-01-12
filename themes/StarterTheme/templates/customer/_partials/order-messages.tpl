@@ -1,10 +1,10 @@
 {if $order.messages}
-  <h3>{l s="Messages"}</h3>
+  <h3>{l s='Messages'}</h3>
   <table>
     <thead>
       <tr>
-        <th>{l s="From"}</th>
-        <th>{l s="Message"}</th>
+        <th>{l s='From'}</th>
+        <th>{l s='Message'}</th>
       </tr>
     </thead>
     <tbody>
@@ -25,16 +25,16 @@
   <form action="{$urls.pages.order_detail}" method="post">
 
     <header>
-      <h1 class="h3">{l s="Add a message"}</h1>
-      <p>{l s="If you would like to add a comment about your order, please write it in the field below."}</p>
+      <h1 class="h3">{l s='Add a message'}</h1>
+      <p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
     </header>
 
     <section class="form-fields">
 
       <label>
-        <span>{l s="Product"}</span>
+        <span>{l s='Product'}</span>
         <select name="id_product">
-          <option value="0">{l s="-- Choose --"}</option>
+          <option value="0">{l s='-- Choose --'}</option>
           {foreach from=$order.products item=product}
             <option value="{$product.product_id}">{$product.product_name}</option>
           {/foreach}
@@ -50,7 +50,7 @@
     <footer class="form-footer">
       <input type="hidden" name="id_order" value="{$order.data.id}" />
       <button type="submit" name="submitMessage">
-        {l s="Send"}
+        {l s='Send'}
       </button>
     </footer>
 
