@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    {block name="head_seo"}
-      <title>{block name="head_seo_title"}{/block}</title>
+    {block name='head_seo'}
+      <title>{block name='head_seo_title'}{/block}</title>
       <meta name="description" content="{block name='head_seo_description'}{/block}" />
       <meta name="keywords" content="{block name='head_seo_keywords'}{/block}" />
     {/block}
@@ -17,7 +17,7 @@
 
   <body>
 
-    {block name="content"}
+    {block name='content'}
       <p>Hello world! This is HTML5 Boilerplate.</p>
     {/block}
 

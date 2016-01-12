@@ -1,1 +1,1 @@
-{extends file="catalog/brand.tpl"}
+{extends file='catalog/brand.tpl'}

@@ -1,4 +1,4 @@
-{include file="_partials/form-errors.tpl" errors=$errors['']}
+{include file='_partials/form-errors.tpl' errors=$errors['']}
 
 <form action="{$action}" id="customer-form" method="post">
 
