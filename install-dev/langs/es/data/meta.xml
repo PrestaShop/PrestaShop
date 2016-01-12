@@ -4,7 +4,7 @@
     <title>Error 404</title>
     <description>Página no encontrada</description>
     <keywords>error, 404, No se ha encontrado</keywords>
-    <url_rewrite>pagina-no-ecnontrada</url_rewrite>
+    <url_rewrite>pagina-no-encontrada</url_rewrite>
   </meta>
   <meta id='best-sales' id_shop='1'>
     <title>Lo más vendido</title>
