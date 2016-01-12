@@ -1,4 +1,4 @@
-<nav data-depth="{$breadcrumb.count}">
+<nav data-depth="{$breadcrumb.count}" class="breadcrumb">
   <ol itemscope itemtype="http://schema.org/BreadcrumbList">
     {foreach from=$breadcrumb.links item=path name=breadcrumb}
       <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">

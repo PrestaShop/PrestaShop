@@ -29,7 +29,7 @@
 
 {block name='header_top'}
   <div class="header-top row">
-    <div class="container _relative">
+    <div class="container _relative navigation">
       {hook h='displayTop'}
     </div>
   </div>

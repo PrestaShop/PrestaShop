@@ -6,7 +6,7 @@
         {include file='catalog/_partials/sort-orders.tpl' sort_orders=$sort_orders}
       {/block}
 
-      <div class="products">
+      <div class="products row">
         {foreach from=$products item="product"}
           {block name='product_miniature'}
             {include file='catalog/product-miniature.tpl' product=$product}
