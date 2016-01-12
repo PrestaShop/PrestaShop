@@ -20,7 +20,7 @@
         {include file='_partials/notifications.tpl'}
       {/block}
 
-      <div id="wrapper">
+      <div id="wrapper" class="container">
         {block name='breadcrumb'}
           {include file='_partials/breadcrumb.tpl'}
         {/block}
