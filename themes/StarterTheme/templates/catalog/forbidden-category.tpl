@@ -1,6 +1,6 @@
-{extends file="$layout"}
+{extends file=$layout}
 
-{block name="content"}
+{block name='content'}
   <section id="main">
   </section>
 {/block}

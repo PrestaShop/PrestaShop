@@ -1,11 +1,11 @@
-{extends file="checkout/checkout-step.tpl"}
+{extends file='checkout/checkout-step.tpl'}
 
-{block name="step_content"}
+{block name='step_content'}
   <div class="delivery-options-list">
     {if $delivery_options|count}
       <form id="delivery-method" method="post">
         <div class="form-fields">
-          {block name="delivery_options"}
+          {block name='delivery_options'}
             <div class="delivery-options">
               {foreach from=$delivery_options item=carrier key=carrier_id}
                 <div>
@@ -26,7 +26,7 @@
             {if $recyclablePackAllowed}
               <label>
                 <input type="checkbox" name="recyclable" value="1" {if $recyclable} checked {/if}>
-                <span>{l s="I would like to receive my order in recycled packaging."}</span>
+                <span>{l s='I would like to receive my order in recycled packaging.'}</span>
               </label>
             {/if}
             {if $gift.allowed}
@@ -34,17 +34,17 @@
                 <input type="checkbox" name="gift" value="1" {if $gift.isGift} checked {/if}>
                 <span>{$gift.label}</span>
               </label>
-              <label for="gift_message">{l s="If you'd like, you can add a note to the gift:"}</label>
+              <label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
               <textarea rows="2" cols="120" id="gift_message" name="gift_message">{$gift.message}</textarea>
             {/if}
           </div>
         </div>
         <button type="submit" class="continue" name="confirmDeliveryOption" value="1">
-          {l s="Continue"}
+          {l s='Continue'}
         </button>
       </form>
     {else}
-      <p class="warning">{l s="Unfortunately, there are no carriers available for your delivery address."}</p>
+      <p class="warning">{l s='Unfortunately, there are no carriers available for your delivery address.'}</p>
     {/if}
   </div>
 {/block}
