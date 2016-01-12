@@ -1,30 +1,11 @@
-{include file='_partials/form-errors.tpl' errors=$errors['']}
+{extends 'customer/page.tpl'}
 
-{* TODO StarterTheme: HOOKS!!! *}
+{block name='page_title'}
+  {l s='Your personal information'}
+{/block}
 
-<form action="{$action}" method="post">
+{* StarterTheme: Add confirmation/error messages *}
 
-  <section class="form-fields">
-    {block name='form_fields'}
-      {foreach from=$formFields item="field"}
-        {block name='form_field'}
-          {form_field field=$field}
-        {/block}
-      {/foreach}
-    {/block}
-
-    <p class="lost_password">
-      <a href="{$urls.pages.password}" rel="nofollow">
-        {l s='Forgot your password?'}
-      </a>
-    </p>
-  </section>
-
-  <footer class="form-footer">
-    <input type="hidden" name="submitLogin" value="1">
-    {block name='form_buttons'}
-      <button type="submit">{l s='Sign in'}</button>
-    {/block}
-  </footer>
-
-</form>
+{block name='page_content'}
+  {render file='customer/_partials/customer-form.tpl' ui=$customer_form}
+{/block}
