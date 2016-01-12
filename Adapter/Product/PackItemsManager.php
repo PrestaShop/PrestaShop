@@ -40,13 +40,13 @@ class PackItemsManager
             $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface');
             $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
         }
-        return \Pack::getItems($pack->id, $id_lang);
+        return \PackCore::getItems($pack->id, $id_lang);
     }
     
     /**
      * Get all Packs that contains the given item in the corresponding declination.
      *
-     * @param \Product $item
+     * @param \ProductCore $item
      * @param integer $item_attribute_id
      * @param integer $id_lang Optional
      * @return Array[Pack] The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
@@ -57,18 +57,18 @@ class PackItemsManager
             $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface');
             $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
         }
-        return \Pack::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
+        return \PackCore::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
     }
     
     /**
      * Is this product a pack?
      *
-     * @param \Product $product
+     * @param \ProductCore $product
      * @return boolean
      */
     public function isPack($product)
     {
-        return \Pack::isPack($product->id);
+        return \PackCore::isPack($product->id);
     }
     
     /**
@@ -76,12 +76,12 @@ class PackItemsManager
      * If $id_product_attribute specified, then will restrict search on the given combination,
      * else this method will match a product if at least one of all its combination is in a pack.
      *
-     * @param \Product $product
+     * @param \ProductCore $product
      * @param integer $id_product_attribute Optional combination of the product
      * @return boolean
      */
     public function isPacked($product, $id_product_attribute = false)
     {
-        return \Pack::isPacked($product->id, $id_product_attribute);
+        return \PackCore::isPacked($product->id, $id_product_attribute);
     }
 }

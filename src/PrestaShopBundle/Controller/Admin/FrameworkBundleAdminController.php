@@ -27,12 +27,23 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
  */
 class FrameworkBundleAdminController extends Controller
 {
+    protected $configuration;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->configuration = new Configuration();
+    }
+
     /**
      * Returns form errors for JS implementation.
      *

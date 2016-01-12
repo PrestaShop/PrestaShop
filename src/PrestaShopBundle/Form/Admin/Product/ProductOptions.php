@@ -26,38 +26,54 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use PrestaShopBundle\Form\Admin\Product\ProductAttachement;
+use PrestaShopBundle\Form\Admin\Product\ProductCustomField;
 use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 
 /**
  * This form class is responsible to generate the product options form
  */
-class ProductOptions extends CommonModelAbstractType
+class ProductOptions extends CommonAbstractType
 {
     private $translator;
     private $suppliers;
-    private $container;
     private $context;
     private $productAdapter;
+    private $router;
 
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
+     * @param object $productDataProvider
+     * @param object $supplierDataProvider
+     * @param object $currencyDataprovider
+     * @param object $attachmentDataprovider
+     * @param object $router
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext, $productDataProvider, $supplierDataProvider, $currencyDataprovider, $attachmentDataprovider, $router)
     {
-        $this->container = $container;
-        $this->context = $container->get('prestashop.adapter.legacy.context');
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
+        $this->context = $legacyContext;
+        $this->translator = $translator;
+        $this->productAdapter = $productDataProvider;
+        $this->currencyDataprovider = $currencyDataprovider;
+        $this->router = $router;
+
         $this->suppliers = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.supplier')->getSuppliers(),
+            $supplierDataProvider->getSuppliers(),
             'id_supplier'
+        );
+
+        $this->attachmentList = $this->formatDataChoicesList(
+            $attachmentDataprovider->getAllAttachments($this->context->getLanguages()[0]['id_lang']),
+            'id_attachment'
         );
     }
 
@@ -78,7 +94,7 @@ class ProductOptions extends CommonModelAbstractType
             'label' => $this->translator->trans('Redirect when disabled', [], 'AdminProducts'),
         ))
         ->add('id_product_redirected', new TypeaheadProductCollectionType(
-            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&exclude_packs=0&excludeVirtuals=0&excludeIds='.urlencode('1,').'&limit=20&q=%QUERY',
+            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'id',
             'name',
             $this->translator->trans('search in catalog...', [], 'AdminProducts'),
@@ -114,6 +130,38 @@ class ProductOptions extends CommonModelAbstractType
                     'required' => false,
                 ))
         )
+        ->add('upc', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\Regex("/^[0-9]{0,12}$/"),
+            )
+        ))
+        ->add('ean13', 'text', array(
+            'required' => false,
+            'error_bubbling' => true,
+            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\Regex("/^[0-9]{0,13}$/"),
+            )
+        ))
+        ->add('isbn', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
+        ))
+        ->add('reference', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('Reference code', [], 'AdminProducts')
+        ))
+        ->add('condition', 'choice', array(
+            'choices'  => array(
+                'new' => $this->translator->trans('New', [], 'AdminProducts'),
+                'used' => $this->translator->trans('Used', [], 'AdminProducts'),
+                'refurbished' => $this->translator->trans('Refurbished', [], 'AdminProducts')
+            ),
+            'required' => true,
+            'label' => $this->translator->trans('Condition', [], 'AdminProducts')
+        ))
         ->add('suppliers', 'choice', array(
             'choices' =>  $this->suppliers,
             'expanded' =>  true,
@@ -129,13 +177,40 @@ class ProductOptions extends CommonModelAbstractType
 
         foreach ($this->suppliers as $id => $supplier) {
             $builder->add('supplier_combination_'.$id, 'collection', array(
-                'type' => new ProductSupplierCombination($id, $this->container),
+                'type' => new ProductSupplierCombination($id, $this->translator, $this->context, $this->currencyDataprovider),
                 'prototype' => true,
                 'allow_add' => true,
                 'required' => false,
                 'label' => $supplier,
             ));
         }
+
+        $builder->add('custom_fields', 'collection', array(
+            'type' => new ProductCustomField(
+                $this->translator,
+                $this->context
+            ),
+            'label' => $this->translator->trans('Customization', [], 'AdminProducts'),
+            'prototype' => true,
+            'allow_add' => true,
+            'allow_delete' => true
+        ));
+
+        //Add product attachment form
+        $builder->add('attachment_product', new ProductAttachement($this->translator, $this->context), array(
+            'required' => false,
+            'label' => $this->translator->trans('Attachment', [], 'AdminProducts'),
+            'attr' => ['data-action' => $this->router->generate('admin_product_attachement_add_action')]
+        ));
+
+        //Add attachment selectors
+        $builder->add('attachments', 'choice', array(
+            'expanded'  => false,
+            'multiple'  => true,
+            'choices'  => $this->attachmentList,
+            'required' => false,
+            'label' => $this->translator->trans('Attachments for this product:', [], 'AdminProducts'),
+        ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();

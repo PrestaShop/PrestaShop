@@ -23,29 +23,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
 
-/**
- * This subclass contains common functions for PrestaShop needs.
- */
-abstract class CommonModelAbstractType extends AbstractType
-{
-    /**
-     * Format legacy data list to mapping SF2 form field choice
-     *
-     * @param array $list
-     * @param string $mapping_value
-     * @param string $mapping_name
-     * @return array
-     */
-    protected function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
-    {
-        $new_list = array();
-        foreach ($list as $item) {
-            $new_list[$item[$mapping_value]] = $item[$mapping_name];
-        }
-        return $new_list;
-    }
-}
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
+
+header('Location: ../../../../../../../');
+exit;

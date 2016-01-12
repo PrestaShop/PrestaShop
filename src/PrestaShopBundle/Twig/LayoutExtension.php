@@ -43,12 +43,13 @@ class LayoutExtension extends \Twig_Extension
      * Keeps the Context to look inside language settings.
      *
      * @param LegacyContext $context
+     * @param Kernel $kernel
      */
     public function __construct(LegacyContext $context, Kernel $kernel)
     {
         $this->context = $context;
         $this->environment = $kernel->getEnvironment();
-        $this->configurationAdapter = new Configuration();
+        $this->configuration = new Configuration();
     }
 
     public function getGlobals()
@@ -56,9 +57,6 @@ class LayoutExtension extends \Twig_Extension
         return array(
             "root_url" => $this->context->getRootUrl(),
             "js_translatable" => [],
-            "ps_configuration" => [
-                "weight_unit" => $this->configurationAdapter->get('PS_WEIGHT_UNIT'),
-            ]
         );
     }
 
@@ -71,6 +69,7 @@ class LayoutExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFilter('admin_asset_path', array($this, 'getAdminAssetPath')),
+            new \Twig_SimpleFilter('configuration', array($this, 'getConfiguration')),
         );
     }
 
@@ -87,6 +86,18 @@ class LayoutExtension extends \Twig_Extension
     }
 
     /**
+     * Returns a legacy configuration key
+     *
+     * @param string $key
+     *
+     * @return array An array of functions
+     */
+    public function getConfiguration($key)
+    {
+        return $this->configuration->get($key);
+    }
+
+    /**
      * Get admin legacy layout into old controller context
      *
      * Parameters can be set manually into twig tempalte or sent from controller
@@ -96,10 +107,11 @@ class LayoutExtension extends \Twig_Extension
      * @param string $title The page title to override default one
      * @param array $headerToolbarBtn The header toolbar to override
      * @param string $displayType The legacy display type variable
+     * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value.
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "")
+    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true)
     {
         if ($this->environment == 'test') {
             return <<<EOF
@@ -128,7 +140,7 @@ EOF;
                 '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
                 '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',
             ),
-            $this->context->getLegacyLayout($controllerName, $title, $headerToolbarBtn, $displayType)
+            $this->context->getLegacyLayout($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader)
         );
 
         return $content;

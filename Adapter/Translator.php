@@ -34,6 +34,8 @@ use Symfony\Component\Process\Exception\LogicException;
  *
  * When legacy translation system will be refactored, we must implements the same interface to allow compatibility,
  * and keep the same way to use '$domain' function argument.
+ *
+ * WARNING : TO ENSURE TRANS PARSER WILL FIND YOUR MESSAGE, you cannot use variables for $id and $domain.
  */
 class Translator implements TranslatorInterface
 {
@@ -58,9 +60,9 @@ class Translator implements TranslatorInterface
     /**
      * Translates the given message.
      *
-     * @param string $id The message id (may also be an object that can be cast to string)
+     * @param string $id The message id. This value can not be passed with a variable
      * @param array $parameters An array of parameters for the message
-     * @param string|null $module The domain: Legacy Admin controller name, module name or null to use the Core. Other special value: 'pdf'.
+     * @param string $domain The domain: Legacy Admin controller name, module name or null to use the Core. Other special value: 'pdf'. This value can not be passed with a variable
      * @param string|null $locale The locale or null to use the default
      *
      * @throws LogicException If no domain set
@@ -70,25 +72,26 @@ class Translator implements TranslatorInterface
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
-        // Very speific case (Form error)
+        if (!$domain) {
+            throw new LogicException('Error, you need to provide a translation domain');
+        }
+
+        // Very specific case (Form error)
         if ($domain == 'form_error') {
-            return \Tools::displayError($id, false);
+            return \ToolsCore::displayError($id, false);
         }
         // Very specific cases (PDF)
         if ($domain == 'pdf') {
             // Does not support overriding the language for this adapter!
-            return \Translate::getPdfTranslation($id, (count($parameters) === 0) ? null : $parameters);
+            return \TranslateCore::getPdfTranslation($id, (count($parameters) === 0) ? null : $parameters);
         }
 
         // Search for Admin case
         $isAdmin = ((isset($this->context->controller) && $this->context->controller->controller_type == 'admin'));
-        if ($isAdmin && $domain == null) {
-            $domain = 'AdminTab'; // default class value for legacy Admin translation
-        }
         if ($isAdmin) {
             $domain = preg_replace('/(c|C)ontroller$/', '', $domain); // remove trailing 'Controller'
 
-            return \Translate::getAdminTranslation($id, $domain, (count($parameters) === 0) ? null : $parameters);
+            return \TranslateCore::getAdminTranslation($id, $domain, (count($parameters) === 0) ? null : $parameters);
         }
 
         // Front / Module case ?
@@ -102,10 +105,10 @@ class Translator implements TranslatorInterface
     /**
      * Translates the given choice message by choosing a translation according to a number.
      *
-     * @param string      $id         The message id (may also be an object that can be cast to string)
+     * @param string      $id         The message id. This value can not be passed with a variable
      * @param int         $number     The number to use to find the indice of the message
      * @param array       $parameters An array of parameters for the message
-     * @param string|null $domain     The domain for the message or null to use the default
+     * @param string|null $domain     The domain for the message or null to use the default. This value can not be passed with a variable
      * @param string|null $locale     The locale or null to use the default
      *
      * @throws LogicException If the locale contains invalid characters

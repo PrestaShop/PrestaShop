@@ -39,10 +39,10 @@ class AdminAttributeGeneratorControllerWrapper
      */
     public function processGenerate($product, $options)
     {
-        \SpecificPriceRule::disableAnyApplication();
+        \SpecificPriceRuleCore::disableAnyApplication();
 
         //add combination if not already exists
-        $combinations = array_values(\AdminAttributeGeneratorController::createCombinations(array_values($options)));
+        $combinations = array_values(\AdminAttributeGeneratorControllerCore::createCombinations(array_values($options)));
         $combinationsValues = array_values(array_map(function () use ($product) {
             return array(
                 'id_product' => $product->id
@@ -51,9 +51,9 @@ class AdminAttributeGeneratorControllerWrapper
 
         $product->generateMultipleCombinations($combinationsValues, $combinations, false);
 
-        \Product::updateDefaultAttribute($product->id);
-        \SpecificPriceRule::enableAnyApplication();
-        \SpecificPriceRule::applyAllRules(array((int)$product->id));
+        \ProductCore::updateDefaultAttribute($product->id);
+        \SpecificPriceRuleCore::enableAnyApplication();
+        \SpecificPriceRuleCore::applyAllRules(array((int)$product->id));
     }
 
     /**
@@ -66,12 +66,12 @@ class AdminAttributeGeneratorControllerWrapper
      */
     public function ajaxProcessDeleteProductAttribute($idAttribute, $idProduct)
     {
-        if (!\Combination::isFeatureActive()) {
+        if (!\CombinationCore::isFeatureActive()) {
             return false;
         }
 
-        if ($idProduct && \Validate::isUnsignedId($idProduct) && \Validate::isLoadedObject($product = new \Product($idProduct))) {
-            if (($depends_on_stock = \StockAvailable::dependsOnStock($idProduct)) && \StockAvailable::getQuantityAvailableByProduct($idProduct, $idAttribute)) {
+        if ($idProduct && \ValidateCore::isUnsignedId($idProduct) && \ValidateCore::isLoadedObject($product = new \ProductCore($idProduct))) {
+            if (($depends_on_stock = \StockAvailableCore::dependsOnStock($idProduct)) && \StockAvailableCore::getQuantityAvailableByProduct($idProduct, $idAttribute)) {
                 return array(
                     'status' => 'error',
                     'message'=> 'It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.'
@@ -79,15 +79,15 @@ class AdminAttributeGeneratorControllerWrapper
             } else {
                 $product->deleteAttributeCombination((int)$idAttribute);
                 $product->checkDefaultAttributes();
-                \Tools::clearColorListCache((int)$product->id);
+                \ToolsCore::clearColorListCache((int)$product->id);
                 if (!$product->hasAttributes()) {
                     $product->cache_default_attribute = 0;
                     $product->update();
                 } else {
-                    \Product::updateDefaultAttribute($idProduct);
+                    \ProductCore::updateDefaultAttribute($idProduct);
                 }
 
-                if ($depends_on_stock && !\Stock::deleteStockByIds($idProduct, $idAttribute)) {
+                if ($depends_on_stock && !\StockCore::deleteStockByIds($idProduct, $idAttribute)) {
                     return array(
                         'status' => 'error',
                         'message'=> 'Error while deleting the stock'

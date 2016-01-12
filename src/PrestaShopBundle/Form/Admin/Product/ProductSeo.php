@@ -25,14 +25,14 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 
 /**
  * This form class is responsible to generate the product SEO form
  */
-class ProductSeo extends CommonModelAbstractType
+class ProductSeo extends CommonAbstractType
 {
     private $translator;
     private $locales;
@@ -40,12 +40,13 @@ class ProductSeo extends CommonModelAbstractType
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext)
     {
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $this->translator = $translator;
+        $this->locales = $legacyContext->getLanguages();
     }
 
     /**
@@ -58,7 +59,8 @@ class ProductSeo extends CommonModelAbstractType
         $builder->add('meta_title', new TranslateType(
             'text',
             array('required' => false),
-            $this->locales
+            $this->locales,
+            true
         ), array(
             'label' => $this->translator->trans('Meta title', [], 'AdminProducts'),
             'required' => false
@@ -66,7 +68,8 @@ class ProductSeo extends CommonModelAbstractType
         ->add('meta_description', new TranslateType(
             'text',
             array('required' => false),
-            $this->locales
+            $this->locales,
+            true
         ), array(
             'label' => $this->translator->trans('Meta description', [], 'AdminProducts'),
             'required' => false
@@ -74,7 +77,8 @@ class ProductSeo extends CommonModelAbstractType
         ->add('link_rewrite', new TranslateType(
             'text',
             array(),
-            $this->locales
+            $this->locales,
+            true
         ), array('label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts')));
     }
 

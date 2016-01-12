@@ -67,7 +67,7 @@ interface ProductInterface
     /**
      * Combines new filter values with old ones (persisted), then persists the combination and returns it.
      *
-     * @param string[]|null $paramsIn New filter params values to take into acount. If not given, the method will simply return persisted values.
+     * @param string[]|null $paramsIn New filter params values to take into account. If not given, the method will simply return persisted values.
      * @return string[] The new filter params values
      */
     public function combinePersistentCatalogProductFilter($paramsIn = array());
@@ -75,8 +75,8 @@ interface ProductInterface
     /**
      * Returns a collection of products, using default language, currency and others, from Context.
      *
-     * @param integer $offset
-     * @param integer $limit
+     * @param integer|string $offset an offset, or the 'last' token
+     * @param integer|string $limit a limit, or the 'last' token
      * @param string $orderBy Field name to sort during SQL query
      * @param string $sortOrder 'asc' or 'desc'
      * @param string[] $post filter params values to take into acount (often comes from POST data).
@@ -92,4 +92,20 @@ interface ProductInterface
      * @return integer The product count on the current shop
      */
     public function countAllProducts();
+
+    /**
+     * Because pagination is tied to memory available on the server side, the choices can vary from one to another platform,
+     * depending on the memory_limit allocated to PHP.
+     * This will return Elements per page that are recommended to fetch products on the Admin catalog page.
+     *
+     * @return array[int] A list of pagination limits to show in the select dropbox in paginator component.
+     */
+    public function getPaginationLimitChoices();
+
+    /**
+     * Returns the last SQL query that was compiled on this Provider.
+     *
+     * @return string The last SQL query that was compiled with $this->compileSqlQuery()
+     */
+    public function getLastCompiledSql();
 }

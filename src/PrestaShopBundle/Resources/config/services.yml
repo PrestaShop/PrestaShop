@@ -46,6 +46,9 @@ services:
     prestashop.adapter.data_provider.supplier:
         class: PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider
 
+    prestashop.adapter.data_provider.warehouse:
+        class: PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider
+
     prestashop.adapter.data_provider.category:
         class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
 
@@ -67,8 +70,8 @@ services:
     prestashop.adapter.data_provider.product:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider
 
-    prestashop.adapter.data_provider.module:
-        class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
+    prestashop.adapter.data_provider.attachment:
+        class: PrestaShop\PrestaShop\Adapter\Product\AttachmentDataProvider
 
     prestashop.adapter.data_provider.feature:
         class: PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider
@@ -84,6 +87,11 @@ services:
         decorates: prestashop.core.data_provider.stock_interface
         public: false
 
+    prestashop.adapter.data_provider.pack:
+        class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
+
+    prestashop.adapter.data_provider.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
 
     # Other adapters
     prestashop.adapter.shop.context:
@@ -100,13 +108,13 @@ services:
     #TWIG EXTENSIONS
     prestashop.twig.extension.translation:
         class: PrestaShopBundle\Twig\TranslationExtension
-        arguments: ["@translator", "@prestashop.adapter.translator", "@service_container"]
+        arguments: ["@translator", "@prestashop.adapter.translator"]
         tags:
             - { name: twig.extension }
 
     prestashop.twig.extension.hook:
         class: PrestaShopBundle\Twig\HookExtension
-        arguments: ["@prestashop.hook.dispatcher"]
+        arguments: ["@prestashop.hook.dispatcher", "@prestashop.adapter.data_provider.module"]
         tags:
             - { name: twig.extension }
 

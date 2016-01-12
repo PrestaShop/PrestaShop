@@ -46,6 +46,6 @@ class ManufacturerDataProvider
      */
     public function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false, $group_by = false)
     {
-        return \Manufacturer::getManufacturers($get_nb_products, $id_lang, $active, $p, $n, $all_group, $group_by);
+        return \ManufacturerCore::getManufacturers($get_nb_products, $id_lang, $active, $p, $n, $all_group, $group_by);
     }
 }

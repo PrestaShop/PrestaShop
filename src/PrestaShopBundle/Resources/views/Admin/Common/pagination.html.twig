@@ -19,20 +19,18 @@
     </ul>
     <ul class="pagination">
         <li style="float: left; margin-left: 2em;">
-            {{ "Viewing $from-$to on $total (page # $current_page / $page_count)"|trans(
-                {'$from': from, '$to': to, '$total': total, '$current_page': current_page, '$page_count': page_count},
+            {{ trans("Viewing $from-$to on $total (page # $current_page / $page_count)",
+                {'$from': from+1, '$to': min(to+1, total), '$total': total, '$current_page': current_page, '$page_count': page_count},
                 'AdminTab') }}
             &nbsp;
             |
             &nbsp;
-            {{ "Elements per page:"|trans({}, 'AdminTab') }}&nbsp;
+            {{ trans("Elements per page:", {}, 'AdminTab') }}&nbsp;
             <select name="paginator_select_page_limit" psurl="{{ changeLimitUrl }}" style="display:inline;width:6em;" class="pagination-link">
-                {% if limit not in [20, 50, 100, 300, 1000] %}<option value="{{ limit }}" selected="selected">{{ limit }}</option>{% endif %}
-                <option value="20" {% if limit==20 %}selected="selected"{% endif %}>20</option>
-                <option value="50" {% if limit==50 %}selected="selected"{% endif %}>50</option>
-                <option value="100" {% if limit==100 %}selected="selected"{% endif %}>100</option>
-                <option value="300" {% if limit==300 %}selected="selected"{% endif %}>300</option>
-                <option value="1000" {% if limit==1000 %}selected="selected"{% endif %}>1000</option>
+                {% if limit not in limit_choices %}<option value="{{ limit }}" selected="selected">{{ limit }}</option>{% endif %}
+                {% for limit_choice in limit_choices %}
+                    <option value="{{ limit_choice }}" {% if limit==limit_choice %}selected="selected"{% endif %}>{{ limit_choice }}</option>
+                {% endfor %}
             </select>
         </li>
     </ul>

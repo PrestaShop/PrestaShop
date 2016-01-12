@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Category;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * This form class is responsible to generate the basic category form
  * Name (not translated), and parent category selector
  */
-class SimpleCategory extends AbstractType
+class SimpleCategory extends CommonAbstractType
 {
     private $translator;
     private $categories;
@@ -42,14 +42,15 @@ class SimpleCategory extends AbstractType
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $categoryDataProvider
      * @param bool $ajax If the form is called from ajax query
      */
-    public function __construct($container, $ajax = false)
+    public function __construct($translator, $categoryDataProvider, $ajax = false)
     {
-        $this->translator = $container->get('prestashop.adapter.translator');
+        $this->translator = $translator;
         $this->ajax = $ajax;
-        $this->formatValidList($container->get('prestashop.adapter.data_provider.category')->getNestedCategories());
+        $this->formatValidList($categoryDataProvider->getNestedCategories());
     }
 
     /**

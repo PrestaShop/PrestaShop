@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
@@ -35,7 +35,7 @@ use Symfony\Component\Form\FormEvent;
 /**
  * This form class is responsible to generate the basic product information form
  */
-class ProductSpecificPrice extends CommonModelAbstractType
+class ProductSpecificPrice extends CommonAbstractType
 {
     private $translator;
     private $locales;
@@ -47,21 +47,24 @@ class ProductSpecificPrice extends CommonModelAbstractType
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $router
+     * @param object $translator
+     * @param object $shopContextAdapter
+     * @param object $countryDataprovider
+     * @param object $currencyDataprovider
+     * @param object $groupDataprovider
+     * @param object $legacyContext
      */
-    public function __construct($container)
+    public function __construct($router, $translator, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext)
     {
-        $this->router = $container->get('router');
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $shopContextAdapter = $container->get('prestashop.adapter.shop.context');
-        $countryAdapter = $container->get('prestashop.adapter.data_provider.country');
-        $currencyAdapter = $container->get('prestashop.adapter.data_provider.currency');
-        $groupAdapter = $container->get('prestashop.adapter.data_provider.group');
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $this->router = $router;
+        $this->translator = $translator;
+        $this->locales = $legacyContext->getLanguages();
         $this->shops = $this->formatDataChoicesList($shopContextAdapter->getShops(), 'id_shop');
-        $this->countries = $this->formatDataChoicesList($countryAdapter->getCountries($this->locales[0]['id_lang']), 'id_country');
-        $this->currencies = $this->formatDataChoicesList($currencyAdapter->getCurrencies(), 'id_currency');
-        $this->groups = $this->formatDataChoicesList($groupAdapter->getGroups($this->locales[0]['id_lang']), 'id_group');
+        $this->countries = $this->formatDataChoicesList($countryDataprovider->getCountries($this->locales[0]['id_lang']), 'id_country');
+        $this->currencies = $this->formatDataChoicesList($currencyDataprovider->getCurrencies(), 'id_currency');
+        $this->groups = $this->formatDataChoicesList($groupDataprovider->getGroups($this->locales[0]['id_lang']), 'id_group');
+        $this->currency = $legacyContext->getContext()->currency;
     }
 
     /**
@@ -71,13 +74,25 @@ class ProductSpecificPrice extends CommonModelAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('sp_id_shop', 'choice', array(
-            'choices' =>  $this->shops,
-            'required' =>  false,
-            'label' =>  false,
-            'placeholder' => $this->translator->trans('All shops', [], 'AdminProducts'),
-        ))
-        ->add('sp_id_currency', 'choice', array(
+        //If context multi-shop, hide shop selector
+        //Else show selector
+        if (count($this->shops) == 1) {
+            $builder->add('sp_id_shop', 'hidden', array(
+                'required' =>  false,
+            ));
+        } else {
+            $builder->add('sp_id_shop', 'choice', array(
+                'choices' =>  $this->shops,
+                'required' =>  false,
+                'label' =>  false,
+                'placeholder' => $this->translator->trans('All shops', [], 'AdminProducts'),
+                'attr' => [
+                    'class' => count($this->shops) >= 1 ? 'hide2' : ''
+                ]
+            ));
+        }
+
+        $builder->add('sp_id_currency', 'choice', array(
             'choices' =>  $this->currencies,
             'required' =>  false,
             'label' =>  false,
@@ -121,17 +136,19 @@ class ProductSpecificPrice extends CommonModelAbstractType
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('sp_price', 'number', array(
+        ->add('sp_price', 'money', array(
             'required' => false,
             'label' => $this->translator->trans('Product price', [], 'AdminProducts'),
-            'attr' => ['class' => 'price']
+            'attr' => ['class' => 'price'],
+            'currency' => $this->currency->iso_code,
         ))
         ->add('leave_bprice', 'checkbox', array(
             'label'    => $this->translator->trans('Leave base price:', [], 'AdminProducts'),
             'required' => false,
         ))
-        ->add('sp_reduction', 'number', array(
+        ->add('sp_reduction', 'money', array(
             'required' => false,
+            'currency' => $this->currency->iso_code,
         ))
         ->add('sp_reduction_type', 'choice', array(
             'choices'  => array(

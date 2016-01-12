@@ -31,6 +31,10 @@ _admin_supplier_routing:
     resource: "admin/routing_supplier.yml"
     prefix: /supplier
 
+_admin_warehouse_routing:
+    resource: "admin/routing_warehouse.yml"
+    prefix: /warehouse
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}
@@ -44,10 +48,3 @@ admin_common_pagination:
         offset: \d+
         limit: \d+
         total: \d+
-
-admin_common_upload:
-    path:     /common/upload/{file_type}
-    methods:  [POST]
-    defaults: { _controller: 'PrestaShopBundle\Controller\Admin\CommonController::uploadAction', file_type: image }
-    requirements:
-        file_type:  image|file

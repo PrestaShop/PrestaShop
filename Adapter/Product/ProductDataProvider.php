@@ -33,6 +33,16 @@ use Symfony\Component\Process\Exception\LogicException;
 class ProductDataProvider
 {
     /**
+     * Get a new ProductCore instance
+     *
+     * @return object product
+     */
+    public function getProductInstance()
+    {
+        return new \ProductCore();
+    }
+
+    /**
      * Get a product
      *
      * @param int $id_product
@@ -51,7 +61,19 @@ class ProductDataProvider
             throw new LogicException('You need to provide a product id', null, 5002);
         }
 
-        return new \Product($id_product, $full, $id_lang, $id_shop, $context);
+        $product = new \ProductCore($id_product, $full, $id_lang, $id_shop, $context);
+        if ($product) {
+            if (!is_array($product->link_rewrite)) {
+                $linkRewrite = $product->link_rewrite;
+            } else {
+                $linkRewrite = $product->link_rewrite[$id_lang ? $id_lang : key($product->link_rewrite)];
+            }
+
+            $cover = \ProductCore::getCover($product->id);
+            $product->image = \Context::getContext()->link->getImageLink($linkRewrite, $cover ? $cover['id_image'] : '', 'home_default');
+        }
+
+        return $product;
     }
 
     /**
@@ -61,7 +83,61 @@ class ProductDataProvider
      */
     public function getIdTaxRulesGroup()
     {
-        $product = new \Product();
+        $product = new \ProductCore();
         return $product->getIdTaxRulesGroup();
+    }
+
+    /**
+     * Get product quantity
+     *
+     * @param int $id_product
+     * @param int|null $id_product_attribute
+     * @param bool|null $cache_is_pack
+     *
+     * @return int stock
+     */
+    public function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
+    {
+        return \ProductCore::getQuantity($id_product, $id_product_attribute, $cache_is_pack);
+    }
+
+    /**
+     * Get associated images to product
+     *
+     * @param int $id_product
+     * @param int $id_lang
+     *
+     * @return array
+     */
+    public function getImages($id_product, $id_lang)
+    {
+        $data = [];
+        foreach (\ImageCore::getImages($id_lang, $id_product) as $image) {
+            $data[] = $this->getImage($image['id_image']);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get an image
+     *
+     * @param int $id_image
+     *
+     * @return object
+     */
+    public function getImage($id_image)
+    {
+        $imageData = new \ImageCore((int)$id_image);
+
+        return [
+            'id' => $imageData->id,
+            'id_product' => $imageData->id_product,
+            'position' => $imageData->position,
+            'cover' => $imageData->cover ? true : false,
+            'legend' => $imageData->legend,
+            'format' => $imageData->image_format,
+            'base_image_url' => _THEME_PROD_DIR_.$imageData->getImgPath(),
+        ];
     }
 }

@@ -24,11 +24,30 @@ admin_delete_attribute:
         idAttribute: \d+
         idProduct: \d+
 
+admin_delete_all_attributes:
+    path:     /delete-all/{idProduct}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\AttributeController::deleteAllAttributeAction
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
 admin_get_product_combinations:
     path:     /product-combinations/{idProduct}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\AttributeController::getProductCombinationsAction
+        _format: json
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_get_form_images_combination:
+    path:     /product-form-images/{idProduct}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\AttributeController::getFormImagesAction
         _format: json
         idProduct: 0
     requirements:

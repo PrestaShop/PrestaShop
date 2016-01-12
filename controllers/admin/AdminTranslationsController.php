@@ -1141,8 +1141,13 @@ class AdminTranslationsControllerCore extends AdminController
                         _PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
                         _PS_CLASS_DIR_.'helper/' => scandir(_PS_CLASS_DIR_.'helper/'),
                         _PS_CLASS_DIR_.'controller/' => array('AdminController.php'),
-                        _PS_CLASS_DIR_ => array('PaymentModule.php')
+                        _PS_CLASS_DIR_ => array('PaymentModule.php'),
                     ),
+                    'php-sf2' => array(
+                        _PS_ROOT_DIR_.'/Adapter/' => \Tools::scandir(_PS_ROOT_DIR_.'/Adapter/', 'php', '', true),
+                        _PS_ROOT_DIR_.'/src/' => \Tools::scandir(_PS_ROOT_DIR_.'/src/', 'php', '', true),
+                    ),
+                    'tpl-sf2' => \Tools::scandir(_PS_ROOT_DIR_.'/src/PrestaShopBundle/Resources/views/', 'twig', '', true),
                     'tpl' => $this->listFiles(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes/'),
                     'specific' => array(
                         _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => array(
@@ -1873,6 +1878,89 @@ class AdminTranslationsControllerCore extends AdminController
         // Get all types of file (PHP, TPL...) and a list of files to parse by folder
         $files_per_directory = $this->getFileToParseByTypeTranslation();
 
+        //Parse SF2 php files
+        $regexSf2Php = [
+            '/->trans\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?[\[|array\(](.*)[\]|\)])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
+            '/->transchoice\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?(.*))(,\s*?[\[|array\(](.*)[\]|\)])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
+        ];
+
+        foreach ($files_per_directory['php-sf2'] as $dir => $files) {
+            foreach ($files as $file) {
+                // Get content for this file
+                $content = file_get_contents($dir . $file);
+                if (!$content) {
+                    continue;
+                }
+
+                // Parse this content
+                foreach ($regexSf2Php as $reg) {
+                    preg_match_all($reg, $content, $matches);
+                    foreach ($matches[0] as $key => $match) {
+                        $domainKey = strpos($match, 'trans(') !== false ? 8 : 10;
+                        $stringToTranslate = $matches[2][$key];
+                        $prefix_key = $matches[$domainKey][$key];
+
+                        if ($prefix_key && $stringToTranslate) {
+                            if (isset($GLOBALS[$name_var][$prefix_key.md5($stringToTranslate)])) {
+                                $tabs_array[$prefix_key][$stringToTranslate]['trad'] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($stringToTranslate)], ENT_COMPAT, 'UTF-8'));
+                            } else {
+                                if (!isset($tabs_array[$prefix_key][$stringToTranslate]['trad'])) {
+                                    $tabs_array[$prefix_key][$stringToTranslate]['trad'] = '';
+                                    if (!isset($missing_translations_back[$prefix_key])) {
+                                        $missing_translations_back[$prefix_key] = 1;
+                                    } else {
+                                        $missing_translations_back[$prefix_key]++;
+                                    }
+                                }
+                            }
+                            $tabs_array[$prefix_key][$stringToTranslate]['use_sprintf'] = $this->checkIfKeyUseSprintf($stringToTranslate);
+                        }
+                    }
+                }
+            }
+        }
+
+        //Parse SF2/Twig files
+        $regexSf2Tpl = [
+            '/trans\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?\{(.*)\})(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
+            '/transchoice\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?(.*))(,\s*?\{(.*)\})(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
+        ];
+
+        foreach ($files_per_directory['tpl-sf2'] as $file) {
+            // Get content for this file
+            $content = file_get_contents(_PS_ROOT_DIR_.'/src/PrestaShopBundle/Resources/views/' . $file);
+            if (!$content) {
+                continue;
+            }
+
+            // Parse this content
+            foreach ($regexSf2Tpl as $reg) {
+                preg_match_all($reg, $content, $matches);
+                foreach ($matches[0] as $key => $match) {
+                    $domainKey = strpos($match, 'trans(') !== false ? 8 : 10;
+                    $stringToTranslate = $matches[2][$key];
+                    $prefix_key = $matches[$domainKey][$key];
+
+                    if ($prefix_key && $stringToTranslate) {
+                        if (isset($GLOBALS[$name_var][$prefix_key.md5($stringToTranslate)])) {
+                            $tabs_array[$prefix_key][$stringToTranslate]['trad'] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($stringToTranslate)], ENT_COMPAT, 'UTF-8'));
+                        } else {
+                            if (!isset($tabs_array[$prefix_key][$stringToTranslate]['trad'])) {
+                                $tabs_array[$prefix_key][$stringToTranslate]['trad'] = '';
+                                if (!isset($missing_translations_back[$prefix_key])) {
+                                    $missing_translations_back[$prefix_key] = 1;
+                                } else {
+                                    $missing_translations_back[$prefix_key]++;
+                                }
+                            }
+                        }
+                        $tabs_array[$prefix_key][$stringToTranslate]['use_sprintf'] = $this->checkIfKeyUseSprintf($stringToTranslate);
+                    }
+                }
+            }
+        }
+
+        //Parse ps PHP files
         foreach ($files_per_directory['php'] as $dir => $files) {
             foreach ($files as $file) {
                 // Check if is a PHP file and if the override file exists

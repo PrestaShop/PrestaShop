@@ -43,6 +43,6 @@ class CountryDataProvider
      */
     public function getCountries($id_lang, $active = false, $contain_states = false, $list_states = true)
     {
-        return \Country::getCountries($id_lang, $active = false, $contain_states = false, $list_states = true);
+        return \CountryCore::getCountries($id_lang, $active = false, $contain_states = false, $list_states = true);
     }
 }

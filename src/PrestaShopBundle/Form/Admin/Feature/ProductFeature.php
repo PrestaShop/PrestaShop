@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Feature;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormEvents;
@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormEvent;
 /**
  * This form class is responsible to generate the product options form
  */
-class ProductFeature extends CommonModelAbstractType
+class ProductFeature extends CommonAbstractType
 {
     private $translator;
     private $locales;
@@ -44,16 +44,19 @@ class ProductFeature extends CommonModelAbstractType
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
+     * @param object $router
+     * @param object $featureDataProvider
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext, $router, $featureDataProvider)
     {
-        $this->container = $container;
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
-        $this->router = $container->get("router");
+        $this->translator = $translator;
+        $this->locales = $legacyContext->getLanguages();
+        $this->router = $router;
+        $this->featureDataProvider = $featureDataProvider;
         $this->features = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.feature')->getFeatures($this->locales[0]['id_lang']),
+            $this->featureDataProvider->getFeatures($this->locales[0]['id_lang']),
             'id_feature'
         );
     }
@@ -66,6 +69,7 @@ class ProductFeature extends CommonModelAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('feature', 'choice', array(
+            'label' => $this->translator->trans('Feature', [], 'AdminProducts'),
             'choices' =>  $this->features,
             'required' =>  false,
             'attr' => array(
@@ -74,10 +78,14 @@ class ProductFeature extends CommonModelAbstractType
             )
         ))
         ->add('value', 'choice', array(
+            'label' => $this->translator->trans('Value', [], 'AdminProducts'),
             'required' =>  false,
             'attr' => array('class' => 'feature-value-selector')
         ))
-        ->add('custom_value', new TranslateType('text', array(), $this->locales), array('required' =>  false));
+        ->add('custom_value', new TranslateType('text', array(), $this->locales, true), array(
+            'required' =>  false,
+            'label' => $this->translator->trans('Custom value', [], 'AdminProducts'),
+        ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
@@ -88,7 +96,7 @@ class ProductFeature extends CommonModelAbstractType
             }
 
             $choices = $this->formatDataChoicesList(
-                $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
+                $this->featureDataProvider->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
                 'id_feature_value',
                 'value'
             );
@@ -110,7 +118,7 @@ class ProductFeature extends CommonModelAbstractType
             }
 
             $choices = $this->formatDataChoicesList(
-                $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
+                $this->featureDataProvider->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
                 'id_feature_value',
                 'value'
             );

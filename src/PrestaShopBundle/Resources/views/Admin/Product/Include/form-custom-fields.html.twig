@@ -1,0 +1,16 @@
+<div class="form-group">
+    <div class="col-xs-3 pull-left">
+        <label class="control-label">{{ form.label.vars.label }}</label>
+        {{ form_widget(form.label) }}
+    </div>
+
+    <div class="col-xs-3 pull-left">
+        <label class="control-label">{{ form.type.vars.label }}</label>
+        {{ form_widget(form.type) }}
+    </div>
+
+    <div class="col-xs-3 pull-left">
+        <label class="control-label"></label>
+        {{ form_widget(form.require) }}
+    </div>
+</div>

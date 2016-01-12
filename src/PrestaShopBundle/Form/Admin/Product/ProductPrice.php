@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice;
@@ -33,23 +33,41 @@ use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice;
 /**
  * This form class is responsible to generate the product price form
  */
-class ProductPrice extends CommonModelAbstractType
+class ProductPrice extends CommonAbstractType
 {
     private $translator;
     private $tax_rules;
+    private $tax_rules_rates;
+    private $configuration;
+    private $eco_tax_rate;
 
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $taxDataProvider
+     * @param object $router
+     * @param object $shopContextAdapter
+     * @param object $countryDataprovider
+     * @param object $currencyDataprovider
+     * @param object $groupDataprovider
+     * @param object $legacyContext
      */
-    public function __construct($container)
+    public function __construct($translator, $taxDataProvider, $router, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext)
     {
-        $this->container = $container;
-        $this->translator = $this->container->get('prestashop.adapter.translator');
-
+        $this->translator = $translator;
+        $this->router = $router;
+        $this->configuration = $this->getConfiguration();
+        $this->shopContextAdapter = $shopContextAdapter;
+        $this->countryDataprovider = $countryDataprovider;
+        $this->currencyDataprovider = $currencyDataprovider;
+        $this->groupDataprovider= $groupDataprovider;
+        $this->legacyContext = $legacyContext;
+        $this->tax_rules_rates = $taxDataProvider->getTaxRulesGroupWithRates();
+        $this->eco_tax_rate = $taxDataProvider->getProductEcotaxRate();
+        $this->currency = $legacyContext->getContext()->currency;
         $this->tax_rules = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.tax')->getTaxRulesGroups(true),
+            $taxDataProvider->getTaxRulesGroups(true),
             'id_tax_rules_group'
         );
     }
@@ -61,41 +79,70 @@ class ProductPrice extends CommonModelAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('price', 'number', array(
+        $builder->add('price', 'money', array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'attr' => ['data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')],
+            'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('id_tax_rules_group', 'choice', array(
-            'choices' =>  $this->tax_rules,
-            'required' => true,
-            'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
-        ))
-        ->add('price_ttc', 'number', array(
+        ->add('price_ttc', 'money', array(
             'required' => false,
             'mapped' => false,
             'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
+        ))
+        ->add('ecotax', 'money', array(
+            'required' => false,
+            'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            ),
+            'attr' => ['data-eco-tax-rate' => $this->eco_tax_rate],
+        ))
+        ->add('id_tax_rules_group', 'choice', array(
+            'choices' =>  $this->tax_rules,
+            'required' => true,
+            'choice_attr' => function ($val) {
+                return [
+                    'data-rates' => implode(',', $this->tax_rules_rates[$val]['rates']),
+                    'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
+                ];
+            },
+            'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
         ))
         ->add('on_sale', 'checkbox', array(
             'required' => false,
             'label' => $this->translator->trans('On sale', [], 'AdminProducts'),
         ))
-        ->add('wholesale_price', 'number', array(
+        ->add('wholesale_price', 'money', array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts')
+            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
-        ->add('unit_price', 'number', array(
+        ->add('unit_price', 'money', array(
             'required' => false,
-            'label' => $this->translator->trans('Unit price (tax excl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('Unit price (tax excl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
         ->add('unity', 'text', array(
             'required' => false,
             'label' => $this->translator->trans('per', [], 'AdminProducts')
         ))
-        ->add('specific_price', new ProductSpecificPrice($this->container))
+        ->add('specific_price', new ProductSpecificPrice(
+            $this->router,
+            $this->translator,
+            $this->shopContextAdapter,
+            $this->countryDataprovider,
+            $this->currencyDataprovider,
+            $this->groupDataprovider,
+            $this->legacyContext
+        ))
         ->add('specificPricePriorityToAll', 'checkbox', array(
             'required' => false,
             'label' => $this->translator->trans('Apply to all products', [], 'AdminProducts'),

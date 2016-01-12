@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
@@ -33,11 +33,12 @@ use Symfony\Component\Form\FormInterface;
 /**
  * This form class is responsible to create a translatable form
  */
-class TranslateType extends AbstractType
+class TranslateType extends CommonAbstractType
 {
     private $type;
     private $options;
     private $locales;
+    private $hideTabs;
 
     /**
      * Constructor
@@ -45,12 +46,14 @@ class TranslateType extends AbstractType
      * @param string $type The field type
      * @param array $options The field options as constraints, attributes...
      * @param array $locales The locales to render all fields
+     * @param boolean $hideTabs The languages tabs will be removed but the tab panels are still here (to control them by JS)
      */
-    public function __construct($type, $options = array(), $locales = array())
+    public function __construct($type, $options = array(), $locales = array(), $hideTabs = true)
     {
         $this->type = $type;
         $this->options = $options;
         $this->locales = $locales;
+        $this->hideTabs = $hideTabs;
     }
 
     /**
@@ -82,6 +85,7 @@ class TranslateType extends AbstractType
     {
         $view->vars['locales'] = $this->locales;
         $view->vars['defaultLocale'] = $this->locales[0];
+        $view->vars['hideTabs'] = $this->hideTabs;
     }
 
     /**

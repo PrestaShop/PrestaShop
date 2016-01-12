@@ -38,6 +38,6 @@ class CurrencyDataProvider
      */
     public function getCurrencies($object = false, $active = true, $group_by = false)
     {
-        return \Currency::getCurrencies($object = false, $active = true, $group_by = false);
+        return \CurrencyCore::getCurrencies($object = false, $active = true, $group_by = false);
     }
 }

@@ -23,16 +23,17 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Business\Addon;
 
-namespace PrestaShopBundle\Form\Admin\Validator;
-
-use Symfony\Component\Validator\Constraint;
-
-/**
- * DropFile
- *
- * This class is used to override the Symfony\Component\Validator\Constraint class
- */
-class DropFile extends Constraint
+interface AddonManagerInterface
 {
+    public function install($source);
+    public function uninstall($name);
+    public function upgrade($name, $version, $source = null);
+    public function enable($name);
+    public function disable($name);
+    public function reset($name);
+
+    public function getInstanceByName($name);
+    public function getAddonList(AddonListFilter $filter);
 }

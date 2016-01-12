@@ -45,7 +45,7 @@ class SupplierDataProvider
      */
     public function getSuppliers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_groups = false)
     {
-        return \Supplier::getSuppliers($get_nb_products, $id_lang, $active, $p, $n, $all_groups);
+        return \SupplierCore::getSuppliers($get_nb_products, $id_lang, $active, $p, $n, $all_groups);
     }
 
     /**
@@ -58,12 +58,12 @@ class SupplierDataProvider
      */
     public function getProductSuppliers($id_product, $group_by_supplier = true)
     {
-        $suppliersCollection = \ProductSupplier::getSupplierCollection($id_product, $group_by_supplier);
+        $suppliersCollection = \ProductSupplierCore::getSupplierCollection($id_product, $group_by_supplier);
         return $suppliersCollection->getResults();
     }
 
     /**
-     * For a given product and supplier, gets the product supplier datas
+     * For a given product and supplier, gets the product supplier data
      *
      * @param int $id_product
      * @param int $id_product_attribute
@@ -72,7 +72,7 @@ class SupplierDataProvider
      */
     public function getProductSupplierData($id_product, $id_product_attribute, $id_supplier)
     {
-        return \ProductSupplier::getProductSupplierData($id_product, $id_product_attribute, $id_supplier);
+        return \ProductSupplierCore::getProductSupplierData($id_product, $id_product_attribute, $id_supplier);
     }
 
     /**
@@ -84,6 +84,6 @@ class SupplierDataProvider
      */
     public function getNameById($id_supplier)
     {
-        return \Supplier::getNameById($id_supplier);
+        return \SupplierCore::getNameById($id_supplier);
     }
 }

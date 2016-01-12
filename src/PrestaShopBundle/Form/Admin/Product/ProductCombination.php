@@ -25,32 +25,33 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 /**
  * This form class is responsible to generate the basic product information form
  */
-class ProductCombination extends CommonModelAbstractType
+class ProductCombination extends CommonAbstractType
 {
     private $translator;
-    private $container;
     private $contextLegacy;
-    private $configurationAdapter;
+    private $configuration;
 
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext)
     {
-        $this->container = $container;
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->contextLegacy = $container->get('prestashop.adapter.legacy.context')->getContext();
-        $this->configurationAdapter = new Configuration();
+        $this->translator = $translator;
+        $this->contextLegacy = $legacyContext->getContext();
+        $this->configuration = $this->getConfiguration();
+        $this->currency = $this->contextLegacy->currency;
     }
 
     /**
@@ -86,9 +87,10 @@ class ProductCombination extends CommonModelAbstractType
                 new Assert\Regex("/^[0-9]{0,12}$/"),
             )
         ))
-        ->add('attribute_wholesale_price', 'number', array(
+        ->add('attribute_wholesale_price', 'money', array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts')
+            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
         ->add('attribute_price_impact', 'choice', array(
             'choices'  => array(
@@ -99,14 +101,16 @@ class ProductCombination extends CommonModelAbstractType
             'required' => true,
             'label' => $this->translator->trans('Impact on price', [], 'AdminProducts'),
         ))
-        ->add('attribute_price', 'number', array(
+        ->add('attribute_price', 'money', array(
             'required' => false,
-            'label' => $this->translator->trans('(tax excl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('(tax excl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
-        ->add('attribute_priceTI', 'number', array(
+        ->add('attribute_priceTI', 'money', array(
             'required' => false,
             'mapped' => false,
-            'label' => $this->translator->trans('(tax incl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('(tax incl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
         ->add('attribute_weight_impact', 'choice', array(
             'choices'  => array(
@@ -119,7 +123,7 @@ class ProductCombination extends CommonModelAbstractType
         ))
         ->add('attribute_weight', 'number', array(
             'required' => false,
-            'label' => $this->translator->trans($this->configurationAdapter->get('PS_WEIGHT_UNIT'), [], 'AdminProducts')
+            'label' => $this->translator->trans($this->configuration->get('PS_WEIGHT_UNIT'), [], 'AdminProducts')
         ))
         ->add('attribute_unit_impact', 'choice', array(
             'choices'  => array(
@@ -158,18 +162,34 @@ class ProductCombination extends CommonModelAbstractType
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric')),
             )
+        ))
+        ->add('id_image_attr', 'choice', array(
+            'choices'  => array(),
+            'required' => false,
+            'expanded' => true,
+            'multiple' => true,
+            'label' => $this->translator->trans('Images', [], 'AdminProducts'),
+            'attr' => array('class' => 'images'),
         ));
 
-        //set default minimal values for collection prototype
-        $builder->setData([
-            'attribute_wholesale_price' => 0,
-            'attribute_price' => 0,
-            'attribute_weight' => 0,
-            'attribute_unity' => 0,
-            'attribute_minimal_quantity' => 1,
-            'available_date_attribute' => '0000-00-00',
-            'attribute_quantity' => 0,
-        ]);
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            $choices = [];
+            if (!empty($data['id_image_attr'])) {
+                foreach ($data['id_image_attr'] as $id) {
+                    $choices[$id] = $id;
+                }
+            }
+
+            $form->add('id_image_attr', 'choice', array(
+                'choices' => $choices,
+                'required' => false,
+                'expanded' => true,
+                'multiple' => true,
+            ));
+        });
     }
 
     /**

@@ -25,14 +25,14 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * This form class is responsible to generate the basic product information form
  */
-class ProductSupplierCombination extends CommonModelAbstractType
+class ProductSupplierCombination extends CommonAbstractType
 {
     private $translator;
     private $contextLegacy;
@@ -43,13 +43,15 @@ class ProductSupplierCombination extends CommonModelAbstractType
      * Constructor
      *
      * @param int $idSupplier The supplier ID
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $contextLegacy
+     * @param object $currencyAdapter
      */
-    public function __construct($idSupplier, $container)
+    public function __construct($idSupplier, $translator, $contextLegacy, $currencyAdapter)
     {
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->contextLegacy = $container->get('prestashop.adapter.legacy.context')->getContext();
-        $this->currencyAdapter = $container->get('prestashop.adapter.data_provider.currency');
+        $this->translator = $translator;
+        $this->contextLegacy = $contextLegacy->getContext();
+        $this->currencyAdapter = $currencyAdapter;
         $this->idSupplier = $idSupplier;
     }
 

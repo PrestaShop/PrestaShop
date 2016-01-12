@@ -76,7 +76,8 @@ class TypeaheadProductCollectionType extends TypeaheadCollectionType
                 $product = $this->productAdapter->getProduct($id);
                 $collection[] = array(
                     'id' => $id,
-                    'name' => $product->name[1],
+                    'name' => $product->name[1].' (ref:'.$product->reference.')',
+                    'image' => $product->image,
                 );
                 $i++;
 

@@ -25,47 +25,64 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
-use PrestaShopBundle\Form\Admin\Type\DropFilesType;
 use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory as SimpleFormCategory;
 use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
+use Symfony\Component\Form\FormError;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * This form class is responsible to generate the basic product information form
  */
-class ProductInformation extends CommonModelAbstractType
+class ProductInformation extends CommonAbstractType
 {
     private $router;
     private $context;
     private $translator;
-    private $manufacturers;
     private $locales;
     private $nested_categories;
+    private $manufacturers;
     private $productAdapter;
-    private $container;
+    private $configuration;
 
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
+     * @param object $router
+     * @param object $categoryDataProvider
+     * @param object $productDataProvider
+     * @param object $featureDataProvider
+     * @param object $manufacturerDataProvider
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext, $router, $categoryDataProvider, $productDataProvider, $featureDataProvider, $manufacturerDataProvider)
     {
-        $this->container = $container;
-        $this->context = $container->get('prestashop.adapter.legacy.context');
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->router = $container->get("router");
-        $this->categories = $this->formatDataChoicesList($container->get('prestashop.adapter.data_provider.category')->getAllCategoriesName(), 'id_category');
-        $this->nested_categories = $container->get('prestashop.adapter.data_provider.category')->getNestedCategories();
-        $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $this->context = $legacyContext;
+        $this->translator = $translator;
+        $this->router = $router;
+        $this->categoryDataProvider = $categoryDataProvider;
+        $this->productDataProvider = $productDataProvider;
+        $this->featureDataProvider = $featureDataProvider;
+        $this->manufacturerDataProvider = $manufacturerDataProvider;
+        $this->configuration = new Configuration();
+
+        $this->categories = $this->formatDataChoicesList($this->categoryDataProvider->getAllCategoriesName(), 'id_category');
+        $this->nested_categories = $this->categoryDataProvider->getNestedCategories();
+        $this->productAdapter = $this->productDataProvider;
+        $this->locales = $this->context->getLanguages();
+        $this->currency = $this->context->getContext()->currency;
         $this->manufacturers = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.manufacturer')->getManufacturers(false, 0, true, false, false, false, true),
+            $this->manufacturerDataProvider->getManufacturers(false, 0, true, false, false, false, true),
             'id_manufacturer'
         );
     }
@@ -86,81 +103,91 @@ class ProductInformation extends CommonModelAbstractType
             'label' =>  $this->translator->trans('Type', [], 'AdminProducts'),
             'required' => true,
         ))
+        ->add('inputPackItems', new TypeaheadProductPackCollectionType(
+            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&excludeVirtuals=1&limit=20&q=%QUERY',
+            'id',
+            'name',
+            $this->translator->trans('search in catalog...', [], 'AdminProducts'),
+            '<span>%s</span> (<span>ref: %s</span> <span>X%s</span>) - <a href="" class="delete">X</a>',
+            $this->productAdapter
+        ), array(
+            'required' => false,
+            'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
+        ))
         ->add('name', new TranslateType('text', array(
                 'constraints' => array(
                     new Assert\NotBlank(),
-                    new Assert\Length(array('min' => 3))
+                    new Assert\Length(array('min' => 3, 'max' => 128))
                 )
-            ), $this->locales), array(
+            ), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Name', [], 'AdminProducts')
             ))
         ->add('description', new TranslateType('textarea', array(
                 'attr' => array('class' => 'autoload_rte'),
                 'required' => false
-            ), $this->locales), array(
+            ), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
                 'required' => false
             ))
-        ->add('images', new DropFilesType($this->translator->trans('Images', [], 'AdminProducts'), $this->router->generate('admin_common_upload'), array(
-            'maxFiles' => '10',
-            'dictRemoveFile' => $this->translator->trans('Delete', [], 'AdminProducts')
-        )))
-        ->add('upc', 'text', array(
-            'required' => false,
-            'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
+        ->add('description_short', new TranslateType('textarea', array(
+            'attr' => array('class' => 'autoload_rte'),
             'constraints' => array(
-                new Assert\Regex("/^[0-9]{0,12}$/"),
-            )
-        ))
-        ->add('ean13', 'text', array(
-            'required' => false,
-            'error_bubbling' => true,
-            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
-            'constraints' => array(
-                new Assert\Regex("/^[0-9]{0,13}$/"),
-            )
-        ))
-        ->add('isbn', 'text', array(
-            'required' => false,
-            'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
-        ))
-        ->add('reference', 'text', array(
-            'required' => false,
-            'label' => $this->translator->trans('Reference code', [], 'AdminProducts')
-        ))
-        ->add('condition', 'choice', array(
-            'choices'  => array(
-                'new' => $this->translator->trans('New', [], 'AdminProducts'),
-                'used' => $this->translator->trans('Used', [], 'AdminProducts'),
-                'refurbished' => $this->translator->trans('Refurbished', [], 'AdminProducts')
+                new Assert\Callback(function ($str, ExecutionContextInterface $context) {
+                    $str = strip_tags($str);
+                    $limit = (int)$this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <=0 ? 800 : $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
+
+                    if (strlen($str) > $limit) {
+                        $context->addViolation(
+                            $this->translator->trans('This value is too long. It should have {{ limit }} characters or less.', [], 'AdminProducts'),
+                            array('{{ limit }}' => $limit)
+                        );
+                    }
+                }),
             ),
-            'required' => true,
-            'label' => $this->translator->trans('Condition', [], 'AdminProducts')
+            'required' => false
+        ), $this->locales, true), array(
+            'label' =>  $this->translator->trans('Short description', [], 'AdminProducts'),
+            'required' => false
         ))
 
         //FEATURES & ATTRIBUTES
         ->add('features', 'collection', array(
-            'type' => new ProductFeature($this->container),
+            'type' => new ProductFeature(
+                $this->translator,
+                $this->context,
+                $this->router,
+                $this->featureDataProvider
+            ),
             'prototype' => true,
             'allow_add' => true,
             'allow_delete' => true
         ))
+        ->add('id_manufacturer', 'choice', array(
+            'choices' => $this->manufacturers,
+            'required' => false,
+            'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
+        ))
 
         //RIGHT COL
-        ->add('active', 'choice', array(
-            'choices'  => array( 1 => $this->translator->trans('Yes', [], 'AdminProducts'), 0 => $this->translator->trans('No', [], 'AdminProducts')),
-            'expanded' => true,
+        ->add('active', 'checkbox', array(
             'label' => $this->translator->trans('Enabled', [], 'AdminProducts'),
-            'required' => true,
-            'multiple' => false,
+            'required' => false,
         ))
-        ->add('price_shortcut', 'number', array(
+        ->add('price_shortcut', 'money', array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
-            )
+            ),
+            'attr' => []
+        ))
+        ->add('price_ttc_shortcut', 'money', array(
+            'required' => false,
+            'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
+            'mapped' => false,
+            'currency' => $this->currency->iso_code,
         ))
         ->add('qty_0_shortcut', 'number', array(
             'required' => false,
@@ -178,20 +205,19 @@ class ProductInformation extends CommonModelAbstractType
             'required' =>  true,
             'label' => $this->translator->trans('Default category', [], 'AdminProducts')
         ))
-        ->add('new_category', new SimpleFormCategory($this->container, true), array(
+        ->add('new_category', new SimpleFormCategory(
+            $this->translator,
+            $this->categoryDataProvider,
+            true
+        ), array(
             'required' => false,
             'mapped' => false,
             'constraints' => [],
             'label' => $this->translator->trans('Add a new category', [], 'AdminProducts'),
             'attr' => ['data-action' => $this->router->generate('admin_category_simple_add_form')]
         ))
-        ->add('id_manufacturer', 'choice', array(
-            'choices' => $this->manufacturers,
-            'required' => false,
-            'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
-        ))
         ->add('related_products', new TypeaheadProductCollectionType(
-            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&exclude_packs=0&excludeVirtuals=0&excludeIds='.urlencode('1,').'&limit=20&q=%QUERY',
+            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'id',
             'name',
             $this->translator->trans('search in catalog...', [], 'AdminProducts'),
@@ -201,6 +227,19 @@ class ProductInformation extends CommonModelAbstractType
             'required' => false,
             'label' => $this->translator->trans('Accessories', [], 'AdminProducts')
         ));
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+            $form = $event->getForm();
+
+            //if product type is pack, check if inputPackItems is not empty
+            if ($data['type_product'] == 1) {
+                if (!isset($data['inputPackItems']) || empty($data['inputPackItems']['data'])) {
+                    $error = $this->translator->trans('This pack is empty. You must add at least one product item.', [], 'AdminProducts');
+                    $form->get('inputPackItems')->addError(new FormError($error));
+                }
+            }
+        });
     }
 
     /**

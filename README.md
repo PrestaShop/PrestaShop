@@ -1,7 +1,7 @@
 About PrestaShop
 --------
 
-PrestaShop is a free and open-source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][1].
+PrestaShop is a free and Open Source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][1].
 
 <p align="center">
   <img src="http://www.prestashop.com/images/banners/general/ps161-screenshot-github.png" alt="PrestaShop's back office dashboard"/>
@@ -109,7 +109,7 @@ Getting support
 If you need help using PrestaShop 1.7, ask on the forums: https://www.prestashop.com/forums/forum/273-170x-in-development/
 
 
-Thank you for downloading and using the PrestaShop open-source e-commerce solution!
+Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
 [1]: https://www.prestashop.com/en/online-store-builder
 [2]: http://www.prestashop.com/en/download

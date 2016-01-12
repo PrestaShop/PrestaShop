@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Form\Admin\Product\ProductCombination;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
@@ -84,7 +85,17 @@ class AttributeController extends FrameworkBundleAdminController
             return $response;
         }
 
-        $modelMapper = new ProductAdminModelAdapter($product->id, $this->container);
+        $modelMapper = new ProductAdminModelAdapter(
+            $product,
+            $this->container->get('prestashop.adapter.legacy.context'),
+            $this->container->get('prestashop.adapter.admin.wrapper.product'),
+            $this->container->get('prestashop.adapter.tools'),
+            $this->container->get('prestashop.adapter.data_provider.product'),
+            $this->container->get('prestashop.adapter.data_provider.supplier'),
+            $this->container->get('prestashop.adapter.data_provider.warehouse'),
+            $this->container->get('prestashop.adapter.data_provider.feature'),
+            $this->container->get('prestashop.adapter.data_provider.pack')
+        );
 
         //store exisiting product combinations
         $existingCombinationsIds = array_map(function ($o) {
@@ -107,7 +118,21 @@ class AttributeController extends FrameworkBundleAdminController
         $newCombinations = [];
         foreach ($newCombinationIds as $combinationId) {
             $attribute = $product->getAttributeCombinationsById($combinationId, 1);
-            $newCombinations[] = $modelMapper->getFormCombination($attribute[0]);
+
+            $form = $this->createForm(new ProductCombination(
+                $this->container->get('prestashop.adapter.translator'),
+                $this->container->get('prestashop.adapter.legacy.context')
+            ), $modelMapper->getFormCombination($attribute[0]));
+
+            $formRender = $this->renderView(
+                'PrestaShopBundle:Admin/Product/Include:form-combination.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'id_product' => $idProduct
+                )
+            );
+
+            $newCombinations[] = $formRender;
         }
 
         $response->setData($newCombinations);
@@ -116,7 +141,7 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete a product atrtibute
+     * Delete a product attribute
      *
      * @param int $idAttribute The attribute ID
      * @param int $idProduct The product ID
@@ -140,7 +165,43 @@ class AttributeController extends FrameworkBundleAdminController
             $response->setStatusCode(400);
         }
 
-        $response->setData(['message' => $translator->trans($res['message'])]);
+        $response->setData(['message' => $translator->trans($res['message'], [], 'AdminProducts')]);
+        return $response;
+    }
+
+    /**
+     * Delete all product attributes
+     *
+     * @param int $idProduct The product ID
+     * @param Request $request The request
+     *
+     * @return string
+     */
+    public function deleteAllAttributeAction($idProduct, Request $request)
+    {
+        $translator = $this->container->get('prestashop.adapter.translator');
+        $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
+        $response = new JsonResponse();
+
+        //get all attribute for a product
+        $combinations = $attributeAdapter->getProductCombinations($idProduct);
+
+        if (!$combinations || !$request->isXmlHttpRequest()) {
+            return $response;
+        }
+
+        foreach ($combinations as $combination) {
+            $res = $this->container->get('prestashop.adapter.admin.controller.attribute_generator')
+                ->ajaxProcessDeleteProductAttribute($combination['id_product_attribute'], $idProduct);
+
+            if ($res['status'] == 'error') {
+                $response->setStatusCode(400);
+                break;
+            }
+        }
+
+        $response->setData(['message' => $translator->trans($res['message'], [], 'AdminProducts')]);
+
         return $response;
     }
 
@@ -157,8 +218,22 @@ class AttributeController extends FrameworkBundleAdminController
         $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
         $combinations = $attributeAdapter->getProductCombinations($idProduct);
 
+        //get product
+        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $product = $productAdapter->getProduct((int)$idProduct, true);
+
         //get combinations
-        $modelMapper = new ProductAdminModelAdapter($idProduct, $this->container);
+        $modelMapper = new ProductAdminModelAdapter(
+            $product,
+            $this->container->get('prestashop.adapter.legacy.context'),
+            $this->container->get('prestashop.adapter.admin.wrapper.product'),
+            $this->container->get('prestashop.adapter.tools'),
+            $this->container->get('prestashop.adapter.data_provider.product'),
+            $this->container->get('prestashop.adapter.data_provider.supplier'),
+            $this->container->get('prestashop.adapter.data_provider.warehouse'),
+            $this->container->get('prestashop.adapter.data_provider.feature'),
+            $this->container->get('prestashop.adapter.data_provider.pack')
+        );
 
         $combinationList = [];
         foreach ($combinations as $combination) {
@@ -167,6 +242,56 @@ class AttributeController extends FrameworkBundleAdminController
         }
 
         $response->setData($combinationList);
+
+        return $response;
+    }
+
+    /**
+     * get the images form for a product combinations
+     *
+     * @param int $idProduct The product id
+     * @param Request $request The request
+     *
+     * @return string Json
+     */
+    public function getFormImagesAction($idProduct, Request $request)
+    {
+        $response = new JsonResponse();
+        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
+        $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
+
+        //get product
+        $product = $productAdapter->getProduct((int)$idProduct, true);
+
+        //get product images
+        $productImages = $productAdapter->getImages($idProduct, $locales[0]['id_lang']);
+
+        if (!$request->isXmlHttpRequest() || !is_object($product) || empty($product->id)) {
+            $response->setStatusCode(400);
+            return $response;
+        }
+
+        $data = [];
+        $combinations = $attributeAdapter->getProductCombinations($idProduct);
+        foreach ($combinations as $combination) {
+            //get combination images
+            $combinationImages = array_map(function ($o) {
+                return $o['id'];
+            }, $attributeAdapter->getImages($combination['id_product_attribute']));
+
+            $newProductImages = $productImages;
+            foreach ($newProductImages as $k => $image) {
+                $newProductImages[$k]['id_image_attr'] = false;
+                if (in_array($image['id'], $combinationImages)) {
+                    $newProductImages[$k]['id_image_attr'] = true;
+                }
+            }
+
+            $data[$combination['id_product_attribute']] = $newProductImages;
+        }
+
+        $response->setData($data);
 
         return $response;
     }

@@ -43,10 +43,10 @@ class PriceCalculator
         &$specific_price_output = null,
         $with_ecotax = true,
         $use_group_reduction = true,
-        \Context $context = null,
+        \ContextCore $context = null,
         $use_customer_price = true
     ) {
-        return \Product::getPriceStatic(
+        return \ProductCore::getPriceStatic(
             $id_product,
             $usetax,
             $id_product_attribute,

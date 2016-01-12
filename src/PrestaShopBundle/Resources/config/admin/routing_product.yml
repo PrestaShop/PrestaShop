@@ -5,34 +5,39 @@ admin_product_catalog:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::catalogAction
         _legacy_controller: AdminProducts
-        limit: 20
+        limit: last
         offset: 0
-        orderBy: id_product
-        sortOrder: asc
+        orderBy: last
+        sortOrder: last
     requirements:
-        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
-        offset: \d+
-        sortOrder: asc|desc
+        orderBy: last|id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
+        offset: last|\d+
+        sortOrder: last|asc|desc
 
 admin_product_list:
     path:     /list/{offset}/{limit}/{orderBy}/{sortOrder}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::listAction
-        limit: 20
+        limit: last
         offset: 0
-        orderBy: id_product
-        sortOrder: asc
+        orderBy: last
+        sortOrder: last
     requirements:
-        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
-        offset: \d+
-        sortOrder: asc|desc
+        orderBy: last|id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
+        offset: last|\d+
+        sortOrder: last|asc|desc
+
+admin_product_new:
+    path: /new
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::newAction
 
 admin_product_form:
     path: /form/{id}
     methods:  [GET, POST]
     defaults:
-        id: 0
         _controller: PrestaShopBundle\Controller\Admin\ProductController::formAction
         _legacy_controller: AdminProducts
         _legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
@@ -58,7 +63,7 @@ admin_product_bulk_action:
 
 admin_product_unit_action:
     path:     /unit/{action}/{id}
-    methods:  [POST]
+    methods:  [POST|GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::unitAction
     requirements:
@@ -72,3 +77,68 @@ admin_product_mass_edit_action:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::massEditAction
     requirements:
         action: sort
+
+admin_product_virtual_save_action:
+    path:     /product/virtual/form/save/{idProduct}
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::saveAction
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_product_virtual_remove_file_action:
+    path:     /product/virtual/remove/file/{idProduct}
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::removeFileAction
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_product_virtual_remove_action:
+    path:     /product/virtual/remove/{idProduct}
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::removeAction
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_product_attachement_add_action:
+    path:     /product/attachment/form/add/{idProduct}
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\AttachementProductController::addAction
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_product_image_upload:
+    path:     /product/image/upload/{idProduct}
+    methods:  [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\ProductImageController::uploadImageAction'
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_product_image_positions:
+    path:     /product/image/positions
+    methods:  [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\ProductImageController::updateImagePositionAction'
+
+admin_product_image_form:
+    path:     /product/image/form/{idImage}
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\ProductImageController::formAction'
+        idImage: 0
+    requirements:
+        idImage: \d+
+
+admin_product_image_delete:
+    path:     /product/image/delete/{idImage}
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\ProductImageController::deleteAction'
+        idImage: 0
+    requirements:
+        idImage: \d+

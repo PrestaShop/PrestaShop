@@ -41,6 +41,6 @@ class GroupDataProvider
      */
     public function getGroups($id_lang, $id_shop = false)
     {
-        return \Group::getGroups($id_lang, $id_shop);
+        return \GroupCore::getGroups($id_lang, $id_shop);
     }
 }

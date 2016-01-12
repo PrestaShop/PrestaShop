@@ -40,7 +40,7 @@ class Context
      */
     public function getShops($active = true, $get_as_list_id = false)
     {
-        return \Shop::getShops($active, \Shop::getContextShopGroupID(), $get_as_list_id);
+        return \ShopCore::getShops($active, \ShopCore::getContextShopGroupID(), $get_as_list_id);
     }
 
     /**
@@ -50,6 +50,27 @@ class Context
      */
     public function getContextShopID($null_value_without_multishop = false)
     {
-        return \Shop::getContextShopID($null_value_without_multishop);
+        return \ShopCore::getContextShopID($null_value_without_multishop);
+    }
+
+    /**
+     * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID)
+     *
+     * @param bool|string $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
+     * @return array
+     */
+    public function getContextListShopID($share = false)
+    {
+        return \ShopCore::getContextListShopID($share);
+    }
+
+    /**
+     * Get the ShopCore class CONTEXT_GROUP constant value
+     *
+     * @return int
+     */
+    public function getShopContextGroupConstant()
+    {
+        return \ShopCore::CONTEXT_GROUP;
     }
 }

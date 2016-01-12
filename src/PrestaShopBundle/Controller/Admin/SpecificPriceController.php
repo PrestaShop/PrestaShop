@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 
 /**
  * Admin controller for the attribute / attribute group

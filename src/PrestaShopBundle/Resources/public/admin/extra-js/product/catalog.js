@@ -26,7 +26,6 @@
 $(document).ready(function() {
 	var form = $('form#product_catalog_list');
 
-
 	/*
 	 * Tree behavior: collapse/expand system and radio button change event.
 	 */
@@ -37,6 +36,10 @@ $(document).ready(function() {
 			$('form#product_catalog_list').submit();
 		}
 	});
+	$("div#product_catalog_category_tree_filter input:button, div#product_catalog_category_tree_filter ul").on('click', function() {
+		categoryFilterButtons();
+	});
+	categoryFilterButtons();
 
 	/*
 	 * Click on a column header ordering icon to change orderBy / orderWay (location.href redirection)
@@ -55,9 +58,10 @@ $(document).ready(function() {
 	});
 
 	/*
-	 * Filter columns buttons behavior
+	 * Filter columns inputs behavior
 	 */
 	$('tr.column-filters input:text, tr.column-filters select', form).change(function() {
+		productCatalogFilterChanged = true;
 		updateFilterMenu();
 	});
 
@@ -81,8 +85,16 @@ $(document).ready(function() {
 	    e.preventDefault();
 	    $('#filter_column_price', form).val($('#filter_column_price', form).attr('sql'));
 	    $('#filter_column_sav_quantity', form).val($('#filter_column_sav_quantity', form).attr('sql'));
+		productCatalogFilterChanged = false;
 	    this.submit();
 	    return false;
+	});
+
+	/*
+	 * Send to SQL manager button on modal
+	 */
+	$('#catalog_sql_query_modal button[value="sql_manager"]').on('click', function() {
+		sendLastSqlQuery(createSqlQueryName());
 	});
 
 	updateBulkMenu();
@@ -107,6 +119,7 @@ function updateBulkMenu() {
 	$('#product_bulk_menu').prop('disabled', (selectedCount == 0));
 }
 
+var productCatalogFilterChanged = false;
 function updateFilterMenu() {
 	var count = $('form#product_catalog_list tr.column-filters select option:selected[value!=""]').size();
 	$('form#product_catalog_list tr.column-filters input[type="text"]:visible').each(function() {
@@ -115,26 +128,52 @@ function updateFilterMenu() {
 	$('form#product_catalog_list tr.column-filters input[type="text"][sql!=""][sql]').each(function() {
 		if ($(this).val()!="") count ++;
 	});
-	$('input[name="products_filter_submit"]').prop('disabled', (count == 0));
-	if (count == 0)
+	$('input[name="products_filter_submit"]').prop('disabled', (count == 0) && productCatalogFilterChanged == false);
+	if (count == 0 && productCatalogFilterChanged == false)
 		$('input[name="products_filter_reset"]').hide();
 	else
 		$('input[name="products_filter_reset"]').show();
 }
 
 function productCategoryFilterReset(div) {
-	$('div#product_catalog_category_tree_filter div.radio > label > input:radio').prop('checked', false);
+	$("div.form-wrapper", div).categorytree('unselect');
 	$('form#product_catalog_list input[name="filter_category"]').val('');
 	$('form#product_catalog_list').submit();
+}
+
+function productCategoryFilterExpand(div, btn) {
+	$('div.form-wrapper', div).categorytree('unfold');
+	$(btn).hide();
+}
+
+function productCategoryFilterCollapse(div, btn) {
+	$('div.form-wrapper', div).categorytree('fold');
+	$(btn).hide();
+}
+
+function categoryFilterButtons() {
+	if ($("div#product_catalog_category_tree_filter ul ul:visible").size() == 0) {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_collapse"]').hide();
+	} else {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_collapse"]').show();
+	}
+	if ($("div#product_catalog_category_tree_filter ul ul:hidden").size() == 0) {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_expand"]').hide();
+	} else {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_expand"]').show();
+	}
+	if ($("div#product_catalog_category_tree_filter ul input:checked").size() == 0) {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_reset"]').hide();
+	} else {
+		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_reset"]').show();
+	}
 }
 
 function productColumnFilterReset(tr) {
 	$('input:text', tr).val('');
 	$('select option:selected', tr).prop("selected", false);
-	$('input#filter_column_price', tr).bootstrapSlider('setValue', [
-	    $('input#filter_column_price', tr).bootstrapSlider('getAttribute', 'min'),
-	    $('input#filter_column_price', tr).bootstrapSlider('getAttribute', 'max')
-	]);
+	$('input#filter_column_price', tr).attr('sql', '');
+	$('input#filter_column_sav_quantity', tr).attr('sql', '');
 	$('form#product_catalog_list').submit();
 }
 
@@ -190,10 +229,33 @@ function bulkProductAction(element, action) {
 	var redirectUrl = '';
 
 	switch (action) {
-		// these cases needs checkboxes to be checked.
+		case 'delete_all':
+			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() == 0) {
+				return false;
+			}
+
+			var urlHandler = $(element).closest('[bulkurl]');
+			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
+			redirectUrl = urlHandler.attr('redirecturl');
+
+			// Confirmation popup and callback...
+			$('#catalog_deletion_modal').modal('show');
+			$('#catalog_deletion_modal button[value="confirm"]').off('click');
+			$('#catalog_deletion_modal button[value="confirm"]').on('click', function() {
+
+				var redirectionInput = $('<input>')
+					.attr('type', 'hidden')
+					.attr('name', 'redirect_url').val(redirectUrl);
+				form.append($(redirectionInput));
+				form.attr('action', postUrl);
+				form.submit();
+
+				$('#catalog_deletion_modal').modal('hide');
+			});
+
+			return; // No break, but RETURN, to avoid code after switch block :)
 		case 'activate_all':
 		case 'deactivate_all':
-		case 'delete_all':
 			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() == 0) {
 				return false;
 			}
@@ -204,6 +266,7 @@ function bulkProductAction(element, action) {
 		// this case will brings to the next page
 		case 'edition_next':
 			redirectUrl = $(element).closest('[massediturl]').attr('redirecturlnextpage');
+			// no break !
 		// this case will post inline edition command
 		case 'edition':
 			var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
@@ -246,7 +309,7 @@ function bulkProductAction(element, action) {
 
 function unitProductAction(element, action) {
 	var form = $('form#product_catalog_list');
-	
+
 	// save action URL for redirection and update to post to bulk action instead
 	// using form action URL allow to get route attributes and stay on the same page & ordering.
 	var urlHandler = $(element).closest('[uniturl]');
@@ -254,6 +317,26 @@ function unitProductAction(element, action) {
 	var redirectionInput = $('<input>')
 		.attr('type', 'hidden')
 		.attr('name', 'redirect_url').val(redirectUrlHandler.attr('redirecturl'));
+
+	switch (action) {
+		case 'delete':
+			// Confirmation popup and callback...
+			$('#catalog_deletion_modal').modal('show');
+			$('#catalog_deletion_modal button[value="confirm"]').off('click');
+			$('#catalog_deletion_modal button[value="confirm"]').on('click', function() {
+
+				form.append($(redirectionInput));
+				var url = urlHandler.attr('uniturl').replace(/duplicate/, action);
+				form.attr('action', url);
+				form.submit();
+
+				$('#catalog_deletion_modal').modal('hide');
+			});
+			return;
+		// Other cases, nothing to do, continue.
+		//default:
+	}
+
 	form.append($(redirectionInput));
 	var url = urlHandler.attr('uniturl').replace(/duplicate/, action);
 	form.attr('action', url);
@@ -275,8 +358,9 @@ function showBulkProductEdition(show) {
 
 function bulkProductEdition(element, action) {
 	var form = $('form#product_catalog_list');
-	
+
 	switch (action) {
+		/*
 		case 'quantity_edition':
 			showBulkProductEdition(true);
 			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
@@ -290,7 +374,7 @@ function bulkProductEdition(element, action) {
 					.attr('onkeydown', 'if (event.keyCode == 13) return bulkProductAction(this, "edition_next"); if (event.keyCode == 27) return bulkProductEdition(this, "cancel");')
 					.val($quantity);
 				$(this).html($input);
-				
+
 			});
 			$('#bulk_edition_toolbar input:submit').attr('tabindex', i++);
 			$('#bulk_edition_toolbar input:button').attr('tabindex', i++);
@@ -298,6 +382,7 @@ function bulkProductEdition(element, action) {
 
 			$('td.product-sav-quantity input', form).first().focus();
 			break;
+		*/
 		case 'sort':
 			showBulkProductEdition(true);
 			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
@@ -314,4 +399,15 @@ function bulkProductEdition(element, action) {
 			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', false);
 			break;
 	}
+}
+
+function showLastSqlQuery() {
+	$('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody[last_sql]').attr('last_sql'));
+	$('#catalog_sql_query_modal').modal('show');
+}
+
+function sendLastSqlQuery(name) {
+	$('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody[last_sql]').attr('last_sql'));
+	$('#catalog_sql_query_modal_content input[name="name"]').val(name);
+	$('#catalog_sql_query_modal_content').submit();
 }
