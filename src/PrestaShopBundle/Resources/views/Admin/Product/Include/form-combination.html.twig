@@ -13,6 +13,10 @@
                 <div class="panel-heading">
                     <button type="button" class="btn btn-default btn-back"><i class="icon-arrow-left"></i> {{ trans('Back', [], 'AdminTabs') }}</button> <span class="title">{{ form.vars.value.name }}</span>
                 </div>
+                <div class="col-xs-12 text-right nav">
+                    <button class="btn btn-default btn-sm prev"><i class="icon-arrow-left"></i></button>
+                    <button class="btn btn-default btn-sm next"><i class="icon-arrow-right"></i></button>
+                </div>
                 <div class="form-group">
                     <div class="col-xs-12">
                         <label class="control-label"></label>
@@ -24,49 +28,38 @@
                         <label class="control-label">{{ form.attribute_wholesale_price.vars.label|raw }}</label>
                         {{ form_widget(form.attribute_wholesale_price) }}
                     </div>
-                    <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_priceTI.vars.label }}</label>
-                        {{ form_widget(form.attribute_priceTI) }}
-                    </div>
+                </div>
+                <div class="form-group">
                     <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.attribute_quantity.vars.label }}</label>
                         {{ form_widget(form.attribute_quantity) }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_price_impact.vars.label }}</label>
-                        {{ form_widget(form.attribute_price_impact) }}
-                    </div>
-                    <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_price.vars.label }}</label>
-                        {{ form_widget(form.attribute_price) }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_weight_impact.vars.label }}</label>
-                        {{ form_widget(form.attribute_weight_impact) }}
-                    </div>
-                    <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_weight.vars.label }}</label>
-                        {{ form_widget(form.attribute_weight) }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_unit_impact.vars.label }}</label>
-                        {{ form_widget(form.attribute_unit_impact) }}
-                    </div>
-                    <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_unity.vars.label }}</label>
-                        {{ form_widget(form.attribute_unity) }}
                     </div>
                     <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.attribute_minimal_quantity.vars.label }}</label>
                         {{ form_widget(form.attribute_minimal_quantity) }}
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_price.vars.label }}</label>
+                        {{ form_widget(form.attribute_price) }}
+
+                        <label class="control-label">{{ form.attribute_priceTI.vars.label }}</label>
+                        {{ form_widget(form.attribute_priceTI) }}
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_weight.vars.label }}</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">{{ 'PS_WEIGHT_UNIT'|configuration }}</span>
+                            {{ form_widget(form.attribute_weight) }}
+                        </div>
+                    </div>
+                    <div class="col-xs-2 pull-left">
+                        <label class="control-label">{{ form.attribute_unity.vars.label }}</label>
+                        {{ form_widget(form.attribute_unity) }}
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.attribute_reference.vars.label }}</label>
@@ -86,6 +79,10 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <div class="col-xs-2 pull-left {% if 'PS_USE_ECOTAX'|configuration != 1 %}hide{% endif %}">
+                        <label class="control-label">{{ form.attribute_ecotax.vars.label }}</label>
+                        {{ form_widget(form.attribute_ecotax) }}
+                    </div>
                     <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.available_date_attribute.vars.label }}</label>
                         {{ form_widget(form.available_date_attribute) }}

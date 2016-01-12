@@ -42,33 +42,62 @@ $(document).ready(function() {
 	attachmentProduct.init();
 	imagesProduct.init();
 	priceCalculation.init();
+	displayFieldsManager.refresh();
 
 	/** Type product fields display management */
 	$('#form_step1_type_product').change(function(){
-		$('#virtual_product').hide();
-		if($(this).val() == 1) {
-			$('#pack_stock_type').show();
-			$('#show_variations_selector').hide();
-			$('#js_form_step1_inputPackItems').show();
-		}else{
-			$('#virtual_product').hide();
-			$('#pack_stock_type').hide();
-			$('#js_form_step1_inputPackItems').hide();
-			$('#form-nav a[href="#step4"]').show();
+		displayFieldsManager.refresh();
+	});
+});
 
-			if($(this).val() == 2){
-				$('#show_variations_selector').hide();
-				$('#virtual_product').show();
-				$('#form-nav a[href="#step4"]').hide();
+
+/**
+ * Manage show or hide fields
+ */
+var displayFieldsManager = (function() {
+
+	var typeProduct = $('#form_step1_type_product');
+	var showVariationsSelector = $('#show_variations_selector');
+	var combinations = $('#combinations');
+
+	return {
+		'refresh': function() {
+			$('#virtual_product').hide();
+			$('#form-nav a[href="#step3"]').text(translate_javascripts['Quantity']);
+
+			/** product type switch */
+			if(typeProduct.val() == 1) {
+				$('#pack_stock_type, #js_form_step1_inputPackItems').show();
+				showVariationsSelector.hide();
+				showVariationsSelector.find('input[value="0"]').attr('checked', true);
 			}else{
-				$('#show_variations_selector').show();
+				$('#virtual_product, #pack_stock_type, #js_form_step1_inputPackItems').hide();
+				$('#form-nav a[href="#step4"]').show();
+
+				if(typeProduct.val() == 2){
+					showVariationsSelector.hide();
+					$('#virtual_product').show();
+					$('#form-nav a[href="#step4"]').hide();
+					showVariationsSelector.find('input[value="0"]').attr('checked', true);
+					$('#form-nav a[href="#step3"]').text(translate_javascripts['Virtual product']);
+				}else{
+					showVariationsSelector.show();
+					$('#form-nav a[href="#step3"]').text(translate_javascripts['Quantity']);
+				}
+			}
+
+			/** check quantity / combinations display */
+			if(showVariationsSelector.find('input:checked').val() == 1 || $('#accordion_combinations tr').length > 0){
+				combinations.show();
+				$('#form-nav a[href="#step3"]').text(translate_javascripts['Combinations']);
+				$('#product_qty_0_shortcut_div, #quantity-no-attribute, #step3_minimal_quantity').hide();
+			}else{
+				combinations.hide();
+				$('#product_qty_0_shortcut_div, #quantity-no-attribute, #step3_minimal_quantity').show();
 			}
 		}
-	});
-
-	$('#form_step1_type_product').change();
-
-});
+	};
+})();
 
 /**
  * Redirection strategy management
@@ -374,42 +403,10 @@ var stock = (function() {
 
 			/** if GSA activation change on 'depend on stock', update quantities fields */
 			$('#form_step3_depends_on_stock_0, #form_step3_depends_on_stock_1, #form_step3_advanced_stock_management').on('change', function(e) {
-				stock.updateQtyFields();
+				displayFieldsManager.refresh();
 				warehouseCombinations.refresh();
 			});
-			stock.updateQtyFields();
-		},
-		'updateQtyFields': function() {
-			/** if combinations exists, hide common quantity field */
-			if ($('#accordion_combinations > div.combination[id^="attribute_"]').length > 0) {
-				$('#quantity-no-attribute').hide();
-				$('#product_qty_0_shortcut_div').hide();
-				$('#step3_minimal_quantity').hide();
-
-				if ($('#form_step3_depends_on_stock_1').length == 0 ||
-					$('#form_step3_depends_on_stock_1:checked').length == 1 ||
-					$('#form_step3_advanced_stock_management:checked').length == 0) {
-					$('#accordion_combinations > div.combination[id^="attribute_"] input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').removeAttr('readonly');
-				} else {
-					$('#accordion_combinations > div.combination[id^="attribute_"] input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').attr('readonly', 'readonly');
-				}
-				return;
-			} else {
-				/** else, there is no combinations */
-				$('#quantity-no-attribute').show();
-				$('#product_qty_0_shortcut_div').show();
-				$('#step3_minimal_quantity').show();
-			}
-
-			/** if GSA and if is manual */
-			if ($('#form_step3_depends_on_stock_1').length == 0 ||
-				$('#form_step3_depends_on_stock_1:checked').length == 1 ||
-				$('#form_step3_advanced_stock_management:checked').length == 0) {
-				$('#quantity-no-attribute').show();
-				$('#product_qty_0_shortcut_div').show();
-				$('#step3_minimal_quantity').show();
-				return;
-			}
+			displayFieldsManager.refresh();
 		}
 	};
 })();
@@ -479,7 +476,7 @@ var combinationGenerator = (function() {
 				.replace(/__loop_index__/g, combinationsLength);
 
 			$('#accordion_combinations').prepend(newForm);
-			stock.updateQtyFields();
+			displayFieldsManager.refresh();
 			combinations.refreshImagesCombination();
 		};
 
@@ -558,7 +555,7 @@ var combinations = (function() {
 					success: function(response) {
 						combinationElem.remove();
 						showSuccessMessage(response.message);
-						stock.updateQtyFields();
+						displayFieldsManager.refresh();
 					},
 					error: function(response){
 						showErrorMessage(jQuery.parseJSON(response.responseText).message);
@@ -599,29 +596,13 @@ var combinations = (function() {
 			/** on change weigth, update weight row */
 			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_weight"]', function() {
 				var id_attribute = $(this).closest('.combination-form').attr('data');
-				var impactField = $(this).closest('.combination-form').find('select[id^="form_step3_combinations_"][id$="_attribute_weight_impact"]');
-				var impact = impactField.val() === '0' ? '1' : impactField.val();
-				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-weight').html(impact * $(this).val() + ' ' + weightUnit);
-			});
-
-			/** on change weigth impact, update weight row */
-			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_weight_impact"]', function() {
-				var id_attribute = $(this).closest('.combination-form').attr('data');
-				$('#accordion_combinations #attribute_'+id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_weight"]').keyup();
+				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-weight').html($(this).val() + ' ' + weightUnit);
 			});
 
 			/** on change price, update price row */
 			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_price"]', function() {
 				var id_attribute = $(this).closest('.combination-form').attr('data');
-				var impactField = $(this).closest('.combination-form').find('select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]');
-				var impact = impactField.val() === '0' ? '1' : impactField.val();
-				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-price-display').html(formatCurrency(impact * $(this).val()));
-			});
-
-			/** on change price impact, update price row */
-			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]', function() {
-				var id_attribute = $(this).closest('.combination-form').attr('data');
-				$('#accordion_combinations #attribute_'+id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup();
+				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-price-display').html(formatCurrency(parseFloat($(this).val())));
 			});
 
 			/** on change images selection */
@@ -632,15 +613,15 @@ var combinations = (function() {
 			/** Combinations fields display management */
 			$('#combinations').hide();
 			$('#show_variations_selector input').change(function(){
-				if($(this).val() == 1){
-					$('#combinations').show();
-				}else{
+				displayFieldsManager.refresh();
+
+				if($(this).val() == 0){
 					//if combination(s) exists, alert user for deleting it
 					if($('#accordion_combinations .combination').length > 0){
 						modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null,{
 							onCancel: function(){
 								$('#show_variations_selector input[value="1"]').attr('checked', true);
-								$('#combinations').show();
+								displayFieldsManager.refresh();
 							},
 							onContinue: function(){
 								$.ajax({
@@ -648,7 +629,7 @@ var combinations = (function() {
 									url: $('#accordion_combinations').attr('data-action-delete-all') + '/' + $('#form_id_product').val(),
 									success: function(response){
 										$('#accordion_combinations .combination').remove();
-										stock.updateQtyFields();
+										displayFieldsManager.refresh();
 									}, error: function(response){
 										showErrorMessage(jQuery.parseJSON(response.responseText).message);
 									},
@@ -656,14 +637,9 @@ var combinations = (function() {
 							}
 						}).show();
 					}
-
-					$('#combinations').hide();
 				}
 			});
 
-			if($('#show_variations_selector input:checked').val() == 1){
-				$('#combinations').show();
-			}
 
 			this.refreshImagesCombination();
 
@@ -671,6 +647,23 @@ var combinations = (function() {
 			$(document).on('click', '#accordion_combinations .btn-open', function(e) {
 				e.preventDefault();
 				var contentElem = $($(this).attr('href'));
+
+				/** create combinations navigation */
+				var navElem = contentElem.find('.nav');
+				var id_attribute = contentElem.attr('data');
+				var prevCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').prev().attr('data');
+				var nextCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').next().attr('data');
+				navElem.find('.prev, .next').hide();
+				if(prevCombinationId){
+					navElem.find('.prev').attr('data', prevCombinationId).show();
+				}
+				if(nextCombinationId){
+					navElem.find('.next').attr('data', nextCombinationId).show();
+				}
+
+				/** init combination tax include price */
+				priceCalculation.impactTaxInclude(contentElem.find('.attribute_priceTE'));
+
 				contentElem.insertBefore('#form-nav').removeClass('hide').show();
 				$('#form-nav, #form_content').hide();
 			});
@@ -680,6 +673,13 @@ var combinations = (function() {
 				e.preventDefault();
 				$(this).closest('.combination-form').hide();
 				$('#form-nav, #form_content').show();
+			});
+
+			/** switch combination form */
+			$(document).on('click', '#form .combination-form .nav button', function(e) {
+				e.preventDefault();
+				$('.combination-form').hide();
+				$('#accordion_combinations .combination[data="' + $(this).attr('data') + '"] .btn-open').click();
 			});
 		},
 		'refreshDefaultImage': function() {
@@ -1566,6 +1566,15 @@ var priceCalculation = (function() {
 				priceCalculation.taxExclude();
 			});
 
+			/** combinations : update TTC price field on change */
+			$('.combination-form .attribute_priceTE').keyup(function(){
+				priceCalculation.impactTaxInclude($(this));
+			});
+			/** combinations : update HT price field on change */
+			$('.combination-form .attribute_priceTI').keyup(function(){
+				priceCalculation.impactTaxExclude($(this));
+			});
+
 			priceCalculation.taxInclude();
 		},
 		'taxInclude': function() {
@@ -1593,6 +1602,32 @@ var priceCalculation = (function() {
 
 			priceHTElem.val(newPrice);
 			priceHTShortcutElem.val(newPrice);
+		},
+		'impactTaxInclude': function(obj) {
+			var price = parseFloat(obj.val().replace(/,/g, '.'));
+			var targetInput = obj.parent().parent().find('input.attribute_priceTI');
+			if(isNaN(price)){
+				targetInput.val(0);
+				return;
+			}
+			var rates = taxElem.find('option:selected').attr('data-rates').split(',');
+			var computation_method = taxElem.find('option:selected').attr('data-computation-method');
+			var newPrice = ps_round(addTaxes(price, rates, computation_method));
+
+			targetInput.val(newPrice);
+		},
+		'impactTaxExclude': function(obj) {
+			var price = parseFloat(obj.val().replace(/,/g, '.'));
+			var targetInput = obj.parent().parent().find('input.attribute_priceTE');
+			if(isNaN(price)){
+				targetInput.val(0);
+				return;
+			}
+			var rates = taxElem.find('option:selected').attr('data-rates').split(',');
+			var computation_method = taxElem.find('option:selected').attr('data-computation-method');
+			var newPrice = ps_round(removeTaxes(ps_round(price, displayPricePrecision), rates, computation_method), displayPricePrecision);
+
+			targetInput.val(newPrice);
 		}
 	};
 })();

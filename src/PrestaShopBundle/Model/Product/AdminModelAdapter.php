@@ -219,6 +219,35 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['id_category_default'] = $this->contextShop->shop->id_category;
         }
 
+        //map combinations and impact price/weight/unit price
+        foreach ($form_data['combinations'] as $k => $combination) {
+            $form_data['combinations'][$k]['attribute_price_impact'] = 0;
+            $form_data['combinations'][$k]['attribute_weight_impact'] = 0;
+            $form_data['combinations'][$k]['attribute_unit_impact'] = 0;
+
+            if ($combination['attribute_price'] > 0) {
+                $form_data['combinations'][$k]['attribute_price_impact'] = 1;
+            } elseif ($combination['attribute_price'] < 0) {
+                $form_data['combinations'][$k]['attribute_price_impact'] = -1;
+            }
+
+            if ($combination['attribute_weight'] > 0) {
+                $form_data['combinations'][$k]['attribute_weight_impact'] = 1;
+            } elseif ($combination['attribute_weight'] < 0) {
+                $form_data['combinations'][$k]['attribute_weight_impact'] = -1;
+            }
+
+            if ($combination['attribute_unity'] > 0) {
+                $form_data['combinations'][$k]['attribute_unit_impact'] = 1;
+            } elseif ($combination['attribute_unity'] < 0) {
+                $form_data['combinations'][$k]['attribute_unit_impact'] = -1;
+            }
+
+            $form_data['combinations'][$k]['attribute_price'] = abs($combination['attribute_price']);
+            $form_data['combinations'][$k]['attribute_weight'] = abs($combination['attribute_weight']);
+            $form_data['combinations'][$k]['attribute_unity'] = abs($combination['attribute_unity']);
+        }
+
         //map suppliers
         $form_data['supplier_loaded'] = 1;
         if (!empty($form_data['suppliers'])) {
@@ -729,6 +758,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'attribute_price' => $combination['price'],
             'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->contextShop->currency->iso_code),
             'attribute_priceTI' => '',
+            'attribute_ecotax' => $combination['ecotax'],
             'attribute_weight_impact' => $attribute_weight_impact,
             'attribute_weight' => $combination['weight'],
             'attribute_unit_impact' => $attribute_unity_price_impact,
