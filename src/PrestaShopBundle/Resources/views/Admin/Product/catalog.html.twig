@@ -135,17 +135,17 @@
                         <tr class="column-filters">
                             <th>&nbsp;</th>
                             <th>
-                                <input type="text" placeholder="{{ trans("Exact ID matching", {}, 'AdminProducts') }}" name="filter_column_id_product" value="{{ filter_column_id_product }}" />
+                                <input type="text" placeholder="{{ trans("Search exact ID", {}, 'AdminProducts') }}" name="filter_column_id_product" value="{{ filter_column_id_product }}" />
                             </th>
                             <th>&nbsp;</th>
                             <th>
-                                <input type="text" placeholder="{{ trans("Partial name allowed", {}, 'AdminProducts') }}" name="filter_column_name" value="{{ filter_column_name }}" />
+                                <input type="text" placeholder="{{ trans("Search name", {}, 'AdminProducts') }}" name="filter_column_name" value="{{ filter_column_name }}" />
                             </th>
                             <th>
-                                <input type="text" placeholder="{{ trans("Partial reference allowed", {}, 'AdminProducts') }}" name="filter_column_reference" value="{{ filter_column_reference }}" />
+                                <input type="text" placeholder="{{ trans("Search ref.", {}, 'AdminProducts') }}" name="filter_column_reference" value="{{ filter_column_reference }}" />
                             </th>
                             <th>
-                                <input type="text" placeholder="{{ trans("Partial category name allowed", {}, 'AdminProducts') }}" name="filter_column_name_category" value="{{ filter_column_name_category }}" />
+                                <input type="text" placeholder="{{ trans("Search category", {}, 'AdminProducts') }}" name="filter_column_name_category" value="{{ filter_column_name_category }}" />
                             </th>
                             <th>
                                 {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
@@ -178,7 +178,7 @@
                             {% if has_category_filter == true %}
                                 <th>
                                     {% if not(activate_drag_and_drop) %}
-                                        <input type="button" class="btn" name="products_filter_position_asc" value="{{ trans("Sort on this category", {}, 'AdminProducts') }}" onclick="productOrderPrioritiesTable();" />
+                                        <input type="button" class="btn" name="products_filter_position_asc" value="{{ trans("Sort", {}, 'AdminProducts') }}" onclick="productOrderPrioritiesTable();" />
                                     {% endif %}
                                 </th>
                             {% endif %}
@@ -207,7 +207,7 @@
                         'div_style': "btn-group dropup",
                         'button_id': "product_bulk_menu",
                         'disabled': true,
-                        'menu_label': trans("Selection actions", {}, 'AdminTab'),
+                        'menu_label': trans("Bulk actions", {}, 'AdminTab'),
                         'menu_icon': "icon-caret-up",
                         'items':[
                             {
