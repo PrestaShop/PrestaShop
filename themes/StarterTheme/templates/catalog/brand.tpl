@@ -1,4 +1,4 @@
-{block name="brand"}
+{block name='brand'}
   <li class="brand">
     <div class="brand-img"><a href="{$brand.url}"><img src="{$brand.image}" alt="{$brand.name}"></a></div>
     <div class="brand-infos">

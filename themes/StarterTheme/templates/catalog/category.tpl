@@ -1,9 +1,9 @@
-{extends file="$layout"}
+{extends file=$layout}
 
-{block name="content"}
+{block name='content'}
   <section id="main">
 
-    {block name="category_header"}
+    {block name='category_header'}
       <h1>{$category.name}</h1>
       <div class="category-cover">
         <img src="{$category.image.large.url}" alt="{$category.image.legend}">
@@ -11,15 +11,15 @@
       <div id="category-description">{$category.description nofilter}</div>
     {/block}
 
-    {block name="category_subcategories"}
+    {block name='category_subcategories'}
       <aside>
         {if $subcategories|count}
           <nav class="subcategories">
             <ul>
               {foreach from=$subcategories item="subcategory"}
                 <li>
-                  {block name="category_miniature"}
-                    {include file="catalog/category-miniature.tpl" category=$subcategory}
+                  {block name='category_miniature'}
+                    {include file='catalog/category-miniature.tpl' category=$subcategory}
                   {/block}
                 </li>
               {/foreach}
@@ -29,8 +29,8 @@
       </aside>
     {/block}
 
-    {block name="category_products"}
-      {include file="catalog/products.tpl" products=$products}
+    {block name='category_products'}
+      {include file='catalog/products.tpl' products=$products}
     {/block}
 
   </section>
