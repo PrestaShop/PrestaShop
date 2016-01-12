@@ -96,12 +96,14 @@ class ProductCombination extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_priceTE']
         ))
         ->add('attribute_priceTI', 'money', array(
             'required' => false,
             'mapped' => false,
-            'label' => $this->translator->trans('(tax incl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_priceTI']
         ))
         ->add('attribute_ecotax', 'money', array(
             'required' => false,

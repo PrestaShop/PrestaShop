@@ -661,6 +661,9 @@ var combinations = (function() {
 					navElem.find('.next').attr('data', nextCombinationId).show();
 				}
 
+				/** init combination tax include price */
+				priceCalculation.impactTaxInclude(contentElem.find('.attribute_priceTE'));
+
 				contentElem.insertBefore('#form-nav').removeClass('hide').show();
 				$('#form-nav, #form_content').hide();
 			});
@@ -1563,6 +1566,15 @@ var priceCalculation = (function() {
 				priceCalculation.taxExclude();
 			});
 
+			/** combinations : update TTC price field on change */
+			$('.combination-form .attribute_priceTE').keyup(function(){
+				priceCalculation.impactTaxInclude($(this));
+			});
+			/** combinations : update HT price field on change */
+			$('.combination-form .attribute_priceTI').keyup(function(){
+				priceCalculation.impactTaxExclude($(this));
+			});
+
 			priceCalculation.taxInclude();
 		},
 		'taxInclude': function() {
@@ -1590,6 +1602,32 @@ var priceCalculation = (function() {
 
 			priceHTElem.val(newPrice);
 			priceHTShortcutElem.val(newPrice);
+		},
+		'impactTaxInclude': function(obj) {
+			var price = parseFloat(obj.val().replace(/,/g, '.'));
+			var targetInput = obj.parent().parent().find('input.attribute_priceTI');
+			if(isNaN(price)){
+				targetInput.val(0);
+				return;
+			}
+			var rates = taxElem.find('option:selected').attr('data-rates').split(',');
+			var computation_method = taxElem.find('option:selected').attr('data-computation-method');
+			var newPrice = ps_round(addTaxes(price, rates, computation_method));
+
+			targetInput.val(newPrice);
+		},
+		'impactTaxExclude': function(obj) {
+			var price = parseFloat(obj.val().replace(/,/g, '.'));
+			var targetInput = obj.parent().parent().find('input.attribute_priceTE');
+			if(isNaN(price)){
+				targetInput.val(0);
+				return;
+			}
+			var rates = taxElem.find('option:selected').attr('data-rates').split(',');
+			var computation_method = taxElem.find('option:selected').attr('data-computation-method');
+			var newPrice = ps_round(removeTaxes(ps_round(price, displayPricePrecision), rates, computation_method), displayPricePrecision);
+
+			targetInput.val(newPrice);
 		}
 	};
 })();
