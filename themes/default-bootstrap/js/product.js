@@ -906,6 +906,7 @@ function displayDiscounts(combination)
 	// If there is some combinations specific quantity discount, show them, else, if there are some
 	// products quantity discount: show them. In case of result, show the category.
 	if (combinationsSpecificQuantityDiscount.length != 0) {
+		$('tbody tr', quantityDiscountTable).hide();
 		combinationsSpecificQuantityDiscount.show();
 		quantityDiscountTable.show();
 	} else if(allQuantityDiscount.length != 0) {
