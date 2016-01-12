@@ -1,1 +1,1 @@
-{hook h="displayFooter"}
+{hook h='displayFooter'}
