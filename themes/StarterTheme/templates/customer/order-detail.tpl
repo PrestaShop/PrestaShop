@@ -1,12 +1,12 @@
-{extends "page.tpl"}
+{extends file='page.tpl'}
 
-{block name="page_title"}
+{block name='page_title'}
   {l s='Order details'}
 {/block}
 
-{block name="page_content"}
+{block name='page_content'}
 
-  {block name="order_infos"}
+  {block name='order_infos'}
     <div id="order-infos">
       <p>{l s='Order Reference %s - placed on %s' sprintf=[$order.data.reference, $order.data.order_date]}</p>
       {if $order.data.url_to_reorder}
@@ -31,7 +31,7 @@
     </div>
   {/block}
 
-  {block name="order_history"}
+  {block name='order_history'}
     <section id="order-history">
       <h1>{l s='Follow your order\'s status step-by-step'}</h1>
       <table>
@@ -58,7 +58,7 @@
     <a href="{$order.data.followup}">{$order.data.followup}</a>
   {/if}
 
-  {block name="addresses"}
+  {block name='addresses'}
     {if $order.addresses.delivery}
       <article id="delivery-address" class="address">
         <header>
@@ -80,7 +80,7 @@
 
   {$hook_orderdetaildisplayed}
 
-  {block name="order_detail"}
+  {block name='order_detail'}
     {if $order.data.return_allowed}
       {include file='customer/_partials/order-detail-return.tpl'}
     {else}
@@ -88,7 +88,7 @@
     {/if}
   {/block}
 
-  {block name="order_carriers"}
+  {block name='order_carriers'}
     {if $order.shipping}
       <table>
         <thead>
@@ -115,7 +115,7 @@
     {/if}
   {/block}
 
-  {block name="order_messages"}
+  {block name='order_messages'}
     {include file='customer/_partials/order-messages.tpl'}
   {/block}
 

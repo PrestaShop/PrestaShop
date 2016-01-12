@@ -1,10 +1,10 @@
-{extends "customer/page.tpl"}
+{extends file='customer/page.tpl'}
 
-{block name="page_title"}
+{block name='page_title'}
   {l s='My vouchers'}
 {/block}
 
-{block name="page_content"}
+{block name='page_content'}
 
   {if $cart_rules}
     <table>

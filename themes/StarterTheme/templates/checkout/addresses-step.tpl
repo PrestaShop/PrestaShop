@@ -1,6 +1,6 @@
-{extends "checkout/checkout-step.tpl"}
+{extends file='checkout/checkout-step.tpl'}
 
-{block "step_content"}
+{block name='step_content'}
 
   {if !$use_same_address}
     <h2 class="h2">{l s='Your Delivery Address'}</h2>
@@ -14,8 +14,8 @@
 
   {if $show_delivery_address_form}
     <div id="delivery-address">
-      {render ui                        = $address_form
-              template                  = "checkout/_partials/address-form.tpl"
+      {render file                      = 'checkout/_partials/address-form.tpl'
+              ui                        = $address_form
               use_same_address          = $use_same_address
               type                      = "delivery"
               form_has_continue_button  = $form_has_continue_button
@@ -23,8 +23,8 @@
     </div>
   {elseif $customer.addresses|count > 0}
     <div id="delivery-addresses">
-      {include  addresses   = $customer.addresses
-                file        = "checkout/_partials/address-selector-block.tpl"
+      {include  file        = 'checkout/_partials/address-selector-block.tpl'
+                addresses   = $customer.addresses
                 name        = "id_address_delivery"
                 selected    = $id_address_delivery
                 type        = "delivery"
@@ -48,8 +48,8 @@
 
     {if $show_invoice_address_form}
       <div id="invoice-address">
-        {render ui                        = $address_form
-                template                  = "checkout/_partials/address-form.tpl"
+        {render file                      = 'checkout/_partials/address-form.tpl'
+                ui                        = $address_form
                 use_same_address          = $use_same_address
                 type                      = "invoice"
                 form_has_continue_button  = $form_has_continue_button
@@ -57,8 +57,8 @@
       </div>
     {else}
       <div id="invoice-addresses">
-        {include  addresses   = $customer.addresses
-                  file        = "checkout/_partials/address-selector-block.tpl"
+        {include  file        = 'checkout/_partials/address-selector-block.tpl'
+                  addresses   = $customer.addresses
                   name        = "id_address_invoice"
                   selected    = $id_address_invoice
                   type        = "invoice"
