@@ -338,7 +338,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         }
     }
 
-    protected function getCategoriesFromModules($modules)
+    protected function getCategoriesFromModules(&$modules)
     {
         $categories = new \stdClass;
 
@@ -346,8 +346,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $categories->categories = $this->createMenuObject('categories',
             'Categories');
 
-        foreach ($modules as $module) {
-            foreach ($module->refs as $name) {
+        foreach ($modules as &$module) {
+            foreach ($module->refs as $key => $name) {
                 $ref  = $this->getRefFromModuleCategoryName($name);
 
                 if (!isset($categories->categories->subMenu->{$ref})) {
@@ -357,6 +357,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 }
 
                 $categories->categories->subMenu->{$ref}->modulesRef[] = $module->id;
+                $module->refs[$key] = $ref;
             }
         }
 
@@ -382,7 +383,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
                 // Add un-implemented properties
                 $product->refs       = (array)(!empty($product->categoryName)
-                    ?$this->getRefFromModuleCategoryName($product->categoryName)
+                    ?$product->categoryName
                     :'unknown'
                 );
                 if (! isset($product->product_type)) {
