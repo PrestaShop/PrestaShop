@@ -92,18 +92,9 @@ class ProductCombination extends CommonAbstractType
             'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
-        ->add('attribute_price_impact', 'choice', array(
-            'choices'  => array(
-                '0' => $this->translator->trans('None', [], 'AdminProducts'),
-                '1' => $this->translator->trans('Increase', [], 'AdminProducts'),
-                '-1' => $this->translator->trans('Decrease', [], 'AdminProducts'),
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Impact on price', [], 'AdminProducts'),
-        ))
         ->add('attribute_price', 'money', array(
             'required' => false,
-            'label' => $this->translator->trans('(tax excl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('attribute_priceTI', 'money', array(
@@ -112,31 +103,14 @@ class ProductCombination extends CommonAbstractType
             'label' => $this->translator->trans('(tax incl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
-        ->add('attribute_weight_impact', 'choice', array(
-            'choices'  => array(
-                '0' => $this->translator->trans('None', [], 'AdminProducts'),
-                '1' => $this->translator->trans('Increase', [], 'AdminProducts'),
-                '-1' => $this->translator->trans('Decrease', [], 'AdminProducts'),
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts'),
-        ))
         ->add('attribute_weight', 'number', array(
             'required' => false,
-            'label' => $this->translator->trans($this->configuration->get('PS_WEIGHT_UNIT'), [], 'AdminProducts')
+            'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts')
         ))
-        ->add('attribute_unit_impact', 'choice', array(
-            'choices'  => array(
-                '0' => $this->translator->trans('None', [], 'AdminProducts'),
-                '1' => $this->translator->trans('Increase', [], 'AdminProducts'),
-                '-1' => $this->translator->trans('Decrease', [], 'AdminProducts'),
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Impact on unit price', [], 'AdminProducts'),
-        ))
-        ->add('attribute_unity', 'number', array(
+        ->add('attribute_unity', 'money', array(
             'required' => false,
-            'label' => $this->translator->trans($this->contextLegacy->currency->sign.'/', [], 'AdminProducts')
+            'label' => $this->translator->trans('Impact on unit price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
         ->add('attribute_minimal_quantity', 'number', array(
             'required' => false,

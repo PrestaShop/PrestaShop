@@ -596,29 +596,13 @@ var combinations = (function() {
 			/** on change weigth, update weight row */
 			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_weight"]', function() {
 				var id_attribute = $(this).closest('.combination-form').attr('data');
-				var impactField = $(this).closest('.combination-form').find('select[id^="form_step3_combinations_"][id$="_attribute_weight_impact"]');
-				var impact = impactField.val() === '0' ? '1' : impactField.val();
-				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-weight').html(impact * $(this).val() + ' ' + weightUnit);
-			});
-
-			/** on change weigth impact, update weight row */
-			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_weight_impact"]', function() {
-				var id_attribute = $(this).closest('.combination-form').attr('data');
-				$('#accordion_combinations #attribute_'+id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_weight"]').keyup();
+				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-weight').html($(this).val() + ' ' + weightUnit);
 			});
 
 			/** on change price, update price row */
 			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_price"]', function() {
 				var id_attribute = $(this).closest('.combination-form').attr('data');
-				var impactField = $(this).closest('.combination-form').find('select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]');
-				var impact = impactField.val() === '0' ? '1' : impactField.val();
-				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-price-display').html(formatCurrency(impact * $(this).val()));
-			});
-
-			/** on change price impact, update price row */
-			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]', function() {
-				var id_attribute = $(this).closest('.combination-form').attr('data');
-				$('#accordion_combinations #attribute_'+id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup();
+				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-price-display').html(formatCurrency(parseFloat($(this).val())));
 			});
 
 			/** on change images selection */

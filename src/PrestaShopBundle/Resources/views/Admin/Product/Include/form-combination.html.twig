@@ -45,34 +45,22 @@
                 </div>
                 <div class="form-group">
                     <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_price_impact.vars.label }}</label>
-                        {{ form_widget(form.attribute_price_impact) }}
-                    </div>
-                    <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.attribute_price.vars.label }}</label>
                         {{ form_widget(form.attribute_price) }}
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_weight_impact.vars.label }}</label>
-                        {{ form_widget(form.attribute_weight_impact) }}
-                    </div>
                     <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.attribute_weight.vars.label }}</label>
-                        {{ form_widget(form.attribute_weight) }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-xs-2 pull-left">
-                        <label class="control-label">{{ form.attribute_unit_impact.vars.label }}</label>
-                        {{ form_widget(form.attribute_unit_impact) }}
+                        <div class="input-group">
+                            <span class="input-group-addon">{{ 'PS_WEIGHT_UNIT'|configuration }}</span>
+                            {{ form_widget(form.attribute_weight) }}
+                        </div>
                     </div>
                     <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.attribute_unity.vars.label }}</label>
                         {{ form_widget(form.attribute_unity) }}
                     </div>
                 </div>
+
                 <div class="form-group">
                     <div class="col-xs-2 pull-left">
                         <label class="control-label">{{ form.attribute_reference.vars.label }}</label>
