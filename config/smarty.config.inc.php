@@ -277,8 +277,8 @@ function smartyRender($params, &$smarty)
 {
     $ui = $params['ui'];
 
-    if (array_key_exists('template', $params)) {
-        $ui->setTemplate($params['template']);
+    if (array_key_exists('file', $params)) {
+        $ui->setTemplate($params['file']);
     }
 
     return implode('', [
