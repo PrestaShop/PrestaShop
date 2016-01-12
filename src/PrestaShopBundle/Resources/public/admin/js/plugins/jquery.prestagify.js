@@ -149,7 +149,7 @@
     var bindFocusInputEvent = function() {
         // Bind click on tagsWrapper to switch and focus on input
         $('.' + immutableConfig.tagsWrapperClass).on('click', function(event) {
-            var clickedElementClasses = event.toElement.className;
+            var clickedElementClasses = event.target.className;
             // Regexp to check if not clicked on closingCross to avoid focusing input if so
             var checkClosingCrossRegex = new RegExp(immutableConfig.closingCrossClass, 'g');
             var closingCrossClicked = clickedElementClasses.match(checkClosingCrossRegex);
@@ -235,18 +235,7 @@
         bindValidationInputEvent();
         bindFocusInputEvent();
         bindClosingCrossEvent();
-        // Allow to continue using jQuery once this plugin has been applied
+
         return this;
     };
 }(jQuery));
-
-
-/*
-var s = "HELLO, WORLD!";
-var nth = 0;
-s = s.replace(/L/g, function (match, i, original) {
-    nth++;
-    return (nth === 2) ? "M" : match;
-});
-alert(s); // "HELMO, WORLD!";
- */
