@@ -50,8 +50,8 @@ class AdminThemesControllerCore extends AdminController
         parent::__construct();
 
         // TODO StarterTheme: handle multistore
-        $this->theme_manager = new ThemeManager();
-        $this->theme_manager->setConfigurator(
+        $this->theme_manager = new ThemeManager(
+            $this->context->shop,
             new AdapterConfiguration($this->context->shop)
         );
     }
