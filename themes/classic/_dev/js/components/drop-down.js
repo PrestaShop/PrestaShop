@@ -1,8 +1,23 @@
 export default class DropDown {
-  constructor() {
-    $('.js-drop-down').on('click', function(event) {
+  constructor(el) {
+    this.el = el;
+  }
+  init(el) {
+    this.el.on('click', function(event) {
+      let currentMenu = $(this);
+
+      if ($(event.target).data('depth') != undefined && ($(event.target).data('depth') !== 0 || $(this).find('ul').length === 0)) {
+        return true;
+      }
       event.preventDefault();
-      $(this).find('ul').toggleClass('active');
+      event.stopPropagation();
+
+      currentMenu.find('ul').toggleClass('active');
+
+      $('html').on('click', function() {
+        currentMenu.find('ul').toggleClass('active');
+        $(this).off();
+      });
     });
   }
 }
