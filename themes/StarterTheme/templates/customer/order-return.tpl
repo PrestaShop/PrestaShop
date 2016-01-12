@@ -1,12 +1,12 @@
-{extends "customer/page.tpl"}
+{extends file='customer/page.tpl'}
 
-{block name="page_title"}
+{block name='page_title'}
   {l s='Order details'}
 {/block}
 
-{block name="page_content"}
+{block name='page_content'}
 
-  {block name="order_return_infos"}
+  {block name='order_return_infos'}
     <div id="order-return-infos">
       <h1>{l s='RE#%s on %s' sprintf=[$orderRet.return_number, $orderRet.return_date]}</h2>
       <p>{l s='We have logged your return request.'}</p>

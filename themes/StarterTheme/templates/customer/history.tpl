@@ -1,10 +1,10 @@
-{extends "customer/page.tpl"}
+{extends file='customer/page.tpl'}
 
-{block name="page_title"}
+{block name='page_title'}
   {l s='Order history'}
 {/block}
 
-{block name="page_content"}
+{block name='page_content'}
   <h2>{l s='Here are the orders you\'ve placed since your account was created.'}</h2>
 
   {if $orders}

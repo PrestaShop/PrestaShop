@@ -14,7 +14,7 @@
   data-id-product             = "{$product.id_product|escape:'javascript'}"
   data-id-product-attribute   = "{$product.id_product_attribute|escape:'javascript'}"
  >
-  {l s="Remove" mod="blockcart"}
+  {l s='Remove' mod="blockcart"}
 </a>
 
 <span class="product-price">{$product.total}</span>
