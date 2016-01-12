@@ -25,6 +25,8 @@ var AdminModule = function() {
     this.sortDisplaySelector = '.module-sort-switch';
     this.moduleListSelector = '#modules-list';
     this.moduleGridSelector = '#modules-grid';
+    this.moduleSortListSelector = '#module-sort-list';
+    this.moduleSortGridSelector = '#module-sort-grid';
     this.moduleItemListSelector = '.module-item-list';
     this.moduleItemGridSelector = '.module-item-grid';
     this.categorySelectorLabelSelector = '.module-category-selector-label';
@@ -307,22 +309,15 @@ var AdminModule = function() {
               var dataAuthor = $(this).attr('data-author');
               var moduleItem = $(this);
               var hasMatched = false;
-             // var _that = _this;
-
               var matchedTagsCount = 0;
 
               $.each(_this.currentTagsList, function(index, value) {
-
+                 // value = .replace(/[|&;$%@"<>()+,]/g, "");
                   var findRegexp = new RegExp(value, 'gi');
                   // If match any on these attrbute  its a match
                   if (dataName.match(findRegexp) || dataDescription.match(findRegexp) ||
                      dataAuthor.match(findRegexp)) {
-                        /* moduleItem.css('display', 'block'); */
                          matchedTagsCount += 1;
-                     } else {
-                         // Nothing found so we have to return true to apply 'display: none' on item
-                        /*moduleItem.css('display', 'none');
-                        _that.areAllModuleDisplayed = false;*/
                      }
                  });
 
@@ -413,16 +408,16 @@ var AdminModule = function() {
 
       if (switchTo == 'grid') {
           $(this.moduleItemListSelector).each(function() {
-              $(this.moduleListSelector).removeClass('module-sort-active');
-              $(this.moduleGridSelector).addClass('module-sort-active');
+              $(_this.moduleSortListSelector).removeClass('module-sort-active');
+              $(_this.moduleSortGridSelector).addClass('module-sort-active');
               $(this).removeClass();
               $(this).addClass('module-item-grid col-md-3');
               _this.setNewDisplay($(this), '-list', '-grid');
           });
       } else if (switchTo == 'list') {
           $(this.moduleItemGridSelector).each(function(index) {
-              $(this.moduleGridSelector).removeClass('module-sort-active');
-              $(this.moduleListSelector).addClass('module-sort-active');
+              $(_this.moduleSortGridSelector).removeClass('module-sort-active');
+              $(_this.moduleSortListSelector).addClass('module-sort-active');
               $(this).removeClass();
               $(this).addClass('module-item-list col-md-12');
               _this.setNewDisplay($(this), '-grid', '-list');
