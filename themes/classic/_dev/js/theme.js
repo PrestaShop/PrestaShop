@@ -8,17 +8,26 @@ import '../css/theme';
 import './setup-rivets';
 import './checkout';
 import './facets';
-import './product';
+
+import DropDown from './components/drop-down';
+import TopMenu from './components/top-menu';
 
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
-import {psShowHide} from './common';
+import {
+  psShowHide
+}
+from './common';
 
 // "inherit" EventEmitter
 for (var i in EventEmitter.prototype) {
-    prestashop[i] = EventEmitter.prototype[i];
+  prestashop[i] = EventEmitter.prototype[i];
 }
 
 $(document).ready(() => {
+  let dropDownEl = $('.js-drop-down');
+  let topMenuEl = $('.js-top-menu > li');
+  let dropDown = new DropDown(dropDownEl).init();
+  let topMenu = new TopMenu(topMenuEl).init();
   psShowHide();
 });
