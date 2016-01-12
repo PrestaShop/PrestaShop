@@ -25,7 +25,7 @@
             &nbsp;
             |
             &nbsp;
-            {{ trans("Elements per page:", {}, 'AdminTab') }}&nbsp;
+            {{ trans("Items per page:", {}, 'AdminTab') }}&nbsp;
             <select name="paginator_select_page_limit" psurl="{{ changeLimitUrl }}" style="display:inline;width:6em;" class="pagination-link">
                 {% if limit not in limit_choices %}<option value="{{ limit }}" selected="selected">{{ limit }}</option>{% endif %}
                 {% for limit_choice in limit_choices %}
