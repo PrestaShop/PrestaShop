@@ -46,4 +46,4 @@
   </label>
 {/if}
 
-{include file="_partials/form-errors.tpl" errors=$field.errors}
+{include file='_partials/form-errors.tpl' errors=$field.errors}

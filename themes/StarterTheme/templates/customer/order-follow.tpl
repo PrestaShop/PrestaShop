@@ -1,10 +1,10 @@
-{extends "customer/page.tpl"}
+{extends file='customer/page.tpl'}
 
-{block name="page_title"}
+{block name='page_title'}
   {l s='Return Merchandise Authorization (RMA)'}
 {/block}
 
-{block name="page_content"}
+{block name='page_content'}
   <h2>{l s='Here is a list of pending merchandise returns'}</h2>
 
   {if isset($errorMsg) && $errorMsg}
