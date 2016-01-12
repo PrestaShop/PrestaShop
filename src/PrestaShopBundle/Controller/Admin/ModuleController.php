@@ -24,15 +24,15 @@ class ModuleController extends Controller
         $toolbarButtons = array();
         $toolbarButtons['manage_module'] = array(
             'href' => $this->generateUrl('admin_module_manage'),
-            'desc' => $translator->trans('[TEMP] Manage my modules', array(), $request->attributes->get('_legacy_controller')),
+            'desc' => $translator->trans('[TEMP] Manage my modules', array(), get_class($this)),
             'icon' => 'icon-share-square',
-            'help' => $translator->trans('Manage', array(), $request->attributes->get('_legacy_controller')),
+            'help' => $translator->trans('Manage', array(), get_class($this)),
         );
         $toolbarButtons['add_module'] = array(
             'href' => '#',
-            'desc' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
+            'desc' => $translator->trans('Add a module', array(), get_class($this)),
             'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
+            'help' => $translator->trans('Add a module', array(), get_class($this)),
             'class' => 'slut',
             'id' => 'test',
             'test' => 'test'
@@ -75,9 +75,9 @@ class ModuleController extends Controller
         $toolbarButtons = array();
         $toolbarButtons['add_module'] = array(
             'href' => $this->generateUrl('admin_module_import'),
-            'desc' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
+            'desc' => $translator->trans('Add a module', array(), get_class($this)),
             'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller'))
+            'help' => $translator->trans('Add a module', array(), get_class($this))
         );
         return $this->render('PrestaShopBundle:Admin/Module:import.html.twig', array(
             'layoutHeaderToolbarBtn' => $toolbarButtons
@@ -92,15 +92,15 @@ class ModuleController extends Controller
         $toolbarButtons = array();
         $toolbarButtons['catalog_module'] = array(
             'href' => $this->generateUrl('admin_module_catalog'),
-            'desc' => $translator->trans('[TEMP] Modules catalog', array(), $request->attributes->get('_legacy_controller')),
+            'desc' => $translator->trans('[TEMP] Modules catalog', array(), get_class($this)),
             'icon' => 'icon-share-square',
-            'help' => $translator->trans('Catalog', array(), $request->attributes->get('_legacy_controller')),
+            'help' => $translator->trans('Catalog', array(), get_class($this)),
         );
         $toolbarButtons['add_module'] = array(
             'href' => $this->generateUrl('admin_module_import'),
-            'desc' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
+            'desc' => $translator->trans('Add a module', array(), get_class($this)),
             'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller'))
+            'help' => $translator->trans('Add a module', array(), get_class($this))
         );
 
         $filter = [];
@@ -171,7 +171,7 @@ class ModuleController extends Controller
 
         // We need a better error handler here. Meanwhile, I throw an exception
         if (! $ret[$module]['status']) {
-            throw new Exception($ret[$module]['msg']);
+            $this->addFlash('error', $ret[$module]['msg']);
         }
         
         if ($request->server->get('HTTP_REFERER')) {
@@ -315,7 +315,7 @@ class ModuleController extends Controller
         } else {
             $msg = sprintf('Could not install module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
         }
-
+        
         return array('status' => $status, 'msg' => $msg);
     }
 
