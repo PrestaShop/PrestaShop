@@ -39,6 +39,10 @@
       }
     }
 
+    .navigation{
+      z-index: 1;
+    }
+
     a{
       color: white;
       text-transform: uppercase;
@@ -54,6 +58,31 @@
         display: none;
       }
     }
+  }
+}
+
+#wrapper{
+  .breadcrumb{
+    text-transform: uppercase;
+    background: transparent;
+    ol{
+      padding-left: 0;
+    }
+    li{
+      display: inline;
+      &:after{
+        content:">";
+      }
+      &:last-child:after{
+        content:"";
+      }
+    }
+    a{
+      color: $gray-light;
+    }
+  }
+  .product-miniature{
+    min-height: 630px;
   }
 }
 
