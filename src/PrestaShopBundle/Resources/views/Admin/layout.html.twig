@@ -8,6 +8,8 @@
     )
 )) %}
 
+{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
+
 {% block stylesheets %}
     {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/*' filter='cssrewrite' %}
     <link rel="stylesheet" href="{{ asset_url|admin_asset_path }}" />
