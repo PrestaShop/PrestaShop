@@ -1,10 +1,10 @@
-{extends "page.tpl"}
+{extends file='page.tpl'}
 
-{block name="page_header_container"}{/block}
+{block name='page_header_container'}{/block}
 
-{block name="page_content_container"}
+{block name='page_content_container'}
   <section id="content" class="page-content page-authentication">
-    {block name="register_form_container"}
+    {block name='register_form_container'}
       <header>
         <h1 class="h1">{l s='Create an account'}</h1>
       </header>
@@ -12,7 +12,7 @@
 
       {$hook_create_account_top nofilter}
       <section class="register-form">
-        {render template='customer/_partials/customer-form.tpl' ui=$register_form}
+        {render file='customer/_partials/customer-form.tpl' ui=$register_form}
       </section>
     {/block}
   </section>

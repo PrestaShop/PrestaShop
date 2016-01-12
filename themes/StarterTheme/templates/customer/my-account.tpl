@@ -1,10 +1,10 @@
-{extends "page.tpl"}
+{extends file='page.tpl'}
 
-{block name="page_title"}
+{block name='page_title'}
   {l s='My account'}
 {/block}
 
-{block name="page_content_container"}
+{block name='page_content_container'}
   <section id="content" class="page-content page-my-account">
 
     <p>{l s='Welcome to your account. Here you can manage all of your personal information and orders.'}</p>
@@ -44,8 +44,8 @@
         </li>
       {/if}
 
-      {block name="displayCustomerAccount"}
-        {hook h="displayCustomerAccount"}
+      {block name='display_customer_account'}
+        {hook h='displayCustomerAccount'}
       {/block}
 
     </ul>

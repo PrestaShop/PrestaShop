@@ -1,6 +1,6 @@
-{extends "checkout/checkout-step.tpl"}
+{extends file='checkout/checkout-step.tpl'}
 
-{block "step_content"}
+{block name='step_content'}
 
   {if $conditions_to_approve|count}
     <p class="ps-hidden-by-js">
@@ -42,10 +42,10 @@
             {* This is the way an option should be selected when Javascript is disabled *}
             <form method="GET" class="ps-hidden-by-js">
               {if $option.id === $selected_payment_option}
-                {l s="Selected"}
+                {l s='Selected'}
               {else}
                 <button class="ps-hidden-by-js" type="submit" name="select_payment_option" value="{$option.id}">
-                  {l s="Choose"}
+                  {l s='Choose'}
                 </button>
               {/if}
             </form>
