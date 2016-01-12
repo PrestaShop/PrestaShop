@@ -147,10 +147,12 @@ class ProductSpecificPrice extends CommonAbstractType
             'required' => false,
         ))
         ->add('sp_reduction', 'money', array(
+            'label' => $this->translator->trans('Reduction', [], 'AdminProducts'),
             'required' => false,
             'currency' => $this->currency->iso_code,
         ))
         ->add('sp_reduction_type', 'choice', array(
+            'label' => $this->translator->trans('Reduction type', [], 'AdminProducts'),
             'choices'  => array(
                 'amount' => '€',
                 'percentage' => $this->translator->trans('%', [], 'AdminProducts'),
@@ -158,6 +160,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'required' => true,
         ))
         ->add('sp_reduction_tax', 'choice', array(
+            'label' => $this->translator->trans('Reduction tax', [], 'AdminProducts'),
             'choices'  => array(
                 '0' => $this->translator->trans('Tax excluded', [], 'AdminProducts'),
                 '1' => $this->translator->trans('Tax included', [], 'AdminProducts'),

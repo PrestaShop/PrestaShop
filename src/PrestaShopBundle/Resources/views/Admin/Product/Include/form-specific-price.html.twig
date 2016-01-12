@@ -1,0 +1,47 @@
+ {{ form_errors(form) }}
+    {{ form_row(form.sp_id_shop) }}
+    <div class="form-group">
+        <div class="col-sm-4">{{ form_row(form.sp_id_currency) }}</div>
+        <div class="col-sm-4">{{ form_row(form.sp_id_country) }}</div>
+        <div class="col-sm-4">{{ form_row(form.sp_id_group) }}</div>
+    </div>
+
+    {{ form_row(form.sp_id_product_attribute) }}
+    <div class="form-group">
+        <div class="col-sm-6">
+            {{ form_row(form.sp_from) }}
+        </div>
+        <div class="col-sm-6">
+            {{ form_row(form.sp_to) }}
+        </div>
+    </div>
+
+    <div class="form-group form-inline">
+        <div class="col-sm-4">
+            <label class="control-label">{{ form.sp_from_quantity.vars.label }} </label>
+            {{ form_widget(form.sp_from_quantity) }}
+        </div>
+        <div class="col-sm-4">
+            <label class="control-label">{{ form.sp_price.vars.label }} </label>
+            {{ form_widget(form.sp_price) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.leave_bprice) }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-4">
+            <label class="control-label">{{ form.sp_reduction.vars.label }}</label>
+            {{ form_widget(form.sp_reduction) }}
+        </div>
+        <div class="col-sm-4">
+            <label class="control-label">{{ form.sp_reduction_type.vars.label }}</label>
+            {{ form_widget(form.sp_reduction_type) }}
+        </div>
+        <div class="col-sm-4">
+            <label class="control-label">{{ form.sp_reduction_tax.vars.label }}</label>
+            {{ form_widget(form.sp_reduction_tax) }}
+        </div>
+    </div>
+{{ form_row(form.save) }}

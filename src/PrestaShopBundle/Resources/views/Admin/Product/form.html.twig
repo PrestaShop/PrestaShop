@@ -400,8 +400,8 @@
                                         {{ trans('Add a specific price', {}, 'AdminProducts') }}
                                     </a>
                                     <div class="collapse" id="specific_price_form" data-action="{{ path('admin_specific_price_add') }}">
-                                        {{ form_errors(form.step2.specific_price) }}
-                                        {{ form_widget(form.step2.specific_price) }}
+                                        <br />
+                                        {{ include('PrestaShopBundle:Admin:Product/Include/form-specific-price.html.twig', {'form': form.step2.specific_price}) }}
                                     </div>
                                 </div>
                             </div>
@@ -412,12 +412,13 @@
                             </div>
                             <label class="col-sm-2 control-label">{{ trans('Priorities', {}, 'AdminProducts') }}</label>
                             <div class="col-sm-10">
-                                {{ form_widget(form.step2.specificPricePriority_0) }}
-                                {{ form_widget(form.step2.specificPricePriority_1) }}
-                                {{ form_widget(form.step2.specificPricePriority_2) }}
-                                {{ form_widget(form.step2.specificPricePriority_3) }}
 
-                                {{ form_widget(form.step2.specificPricePriorityToAll) }}
+                                {{ form_row(form.step2.specificPricePriority_0) }}
+                                {{ form_row(form.step2.specificPricePriority_1) }}
+                                {{ form_row(form.step2.specificPricePriority_2) }}
+                                {{ form_row(form.step2.specificPricePriority_3) }}
+
+                                {{ form_row(form.step2.specificPricePriorityToAll) }}
                             </div>
                         </div>
                     </div>
