@@ -5,7 +5,7 @@ export default class DropDown {
   init(el) {
     this.el.on('click', function(event) {
       let currentMenu = $(this);
-      
+
       if ($(event.target).data('depth') != undefined && ($(event.target).data('depth') !== 0 || $(this).find('ul').length === 0)) {
         return true;
       }
@@ -14,9 +14,8 @@ export default class DropDown {
 
       currentMenu.find('ul').toggleClass('active');
 
-      $('html').on('click', function() {
+      $('html').one('click', function() {
         currentMenu.find('ul').toggleClass('active');
-        $(this).off();
       });
     });
   }
