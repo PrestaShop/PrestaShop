@@ -36,10 +36,12 @@ global_settings:
     toEnable:
       # All modules below are enabled when
       # the theme is enabled (and installed if needed).
+      # They are disabled when the theme is disabled.
       - my-custom-module
       - yippeeslider
     toDisable:
       # All modules below are disabled when the theme is enabled.
+      # They are re-enabled when the theme is disabled.
       - homeslider
       - blockwishlist
     toHookOn:
