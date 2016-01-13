@@ -8,6 +8,7 @@ parameters:
     database_user:     root
     database_password: ~
     database_prefix:   ps_
+    database_server_version: 5.1
     # You should uncomment this if you want use pdo_sqlite
     # database_path: "%kernel.root_dir%/data.db3"
 
