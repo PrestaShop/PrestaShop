@@ -68,9 +68,10 @@ interface ProductInterface
      * Combines new filter values with old ones (persisted), then persists the combination and returns it.
      *
      * @param string[]|null $paramsIn New filter params values to take into account. If not given, the method will simply return persisted values.
+     * @param boolean $avoidPersistence True to avoid persisting these preferences (for an export for example).
      * @return string[] The new filter params values
      */
-    public function combinePersistentCatalogProductFilter($paramsIn = array());
+    public function combinePersistentCatalogProductFilter($paramsIn = array(), $avoidPersistence = false);
 
     /**
      * Returns a collection of products, using default language, currency and others, from Context.
@@ -80,9 +81,11 @@ interface ProductInterface
      * @param string $orderBy Field name to sort during SQL query
      * @param string $sortOrder 'asc' or 'desc'
      * @param string[] $post filter params values to take into acount (often comes from POST data).
+     * @param boolean $avoidPersistence True to avoid persisting these preferences (for an export for example)
+     * @param boolean $formatCldr False to avoid CLDR formatting (heavy memory usage)
      * @return array[mixed[]] A list of products, as an array of arrays of raw data.
      */
-    public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array());
+    public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array(), $avoidPersistence = false, $formatCldr = true);
 
     /**
      * Retrieve global product count (for the current shop).
