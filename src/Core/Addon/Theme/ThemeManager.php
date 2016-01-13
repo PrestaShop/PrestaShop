@@ -34,12 +34,17 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 class ThemeManager implements AddonManagerInterface
 {
     private $shop;
+    private $employee;
     private $configurator;
     private $themes;
 
-    public function __construct(\Shop $shop, ConfigurationInterface $configurator)
+    public function __construct(
+        \Shop $shop,
+        ConfigurationInterface $configurator,
+        \Employee $employee = null)
     {
         $this->shop = $shop;
+        $this->employee = $employee;
         $this->configurator = $configurator;
     }
 
@@ -94,10 +99,19 @@ class ThemeManager implements AddonManagerInterface
      */
     public function enable($name)
     {
-        // Check theme is existing and valid
-        // Check employee rights
-        // Check
-        return true;
+        if (!$this->employee->canEdit()) {
+            return false;
+        }
+
+        $this->disable($this->shop->theme_name);
+
+        $theme = $this->getInstanceByName($name);
+        $theme->onEnable();
+
+        $this->shop->theme_name = $theme->name;
+        $this->shop->update();
+
+        return $this;
     }
 
     /**
