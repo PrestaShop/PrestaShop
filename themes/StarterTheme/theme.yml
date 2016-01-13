@@ -67,6 +67,15 @@ global_settings:
         - ~
       displayFooter:
         - blocknewsletter
+      displayLeftColumn:
+        # blockcategories is hooked on all pages on displayLeftColumn
+        - blockcategories
+        # blocktags is hooked on displayLeftColumn on all pages
+        # except "category" and "index"
+        - blocktags:
+            except_pages:
+              - category
+              - index
 
 theme_settings:
   # All the settings below can be changed through
