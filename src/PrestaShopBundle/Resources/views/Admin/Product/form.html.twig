@@ -583,17 +583,19 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets'../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css'
+    {% stylesheets output='css/admin-product.css'
+    '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css'
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css'
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css'
-    '@PrestaShopBundle/Resources/public/admin/extra-css/product/image-uploader.css' filter='cssrewrite' %}
-    <link rel="stylesheet" href="{{ asset_url|admin_asset_path }}" />
+    '@PrestaShopBundle/Resources/public/admin/extra-css/product/image-uploader.css' filter='cssrewrite' package='admin' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/extra-js/product/form.js'
+    {% javascripts output='js/admin-product.js'
+    '@PrestaShopBundle/Resources/public/admin/extra-js/product/form.js'
     '@PrestaShopBundle/Resources/public/admin/extra-js/category-tree.js'
     '../js/tiny_mce/tiny_mce.js'
     '../js/admin/tinymce.inc.js'
@@ -603,9 +605,9 @@
     '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js'
     '../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js'
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'
-    '../js/jquery/ui/jquery.ui.sortable.min.js'
+    '../js/jquery/ui/jquery.ui.sortable.min.js' package='admin'
     %}
-    <script src="{{ asset_url|admin_asset_path }}"></script>
+    <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
 

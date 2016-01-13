@@ -68,7 +68,6 @@ class LayoutExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('admin_asset_path', array($this, 'getAdminAssetPath')),
             new \Twig_SimpleFilter('configuration', array($this, 'getConfiguration')),
         );
     }
@@ -144,29 +143,6 @@ EOF;
         );
 
         return $content;
-    }
-
-    /**
-     * Get admin asset path filter
-     * Rewrite css/js assets urls for prod env
-     *
-     * @param string $path The original path
-     *
-     * @return string The new asset url
-     */
-    public function getAdminAssetPath($path)
-    {
-        $validExtensions = ['css', 'js'];
-        $pathSplit = explode('?', $path);
-        $pathInfo = pathinfo($pathSplit[0]);
-
-        if ($this->environment == 'dev' || !in_array($pathInfo['extension'], $validExtensions)) {
-            return $path;
-        }
-
-        $pathBase = end(explode(DIRECTORY_SEPARATOR, $pathInfo['dirname']));
-
-        return dirname($pathInfo['dirname']).'/../web/'.$pathBase.'/'.$pathInfo['basename'].(!empty($pathSplit[1]) ? '?'.$pathSplit[1] : '');
     }
 
     /**
