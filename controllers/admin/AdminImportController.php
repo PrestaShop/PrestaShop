@@ -1818,7 +1818,6 @@ class AdminImportControllerCore extends AdminController
 
         $link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
         $valid_link = Validate::isLinkRewrite($link_rewrite);
-
         if ((isset($product->link_rewrite[$id_lang]) && empty($product->link_rewrite[$id_lang])) || !$valid_link) {
             $link_rewrite = Tools::link_rewrite($product->name[$id_lang]);
             if ($link_rewrite == '') {
@@ -1835,7 +1834,7 @@ class AdminImportControllerCore extends AdminController
             );
         }
 
-        if (!($match_ref || $force_ids) || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang]))) {
+        if (!$valid_link || !($match_ref || $force_ids) || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang]))) {
             $product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
         }
 
