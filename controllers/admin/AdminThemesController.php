@@ -52,7 +52,8 @@ class AdminThemesControllerCore extends AdminController
         // TODO StarterTheme: handle multistore
         $this->theme_manager = new ThemeManager(
             $this->context->shop,
-            new AdapterConfiguration($this->context->shop)
+            new AdapterConfiguration($this->context->shop),
+            $this->context->employee
         );
     }
 
@@ -69,6 +70,8 @@ class AdminThemesControllerCore extends AdminController
             $this->initConfigureLayouts();
         } elseif (Tools::isSubmit('submitConfigureLayouts')) {
             $this->processSubmitConfigureLayouts();
+        } elseif (Tools::isSubmit('enableTheme')) {
+            $this->theme_manager->enable(Tools::getValue('theme_name'));
         }
 
         libxml_use_internal_errors(true);
