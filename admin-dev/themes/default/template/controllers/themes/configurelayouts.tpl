@@ -38,18 +38,27 @@
 
             <tr>
               <th>Page</th>
+              <th>Description</th>
               <th>Layout</th>
             </tr>
 
-            {foreach $pages as $page_name => $page_key}
+            {foreach $pages as $page}
               <tr>
                 <td>
-                  {$page_name}
+                  {if $page.title}
+                    {$page.title}
+                  {else}
+                    {$page.page}
+                  {/if}
                 </td>
+                  <td>
+                    {$page.description}
+                  </td>
                 <td>
-                  <select name="layouts[{$page_key}]" id="">
+                  <select name="layouts[{$page.page}]" id="">
+                    <option value="#" {if !isset($page_layouts->{$page.page}) && $page_layouts->{$page.page} == $layout}selected="selected"{/if}>
                     {foreach $available_layouts as $layout}
-                      <option value="{$layout}" {if $page_layouts->{$page_key} == $layout}selected="selected"{/if}>
+                        <option value="{$layout}" {if isset($page_layouts->{$page.page}) && $page_layouts->{$page.page} == $layout}selected="selected"{/if}>
                         {$layout}
                       </option>
                     {/foreach}
