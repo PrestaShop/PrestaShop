@@ -1,4 +1,4 @@
-2007-2015 PrestaShop
+2007-2016 PrestaShop
 
 NOTICE OF LICENSE
 
