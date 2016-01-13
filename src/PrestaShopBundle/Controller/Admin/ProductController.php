@@ -342,7 +342,7 @@ class ProductController extends FrameworkBundleAdminController
         );
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
 
-        $form = $this->createFormBuilder($modelMapper->getFormDatas())
+        $form = $this->createFormBuilder($modelMapper->getFormData())
             ->add('id_product', 'hidden')
             ->add('step1', new ProductForms\ProductInformation(
                 $this->container->get('prestashop.adapter.translator'),
@@ -396,7 +396,7 @@ class ProductController extends FrameworkBundleAdminController
                 // Legacy code. To fix when Object model will change. But report Hooks.
 
                 //define POST values for keeping legacy adminController skills
-                $_POST = $modelMapper->getModelDatas($form->getData(), $isMultiShopContext);
+                $_POST = $modelMapper->getModelData($form->getData(), $isMultiShopContext);
 
                 $adminProductController = $adminProductWrapper->getInstance();
                 $adminProductController->setIdObject($form->getData()['id_product']);
