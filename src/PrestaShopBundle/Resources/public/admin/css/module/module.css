@@ -294,6 +294,7 @@
 }
 .module-modal-header {
     border: 0;
+    margin-right: -35px;
 }
 .module-modal-header > div {
     display: table-row;
@@ -311,4 +312,39 @@
 
 .module-modal-badges > img {
     margin-right: 1em;
+}
+
+/*
+*
+* Module Categories Grid
+*
+*/
+
+#modules-categories-grid {
+    display: none;
+}
+
+.module-category-item {
+    display: table;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.module-category-item-wrapper {
+    background: white;
+    padding: 20px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 0 #C7D6DB;
+    height: 247px;
+    max-height: 247px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 15px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

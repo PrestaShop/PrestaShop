@@ -14,11 +14,13 @@ var AdminModule = function() {
     /* Global configuration */
     this.keywordsSplitCharacter = ' ';
     this.currentDisplay = 'grid';
+    this.isCategoryGridDisplayed = false;
     this.currentTagsList = [];
     this.currentRefMenu = null;
     this.tagSearchBlock = null;
     this.areAllModuleDisplayed = true;
     this.baseAddonsUrl = 'https://addons.prestashop.com/';
+    this.prestagifyInput = null;
 
     /* Selector into vars to make it easier to change them while keeping same code logic */
     this.searchBarSelector = '#module-search-bar';
@@ -39,6 +41,8 @@ var AdminModule = function() {
     this.moduleInstallBtnSelector = 'input.module-install-btn';
     this.moduleInstallLoaderSelector = '.module-install-loader';
     this.moduleSortingDropdownSelector = '.module-sorting-author select';
+    this.categoryGridSelector = '#modules-categories-grid';
+    this.categoryGridItemSelector = '.module-category-item';
 
 /**
  * Initialize all listners and bind everything
@@ -50,7 +54,39 @@ var AdminModule = function() {
     this.initSortingDropdown();
     this.initSearchBlock();
     this.initCategorySelect();
+    this.initCategoriesGrid();
     this.initActionButtons();
+  };
+
+  this.initCategoriesGrid = function() {
+      var _this = this;
+
+      $(this.categoryGridItemSelector).on('click', function(event) {
+          event.stopPropagation();
+          event.preventDefault();
+          var refCategory = $(this).attr('data-category-ref');
+
+          // In case we have some tags we need to reset it !
+          if (_this.currentTagsList.length) {
+                _this.prestagifyInput.resetTags(false);
+                _this.currentTagsList = [];
+          }
+          var menuCategoryToTrigger = $(_this.categoryItemSelector + '[data-category-ref="' + refCategory + '"]');
+
+          if (!menuCategoryToTrigger.length) {
+              alert('No category with ref ('+refMenu+') seems to exists!');
+              return false;
+          }
+
+          // Hide current category grid
+          if (_this.isCategoryGridDisplayed === true) {
+              $(_this.categoryGridSelector).fadeOut();
+              _this.isCategoryGridDisplayed = false;
+          }
+          // Trigger click on right category
+          $(_this.categoryItemSelector + '[data-category-ref="' + refCategory + '"]').click();
+
+      });
   };
 
   this.initSortingDropdown = function() {
@@ -159,8 +195,6 @@ var AdminModule = function() {
         var _this = this;
 
         $(this.moduleInstallBtnSelector).on('click', function(event){
-            /*  var currentModuleItem = $(this).parents().find(selector+':first');
-              var moduleName = currentModuleItem.attr('data-name');*/
               event.preventDefault();
               var _that = _this;
               var next = $(this).next();
@@ -348,27 +382,36 @@ var AdminModule = function() {
             var hrefUrl = this.baseAddonsUrl + 'search.php?search_query=' + searchQuery;
             $(this.addonsSearchLinkSelector).attr('href', hrefUrl);
             $(this.addonsSearchSelector).css('display', 'block');
+            // Display category grid
+            if (this.isCategoryGridDisplayed === false) {
+                $(this.categoryGridSelector).fadeIn();
+                this.isCategoryGridDisplayed = true;
+            }
 
-         }
+        } else {
+            if (this.isCategoryGridDisplayed === true) {
+                $(this.categoryGridSelector).fadeOut();
+                this.isCategoryGridDisplayed = false;
+            }
+        }
      };
 
 
     this.initSearchBlock = function() {
         var _this = this;
-       $(this.searchBarSelector).tagify({
-           delimiter: ' ',
-           onTagsChanged: _this.doTagSearch,
-           onResetTags: _this.resetSearch,
-           inputPlaceholder: 'Add tag ...',
-           closingCross: true,
-           context: _this,
-           clearAllBtn: true,
-           clearAllIconClassAdditional: 'icon icon-remove',
-           clearAllSpanClassAdditional: 'module-tags-clear-btn ',
-           tagInputClassAdditional: 'module-tags-input',
-           tagClassAdditional: 'module-tag ',
-           tagsWrapperClassAdditional: 'module-tags-labels',
-       });
+       this.prestagifyInput = $(this.searchBarSelector).Prestagify({
+                                                                       onTagsChanged: _this.doTagSearch,
+                                                                       onResetTags: _this.resetSearch,
+                                                                       inputPlaceholder: 'Add tag ...',
+                                                                       closingCross: true,
+                                                                       context: _this,
+                                                                       clearAllBtn: true,
+                                                                       clearAllIconClassAdditional: 'icon icon-remove',
+                                                                       clearAllSpanClassAdditional: 'module-tags-clear-btn ',
+                                                                       tagInputClassAdditional: 'module-tags-input',
+                                                                       tagClassAdditional: 'module-tag ',
+                                                                       tagsWrapperClassAdditional: 'module-tags-labels',
+                                                                   });
 
        $(this.addonsSearchLinkSelector).on('click', function(event){
            event.preventDefault();

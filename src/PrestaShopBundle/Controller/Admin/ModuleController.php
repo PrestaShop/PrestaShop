@@ -131,7 +131,7 @@ class ModuleController extends Controller
         foreach ($products as $product_label => $products_part) {
             $products->$product_label = $this->generateProductUrls($products_part);
         }
-        
+
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'modules' => $products,
@@ -174,7 +174,7 @@ class ModuleController extends Controller
         if (! $ret[$module]['status']) {
             $this->addFlash('error', $ret[$module]['msg']);
         }
-        
+
         if ($request->server->get('HTTP_REFERER')) {
             return $this->redirect($request->server->get('HTTP_REFERER'));
         } else {
@@ -316,7 +316,7 @@ class ModuleController extends Controller
         } else {
             $msg = sprintf('Could not install module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
         }
-        
+
         return array('status' => $status, 'msg' => $msg);
     }
 

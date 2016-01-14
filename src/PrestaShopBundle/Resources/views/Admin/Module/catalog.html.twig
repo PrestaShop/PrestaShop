@@ -58,4 +58,7 @@
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_sorting.html.twig' with { 'totalModules' : modules|length } %}
     {# Actual Page Content #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' %}
+    {# Module Categories Grid #}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_categories_grid.html.twig' with { 'categories' : topMenuData.categories }  %}
+
 {% endblock %}
