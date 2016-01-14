@@ -14,7 +14,7 @@
     {/block}
 
     <p class="lost_password">
-      <a href="{$urls.pages.password}" rel="nofollow">
+      <a href="{$urls.pages.password}" rel="nofollow" class="sub-link">
         {l s='Forgot your password?'}
       </a>
     </p>

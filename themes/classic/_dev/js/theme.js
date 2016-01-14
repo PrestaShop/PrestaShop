@@ -1,7 +1,7 @@
-import $ from 'jquery';
 /* expose jQuery for modules */
-window.$ = $;
-window.jQuery = $;
+import $ from 'expose?$!expose?jQuery!jquery';
+import 'expose?Tether!tether';
+import 'bootstrap/dist/js/npm';
 
 import '../css/theme';
 import './checkout';
