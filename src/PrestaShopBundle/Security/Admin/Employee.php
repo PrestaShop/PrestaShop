@@ -28,6 +28,10 @@ namespace PrestaShopBundle\Security\Admin;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 
+/**
+ * Class Employee is used for Symfony security components to authneticate the user.
+ * @package PrestaShopBundle\Security\Admin
+ */
 class Employee implements UserInterface, EquatableInterface
 {
     private $username;
@@ -50,35 +54,68 @@ class Employee implements UserInterface, EquatableInterface
         $this->data = $data;
     }
 
+    /**
+     * Returns roles for the current employee
+     *
+     * @return array
+     */
     public function getRoles()
     {
         return $this->roles;
     }
 
+    /**
+     * Get typed password
+     *
+     * @return string
+     */
     public function getPassword()
     {
         return $this->password;
     }
 
+    /**
+     * The salt used to hash the password
+     *
+     * @return string
+     */
     public function getSalt()
     {
         return $this->salt;
     }
 
+    /**
+     * Get the login of the current employee
+     *
+     * @return string
+     */
     public function getUsername()
     {
         return $this->username;
     }
 
+    /**
+     * @return object
+     */
     public function getData()
     {
         return $this->data;
     }
 
+    /**
+     * Used by Symfony to ensure credentials are removed when logout.
+     */
     public function eraseCredentials()
     {
     }
 
+    /**
+     * Test equality between two Employee entities
+     * (instance of class, password, salt and username)
+     *
+     * @param UserInterface $user
+     * @return bool
+     */
     public function isEqualTo(UserInterface $user)
     {
         if (!$user instanceof Employee) {

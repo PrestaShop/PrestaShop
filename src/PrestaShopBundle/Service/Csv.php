@@ -26,7 +26,7 @@
 namespace PrestaShopBundle\Service;
 
 /**
- * CSV tools and common features
+ * CSV tools and common features on CSV format import/export
  */
 class Csv
 {

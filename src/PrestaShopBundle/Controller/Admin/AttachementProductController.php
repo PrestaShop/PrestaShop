@@ -32,7 +32,7 @@ use PrestaShopBundle\Form\Admin\Product\ProductAttachement;
 use Symfony\Component\Form\FormError;
 
 /**
- * Admin controller for the virtual produc
+ * Admin controller for product attachments (in /product/form page)
  */
 class AttachementProductController extends FrameworkBundleAdminController
 {

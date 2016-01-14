@@ -33,7 +33,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * Admin controller for product image
+ * Admin controller for product images
  */
 class ProductImageController extends FrameworkBundleAdminController
 {
@@ -164,7 +164,7 @@ class ProductImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * delete image
+     * Delete an image from its ID
      *
      * @param int $idImage
      * @param Request $request

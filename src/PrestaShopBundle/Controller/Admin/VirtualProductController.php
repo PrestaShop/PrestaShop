@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
 
 /**
- * Admin controller for the virtual produc
+ * Admin controller for the virtual product on the /product/form page.
  */
 class VirtualProductController extends FrameworkBundleAdminController
 {

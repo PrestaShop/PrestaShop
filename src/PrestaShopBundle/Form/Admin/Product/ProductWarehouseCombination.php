@@ -30,7 +30,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This form class is responsible to generate the basic product information form
+ * This form class is responsible to generate the basic product Warehouse combinations form
  */
 class ProductWarehouseCombination extends CommonAbstractType
 {

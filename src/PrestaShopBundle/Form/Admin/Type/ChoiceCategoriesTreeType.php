@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * This form class is responsible to create a nested category selector
+ * This form class is responsible to create a category selector using Nested sets
  */
 class ChoiceCategoriesTreeType extends CommonAbstractType
 {

@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +30,7 @@ use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter
 use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 
 /**
- * Admin controller for supplier
+ * Admin controller for suppliers page
  */
 class SupplierController extends FrameworkBundleAdminController
 {

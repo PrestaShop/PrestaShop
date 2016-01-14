@@ -31,12 +31,12 @@ use Symfony\Component\HttpFoundation\Response;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 
 /**
- * Admin controller for warehouse
+ * Admin controller for warehouse on the /product/form page
  */
 class WarehouseController extends FrameworkBundleAdminController
 {
     /**
-     * refreshProductWarehouseCombinationFormAction
+     * Refresh the WarehouseCombination data for the given product ID
      *
      * @param int $idProduct
      * @return string|Response
