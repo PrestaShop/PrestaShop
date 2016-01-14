@@ -11,14 +11,16 @@
 {block name='form_fields' append}
   <input type="hidden" name="saveAddress" value="{$type}">
   {if $type === "delivery"}
-    <label>
-      <input  name    = "use_same_address"
-              type    = "checkbox"
-              value   = "1"
-              {if $use_same_address} checked {/if}
-      >
-      <span>{l s='Use this address for invoice too'}</span>
-    </label>
+    <div class="col-md-9 col-md-offset-3 _mtm">
+      <label>
+        <input  name    = "use_same_address"
+                type    = "checkbox"
+                value   = "1"
+                {if $use_same_address} checked {/if}
+        >
+        <span>{l s='Use this address for invoice too'}</span>
+      </label>
+  </div>
   {/if}
 {/block}
 
@@ -31,7 +33,7 @@
       <a href="?cancelAddress={$type}">{l s='Cancel'}</a>
     {/if}
     <form>
-      <button type="submit" class="continue" name="continue" value="1">
+      <button type="submit" class="continue submit-button  _mtm" name="continue" value="1">
           {l s='Continue'}
       </button>
     </form>
