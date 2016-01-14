@@ -253,6 +253,6 @@
 
         return {
             'resetTags': resetTags,
-        }
+        };
     };
 }(jQuery));

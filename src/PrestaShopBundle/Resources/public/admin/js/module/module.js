@@ -338,19 +338,19 @@ var AdminModule = function() {
                   }
               }
               // If no match on data-name, data-description or data-author hide module item
-              var dataName = $(this).attr('data-name');
-              var dataDescription = $(this).attr('data-description');
-              var dataAuthor = $(this).attr('data-author');
+              var dataName = $(this).attr('data-name').toLowerCase();
+              var dataDescription = $(this).attr('data-description').toLowerCase();
+              var dataAuthor = $(this).attr('data-author').toLowerCase();
               var moduleItem = $(this);
               var hasMatched = false;
               var matchedTagsCount = 0;
 
               $.each(_this.currentTagsList, function(index, value) {
-                 // value = .replace(/[|&;$%@"<>()+,]/g, "");
-                  var findRegexp = new RegExp(value, 'gi');
+                 // var findRegexp = new RegExp(value, 'gi');
                   // If match any on these attrbute  its a match
-                  if (dataName.match(findRegexp) || dataDescription.match(findRegexp) ||
-                     dataAuthor.match(findRegexp)) {
+                  value = value.toLowerCase();
+                  if (dataName.indexOf(value) != -1 || dataDescription.indexOf(value) != -1 ||
+                     dataAuthor.indexOf(value) != -1) {
                          matchedTagsCount += 1;
                      }
                  });
