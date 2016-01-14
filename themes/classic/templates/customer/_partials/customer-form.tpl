@@ -2,7 +2,7 @@
 
 <form action="{$action}" id="customer-form" method="post">
 
-  <section class="form-fields">
+  <section class="form-fields row">
     {block "form_fields"}
       {foreach from=$formFields item="field"}
         {block "form_field"}

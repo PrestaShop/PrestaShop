@@ -15,16 +15,20 @@
       <ul>
         {foreach from=$conditions_to_approve item="condition" key="condition_name"}
           <li>
-            <input  id    = "conditions_to_approve[{$condition_name}]"
-                    name  = "conditions_to_approve[{$condition_name}]"
-                    required
-                    type  = "checkbox"
-                    value = "1"
-                    class = "ps-shown-by-js"
-            >
-            <label for="conditions_to_approve[{$condition_name}]">
-              {$condition nofilter}
-            </label>
+            <div class="_fl">
+              <input  id    = "conditions_to_approve[{$condition_name}]"
+                      name  = "conditions_to_approve[{$condition_name}]"
+                      required
+                      type  = "checkbox"
+                      value = "1"
+                      class = "ps-shown-by-js"
+              >
+            </div>
+            <div class="col-md-11">
+              <label for="conditions_to_approve[{$condition_name}]">
+                {$condition nofilter}
+              </label>
+            </div>
           </li>
         {/foreach}
       </ul>
@@ -35,10 +39,10 @@
     {foreach from=$payment_options item="module_options"}
       {foreach from=$module_options item="option"}
         <div>
-          <div id="{$option.id}-container" class="payment-option">
+          <div id="{$option.id}-container" class="payment-option _clb _dpt">
 
             {* This is the way an option should be selected when Javascript is enabled *}
-            <input class="ps-shown-by-js" id="{$option.id}" type="radio" name="payment-option" required {if $selected_payment_option == $option.id} checked {/if}>
+            <input class="ps-shown-by-js _mrs" id="{$option.id}" type="radio" name="payment-option" required {if $selected_payment_option == $option.id} checked {/if}>
             {* This is the way an option should be selected when Javascript is disabled *}
             <form method="GET" class="ps-hidden-by-js">
               {if $option.id === $selected_payment_option}
@@ -50,7 +54,7 @@
               {/if}
             </form>
 
-            <label for="{$option.id}">
+            <label for="{$option.id}" class="_mrs">
               <span>{$option.call_to_action_text}</span>
               {if $option.logo}
                 <img src="{$option.logo}">
@@ -89,8 +93,8 @@
   </div>
 
   <div id="payment-confirmation">
-    <div class="ps-shown-by-js">
-      <button type="submit" {if !$selected_payment_option} disabled {/if}>
+    <div class="ps-shown-by-js _tac">
+      <button type="submit" {if !$selected_payment_option} disabled {/if} class="submit-button _mtl">
         {l s='Order with an obligation to pay'}
       </button>
     </div>

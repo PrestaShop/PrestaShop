@@ -1,20 +1,21 @@
 @import "partials/_variables";
 @import "partials/_fonts";
+@import "partials/_helpers";
 @import "~bootstrap/scss/bootstrap";
 @import "~bourbon/app/assets/stylesheets/bourbon";
 @import "modules/drop-down";
 @import "modules/search-widget";
 @import "modules/top-menu";
-
+@import "modules/checkout";
 
 /*** HEADER ***/
 #header {
   .header-nav {
-    border-bottom: $gray-light 1px solid;
+    border-bottom: $gray 1px solid;
     max-height: 60px;
     margin-bottom: 80px;
     .login {
-      color: $gray-light;
+      color: $gray;
       display: inline-block;
       font-weight: 400;
       text-transform: uppercase;
@@ -23,7 +24,7 @@
   }
 
   .header-top{
-    background: $gray;
+    background: $gray-dark;
     margin-top: 70px;
     height: 100px;
     .menu{
@@ -78,7 +79,7 @@
       }
     }
     a{
-      color: $gray-light;
+      color: $gray;
     }
   }
   .product-miniature{
@@ -86,8 +87,7 @@
   }
 }
 
-/*** HELPERS ***/
-
-._relative{
-  position: relative;
+ul {
+  list-style: none;
+  padding-left: 0;
 }
