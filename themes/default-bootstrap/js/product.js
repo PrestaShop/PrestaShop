@@ -637,7 +637,7 @@ function updatePrice()
 	basePriceWithTax = basePriceWithTax + +combination.price * (taxRate/100 + 1);
 
 	// If a specific price redefine the combination base price
-	if (combination.specific_price && combination.specific_price.price > 0)
+	if (combination.specific_price && combination.specific_price.price > 0 && combination.specific_price.reduction_type == 'percentage')
 	{
 		basePriceWithoutTax = +combination.specific_price.price;
 		basePriceWithTax = +combination.specific_price.price * (taxRate/100 + 1);
