@@ -186,11 +186,12 @@ class ThemeManager implements AddonManagerInterface
 
     private function getThemeOnDisk()
     {
-        $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/config/theme.json');
+        $suffix = 'preview.png';
+        $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/'.$suffix);
 
         $themes = [];
         foreach ($all_theme_dirs as $dir) {
-            $name = basename(substr($dir, 0, -strlen('config/theme.json')));
+            $name = basename(substr($dir, 0, -strlen($suffix)));
             $theme = $this->getInstanceByName($name);
             if (isset($theme)) {
                 $themes[$name] = $theme;
