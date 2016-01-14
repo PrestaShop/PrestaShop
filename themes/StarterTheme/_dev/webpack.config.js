@@ -2,7 +2,7 @@ var webpack = require('webpack');
 
 var plugins = [];
 
-var production = true;
+var production = false;
 
 if (production) {
     plugins.push(
