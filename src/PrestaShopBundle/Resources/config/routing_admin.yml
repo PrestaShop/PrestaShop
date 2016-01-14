@@ -40,3 +40,14 @@ admin_common_pagination:
         offset: \d+
         limit: \d+
         total: \d+
+
+admin_common_recommended_modules:
+    path:     /common/recommended_modules/{domain}/{limit}/{randomize}
+    methods:  [GET]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::recommendedModulesAction'
+        limit: 0
+        randomize: 0
+    requirements:
+        limit: \d+
+        randomize: 0|1

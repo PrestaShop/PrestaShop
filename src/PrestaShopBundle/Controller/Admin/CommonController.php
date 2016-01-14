@@ -33,6 +33,7 @@ use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 
 /**
  * Admin controller for the common actions across the whole admin interface.
@@ -141,6 +142,29 @@ class CommonController extends FrameworkBundleAdminController
             'last_url' => $lastPageUrl,
             'jump_page_url' => $jumpPageUrl,
             'limit_choices' => $limitChoices,
+        );
+    }
+
+    /**
+     * This will allow you to retrieve an HTML code with a list of recommended modules depending on the domain.
+     *
+     * @Template
+     * @param string $domain
+     * @param integer $limit
+     * @param integer $randomize
+     * @return array Template vars
+     */
+    public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
+    {
+        $recommendedModules = $this->container->get('prestashop.data_provider.modules.recommended');
+        /* @var $recommendedModules RecommendedModules */
+        $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, $limit, ($randomize == 1));
+
+        $modules = array(); // TODO
+
+        return array(
+            'domain' => $domain,
+            'modules' => $modules,
         );
     }
 }

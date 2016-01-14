@@ -9,6 +9,9 @@ services:
     prestashop.csv:
         class: PrestaShopBundle\Service\Csv
 
+    prestashop.data_provider.modules.recommended:
+        class: PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules
+
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
         class: PrestaShopBundle\Service\DataProvider\StockInterface
