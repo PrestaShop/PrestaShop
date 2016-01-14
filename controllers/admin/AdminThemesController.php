@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
 
 /**
@@ -53,6 +54,7 @@ class AdminThemesControllerCore extends AdminController
         $this->theme_manager = new ThemeManager(
             $this->context->shop,
             new AdapterConfiguration($this->context->shop),
+            new ThemeChecker(),
             $this->context->employee
         );
     }
