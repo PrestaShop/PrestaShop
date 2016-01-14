@@ -517,8 +517,10 @@ var combinationGenerator = (function() {
 			}
 
 			/** init input typeahead */
-			$('#form_step3_attributes').tokenfield({typeahead: [
-				null, {
+			$('#form_step3_attributes').tokenfield({typeahead: [{
+					hint: false,
+					cache: false
+				}, {
 					source: function(query, syncResults) {
 						engine.search(query, function(suggestions) {
 							syncResults(filter(suggestions));
