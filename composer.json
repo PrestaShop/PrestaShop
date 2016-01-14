@@ -122,7 +122,7 @@
       "bash tools/contrib/install.sh",
       "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-      "php app/console doctrine:database:create --if-not-exists --no-interaction",
+      "php app/console doctrine:database:create --if-not-exists --no-interaction --connection=default",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
@@ -131,7 +131,7 @@
     "post-update-cmd": [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-      "php app/console doctrine:database:create --if-not-exists --no-interaction",
+      "php app/console doctrine:database:create --if-not-exists --no-interaction --connection=default",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
