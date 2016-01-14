@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 
 /**
  * @since 1.5.0
@@ -466,7 +467,7 @@ class ShopCore extends ObjectModel
      */
     public function setTheme()
     {
-        $this->theme = (new ThemeManager($this, $this->configurator))
+        $this->theme = (new ThemeManager($this, $this->configurator, new ThemeChecker()))
                         ->getInstanceByName($this->theme_name);
     }
 
