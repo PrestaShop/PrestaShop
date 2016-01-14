@@ -69,7 +69,7 @@ doctrine:
                 dbname:   "%database_name%"
                 user:     "%database_user%"
                 password: "%database_password%"
-                server_version: %database_server_version%
+                server_version: 5.1
                 charset:  UTF8
                 # if using pdo_sqlite as your database driver:
                 #   1. add the path in parameters.yml
