@@ -1,20 +1,20 @@
-.tagifyAddTagInput:focus {
+.prestagifyAddTagInput:focus {
      outline: 0;
 }
 
-.tagifyAddTagWrapper {
+.prestagifyAddTagWrapper {
     width: 100%;
 }
 
-.tagifyResetTagsBtn {
+.prestagifyResetTagsBtn {
     pointer: cursor !important;
 }
-.tagifyTagsWrapper {
+.prestagifyTagsWrapper {
     display: none;
     position: relative;
 }
 
-.tagifyTag{
+.prestagifyTag{
     float: left;
     border-radius: 5px;
     height: 30px;
@@ -23,11 +23,11 @@
     margin-right: 5px;
 }
 
-.tagifyClosingCross {
+.prestagifyClosingCross {
     margin-left: 5px;
     font-size: 12px;
 }
 
-.tagifyWrapper {
+.prestagifyWrapper {
     position: relative;
 }

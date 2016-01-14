@@ -1,33 +1,20 @@
-/**
- * 2007-2016 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2016 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
+/*
+* jQuery Prestagify plugin
+* https://www.prestashop.com
+*
+* Copyright PrestaShop and other contributors
+* Released under the MIT license
+* https://tldrlegal.com/license/mit-license
+*
+* Date: 2016-01-13
+*/
+
 (function ( $ ) {
     var config = null;
     var validateKeyCode = 13;
     var tagsList = [];
     var fullTagsString = null;
-    var tagifyInput = null;
+    var prestagifyInput = null;
     var defaultConfig = {
         /* Global css config */
         wrapperClassAdditional: '',
@@ -52,35 +39,35 @@
     };
     var immutableConfig = {
         /* Global css config */
-        wrapperClass: 'tagifyWrapper',
+        wrapperClass: 'prestagifyWrapper',
         /* Tags part */
-        tagsWrapperClass: 'tagifyTagsWrapper',
-        tagClass: 'tagifyTag',
+        tagsWrapperClass: 'prestagifyTagsWrapper',
+        tagClass: 'prestagifyTag',
         /* Tag Input part */
-        tagInputWrapperClass: 'tagifyAddTagWrapper',
-        tagInputClass: 'tagifyAddTagInput',
+        tagInputWrapperClass: 'prestagifyAddTagWrapper',
+        tagInputClass: 'prestagifyAddTagInput',
         clearAllIconClass: '',
-        clearAllSpanClass: 'tagifyResetTagsBtn',
-        closingCrossClass: 'tagifyClosingCross',
+        clearAllSpanClass: 'prestagifyResetTagsBtn',
+        closingCrossClass: 'prestagifyClosingCross',
     };
 
     var bindValidationInputEvent = function() {
         // Validate input whenever validateKeyCode is pressed
-        tagifyInput.keypress(function(event) {
+        prestagifyInput.keypress(function(event) {
             if (event.keyCode == validateKeyCode) {
                 tagsList = [];
                 processInput();
             }
         });
         // If focusout of input, display tagsWrapper if not empty or leave input as is
-        tagifyInput.focusout(function(event){
+        prestagifyInput.focusout(function(event){
 
          // Necessarry to avoid race condition when focusout input because we want to reset :-)
           if ($('.' + immutableConfig.clearAllSpanClass + ':hover').length) {
               return false;
           }
             // Only redisplay tags on focusOut if there's something in tagsList
-            if (tagifyInput.val().length) {
+            if (prestagifyInput.val().length) {
                 tagsList = [];
                 processInput();
             }
@@ -88,7 +75,7 @@
     };
 
     var processInput = function() {
-        var fullTagsStringRaw = tagifyInput.val();
+        var fullTagsStringRaw = prestagifyInput.val();
         var tagsListRaw = fullTagsStringRaw.split(config.delimiter);
 
         // Check that's not an empty input
@@ -117,7 +104,7 @@
         } else {
             $('.' + immutableConfig.tagsWrapperClass).css('display', 'none');
             $('.' + immutableConfig.tagInputWrapperClass).css('display', 'block');
-            tagifyInput.focus();
+            prestagifyInput.focus();
         }
         // Call the callback ! (if one)
         if (config.onTagsChanged !== null) {
@@ -161,9 +148,9 @@
         // Insert form after the originalInput
         config.originalInput.after(formHtml);
         // Save tagify input in our object
-        tagifyInput = $('.' + immutableConfig.tagInputClass);
+        prestagifyInput = $('.' + immutableConfig.tagInputClass);
         // Add placeholder on tagify's input
-        tagifyInput.attr('placeholder',  config.inputPlaceholder);
+        prestagifyInput.attr('placeholder',  config.inputPlaceholder);
         return true;
     };
 
@@ -177,36 +164,43 @@
             if ($('.' + immutableConfig.tagInputWrapperClass).is(':hidden') &&  closingCrossClicked === null) {
                 $('.' + immutableConfig.tagsWrapperClass).css('display', 'none');
                 $('.' + immutableConfig.tagInputWrapperClass).css('display', 'block');
-                tagifyInput.focus();
+                prestagifyInput.focus();
             }
         });
     };
 
     var bindResetTagsEvent = function() {
         // Use delegate since we bind it before we insert the html in the DOM
+        var _this = this;
         $(document).delegate('.' + immutableConfig.clearAllSpanClass, 'click', function(){
-            // Empty tags list and tagify input
-            tagsList = [];
-            tagifyInput.val('');
-            tagifyInput.focus();
-            // Empty existing Tags
-            $('.' + immutableConfig.tagClass).remove();
-            // Call the callback if one !
-            if (config.onResetTags !== null) {
-                config.onResetTags.call(config.context);
-            }
+            resetTags(true);
         });
     };
+
+    var resetTags = function(withCallback) {
+        // Empty tags list and tagify input
+        tagsList = [];
+        prestagifyInput.val('');
+        $('.' + immutableConfig.tagsWrapperClass).css('display', 'none');
+        $('.' + immutableConfig.tagInputWrapperClass).css('display', 'block');
+        prestagifyInput.focus();
+        // Empty existing Tags
+        $('.' + immutableConfig.tagClass).remove();
+        // Call the callback if one !
+        if (config.onResetTags !== null && withCallback === true) {
+            config.onResetTags.call(config.context);
+        }
+    }
 
 
     var bindClosingCrossEvent = function() {
         $(document).delegate('.' + immutableConfig.closingCrossClass, 'click', function(event){
             var thisTagWrapper = $(this).parent();
             var clickedTagIndex = thisTagWrapper.index();
-            // Iterate through tags to reconstruct new tagifyInput value
+            // Iterate through tags to reconstruct new prestagifyInput value
             var newInputValue = reconstructInputValFromRemovedTag(clickedTagIndex);
             // Apply new input value
-            tagifyInput.val(newInputValue);
+            prestagifyInput.val(newInputValue);
             thisTagWrapper.remove();
             tagsList = [];
             processInput();
@@ -250,13 +244,15 @@
     };
 
     // jQuery extends function
-    $.fn.tagify = function(_config) {
+    $.fn.Prestagify = function(_config) {
         config = setConfig(_config, this);
         constructTagInputForm();
         bindValidationInputEvent();
         bindFocusInputEvent();
         bindClosingCrossEvent();
 
-        return this;
+        return {
+            'resetTags': resetTags,
+        }
     };
 }(jQuery));
