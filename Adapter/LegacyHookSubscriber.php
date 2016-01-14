@@ -29,6 +29,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Prophecy\Exception\Doubler\MethodNotFoundException;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
+use \ContextCore as OldContext;
 
 /**
  * The subscriber for HookDispatcher that triggers legacy Hooks.
@@ -221,6 +222,12 @@ class LegacyHookSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         $listeners = array();
+
+        //Hack SF2 cache clear : if context not mounted, bypass legacy call
+        $legacyContext = OldContext::getContext();
+        if (!$legacyContext || empty($legacyContext->shop) || empty($legacyContext->employee)) {
+            return $listeners;
+        }
 
         $hooks = \HookCore::getHooks();
         foreach ($hooks as $hook) {
