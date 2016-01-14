@@ -1,0 +1,84 @@
+#checkout {
+  #checkout-cart-summary {
+    float: right;
+    border: 1px $blue-light solid;
+    padding: 10px;
+    width: 25%;
+  }
+  section.checkout-step {
+    width: 70%;
+    margin-top: 30px;
+    border: 1px $blue-light solid;
+    padding: 15px;
+    h1 {
+      font-size: 24px;
+    }
+    span {
+      font-weight: 400;
+    }
+    label {
+      display: block;
+    }
+    small {
+      color: $gray;
+    }
+    input {
+      min-width: 220px;
+      &[name=address1],
+      &[name=address2] {
+        min-width: 315px;
+      }
+    }
+    .radio-field {
+      margin-top: 30px;
+      label {
+        display: inline;
+      }
+    }
+    .checkbox-field div {
+      margin-top: 60px;
+    }
+    .checkbox-field + .checkbox-field div {
+      margin-top: 0;
+    }
+    .select-field div {
+      background: $gray-lighter;
+      padding: 10px 50px;
+    }
+    .form-footer {
+      text-align: center;
+    }
+    .payment-option label{
+      display: table-cell;
+    }
+  }
+  .submit-button {
+    color: white;
+    background: $green;
+    border: none;
+    padding: 5px 30px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    font-size: 20px;
+  }
+  .sub-link {
+    margin-left: 65px;
+    display: inline-block;
+  }
+  .step-number {
+    color: white;
+    background: $green;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    padding: 6px 13px;
+    margin-right: 25px;
+  }
+  input[type=text],
+  input[type=password],
+  input[type=date] {
+    border: $gray-light 2px solid;
+    border-radius: 2px;
+  }
+}
