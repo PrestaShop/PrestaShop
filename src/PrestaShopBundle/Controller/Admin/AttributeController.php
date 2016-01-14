@@ -45,10 +45,22 @@ class AttributeController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
         $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $translator = $this->container->get('prestashop.adapter.translator');
         $attributes = $this->container->get('prestashop.adapter.data_provider.attribute')->getAttributes($locales[0]['id_lang'], true);
 
+        $dataGroupAttributes = [];
         $data = [];
         foreach ($attributes as $attribute) {
+            /** Construct attribute group selector. Ex : Color : All */
+            $dataGroupAttributes[$attribute['id_attribute_group']] = [
+                'value' => 'group-'.$attribute['id_attribute_group'],
+                'label' => $attribute['public_name'].' : '.$translator->trans('All', [], 'AdminTabs'),
+                'data' => [
+                    'id_group' => $attribute['id_attribute_group'],
+                    'name' => $attribute['public_name'],
+                ]
+            ];
+
             $data[] = [
                 'value' => $attribute['id_attribute'],
                 'label' => $attribute['public_name'].' : '.$attribute['name'],
@@ -58,6 +70,8 @@ class AttributeController extends FrameworkBundleAdminController
                 ]
             ];
         }
+
+        $data = array_merge($dataGroupAttributes, $data);
 
         $response->setData($data);
         return $response;
@@ -102,8 +116,24 @@ class AttributeController extends FrameworkBundleAdminController
             return $o['id_product_attribute'];
         }, $product->getAttributeCombinations(1, false));
 
+        //get clean attributes ids
+        $newOptions = [];
+        foreach ($options as $idGroup => $attributes) {
+            foreach ($attributes as $attribute) {
+                //If attribute is a group attribute, replace group data by all attributes group
+                if (false !== strpos($attribute, 'group')) {
+                    $allGroupAttributes = $this->container->get('prestashop.adapter.data_provider.attribute')->getAttributeIdsByGroup((int)$idGroup, true);
+                    foreach ($allGroupAttributes as $groupAttribute) {
+                        $newOptions[$idGroup][$groupAttribute] = $groupAttribute;
+                    }
+                } else {
+                    $newOptions[$idGroup][$attribute] = $attribute;
+                }
+            }
+        }
+
         //create attributes
-        $this->container->get('prestashop.adapter.admin.controller.attribute_generator')->processGenerate($product, $options);
+        $this->container->get('prestashop.adapter.admin.controller.attribute_generator')->processGenerate($product, $newOptions);
 
         //get all product combinations
         $allCombinations = $product->getAttributeCombinations(1, false);

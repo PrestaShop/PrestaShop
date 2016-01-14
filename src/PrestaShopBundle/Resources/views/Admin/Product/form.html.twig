@@ -268,9 +268,9 @@
                         </div>
 
                         <div id="combinations">
-                            <h3>{{ trans('Types of variations', [], 'AdminProducts') }}</h3>
+                            <h3>{{ trans('Product combinations', [], 'AdminProducts') }}</h3>
                             <div class="form-group" id="attributes-generator">
-                                <p>{{ trans('Enter each attribute to create combinations here. E.g. Size M, Color Blue', [], 'AdminProducts') }}</p>
+                                <p>{{ trans('Create a series of combinations by entering the related attributes below.', [], 'AdminProducts') }}</p>
                                 <div class="col-sm-10">
                                     {{ form_errors(form.step3.attributes) }}
                                     {{ form_widget(form.step3.attributes) }}
@@ -287,9 +287,9 @@
                                     <thead>
                                         <tr class="uppercase">
                                             <th></th>
-                                            <th>{{ trans('Product', {}, 'AdminProducts') }}</th>
-                                            <th>{{ trans('Impact on weight', {}, 'AdminProducts') }}</th>
+                                            <th>{{ trans('Combination', {}, 'AdminProducts') }}</th>
                                             <th>{{ trans('Impact on price', {}, 'AdminProducts') }}</th>
+                                            <th>{{ trans('Impact on weight', {}, 'AdminProducts') }}</th>
                                             <th>{{ trans('Quantity', {}, 'AdminProducts') }}</th>
                                             <th></th>
                                         </tr>

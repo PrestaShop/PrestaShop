@@ -44,7 +44,8 @@
             $('#{{ form.vars.id }}').typeahead({
                 limit: 20,
                 minLength: 2,
-                highlight: true
+                highlight: true,
+                hint: false,
             }, {
                 display: '{{ mapping_name }}',
                 source: this['{{ form.vars.id }}_source']
@@ -121,7 +122,8 @@
                 limit: 20,
                 minLength: 2,
                 highlight: true,
-                cache: false
+                cache: false,
+                hint: false,
             }, {
                 display: '{{ mapping_name }}',
                 source: this['{{ form.vars.id }}_source'],
@@ -260,6 +262,7 @@
                 limit: 20,
                 minLength: 2,
                 highlight: true,
+                hint: false,
             }, {
                 display: '{{ mapping_name }}',
                 source: this['{{ form.vars.id }}_source'],

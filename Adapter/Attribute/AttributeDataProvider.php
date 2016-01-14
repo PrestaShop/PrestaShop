@@ -44,6 +44,37 @@ class AttributeDataProvider
         return \AttributeCore::getAttributes($id_lang, $not_null);
     }
 
+
+    /**
+     * Get all attributes ids for a given group
+     *
+     * @param int $id_group Attribute group id
+     * @param bool $not_null Get only not null fields if true
+     * @return array Attributes
+     */
+    public static function getAttributeIdsByGroup($id_group, $not_null = false)
+    {
+        if (!\CombinationCore::isFeatureActive()) {
+            return array();
+        }
+
+        $result = \DbCore::getInstance()->executeS('
+			SELECT DISTINCT a.`id_attribute`
+			FROM `'._DB_PREFIX_.'attribute_group` ag
+			LEFT JOIN `'._DB_PREFIX_.'attribute` a
+				ON a.`id_attribute_group` = ag.`id_attribute_group`
+			'.\ShopCore::addSqlAssociation('attribute_group', 'ag').'
+			'.\ShopCore::addSqlAssociation('attribute', 'a').'
+			WHERE ag.`id_attribute_group` = '.(int)$id_group.'
+			'.($not_null ? 'AND a.`id_attribute` IS NOT NULL' : '').'
+			ORDER BY a.`position` ASC
+		');
+
+        return array_map(function ($a) {
+            return $a['id_attribute'];
+        }, $result);
+    }
+
     /**
      * Get combination for a product
      *
