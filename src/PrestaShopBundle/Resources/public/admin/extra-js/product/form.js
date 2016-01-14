@@ -449,20 +449,6 @@ var nav = (function() {
 var combinationGenerator = (function() {
 	var id_product = $('#form_id_product').val();
 
-	/** Create Bloodhound engine */
-	function getEngine(){
-		return new Bloodhound({
-			datumTokenizer: function(d) {
-				return Bloodhound.tokenizers.whitespace(d.label);
-			},
-			queryTokenizer: Bloodhound.tokenizers.whitespace,
-			prefetch: {
-				url: $('#form_step3_attributes').attr('data-prefetch'),
-				cache: false
-			}
-		});
-	}
-
 	/** Generate combinations */
 	function generate(){
 		/**
@@ -506,10 +492,38 @@ var combinationGenerator = (function() {
 
 	return {
 		'init': function() {
+			/** Create Bloodhound engine */
+			var engine = new Bloodhound({
+				datumTokenizer: function(d) {
+					return Bloodhound.tokenizers.whitespace(d.label);
+				},
+				queryTokenizer: Bloodhound.tokenizers.whitespace,
+				prefetch: {
+					url: $('#form_step3_attributes').attr('data-prefetch'),
+					cache: false
+				}
+			});
+
+			/** Filter suggestion with selected tokens */
+			var filter = function(suggestions) {
+				var selected = [];
+				$('#attributes-generator input.attribute-generator').each(function(){
+					selected.push($(this).val());
+				});
+
+				return $.grep(suggestions, function(suggestion) {
+					return $.inArray(suggestion.value, selected) === -1 && $.inArray('group-' + suggestion.data.id_group, selected) === -1;
+				});
+			}
+
 			/** init input typeahead */
 			$('#form_step3_attributes').tokenfield({typeahead: [
 				null, {
-					source: getEngine(),
+					source: function(query, syncResults) {
+						engine.search(query, function(suggestions) {
+							syncResults(filter(suggestions));
+						});
+					},
 					display: 'label'
 				}]
 			});
