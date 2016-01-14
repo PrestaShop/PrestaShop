@@ -61,7 +61,7 @@
 								{assign var='priceReduction' value=($product.price - $product.price_without_specific_price)}
 								{assign var='symbol' value=$currency->sign}
 							{else}
-								{assign var='priceReduction' value=(($product.price_without_specific_price - $product.price)/$product.price_without_specific_price) * -100}
+								{assign var='priceReduction' value=(($product.price_without_specific_price - $product.price_wt)/$product.price_without_specific_price) * -100}
 								{assign var='symbol' value='%'}
 							{/if}
 						{/if}
