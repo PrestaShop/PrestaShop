@@ -259,7 +259,7 @@
                     </div>
                 </div>
                 <div class="pull-right">
-                    {% render controller('PrestaShopBundle\\Controller\\Admin\\CommonController::paginationAction',
+                    {% render controller('PrestaShopBundle:Admin\\Common:pagination',
                       {'limit': limit, 'offset': offset, 'total': product_count_filtered, 'caller_parameters': pagination_parameters, 'limit_choices': pagination_limit_choices})
                     %}
                 </div>

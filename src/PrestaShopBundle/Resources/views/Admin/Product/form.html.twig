@@ -329,9 +329,9 @@
                         {{ form_row(form.step3.available_date) }}
                     </div>
                     <div class="col-lg-3">
-                        {% include 'PrestaShopBundle:Admin/Helpers:modules_recommended.html.twig' with {
-                            'modules': []
-                        } %}
+                            {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+                                {'limit': 3, 'randomize': 1, 'domain': 'products_quantity' })
+                            %}
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -353,9 +353,9 @@
                         </div>
                     </div>
                     <div class="col-lg-3">
-                        {% include 'PrestaShopBundle:Admin/Helpers:modules_recommended.html.twig' with {
-                            'modules': []
-                        } %}
+                        {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+                            {'limit': 3, 'randomize': 1, 'domain': 'products_shipping' })
+                        %}
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -427,9 +427,9 @@
                         </div>
                     </div>
                     <div class="col-lg-3">
-                        {% include 'PrestaShopBundle:Admin/Helpers:modules_recommended.html.twig' with {
-                            'modules': []
-                        } %}
+                        {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+                            {'limit': 3, 'randomize': 1, 'domain': 'products_price' })
+                        %}
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -438,9 +438,9 @@
                         {{ form_widget(form.step5) }}
                     </div>
                     <div class="col-lg-3">
-                        {% include 'PrestaShopBundle:Admin/Helpers:modules_recommended.html.twig' with {
-                            'modules': []
-                        } %}
+                        {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+                            {'limit': 3, 'randomize': 1, 'domain': 'products_seo' })
+                        %}
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -498,9 +498,9 @@
                         {{ form_row(form.step6.attachments) }}
                     </div>
                     <div class="col-lg-3">
-                        {% include 'PrestaShopBundle:Admin/Helpers:modules_recommended.html.twig' with {
-                            'modules': []
-                        } %}
+                        {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+                            {'limit': 3, 'randomize': 1, 'domain': 'products_options' })
+                        %}
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -519,9 +519,9 @@
                         {% endfor %}
                     </div>
                     <div class="col-lg-3">
-                        {% include 'PrestaShopBundle:Admin/Helpers:modules_recommended.html.twig' with {
-                            'modules': []
-                        } %}
+                        {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+                            {'limit': 3, 'randomize': 1, 'domain': 'products_others' })
+                        %}
                     </div>
                     <div class="clearfix"></div>
                 </div>
