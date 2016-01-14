@@ -29,7 +29,7 @@ use Symfony\Component\Form\AbstractType;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
- * This subclass contains common functions for PrestaShop needs.
+ * This subclass contains common functions for specific Form types needs.
  */
 abstract class CommonAbstractType extends AbstractType
 {

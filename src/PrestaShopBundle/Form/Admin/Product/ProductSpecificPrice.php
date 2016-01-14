@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
 /**
- * This form class is responsible to generate the basic product information form
+ * This form class is responsible to generate the basic product specific prices form
  */
 class ProductSpecificPrice extends CommonAbstractType
 {

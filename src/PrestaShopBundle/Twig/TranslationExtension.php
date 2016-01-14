@@ -49,6 +49,9 @@ class TranslationExtension extends \Twig_Extension
         $this->prestashopTranslator = $prestashopTranslator;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFunctions()
     {
         return array(

@@ -25,7 +25,6 @@
  */
 namespace PrestaShopBundle\Twig;
 
-use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;

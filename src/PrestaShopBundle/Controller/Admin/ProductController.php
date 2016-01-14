@@ -674,6 +674,15 @@ class ProductController extends FrameworkBundleAdminController
         }
     }
 
+    /**
+     * Export product list (like the catalog should list, taking into account the filters, but not the pagination)
+     * in CSV format (or else for later if needed).
+     *
+     * This action does not finish correctly: a die is done to stop the stream that is downloaded by the browser.
+     * So Symfony router cannot take back the hand of the process for the last event listeners (terminate events).
+     *
+     * @param string $_format The format of the output
+     */
     public function exportAction($_format)
     {
         // init vars

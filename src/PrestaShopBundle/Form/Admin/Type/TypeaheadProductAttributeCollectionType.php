@@ -29,7 +29,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * This form class is responsible to create a product with attribute typeahed field
+ * This form class is responsible to create a product with attribute typeahead field
  */
 class TypeaheadProductAttributeCollectionType extends TypeaheadCollectionType
 {

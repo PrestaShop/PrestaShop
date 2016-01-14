@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
 /**
- * This form class is responsible to generate the virtual product
+ * This form class is responsible to generate the product attachments
  */
 class ProductAttachement extends CommonAbstractType
 {

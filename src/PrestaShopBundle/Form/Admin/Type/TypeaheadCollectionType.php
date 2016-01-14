@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * This form class is responsible to create generic typeahed field
+ * This form class is responsible to create generic typeahead field
  */
 class TypeaheadCollectionType extends CommonAbstractType
 {
