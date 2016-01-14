@@ -52,6 +52,7 @@ class ModuleController extends Controller
             shuffle($products);
             $topMenuData = $this->getTopMenuData();
         } catch (Exception $e) {
+            $this->addFlash('error', 'Cannot get catalog data. Please try again later.');
             $products = [];
             $topMenuData = [];
         }

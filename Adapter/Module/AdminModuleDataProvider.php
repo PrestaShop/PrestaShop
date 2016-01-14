@@ -410,8 +410,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 //}
                 $product->conditions = [];
                 $product->rating     = (object)[
-                        'score' => 0.0,
-                        'countReviews' => 0,
+                        'score' => !empty($product->avg_rate)?$product->avg_rate:0.0,
+                        'countReviews' => !empty($product->nb_rates)?$product->nb_rates:0,
                 ];
                 $product->scoring    = 0;
                 $product->media      = (object)[
@@ -448,7 +448,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     protected function getRefFromModuleCategoryName($name)
     {
-        return str_replace([' '], ['_'], strtolower(\Tools::replaceAccentedChars($name)));
+        return str_replace([' ', '(', ')'], ['_', '', ''], strtolower(\Tools::replaceAccentedChars($name)));
     }
 
     protected function fallbackOnCatalogCache()
