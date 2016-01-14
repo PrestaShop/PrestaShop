@@ -56,10 +56,12 @@
                   </td>
                 <td>
                   <select name="layouts[{$page.page}]" id="">
-                    <option value="#" {if !isset($page_layouts->{$page.page}) && $page_layouts->{$page.page} == $layout}selected="selected"{/if}>
-                    {foreach $available_layouts as $layout}
-                        <option value="{$layout}" {if isset($page_layouts->{$page.page}) && $page_layouts->{$page.page} == $layout}selected="selected"{/if}>
-                        {$layout}
+                    <option value="#" {if !isset($page_layouts.{$page.page})}selected="selected"{/if}>
+                      Default
+                    </option>
+                    {foreach $available_layouts as $key => $layout}
+                      <option value="{$key}" {if isset($page_layouts.{$page.page}) && $page_layouts.{$page.page} == $key}selected="selected"{/if}>
+                        {$layout.name} - {$layout.description}
                       </option>
                     {/foreach}
                   </select>
