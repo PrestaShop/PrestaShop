@@ -25,18 +25,20 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use Symfony\Component\Yaml\Parser;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 
 class Theme implements AddonInterface
 {
+    private $yaml;
+
     public function __construct($directory)
     {
         $this->directory = rtrim($directory, '/') . '/';
-        $this->setPropertiesFromJson();
 
-        if (is_null($this->settings)) {
-            $this->initSettings();
-        }
+        $this->yaml = new Parser();
+
+        $this->setProperties();
     }
 
     public function onInstall()
@@ -88,15 +90,10 @@ class Theme implements AddonInterface
         return true;
     }
 
-    public function setPropertiesFromJson()
+    public function setProperties()
     {
-        $properties = $this->getJsonConfig('theme.json');
-
-        if (is_null($properties)) {
-            throw new \Exception("Missing theme.json for theme $this->directory", 1);
-        }
-
-        $properties->settings = $this->getJsonConfig('settings.json');
+        $properties = $this->getConfigFromFile('theme.yml');
+        $properties['settings'] = $this->getConfigFromFile('settings.json');
 
         foreach ($properties as $prop => $value) {
             $this->{$prop} = $value;
@@ -107,39 +104,32 @@ class Theme implements AddonInterface
 
     public function initSettings()
     {
-        $this->settings = new \stdClass();
-        $this->setAvailableLayouts();
+        $this->settings = [];
+        $this->settings['page_layouts'] = [];
 
         return $this->saveSettings();
     }
 
-    public function setAvailableLayouts()
-    {
-        $layouts = glob($this->directory.'templates/layouts/*.tpl');
-
-        $this->settings->available_layouts = [];
-        foreach ($layouts as $layout) {
-            $this->settings->available_layouts[] = basename($layout, '.tpl');
-        }
-
-        return $this;
-    }
-
     public function setPageLayouts(array $layouts)
     {
-        $this->settings->page_layouts = $layouts;
+        $this->settings['page_layouts'] = $layouts;
         $this->saveSettings();
     }
 
-    private function getJsonConfig($filename)
+    private function getConfigFromFile($filename)
     {
         $file = $this->directory.'/config/'.$filename;
-
-        if (file_exists($file)) {
-            return json_decode(file_get_contents($file));
+        if (!file_exists($file)) {
+            return null;
         }
 
-        return null;
+        $content = file_get_contents($file);
+
+        if (preg_match('/.\.(yml|yaml)$/', $file)) {
+            return $this->yaml->parse($content);
+        } elseif (preg_match('/.\.json$/', $file)) {
+            return json_decode($content, true);
+        }
     }
 
     public function saveSettings()
