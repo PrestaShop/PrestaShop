@@ -29,12 +29,29 @@
 #form .toolbarBox a i{
   font-size: 22px;
 }
+
+#accordion_combinations td.img img{
+  max-width:50px;
+}
+#accordion_combinations .combination td.img .fake-img{
+  background: #ccc;
+  width:50px;
+  height:50px;
+}
 .product-combination-image{
   display: inline-block;
+  border: 1px solid #ccc;
+  outline: solid 4px #fff;
   margin: 5px;
 }
-.product-combination-image img{
-  border: 1px solid #ccc
+.product-combination-image.img-highlight{
+  outline: solid 4px #ccc;
+}
+.product-combination-image input{
+  display:none;
+}
+.combination-form .title{
+  font-size: 20px;
 }
 .tt-menu{
   width: 100%;

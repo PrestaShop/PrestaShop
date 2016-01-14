@@ -622,7 +622,18 @@ var combinations = (function() {
 			});
 
 			/** on change images selection */
-			$(document).on('click', '#form .product-combination-image input', function() {
+			$(document).on('click', '#form .product-combination-image', function() {
+				var input = $(this).find('input');
+				var isChecked = input.prop('checked');
+				input.prop('checked', isChecked ? false : true);
+
+				if(isChecked){
+					$(this).removeClass('img-highlight');
+
+				}else{
+					$(this).addClass('img-highlight');
+				}
+
 				_this.refreshDefaultImage();
 			});
 
@@ -728,10 +739,7 @@ var combinations = (function() {
 				if(defaultImageUrl){
 					var img = '<img src="' + defaultImageUrl + '" class="img-responsive" style="max-width:50px" />';
 					$('#accordion_combinations #attribute_'+$(elem).attr('data')).find('td.img').html(img);
-				}else{
-					$('#accordion_combinations #attribute_'+$(elem).attr('data')).find('td.img').html('');
 				}
-
 			});
 		},
 		'refreshImagesCombination': function() {
@@ -752,7 +760,7 @@ var combinations = (function() {
 
 						imagesElem.html('');
 						$.each(combinationImages, function(key, image){
-							var row = '<div class="product-combination-image">\
+							var row = '<div class="product-combination-image ' + (image.id_image_attr ? 'img-highlight' : '') + '">\
 					 			<input type="checkbox" name="form[step3][combinations][' + index + '][id_image_attr][]" value="' + image.id + '" '+ (image.id_image_attr ? 'checked="checked"' : '') +'>\
 					 			<img src="' + image.base_image_url + '-small_default.' + image.format + '" alt="" />\
 					 		</div>';
@@ -1621,7 +1629,7 @@ var priceCalculation = (function() {
 		},
 		'impactTaxInclude': function(obj) {
 			var price = parseFloat(obj.val().replace(/,/g, '.'));
-			var targetInput = obj.parent().parent().find('input.attribute_priceTI');
+			var targetInput = obj.parent().parent().parent().find('input.attribute_priceTI');
 			if(isNaN(price)){
 				targetInput.val(0);
 				return;
@@ -1634,7 +1642,7 @@ var priceCalculation = (function() {
 		},
 		'impactTaxExclude': function(obj) {
 			var price = parseFloat(obj.val().replace(/,/g, '.'));
-			var targetInput = obj.parent().parent().find('input.attribute_priceTE');
+			var targetInput = obj.parent().parent().parent().find('input.attribute_priceTE');
 			if(isNaN(price)){
 				targetInput.val(0);
 				return;

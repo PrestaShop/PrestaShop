@@ -153,7 +153,7 @@ class ProductCombination extends CommonAbstractType
             'required' => false,
             'expanded' => true,
             'multiple' => true,
-            'label' => $this->translator->trans('Images', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Images of this combination', [], 'AdminProducts'),
             'attr' => array('class' => 'images'),
         ));
 
