@@ -190,10 +190,10 @@ class ShopCore extends ObjectModel
         Shop::$initialized = true;
     }
 		
-		protected static function getProto()
-		{
-			return (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 'https://' : 'http://';
-		}
+    protected static function getProto()
+        {
+            return (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 'https://' : 'http://';
+        }
 
     public function setUrl()
     {
@@ -420,9 +420,9 @@ class ShopCore extends ObjectModel
                         $url .= $_SERVER['REQUEST_URI'];
                     } else {
                         $url .= $default_shop->getBaseURI();
-												if (count($params)) {
-														$url .= '?'.http_build_query($params);
-												}
+                        if (count($params)) {
+                            $url .= '?'.http_build_query($params);
+                        }
                     }
                 }
 
