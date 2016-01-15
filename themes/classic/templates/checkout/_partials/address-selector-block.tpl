@@ -6,8 +6,10 @@
       </header>
 
       <label class="radio-block">
-          <input type="radio" name="{$name}" value="{$address.id}" {if $address.id == $selected}checked{/if} />
-          {$address.formatted nofilter}
+          <div class="_display-table">
+            <input type="radio" class="_display-table-cell _margin-right-small" name="{$name}" value="{$address.id}" {if $address.id == $selected}checked{/if} />
+            <div class="_display-table-cell">{$address.formatted nofilter}</div>
+          </div>
       </label>
 
       <footer>
@@ -21,7 +23,7 @@
   {/foreach}
   {if $interactive}
     <p>
-      <button class="ps-hidden-by-js" type="submit">{l s='Save'}</button>
+      <button class="ps-hidden-by-js submit-button center-block" type="submit">{l s='Save'}</button>
     </p>
   {/if}
 </form>

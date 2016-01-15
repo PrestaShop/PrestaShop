@@ -16,7 +16,7 @@
     </header>
 
     <main class="container">
-      <img src="{$shop.logo}" alt="logo" width="180" />
+      <img class="logo img-responsive" src="{$shop.logo}" alt="logo" width="180" />
 
       {block name='notifications'}
         {include file='_partials/notifications.tpl'}
