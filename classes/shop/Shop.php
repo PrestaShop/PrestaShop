@@ -191,9 +191,9 @@ class ShopCore extends ObjectModel
     }
 		
     protected static function getProto()
-        {
-            return (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 'https://' : 'http://';
-        }
+    {
+        return (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 'https://' : 'http://';
+    }
 
     public function setUrl()
     {
