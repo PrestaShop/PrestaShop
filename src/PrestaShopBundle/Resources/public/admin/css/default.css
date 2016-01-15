@@ -29,7 +29,6 @@
 #form .toolbarBox a i{
   font-size: 22px;
 }
-
 #accordion_combinations td.img img{
   max-width:50px;
 }
@@ -91,6 +90,42 @@ body.mobile-nav #form .form-action-bar{
 }
 #footer{
   display: none;
+}
+ul.featureCollection{
+  padding-left:0;
+}
+ul.nostyle{
+  list-style: none;
+}
+ul.typeahead-list li{
+  margin-top:5px;
+}
+ul.typeahead-list li img{
+  width: 50px;
+}
+ul.typeahead-list li .title{
+  display:inline-block;
+  float:none;
+}
+#form_step1_new_category{
+  margin-top:20px;
+}
+ul.category-tree{
+  padding: 0;
+}
+ul.category-tree li{
+  list-style: none;
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+  background-position: 0 3px;
+}
+.bootstrap ul.category-tree li .checkbox,
+.bootstrap ul.category-tree li .radio{
+  padding-left: 20px;
+  padding-top: 0;
+}
+ul.category-tree li > ul{
+  display:none;
 }
 @media (max-width: 768px){
   #form .form-action-bar{

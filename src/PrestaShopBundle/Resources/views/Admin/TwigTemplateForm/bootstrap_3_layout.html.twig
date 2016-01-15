@@ -139,7 +139,7 @@
 
 {% block choice_tree_widget -%}
     <div {{ block('widget_container_attributes') }}>
-        <ul {{ block('widget_container_attributes') }}>
+        <ul class="category-tree">
         {%- for child in choices %}
             {{ block('choice_tree_item_widget') }}
         {% endfor -%}

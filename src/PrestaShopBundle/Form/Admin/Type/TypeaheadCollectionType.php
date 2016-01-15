@@ -59,7 +59,7 @@ class TypeaheadCollectionType extends CommonAbstractType
         $this->mapping_name = $mapping_name;
         $this->placeholder = $placeholder;
         $this->limit = $limit;
-        $this->template_collection = $template_collection ? $template_collection : '<span>%s</span> - <a href="" class="delete">X</a>';
+        $this->template_collection = $template_collection ? $template_collection : '<div class="title col-xs-10">%s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>';
     }
 
 

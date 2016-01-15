@@ -28,6 +28,9 @@ $(document).ready(function() {
 	nav.init();
 	redirectionStrategy.init();
 	featuresCollection.init();
+	relatedProduct.init();
+	manufacturer.init();
+	displayFormCategory.init();
 	defaultCategory.init();
 	nestedCategories.init();
 	formCategory.init();
@@ -175,6 +178,25 @@ var nestedCategories = (function() {
 	};
 })();
 
+
+/**
+ * Display category form management
+ */
+var displayFormCategory = (function() {
+	var parentElem = $('#add-categories');
+	return {
+		'init': function() {
+			/** Click event on the add button */
+			parentElem.find('a.open').on('click', function(e) {
+				e.preventDefault();
+				parentElem.find('#add-categories-content').removeClass('hide');
+				$(this).hide();
+			});
+		}
+	};
+})();
+
+
 /**
  * Default category management
  */
@@ -272,40 +294,26 @@ var formCategory = (function() {
 var featuresCollection = (function() {
 
 	var collectionHolder = $('ul.featureCollection');
-	var newItemBtn = $('<a href="#" class="btn btn-primary btn-xs">+</a>');
-	var newItem = $('<li class="add"></li>').append(newItemBtn);
-	var removeLink = '<a href="#" class="delete btn btn-primary btn-xs">-</a>';
 
 	/** Add a feature */
 	function add(){
 		var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
-		newItem.before($('<li></li>').prepend(removeLink, newForm));
-	}
-
-	/**
-	 * Remove a feature
-	 * @param {object} elem - The clicked link
-	 */
-	function remove(elem){
-		elem.parent().remove();
+		collectionHolder.append('<li>'+newForm+'</li>');
 	}
 
 	return {
 		'init': function() {
-			/** Create add button, and vreate first form */
-			collectionHolder.append(newItem);
-			add();
-
 			/** Click event on the add button */
-			newItemBtn.on('click', function(e) {
+			$('#features a.add').on('click', function(e) {
 				e.preventDefault();
 				add();
+				$('#features-content').removeClass('hide');
 			});
 
 			/** Click event on the remove button */
-			$(document).on('click', 'ul.featureCollection a.delete', function(e) {
+			$(document).on('click', 'ul.featureCollection .delete', function(e) {
 				e.preventDefault();
-				remove($(this));
+				$(this).parent().parent().parent().remove();
 			});
 
 			/** On feature selector event change, refresh possible values list */
@@ -320,6 +328,42 @@ var featuresCollection = (function() {
 						});
 					}
 				});
+			});
+		}
+	};
+})();
+
+/**
+ * Related product management
+ */
+var relatedProduct = (function() {
+	var parentElem = $('#related-product');
+
+	return {
+		'init': function() {
+			/** Click event on the add button */
+			parentElem.find('a.open').on('click', function(e) {
+				e.preventDefault();
+				parentElem.find('#related-content').removeClass('hide');
+				$(this).hide();
+			});
+		}
+	};
+})();
+
+/**
+ * Manufacturer management
+ */
+var manufacturer = (function() {
+	var parentElem = $('#manufacturer');
+
+	return {
+		'init': function() {
+			/** Click event on the add button */
+			parentElem.find('a.open').on('click', function(e) {
+				e.preventDefault();
+				parentElem.find('#manufacturer-content').removeClass('hide');
+				$(this).hide();
 			});
 		}
 	};

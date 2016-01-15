@@ -79,7 +79,7 @@ class SimpleCategory extends CommonAbstractType
         $builder->add('name', 'text', array(
             'label' => $this->translator->trans('Name', [], 'AdminCategories'),
             'required' => false,
-            'attr' => ['placeholder' => $this->translator->trans('Name', [], 'AdminCategories'), 'class' => 'ajax'],
+            'attr' => ['placeholder' => $this->translator->trans('Category name', [], 'AdminCategories'), 'class' => 'ajax'],
             'constraints' => $this->ajax ? [] : array(
                 new Assert\NotBlank(),
                 new Assert\Length(array('min' => 3))
@@ -88,11 +88,7 @@ class SimpleCategory extends CommonAbstractType
         ->add('id_parent', 'choice', array(
             'choices' =>  $this->categories,
             'required' =>  true,
-            'label' => $this->translator->trans('Parent category', [], 'AdminProducts')
-        ))
-        ->add('save', 'button', array(
-            'label' => $this->translator->trans('Save', [], 'AdminCategories'),
-            'attr' => ['class' => 'submit'],
+            'label' => $this->translator->trans('Choose a parent for this new category', [], 'AdminProducts')
         ));
     }
 

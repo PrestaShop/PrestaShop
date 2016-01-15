@@ -102,6 +102,7 @@ class ProductFeature extends CommonAbstractType
             );
 
             $form->add('value', 'choice', array(
+                'label' => $this->translator->trans('Value', [], 'AdminProducts'),
                 'choices' => $choices,
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),
@@ -124,6 +125,7 @@ class ProductFeature extends CommonAbstractType
             );
 
             $form->add('value', 'choice', array(
+                'label' => $this->translator->trans('Value', [], 'AdminProducts'),
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),
                 'choices' => $choices,
