@@ -107,7 +107,8 @@ class AttributeController extends FrameworkBundleAdminController
             $this->container->get('prestashop.adapter.data_provider.supplier'),
             $this->container->get('prestashop.adapter.data_provider.warehouse'),
             $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack')
+            $this->container->get('prestashop.adapter.data_provider.pack'),
+            $this->container->get('prestashop.adapter.shop.context')
         );
 
         //store exisiting product combinations
@@ -261,7 +262,8 @@ class AttributeController extends FrameworkBundleAdminController
             $this->container->get('prestashop.adapter.data_provider.supplier'),
             $this->container->get('prestashop.adapter.data_provider.warehouse'),
             $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack')
+            $this->container->get('prestashop.adapter.data_provider.pack'),
+            $this->container->get('prestashop.adapter.shop.context')
         );
 
         $combinationList = [];
