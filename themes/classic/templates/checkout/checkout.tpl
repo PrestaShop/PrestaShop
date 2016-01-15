@@ -16,12 +16,10 @@
     </header>
 
     <main class="container">
-      <h1>CLASSIC</h1>
+      <img src="{$shop.logo}" alt="logo" width="180" />
 
       {block name='notifications'}
-        {block name='notifications'}
-          {include file='_partials/notifications.tpl'}
-        {/block}
+        {include file='_partials/notifications.tpl'}
       {/block}
 
       {block name='content'}
