@@ -11,7 +11,7 @@
 {block name='form_fields' append}
   <input type="hidden" name="saveAddress" value="{$type}">
   {if $type === "delivery"}
-    <div class="col-md-9 col-md-offset-3 _mtm">
+    <div class="col-md-9 col-md-offset-3 _margin-top-medium">
       <label>
         <input  name    = "use_same_address"
                 type    = "checkbox"
@@ -33,7 +33,7 @@
       <a href="?cancelAddress={$type}">{l s='Cancel'}</a>
     {/if}
     <form>
-      <button type="submit" class="continue submit-button  _mtm" name="continue" value="1">
+      <button type="submit" class="continue submit-button  _margin-top-medium" name="continue" value="1">
           {l s='Continue'}
       </button>
     </form>
