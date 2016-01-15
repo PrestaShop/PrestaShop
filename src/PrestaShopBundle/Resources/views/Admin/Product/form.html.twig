@@ -336,28 +336,17 @@
                     <div class="clearfix"></div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step4">
-                    <div class="col-lg-9">
-                        {{ form_row(form.step4.width) }}
-                        {{ form_row(form.step4.height) }}
-                        {{ form_row(form.step4.depth) }}
-                        {{ form_row(form.step4.weight) }}
-                        {{ form_row(form.step4.additional_shipping_cost) }}
-                        {{ form_row(form.step4.selectedCarriers) }}
+                    {{ include('PrestaShopBundle:Admin/Product/Include:form-shipping.html.twig',
+                        {
+                            'form' : form.step4,
+                            'asm_globally_activated': asm_globally_activated,
+                            'isNotVirtual': form.step1.type_product.vars.value != "2",
+                            'isChecked': form.step3.advanced_stock_management.vars.checked,
+                            'warehouses': warehouses
+                        })
+                    }}
 
-                        <div id="warehouse_combination_collection" data-url="{{ path('admin_warehouse_refresh_product_warehouse_combination_form') }}">
-                            {% if asm_globally_activated
-                               and form.step1.type_product.vars.value != "2"
-                               and form.step3.advanced_stock_management.vars.checked %}
-                                {{ include('PrestaShopBundle:Admin:Product/Include/form-warehouse-combination.html.twig', { 'warehouses': warehouses, 'form': form.step4 }) }}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
-                            {'limit': 3, 'randomize': 1, 'domain': 'products_shipping' })
-                        %}
-                    </div>
-                    <div class="clearfix"></div>
+
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step2">
                     <div class="col-lg-9">
