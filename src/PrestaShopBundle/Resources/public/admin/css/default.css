@@ -88,6 +88,10 @@ body.mobile-nav #form .form-action-bar{
 #footer{
   display: none;
 }
+ul.featureCollection{
+  padding-left:0;
+  list-style: none;
+}
 @media (max-width: 768px){
   #form .form-action-bar{
     padding-left:50px;
