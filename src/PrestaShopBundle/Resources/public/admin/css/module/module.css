@@ -348,3 +348,67 @@
     -ms-user-select: none;
     user-select: none;
 }
+
+/* Addons module item list/grid */
+
+.module-addons-item-grid {
+    height: 247px;
+    display: table;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.module-addons-item-grid i {
+    font-size: 110px;
+}
+
+.module-icon-addons-exit-grid {
+    display: block;
+}
+
+.module-addons-item-wrapper-grid {
+    background: white;
+    padding: 20px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 0 #C7D6DB;
+    height: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 15px;
+}
+
+.module-addons-item-list {
+    margin-top: 5px;
+    height: 50px;
+    display: table;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.module-addons-item-list i {
+    font-size: 25px;
+    display:block;
+}
+
+.module-icon-addons-exit-list {
+    display: inline-block;
+}
+
+.module-addons-item-wrapper-list {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    background-color: lightgray;
+    font-size: 20px;
+}

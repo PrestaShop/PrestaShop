@@ -43,6 +43,8 @@ var AdminModule = function() {
     this.moduleSortingDropdownSelector = '.module-sorting-author select';
     this.categoryGridSelector = '#modules-categories-grid';
     this.categoryGridItemSelector = '.module-category-item';
+    this.addonItemGridSelector = '.module-addons-item-grid';
+    this.addonItemListSelector = '.module-addons-item-list';
 
 /**
  * Initialize all listners and bind everything
@@ -56,6 +58,20 @@ var AdminModule = function() {
     this.initCategorySelect();
     this.initCategoriesGrid();
     this.initActionButtons();
+    this.initAddonsSearch();
+  };
+
+  this.initAddonsSearch = function() {
+      var _this = this;
+      $(this.addonItemGridSelector + ', ' + this.addonItemListSelector).on('click', function(event){
+          console.log('button clicked yay!');
+          var searchQuery = '';
+          if (_this.currentTagsList.length) {
+              searchQuery = encodeURIComponent(_this.currentTagsList.join(' '));
+          }
+          var hrefUrl = _this.baseAddonsUrl + 'search.php?search_query=' + searchQuery;
+          window.open(hrefUrl, '_blank');
+      });
   };
 
   this.initCategoriesGrid = function() {
@@ -346,7 +362,6 @@ var AdminModule = function() {
               var matchedTagsCount = 0;
 
               $.each(_this.currentTagsList, function(index, value) {
-                 // var findRegexp = new RegExp(value, 'gi');
                   // If match any on these attrbute  its a match
                   value = value.toLowerCase();
                   if (dataName.indexOf(value) != -1 || dataDescription.indexOf(value) != -1 ||
@@ -370,6 +385,13 @@ var AdminModule = function() {
      };
 
      this.updateTotalResults = function(totalResultFound) {
+         // Pick the right selector to process search
+         var addonsItemSelector = (
+             this.currentDisplay == 'grid' ?
+             this.addonItemGridSelector :
+             this.addonItemListSelector
+         );
+
          $(this.addonsSearchSelector).css('display', 'none');
          var str = $(this.totalResultSelector).text();
          var explodedStr = str.split(' ');
@@ -387,12 +409,14 @@ var AdminModule = function() {
                 $(this.categoryGridSelector).fadeIn();
                 this.isCategoryGridDisplayed = true;
             }
+            $(addonsItemSelector).css('display', 'none');
 
         } else {
             if (this.isCategoryGridDisplayed === true) {
                 $(this.categoryGridSelector).fadeOut();
                 this.isCategoryGridDisplayed = false;
             }
+            $(addonsItemSelector).css('display', 'table');
         }
      };
 
@@ -449,14 +473,27 @@ var AdminModule = function() {
   this.switchSortingDisplayTo = function(switchTo) {
       var _this = this;
 
+      var addonsItemSelector = (
+          this.currentDisplay == 'grid' ?
+          this.addonItemGridSelector :
+          this.addonItemListSelector
+      );
+
+      var addonItem = $(addonsItemSelector);
+
       if (switchTo == 'grid') {
           $(this.moduleItemListSelector).each(function() {
               $(_this.moduleSortListSelector).removeClass('module-sort-active');
               $(_this.moduleSortGridSelector).addClass('module-sort-active');
               $(this).removeClass();
-              $(this).addClass('module-item-grid col-md-3');
+              $(this).addClass('module-item-grid col-lg-3 col-md-4 col-sm-6');
               _this.setNewDisplay($(this), '-list', '-grid');
           });
+          // Change module addons item
+          addonItem.removeClass();
+          addonItem.addClass('module-addons-item-grid col-lg-3 col-md-4 col-sm-6');
+          this.setNewDisplay(addonItem, '-list', '-grid');
+
       } else if (switchTo == 'list') {
           $(this.moduleItemGridSelector).each(function(index) {
               $(_this.moduleSortGridSelector).removeClass('module-sort-active');
@@ -465,6 +502,10 @@ var AdminModule = function() {
               $(this).addClass('module-item-list col-md-12');
               _this.setNewDisplay($(this), '-grid', '-list');
           });
+          // Change module addons item
+          addonItem.removeClass();
+          addonItem.addClass('module-addons-item-list col-md-12');
+          this.setNewDisplay(addonItem, '-grid', '-list');
       } else {
           console.error('Can\'t switch to undefined display property "'+switchTo+'"');
           return false;
