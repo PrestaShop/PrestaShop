@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 
 /**
  * This form class is responsible to map the form data to the product object
@@ -56,20 +57,22 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $translatableKeys;
     private $unmapKeys;
     private $configuration;
+    private $shopContext;
 
     /**
      * Constructor
      * Set all adapters needed and get product
      *
-     * @param object $product The product object
-     * @param object $legacyContext
-     * @param object $adminProductWrapper
-     * @param object $toolsAdapter
-     * @param object $productDataProvider
-     * @param object $supplierDataProvider
-     * @param object $warehouseDataProvider
-     * @param object $featureDataProvider
-     * @param object $packDataProvider
+     * @param \ProductCore $product The product object
+     * @param LegacyContext $legacyContext
+     * @param AdminProductWrapper $adminProductWrapper
+     * @param Tools $toolsAdapter
+     * @param ProductDataProvider $productDataProvider
+     * @param SupplierDataProvider $supplierDataProvider
+     * @param WarehouseDataProvider $warehouseDataProvider
+     * @param FeatureDataProvider $featureDataProvider
+     * @param PackDataProvider $packDataProvider
+     * @param ShopContext $shopContext
      */
     public function __construct(
         \ProductCore $product,
@@ -80,7 +83,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         SupplierDataProvider $supplierDataProvider,
         WarehouseDataProvider $warehouseDataProvider,
         FeatureDataProvider $featureDataProvider,
-        PackDataProvider $packDataProvider
+        PackDataProvider $packDataProvider,
+        ShopContext $shopContext
     ) {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
@@ -98,6 +102,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->productPricePriority = $this->adminProductWrapper->getPricePriority($product->id);
         $this->configuration = new Configuration();
         $this->product->loadStockData();
+        $this->shopContext = $shopContext;
 
         //define translatable key
         $this->translatableKeys = array(
@@ -433,11 +438,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'wholesale_price' => $this->product->wholesale_price,
                 'unit_price' => $this->product->unit_price_ratio != 0  ? $this->product->price / $this->product->unit_price_ratio : 0,
                 'unity' => $this->product->unity,
-                'specific_price' => [
+                'specific_price' => [ // extra form to be saved separately. Here this is the default form values.
                     'sp_from_quantity' => 1,
                     'sp_reduction' => 0,
                     'sp_reduction_tax' => 1,
                     'leave_bprice' => true,
+                    'sp_id_shop' => $this->shopContext->getContextShopID(),
                 ],
                 'specificPricePriority_0' => $this->productPricePriority[0],
                 'specificPricePriority_1' => $this->productPricePriority[1],

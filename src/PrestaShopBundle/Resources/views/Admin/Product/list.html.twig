@@ -37,9 +37,9 @@
             </td>
             <td>
                 {% if product.active|default(0) == 0 %}
-                    <i class="icon-remove"></i>
+                    <i class="icon-remove list-action-enable action-disabled"></i>
                 {% else %}
-                    <i class="icon-check"></i>
+                    <i class="icon-check list-action-enable action-enabled"></i>
                 {% endif %}
             </td>
             {% if product.position is defined %}

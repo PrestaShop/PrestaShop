@@ -78,7 +78,7 @@
             <input type="hidden" name="filter_category" value="{{ filter_category|default('') }}" />
 
             <div class="table-responsive-row clearfix">
-                <table class="table product" redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}">
+                <table class="table table-condensed table-striped product" redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}">
                     <thead>
                         <tr class="column-headers">
                             <th>
@@ -92,30 +92,30 @@
                             <th>
                                 {{ trans("Image", {}, 'AdminProducts') }}
                             </th>
-                            <th>
+                            <th class="col-xs-3">
                                 {{ trans("Name", {}, 'AdminProducts') }}
                                 &nbsp;<span psorderby="name" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'name' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="name" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'name' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
-                            <th>
+                            <th class="col-xs-1">
                                 {{ trans("Reference", {}, 'AdminProducts') }}
                                 &nbsp;<span psorderby="reference" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'reference' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="reference" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'reference' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
-                            <th>
+                            <th class="col-xs-2">
                                 {{ trans("Category", {}, 'AdminProducts') }}
                                 &nbsp;<span psorderby="name_category" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'name_category' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="name_category" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'name_category' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
-                            <th>
+                            <th class="col-md-1">
                                 {{ trans("Base price", {}, 'AdminProducts') }}
                                 &nbsp;<span psorderby="price" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'price' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="price" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'price' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
-                            <th>
+                            <th class="col-xs-1">
                                 {{ trans("Final price", {}, 'AdminProducts') }}
                             </th>
-                            <th>
+                            <th class="col-xs-1">
                                 {{ trans("Quantity", {}, 'AdminProducts') }}
                                 &nbsp;<span psorderby="sav_quantity" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'sav_quantity' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="sav_quantity" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'sav_quantity' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
@@ -135,9 +135,8 @@
                             <th>&nbsp;</th>
                         </tr>
                         <tr class="column-filters">
-                            <th>&nbsp;</th>
-                            <th>
-                                <input type="text" placeholder="{{ trans("Search exact ID", {}, 'AdminProducts') }}" name="filter_column_id_product" value="{{ filter_column_id_product }}" />
+                            <th colspan="2">
+                                <input type="text" placeholder="{{ trans("Search exact ID", {}, 'AdminProducts') }}" name="filter_column_id_product" value="{{ filter_column_id_product }}" style="width:8.5em" />
                             </th>
                             <th>&nbsp;</th>
                             <th>

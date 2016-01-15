@@ -15,7 +15,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-lg-9">
+                <div class="col-lg-9 form-input-title">
                     {{ form_widget(form.step1.name) }}
                 </div>
                 <div class="col-lg-2">
@@ -533,7 +533,8 @@
             <nav class="navbar navbar-default navbar-fixed-bottom navbar-form-footer">
                 <div class="form-action-bar">
                     <div class="col-xs-6 pull-left">
-                        <a href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-default"><i class="icon-trash"></i></a>
+                        <a href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-danger"><i class="icon-trash"></i></a>
+                        |
                         <a href="{{ preview_link }}" target="_blank" class="btn btn-default hidden-xs">{{ trans('PREVIEW', {}, 'AdminProducts') }}</a>
 
                         <div class="checkbox-active">
@@ -548,7 +549,7 @@
                     </div>
                     <div class="col-xs-6 pull-right text-right">
                         <a href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-default hidden-xs">{{ trans('DUPLICATE', {}, 'AdminProducts') }}</a>
-                        <button type="button" class="btn btn-default btn-submit hidden-xs" data-redirect="{{ path('admin_product_catalog') }}">{{ trans('SAVE & CATALOG', {}, 'AdminProducts')|raw }}</button>
+                        <button type="button" class="btn btn-default btn-submit hidden-xs" data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}">{{ trans('SAVE & CATALOG', {}, 'AdminProducts')|raw }}</button>
                         <button type="button" class="btn btn-default btn-submit hidden-xs" data-redirect="{{ path('admin_product_new') }}">{{ trans('SAVE & NEW', {}, 'AdminProducts')|raw }}</button>
                         <input id="submit" type="submit" class="btn btn-primary" value="{{ trans('SAVE', {}, 'AdminProducts') }}" />
                     </div>
