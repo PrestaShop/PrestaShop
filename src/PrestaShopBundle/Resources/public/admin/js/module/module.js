@@ -20,7 +20,7 @@ var AdminModule = function() {
     this.tagSearchBlock = null;
     this.areAllModuleDisplayed = true;
     this.baseAddonsUrl = 'https://addons.prestashop.com/';
-    this.prestagifyInput = null;
+    this.pstaggerInput = null;
 
     /* Selector into vars to make it easier to change them while keeping same code logic */
     this.searchBarSelector = '#module-search-bar';
@@ -84,7 +84,7 @@ var AdminModule = function() {
 
           // In case we have some tags we need to reset it !
           if (_this.currentTagsList.length) {
-                _this.prestagifyInput.resetTags(false);
+                _this.pstaggerInput.resetTags(false);
                 _this.currentTagsList = [];
           }
           var menuCategoryToTrigger = $(_this.categoryItemSelector + '[data-category-ref="' + refCategory + '"]');
@@ -423,7 +423,7 @@ var AdminModule = function() {
 
     this.initSearchBlock = function() {
         var _this = this;
-       this.prestagifyInput = $(this.searchBarSelector).Prestagify({
+       this.pstaggerInput = $(this.searchBarSelector).pstagger({
                                                                        onTagsChanged: _this.doTagSearch,
                                                                        onResetTags: _this.resetSearch,
                                                                        inputPlaceholder: 'Add tag ...',

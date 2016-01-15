@@ -1,20 +1,20 @@
-.prestagifyAddTagInput:focus {
+.pstaggerAddTagInput:focus {
      outline: 0;
 }
 
-.prestagifyAddTagWrapper {
+.pstaggerAddTagWrapper {
     width: 100%;
 }
 
-.prestagifyResetTagsBtn {
+.pstaggerResetTagsBtn {
     pointer: cursor !important;
 }
-.prestagifyTagsWrapper {
+.pstaggerTagsWrapper {
     display: none;
     position: relative;
 }
 
-.prestagifyTag{
+.pstaggerTag{
     float: left;
     border-radius: 5px;
     height: 30px;
@@ -23,11 +23,11 @@
     margin-right: 5px;
 }
 
-.prestagifyClosingCross {
+.pstaggerClosingCross {
     margin-left: 5px;
     font-size: 12px;
 }
 
-.prestagifyWrapper {
+.pstaggerWrapper {
     position: relative;
 }
