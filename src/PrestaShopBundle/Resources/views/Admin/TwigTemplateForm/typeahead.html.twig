@@ -160,24 +160,24 @@
 {% endblock %}
 
 {% block typeahead_product_pack_collection_widget %}
-    <div class="col-lg-12">
-        <div class="col-lg-6">
-            <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
-        </div>
-        <div class="col-lg-2">
-            <div class="input-group">
-                <span class="input-group-addon">×</span>
-                <input type="number" id="{{ form.vars.id }}-curPackItemQty" class="form-control curPackItemQty" min="1" value="1">
-            </div>
-        </div>
-        <div class="col-lg-2">
-            <div class="input-group">
-                <button id="{{ form.vars.id }}-curPackItemAdd" class="btn">{{ trans("Add", {}, "AdminProducts") }}</button>
-            </div>
+
+    <div class="col-xs-6">
+        <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
+    </div>
+    <div class="col-lg-1">
+        <div class="input-group">
+            <span class="input-group-addon">×</span>
+            <input type="number" id="{{ form.vars.id }}-curPackItemQty" class="form-control curPackItemQty" min="1" value="1">
         </div>
     </div>
+    <div class="col-lg-2">
+        <div class="input-group">
+            <button id="{{ form.vars.id }}-curPackItemAdd" class="btn">{{ trans("Add", {}, "AdminProducts") }}</button>
+        </div>
+    </div>
+
     <div class="clearfix"></div>
-    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12">
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-6">
         {% if collection is defined and collection|length > 0 %}
             {% for item in collection %}
                 <li data-product="{{ item.id }}-{{ item.id_product_attribute }}">

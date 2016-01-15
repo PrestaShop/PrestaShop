@@ -188,7 +188,6 @@ var displayFormCategory = (function() {
 		'init': function() {
 			/** Click event on the add button */
 			parentElem.find('a.open').on('click', function(e) {
-				console.log('aa')
 				e.preventDefault();
 				parentElem.find('#add-categories-content').removeClass('hide');
 				$(this).hide();
