@@ -36,7 +36,7 @@ use \ContextCore as OldContext;
 class LegacyContext
 {
     /**
-     * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\Business\context class,
+     * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\context class,
      * that will contains all you need in the Core architecture
      *
      * @throws LogicException If legacy context is not set properly

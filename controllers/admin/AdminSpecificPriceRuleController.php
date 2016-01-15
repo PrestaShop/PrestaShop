@@ -28,7 +28,7 @@
  * @property SpecificPriceRule $object
  */
 
-use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
+use PrestaShop\PrestaShop\Core\Cldr\Repository;
 
 class AdminSpecificPriceRuleControllerCore extends AdminController
 {

@@ -109,7 +109,7 @@
   },
   "autoload": {
     "psr-4": {
-      "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\": "Core/Business/Cldr/",
+      "PrestaShop\\PrestaShop\\Core\\Cldr\\": "Core/Cldr/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "Core/Foundation/Net/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "Core/Foundation/Compression/",
       "": "src/"
@@ -120,7 +120,7 @@
     "post-install-cmd": [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "bash tools/contrib/install.sh",
-      "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
+      "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
@@ -137,7 +137,7 @@
     ],
     "git-hook-install": "bash tools/contrib/install.sh",
     "git-hook-uninstall": "bash tools/contrib/uninstall.sh",
-    "cldr-init": "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
+    "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
     "phpunit-sf": "php bin/phpunit -c admin-dev/",
     "phpdoc-sf": "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d Core -d Adapter -d src -t docs/phpdoc-sf --template=\"responsive-twig\""
   },

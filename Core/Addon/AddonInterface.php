@@ -23,22 +23,15 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
+namespace PrestaShop\PrestaShop\Core\Addon;
 
-class Configuration implements \PrestaShop\PrestaShop\Core\ConfigurationInterface
+interface AddonInterface
 {
-    /**
-     * Returns constant defined by given $key if exists or check directly into PrestaShop
-     * \Configuration
-     * @param $key
-     * @return mixed
-     */
-    public function get($key)
-    {
-        if (defined($key)) {
-            return constant($key);
-        } else {
-            return \Configuration::get($key);
-        }
-    }
+    public function onInstall();
+    public function onUninstall();
+    public function onEnable();
+    public function onDisable();
+    public function onReset();
+
+    public function onUpgrade($version);
 }

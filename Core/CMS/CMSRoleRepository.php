@@ -23,22 +23,21 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
+namespace PrestaShop\PrestaShop\Core\CMS;
 
-class Configuration implements \PrestaShop\PrestaShop\Core\ConfigurationInterface
+class CMSRoleRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\EntityRepository
 {
     /**
-     * Returns constant defined by given $key if exists or check directly into PrestaShop
-     * \Configuration
-     * @param $key
-     * @return mixed
+     * Return all CMSRoles which are already associated
+     * @return array|null
      */
-    public function get($key)
+    public function getCMSRolesAssociated()
     {
-        if (defined($key)) {
-            return constant($key);
-        } else {
-            return \Configuration::get($key);
-        }
+        $sql = '
+			SELECT *
+			FROM `'.$this->getTableNameWithPrefix().'`
+			WHERE `id_cms` != 0';
+
+        return $this->hydrateMany($this->db->select($sql));
     }
 }

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
+use PrestaShop\PrestaShop\Core\Cldr\Update;
 
 class InstallControllerHttpProcess extends InstallControllerHttp
 {

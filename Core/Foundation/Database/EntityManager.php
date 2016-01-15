@@ -34,7 +34,7 @@ class EntityManager
 
     public function __construct(
         DatabaseInterface $db,
-        \PrestaShop\PrestaShop\Core\Business\ConfigurationInterface $configuration
+        \PrestaShop\PrestaShop\Core\ConfigurationInterface $configuration
     ) {
         $this->db = $db;
         $this->configuration = $configuration;

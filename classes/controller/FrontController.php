@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Business\Cldr;
+use PrestaShop\PrestaShop\Core\Cldr;
 
 class FrontControllerCore extends Controller
 {

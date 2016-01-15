@@ -23,22 +23,24 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
+namespace PrestaShop\PrestaShop\Core;
 
-class Configuration implements \PrestaShop\PrestaShop\Core\ConfigurationInterface
+class ContainerBuilder
 {
     /**
-     * Returns constant defined by given $key if exists or check directly into PrestaShop
-     * \Configuration
-     * @param $key
-     * @return mixed
+     * Construct PrestaShop Core Service container
+     * @return \PrestaShop\PrestaShop\Core\Foundation\IoC\Container
+     * @throws \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
-    public function get($key)
+    public function build()
     {
-        if (defined($key)) {
-            return constant($key);
-        } else {
-            return \Configuration::get($key);
-        }
+        $container = new \PrestaShop\PrestaShop\Core\Foundation\IoC\Container();
+
+        $container->bind('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
+        $container->bind('PrestaShop\\PrestaShop\\Core\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
+        $container->bind('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
+
+        return $container;
     }
 }

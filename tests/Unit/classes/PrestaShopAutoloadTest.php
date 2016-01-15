@@ -57,7 +57,7 @@ class    PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
 
     public function testClassLoadedFromCoreDir()
     {
-        PrestaShopAutoload::getInstance()->load('\\PrestaShop\\PrestaShop\\Core\\Business\\Payment\\PaymentOption');
-        $this->assertTrue(class_exists('\\PrestaShop\\PrestaShop\\Core\\Business\\Payment\\PaymentOption', false));
+        PrestaShopAutoload::getInstance()->load('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption');
+        $this->assertTrue(class_exists('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption', false));
     }
 }

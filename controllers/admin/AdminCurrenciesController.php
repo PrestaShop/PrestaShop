@@ -28,7 +28,7 @@
  * @property Currency $object
  */
 
-use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
+use PrestaShop\PrestaShop\Core\Cldr\Repository;
 
 class AdminCurrenciesControllerCore extends AdminController
 {
