@@ -1,0 +1,69 @@
+{% set dimension_unit, weight_unit = 'PS_DIMENSION_UNIT'|configuration, 'PS_WEIGHT_UNIT'|configuration %}
+
+<h3>{{ trans('Package dimension', [], 'AdminProducts') }}</h3>
+<p>{{ trans('Adjust your shipping costs by filling in the product dimensions.', [], 'AdminProducts') }}</p>
+<div class="col-lg-9">
+    <div class="col-sm-12 form-group">
+        <div class="col-sm-3">
+            <label class="control-label"><strong>{{ form.width.vars.label }}</strong></label>
+            <div class="input-group">
+                 <span class="input-group-addon">{{ dimension_unit }}</span>
+                 {{ form_widget(form.width) }}
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <label class="control-label"><strong>{{ form.height.vars.label }}</strong></label>
+            <div class="input-group">
+                <span class="input-group-addon">{{ dimension_unit }}</span>
+                {{ form_widget(form.height) }}
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <label class="control-label"><strong>{{ form.depth.vars.label }}</strong></label>
+            <div class="input-group">
+                <span class="input-group-addon">{{ dimension_unit }}</span>
+                {{ form_widget(form.depth) }}
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <label class="control-label"><strong>{{ form.weight.vars.label }}</strong></label>
+            <div class="input-group">
+                 <span class="input-group-addon">{{ weight_unit }}</span>
+                {{ form_widget(form.weight) }}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-sm-12 form-group">
+        <div class="col-sm-6">
+            <label class="control-label"><strong>{{ form.additional_shipping_cost.vars.label }}</strong></label>
+            <p>{{ trans('Does this product incur additional shipping cost?', [], 'AdminProducts') }}</p>
+            <div class="col-sm-6 form-group">
+                {{ form_widget(form.additional_shipping_cost) }}
+            </div>
+
+        </div>
+        <div class="col-sm-6">
+            <label class="control-label"><strong>{{ form.selectedCarriers.vars.label }}</strong></label>
+            {{ form_widget(form.selectedCarriers) }}
+        </div>
+    </div>
+
+    <div id="warehouse_combination_collection" class="col-sm-12 form-group" data-url="{{ path('admin_warehouse_refresh_product_warehouse_combination_form') }}">
+        {% if asm_globally_activated
+        and isNotVirtual
+        and isChecked %}
+            {{ include('PrestaShopBundle:Admin:Product/Include/form-warehouse-combination.html.twig', { 'warehouses': warehouses, 'form': form }) }}
+        {% endif %}
+    </div>
+</div>
+<div class="col-lg-3">
+    {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+    {'limit': 3, 'randomize': 1, 'domain': 'products_shipping' })
+    %}
+</div>
+<div class="clearfix"></div>

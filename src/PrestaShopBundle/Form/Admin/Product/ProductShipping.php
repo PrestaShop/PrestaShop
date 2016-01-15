@@ -50,6 +50,7 @@ class ProductShipping extends CommonAbstractType
     {
         $this->translator = $translator;
         $this->legacyContext = $legacyContext;
+        $this->currency = $legacyContext->getContext()->currency;
         $this->locales = $this->legacyContext->getLanguages();
         $this->warehouses = $warehouseDataProvider->getWarehouses();
 
@@ -99,9 +100,10 @@ class ProductShipping extends CommonAbstractType
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('additional_shipping_cost', 'number', array(
+        ->add('additional_shipping_cost', 'money', array(
             'required' => false,
             'label' => $this->translator->trans('Additional shipping fees (for a single item)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
