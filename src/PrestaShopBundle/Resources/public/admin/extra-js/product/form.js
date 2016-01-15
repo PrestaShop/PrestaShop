@@ -872,7 +872,7 @@ var specificPrices = (function() {
 		$.ajax({
 			type: 'POST',
 			url: $('#specific_price_form').attr('data-action'),
-			data: $('#form_step2_specific_price input, #form_step2_specific_price select, #form_id_product').serialize(),
+			data: $('#specific_price_form input, #specific_price_form select, #form_id_product').serialize(),
 			beforeSend: function() {
 				elem.attr('disabled', 'disabled');
 			},
