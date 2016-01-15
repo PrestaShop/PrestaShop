@@ -113,7 +113,14 @@ class ThemeManager implements AddonManagerInterface
         }
 
         $this->disable($this->shop->theme_name);
+
+        $this->doApplyConfiguration($theme->global_settings['configuration'])
+                ->doDisableModules($theme->global_settings['modules']['toDisable'])
+                ->doEnableModules($theme->global_settings['modules']['toEnable'])
+                ->doHookModules($theme->global_settings['modules']['toHookOn']);
+
         $theme->onEnable();
+
         $this->shop->theme_name = $theme->name;
         $this->shop->update();
 
@@ -182,6 +189,32 @@ class ThemeManager implements AddonManagerInterface
         }
 
         return $themes;
+    }
+
+    private function doApplyConfiguration(array $configuration)
+    {
+        foreach ($configuration as $key => $value) {
+            $this->configurator->set($key, $value);
+        }
+        return $this;
+    }
+
+    private function doDisableModules(array $modules)
+    {
+        // TODO: implements doDisableModules
+        return $this;
+    }
+
+    private function doEnableModules(array $modules)
+    {
+        // TODO: implements doEnableModules
+        return $this;
+    }
+
+    private function doHookModules(array $hooks)
+    {
+        // TODO: implements doHookModules
+        return $this;
     }
 
     private function getThemeOnDisk()
