@@ -14,13 +14,7 @@
 <div class="row">
   <div class="container">
     <div class="col-md-8">
-      <h1 class="logo"><strong>CLASSIC</strong></h1>
-      <!--
-      <a class="logo" href="{$urls.base_url}" title="{$shop.name}">
-        WAITING FOR CLASSIC LOGO TO RE-ACTIVATE IMG AND REMOVE H1
-        <img src="{$shop.logo}" alt="{$shop.name}" />
-      </a>
-      -->
+      <img src="{$shop.logo}" alt="logo" width="180" />
     </div>
     <div class="col-md-1 col-md-offset-1">{hook h="displayHeaderMiddle"}</div>
   </div>

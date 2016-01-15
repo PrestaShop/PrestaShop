@@ -6,17 +6,17 @@
     href="{$product.remove_from_cart_url}"
     data-link-action="remove-from-cart"
 >
-    {l s="Remove" mod="blockcart"}
+    {l s='Remove' mod='blockcart'}
 </a>
 {if $product.customizations|count}
     <div class="customizations">
         <ul>
-            {foreach from=$product.customizations item="customization"}
+            {foreach from=$product.customizations item='customization'}
                 <li>
                     <span class="product-quantity">{$customization.quantity}</span>
                     <a href="{$customization.remove_from_cart_url}" class="remove-from-cart" rel="nofollow">{l s='Remove'}</a>
                     <ul>
-                        {foreach from=$customization.fields item="field"}
+                        {foreach from=$customization.fields item='field'}
                             <li>
                                 <label>{$field.label}</label>
                                 {if $field.type == 'text'}
