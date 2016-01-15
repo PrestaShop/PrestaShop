@@ -61,6 +61,10 @@
 .tt-suggestion{
   cursor: pointer
 }
+#form .form-input-title input {
+  font-size: 2.2em;
+  height: 2.2em;
+}
 #form .navbar-form-footer{
   padding:15px;
   border-top: 1px solid #ccc !important;
