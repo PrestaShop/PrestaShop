@@ -28,6 +28,8 @@ $(document).ready(function() {
 	nav.init();
 	redirectionStrategy.init();
 	featuresCollection.init();
+	relatedProduct.init();
+	manufacturer.init();
 	defaultCategory.init();
 	nestedCategories.init();
 	formCategory.init();
@@ -306,6 +308,42 @@ var featuresCollection = (function() {
 						});
 					}
 				});
+			});
+		}
+	};
+})();
+
+/**
+ * Related product management
+ */
+var relatedProduct = (function() {
+	var parentElem = $('#related-product');
+
+	return {
+		'init': function() {
+			/** Click event on the add button */
+			parentElem.find('a.open').on('click', function(e) {
+				e.preventDefault();
+				parentElem.find('#related-content').removeClass('hide');
+				$(this).hide();
+			});
+		}
+	};
+})();
+
+/**
+ * Manufacturer management
+ */
+var manufacturer = (function() {
+	var parentElem = $('#manufacturer');
+
+	return {
+		'init': function() {
+			/** Click event on the add button */
+			parentElem.find('a.open').on('click', function(e) {
+				e.preventDefault();
+				parentElem.find('#manufacturer-content').removeClass('hide');
+				$(this).hide();
 			});
 		}
 	};

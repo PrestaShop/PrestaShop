@@ -108,7 +108,7 @@ class ProductInformation extends CommonAbstractType
             'id',
             'name',
             $this->translator->trans('search in catalog...', [], 'AdminProducts'),
-            '<span>%s</span> (<span>ref: %s</span> <span>X%s</span>) - <a href="" class="delete">X</a>',
+            '<div class="title col-xs-10">%s (ref: %s) X %s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
             $this->productAdapter
         ), array(
             'required' => false,

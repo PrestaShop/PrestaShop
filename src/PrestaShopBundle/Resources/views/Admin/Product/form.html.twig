@@ -112,7 +112,7 @@
                             <div id="features-content" class="{{ form.step1.features|length == 0 ? 'hide':'' }}">
                                 <h4>{{ trans('Features', [], 'AdminProducts') }}</h4>
                                 {{ form_errors(form.step1.features) }}
-                                <ul class="featureCollection" data-prototype="
+                                <ul class="featureCollection nostyle" data-prototype="
                                     {% filter escape %}
                                         {{ include('PrestaShopBundle:Admin/Product/Include:form-feature.html.twig', { 'form': form.step1.features.vars.prototype }) }}
                                     {% endfilter %}">
@@ -126,7 +126,25 @@
                             <a href="#" class="add">{{ trans('+ Add a feature', {}, 'AdminProducts') }}</a>
                         </div>
 
-                        {{ form_row(form.step1.id_manufacturer) }}
+                        <div id="manufacturer" class="form-group col-xs-6">
+                            <div id="manufacturer-content" class="{{ form.step1.id_manufacturer.vars.value == '' ? 'hide':'' }}">
+                                <h4>{{ trans("Related product", {}, 'AdminProducts') }}</h4>
+                                {{ form_errors(form.step1.id_manufacturer) }}
+                                {{ form_widget(form.step1.id_manufacturer) }}
+                            </div>
+                            <a href="#" class="open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}">{{ trans('+ Add a manufacturer', {}, 'AdminProducts') }}</a>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div id="related-product" class="form-group col-xs-6">
+                            <div id="related-content" class="{{ form.step1.related_products.vars.value.data|length == 0 ? 'hide':'' }}">
+                                <h4>{{ trans("Related product", {}, 'AdminProducts') }}</h4>
+                                {{ form_errors(form.step1.related_products) }}
+                                {{ form_widget(form.step1.related_products) }}
+                            </div>
+                            <a href="#" class="open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}">{{ trans('+ Add a related product', {}, 'AdminProducts') }}</a>
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
                     <div class="col-lg-3">
                         <div class="panel" id="show_variations_selector">
@@ -187,13 +205,6 @@
                                     {{ form_widget(form.step1.new_category.id_parent) }}
                                     {{ form_widget(form.step1.new_category.save) }}
                                 </div>
-                            </div>
-                        </div>
-                        <div class="panel">
-                            <div class="panel-heading">{{ trans("Accessories", {}, 'AdminProducts') }} </div>
-                            <div class="panel-body">
-                                {{ form_errors(form.step1.related_products) }}
-                                {{ form_widget(form.step1.related_products) }}
                             </div>
                         </div>
                     </div>
