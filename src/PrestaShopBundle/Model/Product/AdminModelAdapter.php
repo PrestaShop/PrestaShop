@@ -28,6 +28,14 @@ namespace PrestaShopBundle\Model\Product;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Business\Cldr\Repository as cldrRepository;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider;
+use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
+use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
+use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
 
 /**
  * This form class is responsible to map the form data to the product object
@@ -63,8 +71,17 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param object $featureDataProvider
      * @param object $packDataProvider
      */
-    public function __construct($product, $legacyContext, $adminProductWrapper, $toolsAdapter, $productDataProvider, $supplierDataProvider, $warehouseDataProvider, $featureDataProvider, $packDataProvider)
-    {
+    public function __construct(
+        \ProductCore $product,
+        LegacyContext $legacyContext,
+        AdminProductWrapper $adminProductWrapper,
+        Tools $toolsAdapter,
+        ProductDataProvider $productDataProvider,
+        SupplierDataProvider $supplierDataProvider,
+        WarehouseDataProvider $warehouseDataProvider,
+        FeatureDataProvider $featureDataProvider,
+        PackDataProvider $packDataProvider
+    ) {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
         $this->adminProductWrapper = $adminProductWrapper;
@@ -151,7 +168,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      *
      * @return array Transformed form data to model attempt
      */
-    public function getModelDatas($form_data, $isMultiShopContext = false)
+    public function getModelData($form_data, $isMultiShopContext = false)
     {
         //merge all form steps
         $form_data = array_merge(['id_product' => $form_data['id_product']], $form_data['step1'], $form_data['step2'], $form_data['step3'], $form_data['step4'], $form_data['step5'], $form_data['step6']);
@@ -175,7 +192,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['is_virtual'] = 0;
         }
 
-        //if product is disable, remove rediretion strategy fields
+        //if product is disable, remove redirection strategy fields
         if ($form_data['active']) {
             $form_data['redirect_type'] = '';
             $form_data['id_product_redirected'] = 0;
@@ -341,7 +358,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         $new_form_data = array_merge(parent::getHookData(), $new_form_data);
 
-        //if multishop context is define, simalte multishop checkbox for all POST DATAS
+        //if multishop context is defined, simulate multishop checkbox for all POST DATA
         if ($isMultiShopContext) {
             foreach ($this->multishopKeys as $multishopKey) {
                 $new_form_data['multishop_check'][$multishopKey] = 1;
@@ -364,7 +381,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      *
      * @return array Transformed model data to form attempt
      */
-    public function getFormDatas()
+    public function getFormData()
     {
         $form_data = [
             'id_product' => $this->product->id,
@@ -520,7 +537,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $res = [
                 'is_virtual_file' => $download->active,
                 'name' => $download->display_filename,
-                'nb_downloable' => $download->nb_downloadable,
+                'nb_downloadable' => $download->nb_downloadable,
                 'expiration_date' => $dateValue,
                 'nb_days' => $download->nb_days_accessible,
             ];
@@ -665,11 +682,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             ];
 
             if ($dataFeature['custom'] == 1) {
-                $cusomLangs = [];
+                $customLangs = [];
                 foreach ($this->featureAdapter->getFeatureValueLang($dataFeature['id_feature_value']) as $customValues) {
-                    $cusomLangs[$customValues['id_lang']] = $customValues['value'];
+                    $customLangs[$customValues['id_lang']] = $customValues['value'];
                 }
-                $itemForm['custom_value'] = $cusomLangs;
+                $itemForm['custom_value'] = $customLangs;
             }
 
             $formDataFeatures[] = $itemForm;
