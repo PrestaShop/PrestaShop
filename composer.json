@@ -109,12 +109,12 @@
   },
   "autoload": {
     "psr-4": {
-      "PrestaShop\\PrestaShop\\Core\\Cldr\\": "Core/Cldr/",
-      "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "Core/Foundation/Net/",
-      "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "Core/Foundation/Compression/",
+      "PrestaShop\\PrestaShop\\Core\\Cldr\\": "src/Core/Cldr/",
+      "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "src/Core/Foundation/Net/",
+      "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "src/Core/Foundation/Compression/",
       "": "src/"
     },
-    "classmap": ["Core/", "Adapter/"]
+    "classmap": ["src/Core/", "Adapter/"]
   },
   "scripts": {
     "post-install-cmd": [
@@ -139,7 +139,7 @@
     "git-hook-uninstall": "bash tools/contrib/uninstall.sh",
     "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
     "phpunit-sf": "php bin/phpunit -c admin-dev/",
-    "phpdoc-sf": "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d Core -d Adapter -d src -t docs/phpdoc-sf --template=\"responsive-twig\""
+    "phpdoc-sf": "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d src/Core -d Adapter -d src -t docs/phpdoc-sf --template=\"responsive-twig\""
   },
   "config": {
     "bin-dir": "bin"
