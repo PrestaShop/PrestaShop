@@ -30,6 +30,7 @@ $(document).ready(function() {
 	featuresCollection.init();
 	relatedProduct.init();
 	manufacturer.init();
+	displayFormCategory.init();
 	defaultCategory.init();
 	nestedCategories.init();
 	formCategory.init();
@@ -176,6 +177,26 @@ var nestedCategories = (function() {
 		}
 	};
 })();
+
+
+/**
+ * Display category form management
+ */
+var displayFormCategory = (function() {
+	var parentElem = $('#add-categories');
+	return {
+		'init': function() {
+			/** Click event on the add button */
+			parentElem.find('a.open').on('click', function(e) {
+				console.log('aa')
+				e.preventDefault();
+				parentElem.find('#add-categories-content').removeClass('hide');
+				$(this).hide();
+			});
+		}
+	};
+})();
+
 
 /**
  * Default category management

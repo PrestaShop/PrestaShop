@@ -104,7 +104,9 @@ ul.typeahead-list li .title{
   display:inline-block;
   float:none;
 }
-
+#form_step1_new_category{
+  margin-top:20px;
+}
 @media (max-width: 768px){
   #form .form-action-bar{
     padding-left:50px;
