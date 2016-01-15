@@ -4,7 +4,7 @@
   "description": "Tools to help while developing the starter theme",
   "main": "index.js",
   "scripts": {
-    "watch": "webpack -w --hot",
+    "watch": "webpack -w",
     "build": "webpack"
   },
   "author": "",
@@ -27,6 +27,7 @@
     "webpack-sources": "^0.1.0"
   },
   "dependencies": {
+    "bootstrap-datepicker": "^1.5.1",
     "material-design-icons": "^2.1.3",
     "tether": "^1.1.1"
   }

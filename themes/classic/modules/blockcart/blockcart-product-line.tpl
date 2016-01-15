@@ -5,6 +5,7 @@
     rel="nofollow"
     href="{$product.remove_from_cart_url}"
     data-link-action="remove-from-cart"
+    title="remove from cart"
 >
     {l s='Remove' mod='blockcart'}
 </a>
@@ -14,11 +15,11 @@
             {foreach from=$product.customizations item='customization'}
                 <li>
                     <span class="product-quantity">{$customization.quantity}</span>
-                    <a href="{$customization.remove_from_cart_url}" class="remove-from-cart" rel="nofollow">{l s='Remove'}</a>
+                    <a href="{$customization.remove_from_cart_url}" title="remove from cart" class="remove-from-cart" rel="nofollow">{l s='Remove'}</a>
                     <ul>
                         {foreach from=$customization.fields item='field'}
                             <li>
-                                <label>{$field.label}</label>
+                                <span>{$field.label}</span>
                                 {if $field.type == 'text'}
                                     <span>{$field.text}</span>
                                 {else if $field.type == 'image'}

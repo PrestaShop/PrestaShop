@@ -1,56 +1,52 @@
-#checkout {
-  #checkout-cart-summary {
-    float: right;
-    border: 1px $blue-light solid;
-    padding: 10px;
-    width: 25%;
+#checkout-cart-summary {
+  float: right;
+  border: 1px $blue-light solid;
+  padding: 10px;
+  width: 25%;
+}
+section.checkout-step {
+  width: 70%;
+  margin-top: 30px;
+  border: 1px $blue-light solid;
+  padding: 15px;
+
+  span {
+    font-weight: 400;
   }
-  section.checkout-step {
-    width: 70%;
+  label {
+    display: block;
+  }
+  small {
+    color: $gray;
+  }
+  input {
+    min-width: 220px;
+    &[name=address1],
+    &[name=address2] {
+      min-width: 315px;
+    }
+  }
+  .radio-field {
     margin-top: 30px;
-    border: 1px $blue-light solid;
-    padding: 15px;
-    h1 {
-      font-size: 24px;
-    }
-    span {
-      font-weight: 400;
-    }
     label {
-      display: block;
+      display: inline;
     }
-    small {
-      color: $gray;
-    }
-    input {
-      min-width: 220px;
-      &[name=address1],
-      &[name=address2] {
-        min-width: 315px;
-      }
-    }
-    .radio-field {
-      margin-top: 30px;
-      label {
-        display: inline;
-      }
-    }
-    .checkbox-field div {
-      margin-top: 60px;
-    }
-    .checkbox-field + .checkbox-field div {
-      margin-top: 0;
-    }
-    .select-field div {
-      background: $gray-lighter;
-      padding: 10px 50px;
-    }
-    .form-footer {
-      text-align: center;
-    }
-    .payment-option label{
-      display: table-cell;
-    }
+  }
+  .checkbox-field div {
+    margin-top: 60px;
+  }
+  .checkbox-field + .checkbox-field div {
+    margin-top: 0;
+  }
+  .select-field div {
+    background: $gray-lighter;
+    padding: 10px 50px;
+  }
+  .form-footer {
+    text-align: center;
+  }
+  .payment-option label {
+    display: table-cell;
   }
   .submit-button {
     color: white;
