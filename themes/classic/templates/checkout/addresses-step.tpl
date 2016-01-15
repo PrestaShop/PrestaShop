@@ -74,7 +74,7 @@
 
   {if !$form_has_continue_button}
     <form>
-      <button type="submit" class="continue" name="continue" value="1">
+      <button type="submit" class="continue submit-button center-block" name="continue" value="1">
           {l s='Continue'}
       </button>
     </form>
