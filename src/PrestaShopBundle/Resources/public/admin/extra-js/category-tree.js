@@ -24,7 +24,13 @@
  */
 
 (function ($) {
+
 	$.fn.categorytree = function (settings) {
+
+		$.fn.categorytreeFoldStyle = function (pos) {
+			this.attr('style', "background-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_"+ pos +".gif');");
+		};
+
 		var isMethodCall = (typeof settings == 'string'), // is this a method call like $().categorytree("unselect")
 			returnValue = this;
 		// if a method call execute the method on all selected instances
@@ -36,11 +42,11 @@
 					break;
 				case 'unfold':
 					$("ul", this).show();
-					$("li", this).has("ul").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_less.gif')");
+					$("li", this).has("ul").categorytreeFoldStyle('less');
 					break;
 				case 'fold':
 					$("ul ul", this).hide();
-					$("li", this).has("ul").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_more.gif')");
+					$("li", this).has("ul").categorytreeFoldStyle('more');
 					break;
 				default:
 					throw 'Unknown method';
@@ -53,22 +59,16 @@
 					var ui = event.target;
 					$(ui).next("ul").toggle();
 					if ($(ui).next("ul").is(":visible")) {
-						$(ui).parent("li").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_less.gif')");
+						$(ui).parent("li").categorytreeFoldStyle('less');
 					} else {
-						$(ui).parent("li").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_more.gif')");
+						$(ui).parent("li").categorytreeFoldStyle('more');
 					}
 				});
-				if ($(item).find("input:radio:checked").length == 0) {
-					$(item).toggle(); // initial collapse, except if child selected
-				}
 				if ($(item).is(":visible")) {
-					$(item).parent("li").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_less.gif')");
+					$(item).parent("li").categorytreeFoldStyle('less');
 				} else {
-					$(item).parent("li").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_more.gif')");
+					$(item).parent("li").categorytreeFoldStyle('more');
 				}
-			});
-			$("li:not(:has(ul))", this).each(function(i, item) {
-				$(item).attr("style", "list-style-image:none;"); // leafs do not need the folder icon.
 			});
 		}
 		// return the jquery selection (or if it was a method call that returned a value - the returned value)
