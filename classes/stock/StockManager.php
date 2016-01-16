@@ -363,19 +363,15 @@ class StockManagerCore implements StockManagerInterface
                         );
 
                         while ($row = Db::getInstance()->nextRow($resource)) {
-                            // break - in FIFO mode, we have to retreive the oldest positive mvts for which there are left quantities
+                            // continue - in FIFO mode, we have to retreive the oldest positive mvts for which there are left quantities
                             if ($warehouse->management_type == 'FIFO') {
                                 if ($row['qty'] == 0) {
-                                    break;
+                                    continue;
                                 }
                             }
 
-                            // converts date to timestamp
-                            $date = new DateTime($row['date_add']);
-                            $timestamp = $date->format('U');
-
                             // history of the mvt
-                            $stock_history_qty_available[$timestamp] = array(
+                            $stock_history_qty_available[(int)$row['id_stock_mvt']] = array(
                                 'id_stock' => $stock->id,
                                 'id_stock_mvt' => (int)$row['id_stock_mvt'],
                                 'qty' => (int)$row['qty']
