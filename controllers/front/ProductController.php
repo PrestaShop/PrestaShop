@@ -423,6 +423,7 @@ class ProductControllerCore extends FrontController
         if (is_array($attributes_groups) && $attributes_groups) {
             $combination_images = $this->product->getCombinationImages($this->context->language->id);
             $combination_prices_set = array();
+            $product_price = Product::getPriceStatic((int)$this->product->id, false, 0, 6, null, false, true, 1, false, null, null, null, $product_specific_price);
             foreach ($attributes_groups as $k => $row) {
                 // Color management
                 if (isset($row['is_color_group']) && $row['is_color_group'] && (isset($row['attribute_color']) && $row['attribute_color']) || (file_exists(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg'))) {
@@ -457,9 +458,10 @@ class ProductControllerCore extends FrontController
 
                 // Call getPriceStatic in order to set $combination_specific_price
                 if (!isset($combination_prices_set[(int)$row['id_product_attribute']])) {
-                    Product::getPriceStatic((int)$this->product->id, false, $row['id_product_attribute'], 6, null, false, true, 1, false, null, null, null, $combination_specific_price);
-                    $combination_prices_set[(int)$row['id_product_attribute']] = true;
+                    $combination_price = Product::getPriceStatic((int)$this->product->id, false, $row['id_product_attribute'], 6, null, false, true, 1, false, null, null, null, $combination_specific_price);
+                    $combinations[$row['id_product_attribute']]['price'] = $combination_price - $product_price;
                     $combinations[$row['id_product_attribute']]['specific_price'] = $combination_specific_price;
+                    $combination_prices_set[(int)$row['id_product_attribute']] = true;
                 }
                 $combinations[$row['id_product_attribute']]['ecotax'] = (float)$row['ecotax'];
                 $combinations[$row['id_product_attribute']]['weight'] = (float)$row['weight'];
