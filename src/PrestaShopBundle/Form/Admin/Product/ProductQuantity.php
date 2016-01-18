@@ -121,10 +121,10 @@ class ProductQuantity extends CommonAbstractType
             ->add('available_later', new TranslateType('text', array(), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Displayed text when backordering is allowed', [], 'AdminProducts')
             ))
-            ->add('available_date', 'text', array(
+            ->add('available_date', 'datePicker', array(
                 'required' => false,
                 'label' => $this->translator->trans('Availability date:', [], 'AdminProducts'),
-                'attr' => ['class' => 'date', 'placeholder' => 'YYY-MM-DD']
+                'attr' => ['placeholder' => 'YYYY-MM-DD']
             ))
             ->add('virtual_product', new ProductVirtual($this->translator, $this->legacyContext), array(
                 'required' => false,
