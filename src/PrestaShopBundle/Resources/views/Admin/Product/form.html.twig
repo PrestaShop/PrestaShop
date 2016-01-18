@@ -597,6 +597,7 @@
     '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css'
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css'
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css'
+    '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
     '@PrestaShopBundle/Resources/public/admin/extra-css/product/image-uploader.css' filter='cssrewrite' package='admin' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -615,10 +616,13 @@
     '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js'
     '../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js'
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'
+    '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/min/moment.min.js'
+    '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'
     '../js/jquery/ui/jquery.ui.sortable.min.js' package='admin'
     %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/locale/'~ default_language_iso ~'.js' ) }}"></script>
 {% endblock %}
 
 {% set js_translatable = {

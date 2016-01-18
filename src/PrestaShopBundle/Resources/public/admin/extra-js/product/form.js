@@ -47,6 +47,17 @@ $(document).ready(function() {
 	priceCalculation.init();
 	displayFieldsManager.refresh();
 	displayFieldsManager.init();
+
+	/** Type product fields display management */
+	$('#form_step1_type_product').change(function(){
+		displayFieldsManager.refresh();
+	});
+
+	/** Attach date picker */
+	$('.datepicker').datetimepicker({
+		locale: iso_user,
+		format: 'YYYY-MM-DD'
+	});
 });
 
 
