@@ -8,18 +8,22 @@ data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" d
                 {{ module.displayName }}
             </div>
             <div class="text-ellipsis x-small-text module-version-author-{{display_type}}">
-                {% if module.productType == "service" %}
-                    Service by {{ module.author }}
-                {% else %}
-                    v{{ module.version }} by {{ module.author }}
-                {% endif %}
+                {% block addon_version %}
+                    {% if module.productType == "service" %}
+                        Service by {{ module.author }}
+                    {% else %}
+                        v{{ module.version }} by {{ module.author }}
+                    {% endif %}
+                {% endblock %}
             </div>
         </div>
         <div class="module-quick-description-{{display_type}} no-padding">
-            {{ module.description|raw }}
-            {% if module.fullDescription is defined and module.description|length < module.fullDescription|length %}
-                ...
-            {% endif %}
+            {% block addon_description %}
+                {{ module.description|raw }}
+                {% if module.fullDescription is defined and module.description|length < module.fullDescription|length %}
+                    ...
+                {% endif %}
+            {% endblock %}
             <div class="module-read-more-{{display_type}}">
                 <a class="module-read-more-{{display_type}}-btn" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">Read More</a>
             </div>

@@ -13,7 +13,7 @@
     {% endstylesheets %}
 
     {% stylesheets '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css' filter='cssrewrite' %}
-    <link rel="stylesheet" href="{{ asset_url|admin_asset_path }}" />
+    <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
     {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/module/drop.css' filter='cssrewrite' %}
@@ -40,7 +40,7 @@
 
     {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/drop.js'
     '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js' %}
-    <script src="{{ asset_url|admin_asset_path }}"></script>
+    <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
     {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/loader.js' %}

@@ -173,6 +173,8 @@ class ModuleController extends Controller
         // We need a better error handler here. Meanwhile, I throw an exception
         if (! $ret[$module]['status']) {
             $this->addFlash('error', $ret[$module]['msg']);
+        } else {
+            $this->addFlash('success', $ret[$module]['msg']);
         }
 
         if ($request->server->get('HTTP_REFERER')) {
@@ -180,6 +182,67 @@ class ModuleController extends Controller
         } else {
             return $this->redirect($this->generateUrl('admin_module_catalog'));
         }
+    }
+
+    public function notificationAction(Request $request)
+    {
+        $translator = $this->container->get('prestashop.adapter.translator');
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+
+        // toolbarButtons
+        $toolbarButtons = array();
+        $toolbarButtons['catalog_module'] = array(
+            'href' => $this->generateUrl('admin_module_catalog'),
+            'desc' => $translator->trans('[TEMP] Modules catalog', array(), get_class($this)),
+            'icon' => 'icon-share-square',
+            'help' => $translator->trans('Catalog', array(), get_class($this)),
+        );
+        $toolbarButtons['manage_module'] = array(
+            'href' => $this->generateUrl('admin_module_manage'),
+            'desc' => $translator->trans('[TEMP] Manage my modules', array(), get_class($this)),
+            'icon' => 'icon-share-square',
+            'help' => $translator->trans('Manage', array(), get_class($this)),
+        );
+        $toolbarButtons['add_module'] = array(
+            'href' => $this->generateUrl('admin_module_import'),
+            'desc' => $translator->trans('Add a module', array(), get_class($this)),
+            'icon' => 'process-icon-new',
+            'help' => $translator->trans('Add a module', array(), get_class($this))
+        );
+
+        $products = new \stdClass;
+        foreach (['to_configure', 'to_update', 'to_install'] as $subpart) {
+            $products->{$subpart} = [];
+        }
+
+        foreach ($modulesProvider->getManageModules() as $installed_product) {
+            if (!empty($installed_product->warning)) {
+                $row = 'to_configure';
+            } elseif ($installed_product->installed == 1 && version_compare($installed_product->database_version, $installed_product->version, '<')) {
+                $row = 'to_update';
+            } else {
+                $row = false;
+            }
+
+            if ($row) {
+                $products->{$row}[] = (object)$installed_product;
+            }
+        }
+
+        foreach ($modulesProvider->getCatalogModules() as $product) {
+            if (isset($product->origin) && $product->origin === 'customer') {
+                $products->to_install[] = (object)$product;
+            }
+        }
+
+        foreach ($products as $product_label => $products_part) {
+            $products->$product_label = $this->generateProductUrls($products_part);
+        }
+
+        return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
+                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'modules' => $products,
+        ));
     }
 
     /**

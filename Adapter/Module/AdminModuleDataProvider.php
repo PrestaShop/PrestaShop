@@ -316,6 +316,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
                     foreach ($all_modules as $module) {
                         if ($module->name === $installed_module['name']) {
+                            unset($module->version);
                             $installed_module = array_merge($installed_module, (array)$module);
                             continue;
                         }

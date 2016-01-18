@@ -23,6 +23,9 @@
     {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/module/loader.css' filter='cssrewrite' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet" />
 
 {% endblock %}
 
@@ -52,27 +55,19 @@
 {% block content %}
     {# Contains toolbar-nav for module page #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
-    {# Contains menu with Selection/Categories/Popular and Tag Search #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
     {# Actual Page Content #}
     <div class="row">
         <div class="col-lg-10 col-lg-offset-1">
-            <span class="module-search-result-wording">{{modules.modules|length}} installed modules</span>
-            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.modules, 'display_type' : 'list'  } %}
+            <span class="module-search-result-wording">{{modules.to_configure|length}} modules to configure</span>
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid_notification_configure.html.twig' with { 'modules' : modules.to_configure, 'display_type' : 'list'  } %}
 
             <hr class="top-menu-separator">
-            <span class="module-search-result-wording">{{modules.native_modules|length}} preinstalled modules</span>
-            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list' } %}
+            <span class="module-search-result-wording">{{modules.to_update|length}} modules to update</span>
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid_notification_update.html.twig' with { 'modules' : modules.to_update, 'display_type' : 'list' } %}
 
             <hr class="top-menu-separator">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="module-sorting-search-wording">
-                        <span class="module-search-result-wording">{{[]|length}} theme modules</span>
-                    </div>
-                </div>
-            </div>
-            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : [], 'display_type' : 'list' } %}
+            <span class="module-search-result-wording">{{modules.to_install|length}} modules to install</span>
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.to_install, 'display_type' : 'list' } %}
         </div>
     </div>
 {% endblock %}
