@@ -1,12 +1,12 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Business\Product;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Product;
 
 use Phake;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Business\Product\ProductPresenter;
-use PrestaShop\PrestaShop\Core\Business\Product\ProductPresentationSettings;
-use PrestaShop\PrestaShop\Core\Business\Price\PricePresenterInterface;
+use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use PrestaShop\PrestaShop\Core\Price\PricePresenterInterface;
 use Product;
 use Language;
 use Link;
