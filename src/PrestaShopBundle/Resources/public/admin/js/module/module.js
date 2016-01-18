@@ -295,6 +295,9 @@ var AdminModule = function() {
         var totalModules = 0;
         var _this = this;
 
+        // Reset currentTagsList
+        this.currentTagsList = [];
+
         // Avoid trying to redisplay everything if it's already fully displayed
         if (this.areAllModuleDisplayed === false) {
 
