@@ -1,7 +1,7 @@
 <?php
 
-use PrestaShop\PrestaShop\Core\Business\Product\ProductPresenter;
-use PrestaShop\PrestaShop\Core\Business\Product\ProductPresentationSettings;
+use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
 class Adapter_CartPresenter
 {

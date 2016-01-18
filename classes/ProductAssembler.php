@@ -1,6 +1,6 @@
 <?php
 
-use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 
 class ProductAssemblerCore
 {

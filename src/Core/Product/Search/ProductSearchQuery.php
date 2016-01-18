@@ -1,8 +1,8 @@
 <?php
-namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
+namespace PrestaShop\PrestaShop\Core\Product\Search;
 
-use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 
 class ProductSearchQuery
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
+namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 class ProductSearchResult
 {

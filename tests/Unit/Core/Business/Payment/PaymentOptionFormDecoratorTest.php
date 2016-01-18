@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Business\Payment;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Payment;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Business\Payment\PaymentOptionFormDecorator;
+use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
 use DOMDocument;
 use Exception;
 

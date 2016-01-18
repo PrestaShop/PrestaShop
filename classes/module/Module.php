@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Business\Module\WidgetInterface;
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 abstract class ModuleCore
 {

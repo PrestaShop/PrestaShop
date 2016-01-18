@@ -1,7 +1,7 @@
 <?php
 
 use Symfony\Component\Translation\TranslatorInterface;
-use PrestaShop\PrestaShop\Core\Business\Checkout\TermsAndConditions;
+use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
 
 class ConditionsToApproveFinderCore
 {

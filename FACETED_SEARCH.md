@@ -50,7 +50,7 @@ We call a filter any assertion that can be used to filter a list of products and
 
 For instance "Blue products" is a filter. "Red or blue products" is **not** a filter. It's a facet...
 
-A Filter is represented by the `PrestaShop\PrestaShop\Core\Business\Product\Search\Filter` class.
+A Filter is represented by the `PrestaShop\PrestaShop\Core\Product\Search\Filter` class.
 
 ##### Facets
 
@@ -60,11 +60,11 @@ For instance "Blue products or red products" is a facet.
 
 Filters within a facet may be active or not, and are usually combined with the "or" operator even though it is defined by the implementation and not necessarily so. Still, there seems to be a strong UX convention that filters inside a facet are combined with "or", meaning for instance that if I check the "Blue" and the "Red" filter I won't get products that are both blue and red, but a mix of blue products and red products.
 
-A facet is represented by the `PrestaShop\PrestaShop\Core\Business\Product\Search\Facet` class. It is basically a collection of `Filter`s.
+A facet is represented by the `PrestaShop\PrestaShop\Core\Product\Search\Facet` class. It is basically a collection of `Filter`s.
 
 ### The `ProductSearchQuery` object
 
-We introduce the `PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery` object to hold all search query information.
+We introduce the `PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery` object to hold all search query information.
 
 Basically, this object contains:
 - something that tells modules where the query came from (`id_category`, `id_supplier` for `SupplierController` etc.). This is the minimal filter that the search module is supposed to implement.

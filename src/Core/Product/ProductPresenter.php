@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Core\Business\Product;
+namespace PrestaShop\PrestaShop\Core\Product;
 
 use Adapter_ImageRetriever;
 use Adapter_PricePresenter;

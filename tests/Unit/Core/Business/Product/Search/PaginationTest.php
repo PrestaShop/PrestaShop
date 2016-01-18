@@ -1,9 +1,9 @@
 <?php
 
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Business\Product\Search;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Product\Search;
 
 use PHPUnit_Framework_Testcase;
-use PrestaShop\PrestaShop\Core\Business\Product\Search\Pagination;
+use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
 
 class PaginationTest extends PHPUnit_Framework_Testcase
 {

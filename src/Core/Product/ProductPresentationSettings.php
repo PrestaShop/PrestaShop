@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Core\Business\Product;
+namespace PrestaShop\PrestaShop\Core\Product;
 
 class ProductPresentationSettings
 {

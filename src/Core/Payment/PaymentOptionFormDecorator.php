@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Core\Business\Payment;
+namespace PrestaShop\PrestaShop\Core\Payment;
 
 use DOMDocument;
 use DOMNode;
