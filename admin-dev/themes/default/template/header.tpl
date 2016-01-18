@@ -116,16 +116,6 @@
 				</button>
 				<a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}">
 				</a>
-				{* Shop *}
-				{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-					<ul id="header_shop">
-						<li class="dropdown">
-							{$shop_list}
-						</li>
-					</ul>
-				{else}
-					<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">{$shop_name}</a>
-				{/if}
 				<ul id="header_notifs_icon_wrapper">
 {if {$show_new_orders} == 1}
 					<li id="orders_notif" class="dropdown" data-type="order">
@@ -296,10 +286,15 @@
 				<ul id="header_employee_box">
 {if {$base_url}}
 					<li>
-						<a href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" id="header_foaccess" class="_blank" title="{l s='View my shop'}">
-							<span class="string-long">{l s='My shop'}</span>
-							<span class="string-short">{l s='Shop'}</span>
-						</a>
+						{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+							<ul id="header_shop">
+								<li class="dropdown">
+									{$shop_list}
+								</li>
+							</ul>
+						{else}
+							<a id="header_shopname" href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}">{$shop_name}</a>
+						{/if}
 						{if isset($maintenance_mode) && $maintenance_mode == true}
 							<span class="maintenance-mode">
 								&mdash;
