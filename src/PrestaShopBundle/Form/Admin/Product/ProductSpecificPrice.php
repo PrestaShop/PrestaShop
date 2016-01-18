@@ -118,15 +118,15 @@ class ProductSpecificPrice extends CommonAbstractType
             'label' => $this->translator->trans('Combination:s', [], 'AdminProducts'),
             'attr' => ['data-action' =>  $this->router->generate('admin_get_product_combinations')],
         ))
-        ->add('sp_from', 'text', array(
+        ->add('sp_from', 'datePicker', array(
             'required' => false,
             'label' => $this->translator->trans('from', [], 'AdminProducts'),
-            'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD HH:II']
+            'attr' => ['placeholder' => 'YYYY-MM-DD HH:II']
         ))
-        ->add('sp_to', 'text', array(
+        ->add('sp_to', 'datePicker', array(
             'required' => false,
             'label' => $this->translator->trans('to', [], 'AdminProducts'),
-            'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD HH:II']
+            'attr' => ['placeholder' => 'YYYY-MM-DD HH:II']
         ))
         ->add('sp_from_quantity', 'number', array(
             'required' => false,

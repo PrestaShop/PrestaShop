@@ -89,10 +89,10 @@ class ProductVirtual extends CommonAbstractType
                 new Assert\Type(array('type' => 'numeric')),
             ),
         ))
-        ->add('expiration_date', 'text', array(
+        ->add('expiration_date', 'datePicker', array(
             'label'    => $this->translator->trans('Expiration date', [], 'AdminProducts'),
             'required' => false,
-            'attr' => ['class' => 'date', 'placeholder' => 'YYY-MM-DD']
+            'attr' => ['placeholder' => 'YYYY-MM-DD']
         ))
         ->add('nb_days', 'number', array(
             'label'    => $this->translator->trans('Number of days', [], 'AdminProducts'),

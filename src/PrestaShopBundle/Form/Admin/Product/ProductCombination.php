@@ -131,10 +131,10 @@ class ProductCombination extends CommonAbstractType
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('available_date_attribute', 'text', array(
+        ->add('available_date_attribute', 'datePicker', array(
             'required' => false,
             'label' => $this->translator->trans('Availability date', [], 'AdminProducts'),
-            'attr' => ['class' => 'date', 'placeholder' => 'YYY-MM-DD']
+            'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD']
         ))
         ->add('attribute_default', 'checkbox', array(
             'label'    => $this->translator->trans('Make this combination the default combination for this product.', [], 'AdminProducts'),
