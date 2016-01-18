@@ -7,8 +7,8 @@
             <div class="alert alert-info" role="alert">{{ trans('Be carefull, you are in a multishop context, all modifcation will be apply to each shop or group shop', {}, 'AdminProducts') }}</div>
         {% endif %}
         <form name="form" id="form" method="post" class="form-horizontal" novalidate="novalidate">
-            <div class="col-lg-10 {{ languages|length == 1 ? 'hide' : '' }}">
-                <div class="col-lg-1">
+            <div class="col-lg-10">
+                <div class="col-lg-1 {{ languages|length == 1 ? 'hide' : '' }}">
                     <select id="form_switch_language" class="form-control">
                         {% for language in languages %}
                             <option value="{{ language.iso_code }}" {% if default_language_iso == language.iso_code %}selected="selected"{% endif %}>{{ language.iso_code }}</option>
