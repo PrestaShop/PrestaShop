@@ -7,7 +7,6 @@
 @import "modules/search-widget";
 @import "modules/top-menu";
 @import "modules/checkout";
-
 /*** HEADER ***/
 #header {
   .header-nav {
@@ -22,80 +21,93 @@
       margin-top: 20px;
     }
   }
-
-  .header-top{
+  .header-top {
     background: $gray-dark;
     margin-top: 70px;
     height: 100px;
-    .menu{
+    .menu {
       padding-top: 40px;
-      > ul{
+      > ul {
         display: table;
-        > li{
+        > li {
           display: table-cell;
-          ul{
+          ul {
             visibility: hidden;
           }
         }
       }
     }
-
-    .navigation{
+    .navigation {
       z-index: 1;
     }
-
-    a{
+    a {
       color: white;
       text-transform: uppercase;
     }
-    .cart-preview{
+    .cart-preview {
       position: absolute;
-      top:40px;
+      top: 40px;
       right: 20px;
-      .shopping-cart{
+      .shopping-cart {
         vertical-align: middle;
       }
-      .body{
+      .body {
         display: none;
       }
     }
   }
 }
-
-#wrapper{
-  .breadcrumb{
+#wrapper {
+  .breadcrumb {
     text-transform: uppercase;
     background: transparent;
-    ol{
+    ol {
       padding-left: 0;
     }
-    li{
+    li {
       display: inline;
-      &:after{
-        content:">";
+      &:after {
+        content: ">";
       }
-      &:last-child:after{
-        content:"";
+      &:last-child:after {
+        content: "";
       }
     }
-    a{
+    a {
       color: $gray;
     }
   }
-  .product-miniature{
+  .product-miniature {
     min-height: 630px;
-    .product-title a{
+    .product-title a {
       color: $body-color;
     }
   }
-  .variant-links{
-    a{
+  .variant-links {
+    a {
       margin-top: 20px;
     }
   }
 }
-
 ul {
   list-style: none;
   padding-left: 0;
+}
+
+
+@include media-breakpoint-down(md) {
+  #checkout-cart-summary{
+    float: none;
+    width: 100%;
+    margin-top: 1rem;
+  }
+  section.checkout-step {
+    width: 100%;
+  }
+  section.checkout-step input[name=address1], section.checkout-step input[name=address2],section.checkout-step input[type=text], section.checkout-step input[type=password], input[type=date] {
+    min-width: 100%;
+  }
+  label{
+    clear: both;
+  }
 }
