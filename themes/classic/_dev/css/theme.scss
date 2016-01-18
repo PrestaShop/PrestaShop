@@ -84,6 +84,14 @@
   }
   .product-miniature{
     min-height: 630px;
+    .product-title a{
+      color: $body-color;
+    }
+  }
+  .variant-links{
+    a{
+      margin-top: 20px;
+    }
   }
 }
 

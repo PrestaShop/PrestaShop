@@ -14,7 +14,7 @@
   <footer class="form-footer">
     <input type="hidden" name="submitAddress" value="1">
     {block name='form_buttons'}
-      <button type="submit">{l s='Save'}</button>
+      <button type="submit" class="submit-button">{l s='Save'}</button>
     {/block}
   </footer>
 </form>
