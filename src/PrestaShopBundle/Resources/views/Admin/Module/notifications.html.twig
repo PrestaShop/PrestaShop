@@ -23,7 +23,7 @@
     {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/module/loader.css' filter='cssrewrite' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
-    
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet" />
 
@@ -51,6 +51,8 @@
     {% endjavascripts %}
 
 {% endblock %}
+
+{% set requireAddonSearch = false %}
 
 {% block content %}
     {# Contains toolbar-nav for module page #}

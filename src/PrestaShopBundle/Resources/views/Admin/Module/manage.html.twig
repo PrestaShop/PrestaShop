@@ -49,6 +49,8 @@
 
 {% endblock %}
 
+{% set requireAddonSearch = false %}
+
 {% block content %}
     {# Contains toolbar-nav for module page #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
@@ -65,12 +67,8 @@
             {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list' } %}
 
             <hr class="top-menu-separator">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="module-sorting-search-wording">
-                        <span class="module-search-result-wording">{{[]|length}} theme modules</span>
-                    </div>
-                </div>
+            <div class="module-sorting-search-wording">
+                <span class="module-search-result-wording">{{[]|length}} theme modules</span>
             </div>
             {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : [], 'display_type' : 'list' } %}
         </div>

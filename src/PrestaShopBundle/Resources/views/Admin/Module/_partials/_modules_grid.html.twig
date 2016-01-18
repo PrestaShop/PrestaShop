@@ -24,13 +24,18 @@
                 %}
             {% endblock %}
         {% endfor %}
-        <div class="module-addons-item-{{display_type}} {{col_lg}}">
-            <div class="module-addons-item-wrapper-{{display_type}}">
-                <span class="module-icon-addons-exit-{{display_type}}">
-                    <i class="icon-signout"></i>
-                </span>
-                Check results on PrestaShop's Addons Marketplace
-            </div>
-        </div>
+
+        {% block addon_search_card %}
+            {% if requireAddonSearch is defined and requireAddonSearch == true %}
+                <div class="module-addons-item-{{display_type}} {{col_lg}}">
+                    <div class="module-addons-item-wrapper-{{display_type}}">
+                        <span class="module-icon-addons-exit-{{display_type}}">
+                            <i class="icon-signout"></i>
+                        </span>
+                        Check results on PrestaShop's Addons Marketplace
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock %}
     </div>
 </div>
