@@ -9,7 +9,6 @@ section.checkout-step {
   margin-top: 30px;
   border: 1px $blue-light solid;
   padding: 15px;
-
   span {
     font-weight: 400;
   }
@@ -56,6 +55,7 @@ section.checkout-step {
     border-radius: 2px;
     text-transform: uppercase;
     font-size: 20px;
+    margin-top: 20px;
   }
   .sub-link {
     margin-left: 65px;
@@ -77,4 +77,10 @@ section.checkout-step {
     border: $gray-light 2px solid;
     border-radius: 2px;
   }
+}
+.shipping .label {
+  color: $body-color;
+}
+.cart-summary-totals .label {
+  color: $body-color;
 }

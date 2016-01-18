@@ -52,9 +52,6 @@
 ._margin-top-medium {
   margin-top: 20px; }
 
-._margin-top-large {
-  margin-top: 40px; }
-
 /*!
  * Bootstrap v4.0.0-alpha.2 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
@@ -4720,7 +4717,8 @@ section.checkout-step {
     padding: 5px 30px;
     border-radius: 2px;
     text-transform: uppercase;
-    font-size: 20px; }
+    font-size: 20px;
+    margin-top: 20px; }
   section.checkout-step .sub-link {
     margin-left: 65px;
     display: inline-block; }
@@ -4738,6 +4736,12 @@ section.checkout-step {
   section.checkout-step input[type=date] {
     border: #d2d2d2 2px solid;
     border-radius: 2px; }
+
+.shipping .label {
+  color: #3D3C44; }
+
+.cart-summary-totals .label {
+  color: #3D3C44; }
 
 /*** HEADER ***/
 #header .header-nav {
@@ -4793,6 +4797,11 @@ section.checkout-step {
 
 #wrapper .product-miniature {
   min-height: 630px; }
+  #wrapper .product-miniature .product-title a {
+    color: #3D3C44; }
+
+#wrapper .variant-links a {
+  margin-top: 20px; }
 
 ul {
   list-style: none;

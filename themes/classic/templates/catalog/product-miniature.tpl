@@ -11,7 +11,7 @@
   {/block}
 
   {block name='product_name'}
-    <h1 class="h2" itemprop="name"><a href="{$product.url}">{$product.name}</a></h1>
+    <h1 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name}</a></h1>
   {/block}
 
   {block name='product_description_short'}
@@ -22,7 +22,7 @@
     <div class="product-list-actions">
       {if $product.add_to_cart_url}
           <a
-            class = "add-to-cart"
+            class = "add-to-cart btn btn-primary"
             href  = "{$product.add_to_cart_url}"
             rel   = "nofollow"
             data-id-product="{$product.id_product}"
