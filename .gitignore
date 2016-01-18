@@ -3,6 +3,7 @@
 /.htaccess
 *.log
 npm-debug.log.*
+.sass-cache/
 /cache/*
 download/*
 /img/*
