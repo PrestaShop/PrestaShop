@@ -24,8 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
- use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
- use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
+ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
  use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProductSearchProvider;
  use PrestaShop\PrestaShop\Adapter\Translator;
  use PrestaShop\PrestaShop\Adapter\LegacyContext;

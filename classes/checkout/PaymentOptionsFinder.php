@@ -1,7 +1,7 @@
 <?php
 
-use PrestaShop\PrestaShop\Core\Business\Payment\PaymentOptionFormDecorator;
-use PrestaShop\PrestaShop\Core\Business\Payment\PaymentOption;
+use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
+use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 
 class PaymentOptionsFinderCore
 {
@@ -15,7 +15,7 @@ class PaymentOptionsFinderCore
         }
 
         $displayPaymentEUOptions = array_map(
-            ['PrestaShop\PrestaShop\Core\Business\Payment\PaymentOption', 'convertLegacyOption'],
+            ['PrestaShop\PrestaShop\Core\Payment\PaymentOption', 'convertLegacyOption'],
             $rawDisplayPaymentEUOptions
         );
 
