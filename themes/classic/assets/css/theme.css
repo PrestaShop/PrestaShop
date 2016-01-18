@@ -4807,4 +4807,16 @@ ul {
   list-style: none;
   padding-left: 0; }
 
+@media (max-width: 991px) {
+  #checkout-cart-summary {
+    float: none;
+    width: 100%;
+    margin-top: 1rem; }
+  section.checkout-step {
+    width: 100%; }
+  section.checkout-step input[name=address1], section.checkout-step input[name=address2], section.checkout-step input[type=text], section.checkout-step input[type=password], input[type=date] {
+    min-width: 100%; }
+  label {
+    clear: both; } }
+
 /*# sourceMappingURL=theme.css.map*/
