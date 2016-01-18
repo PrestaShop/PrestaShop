@@ -153,6 +153,10 @@ class ProductOptions extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Reference code', [], 'AdminProducts')
         ))
+        ->add('show_condition', 'checkbox', array(
+            'required' => false,
+            'label' => $this->translator->trans('Display condition', [], 'AdminProducts'),
+        ))
         ->add('condition', 'choice', array(
             'choices'  => array(
                 'new' => $this->translator->trans('New', [], 'AdminProducts'),

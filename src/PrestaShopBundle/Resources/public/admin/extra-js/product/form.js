@@ -46,11 +46,7 @@ $(document).ready(function() {
 	imagesProduct.init();
 	priceCalculation.init();
 	displayFieldsManager.refresh();
-
-	/** Type product fields display management */
-	$('#form_step1_type_product').change(function(){
-		displayFieldsManager.refresh();
-	});
+	displayFieldsManager.init();
 });
 
 
@@ -64,6 +60,17 @@ var displayFieldsManager = (function() {
 	var combinations = $('#combinations');
 
 	return {
+		'init': function() {
+			/** Type product fields display management */
+			$('#form_step1_type_product').change(function(){
+				displayFieldsManager.refresh();
+			});
+
+			/** Show condition and condition fields management */
+			$('#form_step6_show_condition').on('change', function() {
+				displayFieldsManager.refresh();
+			});
+		},
 		'refresh': function() {
 			$('#virtual_product').hide();
 			$('#form-nav a[href="#step3"]').text(translate_javascripts['Quantity']);
@@ -98,6 +105,9 @@ var displayFieldsManager = (function() {
 				combinations.hide();
 				$('#product_qty_0_shortcut_div, #quantity-no-attribute, #step3_minimal_quantity').show();
 			}
+
+			/** check condition field enabler */
+			$('#form_step6_condition').prop('disabled', ($('#form_step6_show_condition:checked').length == 0));
 		}
 	};
 })();
