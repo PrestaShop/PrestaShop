@@ -24,9 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Business\Module;
+namespace PrestaShop\PrestaShop\Core\Module;
 
-interface WidgetInterface {
+interface WidgetInterface
+{
     public function renderWidget($hookName, array $configuration);
     public function getWidgetVariables($hookName, array $configuration);
 }
