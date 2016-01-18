@@ -1,8 +1,8 @@
 <?php
-namespace PrestaShop\PrestaShop\Tests\Core\Business\Checkout;
+namespace PrestaShop\PrestaShop\Tests\Core\Checkout;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Business\Checkout\TermsAndConditions;
+use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
 
 class TermsAndConditionsTest extends UnitTestCase
 {
