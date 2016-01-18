@@ -31,6 +31,10 @@ ALTER TABLE  `PREFIX_product_attribute` ADD  `isbn` VARCHAR( 13 ) NULL DEFAULT N
 ALTER TABLE  `PREFIX_stock` ADD  `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
 ALTER TABLE  `PREFIX_supply_order_detail` ADD  `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
 
+ALTER TABLE `PREFIX_product` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '1' AFTER `available_date`;
+ALTER TABLE `PREFIX_product_shop` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '1' AFTER `available_date`;
+
+
 /* Add Payment Preferences tab. SuperAdmin profile is the only one to access it. */
 /* PHP:ps_1701_add_payment_preferences_tab(); */;
 UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminPaymentPreferences' LIMIT 1) AND `id_profile` > 1;

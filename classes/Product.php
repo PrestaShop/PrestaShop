@@ -181,6 +181,9 @@ class ProductCore extends ObjectModel
     /** @var string Object available order date */
     public $available_date = '0000-00-00';
 
+    /** @var bool Will the condition select should be visible for this product ? */
+    public $show_condition = true;
+
     /** @var string Enumerated (enum) product condition (new, used, refurbished) */
     public $condition;
 
@@ -306,6 +309,7 @@ class ProductCore extends ObjectModel
             'id_product_redirected' =>        array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
             'available_for_order' =>        array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'available_date' =>            array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
+            'show_condition' =>            array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'condition' =>                    array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isGenericName', 'values' => array('new', 'used', 'refurbished'), 'default' => 'new'),
             'show_price' =>                array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'indexed' =>                    array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),

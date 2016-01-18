@@ -491,6 +491,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'ean13' => $this->product->ean13,
                 'isbn' => $this->product->isbn,
                 'reference' => $this->product->reference,
+                'show_condition' => (bool) $this->product->show_condition,
                 'condition' => $this->product->condition,
                 'suppliers' => array_map(
                     function ($s) {
