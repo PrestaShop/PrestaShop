@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-class Configuration implements \PrestaShop\PrestaShop\Core\Business\ConfigurationInterface
+class Configuration implements \PrestaShop\PrestaShop\Core\ConfigurationInterface
 {
     /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop

@@ -116,7 +116,7 @@ public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products 
 
     $address_factory    = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
     $price_calculator   = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
-    $configuration      = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Business_Configuration');
+    $configuration      = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Configuration');
 
     // Code...
 }
@@ -256,7 +256,7 @@ The life cycle of an adapter is roughly as follows:
 
 - **Debugging / Refactoring Stage**
     1. Create `Adapter_SomeService` to break a static dependency to `SomeService` in the code you're working on
-        - Adapter should be minimal at first - [it might just forward a call to some legacy function](https://github.com/djfm/PrestaShop/commit/42db57be45c299259a28a247db6c62267d3fb671). 
+        - Adapter should be minimal at first - [it might just forward a call to some legacy function](https://github.com/djfm/PrestaShop/commit/42db57be45c299259a28a247db6c62267d3fb671).
     2. Use `\PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Adapter_SomeService')` in the code under test to retrieve an instance of the service we depend on
     3. Write tests, refactor...
 - **Architecture Improvement Stage**: With time and experience, the precise responsibilities of `Adapter_SomeService` have been clearly identified and tested

@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
+use PrestaShop\PrestaShop\Core\Cldr\Repository;
 
 class CurrencyCore extends ObjectModel
 {

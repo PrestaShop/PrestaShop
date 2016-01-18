@@ -1414,7 +1414,7 @@ class CartCore extends ObjectModel
         // Dependencies
         $address_factory    = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
         $price_calculator    = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
-        $configuration        = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface');
+        $configuration        = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
 
         $ps_tax_address_type = $configuration->get('PS_TAX_ADDRESS_TYPE');
         $ps_use_ecotax = $configuration->get('PS_USE_ECOTAX');
