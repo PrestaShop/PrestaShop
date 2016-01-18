@@ -129,4 +129,20 @@ class StoreCore extends ObjectModel
         $this->hours = serialize(explode(';', $hours));
         return true;
     }
+
+    /**
+     * This method is allow to know if a store exists for AdminImportController
+     * @since 1.6.2.0
+     * @return bool
+     */
+    public static function storeExists($id_store)
+    {
+        $row = Db::getInstance()->getRow('
+            SELECT `id_store`
+            FROM '._DB_PREFIX_.'store a
+            WHERE a.`id_store` = '.(int)$id_store
+        );
+
+        return isset($row['id_store']);
+    }
 }
