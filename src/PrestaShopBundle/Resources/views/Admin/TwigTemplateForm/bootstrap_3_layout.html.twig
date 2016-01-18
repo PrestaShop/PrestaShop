@@ -203,6 +203,18 @@
     {{- parent() -}}
 {%- endblock translate_fields_widget %}
 
+{% block datePicker_widget %}
+    {% spaceless %}
+        {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+        <div class='input-group'>
+            <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+            <span class="input-group-addon">
+                <span class="icon-calendar"></span>
+            </span>
+        </div>
+    {% endspaceless %}
+{% endblock datePicker_widget %}
+
 {# Labels #}
 
 {% block form_label -%}
