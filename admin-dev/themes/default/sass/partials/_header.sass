@@ -1,10 +1,15 @@
+$header-height: 36px
+
+.material-icons
+	line-height: inherit
+
 #header
 	z-index: 20
 #header_infos
 	@extend .navbar
 	@extend .navbar-inverse
 	@extend .navbar-fixed-top
-	height: 36px !important
+	height: $header-height
 	.navbar-header
 		width: 100%
 
@@ -82,6 +87,7 @@
 	border: none
 	color: white
 	display: none
+
 #header_employee_box
 	@extend .nav
 	@extend .navbar-nav
@@ -117,13 +123,15 @@
 			padding: 9px 0
 			color: $brand-warning
 #employee_infos
+	width: $header-height
+	box-sizing: border-box
 	.employee_name
 		position: relative
-		height: 36px
+		height: $header-height
 	.employee_avatar_small
 		.img-thumbnail
-			@include border-radius(36px)
-		@include avatar(36px, 0px)
+			@include border-radius($header-height)
+		@include avatar($header-height, 0px)
 		position: absolute
 		top: 0
 		@include right(0)
@@ -158,7 +166,12 @@
 		sup
 			font-size: 0.7em
 
-#header_quick, .header-list
+#header_quick
+	font-size: 15px
+	a
+		color: $main-color
+		&:hover
+			color: $toolbar-buttons-hover-color
 	@extend .nav
 	@extend .navbar-nav
 	@include ltr
@@ -167,6 +180,28 @@
 		@extend .navbar-right
 	@extend .hidden-xs
 	@extend .hidden-sm
+
+.header-list
+	@extend .nav
+	@extend .navbar-nav
+	@include ltr
+		@extend .navbar-left
+	@include rtl
+		@extend .navbar-right
+	@extend .hidden-xs
+	@extend .hidden-sm
+	height:     $header-height
+	box-sizing: border-box
+	li
+		> a
+			&.notifs
+				display:        block
+				height:         $header-height
+				min-width:      $header-height
+				line-height:    $header-height
+				box-sizing:     border-box
+				padding:        0 5px !important
+				vertical-align: middle
 
 #header_shop
 	@extend .nav

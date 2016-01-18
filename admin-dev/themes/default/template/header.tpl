@@ -205,109 +205,6 @@
 					</script>
 				{/if}
 
-				{* Notifications *}
-				<ul id="header_notifs_icon_wrapper">
-					{if {$show_new_orders} == 1}
-						<li id="orders_notif" class="dropdown" data-type="order">
-							<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
-								<i class="icon-shopping-cart"></i>
-							<span id="orders_notif_number_wrapper" class="notifs_badge hide">
-								<span id="orders_notif_value">0</span>
-							</span>
-							</a>
-							<div class="dropdown-menu notifs_dropdown">
-								<section id="orders_notif_wrapper" class="notifs_panel">
-									<div class="notifs_panel_header">
-										<h3>{l s='Latest Orders'}</h3>
-									</div>
-									<div id="list_orders_notif" class="list_notif">
-									<span class="no_notifs">
-										{l s='No new orders have been placed on your shop.'}
-									</span>
-									</div>
-									<div class="notifs_panel_footer">
-										<a href="{$baseAdminUrl}index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
-									</div>
-								</section>
-							</div>
-						</li>
-					{/if}
-					{if {$show_new_customers} == 1}
-						<li id="customers_notif" class="dropdown" data-type="customer">
-							<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
-								<i class="icon-user"></i>
-							<span id="customers_notif_number_wrapper" class="notifs_badge hide">
-								<span id="customers_notif_value">0</span>
-							</span>
-							</a>
-							<div class="dropdown-menu notifs_dropdown">
-								<section id="customers_notif_wrapper" class="notifs_panel">
-									<div class="notifs_panel_header">
-										<h3>{l s='Latest Registrations'}</h3>
-									</div>
-									<div id="list_customers_notif" class="list_notif">
-									<span class="no_notifs">
-										{l s='No new customers have registered on your shop.'}
-									</span>
-									</div>
-									<div class="notifs_panel_footer">
-										<a href="{$baseAdminUrl}index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a>
-									</div>
-								</section>
-							</div>
-						</li>
-					{/if}
-					{if {$show_new_messages} == 1}
-						<li id="customer_messages_notif" class="dropdown" data-type="customer_message">
-							<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
-								<i class="icon-envelope"></i>
-							<span id="customer_messages_notif_number_wrapper" class="notifs_badge hide">
-								<span id="customer_messages_notif_value" >0</span>
-							</span>
-							</a>
-							<div class="dropdown-menu notifs_dropdown">
-								<section id="customer_messages_notif_wrapper" class="notifs_panel">
-									<div class="notifs_panel_header">
-										<h3>{l s='Latest Messages'}</h3>
-									</div>
-									<div id="list_customer_messages_notif" class="list_notif">
-									<span class="no_notifs">
-										{l s='No new messages have been posted on your shop.'}
-									</span>
-									</div>
-									<div class="notifs_panel_footer">
-										<a href="{$baseAdminUrl}index.php?controller=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
-									</div>
-								</section>
-							</div>
-						</li>
-					{/if}
-				</ul>
-
-				{* Shop name *}
-				{if {$base_url}}
-					<ul class="header-list">
-						<li>
-							{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-								<ul id="header_shop">
-									<li class="dropdown">
-										{$shop_list}
-									</li>
-								</ul>
-							{else}
-								<a id="header_shopname" href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}">{$shop_name}</a>
-							{/if}
-							{if isset($maintenance_mode) && $maintenance_mode == true}
-								<span class="maintenance-mode">
-									&mdash;
-									<span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
-										  title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf='<br />'}</p>">{l s='Maintenance mode'}</span>
-								</span>
-							{/if}
-						</li>
-					</ul>
-				{/if}
-
 				{* Employee *}
 				<ul id="header_employee_box">
 					<li id="employee_infos" class="dropdown">
@@ -335,6 +232,57 @@
 						</ul>
 					</li>
 				</ul>
+
+				{* Notifications *}
+				<ul class="header-list navbar-right">
+					<li id="notification" class="dropdown" data-type="order">
+						<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
+							<i class="material-icons">notifications</i>
+							<span id="orders_notif_number_wrapper" class="notifs_badge hide">
+								<span id="orders_notif_value">0</span>
+							</span>
+						</a>
+						<div class="dropdown-menu notifs_dropdown">
+							<section id="orders_notif_wrapper" class="notifs_panel">
+								<div class="notifs_panel_header">
+									<h3>{l s='Latest Orders'}</h3>
+								</div>
+								<div id="list_orders_notif" class="list_notif">
+									<span class="no_notifs">
+										{l s='No new orders have been placed on your shop.'}
+									</span>
+								</div>
+								<div class="notifs_panel_footer">
+									<a href="{$baseAdminUrl}index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
+								</div>
+							</section>
+						</div>
+					</li>
+				</ul>
+
+				{* Shop name *}
+				{if {$base_url}}
+					<ul class="header-list navbar-right">
+						<li>
+							{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+								<ul id="header_shop">
+									<li class="dropdown">
+										{$shop_list}
+									</li>
+								</ul>
+							{else}
+								<a id="header_shopname" href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}">{$shop_name}</a>
+							{/if}
+							{if isset($maintenance_mode) && $maintenance_mode == true}
+								<span class="maintenance-mode">
+									&mdash;
+									<span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
+										  title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf='<br />'}</p>">{l s='Maintenance mode'}</span>
+								</span>
+							{/if}
+						</li>
+					</ul>
+				{/if}
 
 				{* Ajax running *}
 				<span id="ajax_running">
