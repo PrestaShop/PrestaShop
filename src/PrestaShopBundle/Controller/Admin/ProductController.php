@@ -284,7 +284,7 @@ class ProductController extends FrameworkBundleAdminController
         $translator = $this->container->get('prestashop.adapter.translator');
         $defaultLocale = $contextAdapter->getLanguages()[0]['id_lang'];
 
-        $name = $translator->trans('New product', [], 'NewProduct');
+        $name = $translator->trans('New product', [], 'AdminProducts');
 
         $product = $productAdapter->getProductInstance();
         $product->name = [$defaultLocale => $name];
