@@ -4,9 +4,6 @@
 			<div class="mainsubtablist" style="display:none;"></div>
 		{/if}
 		<ul class="menu">
-			<li class="searchtab">
-				{include file="search_form.tpl" id="header_search" show_clear_btn=1}
-			</li>
 			{foreach $tabs as $t}
 				{if $t.active}
 				<li class="maintab {if $t.current}active{/if} {if $t.sub_tabs|@count}has_submenu{/if}" id="maintab-{$t.class_name}" data-submenu="{$t.id_tab}">

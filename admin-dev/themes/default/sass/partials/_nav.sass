@@ -14,51 +14,6 @@ $min-height: 850px
 		margin: 0
 		padding: 0
 		list-style: none !important
-		li.searchtab
-			padding: 14px 7px
-			height: 55px
-			position: relative
-			background-color: $main-color
-			#bo_query
-				@include border-radius(0, 55px, 55px, 0)
-				color: $main-color
-				background-color: white
-				border: 1px solid transparent !important
-				@include box-shadow(none)
-				@include transition(none)
-			.input-group-btn
-				@include border-radius(55px, 0, 0, 55px)
-				.btn
-					@include border-radius(55px, 0, 0, 55px)
-					@include box-shadow(none)
-				.btn-default
-					@include box-shadow(none)
-					border: 1px solid transparent !important
-			.form-group.focus-search
-				position: absolute
-				width: 400px
-				height: 55px
-				z-index: 900
-				top: 0
-				background-color: $main-color
-				@include left(0)
-				@include padding(14px, 13px, 0, 7px)
-				#bo_query
-					width: 100%
-				.input-group-btn
-					@include border-radius(55px, 0, 0, 55px)
-					.btn
-						@include border-radius(55px, 0, 0, 55px)
-						@include box-shadow(none)
-					.btn-default
-						@include box-shadow(none)
-			.clear_search
-				position: absolute
-				top: 6px
-				z-index: 10
-				@include right(8px)
-			i
-				font-size: $icon-size-base
 		li.maintab
 			position: relative
 			ul.submenu

@@ -205,6 +205,9 @@
 					</script>
 				{/if}
 
+				{* Search *}
+				{include file="search_form.tpl" id="header_search" show_clear_btn=1}
+
 				{* Employee *}
 				<ul id="header_employee_box">
 					<li id="employee_infos" class="dropdown">

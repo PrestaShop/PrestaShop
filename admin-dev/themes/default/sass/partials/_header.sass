@@ -166,6 +166,40 @@ $header-height: 36px
 		sup
 			font-size: 0.7em
 
+.bo_search_form
+	float: left
+	width: 250px
+	#bo_query
+		@include border-radius(0, 55px, 55px, 0)
+		color:       $main-color
+		background:  white
+		border:      1px solid $bg-content-color
+		border-left: none
+		@include box-shadow(none)
+		@include transition(none)
+	.input-group-btn
+		@include border-radius(55px, 0, 0, 55px)
+		border:       1px solid $bg-content-color
+		border-right: none
+		.btn
+			@include border-radius(55px, 0, 0, 55px)
+			@include box-shadow(none)
+			height: 29px
+			outline: none
+		.btn-default
+			@include box-shadow(none)
+			border: 1px solid transparent !important
+	.form-group.focus-search
+		#bo_query
+			width: 100%
+	.clear_search
+		position: absolute
+		top: 6px
+		z-index: 10
+		@include right(8px)
+	i
+		font-size: $icon-size-base
+
 #header_quick
 	font-size: 15px
 	a
