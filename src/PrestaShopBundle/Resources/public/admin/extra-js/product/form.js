@@ -70,6 +70,10 @@ var displayFieldsManager = (function() {
 			$('#form_step6_show_condition').on('change', function() {
 				displayFieldsManager.refresh();
 			});
+
+			$('#form .form-input-title input').on('click', function() {
+				$(this).select();
+			});
 		},
 		'refresh': function() {
 			$('#virtual_product').hide();
@@ -105,9 +109,21 @@ var displayFieldsManager = (function() {
 				combinations.hide();
 				$('#product_qty_0_shortcut_div, #quantity-no-attribute, #step3_minimal_quantity').show();
 			}
+			if ($('#combinations_thead').next().children().length) {
+				$('#combinations_thead').show();
+			} else {
+				$('#combinations_thead').hide();
+			}
 
 			/** check condition field enabler */
 			$('#form_step6_condition').prop('disabled', ($('#form_step6_show_condition:checked').length == 0));
+
+			/** Tooltip for product type combinations */
+			if ($('input[name="show_variations"][value="1"]:checked').length >= 1) {
+				$('#product_type_combinations_shortcut').show();
+			} else {
+				$('#product_type_combinations_shortcut').hide();
+			}
 		}
 	};
 })();

@@ -118,7 +118,8 @@ class ProductInformation extends CommonAbstractType
                 'constraints' => array(
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 3, 'max' => 128))
-                )
+                ),
+                'attr' => ['placeholder' => $this->translator->trans('Name', [], 'AdminProducts')]
             ), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Name', [], 'AdminProducts')
             ))
