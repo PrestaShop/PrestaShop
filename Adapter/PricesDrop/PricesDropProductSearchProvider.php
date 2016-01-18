@@ -2,12 +2,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\PricesDrop;
 
-use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchProviderInterface;
-use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchContext;
-use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
-use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchResult;
-use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrderFactory;
-use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use Product;
 use Tools;

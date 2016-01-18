@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Core\Business\Checkout;
+namespace PrestaShop\PrestaShop\Core\Checkout;
 
 class TermsAndConditions
 {
