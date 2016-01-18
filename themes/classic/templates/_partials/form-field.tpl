@@ -63,7 +63,6 @@
               name="{$field.name}"
               type="{$field.type}"
               value="{$field.value}"
-              {if $field.type === 'date'}data-provide="datepicker"{/if}
       >
       {if $field.name === 'company'}
         <small class="_margin-left-small">{l s='Optional'}</small>
