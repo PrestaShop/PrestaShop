@@ -13,7 +13,6 @@
   z-index: $zindex-navbar;
   min-height: $navbar-height; // Ensure a navbar always shows (e.g., without a .navbar-brand in collapsed mode)
   margin-bottom: $navbar-margin-bottom;
-  border: 1px solid transparent;
 
   // Prevent floats from breaking the navbar
   @include clearfix();
