@@ -39,12 +39,8 @@ class ModuleController extends Controller
             'desc' => $translator->trans('Add a module', array(), get_class($this)),
             'icon' => 'process-icon-new',
             'help' => $translator->trans('Add a module', array(), get_class($this)),
-            'class' => 'slut',
-            'id' => 'test',
-            'test' => 'test'
         );
 
-        //<a class="module-read-more-grid-btn" href="#" data-toggle="modal" data-target="#module-modal-read-more">Read More</a>
         $filter = [];
         if ($keyword !== null) {
             $filter['search'] = $keyword;
