@@ -37,20 +37,22 @@
         </div>
     </div>
 
-
     <div class="col-sm-12 form-group">
+        <div class="col-sm-6">
+            <label class="control-label"><strong>{{ form.selectedCarriers.vars.label }}</strong></label>
+            {{ form_widget(form.selectedCarriers) }}
+        </div>
         <div class="col-sm-6">
             <label class="control-label"><strong>{{ form.additional_shipping_cost.vars.label }}</strong></label>
             <p>{{ trans('Does this product incur additional shipping cost?', [], 'AdminProducts') }}</p>
             <div class="col-sm-6 form-group">
                 {{ form_widget(form.additional_shipping_cost) }}
             </div>
+        </div>
+    </div>
 
-        </div>
-        <div class="col-sm-6">
-            <label class="control-label"><strong>{{ form.selectedCarriers.vars.label }}</strong></label>
-            {{ form_widget(form.selectedCarriers) }}
-        </div>
+    <div class="col-sm-12">
+        <div class="alert alert-warning" role="alert">{{ trans('If no carrier is selected then all the carriers will be available for customers orders.', {}, 'AdminProducts')|raw }}</div>
     </div>
 
     <div id="warehouse_combination_collection" class="col-sm-12 form-group" data-url="{{ path('admin_warehouse_refresh_product_warehouse_combination_form') }}">
