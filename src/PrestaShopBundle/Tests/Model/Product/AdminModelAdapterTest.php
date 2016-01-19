@@ -207,7 +207,7 @@ class AdminModelAdapterTest extends KernelTestCase
     }
 
     /**
-     * @todo find a way to check the value of `attribute_quantity` and `name` that depend on database
+     * @todo find a way to check the value of `attribute_quantity` and `name` and `attribute_price_display` that depend on database
      */
     public function testGetFormCombination()
     {
@@ -225,7 +225,6 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_wholesale_price" => "0.000000",
             "attribute_price_impact" => 0,
             "attribute_price" => "0.000000",
-            "attribute_price_display" => "0,00 €",
             "attribute_priceTI" => "",
             "attribute_ecotax" => "0.000000",
             "attribute_weight_impact" => 0,
