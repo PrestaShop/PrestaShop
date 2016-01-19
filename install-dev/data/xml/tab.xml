@@ -86,7 +86,7 @@
       <class_name>AdminParentCustomer</class_name>
     </tab>
     <tab id="Customers_2" id_parent="Customers" active="1" hide_host_mode="0">
-      <class_name>AdminCustomer</class_name>
+      <class_name>AdminCustomers</class_name>
     </tab>
     <tab id="Addresses" id_parent="Customers" active="1" hide_host_mode="0">
       <class_name>AdminAddresses</class_name>
