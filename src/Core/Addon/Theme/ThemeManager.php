@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use \Tools;
 
 class ThemeManager implements AddonManagerInterface
 {
@@ -38,18 +41,34 @@ class ThemeManager implements AddonManagerInterface
     private $employee;
     private $theme_checker;
     private $configurator;
+    private $fs;
+    private $finder;
     private $themes;
 
     public function __construct(
         \Shop $shop,
         ConfigurationInterface $configurator,
         ThemeChecker $theme_checker,
-        \Employee $employee = null)
+        \Employee $employee = null,
+        Filesystem $fs = null,
+        Finder $finder = null)
     {
         $this->shop = $shop;
         $this->configurator = $configurator;
         $this->theme_checker = $theme_checker;
         $this->employee = $employee;
+
+        if (isset($fs)) {
+            $this->fs = $fs;
+        } else {
+            $this->fs = new Filesystem();
+        }
+
+        if (isset($finder)) {
+            $this->finder = $finder;
+        } else {
+            $this->finder = new Finder();
+        }
     }
 
     /**
@@ -63,6 +82,9 @@ class ThemeManager implements AddonManagerInterface
      */
     public function install($source)
     {
+        if (preg_match('/\.zip$/', $source)) {
+            $this->installFromZip($source);
+        }
         return true;
     }
 
@@ -232,5 +254,49 @@ class ThemeManager implements AddonManagerInterface
         }
 
         return $themes;
+    }
+
+    private function installFromZip($source)
+    {
+        $sandbox_path = $this->getSandboxPath();
+
+        Tools::ZipExtract($source, $sandbox_path);
+
+        $directories = $this->finder->directories()
+                                    ->in($sandbox_path)
+                                    ->depth('== 0')
+                                    ->exclude(['__MACOSX']);
+
+        if (iterator_count($directories->directories()) > 1) {
+            $this->fs->remove($sandbox_path);
+            throw new Exception("Invalid theme zip");
+        }
+
+        $directories = iterator_to_array($directories);
+        $theme_name = basename(current($directories)->getFileName());
+
+        $modules_to_copy = $sandbox_path.$theme_name.'/dependencies/modules';
+        $this->fs->mirror(
+            $modules_to_copy,
+            $this->configurator->get('_PS_MODULE_DIR_')
+        );
+        $this->fs->remove($modules_to_copy);
+
+        $dest = $this->configurator->get('_PS_ALL_THEMES_DIR_').$theme_name;
+        $this->fs->mkdir($dest);
+        $this->fs->mirror(
+            $sandbox_path.$theme_name,
+            $dest
+        );
+        $this->fs->remove($sandbox_path);
+    }
+
+    private function getSandboxPath()
+    {
+        if (!isset($this->sandbox)) {
+            $this->sandbox = $this->configurator->get('_PS_CACHE_DIR_').'sandbox/'.uniqid().'/';
+            $this->fs->mkdir($this->sandbox, 0755);
+        }
+        return $this->sandbox;
     }
 }
