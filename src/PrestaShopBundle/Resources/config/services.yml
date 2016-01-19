@@ -17,6 +17,9 @@ services:
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
         class: PrestaShopBundle\Service\DataProvider\StockInterface
+        
+    prestashop.core.logger.log_interface:
+        class: PrestaShopBundle\Service\Log\LogInterface
 
     # DISPATCHERS
 
@@ -26,11 +29,22 @@ services:
             - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
             - [addSubscriber, ["@prestashop.adapter.legacy.block.helper.subscriber"]]
 
+    # EVENT HANDLER
+    prestashop.handler.log:
+        class: PrestaShopBundle\Service\Log\LogHandler
+        arguments:
+            - @service_container 
+
     # ADAPTERS (prestashop.adapter.*)
 
     # Legacy context service, transitional
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
+        
+    prestashop.adapter.legacy.logger:
+        class: PrestaShop\PrestaShop\Adapter\LegacyLogger
+        decorates: prestashop.core.logger.log_interface
+        public: false
 
     # Legacy context service, transitional
     prestashop.adapter.translator:
