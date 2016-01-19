@@ -28,6 +28,12 @@ class ModuleController extends Controller
             'icon' => 'icon-share-square',
             'help' => $translator->trans('Manage', array(), get_class($this)),
         );
+        $toolbarButtons['notifications_module'] = array(
+            'href' => $this->generateUrl('admin_module_notification'),
+            'desc' => $translator->trans('[TEMP] Module notifications', array(), get_class($this)),
+            'icon' => 'icon-share-square',
+            'help' => $translator->trans('Notifications', array(), get_class($this)),
+        );
         $toolbarButtons['add_module'] = array(
             'href' => '#',
             'desc' => $translator->trans('Add a module', array(), get_class($this)),
@@ -96,6 +102,12 @@ class ModuleController extends Controller
             'desc' => $translator->trans('[TEMP] Modules catalog', array(), get_class($this)),
             'icon' => 'icon-share-square',
             'help' => $translator->trans('Catalog', array(), get_class($this)),
+        );
+        $toolbarButtons['notifications_module'] = array(
+            'href' => $this->generateUrl('admin_module_notification'),
+            'desc' => $translator->trans('[TEMP] Module notifications', array(), get_class($this)),
+            'icon' => 'icon-share-square',
+            'help' => $translator->trans('Notifications', array(), get_class($this)),
         );
         $toolbarButtons['add_module'] = array(
             'href' => $this->generateUrl('admin_module_import'),
@@ -472,12 +484,17 @@ class ModuleController extends Controller
     protected function updateModule($module_name)
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $module = $modulesProvider->getModule($module_name);
-        $old_version = $module->version;
+        //$module = $modulesProvider->getModule($module_name);
+        foreach ($modulesProvider->getManageModules() as $module) {
+            if ($module->name == $module_name) {
+                $old_version = $module->database_version;
+                break;
+            }
+        }
 
         $modulesProvider->setModuleOnDiskFromAddons($module_name);
         $module = $modulesProvider->getModule($module_name);
-        $new_version = $module->version;
+        $new_version = $module->database_version;
 
         $status = version_compare($old_version, $new_version, '>');
         if ($status) {

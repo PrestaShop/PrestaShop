@@ -1,15 +1,19 @@
 {% extends "PrestaShopBundle:Admin/Module/_partials:_modules_card.html.twig" %}
 
+{# Twig extension for "Addons to update" part in notification page #}
+
+{# Display "Old version -> New version" #}
 {% block addon_version %}
     v{{module.database_version}} <i class="material-icons" style="font-size: 10px; ">arrow_forward</i> v{{module.version}}
 {% endblock %}
 
+{# Display changelog instead of the description #}
 {% block addon_description %}
     {% if module.changeLog is defined %}
         <ul>
-            {% for version in module.changeLog %}
+            {% for version, lines in module.changeLog %}
                 <li><b>{{version}}:</b> 
-                {% for line in version %}
+                {% for line in lines %}
                     {{line}}<br/>
                 {% endfor %}
                 </li>
