@@ -4691,9 +4691,18 @@ section.checkout-step {
     display: block; }
   section.checkout-step small {
     color: #b1b1b1; }
-  section.checkout-step input {
+  section.checkout-step input[type=text],
+  section.checkout-step input[type=date],
+  section.checkout-step input[type=email],
+  section.checkout-step input[type=password] {
     min-width: 220px; }
-    section.checkout-step input[name=address1], section.checkout-step input[name=address2] {
+    section.checkout-step input[type=text][name=address1], section.checkout-step input[type=text][name=address2],
+    section.checkout-step input[type=date][name=address1],
+    section.checkout-step input[type=date][name=address2],
+    section.checkout-step input[type=email][name=address1],
+    section.checkout-step input[type=email][name=address2],
+    section.checkout-step input[type=password][name=address1],
+    section.checkout-step input[type=password][name=address2] {
       min-width: 315px; }
   section.checkout-step .radio-field {
     margin-top: 30px; }

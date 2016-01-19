@@ -18,7 +18,10 @@ section.checkout-step {
   small {
     color: $gray;
   }
-  input {
+  input[type=text],
+  input[type=date],
+  input[type=email],
+  input[type=password]{
     min-width: 220px;
     &[name=address1],
     &[name=address2] {
