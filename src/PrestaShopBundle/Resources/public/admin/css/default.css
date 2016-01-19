@@ -19,6 +19,10 @@
 #content.bootstrap.no-header-toolbar{
   padding-top: 20px;
 }
+span.spacer {
+  margin-left: 2em;
+  margin-right: 2em;
+}
 
 
 /* Form */
@@ -63,6 +67,15 @@
 #form .form-input-title input {
   font-size: 2.2em;
   height: 2.2em;
+}
+#form .form-input-title input:not(:focus) {
+  background-image: url('/img/admin/edit_2.gif');
+  background-position: center right 1em;
+  background-repeat: no-repeat;
+}
+#form .form_switch_language, #form .form_step1_type_product {
+  padding-top: 1em;
+
 }
 #form .navbar-form-footer{
   padding:15px;
