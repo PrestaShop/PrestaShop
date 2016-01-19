@@ -32,7 +32,6 @@ before_install:
 
 before_script:
   - phpenv config-rm xdebug.ini
-  - composer.sh
 
 notifications:
   slack: prestashop:Eovjydk55zPrwPkoQIOF0cZn
