@@ -273,5 +273,9 @@ class CartControllerCore extends FrontController
 
         $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
+
+        if (!$this->errors && $this->ajax) {
+            $this->ajaxDie(Tools::jsonEncode(['success' => true]));
+        }
     }
 }
