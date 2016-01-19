@@ -11,7 +11,25 @@ $min-height: 850px
 	background-color: $main-color
 	@include left(0)
 	ul.menu
-		margin: 0
+		.categorytab
+			padding-top:    15px
+			position:       relative
+			min-height:     24px
+			line-height:    24px
+			vertical-align: middle
+			font-weight:    bold
+			.line
+				border-bottom: 1px solid #bbcdd2
+				position:      absolute
+				top:           26px
+				left:          5px
+				right:         5px
+			span
+				background: $main-color
+				padding:    0 10px
+				color:      #bbcdd2
+				position:   relative
+		margin: 15px 0 0 0
 		padding: 0
 		list-style: none !important
 		li.maintab
@@ -38,6 +56,8 @@ $min-height: 850px
 				white-space: nowrap
 				text-overflow: ellipsis
 				overflow: hidden
+				span
+					padding-left: 20px
 			> a.title
 				display: block
 				position: relative
@@ -51,14 +71,13 @@ $min-height: 850px
 				@include transition-duration(0.2s)
 				@include transition-timing-function(ease-out)
 				i
+					display: none
 					vertical-align: middle
 					margin-top: -5px
 					color: $sidebar-menu-color
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
-				span
-					padding-left: 10px
 			&.hover, &:hover:not(.hover)
 				> a.title
 					color: $sidebar-menu-hover-color
@@ -150,6 +169,9 @@ $min-height: 850px
 		@include margin-left($widthSidebarNav)
 
 .page-sidebar-closed
+	.categorytab
+		span
+			display: none
 	#nav-sidebar
 		overflow: visible
 		width: 50px
@@ -173,6 +195,15 @@ $min-height: 850px
 					display: block
 		li.maintab.active ul.submenu
 			border: none!important
+		.maintab
+			> a
+				> i
+					display: inline-block !important
+				> span
+					display: none
+				&:hover
+					> span
+						display: inline-block
 		a.title
 			text-align: center
 			> span

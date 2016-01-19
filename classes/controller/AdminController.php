@@ -1818,77 +1818,7 @@ class AdminControllerCore extends Controller
             }
         }
 
-        // Tab list
-        $tabs = Tab::getTabs($this->context->language->id, 0);
-        $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
-        foreach ($tabs as $index => $tab) {
-            if (!Tab::checkTabRights($tab['id_tab'])
-                || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
-                || $tab['class_name'] == 'AdminCarrierWizard') {
-                unset($tabs[$index]);
-                continue;
-            }
-
-            $img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
-            $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
-            // retrocompatibility : change png to gif if icon not exists
-            if (!$img_exists_cache) {
-                $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
-            }
-
-            if ($img_exists_cache) {
-                $path_img = $img = $img_exists_cache;
-            } else {
-                $path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
-                // Relative link will always work, whatever the base uri set in the admin
-                $img = '../img/t/'.$tab['class_name'].'.png';
-            }
-
-            if (trim($tab['module']) != '') {
-                $path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
-                // Relative link will always work, whatever the base uri set in the admin
-                $img = '../modules/'.$tab['module'].'/'.$tab['class_name'].'.png';
-            }
-
-            // retrocompatibility
-            if (!file_exists($path_img)) {
-                $img = str_replace('png', 'gif', $img);
-            }
-            // tab[class_name] does not contains the "Controller" suffix
-            $tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
-            $tabs[$index]['img'] = $img;
-            $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
-
-            $sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
-            foreach ($sub_tabs as $index2 => $sub_tab) {
-                //check if module is enable and
-                if (isset($sub_tab['module']) && !empty($sub_tab['module'])) {
-                    $module = Module::getInstanceByName($sub_tab['module']);
-                    if (is_object($module) && !$module->isEnabledForShopContext()) {
-                        unset($sub_tabs[$index2]);
-                        continue;
-                    }
-                }
-
-                // class_name is the name of the class controller
-                if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard') {
-                    $sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
-                    $sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
-                } elseif ($sub_tab['class_name'] == 'AdminCarrierWizard' && $sub_tab['class_name'].'Controller' == get_class($this)) {
-                    foreach ($sub_tabs as $i => $tab) {
-                        if ($tab['class_name'] == 'AdminCarriers') {
-                            break;
-                        }
-                    }
-
-                    $sub_tabs[$i]['current'] = true;
-                    unset($sub_tabs[$index2]);
-                } else {
-                    unset($sub_tabs[$index2]);
-                }
-            }
-            $tabs[$index]['sub_tabs'] = array_values($sub_tabs);
-        }
+        $tabs = $this->getTabs();
 
         if (Validate::isLoadedObject($this->context->employee)) {
             $accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
@@ -1941,7 +1871,6 @@ class AdminControllerCore extends Controller
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
             'base_url' => $this->context->shop->getBaseURL(),
-            'tab' => isset($tab) ? $tab : null, // Deprecated, this tab is declared in the foreach, so it's the last tab in the foreach
             'current_parent_id' => (int)Tab::getCurrentParentId(),
             'tabs' => $tabs,
             'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
@@ -1963,6 +1892,55 @@ class AdminControllerCore extends Controller
             .(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '');
             $this->context->smarty->assign('base_url_tc', $this->context->link->getPageLink('index', null, $id_lang = null, $request));
         }
+    }
+
+    private function getTabs($parentId = 0)
+    {
+        $tabs = Tab::getTabs($this->context->language->id, $parentId);
+        $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
+        foreach ($tabs as $index => $tab) {
+            if (!Tab::checkTabRights($tab['id_tab'])
+                || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+                || $tab['class_name'] == 'AdminCarrierWizard') {
+                unset($tabs[$index]);
+                continue;
+            }
+
+            $img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
+            $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
+
+            // retrocompatibility : change png to gif if icon not exists
+            if (!$img_exists_cache) {
+                $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
+            }
+
+            if ($img_exists_cache) {
+                $path_img = $img = $img_exists_cache;
+            } else {
+                $path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
+                // Relative link will always work, whatever the base uri set in the admin
+                $img = '../img/t/'.$tab['class_name'].'.png';
+            }
+
+            if (trim($tab['module']) != '') {
+                $path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
+                // Relative link will always work, whatever the base uri set in the admin
+                $img = '../modules/'.$tab['module'].'/'.$tab['class_name'].'.png';
+            }
+
+            // retrocompatibility
+            if (!file_exists($path_img)) {
+                $img = str_replace('png', 'gif', $img);
+            }
+            // tab[class_name] does not contains the "Controller" suffix
+            $tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
+            $tabs[$index]['img'] = $img;
+            $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
+
+            $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab']));
+        }
+
+        return $tabs;
     }
 
     /**
