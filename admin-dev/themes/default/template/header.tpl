@@ -300,7 +300,7 @@
 	<div id="main">
 		{include file='nav.tpl'}
 
-		<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}{if !isset($page_header_toolbar)} no-header-toolbar{/if}">
+		<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}{if !isset($page_header_toolbar)} no-header-toolbar{/if} {if $current_tab_level == 3}with-tabs{/if}">
 			{if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
 			{if isset($modal_module_list)}{$modal_module_list}{/if}
 

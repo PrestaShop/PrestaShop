@@ -1819,6 +1819,11 @@ class AdminControllerCore extends Controller
         }
 
         $tabs = $this->getTabs();
+        $currentTabLevel = 0;
+        foreach ($tabs as &$tab) {
+            $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
+        }
+
 
         if (Validate::isLoadedObject($this->context->employee)) {
             $accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
@@ -1873,6 +1878,7 @@ class AdminControllerCore extends Controller
             'base_url' => $this->context->shop->getBaseURL(),
             'current_parent_id' => (int)Tab::getCurrentParentId(),
             'tabs' => $tabs,
+            'current_tab_level' => $currentTabLevel,
             'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
             'pic_dir' => _THEME_PROD_PIC_DIR_,
             'controller_name' => htmlentities(Tools::getValue('controller')),
@@ -1894,7 +1900,7 @@ class AdminControllerCore extends Controller
         }
     }
 
-    private function getTabs($parentId = 0)
+    private function getTabs($parentId = 0, $level = 0)
     {
         $tabs = Tab::getTabs($this->context->language->id, $parentId);
         $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
@@ -1933,11 +1939,24 @@ class AdminControllerCore extends Controller
                 $img = str_replace('png', 'gif', $img);
             }
             // tab[class_name] does not contains the "Controller" suffix
-            $tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
+            if (($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab'])) {
+                $tabs[$index]['current'] = true;
+                $tabs[$index]['current_level'] = $level;
+            } else {
+                $tabs[$index]['current'] = false;
+            }
+
             $tabs[$index]['img'] = $img;
             $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
 
-            $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab']));
+            $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
+
+            foreach ($tabs[$index]['sub_tabs'] as $sub_tab) {
+                if ((int)$sub_tab['current'] == true) {
+                    $tabs[$index]['current'] = true;
+                    $tabs[$index]['current_level'] = $sub_tab['current_level'];
+                }
+            }
         }
 
         return $tabs;
