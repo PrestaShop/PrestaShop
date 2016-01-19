@@ -26,7 +26,7 @@
 						{foreach $level_1.sub_tabs as $level_2}
 							{if $level_2.active}
 								<li class="maintab {if $level_2.current}active{/if} {if $level_2.sub_tabs|@count}has_submenu{/if}" id="subtab-{$level_2.class_name|escape:'html':'UTF-8'}" data-submenu="{$level_2.id_tab}">
-									<a href="{$level_2.href|escape:'html':'UTF-8'}" class="title {if $level_2.sub_tabs|@count}has_submenu{/if}">
+									<a href="{if $level_2.sub_tabs|@count && isset($level_2.sub_tabs[0].href)}{$level_2.sub_tabs[0].href|escape:'html':'UTF-8'}{else}{$level_2.href|escape:'html':'UTF-8'}{/if}" class="title {if $level_2.sub_tabs|@count}has_submenu{/if}">
 										<i class="material-icons">&#xE8E5;</i>
 										<span>
 											{if $level_2.name eq ''}{$level_2.class_name|escape:'html':'UTF-8'}{else}{$level_2.name|escape:'html':'UTF-8'}{/if}
@@ -37,7 +37,7 @@
 											{foreach $level_2.sub_tabs as $level_3}
 												{if $level_3.active}
 													<li class="{if $level_3.current}active{/if}" id="subtab-{$level_3.class_name|escape:'html':'UTF-8'}" data-submenu="{$level_3.id_tab}">
-														<a href="{$level_3.href|escape:'html':'UTF-8'}" class="title">
+														<a href="{if $level_3.sub_tabs|@count && isset($level_3.sub_tabs[0].href)}{$level_3.sub_tabs[0].href|escape:'html':'UTF-8'}{else}{$level_3.href|escape:'html':'UTF-8'}{/if}" class="title">
 															{if $level_3.name eq ''}{$level_3.class_name|escape:'html':'UTF-8'}{else}{$level_3.name|escape:'html':'UTF-8'}{/if}
 														</a>
 													</li>
