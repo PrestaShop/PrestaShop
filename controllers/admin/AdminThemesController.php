@@ -74,6 +74,8 @@ class AdminThemesControllerCore extends AdminController
             $this->processSubmitConfigureLayouts();
         } elseif (Tools::isSubmit('enableTheme')) {
             $this->theme_manager->enable(Tools::getValue('theme_name'));
+        } elseif (Tools::getValue('action') == 'importtheme') {
+            $this->display = 'importtheme';
         }
 
         libxml_use_internal_errors(true);
@@ -137,7 +139,23 @@ class AdminThemesControllerCore extends AdminController
     {
         parent::initPageHeaderToolbar();
 
-        $this->toolbar_title[] = $this->l('Theme');
+        if (empty($this->display)) {
+            $this->page_header_toolbar_btn['import_theme'] = array(
+                'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
+                'desc' => $this->l('Add new theme', null, null, false),
+                'icon' => 'process-icon-new'
+            );
+
+            if ($this->context->mode) {
+                unset($this->toolbar_btn['new']);
+            }
+        }
+
+        if ($this->display == 'importtheme') {
+            $this->toolbar_title[] = $this->l('Import theme');
+        } else {
+            $this->toolbar_title[] = $this->l('Theme');
+        }
 
         $title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
         $this->page_header_toolbar_title = $title;
@@ -241,11 +259,61 @@ class AdminThemesControllerCore extends AdminController
      */
     public function postProcess()
     {
-        if (Tools::isSubmit('switchTheme')) {
-            // todo
+        if ($filename = Tools::getValue('theme_archive_server')) {
+            $path = _PS_ALL_THEMES_DIR_.$filename;
+            $this->theme_manager->install($path);
+        } elseif ($filename = Tools::getValue('filename')) {
+            $path = _PS_ALL_THEMES_DIR_.$filename;
+            if ($this->processUploadFile($path)) {
+                $this->theme_manager->install($path);
+            }
+        } elseif ($source = Tools::getValue('themearchiveUrl')) {
+            $this->theme_manager->install($path);
         }
 
         return parent::postProcess();
+    }
+
+    public function processUploadFile($dest)
+    {
+        switch ($_FILES['themearchive']['error']) {
+            case UPLOAD_ERR_OK:
+                break;
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE:
+                $this->errors[] = $this->l('The uploaded file is too large.');
+                return false;
+            default:
+                $this->errors[] = $this->l('Unknown error.');
+                return false;
+        }
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $ext = array_search(
+            $finfo->file($_FILES['themearchive']['tmp_name']),
+            array(
+                'zip' => 'application/zip',
+            ),
+            true
+        );
+        if ($ext === false) {
+            $this->errors[] = $this->l('Invalid file format.');
+            return false;
+        }
+
+        $name = $_FILES['themearchive']['name'];
+        if (!Validate::isFileName($name)) {
+            $name = sha1_file($name).$ext;
+        }
+        if (!move_uploaded_file(
+            $_FILES['themearchive']['tmp_name'],
+            _PS_ALL_THEMES_DIR_.$name
+        )) {
+            $this->errors[] = $this->l('Failed to move uploaded file.');
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -510,6 +578,123 @@ class AdminThemesControllerCore extends AdminController
 
             return $options;
         }
+    }
+
+    public function renderImportTheme()
+    {
+        $fields_form = array();
+
+        $toolbar_btn['save'] = array(
+            'href' => '#',
+            'desc' => $this->l('Save')
+        );
+
+        if ($this->context->mode != Context::MODE_HOST) {
+            $fields_form[0] = array(
+                'form' => array(
+                    'tinymce' => false,
+                    'legend' => array(
+                        'title' => $this->l('Import from your computer'),
+                        'icon' => 'icon-picture'
+                    ),
+                    'input' => array(
+                        array(
+                            'type' => 'file',
+                            'label' => $this->l('Zip file'),
+                            'desc' => $this->l('Browse your computer files and select the Zip file for your new theme.'),
+                            'name' => 'themearchive'
+                        ),
+                    ),
+                    'submit' => array(
+                        'id' => 'zip',
+                        'title' => $this->l('Save'),
+                        )
+                    ),
+                );
+
+            $fields_form[1] = array(
+                'form' => array(
+                    'tinymce' => false,
+                    'legend' => array(
+                        'title' => $this->l('Import from the web'),
+                        'icon' => 'icon-picture'
+                    ),
+                    'input' => array(
+                        array(
+                            'type' => 'text',
+                            'label' => $this->l('Archive URL'),
+                            'desc' => $this->l('Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".'),
+                            'name' => 'themearchiveUrl'
+                        ),
+                    ),
+                    'submit' => array(
+                        'title' => $this->l('Save'),
+                        )
+                    ),
+                );
+
+            $theme_archive_server = array();
+            $files = scandir(_PS_ALL_THEMES_DIR_);
+            $theme_archive_server[] = '-';
+
+            foreach ($files as $file) {
+                if (is_file(_PS_ALL_THEMES_DIR_.$file) && substr(_PS_ALL_THEMES_DIR_.$file, -4) == '.zip') {
+                    $theme_archive_server[] = array(
+                        'id' => basename(_PS_ALL_THEMES_DIR_.$file),
+                        'name' => basename(_PS_ALL_THEMES_DIR_.$file)
+                    );
+                }
+            }
+
+            $fields_form[2] = array(
+                'form' => array(
+                    'tinymce' => false,
+                    'legend' => array(
+                        'title' => $this->l('Import from FTP'),
+                        'icon' => 'icon-picture'
+                    ),
+                    'input' => array(
+                        array(
+                            'type' => 'select',
+                            'label' => $this->l('Select the archive'),
+                            'name' => 'theme_archive_server',
+                            'desc' => $this->l('This selector lists the Zip files that you uploaded in the \'/themes\' folder.'),
+                            'options' => array(
+                                'id' => 'id',
+                                'name' => 'name',
+                                'query' => $theme_archive_server,
+                            )
+                        ),
+                    ),
+                    'submit' => array(
+                        'title' => $this->l('Save'),
+                        )
+                    ),
+                );
+        }
+
+        $this->context->smarty->assign(
+            array(
+                'import_theme' => true,
+                'logged_on_addons' => $this->logged_on_addons,
+                'iso_code' => $this->context->language->iso_code,
+                )
+            );
+
+        $helper = new HelperForm();
+
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminThemes', false).'&action=importtheme';
+        $helper->token = Tools::getAdminTokenLite('AdminThemes');
+        $helper->show_toolbar = true;
+        $helper->toolbar_btn = $toolbar_btn;
+        $helper->fields_value['themearchiveUrl'] = '';
+        $helper->fields_value['theme_archive_server'] = array();
+        $helper->multiple_fieldsets = true;
+        $helper->override_folder = $this->tpl_folder;
+        $helper->languages = $this->getLanguages();
+        $helper->default_form_language = (int)$this->context->language->id;
+
+        return $helper->generateForm($fields_form);
     }
 
     public function setMedia()
