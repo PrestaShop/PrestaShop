@@ -282,15 +282,18 @@ class ProductController extends FrameworkBundleAdminController
         $toolsAdapter = $this->container->get('prestashop.adapter.tools');
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
         $translator = $this->container->get('prestashop.adapter.translator');
-        $defaultLocale = $contextAdapter->getLanguages()[0]['id_lang'];
-
         $name = $translator->trans('New product', [], 'AdminProducts');
 
         $product = $productAdapter->getProductInstance();
-        $product->name = [$defaultLocale => $name];
         $product->active = 0;
         $product->id_category_default = $context->shop->id_category;
-        $product->link_rewrite = [$defaultLocale => $toolsAdapter->link_rewrite($name)];
+
+        //set name and link_rewrite in each lang
+        foreach ($contextAdapter->getLanguages() as $lang) {
+            $product->name[$lang['id_lang']] = $name;
+            $product->link_rewrite[$lang['id_lang']] = $toolsAdapter->link_rewrite($name);
+        }
+
         $product->save();
 
         $product->addToCategories([$context->shop->id_category]);
