@@ -14,17 +14,17 @@
     <form id="conditions-to-approve" method="GET">
       <ul>
         {foreach from=$conditions_to_approve item="condition" key="condition_name"}
-          <li>
-            <div class="pull-xs-left">
+          <li class="_display-table">
+            <div class="_display-table-cell">
               <input  id    = "conditions_to_approve[{$condition_name}]"
                       name  = "conditions_to_approve[{$condition_name}]"
                       required
                       type  = "checkbox"
                       value = "1"
-                      class = "ps-shown-by-js"
+                      class = "ps-shown-by-js _margin-right-small"
               >
             </div>
-            <div class="col-md-11">
+            <div class="_display-table-cell">
               <label for="conditions_to_approve[{$condition_name}]">
                 {$condition nofilter}
               </label>
