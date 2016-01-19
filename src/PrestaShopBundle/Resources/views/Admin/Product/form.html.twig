@@ -565,10 +565,10 @@
                         </div>
                     </div>
                     <div class="col-xs-6 pull-right text-right">
-                        <a href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-default hidden-xs uppercase" data-toggle="tooltip" title="{{ trans('Save and duplicate the current product, then go to the new product.', {}, 'AdminProducts') }}">{{ trans('Duplicate', {}, 'AdminProducts') }}</a>
-                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase" data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}" data-toggle="tooltip" title="{{ trans('Save and go back to the catalog', {}, 'AdminProducts') }}">{{ trans('Go to catalog', {}, 'AdminProducts')|raw }}</button>
-                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase" data-redirect="{{ path('admin_product_new') }}" data-toggle="tooltip" title="{{ trans('Save and create a new product.', {}, 'AdminProducts') }}">{{ trans('Add new product', {}, 'AdminProducts')|raw }}</button>
-                        <input id="submit" type="submit" class="btn btn-primary uppercase" value="{{ trans('Save', {}, 'AdminProducts') }}" data-toggle="tooltip" title="{{ trans('Save the product and stay on the current page.', {}, 'AdminProducts') }}" />
+                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase duplicate" data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" data-toggle="tooltip" title="{{ trans('Save and duplicate (CTRL+D) the current product, then go to the new product.', {}, 'AdminProducts') }}">{{ trans('Duplicate', {}, 'AdminProducts')|raw }}</button>
+                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase go-catalog" data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}" data-toggle="tooltip" title="{{ trans('Save and go back to the catalog (CTRL+Q)', {}, 'AdminProducts') }}">{{ trans('Go to catalog', {}, 'AdminProducts')|raw }}</button>
+                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase new-product" data-redirect="{{ path('admin_product_new') }}" data-toggle="tooltip" title="{{ trans('Save and create (CTRL+P) a new product.', {}, 'AdminProducts') }}">{{ trans('Add new product', {}, 'AdminProducts')|raw }}</button>
+                        <input id="submit" type="submit" class="btn btn-primary uppercase" value="{{ trans('Save', {}, 'AdminProducts') }}" data-toggle="tooltip" title="{{ trans('Save (CTRL+S) the product and stay on the current page.', {}, 'AdminProducts') }}" />
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -626,6 +626,7 @@
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'
     '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/min/moment.min.js'
     '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'
+    '../js/vendor/node_modules/jwerty/jwerty.js'
     '../js/jquery/ui/jquery.ui.sortable.min.js' package='admin'
     %}
     <script src="{{ asset_url }}"></script>
