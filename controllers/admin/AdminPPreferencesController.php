@@ -238,7 +238,7 @@ class AdminPPreferencesControllerCore extends AdminController
                             'off' => 'onchange="stockManagementActivationAuthorization()"'
                         )
                     ),
-                    'PS_ADVANCED_STOCK_MANAGEMENT' => array(
+                    /*'PS_ADVANCED_STOCK_MANAGEMENT' => array(
                         'title' => $this->l('Enable advanced stock management'),
                         'hint' => $this->l('Allows you to manage physical stock, warehouses and supply orders in a new Stock menu.'),
                         'validation' => 'isBool',
@@ -266,7 +266,7 @@ class AdminPPreferencesControllerCore extends AdminController
                         'type' => 'select',
                         'list' => $warehouse_list,
                         'identifier' => 'id_warehouse'
-                    ),
+                    ),*/
                     'PS_PACK_STOCK_TYPE' => array(
                         'title' =>  $this->l('Default pack stock management'),
                         'type' => 'select',
