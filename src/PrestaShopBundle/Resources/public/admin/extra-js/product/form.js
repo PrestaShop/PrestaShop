@@ -66,11 +66,6 @@ var displayFieldsManager = (function() {
 				displayFieldsManager.refresh();
 			});
 
-			/** Show condition and condition fields management */
-			$('#form_step6_show_condition').on('change', function() {
-				displayFieldsManager.refresh();
-			});
-
 			$('#form .form-input-title input').on('click', function() {
 				$(this).select();
 			});
@@ -105,7 +100,7 @@ var displayFieldsManager = (function() {
 				combinations.show();
 				$('#form-nav a[href="#step3"]').text(translate_javascripts['Combinations']);
 				$('#product_qty_0_shortcut_div, #quantity-no-attribute, #step3_minimal_quantity').hide();
-			}else{
+			} else {
 				combinations.hide();
 				$('#product_qty_0_shortcut_div, #quantity-no-attribute, #step3_minimal_quantity').show();
 			}
@@ -114,9 +109,6 @@ var displayFieldsManager = (function() {
 			} else {
 				$('#combinations_thead').hide();
 			}
-
-			/** check condition field enabler */
-			$('#form_step6_condition').prop('disabled', ($('#form_step6_show_condition:checked').length == 0));
 
 			/** Tooltip for product type combinations */
 			if ($('input[name="show_variations"][value="1"]:checked').length >= 1) {
