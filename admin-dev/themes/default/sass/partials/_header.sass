@@ -169,6 +169,7 @@ $header-height: 36px
 .bo_search_form
 	float: left
 	width: 250px
+	margin: 4px 0 0 0
 	#bo_query
 		@include border-radius(0, 55px, 55px, 0)
 		color:       $main-color
@@ -177,6 +178,8 @@ $header-height: 36px
 		border-left: none
 		@include box-shadow(none)
 		@include transition(none)
+	.input-group
+		margin: 0 !important
 	.input-group-btn
 		@include border-radius(55px, 0, 0, 55px)
 		border:       1px solid $bg-content-color
@@ -189,9 +192,6 @@ $header-height: 36px
 		.btn-default
 			@include box-shadow(none)
 			border: 1px solid transparent !important
-	.form-group.focus-search
-		#bo_query
-			width: 100%
 	.clear_search
 		position: absolute
 		top: 6px
