@@ -8,6 +8,7 @@
     "dropzone": "^4.0.1",
     "eonasdan-bootstrap-datetimepicker": "^4.15.35",
     "globalize": "1.0.0",
+    "jwerty": "^0.3.2",
     "sprintf-js": "^1.0.3",
     "typeahead.js": "^0.11.1"
   }

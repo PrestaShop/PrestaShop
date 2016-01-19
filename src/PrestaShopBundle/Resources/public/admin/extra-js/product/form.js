@@ -1103,6 +1103,31 @@ var form = (function() {
 
 	return {
 		'init': function() {
+
+			/** create keyboard event for save */
+			jwerty.key('ctrl+S', function(e) {
+				e.preventDefault();
+				send();
+			});
+
+			/** create keyboard event for save & duplicate */
+			jwerty.key('ctrl+D', function(e) {
+				e.preventDefault();
+				send($('nav.navbar-form-footer .duplicate').attr('data-redirect'));
+			});
+
+			/** create keyboard event for save & new */
+			jwerty.key('ctrl+P', function(e) {
+				e.preventDefault();
+				send($('nav.navbar-form-footer .new-product').attr('data-redirect'));
+			});
+
+			/** create keyboard event for save & go catalog */
+			jwerty.key('ctrl+Q', function(e) {
+				e.preventDefault();
+				send($('nav.navbar-form-footer .go-catalog').attr('data-redirect'));
+			});
+
 			elem.submit(function( event ) {
 				event.preventDefault();
 				send();

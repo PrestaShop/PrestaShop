@@ -69,9 +69,9 @@ span.spacer {
   height: 2.2em;
 }
 #form .form-input-title input:not(:focus) {
-  background-image: url('/img/admin/edit_2.gif');
+  /*background-image: url('/img/admin/edit_2.gif');
   background-position: center right 1em;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat;*/
 }
 #form .form_switch_language, #form .form_step1_type_product {
   padding-top: 1em;
