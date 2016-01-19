@@ -26,8 +26,9 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
-class Configuration implements \PrestaShop\PrestaShop\Core\ConfigurationInterface
+class Configuration implements ConfigurationInterface
 {
     private $shop;
 
@@ -65,11 +66,11 @@ class Configuration implements \PrestaShop\PrestaShop\Core\ConfigurationInterfac
             $value,
             false,
             $this->shop->id_shop_group,
-            $this->shop->id_shop
+            $this->shop->id
         );
 
         if (!$success) {
-            throw new Exception("Could not update configuration", 1);
+            throw new Exception("Could not update configuration");
         }
 
         return $this;
