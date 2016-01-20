@@ -68,20 +68,10 @@ class AdminThemesControllerCore extends AdminController
         parent::init();
         $this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
 
-        if (Tools::getValue('action') == 'configureLayouts') {
+        if (Tools::getValue('display') == 'configureLayouts') {
             $this->initConfigureLayouts();
-        } elseif (Tools::getValue('action') == 'submitConfigureLayouts') {
-            $this->processSubmitConfigureLayouts();
-        } elseif (Tools::getValue('action') == 'enableTheme') {
-            $this->theme_manager->enable(Tools::getValue('theme_name'));
         } elseif (Tools::getValue('action') == 'importtheme') {
             $this->display = 'importtheme';
-        } elseif (Tools::getValue('action') == 'deleteTheme') {
-            $this->theme_manager->uninstall(Tools::getValue('theme_name'));
-        }
-
-        if (Tools::isSubmit('action') && !$this->ajax) {
-            Tools::redirectAdmin($this->context->link->getAdminLink('AdminThemes'));
         }
 
         libxml_use_internal_errors(true);
@@ -265,16 +255,28 @@ class AdminThemesControllerCore extends AdminController
      */
     public function postProcess()
     {
-        if ($filename = Tools::getValue('theme_archive_server')) {
-            $path = _PS_ALL_THEMES_DIR_.$filename;
-            $this->theme_manager->install($path);
-        } elseif ($filename = Tools::getValue('filename')) {
-            $path = _PS_ALL_THEMES_DIR_.$filename;
-            if ($this->processUploadFile($path)) {
+        if (Tools::isSubmit('submitAddconfiguration')) {
+            if ($filename = Tools::getValue('theme_archive_server')) {
+                $path = _PS_ALL_THEMES_DIR_.$filename;
+                $this->theme_manager->install($path);
+            } elseif ($filename = Tools::getValue('filename')) {
+                $path = _PS_ALL_THEMES_DIR_.$filename;
+                if ($this->processUploadFile($path)) {
+                    $this->theme_manager->install($path);
+                }
+            } elseif ($source = Tools::getValue('themearchiveUrl')) {
                 $this->theme_manager->install($path);
             }
-        } elseif ($source = Tools::getValue('themearchiveUrl')) {
-            $this->theme_manager->install($path);
+            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+        } elseif (Tools::getValue('action') == 'submitConfigureLayouts') {
+            $this->processSubmitConfigureLayouts();
+            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+        } elseif (Tools::getValue('action') == 'enableTheme') {
+            $this->theme_manager->enable(Tools::getValue('theme_name'));
+            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+        } elseif (Tools::getValue('action') == 'deleteTheme') {
+            $this->theme_manager->uninstall(Tools::getValue('theme_name'));
+            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
         }
 
         return parent::postProcess();

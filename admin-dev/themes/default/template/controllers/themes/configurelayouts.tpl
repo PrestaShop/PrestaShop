@@ -56,8 +56,8 @@
                   </td>
                 <td>
                   <select name="layouts[{$page.page}]" id="">
-                    <option value="#" {if !isset($page_layouts.{$page.page})}selected="selected"{/if}>
-                      Default
+                    <option value="" {if !isset($page_layouts.{$page.page})}selected="selected"{/if}>
+                      {l s='Default'}
                     </option>
                     {foreach $available_layouts as $key => $layout}
                       <option value="{$key}" {if isset($page_layouts.{$page.page}) && $page_layouts.{$page.page} == $key}selected="selected"{/if}>
@@ -76,7 +76,7 @@
     </div><!-- /.form-wrapper -->
 
     <div class="panel-footer">
-      <input type="hidden" name"action" value="submitConfigureLayouts">
+      <input type="hidden" name="action" value="submitConfigureLayouts">
       <button type="submit" class="btn btn-default pull-right" name="submitConfigureLayouts">
         <i class="process-icon-save"></i> Save
       </button>
