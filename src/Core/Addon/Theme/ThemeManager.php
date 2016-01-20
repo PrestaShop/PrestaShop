@@ -97,6 +97,16 @@ class ThemeManager implements AddonManagerInterface
      */
     public function uninstall($name)
     {
+        if (!$this->employee->canDelete()
+            && $this->isThemeUsed($name)) {
+            return false;
+        }
+
+        $theme = $this->getInstanceByName($name);
+        $theme->onUninstall();
+
+        $this->fs->remove($theme->directory);
+
         return true;
     }
 
