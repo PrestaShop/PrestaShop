@@ -1,0 +1,8 @@
+{ "name": "prestashop-default-theme",
+  "author": "PrestaShop",
+  "version": "1.0.0",
+  "description": "install admin theme dependencies",
+  "dependencies": {
+      "PrestaKit": "https://github.com/gfanton/PrestaKit"
+  }
+}
