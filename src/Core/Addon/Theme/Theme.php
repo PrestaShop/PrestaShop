@@ -25,20 +25,17 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-use Symfony\Component\Yaml\Parser;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 
 class Theme implements AddonInterface
 {
-    private $yaml;
-
-    public function __construct($directory)
+    public function __construct(array $attributes)
     {
-        $this->directory = rtrim($directory, '/') . '/';
+        foreach ($attributes as $attr => $value) {
+            $this->{$attr} = $value;
+        }
 
-        $this->yaml = new Parser();
-
-        $this->setProperties();
+        $this->directory = rtrim($this->directory, '/') . '/';
     }
 
     public function onInstall()
@@ -90,53 +87,8 @@ class Theme implements AddonInterface
         return true;
     }
 
-    public function setProperties()
-    {
-        $properties = $this->getConfigFromFile('theme.yml');
-        $properties['settings'] = $this->getConfigFromFile('settings.json');
-
-        foreach ($properties as $prop => $value) {
-            $this->{$prop} = $value;
-        }
-
-        return $this;
-    }
-
-    public function initSettings()
-    {
-        $this->settings = [];
-        $this->settings['page_layouts'] = [];
-
-        return $this->saveSettings();
-    }
-
     public function setPageLayouts(array $layouts)
     {
         $this->settings['page_layouts'] = $layouts;
-        $this->saveSettings();
-    }
-
-    private function getConfigFromFile($filename)
-    {
-        $file = $this->directory.'/config/'.$filename;
-        if (!file_exists($file)) {
-            return null;
-        }
-
-        $content = file_get_contents($file);
-
-        if (preg_match('/.\.(yml|yaml)$/', $file)) {
-            return $this->yaml->parse($content);
-        } elseif (preg_match('/.\.json$/', $file)) {
-            return json_decode($content, true);
-        }
-    }
-
-    public function saveSettings()
-    {
-        return file_put_contents(
-            $this->directory.'/config/settings.json',
-            json_encode($this->settings)
-        );
     }
 }
