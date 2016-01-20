@@ -412,6 +412,10 @@ class LinkCore
                     $params = array_merge($params, $sfRouteParams);
                 }
                 break;
+            case 'AdminModules':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/module/catalog';
+                break;
         }
 
         $id_lang = Context::getContext()->language->id;

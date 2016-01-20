@@ -1,0 +1,72 @@
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/module/module.css' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/plugins/jquery.pstagger.css' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/module/drop.css' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/module/loader.css' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/module.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/plugins/jquery.pstagger.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/drop.js'
+    '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/loader.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}
+
+{% set requireAddonSearch = false %}
+
+{% block content %}
+    {# Contains toolbar-nav for module page #}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
+    {# Actual Page Content #}
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <span class="module-search-result-wording">{{modules.to_configure|length}} modules to configure</span>
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid_notification_configure.html.twig' with { 'modules' : modules.to_configure, 'display_type' : 'list'  } %}
+
+            <hr class="top-menu-separator">
+            <span class="module-search-result-wording">{{modules.to_update|length}} modules to update</span>
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid_notification_update.html.twig' with { 'modules' : modules.to_update, 'display_type' : 'list' } %}
+
+            <hr class="top-menu-separator">
+            <span class="module-search-result-wording">{{modules.to_install|length}} modules to install</span>
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.to_install, 'display_type' : 'list' } %}
+        </div>
+    </div>
+{% endblock %}

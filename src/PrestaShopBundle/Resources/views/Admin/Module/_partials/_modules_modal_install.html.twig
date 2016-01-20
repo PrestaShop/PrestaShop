@@ -1,0 +1,28 @@
+<div id="module-modal-install-{{module.name}}" class="modal  modal-vcenter fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header module-modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <img class="module-logo-thumb" height="15" width="15" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
+        <h4 class="modal-title module-modal-title">{{ module.displayName }} - Install</h4>
+        <div class="x-small-text">
+            v{{ module.version }} by {{ module.author }}
+        </div>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-md-6">
+                  <p>{{ module.description }}</p>
+              </div>
+              <div class="col-md-6 module-big-cover">
+                  <img src="{% if module.media.cover.big is defined %}{{module.media.cover.big}}{% else %}https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png{% endif %}" height="200"/>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer module-modal-footer">
+        <input type="button" class="pull-left module-install-button" value="Install"/>
+      </div>
+    </div>
+  </div>
+</div>

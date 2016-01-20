@@ -1,0 +1,43 @@
+<div id="module-modal-read-more-{{module.name}}" class="modal  modal-vcenter fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header module-modal-header">
+        <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <div>
+            <img class="module-logo-thumb" height="57" width="57" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
+            <div class="modal-title module-modal-title">
+                <h4>{{ module.displayName }}</h4>
+                <div class="x-small-text">
+                    v{{ module.version }} by {{ module.author }}
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-md-6">
+                    {% if module.additionalDescription is defined %}
+                        <p>{{ module.additionalDescription|raw }}</p>
+                    {% elseif module.fullDescription is defined %}
+                        <p>{{ module.fullDescription|raw }}</p>
+                    {% else %}
+                        <p>{{ module.description|raw }}</p>
+                    {% endif %}
+                    <div class="module-modal-badges">
+                    {% for badge in module.media.badges %}
+                        <img alt="{{badge.label}}" src="{{badge.img}}" data-toggle="tooltip" title="{{badge.label}}">
+                    {% endfor %}
+                    </div>
+              </div>
+              <div class="col-md-6 module-big-cover">
+                  <img src="{% if module.media.cover.big is defined %}{{module.media.cover.big}}{% else %}https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png{% endif %}" height="200"/>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer module-modal-footer">
+        <input type="button" class="pull-left module-install-button" value="Install"/>
+      </div>
+    </div>
+  </div>
+</div>

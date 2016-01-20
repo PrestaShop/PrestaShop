@@ -339,15 +339,6 @@ abstract class ModuleCore
             return false;
         }
 
-        // Install overrides
-        try {
-            $this->installOverrides();
-        } catch (Exception $e) {
-            $this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
-            $this->uninstallOverrides();
-            return false;
-        }
-
         if (!$this->installControllers()) {
             return false;
         }
@@ -733,8 +724,13 @@ abstract class ModuleCore
             }
         }
 
-        if ($this->getOverrides() != null) {
+        // Install overrides
+        try {
             $this->installOverrides();
+        } catch (Exception $e) {
+            $this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
+            $this->uninstallOverrides();
+            return false;
         }
 
         // Enable module in the shop where it is not enabled yet
@@ -805,13 +801,14 @@ abstract class ModuleCore
      */
     public function disable($force_all = false)
     {
+        $result = true;
         if ($this->getOverrides() != null) {
-            $this->uninstallOverrides();
+            $result &= $this->uninstallOverrides();
         }
 
         // Disable module for all shops
         $sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$this->id.' '.((!$force_all) ? ' AND `id_shop` IN('.implode(', ', Shop::getContextListShopID()).')' : '');
-        Db::getInstance()->execute($sql);
+        return $result && Db::getInstance()->execute($sql);
     }
 
     /**
