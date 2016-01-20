@@ -168,16 +168,6 @@ class FrontControllerCore extends Controller
             $useSSL = $this->ssl;
         }
 
-        if (isset($this->php_self) && is_object(Context::getContext()->theme)) {
-            $columns = Context::getContext()->theme->hasColumns($this->php_self);
-
-            // Don't use theme tables if not configured in DB
-            if ($columns) {
-                $this->display_column_left  = $columns['left_column'];
-                $this->display_column_right = $columns['right_column'];
-            }
-        }
-
         $this->objectSerializer = new Adapter_ObjectSerializer();
         $this->cart_presenter = new Adapter_CartPresenter;
     }
