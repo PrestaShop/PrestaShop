@@ -99,7 +99,7 @@
 						<p>{l s='Each page can use a different layouts, choose it among the layout bundled in your theme.'}</p>
 					</div>
 					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')}&action=configureLayouts">
+						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')}&display=configureLayouts">
 							<i class="icon icon-file"></i>
 							{l s='Choose layouts'}
 						</a>
