@@ -80,6 +80,10 @@ class AdminThemesControllerCore extends AdminController
             $this->theme_manager->uninstall(Tools::getValue('theme_name'));
         }
 
+        if (Tools::isSubmit('action') && !$this->ajax) {
+            Tools::redirectAdmin($this->context->link->getAdminLink('AdminThemes'));
+        }
+
         libxml_use_internal_errors(true);
     }
 
