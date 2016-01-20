@@ -76,6 +76,8 @@ class AdminThemesControllerCore extends AdminController
             $this->theme_manager->enable(Tools::getValue('theme_name'));
         } elseif (Tools::getValue('action') == 'importtheme') {
             $this->display = 'importtheme';
+        } elseif (Tools::getValue('action') == 'deleteTheme') {
+            $this->theme_manager->uninstall(Tools::getValue('theme_name'));
         }
 
         libxml_use_internal_errors(true);
