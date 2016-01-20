@@ -33,7 +33,10 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Yaml\Yaml;
 use \Tools;
+use \Shop;
+use \Employee;
 
 class ThemeManager implements AddonManagerInterface
 {
@@ -46,10 +49,10 @@ class ThemeManager implements AddonManagerInterface
     private $themes;
 
     public function __construct(
-        \Shop $shop,
+        Shop $shop,
         ConfigurationInterface $configurator,
         ThemeChecker $theme_checker,
-        \Employee $employee = null,
+        Employee $employee,
         Filesystem $fs = null,
         Finder $finder = null)
     {
@@ -184,9 +187,16 @@ class ThemeManager implements AddonManagerInterface
     public function getInstanceByName($name)
     {
         $dir = $this->configurator->get('_PS_ALL_THEMES_DIR_').$name;
-        $theme = new Theme($dir);
 
-        return $theme;
+        $data = $this->getConfigFromFile(
+            $dir.'/config/theme.yml'
+        );
+        $data['directory'] = $dir;
+        $data['settings'] = $this->getConfigFromFile(
+            $dir.'/config/settings.json'
+        );
+
+        return new Theme($data);
     }
 
     public function getThemeList()
@@ -308,5 +318,28 @@ class ThemeManager implements AddonManagerInterface
             $this->fs->mkdir($this->sandbox, 0755);
         }
         return $this->sandbox;
+    }
+
+    private function getConfigFromFile($file)
+    {
+        if (!file_exists($file)) {
+            return null;
+        }
+
+        $content = file_get_contents($file);
+
+        if (preg_match('/.\.(yml|yaml)$/', $file)) {
+            return Yaml::parse($content);
+        } elseif (preg_match('/.\.json$/', $file)) {
+            return json_decode($content, true);
+        }
+    }
+
+    public function saveTheme($theme)
+    {
+        $test = file_put_contents(
+            $theme->directory.'/config/settings.json',
+            json_encode($theme->settings)
+        );
     }
 }

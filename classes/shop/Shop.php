@@ -25,8 +25,10 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @since 1.5.0
@@ -467,8 +469,21 @@ class ShopCore extends ObjectModel
      */
     public function setTheme()
     {
-        $this->theme = (new ThemeManager($this, $this->configurator, new ThemeChecker()))
-                        ->getInstanceByName($this->theme_name);
+        $dir = _PS_ALL_THEMES_DIR_.$this->theme_name;
+        $theme_data = Yaml::parse(file_get_contents(
+            $dir.'/config/theme.yml'
+        ));
+        $theme_data['directory'] = $dir;
+        $theme_data['settings'] = null;
+
+        $settings_dir = $theme_data['directory'].'/config/settings.json';
+        if (file_exists($settings_dir)) {
+            $theme_data['settings'] = json_decode(file_get_contents(
+                $settings_dir
+            ), true);
+        }
+
+        $this->theme = new Theme($theme_data);
     }
 
     /**
