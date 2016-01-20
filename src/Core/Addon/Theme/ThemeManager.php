@@ -37,6 +37,7 @@ use Symfony\Component\Yaml\Yaml;
 use \Tools;
 use \Shop;
 use \Employee;
+use \Exception;
 
 class ThemeManager implements AddonManagerInterface
 {
@@ -143,7 +144,7 @@ class ThemeManager implements AddonManagerInterface
         }
 
         $theme = $this->getInstanceByName($name);
-        if (!$this->theme_checker->setTheme($theme)->isValid()) {
+        if (!$this->theme_checker->setTheme($theme->directory)->isValid()) {
             return false;
         }
 
@@ -295,12 +296,21 @@ class ThemeManager implements AddonManagerInterface
         $directories = iterator_to_array($directories);
         $theme_name = basename(current($directories)->getFileName());
 
+        $theme_data = Yaml::parse($sandbox_path.$theme_name.'/config/theme.yml');
+        $theme_data['directory'] = $sandbox_path.$theme_name;
+        if (!$this->theme_checker->setTheme(new Theme($theme_data))->isValid()) {
+            $this->fs->remove($sandbox_path);
+            throw new Exception("This theme is not valid for PrestaShop 1.7");
+        }
+
         $modules_to_copy = $sandbox_path.$theme_name.'/dependencies/modules';
-        $this->fs->mirror(
-            $modules_to_copy,
-            $this->configurator->get('_PS_MODULE_DIR_')
-        );
-        $this->fs->remove($modules_to_copy);
+        if ($this->fs->exists($modules_to_copy)) {
+            $this->fs->mirror(
+                $modules_to_copy,
+                $this->configurator->get('_PS_MODULE_DIR_')
+            );
+            $this->fs->remove($modules_to_copy);
+        }
 
         $dest = $this->configurator->get('_PS_ALL_THEMES_DIR_').$theme_name;
         $this->fs->mkdir($dest);
