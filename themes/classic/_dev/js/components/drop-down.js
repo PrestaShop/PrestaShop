@@ -3,20 +3,12 @@ export default class DropDown {
     this.el = el;
   }
   init(el) {
-    this.el.on('click', function(event) {
-      let currentMenu = $(this);
+    this.el.on('show.bs.dropdown', function(e) {
+      $(this).find('.dropdown-menu').first().stop(true, true).slideDown().show();
+    });
 
-      if ($(event.target).data('depth') != undefined && ($(event.target).data('depth') !== 0 || $(this).find('ul').length === 0)) {
-        return true;
-      }
-      event.preventDefault();
-      event.stopPropagation();
-
-      currentMenu.find('ul').toggleClass('active');
-
-      $('html').one('click', function() {
-        currentMenu.find('ul').toggleClass('active');
-      });
+    this.el.on('hide.bs.dropdown', function(e) {
+      $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
     });
   }
 }

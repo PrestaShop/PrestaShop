@@ -1,23 +1,24 @@
-.search-widget{
-  margin-left: 20px;
-  form{
-      position: relative;
-      input[type=text]{
-        text-indent: 30px;
-        border-width: 2px;
-        border-style: solid;
-        border-color: $gray;
-        border-radius: 4px;
-        padding: 10px;
-        min-width: 225px;
+.search-widget {
+  float: right;
+  form {
+    position: relative;
+    input[type=text] {
+      border: none;
+      padding: 10px;
+      min-width: 255px;
+      background: $gray-light;
+      @include placeholder {
+        color: rgba($gray, 0.5);
       }
-      button[type=submit]{
-        position: absolute;
-        background: none;
-        border:none;
-        bottom: 2px;
-        left: 2px;
-        color: $gray;
-      }
+    }
+    button[type=submit] {
+      position: absolute;
+      background: none;
+      border: none;
+      bottom: 5px;
+      right: 10px;
+      font-size: 25px;
+      color: $gray-dark;
+    }
   }
 }
