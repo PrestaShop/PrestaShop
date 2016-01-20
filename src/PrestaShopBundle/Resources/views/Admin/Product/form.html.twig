@@ -1,7 +1,8 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
-    <div>
+
+    <div class="bootstrap ui4">
         {% if is_multishop_context %}
             <div class="alert alert-info" role="alert">{{ trans('Be carefull, you are in a multishop context, all modifcation will be apply to each shop or group shop', {}, 'AdminProducts') }}</div>
         {% endif %}
