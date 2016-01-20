@@ -597,7 +597,7 @@ class AdminImportControllerCore extends AdminController
         uasort($files_to_import, array('AdminImportController', 'usortFiles'));
         foreach ($files_to_import as $k => &$filename) {
             //exclude .  ..  .svn and index.php and all hidden files
-            if (preg_match('/^\..*|index\.php/i', $filename)) {
+            if (preg_match('/^\..*|index\.php/i', $filename) || is_dir(AdminImportController::getPath().$filename)) {
                 unset($files_to_import[$k]);
             }
         }
@@ -710,7 +710,7 @@ class AdminImportControllerCore extends AdminController
                     break;
                 break;
             }
-        } elseif (!preg_match('/.*\.csv$/i', $_FILES['file']['name'])) {
+        } elseif (!preg_match('#(.*?)\.(csv|xls[xt]?|o[dt]s)#is', $_FILES['file']['name'])) {
             $_FILES['file']['error'] = Tools::displayError('The extension of your file should be .csv.');
         } elseif (!@filemtime($_FILES['file']['tmp_name']) ||
             !@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath().$filename_prefix.str_replace("\0", '', $_FILES['file']['name']))) {
@@ -4042,7 +4042,7 @@ class AdminImportControllerCore extends AdminController
 
     protected function openCsvFile($offset = false)
     {
-        $file = AdminImportController::getPath(strval(preg_replace('/\.{2,}/', '.', Tools::getValue('csv'))));
+        $file = $this->excelToCsvFile(Tools::getValue('csv'));
         $handle = false;
         if (is_file($file) && is_readable($file)) {
             if (!mb_check_encoding(file_get_contents($file), 'UTF-8')) {
@@ -4074,6 +4074,37 @@ class AdminImportControllerCore extends AdminController
     protected function closeCsvFile($handle)
     {
         fclose($handle);
+    }
+
+    protected function excelToCsvFile($filename)
+    {
+        if (preg_match('#(.*?)\.(csv)#is', $filename)) {
+            $dest_file = AdminImportController::getPath(strval(preg_replace('/\.{2,}/', '.', $filename)));
+        } else {
+            $csv_folder = AdminImportController::getPath();
+            $excel_folder = $csv_folder.'csvfromexcel/';
+            $info = pathinfo($filename);
+            $csv_name = basename($filename, '.'.$info['extension']).'.csv';
+            $dest_file = $excel_folder.$csv_name;
+
+            if (!is_dir($excel_folder)) {
+                mkdir($excel_folder);
+            }
+
+            if (!is_file($dest_file)) {
+                $reader_excel = PHPExcel_IOFactory::createReaderForFile($csv_folder.$filename);
+                $reader_excel->setReadDataOnly(true);
+                $excel_file = $reader_excel->load($csv_folder.$filename);
+
+                $csv_writer = PHPExcel_IOFactory::createWriter($excel_file, 'CSV');
+
+                $csv_writer->setSheetIndex(0);
+                $csv_writer->setDelimiter(';');
+                $csv_writer->save($dest_file);
+            }
+        }
+
+        return $dest_file;
     }
 
     protected function truncateTables($case)

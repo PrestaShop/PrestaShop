@@ -17,6 +17,7 @@
     "icanboogie/cldr": "1.3.9",
     "curl/curl": "1.2.1",
     "ircmaxell/password-compat": "1.0.4",
+    "phpoffice/phpexcel": "1.8",
     "prestashop/smarty": "dev-master",
     "prestashop/bankwire": "dev-master",
     "prestashop/blockadvertising": "dev-master",

@@ -25,7 +25,7 @@
 <div class="leadin">{block name="leadin"}{/block}</div>
 {if $module_confirmation}
 <div class="alert alert-success clearfix">
-	{l s='Your .CSV file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.'}
+	{l s='Your file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.'}
 </div>
 {/if}
 <div class="row">
@@ -38,7 +38,7 @@
 			</h3>
 			<div class="alert alert-info">
 				<ul class="list-unstyled">
-					<li>{l s='You can read information on CSV import at:'}
+					<li>{l s='You can read information on import at:'}
 						<a href="http://doc.prestashop.com/display/PS16/CSV+Import+Parameters" class="_blank">http://doc.prestashop.com/display/PS16/CSV+Import+Parameters</a>
 					</li>
 					<li>{l s='Read more about the CSV format at:'}
@@ -84,6 +84,7 @@
 							{l s="Choose from history / FTP"}
 						</button>
 						<p class="help-block">
+							{l s='Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots'}.<br/>
 							{l s='Only UTF-8 and ISO 8859-1 encodings are allowed'}.<br/>
 							{l s='You can also upload your file via FTP to the following directory: %s .' sprintf=$path_import}
 						</p>
@@ -196,20 +197,22 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="separator" class="control-label col-lg-4">{l s='Field separator'}</label>
-					<div class="col-lg-8">
-						<input id="separator" name="separator" class="fixed-width-xs form-control" type="text" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" />
-						<div class="help-block">{l s='e.g. '} 1; Blouse; 129.90; 5</div>
+				<div id="csv-fields">
+					<div class="form-group">
+						<label for="separator" class="control-label col-lg-4">{l s='Field separator'}</label>
+						<div class="col-lg-8">
+							<input id="separator" name="separator" class="fixed-width-xs form-control" type="text" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" />
+							<div class="help-block">{l s='e.g. '} 1; Blouse; 129.90; 5</div>
+						</div>
+						<div class="form-group">
+							<label for="multiple_value_separator" class="control-label col-lg-4">{l s='Multiple value separator'}</label>
+							<div class="col-lg-8">
+								<input id="multiple_value_separator" name="multiple_value_separator" class="fixed-width-xs form-control" type="text" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" />
+								<div class="help-block">{l s='e.g. '} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</div>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<label for="multiple_value_separator" class="control-label col-lg-4">{l s='Multiple value separator'}</label>
-					<div class="col-lg-8">
-						<input id="multiple_value_separator" name="multiple_value_separator" class="fixed-width-xs form-control" type="text" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" />
-						<div class="help-block">{l s='e.g. '} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</div>
-					</div>
-				</div>
+  				</div>
 				<hr />
 				<div class="form-group">
 					<label for="truncate" class="control-label col-lg-4">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import'} </label>
@@ -372,6 +375,12 @@
 		$('#csv_file_selected').show();
 		$('#csv_file_uploader').hide();
 		$('#csv_files_history').hide();
+		var pattern = /(\.)?(xls[xt]?|o[td]s)$/mgi;
+		if (pattern.exec(filename) != null) {
+			$("#csv-fields").hide();
+		} else {
+			$("#csv-fields").show();
+		}
 	}
 	// when user unselect the .csv
 	function csv_unselect() {
@@ -396,7 +405,7 @@
 		$('#file').fileupload({
 			dataType: 'json',
 			autoUpload: true,
-			acceptFileTypes: /(\.|\/)(csv)$/i,
+			acceptFileTypes: /(\.)?(csv|xls[xt]?|o[td]s)$/mgi,
 			singleFileUploads: true,
 			{if isset ($post_max_size)}maxFileSize: {$post_max_size},{/if}
 			start: function (e) {
