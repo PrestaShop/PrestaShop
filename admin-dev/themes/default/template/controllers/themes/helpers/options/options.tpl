@@ -39,7 +39,7 @@
 										<div class="action-overlay"></div>
 										<div class="action-buttons">
 											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;enableTheme&amp;theme_name={$theme->name|urlencode}" class="btn btn-default">
+												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=enableTheme&amp;theme_name={$theme->name|urlencode}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
 
@@ -48,7 +48,7 @@
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;theme_name={$theme->name|urlencode}" title="Delete this theme" class="delete">
+														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=deleteTheme&amp;theme_name={$theme->name|urlencode}" title="Delete this theme" class="delete">
 															<i class="icon-trash"></i> {l s='Delete this theme'}
 														</a>
 													</li>
@@ -99,7 +99,7 @@
 						<p>{l s='Each page can use a different layouts, choose it among the layout bundled in your theme.'}</p>
 					</div>
 					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')}&configureLayouts">
+						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')}&action=configureLayouts">
 							<i class="icon icon-file"></i>
 							{l s='Choose layouts'}
 						</a>

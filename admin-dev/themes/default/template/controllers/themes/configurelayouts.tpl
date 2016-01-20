@@ -76,6 +76,7 @@
     </div><!-- /.form-wrapper -->
 
     <div class="panel-footer">
+      <input type="hidden" name"action" value="submitConfigureLayouts">
       <button type="submit" class="btn btn-default pull-right" name="submitConfigureLayouts">
         <i class="process-icon-save"></i> Save
       </button>
