@@ -143,7 +143,7 @@ class ModuleController extends Controller
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'modules' => $products,
-                'topMenuData' => $this->getTopMenuData()
+                'topMenuData' => $this->getTopMenuData('manage')
             ));
     }
 
@@ -356,11 +356,17 @@ class ModuleController extends Controller
         return $products;
     }
 
-    final private function getTopMenuData($activeMenu = null)
+    final private function getTopMenuData($source = 'catalog', $activeMenu = null)
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         //@TODO: To be made ultra flexible, hardcoded for dev purpose ATM
-        $topMenuData = $modulesProvider->getCatalogCategories();
+        if ($source === 'catalog') {
+            $topMenuData = $modulesProvider->getCatalogCategories();
+        } elseif ($source === 'manage') {
+            $topMenuData = $modulesProvider->getManageCategories();
+        } else {
+            throw new Exception("ModuleController::getTopMenuData() was given a bad source parameter (given: '$source')", 1);
+        }
 
         if (isset($activeMenu)) {
             if (!isset($topMenuData->{$activeMenu})) {

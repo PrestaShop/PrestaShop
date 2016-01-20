@@ -13,7 +13,7 @@ var AdminModule = function() {
 
     /* Global configuration */
     this.keywordsSplitCharacter = ' ';
-    this.currentDisplay = 'grid';
+    this.currentDisplay = '';
     this.isCategoryGridDisplayed = false;
     this.currentTagsList = [];
     this.currentRefMenu = null;
@@ -25,8 +25,8 @@ var AdminModule = function() {
     /* Selector into vars to make it easier to change them while keeping same code logic */
     this.searchBarSelector = '#module-search-bar';
     this.sortDisplaySelector = '.module-sort-switch';
-    this.moduleListSelector = '#modules-list';
-    this.moduleGridSelector = '#modules-grid';
+    this.moduleListSelector = '.modules-list';
+    this.moduleGridSelector = '.modules-grid';
     this.moduleSortListSelector = '#module-sort-list';
     this.moduleSortGridSelector = '#module-sort-grid';
     this.moduleItemListSelector = '.module-item-list';
@@ -52,6 +52,7 @@ var AdminModule = function() {
  * @memberof AdminModule
  */
   this.init = function() {
+    this.loadVariables();
     this.initSortingDisplaySwitch();
     this.initSortingDropdown();
     this.initSearchBlock();
@@ -61,10 +62,46 @@ var AdminModule = function() {
     this.initAddonsSearch();
   };
 
+  //@TODO: JS Doc
+  this.loadVariables = function() {
+      if ($(this.moduleListSelector).length) {
+          this.currentDisplay = 'list';
+      } else {
+          this.currentDisplay = 'grid';
+      }
+  };
+
+  //@TODO: JS Doc
+  this.getModuleItemSelector = function() {
+      return (
+            this.currentDisplay == 'grid' ?
+            this.moduleItemGridSelector :
+            this.moduleItemListSelector
+        );
+  };
+
+  //@TODO: JS Doc
+  this.getModuleGlobalSelector = function() {
+      return (
+            this.currentDisplay == 'grid' ?
+            this.moduleGridSelector :
+            this.moduleListSelector
+        );
+  };
+
+  //@TODO: JS Doc
+  this.getAddonItemSelector = function() {
+      return (
+          this.currentDisplay == 'grid' ?
+          this.addonItemGridSelector :
+          this.addonItemListSelector
+      );
+  };
+
+  //@TODO: JS Doc
   this.initAddonsSearch = function() {
       var _this = this;
       $(this.addonItemGridSelector + ', ' + this.addonItemListSelector).on('click', function(event){
-          console.log('button clicked yay!');
           var searchQuery = '';
           if (_this.currentTagsList.length) {
               searchQuery = encodeURIComponent(_this.currentTagsList.join(' '));
@@ -253,86 +290,88 @@ var AdminModule = function() {
 
   this.doCategorySearch = function(categoryRef) {
       // Pick the right selector to process search
-      var selector = (
-            this.currentDisplay == 'grid' ?
-            this.moduleItemGridSelector :
-            this.moduleItemListSelector
-        );
-    var totalModules = 0;
-    // Go through each module items to check if its contains filters tags keywords...
-    $(selector).each(function(index, value) {
-        // get Module's categories references to match them against categoryRef
-        var dataCategories = $(this).attr('data-categories');
-        var moduleItem = $(this);
-        var findRegexp = new RegExp(categoryRef, 'gi');
+      var moduleItemSelector = this.getModuleItemSelector();
+      var moduleGlobalSelector = this.getModuleGlobalSelector();
+      var _this = this;
 
-        if (dataCategories.match(findRegexp)) {
-               moduleItem.css('display', 'block');
-               totalModules += 1;
-               // Match found, return true to continue to iterate
-               return true;
-           } else {
-               // Nothing found so we have to return true to apply 'display: none' on item
-              moduleItem.css('display', 'none');
-           }
-       });
-       // If any tags already here redo search, with new categeory
-       if (this.currentTagsList.length) {
-           this.doTagSearch(this.currentTagsList);
-       } else {
-           this.updateTotalResults(totalModules);
-       }
+      $(moduleGlobalSelector).each(function(index, value) {
+            var _that = _this;
+            var totalModules = 0;
+            // Go through each module items to check if its contains filters tags keywords...
+            $(this).find(moduleItemSelector).each(function(index, value) {
+                // get Module's categories references to match them against categoryRef
+                var dataCategories = $(this).attr('data-categories');
+                var moduleItem = $(this);
+                var findRegexp = new RegExp(categoryRef, 'gi');
+
+                if (dataCategories.match(findRegexp)) {
+                    moduleItem.css('display', 'block');
+                    totalModules += 1;
+                    // Match found, return true to continue to iterate
+                    return true;
+                } else {
+                    // Nothing found so we have to return true to apply 'display: none' on item
+                    moduleItem.css('display', 'none');
+                }
+            });
+            // If any tags already here redo search, with new categeory
+            if (_this.currentTagsList.length) {
+                _this.doTagSearch(_this.currentTagsList);
+            } else {
+                _this.updateTotalResults(totalModules, $(this));
+            }
+        });
+
+
   };
 
   this.resetSearch = function() {
       // Pick the right selector to process search
-      var selector = (
-            this.currentDisplay == 'grid' ?
-            this.moduleItemGridSelector :
-            this.moduleItemListSelector
-        );
+      var moduleItemSelector = this.getModuleItemSelector();
+      var moduleGlobalSelector = this.getModuleGlobalSelector();
+      var _this = this;
 
-        var totalModules = 0;
-        var _this = this;
+      // Reset currentTagsList
+      this.currentTagsList = [];
 
-        // Reset currentTagsList
-        this.currentTagsList = [];
+      // Avoid trying to redisplay everything if it's already fully displayed
+      if (this.areAllModuleDisplayed === false) {
 
-        // Avoid trying to redisplay everything if it's already fully displayed
-        if (this.areAllModuleDisplayed === false) {
-
-            $(selector).each(function(index, value) {
-                if (_this.currentRefMenu !== null) {
-                    var isFromFilterCategory =  ($(this).attr('data-categories') == _this.currentRefMenu);
-                    if (isFromFilterCategory === true) {
+            $(moduleGlobalSelector).each(function(index, value) {
+                var totalModules = 0;
+                var _that = _this;
+                $(this).find(moduleItemSelector).each(function(index, value) {
+                    if (_that.currentRefMenu !== null) {
+                        var isFromFilterCategory =  ($(this).attr('data-categories') == _that.currentRefMenu);
+                        if (isFromFilterCategory === true) {
+                            totalModules += 1;
+                        }
+                        if ($(this).is(':hidden') && isFromFilterCategory === true) {
+                            $(this).css('display', 'block');
+                        }
+                    } else {
                         totalModules += 1;
+                        if ($(this).is(':hidden')) {
+                            $(this).css('display', 'block');
+                        }
                     }
-                    if ($(this).is(':hidden') && isFromFilterCategory === true) {
-                        $(this).css('display', 'block');
-                    }
-                } else {
-                    totalModules += 1;
-                    if ($(this).is(':hidden')) {
-                        $(this).css('display', 'block');
-                    }
-                }
+                });
+
+                // Dont forget this vital var once this done
+                _this.areAllModuleDisplayed = true;
+                _this.updateTotalResults(totalModules, $(this));
             });
-            // Dont forget this vital var once this done
-            this.areAllModuleDisplayed = true;
-            this.updateTotalResults(totalModules);
         }
-  };
+    };
 
   this.doTagSearch = function(tagsList) {
-      var _this = this;
-      this.currentTagsList = tagsList;
+        var _this = this;
+        this.currentTagsList = tagsList;
 
         // Pick the right selector to process search
-        var selector = (
-            this.currentDisplay == 'grid' ?
-            this.moduleItemGridSelector :
-            this.moduleItemListSelector
-        );
+        var moduleItemSelector = this.getModuleItemSelector();
+        var moduleGlobalSelector = this.getModuleGlobalSelector();
+
         var totalResultFound = 0;
         // First reset no result screen if needed
         if (!$('.module-search-no-result').is(':hidden')) {
@@ -342,65 +381,65 @@ var AdminModule = function() {
         if (this.areAllModuleDisplayed === false && this.currentTagsList.length === 0) {
             this.resetSearch();
         } else {
-          var matchCounter = 0;
-          // Go through each module items to check if its contains filters tags keywords...
-          $(selector).each(function(index, value) {
-              // #1: Check if any current category filter
-              if (_this.currentRefMenu !== null) {
-                  if ($(this).attr('data-categories') !== _this.currentRefMenu) {
-                      if (!$(this).is(':hidden')) {
-                          $(this).css('display', 'none');
-                          _this.areAllModuleDisplayed = false;
+          $(moduleGlobalSelector).each(function(index, value) {
+              var _that = _this;
+              var matchCounter = 0;
+              // Go through each module items to check if its contains filters tags keywords...
+              $(this).find(moduleItemSelector).each(function(index, value) {
+                  // #1: Check if any current category filter
+                  if (_that.currentRefMenu !== null) {
+                      if ($(this).attr('data-categories') !== _that.currentRefMenu) {
+                          if (!$(this).is(':hidden')) {
+                              $(this).css('display', 'none');
+                              _that.areAllModuleDisplayed = false;
+                          }
+                          // Iterate to next item
+                          return true;
                       }
-                      // Iterate to next item
-                      return true;
                   }
-              }
-              // If no match on data-name, data-description or data-author hide module item
-              var dataName = $(this).attr('data-name').toLowerCase();
-              var dataDescription = $(this).attr('data-description').toLowerCase();
-              var dataAuthor = $(this).attr('data-author').toLowerCase();
-              var moduleItem = $(this);
-              var hasMatched = false;
-              var matchedTagsCount = 0;
+                  // If no match on data-name, data-description or data-author hide module item
+                  var dataName = $(this).attr('data-name').toLowerCase();
+                  var dataDescription = $(this).attr('data-description').toLowerCase();
+                  var dataAuthor = $(this).attr('data-author').toLowerCase();
+                  var moduleItem = $(this);
+                  var hasMatched = false;
+                  var matchedTagsCount = 0;
 
-              $.each(_this.currentTagsList, function(index, value) {
-                  // If match any on these attrbute  its a match
-                  value = value.toLowerCase();
-                  if (dataName.indexOf(value) != -1 || dataDescription.indexOf(value) != -1 ||
-                     dataAuthor.indexOf(value) != -1) {
-                         matchedTagsCount += 1;
+                  $.each(_that.currentTagsList, function(index, value) {
+                      // If match any on these attrbute  its a match
+                      value = value.toLowerCase();
+                      if (dataName.indexOf(value) != -1 || dataDescription.indexOf(value) != -1 ||
+                         dataAuthor.indexOf(value) != -1) {
+                             matchedTagsCount += 1;
+                         }
+                     });
+
+                     // If module has matched all the tags display it, else hide it
+                     if (matchedTagsCount == _that.currentTagsList.length) {
+                         moduleItem.css('display', 'block');
+                         matchCounter += 1;
+                     } else {
+                         moduleItem.css('display', 'none');
+                         _that.areAllModuleDisplayed = false;
                      }
                  });
-
-                 // If module has matched all the tags display it, else hide it
-                 if (matchedTagsCount == _this.currentTagsList.length) {
-                     moduleItem.css('display', 'block');
-                     matchCounter += 1;
-                 } else {
-                     moduleItem.css('display', 'none');
-                     _this.areAllModuleDisplayed = false;
-                 }
+                 _this.updateTotalResults(matchCounter, $(this));
              });
-
-            this.updateTotalResults(matchCounter);
          }
      };
 
-     this.updateTotalResults = function(totalResultFound) {
+     this.updateTotalResults = function(totalResultFound, domObject) {
          // Pick the right selector to process search
-         var addonsItemSelector = (
-             this.currentDisplay == 'grid' ?
-             this.addonItemGridSelector :
-             this.addonItemListSelector
-         );
+         var addonsItemSelector = this.getAddonItemSelector();
+         var resultWordingObject = domObject.prev().find(this.totalResultSelector);
 
          $(this.addonsSearchSelector).css('display', 'none');
-         var str = $(this.totalResultSelector).text();
+         var str = resultWordingObject.text();
          var explodedStr = str.split(' ');
          explodedStr[0] = totalResultFound;
          var gluedStr = explodedStr.join(' ');
-         $(this.totalResultSelector).text(gluedStr);
+         resultWordingObject.text(gluedStr);
+
          if (totalResultFound === 0) {
             // Construct search query
             var searchQuery = encodeURIComponent(this.currentTagsList.join(' '));
