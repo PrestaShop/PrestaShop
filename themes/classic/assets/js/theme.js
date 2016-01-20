@@ -96,8 +96,8 @@
 	}
 	
 	(0, _expose$ExposeJQueryJquery2['default'])(document).ready(function () {
-	  var dropDownEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-drop-down');
-	  var topMenuEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-top-menu > li');
+	  var dropDownEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-dropdown');
+	  var topMenuEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-top-menu ul');
 	  var dropDown = new _componentsDropDown2['default'](dropDownEl).init();
 	  var topMenu = new _componentsTopMenu2['default'](topMenuEl).init();
 	  (0, _common.psShowHide)();
@@ -9517,20 +9517,12 @@
 	  _createClass(DropDown, [{
 	    key: 'init',
 	    value: function init(el) {
-	      this.el.on('click', function (event) {
-	        var currentMenu = $(this);
+	      this.el.on('show.bs.dropdown', function (e) {
+	        $(this).find('.dropdown-menu').first().stop(true, true).slideDown().show();
+	      });
 	
-	        if ($(event.target).data('depth') != undefined && ($(event.target).data('depth') !== 0 || $(this).find('ul').length === 0)) {
-	          return true;
-	        }
-	        event.preventDefault();
-	        event.stopPropagation();
-	
-	        currentMenu.find('ul').toggleClass('active');
-	
-	        $('html').one('click', function () {
-	          currentMenu.find('ul').toggleClass('active');
-	        });
+	      this.el.on('hide.bs.dropdown', function (e) {
+	        $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
 	      });
 	    }
 	  }]);

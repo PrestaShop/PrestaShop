@@ -22,16 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="language-selector dropdown js-dropdown _margin-top-small col-md-2 col-md-offset-3">
-  <span class="expand-more">{$current_language.name}</span>
-  <a data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <i class="material-icons expand-more">&#xE5C5;</i>
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="dLabel">
-    {foreach from=$languages item=language}
-      <li {if $language.id_lang == $current_language.id_lang} class="current" {/if}>
-        <a href="{$link->getLanguageLink($language.id_lang)}" class="dropdown-item">{$language.name}</a>
-      </li>
-    {/foreach}
-  </ul>
+<div id="contact-link" class="col-md-2 _margin-top-small">
+    {if $contact_infos.phone}
+			{l s='Call us : [1]%s[/1]' tags=['<span class="_gray-dark">'] sprintf=$contact_infos.phone mod='blockcontact'}
+			{else}
+			<a href="{$urls.pages.contact}" title="{l s='Contact us' mod='blockcontact'}">{l s='Contact us' mod='blockcontact'}</a>
+		{/if}
 </div>

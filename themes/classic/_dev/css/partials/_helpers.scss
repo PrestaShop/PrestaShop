@@ -17,13 +17,21 @@
 }
 
 ._margin-right-small{
-  margin-right: 12px;
+  margin-right: 10px;
 }
 
 ._margin-left-small{
   margin-left: 10px;
 }
 
-._margin-top-medium{
-  margin-top: 20px;
+._margin-top-small{
+  margin-top: 10px;
+}
+
+._margin-bottom-medium{
+  margin-bottom: 20px;
+}
+
+._gray-dark{
+  color: $gray-dark;
 }
