@@ -68,11 +68,11 @@ class AdminThemesControllerCore extends AdminController
         parent::init();
         $this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
 
-        if (Tools::isSubmit('configureLayouts')) {
+        if (Tools::getValue('action') == 'configureLayouts') {
             $this->initConfigureLayouts();
-        } elseif (Tools::isSubmit('submitConfigureLayouts')) {
+        } elseif (Tools::getValue('action') == 'submitConfigureLayouts') {
             $this->processSubmitConfigureLayouts();
-        } elseif (Tools::isSubmit('enableTheme')) {
+        } elseif (Tools::getValue('action') == 'enableTheme') {
             $this->theme_manager->enable(Tools::getValue('theme_name'));
         } elseif (Tools::getValue('action') == 'importtheme') {
             $this->display = 'importtheme';
