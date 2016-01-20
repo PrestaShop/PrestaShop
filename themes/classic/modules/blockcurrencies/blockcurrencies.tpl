@@ -23,13 +23,16 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="currency-selector drop-down js-drop-down col-lg-3 col-md-3">
-  <span class="expand-more">{$current_currency.iso_code} {$current_currency.sign}</span>
-  <i class="material-icons expand-more">expand_more</i>
-  <ul>
+<div class="currency-selector dropdown js-dropdown _margin-top-small col-md-2">
+  <span>{l s='Currency' mod='blockcurrencies'} :</span>
+  <span class="expand-more _gray-dark">{$current_currency.iso_code} {$current_currency.sign}</span>
+  <a data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="material-icons expand-more">&#xE5C5;</i>
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="dLabel">
     {foreach from=$currencies item=currency}
       <li {if $currency.current} class="current" {/if}>
-        <a rel="nofollow" href="{$currency.url}">{$currency.iso_code} {$currency.sign}</a>
+        <a rel="nofollow" href="{$currency.url}" class="dropdown-item">{$currency.iso_code} {$currency.sign}</a>
       </li>
     {/foreach}
   </ul>

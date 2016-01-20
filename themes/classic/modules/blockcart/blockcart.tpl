@@ -1,9 +1,9 @@
-<div class="blockcart cart-preview" data-refresh-url="{$refresh_url}">
+<div class="blockcart cart-preview col-md-2 _relative pull-xs-right" data-refresh-url="{$refresh_url}">
   <div class="header">
     <a rel="nofollow" href="{$cart_url}">
       <i class="material-icons shopping-cart">shopping_cart</i>
       <span>{l s='Cart' mod='blockcart'}</span>
-      <span>({$cart.summary_string})</span>
+      <span>({$cart.products_count})</span>
     </a>
   </div>
   <div class="body">
