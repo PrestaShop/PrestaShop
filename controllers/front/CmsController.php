@@ -129,7 +129,11 @@ class CmsControllerCore extends FrontController
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        $cmsCategory = new CMSCategory($this->cms->id_cms_category);
+        if ($this->assignCase == 2) {
+            $cmsCategory = new CMSCategory($this->cms_category->id_cms_category);
+        } else {
+            $cmsCategory = new CMSCategory($this->cms->id_cms_category);
+        }
 
         if ($cmsCategory->id_parent != 0) {
             foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
@@ -141,10 +145,12 @@ class CmsControllerCore extends FrontController
             }
         }
 
-        $breadcrumb['links'][] = [
-            'title' => $this->context->controller->cms->meta_title,
-            'url' => $this->context->link->getCMSLink($this->context->controller->cms)
-        ];
+        if ($this->assignCase == 1) {
+            $breadcrumb['links'][] = [
+                'title' => $this->context->controller->cms->meta_title,
+                'url' => $this->context->link->getCMSLink($this->context->controller->cms)
+            ];
+        }
 
         return $breadcrumb;
     }
