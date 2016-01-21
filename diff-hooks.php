@@ -116,7 +116,16 @@ function getFormattedHookList($hookList, $folder)
             echo "Warning, could not parse hook in:\n$hook\n\n";
             continue;
         }
-        $list[getHookName($line[1])][formatFilePath($line[0], $folder)] = formatFilePath($line[0], $folder);
+
+        $hookName = getHookName($line[1]);
+
+        if (!preg_match('/^\w+$/', $hookName)) {
+            echo "Warning, strange hook name found in {$line[0]}:\n$hookName\n\n";
+            continue;
+        }
+
+        $path = formatFilePath($line[0], $folder);
+        $list[$hookName][$path] = $path;
         ksort($list[getHookName($line[1])]);
     }
 
@@ -134,5 +143,5 @@ function getHookName($str)
 
 function formatFilePath($path, $folder)
 {
-    return str_replace($folder, '', $path);
+    return substr($path, strlen($folder));
 }
