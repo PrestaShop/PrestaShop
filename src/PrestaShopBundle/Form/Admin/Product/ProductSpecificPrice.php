@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
@@ -43,6 +44,7 @@ class ProductSpecificPrice extends CommonAbstractType
     private $countries;
     private $currencies;
     private $groups;
+    private $customerDataprovider;
 
     /**
      * Constructor
@@ -55,16 +57,18 @@ class ProductSpecificPrice extends CommonAbstractType
      * @param object $groupDataprovider
      * @param object $legacyContext
      */
-    public function __construct($router, $translator, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext)
+    public function __construct($router, $translator, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext, $customerDataprovider)
     {
         $this->router = $router;
         $this->translator = $translator;
+        $this->context = $legacyContext;
         $this->locales = $legacyContext->getLanguages();
         $this->shops = $this->formatDataChoicesList($shopContextAdapter->getShops(), 'id_shop');
         $this->countries = $this->formatDataChoicesList($countryDataprovider->getCountries($this->locales[0]['id_lang']), 'id_country');
         $this->currencies = $this->formatDataChoicesList($currencyDataprovider->getCurrencies(), 'id_currency');
         $this->groups = $this->formatDataChoicesList($groupDataprovider->getGroups($this->locales[0]['id_lang']), 'id_group');
         $this->currency = $legacyContext->getContext()->currency;
+        $this->customerDataprovider = $customerDataprovider;
     }
 
     /**
@@ -110,7 +114,18 @@ class ProductSpecificPrice extends CommonAbstractType
             'label' =>  false,
             'placeholder' => $this->translator->trans('All groups', [], 'AdminProducts'),
         ))
-        //TODO : add customer field
+        ->add('sp_id_customer', new TypeaheadCustomerCollectionType(
+            $this->context->getAdminLink('AdminCustomers', true).'&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
+            'id_customer',
+            'fullname_and_email',
+            $this->translator->trans('All customers', [], 'AdminProducts'),
+            '<div class="title col-xs-10">%s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
+            $this->customerDataprovider,
+            1
+        ), array(
+            'required' => false,
+            'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
+        ))
         ->add('sp_id_product_attribute', 'choice', array(
             'choices' =>  [],
             'required' =>  false,
@@ -120,7 +135,7 @@ class ProductSpecificPrice extends CommonAbstractType
         ))
         ->add('sp_from', 'datePicker', array(
             'required' => false,
-            'label' => $this->translator->trans('from', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Available from', [], 'AdminProducts'),
             'attr' => ['placeholder' => 'YYYY-MM-DD HH:II']
         ))
         ->add('sp_to', 'datePicker', array(
@@ -169,7 +184,11 @@ class ProductSpecificPrice extends CommonAbstractType
         ))
         ->add('save', 'button', array(
             'label' => $this->translator->trans('Save', [], 'AdminProducts'),
-            'attr' => array('class' => 'js-save pull-right btn-primary'),
+            'attr' => array('class' => 'js-save'),
+        ))
+        ->add('cancel', 'button', array(
+            'label' => $this->translator->trans('Cancel', [], 'AdminProducts'),
+            'attr' => array('class' => 'js-cancel'),
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

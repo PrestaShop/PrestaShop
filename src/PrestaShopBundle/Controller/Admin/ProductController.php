@@ -391,7 +391,8 @@ class ProductController extends FrameworkBundleAdminController
                 $this->container->get('prestashop.adapter.data_provider.country'),
                 $this->container->get('prestashop.adapter.data_provider.currency'),
                 $this->container->get('prestashop.adapter.data_provider.group'),
-                $this->container->get('prestashop.adapter.legacy.context')
+                $this->container->get('prestashop.adapter.legacy.context'),
+                $this->container->get('prestashop.adapter.data_provider.customer')
             ))
             ->add('step3', new ProductForms\ProductQuantity(
                 $this->container->get('prestashop.adapter.translator'),

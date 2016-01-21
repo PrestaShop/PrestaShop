@@ -97,6 +97,9 @@ services:
     prestashop.adapter.data_provider.attribute:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
 
+    prestashop.adapter.data_provider.customer:
+        class: PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider
+
     prestashop.adapter.stock_manager:
         class: PrestaShop\PrestaShop\Adapter\StockManager
         decorates: prestashop.core.data_provider.stock_interface

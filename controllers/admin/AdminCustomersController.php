@@ -1080,19 +1080,22 @@ class AdminCustomersControllerCore extends AdminController
             if (!empty($search) && $results = Customer::searchByName($search, 50)) {
                 foreach ($results as $result) {
                     if ($result['active']) {
+                        $result['fullname_and_email'] = $result['firstname'].' '.$result['lastname'].' - '.$result['email'];
                         $customers[$result['id_customer']] = $result;
                     }
                 }
             }
         }
 
-        if (count($customers)) {
+        if (count($customers) && Tools::getValue('sf2')) {
+            $to_return = $customers;
+        } elseif (count($customers) && !Tools::getValue('sf2')) {
             $to_return = array(
                 'customers' => $customers,
                 'found' => true
             );
         } else {
-            $to_return = array('found' => false);
+            $to_return = Tools::getValue('sf2') ? array() : array('found' => false);
         }
 
         $this->content = json_encode($to_return);

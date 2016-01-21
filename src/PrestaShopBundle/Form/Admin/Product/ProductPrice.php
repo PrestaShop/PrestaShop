@@ -40,6 +40,7 @@ class ProductPrice extends CommonAbstractType
     private $tax_rules_rates;
     private $configuration;
     private $eco_tax_rate;
+    private $customerDataprovider;
 
     /**
      * Constructor
@@ -52,8 +53,9 @@ class ProductPrice extends CommonAbstractType
      * @param object $currencyDataprovider
      * @param object $groupDataprovider
      * @param object $legacyContext
+     * @param object $customerDataprovider
      */
-    public function __construct($translator, $taxDataProvider, $router, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext)
+    public function __construct($translator, $taxDataProvider, $router, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext, $customerDataprovider)
     {
         $this->translator = $translator;
         $this->router = $router;
@@ -61,7 +63,8 @@ class ProductPrice extends CommonAbstractType
         $this->shopContextAdapter = $shopContextAdapter;
         $this->countryDataprovider = $countryDataprovider;
         $this->currencyDataprovider = $currencyDataprovider;
-        $this->groupDataprovider= $groupDataprovider;
+        $this->groupDataprovider = $groupDataprovider;
+        $this->customerDataprovider = $customerDataprovider;
         $this->legacyContext = $legacyContext;
         $this->tax_rules_rates = $taxDataProvider->getTaxRulesGroupWithRates();
         $this->eco_tax_rate = $taxDataProvider->getProductEcotaxRate();
@@ -118,7 +121,7 @@ class ProductPrice extends CommonAbstractType
         ))
         ->add('on_sale', 'checkbox', array(
             'required' => false,
-            'label' => $this->translator->trans('On sale', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Display the on sale icon on the product page, and in the text found within the product listing.', [], 'AdminProducts'),
         ))
         ->add('wholesale_price', 'money', array(
             'required' => false,
@@ -141,7 +144,8 @@ class ProductPrice extends CommonAbstractType
             $this->countryDataprovider,
             $this->currencyDataprovider,
             $this->groupDataprovider,
-            $this->legacyContext
+            $this->legacyContext,
+            $this->customerDataprovider
         ))
         ->add('specificPricePriorityToAll', 'checkbox', array(
             'required' => false,
