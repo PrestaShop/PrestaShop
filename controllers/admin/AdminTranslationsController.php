@@ -25,6 +25,10 @@
  */
 
 use PrestaShop\PrestaShop\Core\Cldr\Update;
+use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 
 class AdminTranslationsControllerCore extends AdminController
 {
@@ -78,6 +82,14 @@ class AdminTranslationsControllerCore extends AdminController
         $this->table = 'translations';
 
         parent::__construct();
+
+        $theme_manager = new ThemeManager(
+            $this->context->shop,
+            new Configurator(),
+            new ThemeChecker,
+            $this->context->employee
+        );
+        $this->themes = $theme_manager->getThemeList();
     }
 
     /*
@@ -202,7 +214,7 @@ class AdminTranslationsControllerCore extends AdminController
             'packs_to_update' => $packs_to_update,
             'url_submit' => self::$currentIndex.'&token='.$this->token,
             'themes' => $this->themes,
-            'id_theme_current' => $this->context->shop->id_theme,
+            'current_theme_name' => $this->context->shop->theme_name,
             'url_create_language' => 'index.php?controller=AdminLanguages&addlang&token='.$token,
         );
 
@@ -1392,9 +1404,6 @@ class AdminTranslationsControllerCore extends AdminController
         foreach ($this->languages as $language) {
             $this->all_iso_lang[] = $language['iso_code'];
         }
-
-        // Get all themes
-        $this->themes = Theme::getThemes();
 
         // Get folder name of theme
         if (($theme = Tools::getValue('theme')) && !is_array($theme)) {
@@ -3236,14 +3245,10 @@ class AdminTranslationsControllerCore extends AdminController
      */
     protected function theme_exists($theme)
     {
-        if (!is_array($this->themes)) {
-            $this->themes = Theme::getThemes();
-        }
-
         $theme_exists = false;
         foreach ($this->themes as $existing_theme) {
             /** @var Theme $existing_theme */
-            if ($existing_theme->directory == $theme) {
+            if ($existing_theme->name == $theme) {
                 return true;
             }
         }
