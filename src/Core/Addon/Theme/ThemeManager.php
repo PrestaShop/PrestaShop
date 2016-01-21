@@ -225,7 +225,7 @@ class ThemeManager implements AddonManagerInterface
             $filter->setStatus(AddonListFilterStatus::ALL);
         }
 
-        $themes = $this->getThemeOnDisk();
+        $themes = $this->getThemesOnDisk();
 
         foreach ($filter->exclude as $name) {
             unset($themes[$name]);
@@ -260,7 +260,7 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
-    private function getThemeOnDisk()
+    private function getThemesOnDisk()
     {
         $suffix = 'preview.png';
         $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/'.$suffix);
