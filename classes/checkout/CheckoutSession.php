@@ -21,6 +21,11 @@ class CheckoutSessionCore
         return $this->context->customer;
     }
 
+    public function getCart()
+    {
+        return $this->context->cart;
+    }
+
     public function getCustomerAddressesCount()
     {
         return count($this->getCustomer()->getSimpleAddresses(
