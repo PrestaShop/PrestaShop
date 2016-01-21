@@ -91,4 +91,15 @@ class Theme implements AddonInterface
     {
         $this->settings['page_layouts'] = $layouts;
     }
+
+    public function getLayoutForPage($entity)
+    {
+        $layout_name = $this->theme_settings['default_layout'];
+        if ($this->settings['page_layouts'][$entity]) {
+            $layout_name = $this->settings['page_layouts'][$entity];
+        }
+
+        $filename = 'layouts/'.$layout_name.'.tpl';
+        return $filename;
+    }
 }
