@@ -150,13 +150,17 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     public function isModuleOnDisk($name)
     {
-        if (file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php')) {
-            include_once(_PS_MODULE_DIR_.$name.'/'.$name.'.php');
-            
-            return (bool)\PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
+        if (!file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php')) {
+            return false;
         }
 
-        return false;
+        if (substr(`php -l $name`, 0, 16) != 'No syntax errors') {
+            throw new \Exception('Parse error in '.$name.' class');
+        }
+
+        include_once(_PS_MODULE_DIR_.$name.'/'.$name.'.php');
+
+        return (bool)\PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
     }
 
     public function setModuleOnDiskFromAddons($name)
