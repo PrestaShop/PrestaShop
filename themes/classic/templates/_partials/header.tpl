@@ -13,11 +13,11 @@
       <div class="header-top row _margin-bottom-medium">
         <div class="col-md-2">
           <a href="{$urls.base_url}" title="{l s='Homepage'}" >
-            <img class="logo img-responsive" src="{$shop.logo}" alt="logo" />
+            <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name} {l s='logo'}" />
           </a>
         </div>
         <div class="col-md-10">
-          {hook h="displayTop"}
+          {hook h='displayTop'}
         </div>
       </div>
     </div>

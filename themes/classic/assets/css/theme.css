@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700);@font-face {
+@import url(//fonts.googleapis.com/css?family=Open+Sans:400,600,700);@font-face {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
@@ -54,6 +54,9 @@
 
 ._margin-bottom-medium {
   margin-bottom: 20px; }
+
+._margin-top-medium {
+  margin-top: 20px; }
 
 ._gray-dark {
   color: #414141; }
@@ -4679,19 +4682,10 @@ section.checkout-step {
     display: block; }
   section.checkout-step small {
     color: #acaaa6; }
-  section.checkout-step input[type=text],
-  section.checkout-step input[type=date],
-  section.checkout-step input[type=email],
-  section.checkout-step input[type=password] {
-    min-width: 220px; }
-    section.checkout-step input[type=text][name=address1], section.checkout-step input[type=text][name=address2],
-    section.checkout-step input[type=date][name=address1],
-    section.checkout-step input[type=date][name=address2],
-    section.checkout-step input[type=email][name=address1],
-    section.checkout-step input[type=email][name=address2],
-    section.checkout-step input[type=password][name=address1],
-    section.checkout-step input[type=password][name=address2] {
-      min-width: 315px; }
+  section.checkout-step .default-input {
+    min-width: 40%; }
+    section.checkout-step .default-input[name=address1], section.checkout-step .default-input[name=address2] {
+      min-width: 60%; }
   section.checkout-step .radio-field {
     margin-top: 30px; }
     section.checkout-step .radio-field label {
@@ -4765,7 +4759,8 @@ body {
     font-size: 16px;
     width: 115px;
     height: 48px;
-    padding-top: 12px; }
+    padding-top: 12px;
+    margin-right: 15px; }
     #header .header-nav .blockcart a {
       color: #acaaa6; }
   #header .header-nav #contact-link {
