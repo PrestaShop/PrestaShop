@@ -1231,12 +1231,7 @@ class FrontControllerCore extends Controller
     {
         $entity = $this->php_self;
 
-        $layout_name = $this->context->shop->theme->theme_settings['default_layout'];
-        if ($this->context->shop->theme->settings['page_layouts'][$this->php_self]) {
-            $layout_name = $this->context->shop->theme->settings['page_layouts'][$this->php_self];
-        }
-
-        $layout = 'layouts/'.$layout_name.'.tpl';
+        $layout = $this->context->shop->theme->getLayoutForPage($entity);
 
         $id_item = (int)Tools::getValue('id_'.$entity);
 
