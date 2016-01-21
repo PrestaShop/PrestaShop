@@ -125,23 +125,23 @@ class CmsControllerCore extends FrontController
         return array((int)Configuration::get('PS_CONDITIONS_CMS_ID'), (int)Configuration::get('LEGAL_CMS_ID_REVOCATION'));
     }
 
-    public function getBreadcrumb()
+    public function getBreadcrumbLinks()
     {
-        $breadcrumb = parent::getBreadcrumb();
+        $breadcrumb = parent::getBreadcrumbLinks();
 
         $cmsCategory = new CMSCategory($this->cms->id_cms_category);
 
         if ($cmsCategory->id_parent != 0) {
             foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
                 $cmsSubCategory = new CMSCategory($category['id_cms_category']);
-                $breadcrumb[] = [
+                $breadcrumb['links'][] = [
                     'title' => $cmsSubCategory->getName(),
                     'url' => $this->context->link->getCMSCategoryLink($cmsSubCategory)
                 ];
             }
         }
 
-        $breadcrumb[] = [
+        $breadcrumb['links'][] = [
             'title' => $this->context->controller->cms->meta_title,
             'url' => $this->context->link->getCMSLink($this->context->controller->cms)
         ];
