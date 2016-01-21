@@ -457,15 +457,7 @@
                     <div class="clearfix"></div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step5">
-                    <div class="col-lg-9">
-                        {{ form_widget(form.step5) }}
-                    </div>
-                    <div class="col-lg-3">
-                        {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
-                            {'limit': 3, 'randomize': 1, 'domain': 'products_seo' })
-                        %}
-                    </div>
-                    <div class="clearfix"></div>
+                    {{ include('PrestaShopBundle:Admin/Product/Include:form-seo.html.twig',{'form' : form.step5}) }}
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step6">
                     <div class="col-lg-9">

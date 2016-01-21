@@ -26,8 +26,8 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * This form class is responsible to generate the product SEO form

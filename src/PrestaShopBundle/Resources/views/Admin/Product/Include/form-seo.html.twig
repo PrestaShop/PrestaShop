@@ -1,0 +1,25 @@
+<div class="col-lg-9">
+    {{ form_widget(form) }}
+</div>
+<div class="col-lg-3">
+    {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+    {'limit': 3, 'randomize': 1, 'domain': 'products_seo' })
+    %}
+</div>
+<div class="clearfix"></div>
+
+<div class="alert alert-info">
+    {{ trans('Urls management is done in URLS and SEO section. You can improve the URL format of products by following this link.', [], 'AdminProducts') }}
+    <a href="{{ getAdminLink("AdminMeta") }}">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
+
+    <p>
+        {% if 'PS_REWRITING_SETTINGS'|configuration == 0 %}
+            {{ trans('The management of simplified urls is disabled. To enable it, click on the following link.', [], 'AdminProducts') }}
+            <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
+        {% else %}
+            {{ trans('The management of simplified urls is enabled. To disable it, click on the following link.', [], 'AdminProducts') }}
+            <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
+        {% endif %}
+    </p>
+
+</div>
