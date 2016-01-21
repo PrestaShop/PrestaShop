@@ -43,6 +43,7 @@ monolog:
             type: stream
             path: %kernel.logs_dir%/%kernel.environment%.log
             level: notice
+            channels: [!event]
         legacy:
             type: service
             id: prestashop.handler.log
