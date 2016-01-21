@@ -1494,9 +1494,17 @@ class FrontControllerCore extends Controller
 
     public function getBreadcrumb()
     {
+        $breadcrumb = $this->getBreadcrumbLinks();
+        $breadcrumb['count'] = count($breadcrumb['links']);
+
+        return $breadcrumb;
+    }
+
+    protected function getBreadcrumbLinks()
+    {
         $breadcrumb = [];
 
-        $breadcrumb[] = [
+        $breadcrumb['links'][] = [
             'title' => $this->getTranslator()->trans('Home', [], 'Breadcrumb'),
             'url'   => $this->context->link->getPageLink('index', true)
         ];

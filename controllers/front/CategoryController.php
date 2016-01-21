@@ -145,17 +145,17 @@ class CategoryControllerCore extends ProductListingFrontController
         return $retriever->getImage($object, $id_image);
     }
 
-    public function getBreadcrumb()
+    public function getBreadcrumbLinks()
     {
-        $breadcrumb = parent::getBreadcrumb();
+        $breadcrumb = parent::getBreadcrumbLinks();
 
         foreach ($this->category->getAllParents() as $category) {
             if ($category->id_parent != 0 && !$category->is_root_category) {
-                $breadcrumb[] = $this->getCategoryPath($category);
+                $breadcrumb['links'][] = $this->getCategoryPath($category);
             }
         }
 
-        $breadcrumb[] = $this->getCategoryPath($this->category);
+        $breadcrumb['links'][] = $this->getCategoryPath($this->category);
 
         return $breadcrumb;
     }
