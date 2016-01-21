@@ -110,7 +110,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     public function getCatalogCategories()
     {
-        if (count($this->catalog_categories) === 0) {
+        if (empty((array)$this->catalog_categories) === true) {
             $this->loadCatalogData();
         }
 
@@ -132,7 +132,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     public function getManageCategories()
     {
-        if (count($this->manage_categories) === 0) {
+        if (empty((array)$this->manage_categories) === true) {
             $this->loadManageData();
         }
 
@@ -321,6 +321,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     foreach ($all_modules as $module) {
                         if ($module->name === $installed_module['name']) {
                             unset($module->version);
+                            unset($module->badges);
                             $installed_module = array_merge($installed_module, (array)$module);
                             continue;
                         }
@@ -395,7 +396,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     $product->productType = isset($json_key)?rtrim($json_key, 's'):'module';
                 } else {
                     $product->productType = $product->product_type;
-                    unset($product->product_type);
+                    //unset($product->product_type);
                 }
                 if (! isset($product->price)) {
                     $product->price = new \stdClass;
@@ -426,9 +427,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                         'screenshotsUrls' => [],
                         'videoUrl' => null,
                 ];
-                unset($product->badges);
+
+                //unset($product->badges);
                 //unset($module->categoryName);
-                unset($product->cover);
+                //unset($product->cover);
 
                 $remixed_json[] = $product;
             }
