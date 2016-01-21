@@ -1847,11 +1847,10 @@ abstract class ModuleCore
         }
 
         $context = Context::getContext();
-        $theme = new Theme($context->shop->id_theme);
 
         // Save the 2 arrays into XML files
         $trusted_xml = new SimpleXMLElement('<modules_list/>');
-        $trusted_xml->addAttribute('theme', $theme->name);
+        $trusted_xml->addAttribute('theme', $context->shop->theme->name);
         $modules = $trusted_xml->addChild('modules');
         $modules->addAttribute('type', 'trusted');
         foreach ($trusted as $key => $name) {
@@ -2710,8 +2709,6 @@ abstract class ModuleCore
      */
     private function installControllers()
     {
-        $themes = Theme::getThemes();
-        $theme_meta_value = array();
         foreach ($this->controllers as $controller) {
             $page = 'module-'.$this->name.'-'.$controller;
             $result = Db::getInstance()->getValue('SELECT * FROM '._DB_PREFIX_.'meta WHERE page="'.pSQL($page).'"');
@@ -2723,22 +2720,6 @@ abstract class ModuleCore
             $meta->page = $page;
             $meta->configurable = 1;
             $meta->save();
-            if ((int)$meta->id > 0) {
-                foreach ($themes as $theme) {
-                    /** @var Theme $theme */
-                    $theme_meta_value[] = array(
-                        'id_theme' => $theme->id,
-                        'id_meta' => $meta->id,
-                        'left_column' => (int)$theme->default_left_column,
-                        'right_column' => (int)$theme->default_right_column
-                    );
-                }
-            } else {
-                $this->_errors[] = sprintf(Tools::displayError('Unable to install controller: %s'), $controller);
-            }
-        }
-        if (count($theme_meta_value) > 0) {
-            return Db::getInstance()->insert('theme_meta', $theme_meta_value);
         }
 
         return true;

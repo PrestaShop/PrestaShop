@@ -919,15 +919,9 @@ class ToolsCore
     */
     public static function clearXMLCache()
     {
-        $themes = array();
-        foreach (Theme::getThemes() as $theme) {
-            /** @var Theme $theme */
-            $themes[] = $theme->directory;
-        }
-
         foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file) {
             $path_info = pathinfo($file, PATHINFO_EXTENSION);
-            if (($path_info == 'xml') && ($file != 'default.xml') && !in_array(basename($file, '.'.$path_info), $themes)) {
+            if (($path_info == 'xml') && ($file != 'default.xml')) {
                 self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
             }
         }
