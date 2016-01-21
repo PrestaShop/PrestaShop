@@ -274,8 +274,6 @@ class AdminMetaControllerCore extends AdminController
 
     public function renderForm()
     {
-        $files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
-
         $is_index = false;
         if (is_object($this->object) && is_array($this->object->url_rewrite) && count($this->object->url_rewrite)) {
             foreach ($this->object->url_rewrite as $rewrite) {
@@ -283,25 +281,6 @@ class AdminMetaControllerCore extends AdminController
                     $is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
                 }
             }
-        }
-
-        $pages = array(
-            'common' => array(
-                'name' => $this->l('Default pages'),
-                'query' => array(),
-            ),
-            'module' => array(
-                'name' => $this->l('Modules pages'),
-                'query' => array(),
-            ),
-        );
-
-        foreach ($files as $name => $file) {
-            $k = (preg_match('#^module-#', $file)) ? 'module' : 'common';
-            $pages[$k]['query'][] = array(
-                'id' => $file,
-                'page' => $name,
-            );
         }
 
         $this->fields_form = array(
@@ -315,24 +294,10 @@ class AdminMetaControllerCore extends AdminController
                     'name' => 'id_meta',
                 ),
                 array(
-                    'type' => 'select',
-                    'label' => $this->l('Page'),
+                    'type' => 'text',
+                    'label' => $this->l('Page name'),
                     'name' => 'page',
-
-                    'options' => array(
-                        'optiongroup' => array(
-                            'label' => 'name',
-                            'query' => $pages,
-                        ),
-                        'options' => array(
-                            'id' => 'id',
-                            'name' => 'page',
-                            'query' => 'query',
-                        ),
-                    ),
-                    'hint' => $this->l('Name of the related page.'),
-                    'required' => true,
-                    'empty_message' => '<p>'.$this->l('There is no page available!').'</p>',
+                    'disabled' => true,
                 ),
                 array(
                     'type' => 'text',
