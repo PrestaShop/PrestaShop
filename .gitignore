@@ -30,7 +30,7 @@ config/settings.old.php
 config/xml/*
 !config/xml/themes/default.xml
 tests/StarterTheme/settings.js
-themes/*/config/settings.json
+themes/*/config/settings_*.json
 
 # Themes, modules and overrides
 
