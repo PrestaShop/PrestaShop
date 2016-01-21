@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700);
+@import url('//fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 @import "partials/_variables";
 @import "partials/_fonts";
 @import "partials/_helpers";
@@ -42,6 +42,7 @@ body {
       width: 115px;
       height: 48px;
       padding-top: 12px;
+      margin-right: 15px;
       a{
         color: $gray;
       }

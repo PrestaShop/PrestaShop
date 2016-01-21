@@ -3,7 +3,7 @@
     <a rel="nofollow" href="{$cart_url}">
       <i class="material-icons shopping-cart">shopping_cart</i>
       <span>{l s='Cart' mod='blockcart'}</span>
-      <span>({$cart.products_count})</span>
+      <span class="cart-products-count">({$cart.products_count})</span>
     </a>
   </div>
   <div class="body">
