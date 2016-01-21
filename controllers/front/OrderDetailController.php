@@ -358,14 +358,14 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
         return $order_messages;
     }
 
-    public function getBreadcrumb()
+    public function getBreadcrumbLinks()
     {
-        $breadcrumb = parent::getBreadcrumb();
+        $breadcrumb = parent::getBreadcrumbLinks();
 
-        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+        $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
         if (($id_order = (int)Tools::getValue('id_order')) && Validate::isUnsignedId($id_order)) {
-            $breadcrumb[] =[
+            $breadcrumb['links'][] =[
                 'title' => $this->getTranslator()->trans('Order history', [], 'Breadcrumb'),
                 'url' => $this->context->link->getPageLink('history')
             ];
