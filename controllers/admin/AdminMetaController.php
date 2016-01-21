@@ -399,27 +399,7 @@ class AdminMetaControllerCore extends AdminController
             Db::getInstance()->delete('theme_meta', 'id_meta='.(int)Tools::getValue('id_meta'));
         }
 
-        $ret = parent::postProcess();
-
-        if (Tools::isSubmit('submitAddmeta') && Validate::isLoadedObject($ret)) {
-            /** @var Theme $ret */
-            $themes = Theme::getThemes();
-            $theme_meta_value = array();
-            foreach ($themes as $theme) {
-                /** @var Theme $theme */
-                $theme_meta_value[] = array(
-                    'id_theme' => (int)$theme->id,
-                    'id_meta' => (int)$ret->id,
-                    'left_column' => (int)$theme->default_left_column,
-                    'right_column' => (int)$theme->default_right_column
-                );
-            }
-            if (count($theme_meta_value) > 0) {
-                Db::getInstance()->insert('theme_meta', $theme_meta_value, false, true, DB::INSERT_IGNORE);
-            }
-        }
-
-        return $ret;
+        return parent::postProcess();
     }
 
     public function generateRobotsFile()

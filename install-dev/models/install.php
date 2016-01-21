@@ -356,7 +356,7 @@ class InstallModelInstall extends InstallAbstractModel
         $shop->active = true;
         $shop->id_shop_group = $shop_group->id;
         $shop->id_category = 2;
-        $shop->id_theme = 1;
+        $shop->theme_name = 'StarterTheme';
         $shop->name = $shop_name;
         if (!$shop->add()) {
             $this->setError($this->language->l('Cannot create shop').' / '.Db::getInstance()->getMsgError());
