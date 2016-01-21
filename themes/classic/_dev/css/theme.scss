@@ -120,11 +120,7 @@ ul {
   section.checkout-step {
     width: 100%;
   }
-  section.checkout-step input[name=address1],
-  section.checkout-step input[name=address2],
-  section.checkout-step input[type=text],
-  section.checkout-step input[type=password],
-  input[type=date] {
+  .default-input{
     min-width: 100%;
   }
   label {
