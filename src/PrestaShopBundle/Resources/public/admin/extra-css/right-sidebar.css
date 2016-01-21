@@ -1,0 +1,83 @@
+#right-sidebar {
+  background: #363A41;
+  color: white;
+  float: right;
+  position: fixed;
+  display: block;
+  top: 36px;
+  bottom: 0px;
+  z-index: 399;
+  min-height: 100%;
+  max-height: none;
+  overflow: auto;
+  right: -3em;
+  padding: 1em 4em 6em 1em;
+}
+
+/*right sidebar is untested */
+.sidebar.sidebar-right.sidebar-xs-show {
+  right: 0;
+  -webkit-transform: translate(0,0);
+  -ms-transform: translate(0,0);
+  -o-transform: translate(0,0);
+  -moz-transform: translate(0,0);
+  transform: translate(0,0);
+}
+
+@media (min-width: 768px) {
+  /*right sidebar is untested */
+  .sidebar.sidebar-right.sidebar-sm-show {
+    right: 0;
+    -webkit-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    -o-transform: translate(0,0);
+    -moz-transform: translate(0,0);
+    transform: translate(0,0);
+  }
+}
+
+@media (min-width: 992px) {
+  .sidebar.sidebar-right.sidebar-md-show {
+    right: 0;
+    -webkit-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    -o-transform: translate(0,0);
+    -moz-transform: translate(0,0);
+    transform: translate(0,0);
+  }
+}
+
+@media (min-width: 1170px) {
+  .sidebar.sidebar-right.sidebar-lg-show {
+    right: 0;
+    -webkit-transform: translate(0,0);
+    -moz-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    -o-transform: translate(0,0);
+    transform: translate(0,0);
+  }
+}
+
+/* animation class - optional: without it the sidebar would just pop in and out*/
+.sidebar-animate {
+  -webkit-transition: -webkit-transform 300ms ease;
+  -moz-transition: -moz-transform 300ms ease;
+  -o-transition: transform 300ms ease;
+  transition: transform 300ms ease;
+}
+
+.sidebar.sidebar-right {
+  -webkit-transform: translate(100%,0);
+  -moz-transform: translate(100%,0);
+  -ms-transform: translate(100%,0);
+  -o-transform: translate(100%,0);
+  transform: translate(100%,0);
+}
+
+.sidebar.sidebar-right.sidebar-open {
+  -webkit-transform: translate(0,0);
+  -moz-transform: translate(0,0);
+  -ms-transform: translate(0,0);
+  -o-transform: translate(0,0);
+  transform: translate(0,0);
+}
