@@ -905,24 +905,4 @@ class InstallModelInstall extends InstallAbstractModel
 
         return true;
     }
-
-    /**
-     * PROCESS : installTheme
-     * Install theme
-     */
-    public function installTheme()
-    {
-        // @todo do a real install of the theme
-        $sql_loader = new InstallSqlLoader();
-        $sql_loader->setMetaData(array(
-            'PREFIX_' => _DB_PREFIX_,
-            'ENGINE_TYPE' => _MYSQL_ENGINE_,
-        ));
-
-        $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'theme.sql', false);
-        if ($errors = $sql_loader->getErrors()) {
-            $this->setError($errors);
-            return false;
-        }
-    }
 }
