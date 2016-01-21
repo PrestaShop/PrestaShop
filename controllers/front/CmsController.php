@@ -105,14 +105,8 @@ class CmsControllerCore extends FrontController
                 $this->setTemplate('cms/page.tpl');
             }
         } elseif ($this->assignCase == 2) {
-            $this->context->smarty->assign(array(
-                'cms_category' => $this->cms_category,
-                'sub_category' => $this->cms_category->getSubCategories($this->context->language->id),
-                'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)$this->cms_category->id, true, (int)$this->context->shop->id),
-                'body_classes' => array($this->php_self.'-'.$this->cms_category->id, $this->php_self.'-'.$this->cms_category->link_rewrite)
-            ));
-
-            // StarterTheme: Create list template for cms
+            $this->context->smarty->assign($this->getTemplateVarCategoryCms());
+            $this->setTemplate('cms/category.tpl');
         }
     }
 
@@ -129,7 +123,11 @@ class CmsControllerCore extends FrontController
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        $cmsCategory = new CMSCategory($this->cms->id_cms_category);
+        if ($this->assignCase == 2) {
+            $cmsCategory = new CMSCategory($this->cms_category->id_cms_category);
+        } else {
+            $cmsCategory = new CMSCategory($this->cms->id_cms_category);
+        }
 
         if ($cmsCategory->id_parent != 0) {
             foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
@@ -141,10 +139,12 @@ class CmsControllerCore extends FrontController
             }
         }
 
-        $breadcrumb['links'][] = [
-            'title' => $this->context->controller->cms->meta_title,
-            'url' => $this->context->link->getCMSLink($this->context->controller->cms)
-        ];
+        if ($this->assignCase == 1) {
+            $breadcrumb['links'][] = [
+                'title' => $this->context->controller->cms->meta_title,
+                'url' => $this->context->link->getCMSLink($this->context->controller->cms)
+            ];
+        }
 
         return $breadcrumb;
     }
@@ -160,5 +160,26 @@ class CmsControllerCore extends FrontController
         }
 
         return $page;
+    }
+
+    public function getTemplateVarCategoryCms()
+    {
+        $categoryCms = [];
+
+        $categoryCms['cms_category'] = $this->objectSerializer->toArray($this->cms_category);
+        $categoryCms['sub_categories'] = [];
+        $categoryCms['cms_pages'] = [];
+
+        foreach ($this->cms_category->getSubCategories($this->context->language->id) as $subCategory) {
+            $categoryCms['sub_categories'][$subCategory['id_cms_category']] = $subCategory;
+            $categoryCms['sub_categories'][$subCategory['id_cms_category']]['link'] = $this->context->link->getCMSCategoryLink($subCategory['id_cms_category'], $subCategory['link_rewrite']);
+        }
+
+        foreach (CMS::getCMSPages($this->context->language->id, (int)$this->cms_category->id, true, (int)$this->context->shop->id) as $cmsPages) {
+            $categoryCms['cms_pages'][$cmsPages['id_cms']] = $cmsPages;
+            $categoryCms['cms_pages'][$cmsPages['id_cms']]['link'] = $this->context->link->getCMSLink($cmsPages['id_cms'], $cmsPages['link_rewrite']);
+        }
+
+        return $categoryCms;
     }
 }
