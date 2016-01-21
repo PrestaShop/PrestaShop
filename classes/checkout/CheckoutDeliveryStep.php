@@ -124,6 +124,8 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 'Checkout'
             )
         );
+
+        Hook::exec('actionCarrierProcess', array('cart' => $this->getCheckoutSession()->getCart()));
     }
 
     public function render(array $extraParams = [])
