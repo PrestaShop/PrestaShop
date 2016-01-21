@@ -88,6 +88,7 @@ var displayFieldsManager = (function() {
 			/** product type switch */
 			if(typeProduct.val() == 1) {
 				$('#pack_stock_type, #js_form_step1_inputPackItems').show();
+				$('#form-nav a[href="#step4"]').show();
 				showVariationsSelector.hide();
 				showVariationsSelector.find('input[value="0"]').attr('checked', true);
 			}else{
