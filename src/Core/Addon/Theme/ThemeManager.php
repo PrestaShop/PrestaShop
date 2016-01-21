@@ -194,7 +194,7 @@ class ThemeManager implements AddonManagerInterface
         );
         $data['directory'] = $dir;
         $data['settings'] = $this->getConfigFromFile(
-            $dir.'/config/settings.json'
+            $dir.'/config/settings_'.$this->shop->id.'.json'
         );
 
         return new Theme($data);
@@ -348,7 +348,7 @@ class ThemeManager implements AddonManagerInterface
     public function saveTheme($theme)
     {
         $test = file_put_contents(
-            $theme->directory.'/config/settings.json',
+            $theme->directory.'/config/settings_'.$this->shop->id.'.json',
             json_encode($theme->settings)
         );
     }
