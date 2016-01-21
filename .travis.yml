@@ -1,5 +1,12 @@
 language: php
 
+services:
+  - mysql
+
+addons:
+    apt_packages:
+        - apache2
+        - libapache2-mod-fastcgi
 php:
   - 5.4
   - 5.5
@@ -12,27 +19,28 @@ matrix:
     - php: 7.0
 
 before_install:
-  - sudo apt-get update
-
-before_script:
-  - phpenv config-rm xdebug.ini
-  - sudo apt-get install apache2 libapache2-mod-fastcgi
+  - mysql -e 'create database prestashop;'
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "memory_limit = 512M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
   - sudo cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/default
   - sudo cp -Rf . /var/www/prestashop.unit.test
   - sudo chmod 777 -R /var/www/
   - sudo service apache2 restart
 
+before_script:
+  - phpenv config-rm xdebug.ini
+
 notifications:
   slack: prestashop:Eovjydk55zPrwPkoQIOF0cZn
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
+
 script:
   - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
-  - cd /var/www/prestashop.unit.test && composer install
-  - /var/www/prestashop.unit.test/tests/check_php_parse_errors.sh
-  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test --db_create=0 --name=prestashop.unit.test --password=123456789
-  - cd /var/www/prestashop.unit.test && php bin/phpunit -c tests/
-  - cd /var/www/prestashop.unit.test && php bin/phpunit -c admin-dev/
+  - composer install --no-interaction --no-progress
+  - tests/check_php_parse_errors.sh
+  - php install-dev/index_cli.php --language=en --country=us --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop --db_create=0 --name=prestashop.unit.test --password=123456789
+  - php bin/phpunit -c tests/
+  - composer phpunit-sf
