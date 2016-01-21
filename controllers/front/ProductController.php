@@ -769,19 +769,19 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         );
     }
 
-    public function getBreadcrumb()
+    public function getBreadcrumbLinks()
     {
-        $breadcrumb = parent::getBreadcrumb();
+        $breadcrumb = parent::getBreadcrumbLinks();
 
         $categoryDefault = new Category($this->product->id_category_default);
 
         foreach ($categoryDefault->getAllParents() as $category) {
             if ($category->id_parent != 0 && !$category->is_root_category) {
-                $breadcrumb[] = $this->getCategoryPath($category);
+                $breadcrumb['links'][] = $this->getCategoryPath($category);
             }
         }
 
-        $breadcrumb[] = [
+        $breadcrumb['links'][] = [
             'title' => $this->context->controller->product->name,
             'url' => $this->context->link->getProductLink($this->context->controller->product)
         ];
