@@ -63,6 +63,7 @@
               name="{$field.name}"
               type="{$field.type}"
               value="{$field.value}"
+              class="default-input"
       >
       {if $field.name === 'company'}
         <small class="_margin-left-small">{l s='Optional'}</small>

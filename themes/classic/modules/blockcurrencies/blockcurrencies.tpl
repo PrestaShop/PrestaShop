@@ -32,7 +32,7 @@
   <ul class="dropdown-menu" aria-labelledby="dLabel">
     {foreach from=$currencies item=currency}
       <li {if $currency.current} class="current" {/if}>
-        <a rel="nofollow" href="{$currency.url}" class="dropdown-item">{$currency.iso_code} {$currency.sign}</a>
+        <a title="{$currency.name}" rel="nofollow" href="{$currency.url}" class="dropdown-item">{$currency.iso_code} {$currency.sign}</a>
       </li>
     {/foreach}
   </ul>
