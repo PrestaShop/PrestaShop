@@ -24,6 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
+
 class LanguageCore extends ObjectModel
 {
     public $id;
@@ -168,7 +172,14 @@ class LanguageCore extends ObjectModel
             }
         }
 
-        foreach (Theme::getThemes() as $theme) {
+        $theme_manager = new ThemeManager(
+            $this->context->shop,
+            new Configurator(),
+            new ThemeChecker,
+            $this->context->employee
+        );
+        $themes = $theme_manager->getThemeList();
+        foreach ($themes as $theme) {
             /** @var Theme $theme */
             $theme_dir = $theme->directory;
             if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php')) {
@@ -185,28 +196,6 @@ class LanguageCore extends ObjectModel
                 }
             }
         }
-    }
-
-    /**
-      * Return an array of theme
-      *
-      * @return array([theme dir] => array('name' => [theme name]))
-      * @deprecated 1.5.5.0
-      */
-    protected function _getThemesList()
-    {
-        Tools::displayAsDeprecated();
-
-        static $themes = array();
-
-        if (empty($themes)) {
-            $installed_themes = Theme::getThemes();
-            foreach ($installed_themes as $theme) {
-                /** @var Theme $theme */
-                $themes[$theme->directory] = array('name' => $theme->name);
-            }
-        }
-        return $themes;
     }
 
     public function add($autodate = true, $nullValues = false, $only_add = false)
@@ -1007,7 +996,7 @@ class LanguageCore extends ObjectModel
         return Cache::retrieve($key);
     }
 
-    public static function updateModulesTranslations(Array $modules_list)
+    public static function updateModulesTranslations(array $modules_list)
     {
         require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 

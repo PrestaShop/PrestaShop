@@ -102,7 +102,7 @@
 						<option value="">{l s='Core (no theme selected)'}</option>
 						{/if}
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
+							<option value="{$theme->name}" {if $current_theme_name == $theme->name}selected=selected{/if}>{$theme->name}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -240,7 +240,7 @@
 				<div class="col-lg-4">
 					<select name="theme" id="export-theme">
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
+							<option value="{$theme->name}" {if $current_theme_name == $theme->name}selected=selected{/if}>{$theme->name}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -273,7 +273,7 @@
 				<div class="col-lg-4">
 					<select name="fromTheme">
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
+							<option value="{$theme->name}" {if $current_theme_name == $theme->name}selected=selected{/if}>{$theme->name}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -290,7 +290,7 @@
 				<div class="col-lg-4">
 					<select name="toTheme">
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
+							<option value="{$theme->name}" {if $current_theme_name == $theme->name}selected=selected{/if}>{$theme->name}</option>
 						{/foreach}
 					</select>
 				</div>
