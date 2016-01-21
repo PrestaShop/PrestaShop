@@ -1,5 +1,5 @@
 # include subparts of the Admin interface
-_admin_category_routing:
+_admin_addons_routing:
     resource: "admin/routing_addons.yml"
     prefix: /addons
 
