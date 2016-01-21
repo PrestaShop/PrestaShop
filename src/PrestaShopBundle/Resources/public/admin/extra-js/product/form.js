@@ -1104,6 +1104,10 @@ var form = (function() {
 
 	return {
 		'init': function() {
+			/** prevent form submit on ENTER keypress */
+			jwerty.key('enter', function(e) {
+				e.preventDefault();
+			});
 
 			/** create keyboard event for save */
 			jwerty.key('ctrl+S', function(e) {
