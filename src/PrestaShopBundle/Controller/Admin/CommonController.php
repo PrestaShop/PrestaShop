@@ -62,9 +62,10 @@ class CommonController extends FrameworkBundleAdminController
      * @param integer $limit
      * @param integer $offset
      * @param integer $total
+     * @param string $view full|quicknav To change default template used to render the content
      * @return array Template vars
      */
-    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0)
+    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
     {
         // base elements
         if ($limit <= 0) {
@@ -82,43 +83,43 @@ class CommonController extends FrameworkBundleAdminController
                 unset($callerParameters[$k]);
             }
         }
-        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters')['_route']);
-        $nextPageUrl = ($offset+$limit >= $total) ? false : $this->generateUrl($routeName, array_merge(
+        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
+        $nextPageUrl = (!$routeName || ($offset+$limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => min($total-1, $offset+$limit),
                 'limit' => $limit
             )
         ));
-        $previousPageUrl = ($offset == 0) ? false : $this->generateUrl($routeName, array_merge(
+        $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => max(0, $offset-$limit),
                 'limit' => $limit
             )
         ));
-        $firstPageUrl = ($offset == 0) ? false : $this->generateUrl($routeName, array_merge(
+        $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
                 'limit' => $limit
             )
         ));
-        $lastPageUrl = ($offset+$limit >= $total) ? false : $this->generateUrl($routeName, array_merge(
+        $lastPageUrl = (!$routeName || ($offset+$limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => ($pageCount-1)*$limit,
                 'limit' => $limit
             )
         ));
-        $changeLimitUrl = $this->generateUrl($routeName, array_merge(
+        $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
                 'limit' => '_limit'
             )
         ));
-        $jumpPageUrl = $this->generateUrl($routeName, array_merge(
+        $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 999999,
@@ -128,7 +129,7 @@ class CommonController extends FrameworkBundleAdminController
         $limitChoices = $request->attributes->get('limit_choices', array(20, 50, 100));
 
         // Template vars injection
-        return array(
+        $vars = array(
             'limit' => $limit,
             'changeLimitUrl' => $changeLimitUrl,
             'first_url' => $firstPageUrl,
@@ -143,6 +144,12 @@ class CommonController extends FrameworkBundleAdminController
             'jump_page_url' => $jumpPageUrl,
             'limit_choices' => $limitChoices,
         );
+        if ($view != 'full') {
+            return $this->render('PrestaShopBundle:Admin:Common/pagination_'.$view.'.html.twig', array_merge($vars, [
+                // TODO
+            ]));
+        }
+        return $vars;
     }
 
     /**

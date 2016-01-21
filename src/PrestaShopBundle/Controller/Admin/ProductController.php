@@ -228,9 +228,10 @@ class ProductController extends FrameworkBundleAdminController
      * @param integer $offset The offset of the listing
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
+     * @param string $view full|quicknav To change default template used to render the content
      * @return array Template vars
      */
-    public function listAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
+    public function listAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc', $view = 'full')
     {
         $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
         /* @var $productProvider ProductInterfaceProvider */
@@ -243,6 +244,22 @@ class ProductController extends FrameworkBundleAdminController
         $lastSql = $request->attributes->get('last_sql', null); // get from action subcall data, if any
 
         if ($products === null) {
+            // get old values from persistence (before the current update)
+            $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
+
+            if ($offset === 'last') {
+                $offset = $persistedFilterParameters['last_offset'];
+            }
+            if ($limit === 'last') {
+                $limit = $persistedFilterParameters['last_limit'];
+            }
+            if ($orderBy === 'last') {
+                $orderBy = $persistedFilterParameters['last_orderBy'];
+            }
+            if ($sortOrder === 'last') {
+                $sortOrder = $persistedFilterParameters['last_sortOrder'];
+            }
+
             // 2 hooks are triggered here: actionAdminProductsListingFieldsModifier and actionAdminProductsListingResultsModifier
             $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder);
             $lastSql = $productProvider->getLastCompiledSql();
@@ -261,12 +278,21 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         // Template vars injection
-        return array(
+        $vars = array(
             'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
         );
+        if ($view != 'full') {
+            return $this->render('PrestaShopBundle:Admin:Product/list_'.$view.'.html.twig', array_merge($vars, [
+                'limit' => $limit,
+                'offset' => $offset,
+                'total' => $totalCount,
+
+            ]));
+        }
+        return $vars;
     }
 
     /**

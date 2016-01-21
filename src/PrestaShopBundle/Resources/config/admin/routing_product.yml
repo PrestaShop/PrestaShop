@@ -15,7 +15,7 @@ admin_product_catalog:
         sortOrder: last|asc|desc
 
 admin_product_list:
-    path:     /list/{offset}/{limit}/{orderBy}/{sortOrder}
+    path:     /list/{offset}/{limit}/{orderBy}/{sortOrder}/{view}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::listAction
@@ -23,10 +23,12 @@ admin_product_list:
         offset: 0
         orderBy: last
         sortOrder: last
+        view: full
     requirements:
         orderBy: last|id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
         offset: last|\d+
         sortOrder: last|asc|desc
+        view: full|quicknav
 
 admin_product_new:
     path: /new

@@ -37,17 +37,19 @@ _admin_warehouse_routing:
 
 # include common routes for Admin interface
 admin_common_pagination:
-    path:     /common/pagination/{offset}/{limit}/{total}
+    path:     /common/pagination/{offset}/{limit}/{total}/{view}
     methods:  [GET]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::paginationAction'
         offset: 0
         limit: 20
         total: 0
+        view: full
     requirements:
         offset: \d+
         limit: \d+
         total: \d+
+        view: full|quicknav
 
 admin_common_recommended_modules:
     path:     /common/recommended_modules/{domain}/{limit}/{randomize}
