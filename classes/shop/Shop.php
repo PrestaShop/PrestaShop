@@ -476,7 +476,7 @@ class ShopCore extends ObjectModel
         $theme_data['directory'] = $dir;
         $theme_data['settings'] = null;
 
-        $settings_dir = $theme_data['directory'].'/config/settings.json';
+        $settings_dir = $theme_data['directory'].'/config/settings_'.$this->id.'.json';
         if (file_exists($settings_dir)) {
             $theme_data['settings'] = json_decode(file_get_contents(
                 $settings_dir
