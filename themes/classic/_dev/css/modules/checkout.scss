@@ -18,14 +18,11 @@ section.checkout-step {
   small {
     color: $gray;
   }
-  input[type=text],
-  input[type=date],
-  input[type=email],
-  input[type=password]{
-    min-width: 220px;
+  .default-input{
+    min-width: 40%;
     &[name=address1],
     &[name=address2] {
-      min-width: 315px;
+      min-width: 60%;
     }
   }
   .radio-field {
