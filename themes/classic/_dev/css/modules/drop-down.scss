@@ -1,21 +1,7 @@
-.drop-down{
-  margin-top: 20px;
-  span,a,i{
-    color:$gray;
-  }
-  ul{
-    list-style: none;
-    visibility: hidden;
-    max-height: 0;
-    padding-left: 0;
-    background: white;
-    @include transition(max-height .7s $ease-out-quad);
-  }
-  i{
-    vertical-align: middle;
-    margin-left: 10px;
-  }
+.dropdown{
+  color:$gray;
   .expand-more{
+    color: $gray-dark;
     cursor: pointer;
     @include user-select(none);
   }

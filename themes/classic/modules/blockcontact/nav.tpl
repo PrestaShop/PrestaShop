@@ -22,18 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<div class="currency-selector dropdown js-dropdown _margin-top-small col-md-2">
-  <span>{l s='Currency' mod='blockcurrencies'} :</span>
-  <span class="expand-more _gray-dark">{$current_currency.iso_code} {$current_currency.sign}</span>
-  <a title="{l s='Expand'}" data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <i class="material-icons expand-more">&#xE5C5;</i>
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="dLabel">
-    {foreach from=$currencies item=currency}
-      <li {if $currency.current} class="current" {/if}>
-        <a title="{$currency.name}" rel="nofollow" href="{$currency.url}" class="dropdown-item">{$currency.iso_code} {$currency.sign}</a>
-      </li>
-    {/foreach}
-  </ul>
+<div id="contact-link" class="col-md-2 _margin-top-small">
+  {if $contact_infos.phone}
+    {l s='Call us : [1]%s[/1]' tags=['<span class="_gray-dark">'] sprintf=$contact_infos.phone mod='blockcontact'}
+  {else}
+    <a href="{$urls.pages.contact}" title="{l s='Contact us' mod='blockcontact'}">{l s='Contact us' mod='blockcontact'}</a>
+  {/if}
 </div>

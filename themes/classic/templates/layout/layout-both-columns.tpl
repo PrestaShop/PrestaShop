@@ -9,7 +9,7 @@
 
   <body id="{$page.page_name}">
 
-    <main class="container-fluid">
+    <main>
       <header id="header">
         {block name='header'}
           {include file='_partials/header.tpl'}
@@ -20,32 +20,33 @@
         {include file='_partials/notifications.tpl'}
       {/block}
 
-      <div id="wrapper" class="container">
-        {block name='breadcrumb'}
-          {include file='_partials/breadcrumb.tpl'}
-        {/block}
+      <section id="wrapper">
+        <div class="container">
+          {block name='breadcrumb'}
+            {include file='_partials/breadcrumb.tpl'}
+          {/block}
 
-        {block name="left_column"}
-          <div id="left-column">
-            {hook h="displayLeftColumn"}
-          </div>
-        {/block}
+          {block name="left_column"}
+            <div id="left-column">
+              {hook h="displayLeftColumn"}
+            </div>
+          {/block}
 
-        {block name="right_column"}
-          <div id="right-column">
-            {hook h="displayRightColumn"}
-          </div>
-        {/block}
+          {block name="right_column"}
+            <div id="right-column">
+              {hook h="displayRightColumn"}
+            </div>
+          {/block}
 
-        {block name="content_wrapper"}
-          <div id="content-wrapper" class="left-column right-column">
-            {block name="content"}
-              <p>Hello world! This is HTML5 Boilerplate.</p>
-            {/block}
-          </div>
-        {/block}
-
-      </div>
+          {block name="content_wrapper"}
+            <div id="content-wrapper" class="left-column right-column">
+              {block name="content"}
+                <p>Hello world! This is HTML5 Boilerplate.</p>
+              {/block}
+            </div>
+          {/block}
+        </div>
+      </section>
 
       <footer id="footer">
         {block name="footer"}

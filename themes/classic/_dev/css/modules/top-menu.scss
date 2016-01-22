@@ -1,15 +1,6 @@
 .top-menu {
-  .active {
-    max-height: 200px;
-    overflow-y: hidden;
-    visibility: visible !important;
-    background: $gray-dark;
-    max-height: 500px;
-  }
-  ul {
+  a {
+    display: block;
     padding: 10px;
-    list-style: none;
-    max-height: 0;
-    @include transition(max-height .7s $ease-out-quad);
   }
 }
