@@ -193,6 +193,17 @@ class ModuleController extends Controller
         ));
     }
 
+    public function getPreferredModulesAction()
+    {
+        $controller = new \AdminModulesControllerCore();
+        ob_start();
+
+        $controller->ajaxProcessGetTabModulesList();
+
+        $content = ob_get_clean();
+        return new Response($content);
+    }
+
     /**
      * Controller responsible for importing new module from DropFile zone in BO
      * @param  Request $request
@@ -200,6 +211,7 @@ class ModuleController extends Controller
      */
     public function importModuleAction(Request $request)
     {
+
         try {
             $file_uploaded = $request->files->get('file_uploaded');
             $file_uploaded_name = $file_uploaded->getClientOriginalName();
@@ -383,7 +395,6 @@ class ModuleController extends Controller
 
     public function configureModuleAction($module_name)
     {
-        $modulesProvider    = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
 
         /* @var $legacyUrlGenerator UrlGeneratorInterface */
@@ -449,9 +460,10 @@ class ModuleController extends Controller
     protected function updateModule($module_name)
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+
         $module_to_update = null;
         $additionnal_upgrade_files = 0;
-        //$module = $modulesProvider->getModule($module_name);
+
         foreach ($modulesProvider->getManageModules() as $module) {
             if ($module->name == $module_name) {
                 $old_version = $module->database_version;
@@ -485,7 +497,6 @@ class ModuleController extends Controller
 
     final private function getAddonsConnectToolbar()
     {
-        $addonsConnect = [];
         $addonsProvider = $this->container->get('prestashop.core.admin.data_provider.addons_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
 
