@@ -51,7 +51,17 @@ class PDFCore
     {
         $this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'), $orientation);
         $this->template = $template;
-        $this->smarty = $smarty->createData($smarty);
+
+        /**
+         * We need a Smarty instance that does NOT escape
+         * HTML.
+         * Since in BO Smarty does not autoescape
+         * and in FO Smarty does autoescape, we use
+         * a new Smarty of which we're sure it does not escape
+         * the HTML.
+         */
+
+        $this->smarty = clone $smarty;
         $this->smarty->escape_html = false;
 
         $this->objects = $objects;
