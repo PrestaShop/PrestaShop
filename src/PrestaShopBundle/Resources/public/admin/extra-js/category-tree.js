@@ -70,6 +70,7 @@
 					$(item).parent("li").categorytreeFoldStyle('more');
 				}
 			});
+			$(this).closest('.hide').removeClass("hide");
 		}
 		// return the jquery selection (or if it was a method call that returned a value - the returned value)
 		return returnValue;

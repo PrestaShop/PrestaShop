@@ -29,13 +29,17 @@
                 </div>
             </div>
             <div class="col-lg-2 toolbarBox pull-right text-right">
-                <a class="toolbar_btn btn-sales" href="#" title="{{ trans('Quick navigation', [], 'AdminTab') }}" data-toggle="sidebar" data-target="#right-sidebar">
+                <a class="toolbar_btn btn-quicknav" href="#" title="{{ trans('Quick navigation', [], 'AdminTab') }}"
+                    data-toggle="sidebar" data-target="#right-sidebar"
+                    id="product_form_open_quicknav">
                     <i class="icon-AdminCatalog"></i>
                 </a>
-                <a class="toolbar_btn btn-sales" href="{{ stats_link }}" target="_blank" title="{{ trans('Sales', [], 'AdminTab') }}">
+                <a class="toolbar_btn btn-sales" href="{{ stats_link }}" target="_blank" title="{{ trans('Sales', [], 'AdminTab') }}"
+                    id="product_form_go_to_sales">
                     <i class="process-icon-stats"></i>
                 </a>
-                <a class="toolbar_btn btn-help" href="{{ help_link }}" title="{{ trans('Help', [], 'AdminTab') }}">
+                <a class="toolbar_btn btn-help" href="{{ help_link }}" title="{{ trans('Help', [], 'AdminTab') }}"
+                    id="product_form_open_help">
                     <i class="process-icon-help"></i>
                 </a>
             </div>
@@ -46,14 +50,14 @@
                 </div>
             </div>
             <ul class="nav nav-tabs" id="form-nav" role="tablist">
-                <li class="active"><a href="#step1" role="tab" data-toggle="tab">{{ trans('Main information', {}, 'AdminProducts') }}</a></li>
-                <li><a href="#step3" role="tab" data-toggle="tab">{{ trans('Quantity', {}, 'AdminProducts') }}</a></li>
-                <li><a href="#step4" role="tab" data-toggle="tab">{{ trans('Shipping', {}, 'AdminProducts') }}</a></li>
-                <li><a href="#step2" role="tab" data-toggle="tab">{{ trans('Advanced Price', {}, 'AdminProducts') }}</a></li>
-                <li><a href="#step5" role="tab" data-toggle="tab">{{ trans('SEO', {}, 'AdminProducts') }}</a></li>
-                <li><a href="#step6" role="tab" data-toggle="tab">{{ trans('Options', {}, 'AdminProducts') }}</a></li>
+                <li id="tab_step1" class="active"><a href="#step1" role="tab" data-toggle="tab">{{ trans('Main information', {}, 'AdminProducts') }}</a></li>
+                <li id="tab_step3"><a href="#step3" role="tab" data-toggle="tab">{{ trans('Quantity', {}, 'AdminProducts') }}</a></li>
+                <li id="tab_step4"><a href="#step4" role="tab" data-toggle="tab">{{ trans('Shipping', {}, 'AdminProducts') }}</a></li>
+                <li id="tab_step2"><a href="#step2" role="tab" data-toggle="tab">{{ trans('Advanced Price', {}, 'AdminProducts') }}</a></li>
+                <li id="tab_step5"><a href="#step5" role="tab" data-toggle="tab">{{ trans('SEO', {}, 'AdminProducts') }}</a></li>
+                <li id="tab_step6"><a href="#step6" role="tab" data-toggle="tab">{{ trans('Options', {}, 'AdminProducts') }}</a></li>
                 {% if hookcount('displayAdminProductsExtra') > 0 %}
-                    <li><a href="#hooks" role="tab" data-toggle="tab">{{ trans('Additional modules', {}, 'AdminProducts') }}</a></li>
+                    <li id="tab_hooks"><a href="#hooks" role="tab" data-toggle="tab">{{ trans('Additional modules', {}, 'AdminProducts') }}</a></li>
                 {% endif %}
             </ul>
             <div id="form_content" class="tab-content">
@@ -98,8 +102,8 @@
                             </div>
 
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#description_short" data-toggle="tab">{{ trans('Summary', {}, 'AdminProducts') }}</a></li>
-                                <li><a href="#description" data-toggle="tab">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
+                                <li id="tab_description_short" class="active"><a href="#description_short" data-toggle="tab">{{ trans('Summary', {}, 'AdminProducts') }}</a></li>
+                                <li id="tab_description"><a href="#description" data-toggle="tab">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane panel panel-default active" id="description_short">
@@ -622,11 +626,15 @@
             <nav class="navbar navbar-default navbar-fixed-bottom navbar-form-footer">
                 <div class="form-action-bar">
                     <div class="col-xs-6 pull-left">
-                        <a href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-danger delete" data-toggle="tooltip" title="{{ trans('Permanently delete this product.', {}, 'AdminProducts') }}"><i class="icon-trash"></i></a>
+                        <a href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+                            class="btn btn-danger delete" data-toggle="tooltip" id="product_form_delete_btn"
+                            title="{{ trans('Permanently delete this product.', {}, 'AdminProducts') }}"><i class="icon-trash"></i></a>
                         <span class="spacer"></span>
-                        <a href="{{ preview_link }}" target="_blank" class="btn btn-default hidden-xs" data-toggle="tooltip" title="{{ trans('View the product draft on the site.', {}, 'AdminProducts') }}">{{ trans('Preview', {}, 'AdminProducts') }}</a>
+                        <a href="{{ preview_link }}" target="_blank" class="btn btn-default hidden-xs" data-toggle="tooltip" id="product_form_preview_btn"
+                            title="{{ trans('View the product draft on the site.', {}, 'AdminProducts') }}">{{ trans('Preview', {}, 'AdminProducts') }}</a>
 
-                        <div class="checkbox-active" data-toggle="tooltip" title="{{ trans('Should this product be visible on the store?', {}, 'AdminProducts') }}">
+                        <div class="checkbox-active" data-toggle="tooltip" id="product_form_online_switch"
+                            title="{{ trans('Should this product be visible on the store?', {}, 'AdminProducts') }}">
                             {{ trans('Online', {}, 'AdminProducts') }}
                             <div class="checkbox titatoggle unchecked-red checkbox-slider--b-flat" >
                                 <label>
@@ -637,9 +645,15 @@
                         </div>
                     </div>
                     <div class="col-xs-6 pull-right text-right">
-                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase duplicate" data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" data-toggle="tooltip" title="{{ trans('Save and duplicate (CTRL+D) the current product, then go to the new product.', {}, 'AdminProducts') }}">{{ trans('Duplicate', {}, 'AdminProducts')|raw }}</button>
-                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase go-catalog" data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}" data-toggle="tooltip" title="{{ trans('Save and go back to the catalog (CTRL+Q)', {}, 'AdminProducts') }}">{{ trans('Go to catalog', {}, 'AdminProducts')|raw }}</button>
-                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase new-product" data-redirect="{{ path('admin_product_new') }}" data-toggle="tooltip" title="{{ trans('Save and create (CTRL+P) a new product.', {}, 'AdminProducts') }}">{{ trans('Add new product', {}, 'AdminProducts')|raw }}</button>
+                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase duplicate" id="product_form_save_duplicate_btn"
+                            data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+                            data-toggle="tooltip" title="{{ trans('Save and duplicate (CTRL+D) the current product, then go to the new product.', {}, 'AdminProducts') }}">{{ trans('Duplicate', {}, 'AdminProducts')|raw }}</button>
+                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase go-catalog" id="product_form_save_go_to_catalog_btn"
+                            data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
+                            data-toggle="tooltip" title="{{ trans('Save and go back to the catalog (CTRL+Q)', {}, 'AdminProducts') }}">{{ trans('Go to catalog', {}, 'AdminProducts')|raw }}</button>
+                        <button type="button" class="btn btn-default btn-submit hidden-xs uppercase new-product" id="product_form_save_new_btn"
+                            data-redirect="{{ path('admin_product_new') }}" data-toggle="tooltip"
+                            title="{{ trans('Save and create (CTRL+P) a new product.', {}, 'AdminProducts') }}">{{ trans('Add new product', {}, 'AdminProducts')|raw }}</button>
                         <input id="submit" type="submit" class="btn btn-primary uppercase" value="{{ trans('Save', {}, 'AdminProducts') }}" data-toggle="tooltip" title="{{ trans('Save (CTRL+S) the product and stay on the current page.', {}, 'AdminProducts') }}" />
                     </div>
                     <div class="clearfix"></div>

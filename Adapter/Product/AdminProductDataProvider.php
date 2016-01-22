@@ -248,6 +248,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 continue;
             }
             if (strpos($filterParam, 'filter_column_') === 0) {
+                $filterValue = \Db::getInstance()->escape($filterValue, false, true);
                 $field = substr($filterParam, 14); // 'filter_column_' takes 14 chars
                 if (isset($sqlSelect[$field]['table'])) {
                     $sqlWhere[] = $sqlSelect[$field]['table'].'.`'.$sqlSelect[$field]['field'].'` '.sprintf($sqlSelect[$field]['filtering'], $filterValue);

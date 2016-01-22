@@ -31,23 +31,22 @@
         <div class="pull-right">
             <input type="button" name="product_catalog_category_tree_filter_expand" value="{{ trans('Expand All', {}, 'AdminTab') }}"
                    onclick="productCategoryFilterExpand($('div#product_catalog_category_tree_filter'), this);"
-                   class="btn" />
+                   class="btn" id="product_catalog_category_tree_filter_expand" />
             <input type="button" name="product_catalog_category_tree_filter_collapse" value="{{ trans('Collapse All', {}, 'AdminTab') }}"
                    onclick="productCategoryFilterCollapse($('div#product_catalog_category_tree_filter'), this);"
-                   class="btn" />
+                   class="btn" id="product_catalog_category_tree_filter_collapse" />
             <input type="button" name="product_catalog_category_tree_filter_reset" value="Unselect"
                    onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'));"
-                   class="btn" />
+                   class="btn" id="product_catalog_category_tree_filter_reset" />
         </div>
-        <div class="form-wrapper">
+        <div class="form-wrapper hide">
             {{ form_widget(categories) }}
         </div>
     </div>
-
     <div class="panel col-lg-12">
         <div class="panel-heading">
             {{ trans("Products", {}, 'AdminProducts') }} {% if has_category_filter == true and activate_drag_and_drop == true %} {{ trans("(ordering)", {}, 'AdminProducts') }} {%else%} {% if has_filter == true %} {{ trans("(filtered)", {}, 'AdminProducts') }} {% endif %} {% endif %}
-            <span class="badge">{% if has_filter == true %}{{ product_count_filtered }} / {% endif %}{{ product_count }}</span>
+            <span id="product_list_badge" class="badge">{% if has_filter == true %}{{ product_count_filtered }} / {% endif %}{{ product_count }}</span>
             <span class="panel-heading-action">
                 <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
                     <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Export", {}, 'AdminTab') }}" data-html="true" data-placement="top">
@@ -59,12 +58,12 @@
                         <i class="process-icon-import"></i>
                     </span>
                 </a>
-                <a class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
+                <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
                     <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Show SQL query", {}, 'AdminTab') }}" data-html="true" data-placement="top">
                         <i class="process-icon-terminal"></i>
                     </span>
                 </a>
-                <a class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
+                <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
                     <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Export to SQL Manager", {}, 'AdminTab') }}" data-html="true" data-placement="top">
                         <i class="process-icon-database"></i>
                     </span>
@@ -81,10 +80,7 @@
                 <table class="table table-condensed table-striped product" redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}">
                     <thead>
                         <tr class="column-headers">
-                            <th>
-                                <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('table').find('td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
-                            </th>
-                            <th>
+                            <th colspan="2">
                                 {{ trans("ID", {}, 'AdminProducts') }}
                                 &nbsp;<span psorderby="id_product" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'id_product' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="id_product" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'id_product' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
@@ -193,7 +189,10 @@
                       {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder, 'products': products, 'last_sql': last_sql})
                     %}
                     <tfooter>
-
+                        <th colspan="2">
+                            <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('table').find('td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
+                            &nbsp;{{ trans("Select all", {}, 'AdminTab') }}
+                        </th>
                     </tfooter>
                 </table>
             </div>
