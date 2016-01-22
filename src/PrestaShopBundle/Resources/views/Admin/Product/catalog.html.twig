@@ -132,7 +132,14 @@
                         </tr>
                         <tr class="column-filters">
                             <th colspan="2">
-                                <input type="text" placeholder="{{ trans("Search exact ID", {}, 'AdminProducts') }}" name="filter_column_id_product" value="{{ filter_column_id_product }}" style="width:8.5em" />
+                                {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
+                                    'input_name': "filter_column_id_product",
+                                    'min': '0',
+                                    'max': '1000000',
+                                    'minLabel': trans("Min", {}, 'AdminProducts'),
+                                    'maxLabel': trans("Max", {}, 'AdminProducts'),
+                                    'value': filter_column_id_product,
+                                } %}
                             </th>
                             <th>&nbsp;</th>
                             <th>

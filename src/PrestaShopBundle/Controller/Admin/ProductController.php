@@ -95,7 +95,6 @@ class ProductController extends FrameworkBundleAdminController
         if ($request->isMethod('POST')) {
             foreach ($request->request->all() as $param => $value) {
                 switch ($param) {
-                    case 'filter_column_id_product':
                     case 'filter_category':
                         if (!is_numeric($value)) {
                             $request->request->set($param, '');
