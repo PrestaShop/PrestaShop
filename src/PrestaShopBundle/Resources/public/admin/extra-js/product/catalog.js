@@ -83,6 +83,7 @@ $(document).ready(function() {
 	 */
 	form.submit(function(e) {
 	    e.preventDefault();
+		$('#filter_column_id_product', form).val($('#filter_column_id_product', form).attr('sql'));
 	    $('#filter_column_price', form).val($('#filter_column_price', form).attr('sql'));
 	    $('#filter_column_sav_quantity', form).val($('#filter_column_sav_quantity', form).attr('sql'));
 		productCatalogFilterChanged = false;

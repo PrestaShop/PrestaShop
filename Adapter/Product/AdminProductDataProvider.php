@@ -179,7 +179,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $idLang = \ContextCore::getContext()->language->id;
 
         $sqlSelect = array(
-            'id_product' => array('table' => 'p', 'field' => 'id_product', 'filtering' => self::FILTERING_EQUAL_NUMERIC),
+            'id_product' => array('table' => 'p', 'field' => 'id_product', 'filtering' => ' %s '),
             'reference' => array('table' => 'p', 'field' => 'reference', 'filtering' => self::FILTERING_LIKE_BOTH),
             'price' => array('table' => 'p', 'field' => 'price', 'filtering' => ' %s '),
             'id_shop_default' => array('table' => 'p', 'field' => 'id_shop_default'),
