@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<div class="form-group">
+<div id="specific-price-combination-selector" class="form-group {{ has_combinations ? '' : 'hide' }}">
     <div class="col-xs-8 pull-left">
         <label class="control-label">{{ form.sp_id_product_attribute.vars.label }}</label>
         {{ form_errors(form.sp_id_product_attribute) }}
@@ -52,7 +52,7 @@
         {{ form_errors(form.sp_from_quantity) }}
         <div class="input-group">
             {{ form_widget(form.sp_from_quantity) }}
-            <span class="input-group-addon">{{ trans('Untit(s)', {}, 'Adminproducts') }}</span>
+            <span class="input-group-addon">{{ trans('Unit(s)', {}, 'Adminproducts') }}</span>
         </div>
     </div>
 </div>
