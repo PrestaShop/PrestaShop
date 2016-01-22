@@ -1,5 +1,6 @@
-@import url('//fonts.googleapis.com/css?family=Open+Sans:400,600,700');
+@import url('//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
 @import "partials/_variables";
+@import "partials/_functions";
 @import "partials/_fonts";
 @import "partials/_helpers";
 @import "~bootstrap/scss/bootstrap";
@@ -8,6 +9,8 @@
 @import "modules/search-widget";
 @import "modules/top-menu";
 @import "modules/checkout";
+@import "modules/homeslider";
+@import "modules/homefeatured";
 
 body {
   font-family: 'Open Sans', sans-serif;
@@ -15,6 +18,7 @@ body {
 }
 /*** HEADER ***/
 #header {
+  background: white;
   .header-nav {
     border-bottom: $gray-light 2px solid;
     max-height: 50px;
@@ -26,7 +30,12 @@ body {
       font-size: 16px;
     }
     .user-info{
-      width: 110px;
+      a{
+        color: $gray;
+      }
+    }
+    .language-selector{
+      width: 115px;
     }
     .cart-preview {
       .shopping-cart {
@@ -71,6 +80,8 @@ body {
   }
 }
 #wrapper {
+  background: $body-color;
+  box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.11);
   .breadcrumb {
     text-transform: uppercase;
     background: transparent;
@@ -88,17 +99,6 @@ body {
     }
     a {
       color: $gray;
-    }
-  }
-  .product-miniature {
-    min-height: 630px;
-    .product-title a {
-      color: $body-color;
-    }
-  }
-  .variant-links {
-    a {
-      margin-top: 20px;
     }
   }
 }

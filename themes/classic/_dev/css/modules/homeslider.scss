@@ -1,0 +1,49 @@
+.carousel {
+  .carousel-inner {
+    height: 340px;
+  }
+  .carousel-item {
+    height: 100%;
+    img {
+      width: 100%;
+    }
+    .caption {
+      position: absolute;
+      bottom: 0;
+      left: 90px;
+      color: white;
+      max-width: 340px;
+      .caption-title{
+        font-weight: 600;
+        font-size: em(55px);
+      }
+      .caption-description p{
+        font-weight: 300;
+      }
+    }
+  }
+  .carousel-control {
+    opacity: 1;
+    .icon-prev,
+    .icon-next {
+      margin-top: -50px;
+      &::before {
+        content: "";
+      }
+      i {
+        font-size: 50px;
+        color: white;
+      }
+    }
+    .icon-prev {
+      margin-left: -75px;
+    }
+    .icon-next {
+      margin-right: -60px;
+    }
+    &.right,
+    &.left {
+      background: none;
+    }
+  }
+}

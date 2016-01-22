@@ -1,0 +1,51 @@
+.featured-products {
+  .product-miniature {
+    .product-thumbnail {
+      display: block;
+    }
+    .product-title a {
+      color: $gray;
+      font-size: 14px;
+      text-decoration: none;
+      text-align: center;
+      font-weight: 300;
+    }
+    .thumbnail-container {
+      margin-bottom: em(25px);
+      height: 370px;
+      width: 257px;
+      background: white;
+      box-shadow: 0 0 1px 2px rgba(0,0,0,0.05);
+    }
+  }
+  .products-section-title {
+    text-align: center;
+    font-size: em(22px);
+    font-weight: 700;
+    margin: em(50px) 0 em(40px);
+    color: $gray-dark;
+  }
+  .product-title {
+    text-align: center;
+  }
+  .product-description-short,
+  .product-list-actions,
+   {
+    display: none;
+  }
+  .product-price-and-shipping{
+    color:$gray-dark;
+    font-weight: 700;
+    text-align: center;
+  }
+  .variant-links {
+    display: none;
+    a {
+      margin-top: 20px;
+    }
+  }
+  img {
+    margin-left: 4px;
+    border-bottom: $gray-light 1px solid;
+  }
+}
