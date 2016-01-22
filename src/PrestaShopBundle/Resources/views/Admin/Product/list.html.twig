@@ -37,9 +37,13 @@
             </td>
             <td>
                 {% if product.active|default(0) == 0 %}
-                    <i class="icon-remove list-action-enable action-disabled"></i>
+                    <a href="#" onclick="unitProductAction(this, 'activate'); return false;">
+                        <i class="icon-remove list-action-enable action-disabled"></i>
+                    </a>
                 {% else %}
-                    <i class="icon-check list-action-enable action-enabled"></i>
+                    <a href="#" onclick="unitProductAction(this, 'deactivate'); return false;">
+                        <i class="icon-check list-action-enable action-enabled"></i>
+                    </a>
                 {% endif %}
             </td>
             {% if product.position is defined %}

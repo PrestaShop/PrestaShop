@@ -1,56 +1,58 @@
 <div>
-    <h2>{{ trans("Quick navigation", {}, 'AdminProducts') }}</h2>
-
-    <table class="table table-condensed table-striped product">
-        <thead>
-            <tr class="column-headers">
-                <th class="hidden-xs hidden-sm hidden-md">
-                    {{ trans("ID", {}, 'AdminProducts') }}
-                </th>
-                <th>
-                    {{ trans("Name", {}, 'AdminProducts') }}
-                </th>
-                <th class="hidden-xs hidden-sm">
-                    {{ trans("Base price", {}, 'AdminProducts') }}
-                </th>
-                <th class="hidden-xs">
-                    {{ trans("Quantity", {}, 'AdminProducts') }}
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in products %}
-                <tr>
-                    <td class="hidden-xs hidden-sm hidden-md">
-                        <a href="{{ product.url|default('') }}#tab-step1">{{ product.id_product }}</a>
-                    </td>
-                    <td>
-                        <a href="{{ product.url|default('') }}#tab-step1">{{ product.name|default(trans('N/A', {}, 'AdminTab')) }}</a>
-                    </td>
-                    <td class="hidden-xs hidden-sm">
-                        <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default(trans('N/A', {}, 'AdminTab')) }}</a>
-                    </td>
-                    <td class="hidden-xs product-sav-quantity" productquantityvalue="{{ product.sav_quantity|default('') }}">
-                        <a href="{{ product.url|default('') }}#tab-step3">
-                            {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
-                                {{ product.sav_quantity }}
-                            {% else %}
-                                <span class="badge badge-danger">{{ product.sav_quantity|default(trans('N/A', {}, 'AdminTab')) }}</span>
-                            {% endif %}
-                        </a>
-                    </td>
+    <div class="quicknav-scroller">
+        <h2>{{ trans("Quick navigation", {}, 'AdminProducts') }}</h2>
+        <table class="table table-condensed table-striped product quicknav-products">
+            <thead>
+                <tr class="column-headers">
+                    <th class="hidden-xs hidden-sm hidden-md">
+                        {{ trans("ID", {}, 'AdminProducts') }}
+                    </th>
+                    <th>
+                        {{ trans("Name", {}, 'AdminProducts') }}
+                    </th>
+                    <th class="hidden-xs hidden-sm">
+                        {{ trans("Base price", {}, 'AdminProducts') }}
+                    </th>
+                    <th class="hidden-xs">
+                        {{ trans("Quantity", {}, 'AdminProducts') }}
+                    </th>
                 </tr>
-            {% else %}
-                <tr><td colspan="5">
-                    {{ trans("There is no result for this search. You should remove some criteria.", {}, 'AdminProducts') }}
-                </td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <br/>
-    {% render controller('PrestaShopBundle:Admin\\Common:pagination',
-        {'limit': limit, 'offset': offset, 'total': total, 'caller_parameters': {'_route': 'admin_product_list', 'view': 'quicknav'}, 'view': 'quicknav'})
-    %}
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td class="hidden-xs hidden-sm hidden-md">
+                            <a href="{{ product.url|default('') }}#tab-step1">{{ product.id_product }}</a>
+                        </td>
+                        <td>
+                            <a href="{{ product.url|default('') }}#tab-step1">{{ product.name|default(trans('N/A', {}, 'AdminTab')) }}</a>
+                        </td>
+                        <td class="hidden-xs hidden-sm">
+                            <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default(trans('N/A', {}, 'AdminTab')) }}</a>
+                        </td>
+                        <td class="hidden-xs product-sav-quantity" productquantityvalue="{{ product.sav_quantity|default('') }}">
+                            <a href="{{ product.url|default('') }}#tab-step3">
+                                {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
+                                    {{ product.sav_quantity }}
+                                {% else %}
+                                    <span class="badge badge-danger">{{ product.sav_quantity|default(trans('N/A', {}, 'AdminTab')) }}</span>
+                                {% endif %}
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5">
+                        {{ trans("There is no result for this search. You should remove some criteria.", {}, 'AdminProducts') }}
+                    </td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <nav class="navbar quicknav-fixed-bottom navbar-form-footer">
+        {% render controller('PrestaShopBundle:Admin\\Common:pagination',
+            {'limit': limit, 'offset': offset, 'total': total, 'caller_parameters': {'_route': 'admin_product_list', 'view': 'quicknav'}, 'view': 'quicknav'})
+        %}
+    </nav>
     <br/>
     <br/>
 </div>
