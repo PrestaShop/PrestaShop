@@ -1,6 +1,10 @@
 {extends file='checkout/checkout-step.tpl'}
 
 {block name='step_content'}
+  <div id="hook-display-before-carrier">
+    {$hookDisplayBeforeCarrier nofilter}
+  </div>
+
   <div class="delivery-options-list">
     {if $delivery_options|count}
       <form id="delivery-method" method="post">
@@ -47,4 +51,6 @@
       <p class="warning">{l s='Unfortunately, there are no carriers available for your delivery address.'}</p>
     {/if}
   </div>
+
+  <div id="extra_carrier"></div>
 {/block}
