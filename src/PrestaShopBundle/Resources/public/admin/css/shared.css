@@ -47,12 +47,6 @@
     border-color: #E7E8E8 !important;
 }
 
-.active {
-    color: #25B9D7 !important;
-}
-
-
-
 /* CSS FOR Spinner Loader may be removed once we have our own */
 $green: #008744;
 $blue: #0057e7;

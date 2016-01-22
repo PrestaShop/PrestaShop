@@ -278,3 +278,94 @@
         });
     </script>
 {% endblock %}
+
+{% block typeahead_customer_collection_widget %}
+    {{ form_errors(form) }}
+    <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12">
+        {% if collection is defined and collection|length > 0 %}
+            {% for item in collection %}
+                <li>
+                    <img src="{{ item.image }}" />
+                    {{ template_collection|format(item.name)|raw }}
+                    <input type="hidden" name="{{ form.vars.full_name }}" value="{{ item.id }}" />
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    <script>
+        $( document ).ready(function() {
+            var limit = {{ limit }};
+
+            //remove collection item
+            $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
+                e.preventDefault();
+                var _this = $(this);
+
+                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                    onContinue: function(){
+                        _this.parent().remove();
+                    }
+                }).show();
+            });
+
+            //define source
+            this['{{ form.vars.id }}_source'] = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                identify: function(obj) {
+                    return obj.{{ mapping_value }};
+                },
+                remote: {
+                    url: '{{ remote_url|raw }}',
+                    cache: false,
+                    wildcard: '%QUERY',
+                    transform: function(response){
+                        if(!response){
+                            return [];
+                        }
+                        return response;
+                    }
+                }
+            });
+
+            //define typeahead
+            $('#{{ form.vars.id }}').typeahead({
+                limit: 20,
+                minLength: 2,
+                highlight: true,
+                cache: false,
+                hint: false,
+            }, {
+                display: '{{ mapping_name }}',
+                source: this['{{ form.vars.id }}_source'],
+                limit: 30,
+                templates: {
+                    suggestion: function(item){
+                        return '<div>'+ item.{{ mapping_name }} +'</div>'
+                    }
+                }
+            }).bind('typeahead:select', function(ev, suggestion) {
+
+                //if collection length is up to limit, return
+                if(limit != 0 && $('#{{ form.vars.id }}-data li').length >= limit){
+                    return;
+                }
+
+                var value = suggestion.{{ mapping_value }};
+                if (suggestion.id_product_attribute) {
+                    value = value+','+suggestion.id_product_attribute;
+                }
+
+                var html = '<li>';
+                html += sprintf('{{ template_collection|raw }}', suggestion.{{ mapping_name }});
+                html += '<input type="hidden" name="{{ form.vars.full_name }}" value="' + value + '" />';
+                html += '</li>';
+                $('#{{ form.vars.id }}-data').append(html);
+
+            }).bind('typeahead:close', function(ev) {
+                $(ev.target).val('');
+            });
+        });
+    </script>
+{% endblock %}

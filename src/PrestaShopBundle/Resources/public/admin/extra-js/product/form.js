@@ -877,7 +877,6 @@ var specificPrices = (function() {
 					var row = '<tr>\
 						<td>'+ specific_price.rule_name +'</td>\
 						<td>'+ specific_price.attributes_name +'</td>\
-						<td>'+ specific_price.shop +'</td>\
 						<td>'+ specific_price.currency +'</td>\
 						<td>'+ specific_price.country +'</td>\
 						<td>'+ specific_price.group +'</td>\
@@ -886,7 +885,7 @@ var specificPrices = (function() {
 						<td>'+ specific_price.impact +'</td>\
 						<td>'+ specific_price.period +'</td>\
 						<td>'+ specific_price.from_quantity +'</td>\
-						<td>'+ (specific_price.can_delete ? '<a href="'+ $('#js-specific-price-list').attr('data-action-delete')+'/'+specific_price.id_specific_price +'" class="btn btn-default js-delete">X</a>' : '') +'</td>\
+						<td>'+ (specific_price.can_delete ? '<a href="'+ $('#js-specific-price-list').attr('data-action-delete')+'/'+specific_price.id_specific_price +'" class="btn btn-default js-delete"><i class="icon-trash"></i></a>' : '') +'</td>\
 					</tr>';
 
 					tbody.append(row);
@@ -909,6 +908,7 @@ var specificPrices = (function() {
 			},
 			success: function(response){
 				showSuccessMessage(translate_javascripts['Form update success']);
+				$('#specific_price_form .js-cancel').click();
 				getAll();
 			},
 			complete: function(){
@@ -925,8 +925,6 @@ var specificPrices = (function() {
 	 * @param {object} elem - The clicked link
 	 */
 	function remove(elem) {
-		var parentElem = elem.parent().parent();
-
 		modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
 			onContinue: function(){
 				$.ajax({
@@ -936,7 +934,7 @@ var specificPrices = (function() {
 						elem.attr('disabled', 'disabled');
 					},
 					success: function(response){
-						parentElem.remove();
+						getAll();
 						showSuccessMessage(response);
 					},
 					error: function(response){
@@ -974,6 +972,14 @@ var specificPrices = (function() {
 			/** set the default price to for specific price form */
 			$('#form_step2_specific_price_sp_price').val($('#form_step2_price').val());
 			this.getAll();
+
+			$('#specific-price .add').click(function(){
+				$(this).hide();
+			});
+
+			$('#specific_price_form .js-cancel').click(function(){
+				$('#specific-price .add').click().show();
+			});
 
 			$('#specific_price_form .js-save').click(function(){
 				add($(this));
@@ -1689,6 +1695,12 @@ var priceCalculation = (function() {
 				priceCalculation.taxExclude();
 			});
 
+			/** on price change, update final retails prices */
+			$('#form_step2_price, #form_step2_price_ttc').change(function(){
+				$('#final_retail_price_te').text(formatCurrency(parseFloat($('#form_step2_price').val())));
+				$('#final_retail_price_ti').text(formatCurrency(parseFloat($('#form_step2_price_ttc').val())));
+			});
+
 			/** update HT price and shortcut price field on change */
 			$('#form_step2_ecotax').keyup(function(){
 				priceCalculation.taxExclude();
@@ -1704,11 +1716,13 @@ var priceCalculation = (function() {
 			});
 
 			priceCalculation.taxInclude();
+
+			$('#form_step2_price, #form_step2_price_ttc').change();
 		},
 		'taxInclude': function() {
 			var price = parseFloat(priceHTElem.val().replace(/,/g, '.'));
 			if(isNaN(price)){
-				return 0;
+				price = 0;
 			}
 
 			var rates = taxElem.find('option:selected').attr('data-rates').split(',');
@@ -1721,7 +1735,7 @@ var priceCalculation = (function() {
 		'taxExclude': function() {
 			var price = parseFloat(priceTTCElem.val().replace(/,/g, '.'));
 			if(isNaN(price)){
-				return 0;
+				price = 0;
 			}
 
 			var rates = taxElem.find('option:selected').attr('data-rates').split(',');
