@@ -81,6 +81,7 @@ class LayoutExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('getLegacyLayout', array($this, 'getLegacyLayout')),
+            new \Twig_SimpleFunction('getAdminLink', array($this, 'getAdminLink')),
         );
     }
 
@@ -143,6 +144,20 @@ EOF;
         );
 
         return $content;
+    }
+
+    /**
+     * This is a Twig port of the Smarty {$link->getAdminLink()} function
+     *
+     * @param string $controller the controller name
+     * @param bool $withToken
+     * @param array[string] $extraParams
+     *
+     * @return string
+     */
+    public function getAdminLink($controllerName, $withToken = true, $extraParams = [])
+    {
+        return $this->context->getAdminLink($controllerName, $withToken = true, $extraParams = []);
     }
 
     /**
