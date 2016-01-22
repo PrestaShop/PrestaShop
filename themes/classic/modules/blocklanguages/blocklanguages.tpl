@@ -23,14 +23,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="language-selector dropdown js-dropdown _margin-top-small col-md-2 col-md-offset-3">
-  <span class="expand-more">{$current_language.name}</span>
+  <span class="expand-more">{$current_language.name_simple}</span>
   <a data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <i class="material-icons expand-more">&#xE5C5;</i>
   </a>
   <ul class="dropdown-menu" aria-labelledby="dLabel">
     {foreach from=$languages item=language}
       <li {if $language.id_lang == $current_language.id_lang} class="current" {/if}>
-        <a href="{$link->getLanguageLink($language.id_lang)}" class="dropdown-item">{$language.name}</a>
+        <a href="{$link->getLanguageLink($language.id_lang)}" class="dropdown-item">{$language.name_simple}</a>
       </li>
     {/foreach}
   </ul>
