@@ -622,7 +622,7 @@
             <nav class="navbar navbar-default navbar-fixed-bottom navbar-form-footer">
                 <div class="form-action-bar">
                     <div class="col-xs-6 pull-left">
-                        <a href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-danger" data-toggle="tooltip" title="{{ trans('Permanently delete this product.', {}, 'AdminProducts') }}"><i class="icon-trash"></i></a>
+                        <a href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-danger delete" data-toggle="tooltip" title="{{ trans('Permanently delete this product.', {}, 'AdminProducts') }}"><i class="icon-trash"></i></a>
                         <span class="spacer"></span>
                         <a href="{{ preview_link }}" target="_blank" class="btn btn-default hidden-xs" data-toggle="tooltip" title="{{ trans('View the product draft on the site.', {}, 'AdminProducts') }}">{{ trans('Preview', {}, 'AdminProducts') }}</a>
 

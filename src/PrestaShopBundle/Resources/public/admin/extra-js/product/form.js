@@ -1159,6 +1159,17 @@ var form = (function() {
 			$('#form_step1_active', elem).change(function(){
 				send();
 			});
+
+			/** on delete product */
+			$('.form-action-bar .delete', elem).click(function(e){
+				e.preventDefault();
+				var _this = $(this);
+				modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+					onContinue: function(){
+						window.location = _this.attr('href');
+					}
+				}).show();
+			});
 		},
 		'send': function() {
 			send();
