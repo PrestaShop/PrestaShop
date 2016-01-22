@@ -134,6 +134,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             $this->template,
             $extraParams,
             [
+                'hookDisplayBeforeCarrier'  => Hook::exec('displayBeforeCarrier', array('cart' => $this->getCheckoutSession()->getCart())),
                 'id_address'            => $this->getCheckoutSession()->getIdAddressDelivery(),
                 'delivery_options'      => $this->getCheckoutSession()->getDeliveryOptions(),
                 'delivery_option'       => $this->getCheckoutSession()->getSelectedDeliveryOption(),
