@@ -81,3 +81,12 @@
   -o-transform: translate(0,0);
   transform: translate(0,0);
 }
+
+.sidebar.sidebar-right .quicknav-fixed-bottom {
+  bottom: 9.5em;
+  margin-bottom: 0;
+  background: #363A41;
+  position: fixed;
+  left: 0;
+  right: 3em;
+}

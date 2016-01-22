@@ -684,6 +684,22 @@ class ProductController extends FrameworkBundleAdminController
                     $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
                     // stops here and redirect to the new product's page.
                     return $this->redirectToRoute('admin_product_form', array('id' => $duplicateProductId), 302);
+                case 'activate':
+                    $hookDispatcher->dispatchMultiple(['actionAdminActivateBefore', 'actionAdminProductsControllerActivateBefore'], $hookEventParameters);
+                    // Hooks: managed in ProductUpdater
+                    $productUpdater->activateProductIdList([$id]);
+                    $this->addFlash('success', $translator->trans('Product successfully activated.', [], 'AdminProducts'));
+                    $logger->info('Product activated: '.$id);
+                    $hookDispatcher->dispatchMultiple(['actionAdminActivateAfter', 'actionAdminProductsControllerActivateAfter'], $hookEventParameters);
+                    break;
+                case 'deactivate':
+                    $hookDispatcher->dispatchMultiple(['actionAdminDeactivateBefore', 'actionAdminProductsControllerDeactivateBefore'], $hookEventParameters);
+                    // Hooks: managed in ProductUpdater
+                    $productUpdater->activateProductIdList([$id], false);
+                    $this->addFlash('success', $translator->trans('Product successfully deactivated.', [], 'AdminProducts'));
+                    $logger->info('Product deactivated: '.$id);
+                    $hookDispatcher->dispatchMultiple(['actionAdminDeactivateAfter', 'actionAdminProductsControllerDeactivateAfter'], $hookEventParameters);
+                    break;
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
                     $logger->error('Unit action from ProductController received a bad parameter.');

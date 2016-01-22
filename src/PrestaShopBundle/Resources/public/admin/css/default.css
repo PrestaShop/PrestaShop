@@ -155,3 +155,12 @@ ul.category-tree li > ul{
 .icon-caret-selected{
   color: #000000 !important;
 }
+div.quicknav-scroller {
+  overflow-y: auto;
+  top:1em;
+  bottom: 14em;
+  position: fixed;
+  right: 1em;
+  left: 1em;
+  margin-right: 3em;
+}

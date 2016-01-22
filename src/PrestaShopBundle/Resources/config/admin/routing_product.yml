@@ -69,7 +69,7 @@ admin_product_unit_action:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::unitAction
     requirements:
-        action: delete|duplicate
+        action: delete|duplicate|activate|deactivate
         id: \d+
 
 admin_product_mass_edit_action:
