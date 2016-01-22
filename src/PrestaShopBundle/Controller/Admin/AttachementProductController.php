@@ -52,7 +52,7 @@ class AttachementProductController extends FrameworkBundleAdminController
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
 
         if (!$product || !$request->isXmlHttpRequest()) {
             return $response;
