@@ -22,7 +22,7 @@
 * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="panel " id="">
+<div class="panel" id="">
 
   <div class="panel-heading">
     <i class="icon-cogs"></i>
@@ -37,9 +37,9 @@
           <table class="table table-stripped">
 
             <tr>
-              <th>Page</th>
-              <th>Description</th>
-              <th>Layout</th>
+              <th>{l s='Page'}</th>
+              <th>{l s='Description'}</th>
+              <th>{l s='Layout'}</th>
             </tr>
 
             {foreach $pages as $page}
@@ -78,7 +78,7 @@
     <div class="panel-footer">
       <input type="hidden" name="action" value="submitConfigureLayouts">
       <button type="submit" class="btn btn-default pull-right" name="submitConfigureLayouts">
-        <i class="process-icon-save"></i> Save
+        <i class="process-icon-save"></i> {l s='Save'}
       </button>
     </div>
 
