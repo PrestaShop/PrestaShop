@@ -111,10 +111,13 @@ var displayFieldsManager = (function() {
 			/** check quantity / combinations display */
 			if(showVariationsSelector.find('input:checked').val() == 1 || $('#accordion_combinations tr').length > 0){
 				combinations.show();
+
+				$('#specific-price-combination-selector').removeClass('hide').show();
 				$('#form-nav a[href="#step3"]').text(translate_javascripts['Combinations']);
 				$('#product_qty_0_shortcut_div, #quantity-no-attribute, #step3_minimal_quantity').hide();
 			} else {
 				combinations.hide();
+				$('#specific-price-combination-selector').hide();
 				$('#product_qty_0_shortcut_div, #quantity-no-attribute, #step3_minimal_quantity').show();
 			}
 			if ($('#combinations_thead').next().children().length) {
@@ -989,6 +992,14 @@ var specificPrices = (function() {
 				e.preventDefault();
 				remove($(this));
 			});
+
+			$('#form_step2_specific_price_sp_reduction_type').change(function(){
+				if($(this).val() == 'percentage'){
+					$('#form_step2_specific_price_sp_reduction_tax').hide();
+				}else{
+					$('#form_step2_specific_price_sp_reduction_tax').show();
+				}
+			});
 		},
 		'getAll': function() {
 			getAll();
@@ -1684,6 +1695,12 @@ var priceCalculation = (function() {
 
 	return {
 		'init': function() {
+			/** on update tax recalculate tax include price */
+			taxElem.change(function(){
+				priceCalculation.taxInclude();
+				priceTTCElem.change();
+			});
+
 			/** update without tax price and shortcut price field on change */
 			$('#form_step1_price_shortcut, #form_step2_price').keyup(function(){
 				if($(this).attr('id') === 'form_step1_price_shortcut'){
