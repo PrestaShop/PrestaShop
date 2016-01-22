@@ -48,7 +48,7 @@
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=deleteTheme&amp;theme_name={$theme->name|urlencode}" title="Delete this theme" class="delete">
+														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=deleteTheme&amp;theme_name={$theme->name|urlencode}" title="{l s='Delete this theme'}" class="delete">
 															<i class="icon-trash"></i> {l s='Delete this theme'}
 														</a>
 													</li>
@@ -96,7 +96,7 @@
 				<h4>{l s='Configure your page layouts'}</h4>
 				<div class="row">
 					<div class="col-sm-8">
-						<p>{l s='Each page can use a different layouts, choose it among the layout bundled in your theme.'}</p>
+						<p>{l s='Each page can use a different layout, choose it among the layouts bundled in your theme.'}</p>
 					</div>
 					<div class="col-sm-4">
 						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')}&display=configureLayouts">
