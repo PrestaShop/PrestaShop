@@ -234,31 +234,48 @@
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
                     <div class="col-lg-9">
                         <div class="form-group" id="virtual_product" data-action="{{ path('admin_product_virtual_save_action') }}" data-action-remove="{{ path('admin_product_virtual_remove_action') }}">
-                            {{ form_label(form.step3.virtual_product) }}
-                            <div class="col-sm-10">
+                            <h4>{{ form.step3.virtual_product.vars.label }}</h4>
+                            <div class="form-group form-inline">
                                 {{ form_widget(form.step3.virtual_product.is_virtual_file) }}
-                                <div id="virtual_product_content">
-                                    {{ form_errors(form.step3.virtual_product) }}
-
-                                    <div class="form-group">
-                                        {{ form_label(form.step3.virtual_product.file) }}
-                                        <div class="col-sm-10">
-
-                                            <div id="form_step3_virtual_product_file_input" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'hide' : 'show' }}">
-                                                {{ form_widget(form.step3.virtual_product.file) }}
-                                            </div>
-                                            <div id="form_step3_virtual_product_file_details" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'show' : 'hide' }}">
-                                                <a href="{{ form.step3.virtual_product.vars.value.file_download_link is defined ? form.step3.virtual_product.vars.value.file_download_link : '' }}" class="btn btn-default download">{{ trans('Download file', {}, 'AdminProducts') }}</a>
-                                                <a href="{{ path('admin_product_virtual_remove_file_action') }}" class="btn btn-default delete">{{ trans('Delete this file', {}, 'AdminProducts') }}</a>
-                                            </div>
-                                        </div>
+                            </div>
+                            <div id="virtual_product_content" class="well col-lg-8">
+                                {{ form_errors(form.step3.virtual_product) }}
+                                <div class="form-group">
+                                    <label class="control-label">{{ form.step3.virtual_product.file.vars.label }}</label>
+                                    <div id="form_step3_virtual_product_file_input" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'hide' : 'show' }}">
+                                        {{ form_widget(form.step3.virtual_product.file) }}
                                     </div>
-
-                                    {{ form_row(form.step3.virtual_product.name) }}
-                                    {{ form_row(form.step3.virtual_product.nb_downloable) }}
-                                    {{ form_row(form.step3.virtual_product.expiration_date) }}
-                                    {{ form_row(form.step3.virtual_product.nb_days) }}
-                                    {{ form_row(form.step3.virtual_product.save) }}
+                                    <div id="form_step3_virtual_product_file_details" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'show' : 'hide' }}">
+                                        <a href="{{ form.step3.virtual_product.vars.value.file_download_link is defined ? form.step3.virtual_product.vars.value.file_download_link : '' }}" class="btn btn-default download">{{ trans('Download file', {}, 'AdminProducts') }}</a>
+                                        <a href="{{ path('admin_product_virtual_remove_file_action') }}" class="btn btn-default delete">{{ trans('Delete this file', {}, 'AdminProducts') }}</a>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label class="control-label">{{ form.step3.virtual_product.name.vars.label }}</label>
+                                        {{ form_errors(form.step3.virtual_product.name) }}
+                                        {{ form_widget(form.step3.virtual_product.name) }}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="control-label">{{ form.step3.virtual_product.nb_downloable.vars.label }}</label>
+                                        {{ form_errors(form.step3.virtual_product.nb_downloable) }}
+                                        {{ form_widget(form.step3.virtual_product.nb_downloable) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label class="control-label">{{ form.step3.virtual_product.expiration_date.vars.label }}</label>
+                                        {{ form_errors(form.step3.virtual_product.expiration_date) }}
+                                        {{ form_widget(form.step3.virtual_product.expiration_date) }}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="control-label">{{ form.step3.virtual_product.nb_days.vars.label }}</label>
+                                        {{ form_errors(form.step3.virtual_product.nb_days) }}
+                                        {{ form_widget(form.step3.virtual_product.nb_days) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    {{ form_widget(form.step3.virtual_product.save) }}
                                 </div>
                             </div>
                         </div>
@@ -284,23 +301,23 @@
                         {% endif %}
 
                         <div class="form-group" id="pack_stock_type">
-                            {{ form_label(form.step3.pack_stock_type) }}
-                            <div class="col-sm-10">
+                            <h4>{{ form.step3.pack_stock_type.vars.label }}</h4>
+                            <div class="col-sm-4">
                                 {{ form_errors(form.step3.pack_stock_type) }}
                                 {{ form_widget(form.step3.pack_stock_type) }}
                             </div>
                         </div>
 
                         <div class="form-group" style="{% if has_combinations or form.step3.depends_on_stock.vars.value != "0" %}display: none;{% endif %}" id="quantity-no-attribute">
-                            {{ form_label(form.step3.qty_0) }}
-                            <div class="col-sm-10">
+                            <h4>{{ form.step3.qty_0.vars.label }}</h4>
+                            <div class="col-sm-2">
                                 {{ form_errors(form.step3.qty_0) }}
                                 {{ form_widget(form.step3.qty_0) }}
                             </div>
                         </div>
 
                         <div id="combinations">
-                            <h3>{{ trans('Product combinations', [], 'AdminProducts') }}</h3>
+                            <h4>{{ trans('Product combinations', [], 'AdminProducts') }}</h4>
                             <div class="form-group" id="attributes-generator">
                                 <p>
                                     {{ trans('Create a series of combinations by entering the related attributes below.', [], 'AdminProducts') }}
@@ -338,9 +355,7 @@
                             </div>
                         </div>
 
-                        <hr />
-
-                        <h3>{{ trans('Availability preferences', [], 'AdminProducts') }}</h3>
+                        <h4>{{ trans('Availability preferences', [], 'AdminProducts') }}</h4>
 
                         <div class="form-group form-inline">
                             <label class="control-label">{{ trans('Behavior when out of stock', [], 'AdminProducts') }}</label>

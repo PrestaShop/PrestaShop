@@ -13,7 +13,7 @@
             {% set collectionName = 'warehouse_combination_' ~ warehouse.id_warehouse %}
             <div class="form-group" id="warehouse_combination_{{ warehouse.id_warehouse }}">
                 <label class="col-sm-2 control-label">
-                    <h3>{{ form[collectionName].vars.label }}</h3><br/>
+                    <h4>{{ form[collectionName].vars.label }}</h4><br/>
                     {% if form[collectionName]|length() > 1 %}
                         <button type="button" class="btn btn-default check_all_warehouse">
                             <i class="icon-check-sign"></i> {{ trans('Mark / Unmark all', [], 'AdminTab') }}
