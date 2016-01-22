@@ -48,7 +48,7 @@ class WarehouseController extends FrameworkBundleAdminController
         $response = new Response();
 
         //get product and all warehouses
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
         if (!is_object($product) || empty($product->id)) {
             $response->setStatusCode(400);
             return $response;

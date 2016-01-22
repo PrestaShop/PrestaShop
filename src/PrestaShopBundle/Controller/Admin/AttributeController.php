@@ -91,7 +91,7 @@ class AttributeController extends FrameworkBundleAdminController
 
         //get product
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
 
         if (!is_object($product) || empty($product->id) || empty($options) || !is_array($options)) {
             $response->setStatusCode(400);
@@ -250,7 +250,7 @@ class AttributeController extends FrameworkBundleAdminController
 
         //get product
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
 
         //get combinations
         $modelMapper = new ProductAdminModelAdapter(
@@ -293,7 +293,7 @@ class AttributeController extends FrameworkBundleAdminController
         $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
 
         //get product images
         $productImages = $productAdapter->getImages($idProduct, $locales[0]['id_lang']);
