@@ -122,6 +122,21 @@ $(document).ready(function(){
 	$('#columns #layer_cart, #columns .layer_cart_overlay').detach().prependTo('#columns');
 });
 
+// TODO: move this somewhere else
+function hookShoppingCartPreAdd(args) {
+	// this is a variable generated from Media::addJsDef()
+	if (hookListingShoppingCartPreAdd === undefined || ! hookListingShoppingCartPreAdd) {
+		return args;
+	}
+	for (i in hookListingShoppingCartPreAdd) {
+		// such a named function exists ?
+		if (window[hookListingShoppingCartPreAdd[i]]) {
+			args = window[hookListingShoppingCartPreAdd[i]](args);
+		}
+	}
+	return args;
+}
+
 //JS Object : update the cart by ajax actions
 var ajaxCart = {
 	nb_total_products: 0,
@@ -317,7 +332,19 @@ var ajaxCart = {
 		if ($('.cart_block_list').hasClass('collapsed'))
 			this.expand();
 		//send the ajax request to the server
+		dataArray = { controller: 'cart',
+			      add: 1,
+			      ajax: true,
+			      qty: ((quantity && quantity != null) ? quantity : '1'),
+			      id_product: idProduct,
+			      token: static_token
+			    };
+		if (parseInt(idCombination) && idCombination != null) {
+			dataArray.ipa = parseInt(idCombination);
+			dataArray.id_customization = typeof customizationId !== 'undefined' ? customizationId : 0;
+		}
 
+		dataArray = hookShoppingCartPreAdd(dataArray);
 		$.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
@@ -325,7 +352,7 @@ var ajaxCart = {
 			async: true,
 			cache: false,
 			dataType : "json",
-			data: 'controller=cart&add=1&ajax=true&qty=' + ((quantity && quantity != null) ? quantity : '1') + '&id_product=' + idProduct + '&token=' + static_token + ( (parseInt(idCombination) && idCombination != null) ? '&ipa=' + parseInt(idCombination): '' + '&id_customization=' + ((typeof customizationId !== 'undefined') ? customizationId : 0)),
+			data: dataArray,
 			success: function(jsonData,textStatus,jqXHR)
 			{
 				// add appliance to whishlist module
