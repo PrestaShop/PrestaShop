@@ -3848,6 +3848,7 @@ class AdminControllerCore extends Controller
             foreach ($this->boxes as $id) {
                 /** @var ObjectModel $object */
                 $object = new $this->className((int)$id);
+                $object->setFieldsToUpdate(array('active' => true));
                 $object->active = (int)$status;
                 $result &= $object->update();
             }
