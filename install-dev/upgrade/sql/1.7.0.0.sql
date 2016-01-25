@@ -70,3 +70,4 @@ DROP TABLE `PREFIX_theme_specific`;
 
 ALTER TABLE `PREFIX_shop` DROP COLUMN `id_theme`;
 ALTER TABLE `PREFIX_shop` ADD COLUMN `theme_name` VARCHAR(255) AFTER `id_category`;
+UPDATE `PREFIX_shop` SET `theme_name` = 'StarterTheme';
