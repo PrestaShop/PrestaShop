@@ -80,11 +80,15 @@
 
 	var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
 
+	var _componentsProductMiniature = __webpack_require__(37);
+
+	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
+
 	var _prestashop = __webpack_require__(31);
 
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 
-	var _events = __webpack_require__(37);
+	var _events = __webpack_require__(38);
 
 	var _events2 = _interopRequireDefault(_events);
 
@@ -100,6 +104,7 @@
 	  var topMenuEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-top-menu ul');
 	  var dropDown = new _componentsDropDown2['default'](dropDownEl).init();
 	  var topMenu = new _componentsTopMenu2['default'](topMenuEl).init();
+	  var productMinitature = new _componentsProductMiniature2['default']().init();
 	  (0, _common.psShowHide)();
 	});
 
@@ -9581,6 +9586,54 @@
 
 /***/ },
 /* 37 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var ProductMinitature = (function () {
+	  function ProductMinitature() {
+	    _classCallCheck(this, ProductMinitature);
+	  }
+
+	  _createClass(ProductMinitature, [{
+	    key: 'init',
+	    value: function init() {
+	      $('.js-product-miniature').each(function (index, element) {
+	        if ($(element).find('.discount-percentage').length) {
+	          $(element).find('.new').remove();
+	        }
+	        if ($(element).find('.color').length > 5) {
+	          (function () {
+	            var count = 0;
+	            $(element).find('.color').each(function (index, element) {
+	              if (index > 4) {
+	                $(element).hide();
+	                count++;
+	              }
+	            });
+	            $('.js-count').append('+' + count);
+	          })();
+	        }
+	      });
+	    }
+	  }]);
+
+	  return ProductMinitature;
+	})();
+
+	exports['default'] = ProductMinitature;
+	module.exports = exports['default'];
+
+/***/ },
+/* 38 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
