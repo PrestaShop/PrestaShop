@@ -4888,6 +4888,33 @@ section.checkout-step {
   bottom: 0.5em;
   font-size: 1.125em; }
 
+.featured-products .all-product-link {
+  clear: both;
+  color: #414141;
+  font-weight: 700;
+  margin-top: 1.875em;
+  margin-bottom: 3.125em;
+  font-size: 1.125em; }
+
+#block-cmsinfo {
+  background: white;
+  border-radius: 2px;
+  margin-top: 4.375em;
+  padding: 3.125em 18.125em;
+  text-align: center; }
+  #block-cmsinfo h3 {
+    text-transform: uppercase;
+    color: #414141;
+    font-size: 1.5625em;
+    font-weight: 700; }
+  #block-cmsinfo p {
+    color: #414141;
+    font-weight: 300;
+    font-size: 1.1em; }
+    #block-cmsinfo p .dark {
+      color: #acaaa6;
+      font-weight: 300; }
+
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px; }

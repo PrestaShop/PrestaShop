@@ -4,5 +4,6 @@
     {foreach from=$products item="product"}
       {include file="catalog/product-miniature.tpl" product=$product}
     {/foreach}
+    <a class="all-product-link pull-xs-right" href="{$allProductsLink}">{l s='All products' mod='homefeatured'}<i class="material-icons">&#xE315;</i></a>
   </div>
 </section>
