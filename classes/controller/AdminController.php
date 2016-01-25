@@ -476,7 +476,6 @@ class AdminControllerCore extends Controller
             $this->_defaultOrderBy = $this->identifier;
         }
         $this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
-        $this->context->employee->setTabAccess($this->tabAccess);
 
         // Fix for homepage
         if ($this->controller_name == 'AdminDashboard') {
