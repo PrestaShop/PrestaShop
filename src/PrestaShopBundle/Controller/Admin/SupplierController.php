@@ -49,7 +49,7 @@ class SupplierController extends FrameworkBundleAdminController
         $response = new Response();
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
 
         $suppliers = explode('-', $supplierIds);
         if ($supplierIds == 0 || count($suppliers) == 0) {

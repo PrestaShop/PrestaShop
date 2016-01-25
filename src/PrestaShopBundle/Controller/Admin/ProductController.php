@@ -337,7 +337,7 @@ class ProductController extends FrameworkBundleAdminController
     public function formAction($id, Request $request)
     {
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct($id, true);
+        $product = $productAdapter->getProduct($id);
         if (!$product || empty($product->id)) {
             return $this->redirectToRoute('admin_product_catalog');
         }
