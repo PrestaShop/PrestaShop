@@ -1,9 +1,10 @@
 #block-cmsinfo {
   background: white;
   border-radius: 2px;
-  margin-top: em(70px);
+  margin: em(70px) 0;
   padding: em(50px) em(290px);
   text-align: center;
+  @include box-shadow;
   h3 {
     text-transform: uppercase;
     color: $gray-dark;

@@ -14,8 +14,9 @@
     height: 370px;
     width: 257px;
     background: white;
-    box-shadow: 0 0 1px 2px rgba(0,0,0,0.05);
+    box-shadow: 0 0 5px 3px rgba(0,0,0,0.05);
     &:hover {
+      @include box-shadow;
       .highlighted-informations {
         bottom: 140px;
       }
@@ -55,7 +56,7 @@
       height: 20px;
       display: inline-block;
       margin: em(5px);
-      box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.2);
+      @include box-shadow;
     }
   }
   .highlighted-informations {
@@ -96,7 +97,7 @@
     background: $blue;
     text-transform: uppercase;
     width: 50px;
-    box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.1);
+    @include box-shadow;
     &.discount-percentage {
       z-index: 2;
       background: $orange;
