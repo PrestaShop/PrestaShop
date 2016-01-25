@@ -239,6 +239,8 @@
                           {/block}
 
                           <input class="add-to-cart" type="submit" name="add" value="{l s='Add to cart'}" />
+
+                          {hook h='displayProductButtons' product=$product}
                         {*</form>*}
                       {/if}
                     {/block}
