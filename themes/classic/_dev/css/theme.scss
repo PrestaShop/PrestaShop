@@ -82,9 +82,13 @@ body {
 #wrapper {
   background: $body-color;
   box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.11);
+  padding-top: em(25px);
   .breadcrumb {
     text-transform: uppercase;
     background: transparent;
+    &[data-depth="1"]{
+      display: none;
+    }
     ol {
       padding-left: 0;
     }

@@ -9,6 +9,7 @@ import './facets';
 
 import DropDown from './components/drop-down';
 import TopMenu from './components/top-menu';
+import ProductMinitature from './components/product-miniature';
 
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
@@ -27,5 +28,6 @@ $(document).ready(() => {
   let topMenuEl = $('.js-top-menu ul');
   let dropDown = new DropDown(dropDownEl).init();
   let topMenu = new TopMenu(topMenuEl).init();
+  let productMinitature = new ProductMinitature().init();
   psShowHide();
 });
