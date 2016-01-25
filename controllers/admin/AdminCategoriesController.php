@@ -639,6 +639,22 @@ class AdminCategoriesControllerCore extends AdminController
                 'name' => 'checkBoxShopAsso',
             );
         }
+	    // NOTE : Add new input field for id_default_shop if mutlishop context and fill it
+	    // Display this field only if multistore option is enabled AND there are several stores configured
+	    if (Shop::isFeatureActive()) {
+	        $this->fields_form['input'][] = array(
+	                'type' => 'select',
+	                'label' => $this->l('Default shop'),
+	                'name' => 'id_shop_default',
+	                'required' => true, 
+	                'options' => array(
+	        	    'query' => Shop::getShops(),
+	            	    'id' => 'id_shop',
+	            	    'name' => 'name'
+	        	  )
+	            );
+	        $this->fields_value['id_shop_default'] = Validate::isLoadedObject($obj) && $obj->id_shop_default;
+	    }
 
         // remove category tree and radio button "is_root_category" if this category has the root category as parent category to avoid any conflict
         if ($this->_category->id_parent == (int)Configuration::get('PS_ROOT_CATEGORY') && Tools::isSubmit('updatecategory')) {
@@ -751,11 +767,26 @@ class AdminCategoriesControllerCore extends AdminController
         }
         $object = parent::processAdd();
 
+        // NOTE : check multishop and default shop in shop list
+        if (Tools::isSubmit('checkBoxShopAsso_category') && !in_array((int)Tools::getValue('id_shop_default'), Tools::getValue('checkBoxShopAsso_category'))) {
+            $this->errors[] = Tools::displayError('The default shop must be in Associated shop list.');
+        }
+
         //if we create a you root category you have to associate to a shop before to add sub categories in. So we redirect to AdminCategories listing
         if ($object && Tools::getValue('is_root_category')) {
             Tools::redirectAdmin(self::$currentIndex.'&id_category='.(int)Configuration::get('PS_ROOT_CATEGORY').'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=3');
         }
         return $object;
+    }
+
+    // NOTE : add processUpdate method to check for multishop and default shop in shop list
+    public function processUpdate()
+    {
+    	// NOTE : check multishop and default shop in shop list
+    	if (Tools::isSubmit('checkBoxShopAsso_category') && !in_array((int)Tools::getValue('id_shop_default'), Tools::getValue('checkBoxShopAsso_category'))) {
+    	    $this->errors[] = Tools::displayError('The default shop must be in Associated shop list.');
+    	}
+    	Parent::processUpdate();
     }
 
     protected function setDeleteMode()

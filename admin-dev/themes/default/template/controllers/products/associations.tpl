@@ -58,6 +58,25 @@
 			</select>
 		</div>
 	</div>
+	<!-- NOTE : input for id_shop_default selection in multishop context -->
+	{if $feature_shop_active && !$is_shop_context}
+	<div class="form-group">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="id_shop_default" type="default"}</span></div>
+		<label class="control-label col-lg-2" for="id_shop_default">
+			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The default shop is the main shop for your product, used for Force default shop URL feature (Preferences > SEO & URLs) .'}">
+				{l s='Default shop'}
+			</span>
+		</label>
+		<div class="col-lg-5">
+			<select id="id_category_default" name="id_shop_default">
+				<option value="" ></option>
+				{foreach from=$asso_shop_list item=asso_shop}
+					<option value="{$asso_shop.id_shop}" {if $id_shop_default == $asso_shop.id_shop}selected="selected"{/if} >{$asso_shop.name}</option>
+				{/foreach}
+			</select>
+		</div>
+	</div>
+	{/if}
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="product_autocomplete_input">
 			<span class="label-tooltip" data-toggle="tooltip"

@@ -103,6 +103,17 @@ class AdminMetaControllerCore extends AdminController
             ),
         );
 
+		// NOTE : Add shop force option in mutlishop context only
+		if (Shop::isFeatureActive()) {
+			$general_fields['PS_SHOP_FORCE_DEFAULT'] = array(
+				    'title' => $this->l('Force default shop URL'),
+				    'hint' => $this->l('Enable this option if you want to force default shop domain for products and categories in your URLs.'),
+				    'validation' => 'isBool',
+				    'cast' => 'intval',
+				    'type' => 'bool'
+				);
+		}
+
         $url_description = '';
         if (!defined('_PS_HOST_MODE_')) {
             if ($this->checkConfiguration($this->ht_file)) {

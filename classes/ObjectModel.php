@@ -482,7 +482,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Database insertion
         if (Shop::checkIdShopDefault($this->def['table'])) {
-            $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
+            // NOTE : remove id_shop_default default if value is explicit and present in shop list
+            if (is_null($this->id_shop_default) || in_array($this->id_shop_default, $id_shop_list)) {
+            	$this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
+            }
         }
         if (!$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), $null_values)) {
             return false;

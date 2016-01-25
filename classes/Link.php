@@ -95,8 +95,6 @@ class LinkCore
             $id_lang = Context::getContext()->language->id;
         }
 
-        $url = $this->getBaseLink($id_shop, null, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
-
         if (!is_object($product)) {
             if (is_array($product) && isset($product['id_product'])) {
                 $product = new Product($product['id_product'], false, $id_lang, $id_shop);
@@ -106,6 +104,16 @@ class LinkCore
                 throw new PrestaShopException('Invalid product vars');
             }
         }
+
+        // NOTE : get base link moved after object loading and check if id_shop not explicit and config on
+        $ssl = null;
+        if(is_null($id_shop) && Configuration::get('PS_SHOP_FORCE_DEFAULT')) {
+        	$id_shop = $product->id_shop_default;
+        	// NOTE : get shop SSL parameter based on required shop
+        	$ssl = Configuration::get('PS_SSL_ENABLED', null, Shop::getGroupFromShop($id_shop), $id_shop);
+        }
+        // NOTE : SSL parameter shop added (was null) - @TODO : should be handled in getBaseLink
+        $url = $this->getBaseLink($id_shop, $ssl, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
 
         // Set available keywords
         $params = array();
@@ -171,11 +179,19 @@ class LinkCore
             $id_lang = Context::getContext()->language->id;
         }
 
-        $url = $this->getBaseLink($id_shop, null, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
-
         if (!is_object($category)) {
             $category = new Category($category, $id_lang);
         }
+
+        // NOTE : get base link moved after object loading and check if id_shop not explicit and config on
+        $ssl = null;
+        if(is_null($id_shop) && Configuration::get('PS_SHOP_FORCE_DEFAULT')) {
+        	$id_shop = $category->id_shop_default;
+        	// NOTE : get shop SSL parameter based on required shop
+        	$ssl = Configuration::get('PS_SSL_ENABLED', null, Shop::getGroupFromShop($id_shop), $id_shop);
+        }
+        // NOTE : SSL parameter shop added (was null) - @TODO : should be handled in getBaseLink
+        $url = $this->getBaseLink($id_shop, $ssl, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
 
         // Set available keywords
         $params = array();
@@ -407,7 +423,7 @@ class LinkCore
                         //default: if (array_key_exists('updateproduct', $sfRouteParams))
                         return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/form/' . $sfRouteParams['id_product'];
                     }
-                    return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog';
+                    //return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog/';
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }

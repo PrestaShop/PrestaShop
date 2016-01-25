@@ -3262,6 +3262,23 @@ class AdminProductsControllerCore extends AdminController
             $categories[] = $key;
         }
 
+        // NOTE : default shop shop list filtered by shop product existenz
+        if(Shop::isFeatureActive()) {
+        	if ($product->id) {
+        		$shop_list = Product::getShopsByProduct($product->id);
+        		foreach($shop_list as $key => $shop) {
+        			$shop_list[$key]['name'] = Shop::getNameById($shop['id_shop']);
+        		}
+        		$id_shop_default = $product->id_shop_default;
+        	} else {
+        		 $shop_list = Shop::getShops();
+        		 $id_shop_default = null;
+        	}
+        	$data->assign(array('asso_shop_list' => $shop_list,
+        				'id_shop_default' => $id_shop_default
+        	));
+        }
+
         $tree = new HelperTreeCategories('associated-categories-tree', 'Associated categories');
         $tree->setTemplate('tree_associated_categories.tpl')
             ->setHeaderTemplate('tree_associated_header.tpl')
