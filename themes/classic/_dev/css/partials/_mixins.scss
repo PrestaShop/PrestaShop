@@ -1,0 +1,37 @@
+@mixin search-box{
+  form {
+    position: relative;
+    input[type=text] {
+      border: none;
+      padding: 10px;
+      min-width: 255px;
+      background: $gray-light;
+      @include placeholder {
+        color: rgba($gray, 0.5);
+      }
+    }
+    button[type=submit] {
+      position: absolute;
+      background: none;
+      border: none;
+      bottom: 5px;
+      right: 10px;
+      font-size: 25px;
+      color: $gray-dark;
+    }
+  }
+}
+
+@mixin submit-button{
+  input[type=submit]{
+    background: $blue;
+    border:none;
+    color:white;
+    text-transform: uppercase;;
+    padding:em(11px) em(17px);
+  }
+}
+
+@mixin box-shadow{
+  box-shadow: 0 0 5px 3px rgba(0,0,0,0.1);
+}

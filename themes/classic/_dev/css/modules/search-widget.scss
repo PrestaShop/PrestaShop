@@ -1,24 +1,4 @@
 .search-widget {
   float: right;
-  form {
-    position: relative;
-    input[type=text] {
-      border: none;
-      padding: 10px;
-      min-width: 255px;
-      background: $gray-light;
-      @include placeholder {
-        color: rgba($gray, 0.5);
-      }
-    }
-    button[type=submit] {
-      position: absolute;
-      background: none;
-      border: none;
-      bottom: 5px;
-      right: 10px;
-      font-size: 25px;
-      color: $gray-dark;
-    }
-  }
+  @include search-box;
 }
