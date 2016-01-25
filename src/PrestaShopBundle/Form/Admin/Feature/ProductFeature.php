@@ -27,7 +27,6 @@ namespace PrestaShopBundle\Form\Admin\Feature;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
@@ -83,7 +82,11 @@ class ProductFeature extends CommonAbstractType
             'required' =>  false,
             'attr' => array('class' => 'feature-value-selector')
         ))
-        ->add('custom_value', new TranslateType(FormType\TextType::class, array(), $this->locales, true), array(
+        ->add('custom_value', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [],
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'required' =>  false,
             'label' => $this->translator->trans('Custom value', [], 'AdminProducts'),
         ));

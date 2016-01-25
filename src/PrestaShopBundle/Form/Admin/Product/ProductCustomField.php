@@ -27,7 +27,6 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
@@ -58,12 +57,14 @@ class ProductCustomField extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('label', new TranslateType(FormType\TextType::class, array(
-            'constraints' => array(
+        $builder->add('label', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [ 'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Length(array('min' => 2))
-            )
-        ), $this->locales), array(
+            )],
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'label' => $this->translator->trans('Label', [], 'AdminProducts')
         ))
         ->add('type', FormType\ChoiceType::class, array(

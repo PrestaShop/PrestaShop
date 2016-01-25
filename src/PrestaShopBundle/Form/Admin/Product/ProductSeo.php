@@ -26,7 +26,6 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
@@ -57,30 +56,29 @@ class ProductSeo extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('meta_title', new TranslateType(
-            FormType\TextType::class,
-            array('required' => false),
-            $this->locales,
-            true
-        ), array(
+        $builder->add('meta_title', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => ['required' => false],
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'label' => $this->translator->trans('Meta title', [], 'AdminProducts'),
             'required' => false
         ))
-        ->add('meta_description', new TranslateType(
-            FormType\TextType::class,
-            array('required' => false),
-            $this->locales,
-            true
-        ), array(
+        ->add('meta_description', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => ['required' => false],
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'label' => $this->translator->trans('Meta description', [], 'AdminProducts'),
             'required' => false
         ))
-        ->add('link_rewrite', new TranslateType(
-            FormType\TextType::class,
-            array(),
-            $this->locales,
-            true
-        ), array('label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts')));
+        ->add('link_rewrite', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [],
+            'locales' => $this->locales,
+            'hideTabs' => true,
+            'label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts'),
+        ));
     }
 
     /**

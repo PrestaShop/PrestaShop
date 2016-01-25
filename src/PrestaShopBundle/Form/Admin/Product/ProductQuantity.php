@@ -30,7 +30,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type as PsFormType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
@@ -113,10 +112,18 @@ class ProductQuantity extends CommonAbstractType
                     new Assert\Type(array('type' => 'numeric')),
                 ),
             ))
-            ->add('available_now', new TranslateType(FormType\TextType::class, array(), $this->locales, true), array(
+            ->add('available_now', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+                'type' => FormType\TextType::class,
+                'options' => [],
+                'locales' => $this->locales,
+                'hideTabs' => true,
                 'label' =>  $this->translator->trans('Displayed text when in-stock', [], 'AdminProducts')
             ))
-            ->add('available_later', new TranslateType(FormType\TextType::class, array(), $this->locales, true), array(
+            ->add('available_later', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+                'type' => FormType\TextType::class,
+                'options' => [],
+                'locales' => $this->locales,
+                'hideTabs' => true,
                 'label' =>  $this->translator->trans('Displayed text when backordering is allowed', [], 'AdminProducts')
             ))
             ->add('available_date', PsFormType\DatePickerType::class, array(

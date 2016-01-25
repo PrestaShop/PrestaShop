@@ -30,7 +30,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use Symfony\Component\Form\FormError;
@@ -112,39 +111,50 @@ class ProductInformation extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
         ))
-        ->add('name', new TranslateType(FormType\TextType::class, array(
+        ->add('name', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [
                 'constraints' => array(
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 3, 'max' => 128))
-                ),
-                'attr' => ['placeholder' => $this->translator->trans('Name', [], 'AdminProducts')]
-            ), $this->locales, true), array(
-                'label' =>  $this->translator->trans('Name', [], 'AdminProducts')
-            ))
-        ->add('description', new TranslateType(FormType\TextareaType::class, array(
+                ), 'attr' => ['placeholder' => $this->translator->trans('Name', [], 'AdminProducts')]
+            ],
+            'locales' => $this->locales,
+            'hideTabs' => true,
+            'label' => $this->translator->trans('Name', [], 'AdminProducts')
+        ))
+        ->add('description', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextareaType::class,
+            'options' => [
                 'attr' => array('class' => 'autoload_rte'),
                 'required' => false
-            ), $this->locales, true), array(
-                'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
-                'required' => false
-            ))
-        ->add('description_short', new TranslateType(FormType\TextareaType::class, array(
-            'attr' => array('class' => 'autoload_rte'),
-            'constraints' => array(
-                new Assert\Callback(function ($str, ExecutionContextInterface $context) {
-                    $str = strip_tags($str);
-                    $limit = (int)$this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <=0 ? 800 : $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
-
-                    if (strlen($str) > $limit) {
-                        $context->addViolation(
-                            $this->translator->trans('This value is too long. It should have {{ limit }} characters or less.', [], 'AdminProducts'),
-                            array('{{ limit }}' => $limit)
-                        );
-                    }
-                }),
-            ),
+            ],
+            'locales' => $this->locales,
+            'hideTabs' => true,
+            'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
             'required' => false
-        ), $this->locales, true), array(
+        ))
+        ->add('description_short', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextareaType::class,
+            'options' => [
+                'attr' => array('class' => 'autoload_rte'),
+                'constraints' => array(
+                    new Assert\Callback(function ($str, ExecutionContextInterface $context) {
+                        $str = strip_tags($str);
+                        $limit = (int)$this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <=0 ? 800 : $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
+
+                        if (strlen($str) > $limit) {
+                            $context->addViolation(
+                                $this->translator->trans('This value is too long. It should have {{ limit }} characters or less.', [], 'AdminProducts'),
+                                array('{{ limit }}' => $limit)
+                            );
+                        }
+                    }),
+                ),
+                'required' => false
+            ],
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'label' =>  $this->translator->trans('Short description', [], 'AdminProducts'),
             'required' => false
         ))

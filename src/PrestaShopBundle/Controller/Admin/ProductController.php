@@ -380,7 +380,7 @@ class ProductController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
 
         $form = $this->createFormBuilder($modelMapper->getFormData())
-            ->add('id_product', FormType\TextType::class)
+            ->add('id_product', FormType\HiddenType::class)
             ->add('step1', \PrestaShopBundle\Form\Admin\Product\ProductInformation::class)
             ->add('step2', \PrestaShopBundle\Form\Admin\Product\ProductPrice::class)
             ->add('step3', \PrestaShopBundle\Form\Admin\Product\ProductQuantity::class)
