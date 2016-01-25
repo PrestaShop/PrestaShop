@@ -554,29 +554,4 @@ class EmployeeCore extends ObjectModel
         $this->reset_password_token = null;
         $this->reset_password_validity = null;
     }
-
-    public function setTabAccess($tabAccess)
-    {
-        $this->tabAccess = $tabAccess;
-    }
-
-    public function canView()
-    {
-        return (bool)$this->tabAccess['view'];
-    }
-
-    public function canAdd()
-    {
-        return (bool)$this->tabAccess['add'];
-    }
-
-    public function canEdit()
-    {
-        return (bool)$this->tabAccess['edit'];
-    }
-
-    public function canDelete()
-    {
-        return (bool)$this->tabAccess['delete'];
-    }
 }
