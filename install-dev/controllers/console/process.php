@@ -142,12 +142,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
             }
         }
 
-        if (in_array('theme', $steps)) {
-            if (!$this->processInstallTheme()) {
-                $this->printErrors();
-            }
-        }
-
         if ($this->datas->newsletter) {
             $params = http_build_query(array(
                     'email' => $this->datas->admin_email,
@@ -270,17 +264,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
         $result = $this->model_install->installFixtures(null, array('shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country));
         $this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
         return $result;
-    }
-
-    /**
-     * PROCESS : installTheme
-     * Install theme
-     */
-    public function processInstallTheme()
-    {
-        $this->initializeContext();
-
-        return $this->model_install->installTheme();
     }
 
     /**
