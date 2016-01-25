@@ -1366,10 +1366,24 @@ abstract class ModuleCore
 
                     // If (false) is a trick to not load the class with "eval".
                     // This way require_once will works correctly
-                    if (eval('if (false){	'.preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file).' }') !== false) {
-                        require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
-                    } else {
+                    // But namespace and use statements need to be removed
+                    $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
+                    $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
+                    try {
+                        if (eval('if (false){	'.$content.' }') !== false) {
+                            require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
+                        } else {
+                            throw new ParseError("Parse error");
+                        }
+                    } catch (ParseError $e) {
                         $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
+                    }
+
+                    preg_match('/\n[\s\t]*?namespace\s.*?;/', $file, $ns);
+                    if (!empty($ns)) {
+                        $ns = preg_replace('/\n[\s\t]*?namespace\s/', '', $ns[0]);
+                        $ns = rtrim($ns, ';');
+                        $module = $ns.'\\'.$module;
                     }
                 }
 
