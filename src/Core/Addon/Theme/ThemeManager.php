@@ -139,7 +139,7 @@ class ThemeManager implements AddonManagerInterface
      */
     public function enable($name)
     {
-        if (!$this->employee->canEdit()) {
+        if (!$this->employee->can('edit', 'AdminThemes')) {
             return false;
         }
 
