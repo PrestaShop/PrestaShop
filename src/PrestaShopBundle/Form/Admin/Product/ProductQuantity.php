@@ -32,6 +32,8 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
+use PrestaShopBundle\Form\Admin\Type as PsFormType;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product quantity form
@@ -65,7 +67,7 @@ class ProductQuantity extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('attributes', 'text', array(
+        $builder->add('attributes', FormType\TextType::class, array(
             'attr' =>  [
                 'class' => 'tokenfield',
                 'data-limit' => 20,
@@ -76,12 +78,12 @@ class ProductQuantity extends CommonAbstractType
             ],
             'label' =>  $this->translator->trans('Create combinations', [], 'AdminProducts')
         ))
-            ->add('advanced_stock_management', 'checkbox', array(
+            ->add('advanced_stock_management', FormType\CheckboxType::class, array(
                 'required' => false,
                 'label' => $this->translator->trans('I want to use the advanced stock management system for this product.', [], 'AdminProducts'),
             ))
-            ->add('pack_stock_type', 'choice') //see eventListener for details
-            ->add('depends_on_stock', 'choice', array(
+            ->add('pack_stock_type', FormType\ChoiceType::class) //see eventListener for details
+            ->add('depends_on_stock', FormType\ChoiceType::class, array(
                 'choices'  => array(
                     1 => $this->translator->trans('The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). ', [], 'AdminProducts'),
                     0 => $this->translator->trans('I want to specify available quantities manually.', [], 'AdminProducts'),
@@ -90,7 +92,7 @@ class ProductQuantity extends CommonAbstractType
                 'required' => true,
                 'multiple' => false,
             ))
-            ->add('qty_0', 'number', array(
+            ->add('qty_0', FormType\NumberType::class, array(
                 'required' => true,
                 'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
                 'constraints' => array(
@@ -98,16 +100,16 @@ class ProductQuantity extends CommonAbstractType
                     new Assert\Type(array('type' => 'numeric')),
                 ),
             ))
-            ->add('combinations', 'collection', array(
-                'type' => new ProductCombination(
+            ->add('combinations', FormType\CollectionType::class, array(
+                'entry_type' => new ProductCombination(
                     $this->translator,
                     $this->legacyContext
                 ),
                 'allow_add' => true,
                 'allow_delete' => true
             ))
-            ->add('out_of_stock', 'choice') //see eventListener for details
-            ->add('minimal_quantity', 'number', array(
+            ->add('out_of_stock', FormType\ChoiceType::class) //see eventListener for details
+            ->add('minimal_quantity', FormType\NumberType::class, array(
                 'required' => true,
                 'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
                 'constraints' => array(
@@ -115,13 +117,13 @@ class ProductQuantity extends CommonAbstractType
                     new Assert\Type(array('type' => 'numeric')),
                 ),
             ))
-            ->add('available_now', new TranslateType('text', array(), $this->locales, true), array(
+            ->add('available_now', new TranslateType(FormType\TextType::class, array(), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Displayed text when in-stock', [], 'AdminProducts')
             ))
-            ->add('available_later', new TranslateType('text', array(), $this->locales, true), array(
+            ->add('available_later', new TranslateType(FormType\TextType::class, array(), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Displayed text when backordering is allowed', [], 'AdminProducts')
             ))
-            ->add('available_date', 'datePicker', array(
+            ->add('available_date', PsFormType\DatePickerType::class, array(
                 'required' => false,
                 'label' => $this->translator->trans('Availability date:', [], 'AdminProducts'),
                 'attr' => ['placeholder' => 'YYYY-MM-DD']
@@ -141,16 +143,15 @@ class ProductQuantity extends CommonAbstractType
                 $this->translator->trans('Deny orders', [], 'AdminProducts');
             $defaultChoiceLabel .= ')';
 
-            $form->add('out_of_stock', 'choice', array(
+            $form->add('out_of_stock', FormType\ChoiceType::class, array(
                 'choices'  => array(
                     '0' => $this->translator->trans('Deny orders', [], 'AdminProducts'),
                     '1' => $this->translator->trans('Allow orders', [], 'AdminProducts'),
                     '2' => $defaultChoiceLabel,
                 ),
-
                 'expanded' => true,
                 'required' => false,
-                'empty_value' => false,
+                'placeholder' => false,
                 'label' => $this->translator->trans('When out of stock', [], 'AdminProducts')
             ));
 
@@ -165,7 +166,7 @@ class ProductQuantity extends CommonAbstractType
                 $defaultChoiceLabel .= $this->translator->trans('Decrement both.', [], 'AdminProducts');
             }
 
-            $form->add('pack_stock_type', 'choice', array(
+            $form->add('pack_stock_type', FormType\ChoiceType::class, array(
                 'choices'  => array(
                     '0' => $this->translator->trans('Decrement pack only.', [], 'AdminProducts'),
                     '1' => $this->translator->trans('Decrement products in pack only.', [], 'AdminProducts'),
@@ -174,18 +175,18 @@ class ProductQuantity extends CommonAbstractType
                 ),
                 'expanded' => false,
                 'required' => true,
-                'empty_value' => false,
+                'placeholder' => false,
                 'label' => $this->translator->trans('Pack quantities', [], 'AdminProducts')
             ));
         });
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_quantity';
     }

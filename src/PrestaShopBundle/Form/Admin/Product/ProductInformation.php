@@ -39,6 +39,7 @@ use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 use Symfony\Component\Form\FormError;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the basic product information form
@@ -94,7 +95,7 @@ class ProductInformation extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('type_product', 'choice', array(
+        $builder->add('type_product', FormType\ChoiceType::class, array(
             'choices'  => array(
                 0 => $this->translator->trans('Standard product', [], 'AdminProducts'),
                 1 => $this->translator->trans('Pack of existing products', [], 'AdminProducts'),
@@ -114,7 +115,7 @@ class ProductInformation extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
         ))
-        ->add('name', new TranslateType('text', array(
+        ->add('name', new TranslateType(FormType\TextType::class, array(
                 'constraints' => array(
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 3, 'max' => 128))
@@ -123,14 +124,14 @@ class ProductInformation extends CommonAbstractType
             ), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Name', [], 'AdminProducts')
             ))
-        ->add('description', new TranslateType('textarea', array(
+        ->add('description', new TranslateType(FormType\TextareaType::class, array(
                 'attr' => array('class' => 'autoload_rte'),
                 'required' => false
             ), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
                 'required' => false
             ))
-        ->add('description_short', new TranslateType('textarea', array(
+        ->add('description_short', new TranslateType(FormType\TextareaType::class, array(
             'attr' => array('class' => 'autoload_rte'),
             'constraints' => array(
                 new Assert\Callback(function ($str, ExecutionContextInterface $context) {
@@ -152,8 +153,8 @@ class ProductInformation extends CommonAbstractType
         ))
 
         //FEATURES & ATTRIBUTES
-        ->add('features', 'collection', array(
-            'type' => new ProductFeature(
+        ->add('features', FormType\CollectionType::class, array(
+            'entry_type' => new ProductFeature(
                 $this->translator,
                 $this->context,
                 $this->router,
@@ -163,18 +164,18 @@ class ProductInformation extends CommonAbstractType
             'allow_add' => true,
             'allow_delete' => true
         ))
-        ->add('id_manufacturer', 'choice', array(
+        ->add('id_manufacturer', FormType\ChoiceType::class, array(
             'choices' => $this->manufacturers,
             'required' => false,
             'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
         ))
 
         //RIGHT COL
-        ->add('active', 'checkbox', array(
+        ->add('active', FormType\CheckboxType::class, array(
             'label' => $this->translator->trans('Enabled', [], 'AdminProducts'),
             'required' => false,
         ))
-        ->add('price_shortcut', 'money', array(
+        ->add('price_shortcut', FormType\MoneyType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
@@ -184,13 +185,13 @@ class ProductInformation extends CommonAbstractType
             ),
             'attr' => []
         ))
-        ->add('price_ttc_shortcut', 'money', array(
+        ->add('price_ttc_shortcut', FormType\MoneyType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
             'mapped' => false,
             'currency' => $this->currency->iso_code,
         ))
-        ->add('qty_0_shortcut', 'number', array(
+        ->add('qty_0_shortcut', FormType\NumberType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
             'constraints' => array(
@@ -201,7 +202,7 @@ class ProductInformation extends CommonAbstractType
         ->add('categories', new ChoiceCategoriesTreeType('Catégories', $this->nested_categories, $this->categories), array(
             'label' => $this->translator->trans('Associated categories', [], 'AdminProducts')
         ))
-        ->add('id_category_default', 'choice', array(
+        ->add('id_category_default', FormType\ChoiceType::class, array(
             'choices' =>  $this->categories,
             'required' =>  true,
             'label' => $this->translator->trans('Default category', [], 'AdminProducts')
@@ -244,11 +245,11 @@ class ProductInformation extends CommonAbstractType
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_step1';
     }

@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * Admin controller for suppliers page
@@ -91,8 +92,8 @@ class SupplierController extends FrameworkBundleAdminController
                 continue;
             }
 
-            $simpleSubForm->add('supplier_combination_'.$idSupplier, 'collection', array(
-                'type' => new ProductSupplierCombination(
+            $simpleSubForm->add('supplier_combination_'.$idSupplier, FormType\CollectionType::class, array(
+                'entry_type' => new ProductSupplierCombination(
                     $idSupplier,
                     $this->container->get('prestashop.adapter.translator'),
                     $this->container->get('prestashop.adapter.legacy.context'),

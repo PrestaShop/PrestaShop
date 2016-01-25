@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Category;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the basic category form
@@ -76,7 +77,7 @@ class SimpleCategory extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array(
+        $builder->add('name', FormType\TextType::class, array(
             'label' => $this->translator->trans('Name', [], 'AdminCategories'),
             'required' => false,
             'attr' => ['placeholder' => $this->translator->trans('Category name', [], 'AdminCategories'), 'class' => 'ajax'],
@@ -85,7 +86,7 @@ class SimpleCategory extends CommonAbstractType
                 new Assert\Length(array('min' => 3))
             )
         ))
-        ->add('id_parent', 'choice', array(
+        ->add('id_parent', FormType\ChoiceType::class, array(
             'choices' =>  $this->categories,
             'required' =>  true,
             'label' => $this->translator->trans('Choose a parent for this new category', [], 'AdminProducts')
@@ -93,11 +94,11 @@ class SimpleCategory extends CommonAbstractType
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'new_simple_category';
     }

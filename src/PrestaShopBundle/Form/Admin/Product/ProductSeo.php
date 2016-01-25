@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product SEO form
@@ -57,7 +58,7 @@ class ProductSeo extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('meta_title', new TranslateType(
-            'text',
+            FormType\TextType::class,
             array('required' => false),
             $this->locales,
             true
@@ -66,7 +67,7 @@ class ProductSeo extends CommonAbstractType
             'required' => false
         ))
         ->add('meta_description', new TranslateType(
-            'text',
+            FormType\TextType::class,
             array('required' => false),
             $this->locales,
             true
@@ -75,7 +76,7 @@ class ProductSeo extends CommonAbstractType
             'required' => false
         ))
         ->add('link_rewrite', new TranslateType(
-            'text',
+            FormType\TextType::class,
             array(),
             $this->locales,
             true
@@ -83,11 +84,11 @@ class ProductSeo extends CommonAbstractType
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_seo';
     }

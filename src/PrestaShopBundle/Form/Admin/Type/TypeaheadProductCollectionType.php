@@ -91,11 +91,11 @@ class TypeaheadProductCollectionType extends TypeaheadCollectionType
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'typeahead_product_collection';
     }

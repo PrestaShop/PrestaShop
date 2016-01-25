@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product shipping form
@@ -68,7 +69,7 @@ class ProductShipping extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('width', 'number', array(
+        $builder->add('width', FormType\NumberType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Package width', [], 'AdminProducts'),
             'constraints' => array(
@@ -76,7 +77,7 @@ class ProductShipping extends CommonAbstractType
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('height', 'number', array(
+        ->add('height', FormType\NumberType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Package height', [], 'AdminProducts'),
             'constraints' => array(
@@ -84,7 +85,7 @@ class ProductShipping extends CommonAbstractType
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('depth', 'number', array(
+        ->add('depth', FormType\NumberType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Package depth', [], 'AdminProducts'),
             'constraints' => array(
@@ -92,7 +93,7 @@ class ProductShipping extends CommonAbstractType
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('weight', 'number', array(
+        ->add('weight', FormType\NumberType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Package weight', [], 'AdminProducts'),
             'constraints' => array(
@@ -100,7 +101,7 @@ class ProductShipping extends CommonAbstractType
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('additional_shipping_cost', 'money', array(
+        ->add('additional_shipping_cost', FormType\MoneyType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Additional shipping fees (for a single item)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
@@ -109,7 +110,7 @@ class ProductShipping extends CommonAbstractType
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('selectedCarriers', 'choice', array(
+        ->add('selectedCarriers', FormType\ChoiceType::class, array(
             'choices' =>  $this->carriersChoices,
             'expanded' =>  true,
             'multiple' =>  true,
@@ -118,8 +119,8 @@ class ProductShipping extends CommonAbstractType
         ));
 
         foreach ($this->warehouses as $warehouse) {
-            $builder->add('warehouse_combination_'.$warehouse['id_warehouse'], 'collection', array(
-                'type' => new ProductWarehouseCombination($warehouse['id_warehouse'], $this->translator, $this->legacyContext),
+            $builder->add('warehouse_combination_'.$warehouse['id_warehouse'], FormType\CollectionType::class, array(
+                'entry_type' => new ProductWarehouseCombination($warehouse['id_warehouse'], $this->translator, $this->legacyContext),
                 'prototype' => true,
                 'allow_add' => true,
                 'required' => false,
@@ -129,11 +130,11 @@ class ProductShipping extends CommonAbstractType
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_shipping';
     }

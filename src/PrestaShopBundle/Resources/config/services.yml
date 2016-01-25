@@ -29,7 +29,7 @@ services:
     prestashop.handler.log:
         class: PrestaShopBundle\Service\LogHandler\LogHandler
         arguments:
-            - @service_container 
+            - "@service_container"
         tags:
             - { name: addon_log_handler }
 

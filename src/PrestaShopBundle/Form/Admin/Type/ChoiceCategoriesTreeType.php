@@ -29,6 +29,7 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to create a category selector using Nested sets
@@ -86,7 +87,7 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
             $list[$k] = $item.'-'.$k;
         }
 
-        $builder->add('tree', 'choice', array(
+        $builder->add('tree', FormType\ChoiceType::class, array(
             'label' => false,
             'choices' => $list,
             'required' => false,
@@ -97,11 +98,11 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'choice_tree';
     }

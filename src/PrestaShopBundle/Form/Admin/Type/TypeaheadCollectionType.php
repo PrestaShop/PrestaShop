@@ -85,8 +85,8 @@ class TypeaheadCollectionType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('data', 'collection', array(
-            'type' => 'hidden',
+        $builder->add('data', \Symfony\Component\Form\Extension\Core\Type\CollectionType::class, array(
+            'entry_type' => \Symfony\Component\Form\Extension\Core\Type\HiddenType::class,
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,
@@ -96,11 +96,11 @@ class TypeaheadCollectionType extends CommonAbstractType
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'typeahead_collection';
     }

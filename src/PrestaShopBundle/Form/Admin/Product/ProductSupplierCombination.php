@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the basic product suppliers form
@@ -62,24 +63,24 @@ class ProductSupplierCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('supplier_reference', 'text', array(
+        $builder->add('supplier_reference', FormType\TextType::class, array(
             'required' => false,
             'label' => null
         ))
-        ->add('product_price', 'number', array(
+        ->add('product_price', FormType\NumberType::class, array(
             'required' => false,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('product_price_currency', 'choice', array(
+        ->add('product_price_currency', FormType\ChoiceType::class, array(
             'choices'  => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
             'required' => true,
         ))
-        ->add('id_product_attribute', 'hidden')
-        ->add('product_id', 'hidden')
-        ->add('supplier_id', 'hidden');
+        ->add('id_product_attribute', FormType\HiddenType::class)
+        ->add('product_id', FormType\HiddenType::class)
+        ->add('supplier_id', FormType\HiddenType::class);
 
         //set default minimal values for collection prototype
         $builder->setData([
@@ -90,11 +91,11 @@ class ProductSupplierCombination extends CommonAbstractType
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_supplier_combination';
     }

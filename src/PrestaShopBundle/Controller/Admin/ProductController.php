@@ -44,6 +44,7 @@ use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShopBundle\Service\Csv;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -373,7 +374,7 @@ class ProductController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
 
         $form = $this->createFormBuilder($modelMapper->getFormData())
-            ->add('id_product', 'hidden')
+            ->add('id_product', FormType\TextType::class)
             ->add('step1', new ProductForms\ProductInformation(
                 $this->container->get('prestashop.adapter.translator'),
                 $this->container->get('prestashop.adapter.legacy.context'),

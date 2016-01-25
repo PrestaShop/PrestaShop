@@ -30,6 +30,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product options form
@@ -68,7 +69,7 @@ class ProductFeature extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('feature', 'choice', array(
+        $builder->add('feature', FormType\ChoiceType::class, array(
             'label' => $this->translator->trans('Feature', [], 'AdminProducts'),
             'choices' =>  $this->features,
             'required' =>  false,
@@ -77,12 +78,12 @@ class ProductFeature extends CommonAbstractType
                 'class' => 'feature-selector',
             )
         ))
-        ->add('value', 'choice', array(
+        ->add('value', FormType\ChoiceType::class, array(
             'label' => $this->translator->trans('Value', [], 'AdminProducts'),
             'required' =>  false,
             'attr' => array('class' => 'feature-value-selector')
         ))
-        ->add('custom_value', new TranslateType('text', array(), $this->locales, true), array(
+        ->add('custom_value', new TranslateType(FormType\TextType::class, array(), $this->locales, true), array(
             'required' =>  false,
             'label' => $this->translator->trans('Custom value', [], 'AdminProducts'),
         ));
@@ -101,7 +102,7 @@ class ProductFeature extends CommonAbstractType
                 'value'
             );
 
-            $form->add('value', 'choice', array(
+            $form->add('value', FormType\ChoiceType::class, array(
                 'label' => $this->translator->trans('Value', [], 'AdminProducts'),
                 'choices' => $choices,
                 'required' =>  false,
@@ -124,7 +125,7 @@ class ProductFeature extends CommonAbstractType
                 'value'
             );
 
-            $form->add('value', 'choice', array(
+            $form->add('value', new FormType\ChoiceType(), array(
                 'label' => $this->translator->trans('Value', [], 'AdminProducts'),
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),
@@ -134,11 +135,11 @@ class ProductFeature extends CommonAbstractType
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_feature';
     }
