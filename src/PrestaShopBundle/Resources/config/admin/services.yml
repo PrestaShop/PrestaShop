@@ -82,9 +82,3 @@ services:
         class: PrestaShopBundle\Security\Admin\EmployeeProvider
         arguments:
             - "@prestashop.adapter.legacy.context"
-
-    #FORM
-    form.type.date_picker:
-        class: PrestaShopBundle\Form\Admin\Type\DatePickerType
-        tags:
-          - { name: form.type }

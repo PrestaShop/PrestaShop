@@ -31,11 +31,8 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
-use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
-use PrestaShopBundle\Form\Admin\Category\SimpleCategory as SimpleFormCategory;
-use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 use Symfony\Component\Form\FormError;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -154,12 +151,7 @@ class ProductInformation extends CommonAbstractType
 
         //FEATURES & ATTRIBUTES
         ->add('features', FormType\CollectionType::class, array(
-            'entry_type' => new ProductFeature(
-                $this->translator,
-                $this->context,
-                $this->router,
-                $this->featureDataProvider
-            ),
+            'entry_type' => \PrestaShopBundle\Form\Admin\Feature\ProductFeature::class,
             'prototype' => true,
             'allow_add' => true,
             'allow_delete' => true
@@ -199,19 +191,19 @@ class ProductInformation extends CommonAbstractType
                 new Assert\Type(array('type' => 'numeric'))
             )
         ))
-        ->add('categories', new ChoiceCategoriesTreeType('Catégories', $this->nested_categories, $this->categories), array(
-            'label' => $this->translator->trans('Associated categories', [], 'AdminProducts')
+        ->add('categories', \PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType::class, array(
+            'label' => $this->translator->trans('Associated categories', [], 'AdminProducts'),
+            'list' => $this->nested_categories,
+            'valid_list' => $this->categories,
+            'multiple' => true,
         ))
         ->add('id_category_default', FormType\ChoiceType::class, array(
             'choices' =>  $this->categories,
             'required' =>  true,
             'label' => $this->translator->trans('Default category', [], 'AdminProducts')
         ))
-        ->add('new_category', new SimpleFormCategory(
-            $this->translator,
-            $this->categoryDataProvider,
-            true
-        ), array(
+        ->add('new_category', \PrestaShopBundle\Form\Admin\Category\SimpleCategory::class, array(
+            'ajax' => true,
             'required' => false,
             'mapped' => false,
             'constraints' => [],

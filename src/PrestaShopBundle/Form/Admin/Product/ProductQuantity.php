@@ -31,7 +31,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
-use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
 use PrestaShopBundle\Form\Admin\Type as PsFormType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
@@ -101,10 +100,7 @@ class ProductQuantity extends CommonAbstractType
                 ),
             ))
             ->add('combinations', FormType\CollectionType::class, array(
-                'entry_type' => new ProductCombination(
-                    $this->translator,
-                    $this->legacyContext
-                ),
+                'entry_type' => \PrestaShopBundle\Form\Admin\Product\ProductCombination::class,
                 'allow_add' => true,
                 'allow_delete' => true
             ))
@@ -128,7 +124,7 @@ class ProductQuantity extends CommonAbstractType
                 'label' => $this->translator->trans('Availability date:', [], 'AdminProducts'),
                 'attr' => ['placeholder' => 'YYYY-MM-DD']
             ))
-            ->add('virtual_product', new ProductVirtual($this->translator, $this->legacyContext), array(
+            ->add('virtual_product', \PrestaShopBundle\Form\Admin\Product\ProductVirtual::class, array(
                 'required' => false,
                 'label' => $this->translator->trans('Does this product have an associated file?', [], 'AdminProducts'),
             ));

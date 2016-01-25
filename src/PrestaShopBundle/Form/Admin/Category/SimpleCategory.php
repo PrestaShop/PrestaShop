@@ -29,6 +29,7 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the basic category form
@@ -38,19 +39,16 @@ class SimpleCategory extends CommonAbstractType
 {
     private $translator;
     private $categories;
-    private $ajax;
 
     /**
      * Constructor
      *
      * @param object $translator
      * @param object $categoryDataProvider
-     * @param bool $ajax If the form is called from ajax query
      */
-    public function __construct($translator, $categoryDataProvider, $ajax = false)
+    public function __construct($translator, $categoryDataProvider)
     {
         $this->translator = $translator;
-        $this->ajax = $ajax;
         $this->formatValidList($categoryDataProvider->getNestedCategories());
     }
 
@@ -81,7 +79,7 @@ class SimpleCategory extends CommonAbstractType
             'label' => $this->translator->trans('Name', [], 'AdminCategories'),
             'required' => false,
             'attr' => ['placeholder' => $this->translator->trans('Category name', [], 'AdminCategories'), 'class' => 'ajax'],
-            'constraints' => $this->ajax ? [] : array(
+            'constraints' => $options['ajax'] ? [] : array(
                 new Assert\NotBlank(),
                 new Assert\Length(array('min' => 3))
             )
@@ -90,6 +88,13 @@ class SimpleCategory extends CommonAbstractType
             'choices' =>  $this->categories,
             'required' =>  true,
             'label' => $this->translator->trans('Choose a parent for this new category', [], 'AdminProducts')
+        ));
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'ajax' => false,
         ));
     }
 

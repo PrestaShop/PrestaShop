@@ -25,7 +25,6 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShopBundle\Form\Admin\Product\ProductCombination;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
@@ -149,10 +148,10 @@ class AttributeController extends FrameworkBundleAdminController
         foreach ($newCombinationIds as $combinationId) {
             $attribute = $product->getAttributeCombinationsById($combinationId, 1);
 
-            $form = $this->createForm(new ProductCombination(
-                $this->container->get('prestashop.adapter.translator'),
-                $this->container->get('prestashop.adapter.legacy.context')
-            ), $modelMapper->getFormCombination($attribute[0]));
+            $form = $this->createForm(
+                \PrestaShopBundle\Form\Admin\Product\ProductCombination::class,
+                $modelMapper->getFormCombination($attribute[0])
+            );
 
             $formRender = $this->renderView(
                 'PrestaShopBundle:Admin/Product/Include:form-combination.html.twig',

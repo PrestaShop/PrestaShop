@@ -25,7 +25,6 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**

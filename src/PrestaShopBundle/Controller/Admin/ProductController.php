@@ -40,7 +40,6 @@ use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use PrestaShopBundle\Exception\DataUpdateException;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShopBundle\Service\Csv;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -176,7 +175,14 @@ class ProductController extends FrameworkBundleAdminController
 
             // Category tree
             $categories = $this->createForm(
-                new ChoiceCategoriesTreeType('categories', $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(), array(), false)
+                \PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType::class,
+                null,
+                array(
+                    'label' => $translator->trans('Categories', array(), 'AdminProducts'),
+                    'list' => $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(),
+                    'valid_list' => [],
+                    'multiple' => false,
+                )
             );
             if (!empty($persistedFilterParameters['filter_category'])) {
                 $categories->setData(array('tree' => array(0 => $persistedFilterParameters['filter_category'])));
@@ -375,50 +381,12 @@ class ProductController extends FrameworkBundleAdminController
 
         $form = $this->createFormBuilder($modelMapper->getFormData())
             ->add('id_product', FormType\TextType::class)
-            ->add('step1', new ProductForms\ProductInformation(
-                $this->container->get('prestashop.adapter.translator'),
-                $this->container->get('prestashop.adapter.legacy.context'),
-                $this->container->get('router'),
-                $this->container->get('prestashop.adapter.data_provider.category'),
-                $productAdapter,
-                $this->container->get('prestashop.adapter.data_provider.feature'),
-                $this->container->get('prestashop.adapter.data_provider.manufacturer')
-            ))
-            ->add('step2', new ProductForms\ProductPrice(
-                $this->container->get('prestashop.adapter.translator'),
-                $this->container->get('prestashop.adapter.data_provider.tax'),
-                $this->container->get('router'),
-                $this->container->get('prestashop.adapter.shop.context'),
-                $this->container->get('prestashop.adapter.data_provider.country'),
-                $this->container->get('prestashop.adapter.data_provider.currency'),
-                $this->container->get('prestashop.adapter.data_provider.group'),
-                $this->container->get('prestashop.adapter.legacy.context'),
-                $this->container->get('prestashop.adapter.data_provider.customer')
-            ))
-            ->add('step3', new ProductForms\ProductQuantity(
-                $this->container->get('prestashop.adapter.translator'),
-                $this->container->get('router'),
-                $this->container->get('prestashop.adapter.legacy.context')
-            ))
-            ->add('step4', new ProductForms\ProductShipping(
-                $this->container->get('prestashop.adapter.translator'),
-                $this->container->get('prestashop.adapter.legacy.context'),
-                $this->container->get('prestashop.adapter.data_provider.warehouse'),
-                $this->container->get('prestashop.adapter.data_provider.carrier')
-            ))
-            ->add('step5', new ProductForms\ProductSeo(
-                $this->container->get('prestashop.adapter.translator'),
-                $this->container->get('prestashop.adapter.legacy.context')
-            ))
-            ->add('step6', new ProductForms\ProductOptions(
-                $this->container->get('prestashop.adapter.translator'),
-                $this->container->get('prestashop.adapter.legacy.context'),
-                $productAdapter,
-                $this->container->get('prestashop.adapter.data_provider.supplier'),
-                $this->container->get('prestashop.adapter.data_provider.currency'),
-                $this->container->get('prestashop.adapter.data_provider.attachment'),
-                $this->container->get('router')
-            ))
+            ->add('step1', \PrestaShopBundle\Form\Admin\Product\ProductInformation::class)
+            ->add('step2', \PrestaShopBundle\Form\Admin\Product\ProductPrice::class)
+            ->add('step3', \PrestaShopBundle\Form\Admin\Product\ProductQuantity::class)
+            ->add('step4', \PrestaShopBundle\Form\Admin\Product\ProductShipping::class)
+            ->add('step5', \PrestaShopBundle\Form\Admin\Product\ProductSeo::class)
+            ->add('step6', \PrestaShopBundle\Form\Admin\Product\ProductOptions::class)
             ->getForm();
 
         $form->handleRequest($request);

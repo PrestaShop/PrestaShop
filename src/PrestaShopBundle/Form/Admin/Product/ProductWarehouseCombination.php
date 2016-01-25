@@ -29,6 +29,7 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the basic product Warehouse combinations form
@@ -37,20 +38,17 @@ class ProductWarehouseCombination extends CommonAbstractType
 {
     private $translator;
     private $contextLegacy;
-    private $idWarehouse;
 
     /**
      * Constructor
      *
-     * @param int $idWarehouse The warehouse ID
      * @param object $translator
      * @param object $legacyContext
      */
-    public function __construct($idWarehouse, $translator, $legacyContext)
+    public function __construct($translator, $legacyContext)
     {
         $this->translator = $translator;
         $this->contextLegacy = $legacyContext->getContext();
-        $this->idWarehouse = $idWarehouse;
     }
 
     /**
@@ -74,9 +72,16 @@ class ProductWarehouseCombination extends CommonAbstractType
 
         //set default minimal values for collection prototype
         $builder->setData([
-            'warehouse_id' => $this->idWarehouse,
+            'warehouse_id' => $options['id_warehouse'],
             'warehouse_activated' => false,
         ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'id_warehouse' => null,
+        ));
     }
 
     /**

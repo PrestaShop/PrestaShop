@@ -27,7 +27,6 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
-use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
@@ -93,11 +92,9 @@ class SupplierController extends FrameworkBundleAdminController
             }
 
             $simpleSubForm->add('supplier_combination_'.$idSupplier, FormType\CollectionType::class, array(
-                'entry_type' => new ProductSupplierCombination(
-                    $idSupplier,
-                    $this->container->get('prestashop.adapter.translator'),
-                    $this->container->get('prestashop.adapter.legacy.context'),
-                    $this->container->get('prestashop.adapter.data_provider.currency')
+                'entry_type' =>  \PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination::class,
+                'entry_options'  => array(
+                    'id_supplier' => $idSupplier,
                 ),
                 'prototype' => true,
                 'allow_add' => true,

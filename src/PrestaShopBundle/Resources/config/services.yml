@@ -1,6 +1,7 @@
 imports:
     - { resource: admin/services.yml }
-    
+    - { resource: admin/services-form.yml }
+
 services:
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy

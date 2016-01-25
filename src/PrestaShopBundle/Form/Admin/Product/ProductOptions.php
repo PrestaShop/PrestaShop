@@ -32,9 +32,6 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
-use PrestaShopBundle\Form\Admin\Product\ProductAttachement;
-use PrestaShopBundle\Form\Admin\Product\ProductCustomField;
-use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
@@ -182,7 +179,10 @@ class ProductOptions extends CommonAbstractType
 
         foreach ($this->suppliers as $id => $supplier) {
             $builder->add('supplier_combination_'.$id, FormType\CollectionType::class, array(
-                'entry_type' => new ProductSupplierCombination($id, $this->translator, $this->context, $this->currencyDataprovider),
+                'entry_type' => \PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination::class,
+                'entry_options'  => array(
+                    'id_supplier' => $id,
+                ),
                 'prototype' => true,
                 'allow_add' => true,
                 'required' => false,
@@ -191,10 +191,7 @@ class ProductOptions extends CommonAbstractType
         }
 
         $builder->add('custom_fields', FormType\CollectionType::class, array(
-            'entry_type' => new ProductCustomField(
-                $this->translator,
-                $this->context
-            ),
+            'entry_type' => \PrestaShopBundle\Form\Admin\Product\ProductCustomField::class,
             'label' => $this->translator->trans('Customization', [], 'AdminProducts'),
             'prototype' => true,
             'allow_add' => true,
@@ -202,7 +199,7 @@ class ProductOptions extends CommonAbstractType
         ));
 
         //Add product attachment form
-        $builder->add('attachment_product', new ProductAttachement($this->translator, $this->context), array(
+        $builder->add('attachment_product', \PrestaShopBundle\Form\Admin\Product\ProductAttachement::class, array(
             'required' => false,
             'label' => $this->translator->trans('Attachment', [], 'AdminProducts'),
             'attr' => ['data-action' => $this->router->generate('admin_product_attachement_add_action')]

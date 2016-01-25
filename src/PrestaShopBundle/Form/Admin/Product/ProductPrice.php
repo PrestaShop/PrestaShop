@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
@@ -138,16 +137,7 @@ class ProductPrice extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('per', [], 'AdminProducts')
         ))
-        ->add('specific_price', new ProductSpecificPrice(
-            $this->router,
-            $this->translator,
-            $this->shopContextAdapter,
-            $this->countryDataprovider,
-            $this->currencyDataprovider,
-            $this->groupDataprovider,
-            $this->legacyContext,
-            $this->customerDataprovider
-        ))
+        ->add('specific_price', \PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice::class)
         ->add('specificPricePriorityToAll', FormType\CheckboxType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Apply to all products', [], 'AdminProducts'),

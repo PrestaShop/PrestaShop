@@ -29,6 +29,7 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the basic product suppliers form
@@ -38,22 +39,19 @@ class ProductSupplierCombination extends CommonAbstractType
     private $translator;
     private $contextLegacy;
     private $currencyAdapter;
-    private $idSupplier;
 
     /**
      * Constructor
      *
-     * @param int $idSupplier The supplier ID
      * @param object $translator
      * @param object $contextLegacy
      * @param object $currencyAdapter
      */
-    public function __construct($idSupplier, $translator, $contextLegacy, $currencyAdapter)
+    public function __construct($translator, $contextLegacy, $currencyAdapter)
     {
         $this->translator = $translator;
         $this->contextLegacy = $contextLegacy->getContext();
         $this->currencyAdapter = $currencyAdapter;
-        $this->idSupplier = $idSupplier;
     }
 
     /**
@@ -85,9 +83,16 @@ class ProductSupplierCombination extends CommonAbstractType
         //set default minimal values for collection prototype
         $builder->setData([
             'product_price' => 0,
-            'supplier_id' => $this->idSupplier,
+            'supplier_id' => $options['id_supplier'],
             'product_price_currency' => $this->contextLegacy->currency->id,
         ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'id_supplier' => null,
+        ));
     }
 
     /**

@@ -120,7 +120,10 @@ class ProductShipping extends CommonAbstractType
 
         foreach ($this->warehouses as $warehouse) {
             $builder->add('warehouse_combination_'.$warehouse['id_warehouse'], FormType\CollectionType::class, array(
-                'entry_type' => new ProductWarehouseCombination($warehouse['id_warehouse'], $this->translator, $this->legacyContext),
+                'entry_type' => \PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination::class,
+                'entry_options' => array(
+                    'id_warehouse' => $warehouse['id_warehouse'],
+                ),
                 'prototype' => true,
                 'allow_add' => true,
                 'required' => false,
