@@ -653,7 +653,6 @@ abstract class ModuleCore
             $page_name = 'module-'.$this->name.'-'.$controller;
             $meta = Db::getInstance()->getValue('SELECT id_meta FROM `'._DB_PREFIX_.'meta` WHERE page="'.pSQL($page_name).'"');
             if ((int)$meta > 0) {
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme_meta` WHERE id_meta='.(int)$meta);
                 Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta_lang` WHERE id_meta='.(int)$meta);
                 Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta` WHERE id_meta='.(int)$meta);
             }
