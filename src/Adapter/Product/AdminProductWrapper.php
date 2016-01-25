@@ -192,7 +192,7 @@ class AdminProductWrapper
         $id_country = $specificPriceValues['sp_id_country'] ? $specificPriceValues['sp_id_country'] : 0;
         $id_group = $specificPriceValues['sp_id_group'] ? $specificPriceValues['sp_id_group'] : 0;
         $id_customer = !empty($specificPriceValues['sp_id_customer']['data']) ? $specificPriceValues['sp_id_customer']['data'][0] : 0;
-        $price = $specificPriceValues['leave_bprice'] ? '-1' : $specificPriceValues['sp_price'];
+        $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $specificPriceValues['sp_price'];
         $from_quantity = $specificPriceValues['sp_from_quantity'];
         $reduction = (float)$specificPriceValues['sp_reduction'];
         $reduction_tax = $specificPriceValues['sp_reduction_tax'];
