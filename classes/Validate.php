@@ -1110,6 +1110,6 @@ class ValidateCore
 
     public static function isThemeName($theme_name)
     {
-        return (bool)preg_match('/^[0-9A-Za-z-_]{3,255}$/u', $theme_name);
+        return (bool)preg_match('/^[\w-]{3,255}$/u', $theme_name);
     }
 }
