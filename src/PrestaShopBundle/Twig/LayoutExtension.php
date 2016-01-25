@@ -100,7 +100,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
     /**
      * Get admin legacy layout into old controller context
      *
-     * Parameters can be set manually into twig tempalte or sent from controller
+     * Parameters can be set manually into twig template or sent from controller
      * For details : check Resources/views/Admin/Layout.html.twig
      *
      * @param string $controllerName The legacy controller name
