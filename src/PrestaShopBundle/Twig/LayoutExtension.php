@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template
  */
-class LayoutExtension extends \Twig_Extension
+class LayoutExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
     private $context;
     private $environment;

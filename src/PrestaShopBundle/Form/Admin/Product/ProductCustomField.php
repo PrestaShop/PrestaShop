@@ -27,8 +27,8 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product custom fields configuration form
@@ -57,33 +57,36 @@ class ProductCustomField extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('label', new TranslateType('text', array(
-            'constraints' => array(
+        $builder->add('label', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [ 'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Length(array('min' => 2))
-            )
-        ), $this->locales), array(
+            )],
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'label' => $this->translator->trans('Label', [], 'AdminProducts')
         ))
-        ->add('type', 'choice', array(
+        ->add('type', FormType\ChoiceType::class, array(
             'label' => $this->translator->trans('Type', [], 'AdminProducts'),
             'choices'  => array(
-                '1' => $this->translator->trans('Text', [], 'AdminProducts'),
-                '0' => $this->translator->trans('File', [], 'AdminProducts'),
+                $this->translator->trans('Text', [], 'AdminProducts') => 1,
+                $this->translator->trans('File', [], 'AdminProducts') => 0,
             ),
+            'choices_as_values' => true,
             'required' =>  true
-        ))->add('require', 'checkbox', array(
+        ))->add('require', FormType\CheckboxType::class, array(
             'label'    => $this->translator->trans('Required', [], 'AdminProducts'),
             'required' => false,
         ));
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_custom_field';
     }

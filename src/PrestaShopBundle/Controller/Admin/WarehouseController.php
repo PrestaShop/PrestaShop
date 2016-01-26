@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination;
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * Admin controller for warehouse on the /product/form page
@@ -73,11 +73,10 @@ class WarehouseController extends FrameworkBundleAdminController
         $simpleSubForm = $form->create('step4', 'form');
 
         foreach ($warehouses as $warehouse) {
-            $simpleSubForm->add('warehouse_combination_'.$warehouse['id_warehouse'], 'collection', array(
-                'type' => new ProductWarehouseCombination(
-                    $warehouse['id_warehouse'],
-                    $this->container->get('prestashop.adapter.translator'),
-                    $this->container->get('prestashop.adapter.legacy.context')
+            $simpleSubForm->add('warehouse_combination_'.$warehouse['id_warehouse'], FormType\CollectionType::class, array(
+                'entry_type' => \PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination::class,
+                'entry_options' => array(
+                    'id_warehouse' => $warehouse['id_warehouse'],
                 ),
                 'allow_add' => true,
                 'required' => false,

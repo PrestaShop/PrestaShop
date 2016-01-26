@@ -29,33 +29,13 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to create a translatable form
  */
 class TranslateType extends CommonAbstractType
 {
-    private $type;
-    private $options;
-    private $locales;
-    private $hideTabs;
-
-    /**
-     * Constructor
-     *
-     * @param string $type The field type
-     * @param array $options The field options as constraints, attributes...
-     * @param array $locales The locales to render all fields
-     * @param boolean $hideTabs The languages tabs will be removed but the tab panels are still here (to control them by JS)
-     */
-    public function __construct($type, $options = array(), $locales = array(), $hideTabs = true)
-    {
-        $this->type = $type;
-        $this->options = $options;
-        $this->locales = $locales;
-        $this->hideTabs = $hideTabs;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -64,14 +44,14 @@ class TranslateType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $i=0;
-        foreach ($this->locales as $locale) {
-            $locale_options = $this->options;
+        foreach ($options['locales'] as $locale) {
+            $locale_options = $options['options'];
             $locale_options['label'] = $locale['iso_code'];
             if ($i>0) {
                 $locale_options['required'] = false;
                 unset($locale_options['constraints']);
             }
-            $builder->add($locale['id_lang'], $this->type, $locale_options);
+            $builder->add($locale['id_lang'], $options['type'], $locale_options);
             $i++;
         }
     }
@@ -83,17 +63,27 @@ class TranslateType extends CommonAbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['locales'] = $this->locales;
-        $view->vars['defaultLocale'] = $this->locales[0];
-        $view->vars['hideTabs'] = $this->hideTabs;
+        $view->vars['locales'] = $options['locales'];
+        $view->vars['defaultLocale'] = $options['locales'][0];
+        $view->vars['hideTabs'] = $options['hideTabs'];
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'type' => null,
+            'options' => [],
+            'locales' => [],
+            'hideTabs' => true,
+        ));
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'translatefields';
     }

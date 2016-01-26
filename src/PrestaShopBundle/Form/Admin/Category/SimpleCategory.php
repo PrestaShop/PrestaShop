@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Category;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the basic category form
@@ -37,19 +39,16 @@ class SimpleCategory extends CommonAbstractType
 {
     private $translator;
     private $categories;
-    private $ajax;
 
     /**
      * Constructor
      *
      * @param object $translator
      * @param object $categoryDataProvider
-     * @param bool $ajax If the form is called from ajax query
      */
-    public function __construct($translator, $categoryDataProvider, $ajax = false)
+    public function __construct($translator, $categoryDataProvider)
     {
         $this->translator = $translator;
-        $this->ajax = $ajax;
         $this->formatValidList($categoryDataProvider->getNestedCategories());
     }
 
@@ -61,7 +60,7 @@ class SimpleCategory extends CommonAbstractType
     protected function formatValidList($list)
     {
         foreach ($list as $item) {
-            $this->categories[$item['id_category']] = $item['name'];
+            $this->categories[$item['name']] = $item['id_category'];
 
             if (isset($item['children'])) {
                 $this->formatValidList($item['children']);
@@ -76,28 +75,36 @@ class SimpleCategory extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array(
+        $builder->add('name', FormType\TextType::class, array(
             'label' => $this->translator->trans('Name', [], 'AdminCategories'),
             'required' => false,
             'attr' => ['placeholder' => $this->translator->trans('Category name', [], 'AdminCategories'), 'class' => 'ajax'],
-            'constraints' => $this->ajax ? [] : array(
+            'constraints' => $options['ajax'] ? [] : array(
                 new Assert\NotBlank(),
                 new Assert\Length(array('min' => 3))
             )
         ))
-        ->add('id_parent', 'choice', array(
-            'choices' =>  $this->categories,
-            'required' =>  true,
+        ->add('id_parent', FormType\ChoiceType::class, array(
+            'choices' => $this->categories,
+            'choices_as_values' => true,
+            'required' => true,
             'label' => $this->translator->trans('Choose a parent for this new category', [], 'AdminProducts')
         ));
     }
 
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'ajax' => false,
+        ));
+    }
+
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'new_simple_category';
     }

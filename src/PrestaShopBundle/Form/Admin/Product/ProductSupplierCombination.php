@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the basic product suppliers form
@@ -37,22 +39,19 @@ class ProductSupplierCombination extends CommonAbstractType
     private $translator;
     private $contextLegacy;
     private $currencyAdapter;
-    private $idSupplier;
 
     /**
      * Constructor
      *
-     * @param int $idSupplier The supplier ID
      * @param object $translator
      * @param object $contextLegacy
      * @param object $currencyAdapter
      */
-    public function __construct($idSupplier, $translator, $contextLegacy, $currencyAdapter)
+    public function __construct($translator, $contextLegacy, $currencyAdapter)
     {
         $this->translator = $translator;
         $this->contextLegacy = $contextLegacy->getContext();
         $this->currencyAdapter = $currencyAdapter;
-        $this->idSupplier = $idSupplier;
     }
 
     /**
@@ -62,39 +61,47 @@ class ProductSupplierCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('supplier_reference', 'text', array(
+        $builder->add('supplier_reference', FormType\TextType::class, array(
             'required' => false,
             'label' => null
         ))
-        ->add('product_price', 'number', array(
+        ->add('product_price', FormType\NumberType::class, array(
             'required' => false,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('product_price_currency', 'choice', array(
+        ->add('product_price_currency', FormType\ChoiceType::class, array(
             'choices'  => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
+            'choices_as_values' => true,
             'required' => true,
         ))
-        ->add('id_product_attribute', 'hidden')
-        ->add('product_id', 'hidden')
-        ->add('supplier_id', 'hidden');
+        ->add('id_product_attribute', FormType\HiddenType::class)
+        ->add('product_id', FormType\HiddenType::class)
+        ->add('supplier_id', FormType\HiddenType::class);
 
         //set default minimal values for collection prototype
         $builder->setData([
             'product_price' => 0,
-            'supplier_id' => $this->idSupplier,
+            'supplier_id' => $options['id_supplier'],
             'product_price_currency' => $this->contextLegacy->currency->id,
         ]);
     }
 
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'id_supplier' => null,
+        ));
+    }
+
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_supplier_combination';
     }

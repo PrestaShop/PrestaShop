@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product price form
@@ -82,7 +82,7 @@ class ProductPrice extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('price', 'money', array(
+        $builder->add('price', FormType\MoneyType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
             'attr' => ['data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')],
@@ -92,13 +92,13 @@ class ProductPrice extends CommonAbstractType
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('price_ttc', 'money', array(
+        ->add('price_ttc', FormType\MoneyType::class, array(
             'required' => false,
             'mapped' => false,
             'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
-        ->add('ecotax', 'money', array(
+        ->add('ecotax', FormType\MoneyType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
@@ -108,9 +108,10 @@ class ProductPrice extends CommonAbstractType
             ),
             'attr' => ['data-eco-tax-rate' => $this->eco_tax_rate],
         ))
-        ->add('id_tax_rules_group', 'choice', array(
+        ->add('id_tax_rules_group', FormType\ChoiceType::class, array(
             'choices' =>  $this->tax_rules,
             'required' => true,
+            'choices_as_values' => true,
             'choice_attr' => function ($val) {
                 return [
                     'data-rates' => implode(',', $this->tax_rules_rates[$val]['rates']),
@@ -119,61 +120,53 @@ class ProductPrice extends CommonAbstractType
             },
             'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
         ))
-        ->add('on_sale', 'checkbox', array(
+        ->add('on_sale', FormType\CheckboxType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Display the on sale icon on the product page, and in the text found within the product listing.', [], 'AdminProducts'),
         ))
-        ->add('wholesale_price', 'money', array(
+        ->add('wholesale_price', FormType\MoneyType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
-        ->add('unit_price', 'money', array(
+        ->add('unit_price', FormType\MoneyType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Unit price (tax excl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
-        ->add('unity', 'text', array(
+        ->add('unity', FormType\TextType::class, array(
             'required' => false,
             'label' => $this->translator->trans('per', [], 'AdminProducts')
         ))
-        ->add('specific_price', new ProductSpecificPrice(
-            $this->router,
-            $this->translator,
-            $this->shopContextAdapter,
-            $this->countryDataprovider,
-            $this->currencyDataprovider,
-            $this->groupDataprovider,
-            $this->legacyContext,
-            $this->customerDataprovider
-        ))
-        ->add('specificPricePriorityToAll', 'checkbox', array(
+        ->add('specific_price', \PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice::class)
+        ->add('specificPricePriorityToAll', FormType\CheckboxType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Apply to all products', [], 'AdminProducts'),
         ));
 
         //generates fields for price priority
         $specificPricePriorityChoices = [
-            'id_shop' => $this->translator->trans('Shop', [], 'AdminProducts'),
-            'id_currency' => $this->translator->trans('Currency', [], 'AdminProducts'),
-            'id_country' => $this->translator->trans('Country', [], 'AdminProducts'),
-            'id_group' => $this->translator->trans('Group', [], 'AdminProducts'),
+             $this->translator->trans('Shop', [], 'AdminProducts') => 'id_shop',
+             $this->translator->trans('Currency', [], 'AdminProducts') => 'id_currency',
+             $this->translator->trans('Country', [], 'AdminProducts') => 'id_country',
+             $this->translator->trans('Group', [], 'AdminProducts') => 'id_group',
         ];
 
         for ($i=0; $i < count($specificPricePriorityChoices); $i++) {
-            $builder->add('specificPricePriority_'.$i, 'choice', array(
+            $builder->add('specificPricePriority_'.$i, FormType\ChoiceType::class, array(
                 'choices' => $specificPricePriorityChoices,
+                'choices_as_values' => true,
                 'required' => true
             ));
         }
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_price';
     }

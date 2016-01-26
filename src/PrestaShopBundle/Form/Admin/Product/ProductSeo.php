@@ -26,8 +26,8 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product SEO form
@@ -56,38 +56,37 @@ class ProductSeo extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('meta_title', new TranslateType(
-            'text',
-            array('required' => false),
-            $this->locales,
-            true
-        ), array(
+        $builder->add('meta_title', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => ['required' => false],
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'label' => $this->translator->trans('Meta title', [], 'AdminProducts'),
             'required' => false
         ))
-        ->add('meta_description', new TranslateType(
-            'text',
-            array('required' => false),
-            $this->locales,
-            true
-        ), array(
+        ->add('meta_description', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => ['required' => false],
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'label' => $this->translator->trans('Meta description', [], 'AdminProducts'),
             'required' => false
         ))
-        ->add('link_rewrite', new TranslateType(
-            'text',
-            array(),
-            $this->locales,
-            true
-        ), array('label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts')));
+        ->add('link_rewrite', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [],
+            'locales' => $this->locales,
+            'hideTabs' => true,
+            'label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts'),
+        ));
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_seo';
     }

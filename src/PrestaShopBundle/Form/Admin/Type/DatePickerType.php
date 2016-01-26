@@ -35,7 +35,7 @@ class DatePickerType extends AbstractType
 {
     public function getParent()
     {
-        return 'text';
+        return \Symfony\Component\Form\Extension\Core\Type\TextType::class;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -45,8 +45,13 @@ class DatePickerType extends AbstractType
         ));
     }
 
-    public function getName()
+    /**
+     * Returns the block prefix of this type.
+     *
+     * @return string The prefix name
+     */
+    public function getBlockPrefix()
     {
-        return 'datePicker';
+        return 'date_picker';
     }
 }

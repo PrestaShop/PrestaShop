@@ -30,6 +30,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use PrestaShopBundle\Form\Admin\Type as PsFormType;
 
 /**
  * This form class is responsible to generate the virtual product
@@ -60,48 +62,49 @@ class ProductVirtual extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('is_virtual_file', 'choice', array(
+        $builder->add('is_virtual_file', FormType\ChoiceType::class, array(
             'choices'  => array(
-                1 => $this->translator->trans('Yes', [], 'AdminProducts'),
-                0 => $this->translator->trans('No', [], 'AdminProducts'),
+                $this->translator->trans('Yes', [], 'AdminProducts') => 1,
+                $this->translator->trans('No', [], 'AdminProducts') => 0,
             ),
+            'choices_as_values' => true,
             'expanded' => true,
             'required' => true,
             'multiple' => false,
         ))
-        ->add('file', 'file', array(
+        ->add('file', FormType\FileType::class, array(
             'required' => false,
             'label' => $this->translator->trans('File', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
             )
         ))
-        ->add('name', 'text', array(
+        ->add('name', FormType\TextType::class, array(
             'label'    => $this->translator->trans('Filename', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
             ),
         ))
-        ->add('nb_downloable', 'number', array(
+        ->add('nb_downloable', FormType\NumberType::class, array(
             'label'    => $this->translator->trans('Number of allowed downloads', [], 'AdminProducts'),
             'required' => false,
             'constraints' => array(
                 new Assert\Type(array('type' => 'numeric')),
             ),
         ))
-        ->add('expiration_date', 'datePicker', array(
+        ->add('expiration_date', PsFormType\DatePickerType::class, array(
             'label'    => $this->translator->trans('Expiration date', [], 'AdminProducts'),
             'required' => false,
             'attr' => ['placeholder' => 'YYYY-MM-DD']
         ))
-        ->add('nb_days', 'number', array(
+        ->add('nb_days', FormType\NumberType::class, array(
             'label'    => $this->translator->trans('Number of days', [], 'AdminProducts'),
             'required' => false,
             'constraints' => array(
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('save', 'button', array(
+        ->add('save', FormType\ButtonType::class, array(
             'label' => $this->translator->trans('Save', [], 'AdminProducts'),
             'attr' => ['class' => 'btn-primary pull-right']
         ));
@@ -113,20 +116,20 @@ class ProductVirtual extends CommonAbstractType
             //if this partial form is submit from a parent form, disable it
             if ($form->getParent()) {
                 $event->setData([]);
-                $form->add('name', 'text', array('mapped' => false));
+                $form->add('name', FormType\TextType::class, array('mapped' => false));
             } elseif ($data['is_virtual_file'] == 0) {
                 //disable name mapping when is virtual not defined to yes
-                $form->add('name', 'text', array('mapped' => false));
+                $form->add('name', FormType\TextType::class, array('mapped' => false));
             }
         });
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_virtual';
     }

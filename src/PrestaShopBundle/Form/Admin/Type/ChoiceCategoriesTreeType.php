@@ -29,33 +29,14 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to create a category selector using Nested sets
  */
 class ChoiceCategoriesTreeType extends CommonAbstractType
 {
-    private $label;
-    private $list;
-    private $valid_list;
-    private $multiple;
-
-    /**
-     * Constructor
-     *
-     * @param string $label The field label
-     * @param array $list The nested array categories
-     * @param array $valid_list The simple array categories used for choice validation
-     * @param bool $multiple Display checkbox or radio button
-     */
-    public function __construct($label = '', $list = array(), $valid_list = array(), $multiple = true)
-    {
-        $this->label = $label;
-        $this->list = $list;
-        $this->valid_list = $valid_list;
-        $this->multiple = $multiple;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -63,8 +44,8 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['choices'] = $this->list;
-        $view->vars['multiple'] = $this->multiple;
+        $view->vars['choices'] = $options['list'];
+        $view->vars['multiple'] = $options['multiple'];
 
         //if form is submitted, inject categories values array to check or not each field
         if (!empty($view->vars['value']) && !empty($view->vars['value']['tree'])) {
@@ -79,16 +60,10 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //Need choice list hack for workaround with legacy : allow user to create x categories with same name
-        //SF2 form choice options dont allow that, the key/values must be uniques
-        $list = $this->valid_list;
-        foreach ($list as $k => $item) {
-            $list[$k] = $item.'-'.$k;
-        }
-
-        $builder->add('tree', 'choice', array(
+        $builder->add('tree', FormType\ChoiceType::class, array(
             'label' => false,
-            'choices' => $list,
+            'choices' => $options['valid_list'],
+            'choices_as_values' => true,
             'required' => false,
             'multiple'  => true,
             'expanded'  => true,
@@ -96,12 +71,22 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
         ));
     }
 
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'label' => '',
+            'list' => [],
+            'valid_list' => [],
+            'multiple' => true,
+        ));
+    }
+
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'choice_tree';
     }

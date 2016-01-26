@@ -29,8 +29,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * Admin controller for product images
@@ -57,7 +57,7 @@ class ProductImageController extends FrameworkBundleAdminController
         }
 
         $form = $this->createFormBuilder(null, array('csrf_protection' => false))
-            ->add('file', 'file', array(
+            ->add('file', FormType\FileType::class, array(
                 'error_bubbling' => true,
                 'constraints' => [
                     new Assert\NotNull(array('message' => $translator->trans('Please select a file', [], 'AdminProducts'))),
@@ -127,11 +127,15 @@ class ProductImageController extends FrameworkBundleAdminController
         $image = $productAdapter->getImage((int)$idImage);
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form_image', 'form', $image, array('csrf_protection' => false))
-            ->add('legend', new TranslateType('text', array(), $locales), array(
+            ->add('legend', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+                'type' => FormType\TextType::class,
+                'options' => [],
+                'locales' => $locales,
+                'hideTabs' => true,
                 'label' => $translator->trans('Legend', [], 'AdminProducts'),
                 'required' => false,
             ))
-            ->add('cover', 'checkbox', array(
+            ->add('cover', FormType\CheckboxType::class, array(
                 'label'    => $translator->trans('Choose as cover image', [], 'AdminProducts'),
                 'required' => false,
             ))

@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the basic product Warehouse combinations form
@@ -36,20 +38,17 @@ class ProductWarehouseCombination extends CommonAbstractType
 {
     private $translator;
     private $contextLegacy;
-    private $idWarehouse;
 
     /**
      * Constructor
      *
-     * @param int $idWarehouse The warehouse ID
      * @param object $translator
      * @param object $legacyContext
      */
-    public function __construct($idWarehouse, $translator, $legacyContext)
+    public function __construct($translator, $legacyContext)
     {
         $this->translator = $translator;
         $this->contextLegacy = $legacyContext->getContext();
-        $this->idWarehouse = $idWarehouse;
     }
 
     /**
@@ -59,31 +58,38 @@ class ProductWarehouseCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('activated', 'checkbox', array(
+        $builder->add('activated', FormType\CheckboxType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Stored', [], 'AdminProducts')
         ))
-        ->add('id_product_attribute', 'hidden')
-        ->add('product_id', 'hidden')
-        ->add('warehouse_id', 'hidden')
-        ->add('location', 'text', array(
+        ->add('id_product_attribute', FormType\HiddenType::class)
+        ->add('product_id', FormType\HiddenType::class)
+        ->add('warehouse_id', FormType\HiddenType::class)
+        ->add('location', FormType\TextType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Location (optional)', [], 'AdminProducts')
         ));
 
         //set default minimal values for collection prototype
         $builder->setData([
-            'warehouse_id' => $this->idWarehouse,
+            'warehouse_id' => $options['id_warehouse'],
             'warehouse_activated' => false,
         ]);
     }
 
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'id_warehouse' => null,
+        ));
+    }
+
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_warehouse_combination';
     }

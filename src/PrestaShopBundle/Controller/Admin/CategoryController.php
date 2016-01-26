@@ -27,7 +27,6 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PrestaShopBundle\Form\Admin\Category\SimpleCategory as SimpleFormCategory;
 
 /**
  * Admin controller for the Category pages
@@ -50,10 +49,8 @@ class CategoryController extends FrameworkBundleAdminController
         $currentIdShop = $shopContext->getContextShopID();
 
         $form = $this->createFormBuilder()
-            ->add('category', new SimpleFormCategory(
-                $this->container->get('prestashop.adapter.translator'),
-                $this->container->get('prestashop.adapter.data_provider.category')
-            ))->getForm();
+            ->add('category', \PrestaShopBundle\Form\Admin\Category\SimpleCategory::class)
+            ->getForm();
 
         $form->handleRequest($request);
 

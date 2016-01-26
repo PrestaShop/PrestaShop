@@ -1,74 +1,6 @@
-{% block typeahead_collection_widget %}
-    {{ form_errors(form) }}
-    <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
-    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12">
-        {% if collection is defined and collection|length > 0 %}
-            {% for item in collection %}
-                <li>
-                    {{ template_collection|format(item.name)|raw }}
-                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.id }}" />
-                </li>
-            {% endfor %}
-        {% endif %}
-    </ul>
-    <script>
-        $( document ).ready(function() {
-            var limit = {{ limit }};
-
-            //remove collection item
-            $(document).on( 'click', '#{{ form.vars.id }}-data a.delete', function() {
-                $(this).parent().remove();
-                return false;
-            });
-
-            //define source
-            this['{{ form.vars.id }}_source'] = new Bloodhound({
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                datumTokenizer: Bloodhound.tokenizers.whitespace,
-                identify: function(obj) { return obj.{{ mapping_value }}; },
-                remote: {
-                    url: '{{ remote_url|raw }}',
-                    cache: false,
-                    wildcard: '%QUERY',
-                    transform: function(response){
-                        if(!response){
-                            return [];
-                        }
-
-                        return response;
-                    }
-                }
-            });
-
-            //define typeahead
-            $('#{{ form.vars.id }}').typeahead({
-                limit: 20,
-                minLength: 2,
-                highlight: true,
-                hint: false,
-            }, {
-                display: '{{ mapping_name }}',
-                source: this['{{ form.vars.id }}_source']
-            }).bind('typeahead:select', function(ev, suggestion) {
-                //if collection length is up to limit, return
-                if(limit != 0 && $('#{{ form.vars.id }}-data li').length >= limit){
-                    return;
-                }
-
-                var html = '<li>';
-                html += sprintf('{{ template_collection|raw }}', suggestion.{{ mapping_name }});
-                html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + suggestion.{{ mapping_value }} + '" />';
-                html += '</li>';
-                $('#{{ form.vars.id }}-data').append(html);
-            }).bind('typeahead:close', function(ev) {
-                $(ev.target).val('');
-            });
-        });
-    </script>
-{% endblock %}
-
 {% block typeahead_product_collection_widget %}
     {{ form_errors(form) }}
+
     <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
     <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12">
         {% if collection is defined and collection|length > 0 %}
@@ -83,7 +15,6 @@
     </ul>
     <script>
         $( document ).ready(function() {
-            var limit = {{ limit }};
 
             //remove collection item
             $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
@@ -134,9 +65,8 @@
                     }
                 }
             }).bind('typeahead:select', function(ev, suggestion) {
-
                 //if collection length is up to limit, return
-                if(limit != 0 && $('#{{ form.vars.id }}-data li').length >= limit){
+                if({{ limit }} != 0 && $('#{{ form.vars.id }}-data li').length >= {{ limit }}){
                     return;
                 }
 
@@ -160,7 +90,6 @@
 {% endblock %}
 
 {% block typeahead_product_pack_collection_widget %}
-
     <div class="col-xs-6">
         <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
     </div>
@@ -282,21 +211,9 @@
 {% block typeahead_customer_collection_widget %}
     {{ form_errors(form) }}
     <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
-    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12">
-        {% if collection is defined and collection|length > 0 %}
-            {% for item in collection %}
-                <li>
-                    <img src="{{ item.image }}" />
-                    {{ template_collection|format(item.name)|raw }}
-                    <input type="hidden" name="{{ form.vars.full_name }}" value="{{ item.id }}" />
-                </li>
-            {% endfor %}
-        {% endif %}
-    </ul>
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12"></ul>
     <script>
         $( document ).ready(function() {
-            var limit = {{ limit }};
-
             //remove collection item
             $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
                 e.preventDefault();
@@ -348,7 +265,7 @@
             }).bind('typeahead:select', function(ev, suggestion) {
 
                 //if collection length is up to limit, return
-                if(limit != 0 && $('#{{ form.vars.id }}-data li').length >= limit){
+                if({{ limit }} != 0 && $('#{{ form.vars.id }}-data li').length >= {{ limit }}){
                     return;
                 }
 
@@ -359,7 +276,7 @@
 
                 var html = '<li>';
                 html += sprintf('{{ template_collection|raw }}', suggestion.{{ mapping_name }});
-                html += '<input type="hidden" name="{{ form.vars.full_name }}" value="' + value + '" />';
+                html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                 html += '</li>';
                 $('#{{ form.vars.id }}-data').append(html);
 

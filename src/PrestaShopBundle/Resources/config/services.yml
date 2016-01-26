@@ -1,6 +1,7 @@
 imports:
     - { resource: admin/services.yml }
-    
+    - { resource: admin/services-form.yml }
+
 services:
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
@@ -29,7 +30,7 @@ services:
     prestashop.handler.log:
         class: PrestaShopBundle\Service\LogHandler\LogHandler
         arguments:
-            - @service_container 
+            - "@service_container"
         tags:
             - { name: addon_log_handler }
 

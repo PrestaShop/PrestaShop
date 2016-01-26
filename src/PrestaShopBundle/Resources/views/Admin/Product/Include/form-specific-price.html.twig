@@ -1,6 +1,17 @@
 <h4>{{ trans('Specific price conditions', {}, 'AdminProducts') }}</h4>
 {{ form_errors(form) }}
-{{ form_row(form.sp_id_shop) }}
+
+{% if form.sp_id_shop.vars.choices is defined %}
+<div class="form-group">
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">{{ trans('Shop', {}, 'AdminProducts') }}</label>
+        {{ form_errors(form.sp_id_shop) }}
+        {{ form_widget(form.sp_id_shop) }}
+    </div>
+</div>
+{% else %}
+    {{ form_widget(form.sp_id_shop) }}
+{% endif %}
 
 <div class="form-group">
     <div class="col-xs-4 pull-left">

@@ -28,9 +28,9 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product attachments
@@ -61,7 +61,7 @@ class ProductAttachement extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('file', 'file', array(
+        $builder->add('file', FormType\FileType::class, array(
             'required' => false,
             'label' => $this->translator->trans('File', [], 'AdminProducts'),
             'constraints' => array(
@@ -69,17 +69,17 @@ class ProductAttachement extends CommonAbstractType
                 new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
             )
         ))
-        ->add('name', 'text', array(
+        ->add('name', FormType\TextType::class, array(
             'label' =>  $this->translator->trans('Filename', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Length(array('min' => 2))
             )
         ))
-        ->add('description', 'text', array(
+        ->add('description', FormType\TextType::class, array(
             'label' =>  $this->translator->trans('Description', [], 'AdminProducts')
         ))
-        ->add('add', 'button', array(
+        ->add('add', FormType\ButtonType::class, array(
             'label' =>  $this->translator->trans('Add', [], 'AdminProducts'),
             'attr' =>  ['class' => 'btn-primary pull-right']
         ));
@@ -90,18 +90,18 @@ class ProductAttachement extends CommonAbstractType
             //if this partial form is submit from a parent form, disable it
             if ($form->getParent()) {
                 $event->setData([]);
-                $form->add('file', 'file', array('mapped' => false));
-                $form->add('name', 'text', array('mapped' => false));
+                $form->add('file', FormType\FileType::class, array('mapped' => false));
+                $form->add('name', FormType\TextType::class, array('mapped' => false));
             }
         });
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_attachment';
     }
