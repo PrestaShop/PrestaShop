@@ -126,21 +126,22 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         }
 
         $addresses_count = $this->getCheckoutSession()->getCustomerAddressesCount();
+
         if ($addresses_count === 0) {
             $this->show_delivery_address_form = true;
-            $this->form_has_continue_button   = true;
-        } elseif (!$this->use_same_address && $addresses_count < 2) {
-            $this->step_is_complete = false;
-            $this->show_invoice_address_form  = true;
-            $this->form_has_continue_button   = true;
-        }
-
-        if ($this->show_delivery_address_form && $this->use_same_address && $addresses_count < 2) {
-            $this->form_has_continue_button   = true;
+        } elseif ($addresses_count < 2 && !$this->use_same_address) {
+            $this->show_invoice_address_form = true;
         }
 
         if ($this->show_invoice_address_form) {
+            // show continue button because form is at the end of the step
             $this->form_has_continue_button = true;
+        } elseif ($this->show_delivery_address_form) {
+            // only show continue button if we're sure
+            // our form is at the bottom of the step
+            if ($this->use_same_address || $addresses_count < 2) {
+                $this->form_has_continue_button = true;
+            }
         }
 
         $this->setTitle(
