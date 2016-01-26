@@ -39,7 +39,7 @@ class UrlGeneratorTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->context->language = new \stdClass();
+        $this->context->language = new \Language;
         $this->context->language->id = 42;
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');
