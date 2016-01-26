@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -145,9 +146,7 @@ class CommonController extends FrameworkBundleAdminController
             'limit_choices' => $limitChoices,
         );
         if ($view != 'full') {
-            return $this->render('PrestaShopBundle:Admin:Common/pagination_'.$view.'.html.twig', array_merge($vars, [
-                // TODO
-            ]));
+            return $this->render('PrestaShopBundle:Admin:Common/pagination_'.$view.'.html.twig', $vars);
         }
         return $vars;
     }
@@ -165,13 +164,36 @@ class CommonController extends FrameworkBundleAdminController
     {
         $recommendedModules = $this->container->get('prestashop.data_provider.modules.recommended');
         /* @var $recommendedModules RecommendedModules */
-        $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, $limit, ($randomize == 1));
+        $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
 
-        $modules = array(); // TODO
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        /* @var $modulesProvider AdminModuleDataProvider */
+
+        $modules = array();
+        foreach ($moduleIdList as $id) {
+            $module = array_values($modulesProvider->getCatalogModules(['name' => $id]));
+
+            if (count($module) == 1) {
+                $module = $module[0];
+            } elseif (count($module) > 1) {
+                throw new \Exception("Module ID $id matches multiple times on the catalog.");
+            } else {
+                continue; // module not found
+            }
+            $modules[] = $module;
+        }
+
+        if ($randomize == 1) {
+            shuffle($modules);
+        }
+
+        // FIXME: utiliser ceux en commun avec Modules ?
+        $modules = $recommendedModules->filterInstalledAndBadModules($modules);
+        $modules = $recommendedModules->generateModuleUrls($modules);
 
         return array(
             'domain' => $domain,
-            'modules' => $modules,
+            'modules' => array_slice($modules, 0, $limit, true),
         );
     }
 }

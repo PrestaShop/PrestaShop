@@ -1,8 +1,8 @@
 {% set dimension_unit, weight_unit = 'PS_DIMENSION_UNIT'|configuration, 'PS_WEIGHT_UNIT'|configuration %}
 
-<h4>{{ trans('Package dimension', [], 'AdminProducts') }}</h4>
-<p>{{ trans('Adjust your shipping costs by filling in the product dimensions.', [], 'AdminProducts') }}</p>
 <div class="col-lg-9">
+    <h4>{{ trans('Package dimension', [], 'AdminProducts') }}</h4>
+    <p>{{ trans('Adjust your shipping costs by filling in the product dimensions.', [], 'AdminProducts') }}</p>
     <div class="col-sm-12 form-group">
         <div class="col-sm-3">
             <label class="control-label">{{ form.width.vars.label }}</label>

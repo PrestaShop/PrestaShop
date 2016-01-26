@@ -1,6 +1,12 @@
 <div id="recommended_module_{{ domain }}">
     {% for module in modules %}
-        <!-- loop over 'modules' and include module card template in the loop. Fix URLs and button click events! -->
+        {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_card.html.twig'
+            with {
+                'module': module,
+                'display_type': 'grid',
+                'col_lg': 'col-lg-12'
+            }
+        %}
     {% else %}
         <!-- Fallback when Add-ons not reached: Static image with link -->
     {% endfor %}

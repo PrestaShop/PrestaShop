@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ModuleController extends Controller
 {
     /**
-     * Controller resposible for displaying "Catalog" section of Module management pages
+     * Controller responsible for displaying "Catalog" section of Module management pages
      * @param  Request $request
      * @return Response
      */
@@ -67,7 +67,7 @@ class ModuleController extends Controller
     }
 
     /**
-     * Controller resposible for displaying "Catalog" section of Module management pages
+     * Controller responsible for displaying "Catalog" section of Module management pages
      * @param  Request $request
      * @return Response
      */
@@ -254,7 +254,7 @@ class ModuleController extends Controller
     }
 
     /**
-     * Controller resposible for displaying "Catalog" section of Module management pages
+     * Controller responsible for displaying "Catalog" section of Module management pages
      * @param  Request $request
      * @return Response
      */
