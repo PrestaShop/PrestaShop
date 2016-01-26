@@ -1,0 +1,19 @@
+label {
+  text-align: right;
+  font-size: 1rem;
+  &.required {
+    font-weight: bold;
+  }
+}
+
+.form-footer {
+  text-align: center;
+}
+
+.form-control {
+  color: inherit;
+}
+
+.form-control-valign {
+  padding-top: 0.375rem;
+}
