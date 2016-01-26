@@ -27,33 +27,22 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 class ThemeChecker
 {
-    private $theme;
-
-    public function setTheme(Theme $theme)
+    public function isValid(Theme $theme)
     {
-        $this->theme = $theme;
-        return $this;
+        return $this->hasRequiredFiles($theme)
+            && $this->hasRequiredProperties($theme);
     }
 
-    public function isValid()
-    {
-        $valid = true;
-        $valid &= $this->hasRequiredFiles();
-        $valid &= $this->hasMiniumProperties();
-
-        return (bool)$valid;
-    }
-
-    public function hasMiniumProperties()
+    private function hasRequiredProperties($theme)
     {
         foreach ($this->getMinimumProperties() as $prop) {
             $p = explode('.', $prop);
 
-            if (!isset($this->theme->{$p[0]})) {
+            if (!isset($theme->{$p[0]})) {
                 return false;
             }
 
-            $var = $this->theme->{$p[0]};
+            $var = $theme->{$p[0]};
             for ($i=1; $i < count($p); $i++) {
                 if (!isset($var[$p[$i]])) {
                     return false;
@@ -65,7 +54,7 @@ class ThemeChecker
         return true;
     }
 
-    public function getMinimumProperties()
+    public function getMRequiredProperties()
     {
         return [
             'name',
@@ -75,10 +64,10 @@ class ThemeChecker
         ];
     }
 
-    public function hasRequiredFiles()
+    private function hasRequiredFiles($theme)
     {
         foreach ($this->getRequiredFiles() as $file) {
-            if (!file_exists($this->theme->directory.$file)) {
+            if (!file_exists($theme->directory.$file)) {
                 return false;
             }
         }
