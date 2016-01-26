@@ -87,7 +87,8 @@ class CheckoutAddressesStepTest extends UnitTestCase
     {
         $this->setCustomerAddressesCount(1);
         $this->assertTemplateParametersInclude([
-            'show_delivery_address_form' => true
+            'show_delivery_address_form' => true,
+            'form_has_continue_button'   => true
         ], [
             'editAddress'   => 'delivery',
             'id_address'    => null
