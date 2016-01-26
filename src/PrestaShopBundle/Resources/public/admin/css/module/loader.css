@@ -23,23 +23,6 @@
     display: none;
     margin-left: 230px;
 }
- 
-button {
-  outline: none;
-  font-size: 12px;
-  height: 40px;
-  text-align: center;
-  width: 130px;
-  border-radius: 3px;
-  background: #fff;
-  border: 1px solid #25B9D7;
-  color: #25B9D7;
-  text-shadow: 0;
-  font-size: 12px;
-  cursor: pointer;
-  -webkit-transition: all 0.25s ease;
-          transition: all 0.25s ease;
-}
 
 .onclic {
   width: 40px;
