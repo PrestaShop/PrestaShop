@@ -1,0 +1,13 @@
+.block_newsletter{
+  @include search-box;
+  @include submit-button;
+}
+
+.block-contact, .account-list a{
+  color: $gray;
+}
+
+.myaccount-title a,.block-contact-title{
+  font-weight: 700;
+  font-size: 16px;
+}

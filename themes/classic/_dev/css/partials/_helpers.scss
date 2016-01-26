@@ -13,7 +13,7 @@
 }
 
 ._margin-right-large{
-  margin-right: 40px;
+  margin-right: 30px;
 }
 
 ._margin-right-small{
@@ -36,6 +36,14 @@
   margin-top: 20px;
 }
 
+._margin-top-large{
+  margin-top: 30px;
+}
+
 ._gray-dark{
   color: $gray-dark;
+}
+
+._shadow{
+  @include box-shadow;
 }
