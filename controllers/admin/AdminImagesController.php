@@ -508,8 +508,8 @@ class AdminImagesControllerCore extends AdminController
         $generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
 
         if (!$productsImages) {
-            $formated_thumb_scene = ImageType::getFormatedName('thumb_scene');
-            $formated_medium = ImageType::getFormatedName('medium');
+            $formated_thumb_scene = ImageType::getFormattedName('thumb_scene');
+            $formated_medium = ImageType::getFormattedName('medium');
             foreach (scandir($dir) as $image) {
                 if (preg_match('/^[0-9]*\.jpg$/', $image)) {
                     foreach ($type as $k => $imageType) {
