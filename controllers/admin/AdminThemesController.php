@@ -24,8 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
 
 /**
@@ -50,13 +50,8 @@ class AdminThemesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
-        // TODO StarterTheme: handle multistore
-        $this->theme_manager = new ThemeManager(
-            $this->context->shop,
-            new AdapterConfiguration($this->context->shop),
-            new ThemeChecker(),
-            $this->context->employee
-        );
+        $this->theme_manager = (new ThemeManagerBuilder($this->context))
+                                ->build();
     }
 
     public function init()
