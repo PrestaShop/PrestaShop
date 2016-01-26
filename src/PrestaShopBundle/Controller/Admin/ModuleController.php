@@ -343,13 +343,40 @@ class ModuleController extends Controller
             if (isset($product->installed) && $product->installed == 1) {
                 if ($product->active == 0) {
                     $product->url_active = 'enable';
+                    unset(
+                        $product->urls['update'],
+                        $product->urls['install']
+                    );
                 } elseif ($product->is_configurable == 1) {
                     $product->url_active = 'configure';
+                    unset(
+                        $product->urls['update'],
+                        $product->urls['enable'],
+                        $product->urls['install']
+                    );
                 } else {
                     $product->url_active = 'disable';
+                    unset(
+                        $product->urls['update'],
+                        $product->urls['install'],
+                        $product->urls['enable'],
+                        $product->urls['configure']
+                    );
                 }
             } elseif (isset($product->origin) && in_array($product->origin, ['native', 'native_all', 'partner', 'customer'])) {
                 $product->url_active = 'install';
+                unset(
+                    $product->urls['uninstall'],
+                    $product->urls['enable'],
+                    $product->urls['disable'],
+                    $product->urls['reset'],
+                    $product->urls['update'],
+                    $product->urls['configure']
+
+                );
+            } else {
+                $product->url_active = 'buy';
+                unset($product->urls);
             }
         }
 
