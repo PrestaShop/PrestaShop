@@ -40,6 +40,7 @@ class DataFormatterExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFilter('arrayCast', array($this, 'arrayCast')),
+            new \Twig_SimpleFilter('unsetElement', array($this, 'unsetElement')),
         );
     }
 
@@ -52,6 +53,7 @@ class DataFormatterExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('arrayCast', array($this, 'arrayCast')),
+            new \Twig_SimpleFunction('unsetElement', array($this, 'unsetElement')),
         );
     }
 
@@ -65,6 +67,19 @@ class DataFormatterExtension extends \Twig_Extension
     public function arrayCast($toCast)
     {
         return (array)$toCast;
+    }
+
+    /**
+     * PHP 'unset()' exposed through twig template engine
+     *
+     * @param string $array Array containing Element to unset
+     * @param string $key Element to be unset
+     *
+     */
+    public function unsetElement($array, $key)
+    {
+        unset($array[$key]);
+        return $array;
     }
 
     /**
