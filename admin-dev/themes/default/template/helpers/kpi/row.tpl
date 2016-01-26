@@ -24,7 +24,7 @@
 *}
 <div class="panel kpi-container">
 	{if $refresh}
-		<div class="kpi-refresh"><button class="close refresh" type="button" onclick="refresh_kpis();"><i class="process-icon-refresh" style="font-size:1em"></i></button></div>
+		<div class="kpi-refresh"><button class="close refresh" type="button" onclick="refresh_kpis(true);"><i class="process-icon-refresh" style="font-size:1em"></i></button></div>
 	{/if}
 	<div class="row">
 		{assign var='col' value=(int)(12 / $kpis|count)}
