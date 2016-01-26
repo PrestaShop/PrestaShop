@@ -78,9 +78,11 @@
                 </div>
             {% endif %}
 
-            <form method="GET" action="{{module.urls.install}}">
-                <input type="submit" class="pull-right module-install-button" value="Install"/>
-            </form>
+            {% if module.urls.install is defined %}
+                <form method="GET" action="{{module.urls.install}}">
+                    <input type="submit" class="pull-right module-install-button" value="Install"/>
+                </form>
+            {% endif %}
       </div>
     </div>
   </div>
