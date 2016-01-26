@@ -2562,7 +2562,9 @@ class AdminProductsControllerCore extends AdminController
             $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_out_of_stock';
             $helper->tooltip = sprintf($this->l('%s of your products for sale are out of stock.', null, null, false), $helper->value);
             $helper->refresh = (bool)(ConfigurationKPI::get('PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE') < $time);
-            $helper->href = Context::getContext()->link->getAdminLink('AdminProducts').'&productFilter_sav!quantity=0&productFilter_active=1&submitFilterproduct=1';
+            $product_token = Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Context::getContext()->employee->id);
+            $urlParams = ['filter_column_sav_quantity' => '<=0', 'filter_column_active' => '1', 'token' => $product_token, 'submitFilterproduct' => 1];
+            $helper->href = preg_replace("/\\?.*$/", '?tab=AdminProducts&productFilter_sav!quantity=0&productFilter_active=1&submitFilterproduct=1&token='. $product_token, Context::getContext()->link->getAdminLink('AdminProducts', true, $urlParams));
             $kpis[] = $helper->generate();
         }
 
@@ -2600,7 +2602,6 @@ class AdminProductsControllerCore extends AdminController
         $helper->id = 'box-disabled-products';
         $helper->icon = 'icon-off';
         $helper->color = 'color4';
-        $helper->href = $this->context->link->getAdminLink('AdminProducts');
         $helper->title = $this->l('Disabled Products', null, null, false);
         if (ConfigurationKPI::get('DISABLED_PRODUCTS') !== false) {
             $helper->value = ConfigurationKPI::get('DISABLED_PRODUCTS');
@@ -2608,7 +2609,9 @@ class AdminProductsControllerCore extends AdminController
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_products';
         $helper->refresh = (bool)(ConfigurationKPI::get('DISABLED_PRODUCTS_EXPIRE') < $time);
         $helper->tooltip = sprintf($this->l('%s of your products are disabled and not visible to your customers', null, null, false), $helper->value);
-        $helper->href = Context::getContext()->link->getAdminLink('AdminProducts').'&productFilter_active=0&submitFilterproduct=1';
+        $product_token = Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Context::getContext()->employee->id);
+        $urlParams = ['filter_column_active' => '0', 'token' => $product_token, 'submitFilterproduct' => 1];
+        $helper->href = preg_replace("/\\?.*$/", '?tab=AdminProducts&productFilter_active=0&submitFilterproduct=1&token='. $product_token, Context::getContext()->link->getAdminLink('AdminProducts', true, $urlParams));
         $kpis[] = $helper->generate();
 
         $helper = new HelperKpiRow();

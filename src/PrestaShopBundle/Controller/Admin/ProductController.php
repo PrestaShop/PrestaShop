@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
+use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -798,5 +799,29 @@ class ProductController extends FrameworkBundleAdminController
         $urlGenerator = $this->container->get($use?'prestashop.core.admin.url_generator_legacy':'prestashop.core.admin.url_generator');
         /* @var $urlGenerator UrlGeneratorInterface */
         return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
+    }
+
+    /**
+     * Set the Catalog filters values and redirect to the catalogAction.
+     *
+     * URL example: /product/catalog_filters/42/last/32
+     *
+     *
+     * @return void (redirection)
+     */
+    public function catalogFiltersAction($quantity = 'none', $active = 'none')
+    {
+        $quantity = urldecode($quantity);
+
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        /* @var $productProvider ProductInterfaceProvider */
+
+        // we merge empty filter set with given values, to reset the other filters!
+        $productProvider->persistFilterParameters(array_merge(AdminFilter::getProductCatalogEmptyFilter(), [
+            'filter_column_sav_quantity' => ($quantity=='none')?'':$quantity,
+            'filter_column_active' => ($active=='none')?'':$active
+        ]));
+
+        return $this->redirectToRoute('admin_product_catalog');
     }
 }

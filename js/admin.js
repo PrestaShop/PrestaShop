@@ -1606,7 +1606,6 @@ function refresh_kpis()
 	$('.box-stats').each(function() {
 		if ($(this).attr('id')) {
 			var functionName = 'refresh_' + $(this).attr('id').replace(/-/g, '_');
-
 			if (typeof window[functionName] === 'function') {
 				window[functionName]();
 			}
