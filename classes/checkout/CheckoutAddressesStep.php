@@ -146,24 +146,31 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 'Checkout'
             )
         );
+
+        return $this;
+    }
+
+    public function getTemplateParameters()
+    {
+        return [
+            'address_form'          => $this->addressForm->getProxy(),
+            'use_same_address'      => $this->use_same_address,
+            'id_address_delivery'   => $this
+                                        ->getCheckoutSession()
+                                        ->getIdAddressDelivery(),
+            'id_address_invoice'    => $this
+                                        ->getCheckoutSession()
+                                        ->getIdAddressInvoice(),
+            'show_delivery_address_form' => $this->show_delivery_address_form,
+            'show_invoice_address_form'  => $this->show_invoice_address_form,
+            'form_has_continue_button'   => $this->form_has_continue_button
+        ];
     }
 
     public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            $this->template, $extraParams, [
-                'address_form'          => $this->addressForm->getProxy(),
-                'use_same_address'      => $this->use_same_address,
-                'id_address_delivery'   => $this
-                                            ->getCheckoutSession()
-                                            ->getIdAddressDelivery(),
-                'id_address_invoice'    => $this
-                                            ->getCheckoutSession()
-                                            ->getIdAddressInvoice(),
-                'show_delivery_address_form' => $this->show_delivery_address_form,
-                'show_invoice_address_form'  => $this->show_invoice_address_form,
-                'form_has_continue_button'   => $this->form_has_continue_button
-            ]
+            $this->template, $extraParams, $this->getTemplateParameters()
         );
     }
 }
