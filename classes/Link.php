@@ -407,6 +407,12 @@ class LinkCore
                         //default: if (array_key_exists('updateproduct', $sfRouteParams))
                         return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/form/' . $sfRouteParams['id_product'];
                     }
+                    if (array_key_exists('submitFilterproduct', $sfRouteParams)) {
+                        return rtrim($this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog_filters/'
+                            .(array_key_exists('filter_column_sav_quantity', $sfRouteParams)?urlencode($sfRouteParams['filter_column_sav_quantity']):'none').'/'
+                            .(array_key_exists('filter_column_active', $sfRouteParams)?$sfRouteParams['filter_column_active']:'none').'/',
+                        '/');
+                    }
                     return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog';
                 } else {
                     $params = array_merge($params, $sfRouteParams);

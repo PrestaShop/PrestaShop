@@ -14,6 +14,17 @@ admin_product_catalog:
         offset: last|\d+
         sortOrder: last|asc|desc
 
+admin_product_catalog_filters:
+    path: /catalog_filters/{quantity}/{active}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::catalogFiltersAction
+        _legacy_controller: AdminProducts
+        quantity: 'none'
+        active: 'none'
+    requirements:
+        active: none|1|0
+
 admin_product_list:
     path:     /list/{offset}/{limit}/{orderBy}/{sortOrder}/{view}
     methods:  [GET]

@@ -139,7 +139,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getPercentProductOutOfStock()
     {
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT SUM(IF(IFNULL(stock.quantity, 0) = 0, 1, 0)) as without_stock, COUNT(*) as products
+		SELECT SUM(IF(IFNULL(stock.quantity, 0) <= 0, 1, 0)) as without_stock, COUNT(*) as products
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
