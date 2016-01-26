@@ -1,14 +1,16 @@
 @import url('//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
-@import "partials/_variables";
-@import "partials/_fonts";
-@import "partials/_mixins";
-@import "partials/_helpers";
 @import "~bootstrap/scss/bootstrap";
 @import "~bourbon/app/assets/stylesheets/bourbon";
+@import "partials/_variables";
+@import "partials/_fonts";
+@import "partials/_forms";
+@import "partials/_mixins";
+@import "partials/_helpers";
 @import "modules/drop-down";
 @import "modules/search-widget";
 @import "modules/top-menu";
 @import "modules/checkout";
+@import "modules/customer";
 @import "modules/homeslider";
 @import "modules/homefeatured";
 @import "modules/cms-info";
@@ -17,6 +19,7 @@
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
+  color: $gray-dark;
 }
 ul {
   list-style: none;

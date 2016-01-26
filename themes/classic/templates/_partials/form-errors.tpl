@@ -1,7 +1,5 @@
 {if $errors|count}
-  <ul class='form-errors'>
     {foreach $errors as $error}
-      <li>{$error}</li>
+    <div class="alert alert-danger" role="alert">{$error}</div>
     {/foreach}
-  </ul>
 {/if}

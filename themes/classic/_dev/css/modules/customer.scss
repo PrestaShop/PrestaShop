@@ -1,0 +1,21 @@
+.page-authentication {
+  .no-account {
+    text-align: center;
+    font-size: 1.25rem;
+    margin: 1rem 0;
+  }
+}
+
+.login-form {
+  margin: 1.5rem auto;
+  max-width: 600px;
+  form {
+    .forgot-password {
+      margin: 1rem 0;
+    }
+  }
+}
+
+.register-form {
+  margin: 1.5rem auto;
+}
