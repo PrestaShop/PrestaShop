@@ -26,8 +26,7 @@
 
 use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 class AdminShopControllerCore extends AdminController
 {
@@ -521,13 +520,9 @@ class AdminShopControllerCore extends AdminController
             'desc' => $this->l('Enable or disable your store?')
         );*/
 
-        $theme_manager = new ThemeManager(
-            $this->context->shop,
-            new Configurator(),
-            new ThemeChecker,
-            $this->context->employee
-        );
-        $themes = $theme_manager->getThemeList();
+        $themes = (new ThemeManagerBuilder($this->context))
+                        ->build()
+                        ->getThemeList();
 
         $this->fields_form['input'][] = array(
             'type' => 'theme',
