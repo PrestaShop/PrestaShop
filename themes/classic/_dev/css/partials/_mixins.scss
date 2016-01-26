@@ -6,6 +6,7 @@
       padding: 10px;
       min-width: 255px;
       background: $gray-light;
+      color:$gray;
       @include placeholder {
         color: rgba($gray, 0.5);
       }

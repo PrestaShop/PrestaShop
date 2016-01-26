@@ -26,14 +26,15 @@
 <div class="block_newsletter col-md-8">
   <div class="row">
     <p class="col-md-5 _gray-dark _margin-top-small">{l s='Get our latest news and special sales' mod='blocknewsletter'}</p>
-    {if $msg}
-      <p class="notification {if $nw_error}notification-error{else}notification-success{/if}">{$msg}</p>
-    {/if}
+
     <div class="col-md-7">
       <form action="{$urls.pages.index}" method="post">
         <div class="row">
           <div class="col-md-8">
             <input type="text" name="email" value="{$value}" placeholder="{l s='Your e-mail address' mod='blocknewsletter'}" />
+            {if $msg}
+              <p class="text-warning notification {if $nw_error}notification-error{else}notification-success{/if}">{$msg}</p>
+            {/if}
           </div>
           <div class="col-md-4">
             <input type="submit" value="{l s='Subscribe' mod='blocknewsletter'}" name="submitNewsletter" />

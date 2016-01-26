@@ -2,8 +2,8 @@
 @import "partials/_variables";
 @import "partials/_functions";
 @import "partials/_fonts";
-@import "partials/_helpers";
 @import "partials/_mixins";
+@import "partials/_helpers";
 @import "~bootstrap/scss/bootstrap";
 @import "~bourbon/app/assets/stylesheets/bourbon";
 @import "modules/drop-down";
@@ -13,8 +13,7 @@
 @import "modules/homeslider";
 @import "modules/homefeatured";
 @import "modules/cms-info";
-@import "modules/newsletter";
-
+@import "modules/footer";
 /*** COMMONS ***/
 body {
   font-family: 'Open Sans', sans-serif;
@@ -27,7 +26,6 @@ ul {
 .material-icons {
   vertical-align: middle;
 }
-
 /*** HEADER ***/
 #header {
   background: white;
@@ -75,6 +73,14 @@ ul {
       }
     }
   }
+  .sub-menu {
+    // position: absolute;;
+    // background: white;
+    // z-index: 1;
+    // width: 100%;
+    // left: 0;
+    // top: 171px;
+  }
   .header-top {
     .menu {
       > ul {
@@ -90,7 +96,6 @@ ul {
     }
   }
 }
-
 /*** WRAPPER ***/
 #wrapper {
   background: $body-color;
@@ -119,12 +124,10 @@ ul {
     }
   }
 }
-
 /*** FOOTER ***/
 #footer {
   padding-top: em(40px);
 }
-
 @include media-breakpoint-down(md) {
   #checkout-cart-summary {
     float: none;
