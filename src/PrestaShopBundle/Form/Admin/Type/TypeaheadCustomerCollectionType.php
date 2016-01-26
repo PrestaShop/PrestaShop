@@ -25,33 +25,26 @@
  */
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to create a customer
  */
-class TypeaheadCustomerCollectionType extends TypeaheadCollectionType
+class TypeaheadCustomerCollectionType extends CommonAbstractType
 {
     protected $customerAdapter;
-    protected $limit;
 
     /**
      * {@inheritdoc}
      *
-     * @param string $remote_url The remote url to fetch datas
-     * @param string $mapping_value The value to map
-     * @param string $mapping_name The name to map
-     * @param string $placeholder The placeholder for the searchbox
-     * @param string $template_collection The template use by php/javascript to render a collection line (name, image). EX : <img src="%s" /><span>%s</span>
      * @param object $customerAdapter
-     * @param int $limit Limit the number of collection, if set to 0, collection is unlimited
      */
-    public function __construct($remote_url, $mapping_value = 'id', $mapping_name = 'name', $placeholder = '', $template_collection = '', $customerAdapter, $limit = 0)
+    public function __construct($customerAdapter)
     {
-        parent::__construct($remote_url, $mapping_value, $mapping_name, $placeholder, $template_collection, $limit);
         $this->customerAdapter = $customerAdapter;
-        $this->limit = $limit;
     }
 
     /**
@@ -62,7 +55,12 @@ class TypeaheadCustomerCollectionType extends TypeaheadCollectionType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        parent::buildView($view, $form, $options);
+        $view->vars['placeholder'] = $options['placeholder'];
+        $view->vars['remote_url'] = $options['remote_url'];
+        $view->vars['mapping_value'] = $options['mapping_value'];
+        $view->vars['mapping_name'] = $options['mapping_name'];
+        $view->vars['template_collection'] = $options['template_collection'];
+        $view->vars['limit'] = $options['limit'];
 
         //if form is submitted, inject datas to display collection
         if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
@@ -81,12 +79,41 @@ class TypeaheadCustomerCollectionType extends TypeaheadCollectionType
                 $i++;
 
                 //if collection length is up to limit, break
-                if ($this->limit != 0 && $i >= $this->limit) {
+                if ($options['limit'] != 0 && $i >= $options['limit']) {
                     break;
                 }
             }
             $view->vars['collection'] = $collection;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Builds the form.
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('data', \Symfony\Component\Form\Extension\Core\Type\CollectionType::class, array(
+            'entry_type' => \Symfony\Component\Form\Extension\Core\Type\HiddenType::class,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'label' => false,
+            'required' => false,
+            'prototype' => true,
+        ));
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'remote_url' => '',
+            'mapping_value' => 'id',
+            'mapping_name' => 'name',
+            'placeholder' => '',
+            'template_collection' => '',
+            'limit' => 0,
+        ));
     }
 
     /**

@@ -30,8 +30,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
-use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use Symfony\Component\Form\FormError;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -100,14 +98,12 @@ class ProductInformation extends CommonAbstractType
             'label' =>  $this->translator->trans('Type', [], 'AdminProducts'),
             'required' => true,
         ))
-        ->add('inputPackItems', new TypeaheadProductPackCollectionType(
-            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&excludeVirtuals=1&limit=20&q=%QUERY',
-            'id',
-            'name',
-            $this->translator->trans('search in catalog...', [], 'AdminProducts'),
-            '<div class="title col-xs-10">%s (ref: %s) X %s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
-            $this->productAdapter
-        ), array(
+        ->add('inputPackItems', \PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType::class, array(
+            'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&excludeVirtuals=1&limit=20&q=%QUERY',
+            'mapping_value' => 'id',
+            'mapping_name' => 'name',
+            'placeholder' => $this->translator->trans('search in catalog...', [], 'AdminProducts'),
+            'template_collection' => '<div class="title col-xs-10">%s (ref: %s) X %s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
             'required' => false,
             'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
         ))
@@ -220,16 +216,14 @@ class ProductInformation extends CommonAbstractType
             'label' => $this->translator->trans('Add a new category', [], 'AdminProducts'),
             'attr' => ['data-action' => $this->router->generate('admin_category_simple_add_form')]
         ))
-        ->add('related_products', new TypeaheadProductCollectionType(
-            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-            'id',
-            'name',
-            $this->translator->trans('search in catalog...', [], 'AdminProducts'),
-            '',
-            $this->productAdapter
-        ), array(
+        ->add('related_products', \PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType::class, array(
+            'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            'mapping_value' => 'id',
+            'mapping_name' => 'name',
+            'placeholder' => $this->translator->trans('search in catalog...', [], 'AdminProducts'),
+            'template_collection' => '<div class="title col-xs-10">%s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
             'required' => false,
-            'label' => $this->translator->trans('Accessories', [], 'AdminProducts')
+            'label' =>  $this->translator->trans('Accessories', [], 'AdminProducts')
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

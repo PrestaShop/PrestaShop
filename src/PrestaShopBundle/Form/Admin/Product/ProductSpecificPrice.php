@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
@@ -116,17 +115,15 @@ class ProductSpecificPrice extends CommonAbstractType
             'label' =>  false,
             'placeholder' => $this->translator->trans('All groups', [], 'AdminProducts'),
         ))
-        ->add('sp_id_customer', new TypeaheadCustomerCollectionType(
-            $this->context->getAdminLink('AdminCustomers', true).'&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
-            'id_customer',
-            'fullname_and_email',
-            $this->translator->trans('All customers', [], 'AdminProducts'),
-            '<div class="title col-xs-10">%s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
-            $this->customerDataprovider,
-            1
-        ), array(
+        ->add('sp_id_customer', \PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType::class, array(
+            'remote_url' => $this->context->getAdminLink('AdminCustomers', true).'&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
+            'mapping_value' => 'id_customer',
+            'mapping_name' => 'fullname_and_email',
+            'placeholder' => $this->translator->trans('All customers', [], 'AdminProducts'),
+            'template_collection' => '<div class="title col-xs-10">%s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
+            'limit' => 1,
             'required' => false,
-            'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Add customer', [], 'AdminProducts'),
         ))
         ->add('sp_id_product_attribute', FormType\ChoiceType::class, array(
             'choices' =>  [],

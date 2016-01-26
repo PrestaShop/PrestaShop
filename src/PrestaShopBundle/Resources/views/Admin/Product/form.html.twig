@@ -486,7 +486,7 @@
 
                                 <div class="collapse" id="specific_price_form" data-action="{{ path('admin_specific_price_add') }}">
                                     <div class="well">
-                                        {{ include('PrestaShopBundle:Admin:Product/Include/form-specific-price.html.twig', {'form': form.step2.specific_price}) }}
+                                        {{ include('PrestaShopBundle:Admin:Product/Include/form-specific-price.html.twig', {'form': form.step2.specific_price, 'is_multishop_context': is_multishop_context}) }}
                                     </div>
                                 </div>
                             </div>
@@ -725,7 +725,10 @@
     %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+    {% if default_language_iso != 'en' %}
     <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/locale/'~ default_language_iso ~'.js' ) }}"></script>
+    {% endif %}
 {% endblock %}
 
 {% set js_translatable = {

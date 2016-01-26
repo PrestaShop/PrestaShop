@@ -152,3 +152,24 @@ services:
             - "@prestashop.adapter.legacy.context"
         tags:
             - { name: form.type }
+
+    form.type.typeahead.product:
+        class: PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType
+        arguments:
+            - "@prestashop.adapter.data_provider.product"
+        tags:
+            - { name: form.type }
+
+    form.type.typeahead.product_pack:
+        class: PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType
+        arguments:
+            - "@prestashop.adapter.data_provider.product"
+        tags:
+            - { name: form.type }
+
+    form.type.typeahead.customer:
+        class: PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType
+        arguments:
+            - "@prestashop.adapter.data_provider.customer"
+        tags:
+            - { name: form.type }
