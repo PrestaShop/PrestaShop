@@ -71,6 +71,7 @@ class ProductFeature extends CommonAbstractType
         $builder->add('feature', FormType\ChoiceType::class, array(
             'label' => $this->translator->trans('Feature', [], 'AdminProducts'),
             'choices' =>  $this->features,
+            'choices_as_values' => true,
             'required' =>  false,
             'attr' => array(
                 'data-action' => $this->router->generate('admin_feature_get_feature_values'),
@@ -80,6 +81,7 @@ class ProductFeature extends CommonAbstractType
         ->add('value', FormType\ChoiceType::class, array(
             'label' => $this->translator->trans('Value', [], 'AdminProducts'),
             'required' =>  false,
+            'choices_as_values' => true,
             'attr' => array('class' => 'feature-value-selector')
         ))
         ->add('custom_value', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
@@ -108,6 +110,7 @@ class ProductFeature extends CommonAbstractType
             $form->add('value', FormType\ChoiceType::class, array(
                 'label' => $this->translator->trans('Value', [], 'AdminProducts'),
                 'choices' => $choices,
+                'choices_as_values' => true,
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),
             ));
@@ -133,6 +136,7 @@ class ProductFeature extends CommonAbstractType
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),
                 'choices' => $choices,
+                'choices_as_values' => true,
             ));
         });
     }

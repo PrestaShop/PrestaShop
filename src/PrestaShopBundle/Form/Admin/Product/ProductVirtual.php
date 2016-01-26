@@ -64,9 +64,10 @@ class ProductVirtual extends CommonAbstractType
     {
         $builder->add('is_virtual_file', FormType\ChoiceType::class, array(
             'choices'  => array(
-                1 => $this->translator->trans('Yes', [], 'AdminProducts'),
-                0 => $this->translator->trans('No', [], 'AdminProducts'),
+                $this->translator->trans('Yes', [], 'AdminProducts') => 1,
+                $this->translator->trans('No', [], 'AdminProducts') => 0,
             ),
+            'choices_as_values' => true,
             'expanded' => true,
             'required' => true,
             'multiple' => false,

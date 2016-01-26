@@ -70,9 +70,10 @@ class ProductCustomField extends CommonAbstractType
         ->add('type', FormType\ChoiceType::class, array(
             'label' => $this->translator->trans('Type', [], 'AdminProducts'),
             'choices'  => array(
-                '1' => $this->translator->trans('Text', [], 'AdminProducts'),
-                '0' => $this->translator->trans('File', [], 'AdminProducts'),
+                $this->translator->trans('Text', [], 'AdminProducts') => 1,
+                $this->translator->trans('File', [], 'AdminProducts') => 0,
             ),
+            'choices_as_values' => true,
             'required' =>  true
         ))->add('require', FormType\CheckboxType::class, array(
             'label'    => $this->translator->trans('Required', [], 'AdminProducts'),

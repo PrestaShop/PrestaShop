@@ -58,7 +58,7 @@ class ProductShipping extends CommonAbstractType
         $carriers = $carrierDataProvider->getCarriers($this->locales[0]['id_lang'], false, false, false, null, $carrierDataProvider->getAllCarriersConstant());
         $this->carriersChoices = [];
         foreach ($carriers as $carrier) {
-            $this->carriersChoices[$carrier['id_reference']] = $carrier['name'].' ('.$carrier['delay'].')';
+            $this->carriersChoices[$carrier['name'].' ('.$carrier['delay'].')'] = $carrier['id_reference'];
         }
     }
 
@@ -112,6 +112,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('selectedCarriers', FormType\ChoiceType::class, array(
             'choices' =>  $this->carriersChoices,
+            'choices_as_values' => true,
             'expanded' =>  true,
             'multiple' =>  true,
             'required' =>  false,

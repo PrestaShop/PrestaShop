@@ -75,17 +75,18 @@ class ProductQuantity extends CommonAbstractType
                 'data-action' => $this->router->generate('admin_attribute_generator'),
             ],
             'label' =>  $this->translator->trans('Create combinations', [], 'AdminProducts')
-        ))
+            ))
             ->add('advanced_stock_management', FormType\CheckboxType::class, array(
                 'required' => false,
                 'label' => $this->translator->trans('I want to use the advanced stock management system for this product.', [], 'AdminProducts'),
             ))
-            ->add('pack_stock_type', FormType\ChoiceType::class) //see eventListener for details
+            ->add('pack_stock_type', FormType\ChoiceType::class, ['choices_as_values' => true, ]) //see eventListener for details
             ->add('depends_on_stock', FormType\ChoiceType::class, array(
                 'choices'  => array(
-                    1 => $this->translator->trans('The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). ', [], 'AdminProducts'),
-                    0 => $this->translator->trans('I want to specify available quantities manually.', [], 'AdminProducts'),
+                    $this->translator->trans('The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). ', [], 'AdminProducts') => 1,
+                    $this->translator->trans('I want to specify available quantities manually.', [], 'AdminProducts') => 0,
                 ),
+                'choices_as_values' => true,
                 'expanded' => true,
                 'required' => true,
                 'multiple' => false,
@@ -103,7 +104,7 @@ class ProductQuantity extends CommonAbstractType
                 'allow_add' => true,
                 'allow_delete' => true
             ))
-            ->add('out_of_stock', FormType\ChoiceType::class) //see eventListener for details
+            ->add('out_of_stock', FormType\ChoiceType::class, ['choices_as_values' => true, ]) //see eventListener for details
             ->add('minimal_quantity', FormType\NumberType::class, array(
                 'required' => true,
                 'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
@@ -148,10 +149,11 @@ class ProductQuantity extends CommonAbstractType
 
             $form->add('out_of_stock', FormType\ChoiceType::class, array(
                 'choices'  => array(
-                    '0' => $this->translator->trans('Deny orders', [], 'AdminProducts'),
-                    '1' => $this->translator->trans('Allow orders', [], 'AdminProducts'),
-                    '2' => $defaultChoiceLabel,
+                    $this->translator->trans('Deny orders', [], 'AdminProducts') => '0',
+                    $this->translator->trans('Allow orders', [], 'AdminProducts') => '1',
+                    $defaultChoiceLabel => '2',
                 ),
+                'choices_as_values' => true,
                 'expanded' => true,
                 'required' => false,
                 'placeholder' => false,
@@ -171,11 +173,12 @@ class ProductQuantity extends CommonAbstractType
 
             $form->add('pack_stock_type', FormType\ChoiceType::class, array(
                 'choices'  => array(
-                    '0' => $this->translator->trans('Decrement pack only.', [], 'AdminProducts'),
-                    '1' => $this->translator->trans('Decrement products in pack only.', [], 'AdminProducts'),
-                    '2' => $this->translator->trans('Decrement both.', [], 'AdminProducts'),
-                    '3' => $defaultChoiceLabel,
+                    $this->translator->trans('Decrement pack only.', [], 'AdminProducts') => '0',
+                    $this->translator->trans('Decrement products in pack only.', [], 'AdminProducts') => '1',
+                    $this->translator->trans('Decrement both.', [], 'AdminProducts') => '2',
+                    $defaultChoiceLabel => '3',
                 ),
+                'choices_as_values' => true,
                 'expanded' => false,
                 'required' => true,
                 'placeholder' => false,

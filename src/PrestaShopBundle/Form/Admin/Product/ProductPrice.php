@@ -111,6 +111,7 @@ class ProductPrice extends CommonAbstractType
         ->add('id_tax_rules_group', FormType\ChoiceType::class, array(
             'choices' =>  $this->tax_rules,
             'required' => true,
+            'choices_as_values' => true,
             'choice_attr' => function ($val) {
                 return [
                     'data-rates' => implode(',', $this->tax_rules_rates[$val]['rates']),
@@ -145,15 +146,16 @@ class ProductPrice extends CommonAbstractType
 
         //generates fields for price priority
         $specificPricePriorityChoices = [
-            'id_shop' => $this->translator->trans('Shop', [], 'AdminProducts'),
-            'id_currency' => $this->translator->trans('Currency', [], 'AdminProducts'),
-            'id_country' => $this->translator->trans('Country', [], 'AdminProducts'),
-            'id_group' => $this->translator->trans('Group', [], 'AdminProducts'),
+             $this->translator->trans('Shop', [], 'AdminProducts') => 'id_shop',
+             $this->translator->trans('Currency', [], 'AdminProducts') => 'id_currency',
+             $this->translator->trans('Country', [], 'AdminProducts') => 'id_country',
+             $this->translator->trans('Group', [], 'AdminProducts') => 'id_group',
         ];
 
         for ($i=0; $i < count($specificPricePriorityChoices); $i++) {
             $builder->add('specificPricePriority_'.$i, FormType\ChoiceType::class, array(
                 'choices' => $specificPricePriorityChoices,
+                'choices_as_values' => true,
                 'required' => true
             ));
         }

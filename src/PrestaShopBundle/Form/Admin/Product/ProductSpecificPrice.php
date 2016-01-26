@@ -88,29 +88,30 @@ class ProductSpecificPrice extends CommonAbstractType
         } else {
             $builder->add('sp_id_shop', FormType\ChoiceType::class, array(
                 'choices' =>  $this->shops,
+                'choices_as_values' => true,
                 'required' =>  false,
                 'label' =>  false,
                 'placeholder' => $this->translator->trans('All shops', [], 'AdminProducts'),
-                'attr' => [
-                    'class' => count($this->shops) >= 1 ? 'hide2' : ''
-                ]
             ));
         }
 
         $builder->add('sp_id_currency', FormType\ChoiceType::class, array(
             'choices' =>  $this->currencies,
+            'choices_as_values' => true,
             'required' =>  false,
             'label' =>  false,
             'placeholder' =>  $this->translator->trans('All currencies', [], 'AdminProducts'),
         ))
         ->add('sp_id_country', FormType\ChoiceType::class, array(
             'choices' =>  $this->countries,
+            'choices_as_values' => true,
             'required' =>  false,
             'label' =>  false,
             'placeholder' => $this->translator->trans('All countries', [], 'AdminProducts'),
         ))
         ->add('sp_id_group', FormType\ChoiceType::class, array(
             'choices' =>  $this->groups,
+            'choices_as_values' => true,
             'required' =>  false,
             'label' =>  false,
             'placeholder' => $this->translator->trans('All groups', [], 'AdminProducts'),
@@ -127,6 +128,7 @@ class ProductSpecificPrice extends CommonAbstractType
         ))
         ->add('sp_id_product_attribute', FormType\ChoiceType::class, array(
             'choices' =>  [],
+            'choices_as_values' => true,
             'required' =>  false,
             'placeholder' => $this->translator->trans('Apply to all combinations', [], 'AdminProducts'),
             'label' => $this->translator->trans('Combination:s', [], 'AdminProducts'),
@@ -168,17 +170,19 @@ class ProductSpecificPrice extends CommonAbstractType
         ->add('sp_reduction_type', FormType\ChoiceType::class, array(
             'label' => $this->translator->trans('Reduction type', [], 'AdminProducts'),
             'choices'  => array(
-                'amount' => '€',
-                'percentage' => $this->translator->trans('%', [], 'AdminProducts'),
+                '€' => 'amount',
+                 $this->translator->trans('%', [], 'AdminProducts') => 'percentage',
             ),
+            'choices_as_values' => true,
             'required' => true,
         ))
         ->add('sp_reduction_tax', FormType\ChoiceType::class, array(
             'label' => $this->translator->trans('Reduction tax', [], 'AdminProducts'),
             'choices'  => array(
-                '0' => $this->translator->trans('Tax excluded', [], 'AdminProducts'),
-                '1' => $this->translator->trans('Tax included', [], 'AdminProducts'),
+                $this->translator->trans('Tax excluded', [], 'AdminProducts') => '0',
+                $this->translator->trans('Tax included', [], 'AdminProducts') => '1',
             ),
+            'choices_as_values' => true,
             'required' => true,
         ))
         ->add('save', FormType\ButtonType::class, array(
@@ -201,6 +205,7 @@ class ProductSpecificPrice extends CommonAbstractType
             //bypass SF validation, define submitted value in choice list
             $form->add('sp_id_product_attribute', FormType\ChoiceType::class, array(
                 'choices' =>  [$data['sp_id_product_attribute'] => ''],
+                'choices_as_values' => true,
                 'required' =>  false,
             ));
         });

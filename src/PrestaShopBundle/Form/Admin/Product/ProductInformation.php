@@ -91,10 +91,11 @@ class ProductInformation extends CommonAbstractType
     {
         $builder->add('type_product', FormType\ChoiceType::class, array(
             'choices'  => array(
-                0 => $this->translator->trans('Standard product', [], 'AdminProducts'),
-                1 => $this->translator->trans('Pack of existing products', [], 'AdminProducts'),
-                2 => $this->translator->trans('Virtual product (services, booking, downloadable products, etc.)', [], 'AdminProducts'),
+                $this->translator->trans('Standard product', [], 'AdminProducts') => 0,
+                $this->translator->trans('Pack of existing products', [], 'AdminProducts') => 1,
+                $this->translator->trans('Virtual product (services, booking, downloadable products, etc.)', [], 'AdminProducts') => 2,
             ),
+            'choices_as_values' => true,
             'label' =>  $this->translator->trans('Type', [], 'AdminProducts'),
             'required' => true,
         ))
@@ -164,6 +165,7 @@ class ProductInformation extends CommonAbstractType
         ))
         ->add('id_manufacturer', FormType\ChoiceType::class, array(
             'choices' => $this->manufacturers,
+            'choices_as_values' => true,
             'required' => false,
             'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
         ))
@@ -205,6 +207,7 @@ class ProductInformation extends CommonAbstractType
         ))
         ->add('id_category_default', FormType\ChoiceType::class, array(
             'choices' =>  $this->categories,
+            'choices_as_values' => true,
             'required' =>  true,
             'label' => $this->translator->trans('Default category', [], 'AdminProducts')
         ))

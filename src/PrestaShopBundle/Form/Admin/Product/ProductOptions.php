@@ -83,10 +83,11 @@ class ProductOptions extends CommonAbstractType
     {
         $builder->add('redirect_type', FormType\ChoiceType::class, array(
             'choices'  => array(
-                '404' => $this->translator->trans('No redirect (404)', [], 'AdminProducts'),
-                '301' => $this->translator->trans('Catalog Redirected permanently (301)', [], 'AdminProducts'),
-                '302' => $this->translator->trans('Redirected temporarily (302)', [], 'AdminProducts'),
+                $this->translator->trans('No redirect (404)', [], 'AdminProducts') => '404',
+                $this->translator->trans('Catalog Redirected permanently (301)', [], 'AdminProducts') => '301',
+                $this->translator->trans('Redirected temporarily (302)', [], 'AdminProducts') => '302',
             ),
+            'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Redirect when disabled', [], 'AdminProducts'),
         ))
@@ -102,11 +103,12 @@ class ProductOptions extends CommonAbstractType
         ))
         ->add('visibility', FormType\ChoiceType::class, array(
             'choices'  => array(
-                'both' => $this->translator->trans('Everywhere', [], 'AdminProducts'),
-                'catalog' => $this->translator->trans('Catalog only', [], 'AdminProducts'),
-                'search' => $this->translator->trans('Search only', [], 'AdminProducts'),
-                'none' => $this->translator->trans('Nowhere', [], 'AdminProducts'),
+                $this->translator->trans('Everywhere', [], 'AdminProducts') => 'both',
+                $this->translator->trans('Catalog only', [], 'AdminProducts') => 'catalog',
+                $this->translator->trans('Search only', [], 'AdminProducts') => 'search',
+                $this->translator->trans('Nowhere', [], 'AdminProducts') => 'none',
             ),
+            'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Visibility', [], 'AdminProducts'),
         ))
@@ -154,15 +156,17 @@ class ProductOptions extends CommonAbstractType
         ))
         ->add('condition', FormType\ChoiceType::class, array(
             'choices'  => array(
-                'new' => $this->translator->trans('New', [], 'AdminProducts'),
-                'used' => $this->translator->trans('Used', [], 'AdminProducts'),
-                'refurbished' => $this->translator->trans('Refurbished', [], 'AdminProducts')
+                 $this->translator->trans('New', [], 'AdminProducts') => 'new',
+                 $this->translator->trans('Used', [], 'AdminProducts') => 'used',
+                 $this->translator->trans('Refurbished', [], 'AdminProducts') => 'refurbished'
             ),
+            'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Condition', [], 'AdminProducts')
         ))
         ->add('suppliers', FormType\ChoiceType::class, array(
             'choices' =>  $this->suppliers,
+            'choices_as_values' => true,
             'expanded' =>  true,
             'multiple' =>  true,
             'required' =>  false,
@@ -170,11 +174,12 @@ class ProductOptions extends CommonAbstractType
         ))
         ->add('default_supplier', FormType\ChoiceType::class, array(
             'choices' =>  $this->suppliers,
+            'choices_as_values' => true,
             'required' =>  true,
             'label' => $this->translator->trans('Default suppliers', [], 'AdminProducts')
         ));
 
-        foreach ($this->suppliers as $id => $supplier) {
+        foreach ($this->suppliers as $supplier => $id) {
             $builder->add('supplier_combination_'.$id, FormType\CollectionType::class, array(
                 'entry_type' => \PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination::class,
                 'entry_options'  => array(
@@ -207,6 +212,7 @@ class ProductOptions extends CommonAbstractType
             'expanded'  => false,
             'multiple'  => true,
             'choices'  => $this->attachmentList,
+            'choices_as_values' => true,
             'required' => false,
             'label' => $this->translator->trans('Attachments for this product:', [], 'AdminProducts'),
         ));
@@ -217,7 +223,7 @@ class ProductOptions extends CommonAbstractType
 
             //If not supplier selected, remove all supplier combinations collection form
             if (!isset($data['suppliers']) || count($data['suppliers']) == 0) {
-                foreach ($this->suppliers as $id => $supplier) {
+                foreach ($this->suppliers as $supplier => $id) {
                     $form->remove('supplier_combination_'.$id);
                 }
             }

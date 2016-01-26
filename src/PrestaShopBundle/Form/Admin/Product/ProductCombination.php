@@ -152,6 +152,7 @@ class ProductCombination extends CommonAbstractType
         ))
         ->add('id_image_attr', FormType\ChoiceType::class, array(
             'choices'  => array(),
+            'choices_as_values' => true,
             'required' => false,
             'expanded' => true,
             'multiple' => true,
@@ -175,6 +176,7 @@ class ProductCombination extends CommonAbstractType
                 'required' => false,
                 'expanded' => true,
                 'multiple' => true,
+                'choices_as_values' => true,
             ));
         });
     }

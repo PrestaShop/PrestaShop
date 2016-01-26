@@ -60,7 +60,7 @@ class SimpleCategory extends CommonAbstractType
     protected function formatValidList($list)
     {
         foreach ($list as $item) {
-            $this->categories[$item['id_category']] = $item['name'];
+            $this->categories[$item['name']] = $item['id_category'];
 
             if (isset($item['children'])) {
                 $this->formatValidList($item['children']);
@@ -85,8 +85,9 @@ class SimpleCategory extends CommonAbstractType
             )
         ))
         ->add('id_parent', FormType\ChoiceType::class, array(
-            'choices' =>  $this->categories,
-            'required' =>  true,
+            'choices' => $this->categories,
+            'choices_as_values' => true,
+            'required' => true,
             'label' => $this->translator->trans('Choose a parent for this new category', [], 'AdminProducts')
         ));
     }
