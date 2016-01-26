@@ -169,7 +169,7 @@ class StoresControllerCore extends FrontController
         }
 
         $this->context->smarty->assign(array(
-            'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+            'mediumSize' => Image::getSize(ImageType::getFormattedName('medium')),
             'defaultCoordinate' => [
                 'lat'=> (float)Configuration::get('PS_STORES_CENTER_LAT'),
                 'long' => (float)Configuration::get('PS_STORES_CENTER_LONG'),
