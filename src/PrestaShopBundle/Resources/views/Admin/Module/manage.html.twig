@@ -59,15 +59,22 @@
     {# Actual Page Content #}
     <div class="row">
         <div class="col-lg-10 col-lg-offset-1">
-            <span class="module-search-result-wording">{{modules.modules|length}} installed modules</span>
+            <div>
+                <span class="module-search-result-wording">{{modules.modules|length}} installed modules</span>
+            </div>
             {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.modules, 'display_type' : 'list'  } %}
 
             <hr class="top-menu-separator">
-            <span class="module-search-result-wording">{{modules.native_modules|length}} preinstalled modules</span>
+
+            <div>
+                <span class="module-search-result-wording">{{modules.native_modules|length}} preinstalled modules</span>
+            </div>
             {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list' } %}
 
+
             <hr class="top-menu-separator">
-            <div class="module-sorting-search-wording">
+
+            <div>
                 <span class="module-search-result-wording">{{[]|length}} theme modules</span>
             </div>
             {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : [], 'display_type' : 'list' } %}

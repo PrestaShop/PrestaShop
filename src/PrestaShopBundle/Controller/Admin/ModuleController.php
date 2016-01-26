@@ -143,7 +143,7 @@ class ModuleController extends Controller
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'modules' => $products,
-                'topMenuData' => $this->getTopMenuData()
+                'topMenuData' => $this->getTopMenuData('manage')
             ));
     }
 
@@ -343,30 +343,63 @@ class ModuleController extends Controller
             if (isset($product->installed) && $product->installed == 1) {
                 if ($product->active == 0) {
                     $product->url_active = 'enable';
+                    unset(
+                        $product->urls['update'],
+                        $product->urls['install']
+                    );
                 } elseif ($product->is_configurable == 1) {
                     $product->url_active = 'configure';
+                    unset(
+                        $product->urls['update'],
+                        $product->urls['enable'],
+                        $product->urls['install']
+                    );
                 } else {
                     $product->url_active = 'disable';
+                    unset(
+                        $product->urls['update'],
+                        $product->urls['install'],
+                        $product->urls['enable'],
+                        $product->urls['configure']
+                    );
                 }
             } elseif (isset($product->origin) && in_array($product->origin, ['native', 'native_all', 'partner', 'customer'])) {
                 $product->url_active = 'install';
+                unset(
+                    $product->urls['uninstall'],
+                    $product->urls['enable'],
+                    $product->urls['disable'],
+                    $product->urls['reset'],
+                    $product->urls['update'],
+                    $product->urls['configure']
+
+                );
+            } else {
+                $product->url_active = 'buy';
+                unset($product->urls);
             }
         }
 
         return $products;
     }
 
-    final private function getTopMenuData($activeMenu = null)
+    final private function getTopMenuData($source = 'catalog', $activeMenu = null)
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         //@TODO: To be made ultra flexible, hardcoded for dev purpose ATM
-        $topMenuData = $modulesProvider->getCatalogCategories();
+        if ($source === 'catalog') {
+            $topMenuData = $modulesProvider->getCatalogCategories();
+        } elseif ($source === 'manage') {
+            $topMenuData = $modulesProvider->getManageCategories();
+        } else {
+            throw new Exception("ModuleController::getTopMenuData() was given a bad source parameter (given: '$source')", 1);
+        }
 
         if (isset($activeMenu)) {
-            if (!isset($topMenuData->{$activeMenu})) {
+            if (!isset($topMenuData[$activeMenu])) {
                 throw new Exception("Menu '$activeMenu' not found in Top Menu data", 1);
             } else {
-                $topMenuData->{$activeMenu}->class = 'active';
+                $topMenuData[$activeMenu]->class = 'active';
             }
         }
 

@@ -63,10 +63,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     public function __construct(\AppKernel $kernel)
     {
-        $this->catalog_categories      = new \stdClass;
+        $this->catalog_categories      = [];
         $this->catalog_modules         = [];
 
-        $this->manage_categories      = new \stdClass;
+        $this->manage_categories      = [];
         $this->manage_modules         = [];
 
         $this->kernel = $kernel;
@@ -150,13 +150,17 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     public function isModuleOnDisk($name)
     {
-        if (file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php')) {
-            include_once(_PS_MODULE_DIR_.$name.'/'.$name.'.php');
-            
-            return (bool)\PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
+        if (!file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php')) {
+            return false;
         }
 
-        return false;
+        if (substr(`php -l $name`, 0, 16) != 'No syntax errors') {
+            throw new \Exception('Parse error in '.$name.' class');
+        }
+
+        include_once(_PS_MODULE_DIR_.$name.'/'.$name.'.php');
+
+        return (bool)\PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
     }
 
     public function setModuleOnDiskFromAddons($name)
@@ -190,8 +194,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 case 'category':
                     $ref = $this->getRefFromModuleCategoryName($value);
                     // We get the IDs list from the category
-                    $search_result = isset($categories->categories->subMenu->{$ref}) ?
-                        $categories->categories->subMenu->{$ref}->modulesRef :
+                    $search_result = isset($categories['categories']->subMenu[$ref]) ?
+                        $categories['categories']->subMenu[$ref]->modulesRef :
                         [];
                     break;
                 case 'search':
@@ -317,6 +321,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     foreach ($all_modules as $module) {
                         if ($module->name === $installed_module['name']) {
                             unset($module->version);
+                            unset($module->badges);
                             $installed_module = array_merge($installed_module, (array)$module);
                             continue;
                         }
@@ -341,26 +346,30 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     protected function getCategoriesFromModules(&$modules)
     {
-        $categories = new \stdClass;
+        $categories = [];
 
         // Only Tab: Categories
-        $categories->categories = $this->createMenuObject('categories',
+        $categories['categories'] = $this->createMenuObject('categories',
             'Categories');
 
         foreach ($modules as &$module) {
             foreach ($module->refs as $key => $name) {
                 $ref  = $this->getRefFromModuleCategoryName($name);
 
-                if (!isset($categories->categories->subMenu->{$ref})) {
-                    $categories->categories->subMenu->{$ref} = $this->createMenuObject($ref,
+                if (!isset($categories['categories']->subMenu[$ref])) {
+                    $categories['categories']->subMenu[$ref] = $this->createMenuObject($ref,
                         $name
                     );
                 }
 
-                $categories->categories->subMenu->{$ref}->modulesRef[] = $module->id;
+                $categories['categories']->subMenu[$ref]->modulesRef[] = $module->id;
                 $module->refs[$key] = $ref;
             }
         }
+
+        usort($categories['categories']->subMenu, function ($a, $b) {
+            return strcmp($a->name, $b->name);
+        });
 
         return $categories;
     }
@@ -391,7 +400,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     $product->productType = isset($json_key)?rtrim($json_key, 's'):'module';
                 } else {
                     $product->productType = $product->product_type;
-                    unset($product->product_type);
+                    //unset($product->product_type);
                 }
                 if (! isset($product->price)) {
                     $product->price = new \stdClass;
@@ -404,7 +413,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     foreach (['logo.png', 'logo.gif'] as $logo) {
                         $logo_path = _PS_MODULE_DIR_.$product->name.DIRECTORY_SEPARATOR.$logo;
                         if (file_exists($logo_path)) {
-                            $product->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$product->name.DIRECTORY_SEPARATOR.$logo;
+                            $product->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$product->name.'/'.$logo;
                             break;
                         }
                     }
@@ -422,9 +431,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                         'screenshotsUrls' => [],
                         'videoUrl' => null,
                 ];
-                unset($product->badges);
+
+                //unset($product->badges);
                 //unset($module->categoryName);
-                unset($product->cover);
+                //unset($product->cover);
 
                 $remixed_json[] = $product;
             }
@@ -442,7 +452,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return (object)[
                 'name' => $name,
                 'refMenu' => $ref,
-                'subMenu' => new \stdClass,
+                'subMenu' => [],
                 'modulesRef' => [],
         ];
     }

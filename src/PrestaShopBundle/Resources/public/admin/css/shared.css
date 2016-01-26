@@ -1,6 +1,3 @@
-@import url(https://fonts.googleapis.com/css?family=Montserrat);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700);
-
 .x-small-text {
     font-family:"Open Sans", Helvetica,Arial,sans-serif;
     font-size: 10px;
@@ -45,68 +42,4 @@
     margin-bottom: 30px !important;
     margin-left: 5px;
     border-color: #E7E8E8 !important;
-}
-
-/* CSS FOR Spinner Loader may be removed once we have our own */
-$green: #008744;
-$blue: #0057e7;
-$red: #d62d20;
-$yellow: #ffa700;
-$white: #eee;
-
-.loader {
-  position: relative;
-  margin: 0px auto;
-  width: 30px;
-  &:before {
-    content:'';
-    display: block;
-    padding-top: 100%;
-  }
-}
-
-.circular {
-  animation: rotate 2s linear infinite;
-  height: 25px;
-  transform-origin: center center;
-  width: 25px;
-  position: absolute;
-  top: 0; bottom: 0; left: 0; right: 0;
-  margin: auto;
-}
-
-
-.path {
-  stroke-dasharray: 1,200;
-  stroke-dashoffset: 0;
-  animation:
-   dash 1.5s ease-in-out infinite,
-   color 6s ease-in-out infinite
-  ;
-  stroke-linecap: round;
-}
-
-@keyframes rotate{
- 100%{
-  transform: rotate(360deg);
- }
-}
-@keyframes dash{
- 0%{
-  stroke-dasharray: 1,200;
-  stroke-dashoffset: 0;
- }
- 50%{
-  stroke-dasharray: 89,200;
-  stroke-dashoffset: -35px;
- }
- 100%{
-  stroke-dasharray: 89,200;
-  stroke-dashoffset: -124px;
- }
-}
-@keyframes color{
-  0%, 100%{
-    stroke: #2eacce;
-  }
 }
