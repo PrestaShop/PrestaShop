@@ -43,6 +43,7 @@
     "prestashop/smarty": "dev-master",
     "prestashop/bankwire": "dev-feat/starter-theme",
     "prestashop/blockadvertising": "dev-feat/starter-theme",
+    "prestashop/blockbanner": "dev-feat/starter-theme",
     "prestashop/blockbestsellers": "dev-master",
     "prestashop/blockcart": "dev-feat/starter-theme",
     "prestashop/blockcategories": "dev-master",

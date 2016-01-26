@@ -22,14 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<!-- Block search module TOP -->
-<div id="search_widget" class="search-widget" data-search-controller-url="{$search_controller_url}">
-	<form method="get" action="{$search_controller_url}">
-		<input type="hidden" name="controller" value="search">
-		<input type="text" name="s" value="{$search_string}" placeholder="{l s='Search our catalog' mod='blocksearch'}">
-		<button type="submit">
-			<i class="material-icons search">&#xE8B6;</i>
-		</button>
-	</form>
-</div>
-<!-- /Block search module TOP -->
+<a class="banner" href="{$banner_link}">
+  {if isset($banner_img)}
+    <img src="{$banner_img}" alt="{$banner_desc}" title="{$banner_desc}">
+  {else}
+    <span>{$banner_desc}</span>
+  {/if}
+</a>
