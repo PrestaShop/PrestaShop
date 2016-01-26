@@ -1,0 +1,26 @@
+<div class="pull-right btn-group">
+    {% for module_action, module_url in module.urls %}
+        {% if module.url_active is not defined or module.url_active  == module_action %}
+            <a class="btn btn-default  btn-xs light-button {% if module_action  != 'configure' %}module-install-btn{% endif %}" href="{{module_url}}">{{module_action|capitalize}}</a>
+        {% endif %}
+    {% endfor %}
+    {% if module.url is defined and  module.url_active is not defined or module.url_active  == '' %}
+        <a class="btn btn-default btn-xs light-button" href="{{module.url}}">{% if module.price.EUR > 0 %}{{module.price.EUR}}{% else %}Discover{% endif %}</a>
+    {% endif %}
+    <button type="button" class="btn btn-default dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="caret"></span>
+      <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">
+    {% for module_action, module_url in module.urls %}
+        <li><a href="{{module_url}}" class="{% if module_action  != 'configure' %}module-install-btn{% endif %}">{{module_action|capitalize}}</a></li>
+    {% endfor %}
+    </ul>
+
+    <div class="loader module-install-loader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+       </svg>
+    </div>
+
+</div>

@@ -292,18 +292,69 @@
     font-weight: bold !important;
     font-size: 14px;
 }
+
+.module-badges-display {
+    display: inline-block;
+}
 .module-modal-header {
-    border: 0;
     margin-right: -35px;
+    position: fixed;
+    top: 0;
+    background-color: white;
+    width: 100%;
+    z-index: 9999;
+}
+
+.module-modal-header button.close {
+    width: auto;
 }
 .module-modal-header > div {
     display: table-row;
 }
+.module-modal-body {
+    padding: 5px;
+    margin-top: 95px;
+}
 .module-modal-footer {
-    border: 0;
+    position: fixed;
+    bottom: 0;
+    background: white;
+    width: 100%;
 }
 .module-big-cover {
+    height: 240px;
+    overflow: hidden;
+    margin-top: -15px;
     text-align: center;
+    box-shadow: -1px 0px 6px 1px rgba(0, 0, 0, 0.3) inset;
+}
+
+.module-big-cover > img {
+    max-height: 100%;
+    max-width: 100%;
+    height: auto;
+    padding: 4px;
+}
+
+.module-menu-readmore {
+    margin-top: 2px;
+}
+
+.module-readmore-tab-content {
+    text-align: justify;
+    padding: 5px 15px;
+    line-height: 20px;
+    margin-bottom: 61px !important;
+}
+
+.module-readmore-tab {
+    border: none !important;
+}
+
+.module-menu-readmore > .tab-content {
+    margin-top: 5px;
+    color: black;
+    text-align: justify;
 }
 
 .module-modal-badges {
@@ -312,6 +363,23 @@
 
 .module-modal-badges > img {
     margin-right: 1em;
+}
+
+.module-modal-dialog {
+    height: 85%;
+    width: 50%;
+}
+
+.module-modal-content {
+    height: 100%;
+    overflow: scroll;
+    border: none;
+    box-shadow: none;
+}
+
+.module-modal-close {
+    width: auto !important;
+    margin-right: 5px;
 }
 
 /*
