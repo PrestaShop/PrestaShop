@@ -409,7 +409,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     foreach (['logo.png', 'logo.gif'] as $logo) {
                         $logo_path = _PS_MODULE_DIR_.$product->name.DIRECTORY_SEPARATOR.$logo;
                         if (file_exists($logo_path)) {
-                            $product->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$product->name.DIRECTORY_SEPARATOR.$logo;
+                            $product->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$product->name.'/'.$logo;
                             break;
                         }
                     }
