@@ -1,0 +1,23 @@
+#block-cmsinfo {
+  background: white;
+  border-radius: 2px;
+  margin: em(70px) 0;
+  padding: em(50px) em(290px);
+  text-align: center;
+  @include box-shadow;
+  h3 {
+    text-transform: uppercase;
+    color: $gray-dark;
+    font-size: em(25px);
+    font-weight: 700;
+  }
+  p {
+    color: $gray-dark;
+    font-weight: 300;
+    font-size: 1.1em;
+    .dark {
+      color: $gray;
+      font-weight: 300;
+    }
+  }
+}

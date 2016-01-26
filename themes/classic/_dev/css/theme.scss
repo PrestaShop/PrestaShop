@@ -3,6 +3,7 @@
 @import "partials/_functions";
 @import "partials/_fonts";
 @import "partials/_helpers";
+@import "partials/_mixins";
 @import "~bootstrap/scss/bootstrap";
 @import "~bourbon/app/assets/stylesheets/bourbon";
 @import "modules/drop-down";
@@ -11,11 +12,22 @@
 @import "modules/checkout";
 @import "modules/homeslider";
 @import "modules/homefeatured";
+@import "modules/cms-info";
+@import "modules/newsletter";
 
+/*** COMMONS ***/
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
 }
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+.material-icons {
+  vertical-align: middle;
+}
+
 /*** HEADER ***/
 #header {
   background: white;
@@ -29,12 +41,12 @@ body {
       font-weight: 400;
       font-size: 16px;
     }
-    .user-info{
-      a{
+    .user-info {
+      a {
         color: $gray;
       }
     }
-    .language-selector{
+    .language-selector {
       width: 115px;
     }
     .cart-preview {
@@ -45,20 +57,20 @@ body {
         display: none;
       }
     }
-    .blockcart{
+    .blockcart {
       background: $gray-light;
       font-size: 16px;
       width: 115px;
       height: 48px;
       padding-top: 12px;
       margin-right: 15px;
-      a{
+      a {
         color: $gray;
       }
     }
-    #contact-link{
+    #contact-link {
       color: $gray;
-      a{
+      a {
         color: $gray;
       }
     }
@@ -72,19 +84,24 @@ body {
         }
       }
     }
-
     a {
       color: $gray;
       text-transform: uppercase;
     }
   }
 }
+
+/*** WRAPPER ***/
 #wrapper {
   background: $body-color;
-  box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.11);
+  box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11);
+  padding-top: em(25px);
   .breadcrumb {
     text-transform: uppercase;
     background: transparent;
+    &[data-depth="1"] {
+      display: none;
+    }
     ol {
       padding-left: 0;
     }
@@ -102,13 +119,10 @@ body {
     }
   }
 }
-ul {
-  list-style: none;
-  padding-left: 0;
-}
 
-.material-icons{
-    vertical-align: middle;
+/*** FOOTER ***/
+#footer {
+  padding-top: em(40px);
 }
 
 @include media-breakpoint-down(md) {
@@ -120,7 +134,7 @@ ul {
   section.checkout-step {
     width: 100%;
   }
-  .default-input{
+  .default-input {
     min-width: 100%;
   }
   label {
