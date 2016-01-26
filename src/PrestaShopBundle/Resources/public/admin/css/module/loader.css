@@ -1,10 +1,10 @@
+@charset "UTF-8";
+
 .module-import-loader {
     margin: auto;
     margin-top: 3%;
     display: none;
 }
-
-@charset "UTF-8";
 
 .configure-message {
     margin-left: 38%;
