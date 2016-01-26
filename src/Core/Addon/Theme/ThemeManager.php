@@ -54,25 +54,15 @@ class ThemeManager implements AddonManagerInterface
         ConfigurationInterface $configurator,
         ThemeChecker $theme_checker,
         Employee $employee,
-        Filesystem $fs = null,
-        Finder $finder = null)
+        Filesystem $fs,
+        Finder $finder)
     {
         $this->shop = $shop;
         $this->configurator = $configurator;
         $this->theme_checker = $theme_checker;
         $this->employee = $employee;
-
-        if (isset($fs)) {
-            $this->fs = $fs;
-        } else {
-            $this->fs = new Filesystem();
-        }
-
-        if (isset($finder)) {
-            $this->finder = $finder;
-        } else {
-            $this->finder = new Finder();
-        }
+        $this->fs = $fs;
+        $this->finder = $finder;
     }
 
     /**

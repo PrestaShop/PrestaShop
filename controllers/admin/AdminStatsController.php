@@ -26,8 +26,7 @@
 
 use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 class AdminStatsControllerCore extends AdminStatsTabController
 {
@@ -689,13 +688,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'frontoffice_translations':
-                $theme_manager = new ThemeManager(
-                    $this->context->shop,
-                    new Configurator(),
-                    new ThemeChecker,
-                    $this->context->employee
-                );
-                $themes = $theme_manager->getThemeList();
+                $themes = (new ThemeManagerBuilder($this->context))
+                                ->build()
+                                ->getThemeList();
                 $languages = Language::getLanguages();
                 $total = $translated = 0;
                 foreach ($themes as $theme) {
