@@ -126,17 +126,22 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         }
 
         $addresses_count = $this->getCheckoutSession()->getCustomerAddressesCount();
+
         if ($addresses_count === 0) {
             $this->show_delivery_address_form = true;
-            $this->form_has_continue_button   = true;
-        } elseif (!$this->use_same_address && $addresses_count < 2) {
-            $this->step_is_complete = false;
-            $this->show_invoice_address_form  = true;
-            $this->form_has_continue_button   = true;
+        } elseif ($addresses_count < 2 && !$this->use_same_address) {
+            $this->show_invoice_address_form = true;
         }
 
         if ($this->show_invoice_address_form) {
+            // show continue button because form is at the end of the step
             $this->form_has_continue_button = true;
+        } elseif ($this->show_delivery_address_form) {
+            // only show continue button if we're sure
+            // our form is at the bottom of the step
+            if ($this->use_same_address || $addresses_count < 2) {
+                $this->form_has_continue_button = true;
+            }
         }
 
         $this->setTitle(
@@ -146,24 +151,31 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 'Checkout'
             )
         );
+
+        return $this;
+    }
+
+    public function getTemplateParameters()
+    {
+        return [
+            'address_form'          => $this->addressForm->getProxy(),
+            'use_same_address'      => $this->use_same_address,
+            'id_address_delivery'   => $this
+                                        ->getCheckoutSession()
+                                        ->getIdAddressDelivery(),
+            'id_address_invoice'    => $this
+                                        ->getCheckoutSession()
+                                        ->getIdAddressInvoice(),
+            'show_delivery_address_form' => $this->show_delivery_address_form,
+            'show_invoice_address_form'  => $this->show_invoice_address_form,
+            'form_has_continue_button'   => $this->form_has_continue_button
+        ];
     }
 
     public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            $this->template, $extraParams, [
-                'address_form'          => $this->addressForm->getProxy(),
-                'use_same_address'      => $this->use_same_address,
-                'id_address_delivery'   => $this
-                                            ->getCheckoutSession()
-                                            ->getIdAddressDelivery(),
-                'id_address_invoice'    => $this
-                                            ->getCheckoutSession()
-                                            ->getIdAddressInvoice(),
-                'show_delivery_address_form' => $this->show_delivery_address_form,
-                'show_invoice_address_form'  => $this->show_invoice_address_form,
-                'form_has_continue_button'   => $this->form_has_continue_button
-            ]
+            $this->template, $extraParams, $this->getTemplateParameters()
         );
     }
 }
