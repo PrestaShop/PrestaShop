@@ -95,7 +95,8 @@ class Theme implements AddonInterface
     public function getLayoutForPage($page)
     {
         $layout_name = $this->theme_settings['default_layout'];
-        if ($this->settings['page_layouts'][$page]) {
+        if (isset($this->settings['page_layouts'][$page])
+            && $this->settings['page_layouts'][$page]) {
             $layout_name = $this->settings['page_layouts'][$page];
         }
 
