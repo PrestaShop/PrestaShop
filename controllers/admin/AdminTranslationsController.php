@@ -26,9 +26,8 @@
 
 use PrestaShop\PrestaShop\Core\Cldr\Update;
 use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 
 class AdminTranslationsControllerCore extends AdminController
 {
@@ -83,13 +82,9 @@ class AdminTranslationsControllerCore extends AdminController
 
         parent::__construct();
 
-        $theme_manager = new ThemeManager(
-            $this->context->shop,
-            new Configurator(),
-            new ThemeChecker,
-            $this->context->employee
-        );
-        $this->themes = $theme_manager->getThemeList();
+        $this->themes = (new ThemeManagerBuilder($this->context))
+                            ->build()
+                            ->getThemeList();
     }
 
     /*
