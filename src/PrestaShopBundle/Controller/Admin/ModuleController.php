@@ -396,10 +396,10 @@ class ModuleController extends Controller
         }
 
         if (isset($activeMenu)) {
-            if (!isset($topMenuData->{$activeMenu})) {
+            if (!isset($topMenuData[$activeMenu])) {
                 throw new Exception("Menu '$activeMenu' not found in Top Menu data", 1);
             } else {
-                $topMenuData->{$activeMenu}->class = 'active';
+                $topMenuData[$activeMenu]->class = 'active';
             }
         }
 
