@@ -135,6 +135,10 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $this->form_has_continue_button   = true;
         }
 
+        if ($this->show_delivery_address_form && $this->use_same_address && $addresses_count < 2) {
+            $this->form_has_continue_button   = true;
+        }
+
         if ($this->show_invoice_address_form) {
             $this->form_has_continue_button = true;
         }
