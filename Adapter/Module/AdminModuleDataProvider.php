@@ -63,10 +63,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     public function __construct(\AppKernel $kernel)
     {
-        $this->catalog_categories      = new \stdClass;
+        $this->catalog_categories      = [];
         $this->catalog_modules         = [];
 
-        $this->manage_categories      = new \stdClass;
+        $this->manage_categories      = [];
         $this->manage_modules         = [];
 
         $this->kernel = $kernel;
@@ -110,7 +110,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     public function getCatalogCategories()
     {
-        if (empty((array)$this->catalog_categories) === true) {
+        if (count($this->catalog_categories) === 0) {
             $this->loadCatalogData();
         }
 
@@ -132,7 +132,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     public function getManageCategories()
     {
-        if (empty((array)$this->manage_categories) === true) {
+        if (count($this->manage_categories) === 0) {
             $this->loadManageData();
         }
 
@@ -194,8 +194,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 case 'category':
                     $ref = $this->getRefFromModuleCategoryName($value);
                     // We get the IDs list from the category
-                    $search_result = isset($categories->categories->subMenu->{$ref}) ?
-                        $categories->categories->subMenu->{$ref}->modulesRef :
+                    $search_result = isset($categories['categories']->subMenu[$ref]) ?
+                        $categories['categories']->subMenu[$ref]->modulesRef :
                         [];
                     break;
                 case 'search':
@@ -346,26 +346,30 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     protected function getCategoriesFromModules(&$modules)
     {
-        $categories = new \stdClass;
+        $categories = [];
 
         // Only Tab: Categories
-        $categories->categories = $this->createMenuObject('categories',
+        $categories['categories'] = $this->createMenuObject('categories',
             'Categories');
 
         foreach ($modules as &$module) {
             foreach ($module->refs as $key => $name) {
                 $ref  = $this->getRefFromModuleCategoryName($name);
 
-                if (!isset($categories->categories->subMenu->{$ref})) {
-                    $categories->categories->subMenu->{$ref} = $this->createMenuObject($ref,
+                if (!isset($categories['categories']->subMenu[$ref])) {
+                    $categories['categories']->subMenu[$ref] = $this->createMenuObject($ref,
                         $name
                     );
                 }
 
-                $categories->categories->subMenu->{$ref}->modulesRef[] = $module->id;
+                $categories['categories']->subMenu[$ref]->modulesRef[] = $module->id;
                 $module->refs[$key] = $ref;
             }
         }
+
+        usort($categories['categories']->subMenu, function ($a, $b) {
+            return strcmp($a->name, $b->name);
+        });
 
         return $categories;
     }
@@ -448,7 +452,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return (object)[
                 'name' => $name,
                 'refMenu' => $ref,
-                'subMenu' => new \stdClass,
+                'subMenu' => [],
                 'modulesRef' => [],
         ];
     }
