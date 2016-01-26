@@ -532,11 +532,11 @@ class LanguageCore extends ObjectModel
 
             $images = array(
                 '.jpg',
-                '-default-'.ImageType::getFormatedName('thickbox').'.jpg',
-                '-default-'.ImageType::getFormatedName('home').'.jpg',
-                '-default-'.ImageType::getFormatedName('large').'.jpg',
-                '-default-'.ImageType::getFormatedName('medium').'.jpg',
-                '-default-'.ImageType::getFormatedName('small').'.jpg'
+                '-default-'.ImageType::getFormattedName('thickbox').'.jpg',
+                '-default-'.ImageType::getFormattedName('home').'.jpg',
+                '-default-'.ImageType::getFormattedName('large').'.jpg',
+                '-default-'.ImageType::getFormattedName('medium').'.jpg',
+                '-default-'.ImageType::getFormattedName('small').'.jpg'
             );
             $images_directories = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
             foreach ($images_directories as $image_directory) {
@@ -818,12 +818,12 @@ class LanguageCore extends ObjectModel
 
         $files_copy = array(
             '/en.jpg',
-            '/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('home').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('large').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('medium').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('small').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('scene').'.jpg'
+            '/en-default-'.ImageType::getFormattedName('thickbox').'.jpg',
+            '/en-default-'.ImageType::getFormattedName('home').'.jpg',
+            '/en-default-'.ImageType::getFormattedName('large').'.jpg',
+            '/en-default-'.ImageType::getFormattedName('medium').'.jpg',
+            '/en-default-'.ImageType::getFormattedName('small').'.jpg',
+            '/en-default-'.ImageType::getFormattedName('scene').'.jpg'
         );
 
         foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to) {
