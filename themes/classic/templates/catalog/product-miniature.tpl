@@ -59,7 +59,7 @@
             {hook h='displayProductDeliveryTime' product=$product}
           {/if}
 
-          {hook h='displayProductPriceBlock' product=$product type="weight"}
+          {hook h='displayProductPriceBlock' product=$product type='weight'}
         </div>
       {/block}
 
