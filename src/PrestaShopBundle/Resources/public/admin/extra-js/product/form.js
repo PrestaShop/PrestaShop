@@ -26,7 +26,6 @@
 $(document).ready(function() {
 	form.init();
 	nav.init();
-	redirectionStrategy.init();
 	featuresCollection.init();
 	relatedProduct.init();
 	manufacturer.init();
@@ -47,6 +46,7 @@ $(document).ready(function() {
 	priceCalculation.init();
 	displayFieldsManager.refresh();
 	displayFieldsManager.init();
+	seo.init();
 	rightSidebar.init();
 
 	/** Type product fields display management */
@@ -132,58 +132,6 @@ var displayFieldsManager = (function() {
 			} else {
 				$('#product_type_combinations_shortcut').hide();
 			}
-		}
-	};
-})();
-
-/**
- * Redirection strategy management
- */
-var redirectionStrategy = (function() {
-	var redirectStrategyElems = $('.js-redirect-strategy', '#step6');
-	var redirectTypeElem = $('#form_step6_redirect_type');
-	var activeElem = $('#form_step1_active');
-
-	/**
-	 * Hide or show all redirect fields
-	 * @param {int} active - If product is active or not
-	 */
-	function hideShowRedirectElems(active){
-		if(active){
-			redirectStrategyElems.hide();
-		}else{
-			redirectStrategyElems.show();
-			hideShowRedirectToProduct();
-		}
-
-	}
-
-	/** Hide or show the input product selector */
-	function hideShowRedirectToProduct(){
-		if(redirectTypeElem.val() == '404'){
-			$('#id-product-redirected').hide();
-		}else{
-			$('#id-product-redirected').show();
-		}
-	}
-
-	return {
-		'init': function() {
-			if(activeElem.is(':checked')){
-				redirectStrategyElems.hide();
-			}else{
-				hideShowRedirectToProduct();
-			}
-
-			/** On active button change */
-			activeElem.change(function(){
-				hideShowRedirectElems($(this).is(':checked'));
-			});
-
-			/** On redirect type select change */
-			redirectTypeElem.change(function(){
-				hideShowRedirectToProduct();
-			});
 		}
 	};
 })();
@@ -1891,6 +1839,43 @@ var rightSidebar = (function() {
 		'navigationChange': function(url, sidebar) {
 			console.log('pouet');
 			rightSidebar.loadQuickNav(url, sidebar);
+		}
+	};
+})();
+
+/**
+ * Manage seo
+ */
+var seo = (function() {
+	var redirectTypeElem = $('#form_step5_redirect_type');
+
+	/** Hide or show the input product selector */
+	function hideShowRedirectToProduct(){
+		if(redirectTypeElem.val() == '404'){
+			$('#id-product-redirected').hide();
+		}else{
+			$('#id-product-redirected').show();
+		}
+	}
+
+	return {
+		'init': function() {
+
+			hideShowRedirectToProduct();
+
+			/** On redirect type select change */
+			redirectTypeElem.change(function(){
+				hideShowRedirectToProduct();
+			});
+
+
+			/** Reset all languages title to friendly url*/
+			$('#seo-url-regenerate').click(function(){
+				$.each($('.form-input-title input'), function(){
+					var id_lang = $(this).attr('name').match(/\d+/)[0];
+					$('#form_step5_link_rewrite_' + id_lang).val(str2url($(this).val(), 'UTF-8'));
+				});
+			});
 		}
 	};
 })();

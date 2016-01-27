@@ -198,22 +198,16 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['is_virtual'] = 0;
         }
 
-        //if product is disable, remove redirection strategy fields
-        if ($form_data['active']) {
-            $form_data['redirect_type'] = '';
-            $form_data['id_product_redirected'] = 0;
-        } else {
-            $form_data['redirect_type'] = (string)$form_data['redirect_type'];
-
-            if ($form_data['redirect_type'] != '404') {
-                if (isset($form_data['id_product_redirected']) && !empty($form_data['id_product_redirected']['data'])) {
-                    $form_data['id_product_redirected'] = $form_data['id_product_redirected']['data'][0];
-                } else {
-                    $form_data['id_product_redirected'] = 0;
-                }
+        // Product redirection
+        $form_data['redirect_type'] = (string)$form_data['redirect_type'];
+        if ($form_data['redirect_type'] != '404') {
+            if (isset($form_data['id_product_redirected']) && !empty($form_data['id_product_redirected']['data'])) {
+                $form_data['id_product_redirected'] = $form_data['id_product_redirected']['data'][0];
             } else {
                 $form_data['id_product_redirected'] = 0;
             }
+        } else {
+            $form_data['id_product_redirected'] = 0;
         }
 
         //map inputPackItems
@@ -476,12 +470,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'link_rewrite' => $this->product->link_rewrite,
                 'meta_title' => $this->product->meta_title,
                 'meta_description' => $this->product->meta_description,
-            ],
-            'step6' => [
                 'redirect_type' => $this->product->redirect_type,
                 'id_product_redirected' => [
                     'data' => [$this->product->id_product_redirected]
                 ],
+            ],
+            'step6' => [
                 'visibility' => $this->product->visibility,
                 'display_options' => [
                     'available_for_order' => (bool) $this->product->available_for_order,
