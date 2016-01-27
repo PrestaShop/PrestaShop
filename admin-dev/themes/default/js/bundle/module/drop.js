@@ -1,17 +1,16 @@
 $(document).ready(function() {
-
-    $('a[title="Add a module"]').attr('data-toggle', 'modal');
-    $('a[title="Add a module"]').attr('data-target', '#module-modal-read-more');
-
-    var importC = new AdminModuleImport();
-    importC.init();
+    var controller = new AdminModuleImportController();
+    controller.init();
 });
 
 /**
  * AdminModuleImport Page Controller.
  * @constructor
  */
-var AdminModuleImport = function() {
+var AdminModuleImportController = function() {
+
+    this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
+    this.dropZoneModalSelector = '#module-modal-import';
 
     /**
      * Initialize all listners and bind everything
@@ -19,7 +18,13 @@ var AdminModuleImport = function() {
      * @memberof AdminModule
      f*/
     this.init = function() {
+        this.initAddModuleAction();
         this.initDropzone();
+    };
+
+    this.initAddModuleAction = function() {
+        $(this.dropModuleBtnSelector).attr('data-toggle', 'modal');
+        $(this.dropModuleBtnSelector).attr('data-target', this.dropZoneModalSelector);
     };
 
     this.initDropzone = function () {
