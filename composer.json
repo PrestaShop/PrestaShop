@@ -110,12 +110,9 @@
   },
   "autoload": {
     "psr-4": {
-      "PrestaShop\\PrestaShop\\Core\\Cldr\\": "src/Core/Cldr/",
-      "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "src/Core/Foundation/Net/",
-      "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "src/Core/Foundation/Compression/",
-      "": "src/"
-    },
-    "classmap": ["src/Core/", "Adapter/"]
+      "PrestaShop\\PrestaShop\\": "src/",
+      "PrestaShopBundle\\": "src/PrestaShopBundle/"
+    }
   },
   "scripts": {
     "post-install-cmd": [
