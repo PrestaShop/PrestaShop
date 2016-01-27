@@ -41,7 +41,7 @@
   display: table-cell; }
 
 ._margin-right-large {
-  margin-right: 40px; }
+  margin-right: 30px; }
 
 ._margin-right-small {
   margin-right: 10px; }
@@ -58,8 +58,14 @@
 ._margin-top-medium {
   margin-top: 20px; }
 
+._margin-top-large {
+  margin-top: 30px; }
+
 ._gray-dark {
   color: #414141; }
+
+._shadow {
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1); }
 
 /*!
  * Bootstrap v4.0.0-alpha.2 (http://getbootstrap.com)
@@ -4643,7 +4649,8 @@ a.bg-danger:focus, a.bg-danger:hover {
       border: none;
       padding: 10px;
       min-width: 255px;
-      background: #efefef; }
+      background: #efefef;
+      color: #acaaa6; }
       .search-widget form input[type=text]::-webkit-input-placeholder {
         color: rgba(172, 170, 166, 0.5); }
       .search-widget form input[type=text]::-moz-placeholder {
@@ -4919,7 +4926,8 @@ section.checkout-step {
     border: none;
     padding: 10px;
     min-width: 255px;
-    background: #efefef; }
+    background: #efefef;
+    color: #acaaa6; }
     .block_newsletter form input[type=text]::-webkit-input-placeholder {
       color: rgba(172, 170, 166, 0.5); }
     .block_newsletter form input[type=text]::-moz-placeholder {
@@ -4943,6 +4951,13 @@ section.checkout-step {
   color: white;
   text-transform: uppercase;
   padding: 0.6875em 1.0625em; }
+
+.block-contact, .account-list a {
+  color: #acaaa6; }
+
+.myaccount-title, .myaccount-title a, .block-contact-title {
+  font-weight: 700;
+  font-size: 1em; }
 
 /*** COMMONS ***/
 body {
@@ -4989,6 +5004,12 @@ ul {
       color: #acaaa6; }
       #header .header-nav #contact-link a {
         color: #acaaa6; }
+  #header .sub-menu {
+    box-shadow: inset 0 2px 5px 0 rgba(0, 0, 0, 0.11), 0 0 5px 3px rgba(0, 0, 0, 0.1);
+    min-width: 69.375em;
+    left: -11.875em;
+    border: none;
+    top: 4.6875em; }
   #header .header-top .menu > ul {
     display: table; }
     #header .header-top .menu > ul > li {

@@ -22,16 +22,14 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="language-selector dropdown js-dropdown _margin-top-small col-md-2 col-md-offset-3">
-  <span class="expand-more" data-toggle="dropdown">{$current_language.name_simple}</span>
-  <a data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <i class="material-icons expand-more">&#xE5C5;</i>
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="dLabel">
-    {foreach from=$languages item=language}
-      <li {if $language.id_lang == $current_language.id_lang} class="current" {/if}>
-        <a href="{$link->getLanguageLink($language.id_lang)}" class="dropdown-item">{$language.name_simple}</a>
-      </li>
-    {/foreach}
-  </ul>
+
+<div id="block_myaccount_infos" class="col-md-2">
+	<h4 class="myaccount-title"><a class="_gray-dark text-uppercase" href="{$urls.pages.my_account}" title="{l s='My account' mod='blockmyaccount'}" rel="nofollow">{l s='My account' mod='blockmyaccount'}</a></h4>
+	<ul class="account-list">
+        {foreach from=$my_account_urls item=my_account_url}
+            <li><a href="{$my_account_url.url}" title="{$my_account_url.title}" rel="nofollow">{$my_account_url.title}</a></li>
+        {/foreach}
+        {hook h='displayMyAccountBlock'}
+	</ul>
+	<p class="logout"><a href="{$logout_url}" title="{l s='Sign out' mod='blockmyaccount'}" rel="nofollow">{l s='Sign out' mod='blockmyaccount'}</a></p>
 </div>
