@@ -1,6 +1,5 @@
 @import url('//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
 @import "partials/_variables";
-@import "partials/_functions";
 @import "partials/_fonts";
 @import "partials/_mixins";
 @import "partials/_helpers";
@@ -73,14 +72,14 @@ ul {
       }
     }
   }
-  .sub-menu {
-    // position: absolute;;
-    // background: white;
-    // z-index: 1;
-    // width: 100%;
-    // left: 0;
-    // top: 171px;
+  .sub-menu{
+    box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11), 0 0 5px 3px rgba(0,0,0,0.1);
+    min-width: em(1110px);
+    left: em(-190px);
+    border: none;
+    top:em(75px);
   }
+
   .header-top {
     .menu {
       > ul {
