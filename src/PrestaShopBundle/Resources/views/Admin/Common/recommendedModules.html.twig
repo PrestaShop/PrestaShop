@@ -1,5 +1,5 @@
 <div id="recommended_module_{{ domain }}">
-    {% for module in modules %}
+    {#% for module in modules %}
         {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_card.html.twig'
             with {
                 'module': module,
@@ -7,7 +7,18 @@
                 'col_lg': 'col-lg-12'
             }
         %}
-    {% else %}
-        <!-- Fallback when Add-ons not reached: Static image with link -->
-    {% endfor %}
+    {% else %#}
+        <a href="http://addons.prestashop.com/" target="_blank" class="col-lg-12">
+            {% image '@PrestaShopBundle/Resources/public/admin/images/pub_conversion_EN.gif' package='admin' %} <img class="img-responsive center-block" src="{{ asset_url }}" /> {% endimage %}
+        </a>
+        <div class="clearfix">&nbsp;</div>
+        <a href="http://addons.prestashop.com/" target="_blank" class="col-lg-12">
+            {% image '@PrestaShopBundle/Resources/public/admin/images/pub_loyalty_EN.gif' package='admin' %} <img class="img-responsive center-block" src="{{ asset_url }}" /> {% endimage %}
+        </a>
+        <div class="clearfix">&nbsp;</div>
+        <a href="http://addons.prestashop.com/" target="_blank" class="col-lg-12">
+            {% image '@PrestaShopBundle/Resources/public/admin/images/pub_trafic_EN.gif' package='admin' %} <img class="img-responsive center-block" src="{{ asset_url }}" /> {% endimage %}
+        </a>
+        <div class="clearfix">&nbsp;</div>
+    {#% endfor %#}
 </div>

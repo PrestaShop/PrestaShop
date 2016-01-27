@@ -199,6 +199,13 @@ ul.category-tree li > ul{
 .icon-caret-selected{
   color: #000000 !important;
 }
+
+/* recommended modules */
+div.left-separator {
+  border-left: 1px solid #eee;
+}
+
+/* Quick nav sidebar */
 div.quicknav-scroller {
   overflow-y: auto;
   top: 4.7em;
