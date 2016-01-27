@@ -4666,6 +4666,9 @@ label {
       min-width: 255px;
       background: #efefef;
       color: #acaaa6; }
+      .search-widget form input[type=text]:focus {
+        border-color: white;
+        box-shadow: 0 0 8px #2fb5d2; }
       .search-widget form input[type=text]::-webkit-input-placeholder {
         color: rgba(172, 170, 166, 0.5); }
       .search-widget form input[type=text]::-moz-placeholder {
@@ -4683,17 +4686,24 @@ label {
       font-size: 25px;
       color: #414141; }
 
-.top-menu:not([data-depth="0"]) {
+.top-menu[data-depth="1"] {
   margin: 0.625em; }
 
 .top-menu a {
   display: block;
   padding: 10px;
-  color: #acaaa6; }
+  color: #acaaa6;
+  font-weight: 300; }
 
 #index .top-menu li.category:first-child a[data-depth="1"] {
   color: #414141;
-  text-transform: uppercase; }
+  text-transform: uppercase;
+  font-weight: 600; }
+
+.top-menu a[data-depth="0"] {
+  font-weight: 600; }
+  #index .top-menu a[data-depth="0"]:hover {
+    color: #2fb5d2; }
 
 .top-menu a[data-depth="2"],
 .top-menu a[data-depth="1"] {
@@ -4984,6 +4994,9 @@ section.checkout-step {
     min-width: 255px;
     background: #efefef;
     color: #acaaa6; }
+    .block_newsletter form input[type=text]:focus {
+      border-color: white;
+      box-shadow: 0 0 8px #2fb5d2; }
     .block_newsletter form input[type=text]::-webkit-input-placeholder {
       color: rgba(172, 170, 166, 0.5); }
     .block_newsletter form input[type=text]::-moz-placeholder {
@@ -5011,9 +5024,9 @@ section.checkout-step {
 .block-contact, .account-list a {
   color: #acaaa6; }
 
-.myaccount-title a, .block-contact-title {
+.myaccount-title, .myaccount-title a, .block-contact-title {
   font-weight: 700;
-  font-size: 16px; }
+  font-size: 1em; }
 
 /*** COMMONS ***/
 body {
@@ -5044,6 +5057,12 @@ ul {
       color: #acaaa6; }
     #header .header-nav .language-selector {
       width: 115px; }
+    #header .header-nav .cart-preview.active {
+      background: #2fb5d2; }
+      #header .header-nav .cart-preview.active a {
+        color: white; }
+      #header .header-nav .cart-preview.active i {
+        color: rgba(255, 255, 255, 0.6); }
     #header .header-nav .cart-preview .shopping-cart {
       vertical-align: middle; }
     #header .header-nav .cart-preview .body {
