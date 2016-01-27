@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Routing\Router;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -52,6 +53,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     const _WATCH_DOG_ = 86400;
 
     private $kernel;
+    /**
+     * @var Router
+     */
+    private $router;
 
     private $cache_dir;
 
@@ -61,7 +66,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     protected $manage_categories;
     protected $manage_modules;
 
-    public function __construct(\AppKernel $kernel)
+    public function __construct(\AppKernel $kernel, Router $router)
     {
         $this->catalog_categories      = [];
         $this->catalog_modules         = [];
@@ -70,6 +75,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $this->manage_modules         = [];
 
         $this->kernel = $kernel;
+        $this->router = $router;
         $this->cache_dir = $this->kernel->getCacheDir().'/modules/';
     }
 
@@ -106,6 +112,64 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return $this->applyModuleFilters(
                 $this->catalog_modules, $this->catalog_categories, $filter
         );
+    }
+
+    public function generateAddonsUrls(array $addons)
+    {
+        foreach ($addons as &$addon) {
+            $addon->urls = [];
+            foreach (['install', 'uninstall', 'enable', 'disable', 'reset', 'update'] as $action) {
+                $addon->urls[$action] = $this->router->generate('admin_module_manage_action', [
+                    'action' => $action,
+                    'module_name' => $addon->name,
+                ]);
+            }
+            $addon->urls['configure'] = $this->router->generate('admin_module_configure_action', [
+                'module_name' => $addon->name,
+            ]);
+
+            // Which button should be displayed first ?
+            $addon->url_active = '';
+            if (isset($addon->installed) && $addon->installed == 1) {
+                if ($addon->active == 0) {
+                    $addon->url_active = 'enable';
+                    unset(
+                        $addon->urls['update'],
+                        $addon->urls['install']
+                    );
+                } elseif ($addon->is_configurable == 1) {
+                    $addon->url_active = 'configure';
+                    unset(
+                        $addon->urls['update'],
+                        $addon->urls['enable'],
+                        $addon->urls['install']
+                    );
+                } else {
+                    $addon->url_active = 'disable';
+                    unset(
+                        $addon->urls['update'],
+                        $addon->urls['install'],
+                        $addon->urls['enable'],
+                        $addon->urls['configure']
+                    );
+                }
+            } elseif (isset($addon->origin) && in_array($addon->origin, ['native', 'native_all', 'partner', 'customer'])) {
+                $addon->url_active = 'install';
+                unset(
+                    $addon->urls['uninstall'],
+                    $addon->urls['enable'],
+                    $addon->urls['disable'],
+                    $addon->urls['reset'],
+                    $addon->urls['update'],
+                    $addon->urls['configure']
+                );
+            } else {
+                $addon->url_active = 'buy';
+                unset($addon->urls);
+            }
+        }
+
+        return $addons;
     }
 
     public function getCatalogCategories()
@@ -456,7 +520,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         usort($remixed_json, function ($module1, $module2) {
             return strnatcasecmp($module1->displayName, $module2->displayName);
         });
-        
+
         return $remixed_json;
     }
 
