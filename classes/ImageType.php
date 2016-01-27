@@ -165,6 +165,12 @@ class ImageTypeCore extends ObjectModel
 
     public static function getFormatedName($name)
     {
+        Tools::displayAsDeprecated('Please use ImageType::getFormattedName($name) instead');
+        return self::getFormattedName($name);
+    }
+
+    public static function getFormattedName($name)
+    {
         $theme_name = Context::getContext()->shop->theme_name;
         $name_without_theme_name = str_replace(array('_'.$theme_name, $theme_name.'_'), '', $name);
 

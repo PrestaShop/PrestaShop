@@ -25,8 +25,19 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-abstract class AbstractTheme implements AddonInterface
+use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
+
+class Theme implements AddonInterface
 {
+    public function __construct(array $attributes)
+    {
+        foreach ($attributes as $attr => $value) {
+            $this->{$attr} = $value;
+        }
+
+        $this->directory = rtrim($this->directory, '/') . '/';
+    }
+
     public function onInstall()
     {
         return true;
@@ -74,5 +85,22 @@ abstract class AbstractTheme implements AddonInterface
     public function onReset()
     {
         return true;
+    }
+
+    public function setPageLayouts(array $layouts)
+    {
+        $this->settings['page_layouts'] = $layouts;
+    }
+
+    public function getLayoutForPage($page)
+    {
+        $layout_name = $this->theme_settings['default_layout'];
+        if (isset($this->settings['page_layouts'][$page])
+            && $this->settings['page_layouts'][$page]) {
+            $layout_name = $this->settings['page_layouts'][$page];
+        }
+
+        $filename = 'layouts/'.$layout_name.'.tpl';
+        return $filename;
     }
 }

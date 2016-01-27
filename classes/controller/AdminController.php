@@ -2813,10 +2813,6 @@ class AdminControllerCore extends Controller
             $this->context->shop = new Shop((int)$shop_id);
         }
 
-        if ($this->context->shop->id_theme != $this->context->theme->id) {
-            $this->context->theme = new Theme((int)$this->context->shop->id_theme);
-        }
-
         // Replace current default country
         $this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
     }

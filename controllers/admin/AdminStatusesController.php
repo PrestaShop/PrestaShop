@@ -492,9 +492,9 @@ class AdminStatusesControllerCore extends AdminController
 
     protected function getTemplates()
     {
-        $theme = new Theme($this->context->shop->id_theme);
         $default_path = '../mails/';
-        $theme_path = '../themes/'.$theme->directory.'/mails/'; // Mail templates can also be found in the theme folder
+        // Mail templates can also be found in the theme folder
+        $theme_path = '../themes/'.$this->context->shop->theme->name.'/mails/';
 
         $array = array();
         foreach (Language::getLanguages(false) as $language) {

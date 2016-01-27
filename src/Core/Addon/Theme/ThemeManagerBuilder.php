@@ -23,10 +23,34 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core;
 
-interface ConfigurationInterface
+namespace PrestaShop\PrestaShop\Core\Addon\Theme;
+
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use \Context;
+
+class ThemeManagerBuilder
 {
-    public function get($key);
-    public function set($key, $value);
+    private $result;
+
+    public function __construct(Context $context)
+    {
+        $this->result = new ThemeManager(
+            $context->shop,
+            new Configuration($context->shop),
+            new ThemeChecker(),
+            $context->employee,
+            new Filesystem(),
+            new Finder()
+        );
+    }
+
+    public function build()
+    {
+        return $this->result;
+    }
 }

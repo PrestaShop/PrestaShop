@@ -168,16 +168,6 @@ class FrontControllerCore extends Controller
             $useSSL = $this->ssl;
         }
 
-        if (isset($this->php_self) && is_object(Context::getContext()->theme)) {
-            $columns = Context::getContext()->theme->hasColumns($this->php_self);
-
-            // Don't use theme tables if not configured in DB
-            if ($columns) {
-                $this->display_column_left  = $columns['left_column'];
-                $this->display_column_right = $columns['right_column'];
-            }
-        }
-
         $this->objectSerializer = new Adapter_ObjectSerializer();
         $this->cart_presenter = new Adapter_CartPresenter;
     }
@@ -1239,17 +1229,10 @@ class FrontControllerCore extends Controller
      */
     public function getLayout()
     {
-        $layout = 'layout/layout-full-width.tpl';
-
-        if ($this->display_column_left && $this->display_column_right) {
-            $layout = 'layout/layout-both-columns.tpl';
-        } elseif ($this->display_column_left) {
-            $layout = 'layout/layout-left-column.tpl';
-        } elseif ($this->display_column_right) {
-            $layout = 'layout/layout-right-column.tpl';
-        }
-
         $entity = $this->php_self;
+
+        $layout = $this->context->shop->theme->getLayoutForPage($entity);
+
         $id_item = (int)Tools::getValue('id_'.$entity);
 
         $layout_override_dir  = $this->getOverrideThemeDir();
@@ -1382,7 +1365,7 @@ class FrontControllerCore extends Controller
         $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
         $urls['pages'] = $pages;
 
-        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->theme->directory . '/assets/';
+        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->name . '/assets/';
 
         $urls['actions'] = [
             'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
