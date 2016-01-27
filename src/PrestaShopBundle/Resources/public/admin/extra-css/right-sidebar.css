@@ -1,6 +1,5 @@
 #right-sidebar {
-  background: #363A41;
-  color: white;
+  background: white;
   float: right;
   position: fixed;
   display: block;
@@ -11,7 +10,8 @@
   max-height: none;
   overflow: auto;
   right: -3em;
-  padding: 1em 4em 6em 1em;
+  padding: 0 3em 0 0;
+  box-shadow: 0 0 12px rgba(0,0,0,0.8);
 }
 
 /*right sidebar is untested */
@@ -83,10 +83,16 @@
 }
 
 .sidebar.sidebar-right .quicknav-fixed-bottom {
-  bottom: 9.5em;
+  bottom: 8.2em;
   margin-bottom: 0;
-  background: #363A41;
   position: fixed;
   left: 0;
   right: 3em;
+  padding: 0 1em 1em;
+}
+
+.sidebar.sidebar-right .quicknav-header {
+  background: #363A41;
+  color: white;
+  padding: 1.2em;
 }
