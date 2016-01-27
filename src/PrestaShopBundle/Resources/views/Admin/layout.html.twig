@@ -16,9 +16,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/*' package='admin' output='js/admin-layout.js' %}
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
 {% endblock %}
 
 {% block translate_javascripts %}

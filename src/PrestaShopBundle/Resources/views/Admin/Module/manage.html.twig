@@ -10,26 +10,12 @@
 {% endblock %}
 
 {% block javascripts %}
-
     {{ parent() }}
-
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/module.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/plugins/jquery.pstagger.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/drop.js'
-    '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js' %}
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/loader.js' %}
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
+    <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/drop.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/loader.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js') }}"></script>
 {% endblock %}
 
 {% set requireAddonSearch = false %}

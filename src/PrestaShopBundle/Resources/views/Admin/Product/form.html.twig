@@ -686,26 +686,21 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts output='js/admin-product.js'
-    '@PrestaShopBundle/Resources/public/admin/extra-js/product/form.js'
-    '@PrestaShopBundle/Resources/public/admin/extra-js/category-tree.js'
-    '@PrestaShopBundle/Resources/public/admin/extra-js/right-sidebar.js'
-    '../js/tiny_mce/tiny_mce.js'
-    '../js/admin/tinymce.inc.js'
-    '../js/admin/tinymce_loader.js'
-    '../js/vendor/node_modules/typeahead.js/dist/typeahead.jquery.min.js'
-    '../js/vendor/node_modules/typeahead.js/dist/bloodhound.min.js'
-    '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js'
-    '../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js'
-    '../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'
-    '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/min/moment.min.js'
-    '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'
-    '../js/vendor/node_modules/jwerty/jwerty.js'
-    '../js/jquery/ui/jquery.ui.sortable.min.js' package='admin'
-    %}
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
+    <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/product/right-sidebar.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
+    <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
+    <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
+    <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/typeahead.js/dist/typeahead.jquery.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/typeahead.js/dist/bloodhound.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/jwerty/jwerty.js') }}"></script>
+    <script src="{{ asset('../js/jquery/ui/jquery.ui.sortable.min.js') }}"></script>
     {% if default_language_iso != 'en' %}
     <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/locale/'~ default_language_iso ~'.js' ) }}"></script>
     {% endif %}
