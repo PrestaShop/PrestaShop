@@ -9523,11 +9523,11 @@
 	    key: 'init',
 	    value: function init(el) {
 	      this.el.on('show.bs.dropdown', function (e) {
-	        $(this).find('.dropdown-menu').first().stop(true, true).slideDown().show();
+	        $(e.target).find('.dropdown-menu').first().stop(true, true).slideDown();
 	      });
 	
 	      this.el.on('hide.bs.dropdown', function (e) {
-	        $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+	        $(e.target).find('.dropdown-menu').first().stop(true, true).slideUp();
 	      });
 	    }
 	  }]);
