@@ -50,6 +50,15 @@ ul {
       width: 115px;
     }
     .cart-preview {
+      &.active {
+        background: $blue;
+        a{
+          color: white;
+        }
+        i{
+          color: rgba(255, 255, 255, 0.6);
+        }
+      }
       .shopping-cart {
         vertical-align: middle;
       }
@@ -75,14 +84,6 @@ ul {
       }
     }
   }
-  .sub-menu{
-    box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11), 0 0 5px 3px rgba(0,0,0,0.1);
-    min-width: em(1110px);
-    left: em(-190px);
-    border: none;
-    top:em(75px);
-  }
-
   .header-top {
     .menu {
       > ul {
@@ -92,7 +93,7 @@ ul {
         }
       }
     }
-    a {
+    a[data-depth="0"] {
       color: $gray;
       text-transform: uppercase;
     }
