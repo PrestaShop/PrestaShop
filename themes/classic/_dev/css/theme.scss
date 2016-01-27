@@ -50,6 +50,15 @@ ul {
       width: 115px;
     }
     .cart-preview {
+      &.active {
+        background: $blue;
+        a{
+          color: white;
+        }
+        i{
+          color: rgba(255, 255, 255, 0.6);
+        }
+      }
       .shopping-cart {
         vertical-align: middle;
       }
@@ -75,7 +84,6 @@ ul {
       }
     }
   }
-
   .header-top {
     .menu {
       > ul {
