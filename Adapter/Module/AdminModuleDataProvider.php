@@ -220,6 +220,15 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                         }
                     }
                     break;
+                case 'name':
+                    // exact given name (should return 0 or 1 result)
+                    foreach ($module_ids as $key) {
+                        $module = $products[$key];
+                        if ($module->name == $value) {
+                            $search_result[] = $key;
+                        }
+                    }
+                    break;
                 default:
                     // "the switch statement is considered a looping structure for the purposes of continue."
                     continue 2;

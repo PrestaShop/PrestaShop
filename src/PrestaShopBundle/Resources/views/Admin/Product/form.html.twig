@@ -379,7 +379,7 @@
                         {{ form_row(form.step3.available_later) }}
                         {{ form_row(form.step3.available_date) }}
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 left-separator">
                             {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
                                 {'limit': 3, 'randomize': 1, 'domain': 'products_quantity' })
                             %}
@@ -524,7 +524,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 left-separator">
                         {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
                             {'limit': 3, 'randomize': 1, 'domain': 'products_price' })
                         %}
@@ -574,7 +574,7 @@
                         {{ form_row(form.step6.attachment_product) }}
                         {{ form_row(form.step6.attachments) }}
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 left-separator">
                         {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
                             {'limit': 3, 'randomize': 1, 'domain': 'products_options' })
                         %}
@@ -595,7 +595,7 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 left-separator">
                         {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
                             {'limit': 3, 'randomize': 1, 'domain': 'products_others' })
                         %}
