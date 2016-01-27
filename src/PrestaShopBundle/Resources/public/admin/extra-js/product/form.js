@@ -47,6 +47,7 @@ $(document).ready(function() {
 	displayFieldsManager.refresh();
 	displayFieldsManager.init();
 	seo.init();
+	tags.init();
 	rightSidebar.init();
 
 	/** Type product fields display management */
@@ -556,9 +557,18 @@ var combinationGenerator = (function() {
 				}]
 			});
 
+			/** On event "tokenfield:createtoken" : stop event if its not a typehead result */
+			$('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
+				if(!e.attrs.data){
+					return false;
+				}
+			});
+
 			/** On event "tokenfield:createdtoken" : store attributes in input when add a token */
 			$('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
-				$('#attributes-generator').append('<input type="hidden" id="attribute-generator-'+e.attrs.value+'" class="attribute-generator" value="'+e.attrs.value+'" name="options['+e.attrs.data.id_group+']['+e.attrs.value+']" />');
+				if(e.attrs.data){
+					$('#attributes-generator').append('<input type="hidden" id="attribute-generator-'+e.attrs.value+'" class="attribute-generator" value="'+e.attrs.value+'" name="options['+e.attrs.data.id_group+']['+e.attrs.value+']" />');
+				}
 			});
 
 			/** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
@@ -1876,6 +1886,18 @@ var seo = (function() {
 					$('#form_step5_link_rewrite_' + id_lang).val(str2url($(this).val(), 'UTF-8'));
 				});
 			});
+		}
+	};
+})();
+
+
+/**
+ * Tags management
+ */
+var tags = (function() {
+	return {
+		'init': function() {
+			$('#form_step6_tags .tokenfield').tokenfield();
 		}
 	};
 })();

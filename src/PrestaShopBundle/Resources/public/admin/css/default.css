@@ -1,11 +1,17 @@
 /* Common */
-
-.token-input{
-  border:0 !important;
-  padding: 0 !important;
-  margin-top: -6px !important;
-  background-color: transparent !important;
+.bootstrap .form-control.tokenfield{
+  height: auto;
+  padding-bottom: 0;
+}
+.bootstrap input.token-input[type="text"]{
+  display: inline-block;
+  border:0;
+  padding: 0;
+  margin-top: -6px;
+  margin-bottom: 0;
+  background-color: transparent;
   max-width:100%;
+  width: auto !important;
 }
 .uppercase {
   text-transform: uppercase;
