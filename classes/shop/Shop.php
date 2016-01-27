@@ -493,7 +493,7 @@ class ShopCore extends ObjectModel
     */
     public function getTheme()
     {
-        Toos::displayAsDeprecated('Please use $this->theme->directory instead');
+        Tools::displayAsDeprecated('Please use $this->theme->directory instead');
         return $this->theme->directory;
     }
 
