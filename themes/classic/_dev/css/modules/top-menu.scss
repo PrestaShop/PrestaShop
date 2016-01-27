@@ -1,6 +1,31 @@
 .top-menu {
+  &:not([data-depth="0"]){
+    margin: em(10px);
+  }
   a {
     display: block;
     padding: 10px;
+    color: $gray;
+  }
+  li.category:first-child a[data-depth="1"] {
+    #index & {
+      color: $gray-dark;
+      text-transform: uppercase;
+    }
+  }
+  a[data-depth="2"],
+  a[data-depth="1"] {
+    padding: 0 em(10px);
+  }
+}
+.sub-menu {
+  box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11), 0 5px 5px 3px rgba(0,0,0,0.1);
+  min-width: em(1110px);
+  left: em(-190px);
+  border: none;
+  top: em(55px);
+  .category {
+    float: left;
+    margin: em(20px);
   }
 }

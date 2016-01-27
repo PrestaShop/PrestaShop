@@ -13,7 +13,7 @@
               >
                 {$node.label}
               </a>
-              <div {if $depth === 0} class="dropdown-menu" {/if}>
+              <div {if $depth === 0} class="dropdown-menu sub-menu" {/if}>
                 {menu nodes=$node.children depth=$node.depth}
               </div>
             </li>

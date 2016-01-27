@@ -7,7 +7,7 @@
   color: $gray;
 }
 
-.myaccount-title a,.block-contact-title{
+.myaccount-title,.myaccount-title a,.block-contact-title{
   font-weight: 700;
-  font-size: 16px;
+  font-size: em(16px);
 }
