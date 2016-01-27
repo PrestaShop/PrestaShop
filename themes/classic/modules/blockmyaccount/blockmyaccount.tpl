@@ -29,7 +29,7 @@
         {foreach from=$my_account_urls item=my_account_url}
             <li><a href="{$my_account_url.url}" title="{$my_account_url.title}" rel="nofollow">{$my_account_url.title}</a></li>
         {/foreach}
-        {hook h="displayMyAccountBlock"}
+        {hook h='displayMyAccountBlock'}
 	</ul>
 	<p class="logout"><a href="{$logout_url}" title="{l s='Sign out' mod='blockmyaccount'}" rel="nofollow">{l s='Sign out' mod='blockmyaccount'}</a></p>
 </div>
