@@ -32,6 +32,8 @@ before_install:
 
 before_script:
   - phpenv config-rm xdebug.ini
+  - "mkdir -p ~/.composer"
+  - cp .travis.composer.config.json ~/.composer/config.json
 
 notifications:
   slack: prestashop:Eovjydk55zPrwPkoQIOF0cZn
