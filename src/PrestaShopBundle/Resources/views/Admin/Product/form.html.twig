@@ -1,7 +1,6 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
-
     <div>
         {% if is_multishop_context %}
             <div class="alert alert-info" role="alert">{{ trans('Be carefull, you are in a multishop context, all modifcation will be apply to each shop or group shop', {}, 'AdminProducts') }}</div>
@@ -649,7 +648,7 @@
 
     <nav id="right-sidebar" role="navigation" class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-center"
          data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}">
-        {% image '@PrestaShopBundle/Resources/public/admin/images/dashboard_loading.gif' package='admin' %} <img src="{{ asset_url }}" style="margin-top: 10em;" alt="{{ trans('Loading...', [], 'AdminTab') }}" /> {% endimage %}
+        <img src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}" style="margin-top: 10em;" alt="{{ trans('Loading...', [], 'AdminTab') }}" />
     </nav>
 
     {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
