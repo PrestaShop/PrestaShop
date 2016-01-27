@@ -10,7 +10,7 @@
 
 {block name='header_top'}
     <div class="container">
-      <div class="header-top row _margin-bottom-medium">
+      <div class="header-top row">
         <div class="col-md-2">
           <a href="{$urls.base_url}" title="{l s='Homepage'}" >
             <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name} {l s='logo'}" />
