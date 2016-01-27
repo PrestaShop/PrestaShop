@@ -46,6 +46,12 @@ var AdminModule = function() {
     this.addonItemGridSelector = '.module-addons-item-grid';
     this.addonItemListSelector = '.module-addons-item-list';
 
+    /* Selectors for Module Import and Addons connect */
+    this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
+    this.addonsConnectBtnSelector = '#page-header-desc-configuration-addons_connect';
+    this.dropZoneModalSelector = '#module-modal-import';
+    this.addonsConnectModalSelector = '#module-modal-addons-connect';
+
 /**
  * Initialize all listners and bind everything
  * @method init
@@ -60,6 +66,47 @@ var AdminModule = function() {
     this.initCategoriesGrid();
     this.initActionButtons();
     this.initAddonsSearch();
+    this.initAddonsConnect();
+    this.initAddModuleAction();
+    this.initDropzone();
+  };
+
+  this.initAddonsConnect = function() {
+      $(this.dropModuleBtnSelector).attr('data-toggle', 'modal');
+      $(this.dropModuleBtnSelector).attr('data-target', this.dropZoneModalSelector);
+  };
+
+  //@TODO: JS Doc
+  this.initAddModuleAction = function() {
+      $(this.addonsConnectBtnSelector).attr('data-toggle', 'modal');
+      $(this.addonsConnectBtnSelector).attr('data-target', this.addonsConnectModalSelector);
+  };
+
+  //@TODO: JS Doc
+  this.initDropzone = function () {
+      Dropzone.options.importDropzone = {
+          url: 'import',
+          acceptedFiles: '.zip, .tar',
+          paramName: "module_file", // The name that will be used to transfer the file
+          maxFilesize: 5, // MB
+          uploadMultiple: false,
+          addRemoveLinks: true,
+          processing: function (file, response) {
+              $('.dz-preview').css('display', 'none');
+              $('.module-import-loader').css('display', 'block');
+              $('.install-message').css('display', 'block');
+              $( ".module-import-loader" ).addClass( "onclic" );
+          },
+          complete: function (file, response) {
+              setTimeout(function() {
+                  $( ".module-import-loader" ).removeClass( "onclic" );
+                  $( ".module-import-loader" ).addClass( "validate" );
+                  $('.configure-message').css('display', 'block');
+              }, 2250 );
+              var obj = jQuery.parseJSON(file.xhr.response);
+              $( ".dropzone" ).attr( "action", "manage/action/configure/" + obj.module_name);
+          }
+      };
   };
 
   //@TODO: JS Doc

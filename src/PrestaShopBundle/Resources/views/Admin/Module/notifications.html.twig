@@ -21,6 +21,8 @@
 {% set requireAddonSearch = false %}
 
 {% block content %}
+    {# Addons connect modal #}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_addons_connect.html.twig' %}
     {# Contains toolbar-nav for module page #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
     {# Actual Page Content #}
