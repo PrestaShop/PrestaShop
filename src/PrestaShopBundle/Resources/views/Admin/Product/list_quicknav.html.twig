@@ -1,6 +1,9 @@
 <div>
-    <div class="quicknav-scroller">
+    <div class="quicknav-header">
+        <div class="pull-left"><a href="#" data-toggle="sidebar" data-target=".sidebar"><i class="icon-remove"></i></a></div>
         <h2>{{ trans("Quick navigation", {}, 'AdminProducts') }}</h2>
+    </div>
+    <div class="quicknav-scroller">
         <table class="table table-condensed table-striped product quicknav-products">
             <thead>
                 <tr class="column-headers">
@@ -48,11 +51,11 @@
             </tbody>
         </table>
     </div>
-    <nav class="navbar quicknav-fixed-bottom navbar-form-footer">
+    <div class="quicknav-fixed-bottom navbar-form-footer">
         {% render controller('PrestaShopBundle:Admin\\Common:pagination',
             {'limit': limit, 'offset': offset, 'total': total, 'caller_parameters': {'_route': 'admin_product_list', 'view': 'quicknav'}, 'view': 'quicknav'})
         %}
-    </nav>
+    </div>
     <br/>
     <br/>
 </div>

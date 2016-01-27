@@ -196,7 +196,7 @@
                       {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder, 'products': products, 'last_sql': last_sql})
                     %}
                     <tfooter>
-                        <th colspan="2">
+                        <th colspan="11">
                             <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('table').find('td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
                             &nbsp;{{ trans("Select all", {}, 'AdminTab') }}
                         </th>

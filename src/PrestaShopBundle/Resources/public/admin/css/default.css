@@ -201,10 +201,17 @@ ul.category-tree li > ul{
 }
 div.quicknav-scroller {
   overflow-y: auto;
-  top:1em;
-  bottom: 14em;
+  top: 4.7em;
+  bottom: 13.6em;
   position: fixed;
-  right: 1em;
-  left: 1em;
+  right: 0.5em;
+  left: 0.5em;
   margin-right: 3em;
+  padding: 0.6em 0.1em 0em 0.6em;
+}
+div.quicknav-scroller table.table {
+  margin-bottom: 0 !important;
+}
+div.quicknav-header h2 {
+  margin: 0;
 }
