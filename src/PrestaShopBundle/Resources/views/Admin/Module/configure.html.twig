@@ -1,31 +1,18 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block stylesheets %}
-
     {{ parent() }}
-
-    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/module/module.css' filter='cssrewrite' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
-    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/plugins/jquery.pstagger.css' filter='cssrewrite' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/module.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/loader.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
-
     {{ parent() }}
-
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/module.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/plugins/jquery.pstagger.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
+    <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
 {% endblock %}
 
 {% set requireAddonSearch = false %}
