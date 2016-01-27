@@ -38,3 +38,5 @@ ALTER TABLE `PREFIX_product_shop` ADD `show_condition` TINYINT(1) NOT NULL DEFAU
 /* Add Payment Preferences tab. SuperAdmin profile is the only one to access it. */
 /* PHP:ps_1701_add_payment_preferences_tab(); */;
 UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminPaymentPreferences' LIMIT 1) AND `id_profile` > 1;
+
+UPDATE `PREFIX_quick_access` SET `link` = "product/new" WHERE `link` = "index.php?controller=AdminProducts&addproduct";
