@@ -61,7 +61,7 @@ class ModuleController extends Controller
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'modules' => $this->generateProductUrls($this->createCatalogModuleList($products)),
+                'modules' => $modulesProvider->generateAddonsUrls($this->createCatalogModuleList($products)),
                 'topMenuData' => $topMenuData
             ));
     }
@@ -137,7 +137,7 @@ class ModuleController extends Controller
         }
 
         foreach ($products as $product_label => $products_part) {
-            $products->$product_label = $this->generateProductUrls($products_part);
+            $products->$product_label = $modulesProvider->generateAddonsUrls($products_part);
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
@@ -249,7 +249,7 @@ class ModuleController extends Controller
         }
 
         foreach ($products as $product_label => $products_part) {
-            $products->$product_label = $this->generateProductUrls($products_part);
+            $products->$product_label = $modulesProvider->generateAddonsUrls($products_part);
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
@@ -327,65 +327,6 @@ class ModuleController extends Controller
         }
 
         return $moduleFullList;
-    }
-
-    final private function generateProductUrls(array $products)
-    {
-        foreach ($products as &$product) {
-            $product->urls = [];
-            foreach (['install', 'uninstall', 'enable', 'disable', 'reset', 'update'] as $action) {
-                $product->urls[$action] = $this->generateUrl('admin_module_manage_action', [
-                    'action' => $action,
-                    'module_name' => $product->name,
-                ]);
-            }
-            $product->urls['configure'] = $this->generateUrl('admin_module_configure_action', [
-                'module_name' => $product->name,
-            ]);
-
-            // Which button should be displayed first ?
-            $product->url_active = '';
-            if (isset($product->installed) && $product->installed == 1) {
-                if ($product->active == 0) {
-                    $product->url_active = 'enable';
-                    unset(
-                        $product->urls['update'],
-                        $product->urls['install']
-                    );
-                } elseif ($product->is_configurable == 1) {
-                    $product->url_active = 'configure';
-                    unset(
-                        $product->urls['update'],
-                        $product->urls['enable'],
-                        $product->urls['install']
-                    );
-                } else {
-                    $product->url_active = 'disable';
-                    unset(
-                        $product->urls['update'],
-                        $product->urls['install'],
-                        $product->urls['enable'],
-                        $product->urls['configure']
-                    );
-                }
-            } elseif (isset($product->origin) && in_array($product->origin, ['native', 'native_all', 'partner', 'customer'])) {
-                $product->url_active = 'install';
-                unset(
-                    $product->urls['uninstall'],
-                    $product->urls['enable'],
-                    $product->urls['disable'],
-                    $product->urls['reset'],
-                    $product->urls['update'],
-                    $product->urls['configure']
-
-                );
-            } else {
-                $product->url_active = 'buy';
-                unset($product->urls);
-            }
-        }
-
-        return $products;
     }
 
     final private function getTopMenuData($source = 'catalog', $activeMenu = null)

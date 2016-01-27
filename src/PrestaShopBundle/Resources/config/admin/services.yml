@@ -65,6 +65,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
         arguments:
              - "@kernel"
+             - "@router"
         decorates: prestashop.core.admin.data_provider.module_interface
         public: false
     prestashop.adapter.admin.controller.attribute_generator:
