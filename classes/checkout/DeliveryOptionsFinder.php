@@ -1,6 +1,8 @@
 <?php
 
 use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\ObjectSerializer;
 
 class DeliveryOptionsFinderCore
 {
@@ -10,8 +12,8 @@ class DeliveryOptionsFinderCore
     public function __construct(
         Context $context,
         TranslatorInterface $translator,
-        Adapter_ObjectSerializer $objectSerializer,
-        Adapter_PricePresenter $pricePresenter
+        ObjectSerializer $objectSerializer,
+        PricePresenter $pricePresenter
     ) {
         $this->context = $context;
         $this->objectSerializer = $objectSerializer;

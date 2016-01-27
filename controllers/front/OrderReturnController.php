@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+
 class OrderReturnControllerCore extends FrontController
 {
     public $auth = true;
@@ -119,7 +121,7 @@ class OrderReturnControllerCore extends FrontController
     public function getTemplateVarCustomization(array $product)
     {
         $product_customizations = [];
-        $imageRetriever = new Adapter_ImageRetriever($this->context->link);
+        $imageRetriever = new ImageRetriever($this->context->link);
 
         foreach ($product['customizedDatas'] as $byAddress) {
             foreach ($byAddress as $customization) {

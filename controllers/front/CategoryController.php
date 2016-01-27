@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryProductSearchProvider;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 
 class CategoryControllerCore extends ProductListingFrontController
 {
@@ -139,7 +140,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
     protected function getImage($object, $id_image)
     {
-        $retriever = new Adapter_ImageRetriever(
+        $retriever = new ImageRetriever(
             $this->context->link
         );
         return $retriever->getImage($object, $id_image);
