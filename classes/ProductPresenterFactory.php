@@ -2,6 +2,11 @@
 
 use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 class ProductPresenterFactoryCore
 {
@@ -27,16 +32,16 @@ class ProductPresenterFactoryCore
 
     public function getPresenter()
     {
-        $imageRetriever = new Adapter_ImageRetriever(
+        $imageRetriever = new ImageRetriever(
             $this->context->link
         );
 
         return new ProductPresenter(
             $imageRetriever,
             $this->context->link,
-            new Adapter_PricePresenter,
-            new Adapter_ProductColorsRetriever,
-            new Adapter_Translator
+            new PricePresenter,
+            new ProductColorsRetriever,
+            new Translator(new LegacyContext)
         );
     }
 }
