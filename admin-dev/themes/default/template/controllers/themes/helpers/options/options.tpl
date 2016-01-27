@@ -29,6 +29,7 @@
 		{if $field['can_display_themes']}
 			<div class="col-lg-12">
 				<div class="row">
+
 					{foreach $field.themes as $theme}
 						<div class="col-sm-4 col-lg-3">
 							<div class="theme-container">
@@ -38,59 +39,30 @@
 										<div class="action-overlay"></div>
 										<div class="action-buttons">
 											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;submitOptionstheme&amp;id_theme={$theme->id}" class="btn btn-default">
+												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=enableTheme&amp;theme_name={$theme->name|urlencode}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
-												{if $theme->name != 'default-bootstrap' || ($theme->name == 'default-bootstrap'  && $host_mode == 0)}
+
 												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 													<i class="icon-caret-down"></i>&nbsp;
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;id_theme={$theme->id}" title="Delete this theme" class="delete">
+														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=deleteTheme&amp;theme_name={$theme->name|urlencode}" title="{l s='Delete this theme'}" class="delete">
 															<i class="icon-trash"></i> {l s='Delete this theme'}
 														</a>
 													</li>
 												</ul>
-												{/if}
+
 											</div>
 										</div>
 									</div>
-									<img class="center-block img-thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->name}" />
+									<img class="center-block img-thumbnail" src="../themes/{$theme->name}/preview.png" alt="{$theme->name}" />
 								</div>
 							</div>
 						</div>
 					{/foreach}
-					{foreach $field.not_installed as $theme}
-						<div class="col-sm-4 col-lg-3">
-							<div class="theme-container">
-								<h4 class="theme-title">{$theme.name}</h4>
-								<div class="thumbnail-wrapper">
-									<div class="action-wrapper">
-										<div class="action-overlay"></div>
-										<div class="action-buttons">
-											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;installThemeFromFolder&amp;theme_dir={$theme.directory}" class="btn btn-default">
-													<i class="icon-check"></i> {l s='Install this theme'}
-												</a>
-												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-													<i class="icon-caret-down"></i>&nbsp;
-												</button>
-												<ul class="dropdown-menu">
-													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;theme_dir={$theme.directory}" title="Delete this theme" class="delete">
-															<i class="icon-trash"></i> {l s='Delete this theme'}
-														</a>
-													</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<img class="center-block img-thumbnail" src="../themes/{$theme.directory}/themes/{$theme.directory}/preview.jpg" alt="{$theme.name}" />
-								</div>
-							</div>
-						</div>
-					{/foreach}
+
 				</div>
 			</div>
 		{/if}
@@ -108,28 +80,28 @@
 
 			<div class="col-md-3">
 				<a href="{$base_url}" class="_blank">
-					<img class="center-block img-thumbnail" src="../themes/{$cur_theme.theme_directory}/preview.jpg" alt="{$cur_theme.theme_name}" />
+					<img class="center-block img-thumbnail" src="../themes/{$cur_theme->name}/preview.png" alt="{$cur_theme->name}" />
 				</a>
 			</div>
 
 			<div id="js_theme_form_container" class="col-md-9">
-				<h2>{$cur_theme.theme_name} {if isset($cur_theme.theme_version)}<small>version {$cur_theme.theme_version}</small>{/if}</h2>
-				{if isset($cur_theme.author_name)}
+				<h2>{$cur_theme->name} {if isset($cur_theme->version)}<small>version {$cur_theme->version}</small>{/if}</h2>
+				{if isset($cur_theme->author.name)}
 				<p>
-					{l s='Designed by %s' sprintf=$cur_theme.author_name}
+					{l s='Designed by %s' sprintf=$cur_theme->author.name}
 				</p>
 				{/if}
 
 				<hr />
-				<h4>{l s='Configure your theme'}</h4>
+				<h4>{l s='Configure your page layouts'}</h4>
 				<div class="row">
 					<div class="col-sm-8">
-						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. This setting is mostly for advanced users.'}</p>
+						<p>{l s='Each page can use a different layout, choose it among the layouts bundled in your theme.'}</p>
 					</div>
 					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;updatetheme&amp;id_theme={$cur_theme.theme_id}">
-							<i class="icon icon-cog"></i>
-							{l s='Advanced settings'}
+						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')}&display=configureLayouts">
+							<i class="icon icon-file"></i>
+							{l s='Choose layouts'}
 						</a>
 					</div>
 				</div>

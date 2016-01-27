@@ -24,6 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+
 class AdminStatsControllerCore extends AdminStatsTabController
 {
     public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
@@ -684,7 +688,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'frontoffice_translations':
-                $themes = Theme::getThemes();
+                $themes = (new ThemeManagerBuilder($this->context))
+                                ->build()
+                                ->getThemeList();
                 $languages = Language::getLanguages();
                 $total = $translated = 0;
                 foreach ($themes as $theme) {

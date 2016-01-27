@@ -653,7 +653,6 @@ abstract class ModuleCore
             $page_name = 'module-'.$this->name.'-'.$controller;
             $meta = Db::getInstance()->getValue('SELECT id_meta FROM `'._DB_PREFIX_.'meta` WHERE page="'.pSQL($page_name).'"');
             if ((int)$meta > 0) {
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme_meta` WHERE id_meta='.(int)$meta);
                 Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta_lang` WHERE id_meta='.(int)$meta);
                 Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta` WHERE id_meta='.(int)$meta);
             }
@@ -1367,11 +1366,24 @@ abstract class ModuleCore
                     // We check any parse error before including the file.
                     // If (false) is a trick to not load the class with "eval".
                     // This way require_once will works correctly
+                    // But namespace and use statements need to be removed
+                    $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
+                    $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
+                    try {
+                        if (substr(`php -l $file_path`, 0, 16) == 'No syntax errors' || eval('if (false){	'.$content.' }') !== false) {
+                            require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
+                        } else {
+                            throw new ParseError("Parse error");
+                        }
+                    } catch (ParseError $e) {
+                        $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
+                    }
 
-                    if (substr(`php -l $file_path`, 0, 16) == 'No syntax errors' || eval('if (false){	'.preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file)."\n".' }') !== false) {
-                        require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
-                    } else {
-                        $module_errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
+                    preg_match('/\n[\s\t]*?namespace\s.*?;/', $file, $ns);
+                    if (!empty($ns)) {
+                        $ns = preg_replace('/\n[\s\t]*?namespace\s/', '', $ns[0]);
+                        $ns = rtrim($ns, ';');
+                        $module = $ns.'\\'.$module;
                     }
                 }
 
@@ -1734,7 +1746,7 @@ abstract class ModuleCore
 
         if ($trusted_modules_list_content === null) {
             $trusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST);
-            if (strpos($trusted_modules_list_content, $context->theme->name) === false) {
+            if (strpos($trusted_modules_list_content, $context->shop->theme->name) === false) {
                 self::generateTrustedXml();
             }
         }
@@ -1834,11 +1846,10 @@ abstract class ModuleCore
         }
 
         $context = Context::getContext();
-        $theme = new Theme($context->shop->id_theme);
 
         // Save the 2 arrays into XML files
         $trusted_xml = new SimpleXMLElement('<modules_list/>');
-        $trusted_xml->addAttribute('theme', $theme->name);
+        $trusted_xml->addAttribute('theme', $context->shop->theme->name);
         $modules = $trusted_xml->addChild('modules');
         $modules->addAttribute('type', 'trusted');
         foreach ($trusted as $key => $name) {
@@ -2697,8 +2708,6 @@ abstract class ModuleCore
      */
     private function installControllers()
     {
-        $themes = Theme::getThemes();
-        $theme_meta_value = array();
         foreach ($this->controllers as $controller) {
             $page = 'module-'.$this->name.'-'.$controller;
             $result = Db::getInstance()->getValue('SELECT * FROM '._DB_PREFIX_.'meta WHERE page="'.pSQL($page).'"');
@@ -2710,22 +2719,6 @@ abstract class ModuleCore
             $meta->page = $page;
             $meta->configurable = 1;
             $meta->save();
-            if ((int)$meta->id > 0) {
-                foreach ($themes as $theme) {
-                    /** @var Theme $theme */
-                    $theme_meta_value[] = array(
-                        'id_theme' => $theme->id,
-                        'id_meta' => $meta->id,
-                        'left_column' => (int)$theme->default_left_column,
-                        'right_column' => (int)$theme->default_right_column
-                    );
-                }
-            } else {
-                $this->_errors[] = sprintf(Tools::displayError('Unable to install controller: %s'), $controller);
-            }
-        }
-        if (count($theme_meta_value) > 0) {
-            return Db::getInstance()->insert('theme_meta', $theme_meta_value);
         }
 
         return true;

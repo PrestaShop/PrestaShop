@@ -1,0 +1,27 @@
+name: StarterTheme
+display_name: Starter Theme
+version: 1.0.0
+author:
+  name: "PrestaShop Team"
+  email: "pub@prestashop.com"
+  url: "http://www.prestashop.com"
+
+meta:
+  compatibility:
+      from: 1.7.0.0
+      to: ~
+
+  available_layouts:
+    layout-full-width:
+      name: Full width layout
+      description: Ideal for product pages to maximize picture size
+    layout-left-side-column:
+      name: One small left column
+      description: Great for CMS pages to show advertisements on the side
+
+global_settings:
+  configuration:
+    PS_QUICK_VIEW: false
+
+theme_settings:
+  default_layout: layout-full-width

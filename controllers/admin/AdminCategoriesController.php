@@ -453,8 +453,8 @@ class AdminCategoriesControllerCore extends AdminController
         $images_types = ImageType::getImagesTypes('categories');
         $format = array();
         $thumb = $thumb_url = '';
-        $formated_category= ImageType::getFormatedName('category');
-        $formated_medium = ImageType::getFormatedName('medium');
+        $formated_category= ImageType::getFormattedName('category');
+        $formated_medium = ImageType::getFormattedName('medium');
         foreach ($images_types as $k => $image_type) {
             if ($formated_category == $image_type['name']) {
                 $format['category'] = $image_type;
@@ -708,7 +708,7 @@ class AdminCategoriesControllerCore extends AdminController
             }
 
             $images_types = ImageType::getImagesTypes('categories');
-            $formated_medium = ImageType::getFormatedName('medium');
+            $formated_medium = ImageType::getFormattedName('medium');
             foreach ($images_types as $k => $image_type) {
                 if ($formated_medium == $image_type['name'] &&
                     file_exists(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType) &&
@@ -878,7 +878,7 @@ class AdminCategoriesControllerCore extends AdminController
                 if (!isset($images_types)) {
                     $images_types = ImageType::getImagesTypes('categories');
                 }
-                $formated_medium = ImageType::getFormatedName('medium');
+                $formated_medium = ImageType::getFormattedName('medium');
                 foreach ($images_types as $k => $image_type) {
                     if ($formated_medium == $image_type['name']) {
                         if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize())) {

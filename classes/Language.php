@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+
 class LanguageCore extends ObjectModel
 {
     public $id;
@@ -168,7 +171,10 @@ class LanguageCore extends ObjectModel
             }
         }
 
-        foreach (Theme::getThemes() as $theme) {
+        $themes =  (new ThemeManagerBuilder($this->context))
+                        ->build()
+                        ->getThemeList();
+        foreach ($themes as $theme) {
             /** @var Theme $theme */
             $theme_dir = $theme->directory;
             if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php')) {
@@ -185,28 +191,6 @@ class LanguageCore extends ObjectModel
                 }
             }
         }
-    }
-
-    /**
-      * Return an array of theme
-      *
-      * @return array([theme dir] => array('name' => [theme name]))
-      * @deprecated 1.5.5.0
-      */
-    protected function _getThemesList()
-    {
-        Tools::displayAsDeprecated();
-
-        static $themes = array();
-
-        if (empty($themes)) {
-            $installed_themes = Theme::getThemes();
-            foreach ($installed_themes as $theme) {
-                /** @var Theme $theme */
-                $themes[$theme->directory] = array('name' => $theme->name);
-            }
-        }
-        return $themes;
     }
 
     public function add($autodate = true, $nullValues = false, $only_add = false)
@@ -548,11 +532,11 @@ class LanguageCore extends ObjectModel
 
             $images = array(
                 '.jpg',
-                '-default-'.ImageType::getFormatedName('thickbox').'.jpg',
-                '-default-'.ImageType::getFormatedName('home').'.jpg',
-                '-default-'.ImageType::getFormatedName('large').'.jpg',
-                '-default-'.ImageType::getFormatedName('medium').'.jpg',
-                '-default-'.ImageType::getFormatedName('small').'.jpg'
+                '-default-'.ImageType::getFormattedName('thickbox').'.jpg',
+                '-default-'.ImageType::getFormattedName('home').'.jpg',
+                '-default-'.ImageType::getFormattedName('large').'.jpg',
+                '-default-'.ImageType::getFormattedName('medium').'.jpg',
+                '-default-'.ImageType::getFormattedName('small').'.jpg'
             );
             $images_directories = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
             foreach ($images_directories as $image_directory) {
@@ -834,12 +818,12 @@ class LanguageCore extends ObjectModel
 
         $files_copy = array(
             '/en.jpg',
-            '/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('home').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('large').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('medium').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('small').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('scene').'.jpg'
+            '/en-default-'.ImageType::getFormattedName('thickbox').'.jpg',
+            '/en-default-'.ImageType::getFormattedName('home').'.jpg',
+            '/en-default-'.ImageType::getFormattedName('large').'.jpg',
+            '/en-default-'.ImageType::getFormattedName('medium').'.jpg',
+            '/en-default-'.ImageType::getFormattedName('small').'.jpg',
+            '/en-default-'.ImageType::getFormattedName('scene').'.jpg'
         );
 
         foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to) {
@@ -1007,7 +991,7 @@ class LanguageCore extends ObjectModel
         return Cache::retrieve($key);
     }
 
-    public static function updateModulesTranslations(Array $modules_list)
+    public static function updateModulesTranslations(array $modules_list)
     {
         require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 

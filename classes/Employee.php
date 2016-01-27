@@ -554,4 +554,10 @@ class EmployeeCore extends ObjectModel
         $this->reset_password_token = null;
         $this->reset_password_validity = null;
     }
+
+    public function can($action, $tab)
+    {
+        $access = Profile::getProfileAccess($this->id_profile, Tab::getIdFromClassName($tab));
+        return ($access[$action] == '1');
+    }
 }

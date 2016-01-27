@@ -24,9 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
- * @property Shop $object
- */
+use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+
 class AdminShopControllerCore extends AdminController
 {
     public function __construct()
@@ -36,7 +37,7 @@ class AdminShopControllerCore extends AdminController
         $this->table = 'shop';
         $this->className = 'Shop';
         $this->multishop_context = Shop::CONTEXT_ALL;
-        
+
         $this->id_shop_group = (int)Tools::getValue('id_shop_group');
 
         /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
@@ -250,7 +251,7 @@ class AdminShopControllerCore extends AdminController
             elseif (Shop::getTotalShops() == 1)
                 $this->errors[] = Tools::displayError('You cannot disable the last shop.');
         }*/
-        
+
         if (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) {
             $shop_group = new ShopGroup((int)Tools::getValue('id_shop_group'));
             if ($shop_group->shopNameExists(Tools::getValue('name'), (int)Tools::getValue('id_shop'))) {
@@ -475,7 +476,7 @@ class AdminShopControllerCore extends AdminController
             $root_category = new Category($root_categories[0]['id_category']);
             $children = $root_category->getAllChildren($this->context->language->id);
             $selected_cat[] = $root_categories[0]['id_category'];
-            
+
             foreach ($children as $child) {
                 $selected_cat[] = $child->id;
             }
@@ -519,15 +520,9 @@ class AdminShopControllerCore extends AdminController
             'desc' => $this->l('Enable or disable your store?')
         );*/
 
-        $themes = Theme::getThemes();
-        if (!isset($obj->id_theme)) {
-            foreach ($themes as $theme) {
-                if (isset($theme->id)) {
-                    $id_theme = $theme->id;
-                    break;
-                }
-            }
-        }
+        $themes = (new ThemeManagerBuilder($this->context))
+                        ->build()
+                        ->getThemeList();
 
         $this->fields_form['input'][] = array(
             'type' => 'theme',
@@ -576,7 +571,7 @@ class AdminShopControllerCore extends AdminController
             'zone' => $this->l('Zones'),
             'cart_rule' => $this->l('Cart rules'),
         );
-        
+
         // Hook for duplication of shop data
         $modules_list = Hook::getHookModuleExecList('actionShopDataDuplication');
         if (is_array($modules_list) && count($modules_list) > 0) {
@@ -586,7 +581,7 @@ class AdminShopControllerCore extends AdminController
         }
 
         asort($import_data);
-                
+
         if (!$this->object->id) {
             $this->fields_import_form = array(
                 'radio' => array(
@@ -618,7 +613,7 @@ class AdminShopControllerCore extends AdminController
                 (isset($obj->id_shop_group)) ? $obj->id_shop_group : Shop::getContextShopGroupID()),
             'id_category' => (Tools::getValue('id_category') ? Tools::getValue('id_category') :
                 (isset($obj->id_category)) ? $obj->id_category : (int)Configuration::get('PS_HOME_CATEGORY')),
-            'id_theme_checked' => (isset($obj->id_theme) ? $obj->id_theme : $id_theme)
+            'theme_name' => $obj->theme_name,
         );
 
         $ids_category = array();
@@ -653,7 +648,7 @@ class AdminShopControllerCore extends AdminController
         if (Tools::isSubmit('id_category_default')) {
             $_POST['id_category'] = (int)Tools::getValue('id_category_default');
         }
-    
+
         /* Checking fields validity */
         $this->validateRules();
 
@@ -711,13 +706,13 @@ class AdminShopControllerCore extends AdminController
             if (!array_key_exists('Edit', self::$cache_lang)) {
                 self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
             }
-    
+
             $tpl->assign(array(
                 'href' => $this->context->link->getAdminLink('AdminShop').'&shop_id='.(int)$id.'&update'.$this->table,
                 'action' => self::$cache_lang['Edit'],
                 'id' => $id
             ));
-    
+
             return $tpl->fetch();
         } else {
             return;
@@ -738,7 +733,7 @@ class AdminShopControllerCore extends AdminController
             $root_category = new Category($root_categories[0]['id_category']);
             $children = $root_category->getAllChildren($this->context->language->id);
             $selected_cat[] = $root_categories[0]['id_category'];
-            
+
             foreach ($children as $child) {
                 $selected_cat[] = $child->id;
             }

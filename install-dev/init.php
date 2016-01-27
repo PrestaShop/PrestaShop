@@ -41,8 +41,9 @@ if (!defined('_PS_CORE_DIR_')) {
     define('_PS_CORE_DIR_', realpath(dirname(__FILE__).'/..'));
 }
 
+$themes = glob(dirname(dirname(__FILE__)).'/themes/*/config/theme.yml');
 if (!defined('_THEME_NAME_')) {
-    define('_THEME_NAME_', 'StarterTheme');
+    define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
 }
 
 
