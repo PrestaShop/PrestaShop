@@ -120,6 +120,50 @@ ul.typeahead-list li .title{
   display:inline-block;
   float:none;
 }
+ul.typeahead-list.pack{
+  padding: 0;
+}
+ul.typeahead-list.pack li{
+  width: 200px;
+  border: 1px solid #eee;
+  display: inline-block;
+  overflow: hidden;
+  margin-right: 10px;
+  position: relative;
+  cursor: pointer
+}
+ul.typeahead-list.pack li img{
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 5px;
+}
+ul.typeahead-list.pack li span{
+  display: inline-block;
+  width: 100%;
+  padding: 0 5px;
+}
+ul.typeahead-list.pack li .title,
+ul.typeahead-list.pack li .ref {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ul.typeahead-list.pack li .quantity,
+ul.typeahead-list.pack li .ref {
+  color: #ccc;
+}
+ul.typeahead-list.pack li .delete{
+  position : absolute;
+  right: 2px;
+  top: 2px;
+  display: none;
+}
+ul.typeahead-list.pack li:hover{
+  border: 1px solid #00aff0;
+}
+ul.typeahead-list.pack li:hover .delete{
+  display: block;
+}
 #form_step1_new_category{
   margin-top:20px;
 }

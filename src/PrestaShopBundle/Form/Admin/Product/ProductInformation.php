@@ -104,7 +104,7 @@ class ProductInformation extends CommonAbstractType
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => $this->translator->trans('search in catalog...', [], 'AdminProducts'),
-            'template_collection' => '<div class="title col-xs-10">%s (ref: %s) X %s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
+            'template_collection' => '<span class="title">%s</span><span class="ref">REF: %s</span><span class="quantity">X %s</span><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
             'required' => false,
             'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
         ))
