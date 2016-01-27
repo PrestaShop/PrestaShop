@@ -66,33 +66,33 @@
 
 	__webpack_require__(19);
 
-	__webpack_require__(22);
-
 	__webpack_require__(27);
 
-	__webpack_require__(29);
+	__webpack_require__(32);
 
-	var _componentsDropDown = __webpack_require__(30);
+	__webpack_require__(34);
+
+	var _componentsDropDown = __webpack_require__(35);
 
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 
-	var _componentsTopMenu = __webpack_require__(31);
+	var _componentsTopMenu = __webpack_require__(36);
 
 	var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
 
-	var _componentsProductMiniature = __webpack_require__(32);
+	var _componentsProductMiniature = __webpack_require__(37);
 
 	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 
-	var _prestashop = __webpack_require__(26);
+	var _prestashop = __webpack_require__(31);
 
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 
-	var _events = __webpack_require__(33);
+	var _events = __webpack_require__(38);
 
 	var _events2 = _interopRequireDefault(_events);
 
-	var _common = __webpack_require__(28);
+	var _common = __webpack_require__(33);
 
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
@@ -7598,14 +7598,19 @@
 /***/ },
 /* 20 */,
 /* 21 */,
-/* 22 */
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _rivets = __webpack_require__(23);
+	var _rivets = __webpack_require__(28);
 
 	var _rivets2 = _interopRequireDefault(_rivets);
 
@@ -7613,7 +7618,7 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _prestashop = __webpack_require__(26);
+	var _prestashop = __webpack_require__(31);
 
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 
@@ -7649,7 +7654,7 @@
 	});
 
 /***/ },
-/* 23 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {// Rivets.js
@@ -9040,19 +9045,19 @@
 	  };
 
 	  if (typeof (typeof module !== "undefined" && module !== null ? module.exports : void 0) === 'object') {
-	    module.exports = Rivets.factory(__webpack_require__(25));
+	    module.exports = Rivets.factory(__webpack_require__(30));
 	  } else if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(25)], __WEBPACK_AMD_DEFINE_RESULT__ = function (sightglass) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(30)], __WEBPACK_AMD_DEFINE_RESULT__ = function (sightglass) {
 	      return this.rivets = Rivets.factory(sightglass);
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else {
 	    this.rivets = Rivets.factory(sightglass);
 	  }
 	}).call(undefined);
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)(module)))
 
 /***/ },
-/* 24 */
+/* 29 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -9069,7 +9074,7 @@
 	};
 
 /***/ },
-/* 25 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
@@ -9287,13 +9292,13 @@
 	}).call(undefined);
 
 /***/ },
-/* 26 */
+/* 31 */
 /***/ function(module, exports) {
 
 	module.exports = prestashop;
 
 /***/ },
-/* 27 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9304,11 +9309,11 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _prestashop = __webpack_require__(26);
+	var _prestashop = __webpack_require__(31);
 
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 
-	var _common = __webpack_require__(28);
+	var _common = __webpack_require__(33);
 
 	function collapsePaymentOptions() {
 	  (0, _jquery2['default'])('.js-additional-information, .js-payment-option-form').hide();
@@ -9404,7 +9409,7 @@
 	(0, _jquery2['default'])(document).ready(setupCheckoutScripts);
 
 /***/ },
-/* 28 */
+/* 33 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -9420,7 +9425,7 @@
 	}
 
 /***/ },
-/* 29 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9494,7 +9499,7 @@
 	});
 
 /***/ },
-/* 30 */
+/* 35 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -9534,7 +9539,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 31 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9553,7 +9558,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _dropDown = __webpack_require__(30);
+	var _dropDown = __webpack_require__(35);
 
 	var _dropDown2 = _interopRequireDefault(_dropDown);
 
@@ -9580,7 +9585,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 32 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -9628,7 +9633,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 33 */
+/* 38 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
