@@ -2,6 +2,10 @@
   form {
     position: relative;
     input[type=text] {
+      &:focus{
+        border-color: white;
+        box-shadow: 0 0 8px $blue;
+      }
       border: none;
       padding: 10px;
       min-width: 255px;
