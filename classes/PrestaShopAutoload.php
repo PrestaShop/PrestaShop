@@ -191,7 +191,15 @@ class PrestaShopAutoload
                                 .'(?:\s+extends\s+'.$namespacePattern.'[a-z][a-z0-9_]*)?(?:\s+implements\s+'.$namespacePattern.'[a-z][\\a-z0-9_]*(?:\s*,\s*'.$namespacePattern.'[a-z][\\a-z0-9_]*)*)?\s*\{#i';
 
                     //DONT LOAD CLASS WITH NAMESPACE - PSR4 autoloaded from composer
-                    if (false === strpos($content, 'namespace ') && preg_match($pattern, $content, $m)) {
+                    $usesNamespace = false;
+                    foreach (token_get_all($content) as $token) {
+                        if ($token[0] === T_NAMESPACE) {
+                            $usesNamespace = true;
+                            break;
+                        }
+                    }
+
+                    if (!$usesNamespace && preg_match($pattern, $content, $m)) {
                         $classes[$m['classname']] = array(
                             'path' => $path.$file,
                             'type' => trim($m[1]),
