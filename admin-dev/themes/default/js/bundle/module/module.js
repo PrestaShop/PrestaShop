@@ -71,6 +71,7 @@ var AdminModule = function() {
     this.initDropzone();
   };
 
+  //@TODO: JS Doc
   this.initAddonsConnect = function() {
       $(this.dropModuleBtnSelector).attr('data-toggle', 'modal');
       $(this.dropModuleBtnSelector).attr('data-target', this.dropZoneModalSelector);
@@ -347,11 +348,10 @@ var AdminModule = function() {
             // Go through each module items to check if its contains filters tags keywords...
             $(this).find(moduleItemSelector).each(function(index, value) {
                 // get Module's categories references to match them against categoryRef
-                var dataCategories = $(this).attr('data-categories');
+                var dataCategories = $(this).attr('data-categories').toLowerCase();
                 var moduleItem = $(this);
-                var findRegexp = new RegExp(categoryRef, 'gi');
 
-                if (dataCategories.match(findRegexp)) {
+                if (dataCategories === categoryRef.toLowerCase()) {
                     moduleItem.css('display', 'block');
                     totalModules += 1;
                     // Match found, return true to continue to iterate
@@ -562,15 +562,14 @@ var AdminModule = function() {
   this.switchSortingDisplayTo = function(switchTo) {
       var _this = this;
 
-      var addonsItemSelector = (
-          this.currentDisplay == 'grid' ?
-          this.addonItemGridSelector :
-          this.addonItemListSelector
-      );
+      var addonsItemSelector = this.getAddonItemSelector();
+      var gridListSelector = this.getModuleGlobalSelector();
 
       var addonItem = $(addonsItemSelector);
 
       if (switchTo == 'grid') {
+          // Change main wrapper classe to grid
+          $(gridListSelector).addClass('modules-grid').removeClass('modules-list');
           $(this.moduleItemListSelector).each(function() {
               $(_this.moduleSortListSelector).removeClass('module-sort-active');
               $(_this.moduleSortGridSelector).addClass('module-sort-active');
@@ -584,6 +583,8 @@ var AdminModule = function() {
           this.setNewDisplay(addonItem, '-list', '-grid');
 
       } else if (switchTo == 'list') {
+          // Change main wrapper classe to list
+          $(gridListSelector).addClass('modules-list').removeClass('modules-grid');
           $(this.moduleItemGridSelector).each(function(index) {
               $(_this.moduleSortGridSelector).removeClass('module-sort-active');
               $(_this.moduleSortListSelector).addClass('module-sort-active');
