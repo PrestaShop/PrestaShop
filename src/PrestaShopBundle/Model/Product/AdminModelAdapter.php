@@ -114,6 +114,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'meta_description',
             'available_now',
             'available_later',
+            'tags',
         );
 
         //define unused key for manual binding
@@ -477,6 +478,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             ],
             'step6' => [
                 'visibility' => $this->product->visibility,
+                'tags' => $this->getTags(),
                 'display_options' => [
                     'available_for_order' => (bool) $this->product->available_for_order,
                     'show_price' => (bool) $this->product->show_price,
@@ -788,5 +790,19 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'attribute_quantity' => $this->productAdapter->getQuantity($this->product->id, $combination['id_product_attribute']),
             'name' => implode(', ', $name)
         ];
+    }
+
+    /**
+     * Get a localized tags for product
+     *
+     * @return array
+     */
+    private function getTags()
+    {
+        $tags = [];
+        foreach ($this->locales as $locale) {
+            $tags[$locale['id_lang']] = $this->product->getTags($locale['id_lang']);
+        }
+        return $tags;
     }
 }

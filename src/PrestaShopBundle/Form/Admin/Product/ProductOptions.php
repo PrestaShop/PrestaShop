@@ -43,6 +43,7 @@ class ProductOptions extends CommonAbstractType
     private $context;
     private $productAdapter;
     private $router;
+    private $locales;
 
     /**
      * Constructor
@@ -61,6 +62,7 @@ class ProductOptions extends CommonAbstractType
         $this->translator = $translator;
         $this->productAdapter = $productDataProvider;
         $this->currencyDataprovider = $currencyDataprovider;
+        $this->locales = $legacyContext->getLanguages();
         $this->router = $router;
 
         $this->suppliers = $this->formatDataChoicesList(
@@ -91,6 +93,17 @@ class ProductOptions extends CommonAbstractType
             'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Visibility', [], 'AdminProducts'),
+        ))
+        ->add('tags', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [
+                'attr' => [
+                    'class' => 'tokenfield',
+                    'placeholder' => $this->translator->trans('Add a keyword', [], 'AdminProducts')
+                ]
+            ],
+            'locales' => $this->locales,
+            'label' => $this->translator->trans('Tags', [], 'AdminProducts')
         ))
         ->add(
             $builder->create('display_options', FormType\FormType::class, array('required' => false, 'label' => $this->translator->trans('Display options', [], 'AdminProducts')))

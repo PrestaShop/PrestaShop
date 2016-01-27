@@ -47,6 +47,7 @@ $(document).ready(function() {
 	displayFieldsManager.refresh();
 	displayFieldsManager.init();
 	seo.init();
+	tags.init();
 	rightSidebar.init();
 
 	/** Type product fields display management */
@@ -1885,6 +1886,18 @@ var seo = (function() {
 					$('#form_step5_link_rewrite_' + id_lang).val(str2url($(this).val(), 'UTF-8'));
 				});
 			});
+		}
+	};
+})();
+
+
+/**
+ * Tags management
+ */
+var tags = (function() {
+	return {
+		'init': function() {
+			$('#form_step6_tags .tokenfield').tokenfield();
 		}
 	};
 })();
