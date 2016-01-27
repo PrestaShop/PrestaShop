@@ -1,17 +1,12 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block stylesheets %}
-
     {{ parent() }}
-
-    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/module/module.css' filter='cssrewrite' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
-    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/plugins/jquery.pstagger.css' filter='cssrewrite' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/module.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/loader.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css') }}" />
 {% endblock %}
 
 {% block javascripts %}

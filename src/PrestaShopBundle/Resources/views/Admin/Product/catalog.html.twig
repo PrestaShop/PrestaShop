@@ -13,17 +13,7 @@
     {% endjavascripts %}
 {% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {% stylesheets
-    output='css/admin-catalog.css'
-        '../js/vendor/node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css' filter='cssrewrite' package='admin' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-{% endblock %}
-
 {% block content %}
-
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
 
     <div id="product_catalog_category_tree_filter" class="panel">

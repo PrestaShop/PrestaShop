@@ -677,15 +677,12 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets output='css/admin-product.css'
-    '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css'
-    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css'
-    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css'
-    '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
-    '@PrestaShopBundle/Resources/public/admin/extra-css/right-sidebar.css'
-    '@PrestaShopBundle/Resources/public/admin/extra-css/product/image-uploader.css' filter='cssrewrite' package='admin' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/product/right-sidebar.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/product/image-uploader.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" />
 {% endblock %}
 
 {% block javascripts %}

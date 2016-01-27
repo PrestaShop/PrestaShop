@@ -11,9 +11,8 @@
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% block stylesheets %}
-    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/*' filter='cssrewrite' package='admin' output='css/admin-layout.css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/shared.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
