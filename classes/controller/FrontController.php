@@ -885,7 +885,6 @@ class FrontControllerCore extends Controller
             'static_token'          => Tools::getToken(false),
             'token'                 => Tools::getToken(),
             'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
-            'content_only'          => (int)Tools::getValue('content_only')
         ));
     }
 
@@ -1234,6 +1233,10 @@ class FrontControllerCore extends Controller
         $entity = $this->php_self;
 
         $layout = $this->context->shop->theme->getLayoutForPage($entity);
+
+        if ((int)Tools::getValue('content_only')) {
+            $layout = 'layouts/layout-content-only.tpl';
+        }
 
         $id_item = (int)Tools::getValue('id_'.$entity);
 
