@@ -291,7 +291,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
     {
         $this->initializeContext();
 
-        $this->model_install->installTheme();
         if ($this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
