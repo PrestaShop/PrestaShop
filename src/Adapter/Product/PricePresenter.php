@@ -1,6 +1,10 @@
 <?php
 
-class Adapter_PricePresenter
+namespace PrestaShop\PrestaShop\Adapter\Product;
+
+use Tools;
+
+class PricePresenter
 {
     public function convertAmount($price)
     {

@@ -1,9 +1,20 @@
 <?php
 
+namespace PrestaShop\PrestaShop\Adapter\Cart;
+
 use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Context;
+use Cart;
+use Product;
+use Configuration;
 
-class Adapter_CartPresenter
+class CartPresenter
 {
     private $pricePresenter;
     private $link;
@@ -12,10 +23,10 @@ class Adapter_CartPresenter
 
     public function __construct()
     {
-        $this->pricePresenter = new Adapter_PricePresenter;
+        $this->pricePresenter = new PricePresenter;
         $this->link = Context::getContext()->link;
-        $this->translator = new Adapter_Translator;
-        $this->imageRetriever = new Adapter_ImageRetriever($this->link);
+        $this->translator = new Translator(new LegacyContext);
+        $this->imageRetriever = new ImageRetriever($this->link);
     }
 
     private function includeTaxes()
@@ -34,7 +45,7 @@ class Adapter_CartPresenter
             $this->imageRetriever,
             $this->link,
             $this->pricePresenter,
-            new Adapter_ProductColorsRetriever,
+            new ProductColorsRetriever,
             $this->translator
         );
 
@@ -209,13 +220,13 @@ class Adapter_CartPresenter
         $shipping_cost = $cart->getTotalShippingCost(null, $this->includeTaxes());
         $subtotals['shipping'] = [
             'type'   => 'shipping',
-            'label'  => $this->translator->l('Shipping', 'Cart'),
-            'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->l('Free', 'Cart')
+            'label'  => $this->translator->trans('Shipping', [], 'Cart'),
+            'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->trans('Free', [], 'Cart')
         ];
 
         $total = [
             'type'   => 'total',
-            'label'  => $this->translator->l('Total', 'Cart'),
+            'label'  => $this->translator->trans('Total', [], 'Cart'),
             'amount' => $this->pricePresenter->convertAndFormat($this->includeTaxes() ? $total_including_tax : $total_excluding_tax)
         ];
 
@@ -224,8 +235,8 @@ class Adapter_CartPresenter
         }, 0);
 
         $summary_string = $products_count === 1 ?
-                          $this->translator->l('1 product', 'Cart') :
-                          sprintf($this->translator->l('%d products', 'Cart'), $products_count)
+                          $this->translator->trans('1 product', [], 'Cart') :
+                          sprintf($this->translator->trans('%d products', [], 'Cart'), $products_count)
         ;
 
         return [

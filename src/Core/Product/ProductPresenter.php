@@ -2,11 +2,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
-use Adapter_ImageRetriever;
-use Adapter_PricePresenter;
-use \PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
-use Adapter_ProductColorsRetriever;
-use Adapter_Translator;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
+use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
+use Symfony\Component\Translation\TranslatorInterface;
 use Language;
 use Link;
 
@@ -20,11 +20,11 @@ class ProductPresenter
     private $translator;
 
     public function __construct(
-        Adapter_ImageRetriever $imageRetriever,
+        ImageRetriever $imageRetriever,
         Link $link,
-        Adapter_PricePresenter $pricePresenter,
-        Adapter_ProductColorsRetriever $productColorsRetriever,
-        Adapter_Translator $translator
+        PricePresenter $pricePresenter,
+        ProductColorsRetriever $productColorsRetriever,
+        TranslatorInterface $translator
     ) {
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
@@ -204,28 +204,28 @@ class ProductPresenter
         if ($show_price && $product['online_only']) {
             $labels['online-only'] = [
                 'type' => 'online-only',
-                'label' => $this->translator->l('Online only', 'Product')
+                'label' => $this->translator->trans('Online only', [], 'Product')
             ];
         }
 
         if ($show_price && $product['on_sale'] && !$settings->catalog_mode) {
             $labels['on-sale'] = [
                 'type' => 'on-sale',
-                'label' => $this->translator->l('On sale!', 'Product')
+                'label' => $this->translator->trans('On sale!', [], 'Product')
             ];
         }
 
         if ($show_price && $product['reduction'] && !$settings->catalog_mode && !$product['on_sale']) {
             $labels['discount'] = [
                 'type' => 'discount',
-                'label' => $this->translator->l('Reduced price', 'Product')
+                'label' => $this->translator->trans('Reduced price', [], 'Product')
             ];
         }
 
         if ($product['new']) {
             $labels['new'] = [
                 'type' => 'new',
-                'label' => $this->translator->l('New', 'Product')
+                'label' => $this->translator->trans('New', [], 'Product')
             ];
         }
 
@@ -250,8 +250,9 @@ class ProductPresenter
 
         if ($show_availability) {
             if ($product['quantity'] > 0) {
-                $presentedProduct['availability_message'] = $this->translator->l(
+                $presentedProduct['availability_message'] = $this->translator->trans(
                     'In Stock',
+                    [],
                     'Product'
                 );
                 $presentedProduct['availability'] = 'available';

@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+
 class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
 {
     public $php_self = 'order-detail';
@@ -222,7 +224,7 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
     public function getTemplateVarCustomization(array $product)
     {
         $product_customizations = [];
-        $imageRetriever = new Adapter_ImageRetriever($this->context->link);
+        $imageRetriever = new ImageRetriever($this->context->link);
 
         foreach ($product['customizedDatas'] as $byAddress) {
             foreach ($byAddress as $customization) {

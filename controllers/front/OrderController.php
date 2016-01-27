@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
+use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
 
 class OrderControllerCore extends FrontController
 {
@@ -46,7 +47,7 @@ class OrderControllerCore extends FrontController
             $this->context,
             $this->getTranslator(),
             $this->objectSerializer,
-            new Adapter_PricePresenter
+            new PricePresenter
         );
 
         $session = new CheckoutSession(

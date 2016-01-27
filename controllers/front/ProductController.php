@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
     public $php_self = 'product';
@@ -671,7 +674,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
     {
-        $pricePresenter = new Adapter_PricePresenter();
+        $pricePresenter = new PricePresenter();
 
         foreach ($specific_prices as $key => &$row) {
             $row['quantity'] = &$row['from_quantity'];
@@ -837,7 +840,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $field['is_customized'] = true;
                     switch ($customization_field['type']) {
                         case Product::CUSTOMIZE_FILE:
-                            $imageRetriever = new Adapter_ImageRetriever($this->context->link);
+                            $imageRetriever = new ImageRetriever($this->context->link);
                             $field['image'] = $imageRetriever->getCustomizationImage(
                                 $data['value']
                             );
