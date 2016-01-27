@@ -12,10 +12,9 @@ use Language;
 use Link;
 use Context;
 use Adapter_ProductPriceCalculator;
-use Adapter_PricePresenter;
-use Adapter_Translator;
+use PrestaShop\PrestaShop\Adapter\Product\PricePresenter as BasePricePresenter;
 
-class PricePresenter extends Adapter_PricePresenter
+class PricePresenter extends BasePricePresenter
 {
     public function convertAmount($price)
     {
@@ -62,13 +61,13 @@ class ProductPresenterTest extends UnitTestCase
 
     private function _presentProduct($method, $field)
     {
-        $translator = Phake::mock('Adapter_Translator');
+        $translator = Phake::mock('Symfony\Component\Translation\TranslatorInterface');
         Phake::when($translator)->l(Phake::anyParameters())->thenReturn('some label');
 
         $link = Phake::mock('Link');
         Phake::when($link)->getAddToCartURL(Phake::anyParameters())->thenReturn('http://add-to-cart.url');
 
-        $imageRetriever = Phake::mock('Adapter_ImageRetriever');
+        $imageRetriever = Phake::mock('PrestaShop\PrestaShop\Adapter\Image\ImageRetriever');
         Phake::when($imageRetriever)->getProductImages(Phake::anyParameters())->thenReturn([
             ['id_image' => 0, 'associatedVariants' => []]
         ]);
@@ -77,7 +76,7 @@ class ProductPresenterTest extends UnitTestCase
             $imageRetriever,
             $link,
             new PricePresenter,
-            Phake::mock('Adapter_ProductColorsRetriever'),
+            Phake::mock('PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever'),
             $translator
         );
 

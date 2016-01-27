@@ -1,6 +1,10 @@
 <?php
 
-class Adapter_ProductColorsRetriever
+namespace PrestaShop\PrestaShop\Adapter\Product;
+
+use Product;
+
+class ProductColorsRetriever
 {
     public function getColoredVariants($id_product)
     {

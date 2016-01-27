@@ -24,7 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Adapter_ObjectSerializer
+namespace PrestaShop\PrestaShop\Adapter;
+
+class ObjectSerializer
 {
     public function toArray($object)
     {

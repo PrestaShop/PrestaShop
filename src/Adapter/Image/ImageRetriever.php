@@ -1,6 +1,13 @@
 <?php
 
-class Adapter_ImageRetriever
+namespace PrestaShop\PrestaShop\Adapter\Image;
+
+use Link;
+use Language;
+use Product;
+use ImageType;
+
+class ImageRetriever
 {
     private $link;
 

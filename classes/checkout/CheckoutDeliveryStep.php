@@ -1,5 +1,7 @@
 <?php
 
+use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+
 class CheckoutDeliveryStepCore extends AbstractCheckoutStep
 {
     protected $template = 'checkout/delivery-step.tpl';
@@ -69,7 +71,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     {
         if ($this->getGiftCost() != 0) {
             $taxLabel = '';
-            $pricePresenter = new Adapter_PricePresenter();
+            $pricePresenter = new PricePresenter();
 
             if ($this->getIncludeTaxes() && $this->getDisplayTaxesLabel()) {
                 $taxLabel .= ' tax incl.';

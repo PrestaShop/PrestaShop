@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
+
 class CartControllerCore extends FrontController
 {
     public $php_self = 'cart';
@@ -70,7 +72,7 @@ class CartControllerCore extends FrontController
     {
         parent::initContent();
 
-        $presenter = new Adapter_CartPresenter;
+        $presenter = new CartPresenter;
         $this->context->smarty->assign([
             'cart' => $presenter->present($this->context->cart)
         ]);

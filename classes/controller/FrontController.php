@@ -26,6 +26,8 @@
 
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\ObjectSerializer;
 
 class FrontControllerCore extends Controller
 {
@@ -134,7 +136,7 @@ class FrontControllerCore extends Controller
     public $nb_items_per_page;
 
     /**
-     * @var object Adapter_ObjectSerializer
+     * @var object ObjectSerializer
      */
     public $objectSerializer;
 
@@ -168,8 +170,8 @@ class FrontControllerCore extends Controller
             $useSSL = $this->ssl;
         }
 
-        $this->objectSerializer = new Adapter_ObjectSerializer();
-        $this->cart_presenter = new Adapter_CartPresenter;
+        $this->objectSerializer = new ObjectSerializer();
+        $this->cart_presenter = new CartPresenter;
     }
 
     /**
