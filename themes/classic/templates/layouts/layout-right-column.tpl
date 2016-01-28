@@ -1,4 +1,4 @@
-{extends file='layout/layout-both-columns.tpl'}
+{extends file='layouts/layout-both-columns.tpl'}
 
 {block name='left_column'}{/block}
 
