@@ -172,7 +172,7 @@
 
 {% block translatefields_widget %}
     {{ form_errors(form) }}
-    <div class="translations tabbable">
+    <div class="translations tabbable" id="{{ form.vars.id }}">
         {% if hideTabs == false and form|length > 1 %}
         <ul class="translationsLocales nav nav-tabs">
             {% for translationsFields in form %}

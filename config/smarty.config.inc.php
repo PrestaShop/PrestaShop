@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'smarty/smarty/libs/');
+define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'prestashop/smarty/');
 
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {

@@ -90,6 +90,20 @@
 {% endblock %}
 
 {% block typeahead_product_pack_collection_widget %}
+    <h4 class="title-products {{ collection is defined and collection|length > 0 ? '' : 'hide' }}">{{ trans('List of products for this pack', {}, 'AdminProducts') }}</h4>
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list pack nostyle">
+        {% if collection is defined and collection|length > 0 %}
+            {% for item in collection %}
+                <li data-product="{{ item.id }}-{{ item.id_product_attribute }}">
+                    <img src="{{ item.image }}" /> {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
+                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
+                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    <div class="clearfix"></div>
+    <h4>{{ form.vars.label }}</h4>
     <div class="col-xs-6">
         <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
     </div>
@@ -105,17 +119,6 @@
         </div>
     </div>
 
-    <div class="clearfix"></div>
-    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-6">
-        {% if collection is defined and collection|length > 0 %}
-            {% for item in collection %}
-                <li data-product="{{ item.id }}-{{ item.id_product_attribute }}">
-                    <img src="{{ item.image }}" style="width:50px" /> {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
-                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
-                </li>
-            {% endfor %}
-        {% endif %}
-    </ul>
     <script>
         $( document ).ready(function() {
             //remove collection item
@@ -126,6 +129,9 @@
                 modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
                     onContinue: function(){
                         _this.parent().remove();
+                        if(_this.parent().parent().length == 0){
+                            $('#js_{{ form.vars.id }} h4.title-products').addClass('hide');
+                        }
                     }
                 }).show();
             });
@@ -138,11 +144,12 @@
                     var value = number + 'x' + data.id + 'x' + (data.id_product_attribute ? data.id_product_attribute : 0);
 
                     var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '">';
-                    html += '<img src="' + data.image +'" style="width:50px" /> ';
+                    html += '<img src="' + data.image +'" /> ';
                     html += sprintf('{{ template_collection|raw }}', data.{{ mapping_name }}, data.ref, number);
                     html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                     html += '</li>';
                     $('#{{ form.vars.id }}-data').append(html);
+                    $('#js_{{ form.vars.id }} h4.title-products').removeClass('hide');
 
                     $('#{{ form.vars.id }}').val('');
                 }

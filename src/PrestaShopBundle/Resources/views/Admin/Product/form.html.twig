@@ -1,7 +1,6 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
-
     <div>
         {% if is_multishop_context %}
             <div class="alert alert-info" role="alert">{{ trans('Be carefull, you are in a multishop context, all modifcation will be apply to each shop or group shop', {}, 'AdminProducts') }}</div>
@@ -65,11 +64,9 @@
                     <div class="col-lg-12 right-sidebar-flex">
                         <div class="col-lg-9">
                             <div class="form-group" id="js_form_step1_inputPackItems">
-                                <h4>{{ form.step1.inputPackItems.vars.label }}</h4>
                                 {{ form_errors(form.step1.inputPackItems) }}
                                 {{ form_widget(form.step1.inputPackItems) }}
                             </div>
-
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <div id="product-images-container">
@@ -381,7 +378,7 @@
                         {{ form_row(form.step3.available_later) }}
                         {{ form_row(form.step3.available_date) }}
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 left-separator">
                             {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
                                 {'limit': 3, 'randomize': 1, 'domain': 'products_quantity' })
                             %}
@@ -526,7 +523,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 left-separator">
                         {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
                             {'limit': 3, 'randomize': 1, 'domain': 'products_price' })
                         %}
@@ -538,22 +535,8 @@
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step6">
                     <div class="col-lg-9">
-                        <div class="form-group js-redirect-strategy" id="redirect-type">
-                            {{ form_label(form.step6.redirect_type) }}
-                            <div class="col-sm-10">
-                                {{ form_errors(form.step6.redirect_type) }}
-                                {{ form_widget(form.step6.redirect_type) }}
-                            </div>
-                        </div>
-                        <div class="form-group js-redirect-strategy" id="id-product-redirected">
-                            {{ form_label(form.step6.id_product_redirected) }}
-                            <div class="col-sm-10">
-                                {{ form_errors(form.step6.id_product_redirected) }}
-                                {{ form_widget(form.step6.id_product_redirected) }}
-                            </div>
-                        </div>
-
                         {{ form_row(form.step6.visibility) }}
+                        {{ form_row(form.step6.tags) }}
                         {{ form_row(form.step6.display_options) }}
                         {{ form_row(form.step6.upc) }}
                         {{ form_row(form.step6.ean13) }}
@@ -590,7 +573,7 @@
                         {{ form_row(form.step6.attachment_product) }}
                         {{ form_row(form.step6.attachments) }}
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 left-separator">
                         {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
                             {'limit': 3, 'randomize': 1, 'domain': 'products_options' })
                         %}
@@ -611,7 +594,7 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 left-separator">
                         {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
                             {'limit': 3, 'randomize': 1, 'domain': 'products_others' })
                         %}
@@ -665,7 +648,7 @@
 
     <nav id="right-sidebar" role="navigation" class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-center"
          data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}">
-        {% image '@PrestaShopBundle/Resources/public/admin/images/dashboard_loading.gif' package='admin' %} <img src="{{ asset_url }}" style="margin-top: 10em;" alt="{{ trans('Loading...', [], 'AdminTab') }}" /> {% endimage %}
+        <img src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}" style="margin-top: 10em;" alt="{{ trans('Loading...', [], 'AdminTab') }}" />
     </nav>
 
     {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
@@ -693,39 +676,31 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets output='css/admin-product.css'
-    '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css'
-    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css'
-    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css'
-    '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
-    '@PrestaShopBundle/Resources/public/admin/extra-css/right-sidebar.css'
-    '@PrestaShopBundle/Resources/public/admin/extra-css/product/image-uploader.css' filter='cssrewrite' package='admin' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/product/right-sidebar.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/product/image-uploader.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts output='js/admin-product.js'
-    '@PrestaShopBundle/Resources/public/admin/extra-js/product/form.js'
-    '@PrestaShopBundle/Resources/public/admin/extra-js/category-tree.js'
-    '@PrestaShopBundle/Resources/public/admin/extra-js/right-sidebar.js'
-    '../js/tiny_mce/tiny_mce.js'
-    '../js/admin/tinymce.inc.js'
-    '../js/admin/tinymce_loader.js'
-    '../js/vendor/node_modules/typeahead.js/dist/typeahead.jquery.min.js'
-    '../js/vendor/node_modules/typeahead.js/dist/bloodhound.min.js'
-    '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js'
-    '../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js'
-    '../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'
-    '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/min/moment.min.js'
-    '../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'
-    '../js/vendor/node_modules/jwerty/jwerty.js'
-    '../js/jquery/ui/jquery.ui.sortable.min.js' package='admin'
-    %}
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
+    <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/product/right-sidebar.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
+    <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
+    <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
+    <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/typeahead.js/dist/typeahead.jquery.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/typeahead.js/dist/bloodhound.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/jwerty/jwerty.js') }}"></script>
+    <script src="{{ asset('../js/jquery/ui/jquery.ui.sortable.min.js') }}"></script>
     {% if default_language_iso != 'en' %}
     <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/locale/'~ default_language_iso ~'.js' ) }}"></script>
     {% endif %}

@@ -12,6 +12,7 @@ services:
 
     prestashop.data_provider.modules.recommended:
         class: PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules
+        arguments: ["@router"]
 
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:

@@ -17,11 +17,4 @@
             <a class="pagination-link" {% if last_url is defined and last_url != false %}href="{{ last_url }}"{% else %}nohref{% endif %}>{{ page_count }}</a>
         </li>
     </ul>
-    <ul class="pagination">
-        <li style="float: left; margin-left: 2em;">
-            {{ trans("$from-$to / $total (page # $current_page / $page_count)",
-                {'$from': from+1, '$to': min(to+1, total), '$total': total, '$current_page': current_page, '$page_count': page_count},
-                'AdminTab') }}
-        </li>
-    </ul>
 </div>

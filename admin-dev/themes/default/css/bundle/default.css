@@ -1,11 +1,17 @@
 /* Common */
-
-.token-input{
-  border:0 !important;
-  padding: 0 !important;
-  margin-top: -6px !important;
-  background-color: transparent !important;
+.bootstrap .form-control.tokenfield{
+  height: auto;
+  padding-bottom: 0;
+}
+.bootstrap input.token-input[type="text"]{
+  display: inline-block;
+  border:0;
+  padding: 0;
+  margin-top: -6px;
+  margin-bottom: 0;
+  background-color: transparent;
   max-width:100%;
+  width: auto !important;
 }
 .uppercase {
   text-transform: uppercase;
@@ -120,6 +126,50 @@ ul.typeahead-list li .title{
   display:inline-block;
   float:none;
 }
+ul.typeahead-list.pack{
+  padding: 0;
+}
+ul.typeahead-list.pack li{
+  width: 200px;
+  border: 1px solid #eee;
+  display: inline-block;
+  overflow: hidden;
+  margin-right: 10px;
+  position: relative;
+  cursor: pointer
+}
+ul.typeahead-list.pack li img{
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 5px;
+}
+ul.typeahead-list.pack li span{
+  display: inline-block;
+  width: 100%;
+  padding: 0 5px;
+}
+ul.typeahead-list.pack li .title,
+ul.typeahead-list.pack li .ref {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ul.typeahead-list.pack li .quantity,
+ul.typeahead-list.pack li .ref {
+  color: #ccc;
+}
+ul.typeahead-list.pack li .delete{
+  position : absolute;
+  right: 2px;
+  top: 2px;
+  display: none;
+}
+ul.typeahead-list.pack li:hover{
+  border: 1px solid #00aff0;
+}
+ul.typeahead-list.pack li:hover .delete{
+  display: block;
+}
 #form_step1_new_category{
   margin-top:20px;
 }
@@ -155,12 +205,26 @@ ul.category-tree li > ul{
 .icon-caret-selected{
   color: #000000 !important;
 }
+
+/* recommended modules */
+div.left-separator {
+  border-left: 1px solid #eee;
+}
+
+/* Quick nav sidebar */
 div.quicknav-scroller {
   overflow-y: auto;
-  top:1em;
-  bottom: 14em;
+  top: 4.7em;
+  bottom: 13.6em;
   position: fixed;
-  right: 1em;
-  left: 1em;
+  right: 0.5em;
+  left: 0.5em;
   margin-right: 3em;
+  padding: 0.6em 0.1em 0em 0.6em;
+}
+div.quicknav-scroller table.table {
+  margin-bottom: 0 !important;
+}
+div.quicknav-header h2 {
+  margin: 0;
 }

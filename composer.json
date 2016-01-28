@@ -8,7 +8,6 @@
     "doctrine/dbal": "~2.5.0",
     "doctrine/orm": "~2.5.0",
     "doctrine/doctrine-bundle": "1.5.2",
-    "symfony/assetic-bundle": "~2.7.0",
     "symfony/swiftmailer-bundle": "2.3.8",
     "symfony/monolog-bundle": "2.8.1",
     "sensio/distribution-bundle": "4.0.1",
@@ -110,12 +109,9 @@
   },
   "autoload": {
     "psr-4": {
-      "PrestaShop\\PrestaShop\\Core\\Cldr\\": "src/Core/Cldr/",
-      "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "src/Core/Foundation/Net/",
-      "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "src/Core/Foundation/Compression/",
-      "": "src/"
-    },
-    "classmap": ["src/Core/", "Adapter/"]
+      "PrestaShop\\PrestaShop\\": "src/",
+      "PrestaShopBundle\\": "src/PrestaShopBundle/"
+    }
   },
   "scripts": {
     "post-install-cmd": [

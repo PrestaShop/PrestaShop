@@ -43,6 +43,7 @@ class ProductOptions extends CommonAbstractType
     private $context;
     private $productAdapter;
     private $router;
+    private $locales;
 
     /**
      * Constructor
@@ -61,6 +62,7 @@ class ProductOptions extends CommonAbstractType
         $this->translator = $translator;
         $this->productAdapter = $productDataProvider;
         $this->currencyDataprovider = $currencyDataprovider;
+        $this->locales = $legacyContext->getLanguages();
         $this->router = $router;
 
         $this->suppliers = $this->formatDataChoicesList(
@@ -81,27 +83,7 @@ class ProductOptions extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('redirect_type', FormType\ChoiceType::class, array(
-            'choices'  => array(
-                $this->translator->trans('No redirect (404)', [], 'AdminProducts') => '404',
-                $this->translator->trans('Catalog Redirected permanently (301)', [], 'AdminProducts') => '301',
-                $this->translator->trans('Redirected temporarily (302)', [], 'AdminProducts') => '302',
-            ),
-            'choices_as_values' => true,
-            'required' => true,
-            'label' => $this->translator->trans('Redirect when disabled', [], 'AdminProducts'),
-        ))
-        ->add('id_product_redirected', \PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType::class, array(
-            'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-            'mapping_value' => 'id',
-            'mapping_name' => 'name',
-            'placeholder' => $this->translator->trans('search in catalog...', [], 'AdminProducts'),
-            'template_collection' => '<div class="title col-xs-10">%s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
-            'limit' => 1,
-            'required' => false,
-            'label' => $this->translator->trans('Related product:', [], 'AdminProducts')
-        ))
-        ->add('visibility', FormType\ChoiceType::class, array(
+        $builder->add('visibility', FormType\ChoiceType::class, array(
             'choices'  => array(
                 $this->translator->trans('Everywhere', [], 'AdminProducts') => 'both',
                 $this->translator->trans('Catalog only', [], 'AdminProducts') => 'catalog',
@@ -111,6 +93,17 @@ class ProductOptions extends CommonAbstractType
             'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Visibility', [], 'AdminProducts'),
+        ))
+        ->add('tags', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [
+                'attr' => [
+                    'class' => 'tokenfield',
+                    'placeholder' => $this->translator->trans('Add a keyword', [], 'AdminProducts')
+                ]
+            ],
+            'locales' => $this->locales,
+            'label' => $this->translator->trans('Tags', [], 'AdminProducts')
         ))
         ->add(
             $builder->create('display_options', FormType\FormType::class, array('required' => false, 'label' => $this->translator->trans('Display options', [], 'AdminProducts')))

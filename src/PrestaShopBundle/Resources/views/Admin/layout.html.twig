@@ -11,20 +11,18 @@
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% block stylesheets %}
-    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/*' filter='cssrewrite' package='admin' output='css/admin-layout.css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/shared.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/*' package='admin' output='js/admin-layout.js' %}
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
 {% endblock %}
 
 {% block translate_javascripts %}
     <script>
-        var translate_javascripts = {{ js_translatable|json_encode()|raw }}
+        var translate_javascripts = {{ js_translatable|json_encode()|raw }};
+        var PS_ALLOW_ACCENTED_CHARS_URL = {{ 'PS_ALLOW_ACCENTED_CHARS_URL'|configuration }};
     </script>
 {% endblock %}
 

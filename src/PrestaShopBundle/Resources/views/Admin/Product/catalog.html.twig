@@ -2,28 +2,13 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts
-        output='js/admin-catalog.js'
-        '@PrestaShopBundle/Resources/public/admin/extra-js/product/catalog.js'
-        '@PrestaShopBundle/Resources/public/admin/extra-js/pagination.js'
-        '@PrestaShopBundle/Resources/public/admin/extra-js/category-tree.js'
-        '../js/jquery/ui/jquery.ui.sortable.min.js'
-        '../js/vendor/node_modules/bootstrap-slider/dist/bootstrap-slider.min.js' package='admin' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {% stylesheets
-    output='css/admin-catalog.css'
-        '../js/vendor/node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css' filter='cssrewrite' package='admin' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <script src="{{ asset('themes/default/js/bundle/product/catalog.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
+    <script src="{{ asset('../js/jquery/ui/jquery.ui.sortable.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
 
     <div id="product_catalog_category_tree_filter" class="panel">
@@ -196,7 +181,7 @@
                       {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder, 'products': products, 'last_sql': last_sql})
                     %}
                     <tfooter>
-                        <th colspan="2">
+                        <th colspan="11">
                             <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('table').find('td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
                             &nbsp;{{ trans("Select all", {}, 'AdminTab') }}
                         </th>

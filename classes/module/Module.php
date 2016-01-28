@@ -724,13 +724,15 @@ abstract class ModuleCore
             }
         }
 
-        // Install overrides
-        try {
-            $this->installOverrides();
-        } catch (Exception $e) {
-            $this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
-            $this->uninstallOverrides();
-            return false;
+        if ($this->getOverrides() != null) {
+            // Install overrides
+            try {
+                $this->installOverrides();
+            } catch (Exception $e) {
+                $this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
+                $this->uninstallOverrides();
+                return false;
+            }
         }
 
         // Enable module in the shop where it is not enabled yet
@@ -1276,8 +1278,9 @@ abstract class ModuleCore
         }
 
         foreach ($modules_dir as $module) {
+            $module_errors = array();
             if (Module::useTooMuchMemory()) {
-                $errors[] = Tools::displayError('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration');
+                $module_errors[] = Tools::displayError('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration');
                 break;
             }
 
@@ -1300,16 +1303,16 @@ abstract class ModuleCore
                 libxml_use_internal_errors(true);
                 $xml_module = @simplexml_load_file($config_file);
                 if (!$xml_module) {
-                    $errors[] = Tools::displayError(sprintf('%1s could not be loaded.', $config_file));
+                    $module_errors[] = Tools::displayError(sprintf('%1s could not be loaded.', $config_file));
                     break;
                 }
                 foreach (libxml_get_errors() as $error) {
-                    $errors[] = '['.$module.'] '.Tools::displayError('Error found in config file:').' '.htmlentities($error->message);
+                    $module_errors[] = '['.$module.'] '.Tools::displayError('Error found in config file:').' '.htmlentities($error->message);
                 }
                 libxml_clear_errors();
 
                 // If no errors in Xml, no need instand and no need new config.xml file, we load only translations
-                if (!count($errors) && (int)$xml_module->need_instance == 0) {
+                if (!count($module_errors) && (int)$xml_module->need_instance == 0) {
                     $file = _PS_MODULE_DIR_.$module.'/'.Context::getContext()->language->iso_code.'.php';
                     if (Tools::file_exists_cache($file) && include_once($file)) {
                         if (isset($_MODULE) && is_array($_MODULE)) {
@@ -1361,71 +1364,76 @@ abstract class ModuleCore
                         $file = substr($file, 0, -2);
                     }
 
+                    // We check any parse error before including the file.
                     // If (false) is a trick to not load the class with "eval".
                     // This way require_once will works correctly
-                    if (eval('if (false){	'.$file."\n".' }') !== false) {
+                    if (substr(`php -l $file_path`, 0, 16) == 'No syntax errors' || eval('if (false){	'.$file."\n".' }') !== false) {
                         require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
                     } else {
-                        $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
+                        $module_errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
                     }
                 }
 
                 // If class exists, we just instanciate it
                 if (class_exists($module, false)) {
-                    $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module);
+                    try {
+                        $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module);
 
-                    $item = new stdClass();
+                        $item = new stdClass();
 
-                    $item->id = (int)$tmp_module->id;
-                    $item->warning = $tmp_module->warning;
-                    $item->name = $tmp_module->name;
-                    $item->version = $tmp_module->version;
-                    $item->tab = $tmp_module->tab;
-                    $item->displayName = $tmp_module->displayName;
-                    $item->description = stripslashes($tmp_module->description);
-                    $item->author = $tmp_module->author;
-                    $item->author_uri = (isset($tmp_module->author_uri) && $tmp_module->author_uri) ? $tmp_module->author_uri : false;
-                    $item->limited_countries = $tmp_module->limited_countries;
-                    $item->parent_class = get_parent_class($module);
-                    $item->is_configurable = $tmp_module->is_configurable = method_exists($tmp_module, 'getContent') ? 1 : 0;
-                    $item->need_instance = isset($tmp_module->need_instance) ? $tmp_module->need_instance : 0;
-                    $item->active = $tmp_module->active;
-                    $item->trusted = Module::isModuleTrusted($tmp_module->name);
-                    $item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
-                    $item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
-                    $item->confirmUninstall = isset($tmp_module->confirmUninstall) ? html_entity_decode($tmp_module->confirmUninstall) : null;
-                    $item->description_full = stripslashes($tmp_module->description_full);
-                    $item->additional_description = isset($tmp_module->additional_description) ? stripslashes($tmp_module->additional_description) : null;
-                    $item->compatibility = isset($tmp_module->compatibility) ? (array)$tmp_module->compatibility : null;
-                    $item->nb_rates = isset($tmp_module->nb_rates) ? (array)$tmp_module->nb_rates : null;
-                    $item->avg_rate = isset($tmp_module->avg_rate) ? (array)$tmp_module->avg_rate : null;
-                    $item->badges = isset($tmp_module->badges) ? (array)$tmp_module->badges : null;
-                    $item->url = isset($tmp_module->url) ? $tmp_module->url : null;
-                    $item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
+                        $item->id = (int)$tmp_module->id;
+                        $item->warning = $tmp_module->warning;
+                        $item->name = $tmp_module->name;
+                        $item->version = $tmp_module->version;
+                        $item->tab = $tmp_module->tab;
+                        $item->displayName = $tmp_module->displayName;
+                        $item->description = stripslashes($tmp_module->description);
+                        $item->author = $tmp_module->author;
+                        $item->author_uri = (isset($tmp_module->author_uri) && $tmp_module->author_uri) ? $tmp_module->author_uri : false;
+                        $item->limited_countries = $tmp_module->limited_countries;
+                        $item->parent_class = get_parent_class($module);
+                        $item->is_configurable = $tmp_module->is_configurable = method_exists($tmp_module, 'getContent') ? 1 : 0;
+                        $item->need_instance = isset($tmp_module->need_instance) ? $tmp_module->need_instance : 0;
+                        $item->active = $tmp_module->active;
+                        $item->trusted = Module::isModuleTrusted($tmp_module->name);
+                        $item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
+                        $item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
+                        $item->confirmUninstall = isset($tmp_module->confirmUninstall) ? html_entity_decode($tmp_module->confirmUninstall) : null;
+                        $item->description_full = stripslashes($tmp_module->description_full);
+                        $item->additional_description = isset($tmp_module->additional_description) ? stripslashes($tmp_module->additional_description) : null;
+                        $item->compatibility = isset($tmp_module->compatibility) ? (array)$tmp_module->compatibility : null;
+                        $item->nb_rates = isset($tmp_module->nb_rates) ? (array)$tmp_module->nb_rates : null;
+                        $item->avg_rate = isset($tmp_module->avg_rate) ? (array)$tmp_module->avg_rate : null;
+                        $item->badges = isset($tmp_module->badges) ? (array)$tmp_module->badges : null;
+                        $item->url = isset($tmp_module->url) ? $tmp_module->url : null;
+                        $item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
 
-                    if ($item->onclick_option) {
-                        $href = Context::getContext()->link->getAdminLink('Module', true).'&module_name='.$tmp_module->name.'&tab_module='.$tmp_module->tab;
-                        $item->onclick_option_content = array();
-                        $option_tab = array('desactive', 'reset', 'configure', 'delete');
+                        if ($item->onclick_option) {
+                            $href = Context::getContext()->link->getAdminLink('Module', true).'&module_name='.$tmp_module->name.'&tab_module='.$tmp_module->tab;
+                            $item->onclick_option_content = array();
+                            $option_tab = array('desactive', 'reset', 'configure', 'delete');
 
-                        foreach ($option_tab as $opt) {
-                            $item->onclick_option_content[$opt] = $tmp_module->onclickOption($opt, $href);
+                            foreach ($option_tab as $opt) {
+                                $item->onclick_option_content[$opt] = $tmp_module->onclickOption($opt, $href);
+                            }
                         }
+
+                        $module_list[$item->name.'_disk'] = $item;
+
+                        if (!$xml_exist || $need_new_config_file) {
+                            self::$_generate_config_xml_mode = true;
+                            $tmp_module->_generateConfigXml();
+                            self::$_generate_config_xml_mode = false;
+                        }
+
+                        unset($tmp_module);
+                    } catch (Exception $e) {
                     }
-
-                    $module_list[$item->name.'_disk'] = $item;
-
-                    if (!$xml_exist || $need_new_config_file) {
-                        self::$_generate_config_xml_mode = true;
-                        $tmp_module->_generateConfigXml();
-                        self::$_generate_config_xml_mode = false;
-                    }
-
-                    unset($tmp_module);
                 } else {
-                    $errors[] = sprintf(Tools::displayError('%1$s (class missing in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
+                    $module_errors[] = sprintf(Tools::displayError('%1$s (class missing in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
                 }
             }
+            $errors = array_merge($errors, $module_errors);
         }
 
         // Get modules information from database

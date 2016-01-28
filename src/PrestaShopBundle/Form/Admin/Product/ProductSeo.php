@@ -46,6 +46,7 @@ class ProductSeo extends CommonAbstractType
     public function __construct($translator, $legacyContext)
     {
         $this->translator = $translator;
+        $this->context = $legacyContext;
         $this->locales = $legacyContext->getLanguages();
     }
 
@@ -58,7 +59,10 @@ class ProductSeo extends CommonAbstractType
     {
         $builder->add('meta_title', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
             'type' => FormType\TextType::class,
-            'options' => ['required' => false],
+            'options' => [
+                'attr' => ['placeholder' => $this->translator->trans('Same title as the product, can be edited', [], 'AdminProducts')],
+                'required' => false
+            ],
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' => $this->translator->trans('Meta title', [], 'AdminProducts'),
@@ -66,7 +70,10 @@ class ProductSeo extends CommonAbstractType
         ))
         ->add('meta_description', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
             'type' => FormType\TextType::class,
-            'options' => ['required' => false],
+            'options' => [
+                'attr' => ['placeholder' => $this->translator->trans('Same description as the product, can be edited', [], 'AdminProducts')],
+                'required' => false
+            ],
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' => $this->translator->trans('Meta description', [], 'AdminProducts'),
@@ -77,7 +84,27 @@ class ProductSeo extends CommonAbstractType
             'options' => [],
             'locales' => $this->locales,
             'hideTabs' => true,
-            'label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Friendly URL', [], 'AdminProducts'),
+        ))
+        ->add('redirect_type', FormType\ChoiceType::class, array(
+            'choices'  => array(
+                $this->translator->trans('No redirect (404)', [], 'AdminProducts') => '404',
+                $this->translator->trans('Catalog Redirected permanently (301)', [], 'AdminProducts') => '301',
+                $this->translator->trans('Redirected temporarily (302)', [], 'AdminProducts') => '302',
+            ),
+            'choices_as_values' => true,
+            'required' => true,
+            'label' => $this->translator->trans('Redirection when inactive', [], 'AdminProducts'),
+        ))
+        ->add('id_product_redirected', \PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType::class, array(
+            'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            'mapping_value' => 'id',
+            'mapping_name' => 'name',
+            'placeholder' => $this->translator->trans('search in catalog...', [], 'AdminProducts'),
+            'template_collection' => '<div class="title col-xs-9">%s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
+            'limit' => 1,
+            'required' => false,
+            'label' => $this->translator->trans('Related product', [], 'AdminProducts')
         ));
     }
 
