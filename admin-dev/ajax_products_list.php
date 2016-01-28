@@ -80,6 +80,7 @@ if ($items && ($disableCombination ||$excludeIds || (isset($_SERVER['HTTP_REFERE
     $results = [];
     foreach ($items as $item) {
         if (!$forceJson) {
+            $item['name'] = str_replace('|', '&#124;', $item['name']);		
             $results[] = trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product']);
         } else {
             $results[] = array(
