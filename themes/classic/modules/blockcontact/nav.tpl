@@ -24,7 +24,7 @@
 *}
 <div id="contact-link" class="col-md-2 _margin-top-small">
   {if $contact_infos.phone}
-    {l s='Call us : [1]%s[/1]' tags=['<span class="_gray-dark">'] sprintf=$contact_infos.phone mod='blockcontact'}
+    {l s='Call us : [1]%s[/1]' tags=['<span class="_gray-darker">'] sprintf=$contact_infos.phone mod='blockcontact'}
   {else}
     <a href="{$urls.pages.contact}" title="{l s='Contact us' mod='blockcontact'}">{l s='Contact us' mod='blockcontact'}</a>
   {/if}

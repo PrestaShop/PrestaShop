@@ -24,7 +24,7 @@
 *}
 
 <div id="block_myaccount_infos" class="col-md-2">
-	<h4 class="myaccount-title"><a class="_gray-dark text-uppercase" href="{$urls.pages.my_account}" title="{l s='My account' mod='blockmyaccount'}" rel="nofollow">{l s='My account' mod='blockmyaccount'}</a></h4>
+	<h4 class="myaccount-title"><a class="_gray-darker text-uppercase" href="{$urls.pages.my_account}" title="{l s='My account' mod='blockmyaccount'}" rel="nofollow">{l s='My account' mod='blockmyaccount'}</a></h4>
 	<ul class="account-list">
         {foreach from=$my_account_urls item=my_account_url}
             <li><a href="{$my_account_url.url}" title="{$my_account_url.title}" rel="nofollow">{$my_account_url.title}</a></li>
