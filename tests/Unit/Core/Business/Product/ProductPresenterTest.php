@@ -62,7 +62,7 @@ class ProductPresenterTest extends UnitTestCase
     private function _presentProduct($method, $field)
     {
         $translator = Phake::mock('Symfony\Component\Translation\TranslatorInterface');
-        Phake::when($translator)->l(Phake::anyParameters())->thenReturn('some label');
+        Phake::when($translator)->trans(Phake::anyParameters())->thenReturn('some label');
 
         $link = Phake::mock('Link');
         Phake::when($link)->getAddToCartURL(Phake::anyParameters())->thenReturn('http://add-to-cart.url');
