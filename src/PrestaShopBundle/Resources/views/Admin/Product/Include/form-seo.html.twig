@@ -31,15 +31,21 @@
     <div class="alert alert-info">
         {{ trans('Urls management is done in URLS and SEO section. You can improve the URL format of products by following this link.', [], 'AdminProducts') }}
         <a href="{{ getAdminLink("AdminMeta") }}">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
+
         <p>
             {% if 'PS_REWRITING_SETTINGS'|configuration == 0 %}
-                {{ trans('The management of simplified urls is disabled. To enable it, click on the following link.', [], 'AdminProducts') }}
+                {{ trans('The management of simplified urls is', [], 'AdminProducts') }}
+                <strong>{{ trans('disabled', [], 'AdminProducts') }}</strong>.
+                {{ trans('To enable it, click on the following link.', [], 'AdminProducts') }}
                 <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
             {% else %}
-                {{ trans('The management of simplified urls is enabled. To disable it, click on the following link.', [], 'AdminProducts') }}
+                {{ trans('The management of simplified urls is', [], 'AdminProducts') }}
+                <strong>{{ trans('enabled', [], 'AdminProducts') }}</strong>.
+                {{ trans('To disable it, click on the following link.', [], 'AdminProducts') }}
                 <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
             {% endif %}
         </p>
+
     </div>
 
     <div class="form-group">
