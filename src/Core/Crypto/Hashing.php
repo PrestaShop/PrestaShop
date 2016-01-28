@@ -23,7 +23,7 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Foundation\Crypto;
+namespace PrestaShop\PrestaShop\Core\Crypto;
 
 class Hashing
 {

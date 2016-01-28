@@ -329,7 +329,7 @@ class CustomerCore extends ObjectModel
             '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' AND `deleted` = 0 AND `is_guest` = 0');
 
         try {
-            $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing');
+            $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
             return false;
         }
@@ -798,7 +798,7 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
-        $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing');
+        $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         $this->is_guest = 0;
         $this->passwd = $crypto->encrypt($password, _COOKIE_KEY_);
         $this->cleanGroups();
@@ -832,7 +832,7 @@ class CustomerCore extends ObjectModel
 
     public function setWsPasswd($passwd)
     {
-        $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing');
+        $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
 
         if ($this->id == 0 || $this->passwd != $passwd) {
             $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
@@ -926,7 +926,7 @@ class CustomerCore extends ObjectModel
     public function validateController($htmlentities = true)
     {
         $errors = parent::validateController($htmlentities);
-        $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing');
+        $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
 
         if ($value = Tools::getValue('passwd')) {
             $this->passwd = $crypto->encrypt($value, _COOKIE_KEY_);
