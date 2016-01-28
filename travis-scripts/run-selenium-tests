@@ -1,0 +1,11 @@
+rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install 4
+/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1280x1024x16
+cd /var/www/prestashop.unit.test/tests/StarterTheme
+mv settings.travis.js settings.js
+npm install
+DISPLAY=:10 npm run selenium &> /dev/null &
+sleep 5
+npm test
+status=$?
+cd $TRAVIS_BUILD_DIR
+exit $status
