@@ -8,9 +8,9 @@
     color: $gray;
     font-weight: 300;
   }
-  li.category:first-child a[data-depth="1"] {
+  .sub-menu li.category:first-child a[data-depth="1"] {
     #index & {
-      color: $gray-dark;
+      color: $gray-darker;
       text-transform: uppercase;
       font-weight: 600;
     }

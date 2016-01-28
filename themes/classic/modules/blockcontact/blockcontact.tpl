@@ -24,7 +24,7 @@
 *}
 
 <div class="block-contact col-md-4 col-md-offset-2">
-	<h4 class="_gray-dark text-uppercase block-contact-title">{l s='Store information' mod='blockcontact'}</h4>
+	<h4 class="_gray-darker text-uppercase block-contact-title">{l s='Store information' mod='blockcontact'}</h4>
     {$contact_infos.address.formatted nofilter}
     {if $contact_infos.phone}<br>{l s='Tel: %s' sprintf=$contact_infos.phone}{/if}
     {if $contact_infos.fax}<br>{l s='Fax: %s' sprintf=$contact_infos.fax}{/if}
