@@ -761,7 +761,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         }
 
         //generate combination name
-        $attributesCombinations = $this->product->getAttributeCombinationsById($combination['id_product_attribute'], 1);
+        $attributesCombinations = $this->product->getAttributeCombinationsById($combination['id_product_attribute'], $this->locales[0]['id_lang']);
         $name = [];
         foreach ($attributesCombinations as $attribute) {
             $name[] = $attribute['group_name'].' - '.$attribute['attribute_name'];
