@@ -29,14 +29,14 @@ $(document).ready(function() {
 	/*
 	 * Tree behavior: collapse/expand system and radio button change event.
 	 */
-	$("div#product_catalog_category_tree_filter div.form-wrapper").categorytree();
+	$('div#product_catalog_category_tree_filter div.form-wrapper').categorytree();
 	$('div#product_catalog_category_tree_filter div.radio > label > input:radio').change(function() {
 		if ($(this).is(':checked')) {
 			$('form#product_catalog_list input[name="filter_category"]').val($(this).val());
 			$('form#product_catalog_list').submit();
 		}
 	});
-	$("div#product_catalog_category_tree_filter input:button, div#product_catalog_category_tree_filter ul").on('click', function() {
+	$('div#product_catalog_category_tree_filter input:button, div#product_catalog_category_tree_filter ul').on('click', function() {
 		categoryFilterButtons();
 	});
 	categoryFilterButtons();
@@ -117,27 +117,32 @@ function productOrderPrioritiesTable() {
 
 function updateBulkMenu() {
 	var selectedCount = $('form#product_catalog_list input:checked[name="bulk_action_selected_products[]"][disabled!="disabled"]').size();
-	$('#product_bulk_menu').prop('disabled', (selectedCount == 0));
+	$('#product_bulk_menu').prop('disabled', (selectedCount === 0));
 }
 
 var productCatalogFilterChanged = false;
 function updateFilterMenu() {
 	var count = $('form#product_catalog_list tr.column-filters select option:selected[value!=""]').size();
 	$('form#product_catalog_list tr.column-filters input[type="text"]:visible').each(function() {
-		if ($(this).val()!="") count ++;
+		if ($(this).val() !== '') {
+			count ++;
+		}
 	});
 	$('form#product_catalog_list tr.column-filters input[type="text"][sql!=""][sql]').each(function() {
-		if ($(this).val()!="") count ++;
+		if ($(this).val() !== '') {
+			count ++;
+		}
 	});
-	$('input[name="products_filter_submit"]').prop('disabled', (count == 0) && productCatalogFilterChanged == false);
-	if (count == 0 && productCatalogFilterChanged == false)
+	$('input[name="products_filter_submit"]').prop('disabled', (count === 0) && productCatalogFilterChanged === false);
+	if (count === 0 && productCatalogFilterChanged === false) {
 		$('input[name="products_filter_reset"]').hide();
-	else
+	}else {
 		$('input[name="products_filter_reset"]').show();
+	}
 }
 
 function productCategoryFilterReset(div) {
-	$("div.form-wrapper", div).categorytree('unselect');
+	$('div.form-wrapper', div).categorytree('unselect');
 	$('form#product_catalog_list input[name="filter_category"]').val('');
 	$('form#product_catalog_list').submit();
 }
@@ -153,17 +158,17 @@ function productCategoryFilterCollapse(div, btn) {
 }
 
 function categoryFilterButtons() {
-	if ($("div#product_catalog_category_tree_filter ul ul:visible").size() == 0) {
+	if ($('div#product_catalog_category_tree_filter ul ul:visible').size() === 0) {
 		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_collapse"]').hide();
 	} else {
 		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_collapse"]').show();
 	}
-	if ($("div#product_catalog_category_tree_filter ul ul:hidden").size() == 0) {
+	if ($('div#product_catalog_category_tree_filter ul ul:hidden').size() === 0) {
 		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_expand"]').hide();
 	} else {
 		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_expand"]').show();
 	}
-	if ($("div#product_catalog_category_tree_filter ul input:checked").size() == 0) {
+	if ($('div#product_catalog_category_tree_filter ul input:checked').size() === 0) {
 		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_reset"]').hide();
 	} else {
 		$('div#product_catalog_category_tree_filter input[name="product_catalog_category_tree_filter_reset"]').show();
@@ -172,7 +177,7 @@ function categoryFilterButtons() {
 
 function productColumnFilterReset(tr) {
 	$('input:text', tr).val('');
-	$('select option:selected', tr).prop("selected", false);
+	$('select option:selected', tr).prop('selected', false);
 	$('input#filter_column_price', tr).attr('sql', '');
 	$('input#filter_column_sav_quantity', tr).attr('sql', '');
 	$('form#product_catalog_list').submit();
@@ -181,7 +186,9 @@ function productColumnFilterReset(tr) {
 function bulkDuplicateAction(allItems, postUrl, redirectUrl) {
 	var itemsCount = allItems.length;
 	var currentItemIdx = 0;
-	if (itemsCount < 1) return;
+	if (itemsCount < 1) {
+		return;
+	}
 	$('#catalog_duplication_modal').modal('show');
 	var details = $('#catalog_duplication_progression .progress-details-text');
 
@@ -195,20 +202,25 @@ function bulkDuplicateAction(allItems, postUrl, redirectUrl) {
 
 	// call duplication in ajax. Recursive with inner function
 	var duplicateCall = function(items, successCallback, errorCallback) {
-		if (items.length == 0) return;
+		if (items.length === 0) {
+			return;
+		}
 		var item0 = $(items.shift()).val();
 		currentItemIdx++;
 
 		details.html(details.attr('default-value').replace(/\.\.\./, '')+' (#'+item0+')');
 		$.ajax({
-			type: "POST",
+			type: 'POST',
 			url: postUrl,
 			data: { bulk_action_selected_products: [item0] },
 			success: function(data, status) {
 				$('#catalog_duplication_progression .progress-bar').css('width', (currentItemIdx*100/itemsCount)+'%');
 				$('#catalog_duplication_progression .progress-bar span').html(currentItemIdx+' / '+itemsCount);
-				if (items.length > 0) duplicateCall(items, successCallback, errorCallback);
-				else successCallback();
+				if (items.length > 0) {
+					duplicateCall(items, successCallback, errorCallback);
+				} else {
+					successCallback();
+				}
 			},
 			error: errorCallback,
 			dataType: 'json'
@@ -228,14 +240,14 @@ function bulkProductAction(element, action) {
 	var form = $('form#product_catalog_list');
 	var postUrl = '';
 	var redirectUrl = '';
-
+	var urlHandler = null;
 	switch (action) {
 		case 'delete_all':
-			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() == 0) {
+			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() === 0) {
 				return false;
 			}
 
-			var urlHandler = $(element).closest('[bulkurl]');
+			urlHandler = $(element).closest('[bulkurl]');
 			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
 			redirectUrl = urlHandler.attr('redirecturl');
 
@@ -257,10 +269,10 @@ function bulkProductAction(element, action) {
 			return; // No break, but RETURN, to avoid code after switch block :)
 		case 'activate_all':
 		case 'deactivate_all':
-			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() == 0) {
+			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() === 0) {
 				return false;
 			}
-			var urlHandler = $(element).closest('[bulkurl]');
+			urlHandler = $(element).closest('[bulkurl]');
 			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
 			redirectUrl = urlHandler.attr('redirecturl');
 			break;
@@ -271,18 +283,18 @@ function bulkProductAction(element, action) {
 		// this case will post inline edition command
 		case 'edition':
 			var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
-			var urlHandler = $(element).closest('[massediturl]');
+			urlHandler = $(element).closest('[massediturl]');
 			postUrl = urlHandler.attr('massediturl').replace(/sort/, editionAction);
-			if (redirectUrl == '') {
+			if (redirectUrl === '') {
 				redirectUrl = urlHandler.attr('redirecturl');
 			}
 			break;
 		case 'duplicate_all':
 			var items = $('input:checked[name="bulk_action_selected_products[]"]', form);
-			if (items.size() == 0) {
+			if (items.size() === 0) {
 				return false;
 			}
-			var urlHandler = $(element).closest('[bulkurl]');
+			urlHandler = $(element).closest('[bulkurl]');
 			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
 			redirectUrl = urlHandler.attr('redirecturl');
 			if (items.size() > 1) {
@@ -295,7 +307,7 @@ function bulkProductAction(element, action) {
 			return false;
 	}
 
-	if (postUrl != '' && redirectUrl != '') {
+	if (postUrl !== '' && redirectUrl !== '') {
 		// save action URL for redirection and update to post to bulk action instead
 		// using form action URL allow to get route attributes and stay on the same page & ordering.
 		var redirectionInput = $('<input>')
@@ -346,7 +358,7 @@ function unitProductAction(element, action) {
 
 function showBulkProductEdition(show) {
 	// Paginator does not have a next page link : we are on the last page!
-	if ($('a#pagination_next_url[href]').length == 0) {
+	if ($('a#pagination_next_url[href]').length === 0) {
 		$('#bulk_edition_save_next').prop('disabled', true).removeClass('btn-primary');
 		$('#bulk_edition_save_keep').attr('type', 'submit').addClass('btn-primary');
 	}
