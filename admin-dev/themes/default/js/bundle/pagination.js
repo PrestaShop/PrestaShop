@@ -37,11 +37,9 @@ $(document).ready(function() {
 	/*
 	 * Input field changes management
 	 */
-	function checkInputPage(e) {
-		var e = e || event,
-			char = e.type == 'keypress'
-				? String.fromCharCode(e.keyCode || e.which)
-				: (e.clipboardData || window.clipboardData).getData('Text');
+	function checkInputPage(eventOrigin) {
+		var e = eventOrigin || event;
+		var char = e.type === 'keypress' ? String.fromCharCode(e.keyCode || e.which) : (e.clipboardData || window.clipboardData).getData('Text');
 		if (/[^\d]/gi.test(char)) {
 			return false;
 		}
@@ -52,7 +50,7 @@ $(document).ready(function() {
 
 		$(this).on('keyup', function(e) {
 			var val = parseInt($(e.target).val());
-			if (e.which == 13) { // ENTER
+			if (e.which === 13) { // ENTER
 				e.preventDefault();
 				if (parseInt(val) > 0) {
 					var limit = $(e.target).attr('pslimit');

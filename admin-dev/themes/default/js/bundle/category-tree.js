@@ -28,10 +28,10 @@
 	$.fn.categorytree = function (settings) {
 
 		$.fn.categorytreeFoldStyle = function (pos) {
-			this.attr('style', "background-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_"+ pos +".gif');");
+			this.attr('style', 'background-image:url("'+ baseDir +'web/bundles/framework/images/blue_picto_'+ pos +'.gif");');
 		};
 
-		var isMethodCall = (typeof settings == 'string'), // is this a method call like $().categorytree("unselect")
+		var isMethodCall = (typeof settings === 'string'), // is this a method call like $().categorytree("unselect")
 			returnValue = this;
 		// if a method call execute the method on all selected instances
 		if(isMethodCall) {
@@ -41,12 +41,12 @@
 					// TODO: add a callback method feature?
 					break;
 				case 'unfold':
-					$("ul", this).show();
-					$("li", this).has("ul").categorytreeFoldStyle('less');
+					$('ul', this).show();
+					$('li', this).has('ul').categorytreeFoldStyle('less');
 					break;
 				case 'fold':
-					$("ul ul", this).hide();
-					$("li", this).has("ul").categorytreeFoldStyle('more');
+					$('ul ul', this).hide();
+					$('li', this).has('ul').categorytreeFoldStyle('more');
 					break;
 				default:
 					throw 'Unknown method';
@@ -54,23 +54,23 @@
 		}
 		// initialize tree
 		else {
-			$("li > ul", this).each(function(i, item) {
-				$(item).prev("div").on('click', function(event) {
+			$('li > ul', this).each(function(i, item) {
+				$(item).prev('div').on('click', function(event) {
 					var ui = event.target;
-					$(ui).next("ul").toggle();
-					if ($(ui).next("ul").is(":visible")) {
-						$(ui).parent("li").categorytreeFoldStyle('less');
+					$(ui).next('ul').toggle();
+					if ($(ui).next('ul').is(':visible')) {
+						$(ui).parent('li').categorytreeFoldStyle('less');
 					} else {
-						$(ui).parent("li").categorytreeFoldStyle('more');
+						$(ui).parent('li').categorytreeFoldStyle('more');
 					}
 				});
-				if ($(item).is(":visible")) {
-					$(item).parent("li").categorytreeFoldStyle('less');
+				if ($(item).is(':visible')) {
+					$(item).parent('li').categorytreeFoldStyle('less');
 				} else {
-					$(item).parent("li").categorytreeFoldStyle('more');
+					$(item).parent('li').categorytreeFoldStyle('more');
 				}
 			});
-			$(this).closest('.hide').removeClass("hide");
+			$(this).closest('.hide').removeClass('hide');
 		}
 		// return the jquery selection (or if it was a method call that returned a value - the returned value)
 		return returnValue;
