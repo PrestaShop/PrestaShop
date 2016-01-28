@@ -1,0 +1,6 @@
+sudo rm -Rf /var/www/prestashop.unit.test
+sudo cp -Rf $TRAVIS_BUILD_DIR/fresh_install /var/www/prestashop.unit.test
+sudo chmod 777 -R /var/www
+mysql -uroot -e "drop database \`prestashop\`"
+mysqladmin -uroot create prestashop
+mysql -uroot prestashop < $TRAVIS_BUILD_DIR/db.sql

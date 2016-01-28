@@ -1,0 +1,1 @@
+/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1280x1024x16

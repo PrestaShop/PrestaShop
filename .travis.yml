@@ -1,5 +1,10 @@
 language: php
 
+env:
+  global:
+    - secure: sE9hGYohi3f5w+bPHkxCYVUJfuZz1LQQUwXBO5RqWE+poZlQIpnyQg0t5AxRFIXdXF3myO48rubHuuju4jzkC4L3IZxbRmYmR86qD5pOVIloRPhaQbJChdXJMMqoVTn09I+32O4Odc+jkZfokFRKzouiNAmkLUPx95ZPqvOypNw=
+    - secure: YZ3nMLBHRfE90l+shXJZq/Z7oThLjS/00+g9VS2whM4Z89TyA9FifeALB2yyT/sjie0kr8fokI77vaM+tbcrqxjZkwNamdUxDlz9Hw6HkbTTcXpbMM5ChQ83RPWClhTrYGvMy3N6WRnDA6xyk9jWki6ksd/c6poUUl533xrTXSc=
+
 services:
   - mysql
 
@@ -7,6 +12,7 @@ addons:
     apt_packages:
         - apache2
         - libapache2-mod-fastcgi
+    sauce_connect: true
 php:
   - 5.4
   - 5.5
@@ -45,8 +51,12 @@ script:
   - composer install --no-interaction --no-progress
   - tests/check_php_parse_errors.sh
   - bash ./travis-scripts/install-prestashop
+  - bash ./travis-scripts/backup-prestashop
   - php bin/phpunit -c tests/
   - composer phpunit-sf
+  - cd $TRAVIS_BUILD_DIR # because /var/www/prestashop.unit.test (cwd) is about to be deleted
+  - bash ./travis-scripts/restore-backup
+  - bash ./travis-scripts/run-selenium-tests
 
 after_script:
   - sudo cat /var/log/apache2/error.log
