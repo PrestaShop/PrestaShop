@@ -5,8 +5,6 @@
 #product-images-dropzone.dropzone .dz-preview{
   width: 130px;
   height: 130px;
-}
-#product-images-dropzone.dropzone .dz-preview:hover{
   border:1px solid #ccc;
 }
 #product-images-dropzone.dropzone .dz-preview .dz-image{

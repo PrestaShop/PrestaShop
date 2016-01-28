@@ -1459,6 +1459,10 @@ var imagesProduct = (function() {
 					//init sortable
 					dropZoneElem.sortable({
 						opacity: 0.9,
+						containment: "parent",
+						distance: 32,
+						tolerance: "pointer",
+						cursorAt: { left: 64, top: 64 },
 						stop: function(event, ui) {
 							var sort = {};
 							$.each(dropZoneElem.find('.dz-preview'), function( index, value ) {
