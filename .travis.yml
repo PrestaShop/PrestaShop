@@ -16,6 +16,7 @@ php:
 matrix:
   fast_finish: true
   allow_failures:
+    - php: 5.4
     - php: 7.0
 
 before_install:
@@ -43,6 +44,9 @@ script:
   - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
   - composer install --no-interaction --no-progress
   - tests/check_php_parse_errors.sh
-  - php install-dev/index_cli.php --language=en --country=us --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop --db_create=0 --name=prestashop.unit.test --password=123456789
+  - bash ./travis-scripts/install-prestashop
   - php bin/phpunit -c tests/
   - composer phpunit-sf
+
+after_script:
+  - sudo cat /var/log/apache2/error.log

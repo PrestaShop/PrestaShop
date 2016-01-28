@@ -48,6 +48,7 @@ class AdminModelAdapterTest extends KernelTestCase
                 "inputPackItems" => [],
                 "name" => [],
                 "name_1" => "Amazing product",
+                "name_2" => "Amazing product",
                 "description" => [],
                 "description_short" => [],
                 "active" => '',
