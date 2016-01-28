@@ -5,18 +5,18 @@
 {/block}
 
 {block name='page_content'}
-  <h2>{l s='Here is a list of pending merchandise returns'}</h2>
+  <h6>{l s='Here is a list of pending merchandise returns'}</h6>
 
   {if isset($errorMsg) && $errorMsg}
-    <form action="{$urls.pages.authentication}" method="post">
+    <form method="post">
 
       <section class="form-fields">
-
-        <label>
-          <span>{l s='Please provide an explanation for your RMA:'}</span>
-           <textarea cols="67" rows="3" name="returnText"></textarea>
-        </label>
-
+        <div class="form-group row">
+          <label class="col-md-3 form-control-label">{l s='Please provide an explanation for your RMA:'}</label>
+          <div class="col-md-9">
+            <textarea cols="67" rows="3" name="returnText" class="form-control"></textarea>
+          </div>
+        </div>
       </section>
 
       <footer class="form-footer">
@@ -29,15 +29,15 @@
         {/foreach}
         <input type="hidden" name="id_order" value="{$id_order}"/>
 
-        <button type="submit">{l s='Make an RMA slip'}</button>
+        <button type="submit" class="btn btn-primary">{l s='Make an RMA slip'}</button>
       </footer>
 
     </form>
   {/if}
 
   {if $ordersReturn && count($ordersReturn)}
-    <table>
-      <thead>
+    <table class="table table-striped table-bordered">
+      <thead class="thead-default">
         <tr>
           <th>{l s='Return'}</th>
           <th>{l s='Order'}</th>
