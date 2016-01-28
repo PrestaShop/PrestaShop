@@ -46,3 +46,6 @@ script:
   - bash ./travis-scripts/install-prestashop
   - php bin/phpunit -c tests/
   - composer phpunit-sf
+
+after_script:
+  - sudo cat /var/log/apache2/error.log
