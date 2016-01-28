@@ -7,12 +7,12 @@
   @include box-shadow;
   h3 {
     text-transform: uppercase;
-    color: $gray-dark;
+    color: $gray-darker;
     font-size: em(25px);
     font-weight: 700;
   }
   p {
-    color: $gray-dark;
+    color: $gray-darker;
     font-weight: 300;
     font-size: 1.1em;
     .dark {
