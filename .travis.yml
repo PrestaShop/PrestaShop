@@ -23,7 +23,6 @@ matrix:
   fast_finish: true
   allow_failures:
     - php: 5.4
-    - php: 5.5
     - php: 7.0
 
 before_install:
