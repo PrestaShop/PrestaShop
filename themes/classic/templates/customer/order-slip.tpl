@@ -5,7 +5,7 @@
 {/block}
 
 {block name='page_content'}
-  <h2>{l s='Credit slips you have received after canceled orders'}.</h2>
+  <h6>{l s='Credit slips you have received after canceled orders'}.</h6>
 
   {if $credit_slips}
     <table>

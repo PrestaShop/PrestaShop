@@ -47,3 +47,19 @@
 ._shadow{
   @include box-shadow;
 }
+
+._pull-right {
+  float:right;
+}
+
+._align-center {
+  text-align: center;
+}
+
+._align-right {
+  text-align: right;
+}
+
+._valign-middle{
+  vertical-align: middle;
+}
