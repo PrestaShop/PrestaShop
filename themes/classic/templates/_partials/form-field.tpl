@@ -1,7 +1,7 @@
 {if $field.type !== 'hidden'}
   <div class="form-group row">
     <label class="col-md-3 form-control-label{if $field.required} required{/if}">{$field.label}</label>
-    <div class="col-md-9{if ($field.type === 'checkbox' || $field.type === 'radio')} form-control-valign{/if}">
+    <div class="col-md-9{if ($field.type === 'checkbox' || $field.type === 'radio-buttons')} form-control-valign{/if}">
       {if $field.type === 'select'}
         <select {if $field.required} required {/if} name="{$field.name}" class="form-control">
           <option value disabled selected>{l s='-- please choose --'}</option>

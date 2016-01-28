@@ -1,9 +1,9 @@
-<form action="{$urls.pages.order_follow}" method="post">
+<form id="order-return-form" action="{$urls.pages.order_follow}" method="post">
 
-  <table id="order-products">
-    <thead>
+  <table id="order-products" class="table table-bordered return">
+    <thead class="thead-default">
       <tr>
-        <th><input type="checkbox" /></th>
+        <th class="head-checkbox"><input type="checkbox"/></th>
         <th>{l s='Reference'}</th>
         <th>{l s='Product'}</th>
         <th>{l s='Quantity'}</th>
@@ -22,21 +22,26 @@
         </td>
         <td>{$product.product_reference}</td>
         <td>{$product.product_name}</td>
-        <td>
-          {$product.product_quantity}
-          {if !$product.customizedDatas}
-            <select name="order_qte_input[{$product.id_order_detail}]">
-          {else}
-            <select name="order_qte_input[{$smarty.foreach.products.index}]">
-          {/if}
-              {section name=quantity start=1 loop=$product.product_quantity+1}
-                <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
-              {/section}
-            </select>
+        <td class="qty">
+          <div class="current">
+            {$product.product_quantity}
+          </div>
+          <div class="select">
+            {if !$product.customizedDatas}
+              <select name="order_qte_input[{$product.id_order_detail}]" class="form-control">
+            {else}
+              <select name="order_qte_input[{$smarty.foreach.products.index}]" class="form-control">
+            {/if}
+                {section name=quantity start=1 loop=$product.product_quantity+1}
+                  <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
+                {/section}
+              </select>
+          </div>
+          <div class="clearfix"></div>
         </td>
-        <td>{$product.qty_returned}</td>
-        <td>{$product.unit_price}</td>
-        <td>{$product.total_price}</td>
+        <td class="_align-right">{$product.qty_returned}</td>
+        <td class="_align-right">{$product.unit_price}</td>
+        <td class="_align-right">{$product.total_price}</td>
       </tr>
       {if $product.customizations}
         {foreach $product.customizations  as $customization}
@@ -55,11 +60,13 @@
             </td>
             <td>
               {$customization.quantity}
-              <select name="customization_qty_input[{$customization.id_customization}]">
-                {section name=quantity start=1 loop=$customization.quantity+1}
-                  <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
-                {/section}
-              </select>
+              <span>
+                <select name="customization_qty_input[{$customization.id_customization}]" class="form-control">
+                  {section name=quantity start=1 loop=$customization.quantity+1}
+                    <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
+                  {/section}
+                </select>
+              </span>
             </td>
             <td colspan="3"></td>
           </tr>
@@ -71,32 +78,32 @@
       {if $priceDisplay && $use_tax}
         <tr>
           <td colspan="2">{l s='Items (tax excl.)'}</td>
-          <td colspan="5">{$order.data.total_products}</td>
+          <td colspan="5" class="_align-right">{$order.data.total_products}</td>
         </tr>
       {/if}
       <tr>
         <td colspan="2">{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
-        <td colspan="5">{$order.data.total_products_wt}</td>
+        <td colspan="5" class="_align-right">{$order.data.total_products_wt}</td>
       </tr>
       {if $order.data.total_discounts}
         <tr>
           <td colspan="2">{l s='Total vouchers'}</td>
-          <td colspan="5">{$order.data.total_discounts}</td>
+          <td colspan="5" class="_align-right">{$order.data.total_discounts}</td>
         </tr>
       {/if}
       {if $order.data.total_wrapping}
       <tr>
         <td colspan="2">{l s='Total gift wrapping cost'}</td>
-        <td colspan="5">{$order.data.total_wrapping}</td>
+        <td colspan="5" class="_align-right">{$order.data.total_wrapping}</td>
       </tr>
       {/if}
       <tr>
         <td colspan="2">{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
-        <td colspan="5">{$order.data.total_shipping}</td>
+        <td colspan="5" class="_align-right">{$order.data.total_shipping}</td>
       </tr>
       <tr>
         <td colspan="2">{l s='Total'}</td>
-        <td colspan="5">{$order.data.total_paid}</td>
+        <td colspan="5" class="_align-right">{$order.data.total_paid}</td>
       </tr>
     </tfoot>
   </table>
@@ -107,16 +114,14 @@
   </header>
 
   <section class="form-fields">
-
-    <label>
-      <textarea cols="67" rows="3" name="returnText"></textarea>
-    </label>
-
+    <div class="form-group">
+      <textarea cols="67" rows="3" name="returnText" class="form-control"></textarea>
+    </div>
   </section>
 
   <footer class="form-footer">
     <input type="hidden" name="id_order" value="{$order.data.id}" />
-    <button type="submit" name="submitReturnMerchandise">
+    <button type="submit" name="submitReturnMerchandise" class="btn btn-primary">
       {l s='Make an RMA slip'}
     </button>
   </footer>

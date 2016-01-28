@@ -8,7 +8,11 @@
 
   {block name='order_return_infos'}
     <div id="order-return-infos">
-      <h1>{l s='RE#%s on %s' sprintf=[$orderRet.return_number, $orderRet.return_date]}</h2>
+      <div class="card">
+        <div class="card-block">
+          <strong>{l s='RE#%s on %s' sprintf=[$orderRet.return_number, $orderRet.return_date]}</strong>
+        </div>
+      </div>
       <p>{l s='We have logged your return request.'}</p>
       <p>{l s='Your package must be returned to us within %s days of receiving your order.' sprintf=$nbdaysreturn}</p>
       <p>{l s='The current status of your merchandise return is: %s' sprintf=$state_name}</p>
@@ -16,8 +20,8 @@
     </div>
   {/block}
 
-  <table>
-    <thead>
+    <table class="table table-striped table-bordered">
+      <thead class="thead-default">
       <tr>
         <th>{l s='Reference'}</th>
         <th>{l s='Product'}</th>

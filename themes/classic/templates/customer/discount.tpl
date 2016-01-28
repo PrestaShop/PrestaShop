@@ -7,8 +7,8 @@
 {block name='page_content'}
 
   {if $cart_rules}
-    <table>
-      <thead>
+    <table class="table table-striped table-bordered">
+      <thead class="thead-default">
         <tr>
           <th>{l s='Code'}</th>
           <th>{l s='Description'}</th>
