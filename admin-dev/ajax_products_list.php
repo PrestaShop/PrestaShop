@@ -76,6 +76,7 @@ $items = Db::getInstance()->executeS($sql);
 
 if ($items && ($excludeIds || strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false)) {
     foreach ($items as $item) {
+    	$item['name'] = str_replace('|', '&#124;', $item['name']);
         echo trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product'])."\n";
     }
 } elseif ($items) {
