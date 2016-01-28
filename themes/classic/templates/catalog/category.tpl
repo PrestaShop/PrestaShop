@@ -4,29 +4,14 @@
   <section id="main">
 
     {block name='category_header'}
-      <h1>{$category.name}</h1>
-      <div class="category-cover">
-        <img src="{$category.image.large.url}" alt="{$category.image.legend}">
-      </div>
-      <div id="category-description">{$category.description nofilter}</div>
-    {/block}
+      <div class="block-category">
+        <h1 class="h4 text-uppercase _bolder">{$category.name}</h1>
+        <div id="category-description" class="text-muted">{$category.description nofilter}</div>
+        <div class="category-cover">
+          <img src="{$category.image.large.url}" alt="{$category.image.legend}">
+        </div>
 
-    {block name='category_subcategories'}
-      <aside>
-        {if $subcategories|count}
-          <nav class="subcategories">
-            <ul>
-              {foreach from=$subcategories item="subcategory"}
-                <li>
-                  {block name='category_miniature'}
-                    {include file='catalog/category-miniature.tpl' category=$subcategory}
-                  {/block}
-                </li>
-              {/foreach}
-            </ul>
-          </nav>
-        {/if}
-      </aside>
+      </div>
     {/block}
 
     {block name='category_products'}

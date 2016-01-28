@@ -14,12 +14,13 @@
 @import "modules/homeslider";
 @import "modules/homefeatured";
 @import "modules/cms-info";
+@import "modules/categories";
 @import "modules/footer";
 /*** COMMONS ***/
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
-  color: $gray-dark;
+  color: $gray-darker;
 }
 ul {
   list-style: none;
@@ -36,7 +37,7 @@ ul {
     max-height: 50px;
     margin-bottom: 30px;
     .login {
-      color: $gray-dark;
+      color: $gray-darker;
       display: inline-block;
       font-weight: 400;
       font-size: 16px;
@@ -52,10 +53,10 @@ ul {
     .cart-preview {
       &.active {
         background: $blue;
-        a{
+        a {
           color: white;
         }
-        i{
+        i {
           color: rgba(255, 255, 255, 0.6);
         }
       }
@@ -105,8 +106,8 @@ ul {
   box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11);
   padding-top: em(25px);
   .breadcrumb {
-    text-transform: uppercase;
     background: transparent;
+    padding: 0;
     &[data-depth="1"] {
       display: none;
     }
@@ -116,10 +117,16 @@ ul {
     li {
       display: inline;
       &:after {
-        content: ">";
+        content: "/";
       }
-      &:last-child:after {
-        content: "";
+      &:last-child {
+        a{
+          color:$gray-darker;
+        }
+
+        &:after {
+          content: "";
+        }
       }
     }
     a {

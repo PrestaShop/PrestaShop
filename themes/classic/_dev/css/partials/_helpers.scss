@@ -40,10 +40,17 @@
   margin-top: 30px;
 }
 
+._gray-light{
+  color: $gray-light;
+}
+
 ._gray-dark{
   color: $gray-dark;
 }
 
+._bolder{
+  font-weight: 700;
+}
 ._shadow{
   @include box-shadow;
 }

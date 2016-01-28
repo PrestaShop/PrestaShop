@@ -1,4 +1,4 @@
-<article class="product-miniature js-product-miniature col-md-3" itemscope itemtype="http://schema.org/Product">
+<article class="product-miniature js-product-miniature col-md-{$columns}" itemscope itemtype="http://schema.org/Product">
   <div class="thumbnail-container">
     {block name='product_thumbnail'}
       <a href="{$product.url}" class="thumbnail product-thumbnail">
