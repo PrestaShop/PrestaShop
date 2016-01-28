@@ -500,6 +500,13 @@ abstract class ControllerCore
         return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
     }
 
+    public function getLayout()
+    {
+        // This is implemented by some children classes (e.g. FrontController)
+        // but not required for all controllers.
+        return null;
+    }
+
     /**
      * Renders controller templates and generates page content
      *
@@ -517,10 +524,10 @@ abstract class ControllerCore
 
         if (is_array($content)) {
             foreach ($content as $tpl) {
-                $html .= $this->context->smarty->fetch($tpl);
+                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
             }
         } else {
-            $html = $this->context->smarty->fetch($content);
+            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
         }
 
         if ($this->controller_type === 'modulefront') {
