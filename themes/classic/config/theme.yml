@@ -1,0 +1,33 @@
+name: classic
+display_name: Classic
+version: 1.0.0
+author:
+  name: "PrestaShop Team"
+  email: "pub@prestashop.com"
+  url: "http://www.prestashop.com"
+
+meta:
+  compatibility:
+      from: 1.7.0.0
+      to: ~
+
+  available_layouts:
+    layout-full-width:
+      name: Full Width
+      description: No side columns, ideal for distraction-free pages such as product pages.
+    layout-both-columns:
+      name: Three Columns
+      description: One large central column and 2 side columns.
+    layout-left-column:
+      name: Two Columns, small left column
+      description: Two columns with a small left column
+    layout-left-column:
+      name: Two Columns, small right column
+      description: Two columns with a small right column
+
+global_settings:
+  configuration:
+    PS_QUICK_VIEW: false
+
+theme_settings:
+  default_layout: layout-full-width
