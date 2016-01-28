@@ -29,6 +29,10 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use Phake;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
 class AdminModuleDataProviderTest extends UnitTestCase
 {
     private $legacyContext;
@@ -37,6 +41,10 @@ class AdminModuleDataProviderTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
+
+        if (!defined('__PS_BASE_URI__')) {
+            define('__PS_BASE_URI__', "http://www.example.com/shop");
+        }
 
         $this->context->language = new \stdClass();
         $this->context->language->id = 42;
