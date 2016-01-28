@@ -152,6 +152,12 @@
 										{l s='Add current page to QuickAccess'}
 									</a>
 								</li>
+                                <li>
+                                    <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+                                        <i class="icon-cog"></i>
+                                        {l s='Manage quick accesses'}
+                                    </a>
+                                </li>
 							</ul>
 						</li>
 					</ul>
