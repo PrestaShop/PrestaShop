@@ -26,26 +26,37 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
+use PrestaShop\PrestaShop\Core\Module\HookRepository;
+use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use \Context;
+use \Db;
 
 class ThemeManagerBuilder
 {
     private $result;
 
-    public function __construct(Context $context)
+    public function __construct(Context $context, Db $db)
     {
         $this->result = new ThemeManager(
             $context->shop,
             new Configuration($context->shop),
-            new ThemeChecker(),
+            new ThemeChecker,
             $context->employee,
-            new Filesystem(),
-            new Finder()
+            new Filesystem,
+            new Finder,
+            new HookConfigurator(
+                new HookRepository(
+                    new HookInformationProvider,
+                    $context->shop,
+                    $db
+                )
+            )
         );
     }
 
