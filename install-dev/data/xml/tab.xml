@@ -18,7 +18,7 @@
         </tab>
 
             <!--ORDERS-->
-            <tab id="Orders" id_parent="SELL" active="1" hide_host_mode="0" icon="">
+            <tab id="Orders" id_parent="SELL" active="1" hide_host_mode="0" icon="shopping_basket">
                 <class_name>AdminParentOrders</class_name>
             </tab>
 
@@ -39,7 +39,7 @@
                 </tab>
 
             <!--CATALOG-->
-            <tab id="Catalog" id_parent="SELL" active="1" hide_host_mode="0" icon="">
+            <tab id="Catalog" id_parent="SELL" active="1" hide_host_mode="0" icon="store">
                 <class_name>AdminCatalog</class_name>
             </tab>
 
@@ -89,7 +89,7 @@
                     </tab>
 
             <!--CUSTOMERS-->
-            <tab id="Customers" id_parent="SELL" active="1" hide_host_mode="0" icon="">
+            <tab id="Customers" id_parent="SELL" active="1" hide_host_mode="0" icon="account_circle">
                 <class_name>AdminParentCustomer</class_name>
             </tab>
 
@@ -107,7 +107,7 @@
             -->
 
             <!--CUSTOMER SERVICE-->
-            <tab id="Customer_Service_1" id_parent="SELL" active="1" hide_host_mode="0" icon="">
+            <tab id="Customer_Service_1" id_parent="SELL" active="1" hide_host_mode="0" icon="chat">
                 <class_name>AdminParentCustomerThreads</class_name>
             </tab>
 
@@ -122,7 +122,7 @@
                 </tab>
 
             <!--SHIPPING-->
-            <tab id="Shipping" id_parent="SELL" active="1" hide_host_mode="0" icon="">
+            <tab id="Shipping" id_parent="SELL" active="1" hide_host_mode="0" icon="local_shipping">
                 <class_name>AdminParentShipping</class_name>
             </tab>
 
@@ -134,7 +134,7 @@
                 </tab>
 
             <!--PAYMENTS-->
-            <tab id="Payment" id_parent="SELL" active="1" hide_host_mode="0" icon="">
+            <tab id="Payment" id_parent="SELL" active="1" hide_host_mode="0" icon="payment">
                 <class_name>AdminPayment</class_name>
             </tab>
 
@@ -147,12 +147,12 @@
 
 
             <!--STATISTICS-->
-            <tab id="Stats" id_parent="SELL" active="1" hide_host_mode="0" icon="">
+            <tab id="Stats" id_parent="SELL" active="1" hide_host_mode="0" icon="assessment">
                 <class_name>AdminStats</class_name>
             </tab>
 
             <!--ADVANCED STOCK MANAGEMENT-->
-            <tab id="Advanced_stock_management" id_parent="SELL" active="1" hide_host_mode="0" icon="">
+            <tab id="Advanced_stock_management" id_parent="SELL" active="1" hide_host_mode="0" icon="store">
                 <class_name>AdminStock</class_name>
             </tab>
 
@@ -190,7 +190,7 @@
         </tab>
 
             <!--MODULES-->
-            <tab id="Modules" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="">
+            <tab id="Modules" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="extension">
                 <class_name>AdminParentModules</class_name>
             </tab>
 
@@ -203,7 +203,7 @@
 
 
             <!--LOOK & FEEL-->
-            <tab id="Look_feel" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="">
+            <tab id="Look_feel" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="desktop_mac">
                 <class_name>AdminThemes</class_name>
             </tab>
 
@@ -226,7 +226,7 @@
 
 
             <!--INTERNATIONAL OK-->
-            <tab id="International" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="">
+            <tab id="International" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="language">
                 <class_name>AdminParentLocalization</class_name>
             </tab>
 
@@ -282,7 +282,7 @@
         </tab>
 
             <!--SHOP PARAMETERS-->
-            <tab id="Shop_parameters" id_parent="CONFIGURE" active="1" hide_host_mode="0" icon="">
+            <tab id="Shop_parameters" id_parent="CONFIGURE" active="1" hide_host_mode="0" icon="settings">
                 <class_name>AdminPreferences</class_name>
             </tab>
 
@@ -380,7 +380,7 @@
                 </tab>
 
             <!--ADVANCED PARAMETERS-->
-            <tab id="Advanced_parameters" id_parent="CONFIGURE" active="1" hide_host_mode="0" icon="">
+            <tab id="Advanced_parameters" id_parent="CONFIGURE" active="1" hide_host_mode="0" icon="settings_applications">
                 <class_name>AdminInformation</class_name>
             </tab>
 
