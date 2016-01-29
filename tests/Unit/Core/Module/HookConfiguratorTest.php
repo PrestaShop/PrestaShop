@@ -134,4 +134,32 @@ class HookConfiguratorTest extends UnitTestCase
 
         $this->assertEquals($expected, $actual);
     }
+
+    public function test_when_a_module_is_hooked_it_is_unhooked_from_current_display_hooks()
+    {
+        $this->setCurrentDisplayHooksConfiguration([
+            "displayTop" => [
+                "blocklanguages"
+            ],
+            "displayNav" => [
+                "block_already_here"
+            ]
+        ]);
+
+        $expected = [
+            "displayTop" => [
+            ],
+            "displayNav" => [
+                "blocklanguages"
+            ]
+        ];
+
+        $actual = $this->hookConfigurator->getThemeHooksConfiguration([
+            "displayNav" => [
+                "blocklanguages"
+            ]
+        ]);
+
+        $this->assertEquals($expected, $actual);
+    }
 }
