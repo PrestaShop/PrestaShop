@@ -17,7 +17,7 @@
   &:hover {
     @include box-shadow;
     .highlighted-informations {
-      bottom: 140px;
+      bottom: 129px;
     }
   }
 }
@@ -80,6 +80,7 @@
   background: white;
   width: 257px;
   bottom: 42px;
+  height: 100px;
   box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
 }
 img {
@@ -93,7 +94,7 @@ img {
   left: em(-7px);
   padding: em(5px) em(10px);
   color: white;
-  background: $blue;
+  background: $brand-primary;
   text-transform: uppercase;
   width: 50px;
   @include box-shadow;

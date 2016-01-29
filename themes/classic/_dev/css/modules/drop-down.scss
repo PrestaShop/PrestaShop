@@ -4,6 +4,9 @@
     color: $gray-darker;
     cursor: pointer;
     @include user-select(none);
+    &:hover{
+      color: $brand-primary;
+    }
   }
 
   .active{
@@ -11,4 +14,10 @@
     overflow-y: hidden;
     visibility: visible;
   }
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+  background: none;
+  text-decoration: none;
+  color: $brand-primary;
 }
