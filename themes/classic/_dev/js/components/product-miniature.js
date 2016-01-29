@@ -12,7 +12,7 @@ export default class ProductMinitature {
             count ++;
           }
         });
-        $('.js-count').append(`+${count}`);
+        $(element).find('.js-count').append(`+${count}`);
       }
     });
   }

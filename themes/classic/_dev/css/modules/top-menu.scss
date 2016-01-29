@@ -16,8 +16,9 @@
   a[data-depth="0"] {
     font-weight: 600;
     &:hover {
-      #index & {
-        color: $blue;
+      #header & {
+        color: $brand-primary;
+        text-decoration: none;
       }
     }
   }

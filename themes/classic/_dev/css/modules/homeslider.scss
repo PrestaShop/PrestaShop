@@ -13,11 +13,11 @@
       left: 90px;
       color: white;
       max-width: 340px;
-      .caption-title{
+      .caption-title {
         font-weight: 600;
         font-size: em(55px);
       }
-      .caption-description p{
+      .caption-description p {
         font-weight: 300;
       }
     }
@@ -33,6 +33,11 @@
       i {
         font-size: 50px;
         color: white;
+      }
+      &:hover {
+        i {
+          color: $brand-primary;
+        }
       }
     }
     .icon-prev {

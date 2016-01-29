@@ -29,6 +29,13 @@ ul {
 .material-icons {
   vertical-align: middle;
 }
+a:hover{
+  color: $brand-primary;
+  text-decoration: none;
+}
+.dropdown-item:focus, .dropdown-item:hover {
+  background: none;
+}
 /*** HEADER ***/
 #header {
   background: white;
@@ -45,6 +52,10 @@ ul {
     .user-info {
       a {
         color: $gray;
+        &:hover{
+          text-decoration: none;
+          color: $brand-primary;
+        }
       }
     }
     .language-selector {
@@ -52,7 +63,7 @@ ul {
     }
     .cart-preview {
       &.active {
-        background: $blue;
+        background: $brand-primary;
         a {
           color: white;
         }
@@ -76,6 +87,9 @@ ul {
       margin-right: 15px;
       a {
         color: $gray;
+        &:hover{
+          color: $brand-primary;
+        }
       }
     }
     #contact-link {
