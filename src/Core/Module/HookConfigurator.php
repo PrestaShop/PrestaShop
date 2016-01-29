@@ -27,12 +27,6 @@ class HookConfigurator
      * 			"blockmenu" => [
      * 				"except_pages" => ["category", "product"]
      * 			]
-     * 		],
-     * 		"hookyHooka" => [
-     * 			null,
-     * 			"blocknewsletter" => [
-     * 				"do_not_unkhook" => true
-     * 			]
      * 		]
      * ]
      */
