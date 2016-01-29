@@ -688,7 +688,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'frontoffice_translations':
-                $themes = (new ThemeManagerBuilder($this->context))
+                $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                                 ->build()
                                 ->getThemeList();
                 $languages = Language::getLanguages();
