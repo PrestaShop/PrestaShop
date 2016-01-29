@@ -94,6 +94,9 @@
 		<p>
 			<b>{l s='Max execution time'}:</b> {$version.max_execution_time|escape:'htmlall':'UTF-8'}
 		</p>
+		<p>
+			<b>{l s='Upload Max File size:'}</b> {$version.upload_max_filesize|escape:'html':'UTF-8'}
+		</p>
 		{if $apache_instaweb}
 		<p style="color:red;font-weight:700">{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
 		{/if}
@@ -104,7 +107,7 @@
 			<b>{l s='MySQL version'}:</b> {$database.version|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='MySQL engine'}:</b> {$database.engine|escape:'htmlall':'UTF-8'}
+			<b>{l s='MySQL engine'}:</b> {$database.engine|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
 			<b>{l s='Tables prefix'}:</b> {$database.prefix|escape:'htmlall':'UTF-8'}
