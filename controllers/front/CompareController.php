@@ -119,6 +119,35 @@ class CompareControllerCore extends FrontController
 
                     $curProduct->id_image = Tools::htmlentitiesUTF8(Product::defineProductImage(array('id_image' => $cover['id_image'], 'id_product' => $id), $this->context->language->id));
                     $curProduct->allow_oosp = Product::isAvailableWhenOutOfStock($curProduct->out_of_stock);
+
+                    if (Configuration::get('PS_SHOW_LOW_PRICE')) {
+                        $product_price = $curProduct->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
+                        $id_customer = (isset($this->context->customer) ? (int)$this->context->customer->id : 0);
+                        $id_group = (int)Group::getCurrent()->id;
+                        $id_country = (int)$id_customer ? Customer::getCurrentCountry($id_customer) : Configuration::get('PS_COUNTRY_DEFAULT');
+                        $id_shop = $this->context->shop->id;
+                        $id_currency = (int)$this->context->cookie->id_currency;
+
+                        $quantity_discounts = SpecificPrice::getQuantityDiscounts($id, $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
+                        $lowest_price = $product_price;
+
+                       foreach ($quantity_discounts as &$quantity_discount) {
+                            if ($quantity_discount['reduction_type'] == 'amount') {
+                                $low = $product_price - $quantity_discount['reduction'];
+                            } else {
+                                $low = $product_price-round($product_price*$quantity_discount['reduction'], 1);
+                            }
+
+                           if ($lowest_price > $low) {
+                                $lowest_price = $low;
+                            }
+                        }
+
+                        if ($lowest_price != $product_price) {
+                            $curProduct->lowest_price = $lowest_price;
+                        }
+                    }
+
                     $listProducts[] = $curProduct;
                 }
 

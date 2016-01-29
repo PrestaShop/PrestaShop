@@ -108,6 +108,14 @@ class AdminPPreferencesControllerCore extends AdminController
                         'cast' => 'intval',
                         'required' => false,
                         'type' => 'bool'
+                   ),
+                    'PS_SHOW_LOW_PRICE' => array(
+                        'title' => $this->l('Show lowest available price'),
+                        'hint' => $this->l('Using quantity discount prices, it will display $Lowest - $Normal'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'required' => false,
+                        'type' => 'bool'
                     )
                 ),
                 'submit' => array('title' => $this->l('Save'))

@@ -330,7 +330,9 @@ class ProductControllerCore extends FrontController
         $id_product = (int)$this->product->id;
         $id_shop = $this->context->shop->id;
 
+        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
         $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
+        $lowest_price = $product_price;
         foreach ($quantity_discounts as &$quantity_discount) {
             if ($quantity_discount['id_product_attribute']) {
                 $combination = new Combination((int)$quantity_discount['id_product_attribute']);
@@ -343,9 +345,27 @@ class ProductControllerCore extends FrontController
             if ((int)$quantity_discount['id_currency'] == 0 && $quantity_discount['reduction_type'] == 'amount') {
                 $quantity_discount['reduction'] = Tools::convertPriceFull($quantity_discount['reduction'], null, Context::getContext()->currency);
             }
+
+        if (Configuration::get('PS_SHOW_LOW_PRICE')) {
+                if ($quantity_discount['reduction_type'] == 'amount') {
+                    $low = $product_price - $quantity_discount['reduction'];
+                } else {
+                    $low = $product_price-round($product_price*$quantity_discount['reduction'], 1);
+                }
+
+                if ($lowest_price > $low) {
+                    $lowest_price = $low;
+                }
+            }
+        }
+            if ($lowest_price ==  $product_price) {
+                $lowest_price = null;
+            }
+
+       if (isset($lowest_price)) {
+            $this->context->smarty->assign('lowest_price', $lowest_price);
         }
 
-        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
         $address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $this->context->smarty->assign(array(
             'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $ecotax_tax_amount),
