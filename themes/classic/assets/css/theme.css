@@ -4642,6 +4642,9 @@ label {
 ._shadow {
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1); }
 
+._valign-middle {
+  vertical-align: middle; }
+
 .dropdown {
   color: #acaaa6; }
   .dropdown .expand-more {
@@ -4788,10 +4791,19 @@ section.checkout-step {
 .cart-summary-totals .label {
   color: #ebebeb; }
 
-.page-authentication .no-account {
-  text-align: center;
-  font-size: 1.25rem;
-  margin: 1rem 0; }
+.table-labeled th {
+  vertical-align: middle; }
+
+.table-labeled td {
+  vertical-align: middle; }
+
+.table-labeled .label {
+  font-size: inherit;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em; }
+
+.card-header {
+  font-size: 1.25rem; }
 
 .login-form {
   margin: 1.5rem auto;
@@ -4801,6 +4813,50 @@ section.checkout-step {
 
 .register-form {
   margin: 1.5rem auto; }
+
+.page-my-account .links a {
+  width: 100%;
+  margin-bottom: 0.5rem; }
+
+.page-authentication .no-account {
+  text-align: center;
+  font-size: 1.25rem;
+  margin: 1rem 0; }
+
+.page-addresses .address {
+  border: 1px solid #acaaa6;
+  margin-bottom: 1rem; }
+  .page-addresses .address address {
+    min-height: 9.5rem; }
+
+.page-order table thead th {
+  text-align: center; }
+
+.page-order-details #order-infos ul {
+  margin: 0; }
+
+#order-return-form {
+  margin-bottom: 1rem; }
+
+#order-products.return th.head-checkbox {
+  width: 30px; }
+
+#order-products.return td {
+  padding: 1.375rem 0.75rem; }
+  #order-products.return td.qty {
+    min-width: 125px; }
+    #order-products.return td.qty .current {
+      width: 30%;
+      float: left;
+      text-align: right;
+      padding-right: 0.5rem; }
+    #order-products.return td.qty .select {
+      width: 70%;
+      float: left;
+      margin: -0.625rem 0;
+      padding-left: 0.25rem; }
+      #order-products.return td.qty .select select {
+        text-align: center; }
 
 .carousel .carousel-inner {
   height: 340px; }
@@ -5108,6 +5164,18 @@ ul {
         content: ""; }
     #wrapper .breadcrumb a {
       color: #acaaa6; }
+
+/*** MAIN ***/
+#main .page-header {
+  margin-bottom: 1.5625em; }
+
+#main .page-content {
+  margin-bottom: 1.5625em; }
+  #main .page-content h6 {
+    margin-bottom: 1.25rem; }
+
+#main .page-footer {
+  margin-bottom: 1.5625em; }
 
 /*** FOOTER ***/
 #footer {

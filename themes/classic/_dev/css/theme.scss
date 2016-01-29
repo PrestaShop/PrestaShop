@@ -127,6 +127,21 @@ ul {
     }
   }
 }
+/*** MAIN ***/
+#main {
+  .page-header {
+    margin-bottom: em(25px);
+  }
+  .page-content {
+    margin-bottom: em(25px);
+    h6 {
+      margin-bottom: 1.25rem;
+    }
+  }
+  .page-footer {
+    margin-bottom: em(25px);
+  }
+}
 /*** FOOTER ***/
 #footer {
   padding-top: em(40px);

@@ -47,3 +47,7 @@
 ._shadow{
   @include box-shadow;
 }
+
+._valign-middle{
+  vertical-align: middle;
+}
