@@ -126,7 +126,7 @@
                 <td>{$line.shipping_date}</td>
                 <td>{$line.carrier_name}</td>
                 <td>{$line.shipping_weight}</td>
-                <td class="_align-right">{$line.shipping_cost}</td>
+                <td class="text-xs-right">{$line.shipping_cost}</td>
                 <td>{$line.tracking}</td>
               </tr>
             {/foreach}
