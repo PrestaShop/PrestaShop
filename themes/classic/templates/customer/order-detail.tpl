@@ -12,7 +12,7 @@
           <div class="card-block">
             <strong>{l s='Order Reference %s - placed on %s' sprintf=[$order.data.reference, $order.data.order_date]}</strong>
             {if $order.data.url_to_reorder}
-              <div class="_pull-right">
+              <div class="pull-xs-right">
                 <a href="{$order.data.url_to_reorder}" class="btn btn-primary">{l s='Reorder'}</a>
               </div>
               <div class="clearfix"></div>
