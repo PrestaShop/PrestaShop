@@ -67,6 +67,7 @@ class HookRepository
         $this->db->execute("DELETE FROM {$this->db_prefix}hook_module
              WHERE id_hook = $id_hook AND id_shop = $id_shop
         ");
+        // TODO: remove exceptions too
 
         return $this;
     }
@@ -88,34 +89,92 @@ class HookRepository
 
             $this->unHookModulesFromHook($hook_name);
 
-            foreach ($module_names as $n => $module_name) {
-                $position  = $n + 1;
+            $position = 0;
+            foreach ($module_names as $key => $module) {
+                if (is_array($module)) {
+                    $module_name = $key;
+                    $extra_data  = $module;
+                } else {
+                    $module_name = $module;
+                    $extra_data  = [];
+                }
+
+                ++$position;
                 $id_module = $this->getIdModule($module_name);
                 if (!$id_module) {
                     continue;
                 }
 
-                $hook_module[] = [
+                $row = [
                     'id_module' => $id_module,
                     'id_shop'   => (int)$this->shop->id,
                     'id_hook'   => $id_hook,
                     'position'  => $position
                 ];
+
+                $this->db->insert('hook_module', $row);
+
+                if (!empty($extra_data['except_pages'])) {
+                    $this->setModuleExceptions(
+                        $id_module,
+                        $id_hook,
+                        $extra_data['except_pages']
+                    );
+                }
             }
         }
 
-        foreach ($hook_module as $row) {
-            $this->db->insert('hook_module', $row);
+        return $this;
+    }
+
+    private function setModuleExceptions($id_module, $id_hook, array $pages)
+    {
+        $id_shop    = (int)$this->shop->id;
+        $id_module  = (int)$id_module;
+        $id_hook    = (int)$id_hook;
+
+        $this->db->execute("DELETE FROM {$this->db_prefix}hook_module_exceptions
+            WHERE id_shop = $id_shop
+            AND id_module = $id_module
+            AND id_hook = $id_hook
+        ");
+
+        foreach ($pages as $page) {
+            $this->db->insert('hook_module_exceptions', [
+                'id_shop'   => $id_shop,
+                'id_module' => $id_module,
+                'id_hook'   => $id_hook,
+                'file_name' => $page
+            ]);
         }
 
         return $this;
+    }
+
+    private function getExceptions($id_module, $id_hook)
+    {
+        $id_shop    = (int)$this->shop->id;
+        $id_module  = (int)$id_module;
+        $id_hook    = (int)$id_hook;
+
+        $rows = $this->db->executeS("SELECT file_name
+            FROM {$this->db_prefix}hook_module_exceptions
+            WHERE id_shop = $id_shop
+            AND id_module = $id_module
+            AND id_hook = $id_hook
+            ORDER BY file_name ASC
+        ");
+
+        return array_map(function ($row) {
+            return $row['file_name'];
+        }, $rows);
     }
 
     public function getHooksWithModules()
     {
         $id_shop = (int)$this->shop->id;
 
-        $sql = "SELECT h.name as hook_name, m.name as module_name
+        $sql = "SELECT h.name as hook_name, h.id_hook, m.name as module_name, m.id_module
             FROM {$this->db_prefix}hook_module hm
             INNER JOIN {$this->db_prefix}hook h
                 ON h.id_hook = hm.id_hook
@@ -130,7 +189,18 @@ class HookRepository
         $hooks = [];
 
         foreach ($rows as $row) {
-            $hooks[$row['hook_name']][] = $row['module_name'];
+            $exceptions = $this->getExceptions(
+                $row['id_module'],
+                $row['id_hook']
+            );
+
+            if (empty($exceptions)) {
+                $hooks[$row['hook_name']][] = $row['module_name'];
+            } else {
+                $hooks[$row['hook_name']][$row['module_name']] = [
+                    'except_pages' => $exceptions
+                ];
+            }
         }
 
         return $hooks;

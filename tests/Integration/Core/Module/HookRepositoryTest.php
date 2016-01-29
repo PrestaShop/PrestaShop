@@ -57,4 +57,24 @@ class HookRepositoryTest extends IntegrationTestCase
             array_key_exists('notADisplayTestHookName', $actual)
         );
     }
+
+    public function test_exceptions_taken_into_account()
+    {
+        $this->hookRepository->persistHookConfiguration([
+            'displayTestHookNameWithExceptions' => [
+                'blocknewsletter' => [
+                    'except_pages' => ['category', 'product']
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(
+            [
+                'blocknewsletter' => [
+                    'except_pages' => ['category', 'product']
+                ]
+            ],
+            $this->hookRepository->getHooksWithModules()['displayTestHookNameWithExceptions']
+        );
+    }
 }
