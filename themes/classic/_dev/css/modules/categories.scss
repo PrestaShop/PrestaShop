@@ -55,3 +55,23 @@
     border-radius: 0;
   }
 }
+
+#search_filters{
+  @include box-shadow;
+  background: white;
+  .facets-title{
+    padding: em(20px) em(20px) 0;
+  }
+  .facet{
+    padding-left: em(30px);
+    .facet-title{
+      color: $gray;
+    }
+    .search-link{
+      font-size: em(14px);
+    }
+    .facet-label{
+      margin-bottom: 0;
+    }
+  }
+}
