@@ -118,6 +118,35 @@ class HookConfiguratorTest extends UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function test_multiple_tilde_in_hook_module_list()
+    {
+        $this->setCurrentDisplayHooksConfiguration([
+            "displayTop" => [
+                "block_already_here"
+            ]
+        ]);
+
+        $expected = [
+            "displayTop" => [
+                "block_already_here",
+                "blocklanguages",
+                "blockcurrencies"
+            ]
+        ];
+
+        $actual = $this->hookConfigurator->getThemeHooksConfiguration([
+            "displayTop" => [
+                null,
+                "blocklanguages",
+                null,
+                "blockcurrencies",
+                null,
+            ]
+        ]);
+
+        $this->assertEquals($expected, $actual);
+    }
+
     public function test_single_module_prepended_to_hook()
     {
         $this->setCurrentDisplayHooksConfiguration([
