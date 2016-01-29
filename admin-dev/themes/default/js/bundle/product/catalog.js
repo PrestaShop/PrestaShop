@@ -180,6 +180,7 @@ function productColumnFilterReset(tr) {
 	$('select option:selected', tr).prop('selected', false);
 	$('input#filter_column_price', tr).attr('sql', '');
 	$('input#filter_column_sav_quantity', tr).attr('sql', '');
+	$('input#filter_column_id_product', tr).attr('sql', '');
 	$('form#product_catalog_list').submit();
 }
 
