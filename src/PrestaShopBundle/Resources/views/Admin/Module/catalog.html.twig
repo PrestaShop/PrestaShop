@@ -11,11 +11,10 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
-    <script src="{{ asset('themes/default/js/bundle/module/drop.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/module/loader.js') }}"></script>
     <script src="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
 {% endblock %}
 
 {% set requireAddonSearch = true %}
