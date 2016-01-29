@@ -5,15 +5,22 @@ namespace PrestaShop\PrestaShop\Core\Module;
 use Db;
 use Exception;
 use Shop;
+use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 
 class HookRepository
 {
+    private $hookInfo;
     private $shop;
     private $db;
     private $db_prefix;
 
-    public function __construct(Shop $shop, Db $db, $db_prefix)
-    {
+    public function __construct(
+        HookInformationProvider $hookInfo,
+        Shop $shop,
+        Db $db,
+        $db_prefix
+    ) {
+        $this->hookInfo = $hookInfo;
         $this->shop = $shop;
         $this->db = $db;
         $this->db_prefix = $db_prefix;
@@ -132,5 +139,10 @@ class HookRepository
 
     public function getDisplayHooksWithModules()
     {
+        return array_filter(
+            $this->getHooksWithModules(),
+            [$this->hookInfo, 'isDisplayHookName'],
+            ARRAY_FILTER_USE_KEY
+        );
     }
 }
