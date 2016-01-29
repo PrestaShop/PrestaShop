@@ -234,6 +234,21 @@
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
                     <div class="col-lg-9">
+                        <div class="form-group" id="quantities" style="{% if has_combinations or form.step3.depends_on_stock.vars.value != "0" %}display: none;{% endif %}">
+                            <h4>{{ trans('Quantities', [], 'AdminProducts') }}</h4>
+                            <div class="col-sm-2 pull-left">
+                                <label class="control-label">{{ form.step3.qty_0.vars.label }}</label>
+                                {{ form_errors(form.step3.qty_0) }}
+                                {{ form_widget(form.step3.qty_0) }}
+                            </div>
+                            <div class="col-sm-2 pull-left">
+                                <label class="control-label">{{ form.step3.minimal_quantity.vars.label }}</label>
+                                {{ form_errors(form.step3.minimal_quantity) }}
+                                {{ form_widget(form.step3.minimal_quantity) }}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
                         <div class="form-group" id="virtual_product" data-action="{{ path('admin_product_virtual_save_action') }}" data-action-remove="{{ path('admin_product_virtual_remove_action') }}">
                             <h4>{{ form.step3.virtual_product.vars.label }}</h4>
                             <div class="form-group form-inline">
@@ -309,14 +324,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group" style="{% if has_combinations or form.step3.depends_on_stock.vars.value != "0" %}display: none;{% endif %}" id="quantity-no-attribute">
-                            <h4>{{ form.step3.qty_0.vars.label }}</h4>
-                            <div class="col-sm-2">
-                                {{ form_errors(form.step3.qty_0) }}
-                                {{ form_widget(form.step3.qty_0) }}
-                            </div>
-                        </div>
-
                         <div id="combinations">
                             <h4>{{ trans('Product combinations', [], 'AdminProducts') }}</h4>
                             <div class="form-group" id="attributes-generator">
@@ -356,27 +363,31 @@
                             </div>
                         </div>
 
-                        <h4>{{ trans('Availability preferences', [], 'AdminProducts') }}</h4>
-
                         <div class="form-group form-inline">
+                            <h4>{{ trans('Availability preferences', [], 'AdminProducts') }}</h4>
                             <label class="control-label">{{ trans('Behavior when out of stock', [], 'AdminProducts') }}</label>
                             {{ form_errors(form.step3.out_of_stock) }}
-                            <div class="">
+                            <div>
                                 {{ form_widget(form.step3.out_of_stock) }}
                             </div>
                         </div>
 
-                        <div class="form-group {% if has_combinations %}hide{% endif %}" id="step3_minimal_quantity">
-                            {{ form_errors(form.step3.minimal_quantity) }}
-                            {{ form_label(form.step3.minimal_quantity) }}
-                            <div class="col-sm-10">
-                                {{ form_widget(form.step3.minimal_quantity) }}
+                        <div class="form-group">
+                            <div class="col-xs-4 pull-left">
+                                <label class="control-label">{{ form.step3.available_now.vars.label }}</label>
+                                {{ form_errors(form.step3.available_now) }}
+                                {{ form_widget(form.step3.available_now) }}
+                            </div>
+                            <div class="col-xs-4 pull-left">
+                                <label class="control-label">{{ form.step3.available_later.vars.label }}</label>
+                                {{ form_errors(form.step3.available_later) }}
+                                {{ form_widget(form.step3.available_later) }}
+
+                                <label class="control-label">{{ form.step3.available_date.vars.label }}</label>
+                                {{ form_errors(form.step3.available_date) }}
+                                {{ form_widget(form.step3.available_date) }}
                             </div>
                         </div>
-
-                        {{ form_row(form.step3.available_now) }}
-                        {{ form_row(form.step3.available_later) }}
-                        {{ form_row(form.step3.available_date) }}
                     </div>
                     <div class="col-lg-3 left-separator">
                             {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
