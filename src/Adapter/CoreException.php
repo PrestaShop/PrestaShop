@@ -25,6 +25,6 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-class CoreException extends \PrestaShop\PrestaShop\Core\Foundation\Exception\Exception
+class CoreException extends \Exception
 {
 }

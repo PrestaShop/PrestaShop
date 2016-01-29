@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once(_PS_TOOL_DIR_.'smarty/Smarty.class.php');
+require_once(_PS_VENDOR_DIR_.'/prestashop/smarty/Smarty.class.php');
 
 class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 {

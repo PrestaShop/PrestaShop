@@ -85,6 +85,7 @@ class AttributeController extends FrameworkBundleAdminController
     public function attributesGeneratorAction(Request $request)
     {
         $response = new JsonResponse();
+        $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
         $options = $request->get('options');
         $idProduct = isset($request->get('form')['id_product']) ? $request->get('form')['id_product'] : null;
 
@@ -146,7 +147,7 @@ class AttributeController extends FrameworkBundleAdminController
 
         $newCombinations = [];
         foreach ($newCombinationIds as $combinationId) {
-            $attribute = $product->getAttributeCombinationsById($combinationId, 1);
+            $attribute = $product->getAttributeCombinationsById($combinationId, $locales[0]['id_lang']);
 
             $form = $this->createForm(
                 \PrestaShopBundle\Form\Admin\Product\ProductCombination::class,
