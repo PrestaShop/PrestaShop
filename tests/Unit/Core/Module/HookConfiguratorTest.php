@@ -56,6 +56,41 @@ class HookConfiguratorTest extends UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function test_single_module_appended_to_hook_with_exceptions()
+    {
+        $this->setCurrentDisplayHooksConfiguration([
+            "displayTop" => [
+                "block_already_here"
+            ]
+        ]);
+
+        $expected = [
+            "displayTop" => [
+                "block_already_here",
+                "blocklanguages" => [
+                    "except_pages" => [
+                        "category",
+                        "product"
+                    ]
+                ]
+            ]
+        ];
+
+        $actual = $this->hookConfigurator->getThemeHooksConfiguration([
+            "displayTop" => [
+                null,
+                "blocklanguages" => [
+                    "except_pages" => [
+                        "category",
+                        "product"
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals($expected, $actual);
+    }
+
     public function test_multiple_modules_appended_to_hook()
     {
         $this->setCurrentDisplayHooksConfiguration([
