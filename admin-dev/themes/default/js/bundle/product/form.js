@@ -115,11 +115,11 @@ var displayFieldsManager = (function() {
 
 				$('#specific-price-combination-selector').removeClass('hide').show();
 				$('#form-nav a[href="#step3"]').text(translate_javascripts['Combinations']);
-				$('#product_qty_0_shortcut_div, #quantity-no-attribute, #step3_minimal_quantity').hide();
+				$('#product_qty_0_shortcut_div, #quantities').hide();
 			} else {
 				combinations.hide();
 				$('#specific-price-combination-selector').hide();
-				$('#product_qty_0_shortcut_div, #quantity-no-attribute, #step3_minimal_quantity').show();
+				$('#product_qty_0_shortcut_div, #quantities').show();
 			}
 			if ($('#combinations_thead').next().children().length) {
 				$('#combinations_thead').show();
