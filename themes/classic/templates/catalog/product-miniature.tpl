@@ -77,7 +77,7 @@
           <span class='product-availability {$product.availability}'>{$product.availability_message}</span>
         {/if}
       {/block}
-      {hook h='displayProductListReviews' product=$product}
+      
     </div>
     <div class="highlighted-informations">
       <a href="{$product.link}" title="{l s='Quick view'}" class="quick-view">
