@@ -38,17 +38,41 @@ class HookConfigurator
      */
     public function getThemeHooksConfiguration(array $hooks)
     {
+        $uniqueModuleList = $this->getUniqueModuleToHookList($hooks);
         $currentHooks = $this->hookRepository->getDisplayHooks();
 
+        foreach ($currentHooks as $hookName => $moduleList) {
+            foreach ($moduleList as $key => $value) {
+                if (in_array($value, $uniqueModuleList)) {
+                    unset($currentHooks[$hookName][$key]);
+                }
+            }
+        }
+
         foreach ($hooks as $hookName => $modules) {
+            $existing = $currentHooks[$hookName];
+            $currentHooks[$hookName] = [];
             foreach ($modules as $module) {
                 if ($module === null) {
-                    continue;
+                    foreach ($existing as $m) {
+                        $currentHooks[$hookName][] = $m;
+                    }
+                } else {
+                    $currentHooks[$hookName][] = $module;
                 }
-                $currentHooks[$hookName][] = $module;
             }
         }
 
         return $currentHooks;
+    }
+
+    private function getUniqueModuleToHookList(array $hooks)
+    {
+        $list = [];
+        foreach ($hooks as $hookName => $modules) {
+            $list = array_merge($list, $modules);
+        }
+
+        return $list;
     }
 }
