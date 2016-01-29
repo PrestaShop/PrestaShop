@@ -24,7 +24,7 @@ class HookConfiguratorTest extends UnitTestCase
     private function setCurrentDisplayHooksConfiguration(array $hookConfiguration)
     {
         Phake::when($this->hookRepository)
-            ->getDisplayHooks()
+            ->getDisplayHooksWithModules()
             ->thenReturn($hookConfiguration)
         ;
 
