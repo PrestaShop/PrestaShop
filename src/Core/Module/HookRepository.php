@@ -17,13 +17,12 @@ class HookRepository
     public function __construct(
         HookInformationProvider $hookInfo,
         Shop $shop,
-        Db $db,
-        $db_prefix
+        Db $db
     ) {
         $this->hookInfo = $hookInfo;
         $this->shop = $shop;
         $this->db = $db;
-        $this->db_prefix = $db_prefix;
+        $this->db_prefix = $db->getPrefix();
     }
 
     public function getIdHook($hook_name)
