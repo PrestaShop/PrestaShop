@@ -26,19 +26,19 @@
             <tr>
               <th scope="row">{$order.reference}</th>
               <td>{$order.order_date}</td>
-              <td class="_align-right">{$order.total_price}</td>
+              <td class="text-xs-right">{$order.total_price}</td>
               <td>{$order.payment}</td>
               <td>
                 <span class="label label-pill {$order.contrast}" style="background-color:{$order.order_state_color}">{$order.order_state}</span>
               </td>
-              <td class="_align-center">
+              <td class="text-xs-center">
                 {if $order.url_to_invoice}
                   <a href="{$order.url_to_invoice}" class="order-invoice-link"><i class="material-icons">&#xE415;</i></a>
                 {else}
                   -
                 {/if}
               </td>
-              <td class="_align-center">
+              <td class="text-xs-center">
                 <a href="{$order.url_details}" class="btn btn-secondary">
                   {l s='Details'}
                 </a>

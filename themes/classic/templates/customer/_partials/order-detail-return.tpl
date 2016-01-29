@@ -39,9 +39,9 @@
           </div>
           <div class="clearfix"></div>
         </td>
-        <td class="_align-right">{$product.qty_returned}</td>
-        <td class="_align-right">{$product.unit_price}</td>
-        <td class="_align-right">{$product.total_price}</td>
+        <td class="text-xs-right">{$product.qty_returned}</td>
+        <td class="text-xs-right">{$product.unit_price}</td>
+        <td class="text-xs-right">{$product.total_price}</td>
       </tr>
       {if $product.customizations}
         {foreach $product.customizations  as $customization}
@@ -78,32 +78,32 @@
       {if $priceDisplay && $use_tax}
         <tr>
           <td colspan="2">{l s='Items (tax excl.)'}</td>
-          <td colspan="5" class="_align-right">{$order.data.total_products}</td>
+          <td colspan="5" class="text-xs-right">{$order.data.total_products}</td>
         </tr>
       {/if}
       <tr>
         <td colspan="2">{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
-        <td colspan="5" class="_align-right">{$order.data.total_products_wt}</td>
+        <td colspan="5" class="text-xs-right">{$order.data.total_products_wt}</td>
       </tr>
       {if $order.data.total_discounts}
         <tr>
           <td colspan="2">{l s='Total vouchers'}</td>
-          <td colspan="5" class="_align-right">{$order.data.total_discounts}</td>
+          <td colspan="5" class="text-xs-right">{$order.data.total_discounts}</td>
         </tr>
       {/if}
       {if $order.data.total_wrapping}
       <tr>
         <td colspan="2">{l s='Total gift wrapping cost'}</td>
-        <td colspan="5" class="_align-right">{$order.data.total_wrapping}</td>
+        <td colspan="5" class="text-xs-right">{$order.data.total_wrapping}</td>
       </tr>
       {/if}
       <tr>
         <td colspan="2">{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
-        <td colspan="5" class="_align-right">{$order.data.total_shipping}</td>
+        <td colspan="5" class="text-xs-right">{$order.data.total_shipping}</td>
       </tr>
       <tr>
         <td colspan="2">{l s='Total'}</td>
-        <td colspan="5" class="_align-right">{$order.data.total_paid}</td>
+        <td colspan="5" class="text-xs-right">{$order.data.total_paid}</td>
       </tr>
     </tfoot>
   </table>
