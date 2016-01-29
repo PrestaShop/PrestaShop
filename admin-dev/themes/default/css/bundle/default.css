@@ -110,7 +110,8 @@ body.mobile-nav #form .form-action-bar{
 #footer{
   display: none;
 }
-ul.featureCollection{
+ul.featureCollection,
+ul.customFieldCollection{
   padding-left:0;
 }
 ul.nostyle{

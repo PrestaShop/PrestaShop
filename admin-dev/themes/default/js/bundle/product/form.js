@@ -1158,39 +1158,31 @@ var form = (function() {
 var customFieldCollection = (function() {
 
 	var collectionHolder = $('ul.customFieldCollection');
-	var newItemBtn = $('<a href="#" class="btn btn-primary btn-xs">+</a>');
-	var newItem = $('<li class="add"></li>').append(newItemBtn);
-	var removeLink = '<a href="#" class="delete btn btn-primary btn-xs">-</a>';
 
-	/** Add a feature */
+	/** Add a custom field */
 	function add(){
 		var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
-		newItem.before($('<li></li>').prepend(removeLink, newForm));
-	}
-
-	/**
-	 * Remove a feature
-	 * @param {object} elem - The clicked link
-	 */
-	function remove(elem){
-		elem.parent().remove();
+		collectionHolder.append('<li>'+newForm+'</li>');
 	}
 
 	return {
 		'init': function() {
-			/** Create add button, and vreate first form */
-			collectionHolder.append(newItem);
-
 			/** Click event on the add button */
-			newItemBtn.on('click', function(e) {
+			$('#custom_fields a.add').on('click', function(e) {
 				e.preventDefault();
 				add();
 			});
 
 			/** Click event on the remove button */
-			$(document).on('click', 'ul.customFieldCollection a.delete', function(e) {
+			$(document).on('click', 'ul.customFieldCollection .delete', function(e) {
 				e.preventDefault();
-				remove($(this));
+				var _this = $(this);
+
+				modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+					onContinue: function(){
+						_this.parent().parent().parent().remove();
+					}
+				}).show();
 			});
 		}
 	};
