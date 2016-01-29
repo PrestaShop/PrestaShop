@@ -134,7 +134,7 @@ class ThemeManager implements AddonManagerInterface
         }
 
         $theme = $this->getInstanceByName($name);
-        if (!$this->theme_checker->setTheme($theme->directory)->isValid()) {
+        if (!$this->theme_checker->isValid($theme)) {
             return false;
         }
 
@@ -288,7 +288,7 @@ class ThemeManager implements AddonManagerInterface
 
         $theme_data = Yaml::parse($sandbox_path.$theme_name.'/config/theme.yml');
         $theme_data['directory'] = $sandbox_path.$theme_name;
-        if (!$this->theme_checker->setTheme(new Theme($theme_data))->isValid()) {
+        if (!$this->theme_checker->isValid(new Theme($theme_data))) {
             $this->fs->remove($sandbox_path);
             throw new Exception("This theme is not valid for PrestaShop 1.7");
         }
