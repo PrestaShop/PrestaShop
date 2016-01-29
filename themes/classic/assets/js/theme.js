@@ -9619,7 +9619,7 @@
 	                count++;
 	              }
 	            });
-	            $('.js-count').append('+' + count);
+	            $(element).find('.js-count').append('+' + count);
 	          })();
 	        }
 	      });

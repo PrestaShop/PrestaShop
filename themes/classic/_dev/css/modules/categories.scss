@@ -31,16 +31,27 @@
   color: $gray-dark;
   .select-title {
     display: inline-block;
-    width: em(220px);
-    color:$gray-darker;
+    width: em(270px);
+    color: $gray-darker;
     background: white;
     padding: em(10px);
   }
   .select-list {
     display: block;
+    color: $gray-darker;
+    padding: em(10px) em(25px);
+    &:hover{
+      background: $brand-primary;
+      color: white;
+      text-decoration: none;
+    }
   }
-  .dropdown-menu{
-    right:0;
-    width: em(220px);
+  .dropdown-menu {
+    right: 0;
+    left: auto;
+    width: em(235px);
+    background: $gray-lighter;
+    border: none;
+    border-radius: 0;
   }
 }
