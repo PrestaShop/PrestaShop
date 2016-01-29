@@ -50,7 +50,7 @@ class AdminThemesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->theme_manager = (new ThemeManagerBuilder($this->context))
+        $this->theme_manager = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                                 ->build();
     }
 

@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
@@ -55,7 +56,8 @@ class ThemeManager implements AddonManagerInterface
         ThemeChecker $theme_checker,
         Employee $employee,
         Filesystem $fs,
-        Finder $finder)
+        Finder $finder,
+        HookConfigurator $hookConfigurator)
     {
         $this->shop = $shop;
         $this->configurator = $configurator;
@@ -63,6 +65,7 @@ class ThemeManager implements AddonManagerInterface
         $this->employee = $employee;
         $this->fs = $fs;
         $this->finder = $finder;
+        $this->hookConfigurator = $hookConfigurator;
     }
 
     /**
