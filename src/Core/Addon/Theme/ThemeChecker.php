@@ -35,7 +35,7 @@ class ThemeChecker
 
     private function hasRequiredProperties($theme)
     {
-        foreach ($this->getMinimumProperties() as $prop) {
+        foreach ($this->getMRequiredProperties() as $prop) {
             $p = explode('.', $prop);
 
             if (!isset($theme->{$p[0]})) {
