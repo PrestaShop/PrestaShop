@@ -4642,12 +4642,6 @@ label {
 ._shadow {
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1); }
 
-._align-center {
-  text-align: center; }
-
-._align-right {
-  text-align: right; }
-
 ._valign-middle {
   vertical-align: middle; }
 
