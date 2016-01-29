@@ -33,7 +33,7 @@ class HookConfigurator
     public function getThemeHooksConfiguration(array $hooks)
     {
         $uniqueModuleList = $this->getUniqueModuleToHookList($hooks);
-        $currentHooks = $this->hookRepository->getDisplayHooks();
+        $currentHooks = $this->hookRepository->getDisplayHooksWithModules();
 
         foreach ($currentHooks as $hookName => $moduleList) {
             foreach ($moduleList as $key => $value) {
