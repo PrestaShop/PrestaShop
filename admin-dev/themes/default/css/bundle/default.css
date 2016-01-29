@@ -104,6 +104,14 @@ body.mobile-nav #form .form-action-bar{
 #form .form-action-bar .checkbox-active .checkbox{
   display: inline-block
 }
+.form-inline .checkbox label,
+.form-inline .radio label{
+  padding-left: 0;
+  padding-right: 20px;
+}
+.form-inline.checkbox .col-sm-10{
+  width: auto
+}
 .checkbox-active .titatoggle input + span:after{
   margin-top: 7px
 }
@@ -229,3 +237,8 @@ div.quicknav-scroller table.table {
 div.quicknav-header h2 {
   margin: 0;
 }
+#product-attachment-file{
+  overflow-y: auto;
+  height: 120px;
+}
+

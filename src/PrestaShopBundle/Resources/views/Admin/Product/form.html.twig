@@ -535,20 +535,61 @@
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step6">
                     <div class="col-lg-9">
-                        {{ form_row(form.step6.visibility) }}
-                        {{ form_row(form.step6.tags) }}
-                        {{ form_row(form.step6.display_options) }}
-                        {{ form_row(form.step6.upc) }}
-                        {{ form_row(form.step6.ean13) }}
-                        {{ form_row(form.step6.isbn) }}
-                        {{ form_row(form.step6.reference) }}
-                        {{ form_row(form.step6.show_condition) }}
-                        {{ form_row(form.step6.condition) }}
-                        {{ form_row(form.step6.suppliers) }}
-                        {{ form_row(form.step6.default_supplier) }}
-
-                        <div id="supplier_combination_collection" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
-                            {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
+                        <div class="form-group">
+                            <h4>{{ trans('Visibility', {}, 'AdminProducts') }}</h4>
+                            <div class="col-xs-4">
+                                {{ form_errors(form.step6.visibility) }}
+                                {{ form_widget(form.step6.visibility) }}
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-sm-8 form-inline checkbox">
+                                {{ form_errors(form.step6.display_options) }}
+                                {{ form_widget(form.step6.display_options) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8">
+                                {{ form_errors(form.step6.tags) }}
+                                {{ form_widget(form.step6.tags) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="alert alert-info" role="alert">{{ trans('Each tag has to be followed by a comma.', {}, 'AdminProducts')|raw }}</div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group">
+                            <h4>{{ trans('Advanced details', {}, 'AdminProducts') }}</h4>
+                            <div class="col-xs-4 pull-left">
+                                <label class="control-label">{{ form.step6.condition.vars.label }}</label>
+                                {{ form_errors(form.step6.condition) }}
+                                {{ form_widget(form.step6.condition) }}
+                            </div>
+                            <div class="col-xs-4 pull-left">
+                                <label class="control-label">&nbsp;</label>
+                                {{ form_widget(form.step6.show_condition) }}
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-xs-4 pull-left">
+                                <label class="control-label">{{ form.step6.reference.vars.label }}</label>
+                                {{ form_errors(form.step6.reference) }}
+                                {{ form_widget(form.step6.reference) }}
+                            </div>
+                            <div class="col-xs-4 pull-left">
+                                <label class="control-label">{{ form.step6.isbn.vars.label }}</label>
+                                {{ form_errors(form.step6.isbn) }}
+                                {{ form_widget(form.step6.isbn) }}
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-xs-4 pull-left">
+                                <label class="control-label">{{ form.step6.upc.vars.label }}</label>
+                                {{ form_errors(form.step6.upc) }}
+                                {{ form_widget(form.step6.upc) }}
+                            </div>
+                            <div class="col-xs-4 pull-left">
+                                <label class="control-label">{{ form.step6.ean13.vars.label }}</label>
+                                {{ form_errors(form.step6.ean13) }}
+                                {{ form_widget(form.step6.ean13) }}
+                            </div>
                         </div>
 
                         <div class="form-group" id="custom_fields">
@@ -567,8 +608,40 @@
                             <a href="#" class="add">{{ trans('+ Add a custom field', {}, 'AdminProducts') }}</a>
                         </div>
 
-                        {{ form_row(form.step6.attachment_product) }}
-                        {{ form_row(form.step6.attachments) }}
+                        <div class="form-group col-sm-5">
+                            <h4>{{ trans('Select attachments for this product', {}, 'AdminProducts') }}</h4>
+                            {{ form_errors(form.step6.attachment_product) }}
+                            {{ form_widget(form.step6.attachments) }}
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4">
+                            <h4>{{ trans('Add an attachment', {}, 'AdminProducts') }}</h4>
+                            {{ form_errors(form.step6.attachment_product) }}
+                            <div id="form_step6_attachment_product" data-action="{{ form.step6.attachment_product.vars.attr['data-action'] }}">
+                                <div class="form-group">{{ form_widget(form.step6.attachment_product.file) }}</div>
+                                <div class="form-group">{{ form_widget(form.step6.attachment_product.name) }}</div>
+                                <div class="form-group">{{ form_widget(form.step6.attachment_product.description) }}</div>
+                                <div class="form-group">{{ form_widget(form.step6.attachment_product.add) }}</div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="form-group" id="custom_fields">
+                            <h4>{{ form.step6.suppliers.vars.label }}</h4>
+                            {{ form_errors(form.step6.suppliers) }}
+                            <div class="col-sm-4">
+                                <label class="control-label">{{ trans('Choose the suppliers associated with this product', {}, 'AdminProducts') }}</label>
+                                {{ form_widget(form.step6.suppliers) }}
+                            </div>
+                            <div class="col-sm-4" id="default_supplier_list">
+                                <label class="control-label">{{ trans('Choose a default supplier', {}, 'AdminProducts') }}</label>
+                                {{ form_widget(form.step6.default_supplier) }}
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="supplier_combination_collection" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
+                            {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
+                        </div>
                     </div>
                     <div class="col-lg-3 left-separator">
                         {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',

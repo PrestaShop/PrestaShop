@@ -71,13 +71,15 @@ class ProductAttachement extends CommonAbstractType
         ))
         ->add('name', FormType\TextType::class, array(
             'label' =>  $this->translator->trans('Filename', [], 'AdminProducts'),
+            'attr' =>  ['placeholder' => $this->translator->trans('Title', [], 'AdminProducts')],
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Length(array('min' => 2))
             )
         ))
         ->add('description', FormType\TextType::class, array(
-            'label' =>  $this->translator->trans('Description', [], 'AdminProducts')
+            'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
+            'attr' =>  ['placeholder' => $this->translator->trans('Description', [], 'AdminProducts')],
         ))
         ->add('add', FormType\ButtonType::class, array(
             'label' =>  $this->translator->trans('Add', [], 'AdminProducts'),
