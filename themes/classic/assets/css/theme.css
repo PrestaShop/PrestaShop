@@ -4642,6 +4642,9 @@ label {
 ._gray-dark {
   color: #878787; }
 
+._gray-darker {
+  color: #414141; }
+
 ._bolder {
   font-weight: 700; }
 
@@ -5113,6 +5116,20 @@ img {
     background: #f6f6f6;
     border: none;
     border-radius: 0; }
+
+#search_filters {
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
+  background: white; }
+  #search_filters .facets-title {
+    padding: 1.25em 1.25em 0; }
+  #search_filters .facet {
+    padding-left: 1.875em; }
+    #search_filters .facet .facet-title {
+      color: #acaaa6; }
+    #search_filters .facet .search-link {
+      font-size: 0.875em; }
+    #search_filters .facet .facet-label {
+      margin-bottom: 0; }
 
 .block_newsletter form {
   position: relative; }

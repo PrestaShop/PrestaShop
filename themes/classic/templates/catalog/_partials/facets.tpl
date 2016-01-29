@@ -1,14 +1,15 @@
 <div id="search_filters">
+  <h4 class="h5 facets-title">{l s='Filter By'}</h4>
   {foreach from=$facets item="facet"}
     {if $facet.displayed}
       <section class="facet">
-        <h1 class="h3">{$facet.label}</h1>
+        <h1 class="h6 facet-title">{$facet.label}</h1>
         {if $facet.widgetType !== 'dropdown'}
           <ul>
             {foreach from=$facet.filters item="filter"}
               {if $filter.displayed}
                 <li>
-                  <label>
+                  <label class="facet-label">
                     {if $facet.multipleSelectionAllowed}
                       <input
                         data-search-url="{$filter.nextEncodedFacetsURL}"
@@ -28,7 +29,7 @@
 
                     <a
                       href="{$filter.nextEncodedFacetsURL}"
-                      class="js-search-link {if $filter.active} active {/if}"
+                      class="_gray-darker search-link js-search-link {if $filter.active} active {/if}"
                     >
                       {$filter.label}
                       {if $filter.magnitude}
