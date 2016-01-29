@@ -8,12 +8,10 @@
     color: $gray;
     font-weight: 300;
   }
-  .sub-menu li.category:first-child a[data-depth="1"] {
-    #index & {
-      color: $gray-darker;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
+  a.dropdown-submenu {
+    color: $gray-darker;
+    text-transform: uppercase;
+    font-weight: 600;
   }
   a[data-depth="0"] {
     font-weight: 600;
