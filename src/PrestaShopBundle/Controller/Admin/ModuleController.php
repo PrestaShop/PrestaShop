@@ -20,6 +20,7 @@ class ModuleController extends Controller
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
+
         // toolbarButtons
         $toolbarButtons = array();
         $toolbarButtons['manage_module'] = array(
@@ -40,14 +41,7 @@ class ModuleController extends Controller
             'icon' => 'process-icon-new',
             'help' => $translator->trans('Add a module', array(), get_class($this)),
         );
-
-        // @TODO Check if connected to addons or not
-        $toolbarButtons['addons_connect'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-            'icon' => 'icon-chain-broken',
-            'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-        );
+        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
 
         $filter = [];
         if ($keyword !== null) {
@@ -506,5 +500,31 @@ class ModuleController extends Controller
         }
 
         return array('status' => $status, 'msg' => $msg);
+    }
+
+    final private function getAddonsConnectToolbar()
+    {
+        $addonsConnect = [];
+        $addonsProvider = $this->container->get('prestashop.core.admin.data_provider.addons_interface');
+        $translator = $this->container->get('prestashop.adapter.translator');
+
+        if ($addonsProvider->isAddonsAuthenticated()) {
+            $addonsEmail = $addonsProvider->getAddonsEmail();
+            $addonsConnect = [
+                'href' => '#',
+                'desc' => $addonsEmail,
+                'icon' => 'icon-chain-broken',
+                'help' => $translator->trans('Synchronized with Addons Marketplace!', array(), get_class($this))
+            ];
+        } else {
+            $addonsConnect = [
+                'href' => '#',
+                'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
+                'icon' => 'icon-chain-broken',
+                'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this))
+            ];
+        }
+
+        return $addonsConnect;
     }
 }
