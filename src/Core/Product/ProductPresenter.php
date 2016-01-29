@@ -263,23 +263,26 @@ class ProductPresenter
                     $presentedProduct['availability_date'] = $product['available_date'];
                     $presentedProduct['availability'] = 'available';
                 } else {
-                    $presentedProduct['availability_message'] = $this->translator->l(
+                    $presentedProduct['availability_message'] = $this->translator->trans(
                         'Out Of Stock',
+                        [],
                         'Product'
                     );
                     $presentedProduct['availability_date'] = $product['available_date'];
                     $presentedProduct['availability'] = 'unavailable';
                 }
             } elseif ($product['quantity_all_versions']) {
-                $presentedProduct['availability_message'] = $this->translator->l(
+                $presentedProduct['availability_message'] = $this->translator->trans(
                     'Product available with different options',
+                    [],
                     'Product'
                 );
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             } else {
-                $presentedProduct['availability_message'] = $this->translator->l(
+                $presentedProduct['availability_message'] = $this->translator->trans(
                     'Out Of Stock',
+                    [],
                     'Product'
                 );
                 $presentedProduct['availability_date'] = $product['available_date'];
