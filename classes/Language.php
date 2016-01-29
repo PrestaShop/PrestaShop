@@ -171,7 +171,7 @@ class LanguageCore extends ObjectModel
             }
         }
 
-        $themes =  (new ThemeManagerBuilder($this->context))
+        $themes =  (new ThemeManagerBuilder($this->context, Db::getInstance()))
                         ->build()
                         ->getThemeList();
         foreach ($themes as $theme) {

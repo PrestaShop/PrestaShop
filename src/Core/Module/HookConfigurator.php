@@ -2,6 +2,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Module;
 
+use PrestaShop\PrestaShop\Core\Module\HookRepository;
+
 class HookConfigurator
 {
     private $hookRepository;
