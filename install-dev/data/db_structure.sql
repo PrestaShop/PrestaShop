@@ -1854,6 +1854,7 @@ CREATE TABLE `PREFIX_tab` (
   `position` int(10) unsigned NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1,
   `hide_host_mode` tinyint(1) NOT NULL DEFAULT '0',
+  `icon` varchar(32) DEFAULT '',
   PRIMARY KEY (`id_tab`),
   KEY `class_name` (`class_name`),
   KEY `id_parent` (`id_parent`)
