@@ -67,7 +67,10 @@ class HookRepository
         $this->db->execute("DELETE FROM {$this->db_prefix}hook_module
              WHERE id_hook = $id_hook AND id_shop = $id_shop
         ");
-        // TODO: remove exceptions too
+
+        $this->db->execute("DELETE FROM {$this->db_prefix}hook_module_exceptions
+            WHERE id_hook = $id_hook AND id_shop = $id_shop
+        ");
 
         return $this;
     }
