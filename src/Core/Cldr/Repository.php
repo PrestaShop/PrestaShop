@@ -107,7 +107,11 @@ class Repository
             $this->region = $locale[1].'-'.strtoupper($locale[2]);
         } else {
             $this->locale = $locale[0];
-            $this->region = strtoupper($locale[1]);
+            if (!empty($locale[1])) {
+                $this->region = strtoupper($locale[1]);
+            } else {
+                $this->region = strtoupper($this->locale);
+            }
         }
     }
 
