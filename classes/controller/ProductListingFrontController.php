@@ -138,6 +138,38 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     /**
+     * Renders an array of active filters.
+     *
+     * @param  array  $facets
+     * @return string the HTML of the facets
+     */
+    protected function renderActiveFilters(ProductSearchResult $result)
+    {
+        // not all search providers generate menus
+        if (empty($result->getFacetCollection())) {
+            return '';
+        }
+
+        $facetsVar = array_map(
+            [$this, 'prepareFacetForTemplate'],
+            $result->getFacetCollection()->getFacets()
+        );
+
+        $activeFilters = [];
+        foreach ($facetsVar as $facet) {
+            foreach ($facet['filters'] as $filter) {
+                if ($filter['active']) {
+                    $activeFilters[] = $filter;
+                }
+            }
+        }
+
+        return $this->render('catalog/_partials/active_filters.tpl', [
+            'activeFilters' => $activeFilters,
+        ]);
+    }
+
+    /**
      * This method is the heart of the search provider delegation
      * mechanism.
      *
@@ -266,9 +298,16 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 $context,
                 $result
             );
+            $rendered_active_filters = $provider->renderActiveFilters(
+                $context,
+                $result
+            );
         } else {
             // with the core
             $rendered_facets = $this->renderFacets(
+                $result
+            );
+            $rendered_active_filters = $this->renderActiveFilters(
                 $result
             );
         }
@@ -293,6 +332,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'sort_orders'       => $sort_orders,
             'pagination'        => $pagination,
             'rendered_facets'   => $rendered_facets,
+            'rendered_active_filters'   => $rendered_active_filters,
             'js_enabled'        => $this->ajax,
             'current_url'       => $this->updateQueryString([
                 'q' => $result->getEncodedFacets()
