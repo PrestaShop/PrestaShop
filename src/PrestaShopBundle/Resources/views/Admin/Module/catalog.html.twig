@@ -30,6 +30,8 @@
     {# Actual Page Content #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' %}
     {# Module Categories Grid #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_categories_grid.html.twig' with { 'categories' : topMenuData.categories }  %}
+    {% if topMenuData.categories is defined %}
+        {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_categories_grid.html.twig' with { 'categories' : topMenuData.categories }  %}
+    {% endif %}
 
 {% endblock %}

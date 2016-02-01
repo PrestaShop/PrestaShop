@@ -418,6 +418,9 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     $product->price->USD = 0;
                     $product->price->GBP = 0;
                 }
+                if (! isset($product->url)) {
+                    $product->url = '';
+                }
                 // ToDo: Does this test should be in the Addon service ?
                 //if (isset($product->installed) && $product->installed == 1) {
                     foreach (['logo.png', 'logo.gif'] as $logo) {
