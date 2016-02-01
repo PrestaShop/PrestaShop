@@ -379,4 +379,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         return $paginationLimitChoices;
     }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::isNewProductDefaultActivated()
+     */
+    public function isNewProductDefaultActivated()
+    {
+        return (bool) \Configuration::get('PS_PRODUCT_ACTIVATION_DEFAULT');
+    }
 }

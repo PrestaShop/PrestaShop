@@ -108,6 +108,14 @@ class AdminPPreferencesControllerCore extends AdminController
                         'cast' => 'intval',
                         'required' => false,
                         'type' => 'bool'
+                    ),
+                    'PS_PRODUCT_ACTIVATION_DEFAULT' => array(
+                        'title' => $this->l('Default activation state'),
+                        'hint' => $this->l('When active, new products will be activated by default during creation.'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'required' => false,
+                        'type' => 'bool'
                     )
                 ),
                 'submit' => array('title' => $this->l('Save'))

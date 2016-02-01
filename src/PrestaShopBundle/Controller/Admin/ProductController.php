@@ -310,6 +310,8 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function newAction()
     {
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        /* @var $productProvider ProductInterfaceProvider */
         $contextAdapter = $this->get('prestashop.adapter.legacy.context');
         $context = $contextAdapter->getContext();
         $toolsAdapter = $this->container->get('prestashop.adapter.tools');
@@ -318,7 +320,7 @@ class ProductController extends FrameworkBundleAdminController
         $name = $translator->trans('New product', [], 'AdminProducts');
 
         $product = $productAdapter->getProductInstance();
-        $product->active = 0;
+        $product->active = $productProvider->isNewProductDefaultActivated()? 1 : 0;
         $product->id_category_default = $context->shop->id_category;
 
         //set name and link_rewrite in each lang
