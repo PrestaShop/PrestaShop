@@ -81,7 +81,7 @@ a:hover{
     .blockcart {
       background: $gray-light;
       font-size: 16px;
-      width: 115px;
+      width: em(135px);
       height: 48px;
       padding-top: 12px;
       margin-right: 15px;
@@ -132,6 +132,8 @@ a:hover{
       display: inline;
       &:after {
         content: "/";
+        color: $gray-dark;
+        margin: em(5px);
       }
       &:last-child {
         a{
