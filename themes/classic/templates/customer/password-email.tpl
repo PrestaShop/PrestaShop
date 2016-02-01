@@ -13,16 +13,16 @@
       </header>
 
       <section class="form-fields">
-
-        <label>
-          <span>{l s='Email address'}</span>
-          <input type="email" name="email" id="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" />
-        </label>
-
+        <div class="form-group row"> 
+          <label class="col-md-3 form-control-label required">{l s='Email address'}</label>
+          <div class="col-md-9">
+            <input type="email" name="email" id="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" class="form-control" />
+          </div>
+        </div>
       </section>
 
       <footer class="form-footer">
-        <button type="submit" name="submit">
+        <button type="submit" name="submit" class="btn btn-primary">
           {l s='Send reset link'}
         </button>
       </footer>
@@ -32,7 +32,8 @@
 {/block}
 
 {block name='page_footer'}
-  <ul>
-    <li><a href="{$urls.pages.authentication}">{l s='Back to Login'}</a></li>
-  </ul>
+  <a href="{$urls.pages.my_account}" class="btn btn-secondary">
+    <i class="material-icons">&#xE5CB;</i>
+    <span class="_valign-middle">{l s='Back to login'}</span>
+  </a> 
 {/block}
