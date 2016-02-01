@@ -146,7 +146,7 @@ class ThemeManager implements AddonManagerInterface
         $this->doApplyConfiguration($theme->global_settings['configuration'])
                 ->doDisableModules($theme->global_settings['modules']['toDisable'])
                 ->doEnableModules($theme->global_settings['modules']['toEnable'])
-                ->doHookModules($theme->global_settings['modules']['toHookOn']);
+                ->doHookModules($theme->global_settings['hooks']['module_to_hook']);
 
         $theme->onEnable();
 
@@ -249,7 +249,7 @@ class ThemeManager implements AddonManagerInterface
 
     private function doHookModules(array $hooks)
     {
-        // TODO: implements doHookModules
+        $this->hookConfigurator->setHooksConfiguration($hooks);
         return $this;
     }
 

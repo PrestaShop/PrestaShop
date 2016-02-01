@@ -66,6 +66,14 @@ class HookConfigurator
         return $currentHooks;
     }
 
+    public function setHooksConfiguration(array $hooks)
+    {
+        $this->hookRepository->persistHooksConfiguration(
+            $this->getThemeHooksConfiguration($hooks)
+        );
+        return $this;
+    }
+
     private function getUniqueModuleToHookList(array $hooks)
     {
         $list = [];
