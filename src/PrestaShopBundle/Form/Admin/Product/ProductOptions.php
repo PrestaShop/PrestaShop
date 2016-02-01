@@ -70,8 +70,9 @@ class ProductOptions extends CommonAbstractType
             'id_supplier'
         );
 
+        $this->fullAttachmentList = $attachmentDataprovider->getAllAttachments($this->context->getLanguages()[0]['id_lang']);
         $this->attachmentList = $this->formatDataChoicesList(
-            $attachmentDataprovider->getAllAttachments($this->context->getLanguages()[0]['id_lang']),
+            $this->fullAttachmentList,
             'id_attachment'
         );
     }
@@ -99,11 +100,11 @@ class ProductOptions extends CommonAbstractType
             'options' => [
                 'attr' => [
                     'class' => 'tokenfield',
-                    'placeholder' => $this->translator->trans('Add a keyword', [], 'AdminProducts')
+                    'placeholder' => $this->translator->trans('Tags', [], 'AdminProducts')
                 ]
             ],
             'locales' => $this->locales,
-            'label' => $this->translator->trans('Tags', [], 'AdminProducts')
+            'label' => $this->translator->trans('Tags...', [], 'AdminProducts')
         ))
         ->add(
             $builder->create('display_options', FormType\FormType::class, array('required' => false, 'label' => $this->translator->trans('Display options', [], 'AdminProducts')))
@@ -202,12 +203,13 @@ class ProductOptions extends CommonAbstractType
 
         //Add attachment selectors
         $builder->add('attachments', FormType\ChoiceType::class, array(
-            'expanded'  => false,
+            'expanded'  => true,
             'multiple'  => true,
             'choices'  => $this->attachmentList,
             'choices_as_values' => true,
             'required' => false,
-            'label' => $this->translator->trans('Attachments for this product:', [], 'AdminProducts'),
+            'attr' => ['data' => $this->fullAttachmentList],
+            'label' => $this->translator->trans('Attachments for this product:', [], 'AdminProducts')
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

@@ -606,14 +606,16 @@ class AdminProductWrapper
     public function processAddAttachment($product, $data, $locales)
     {
         $attachment = null;
-
         $file = $data['file'];
         if (!empty($file)) {
             $fileName = sha1(microtime());
-
             $attachment = new \AttachmentCore();
-            $attachment->name[(int)$locales[0]['id_lang']] = $data['name'];
-            $attachment->description[(int)$locales[0]['id_lang']] = $data['description'];
+
+            foreach ($locales as $locale) {
+                $attachment->name[(int)$locale['id_lang']] = $data['name'];
+                $attachment->description[(int)$locale['id_lang']] = $data['description'];
+            }
+
             $attachment->file = $fileName;
             $attachment->mime = $file->getMimeType();
             $attachment->file_name = $file->getClientOriginalName();

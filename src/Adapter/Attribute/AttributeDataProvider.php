@@ -84,7 +84,7 @@ class AttributeDataProvider
      */
     public function getProductCombinations($idProduct)
     {
-        $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $context = \ContextCore::getContext();
 
         //get product
         $product = new \ProductCore((int)$idProduct, false);
@@ -99,7 +99,7 @@ class AttributeDataProvider
 
         $combinations = [];
         foreach ($allCombinationsIds as $combinationId) {
-            $combinations[] = $product->getAttributeCombinationsById($combinationId, $locales[0]['id_lang'])[0];
+            $combinations[] = $product->getAttributeCombinationsById($combinationId, $context->employee->id_lang)[0];
         }
 
         return $combinations;

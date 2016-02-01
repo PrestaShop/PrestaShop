@@ -296,7 +296,13 @@ var featuresCollection = (function() {
 			/** Click event on the remove button */
 			$(document).on('click', 'ul.featureCollection .delete', function(e) {
 				e.preventDefault();
-				$(this).parent().parent().parent().remove();
+				var _this = $(this);
+
+				modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+					onContinue: function(){
+						_this.parent().parent().parent().remove();
+					}
+				}).show();
 			});
 
 			/** On feature selector event change, refresh possible values list */
@@ -356,7 +362,7 @@ var manufacturer = (function() {
  * Suppliers management
  */
 var supplier = (function() {
-	var defaultSupplierRow = $('#form_step6_default_supplier').parent().parent();
+	var defaultSupplierRow = $('#default_supplier_list');
 	var isInit = false;
 	return {
 		'init': function() {
@@ -1158,39 +1164,31 @@ var form = (function() {
 var customFieldCollection = (function() {
 
 	var collectionHolder = $('ul.customFieldCollection');
-	var newItemBtn = $('<a href="#" class="btn btn-primary btn-xs">+</a>');
-	var newItem = $('<li class="add"></li>').append(newItemBtn);
-	var removeLink = '<a href="#" class="delete btn btn-primary btn-xs">-</a>';
 
-	/** Add a feature */
+	/** Add a custom field */
 	function add(){
 		var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
-		newItem.before($('<li></li>').prepend(removeLink, newForm));
-	}
-
-	/**
-	 * Remove a feature
-	 * @param {object} elem - The clicked link
-	 */
-	function remove(elem){
-		elem.parent().remove();
+		collectionHolder.append('<li>'+newForm+'</li>');
 	}
 
 	return {
 		'init': function() {
-			/** Create add button, and vreate first form */
-			collectionHolder.append(newItem);
-
 			/** Click event on the add button */
-			newItemBtn.on('click', function(e) {
+			$('#custom_fields a.add').on('click', function(e) {
 				e.preventDefault();
 				add();
 			});
 
 			/** Click event on the remove button */
-			$(document).on('click', 'ul.customFieldCollection a.delete', function(e) {
+			$(document).on('click', 'ul.customFieldCollection .delete', function(e) {
 				e.preventDefault();
-				remove($(this));
+				var _this = $(this);
+
+				modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+					onContinue: function(){
+						_this.parent().parent().parent().remove();
+					}
+				}).show();
 			});
 		}
 	};
@@ -1316,6 +1314,15 @@ var attachmentProduct = (function() {
 		'init': function() {
 			var buttonSave = $('#form_step6_attachment_product_add');
 
+			/** check all attachments files */
+			$('#product-attachment-files-check').change(function(){
+				if($(this).is(":checked")) {
+					$('#product-attachment-file input[type="checkbox"]').attr('checked', true);
+				}else{
+					$('#product-attachment-file input[type="checkbox"]').attr('checked', false);
+				}
+			});
+
 			/** add attachment */
 			$('#form_step6_attachment_product_add').click(function(){
 				var _this = $(this);
@@ -1345,12 +1352,15 @@ var attachmentProduct = (function() {
 
 						//inject new attachment in attachment list
 						if(response.id){
-							$('#form_step6_attachments')
-								.append($('<option></option>')
-									.attr('value', response.id)
-									.text(response.real_name)
-									.prop('selected', true)
-								);
+							var row = '<tr>\
+								<td><input type="checkbox" name="form[step6][attachments][]" value="'+ response.id +'" checked="checked"> '+ response.real_name +'</td>\
+								<td>'+ response.file_name +'</td>\
+								<td>'+ response.mime +'</td>\
+							</tr>';
+
+							$('#product-attachment-file tbody').append(row);
+							$('.js-options-no-attachments').addClass('hide');
+							$('.js-options-with-attachments').removeClass('hide');
 						}
 					},
 					error: function(response){

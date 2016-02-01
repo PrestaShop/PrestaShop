@@ -215,6 +215,40 @@
     {% endspaceless %}
 {% endblock date_picker_widget %}
 
+{% block _form_step6_attachments_widget %}
+    <div class="js-options-no-attachments{{ form|length >1 ? 'hide' : '' }}">
+        <small>{{ trans('There is no attachments yet.', {}, 'AdminProducts') }}</small>
+    </div>
+    <div class="js-options-with-attachments {{ form|length == 0 ? 'hide' : '' }}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    <div class="checkbox">
+                        <label><input type="checkbox" id="product-attachment-files-check">{{ trans('Title', {}, 'AdminProducts') }}</label>
+                    </div>
+                </th>
+                <th>{{ trans('File name', {}, 'AdminProducts') }}</th>
+                <th>{{ trans('Type', {}, 'AdminProducts') }}</th>
+            </tr>
+            </thead>
+        </table>
+        <div id="product-attachment-file">
+            <table class="table table-striped">
+                <tbody>
+                {%- for child in form %}
+                    <tr>
+                        <td>{{ form_widget(child) }}</td>
+                        <td>{{ form.vars.attr.data[loop.index0]['file_name'] }}</td>
+                        <td>{{ form.vars.attr.data[loop.index0]['mime'] }}</td>
+                    </tr>
+                {% endfor -%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
 {# Labels #}
 
 {% block form_label -%}
