@@ -642,9 +642,7 @@ class ToolsCore
         if ($context) {
             $language_code = $context->language->language_code;
         }
-        if (empty($language_code)) {
-            throw new PrestaShopException('Invalid language code');
-        }
+
         if (!empty($cldr_cache[$language_code])) {
             $cldr = $cldr_cache[$language_code];
         } else {
