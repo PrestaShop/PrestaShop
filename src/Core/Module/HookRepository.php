@@ -137,7 +137,7 @@ class HookRepository
                 $this->db->insert('hook_module', $row);
 
                 if (!empty($extra_data['except_pages'])) {
-                    $this->setModuleExceptions(
+                    $this->setModuleHookExceptions(
                         $id_module,
                         $id_hook,
                         $extra_data['except_pages']
@@ -149,7 +149,7 @@ class HookRepository
         return $this;
     }
 
-    private function setModuleExceptions($id_module, $id_hook, array $pages)
+    private function setModuleHookExceptions($id_module, $id_hook, array $pages)
     {
         $id_shop    = (int)$this->shop->id;
         $id_module  = (int)$id_module;
@@ -173,7 +173,7 @@ class HookRepository
         return $this;
     }
 
-    private function getExceptions($id_module, $id_hook)
+    private function getModuleHookExceptions($id_module, $id_hook)
     {
         $id_shop    = (int)$this->shop->id;
         $id_module  = (int)$id_module;
@@ -211,7 +211,7 @@ class HookRepository
         $hooks = [];
 
         foreach ($rows as $row) {
-            $exceptions = $this->getExceptions(
+            $exceptions = $this->getModuleHookExceptions(
                 $row['id_module'],
                 $row['id_hook']
             );
