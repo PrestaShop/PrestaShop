@@ -628,6 +628,25 @@ class ToolsCore
         return $currency;
     }
 
+    public static function getCldr(Context $context = null, $language_code = null)
+    {
+        static $cldr_cache;
+        if ($context) {
+            $language_code = $context->language->language_code;
+        }
+        if (empty($language_code)) {
+            throw new PrestaShopException('Invalid language code');
+        }
+        if (!empty($cldr_cache[$language_code])) {
+            $cldr = $cldr_cache[$language_code];
+        } else {
+            $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository($language_code);
+            $cldr_cache[$language_code] = $cldr;
+        }
+
+        return $cldr;
+    }
+
     /**
     * Return price with currency sign for a given product
     *
@@ -650,14 +669,8 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
-        static $cldr_cache;
-        $language_code = strtolower(is_object($context->language) ? $context->language->language_code : $context->language);
-        if (!empty($cldr_cache[$language_code])) {
-            $cldr = $cldr_cache[$language_code];
-        } else {
-            $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository($language_code);
-            $cldr_cache[$language_code] = $cldr;
-        }
+        $cldr = self::getCldr($context);
+
 
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
@@ -669,7 +682,7 @@ class ToolsCore
      */
     public static function displayNumber($number, $currency = null)
     {
-        $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository(Context::getContext()->language);
+        $cldr = self::getCldr(Context::getContext());
 
         return $cldr->getNumber($number);
     }

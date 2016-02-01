@@ -114,7 +114,7 @@ class Update extends Repository
             throw new \Exception('Error : the locale is not valid');
         }
 
-        $cldrRepository = new Repository($locale);
+        $cldrRepository = \Tools::getCldr(null, $locale);
         $locale = $cldrRepository->getCulture();
 
         $file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip';
