@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="block_newsletter col-md-8">
+<div class="block_newsletter col-md-7">
   <div class="row">
     <p class="col-md-5 _gray-darker _margin-top-small">{l s='Get our latest news and special sales' mod='blocknewsletter'}</p>
 
