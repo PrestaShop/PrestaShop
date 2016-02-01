@@ -22,6 +22,20 @@ meta:
 global_settings:
   configuration:
     PS_QUICK_VIEW: false
+  hooks:
+    custom_hooks:
+      - name: displayFooterBefore
+        title: displayFooterBefore
+        description: Add a widget area above the footer
+    module_to_hook:
+      displayTop:
+        # displayHeaderTop will have exactly the following
+        # modules hooked to it, in the specified order.
+        # Each module in this list will be unhooked
+        # from all other display hooks it is hooked to.
+        - blocklanguages
+        - blockcurrencies
+        - blockuserinfo
 
 theme_settings:
   default_layout: layout-full-width
