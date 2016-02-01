@@ -1217,7 +1217,7 @@ var virtualProduct = (function() {
 							$('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
 							$('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
 							$('#form_step3_virtual_product_name').val('');
-							$('#form_step3_virtual_product_nb_downloable').val(0);
+							$('#form_step3_virtual_product_nb_downloadable').val(0);
 							$('#form_step3_virtual_product_expiration_date').val('');
 							$('#form_step3_virtual_product_nb_days').val(0);
 						}
@@ -1260,7 +1260,7 @@ var virtualProduct = (function() {
 				}
 				data.append('product_virtual[is_virtual_file]', $('input[name="form[step3][virtual_product][is_virtual_file]"]:checked').val());
 				data.append('product_virtual[name]', $('#form_step3_virtual_product_name').val());
-				data.append('product_virtual[nb_downloable]', $('#form_step3_virtual_product_nb_downloable').val());
+				data.append('product_virtual[nb_downloadable]', $('#form_step3_virtual_product_nb_downloadable').val());
 				data.append('product_virtual[expiration_date]', $('#form_step3_virtual_product_expiration_date').val());
 				data.append('product_virtual[nb_days]', $('#form_step3_virtual_product_nb_days').val());
 

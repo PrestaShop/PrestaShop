@@ -543,7 +543,7 @@ class AdminProductWrapper
             $download->date_add = date('Y-m-d H:i:s');
             $download->date_expiration = $data['expiration_date'] ? $data['expiration_date'].' 23:59:59' : '';
             $download->nb_days_accessible = (int)$data['nb_days'];
-            $download->nb_downloadable = (int)$data['nb_downloable'];
+            $download->nb_downloadable = (int)$data['nb_downloadable'];
             $download->active = 1;
             $download->is_shareable = 0;
 
