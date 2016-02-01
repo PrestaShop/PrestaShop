@@ -33,7 +33,7 @@ services:
     prestashop.handler.log:
         class: PrestaShopBundle\Service\Log\LogHandler
         arguments:
-            - @service_container 
+            - "@service_container" 
 
     # ADAPTERS (prestashop.adapter.*)
 
