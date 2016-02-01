@@ -29,7 +29,7 @@ class HookRepositoryTest extends IntegrationTestCase
             'blockcart'
         ];
 
-        $this->hookRepository->persistHookConfiguration([
+        $this->hookRepository->persistHooksConfiguration([
             'displayTestHookName' => $modules
         ]);
 
@@ -41,7 +41,7 @@ class HookRepositoryTest extends IntegrationTestCase
 
     public function test_only_display_hooks_are_retrieved()
     {
-        $this->hookRepository->persistHookConfiguration([
+        $this->hookRepository->persistHooksConfiguration([
             'displayTestHookName' => ['blocknewsletter', 'blockcart'],
             'notADisplayTestHookName' => ['blocklanguage', 'blockcurrencies']
         ]);
@@ -60,7 +60,7 @@ class HookRepositoryTest extends IntegrationTestCase
 
     public function test_exceptions_taken_into_account()
     {
-        $this->hookRepository->persistHookConfiguration([
+        $this->hookRepository->persistHooksConfiguration([
             'displayTestHookNameWithExceptions' => [
                 'blocknewsletter' => [
                     'except_pages' => ['category', 'product']
