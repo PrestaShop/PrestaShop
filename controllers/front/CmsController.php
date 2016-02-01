@@ -154,9 +154,11 @@ class CmsControllerCore extends FrontController
         $page = parent::getTemplateVarPage();
 
         if ($this->assignCase == 2) {
-            $page['body_classes'] = ltrim($page['body_classes'].' '.$this->php_self.'-'.$this->cms_category->id.' '.$this->php_self.'-'.$this->cms_category->link_rewrite, ' ');
+            $page['body_classes']['page'.$this->php_self.'-'.$this->cms_category->id] = true;
+            $page['body_classes'][$this->cms_category->link_rewrite] = true;
         } else {
-            $page['body_classes'] = ltrim($page['body_classes'].' '.$this->php_self.'-'.$this->cms->id.' '.$this->php_self.'-'.$this->cms->link_rewrite, ' ');
+            $page['body_classes']['page'.$this->php_self.'-'.$this->cms->id] = true;
+            $page['body_classes'][$this->cms->link_rewrite] = true;
         }
 
         return $page;

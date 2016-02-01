@@ -1209,7 +1209,7 @@ class FrontControllerCore extends Controller
     {
         $entity = $this->php_self;
 
-        $layout = $this->context->shop->theme->getLayoutForPage($entity);
+        $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
 
         if ((int)Tools::getValue('content_only')) {
             $layout = 'layouts/layout-content-only.tpl';
@@ -1458,12 +1458,15 @@ class FrontControllerCore extends Controller
         $meta_tags = Meta::getMetaTags($this->context->language->id, $page_name);
 
         $page = [
+            'canonical' => $this->getCanonicalURL(),
             'title' => $meta_tags['meta_title'],
             'description' => $meta_tags['meta_description'],
             'keywords' => $meta_tags['meta_keywords'],
             'page_name' => $page_name,
-            'body_classes' => '',
-            'canonical' => $this->getCanonicalURL()
+            'body_classes' => [
+                'page-'.$this->php_self => true,
+                $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
+            ],
         ];
 
         return $page;
