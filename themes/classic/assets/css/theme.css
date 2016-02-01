@@ -5213,8 +5213,12 @@ img {
   font-weight: 700;
   font-size: 1em; }
 
+.block-social li {
+  height: 2.5em;
+  width: 2.5em; }
+
 .facebook {
-  background: red url(../css/493158ca864e818ef301c20e626c79c4.svg); }
+  background: url(../css/493158ca864e818ef301c20e626c79c4.svg); }
 
 /*** COMMONS ***/
 body {
@@ -5290,7 +5294,7 @@ a:hover {
 
 /*** WRAPPER ***/
 #wrapper {
-  background: #ebebeb;
+  background: #373a3c;
   box-shadow: inset 0 2px 5px 0 rgba(0, 0, 0, 0.11);
   padding-top: 1.5625em; }
   #wrapper .breadcrumb {
