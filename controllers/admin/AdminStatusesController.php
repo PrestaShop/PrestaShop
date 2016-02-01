@@ -494,7 +494,7 @@ class AdminStatusesControllerCore extends AdminController
     {
         $default_path = '../mails/';
         // Mail templates can also be found in the theme folder
-        $theme_path = '../themes/'.$this->context->shop->theme->name.'/mails/';
+        $theme_path = '../themes/'.$this->context->shop->theme->getName().'/mails/';
 
         $array = array();
         foreach (Language::getLanguages(false) as $language) {
