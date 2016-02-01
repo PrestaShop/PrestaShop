@@ -51,7 +51,9 @@ class ThemeChecker
     {
         return [
             'name',
+            'display_name',
             'version',
+            'author.name',
             'meta.compatibility.from',
             'meta.available_layouts',
         ];
