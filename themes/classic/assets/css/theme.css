@@ -5224,7 +5224,7 @@ img {
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
-  color: #414141; }
+  color: #ebebeb; }
 
 ul {
   list-style: none;
@@ -5294,7 +5294,7 @@ a:hover {
 
 /*** WRAPPER ***/
 #wrapper {
-  background: #373a3c;
+  background: #ebebeb;
   box-shadow: inset 0 2px 5px 0 rgba(0, 0, 0, 0.11);
   padding-top: 1.5625em; }
   #wrapper .breadcrumb {
