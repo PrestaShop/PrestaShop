@@ -230,10 +230,12 @@ class HookRepository
 
     public function getDisplayHooksWithModules()
     {
-        return array_filter(
-            $this->getHooksWithModules(),
-            [$this->hookInfo, 'isDisplayHookName'],
-            ARRAY_FILTER_USE_KEY
-        );
+        $hooks = [];
+        foreach ($this->getHooksWithModules() as $hook_name => $modules) {
+            if ($this->hookInfo->isDisplayHookName($hook_name)) {
+                $hooks[$hook_name] = $modules;
+            }
+        }
+        return $hooks;
     }
 }
