@@ -109,7 +109,7 @@
   </table>
 
   <header>
-    <h1 class="h3">{l s='Merchandise return'}</h1>
+    <h3>{l s='Merchandise return'}</h3>
     <p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.'}</p>
   </header>
 

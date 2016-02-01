@@ -32,7 +32,7 @@
     <section class="form-fields">
 
       <div class="form-group row">
-        <label class="col-md-3 form-control-label required">{l s='Product'}</label>
+        <label class="col-md-3 form-control-label">{l s='Product'}</label>
         <div class="col-md-9">
           <select name="id_product" class="form-control">
             <option value="0">{l s='-- Choose --'}</option>
@@ -46,7 +46,7 @@
       <div class="form-group row">
         <label class="col-md-3 form-control-label"></label>
         <div class="col-md-9">
-          <textarea cols="67" rows="3" name="msgText" class="form-control"></textarea>
+          <textarea rows="3" name="msgText" class="form-control"></textarea>
         </div>
       </div>
 
