@@ -49,6 +49,9 @@ class Hook
 
             foreach ($langs as $lang) {
                 $language_code = explode('-', $lang['language_code']);
+                if (empty($language_code[1])) {
+                    $language_code[1] = $language_code[0];
+                }
                 $cldr_update->fetchLocale($language_code['0'].'-'.strtoupper($language_code[1]));
             }
         }
