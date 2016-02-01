@@ -39,9 +39,9 @@ class Theme implements AddonInterface
         $this->attributes = new ArrayFinder($attributes);
     }
 
-    public function get($attr)
+    public function get($attr, $default = null)
     {
-        return $this->attributes->get($attr);
+        return $this->attributes->get($attr, $default);
     }
 
     public function getName()
