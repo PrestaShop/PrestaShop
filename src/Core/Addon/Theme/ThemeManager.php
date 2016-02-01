@@ -173,9 +173,9 @@ class ThemeManager implements AddonManagerInterface
      * @param  string $name The theme name to reset
      * @return bool         True for success
      */
-    public function reset($name)
+    public function reset($theme_name)
     {
-        return true;
+        return $this->disable($theme_name) && $this->enable($theme_name);
     }
 
     public function getInstanceByName($name)
