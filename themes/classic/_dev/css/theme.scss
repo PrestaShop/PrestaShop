@@ -20,7 +20,7 @@
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
-  color: $gray-darker;
+  color: $gray-light;
 }
 ul {
   list-style: none;
@@ -116,7 +116,7 @@ a:hover{
 }
 /*** WRAPPER ***/
 #wrapper {
-  background: $body-color;
+  background: $gray-light;
   box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11);
   padding-top: em(25px);
   .breadcrumb {
