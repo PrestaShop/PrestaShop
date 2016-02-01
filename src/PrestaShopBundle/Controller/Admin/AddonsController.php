@@ -33,7 +33,7 @@ class AddonsController extends Controller
             $json = $addonsProvider->request('check_customer', $params);
 
             Configuration::updateValue('PS_LOGGED_ON_ADDONS', 1);
-            
+
             $response->headers->setCookie(new Cookie('username_addons', $params['username_addons']));
             $response->headers->setCookie(new Cookie('password_addons', $params['password_addons']));
             $response->headers->setCookie(new Cookie('is_contributor', (int)$json->is_contributor));
@@ -43,7 +43,7 @@ class AddonsController extends Controller
         } catch (Exception $e) {
             $response->setData([
                 'success' => 0,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
 

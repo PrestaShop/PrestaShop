@@ -48,9 +48,10 @@ var AdminModule = function() {
 
     /* Selectors for Module Import and Addons connect */
     this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
-    this.addonsConnectBtnSelector = '#page-header-desc-configuration-addons_connect';
+    this.addonsConnectModalBtnSelector = '#page-header-desc-configuration-addons_connect';
     this.dropZoneModalSelector = '#module-modal-import';
     this.addonsConnectModalSelector = '#module-modal-addons-connect';
+    this.addonsConnectForm = '#addons-connect-form';
 
 /**
  * Initialize all listners and bind everything
@@ -75,12 +76,38 @@ var AdminModule = function() {
   this.initAddonsConnect = function() {
       $(this.dropModuleBtnSelector).attr('data-toggle', 'modal');
       $(this.dropModuleBtnSelector).attr('data-target', this.dropZoneModalSelector);
+
+      var _this = this;
+
+      $(this.addonsConnectForm).on('submit', function(event){
+          event.preventDefault();
+          event.stopPropagation();
+
+          var _that = _this;
+
+          $.ajax({
+                method: 'POST',
+                url: $(this).attr("action"),
+                dataType: 'json',
+                data: $(this).serialize()
+            }).done(function(response) {
+                var responseCode = response.success;
+                var responseMsg = response.message;
+
+                if (responseCode === 1) {
+                    // Success !
+                    location.reload();
+                } else {
+                     $.growl.error({ message: responseMsg });
+                }
+            });
+      });
   };
 
   //@TODO: JS Doc
   this.initAddModuleAction = function() {
-      $(this.addonsConnectBtnSelector).attr('data-toggle', 'modal');
-      $(this.addonsConnectBtnSelector).attr('data-target', this.addonsConnectModalSelector);
+      $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
+      $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
   };
 
   //@TODO: JS Doc
