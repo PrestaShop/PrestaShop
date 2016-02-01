@@ -651,11 +651,12 @@ class ToolsCore
         }
 
         static $cldr_cache;
-        if (!empty($cldr_cache[Context::getContext()->language->language_code])) {
-            $cldr = $cldr_cache[Context::getContext()->language->language_code];
+        $language_code = strtolower(is_object($context) ? $context->language_code : $context);
+        if (!empty($cldr_cache[$language_code])) {
+            $cldr = $cldr_cache[$language_code];
         } else {
-            $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository(Context::getContext()->language->language_code);
-            $cldr_cache[Context::getContext()->language->language_code] = $cldr;
+            $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository($language_code);
+            $cldr_cache[$language_code] = $cldr;
         }
 
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
