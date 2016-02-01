@@ -37,9 +37,7 @@ class CustomerFormCore extends AbstractForm
 
     public function setGuestAllowed($guest_allowed = true)
     {
-        if ($guest_allowed) {
-            $this->formatter->setPasswordRequired(false);
-        }
+        $this->formatter->setPasswordRequired(!$guest_allowed);
         $this->guest_allowed = $guest_allowed;
         return $this;
     }
