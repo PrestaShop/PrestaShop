@@ -347,7 +347,9 @@ function smartyWidgetBlock($params, $content, &$smarty)
 
 function smartyClassname($classname)
 {
-    $classname = str_replace('_', '-', $classname);
+    $classname = Tools::replaceAccentedChars(strtolower($classname));
+    $classname = preg_replace('/[^A-Za-z0-9]/', '-', $classname);
+    $classname = preg_replace('/[-]+/', '-', $classname);
     return $classname;
 }
 

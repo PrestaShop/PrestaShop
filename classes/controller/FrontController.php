@@ -1475,8 +1475,8 @@ class FrontControllerCore extends Controller
             'keywords' => $meta_tags['meta_keywords'],
             'page_name' => $page_name,
             'body_classes' => [
-                'page-'.$this->php_self => true,
                 $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
+                'page-'.$this->php_self => true,
             ],
         ];
 
