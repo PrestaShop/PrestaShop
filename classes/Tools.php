@@ -651,7 +651,7 @@ class ToolsCore
         }
 
         static $cldr_cache;
-        $language_code = strtolower(is_object($context) ? $context->language_code : $context);
+        $language_code = strtolower(is_object($context->language) ? $context->language->language_code : $context->language);
         if (!empty($cldr_cache[$language_code])) {
             $cldr = $cldr_cache[$language_code];
         } else {
