@@ -170,24 +170,28 @@ class CommonController extends FrameworkBundleAdminController
         /* @var $modulesProvider AdminModuleDataProvider */
 
         $modules = array();
-        foreach ($moduleIdList as $id) {
-            $module = array_values($modulesProvider->getCatalogModules(['name' => $id]));
+        try {
+            foreach ($moduleIdList as $id) {
+                $module = array_values($modulesProvider->getCatalogModules(['name' => $id]));
 
-            if (count($module) == 1) {
-                $module = $module[0];
-            } elseif (count($module) > 1) {
-                throw new \Exception("Module ID $id matches multiple times on the catalog.");
-            } else {
-                continue; // module not found
+                if (count($module) == 1) {
+                    $module = $module[0];
+                } elseif (count($module) > 1) {
+                    throw new \Exception("Module ID $id matches multiple times on the catalog.");
+                } else {
+                    continue; // module not found
+                }
+                $modules[] = $module;
             }
-            $modules[] = $module;
+        } catch (\Exception $e) {
+            $modules = array();
         }
 
         if ($randomize == 1) {
             shuffle($modules);
         }
 
-        // FIXME: utiliser ceux en commun avec Modules ?
+        // FIXME: use common functions from Module admin page provider when available
         $modules = $recommendedModules->filterInstalledAndBadModules($modules);
         $modules = $recommendedModules->generateModuleUrls($modules);
 

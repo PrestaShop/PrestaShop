@@ -61,7 +61,22 @@ class RecommendedModules
      */
     public function getRecommendedModuleIdList($domain = 'administration', $randomize = false)
     {
-        return ['twengafeed', 'gsitemap', 'feeder', 'gtrustedstores']; // FIXME
+        // FIXME: replace static by dynamic call from add-ons when available
+        switch ($domain) {
+            case 'products_quantity':
+                return [];
+            case 'products_shipping':
+                return ['boxdropshipment', 'pqeasypost'];
+            case 'products_price':
+                return ['pm_multiplefeatures', 'groupinc'];
+            case 'products_seo':
+                return ['ebay', 'gshopping', 'amazon', 'ec_seo404', 'cdiscount'];
+            case 'products_options':
+                return ['productsbycategoryslider'];
+            case 'products_others':
+            default:
+                return ['favoriteproducts', 'wic_pushproductcms', 'productsbycategoryslider', 'erpillicopresta'];
+        }
     }
 
     /**
@@ -114,13 +129,40 @@ class RecommendedModules
             if (isset($product->installed) && $product->installed == 1) {
                 if ($product->active == 0) {
                     $product->url_active = 'enable';
+                    unset(
+                        $product->urls['update'],
+                        $product->urls['install']
+                    );
                 } elseif ($product->is_configurable == 1) {
                     $product->url_active = 'configure';
+                    unset(
+                        $product->urls['update'],
+                        $product->urls['enable'],
+                        $product->urls['install']
+                    );
                 } else {
                     $product->url_active = 'disable';
+                    unset(
+                        $product->urls['update'],
+                        $product->urls['install'],
+                        $product->urls['enable'],
+                        $product->urls['configure']
+                    );
                 }
             } elseif (isset($product->origin) && in_array($product->origin, ['native', 'native_all', 'partner', 'customer'])) {
                 $product->url_active = 'install';
+                unset(
+                    $product->urls['uninstall'],
+                    $product->urls['enable'],
+                    $product->urls['disable'],
+                    $product->urls['reset'],
+                    $product->urls['update'],
+                    $product->urls['configure']
+
+                );
+            } else {
+                $product->url_active = 'buy';
+                unset($product->urls);
             }
         }
 
