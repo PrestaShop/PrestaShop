@@ -5206,10 +5206,20 @@ img {
   text-transform: uppercase;
   padding: 0.6875em 1.0625em; }
 
-.block-contact,
-.account-list a {
+.block-contact {
+  border-left: #ebebeb 2px solid;
+  padding-left: 4.375em;
   color: #acaaa6; }
 
+.block-cms li a,
+.account-list a {
+  color: #acaaa6;
+  cursor: pointer; }
+  .block-cms li a:hover,
+  .account-list a:hover {
+    color: #2fb5d2; }
+
+.blockcms-title,
 .myaccount-title,
 .myaccount-title a,
 .block-contact-title {
