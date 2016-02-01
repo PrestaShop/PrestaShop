@@ -81,7 +81,7 @@ class AdminInformationControllerCore extends AdminController
             'shop' => array(
                 'ps' => _PS_VERSION_,
                 'url' => $this->context->shop->getBaseURL(),
-                'theme' => $this->context->shop->theme->name,
+                'theme' => $this->context->shop->theme->getName(),
             ),
             'mail' => Configuration::get('PS_MAIL_METHOD') == 1,
             'smtp' => array(
