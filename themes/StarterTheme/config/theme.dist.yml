@@ -34,18 +34,23 @@ global_settings:
     NEW_PRODUCTS_NBR: 4
     PS_PNG_QUALITY: 8
   modules:
-    toEnable:
+    to_enable:
       # All modules below are enabled when
       # the theme is enabled (and installed if needed).
       # They are disabled when the theme is disabled.
       - my-custom-module
       - yippeeslider
-    toDisable:
+    to_disable:
       # All modules below are disabled when the theme is enabled.
       # They are re-enabled when the theme is disabled.
       - homeslider
       - blockwishlist
-    toHookOn:
+  hooks:
+    custom_hooks:
+      - name: displayFooterBefore
+        title: displayFooterBefore
+        description: Add a widget area above the footer
+    module_to_hook:
       displayHeaderTop:
         # displayHeaderTop will have exactly the following
         # modules hooked to it, in the specified order.
@@ -54,8 +59,8 @@ global_settings:
         - blocklanguages
         - blockcurrencies
         - blockuserinfo
-      displayHeaderMidle:
-        # displayHeaderMidle will have whatever is currently hooked to it
+      displayHeaderMiddle:
+        # displayHeaderMiddle will have whatever is currently hooked to it
         # kept hooked to it, and blocksearch will be appended
         # to the list (or moved to the end if already hooked there).
         - ~
