@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
@@ -55,7 +56,8 @@ class ThemeManager implements AddonManagerInterface
         ThemeChecker $theme_checker,
         Employee $employee,
         Filesystem $fs,
-        Finder $finder)
+        Finder $finder,
+        HookConfigurator $hookConfigurator)
     {
         $this->shop = $shop;
         $this->configurator = $configurator;
@@ -63,6 +65,7 @@ class ThemeManager implements AddonManagerInterface
         $this->employee = $employee;
         $this->fs = $fs;
         $this->finder = $finder;
+        $this->hookConfigurator = $hookConfigurator;
     }
 
     /**
@@ -99,7 +102,7 @@ class ThemeManager implements AddonManagerInterface
         $theme = $this->getInstanceByName($name);
         $theme->onUninstall();
 
-        $this->fs->remove($theme->directory);
+        $this->fs->remove($theme->getDirectory());
 
         return true;
     }
@@ -140,14 +143,15 @@ class ThemeManager implements AddonManagerInterface
 
         $this->disable($this->shop->theme_name);
 
-        $this->doApplyConfiguration($theme->global_settings['configuration'])
-                ->doDisableModules($theme->global_settings['modules']['toDisable'])
-                ->doEnableModules($theme->global_settings['modules']['toEnable'])
-                ->doHookModules($theme->global_settings['modules']['toHookOn']);
+        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
+                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
+                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
+                ->doEnableModules($theme->get('global_settings.modules.to_enable', []))
+                ->doHookModules($theme->get('global_settings.hooks.module_to_hook'));
 
         $theme->onEnable();
 
-        $this->shop->theme_name = $theme->name;
+        $this->shop->theme_name = $theme->getName();
         $this->shop->update();
 
         return $this;
@@ -170,9 +174,9 @@ class ThemeManager implements AddonManagerInterface
      * @param  string $name The theme name to reset
      * @return bool         True for success
      */
-    public function reset($name)
+    public function reset($theme_name)
     {
-        return true;
+        return $this->disable($theme_name) && $this->enable($theme_name);
     }
 
     public function getInstanceByName($name)
@@ -224,6 +228,18 @@ class ThemeManager implements AddonManagerInterface
         return $themes;
     }
 
+    private function doCreateCustomHooks(array $hooks)
+    {
+        foreach ($hooks as $hook) {
+            $this->hookConfigurator->addHook(
+                $hook['name'],
+                $hook['title'],
+                $hook['description']
+            );
+        }
+        return $this;
+    }
+
     private function doApplyConfiguration(array $configuration)
     {
         foreach ($configuration as $key => $value) {
@@ -246,7 +262,7 @@ class ThemeManager implements AddonManagerInterface
 
     private function doHookModules(array $hooks)
     {
-        // TODO: implements doHookModules
+        $this->hookConfigurator->setHooksConfiguration($hooks);
         return $this;
     }
 
@@ -338,8 +354,8 @@ class ThemeManager implements AddonManagerInterface
     public function saveTheme($theme)
     {
         $test = file_put_contents(
-            $theme->directory.'/config/settings_'.$this->shop->id.'.json',
-            json_encode($theme->settings)
+            $theme->getDirectory().'/config/settings_'.$this->shop->id.'.json',
+            json_encode($theme->get('settings'))
         );
     }
 }

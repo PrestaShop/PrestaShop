@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use Shudrum\Component\ArrayFinder\ArrayFinder;
+
 class ThemeChecker
 {
     public function isValid(Theme $theme)
@@ -35,30 +37,23 @@ class ThemeChecker
 
     private function hasRequiredProperties($theme)
     {
-        foreach ($this->getMRequiredProperties() as $prop) {
-            $p = explode('.', $prop);
-
-            if (!isset($theme->{$p[0]})) {
+        $attributes = new ArrayFinder($theme->get(null));
+        foreach ($this->getRequiredProperties() as $prop) {
+            if (!$attributes->offsetExists($prop)) {
                 return false;
-            }
-
-            $var = $theme->{$p[0]};
-            for ($i=1; $i < count($p); $i++) {
-                if (!isset($var[$p[$i]])) {
-                    return false;
-                }
-                $var = $var[$p[$i]];
             }
         }
 
         return true;
     }
 
-    public function getMRequiredProperties()
+    public function getRequiredProperties()
     {
         return [
             'name',
+            'display_name',
             'version',
+            'author.name',
             'meta.compatibility.from',
             'meta.available_layouts',
         ];
@@ -67,7 +62,7 @@ class ThemeChecker
     private function hasRequiredFiles($theme)
     {
         foreach ($this->getRequiredFiles() as $file) {
-            if (!file_exists($theme->directory.$file)) {
+            if (!file_exists($theme->getDirectory().$file)) {
                 return false;
             }
         }

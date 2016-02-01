@@ -520,7 +520,7 @@ class AdminShopControllerCore extends AdminController
             'desc' => $this->l('Enable or disable your store?')
         );*/
 
-        $themes = (new ThemeManagerBuilder($this->context))
+        $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                         ->build()
                         ->getThemeList();
 

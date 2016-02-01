@@ -33,13 +33,13 @@
 					{foreach $field.themes as $theme}
 						<div class="col-sm-4 col-lg-3">
 							<div class="theme-container">
-								<h4 class="theme-title">{$theme->name}</h4>
+								<h4 class="theme-title">{$theme->getName()}</h4>
 								<div class="thumbnail-wrapper">
 									<div class="action-wrapper">
 										<div class="action-overlay"></div>
 										<div class="action-buttons">
 											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=enableTheme&amp;theme_name={$theme->name|urlencode}" class="btn btn-default">
+												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=enableTheme&amp;theme_name={$theme->getName()|urlencode}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
 
@@ -48,7 +48,7 @@
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=deleteTheme&amp;theme_name={$theme->name|urlencode}" title="{l s='Delete this theme'}" class="delete">
+														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=deleteTheme&amp;theme_name={$theme->getName()|urlencode}" title="{l s='Delete this theme'}" class="delete">
 															<i class="icon-trash"></i> {l s='Delete this theme'}
 														</a>
 													</li>
@@ -57,7 +57,7 @@
 											</div>
 										</div>
 									</div>
-									<img class="center-block img-thumbnail" src="../themes/{$theme->name}/preview.png" alt="{$theme->name}" />
+									<img class="center-block img-thumbnail" src="../themes/{$theme->getName()}/preview.png" alt="{$theme->getName()}" />
 								</div>
 							</div>
 						</div>
@@ -80,17 +80,15 @@
 
 			<div class="col-md-3">
 				<a href="{$base_url}" class="_blank">
-					<img class="center-block img-thumbnail" src="../themes/{$cur_theme->name}/preview.png" alt="{$cur_theme->name}" />
+					<img class="center-block img-thumbnail" src="../themes/{$cur_theme->getName()}/preview.png" alt="{$cur_theme->getName()}" />
 				</a>
 			</div>
 
 			<div id="js_theme_form_container" class="col-md-9">
-				<h2>{$cur_theme->name} {if isset($cur_theme->version)}<small>version {$cur_theme->version}</small>{/if}</h2>
-				{if isset($cur_theme->author.name)}
+				<h2>{$cur_theme->getName()} <small>version {$cur_theme->get('version')}</small></h2>
 				<p>
-					{l s='Designed by %s' sprintf=$cur_theme->author.name}
+					{l s='Designed by %s' sprintf=$cur_theme->get('author.name')}
 				</p>
-				{/if}
 
 				<hr />
 				<h4>{l s='Configure your page layouts'}</h4>
@@ -98,11 +96,16 @@
 					<div class="col-sm-8">
 						<p>{l s='Each page can use a different layout, choose it among the layouts bundled in your theme.'}</p>
 					</div>
-					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')}&display=configureLayouts">
+					<div class="col-sm-4 text-right">
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminThemes')}&display=configureLayouts">
 							<i class="icon icon-file"></i>
 							{l s='Choose layouts'}
 						</a>
+						{if $smarty.const._PS_MODE_DEV_}
+							<a class="btn btn-default" href="{$link->getAdminLink('AdminThemes')}&amp;action=resetToDefaults&amp;theme_name={$cur_theme->getName()}">
+								{l s='Reset to defaults'}
+							</a>
+						{/if}
 					</div>
 				</div>
 			</div>
