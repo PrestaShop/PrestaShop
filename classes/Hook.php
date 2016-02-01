@@ -107,13 +107,7 @@ class HookCore extends ObjectModel
             return false;
         }
 
-        if (strpos($hook_name, 'display') === 0) {
-            return true;
-        } elseif (strpos($hook_name, 'action') === 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return strpos($hook_name, 'display') === 0;
     }
 
     /**

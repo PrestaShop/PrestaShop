@@ -171,12 +171,12 @@ class LanguageCore extends ObjectModel
             }
         }
 
-        $themes =  (new ThemeManagerBuilder($this->context))
+        $themes =  (new ThemeManagerBuilder($this->context, Db::getInstance()))
                         ->build()
                         ->getThemeList();
         foreach ($themes as $theme) {
             /** @var Theme $theme */
-            $theme_dir = $theme->directory;
+            $theme_dir = $theme->getDirectory();
             if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php')) {
                 rename(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php', _PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$newIso.'.php');
             }

@@ -243,6 +243,11 @@ abstract class DbCore
         return self::$instance[$id_server];
     }
 
+    public function getPrefix()
+    {
+        return _DB_PREFIX_;
+    }
+
     /**
      * @param $test_db Db
      * Unit testing purpose only

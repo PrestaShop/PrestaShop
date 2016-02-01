@@ -82,7 +82,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->themes = (new ThemeManagerBuilder($this->context))
+        $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                             ->build()
                             ->getThemeList();
     }
@@ -369,10 +369,10 @@ class AdminTranslationsControllerCore extends AdminController
         } else {
             $theme_exists = array('from_theme' => false, 'to_theme' => false);
             foreach ($this->themes as $theme) {
-                if ($theme->directory == $from_theme) {
+                if ($theme->getDirectory() == $from_theme) {
                     $theme_exists['from_theme'] = true;
                 }
-                if ($theme->directory == $to_theme) {
+                if ($theme->getDirectory() == $to_theme) {
                     $theme_exists['to_theme'] = true;
                 }
             }
@@ -2797,7 +2797,7 @@ class AdminTranslationsControllerCore extends AdminController
 
     public function copyMailFilesForAllLanguages()
     {
-        $current_theme = Tools::safeOutput($this->context->shop->theme->name);
+        $current_theme = Tools::safeOutput($this->context->shop->theme->getName());
         $languages = Language::getLanguages();
 
         foreach ($languages as $key => $lang) {
@@ -3243,7 +3243,7 @@ class AdminTranslationsControllerCore extends AdminController
         $theme_exists = false;
         foreach ($this->themes as $existing_theme) {
             /** @var Theme $existing_theme */
-            if ($existing_theme->name == $theme) {
+            if ($existing_theme->getName() == $theme) {
                 return true;
             }
         }

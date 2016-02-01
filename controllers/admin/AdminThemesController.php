@@ -50,7 +50,7 @@ class AdminThemesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->theme_manager = (new ThemeManagerBuilder($this->context))
+        $this->theme_manager = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                                 ->build();
     }
 
@@ -102,9 +102,9 @@ class AdminThemesControllerCore extends AdminController
                     $sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
                     mkdir($sandbox);
 
-                    file_put_contents($sandbox.(string)$addons_theme->name.'.zip', $zip_content);
+                    file_put_contents($sandbox.(string)$addons_theme->getName().'.zip', $zip_content);
 
-                    if ($this->extractTheme($sandbox.(string)$addons_theme->name.'.zip', $sandbox)) {
+                    if ($this->extractTheme($sandbox.(string)$addons_theme->getName().'.zip', $sandbox)) {
                         if ($theme_directory = $this->installTheme(self::UPLOADED_THEME_DIR_NAME, $sandbox, false)) {
                             $ids_themes[$theme_directory] = (string)$addons_theme->id;
                         }
@@ -272,6 +272,8 @@ class AdminThemesControllerCore extends AdminController
         } elseif (Tools::getValue('action') == 'deleteTheme') {
             $this->theme_manager->uninstall(Tools::getValue('theme_name'));
             $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+        } elseif (Tools::getValue('action') == 'resetToDefaults') {
+            $this->theme_manager->reset(Tools::getValue('theme_name'));
         }
 
         return parent::postProcess();
@@ -544,7 +546,7 @@ class AdminThemesControllerCore extends AdminController
             ),
         );
 
-        $other_themes = $this->theme_manager->getThemeListExcluding([$this->context->shop->theme->name]);
+        $other_themes = $this->theme_manager->getThemeListExcluding([$this->context->shop->theme->getName()]);
         if (!empty($other_themes)) {
             $this->fields_options['theme'] = array(
                 'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
@@ -714,8 +716,8 @@ class AdminThemesControllerCore extends AdminController
     {
         $this->context->smarty->assign([
             'pages' => Meta::getAllMeta($this->context->language->id),
-            'page_layouts' => $this->context->shop->theme->settings['page_layouts'],
-            'available_layouts' => $this->context->shop->theme->meta['available_layouts'],
+            'page_layouts' => $this->context->shop->theme->get('settings.page_layouts'),
+            'available_layouts' => $this->context->shop->theme->get('meta.available_layouts'),
         ]);
 
         $this->setTemplate('controllers/themes/configurelayouts.tpl');
