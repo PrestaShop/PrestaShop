@@ -13,18 +13,18 @@
                       Link your shop to your addons account: it will automatically import the modules you purchased. Don't have an account yet ?
                       <a href="http://addons.prestashop.com/authentication.php" target="_blank">Sign up now</a>
                   </p>
-                  <form>
+                  <form id="addons-connect-form"  action="{{ path('admin_addons_login') }}" method="POST">
                   <div class="form-group">
                     <label for="module-addons-connect-email">Email address</label>
-                    <input type="email" class="form-control" id="module-addons-connect-email" placeholder="Email">
+                    <input name="username_addons" type="email" class="form-control" id="module-addons-connect-email" placeholder="Email">
                   </div>
                   <div class="form-group">
                     <label for="module-addons-connect-password">Password</label>
-                    <input type="password" class="form-control" id="module-addons-connect-password" placeholder="Password">
+                    <input name="password_addons" type="password" class="form-control" id="module-addons-connect-password" placeholder="Password">
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox"> Remember me
+                      <input name="addons_remember_me" type="checkbox"> Remember me
                     </label>
                   </div>
                   <button type="submit" class="btn btn-default">Let's go!</button>
