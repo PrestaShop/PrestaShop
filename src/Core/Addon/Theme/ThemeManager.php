@@ -143,10 +143,10 @@ class ThemeManager implements AddonManagerInterface
 
         $this->disable($this->shop->theme_name);
 
-        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks'))
-                ->doApplyConfiguration($theme->get('global_settings.configuration'))
-                ->doDisableModules($theme->get('global_settings.modules.to_disable'))
-                ->doEnableModules($theme->get('global_settings.modules.to_enable'))
+        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
+                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
+                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
+                ->doEnableModules($theme->get('global_settings.modules.to_enable', []))
                 ->doHookModules($theme->get('global_settings.hooks.module_to_hook'));
 
         $theme->onEnable();
