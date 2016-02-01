@@ -58,6 +58,16 @@ class AdminModuleDataProviderTest extends UnitTestCase
         }
 
         $this->setupSfKernel();
+
+        // We try to load the Addons catalog. If it fails, we skip the tests of this file.
+        try {
+            $dataProvider = new AdminModuleDataProvider($this->sfKernel);
+            $dataProvider->getCatalogModules();
+        } catch (\Exception $e) {
+            if ($e->getMessage() == 'Data from PrestaShop Addons is invalid, and cannot fallback on cache') {
+                $this->markTestSkipped('The Addons catalog is not available, test skipped x_x');
+            }
+        }
     }
 
     public function test_modules_in_catalog()

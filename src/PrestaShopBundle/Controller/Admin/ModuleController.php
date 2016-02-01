@@ -237,10 +237,15 @@ class ModuleController extends Controller
             }
         }
 
-        foreach ($modulesProvider->getCatalogModules() as $product) {
-            if (isset($product->origin) && $product->origin === 'customer') {
-                $products->to_install[] = (object)$product;
+        try {
+            foreach ($modulesProvider->getCatalogModules() as $product) {
+                if (isset($product->origin) && $product->origin === 'customer') {
+                    $products->to_install[] = (object)$product;
+                }
             }
+        } catch (Exception $e) {
+            // Todo: To be replaced by a warning when implemented
+            $this->addFlash('error', 'Cannot get catalog data from PrestaShop Addons. This page can be incomplete.');
         }
 
         foreach ($products as $product_label => $products_part) {
