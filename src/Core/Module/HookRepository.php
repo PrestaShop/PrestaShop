@@ -43,7 +43,7 @@ class HookRepository
             'title'         => $title,
             'description'   => $description,
             'position'      => $position
-        ]);
+        ], false, true, Db::REPLACE);
 
         return $this->getIdHook($hook_name);
     }

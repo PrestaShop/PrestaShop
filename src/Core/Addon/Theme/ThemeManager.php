@@ -143,7 +143,8 @@ class ThemeManager implements AddonManagerInterface
 
         $this->disable($this->shop->theme_name);
 
-        $this->doApplyConfiguration($theme->global_settings['configuration'])
+        $this->doCreateCustomHooks($theme->global_settings['hooks']['custom_hooks'])
+                ->doApplyConfiguration($theme->global_settings['configuration'])
                 ->doDisableModules($theme->global_settings['modules']['toDisable'])
                 ->doEnableModules($theme->global_settings['modules']['toEnable'])
                 ->doHookModules($theme->global_settings['hooks']['module_to_hook']);
@@ -225,6 +226,18 @@ class ThemeManager implements AddonManagerInterface
         }
 
         return $themes;
+    }
+
+    private function doCreateCustomHooks(array $hooks)
+    {
+        foreach ($hooks as $hook) {
+            $this->hookConfigurator->addHook(
+                $hook['name'],
+                $hook['title'],
+                $hook['description']
+            );
+        }
+        return $this;
     }
 
     private function doApplyConfiguration(array $configuration)
