@@ -25,7 +25,7 @@ class HookRepository
         $this->db_prefix = $db->getPrefix();
     }
 
-    public function getIdHook($hook_name)
+    public function getIdByName($hook_name)
     {
         $escaped_hook_name = $this->db->escape($hook_name);
 
@@ -45,7 +45,7 @@ class HookRepository
             'position'      => $position
         ], false, true, Db::REPLACE);
 
-        return $this->getIdHook($hook_name);
+        return $this->getIdByName($hook_name);
     }
 
     private function getIdModule($module_name)
@@ -61,7 +61,7 @@ class HookRepository
 
     public function unHookModulesFromHook($hook_name)
     {
-        $id_hook = $this->getIdHook($hook_name);
+        $id_hook = $this->getIdByName($hook_name);
         $id_shop = (int)$this->shop->id;
 
         $this->db->execute("DELETE FROM {$this->db_prefix}hook_module
@@ -99,7 +99,7 @@ class HookRepository
         $hook_module = [];
 
         foreach ($hooks as $hook_name => $module_names) {
-            $id_hook = $this->getIdHook($hook_name);
+            $id_hook = $this->getIdByName($hook_name);
             if (!$id_hook) {
                 $id_hook = $this->createHook($hook_name);
             }
