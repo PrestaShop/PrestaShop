@@ -1622,7 +1622,7 @@ class FrontControllerCore extends Controller
             $this->getTemplateVarUrls()
         );
 
-        $form->setAction($this->updateQueryString(null));
+        $form->setAction($this->getCurrentURL());
 
         return $form;
     }
@@ -1660,7 +1660,7 @@ class FrontControllerCore extends Controller
 
         $form->setGuestAllowed($this->guestAllowed);
 
-        $form->setAction($this->updateQueryString(null));
+        $form->setAction($this->getCurrentURL());
 
         return $form;
     }
@@ -1695,7 +1695,7 @@ class FrontControllerCore extends Controller
             )
         );
 
-        $form->setAction($this->updateQueryString(null));
+        $form->setAction($this->getCurrentURL());
 
         return $form;
     }
