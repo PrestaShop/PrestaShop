@@ -68,6 +68,9 @@ class VirtualProductController extends FrameworkBundleAdminController
             $res = $adminProductWrapper->updateDownloadProduct($product, $data);
             $res->file_download_link = $res->filename ? $legacyContext->getAdminBaseUrl().$res->getTextLink(true) : '';
 
+            $product->is_virtual = 1;
+            $product->save();
+
             $response->setData($res);
         } else {
             $response->setStatusCode(400);
