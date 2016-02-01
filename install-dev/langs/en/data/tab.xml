@@ -109,7 +109,7 @@
   <tab id="Image_Settings" name="Image Settings" />
   <tab id="International" name="International" />
   <tab id="Tax_Management" name="Tax Management" />
-  <tab id="Shop_parameters" name="Tax Management" />
+  <tab id="Shop_parameters" name="Parameters" />
   <tab id="Order_settings" name="Order Preferences" />
   <tab id="Customer_settings" name="Customer Preferences" />
   <tab id="Traffic" name="Traffic" />
