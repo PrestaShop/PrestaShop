@@ -628,6 +628,14 @@ class ToolsCore
         return $currency;
     }
 
+    /**
+     * Return the CLDR associated with the context or given language_code
+     *
+     * @param Context|null $context
+     * @param null         $language_code
+     * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
+     * @throws PrestaShopException
+     */
     public static function getCldr(Context $context = null, $language_code = null)
     {
         static $cldr_cache;
