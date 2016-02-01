@@ -66,31 +66,31 @@
 
 	__webpack_require__(19);
 
-	__webpack_require__(28);
+	__webpack_require__(35);
 
-	__webpack_require__(31);
+	__webpack_require__(38);
 
-	var _componentsDropDown = __webpack_require__(32);
+	var _componentsDropDown = __webpack_require__(39);
 
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 
-	var _componentsTopMenu = __webpack_require__(33);
+	var _componentsTopMenu = __webpack_require__(40);
 
 	var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
 
-	var _componentsProductMiniature = __webpack_require__(34);
+	var _componentsProductMiniature = __webpack_require__(41);
 
 	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 
-	var _prestashop = __webpack_require__(29);
+	var _prestashop = __webpack_require__(36);
 
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 
-	var _events = __webpack_require__(35);
+	var _events = __webpack_require__(42);
 
 	var _events2 = _interopRequireDefault(_events);
 
-	var _common = __webpack_require__(30);
+	var _common = __webpack_require__(37);
 
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
@@ -7602,7 +7602,14 @@
 /* 25 */,
 /* 26 */,
 /* 27 */,
-/* 28 */
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7613,11 +7620,11 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _prestashop = __webpack_require__(29);
+	var _prestashop = __webpack_require__(36);
 
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 
-	var _common = __webpack_require__(30);
+	var _common = __webpack_require__(37);
 
 	function collapsePaymentOptions() {
 	  (0, _jquery2['default'])('.js-additional-information, .js-payment-option-form').hide();
@@ -7713,13 +7720,13 @@
 	(0, _jquery2['default'])(document).ready(setupCheckoutScripts);
 
 /***/ },
-/* 29 */
+/* 36 */
 /***/ function(module, exports) {
 
 	module.exports = prestashop;
 
 /***/ },
-/* 30 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7735,7 +7742,7 @@
 	}
 
 /***/ },
-/* 31 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7809,7 +7816,7 @@
 	});
 
 /***/ },
-/* 32 */
+/* 39 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7849,7 +7856,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 33 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7868,7 +7875,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _dropDown = __webpack_require__(32);
+	var _dropDown = __webpack_require__(39);
 
 	var _dropDown2 = _interopRequireDefault(_dropDown);
 
@@ -7895,7 +7902,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 34 */
+/* 41 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7943,7 +7950,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 35 */
+/* 42 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.

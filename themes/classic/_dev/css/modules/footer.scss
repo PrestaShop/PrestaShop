@@ -2,10 +2,21 @@
   @include search-box;
   @include submit-button;
 }
-.block-contact,
-.account-list a {
+.block-contact {
+  border-left: $gray-light 2px solid;
+  padding-left: em(70px);
   color: $gray;
 }
+
+.block-cms li a,
+.account-list a {
+  color: $gray;
+  cursor: pointer;
+  &:hover{
+    color:$brand-primary;
+  }
+}
+.blockcms-title,
 .myaccount-title,
 .myaccount-title a,
 .block-contact-title {
@@ -20,7 +31,7 @@
   display: inline-block;
   margin: em(2px);
   cursor: pointer;
-  &:hover{
+  &:hover {
     background-color: $brand-primary;
   }
   a {
