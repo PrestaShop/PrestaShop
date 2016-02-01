@@ -40,6 +40,7 @@ class DataFormatterExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFilter('arrayCast', array($this, 'arrayCast')),
+            new \Twig_SimpleFilter('intCast', array($this, 'intCast')),
             new \Twig_SimpleFilter('unsetElement', array($this, 'unsetElement')),
         );
     }
@@ -53,6 +54,7 @@ class DataFormatterExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('arrayCast', array($this, 'arrayCast')),
+            new \Twig_SimpleFunction('intCast', array($this, 'intCast')),
             new \Twig_SimpleFunction('unsetElement', array($this, 'unsetElement')),
         );
     }
@@ -60,13 +62,25 @@ class DataFormatterExtension extends \Twig_Extension
     /**
      * Cast to array the variable given
      *
-     * @param string $toCast Mixed value to be casted into an array
+     * @param mixed $toCast Mixed value to be casted into an array
      *
      * @return array $toCast casted in array
      */
     public function arrayCast($toCast)
     {
         return (array)$toCast;
+    }
+
+    /**
+     * Cast to int the variable given
+     *
+     * @param mixed $toCast Mixed value to be casted into an int
+     *
+     * @return int $toCast casted in int
+     */
+    public function intCast($toCast)
+    {
+        return (int)$toCast;
     }
 
     /**

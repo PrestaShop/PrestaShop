@@ -209,13 +209,12 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /** Does this function should be in a User related class ? **/
-    protected function getAddonsCredentials()
+    public function getAddonsEmail()
     {
         $request = Request::createFromGlobals();
 
         return [
             'username_addons' => $request->cookies->get('username_addons'),
-            'password_addons' => $request->cookies->get('password_addons'),
         ];
     }
 
