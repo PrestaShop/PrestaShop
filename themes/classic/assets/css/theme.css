@@ -5133,7 +5133,7 @@ img {
       border: 2px #acaaa6 solid; }
       #search_filters #facet-checkbox + span .check {
         display: none;
-        margin: -0.375em -0.125em;
+        margin: -0.25em -0.125em;
         font-size: 0.9375em; }
     #search_filters #facet-checkbox:checked + span .check {
       display: block; }
