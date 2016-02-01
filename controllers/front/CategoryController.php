@@ -48,8 +48,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
     public function getCanonicalURL()
     {
-        // Canonical URL is the category URL without any parameters.
-        return $this->updateQueryString(null);
+        return $this->context->link->getCategoryLink($this->category);
     }
 
     /**
