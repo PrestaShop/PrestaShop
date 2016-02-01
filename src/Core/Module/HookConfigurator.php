@@ -74,6 +74,12 @@ class HookConfigurator
         return $this;
     }
 
+    public function addHook($name, $title, $description)
+    {
+        $this->hookRepository->createHook($name, $title, $description);
+        return $this;
+    }
+
     private function getUniqueModuleToHookList(array $hooks)
     {
         $list = [];
