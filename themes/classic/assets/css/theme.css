@@ -5319,7 +5319,7 @@ a:hover {
     #header .header-nav .blockcart {
       background: #ebebeb;
       font-size: 16px;
-      width: 115px;
+      width: 8.4375em;
       height: 48px;
       padding-top: 12px;
       margin-right: 15px; }
@@ -5354,7 +5354,9 @@ a:hover {
     #wrapper .breadcrumb li {
       display: inline; }
       #wrapper .breadcrumb li:after {
-        content: "/"; }
+        content: "/";
+        color: #878787;
+        margin: 0.3125em; }
       #wrapper .breadcrumb li:last-child a {
         color: #414141; }
       #wrapper .breadcrumb li:last-child:after {
