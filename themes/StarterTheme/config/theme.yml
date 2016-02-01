@@ -28,7 +28,7 @@ global_settings:
         title: displayFooterBefore
         description: Add a widget area above the footer
     module_to_hook:
-      displayTop:
+      displayNav:
         # displayHeaderTop will have exactly the following
         # modules hooked to it, in the specified order.
         # Each module in this list will be unhooked
@@ -36,6 +36,13 @@ global_settings:
         - blocklanguages
         - blockcurrencies
         - blockuserinfo
+      displayHome:
+        - homeslider
+        - homefeatured
+        - blockbanner
+      displayFooter:
+        - blocknewsletter
+        - blockcontact
 
 theme_settings:
   default_layout: layout-full-width
