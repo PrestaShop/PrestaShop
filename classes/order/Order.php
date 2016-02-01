@@ -1396,8 +1396,10 @@ class OrderCore extends ObjectModel
         if ($number) {
             $sql .= (int)$number;
         } else {
-            $sql .= '(SELECT new_number FROM (SELECT (MAX(`delivery_number`) + 1) AS new_number
-            FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+            $getNumberSql = '(SELECT new_number FROM (SELECT (MAX(`delivery_number`) + 1) AS new_number
+                FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+            $newInvoiceNumber = Db::getInstance()->getValue($getNumberSql);
+            $sql .= $newInvoiceNumber;
         }
 
         $sql .= ' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
