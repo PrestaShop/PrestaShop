@@ -1,4 +1,8 @@
 .carousel {
+  .direction{
+    z-index: auto;
+    margin-top: em(-40px);
+  }
   .carousel-inner {
     height: 340px;
   }
@@ -26,7 +30,6 @@
     opacity: 1;
     .icon-prev,
     .icon-next {
-      margin-top: -50px;
       &::before {
         content: "";
       }

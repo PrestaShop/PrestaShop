@@ -40,7 +40,7 @@
     display: block;
     color: $gray-darker;
     padding: em(10px) em(25px);
-    &:hover{
+    &:hover {
       background: $brand-primary;
       color: white;
       text-decoration: none;
@@ -55,23 +55,67 @@
     border-radius: 0;
   }
 }
-
-#search_filters{
+#search_filters {
   @include box-shadow;
   background: white;
-  .facets-title{
-    padding: em(20px) em(20px) 0;
+  padding: em(20px);
+  #facet-checkbox {
+    display: none;
+    + span {
+      display: inline-block;
+      width: em(15px);
+      height: em(15px);
+      vertical-align: middle;
+      cursor: pointer;
+      border: 2px $gray solid;
+      .check {
+        display: none;
+        margin: em(-6px) em(-2px);
+        font-size: em(15px);
+      }
+    }
+    &:checked + span {
+      .check {
+        display: block;
+      }
+    }
   }
-  .facet{
-    padding-left: em(30px);
-    .facet-title{
+  .facet {
+    .facet-title {
       color: $gray;
     }
-    .search-link{
+    .search-link {
       font-size: em(14px);
     }
-    .facet-label{
+    .facet-label {
       margin-bottom: 0;
     }
+  }
+}
+.pagination {
+  width: 100%;
+  .page-list {
+    background: white;
+    padding: em(10px) em(20px);
+    li {
+      display: inline;
+    }
+  }
+  a {
+    color: black;
+    font-weight: 600;
+  }
+  .previous {
+    float: left;
+  }
+  .next {
+    float: right;
+  }
+  .disabled {
+    color: $gray;
+  }
+  .current a{
+    color: $brand-primary;
+    text-decoration: none;
   }
 }
