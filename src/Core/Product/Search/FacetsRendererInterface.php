@@ -8,4 +8,9 @@ interface FacetsRendererInterface
         ProductSearchContext $context,
         ProductSearchResult $result
     );
+
+    public function renderActiveFilters(
+        ProductSearchContext $context,
+        ProductSearchResult $result
+    );
 }
