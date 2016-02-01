@@ -541,7 +541,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $res = [
                 'is_virtual_file' => $download->active,
                 'name' => $download->display_filename,
-                'nb_downloadable' => $download->nb_downloadable,
+                'nb_downloable' => $download->nb_downloadable,
                 'expiration_date' => $dateValue,
                 'nb_days' => $download->nb_days_accessible,
             ];
