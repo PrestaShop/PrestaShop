@@ -105,4 +105,9 @@ class CheckoutSessionCore
     {
         return Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
     }
+
+    public function getCheckoutURL()
+    {
+        return $this->context->link->getPageLink('order');
+    }
 }
