@@ -108,15 +108,18 @@ class Theme implements AddonInterface
         $this->attributes->set('settings.page_layouts', $layouts);
     }
 
-    public function getLayoutForPage($page)
+    public function getLayoutNameForPage($page)
     {
         $layout_name = $this->get('theme_settings.default_layout');
         if (isset($this->attributes['settings']['page_layouts'][$page])
             && $this->attributes['settings']['page_layouts'][$page]) {
             $layout_name = $this->attributes['settings']['page_layouts'][$page];
         }
+        return $layout_name;
+    }
 
-        $filename = 'layouts/'.$layout_name.'.tpl';
-        return $filename;
+    public function getLayoutRelativePathForPage($page)
+    {
+        return 'layouts/'.$this->getLayoutNameForPage($page).'.tpl';
     }
 }

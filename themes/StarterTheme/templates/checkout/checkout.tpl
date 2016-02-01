@@ -7,7 +7,7 @@
     {/block}
   </head>
 
-  <body id="{$page.page_name}">
+  <body id="{$page.page_name}" class="{$page.body_classes|classnames}">
 
     <header id="header">
       {block name='header'}
