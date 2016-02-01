@@ -5,6 +5,7 @@ import 'bootstrap/dist/js/npm';
 
 import '../css/theme';
 import './checkout';
+import './customer';
 import './facets';
 
 import DropDown from './components/drop-down';
