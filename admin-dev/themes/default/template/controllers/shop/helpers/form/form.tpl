@@ -27,14 +27,14 @@
 {block name="input"}
 	{if $input.type == 'theme'}
 		{foreach $input.values as $theme}
-			<div class="col-lg-3 select_theme {if $theme->name == $fields_value.theme_name}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
+			<div class="col-lg-3 select_theme {if $theme->getName() == $fields_value.theme_name}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
 				<div class="radio">
 					<label>
-						<input type="radio" name="theme_name" value="{$theme->name|escape:'html':'UTF-8'}"{if $theme->name == $fields_value.theme_name} checked="checked"{/if} /> {$theme->name|escape:'html':'UTF-8'}
+						<input type="radio" name="theme_name" value="{$theme->getName()|escape:'html':'UTF-8'}"{if $theme->getName() == $fields_value.theme_name} checked="checked"{/if} /> {$theme->getName()|escape:'html':'UTF-8'}
 					</label>
 				</div>
 				<div class="theme-container">
-					<img class="thumbnail" src="../themes/{$theme->name|escape:'html':'UTF-8'}/preview.jpg" />
+					<img class="thumbnail" src="../themes/{$theme->getName()|escape:'html':'UTF-8'}/preview.jpg" />
 				</div>
 			</div>
 		{/foreach}

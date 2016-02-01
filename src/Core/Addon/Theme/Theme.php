@@ -26,16 +26,32 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
+use Shudrum\Component\ArrayFinder\ArrayFinder;
 
 class Theme implements AddonInterface
 {
+    private $attributes;
+
     public function __construct(array $attributes)
     {
-        foreach ($attributes as $attr => $value) {
-            $this->{$attr} = $value;
-        }
+        $attributes['directory'] = rtrim($attributes['directory'], '/') . '/';
 
-        $this->directory = rtrim($this->directory, '/') . '/';
+        $this->attributes = new ArrayFinder($attributes);
+    }
+
+    public function get($attr)
+    {
+        return $this->attributes->get($attr);
+    }
+
+    public function getName()
+    {
+        return $this->attributes->get('name');
+    }
+
+    public function getDirectory()
+    {
+        return $this->attributes->get('directory');
     }
 
     public function onInstall()
@@ -89,15 +105,15 @@ class Theme implements AddonInterface
 
     public function setPageLayouts(array $layouts)
     {
-        $this->settings['page_layouts'] = $layouts;
+        $this->attributes->set('settings.page_layouts', $layouts);
     }
 
     public function getLayoutForPage($page)
     {
-        $layout_name = $this->theme_settings['default_layout'];
-        if (isset($this->settings['page_layouts'][$page])
-            && $this->settings['page_layouts'][$page]) {
-            $layout_name = $this->settings['page_layouts'][$page];
+        $layout_name = $this->get('theme_settings.default_layout');
+        if (isset($this->attributes['settings']['page_layouts'][$page])
+            && $this->attributes['settings']['page_layouts'][$page]) {
+            $layout_name = $this->attributes['settings']['page_layouts'][$page];
         }
 
         $filename = 'layouts/'.$layout_name.'.tpl';

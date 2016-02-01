@@ -102,7 +102,7 @@ class ThemeManager implements AddonManagerInterface
         $theme = $this->getInstanceByName($name);
         $theme->onUninstall();
 
-        $this->fs->remove($theme->directory);
+        $this->fs->remove($theme->getDirectory());
 
         return true;
     }
@@ -143,15 +143,15 @@ class ThemeManager implements AddonManagerInterface
 
         $this->disable($this->shop->theme_name);
 
-        $this->doCreateCustomHooks($theme->global_settings['hooks']['custom_hooks'])
-                ->doApplyConfiguration($theme->global_settings['configuration'])
-                ->doDisableModules($theme->global_settings['modules']['toDisable'])
-                ->doEnableModules($theme->global_settings['modules']['toEnable'])
-                ->doHookModules($theme->global_settings['hooks']['module_to_hook']);
+        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks'))
+                ->doApplyConfiguration($theme->get('global_settings.configuration'))
+                ->doDisableModules($theme->get('global_settings.modules.to_disable'))
+                ->doEnableModules($theme->get('global_settings.modules.to_enable'))
+                ->doHookModules($theme->get('global_settings.hooks.module_to_hook'));
 
         $theme->onEnable();
 
-        $this->shop->theme_name = $theme->name;
+        $this->shop->theme_name = $theme->getName();
         $this->shop->update();
 
         return $this;
@@ -354,8 +354,8 @@ class ThemeManager implements AddonManagerInterface
     public function saveTheme($theme)
     {
         $test = file_put_contents(
-            $theme->directory.'/config/settings_'.$this->shop->id.'.json',
-            json_encode($theme->settings)
+            $theme->getDirectory().'/config/settings_'.$this->shop->id.'.json',
+            json_encode($theme->get('settings'))
         );
     }
 }

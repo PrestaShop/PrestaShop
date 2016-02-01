@@ -50,7 +50,7 @@ global_settings:
       - name: displayFooterBefore
         title: displayFooterBefore
         description: Add a widget area above the footer
-    module_to_hook:
+    modules_to_hook:
       displayHeaderTop:
         # displayHeaderTop will have exactly the following
         # modules hooked to it, in the specified order.
