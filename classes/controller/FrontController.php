@@ -1370,7 +1370,7 @@ class FrontControllerCore extends Controller
         $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
         $urls['pages'] = $pages;
 
-        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->name . '/assets/';
+        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->getName() . '/assets/';
 
         $urls['actions'] = [
             'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
