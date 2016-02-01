@@ -98,11 +98,16 @@
 					<div class="col-sm-8">
 						<p>{l s='Each page can use a different layout, choose it among the layouts bundled in your theme.'}</p>
 					</div>
-					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')}&display=configureLayouts">
+					<div class="col-sm-4 text-right">
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminThemes')}&display=configureLayouts">
 							<i class="icon icon-file"></i>
 							{l s='Choose layouts'}
 						</a>
+						{if $smarty.const._PS_MODE_DEV_}
+							<a class="btn btn-default" href="{$link->getAdminLink('AdminThemes')}&amp;action=resetToDefaults&amp;theme_name={$cur_theme->name}">
+								{l s='Reset to defaults'}
+							</a>
+						{/if}
 					</div>
 				</div>
 			</div>

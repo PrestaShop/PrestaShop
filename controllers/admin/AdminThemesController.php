@@ -272,6 +272,8 @@ class AdminThemesControllerCore extends AdminController
         } elseif (Tools::getValue('action') == 'deleteTheme') {
             $this->theme_manager->uninstall(Tools::getValue('theme_name'));
             $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+        } elseif (Tools::getValue('action') == 'resetToDefaults') {
+            $this->theme_manager->reset(Tools::getValue('theme_name'));
         }
 
         return parent::postProcess();
