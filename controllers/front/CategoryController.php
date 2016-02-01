@@ -164,4 +164,17 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         return $this->category;
     }
+
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+
+        $page['body_classes']['-id-'.$this->category->id] = true;
+        $page['body_classes']['-'.$this->category->name] = true;
+        $page['body_classes']['-id-parent-'.$this->category->id_parent] = true;
+        $page['body_classes']['-depth-level-'.$this->category->level_depth] = true;
+
+
+        return $page;
+    }
 }
