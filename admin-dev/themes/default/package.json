@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "description": "install admin theme dependencies",
   "dependencies": {
-      "PrestaKit": "https://github.com/gfanton/PrestaKit"
+      "PrestaKit": "https://github.com/PrestaShop/prestashop-ui-kit"
   }
 }
