@@ -1147,6 +1147,11 @@ var form = (function() {
 					}
 				}).show();
 			});
+
+			/** show rendrered form after page load */
+			$(window).load(function(){
+				$('#form-loading').fadeIn();
+			});
 		},
 		'send': function() {
 			send();
