@@ -171,7 +171,11 @@ class CommonController extends FrameworkBundleAdminController
 
         $modules = array();
         foreach ($moduleIdList as $id) {
-            $module = array_values($modulesProvider->getCatalogModules(['name' => $id]));
+            try {
+                $module = array_values($modulesProvider->getCatalogModules(['name' => $id]));
+            } catch (\Exception $e) {
+                continue;
+            }
 
             if (count($module) == 1) {
                 $module = $module[0];
@@ -187,9 +191,8 @@ class CommonController extends FrameworkBundleAdminController
             shuffle($modules);
         }
 
-        // FIXME: utiliser ceux en commun avec Modules ?
         $modules = $recommendedModules->filterInstalledAndBadModules($modules);
-        $modules = $recommendedModules->generateModuleUrls($modules);
+        $modules = $modulesProvider->generateAddonsUrls($modules);
 
         return array(
             'domain' => $domain,
