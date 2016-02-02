@@ -33,8 +33,10 @@ namespace PrestaShopBundle\Service\DataProvider\Admin;
 interface AddonsInterface
 {
     /**
-     * Send a request to Addons
-     * 
+     * Send a request to addons.prestashop.com to retrieve Modules/Addons data.
+     *
+     * @param string $action The query type.
+     * @param array $params The request parameters.
      */
     public function request($action, $params);
 }

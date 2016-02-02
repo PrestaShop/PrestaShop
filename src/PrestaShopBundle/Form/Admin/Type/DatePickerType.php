@@ -33,11 +33,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class DatePickerType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getParent()
     {
         return \Symfony\Component\Form\Extension\Core\Type\TextType::class;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

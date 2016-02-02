@@ -25,6 +25,11 @@
  */
 namespace PrestaShop\PrestaShop\Core\Stock;
 
+/**
+ * Class StockManager Refactored features about product stocks.
+ *
+ * @package PrestaShop\PrestaShop\Core\Stock
+ */
 class StockManager
 {
     /**

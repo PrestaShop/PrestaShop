@@ -23,7 +23,6 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
@@ -78,6 +77,9 @@ class AddonsDataProvider implements AddonsInterface
             && $request->cookies->get('password_addons', false);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function request($action, $params = array())
     {
         if (!self::$is_addons_up) {

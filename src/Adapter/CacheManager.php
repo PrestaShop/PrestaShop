@@ -25,6 +25,13 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+/**
+ * Class CacheManager drives the cache behavior.
+ *
+ * Features to drive the legacy cache from new code architecture.
+ *
+ * @package PrestaShop\PrestaShop\Adapter
+ */
 class CacheManager
 {
     /**

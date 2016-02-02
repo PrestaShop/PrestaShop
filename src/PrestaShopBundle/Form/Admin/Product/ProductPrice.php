@@ -77,8 +77,6 @@ class ProductPrice extends CommonAbstractType
 
     /**
      * {@inheritdoc}
-     *
-     * Builds form
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

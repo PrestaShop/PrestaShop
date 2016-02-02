@@ -23,9 +23,12 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Cldr;
 
+/**
+ * Class Localize
+ * @package PrestaShop\PrestaShop\Core\Cldr
+ */
 class Localize
 {
     const DEFAULT_LOCALE = 'en';
@@ -41,11 +44,19 @@ class Localize
     private static $environmentLocale;
     private static $locale;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __toString()
     {
         return self::toString();
     }
 
+    /**
+     * Get the Browser locales (checking the HTTP header 'accept language')
+     *
+     * @return array The accepted locales
+     */
     public static function getBrowserLocales()
     {
         if (self::$browserLocales !== null) {
@@ -99,6 +110,12 @@ class Localize
         return $result;
     }
 
+    /**
+     * Parse the language part of a given locale string
+     *
+     * @param null|string $locale The local to parse
+     * @return string The language parsed from the $locale input
+     */
     public static function getLanguage($locale = null)
     {
         if (!isset($locale)) {
@@ -109,6 +126,11 @@ class Localize
         return $locale[0];
     }
 
+    /**
+     * Sets a locale value as a singleton
+     *
+     * @param string $value The local to set
+     */
     public static function setLocale($value)
     {
         if (!is_string($value)) {
@@ -118,6 +140,11 @@ class Localize
         self::$locale = self::canonicalize($value);
     }
 
+    /**
+     * Gets the locale value (singleton)
+     *
+     * @return string The locale singleton
+     */
     public static function getLocale()
     {
         if (!isset(self::$locale)) {
@@ -127,6 +154,12 @@ class Localize
         return self::$locale;
     }
 
+    /**
+     * Gets the best locale value, looking after the input, the browser and the environment locales.
+     *
+     * @param null|string|Localize $locale
+     * @return string The best fitting locale
+     */
     public static function getPreferedLocale($locale = null)
     {
         if ($locale instanceof self) {
@@ -158,6 +191,12 @@ class Localize
         return (string)self::canonicalize($locale);
     }
 
+    /**
+     * Parse the region part of the given locale string.
+     *
+     * @param null|string $locale The locale value to parse
+     * @return string The region parsed from the input
+     */
     public static function getRegion($locale = null)
     {
         if (!isset($locale)) {
@@ -173,11 +212,22 @@ class Localize
         return $locale[0];
     }
 
+    /**
+     * Cast the current Localize instance into a string.
+     *
+     * @return string The locale of the current Localize instance, in a string format.
+     */
     public static function toString()
     {
         return (string)self::getLocale();
     }
 
+    /**
+     * Parse and fix the given locale to ensure format.
+     *
+     * @param $locale The locale to fix.
+     * @return array|null|string The fixed locale format.
+     */
     private static function canonicalize($locale)
     {
         if (empty($locale) || $locale == '') {

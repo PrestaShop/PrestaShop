@@ -35,22 +35,17 @@ use Symfony\Component\Routing\Router;
 class RecommendedModules
 {
 
+    /**
+     * @var Router
+     */
     private $router;
 
     /**
-     * Constructor
-     * Set all adapters needed and get product
+     * Constructor.
      *
-     * @param \ProductCore $product The product object
-     * @param LegacyContext $legacyContext
-     * @param AdminProductWrapper $adminProductWrapper
-     * @param Tools $toolsAdapter
-     * @param ProductDataProvider $productDataProvider
-     * @param SupplierDataProvider $supplierDataProvider
-     * @param WarehouseDataProvider $warehouseDataProvider
-     * @param FeatureDataProvider $featureDataProvider
-     * @param PackDataProvider $packDataProvider
-     * @param ShopContext $shopContext
+     * Dependency injection will give the required services.
+     *
+     * @param Router $router
      */
     public function __construct(Router $router)
     {

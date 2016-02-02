@@ -617,6 +617,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param string $action The action to apply on the selected product
+     * @param integer $id The product ID to apply the action on.
      * @throws \Exception If action not properly set or unknown.
      * @return void (redirection)
      */
@@ -775,7 +776,8 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog_filters/42/last/32
      *
-     *
+     * @param integer|string $quantity The quantity to set on the catalog filters persistence.
+     * @param string $active The activation state to set on the catalog filters persistence.
      * @return void (redirection)
      */
     public function catalogFiltersAction($quantity = 'none', $active = 'none')

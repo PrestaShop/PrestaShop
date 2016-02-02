@@ -34,10 +34,23 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
  */
 class Employee implements UserInterface, EquatableInterface
 {
+    /**
+     * @var string
+     */
     private $username;
+    /**
+     * @var string
+     */
     private $password;
+    /**
+     * @var string
+     */
     private $salt;
+    /**
+     * @var array
+     */
     private $roles;
+
     private $data;
 
     /**
@@ -95,6 +108,8 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
+     * Get the data paremeter of the current employee
+     *
      * @return object
      */
     public function getData()

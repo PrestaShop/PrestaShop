@@ -33,8 +33,8 @@ use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
  */
 class PrestaShopBundle extends Bundle
 {
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\HttpKernel\Bundle\Bundle::getContainerExtension()
+    /**
+     * {@inheritdoc}
      */
     public function getContainerExtension()
     {

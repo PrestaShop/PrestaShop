@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Adapter\Country;
 class CountryDataProvider
 {
     /**
-     * @brief Return available countries
+     * Return available countries
      *
      * @param int $id_lang Language ID
      * @param bool $active return only active coutries

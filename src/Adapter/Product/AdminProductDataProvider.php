@@ -63,8 +63,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $this->imageManager = $imageManager;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::getPersistedFilterParameters()
+    /**
+     * {@inheritdoc}
      */
     public function getPersistedFilterParameters()
     {
@@ -83,8 +83,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         return $filter->getProductCatalogFilter();
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::isCategoryFiltered()
+    /**
+     * {@inheritdoc}
      */
     public function isCategoryFiltered()
     {
@@ -92,8 +92,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         return (isset($filters['filter_category']) && $filters['filter_category'] > 0);
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::isColumnFiltered()
+    /**
+     * {@inheritdoc}
      */
     public function isColumnFiltered()
     {
@@ -106,8 +106,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         return false;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::persistFilterParameters()
+    /**
+     * {@inheritdoc}
      */
     public function persistFilterParameters(array $parameters)
     {
@@ -136,8 +136,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $this->entityManager->flush();
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::combinePersistentCatalogProductFilter()
+    /**
+     * {@inheritdoc}
      */
     public function combinePersistentCatalogProductFilter($paramsIn = array(), $avoidPersistence = false)
     {
@@ -153,8 +153,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         return $paramsOut;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::getCatalogProductList()
+    /**
+     * {@inheritdoc}
      */
     public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array(), $avoidPersistence = false, $formatCldr = true)
     {
@@ -318,8 +318,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         return $products;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::countAllProducts()
+    /**
+     * {@inheritdoc}
      */
     public function countAllProducts()
     {
@@ -361,8 +361,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         return $params;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::getPaginationLimitChoices()
+    /**
+     * {@inheritdoc}
      */
     public function getPaginationLimitChoices()
     {
