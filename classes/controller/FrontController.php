@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectSerializer;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 
 class FrontControllerCore extends Controller
 {
@@ -1654,7 +1655,7 @@ class FrontControllerCore extends Controller
             $this->makeCustomerFormatter(),
             new CustomerPersister(
                 $this->context,
-                new PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing,
+                new Hashing,
                 $this->getTranslator(),
                 $this->guestAllowed
             ),
