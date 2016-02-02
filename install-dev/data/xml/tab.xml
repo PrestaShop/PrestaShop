@@ -323,15 +323,15 @@
                         <class_name>AdminGenders</class_name>
                     </tab>
 
-                <tab id="Contacts" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminStores</class_name>
+                <tab id="Contact" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentStores</class_name>
                 </tab>
 
-                    <tab id="Store_Contacts" id_parent="Contact" active="1" hide_host_mode="0" icon="">
-                        <class_name>AdminStores</class_name>
-                    </tab>
                     <tab id="Contacts" id_parent="Contact" active="1" hide_host_mode="0" icon="">
                         <class_name>AdminContacts</class_name>
+                    </tab>
+                    <tab id="Store_Contacts" id_parent="Contact" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminStores</class_name>
                     </tab>
 
                 <tab id="Traffic" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
@@ -378,22 +378,22 @@
                 <class_name>AdminAdvancedParameters</class_name>
             </tab>
 
-                <tab id="Information" id_parent="Advanced_parameters" active="1" hide_host_mode="0" icon="">
+                <tab id="Information" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminInformation</class_name>
                 </tab>
-                <tab id="Performance" id_parent="Advanced_parameters" active="1" hide_host_mode="0" icon="">
+                <tab id="Performance" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminPerformance</class_name>
                 </tab>
-                <tab id="Administration" id_parent="Advanced_parameters" active="1" hide_host_mode="0" icon="">
+                <tab id="Administration" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminAdmin</class_name>
                 </tab>
-                <tab id="E-mail" id_parent="Advanced_parameters" active="1" hide_host_mode="0" icon="">
+                <tab id="E-mail" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminEmails</class_name>
                 </tab>
-                <tab id="CSV_Import" id_parent="Advanced_parameters" active="1" hide_host_mode="0" icon="">
+                <tab id="CSV_Import" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminImport</class_name>
                 </tab>
-                <tab id="Database" id_parent="Advanced_parameters" active="1" hide_host_mode="0" icon="">
+                <tab id="Database" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminRequestSql</class_name>
                 </tab>
 
@@ -404,59 +404,15 @@
                         <class_name>AdminBackup</class_name>
                     </tab>
 
-                <tab id="Logs" id_parent="Advanced_parameters" active="1" hide_host_mode="0" icon="">
+                <tab id="Logs" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminLogs</class_name>
                 </tab>
-                <tab id="Webservice" id_parent="Advanced_parameters" active="1" hide_host_mode="0" icon="">
+                <tab id="Webservice" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminWebservice</class_name>
                 </tab>
-                <tab id="Multistore" id_parent="Advanced_parameters" active="0" hide_host_mode="0" icon="">
+                <tab id="Multistore" id_parent="Advanced_Parameters" active="0" hide_host_mode="0" icon="">
                     <class_name>AdminShopGroup</class_name>
                 </tab>
-
-        <!-- USELESS TO CHECK
-        <tab id="Preferences_1" id_parent="Administration" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminAdminPreferences</class_name>
-        </tab>
-        <tab id="Menus" id_parent="Administration" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminTabs</class_name>
-        </tab>
-        <tab id="Quick_Access" id_parent="Administration" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminQuickAccesses</class_name>
-        </tab>
-        <tab id="Combinations_Generator" id_parent="-1" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminAttributeGenerator</class_name>
-        </tab>
-        <tab id="Search" id_parent="-1" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminSearch</class_name>
-        </tab>
-        <tab id="Login" id_parent="-1" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminLogin</class_name>
-        </tab>
-        <tab id="Shops" id_parent="-1" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminShop</class_name>
-        </tab>
-        <tab id="Shop_URLs" id_parent="-1" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminShopUrl</class_name>
-        </tab>
-        <tab id="CMS_Pages" id_parent="-1" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminCms</class_name>
-        </tab>
-        <tab id="CMS_Categories" id_parent="-1" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminCmsCategories</class_name>
-        </tab>
-        <tab id="Advanced_Parameters" id_parent="" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminTools</class_name>
-        </tab>
-
-        <tab id="Stats" id_parent="" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminParentStats</class_name>
-        </tab>
-
-        <tab id="Customers_1" id_parent="Customers" active="1" hide_host_mode="0" icon="">
-        <class_name>AdminCustomers</class_name>
-        </tab>
-        -->
 
     </entities>
 </entity_tab>

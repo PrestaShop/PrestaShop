@@ -43,6 +43,7 @@
   <tab id="Customer_Service" name="Customer Service"/>
   <tab id="Customer_Service_2" name="Customer Service"/>
   <tab id="Contacts" name="Contacts"/>
+  <tab id="Contact" name="Contact"/>
   <tab id="Titles" name="Titles"/>
   <tab id="Outstanding" name="Outstanding"/>
   <tab id="Cart_Rules" name="Cart Rules"/>
@@ -71,7 +72,7 @@
   <tab id="SEO_URLs" name="SEO &amp; URLs"/>
   <tab id="Pages" name="Pages"/>
   <tab id="Images" name="Images"/>
-  <tab id="Store_Contacts" name="Store Contacts"/>
+  <tab id="Store_Contacts" name="Contacts"/>
   <tab id="Search_1" name="Search"/>
   <tab id="Maintenance" name="Maintenance"/>
   <tab id="Geolocation" name="Geolocation"/>
@@ -109,9 +110,9 @@
   <tab id="Image_Settings" name="Image Settings" />
   <tab id="International" name="International" />
   <tab id="Tax_Management" name="Tax Management" />
-  <tab id="Shop_parameters" name="Tax Management" />
-  <tab id="Order_settings" name="Order Preferences" />
-  <tab id="Customer_settings" name="Customer Preferences" />
+  <tab id="Shop_parameters" name="Shop Parameters" />
+  <tab id="Order_settings" name="Order Settings" />
+  <tab id="Customer_settings" name="Customer Settings" />
   <tab id="Traffic" name="Traffic" />
   <tab id="Database" name="Database" />
 </entity_tab>
