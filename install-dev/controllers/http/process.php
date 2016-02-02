@@ -290,11 +290,10 @@ class InstallControllerHttpProcess extends InstallControllerHttp
     public function processInstallTheme()
     {
         $this->initializeContext();
-
+        $this->model_install->installTheme();
         if ($this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
-
         $this->session->process_validated = array_merge($this->session->process_validated, array('installTheme' => true));
         $this->ajaxJsonAnswer(true);
     }
