@@ -100,7 +100,7 @@ class Hashing
 
     /**
      * hash the $passwd string and return the result of the 1st hashing method
-     * contained in \PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing::hash_methods
+     * contained in PrestaShop\PrestaShop\Core\Crypto\Hashing::hash_methods
      * @param  string  $passwd     the password you want to hash
      * @param  string  $cookie_key the define _COOKIE_KEY_
      * @return string
