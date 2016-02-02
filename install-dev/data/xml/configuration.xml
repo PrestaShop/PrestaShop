@@ -790,9 +790,6 @@ Country</value>
   <configuration id="PS_DASHBOARD_SIMULATION" name="PS_DASHBOARD_SIMULATION">
     <value>1</value>
   </configuration>
-  <configuration id="PS_QUICK_VIEW" name="PS_QUICK_VIEW">
-    <value>1</value>
-  </configuration>
   <configuration id="PS_USE_HTMLPURIFIER" name="PS_USE_HTMLPURIFIER">
     <value>1</value>
   </configuration>

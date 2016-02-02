@@ -459,7 +459,6 @@ class FrontControllerCore extends Controller
             'b2b_enable'          => (bool)Configuration::get('PS_B2B_ENABLE'),
             'request'             => $link->getPaginationLink(false, false, false, true),
             'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
-            'quick_view'          => (bool)Configuration::get('PS_QUICK_VIEW'),
         ));
 
         /**
