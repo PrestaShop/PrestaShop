@@ -70,8 +70,8 @@
               </button>
             {/if}
           </form>
+          </nav>
         {/if}
-        </nav>
       </section>
     {/if}
   {/foreach}
