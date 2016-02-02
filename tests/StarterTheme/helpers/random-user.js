@@ -22,7 +22,7 @@ export function getRandomUser () {
       json: true
     }, (error, response, body) => {
       if (error) {
-          reject(error);
+          resolve(defaultUser);
       } else if (body.results) {
         const user = body.results[0].user;
         // sometimes we get weird e-mails from the API
