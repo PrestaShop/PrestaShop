@@ -147,7 +147,7 @@ class ThemeManager implements AddonManagerInterface
                 ->doApplyConfiguration($theme->get('global_settings.configuration', []))
                 ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
                 ->doEnableModules($theme->get('global_settings.modules.to_enable', []))
-                ->doHookModules($theme->get('global_settings.hooks.module_to_hook'));
+                ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
         $theme->onEnable();
 
