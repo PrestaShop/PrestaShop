@@ -18,6 +18,13 @@
         {/foreach}
       {elseif $field.type === 'checkbox'}
         <input type="checkbox" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
+      {elseif $field.type === 'date'}
+        <div class="input-group date" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+            <input type="text" class="form-control">
+            <div class="input-group-addon">
+                <i class="material-icons">&#xE916;</i>
+            </div>
+        </div>
       {else}
         <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
         {if $field.type === 'password'}
