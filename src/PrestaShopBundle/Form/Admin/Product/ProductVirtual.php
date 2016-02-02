@@ -85,7 +85,7 @@ class ProductVirtual extends CommonAbstractType
                 new Assert\NotBlank(),
             ),
         ))
-        ->add('nb_downloable', FormType\NumberType::class, array(
+        ->add('nb_downloadable', FormType\NumberType::class, array(
             'label'    => $this->translator->trans('Number of allowed downloads', [], 'AdminProducts'),
             'required' => false,
             'constraints' => array(

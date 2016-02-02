@@ -533,6 +533,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function getVirtualProductData()
     {
+        //force virtual product feature
+        \ConfigurationCore::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
+
         $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$this->product->id, false);
         if ($id_product_download) {
             $download = new \ProductDownloadCore($id_product_download);
@@ -541,7 +544,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $res = [
                 'is_virtual_file' => $download->active,
                 'name' => $download->display_filename,
-                'nb_downloable' => $download->nb_downloadable,
+                'nb_downloadable' => $download->nb_downloadable,
                 'expiration_date' => $dateValue,
                 'nb_days' => $download->nb_days_accessible,
             ];
