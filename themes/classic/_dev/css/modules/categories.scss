@@ -49,7 +49,7 @@
   .dropdown-menu {
     right: 0;
     left: auto;
-    width: em(235px);
+    width: em(270px);
     background: $gray-lighter;
     border: none;
     border-radius: 0;
@@ -71,7 +71,8 @@
       .check {
         display: none;
         margin: em(-4px) em(-2px);
-        font-size: em(15px);
+        font-size: 1.1em;
+        color: $gray-darker;
       }
     }
     &:checked + span {
