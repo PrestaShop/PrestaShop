@@ -385,7 +385,7 @@
                     <class_name>AdminPerformance</class_name>
                 </tab>
                 <tab id="Administration" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminAdmin</class_name>
+                    <class_name>AdminAdminPreferences</class_name>
                 </tab>
                 <tab id="E-mail" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminEmails</class_name>
