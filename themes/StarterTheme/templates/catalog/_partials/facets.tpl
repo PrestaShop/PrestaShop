@@ -4,6 +4,7 @@
       <section class="facet">
         <h1 class="h3">{$facet.label}</h1>
         {if $facet.widgetType !== 'dropdown'}
+        <nav>
           <ul>
             {foreach from=$facet.filters item="filter"}
               {if $filter.displayed}
@@ -69,6 +70,7 @@
               </button>
             {/if}
           </form>
+          </nav>
         {/if}
       </section>
     {/if}
