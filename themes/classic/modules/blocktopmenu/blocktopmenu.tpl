@@ -1,7 +1,7 @@
 {function name="menu" nodes=[] depth=0 parent=null}
   {strip}
     {if $depth === 1}
-      <a href="{$node.url nofilter}">{$node.label}</a>
+      <a class="_margin-left-medium" href="{$node.url nofilter}" title="{$node.label}">{$node.label}</a>
     {/if}
     {if $nodes|count}
       <ul aria-labelledby="dLabel" data-depth="{$depth}" class="top-menu">
