@@ -1,64 +1,52 @@
 /*** HELPERS ***/
-
-._relative{
+._relative {
   position: relative;
 }
-
-._display-table{
+._display-table {
   display: table;
 }
-
-._display-table-cell{
+._display-table-cell {
   display: table-cell;
 }
-
-._margin-right-large{
+._margin-right-large {
   margin-right: 30px;
 }
-
-._margin-right-small{
+._margin-right-small {
   margin-right: 10px;
 }
-
-._margin-left-small{
+._margin-left-small {
   margin-left: 10px;
 }
-
-._margin-top-small{
+._margin-top-small {
   margin-top: 10px;
 }
-
-._margin-bottom-medium{
+._margin-bottom-medium {
   margin-bottom: 20px;
 }
-
-._margin-top-medium{
+._margin-bottom-small {
+  margin-bottom: 20px;
+}
+._margin-top-medium {
   margin-top: 20px;
 }
-
-._margin-top-large{
+._margin-top-large {
   margin-top: 30px;
 }
-
-._gray-light{
+._gray-light {
   color: $gray-light;
 }
-
-._gray-dark{
+._gray-dark {
   color: $gray-dark;
 }
-
-._gray-darker{
+._gray-darker {
   color: $gray-darker;
 }
-
-._bolder{
+._bolder {
   font-weight: 700;
 }
-._shadow{
+._shadow {
   @include box-shadow;
 }
-
-._valign-middle{
+._valign-middle {
   vertical-align: middle;
 }
