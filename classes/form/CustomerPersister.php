@@ -1,6 +1,6 @@
 <?php
 
-use PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing as Crypto;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing as Crypto;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerPersisterCore
