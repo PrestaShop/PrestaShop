@@ -58,10 +58,11 @@ class AdminModuleDataProviderTest extends UnitTestCase
         }
 
         $this->setupSfKernel();
+        $this->sfRouter = $this->sfKernel->getContainer()->get('router');
 
         // We try to load the Addons catalog. If it fails, we skip the tests of this file.
         try {
-            $dataProvider = new AdminModuleDataProvider($this->sfKernel);
+            $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
             $dataProvider->getCatalogModules();
         } catch (\Exception $e) {
             if ($e->getMessage() == 'Data from PrestaShop Addons is invalid, and cannot fallback on cache') {
@@ -72,7 +73,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function test_modules_in_catalog()
     {
-        $dataProvider = new AdminModuleDataProvider($this->sfKernel);
+        $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
 
         $modules = $dataProvider->getCatalogModules();
         $categories = $dataProvider->getCatalogCategories();
@@ -83,7 +84,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function test_modules_in_categories_can_be_found_in_module_list()
     {
-        $dataProvider = new AdminModuleDataProvider($this->sfKernel);
+        $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
 
         $modules = $dataProvider->getCatalogModules();
         $categories = $dataProvider->getCatalogCategories();
@@ -112,7 +113,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function test_no_results()
     {
-        $dataProvider = new AdminModuleDataProvider($this->sfKernel);
+        $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
 
         $filters = ['search' => 'doge'];
         $modules = $dataProvider->getCatalogModules($filters);
@@ -122,7 +123,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function test_unknown_filter_criteria()
     {
-        $dataProvider = new AdminModuleDataProvider($this->sfKernel);
+        $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
 
         // An unexpected critera should have no effect on the module list
         $filters = ['random_filter' => 'doge'];
@@ -135,7 +136,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function test_specific_module_search()
     {
-        $dataProvider = new AdminModuleDataProvider($this->sfKernel);
+        $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
 
         // An unexpected critera should have no effect on the module list
         $filters = ['search' => 'ganalytics'];
@@ -146,7 +147,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function test_specific_module_search_2_results()
     {
-        $dataProvider = new AdminModuleDataProvider($this->sfKernel);
+        $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
 
         // An unexpected critera should have no effect on the module list
         $filters = ['search' => 'ganalytics gapi'];
@@ -157,8 +158,8 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function test_only_one_call_to_addons_and_same_result()
     {
-        $dataProvider = new AdminModuleDataProvider($this->sfKernel);
-        $mock = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider', ['convertJsonForNewCatalog'], ['kernel' => $this->sfKernel]);
+        $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
+        $mock = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider', ['convertJsonForNewCatalog'], ['kernel' => $this->sfKernel, 'router' => $this->sfRouter]);
         $mock->expects($this->once())->method('convertJsonForNewCatalog')->will($this->returnValue($dataProvider->getCatalogModules()));
 
         $mock->clearCatalogCache();
@@ -171,7 +172,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function test_product_type_correct()
     {
-        $dataProvider = new AdminModuleDataProvider($this->sfKernel);
+        $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
 
         $modules = $dataProvider->getCatalogModules();
         $possible_values = ['module', 'service', 'theme'];

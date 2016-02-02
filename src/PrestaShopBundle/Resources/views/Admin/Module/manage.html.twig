@@ -11,16 +11,17 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
-    <script src="{{ asset('themes/default/js/bundle/module/drop.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/module/loader.js') }}"></script>
     <script src="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
 {% endblock %}
 
 {% set requireAddonSearch = false %}
 
 {% block content %}
+    {# Addons connect modal #}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_addons_connect.html.twig' %}
     {# Contains toolbar-nav for module page #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
     {# Contains menu with Selection/Categories/Popular and Tag Search #}
