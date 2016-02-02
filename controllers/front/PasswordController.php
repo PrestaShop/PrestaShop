@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 
 class PasswordControllerCore extends FrontController
 {
