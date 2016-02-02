@@ -109,4 +109,13 @@ interface ProductInterface
      * @return string The last SQL query that was compiled with $this->compileSqlQuery()
      */
     public function getLastCompiledSql();
+
+    /**
+     * Returns default activation state for new product.
+     *
+     * Duplication process could be different since duplicated product is always deactivated after duplication.
+     *
+     * @return boolean True if a newly created product should be activated by default.
+     */
+    public function isNewProductDefaultActivated();
 }
