@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+
 class InstallModelInstall extends InstallAbstractModel
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
@@ -908,5 +910,19 @@ class InstallModelInstall extends InstallAbstractModel
         Search::indexation(true);
 
         return true;
+    }
+
+    public function installTheme()
+    {
+        $builder = new ThemeManagerBuilder(
+            Context::getContext(),
+            Db::getInstance()
+        );
+
+        $theme_manager = $builder->build();
+
+        return $theme_manager->install(_THEME_NAME_) &&
+               $theme_manager->enable(_THEME_NAME_)
+        ;
     }
 }
