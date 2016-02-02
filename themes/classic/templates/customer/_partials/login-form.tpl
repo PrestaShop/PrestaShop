@@ -2,7 +2,7 @@
 
 {* TODO StarterTheme: HOOKS!!! *}
 
-<form action="{$action}" method="post">
+<form action="{$action}" method="post" data-toggle="validator">
 
   <section>
     {block name='form_fields'}

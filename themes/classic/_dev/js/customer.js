@@ -5,8 +5,8 @@ function initRmaItemSelector () {
     var checked = $(this).prop('checked');
     $('#order-return-form table tbody input[type=checkbox]').each(function (_, checkbox) {
       $(checkbox).prop('checked', checked);
-    })
-  })
+    });
+  });
 }
 
 function setupCustomerScripts () {
