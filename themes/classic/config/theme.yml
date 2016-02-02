@@ -49,6 +49,9 @@ global_settings:
       displayFooter:
         - blockcms
         - blockcontact
+      displayLeftColumn:
+        - blocklayered
+        - ~
 
 theme_settings:
   default_layout: layout-full-width
