@@ -41,10 +41,15 @@
 
 </{if isset($href) && $href}a{else}div{/if}>
 
-{if isset($source) && $source != '' && isset($refresh) && $refresh != ''}
 <script>
 	function refresh_{$id|replace:'-':'_'|addslashes}()
 	{
+		{if !isset($source) || $source == '' || !isset($refresh) || $refresh == ''}
+			if (arguments.length < 1 || arguments[0] != true) {
+				// refresh kpis only if force mode is true (pass true as first argument of this function).
+				return;
+			}
+		{/if}
 		$.ajax({
 			url: '{$source|addslashes}' + '&rand=' + new Date().getTime(),
 			dataType: 'json',
@@ -69,7 +74,6 @@
 		});
 	}
 </script>
-{/if}
 
 {if $chart}
 <script>

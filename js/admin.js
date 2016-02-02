@@ -1603,11 +1603,16 @@ function parseDate(date){
 
 function refresh_kpis()
 {
+	var force = (arguments.length == 1 && arguments[0] == true);
 	$('.box-stats').each(function() {
 		if ($(this).attr('id')) {
 			var functionName = 'refresh_' + $(this).attr('id').replace(/-/g, '_');
 			if (typeof window[functionName] === 'function') {
-				window[functionName]();
+				if (force) {
+					window[functionName](true); // force refresh, ignoring cache delay
+				} else {
+					window[functionName]();
+				}
 			}
 		}
 	});
