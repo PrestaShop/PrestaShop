@@ -5,8 +5,8 @@
 
     {block name='category_header'}
       <div class="block-category">
-        <h1 class="h4 text-uppercase _bolder">{$category.name}</h1>
-        <div id="category-description" class="text-muted">{$category.description nofilter}</div>
+        <h1 class="h4 text-uppercase _bolder _gray-darker">{$category.name}</h1>
+        <div id="category-description" class="text-muted _smaller-text">{$category.description nofilter}</div>
         <div class="category-cover">
           <img src="{$category.image.large.url}" alt="{$category.image.legend}">
         </div>
