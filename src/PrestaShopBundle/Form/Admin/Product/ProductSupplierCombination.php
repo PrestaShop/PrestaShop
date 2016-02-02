@@ -88,7 +88,9 @@ class ProductSupplierCombination extends CommonAbstractType
             'product_price_currency' => $this->contextLegacy->currency->id,
         ]);
     }
-
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

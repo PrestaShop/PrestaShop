@@ -25,6 +25,11 @@
  */
 namespace PrestaShop\PrestaShop\Core\Crypto;
 
+/**
+ * Class Hashing to manage hash and crypto of user (clients/merchants) passwords.
+ *
+ * @package PrestaShop\PrestaShop\Core\Crypto
+ */
 class Hashing
 {
     /** @var array should contain hashing methods */

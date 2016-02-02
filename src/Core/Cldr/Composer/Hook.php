@@ -23,17 +23,28 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Cldr\Composer;
 
 use Composer\Script\Event;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
 
+/**
+ * Class Hook used to download CLDR data during composer install/update
+ *
+ * @package PrestaShop\PrestaShop\Core\Cldr\Composer
+ */
 class Hook
 {
+    /**
+     * Triggers CLDR download
+     *
+     * @param Event $event
+     * @throws \Exception
+     * @throws \PrestaShopDatabaseException
+     */
     public static function init(Event $event)
     {
-        $event->getIO()->write("Init CLDR datas download...");
+        $event->getIO()->write("Init CLDR data download...");
         $root_dir = realpath('');
 
         $cldr_update = new Update($root_dir.'/translations/');

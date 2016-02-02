@@ -30,7 +30,13 @@ namespace PrestaShopBundle\Exception;
  */
 class DataUpdateException extends \Exception
 {
+    /**
+     * @var string
+     */
     public $dataType;
+    /**
+     * @var \integer[]|null
+     */
     public $failedIds;
 
     /**

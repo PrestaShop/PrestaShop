@@ -77,6 +77,9 @@ class ProductWarehouseCombination extends CommonAbstractType
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

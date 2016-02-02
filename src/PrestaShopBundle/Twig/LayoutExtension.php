@@ -34,7 +34,13 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
  */
 class LayoutExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
+    /**
+     * @var LegacyContext
+     */
     private $context;
+    /**
+     * @var string
+     */
     private $environment;
 
     /**
@@ -52,6 +58,11 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         $this->configuration = new Configuration();
     }
 
+    /**
+     * Provides globals for Twig templates
+     *
+     * @return array The base globals available in twig templates.
+     */
     public function getGlobals()
     {
         return array(

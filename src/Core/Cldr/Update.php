@@ -23,13 +23,17 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Cldr;
 
 use PrestaShop\PrestaShop\Core\Cldr\Localize;
 use PrestaShop\PrestaShop\Core\Cldr\Repository;
 use Curl\Curl;
 
+/**
+ * Class Update will download CLDR data and extract/install them into the cache directory.
+ *
+ * @package PrestaShop\PrestaShop\Core\Cldr
+ */
 class Update extends Repository
 {
     const ZIP_CORE_URL = 'http://www.unicode.org/Public/cldr/26/json-full.zip';
@@ -37,6 +41,11 @@ class Update extends Repository
     protected $newDatasFile = [];
     protected $oldUmask;
 
+    /**
+     * Constructor.
+     *
+     * @param string $psCacheDir The cache directory for CLDR downloads.
+     */
     public function __construct($psCacheDir)
     {
         $this->oldUmask = umask(0000);
@@ -51,13 +60,16 @@ class Update extends Repository
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __destruct()
     {
         umask($this->oldUmask);
     }
 
-    /*
-     * Init CLDR datas and download default language
+    /**
+     * Init CLDR data and download default language
      */
     public function init()
     {
@@ -103,8 +115,8 @@ class Update extends Repository
     }
 
 
-    /*
-     * fetch CLDR datas for a locale
+    /**
+     * Fetch CLDR data for a locale
      *
      * @param string $locale
      */
@@ -142,7 +154,7 @@ class Update extends Repository
     }
 
     /**
-     * generate CLDR supplemental datas
+     * Generate CLDR supplemental data
      */
     private function generateSupplementalDatas()
     {
@@ -163,7 +175,7 @@ class Update extends Repository
     }
 
     /**
-     * generate CLDR translations main datas
+     * Generate CLDR translations main data
      *
      * @param string $locale
      */

@@ -68,6 +68,9 @@ class TranslateType extends CommonAbstractType
         $view->vars['hideTabs'] = $options['hideTabs'];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

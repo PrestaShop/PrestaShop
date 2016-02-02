@@ -36,8 +36,8 @@ use Symfony\Component\DependencyInjection\Loader\FileLoader;
  */
 class PrestaShopExtension extends Extension
 {
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\DependencyInjection\Extension\ExtensionInterface::load()
+    /**
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -45,8 +45,8 @@ class PrestaShopExtension extends Extension
         $loader->load('services.yml');
     }
 
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\DependencyInjection\Extension\Extension::getAlias()
+    /**
+     * {@inheritdoc}
      */
     public function getAlias()
     {

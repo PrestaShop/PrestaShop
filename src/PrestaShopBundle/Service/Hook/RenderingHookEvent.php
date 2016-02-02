@@ -33,7 +33,13 @@ namespace PrestaShopBundle\Service\Hook;
  */
 class RenderingHookEvent extends HookEvent
 {
+    /**
+     * @var string
+     */
     private $currentContent = '';
+    /**
+     * @var undefined
+     */
     private $currentListener = null;
 
     /**
@@ -43,9 +49,9 @@ class RenderingHookEvent extends HookEvent
      * This content will be pushed in a stack between each listener call.
      * Every response is kept, but a given listener cannot see the previous listeners' responses.
      *
-     * @param $content
-     * @param null $fromListener
-     * @return $this
+     * @param string $content The rendering content returned by the listener
+     * @param undefined $fromListener The listener that sets the content
+     * @return $this for fluent use.
      */
     public function setContent($content, $fromListener = null)
     {
