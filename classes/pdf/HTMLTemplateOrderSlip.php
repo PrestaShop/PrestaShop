@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -56,7 +56,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->shop = new Shop((int)$this->order->id_shop);
     }
-    
+
     /**
      * Returns the template's HTML header
      *
@@ -66,7 +66,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     {
         $this->assignCommonHeaderData();
         $this->smarty->assign(array(
-            'header' => $this->l('Credit slip'),
+            'header' => HTMLTemplateOrderSlip::l('Credit slip'),
         ));
 
         return $this->smarty->fetch($this->getTemplate('header'));
@@ -79,7 +79,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getContent()
     {
-        $invoice_address = new Address((int)$this->order->id_address_invoice);
+        $delivery_address = $invoice_address = new Address((int)$this->order->id_address_invoice);
         $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
         $formatted_delivery_address = '';
 
@@ -98,9 +98,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
                 if ($this->order_slip->partial == 1) {
                     $order_slip_detail = Db::getInstance()->getRow('
-						SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
-						WHERE `id_order_slip` = '.(int)$this->order_slip->id.'
-						AND `id_order_detail` = '.(int)$product['id_order_detail']);
+                        SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
+                        WHERE `id_order_slip` = '.(int)$this->order_slip->id.'
+                        AND `id_order_detail` = '.(int)$product['id_order_detail']);
 
                     $product['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
                     $product['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
@@ -142,10 +142,10 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
         $this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
-        
+
         $total_cart_rule = 0;
         if ($this->order_slip->order_slip_type == 1 && is_array($cart_rules = $this->order->getCartRules($this->order_invoice->id))) {
-            foreach($cart_rules as $cart_rule) {
+            foreach ($cart_rules as $cart_rule) {
                 if ($tax_excluded_display) {
                     $total_cart_rule += $cart_rule['value_tax_excl'];
                 } else {
@@ -153,7 +153,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
                 }
             }
         }
-        
+
         $this->smarty->assign(array(
             'order' => $this->order,
             'order_slip' => $this->order_slip,
@@ -177,7 +177,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'tax_tab' => $this->getTaxTabContent(),
         );
         $this->smarty->assign($tpls);
-        
+
         return $this->smarty->fetch($this->getTemplate('order-slip'));
     }
 

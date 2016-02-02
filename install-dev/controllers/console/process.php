@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class InstallControllerConsoleProcess extends InstallControllerConsole
 {
@@ -142,12 +142,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
             }
         }
 
-        if (in_array('theme', $steps)) {
-            if (!$this->processInstallTheme()) {
-                $this->printErrors();
-            }
-        }
-
         if ($this->datas->newsletter) {
             $params = http_build_query(array(
                     'email' => $this->datas->admin_email,
@@ -157,12 +151,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
                     'source' => 'installer'
                 ));
             Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
-        }
-
-        if ($this->datas->send_email) {
-            if (!$this->processSendEmail()) {
-                $this->printErrors();
-            }
         }
     }
 
@@ -221,7 +209,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
         $this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
         $result = $this->model_install->populateDatabase();
         $this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
-        Configuration::updateValue('PS_INSTALL_XML_LOADERS_ID', Tools::jsonEncode($this->datas->xml_loader_ids));
+        Configuration::updateValue('PS_INSTALL_XML_LOADERS_ID', json_encode($this->datas->xml_loader_ids));
 
         return $result;
     }
@@ -268,7 +256,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     {
         $this->initializeContext();
 
-        if ((!$this->datas->xml_loader_ids || !is_array($this->datas->xml_loader_ids)) && ($xml_ids = Tools::jsonDecode(Configuration::get('PS_INSTALL_XML_LOADERS_ID'), true))) {
+        if ((!$this->datas->xml_loader_ids || !is_array($this->datas->xml_loader_ids)) && ($xml_ids = json_decode(Configuration::get('PS_INSTALL_XML_LOADERS_ID'), true))) {
             $this->datas->xml_loader_ids = $xml_ids;
         }
 
@@ -279,17 +267,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     }
 
     /**
-     * PROCESS : installTheme
-     * Install theme
-     */
-    public function processInstallTheme()
-    {
-        $this->initializeContext();
-
-        return $this->model_install->installTheme();
-    }
-
-    /**
      * PROCESS : installModulesAddons
      * Install modules from addons
      */
@@ -297,45 +274,4 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     {
         return $this->model_install->installModulesAddons();
     }
-
-  /**
-  * PROCESS : sendEmail
-  * Send information e-mail
-  */
-  public function processSendEmail()
-  {
-      require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
-      $mail = new InstallModelMail(
-      false,
-      $this->datas->smtp_server,
-      $this->datas->smtp_login,
-      $this->datas->smtp_password,
-      $this->datas->smtp_port,
-      $this->datas->smtp_encryption,
-      $this->datas->admin_email
-    );
-
-      if (file_exists(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt')) {
-          $content = file_get_contents(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt');
-      } else {
-          $content = file_get_contents(_PS_INSTALL_LANGS_PATH_.InstallLanguages::DEFAULT_ISO.'/mail_identifiers.txt');
-      }
-
-      $vars = array(
-      '{firstname}' => $this->datas->admin_firstname,
-      '{lastname}' => $this->datas->admin_lastname,
-      '{shop_name}' => $this->datas->shop_name,
-      '{passwd}' => $this->datas->admin_password,
-      '{email}' => $this->datas->admin_email,
-      '{shop_url}' => Tools::getHttpHost(true).__PS_BASE_URI__,
-    );
-      $content = str_replace(array_keys($vars), array_values($vars), $content);
-
-      $mail->send(
-      $this->l('%s Login information', $this->datas->shop_name),
-      $content
-    );
-
-      return true;
-  }
 }

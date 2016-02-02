@@ -1,0 +1,95 @@
+<tbody {% if activate_drag_and_drop %}class="sortable"{% endif %}
+        last_sql="{{ last_sql_query|escape('html_attr') }}">
+    {% for product in products %}
+        <tr uniturl="{{ product.unit_action_url|default('#') }}" productid="{{ product.id_product }}">
+            <td class="checkbox-column">
+                <input type="checkbox" name="bulk_action_selected_products[]" value="{{ product.id_product }}" />
+            </td>
+            <td>
+                <a href="{{ product.url|default('') }}#tab-step1">{{ product.id_product }}</a>
+            </td>
+            <td>
+                <a href="{{ product.url|default('') }}#tab-step1">{{ product.image|raw }}</a>
+            </td>
+            <td>
+                <a href="{{ product.url|default('') }}#tab-step1">{{ product.name|default(trans('N/A', {}, 'AdminTab')) }}</a>
+            </td>
+            <td>
+                <a href="{{ product.url|default('') }}#tab-step6">{{ product.reference|default(trans('N/A', {}, 'AdminTab')) }}</a>
+            </td>
+            <td>
+                <a href="{{ product.url|default('') }}#tab-step1">{{ product.name_category|default('') }}</a>
+            </td>
+            <td>
+                <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default(trans('N/A', {}, 'AdminTab')) }}</a>
+            </td>
+            <td>
+                <a href="{{ product.url|default('') }}#tab-step2">{{ product.price_final|default(trans('N/A', {}, 'AdminTab')) }}</a>
+            </td>
+            <td class="product-sav-quantity" productquantityvalue="{{ product.sav_quantity|default('') }}">
+                <a href="{{ product.url|default('') }}#tab-step3">
+                    {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
+                        {{ product.sav_quantity }}
+                    {% else %}
+                        <span class="badge badge-danger">{{ product.sav_quantity|default(trans('N/A', {}, 'AdminTab')) }}</span>
+                    {% endif %}
+                </a>
+            </td>
+            <td>
+                {% if product.active|default(0) == 0 %}
+                    <a href="#" onclick="unitProductAction(this, 'activate'); return false;">
+                        <i class="icon-remove list-action-enable action-disabled"></i>
+                    </a>
+                {% else %}
+                    <a href="#" onclick="unitProductAction(this, 'deactivate'); return false;">
+                        <i class="icon-check list-action-enable action-enabled"></i>
+                    </a>
+                {% endif %}
+            </td>
+            {% if product.position is defined %}
+                <td {% if activate_drag_and_drop %}class="placeholder"{% endif %} style="cursor: pointer; cursor: hand;">
+                    {% if activate_drag_and_drop %}
+                        <big><big>⇅</big></big>
+                    {% endif %}
+                    <span class="position">{{ product.position }}</span>
+                    <input type="hidden" name="mass_edit_action_sorted_products[]" value="{{ product.id_product }}" />
+                    <input type="hidden" name="mass_edit_action_sorted_positions[]" value="{{ product.position }}" />
+                </td>
+            {% endif %}
+            <td>
+                <div class="btn-group-action">
+                    {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
+                        'button_id': "product_list_id_" ~ product.id_product ~ "_menu",
+                        'default_item': {
+                            "href": product.url|default('#'),
+                            "icon": "icon-pencil",
+                            "label": trans("Edit", {}, 'AdminTab')
+                        },
+                        items: [
+                            {
+                                "href": product.preview_url|default('#'),
+                                "target": "_blank",
+                                "icon": "icon-eye",
+                                "label": trans("Preview", {}, 'AdminTab')
+                            },
+                            {
+                                "onclick": "unitProductAction(this, 'duplicate');",
+                                "icon": "icon-copy",
+                                "label": trans("Duplicate", {}, 'AdminTab')
+                            },
+                            {
+                                "onclick": "unitProductAction(this, 'delete');",
+                                "icon": "icon-trash",
+                                "label": trans("Delete", {}, 'AdminTab')
+                            }
+                        ]
+                    } %}
+                </div>
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="11">
+            {{ trans("There is no result for this search. You should remove some criteria.", {}, 'AdminProducts') }}
+        </td></tr>
+    {% endfor %}
+</tbody>

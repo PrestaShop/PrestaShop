@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property Country $object
@@ -46,7 +46,7 @@ class AdminCountriesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-            'affectzone' => array('text' => $this->l('Assign to a new zone'))
+            'AffectZone' => array('text' => $this->l('Assign to a new zone'))
         );
 
         $this->fieldImageSettings = array(
@@ -149,6 +149,9 @@ class AdminCountriesControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         $this->tpl_list_vars['zones'] = Zone::getZones();
+        $this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
+        $this->tpl_list_vars['POST'] = $_POST;
+
         return parent::renderList();
     }
 
@@ -165,7 +168,8 @@ class AdminCountriesControllerCore extends AdminController
 
         $default_layout = '';
 
-        $default_layout_tab = array(
+        // TODO: Use format from XML
+        $default_layout_tab = [
             array('firstname', 'lastname'),
             array('company'),
             array('vat_number'),
@@ -174,7 +178,7 @@ class AdminCountriesControllerCore extends AdminController
             array('postcode', 'city'),
             array('Country:name'),
             array('phone'),
-            array('phone_mobile'));
+        ];
 
         foreach ($default_layout_tab as $line) {
             $default_layout .= implode(' ', $line)."\r\n";
@@ -403,7 +407,7 @@ class AdminCountriesControllerCore extends AdminController
             }
         } elseif (Validate::isLanguageIsoCode(Tools::getValue('iso_code'))) {
             $id_country = (int)Country::getByIso(Tools::getValue('iso_code'));
-            if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table)) {
+            if ($id_country != 0 && $id_country != Tools::getValue('id_'.$this->table)) {
                 $this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
             }
         }
@@ -458,21 +462,22 @@ class AdminCountriesControllerCore extends AdminController
         return false;
     }
 
-    public function processBulkStatusSelection($way)
+    /**
+     * Allow the assignation of zone only if the form is displayed.
+     */
+    protected function processBulkAffectZone()
     {
-        if (is_array($this->boxes) && !empty($this->boxes)) {
-            $countries_ids = array();
-            foreach ($this->boxes as $id) {
-                $countries_ids[] = array('id_country' => $id);
-            }
-
-            if (count($countries_ids)) {
-                Country::addModuleRestrictions(array(), $countries_ids, array());
-            }
+        $zone_to_affect = Tools::getValue('zone_to_affect');
+        if ($zone_to_affect && $zone_to_affect !== 0) {
+            parent::processBulkAffectZone();
         }
-        parent::processBulkStatusSelection($way);
-    }
 
+        if (Tools::getIsset('submitBulkAffectZonecountry')) {
+            $this->tpl_list_vars['assign_zone'] = true;
+        }
+
+        return;
+    }
 
     protected function displayValidFields()
     {

@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2015 PrestaShop SA
- *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 class ConfigurationCore extends ObjectModel
@@ -174,7 +174,7 @@ class ConfigurationCore extends ObjectModel
      * @param int $id_lang Language ID
      * @return string Value
      */
-    public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
+    public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null, $default = false)
     {
         if (defined('_PS_DO_NOT_LOAD_CONFIGURATION_') && _PS_DO_NOT_LOAD_CONFIGURATION_) {
             return false;
@@ -206,7 +206,7 @@ class ConfigurationCore extends ObjectModel
         } elseif (Configuration::hasKey($key, $id_lang)) {
             return self::$_cache[self::$definition['table']][$id_lang]['global'][$key];
         }
-        return false;
+        return $default;
     }
 
     public static function getGlobalValue($key, $id_lang = null)
@@ -324,7 +324,7 @@ class ConfigurationCore extends ObjectModel
     public static function set($key, $values, $id_shop_group = null, $id_shop = null)
     {
         if (!Validate::isConfigName($key)) {
-            die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), $key));
+            die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), Tools::htmlentitiesUTF8($key)));
         }
 
         if ($id_shop === null) {
@@ -379,7 +379,7 @@ class ConfigurationCore extends ObjectModel
     public static function updateValue($key, $values, $html = false, $id_shop_group = null, $id_shop = null)
     {
         if (!Validate::isConfigName($key)) {
-            die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), $key));
+            die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), Tools::htmlentitiesUTF8($key)));
         }
 
         if ($id_shop === null || !Shop::isFeatureActive()) {
@@ -443,7 +443,7 @@ class ConfigurationCore extends ObjectModel
                         'date_add'      => $now,
                         'date_upd'      => $now,
                     );
-                    $result &= Db::getInstance()->insert('configuration', $data, true);
+                    $result &= Db::getInstance()->insert(self::$definition['table'], $data, true);
                     $configID = Db::getInstance()->Insert_ID();
                 }
 

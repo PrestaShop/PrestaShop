@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="bootstrap">
 	<div class="col-lg-2">
@@ -69,10 +69,36 @@
 			<p class="text-justify">{$additional_description}</p>
 		{/if}
 		<hr />
-		{if $is_addons_partner}
+		{if $installed}
+			<div class="btn-group-action pull-right">
+				{if $options|count > 0}
+				<div class="btn-group">
+					{assign var=option value=$options[0]}
+					{$option}
+					{if $options|count > 1}
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+						<span class="caret">&nbsp;</span>
+					</button>
+					<ul class="dropdown-menu pull-right">
+
+					{foreach $options key=key item=option}
+						{if $key != 0}
+							{if strpos($option, 'title="divider"') !== false}
+								<li class="divider"></li>
+							{else}
+								<li>{$option}</li>
+							{/if}
+						{/if}
+					{/foreach}
+					</ul>
+					{/if}
+				</div>
+				{/if}
+			</div>
+		{elseif $is_addons_partner}
 			<a class="btn btn-success btn-lg pull-right" href="{$url}">{l s='Install module'}</a>
 		{else}
-			<a class="btn btn-success btn-lg pull-right" href="{$url}" onclick="return !window.open(this.href);">{l s='View on PrestaShop Addons'}</a>
+			<a class="btn btn-success btn-lg pull-right" href="{$url}" onclick="return !window.open(this.href, '_blank');">{l s='View on PrestaShop Addons'}</a>
 		{/if}
 	</div>
 </div>

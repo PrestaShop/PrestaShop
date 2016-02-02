@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property Configuration $object
@@ -93,6 +93,25 @@ class AdminPerformanceControllerCore extends AdminController
                     'hint' => $this->l('Should be enabled except for debugging.')
                 ),
                 array(
+                    'type' => 'switch',
+                    'label' => $this->l('Multi-front optimizations'),
+                    'name' => 'smarty_local',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'smarty_local_1',
+                            'value' => 1,
+                            'label' => $this->l('Yes'),
+                        ),
+                        array(
+                            'id' => 'smarty_local_0',
+                            'value' => 0,
+                            'label' => $this->l('No')
+                        )
+                    ),
+                    'hint' => $this->l('Should be enabled if you want to avoid to store the smarty cache on NFS.')
+                ),
+                array(
                     'type' => 'radio',
                     'label' => $this->l('Caching type'),
                     'name' => 'smarty_caching_type',
@@ -135,6 +154,7 @@ class AdminPerformanceControllerCore extends AdminController
 
         $this->fields_value['smarty_force_compile'] = Configuration::get('PS_SMARTY_FORCE_COMPILE');
         $this->fields_value['smarty_cache'] = Configuration::get('PS_SMARTY_CACHE');
+        $this->fields_value['smarty_local'] = Configuration::get('PS_SMARTY_LOCAL');
         $this->fields_value['smarty_caching_type'] = Configuration::get('PS_SMARTY_CACHING_TYPE');
         $this->fields_value['smarty_clear_cache'] = Configuration::get('PS_SMARTY_CLEAR_CACHE');
         $this->fields_value['smarty_console'] = Configuration::get('PS_SMARTY_CONSOLE');
@@ -661,7 +681,7 @@ class AdminPerformanceControllerCore extends AdminController
         parent::initPageHeaderToolbar();
 
         $this->page_header_toolbar_btn['clear_cache'] = array(
-            'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1',
+            'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1&empty_sf2_cache=1',
             'desc' => $this->l('Clear cache'),
             'icon' => 'process-icon-eraser'
         );
@@ -725,6 +745,7 @@ class AdminPerformanceControllerCore extends AdminController
                 Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
                 Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type'));
                 Configuration::updateValue('PS_SMARTY_CLEAR_CACHE', Tools::getValue('smarty_clear_cache'));
+                Configuration::updateValue('PS_SMARTY_LOCAL', Tools::getValue('smarty_local', 0));
                 $redirectAdmin = true;
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
@@ -975,6 +996,15 @@ class AdminPerformanceControllerCore extends AdminController
             Tools::generateIndex();
         }
 
+        if ((bool)Tools::getValue('empty_sf2_cache')) {
+            $redirectAdmin = true;
+
+            $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+            $sf2Refresh->addCacheClear();
+            $sf2Refresh->addAsseticDump();
+            $sf2Refresh->execute();
+        }
+
         if (Tools::isSubmit('submitAddconfiguration')) {
             Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
             Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
@@ -1020,7 +1050,7 @@ class AdminPerformanceControllerCore extends AdminController
                         $res      = @memcache_get_server_status($memcache, $host, $port);
                     }
                 }
-                die(Tools::jsonEncode(array($res)));
+                die(json_encode(array($res)));
             }
         }
         die;

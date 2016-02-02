@@ -138,12 +138,6 @@
     <keywords/>
     <url_rewrite>stores</url_rewrite>
   </meta>
-  <meta id="order-opc" id_shop="1">
-    <title>سفارش</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>quick-order</url_rewrite>
-  </meta>
   <meta id="guest-tracking" id_shop="1">
     <title>پیگیری مهمان</title>
     <description/>
@@ -155,11 +149,5 @@
     <description/>
     <keywords/>
     <url_rewrite>order-confirmation</url_rewrite>
-  </meta>
-  <meta id="products-comparison" id_shop="1">
-    <title>مقایسه محصولات</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>products-comparison</url_rewrite>
   </meta>
 </entity_meta>

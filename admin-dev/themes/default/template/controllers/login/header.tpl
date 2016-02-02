@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie6"> <![endif]-->
@@ -47,7 +47,7 @@
 		{foreach from=$js_files item=js_uri}
 			<script type="text/javascript" src="{$js_uri}"></script>
 		{/foreach}
-		<script type="text/javascript" src="../js/admin/login.js?{$smarty.now}"></script>
+		<script type="text/javascript" src="../js/admin/login.js?v={$smarty.const._PS_VERSION_|escape:'html':'UTF-8'}"></script>
 
 		{if (isset($js_def) && count($js_def) || isset($js_files) && count($js_files))}
 			{include file=$smarty.const._PS_ALL_THEMES_DIR_|cat:"javascript.tpl"}

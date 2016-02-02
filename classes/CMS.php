@@ -1,32 +1,34 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class CMSCore extends ObjectModel
 {
     /** @var string Name */
+    public $id;
+    public $id_cms;
     public $meta_title;
     public $meta_description;
     public $meta_keywords;
@@ -243,10 +245,10 @@ class CMSCore extends ObjectModel
     public static function getCMSContent($id_cms, $id_lang = null, $id_shop = null)
     {
         if (is_null($id_lang)) {
-            $id_lang = (int)Configuration::get('PS_SHOP_DEFAULT');
+            $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
         }
         if (is_null($id_shop)) {
-            $id_shop = (int)Configuration::get('PS_LANG_DEFAULT');
+            $id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
         }
 
         $sql = '
@@ -260,6 +262,6 @@ class CMSCore extends ObjectModel
     /* Method required for new PrestaShop Core */
     public static function getRepositoryClassName()
     {
-        return 'Core_Business_CMS_CMSRepository';
+        return '\\PrestaShop\\PrestaShop\\Core\\CMS\\CMSRepository';
     }
 }

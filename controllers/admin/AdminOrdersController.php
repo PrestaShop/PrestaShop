@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class BoOrder extends PaymentModule
 {
@@ -1695,7 +1695,7 @@ class AdminOrdersControllerCore extends AdminController
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
             // if the current stock requires a warning
-            if ($product['current_stock'] == 0 && $display_out_of_stock_warning) {
+            if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
                 $this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
             }
             if ($product['id_warehouse'] != 0) {
@@ -1711,6 +1711,30 @@ class AdminOrdersControllerCore extends AdminController
                 $product['warehouse_name'] = '--';
                 $product['warehouse_location'] = false;
             }
+        }
+
+        // Package management for order
+        foreach ($products as &$product) {
+            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->context->language->id, true) : array();
+            foreach ($pack_items as &$pack_item) {
+                $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
+                // if the current stock requires a warning
+                if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
+                    $this->displayWarning($this->l('This product, included in package ('.$product['product_name'].') is out of stock: ').' '.$pack_item['product_name']);
+                }
+                $this->setProductImageInformations($pack_item);
+                if ($pack_item['image'] != null) {
+                    $name = 'product_mini_'.(int)$pack_item['id_product'].(isset($pack_item['id_product_attribute']) ? '_'.(int)$pack_item['id_product_attribute'] : '').'.jpg';
+                    // generate image cache, only for back office
+                    $pack_item['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$pack_item['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg');
+                    if (file_exists(_PS_TMP_IMG_DIR_.$name)) {
+                        $pack_item['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
+                    } else {
+                        $pack_item['image_size'] = false;
+                    }
+                }
+            }
+            $product['pack_items'] = $pack_items;
         }
 
         $gender = new Gender((int)$customer->id_gender, $this->context->language->id);
@@ -1865,7 +1889,7 @@ class AdminOrdersControllerCore extends AdminController
             $to_return = array('found' => false);
         }
 
-        $this->content = Tools::jsonEncode($to_return);
+        $this->content = json_encode($to_return);
     }
 
     public function ajaxProcessSendMailValidateOrder()
@@ -1882,11 +1906,11 @@ class AdminOrdersControllerCore extends AdminController
                     );
                     if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order', (int)$cart->id_lang), $mailVars, $customer->email,
                             $customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, $cart->id_shop)) {
-                        die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The email was sent to your customer.'))));
+                        die(json_encode(array('errors' => false, 'result' => $this->l('The email was sent to your customer.'))));
                     }
                 }
             }
-            $this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the email to your customer.')));
+            $this->content = json_encode(array('errors' => true, 'result' => $this->l('Error in sending the email to your customer.')));
         }
     }
 
@@ -1895,7 +1919,7 @@ class AdminOrdersControllerCore extends AdminController
         // Load object
         $order = new Order((int)Tools::getValue('id_order'));
         if (!Validate::isLoadedObject($order)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The order object cannot be loaded.')
             )));
@@ -1904,7 +1928,7 @@ class AdminOrdersControllerCore extends AdminController
         $old_cart_rules = Context::getContext()->cart->getCartRules();
 
         if ($order->hasBeenShipped()) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('You cannot add products to delivered orders. ')
             )));
@@ -1918,7 +1942,7 @@ class AdminOrdersControllerCore extends AdminController
         }
         $product = new Product($product_informations['product_id'], false, $order->id_lang);
         if (!Validate::isLoadedObject($product)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The product object cannot be loaded.')
             )));
@@ -1927,7 +1951,7 @@ class AdminOrdersControllerCore extends AdminController
         if (isset($product_informations['product_attribute_id']) && $product_informations['product_attribute_id']) {
             $combination = new Combination($product_informations['product_attribute_id']);
             if (!Validate::isLoadedObject($combination)) {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The combination object cannot be loaded.')
             )));
@@ -1994,9 +2018,9 @@ class AdminOrdersControllerCore extends AdminController
         if ($update_quantity < 0) {
             // If product has attribute, minimal quantity is set with minimal quantity of attribute
             $minimal_quantity = ($product_informations['product_attribute_id']) ? Attribute::getAttributeMinimalQty($product_informations['product_attribute_id']) : $product->minimal_quantity;
-            die(Tools::jsonEncode(array('error' => sprintf(Tools::displayError('You must add %d minimum quantity', false), $minimal_quantity))));
+            die(json_encode(array('error' => sprintf(Tools::displayError('You must add %d minimum quantity', false), $minimal_quantity))));
         } elseif (!$update_quantity) {
-            die(Tools::jsonEncode(array('error' => Tools::displayError('You already have the maximum quantity available for this product.', false))));
+            die(json_encode(array('error' => Tools::displayError('You already have the maximum quantity available for this product.', false))));
         }
 
         // If order is valid, we can create a new invoice or edit an existing invoice
@@ -2211,7 +2235,7 @@ class AdminOrdersControllerCore extends AdminController
         $res &= $order->update();
 
 
-        die(Tools::jsonEncode(array(
+        die(json_encode(array(
             'result' => true,
             'view' => $this->createTemplate('_product_line.tpl')->fetch(),
             'can_edit' => $this->tabAccess['add'],
@@ -2237,7 +2261,7 @@ class AdminOrdersControllerCore extends AdminController
     {
         $order_detail = new OrderDetail(Tools::getValue('id_order_detail'));
         if (!Validate::isLoadedObject($order_detail)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The OrderDetail object cannot be loaded.')
             )));
@@ -2245,7 +2269,7 @@ class AdminOrdersControllerCore extends AdminController
 
         $product = new Product($order_detail->product_id);
         if (!Validate::isLoadedObject($product)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The product object cannot be loaded.')
             )));
@@ -2253,13 +2277,13 @@ class AdminOrdersControllerCore extends AdminController
 
         $address = new Address(Tools::getValue('id_address'));
         if (!Validate::isLoadedObject($address)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The address object cannot be loaded.')
             )));
         }
 
-        die(Tools::jsonEncode(array(
+        die(json_encode(array(
             'result' => true,
             'product' => $product,
             'tax_rate' => $product->getTaxesRate($address),
@@ -2432,7 +2456,7 @@ class AdminOrdersControllerCore extends AdminController
         ));
 
         if (!$res) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => $res,
                 'error' => Tools::displayError('An error occurred while editing the product line.')
             )));
@@ -2447,7 +2471,7 @@ class AdminOrdersControllerCore extends AdminController
 
         $this->sendChangedNotification($order);
 
-        die(Tools::jsonEncode(array(
+        die(json_encode(array(
             'result' => $res,
             'view' => $view,
             'can_edit' => $this->tabAccess['add'],
@@ -2502,7 +2526,7 @@ class AdminOrdersControllerCore extends AdminController
         }
 
         if (!$res) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => $res,
                 'error' => Tools::displayError('An error occurred while attempting to delete the product line.')
             )));
@@ -2530,7 +2554,7 @@ class AdminOrdersControllerCore extends AdminController
 
         $this->sendChangedNotification($order);
 
-        die(Tools::jsonEncode(array(
+        die(json_encode(array(
             'result' => $res,
             'order' => $order,
             'invoices' => $invoice_array,
@@ -2542,28 +2566,28 @@ class AdminOrdersControllerCore extends AdminController
     protected function doEditProductValidation(OrderDetail $order_detail, Order $order, OrderInvoice $order_invoice = null)
     {
         if (!Validate::isLoadedObject($order_detail)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The Order Detail object could not be loaded.')
             )));
         }
 
         if (!empty($order_invoice) && !Validate::isLoadedObject($order_invoice)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The invoice object cannot be loaded.')
             )));
         }
 
         if (!Validate::isLoadedObject($order)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The order object cannot be loaded.')
             )));
         }
 
         if ($order_detail->id_order != $order->id) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('You cannot edit the order detail for this order.')
             )));
@@ -2571,14 +2595,14 @@ class AdminOrdersControllerCore extends AdminController
 
         // We can't edit a delivered order
         if ($order->hasBeenDelivered()) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('You cannot edit a delivered order.')
             )));
         }
 
         if (!empty($order_invoice) && $order_invoice->id_order != Tools::getValue('id_order')) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('You cannot use this invoice for the order')
             )));
@@ -2589,21 +2613,21 @@ class AdminOrdersControllerCore extends AdminController
         $product_price_tax_excl = str_replace(',', '.', Tools::getValue('product_price_tax_excl'));
 
         if (!Validate::isPrice($product_price_tax_incl) || !Validate::isPrice($product_price_tax_excl)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('Invalid price')
             )));
         }
 
         if (!is_array(Tools::getValue('product_quantity')) && !Validate::isUnsignedInt(Tools::getValue('product_quantity'))) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('Invalid quantity')
             )));
         } elseif (is_array(Tools::getValue('product_quantity'))) {
             foreach (Tools::getValue('product_quantity') as $qty) {
                 if (!Validate::isUnsignedInt($qty)) {
-                    die(Tools::jsonEncode(array(
+                    die(json_encode(array(
                         'result' => false,
                         'error' => Tools::displayError('Invalid quantity')
                     )));
@@ -2615,21 +2639,21 @@ class AdminOrdersControllerCore extends AdminController
     protected function doDeleteProductLineValidation(OrderDetail $order_detail, Order $order)
     {
         if (!Validate::isLoadedObject($order_detail)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The Order Detail object could not be loaded.')
             )));
         }
 
         if (!Validate::isLoadedObject($order)) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('The order object cannot be loaded.')
             )));
         }
 
         if ($order_detail->id_order != $order->id) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('You cannot delete the order detail.')
             )));
@@ -2637,7 +2661,7 @@ class AdminOrdersControllerCore extends AdminController
 
         // We can't edit a delivered order
         if ($order->hasBeenDelivered()) {
-            die(Tools::jsonEncode(array(
+            die(json_encode(array(
                 'result' => false,
                 'error' => Tools::displayError('You cannot edit a delivered order.')
             )));
@@ -2787,7 +2811,7 @@ class AdminOrdersControllerCore extends AdminController
         $authorized_modules = array();
 
         if (!Validate::isLoadedObject($customer) || !is_array($modules)) {
-            die(Tools::jsonEncode(array('result' => false)));
+            die(json_encode(array('result' => false)));
         }
 
         foreach ($modules as $module) {
@@ -2806,9 +2830,41 @@ class AdminOrdersControllerCore extends AdminController
             'payment_modules' => $payment_modules,
         ));
 
-        die(Tools::jsonEncode(array(
+        die(json_encode(array(
             'result' => true,
             'view' => $this->createTemplate('_select_payment.tpl')->fetch(),
         )));
+    }
+
+    /**
+    *
+    * This method allow to add image information on a package detail
+    * @param array &pack_item
+    */
+    protected function setProductImageInformations(&$pack_item)
+    {
+        if (isset($pack_item['id_product_attribute']) && $pack_item['id_product_attribute']) {
+            $id_image = Db::getInstance()->getValue('
+                SELECT `image_shop`.id_image
+                FROM `'._DB_PREFIX_.'product_attribute_image` pai'.
+                Shop::addSqlAssociation('image', 'pai', true).'
+                WHERE id_product_attribute = '.(int)$pack_item['id_product_attribute']);
+        }
+
+        if (!isset($id_image) || !$id_image) {
+            $id_image = Db::getInstance()->getValue('
+                SELECT `image_shop`.id_image
+                FROM `'._DB_PREFIX_.'image` i'.
+                Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
+                WHERE i.id_product = '.(int)$pack_item['id_product']
+            );
+        }
+
+        $pack_item['image'] = null;
+        $pack_item['image_size'] = null;
+
+        if ($id_image) {
+            $pack_item['image'] = new Image($id_image);
+        }
     }
 }

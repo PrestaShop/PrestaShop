@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
     include_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
@@ -243,6 +243,11 @@ abstract class DbCore
         return self::$instance[$id_server];
     }
 
+    public function getPrefix()
+    {
+        return _DB_PREFIX_;
+    }
+
     /**
      * @param $test_db Db
      * Unit testing purpose only
@@ -346,41 +351,6 @@ abstract class DbCore
     {
         if ($this->link) {
             $this->disconnect();
-        }
-    }
-
-    /**
-     * Executes SQL query based on selected type
-     *
-     * @deprecated 1.5.0.1 Use insert() or update() method instead.
-     * @param string $table
-     * @param array $data
-     * @param string $type (INSERT, INSERT IGNORE, REPLACE, UPDATE).
-     * @param string $where
-     * @param int $limit
-     * @param bool $use_cache
-     * @param bool $use_null
-     * @return bool
-     * @throws PrestaShopDatabaseException
-     */
-    public function autoExecute($table, $data, $type, $where = '', $limit = 0, $use_cache = true, $use_null = false)
-    {
-        $type = strtoupper($type);
-        switch ($type) {
-            case 'INSERT' :
-                return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT, false);
-
-            case 'INSERT IGNORE' :
-                return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT_IGNORE, false);
-
-            case 'REPLACE' :
-                return $this->insert($table, $data, $use_null, $use_cache, Db::REPLACE, false);
-
-            case 'UPDATE' :
-                return $this->update($table, $data, $where, $limit, $use_null, $use_cache, false);
-
-            default :
-                throw new PrestaShopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
         }
     }
 
@@ -895,50 +865,6 @@ abstract class DbCore
     public static function checkAutoIncrement($server, $user, $pwd)
     {
         return call_user_func_array(array(Db::getClass(), 'checkAutoIncrement'), array($server, $user, $pwd));
-    }
-
-    /**
-     * Executes a query
-     *
-     * @deprecated 1.5.0.1
-     * @param string|DbQuery $sql
-     * @param bool $use_cache
-     * @return array|bool|mysqli_result|PDOStatement|resource
-     * @throws PrestaShopDatabaseException
-     */
-    public static function s($sql, $use_cache = true)
-    {
-        Tools::displayAsDeprecated();
-        return Db::getInstance()->executeS($sql, true, $use_cache);
-    }
-
-    /**
-     * Executes a query
-     *
-     * @deprecated 1.5.0.1
-     * @param $sql
-     * @param int $use_cache
-     * @return array|bool|mysqli_result|PDOStatement|resource
-     */
-    public static function ps($sql, $use_cache = 1)
-    {
-        Tools::displayAsDeprecated();
-        $ret = Db::s($sql, $use_cache);
-        return $ret;
-    }
-
-    /**
-     * Executes a query and kills process (dies)
-     *
-     * @deprecated 1.5.0.1
-     * @param $sql
-     * @param int $use_cache
-     */
-    public static function ds($sql, $use_cache = 1)
-    {
-        Tools::displayAsDeprecated();
-        Db::s($sql, $use_cache);
-        die();
     }
 
     /**

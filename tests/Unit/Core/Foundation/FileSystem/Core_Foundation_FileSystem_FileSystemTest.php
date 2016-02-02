@@ -18,17 +18,17 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\FileSystem;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\FileSystem;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use Core_Foundation_FileSystem_FileSystem;
-use Core_Foundation_FileSystem_Exception;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
+use \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception;
 
 class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 {
@@ -37,7 +37,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     public function setup()
     {
-        $this->fs = new Core_Foundation_FileSystem_FileSystem;
+        $this->fs = new FileSystem();
         $this->fixturesPath = __DIR__ . DIRECTORY_SEPARATOR . 'fixtures';
     }
 
@@ -58,7 +58,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * @expectedException Core_Foundation_FileSystem_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
     public function test_joinPaths_one_path_throws()
     {
@@ -66,7 +66,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * @expectedException Core_Foundation_FileSystem_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
     public function test_joinPaths_zero_path_throws()
     {
@@ -113,7 +113,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     /**
      * Rationale: ls /some/non/existing/file => ls: cannot access /some/non/existing/file: No such file or directory
-     * @expectedException Core_Foundation_FileSystem_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
     public function test_listEntriesRecursively_throws_if_path_does_not_exist()
     {
@@ -122,7 +122,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     /**
      *
-     * @expectedException Core_Foundation_FileSystem_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
     public function test_listEntriesRecursively_throws_when_path_is_a_file()
     {

@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -168,7 +168,6 @@ $(function(){
 
 		if ($this.val() != 0)
 		{
-			$this.find("[value='0']").remove();
 			hook_select.find("option").remove();
 
 			$.ajax({
@@ -194,7 +193,12 @@ $(function(){
 					else
 					{
 						for (var current_hook = 0; current_hook < jsonData.length; current_hook++)
-							hook_select.append('<option value="'+jsonData[current_hook].id_hook+'">'+jsonData[current_hook].name+'</option>');
+						{
+							var hook_description = '';
+							if(jsonData[current_hook].description != '')
+								hook_description = ' ('+jsonData[current_hook].description+')';
+							hook_select.append('<option value="'+jsonData[current_hook].id_hook+'">'+jsonData[current_hook].name+hook_description+'</option>');
+						}
 
 						hook_select.prop('disabled', false);
 					}

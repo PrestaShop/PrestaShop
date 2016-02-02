@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class LinkCore
 {
@@ -87,7 +87,7 @@ class LinkCore
      * @param int $ipa ID product attribute
      * @return string
      */
-    public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false, $add_anchor = false)
+    public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false, $add_anchor = false, $extra_params = [])
     {
         $dispatcher = Dispatcher::getInstance();
 
@@ -110,8 +110,8 @@ class LinkCore
         // Set available keywords
         $params = array();
         $params['id'] = $product->id;
+        $params['id_product_attribute'] = $ipa;
         $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
-
         $params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
         $params['meta_keywords'] =    Tools::str2url($product->getFieldByLang('meta_keywords'));
         $params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));
@@ -153,7 +153,98 @@ class LinkCore
         }
         $anchor = $ipa ? $product->getAnchor((int)$ipa, (bool)$add_anchor) : '';
 
-        return $url.$dispatcher->createUrl('product_rule', $id_lang, $params, $force_routes, $anchor, $id_shop);
+        return $url.$dispatcher->createUrl('product_rule', $id_lang, array_merge($params, $extra_params), $force_routes, $anchor, $id_shop);
+    }
+
+    public function getRemoveFromCartURL(
+        $id_product,
+        $id_product_attribute,
+        $id_customization = null
+    ) {
+        $params = [
+            'delete' => 1,
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        if ($id_customization) {
+            $params['id_customization'] = $id_customization;
+        }
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
+    }
+
+    public function getUpQuantityCartURL(
+        $id_product,
+        $id_product_attribute,
+        $id_customization = null
+    ) {
+        $params = [
+            'update' => 1,
+            'op' => 'up',
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        if ($id_customization) {
+            $params['id_customization'] = $id_customization;
+        }
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
+    }
+
+    public function getDownQuantityCartURL(
+        $id_product,
+        $id_product_attribute,
+        $id_customization = null
+    ) {
+        $params = [
+            'update' => 1,
+            'op' => 'down',
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        if ($id_customization) {
+            $params['id_customization'] = $id_customization;
+        }
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
+    }
+
+    public function getAddToCartURL($id_product, $id_product_attribute)
+    {
+        $params = [
+            'add' => 1,
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
     }
 
     /**
@@ -385,14 +476,48 @@ class LinkCore
      *
      * @param string $controller
      * @param bool $with_token include or not the token in the url
+     * @param array(string) $sfRouteParams Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string.
+     *
      * @return string url
      */
-    public function getAdminLink($controller, $with_token = true)
+    public function getAdminLink($controller, $with_token = true, $sfRouteParams = array())
     {
+        $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
+
+        switch ($controller) {
+            case 'AdminProducts':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                global $kernel; // sf kernel
+                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
+                if (!$redirectLegacy) {
+                    if (array_key_exists('id_product', $sfRouteParams)) {
+                        if (array_key_exists('deleteproduct', $sfRouteParams)) {
+                            return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/unit/delete/' . $sfRouteParams['id_product'];
+                        }
+                        //default: if (array_key_exists('updateproduct', $sfRouteParams))
+                        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/form/' . $sfRouteParams['id_product'];
+                    }
+                    if (array_key_exists('submitFilterproduct', $sfRouteParams)) {
+                        return rtrim($this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog_filters/'
+                            .(array_key_exists('filter_column_sav_quantity', $sfRouteParams)?urlencode($sfRouteParams['filter_column_sav_quantity']):'none').'/'
+                            .(array_key_exists('filter_column_active', $sfRouteParams)?$sfRouteParams['filter_column_active']:'none').'/',
+                        '/');
+                    }
+                    return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog';
+                } else {
+                    $params = array_merge($params, $sfRouteParams);
+                }
+                break;
+            case 'AdminModules':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/module/catalog';
+                break;
+        }
+
         $id_lang = Context::getContext()->language->id;
 
-        $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
-        return Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**
@@ -483,6 +608,10 @@ class LinkCore
                 $request = urlencode($request);
             }
             parse_str($request, $request);
+        }
+
+        if ($controller === 'cart' && (!empty($request['add']) || !empty($request['delete'])) && Configuration::get('PS_TOKEN_ENABLE')) {
+            $request['token'] = Tools::getToken(false);
         }
 
         $uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request, false, '', $id_shop);
@@ -656,7 +785,7 @@ class LinkCore
         return Language::getIsoById($id_lang).'/';
     }
 
-    protected function getBaseLink($id_shop = null, $ssl = null, $relative_protocol = false)
+    public function getBaseLink($id_shop = null, $ssl = null, $relative_protocol = false)
     {
         static $force_ssl = null;
 
@@ -701,5 +830,84 @@ class LinkCore
         } else {
             return false;
         }
+    }
+
+    public static function getUrlSmarty($params, &$smarty)
+    {
+        $context = Context::getContext();
+
+        if (!isset($params['params'])) {
+            $params['params'] = [];
+        }
+
+        if (isset($params['id'])) {
+            $entity = str_replace('-', '_', $params['entity']);
+            $id = ['id_'.$entity => $params['id']];
+            $params['params'] = array_merge($id, $params['params']);
+        }
+
+        $default = [
+            'id_lang' => $context->language->id,
+            'id_shop' => null,
+            'alias' => null,
+            'ssl' => null,
+            'relative_protocol' => false,
+        ];
+        $params = array_merge($default, $params);
+
+        $url_parameters = http_build_query($params['params']);
+
+        switch ($params['entity']) {
+            case "category":
+                $params = array_merge(['selected_filters' => null], $params);
+                $link = $context->link->getCategoryLink(
+                    new Category($params['id'], $params['id_lang']),
+                    $params['alias'],
+                    $params['id_lang'],
+                    $params['selected_filters'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
+            case "cms":
+                $link = $context->link->getCMSLink(
+                    new CMS($params['id'], $params['id_lang']),
+                    $params['alias'],
+                    $params['ssl'],
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
+            case "module":
+                $params = array_merge([
+                    'selected_filters' => null,
+                    'params' => array(),
+                    'controller' => 'default',
+                ], $params);
+                $link = $context->link->getModuleLink(
+                    $params['name'],
+                    $params['controller'],
+                    $params['params'],
+                    $params['ssl'],
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
+            default:
+                $link = $context->link->getPageLink(
+                    $params['entity'],
+                    $params['ssl'],
+                    $params['id_lang'],
+                    $url_parameters,
+                    false,
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
+        }
+
+        return $link;
     }
 }

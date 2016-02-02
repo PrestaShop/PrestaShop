@@ -9,7 +9,7 @@
       <link>index.php?controller=AdminCategories&amp;addcategory</link>
     </quick_access>
     <quick_access id="New_product" new_window="0">
-      <link>index.php?controller=AdminProducts&amp;addproduct</link>
+      <link>product/new</link>
     </quick_access>
     <quick_access id="New_voucher" new_window="0">
       <link>index.php?controller=AdminCartRules&amp;addcart_rule</link>

@@ -41,12 +41,12 @@ class Swift_BatchMailer
    * @var array
    */
   protected $headers = array();
-  
+
   /**
    * Constructor.
    * @param Swift The current instance of Swift
    */
-  public function __construct(Swift $swift)
+  public function __construct(SwiftPs $swift)
   {
     $this->setSwift($swift);
   }
@@ -54,7 +54,7 @@ class Swift_BatchMailer
    * Set the current Swift instance.
    * @param Swift The instance
    */
-  public function setSwift(Swift $swift)
+  public function setSwift(SwiftPs $swift)
   {
     $this->swift = $swift;
   }
@@ -189,7 +189,7 @@ class Swift_BatchMailer
   {
     $sent = 0;
     $successive_fails = 0;
-    
+
     $it = $recipients->getIterator("to");
     while ($it->hasNext())
     {
@@ -223,7 +223,7 @@ class Swift_BatchMailer
         }
       }
     }
-    
+
     return $sent;
   }
 }

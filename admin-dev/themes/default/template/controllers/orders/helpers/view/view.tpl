@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/view/view.tpl"}
@@ -1084,8 +1084,7 @@
 											<td class="partial_refund_fields current-edit" style="display:none;">
 												<div class="input-group">
 													<div class="input-group-addon">
-														{$currency->prefix}
-														{$currency->suffix}
+														{$currency->sign}
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
@@ -1162,8 +1161,7 @@
 								</label>
 								<div class="input-group col-lg-1 pull-left">
 									<div class="input-group-addon">
-										{$currency->prefix}
-										{$currency->suffix}
+										{$currency->sign}
 									</div>
 									<input type="text" class="input fixed-width-md" name="refund_total_voucher_choose" value="0"/>
 								</div>
@@ -1211,8 +1209,7 @@
 								</label>
 								<div class="input-group col-lg-1 pull-left">
 									<div class="input-group-addon">
-										{$currency->prefix}
-										{$currency->suffix}
+										{$currency->sign}
 									</div>
 									<input type="text" class="input fixed-width-md" name="refund_voucher_choose" value="0"/>
 								</div>

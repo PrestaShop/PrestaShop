@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * Step 2 : check system configuration (permissions on folders, PHP version, etc.)
@@ -76,6 +76,9 @@ class InstallControllerHttpSystem extends InstallControllerHttp
             $this->tests['optional'] = $this->model_system->checkOptionalTests();
         }
 
+        $testsRequiredsf2 = $this->model_system->checkSf2Requirements();
+        $testsOptionalsf2 = $this->model_system->checkSf2Recommendations();
+
         if (!is_callable('getenv') || !($user = @getenv('APACHE_RUN_USER'))) {
             $user = 'Apache';
         }
@@ -116,7 +119,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'theme_cache_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/default-bootstrap/cache/'),
                         'translations_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/translations/'),
                         'customizable_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/upload/'),
-                        'virtual_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/download/')
+                        'virtual_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/download/'),
                     )
                 ),
             ),
@@ -127,11 +130,9 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                     'checks' => array(
                         'new_phpversion' => sprintf($this->l('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!'), phpversion()),
                         'fopen' => $this->l('Cannot open external URLs'),
-                        'register_globals' => $this->l('PHP register_globals option is enabled'),
                         'gz' => $this->l('GZIP compression is not activated'),
                         'mcrypt' => $this->l('Mcrypt extension is not enabled'),
                         'mbstring' => $this->l('Mbstring extension is not enabled'),
-                        'magicquotes' => $this->l('PHP magic quotes option is enabled'),
                         'dom' => $this->l('Dom extension is not loaded'),
                         'pdo_mysql' => $this->l('PDO MySQL extension is not loaded')
                     )
@@ -139,14 +140,29 @@ class InstallControllerHttpSystem extends InstallControllerHttp
             ),
         );
 
+        //Inject Sf2 errors to test render required
+        foreach ($testsRequiredsf2 as $error) {
+            $this->tests_render['required'][2]['checks'][] = $this->l($error->getHelpHtml());
+        }
+
+        //Inject Sf2 optionnal config to test render optional
+        foreach ($testsOptionalsf2 as $error) {
+            $this->tests_render['optional'][0]['checks'][] = $this->l($error->getHelpHtml());
+        }
+
         foreach ($this->tests_render['required'] as &$category) {
             foreach ($category['checks'] as $id => $check) {
-                if ($this->tests['required']['checks'][$id] != 'ok') {
+                if (!isset($this->tests['required']['checks'][$id]) || $this->tests['required']['checks'][$id] != 'ok') {
                     $category['success'] = 0;
                 }
             }
         }
-        
+
+        //if sf2 requirement error found, force the required success to false
+        if (count($testsRequiredsf2) > 0) {
+            $this->tests['required']['success'] = false;
+        }
+
         // If required tests failed, disable next button
         if (!$this->tests['required']['success']) {
             $this->next_button = false;

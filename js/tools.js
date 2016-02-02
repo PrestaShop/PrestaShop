@@ -1,28 +1,31 @@
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
+/**
+ * @returns float parsed from a string containing a formatted price
+ */
 function formatedNumberToFloat(price, currencyFormat, currencySign)
 {
 	price = price.replace(currencySign, '');
@@ -37,44 +40,74 @@ function formatedNumberToFloat(price, currencyFormat, currencySign)
 	return price;
 }
 
-//return a formatted number
+/**
+ * @deprecated Please use asynchronous formatNumberCldr() instead.
+ * 
+ * @param value float The number to format
+ * @param numberOfDecimal Size of fractionnal part in the number
+ * @param thousenSeparator Not used anymore
+ * @param virgule Not used anymore
+ * @returns string a formatted number according to the current locale settings
+ */
 function formatNumber(value, numberOfDecimal, thousenSeparator, virgule)
 {
-	value = value.toFixed(numberOfDecimal);
-	var val_string = value+'';
-	var tmp = val_string.split('.');
-	var abs_val_string = (tmp.length === 2) ? tmp[0] : val_string;
-	var deci_string = ('0.' + (tmp.length === 2 ? tmp[1] : 0)).substr(2);
-	var nb = abs_val_string.length;
-
-	for (var i = 1 ; i < 4; i++)
-		if (value >= Math.pow(10, (3 * i)))
-			abs_val_string = abs_val_string.substring(0, nb - (3 * i)) + thousenSeparator + abs_val_string.substring(nb - (3 * i));
-
-	if (parseInt(numberOfDecimal) === 0)
-		return abs_val_string;
-	return abs_val_string + virgule + (deci_string > 0 ? deci_string : '00');
+	var globalize = cldrForNumber();
+	return globalize.numberFormatter({
+			minimumFractionDigits: 2,
+			maximumFractionDigits: numberOfDecimal
+	})(value);
 }
 
+/**
+ * This call will load CLDR data to format a number according to the page locale, and then send formatted
+ * number into parameter of the callback function. This function is asynchronous as AJAX calls may occur.
+ * 
+ * @param value float The number to format
+ * @param callback The function to call with the resulting formatted number as unique parameter
+ * @param numberOfDecimal Size of fractionnal part in the number
+ */
+function formatNumberCldr(value, callback, numberOfDecimal) {
+	if (typeof numberOfDecimal === 'undefined') numberOfDecimal = 2;
+	
+	cldrForNumber(function(globalize) {
+		var result = globalize.numberFormatter({
+			minimumFractionDigits: 2,
+			maximumFractionDigits: numberOfDecimal
+		})(value);
+		callback(result);
+	});
+}
+
+/**
+ * @deprecated Please use asynchronous formatCurrencyCldr() instead.
+ * 
+ * @param price float The value to format in a price
+ * @param currencyFormat Not used anymore
+ * @param currencySign Not used anymore
+ * @param currencyBlank Not used anymore
+ * @returns string a formatted price according to the current locale settings
+ */
 function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 {
-	// if you modified this function, don't forget to modify the PHP function displayPrice (in the Tools.php class)
-	var blank = '';
-	price = parseFloat(price.toFixed(10));
-	price = ps_round(price, priceDisplayPrecision);
-	if (currencyBlank > 0)
-		blank = ' ';
-	if (currencyFormat == 1)
-		return currencySign + blank + formatNumber(price, priceDisplayPrecision, ',', '.');
-	if (currencyFormat == 2)
-		return (formatNumber(price, priceDisplayPrecision, ' ', ',') + blank + currencySign);
-	if (currencyFormat == 3)
-		return (currencySign + blank + formatNumber(price, priceDisplayPrecision, '.', ','));
-	if (currencyFormat == 4)
-		return (formatNumber(price, priceDisplayPrecision, ',', '.') + blank + currencySign);
-	if (currencyFormat == 5)
-		return (currencySign + blank + formatNumber(price, priceDisplayPrecision, '\'', '.'));
-	return price;
+	var formatter = cldrForCurrencyFormatterWrapper(null, {
+		maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2
+	});
+	return formatter(price);
+}
+
+/**
+ * This call will load CLDR data to format a price according to the page locale, and then send formatted
+ * price into parameter of the callback function. This function is asynchronous as AJAX calls may occur.
+ * 
+ * @param price float The price to format
+ * @param callback The function to call with the resulting formatted price as unique parameter
+ */
+function formatCurrencyCldr(price, callback) {
+	cldrForCurrencyFormatterWrapper(function(formatter) {
+		callback(formatter(price));
+	}, {
+		maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2
+	});
 }
 
 function ps_round_helper(value, mode)
@@ -593,14 +626,16 @@ function isCleanHtml(content)
 	return true;
 }
 
-function sleep(milliseconds)
-{
-	var start = new Date().getTime();
-
-	for (var i = 0; i < 1e7; i++) {
-		if ((new Date().getTime() - start) > milliseconds) {
-			break;
-		}
+function getStorageAvailable() {
+	test = 'foo';
+	storage =  window.localStorage || window.sessionStorage;
+	try {
+		storage.setItem(test, test);
+		storage.removeItem(test);
+		return storage;
+	}
+	catch (error) {
+		return null;
 	}
 }
 

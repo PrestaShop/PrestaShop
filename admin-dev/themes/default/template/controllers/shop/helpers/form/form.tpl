@@ -17,24 +17,24 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="helpers/form/form.tpl"}
 
 {block name="input"}
 	{if $input.type == 'theme'}
 		{foreach $input.values as $theme}
-			<div class="col-lg-3 select_theme {if $theme->id == $fields_value.id_theme_checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
+			<div class="col-lg-3 select_theme {if $theme->getName() == $fields_value.theme_name}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
 				<div class="radio">
 					<label>
-						<input type="radio" name="id_theme" value="{$theme->id|intval}"{if $theme->id == $fields_value.id_theme_checked} checked="checked"{/if} /> {$theme->name|escape:'html':'UTF-8'}
+						<input type="radio" name="theme_name" value="{$theme->getName()|escape:'html':'UTF-8'}"{if $theme->getName() == $fields_value.theme_name} checked="checked"{/if} /> {$theme->getName()|escape:'html':'UTF-8'}
 					</label>
 				</div>
 				<div class="theme-container">
-					<img class="thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->directory}" />
+					<img class="thumbnail" src="../themes/{$theme->getName()|escape:'html':'UTF-8'}/preview.jpg" />
 				</div>
 			</div>
 		{/foreach}

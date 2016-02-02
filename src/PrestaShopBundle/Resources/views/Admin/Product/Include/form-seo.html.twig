@@ -1,0 +1,67 @@
+<div class="col-lg-9">
+    <h4>{{ trans('Search Engine Optimization', {}, 'AdminProducts') }}</h4>
+    <p>{{ trans('Improve your ranking in search engine', {}, 'AdminProducts') }}</p>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <label class="control-label">{{ form.meta_title.vars.label }}</label>
+            {{ form_errors(form.meta_title) }}
+            {{ form_widget(form.meta_title) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <label class="control-label">{{ form.meta_description.vars.label }}</label>
+            {{ form_errors(form.meta_description) }}
+            {{ form_widget(form.meta_description) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <label class="control-label">{{ form.link_rewrite.vars.label }}</label>
+            {{ form_errors(form.link_rewrite) }}
+            <div class="clearfix"></div>
+            <div class="col-sm-11">
+                {{ form_widget(form.link_rewrite) }}
+            </div>
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-default" id="seo-url-regenerate">{{ trans('Reset URL', {}, 'AdminProducts') }}</button>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-info">
+        {{ trans('Urls management is done in URLS and SEO section. You can improve the URL format of products by following this link.', [], 'AdminProducts') }}
+        <a href="{{ getAdminLink("AdminMeta") }}">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
+        <p>
+            {% if 'PS_REWRITING_SETTINGS'|configuration == 0 %}
+                {{ trans('The management of simplified urls is disabled. To enable it, click on the following link.', [], 'AdminProducts') }}
+                <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
+            {% else %}
+                {{ trans('The management of simplified urls is enabled. To disable it, click on the following link.', [], 'AdminProducts') }}
+                <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="form-group">
+        <h4>{{ trans('Redirection page', {}, 'AdminProducts') }}</h4>
+        <div class="form-group">
+            <div class="col-sm-3">
+                <label class="control-label">{{ form.redirect_type.vars.label }}</label>
+                {{ form_errors(form.redirect_type) }}
+                {{ form_widget(form.redirect_type) }}
+            </div>
+            <div class="col-sm-5" id="id-product-redirected">
+                <label class="control-label">{{ form.id_product_redirected.vars.label }}</label>
+                {{ form_errors(form.id_product_redirected) }}
+                {{ form_widget(form.id_product_redirected) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 left-separator">
+    {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+    {'limit': 3, 'randomize': 1, 'domain': 'products_seo' })
+    %}
+</div>
+<div class="clearfix"></div>

@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <entity_order_return_state>
   <order_return_state id="Waiting_for_confirmation">
-    <name>Waiting for confirmation</name>
+    <name>Väntar på bekräftelse</name>
   </order_return_state>
   <order_return_state id="Waiting_for_package">
-    <name>Waiting for package</name>
+    <name>Väntar på paket</name>
   </order_return_state>
   <order_return_state id="Package_received">
-    <name>Package received</name>
+    <name>Paket mottaget</name>
   </order_return_state>
   <order_return_state id="Return_denied">
-    <name>Return denied</name>
+    <name>Retur nekad</name>
   </order_return_state>
   <order_return_state id="Return_completed">
-    <name>Return completed</name>
+    <name>Retur godkänd och klar</name>
   </order_return_state>
 </entity_order_return_state>

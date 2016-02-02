@@ -138,12 +138,6 @@
     <keywords/>
     <url_rewrite>toko</url_rewrite>
   </meta>
-  <meta id='order-opc' id_shop='1'>
-    <title>Order</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>quick-order</url_rewrite>
-  </meta>
   <meta id='guest-tracking' id_shop='1'>
     <title>Guest tracking</title>
     <description/>
@@ -155,11 +149,5 @@
     <description/>
     <keywords/>
     <url_rewrite>konfirmasi-pembelian</url_rewrite>
-  </meta>
-  <meta id="products-comparison" id_shop="1">
-    <title>Products Comparison</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>products-comparison</url_rewrite>
   </meta>
 </entity_meta>

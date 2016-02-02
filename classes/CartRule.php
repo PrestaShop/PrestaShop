@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class CartRuleCore extends ObjectModel
 {
@@ -347,28 +347,36 @@ class CartRuleCore extends ObjectModel
             }
         }
 
-        foreach ($result as $key => $cart_rule) {
+        $result_bak = $result;
+        $result = array();
+        $country_restriction = false;
+        foreach ($result_bak as $key => $cart_rule) {
             if ($cart_rule['country_restriction']) {
+                $country_restriction = true;
                 $countries = Db::getInstance()->ExecuteS('
-					SELECT `id_country`
-					FROM `'._DB_PREFIX_.'address`
-					WHERE `id_customer` = '.(int)$id_customer.'
-					AND `deleted` = 0'
+                    SELECT `id_country`
+                    FROM `'._DB_PREFIX_.'address`
+                    WHERE `id_customer` = '.(int)$id_customer.'
+                    AND `deleted` = 0'
                 );
 
                 if (is_array($countries) && count($countries)) {
                     foreach ($countries as $country) {
                         $id_cart_rule = (bool)Db::getInstance()->getValue('
-							SELECT crc.id_cart_rule
-							FROM '._DB_PREFIX_.'cart_rule_country crc
-							WHERE crc.id_cart_rule = '.(int)$cart_rule['id_cart_rule'].'
-							AND crc.id_country = '.(int)$country['id_country']);
-                        if (!$id_cart_rule) {
-                            unset($result[$key]);
+                            SELECT crc.id_cart_rule
+                            FROM '._DB_PREFIX_.'cart_rule_country crc
+                            WHERE crc.id_cart_rule = '.(int)$cart_rule['id_cart_rule'].'
+                            AND crc.id_country = '.(int)$country['id_country']);
+                        if ($id_cart_rule) {
+                            $result[$id_cart_rule] = $result_bak[$key];
                         }
                     }
                 }
             }
+        }
+
+        if (!$country_restriction) {
+            $result = $result_bak;
         }
 
         // Retrocompatibility with 1.4 discounts
@@ -1385,12 +1393,12 @@ class CartRuleCore extends ObjectModel
         // Delete the product rules that does not have any values
         if (Db::getInstance()->Affected_Rows() > 0) {
             Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule_value`
-																							WHERE `cart_rule_product_rule`.`id_product_rule` = `cart_rule_product_rule_value`.`id_product_rule`)');
+																							WHERE `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule` = `'._DB_PREFIX_.'cart_rule_product_rule_value`.`id_product_rule`)');
         }
         // If the product rules were the only conditions of a product rule group, delete the product rule group
         if (Db::getInstance()->Affected_Rows() > 0) {
             Db::getInstance()->delete('cart_rule_product_rule_group', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule`
-																						WHERE `cart_rule_product_rule`.`id_product_rule_group` = `cart_rule_product_rule_group`.`id_product_rule_group`)');
+																						WHERE `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule_group` = `'._DB_PREFIX_.'cart_rule_product_rule_group`.`id_product_rule_group`)');
         }
 
         // If the product rule group were the only restrictions of a cart rule, update de cart rule restriction cache

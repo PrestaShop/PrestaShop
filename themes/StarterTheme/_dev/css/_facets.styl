@@ -1,0 +1,24 @@
+#search_filters
+  select
+    width 60%
+  span.magnitude
+    display inline
+    color black
+    &:before
+      content "("
+    &:after
+      content ")"
+  a, a:visited
+    color inherit
+  .facet
+    a
+      text-decoration none
+      &.active
+        font-weight bold
+    ul
+      list-style none
+      margin 0
+      padding 0
+  .active_filters
+    ul
+      padding-left 20px

@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 <div class="modal-body">
@@ -37,7 +37,7 @@
 			<!--start addons login-->
 			<form id="addons_login_form" method="post" >
 				<div>
-					<a href="{$addons_register_link|escape:'html':'UTF-8'}"><img class="img-responsive center-block" src="themes/default/img/prestashop-addons-logo.png" alt="Logo PrestaShop Addons"/></a>
+					<a href="{$addons_register_link|escape:'html':'UTF-8'}"><img class="img-responsive center-block" src="{$img_base_path}themes/default/img/prestashop-addons-logo.png" alt="Logo PrestaShop Addons"/></a>
 					<h3 class="text-center">{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}</h3>
 					<hr />
 				</div>

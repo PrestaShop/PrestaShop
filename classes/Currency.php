@@ -24,6 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+use PrestaShop\PrestaShop\Core\Cldr\Repository;
+
 class CurrencyCore extends ObjectModel
 {
     public $id;
@@ -34,14 +36,8 @@ class CurrencyCore extends ObjectModel
     /** @var string Iso code */
     public $iso_code;
 
-    /** @var string Iso code numeric */
+    /** @var string numeric Iso code */
     public $iso_code_num;
-
-    /** @var string Symbol for short display */
-    public $sign;
-
-    /** @var int bool used for displaying blank between sign and price */
-    public $blank;
 
     /** @var string exchange rate from euros */
     public $conversion_rate;
@@ -49,14 +45,13 @@ class CurrencyCore extends ObjectModel
     /** @var bool True if currency has been deleted (staying in database as deleted) */
     public $deleted = 0;
 
-    /** @var int ID used for displaying prices */
-    public $format;
-
-    /** @var int bool Display decimals on prices */
-    public $decimals;
-
     /** @var int bool active */
     public $active;
+
+    public $sign;
+    public $format;
+    public $blank;
+    public $decimals;
 
     /**
      * @see ObjectModel::$definition
@@ -66,16 +61,11 @@ class CurrencyCore extends ObjectModel
         'primary' => 'id_currency',
         'multilang_shop' => true,
         'fields' => array(
-            'name' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-            'iso_code' =>        array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
-            'iso_code_num' =>    array('type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3),
-            'blank' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'sign' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 8),
-            'format' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'decimals' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+            'name' =>           array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+            'iso_code' =>       array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
             'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
             'deleted' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'active' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'active' =>         array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
         ),
     );
 
@@ -100,15 +90,26 @@ class CurrencyCore extends ObjectModel
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
+        $this->cldr = Tools::getCldr(Context::getContext());
+
         parent::__construct($id, $id_lang, $id_shop);
-        // prefix and suffix are convenient shortcut for displaying
-        // price sign before or after the price number
-        $this->prefix =    $this->format % 2 != 0 ? $this->sign.' ' : '';
-        $this->suffix =    $this->format % 2 == 0 ? ' '.$this->sign : '';
+
+        if ($this->iso_code) {
+            $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
+
+            $this->sign = $cldrCurrency['symbol'];
+            $this->iso_code_num = $cldrCurrency['iso_code'];
+            $this->name = $cldrCurrency['name'];
+            $this->format = $this->cldr->getCurrencyFormatPattern();
+            $this->blank = 1;
+            $this->decimals = 1;
+        }
+
         if (!$this->conversion_rate) {
             $this->conversion_rate = 1;
         }
     }
+
     /**
      * Overriding check if currency rate is not empty and if currency with the same iso code already exists.
      * If it's true, currency is not added.
@@ -120,7 +121,11 @@ class CurrencyCore extends ObjectModel
         if ((float)$this->conversion_rate <= 0) {
             return false;
         }
-        return Currency::exists($this->iso_code, $this->iso_code_num) ? false : parent::add($autodate, $nullValues);
+
+        $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
+        $this->name = $cldrCurrency['name'];
+
+        return Currency::exists($this->iso_code) ? false : parent::add($autodate, $nullValues);
     }
 
     public function update($autodate = true, $nullValues = false)
@@ -128,6 +133,10 @@ class CurrencyCore extends ObjectModel
         if ((float)$this->conversion_rate <= 0) {
             return false;
         }
+
+        $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
+        $this->name = $cldrCurrency['name'];
+
         return parent::update($autodate, $nullValues);
     }
 
@@ -137,13 +146,9 @@ class CurrencyCore extends ObjectModel
      * @param int|string $iso_code int for iso code number string for iso code
      * @return bool
      */
-    public static function exists($iso_code, $iso_code_num, $id_shop = 0)
+    public static function exists($iso_code, $id_shop = 0)
     {
-        if (is_int($iso_code)) {
-            $id_currency_exists = Currency::getIdByIsoCodeNum((int)$iso_code_num, (int)$id_shop);
-        } else {
-            $id_currency_exists = Currency::getIdByIsoCode($iso_code, (int)$id_shop);
-        }
+        $id_currency_exists = Currency::getIdByIsoCode($iso_code, (int)$id_shop);
 
         if ($id_currency_exists) {
             return true;
@@ -193,24 +198,6 @@ class CurrencyCore extends ObjectModel
      */
     public function getSign($side = null)
     {
-        if (!$side) {
-            return $this->sign;
-        }
-        $formated_strings = array(
-            'left' => $this->sign.' ',
-            'right' => ' '.$this->sign
-        );
-
-        $formats = array(
-            1 => array('left' => &$formated_strings['left'], 'right' => ''),
-            2 => array('left' => '', 'right' => &$formated_strings['right']),
-            3 => array('left' => &$formated_strings['left'], 'right' => ''),
-            4 => array('left' => '', 'right' => &$formated_strings['right']),
-            5 => array('left' => '', 'right' => &$formated_strings['right'])
-        );
-        if (isset($formats[$this->format][$side])) {
-            return ($formats[$this->format][$side]);
-        }
         return $this->sign;
     }
 
@@ -225,28 +212,64 @@ class CurrencyCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'currency` c
 		'.Shop::addSqlAssociation('currency', 'c').
-        ' WHERE `deleted` = 0'.
-        ($active ? ' AND c.`active` = 1' : '').
-        ($group_by ? ' GROUP BY c.`id_currency`' : '').
-        ' ORDER BY `name` ASC');
-        if ($object) {
-            foreach ($tab as $key => $currency) {
-                $tab[$key] = Currency::getCurrencyInstance($currency['id_currency']);
-            }
-        }
-        return $tab;
+            ' WHERE `deleted` = 0'.
+            ($active ? ' AND c.`active` = 1' : '').
+            ($group_by ? ' GROUP BY c.`id_currency`' : '').
+            ' ORDER BY `iso_code` ASC');
+
+        return self::addCldrDatasToCurrency($tab, $object);
     }
 
     public static function getCurrenciesByIdShop($id_shop = 0)
     {
-        return Db::getInstance()->executeS('
+        $currencies = Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'currency` c
 		LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
 		'.($id_shop ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
-		ORDER BY `name` ASC');
+		ORDER BY `iso_code` ASC');
+
+        return self::addCldrDatasToCurrency($currencies);
     }
 
+    /*
+     * Add Cldr datas to result query or signe object/array
+     *
+     * @param $currencies mixed object|array
+     * @param $isObject bool
+     */
+    protected static function addCldrDatasToCurrency($currencies, $isObject = false)
+    {
+        $cldr = new Repository(Context::getContext()->language);
+
+        if (is_array($currencies)) {
+            foreach ($currencies as $k => $c) {
+                if ($isObject) {
+                    $currencies[$k] = Currency::getCurrencyInstance($c['id_currency']);
+                } else {
+                    $currency = $cldr->getCurrency($c['iso_code']);
+
+                    $currencies[$k]['name'] = ucfirst($currency['name']);
+                    $currencies[$k]['iso_code_num'] = $currency['iso_code'];
+                    $currencies[$k]['sign'] = $currency['symbol'];
+                    $currencies[$k]['format'] = '';
+                }
+            }
+        } else {
+            if ($isObject) {
+                $currencies = Currency::getCurrencyInstance($currencies['id_currency']);
+            } else {
+                $currency = $cldr->getCurrency($currencies['iso_code']);
+
+                $currencies['name'] = ucfirst($currency['name']);
+                $currencies['iso_code_num'] = $currency['iso_code'];
+                $currencies['sign'] = $currency['symbol'];
+                $currencies['format'] = '';
+            }
+        }
+
+        return $currencies;
+    }
 
     public static function getPaymentCurrenciesSpecial($id_module, $id_shop = null)
     {
@@ -274,7 +297,8 @@ class CurrencyCore extends ObjectModel
 					AND mc.`id_module` = '.(int)$id_module.'
 					AND c.`active` = 1
 					AND mc.id_shop = '.(int)$id_shop.'
-				ORDER BY c.`name` ASC';
+				ORDER BY c.`iso_code` ASC';
+
         return Db::getInstance()->executeS($sql);
     }
 
@@ -292,6 +316,8 @@ class CurrencyCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'module_currency`
 				WHERE `id_module` = '.(int)$id_module.'
 					AND `id_shop` = '.(int)$id_shop;
+
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
@@ -321,19 +347,6 @@ class CurrencyCore extends ObjectModel
             return $result;
         }
         return Cache::retrieve($cache_id);
-    }
-
-    /**
-     * @param $iso_code_num
-     * @param int $id_shop
-     * @return int
-     */
-    public static function getIdByIsoCodeNum($iso_code_num, $id_shop = 0)
-    {
-        $query = Currency::getIdByQuery($id_shop);
-        $query->where('iso_code_num = \''.pSQL($iso_code_num).'\'');
-
-        return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
     }
 
     /**

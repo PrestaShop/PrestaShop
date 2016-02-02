@@ -1,0 +1,12 @@
+<div id="modules-categories-grid">
+    <div class="row">
+        {% for category in categories.subMenu|arrayCast %}
+            {# Module Card #}
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_categories_card.html.twig'
+                with {
+                    'category': category
+                }
+            %}
+        {% endfor %}
+    </div>
+</div>

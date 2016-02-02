@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property Configuration $object
@@ -52,14 +52,6 @@ class AdminPPreferencesControllerCore extends AdminController
                         'cast' => 'intval',
                         'required' => false,
                         'type' => 'bool'
-                    ),
-                    'PS_COMPARATOR_MAX_ITEM' => array(
-                        'title' => $this->l('Product comparison'),
-                        'hint' => $this->l('Set the maximum number of products that can be selected for comparison. Set to "0" to disable this feature.'),
-                        'validation' => 'isUnsignedId',
-                        'required' => true,
-                        'cast' => 'intval',
-                        'type' => 'text'
                     ),
                     'PS_NB_DAYS_NEW_PRODUCT' => array(
                         'title' => $this->l('Number of days for which the product is considered \'new\''),
@@ -238,7 +230,7 @@ class AdminPPreferencesControllerCore extends AdminController
                             'off' => 'onchange="stockManagementActivationAuthorization()"'
                         )
                     ),
-                    'PS_ADVANCED_STOCK_MANAGEMENT' => array(
+                    /*'PS_ADVANCED_STOCK_MANAGEMENT' => array(
                         'title' => $this->l('Enable advanced stock management'),
                         'hint' => $this->l('Allows you to manage physical stock, warehouses and supply orders in a new Stock menu.'),
                         'validation' => 'isBool',
@@ -266,7 +258,7 @@ class AdminPPreferencesControllerCore extends AdminController
                         'type' => 'select',
                         'list' => $warehouse_list,
                         'identifier' => 'id_warehouse'
-                    ),
+                    ),*/
                     'PS_PACK_STOCK_TYPE' => array(
                         'title' =>  $this->l('Default pack stock management'),
                         'type' => 'select',

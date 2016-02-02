@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property ImageType $object
@@ -508,33 +508,39 @@ class AdminImagesControllerCore extends AdminController
         $generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
 
         if (!$productsImages) {
+            $formated_thumb_scene = ImageType::getFormattedName('thumb_scene');
+            $formated_medium = ImageType::getFormattedName('medium');
             foreach (scandir($dir) as $image) {
                 if (preg_match('/^[0-9]*\.jpg$/', $image)) {
                     foreach ($type as $k => $imageType) {
                         // Customizable writing dir
                         $newDir = $dir;
-                        if ($imageType['name'] == 'thumb_scene') {
+                        if ($imageType['name'] == $formated_thumb_scene) {
                             $newDir .= 'thumbs/';
                         }
                         if (!file_exists($newDir)) {
                             continue;
                         }
+
+                        if (($dir == _PS_CAT_IMG_DIR_) && ($imageType['name'] == $formated_medium) && is_file(_PS_CAT_IMG_DIR_.str_replace('.', '_thumb.', $image))) {
+                            $image = str_replace('.', '_thumb.', $image);
+                        }
+
                         if (!file_exists($newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg')) {
                             if (!file_exists($dir.$image) || !filesize($dir.$image)) {
                                 $this->errors[] = sprintf(Tools::displayError('Source file does not exist or is empty (%s)'), $dir.$image);
-                            } else {
-                                if (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height'])) {
-                                    $this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
-                                }
+                            } elseif (!ImageManager::resize($dir.$image, $newDir.substr(str_replace('_thumb.', '.', $image), 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height'])) {
+                                $this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
+                            }
 
-                                if ($generate_hight_dpi_images) {
-                                    if (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'2x.jpg', (int)$imageType['width']*2, (int)$imageType['height']*2)) {
-                                        $this->errors[] = sprintf(Tools::displayError('Failed to resize image file to high resolution (%s)'), $dir.$image);
-                                    }
+                            if ($generate_hight_dpi_images) {
+                                if (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'2x.jpg', (int)$imageType['width']*2, (int)$imageType['height']*2)) {
+                                    $this->errors[] = sprintf(Tools::displayError('Failed to resize image file to high resolution (%s)'), $dir.$image);
                                 }
                             }
                         }
-                        if (time() - $this->start_time > $this->max_execution_time - 4) { // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
+                         // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
+                        if (time() - $this->start_time > $this->max_execution_time - 4) {
                             return 'timeout';
                         }
                     }
@@ -694,17 +700,6 @@ class AdminImagesControllerCore extends AdminController
         return (count($this->errors) > 0 ? false : true);
     }
 
-    /**
-     * Init display for move images block
-     */
-    public function initMoveImages()
-    {
-        $this->context->smarty->assign(array(
-            'safe_mode' => Tools::getSafeModeStatus(),
-            'link_ppreferences' => 'index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'#PS_LEGACY_IMAGES_on',
-        ));
-    }
-
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
@@ -742,7 +737,6 @@ class AdminImagesControllerCore extends AdminController
     {
         if ($this->display != 'edit' && $this->display != 'add') {
             $this->initRegenerate();
-            $this->initMoveImages();
 
             $this->context->smarty->assign(array(
                 'display_regenerate' => true,

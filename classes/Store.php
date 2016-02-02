@@ -1,31 +1,34 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class StoreCore extends ObjectModel
 {
+    /** @var int Store id */
+    public $id;
+
     /** @var int Country id */
     public $id_country;
 
@@ -93,7 +96,7 @@ class StoreCore extends ObjectModel
             'city' =>            array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
             'latitude' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
             'longitude' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
-            'hours' =>            array('type' => self::TYPE_STRING, 'validate' => 'isSerializedArray', 'size' => 65000),
+            'hours' =>            array('type' => self::TYPE_STRING, 'validate' => 'isJson', 'size' => 65000),
             'phone' =>            array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
             'fax' =>            array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
             'note' =>            array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
@@ -119,14 +122,46 @@ class StoreCore extends ObjectModel
         $this->image_dir = _PS_STORE_IMG_DIR_;
     }
 
+    public static function getStores()
+    {
+        $stores = Db::getInstance()->executeS('
+            SELECT s.id_store AS `id`, s.*
+            FROM '._DB_PREFIX_.'store s
+            '.Shop::addSqlAssociation('store', 's').'
+            WHERE s.active = 1'
+        );
+
+        return $stores;
+    }
+
     public function getWsHours()
     {
-        return implode(';', Tools::unSerialize($this->hours));
+        return $this->hours;
     }
 
     public function setWsHours($hours)
     {
-        $this->hours = serialize(explode(';', $hours));
+        if (!is_string($hours)) {
+            return false;
+        }
+
+        $this->hours = $hours;
         return true;
+    }
+
+    /**
+     * This method is allow to know if a store exists for AdminImportController
+     * @since 1.6.2.0
+     * @return bool
+     */
+    public static function storeExists($id_store)
+    {
+        $row = Db::getInstance()->getRow('
+            SELECT `id_store`
+            FROM '._DB_PREFIX_.'store a
+            WHERE a.`id_store` = '.(int)$id_store
+        );
+
+        return isset($row['id_store']);
     }
 }

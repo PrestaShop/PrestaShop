@@ -114,9 +114,9 @@ public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products 
 {
     // Dependencies
 
-    $address_factory    = Adapter_ServiceLocator::get('Adapter_AddressFactory');
-    $price_calculator   = Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
-    $configuration      = Adapter_ServiceLocator::get('Core_Business_Configuration');
+    $address_factory    = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
+    $price_calculator   = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
+    $configuration      = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Configuration');
 
     // Code...
 }
@@ -125,23 +125,23 @@ public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products 
 On the unit test side, setting up the mocked objects follow this pattern:
 
 ```php
-$this->container = new Core_Foundation_IoC_Container;
-Adapter_ServiceLocator::setServiceContainerInstance($this->container);
+$this->container = new \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+\PrestaShop\PrestaShop\Adapter\ServiceLocator::setServiceContainerInstance($this->container);
 
-$addressFactory = Phake::mock('Adapter_AddressFactory');
+$addressFactory = Phake::mock('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
 $address = new Address;
 $address->id = 1;
 
 Phake::when($addressFactory)->findOrCreate()->thenReturn($address);
 
-$this->container->bind('Adapter_AddressFactory', $addressFactory);
+$this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory', $addressFactory);
 ```
 
 What's happening here is:
 
 1. We create a Dependency Injection Container instance specifically for our tests
 2. We tell the ServiceLocator to fetch dependencies from our container
-3. We mock our dependency (`Adapter_AddressFactory` here)
+3. We mock our dependency (`\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory` here)
 4. We bind the mocked dependency to the ServiceContainer instance
 5. In the code under test, the ServiceLocator only talks with our test container and pulls the dependencies we crafted from there
 
@@ -157,12 +157,12 @@ Code in an adapter might:
 
 As a first step, an Adapter can just use the same code as the legacy part it replaces.
 
-For instance our `Adapter_AddressFactory` class:
+For instance our `\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory` class:
 
 ```php
 <?php
 
-class Adapter_AddressFactory
+class AddressFactory
 {
     public function findOrCreate($id_address = null, $with_geoloc = false)
     {
@@ -196,7 +196,7 @@ But the same exact code as before is called, which is as safe as can be.
 
 Now that our dependencies are safely exposed we have a solid starting point for further work:
 
-if `Adapter_AddressFactory::findOrCreate` does strange things we're not comfortable with, and if we have strong unit tests on the code that uses the adapter, then we can start delegating work from `Adapter_AddressFactory` to non-legacy code instead of using the copy-pasted logic from the legacy code.
+if `\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory::findOrCreate` does strange things we're not comfortable with, and if we have strong unit tests on the code that uses the adapter, then we can start delegating work from `\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory` to non-legacy code instead of using the copy-pasted logic from the legacy code.
 
 # A Proposal for a New Software Architecture
 
@@ -256,14 +256,14 @@ The life cycle of an adapter is roughly as follows:
 
 - **Debugging / Refactoring Stage**
     1. Create `Adapter_SomeService` to break a static dependency to `SomeService` in the code you're working on
-        - Adapter should be minimal at first - [it might just forward a call to some legacy function](https://github.com/djfm/PrestaShop/commit/42db57be45c299259a28a247db6c62267d3fb671). 
-    2. Use `Adapter_ServiceLocator::get('Adapter_SomeService')` in the code under test to retrieve an instance of the service we depend on
+        - Adapter should be minimal at first - [it might just forward a call to some legacy function](https://github.com/djfm/PrestaShop/commit/42db57be45c299259a28a247db6c62267d3fb671).
+    2. Use `\PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Adapter_SomeService')` in the code under test to retrieve an instance of the service we depend on
     3. Write tests, refactor...
 - **Architecture Improvement Stage**: With time and experience, the precise responsibilities of `Adapter_SomeService` have been clearly identified and tested
     1. Write a new `Core_SomeService` class inside the `Core` file hierarchy, test it thoroughly
-    2. Delegate work from `Adapter_SomeService` to `Core_SomeService`, keeping the `Adapter_ServiceLocator::get('Adapter_SomeService')` calls in the code where proper dependency injection is still too hard to do. Propagate the `Core_SomeService` dependency in a better way where possible.
+    2. Delegate work from `Adapter_SomeService` to `Core_SomeService`, keeping the `\PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Adapter_SomeService')` calls in the code where proper dependency injection is still too hard to do. Propagate the `Core_SomeService` dependency in a better way where possible.
 - **Adapter Removal**: At some point, if enough code has been cleaned up, the `Adapter_SomeService` might not be needed any more
-    1. Remove all calls to `Adapter_ServiceLocator::get('Adapter_SomeService')` and replace them with proper dependency injection
+    1. Remove all calls to `\PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Adapter_SomeService')` and replace them with proper dependency injection
     2. Delete `Adapter_SomeService`.
     3. Profit!
 
@@ -273,4 +273,4 @@ The life cycle of an adapter is roughly as follows:
 
 Our goal is to gradually move the code from `Legacy` towards `Core`.
 
-As an intermediate step, code in `Legacy` is expected to make heavy use of the `Adapter_ServiceLocator` to break dependencies.
+As an intermediate step, code in `Legacy` is expected to make heavy use of the `\PrestaShop\PrestaShop\Adapter\ServiceLocator` to break dependencies.

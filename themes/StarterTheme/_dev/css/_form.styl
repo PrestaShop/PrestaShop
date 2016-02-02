@@ -1,0 +1,29 @@
+label.radio-block
+  display block
+
+.form-fields
+  label
+    margin-top small-padding
+    margin-bottom 2*small-padding
+    display block
+    &.-required
+      > span
+        font-weight bold
+        &:after
+          content: " *"
+  input[type=checkbox] + span
+    display inline
+  textarea
+    max-width 100%
+  .radio-field
+    > span
+      margin-bottom small-padding
+    label
+      display inline
+      margin-right small-padding
+      background-color white
+      padding small-padding
+      border 1px solid border-color
+.form-footer
+  button
+    margin-top 2*small-padding

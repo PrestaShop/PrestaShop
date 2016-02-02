@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {capture name='tr_count'}{counter name='tr_count'}{/capture}
 <tbody>
@@ -173,7 +173,7 @@
 						<ul class="dropdown-menu">
 						{foreach $compiled_actions AS $key => $action}
 							{if $key != 0}
-							<li {if $action == 'divider'}class="divider"{/if}>
+							<li{if $action == 'divider' && $compiled_actions|count > 3} class="divider"{/if}>
 								{if $action != 'divider'}{$action}{/if}
 							</li>
 							{/if}

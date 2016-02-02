@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property State $object
@@ -48,7 +48,7 @@ class AdminStatesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-            'affectzone' => array('text' => $this->l('Affect a new zone'))
+            'AffectZone' => array('text' => $this->l('Assign to a new zone'))
         );
 
         $this->_select = 'z.`name` AS zone, cl.`name` AS country';
@@ -123,6 +123,15 @@ class AdminStatesControllerCore extends AdminController
         }
 
         parent::initPageHeaderToolbar();
+    }
+
+    public function renderList()
+    {
+        $this->tpl_list_vars['zones'] = Zone::getZones();
+        $this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
+        $this->tpl_list_vars['POST'] = $_POST;
+
+        return parent::renderList();
     }
 
     public function renderForm()
@@ -273,5 +282,22 @@ class AdminStatesControllerCore extends AdminController
         }
 
         die($list);
+    }
+
+    /**
+     * Allow the assignation of zone only if the form is displayed.
+     */
+    protected function processBulkAffectZone()
+    {
+        $zone_to_affect = Tools::getValue('zone_to_affect');
+        if ($zone_to_affect && $zone_to_affect !== 0) {
+            parent::processBulkAffectZone();
+        }
+
+        if (Tools::getIsset('submitBulkAffectZonestate')) {
+            $this->tpl_list_vars['assign_zone'] = true;
+        }
+
+        return;
     }
 }

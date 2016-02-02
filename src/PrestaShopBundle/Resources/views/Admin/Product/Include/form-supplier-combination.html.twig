@@ -1,0 +1,37 @@
+{% if suppliers|length > 0 %}
+    <h4>{{ trans('Supplier reference(s)', {}, 'AdminProducts') }}</h4>
+{% endif %}
+
+{% for supplierId in suppliers %}
+    {% set collectionName = 'supplier_combination_' ~ supplierId %}
+    <div class="panel-body" id="supplier_combination_{{ supplierId }}">
+        <strong class="text-primary">{{ form[collectionName].vars.label }}</strong>
+        <div>
+            {{ form_errors(form[collectionName]) }}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{{ trans('Product name', {}, 'AdminProducts') }}</th>
+                        <th>{{ trans('Supplier reference', {}, 'AdminProducts') }}</th>
+                        <th>{{ trans('Unit price tax excluded', {}, 'AdminProducts') }}</th>
+                        <th>{{ trans('Unit price currency', {}, 'AdminProducts') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for supplier_combination in form[collectionName] %}
+                        <tr>
+                            <td>{{ supplier_combination.vars.value.label }}</td>
+                            <td>{{ form_widget(supplier_combination.supplier_reference) }}</td>
+                            <td>{{ form_widget(supplier_combination.product_price) }}</td>
+                            <td>
+                                {{ form_widget(supplier_combination.product_price_currency) }}
+                                {{ form_widget(supplier_combination.id_product_attribute) }}
+                                {{ form_widget(supplier_combination.supplier_id) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endfor %}

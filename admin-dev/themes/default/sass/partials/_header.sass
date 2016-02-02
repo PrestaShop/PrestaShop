@@ -1,21 +1,36 @@
+$header-height: 36px
+
+.material-icons
+	line-height: inherit
+
 #header
 	z-index: 20
+	#orders_notif_number_wrapper
+		color: #fff
+		background: #fbb000
+		position: absolute
+		top: 2px
+		right: 2px
+		line-height: 10px
+		font-size: 9px
+		padding: 4px
+		@include border-radius(10px)
 #header_infos
 	@extend .navbar
 	@extend .navbar-inverse
 	@extend .navbar-fixed-top
-	height: 36px !important
+	height: $header-height
 	.navbar-header
 		width: 100%
 
-#header_shopversion
+#header_logo
 	@extend .navbar-brand
 	font-size: 1.3em !important
 	position: relative
 	height: 36px
 	background: url('#{$img-path}/prestashop-avatar-header_shopname.png') no-repeat top left
 	background-size: auto 36px
-	padding-left: 140px !important
+	padding-left: 205px !important
 	@include margin(0, 5px, 0, 0)
 	#shop_version
 		font-size: 10px
@@ -33,12 +48,12 @@
 	> li > a
 		height: 36px
 		display: block
-		color: white
-		&:hover i
-			color: white
-	> li > a > i
-		font-size: $icon-size-base
-		vertical-align: middle
+		color: $main-color
+		&:hover
+			color: $toolbar-buttons-hover-color
+		> i
+			font-size: $icon-size-base
+			vertical-align: middle
 	.notifs
 		width: 40px
 		position: relative
@@ -82,6 +97,7 @@
 	border: none
 	color: white
 	display: none
+
 #header_employee_box
 	@extend .nav
 	@extend .navbar-nav
@@ -117,18 +133,17 @@
 			padding: 9px 0
 			color: $brand-warning
 #employee_infos
+	width: $header-height
+	box-sizing: border-box
 	.employee_name
 		position: relative
-		@include ltr
-			padding-right: 40px !important
-		@include rtl
-			padding-left: 40px !important
+		height: $header-height
 	.employee_avatar_small
 		.img-thumbnail
-			@include border-radius(0)
-		@include avatar(36px, 0px)
+			@include border-radius($header-height)
+		@include avatar($header-height, 0px)
 		position: absolute
-		top: 0px
+		top: 0
 		@include right(0)
 	img
 		border: none
@@ -161,7 +176,46 @@
 		sup
 			font-size: 0.7em
 
+.bo_search_form
+	float: left
+	width: 250px
+	margin: 4px 0 0 0
+	#bo_query
+		@include border-radius(0, 55px, 55px, 0)
+		color:       $main-color
+		background:  white
+		border:      1px solid $bg-content-color
+		border-left: none
+		@include box-shadow(none)
+		@include transition(none)
+	.input-group
+		margin: 0 !important
+	.input-group-btn
+		@include border-radius(55px, 0, 0, 55px)
+		border:       1px solid $bg-content-color
+		border-right: none
+		.btn
+			@include border-radius(55px, 0, 0, 55px)
+			@include box-shadow(none)
+			height: 29px
+			outline: none
+		.btn-default
+			@include box-shadow(none)
+			border: 1px solid transparent !important
+	.clear_search
+		position: absolute
+		top: 6px
+		z-index: 10
+		@include right(8px)
+	i
+		font-size: $icon-size-base
+
 #header_quick
+	font-size: 15px
+	a
+		color: $main-color
+		&:hover
+			color: $toolbar-buttons-hover-color
 	@extend .nav
 	@extend .navbar-nav
 	@include ltr
@@ -170,6 +224,29 @@
 		@extend .navbar-right
 	@extend .hidden-xs
 	@extend .hidden-sm
+
+.header-list
+	@extend .nav
+	@extend .navbar-nav
+	@include ltr
+		@extend .navbar-left
+	@include rtl
+		@extend .navbar-right
+	@extend .hidden-xs
+	@extend .hidden-sm
+	height:     $header-height
+	box-sizing: border-box
+	margin: 0 10px !important
+	li
+		> a
+			&.notifs
+				display:        block
+				height:         $header-height
+				min-width:      $header-height
+				line-height:    $header-height
+				box-sizing:     border-box
+				padding:        0 5px !important
+				vertical-align: middle
 
 #header_shop
 	@extend .nav

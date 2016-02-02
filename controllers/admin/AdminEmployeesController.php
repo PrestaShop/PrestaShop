@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property Employee $object
@@ -641,18 +641,9 @@ class AdminEmployeesControllerCore extends AdminController
     {
         $res = parent::afterUpdate($object);
         // Update cookie if needed
-        if (Tools::getValue('id_employee') == $this->context->employee->id && ($passwd = Tools::getValue('passwd'))
+        if (Tools::getValue('id_employee') == $this->context->employee->id && Tools::getValue('passwd')
             && $object->passwd != $this->context->employee->passwd) {
             $this->context->cookie->passwd = $this->context->employee->passwd = $object->passwd;
-            if (Tools::getValue('passwd_send_email')) {
-                $params = array(
-                    '{email}' => $object->email,
-                    '{lastname}' => $object->lastname,
-                    '{firstname}' => $object->firstname,
-                    '{passwd}' => $passwd
-                );
-                Mail::Send($object->id_lang, 'password', Mail::l('Your new password', $object->id_lang), $params, $object->email, $object->firstname.' '.$object->lastname);
-            }
         }
 
         return $res;
@@ -687,6 +678,6 @@ class AdminEmployeesControllerCore extends AdminController
                 }
             }
         }
-        die(Tools::jsonEncode($this->tabs_list));
+        die(json_encode($this->tabs_list));
     }
 }

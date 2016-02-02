@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class CmsControllerCore extends FrontController
 {
@@ -36,9 +36,6 @@ class CmsControllerCore extends FrontController
 
     public function canonicalRedirection($canonicalURL = '')
     {
-        if (Tools::getValue('live_edit')) {
-            return;
-        }
         if (Validate::isLoadedObject($this->cms) && ($canonicalURL = $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite, $this->ssl))) {
             parent::canonicalRedirection($canonicalURL);
         } elseif (Validate::isLoadedObject($this->cms_category) && ($canonicalURL = $this->context->link->getCMSCategoryLink($this->cms_category))) {
@@ -59,7 +56,7 @@ class CmsControllerCore extends FrontController
         }
 
         if (Configuration::get('PS_SSL_ENABLED') && Tools::getValue('content_only') && $id_cms && Validate::isLoadedObject($this->cms)
-            && in_array($id_cms, array((int)Configuration::get('PS_CONDITIONS_CMS_ID'), (int)Configuration::get('LEGAL_CMS_ID_REVOCATION')))) {
+            && in_array($id_cms, $this->getSSLCMSPageIds())) {
             $this->ssl = true;
         }
 
@@ -84,17 +81,6 @@ class CmsControllerCore extends FrontController
         }
     }
 
-    public function setMedia()
-    {
-        parent::setMedia();
-
-        if ($this->assignCase == 1) {
-            $this->addJS(_THEME_JS_DIR_.'cms.js');
-        }
-
-        $this->addCSS(_THEME_CSS_DIR_.'cms.css');
-    }
-
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
@@ -103,39 +89,97 @@ class CmsControllerCore extends FrontController
     {
         parent::initContent();
 
-        $parent_cat = new CMSCategory(1, $this->context->language->id);
-        $this->context->smarty->assign('id_current_lang', $this->context->language->id);
-        $this->context->smarty->assign('home_title', $parent_cat->name);
-        $this->context->smarty->assign('cgv_id', Configuration::get('PS_CONDITIONS_CMS_ID'));
-
         if ($this->assignCase == 1) {
-            if (isset($this->cms->id_cms_category) && $this->cms->id_cms_category) {
-                $path = Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS');
-            } elseif (isset($this->cms_category->meta_title)) {
-                $path = Tools::getFullPath(1, $this->cms_category->meta_title, 'CMS');
-            }
-
             $this->context->smarty->assign(array(
-                'cms' => $this->cms,
-                'content_only' => (int)Tools::getValue('content_only'),
-                'path' => $path,
-                'body_classes' => array($this->php_self.'-'.$this->cms->id, $this->php_self.'-'.$this->cms->link_rewrite)
+                'cms' => $this->objectSerializer->toArray($this->cms),
             ));
 
             if ($this->cms->indexation == 0) {
                 $this->context->smarty->assign('nobots', true);
             }
+
+            if (Tools::getValue('content_only')) {
+                // This is use to create a "fancybox"
+                // StarterTheme: Create template for cms in a fancybox
+            } else {
+                $this->setTemplate('cms/page.tpl');
+            }
         } elseif ($this->assignCase == 2) {
-            $this->context->smarty->assign(array(
-                'category' => $this->cms_category, //for backward compatibility
-                'cms_category' => $this->cms_category,
-                'sub_category' => $this->cms_category->getSubCategories($this->context->language->id),
-                'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)$this->cms_category->id, true, (int)$this->context->shop->id),
-                'path' => ($this->cms_category->id !== 1) ? Tools::getPath($this->cms_category->id, $this->cms_category->name, false, 'CMS') : '',
-                'body_classes' => array($this->php_self.'-'.$this->cms_category->id, $this->php_self.'-'.$this->cms_category->link_rewrite)
-            ));
+            $this->context->smarty->assign($this->getTemplateVarCategoryCms());
+            $this->setTemplate('cms/category.tpl');
+        }
+    }
+
+    /**
+     * Return an array of IDs of CMS pages, which shouldn't be forwared to their canonical URLs in SSL environment.
+     * Required for pages which are shown in iframes.
+    */
+    protected function getSSLCMSPageIds()
+    {
+        return array((int)Configuration::get('PS_CONDITIONS_CMS_ID'), (int)Configuration::get('LEGAL_CMS_ID_REVOCATION'));
+    }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        if ($this->assignCase == 2) {
+            $cmsCategory = new CMSCategory($this->cms_category->id_cms_category);
+        } else {
+            $cmsCategory = new CMSCategory($this->cms->id_cms_category);
         }
 
-        $this->setTemplate(_PS_THEME_DIR_.'cms.tpl');
+        if ($cmsCategory->id_parent != 0) {
+            foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
+                $cmsSubCategory = new CMSCategory($category['id_cms_category']);
+                $breadcrumb['links'][] = [
+                    'title' => $cmsSubCategory->getName(),
+                    'url' => $this->context->link->getCMSCategoryLink($cmsSubCategory)
+                ];
+            }
+        }
+
+        if ($this->assignCase == 1) {
+            $breadcrumb['links'][] = [
+                'title' => $this->context->controller->cms->meta_title,
+                'url' => $this->context->link->getCMSLink($this->context->controller->cms)
+            ];
+        }
+
+        return $breadcrumb;
+    }
+
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+
+        if ($this->assignCase == 2) {
+            $page['body_classes'] = ltrim($page['body_classes'].' '.$this->php_self.'-'.$this->cms_category->id.' '.$this->php_self.'-'.$this->cms_category->link_rewrite, ' ');
+        } else {
+            $page['body_classes'] = ltrim($page['body_classes'].' '.$this->php_self.'-'.$this->cms->id.' '.$this->php_self.'-'.$this->cms->link_rewrite, ' ');
+        }
+
+        return $page;
+    }
+
+    public function getTemplateVarCategoryCms()
+    {
+        $categoryCms = [];
+
+        $categoryCms['cms_category'] = $this->objectSerializer->toArray($this->cms_category);
+        $categoryCms['sub_categories'] = [];
+        $categoryCms['cms_pages'] = [];
+
+        foreach ($this->cms_category->getSubCategories($this->context->language->id) as $subCategory) {
+            $categoryCms['sub_categories'][$subCategory['id_cms_category']] = $subCategory;
+            $categoryCms['sub_categories'][$subCategory['id_cms_category']]['link'] = $this->context->link->getCMSCategoryLink($subCategory['id_cms_category'], $subCategory['link_rewrite']);
+        }
+
+        foreach (CMS::getCMSPages($this->context->language->id, (int)$this->cms_category->id, true, (int)$this->context->shop->id) as $cmsPages) {
+            $categoryCms['cms_pages'][$cmsPages['id_cms']] = $cmsPages;
+            $categoryCms['cms_pages'][$cmsPages['id_cms']]['link'] = $this->context->link->getCMSLink($cmsPages['id_cms'], $cmsPages['link_rewrite']);
+        }
+
+        return $categoryCms;
     }
 }

@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {if $check_product_association_ajax}
 	{assign var=class_input_ajax value='check_product_name '}
@@ -169,6 +169,18 @@
 		</label>
 		<div class="col-lg-3">
 			<input maxlength="13" type="text" id="ean13" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="isbn">
+			<span class="label-tooltip" data-toggle="tooltip"
+				  title="{l s='ISBN code'}">
+				{$bullet_common_field} {l s='ISBN'}
+			</span>
+		</label>
+		<div class="col-lg-3">
+			<input maxlength="13" type="text" id="isbn" name="isbn" value="{$product->isbn|htmlentitiesUTF8}" />
 		</div>
 	</div>
 

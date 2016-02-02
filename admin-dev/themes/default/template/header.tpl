@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie6 " lang="en"> <![endif]-->
@@ -43,6 +43,7 @@
 		var help_class_name = '{$controller_name|@addcslashes:'\''}';
 		var iso_user = '{$iso_user|@addcslashes:'\''}';
 		var full_language_code = '{$full_language_code|@addcslashes:'\''}';
+		var full_cldr_language_code = '{$full_cldr_language_code|@addcslashes:'\''}';
 		var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
 		var _PS_VERSION_ = '{$smarty.const._PS_VERSION_|@addcslashes:'\''}';
 		var roundMode = {$round_mode|intval};
@@ -113,215 +114,115 @@
 				<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
 					<i class="icon-reorder"></i>
 				</button>
-				<a id="header_shopversion" href="{$default_tab_link|escape:'html':'UTF-8'}">
-					<span id="shop_version">{$version}</span>
+
+				{* Logo *}
+				<a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}">
 				</a>
-				{* Shop *}
-				{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-					<ul id="header_shop">
+
+				{* Quick access *}
+				{if count($quick_access) >= 0}
+					<ul id="header_quick">
 						<li class="dropdown">
-							{$shop_list}
+							<a href="javascript:void(0)" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <i class="icon-caret-down"></i></a>
+							<ul class="dropdown-menu">
+								{foreach $quick_access as $quick}
+									<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
+										<a href="{$baseAdminUrl}{$quick.link|escape:'html':'UTF-8'}"{if $quick.new_window} class="_blank"{/if}>
+											{if isset($quick.icon)}
+												<i class="icon-{$quick.icon} icon-fw"></i>
+											{else}
+												<i class="icon-chevron-right icon-fw"></i>
+											{/if}
+											{$quick.name}
+										</a>
+									</li>
+								{/foreach}
+								<li class="divider"></li>
+								{if isset($matchQuickLink)}
+									<li>
+										<a href="javascript:void(0);" class="ajax-quick-link" data-method="remove" data-quicklink-id="{$matchQuickLink}">
+											<i class="icon-minus-circle"></i>
+											{l s='Remove from QuickAccess'}
+										</a>
+									</li>
+								{/if}
+								<li {if isset($matchQuickLink)}class="hide"{/if}>
+									<a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
+										<i class="icon-plus-circle"></i>
+										{l s='Add current page to QuickAccess'}
+									</a>
+								</li>
+                                <li>
+                                    <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+                                        <i class="icon-cog"></i>
+                                        {l s='Manage quick accesses'}
+                                    </a>
+                                </li>
+							</ul>
 						</li>
 					</ul>
-				{else}
-					<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">{$shop_name}</a>
-				{/if}
-				<ul id="header_notifs_icon_wrapper">
-{if {$show_new_orders} == 1}
-					<li id="orders_notif" class="dropdown" data-type="order">
-						<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
-							<i class="icon-shopping-cart"></i>
-							<span id="orders_notif_number_wrapper" class="notifs_badge hide">
-								<span id="orders_notif_value">0</span>
-							</span>
-						</a>
-						<div class="dropdown-menu notifs_dropdown">
-							<section id="orders_notif_wrapper" class="notifs_panel">
-								<div class="notifs_panel_header">
-									<h3>{l s='Latest Orders'}</h3>
-								</div>
-								<div id="list_orders_notif" class="list_notif">
-									<span class="no_notifs">
-										{l s='No new orders have been placed on your shop.'}
-									</span>
-								</div>
-								<div class="notifs_panel_footer">
-									<a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
-								</div>
-							</section>
-						</div>
-					</li>
-{/if}
-{if {$show_new_customers} == 1}
-					<li id="customers_notif" class="dropdown" data-type="customer">
-						<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
-							<i class="icon-user"></i>
-							<span id="customers_notif_number_wrapper" class="notifs_badge hide">
-								<span id="customers_notif_value">0</span>
-							</span>
-						</a>
-						<div class="dropdown-menu notifs_dropdown">
-							<section id="customers_notif_wrapper" class="notifs_panel">
-								<div class="notifs_panel_header">
-									<h3>{l s='Latest Registrations'}</h3>
-								</div>
-								<div id="list_customers_notif" class="list_notif">
-									<span class="no_notifs">
-										{l s='No new customers have registered on your shop.'}
-									</span>
-								</div>
-								<div class="notifs_panel_footer">
-									<a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a>
-								</div>
-							</section>
-						</div>
-					</li>
-{/if}
-{if {$show_new_messages} == 1}
-					<li id="customer_messages_notif" class="dropdown" data-type="customer_message">
-						<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
-							<i class="icon-envelope"></i>
-							<span id="customer_messages_notif_number_wrapper" class="notifs_badge hide">
-								<span id="customer_messages_notif_value" >0</span>
-							</span>
-						</a>
-						<div class="dropdown-menu notifs_dropdown">
-							<section id="customer_messages_notif_wrapper" class="notifs_panel">
-								<div class="notifs_panel_header">
-									<h3>{l s='Latest Messages'}</h3>
-								</div>
-								<div id="list_customer_messages_notif" class="list_notif">
-									<span class="no_notifs">
-										{l s='No new messages have been posted on your shop.'}
-									</span>
-								</div>
-								<div class="notifs_panel_footer">
-									<a href="index.php?controller=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a>
-								</div>
-							</section>
-						</div>
-					</li>
-{/if}
-				</ul>
-{if count($quick_access) >= 0}
-				<ul id="header_quick">
-					<li class="dropdown">
-						<a href="javascript:void(0)" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <i class="icon-caret-down"></i></a>
-						<ul class="dropdown-menu">
-							{foreach $quick_access as $quick}
-								<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
-									<a href="{$quick.link|escape:'html':'UTF-8'}"{if $quick.new_window} class="_blank"{/if}>
-										{if isset($quick.icon)}
-											<i class="icon-{$quick.icon} icon-fw"></i>
-										{else}
-											<i class="icon-chevron-right icon-fw"></i>
-										{/if}
-										{$quick.name}
-									</a>
-								</li>
-							{/foreach}
-							<li class="divider"></li>
-							{if isset($matchQuickLink)}
-								<li>
-									<a href="javascript:void(0);" class="ajax-quick-link" data-method="remove" data-quicklink-id="{$matchQuickLink}">
-										<i class="icon-minus-circle"></i>
-										{l s='Remove from QuickAccess'}
-									</a>
-								</li>
-							{/if}
-							<li {if isset($matchQuickLink)}class="hide"{/if}>
-								<a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
-									<i class="icon-plus-circle"></i>
-									{l s='Add current page to QuickAccess'}
-								</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				{$quick_access_current_link_name = " - "|explode:$quick_access_current_link_name}
-				<script>
-					$(function() {
-						$('.ajax-quick-link').on('click', function(e){
-							e.preventDefault();
+					{$quick_access_current_link_name = " - "|explode:$quick_access_current_link_name}
+					<script>
+						$(function() {
+							$('.ajax-quick-link').on('click', function(e){
+								e.preventDefault();
 
-							var method = $(this).data('method');
+								var method = $(this).data('method');
 
-							if(method == 'add')
-								var name = prompt('{l s='Please name this shortcut:' js=1}', '{$quick_access_current_link_name.0|truncate:32}');
+								if(method == 'add')
+									var name = prompt('{l s='Please name this shortcut:' js=1}', '{$quick_access_current_link_name.0|truncate:32}');
 
-							if(method == 'add' && name || method == 'remove')
-							{
-								$.ajax({
-									type: 'POST',
-									headers: { "cache-control": "no-cache" },
-									async: false,
-									url: "{$link->getAdminLink('AdminQuickAccesses')}" + "&action=GetUrl" + "&rand={1|rand:200}" + "&ajax=1" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
-									data: {
-										"url": "{$link->getQuickLink($smarty.server['REQUEST_URI'])}",
-										"name": name,
-										"icon": "{$quick_access_current_link_icon}"
-									},
-									dataType: "json",
-									success: function(data) {
-										var quicklink_list ='';
-										$.each(data, function(index,value){
-											if (typeof data[index]['name'] !== 'undefined')
-												quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
-										});
-
-										if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
-											$.each(data, function(index, value)
-											{
-												if (typeof data[index] == 'string')
-													$.growl.error({ title: "", message: data[index]});
+								if(method == 'add' && name || method == 'remove')
+								{
+									$.ajax({
+										type: 'POST',
+										headers: { "cache-control": "no-cache" },
+										async: false,
+										url: "{$link->getAdminLink('AdminQuickAccesses')}" + "&action=GetUrl" + "&rand={1|rand:200}" + "&ajax=1" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
+										data: {
+											"url": "{$link->getQuickLink($smarty.server['REQUEST_URI'])}",
+											"name": name,
+											"icon": "{$quick_access_current_link_icon}"
+										},
+										dataType: "json",
+										success: function(data) {
+											var quicklink_list ='';
+											$.each(data, function(index,value){
+												if (typeof data[index]['name'] !== 'undefined')
+													quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
 											});
-										else if (quicklink_list)
-										{
-											$("#header_quick ul.dropdown-menu").html(quicklink_list);
-											showSuccessMessage(update_success_msg);
+
+											if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
+												$.each(data, function(index, value)
+												{
+													if (typeof data[index] == 'string')
+														$.growl.error({ title: "", message: data[index]});
+												});
+											else if (quicklink_list)
+											{
+												$("#header_quick ul.dropdown-menu").html(quicklink_list);
+												showSuccessMessage(update_success_msg);
+											}
 										}
-									}
-								});
-							}
+									});
+								}
+							});
 						});
-					});
-				</script>
-{/if}
+					</script>
+				{/if}
+
+				{* Search *}
+				{include file="search_form.tpl" id="header_search" show_clear_btn=1}
+
+				{* Employee *}
 				<ul id="header_employee_box">
-					{if (!isset($logged_on_addons) || !$logged_on_addons) && (isset($display_addons_connection) && $display_addons_connection)}
-						<li class="hidden-sm hidden-xs">
-							<a href="#" class="addons_connect toolbar_btn" data-toggle="modal" data-target="#modal_addons_connect" title="{l s='Connect to PrestaShop Marketplace account'}">
-								<i class="icon-chain-broken"></i>
-								<span class="string-long">{l s='Connect to PrestaShop Marketplace account'}</span>
-								<span class="string-short">{l s='PrestaShop Marketplace'}</span>
-							</a>
-						</li>
-					{/if}
-{if {$base_url}}
-					<li>
-						<a href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" id="header_foaccess" class="_blank" title="{l s='View my shop'}">
-							<span class="string-long">{l s='My shop'}</span>
-							<span class="string-short">{l s='Shop'}</span>
-						</a>
-						{if isset($maintenance_mode) && $maintenance_mode == true}
-							<span class="maintenance-mode">
-								&mdash;
-								<span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
-								title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf='<br />'}</p>">{l s='Maintenance mode'}</span>
-							</span>
-						{/if}
-					</li>
-{/if}
 					<li id="employee_infos" class="dropdown">
 						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
 							<span class="employee_avatar_small">
 								{if isset($employee)}
-								<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
+									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
 								{/if}
 							</span>
-							<span class="string-long">{$employee->firstname}&nbsp;{$employee->lastname}</span>
-							<span class="string-short">{l s='Me'}</span>
-							<i class="caret"></i>
 						</a>
 						<ul id="employee_links" class="dropdown-menu">
 							<li>
@@ -341,6 +242,58 @@
 					</li>
 				</ul>
 
+				{* Notifications *}
+				<ul class="header-list navbar-right">
+					<li id="notification" class="dropdown" data-type="order">
+						<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
+							<i class="material-icons">notifications</i>
+							<span id="orders_notif_number_wrapper" class="notifs_badge hide">
+								<span id="orders_notif_value">0</span>
+							</span>
+						</a>
+						<div class="dropdown-menu notifs_dropdown">
+							<section id="orders_notif_wrapper" class="notifs_panel">
+								<div class="notifs_panel_header">
+									<h3>{l s='Latest Orders'}</h3>
+								</div>
+								<div id="list_orders_notif" class="list_notif">
+									<span class="no_notifs">
+										{l s='No new orders have been placed on your shop.'}
+									</span>
+								</div>
+								<div class="notifs_panel_footer">
+									<a href="{$baseAdminUrl}index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
+								</div>
+							</section>
+						</div>
+					</li>
+				</ul>
+
+				{* Shop name *}
+				{if {$base_url}}
+					<ul class="header-list navbar-right">
+						<li>
+							{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+								<ul id="header_shop">
+									<li class="dropdown">
+										{$shop_list}
+									</li>
+								</ul>
+							{else}
+								<a id="header_shopname" href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}">{$shop_name}</a>
+							{/if}
+							{if isset($maintenance_mode) && $maintenance_mode == true}
+								<span class="maintenance-mode">
+									&mdash;
+									<span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
+										  title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf='<br />'}</p>">{l s='Maintenance mode'}</span>
+								</span>
+							{/if}
+						</li>
+					</ul>
+				{/if}
+
+				{* Ajax running *}
 				<span id="ajax_running">
 					<i class="icon-refresh icon-spin icon-fw"></i>
 				</span>
@@ -353,7 +306,7 @@
 	<div id="main">
 		{include file='nav.tpl'}
 
-		<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
+		<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}{if !isset($page_header_toolbar)} no-header-toolbar{/if} {if $current_tab_level == 3}with-tabs{/if}">
 			{if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
 			{if isset($modal_module_list)}{$modal_module_list}{/if}
 

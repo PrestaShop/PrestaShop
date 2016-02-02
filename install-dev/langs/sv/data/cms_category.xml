@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <entity_cms_category>
   <cms_category id="Home">
-    <name>Home</name>
+    <name>Hem</name>
     <description/>
     <link_rewrite>home</link_rewrite>
     <meta_title/>

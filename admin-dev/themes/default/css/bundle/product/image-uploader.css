@@ -1,0 +1,65 @@
+#product-images-dropzone{
+  width: 100%;
+  min-height:200px;
+}
+#product-images-dropzone.dropzone .dz-preview{
+  width: 130px;
+  height: 130px;
+  border:1px solid #ccc;
+}
+#product-images-dropzone.dropzone .dz-preview .dz-image{
+  border-radius: 0;
+  width: 100%;
+  height: 100%;
+  line-height: 130px;
+}
+#product-images-dropzone.dropzone .dz-preview .dz-image.bg{
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+#product-images-dropzone.dropzone .dz-preview .dz-image img{
+  vertical-align: middle;
+  display: inline-block;
+}
+#product-images-dropzone.dropzone .dz-preview .iscover{
+  background: #fff;
+  color:#337ab7;
+  text-align:center;
+  padding: 5px;
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  width: 100%;
+}
+#product-images-dropzone.dropzone.dz-clickable * {
+  cursor: pointer;
+}
+#product-images-dropzone.dropzone .dz-preview.dz-image-preview .dz-remove,
+#product-images-dropzone.dropzone .dz-preview.dz-image-preview .dz-error-mark,
+#product-images-dropzone.dropzone .dz-preview.dz-image-preview .dz-error-message,
+#product-images-dropzone.dropzone .dz-preview.dz-image-preview .dz-success-mark,
+#product-images-dropzone.dropzone .dz-preview.dz-image-preview .dz-details .dz-size,
+#product-images-dropzone.dropzone .dz-preview.dz-image-preview .dz-details .dz-filename{
+  display:none;
+}
+#product-images-dropzone.dropzone .dz-preview:hover .dz-image img {
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  -o-transform: none;
+  transform: none;
+  -webkit-filter: none;
+  filter: none;
+}
+
+#product-images-form-container{
+
+  position: absolute!important;
+  z-index: 1000;
+  min-height:200px;
+  right: 0;
+  top:0;
+  cursor: default !important;
+  display: none;
+}

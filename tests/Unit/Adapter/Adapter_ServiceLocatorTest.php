@@ -18,29 +18,29 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Adapter;
+namespace PrestaShop\PrestaShop\tests\Unit\Adapter;
 
-use Adapter_ServiceLocator;
-use Core_Foundation_IoC_Container;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PHPUnit_Framework_TestCase;
 
 class Adapter_ServiceLocatorTest extends PHPUnit_Framework_TestCase
 {
     public function test_get_delegates_to_service_container()
     {
-        Adapter_ServiceLocator::setServiceContainerInstance(
-            new Core_Foundation_IoC_Container
+        ServiceLocator::setServiceContainerInstance(
+            new Container()
         );
 
         $this->assertInstanceOf(
-            'Core_Foundation_IoC_Container',
-            Adapter_ServiceLocator::get('Core_Foundation_IoC_Container')
+            '\\PrestaShop\\PrestaShop\\Core\\Foundation\\IoC\\Container',
+            ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\IoC\\Container')
         );
     }
 }

@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * Use this helper to generate preferences forms, with values stored in the configuration table
@@ -120,29 +120,32 @@ class HelperOptionsCore extends Helper
                     } elseif (isset($field['image']) && $field['image']) { // Use for retrocompatibility
                         $uploader->setFiles(array(
                             0 => array(
-                            'type'       => HelperUploader::TYPE_IMAGE,
-                            'image'      => isset($field['image'])?$field['image']:null,
-                            'size'       => isset($field['size'])?$field['size']:null,
-                            'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
-                        )));
+                                'type'       => HelperUploader::TYPE_IMAGE,
+                                'image'      => isset($field['image'])?$field['image']:null,
+                                'size'       => isset($field['size'])?$field['size']:null,
+                                'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
+                            )
+                        ));
                     }
 
                     if (isset($field['file']) && $field['file']) { // Use for retrocompatibility
                         $uploader->setFiles(array(
                             0 => array(
-                            'type'       => HelperUploader::TYPE_FILE,
-                            'size'       => isset($field['size'])?$field['size']:null,
-                            'delete_url' => isset($field['delete_url'])?$field['delete_url']:null,
-                            'download_url' => isset($field['file'])?$field['file']:null
-                        )));
+                                'type'         => HelperUploader::TYPE_FILE,
+                                'size'         => isset($field['size'])?$field['size']:null,
+                                'delete_url'   => isset($field['delete_url'])?$field['delete_url']:null,
+                                'download_url' => isset($field['file'])?$field['file']:null
+                            )
+                        ));
                     }
 
                     if (isset($field['thumb']) && $field['thumb']) { // Use for retrocompatibility
                         $uploader->setFiles(array(
                             0 => array(
-                            'type'       => HelperUploader::TYPE_IMAGE,
-                            'image'      => isset($field['thumb'])?'<img src="'.$field['thumb'].'" alt="'.$field['title'].'" title="'.$field['title'].'" />':null,
-                        )));
+                                'type'  => HelperUploader::TYPE_IMAGE,
+                                'image' => isset($field['thumb'])?'<img src="'.$field['thumb'].'" alt="'.$field['title'].'" title="'.$field['title'].'" />':null,
+                            )
+                        ));
                     }
 
                     $uploader->setTitle(isset($field['title'])?$field['title']:null);

@@ -8,7 +8,7 @@ class AverageTaxOfProductsTaxCalculator
 
     public $computation_method = 'average_tax_of_products';
 
-    public function __construct(Core_Foundation_Database_DatabaseInterface $db, Core_Business_ConfigurationInterface $configuration)
+    public function __construct(\PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface $db, \PrestaShop\PrestaShop\Core\ConfigurationInterface $configuration)
     {
         $this->db = $db;
         $this->configuration = $configuration;

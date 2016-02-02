@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {* retro compatibility *}
@@ -32,7 +32,7 @@
 {/if}
 
 <div class="bootstrap">
-	<div class="page-head">
+	<div class="page-head {if $current_tab_level == 3}with-tabs{/if}">
 		{block name=pageTitle}
 		<h2 class="page-title">
 			{*if isset($toolbar_btn['back'])}
@@ -128,5 +128,20 @@
 			</div>
 		</div>
 		{/block}
+		{if $current_tab_level == 3}
+			<div class="page-head-tabs">
+				{foreach $tabs as $level_1}
+					{foreach $level_1.sub_tabs as $level_2}
+						{foreach $level_2.sub_tabs as $level_3}
+							{if $level_3.current}
+								{foreach $level_3.sub_tabs as $level_4}
+									<a href="{$level_4.href}" {if $level_4.current}class="current"{/if}>{$level_4.name}</a>
+								{/foreach}
+							{/if}
+						{/foreach}
+					{/foreach}
+				{/foreach}
+			</div>
+		{/if}
 	</div>
 </div>

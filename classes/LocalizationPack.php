@@ -1,28 +1,30 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+use PrestaShop\PrestaShop\Core\Cldr\Update;
 
 class LocalizationPackCore
 {
@@ -95,6 +97,18 @@ class LocalizationPackCore
             foreach ($selection as $selected) {
                 // No need to specify the install_mode because if the selection mode is used, then it's not the install
                 $res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install'.$selected}($xml) : false;
+            }
+        }
+
+        //get/update cldr datas for each language
+        if ($iso_localization_pack) {
+            foreach ($xml->languages->language as $lang) {
+                //use this to get correct language code ex : qc become fr
+                $languageCode = explode('-', Language::getLanguageCodeByIso($lang['iso_code']));
+                $isoCode = $languageCode[0].'-'.strtoupper($iso_localization_pack);
+
+                $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+                $cldrUpdate->fetchLocale($isoCode);
             }
         }
 
@@ -283,7 +297,7 @@ class LocalizationPackCore
             foreach ($xml->currencies->currency as $data) {
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
-                if (Currency::exists($attributes['iso_code'], (int)$attributes['iso_code_num'])) {
+                if (Currency::exists($attributes['iso_code'])) {
                     continue;
                 }
                 $currency = new Currency();
@@ -300,7 +314,7 @@ class LocalizationPackCore
                     $this->_errors[] = Tools::displayError('Invalid currency properties.');
                     return false;
                 }
-                if (!Currency::exists($currency->iso_code, $currency->iso_code_num)) {
+                if (!Currency::exists($currency->iso_code)) {
                     if (!$currency->add()) {
                         $this->_errors[] = Tools::displayError('An error occurred while importing the currency: ').strval($attributes['name']);
                         return false;
@@ -321,6 +335,8 @@ class LocalizationPackCore
 
         return true;
     }
+
+
 
     /**
      * @param SimpleXMLElement $xml

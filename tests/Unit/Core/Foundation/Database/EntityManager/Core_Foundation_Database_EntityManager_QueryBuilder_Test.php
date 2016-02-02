@@ -18,16 +18,16 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Database\EntityManager;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\Database\EntityManager;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use Core_Foundation_Database_EntityManager_QueryBuilder;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager\QueryBuilder;
 use Phake;
 
 class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestCase
@@ -36,11 +36,11 @@ class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestC
 
     public function setup()
     {
-        $mockDb = Phake::mock('Core_Foundation_Database_DatabaseInterface');
+        $mockDb = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface');
 
         Phake::when($mockDb)->escape(Phake::anyParameters())->thenReturn('escaped');
 
-        $this->queryBuilder = new Core_Foundation_Database_EntityManager_QueryBuilder(
+        $this->queryBuilder = new QueryBuilder(
             $mockDb
         );
     }

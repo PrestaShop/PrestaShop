@@ -18,15 +18,18 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
  * @property SpecificPriceRule $object
  */
+
+use PrestaShop\PrestaShop\Core\Cldr\Repository;
+
 class AdminSpecificPriceRuleControllerCore extends AdminController
 {
     public $list_reduction_type;
@@ -38,6 +41,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->className = 'SpecificPriceRule';
         $this->lang = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
+        $this->cldr = Tools::getCldr(Context::getContext());
 
         /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
         if ($this->id_shop = (int)Tools::getValue('shop_id')) {
@@ -55,7 +59,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
         $this->context = Context::getContext();
 
-        $this->_select = 's.name shop_name, cu.name currency_name, cl.name country_name, gl.name group_name';
+        $this->_select = 's.name shop_name, cu.iso_code as currency_iso_code, cl.name country_name, gl.name group_name';
         $this->_join = 'LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = a.id_shop)
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang='.(int)$this->context->language->id.')
@@ -151,6 +155,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
         foreach ($this->_list as $k => $list) {
+            $currency = $this->cldr->getCurrency($this->_list[$k]['currency_iso_code']);
+            $this->_list[$k]['currency_name'] = ucfirst($currency['name']);
+
             if ($list['reduction_type'] == 'amount') {
                 $this->_list[$k]['reduction_type'] = $this->list_reduction_type['amount'];
             } elseif ($list['reduction_type'] == 'percentage') {
@@ -196,7 +203,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'label' => $this->l('Currency'),
                     'name' => 'id_currency',
                     'options' => array(
-                        'query' => array_merge(array(0 => array('id_currency' => 0, 'name' => $this->l('All currencies'))), Currency::getCurrencies()),
+                        'query' => array_merge(array(0 => array('id_currency' => 0, 'name' => $this->l('All currencies'))), Currency::getCurrencies(false, true, true)),
                         'id' => 'id_currency',
                         'name' => 'name'
                     ),
@@ -308,7 +315,8 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             'price' => $price,
             'from_quantity' => (($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 1),
             'reduction' => number_format((($value = $this->getFieldValue($this->object, 'reduction')) ? $value : 0), 6),
-            'leave_bprice_on' => $price ? 0 : 1
+            'leave_bprice_on' => $price ? 0 : 1,
+            'shop_id' => (($value = $this->getFieldValue($this->object, 'id_shop')) ? $value : 1)
         );
 
         $attribute_groups = array();

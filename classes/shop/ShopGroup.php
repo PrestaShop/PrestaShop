@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @since 1.5.0
@@ -91,16 +91,16 @@ class ShopGroupCore extends ObjectModel
     public function getTotalShops()
     {
         $sql = 'SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'shop s
-				WHERE id_shop_group='.(int)$this->id;
+                FROM '._DB_PREFIX_.'shop s
+                WHERE id_shop_group='.(int)$this->id;
         return (int)Db::getInstance()->getValue($sql);
     }
 
     public static function getShopsFromGroup($id_group)
     {
         $sql = 'SELECT s.`id_shop`
-				FROM '._DB_PREFIX_.'shop s
-				WHERE id_shop_group='.(int)$id_group;
+                FROM '._DB_PREFIX_.'shop s
+                WHERE id_shop_group='.(int)$id_group;
         return Db::getInstance()->executeS($sql);
     }
 
@@ -113,8 +113,8 @@ class ShopGroupCore extends ObjectModel
     public static function getIdByName($name)
     {
         $sql = 'SELECT id_shop_group
-				FROM '._DB_PREFIX_.'shop_group
-				WHERE name = \''.pSQL($name).'\'';
+                FROM '._DB_PREFIX_.'shop_group
+                WHERE name = \''.pSQL($name).'\'';
         return (int)Db::getInstance()->getValue($sql);
     }
 
@@ -133,10 +133,10 @@ class ShopGroupCore extends ObjectModel
         }
 
         if ($check == 'all' || $check == 'customer') {
-            $total_customer = (int)Db::getInstance()->getValue('
-				SELECT count(*)
-				FROM `'._DB_PREFIX_.'customer`
-				WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
+            $total_customer = (int)Db::getInstance()->getValue(
+                'SELECT count(*)
+                FROM `'._DB_PREFIX_.'customer`
+                WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
             );
             if ($total_customer) {
                 return true;
@@ -144,10 +144,10 @@ class ShopGroupCore extends ObjectModel
         }
 
         if ($check == 'all' || $check == 'order') {
-            $total_order = (int)Db::getInstance()->getValue('
-				SELECT count(*)
-				FROM `'._DB_PREFIX_.'orders`
-				WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
+            $total_order = (int)Db::getInstance()->getValue(
+                'SELECT count(*)
+                FROM `'._DB_PREFIX_.'orders`
+                WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
             );
             if ($total_order) {
                 return true;
@@ -159,12 +159,12 @@ class ShopGroupCore extends ObjectModel
 
     public function shopNameExists($name, $id_shop = false)
     {
-        return Db::getInstance()->getValue('
-			SELECT id_shop
-			FROM '._DB_PREFIX_.'shop
-			WHERE name = "'.pSQL($name).'"
-			AND id_shop_group = '.(int)$this->id.'
-			'.($id_shop ? 'AND id_shop != '.(int)$id_shop : '')
+        return Db::getInstance()->getValue(
+            'SELECT id_shop
+            FROM '._DB_PREFIX_.'shop
+            WHERE name = "'.pSQL($name).'"
+            AND id_shop_group = '.(int)$this->id.'
+            '.($id_shop ? 'AND id_shop != '.(int)$id_shop : '')
         );
     }
 }

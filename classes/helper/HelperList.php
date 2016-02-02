@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @since 1.5.0
@@ -236,11 +236,17 @@ class HelperListCore extends Helper
                     $is_first = false;
 
                     if (!preg_match('/a\s*.*class/', $this->_list[$index][$action])) {
-                        $this->_list[$index][$action] = preg_replace('/href\s*=\s*\"([^\"]*)\"/',
-                            'href="$1" class="btn btn-default"', $this->_list[$index][$action]);
+                        $this->_list[$index][$action] = preg_replace(
+                            '/href\s*=\s*\"([^\"]*)\"/',
+                            'href="$1" class="btn btn-default"',
+                            $this->_list[$index][$action]
+                        );
                     } elseif (!preg_match('/a\s*.*class\s*=\s*\".*btn.*\"/', $this->_list[$index][$action])) {
-                        $this->_list[$index][$action] = preg_replace('/a(\s*.*)class\s*=\s*\"(.*)\"/',
-                            'a $1 class="$2 btn btn-default"', $this->_list[$index][$action]);
+                        $this->_list[$index][$action] = preg_replace(
+                            '/a(\s*.*)class\s*=\s*\"(.*)\"/',
+                            'a $1 class="$2 btn btn-default"',
+                            $this->_list[$index][$action]
+                        );
                     }
                 }
             }
@@ -389,7 +395,6 @@ class HelperListCore extends Helper
         return $tpl->fetch();
     }
 
-
     /**
      * Display action show details of a table row
      * This action need an ajax request with a return like this:
@@ -428,7 +433,7 @@ class HelperListCore extends Helper
             'token' => $token != null ? $token : $this->token,
             'action' => self::$cache_lang['Details'],
             'params' => $ajax_params,
-            'json_params' => Tools::jsonEncode($ajax_params)
+            'json_params' => json_encode($ajax_params)
         ));
         return $tpl->fetch();
     }
@@ -461,8 +466,24 @@ class HelperListCore extends Helper
             self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
         }
 
+        $href = $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token);
+
+        switch ($this->currentIndex) {
+            case 'index.php?controller=AdminProducts':
+            case 'index.php?tab=AdminProducts':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                global $kernel; // sf kernel
+                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
+                if (!$redirectLegacy && $this->identifier == 'id_product') {
+                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
+                }
+                break;
+            default:
+        }
+
         $tpl->assign(array(
-            'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token),
+            'href' => $href,
             'action' => self::$cache_lang['Edit'],
             'id' => $id
         ));
@@ -493,9 +514,25 @@ class HelperListCore extends Helper
             $name = addcslashes('\n\n'.self::$cache_lang['Name'].' '.$name, '\'');
         }
 
+        $href = $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token);
+
+        switch ($this->currentIndex) {
+            case 'index.php?controller=AdminProducts':
+            case 'index.php?tab=AdminProducts':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                global $kernel; // sf kernel
+                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
+                if (!$redirectLegacy && $this->identifier == 'id_product') {
+                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
+                }
+                break;
+            default:
+        }
+
         $data = array(
             $this->identifier => $id,
-            'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+            'href' => $href,
             'action' => self::$cache_lang['Delete'],
         );
 
@@ -574,7 +611,8 @@ class HelperListCore extends Helper
         $this->page = (int)$page;
 
         /* Choose number of results per page */
-        $selected_pagination = Tools::getValue($this->list_id.'_pagination',
+        $selected_pagination = Tools::getValue(
+            $this->list_id.'_pagination',
             isset($this->context->cookie->{$this->list_id.'_pagination'}) ? $this->context->cookie->{$this->list_id.'_pagination'} : $this->_default_pagination
         );
 

@@ -237,10 +237,6 @@
       <alias>paymentCCAdded</alias>
       <name>actionPaymentCCAdd</name>
     </hook_alias>
-    <hook_alias id="extraProductComparison">
-      <alias>extraProductComparison</alias>
-      <name>displayProductComparison</name>
-    </hook_alias>
     <hook_alias id="categoryAddition">
       <alias>categoryAddition</alias>
       <name>actionCategoryAdd</name>
@@ -348,6 +344,26 @@
     <hook_alias id="myAccountBlock">
       <alias>myAccountBlock</alias>
       <name>displayMyAccountBlock</name>
+    </hook_alias>
+    <hook_alias id="actionBeforeCartUpdateQty">
+      <alias>actionBeforeCartUpdateQty</alias>
+      <name>actionCartUpdateQuantityBefore</name>
+    </hook_alias>
+    <hook_alias id="actionBeforeAjaxDie">
+      <alias>actionBeforeAjaxDie</alias>
+      <name>actionAjaxDieBefore</name>
+    </hook_alias>
+    <hook_alias id="actionBeforeAuthentication">
+      <alias>actionBeforeAuthentication</alias>
+      <name>actionAuthenticationBefore</name>
+    </hook_alias>
+    <hook_alias id="actionBeforeSubmitAccount">
+      <alias>actionBeforeSubmitAccount</alias>
+      <name>actionSubmitAccountBefore</name>
+    </hook_alias>
+    <hook_alias id="actionAfterDeleteProductInCart">
+      <alias>actionAfterDeleteProductInCart</alias>
+      <name>actionDeleteProductInCartAfter</name>
     </hook_alias>
   </entities>
 </entity_hook_alias>

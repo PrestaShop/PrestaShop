@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property Meta $object
@@ -274,8 +274,6 @@ class AdminMetaControllerCore extends AdminController
 
     public function renderForm()
     {
-        $files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
-
         $is_index = false;
         if (is_object($this->object) && is_array($this->object->url_rewrite) && count($this->object->url_rewrite)) {
             foreach ($this->object->url_rewrite as $rewrite) {
@@ -283,25 +281,6 @@ class AdminMetaControllerCore extends AdminController
                     $is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
                 }
             }
-        }
-
-        $pages = array(
-            'common' => array(
-                'name' => $this->l('Default pages'),
-                'query' => array(),
-            ),
-            'module' => array(
-                'name' => $this->l('Modules pages'),
-                'query' => array(),
-            ),
-        );
-
-        foreach ($files as $name => $file) {
-            $k = (preg_match('#^module-#', $file)) ? 'module' : 'common';
-            $pages[$k]['query'][] = array(
-                'id' => $file,
-                'page' => $name,
-            );
         }
 
         $this->fields_form = array(
@@ -315,24 +294,10 @@ class AdminMetaControllerCore extends AdminController
                     'name' => 'id_meta',
                 ),
                 array(
-                    'type' => 'select',
-                    'label' => $this->l('Page'),
+                    'type' => 'text',
+                    'label' => $this->l('Page name'),
                     'name' => 'page',
-
-                    'options' => array(
-                        'optiongroup' => array(
-                            'label' => 'name',
-                            'query' => $pages,
-                        ),
-                        'options' => array(
-                            'id' => 'id',
-                            'name' => 'page',
-                            'query' => 'query',
-                        ),
-                    ),
-                    'hint' => $this->l('Name of the related page.'),
-                    'required' => true,
-                    'empty_message' => '<p>'.$this->l('There is no page available!').'</p>',
+                    'disabled' => true,
                 ),
                 array(
                     'type' => 'text',
@@ -434,27 +399,7 @@ class AdminMetaControllerCore extends AdminController
             Db::getInstance()->delete('theme_meta', 'id_meta='.(int)Tools::getValue('id_meta'));
         }
 
-        $ret = parent::postProcess();
-
-        if (Tools::isSubmit('submitAddmeta') && Validate::isLoadedObject($ret)) {
-            /** @var Theme $ret */
-            $themes = Theme::getThemes();
-            $theme_meta_value = array();
-            foreach ($themes as $theme) {
-                /** @var Theme $theme */
-                $theme_meta_value[] = array(
-                    'id_theme' => (int)$theme->id,
-                    'id_meta' => (int)$ret->id,
-                    'left_column' => (int)$theme->default_left_column,
-                    'right_column' => (int)$theme->default_right_column
-                );
-            }
-            if (count($theme_meta_value) > 0) {
-                Db::getInstance()->insert('theme_meta', $theme_meta_value, false, true, DB::INSERT_IGNORE);
-            }
-        }
-
-        return $ret;
+        return parent::postProcess();
     }
 
     public function generateRobotsFile()
@@ -771,7 +716,7 @@ class AdminMetaControllerCore extends AdminController
         // Files
         $disallow_controllers = array(
             'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
-            'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order', 'order-opc',
+            'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order',
             'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
             'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics','attachment', 'guest-tracking'
         );

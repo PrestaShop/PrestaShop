@@ -1,0 +1,16 @@
+# This file is a used by travis install with specific setting.
+parameters:
+    database_host:     localhost
+    database_port:     ~
+    database_name:     prestashop
+    database_user:     root
+    database_password: ~
+    database_prefix:   ps_
+
+    mailer_transport:  smtp
+    mailer_host:       localhost
+    mailer_user:       ~
+    mailer_password:   ~
+
+    # A secret key that's used to generate certain security-related tokens
+    secret:            TravisTokenIsSoSecretDoNotChangeIt

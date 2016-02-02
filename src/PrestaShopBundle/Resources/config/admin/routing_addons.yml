@@ -1,0 +1,13 @@
+#All the module related routes
+
+admin_addons_login:
+    path:     /login
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\AddonsController::loginAction
+        
+admin_addons_logout:
+    path:     /logout
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\AddonsController::logoutAction

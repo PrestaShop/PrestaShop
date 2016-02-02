@@ -1,0 +1,72 @@
+<script>
+    $(document).ready(function() {
+        var sliderInput = $('#{{ input_name }}');
+
+        // parse and fix init value
+        var value = sliderInput.attr('sql');
+        if (value != '') {
+	        value = value.replace('BETWEEN ', '');
+	        value = value.replace(' AND ', ',');
+	        value = value.replace('<', '{{ min|default('0') }},');
+	        value = value.replace('>', '{{ max|default('10') }},');
+	        value = value.split(',');
+	        value[0] = parseInt(value[0]);
+	        value[1] = parseInt(value[1]);
+        } else {
+            value = [{{ min|default('0') }},{{ max|default('10') }}];
+        }
+        value = value.sort(function sortNumber(a,b) {
+            return a - b;
+        });
+
+        sliderInput.bootstrapSlider({
+            formatter: function(values) {
+                if (typeof values[0] != 'undefined') {
+	                var slider = $('#{{ input_name }}');
+	                if (values[0] == {{ min|default('0') }} && values[1] == {{ max|default('10') }}) {
+	                    slider.attr('sql', '');
+	                    return "{{ trans('Not filtered', {}, 'AdminTab') }}";
+	                }
+	                if (values[0] == values[1]) {
+	                    slider.attr('sql', ''); //'='+values[0]);
+	                    return "{{ trans('Equals', {}, 'AdminTab') }} " + values[0];
+	                }
+	                if (values[0] == {{ min|default('0') }}) {
+	                    slider.attr('sql', '<'+values[1]);
+	                    return "{{ trans('Below', {}, 'AdminTab') }} " + values[1];
+	                }
+	                if (values[1] == {{ max|default('10') }}) {
+	                    slider.attr('sql', '>'+values[0]);
+	                    return "{{ trans('Above', {}, 'AdminTab') }} " + values[0];
+	                }
+	                slider.attr('sql', 'BETWEEN '+values[0]+' AND '+values[1]);
+	                return "{{ trans('Inside range', {}, 'AdminTab') }} [" + values[0] + "~" + values[1] + "]";
+	            }
+            },
+            min: {{ min|default('0') }},
+            max: {{ max|default('10') }},
+            step: {{ step|default('1') }},
+            //tooltip: 'always',
+            scale: '{{ scale|default('linear') }}', // or 'logarithmic'
+            value: value,
+            id: '{{ input_name }}Slider'
+        });
+        {% if on_change_func_name is defined %}
+            sliderInput.on('slideStop', function() {
+                {{ on_change_func_name|raw }}
+            });
+        {% endif %}
+    });
+</script>
+<style>
+    <!-- /* To remove once integrated in sass */
+    #{{ input_name }}Slider .slider-selection {
+        background: #aaaaaa;
+    }
+    #{{ input_name }}Slider .tooltip-inner {
+        padding: 0.4em;
+    }
+    -->
+</style>
+
+<input type="text" id="{{ input_name }}" name="{{ input_name }}" value="" sql="{{ value }}" />

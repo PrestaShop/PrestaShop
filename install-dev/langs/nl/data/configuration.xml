@@ -1,10 +1,10 @@
 <?xml version='1.0'?>
 <entity_configuration>
   <configuration id='PS_INVOICE_PREFIX'>
-    <value>#IN</value>
+    <value>#FA</value>
   </configuration>
   <configuration id='PS_DELIVERY_PREFIX'>
-    <value>#DE</value>
+    <value>#PB</value>
   </configuration>
   <configuration id="PS_RETURN_PREFIX">
     <value>#RE</value>

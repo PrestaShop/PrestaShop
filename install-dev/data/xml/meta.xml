@@ -96,10 +96,6 @@
 			<page>stores</page>
 			<configurable>1</configurable>
 		</meta>
-		<meta id="order-opc">
-			<page>order-opc</page>
-			<configurable>1</configurable>
-		</meta>
 		<meta id="guest-tracking">
 			<page>guest-tracking</page>
 			<configurable>1</configurable>
@@ -139,10 +135,6 @@
 		<meta id="module-cashondelivery-validation">
 			<page>module-cashondelivery-validation</page>
 			<configurable>0</configurable>
-		</meta>
-		<meta id="products-comparison">
-			<page>products-comparison</page>
-			<configurable>1</configurable>
 		</meta>
 	</entities>
 </entity_meta>

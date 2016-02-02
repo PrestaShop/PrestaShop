@@ -1,0 +1,41 @@
+.language-selector
+  width 200px
+  text-align center
+
+.language-selector, .currency-selector
+  display inline-block
+  position relative
+  border 1px solid border-color
+  padding small-padding
+  background-color background-color
+  cursor pointer
+  z-index 100
+  a, a:visited
+    display block
+    text-decoration none
+    color text-color
+  ul
+    display none
+    position absolute
+    background-color white
+    margin 0
+    padding 0
+    width calc(100% + 2px)
+    left -1px
+    top 100%
+  &:hover ul
+      display block
+    li
+      cursor pointer
+      list-style none
+      display block
+      padding small-padding
+      border 1px solid border-color
+      &:not(:first-child)
+        border-top 0px
+      &:hover
+        background-color highlighted-background-color
+        a
+          color white
+      &.current
+        font-style italic

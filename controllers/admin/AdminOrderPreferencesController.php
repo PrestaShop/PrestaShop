@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property Configuration $object
@@ -46,32 +46,11 @@ class AdminOrderPreferencesControllerCore extends AdminController
             $cms_tab[] = array('id' => $cms_file['id_cms'], 'name' => $cms_file['meta_title']);
         }
 
-        // List of order process types
-        $order_process_type = array(
-            array(
-                'value' => PS_ORDER_PROCESS_STANDARD,
-                'name' => $this->l('Standard (Five steps)')
-            ),
-            array(
-                'value' => PS_ORDER_PROCESS_OPC,
-                'name' => $this->l('One-page checkout')
-            )
-        );
-
         $this->fields_options = array(
             'general' => array(
                 'title' =>    $this->l('General'),
                 'icon' =>    'icon-cogs',
                 'fields' =>    array(
-                    'PS_ORDER_PROCESS_TYPE' => array(
-                        'title' => $this->l('Order process type'),
-                        'hint' => $this->l('Please choose either the five-step or one-page checkout process.'),
-                        'validation' => 'isInt',
-                        'cast' => 'intval',
-                        'type' => 'select',
-                        'list' => $order_process_type,
-                        'identifier' => 'value'
-                    ),
                     'PS_GUEST_CHECKOUT_ENABLED' => array(
                         'title' => $this->l('Enable guest checkout'),
                         'hint' => $this->l('Allow guest visitors to place an order without registering.'),

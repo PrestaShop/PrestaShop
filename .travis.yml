@@ -1,34 +1,62 @@
 language: php
 
+env:
+  global:
+    - secure: sE9hGYohi3f5w+bPHkxCYVUJfuZz1LQQUwXBO5RqWE+poZlQIpnyQg0t5AxRFIXdXF3myO48rubHuuju4jzkC4L3IZxbRmYmR86qD5pOVIloRPhaQbJChdXJMMqoVTn09I+32O4Odc+jkZfokFRKzouiNAmkLUPx95ZPqvOypNw=
+    - secure: YZ3nMLBHRfE90l+shXJZq/Z7oThLjS/00+g9VS2whM4Z89TyA9FifeALB2yyT/sjie0kr8fokI77vaM+tbcrqxjZkwNamdUxDlz9Hw6HkbTTcXpbMM5ChQ83RPWClhTrYGvMy3N6WRnDA6xyk9jWki6ksd/c6poUUl533xrTXSc=
+
+services:
+  - mysql
+
+addons:
+    apt_packages:
+        - apache2
+        - libapache2-mod-fastcgi
+    sauce_connect: true
 php:
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
   - 7.0
- 
+
 matrix:
   fast_finish: true
   allow_failures:
+    - php: 5.4
     - php: 7.0
 
 before_install:
-  - sudo apt-get update
-
-before_script:
-  - sudo apt-get install apache2 libapache2-mod-fastcgi
+  - mysql -e 'create database prestashop;'
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "memory_limit = 512M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
   - sudo cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/default
   - sudo cp -Rf . /var/www/prestashop.unit.test
   - sudo chmod 777 -R /var/www/
   - sudo service apache2 restart
 
+before_script:
+  - phpenv config-rm xdebug.ini
+  - "mkdir -p ~/.composer"
+  - cp .travis.composer.config.json ~/.composer/config.json
+
 notifications:
   slack: prestashop:Eovjydk55zPrwPkoQIOF0cZn
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
+
 script:
-  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test --db_create=1 --name=prestashop.unit.test --password=123456789
-  - cd /var/www/prestashop.unit.test/tests && bash getcomposer.sh && php composer.phar install && php vendor/bin/phpunit -c .
+  - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
+  - composer install --no-interaction --no-progress
+  - tests/check_php_parse_errors.sh
+  - bash ./travis-scripts/install-prestashop
+  - bash ./travis-scripts/backup-prestashop
+  - php bin/phpunit -c tests/
+  - composer phpunit-sf
+  - cd $TRAVIS_BUILD_DIR # because /var/www/prestashop.unit.test (cwd) is about to be deleted
+  - bash ./travis-scripts/restore-backup
+  - bash ./travis-scripts/run-selenium-tests
+
+after_script:
+  - sudo cat /var/log/apache2/error.log

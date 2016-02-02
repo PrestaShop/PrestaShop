@@ -1,0 +1,37 @@
+<div>
+    <ul class="pagination">
+        <li class="{% if first_url %}{% else %}disabled{% endif %}">
+            <a class="pagination-link" {% if first_url %}href="{{ first_url }}"{% else %}nohref{% endif %}>1</a>
+        </li>
+        <li class="{% if previous_url %}{% else %}disabled{% endif %}">
+            <a class="pagination-link" {% if previous_url %}href="{{ previous_url }}"{% else %}nohref{% endif %}>&lt;</a>
+        </li>
+        <li style="float: left;">
+            <input name="paginator_jump_page" class="pagination-link" type="text" style="width: 4em;"
+                   value="{{ current_page }}" psurl="{{ jump_page_url }}" psmax="{{ page_count }}" pslimit="{{ limit }}" />
+        </li>
+        <li class="{% if next_url is defined and next_url != false %}{% else %}disabled{% endif %}">
+            <a class="pagination-link" id="pagination_next_url" {% if next_url is defined and next_url != false %}href="{{ next_url }}"{% else %}nohref{% endif %}>&gt;</a>
+        </li>
+        <li class="{% if last_url is defined and last_url != false %}{% else %}disabled{% endif %}">
+            <a class="pagination-link" {% if last_url is defined and last_url != false %}href="{{ last_url }}"{% else %}nohref{% endif %}>{{ page_count }}</a>
+        </li>
+    </ul>
+    <ul class="pagination">
+        <li style="float: left; margin-left: 2em;">
+            {{ trans("Viewing $from-$to on $total (page # $current_page / $page_count)",
+                {'$from': from+1, '$to': min(to+1, total), '$total': total, '$current_page': current_page, '$page_count': page_count},
+                'AdminTab') }}
+            &nbsp;
+            |
+            &nbsp;
+            {{ trans("Items per page:", {}, 'AdminTab') }}&nbsp;
+            <select name="paginator_select_page_limit" psurl="{{ changeLimitUrl }}" style="display:inline;width:6em;" class="pagination-link">
+                {% if limit not in limit_choices %}<option value="{{ limit }}" selected="selected">{{ limit }}</option>{% endif %}
+                {% for limit_choice in limit_choices %}
+                    <option value="{{ limit_choice }}" {% if limit==limit_choice %}selected="selected"{% endif %}>{{ limit_choice }}</option>
+                {% endfor %}
+            </select>
+        </li>
+    </ul>
+</div>

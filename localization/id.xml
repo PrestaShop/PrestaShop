@@ -25,4 +25,40 @@
 		<unit type="base_distance" value="m" />
 		<unit type="long_distance" value="km" />
 	</units>
+	<states>
+		<state name="Aceh" iso_code="ID-AC" country="ID" zone="Asia"/>
+		<state name="Bali" iso_code="ID-BA" country="ID" zone="Asia"/>
+		<state name="Babel" iso_code="ID-BB" country="ID" zone="Asia"/>
+		<state name="Banten" iso_code="ID-BT" country="ID" zone="Asia"/>
+		<state name="Bengkulu" iso_code="ID-BE" country="ID" zone="Asia"/>
+		<state name="Jateng" iso_code="ID-JT" country="ID" zone="Asia"/>
+		<state name="Kalteng" iso_code="ID-KT" country="ID" zone="Asia"/>
+		<state name="Sulteng" iso_code="ID-ST" country="ID" zone="Asia"/>
+		<state name="Jatim" iso_code="ID-JI" country="ID" zone="Asia"/>
+		<state name="Kaltim" iso_code="ID-KI" country="ID" zone="Asia"/>
+		<state name="NTT" iso_code="ID-NT" country="ID" zone="Asia"/>
+		<state name="Gorontalo" iso_code="ID-GO" country="ID" zone="Asia"/>
+		<state name="DKI" iso_code="ID-JK" country="ID" zone="Asia"/>
+		<state name="Jambi" iso_code="ID-JA" country="ID" zone="Asia"/>
+		<state name="Lampung" iso_code="ID-LA" country="ID" zone="Asia"/>
+		<state name="Maluku" iso_code="ID-MA" country="ID" zone="Asia"/>
+		<state name="Kaltara" iso_code="ID-KU" country="ID" zone="Asia"/>
+		<state name="Malukuutara" iso_code="ID-MU" country="ID" zone="Asia"/>
+		<state name="Sulut" iso_code="ID-SA" country="ID" zone="Asia"/>
+		<state name="Sumut" iso_code="ID-SU" country="ID" zone="Asia"/>
+		<state name="Papua" iso_code="ID-PA" country="ID" zone="Asia"/>
+		<state name="Riau" iso_code="ID-RI" country="ID" zone="Asia"/>
+		<state name="Kepri" iso_code="ID-KR" country="ID" zone="Asia"/>
+		<state name="Sultra" iso_code="ID-SG" country="ID" zone="Asia"/>
+		<state name="Kalsel" iso_code="ID-KS" country="ID" zone="Asia"/>
+		<state name="Sulsel" iso_code="ID-SN" country="ID" zone="Asia"/>
+		<state name="Sumsel" iso_code="ID-SS" country="ID" zone="Asia"/>
+		<state name="Jabar" iso_code="ID-JB" country="ID" zone="Asia"/>
+		<state name="Kalbar" iso_code="ID-KB" country="ID" zone="Asia"/>
+		<state name="NTB" iso_code="ID-NB" country="ID" zone="Asia"/>
+		<state name="Papuabarat" iso_code="ID-PB" country="ID" zone="Asia"/>
+		<state name="Sulbar" iso_code="ID-SR" country="ID" zone="Asia"/>
+		<state name="Sumbar" iso_code="ID-SB" country="ID" zone="Asia"/>
+		<state name="DIY" iso_code="ID-YO" country="ID" zone="Asia"/>
+	</states>
 </localizationPack>

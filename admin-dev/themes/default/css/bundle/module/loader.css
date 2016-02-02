@@ -1,0 +1,75 @@
+@charset "UTF-8";
+
+.module-import-loader {
+    margin: auto;
+    margin-top: 3%;
+    display: none;
+}
+
+.configure-message {
+    margin-left: 38%;
+    margin-top: 1%;
+    border: 1px solid #000000;
+    color: #000000;
+    background: #DDDDDD;
+    display: none;
+}
+
+.install-message {
+    font-size: 17px;
+    font-weight: bold;
+    margin: auto;
+    margin-top: 1%;
+    display: none;
+    margin-left: 230px;
+}
+
+.onclic {
+  width: 40px;
+  border-radius: 40px;
+  border-color: #E6E8EB;
+  border-width: 2px;
+  font-size: 0;
+  border-left-color: #25B9D7;
+  -webkit-animation: rotating 2s linear infinite;
+          animation: rotating 2s linear infinite;
+}
+.onclic:after {
+  content: "";
+}
+.onclic:hover {
+  color: #25B9D7;
+  background: white;
+}
+
+.validate {
+  font-size: 13px;
+  color: #FFF;
+  background: #25B9D7;
+}
+.validate:after {
+  font-family: 'FontAwesome';
+  content: "\f00c";
+}
+
+@-webkit-keyframes rotating {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes rotating {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}

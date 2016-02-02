@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property CustomerThread $object
@@ -110,6 +110,18 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 'filter_key' => 'messages',
                 'tmpTableFilter' => true,
                 'maxlength' => 40,
+            ),
+            'private' => array(
+                'title' => $this->l('Private'),
+                'type' => 'select',
+                'filter_key' => 'private',
+                'align' => 'center',
+                'cast' => 'intval',
+                'callback' => 'printOptinIcon',
+                'list' => array(
+                    '0' => $this->l('No'),
+                    '1' => $this->l('Yes')
+                )
             ),
             'date_upd' => array(
                 'title' => $this->l('Last message'),
@@ -227,7 +239,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = '
-			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages,
+			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages, cm.private,
 			(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
 				FROM `'._DB_PREFIX_.'customer_message` cm2
@@ -282,6 +294,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
     {
         parent::initToolbar();
         unset($this->toolbar_btn['new']);
+    }
+
+    public function printOptinIcon($value, $customer)
+    {
+        return ($value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>');
     }
 
     public function postProcess()
@@ -357,7 +374,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     $params = array(
                         '{messages}' => Tools::nl2br(stripslashes($output)),
                         '{employee}' => $current_employee->firstname.' '.$current_employee->lastname,
-                        '{comment}' => stripslashes($_POST['message_forward'])
+                        '{comment}' => stripslashes($_POST['message_forward']),
+                        '{firstname}' => '',
+                        '{lastname}' => '',
                     );
 
                     if (Mail::Send(
@@ -703,7 +722,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $product = new Product((int)$message['id_product'], false, $this->context->language->id);
             $link_product = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$product->id;
 
-            $content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>';
+            $content = '';
+            if (!$message['private']) {
+                $content .= $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>';
+            }
             if (Validate::isLoadedObject($product)) {
                 $content .= '<br/>'.$this->l('Product: ').'<span class="label label-info">'.$product->name.'</span><br/><br/>';
             }
@@ -874,7 +896,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('syncImapMail')) {
-            die(Tools::jsonEncode($this->syncImap()));
+            die(json_encode($this->syncImap()));
         }
     }
 
@@ -981,6 +1003,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         $result = imap_fetch_overview($mbox, "1:{$check->Nmsgs}", 0);
+        $message_errors = array();
         foreach ($result as $overview) {
             //check if message exist in database
             if (isset($overview->subject)) {
@@ -1011,11 +1034,22 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
                 $new_ct = (Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$match_found && (strpos($subject, '[no_sync]') == false));
 
+                $fetch_succeed = true;
                 if ($match_found || $new_ct) {
                     if ($new_ct) {
-                        if (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $result)
-                            || !Validate::isEmail($from = $result[1])) {
+                        // parse from attribute and fix it if needed
+                        $from_parsed = array();
+                        if (!isset($overview->from)
+                            || (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $from_parsed)
+                            && !Validate::isEmail($overview->from))) {
+                            $message_errors[] = Tools::displayError('An unindentified message has no valid "FROM" information, cannot create it in a new thread.');
                             continue;
+                        }
+
+                        // fix email format: from "Mr Sanders <sanders@blueforest.com>" to "sanders@blueforest.com"
+                        $from = $overview->from;
+                        if (isset($from_parsed[1])) {
+                            $from = $from_parsed[1];
                         }
 
                         // we want to assign unrecognized mails to the right contact category
@@ -1025,7 +1059,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         }
 
                         foreach ($contacts as $contact) {
-                            if (strpos($overview->to, $contact['email']) !== false) {
+                            if (isset($overview->to) && strpos($overview->to, $contact['email']) !== false) {
                                 $id_contact = $contact['id_contact'];
                             }
                         }
@@ -1057,26 +1091,43 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $message = utf8_encode($message);
                         $message = quoted_printable_decode($message);
                         $message = nl2br($message);
+                        if (!$message || strlen($message)==0) {
+                            $message_errors[] = Tools::displayError('The message body is empty, cannot import it.');
+                            $fetch_succeed = false;
+                            continue;
+                        }
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
-                        $cm->message = $message;
-
-                        if (!Validate::isCleanHtml($message)) {
+                        if (empty($message) || !Validate::isCleanHtml($message)) {
                             $str_errors.= Tools::displayError(sprintf('Invalid Message Content for subject: %1s', $subject));
                         } else {
-                            $cm->add();
+                            try {
+                                $cm->message = $message;
+                                $cm->add();
+                            } catch (PrestaShopException $pse) {
+                                $message_errors[] = Tools::displayError('The message content is not valid, cannot import it.');
+                                $fetch_succeed = false;
+                                continue;
+                            }
                         }
                     }
                 }
-                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
+                if ($fetch_succeed) {
+                    Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_message_sync_imap` (`md5_header`) VALUES (\'' . pSQL($md5) . '\')');
+                }
             }
         }
         imap_expunge($mbox);
         imap_close($mbox);
+        if (sizeof($message_errors)>0) {
+            if (($more_error = $str_errors.$str_error_delete) && strlen($more_error)>0) {
+                $message_errors = array_merge(array($more_error), $message_errors);
+            }
+            return array('hasError' => true, 'errors' => $message_errors);
+        }
         if ($str_errors.$str_error_delete) {
             return array('hasError' => true, 'errors' => array($str_errors.$str_error_delete));
-        }
-        else {
+        } else {
             return array('hasError' => false, 'errors' => '');
         }
     }

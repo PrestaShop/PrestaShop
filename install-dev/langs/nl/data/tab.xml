@@ -13,7 +13,7 @@
   <tab id="Customers" name="Klanten"/>
   <tab id="Price_Rules" name="Prijsregels"/>
   <tab id="Shipping" name="Verzending"/>
-  <tab id="Localization" name="Localisatie"/>
+  <tab id="Localization" name="Lokalisatie"/>
   <tab id="Modules" name="Modules"/>
   <tab id="Preferences" name="Instellingen"/>
   <tab id="Advanced_Parameters" name="Geavanceerde Instellingen"/>
@@ -43,7 +43,7 @@
   <tab id="Customer_Service" name="Klantenservice"/>
   <tab id="Contacts" name="Contactpersonen"/>
   <tab id="Titles" name="Sociale titels"/>
-  <tab id="Outstanding" name="Uitzonderlijk"/>
+  <tab id="Outstanding" name="Openstaand"/>
   <tab id="Cart_Rules" name="Winkelwagenregels"/>
   <tab id="Catalog_Price_Rules" name="Catalogus prijsregels"/>
   <tab id="Marketing" name="Marketing"/>
@@ -51,14 +51,14 @@
   <tab id="Carriers" name="Vervoerders"/>
   <tab id="Price_Ranges" name="Prijsklasse"/>
   <tab id="Weight_Ranges" name="Gewichtsklasse"/>
-  <tab id="Localization_1" name="Localisatie"/>
+  <tab id="Localization_1" name="Lokalisatie"/>
   <tab id="Languages" name="Talen"/>
   <tab id="Zones" name="Zones"/>
   <tab id="Countries" name="Landen"/>
   <tab id="States" name="Provincies"/>
   <tab id="Currencies" name="Valuta's"/>
   <tab id="Taxes" name="Belastingen"/>
-  <tab id="Tax_Rules" name="Btw-regels"/>
+  <tab id="Tax_Rules" name="Belastingregels"/>
   <tab id="Translations" name="Vertalingen"/>
   <tab id="Modules_1" name="Modules en Services"/>
   <tab id="Modules_Themes_Catalog" name="Module- &amp; themacatologus"/>
@@ -97,8 +97,8 @@
   <tab id="Warehouses" name="Magazijnen"/>
   <tab id="Stock_Management" name="Voorraadbeheer"/>
   <tab id="Stock_Movement" name="Voorraadverplaatsing"/>
-  <tab id="Instant_Stock_Status" name="Huidige voorraad status"/>
-  <tab id="Stock_Coverage" name="Voorraadbeheer"/>
+  <tab id="Instant_Stock_Status" name="Huidige voorraadstatus"/>
+  <tab id="Stock_Coverage" name="Voorraaddekking"/>
   <tab id="Supply_orders" name="Leveringsbestellingen"/>
   <tab id="Configuration" name="Configuratie"/>
   <tab id="CarrierWizard" name="Vervoerder"/>

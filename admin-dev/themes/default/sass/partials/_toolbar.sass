@@ -1,6 +1,8 @@
 .page-head
 	width: 100%
 	height: 100px
+	&.with-tabs
+		height: 130px
 	padding: 0
 	margin: 0
 	position: fixed
@@ -108,6 +110,28 @@
 				color: #363A41
 				&:hover
 					color: #363A41
+	.page-head-tabs
+		display:  inline-block
+		position: absolute
+		bottom:   0
+		left:     220px
+		a
+			display:        inline-block
+			float:          left
+			height:         40px
+			line-height:    40px
+			padding:        0 10px
+			vertical-align: middle
+			color:          #363a41
+			box-sizing:     border-box
+			font-size:      16px
+			&.current
+				border-bottom: 3px solid #3ed2f0
+
+.page-sidebar-closed
+	.page-head
+		.page-head-tabs
+			left: 60px
 
 .page-header-toolbar-back
 	border: none!important

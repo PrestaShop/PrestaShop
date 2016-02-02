@@ -1,0 +1,11 @@
+{% extends "PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig" %}
+
+{% block addon_card %}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_card_notification_update.html.twig'
+        with {
+            'module': module,
+            'display_type': display_type,
+            'col_lg': col_lg
+        }
+    %}
+{% endblock %}

@@ -1,0 +1,3 @@
+app:
+    # The main bundle is PrestaShopCoreBundle which will load other dependencies.
+    resource: "@PrestaShopBundle/Resources/config/routing.yml"

@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property CartRule $object
@@ -119,7 +119,7 @@ class AdminCartRulesControllerCore extends AdminController
                 }
             }
         }
-        echo Tools::jsonEncode(array('html' => $html, 'next_link' => $next_link));
+        echo json_encode(array('html' => $html, 'next_link' => $next_link));
     }
 
     public function setMedia()
@@ -227,8 +227,19 @@ class AdminCartRulesControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('An action is required for this cart rule.');
             }
         }
-
         return parent::postProcess();
+    }
+
+    public function processDelete()
+    {
+        $res = parent::processDelete();
+        if (Tools::isSubmit('delete'.$this->table)) {
+            $back = urldecode(Tools::getValue('back', ''));
+            if (!empty($back)) {
+                $this->redirect_after = $back;
+            }
+        }
+        return $res;
     }
 
     protected function afterUpdate($current_object)
@@ -529,12 +540,12 @@ class AdminCartRulesControllerCore extends AdminController
 			)
 			ORDER BY `firstname`, `lastname` ASC
 			LIMIT 50');
-            die(Tools::jsonEncode($customers));
+            die(json_encode($customers));
         }
         // Both product filter (free product and product discount) search for products
         if (Tools::isSubmit('giftProductFilter') || Tools::isSubmit('reductionProductFilter')) {
             $products = Product::searchByName(Context::getContext()->language->id, trim(Tools::getValue('q')));
-            die(Tools::jsonEncode($products));
+            die(json_encode($products));
         }
     }
 
@@ -577,17 +588,12 @@ class AdminCartRulesControllerCore extends AdminController
     public function ajaxProcessSearchProducts()
     {
         $array = $this->searchProducts(Tools::getValue('product_search'));
-        $this->content = trim(Tools::jsonEncode($array));
+        $this->content = trim(json_encode($array));
     }
 
     public function renderForm()
     {
         $limit = 40;
-        $back = Tools::safeOutput(Tools::getValue('back', ''));
-        if (empty($back)) {
-            $back = self::$currentIndex.'&token='.$this->token;
-        }
-
         $this->toolbar_btn['save-and-stay'] = array(
             'href' => '#',
             'desc' => $this->l('Save and Stay')
@@ -711,6 +717,6 @@ class AdminCartRulesControllerCore extends AdminController
         if ($vouchers = CartRule::getCartsRuleByCode(Tools::getValue('q'), (int)$this->context->language->id, true)) {
             $found = true;
         }
-        echo Tools::jsonEncode(array('found' => $found, 'vouchers' => $vouchers));
+        echo json_encode(array('found' => $found, 'vouchers' => $vouchers));
     }
 }
