@@ -31,7 +31,7 @@ data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" d
 
 
         <div class="module-quick-action-{{display_type}} clearfix">
-            {% if requireBulkActions == true %}
+            {% if requireBulkActions is defined and requireBulkActions == true %}
                 <div class="pull-right">
                     <input type="checkbox" class="module-checkbox-bulk-{{display_type}}" />
                 </div>

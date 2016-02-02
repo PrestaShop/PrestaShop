@@ -64,7 +64,9 @@ class ModuleController extends Controller
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'modules' => $modulesProvider->generateAddonsUrls($this->createCatalogModuleList($products)),
-                'topMenuData' => $topMenuData
+                'topMenuData' => $topMenuData,
+                'requireAddonsSearch' => true,
+                'requireBulkActions' => false,
             ));
     }
 
@@ -158,7 +160,9 @@ class ModuleController extends Controller
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'modules' => $products,
-                'topMenuData' => $this->getTopMenuData('manage')
+                'topMenuData' => $this->getTopMenuData('manage'),
+                'requireAddonsSearch' => false,
+                'requireBulkActions' => true,
             ));
     }
 
@@ -276,6 +280,8 @@ class ModuleController extends Controller
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'modules' => $products,
+                'requireAddonsSearch' => false,
+                'requireBulkActions' => false,
         ));
     }
 
