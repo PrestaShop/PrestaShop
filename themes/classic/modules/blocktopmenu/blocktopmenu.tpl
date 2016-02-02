@@ -1,5 +1,8 @@
-{function name="menu" nodes=[] depth=0}
+{function name="menu" nodes=[] depth=0 parent=null}
   {strip}
+    {if $depth === 1}
+      <a href="{$node.url nofilter}">{$node.label}</a>
+    {/if}
     {if $nodes|count}
       <ul aria-labelledby="dLabel" data-depth="{$depth}" class="top-menu">
         {foreach from=$nodes item=node}
@@ -14,7 +17,7 @@
                 {$node.label}
               </a>
               <div {if $depth === 0} class="dropdown-menu sub-menu" {/if}>
-                {menu nodes=$node.children depth=$node.depth}
+                {menu nodes=$node.children depth=$node.depth parent=$node}
               </div>
             </li>
           {else}
