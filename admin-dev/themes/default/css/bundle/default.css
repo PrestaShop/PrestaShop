@@ -32,6 +32,9 @@ span.spacer {
 
 
 /* Form */
+#form-loading{
+  display: none;
+}
 #form .toolbarBox a{
   text-decoration: none;
   display: inline-block;
