@@ -1,4 +1,4 @@
-<div id="search_filters">
+<div id="search_filters" class="_margin-bottom-medium">
   <h4 class="h5 facets-title">{l s='Filter By'}</h4>
   {foreach from=$facets item="facet"}
     {if $facet.displayed}

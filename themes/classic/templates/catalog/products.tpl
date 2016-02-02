@@ -1,10 +1,10 @@
 <section id="products">
   {if $products|count}
       <div class="row _margin-top-large _margin-bottom-medium">
-        <div class="col-md-5">
+        <div class="col-md-4">
           <h1 class="h4 text-uppercase _bolder _gray-dark">{$category.name}</h1>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
           <div class="_display-table pull-xs-right">
             <div class="_display-table-cell">
               {if $products|count > 1}
@@ -22,6 +22,14 @@
         </div>
 
       </div>
+
+
+      {if isset($rendered_active_filters)}
+        {$rendered_active_filters nofilter}
+      {/if}
+
+
+
       <div class="products row">
         {foreach from=$products item="product"}
           {block name='product_miniature'}

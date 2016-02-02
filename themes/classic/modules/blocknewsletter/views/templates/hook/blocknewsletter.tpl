@@ -25,7 +25,7 @@
 
 <div class="block_newsletter col-md-7">
   <div class="row">
-    <p class="col-md-5 _gray-darker _margin-top-small">{l s='Get our latest news and special sales' mod='blocknewsletter'}</p>
+    <p class="col-md-5 _gray-darker _margin-top-small _smaller-text">{l s='Get our latest news and special sales' mod='blocknewsletter'}</p>
 
     <div class="col-md-7">
       <form action="{$urls.pages.index}" method="post">
