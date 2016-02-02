@@ -114,11 +114,11 @@
                 <tab id="Customer_Service_2" id_parent="Customer_Service" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminCustomerThreads</class_name>
                 </tab>
-                <tab id="Merchandise_Returns" id_parent="Customer_Service" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminReturn</class_name>
-                </tab>
                 <tab id="Order_Messages" id_parent="Customer_Service" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminOrderMessage</class_name>
+                </tab>
+                <tab id="Merchandise_Returns" id_parent="Customer_Service" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminReturn</class_name>
                 </tab>
 
             <!--SHIPPING-->
@@ -307,7 +307,7 @@
                     </tab>
 
                 <tab id="Products_1" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminPreferences</class_name>
+                    <class_name>AdminPPreferences</class_name>
                 </tab>
                 <tab id="Customer_settings" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminCustomerPreferences</class_name>
@@ -385,7 +385,7 @@
                     <class_name>AdminPerformance</class_name>
                 </tab>
                 <tab id="Administration" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminAdmin</class_name>
+                    <class_name>AdminAdminPreferences</class_name>
                 </tab>
                 <tab id="E-mail" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminEmails</class_name>
