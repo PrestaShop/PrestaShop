@@ -323,8 +323,8 @@
                         <class_name>AdminGenders</class_name>
                     </tab>
 
-                <tab id="Contacts" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminStores</class_name>
+                <tab id="Contact" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminParentStores</class_name>
                 </tab>
 
                     <tab id="Store_Contacts" id_parent="Contact" active="1" hide_host_mode="0" icon="">
