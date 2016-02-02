@@ -2,7 +2,7 @@
   &[data-depth="1"] {
     margin: em(10px);
   }
-  a {
+  a:not([data-depth="0"]) {
     display: block;
     padding: 10px;
     color: $gray;
@@ -24,7 +24,7 @@
   }
   a[data-depth="2"],
   a[data-depth="1"] {
-    padding: 0 em(10px);
+    padding: 0 em(10px) em(10px) 0;
   }
 }
 .sub-menu {
@@ -35,6 +35,6 @@
   top: em(55px);
   .category {
     float: left;
-    margin: em(20px);
+    margin: 0 em(20px);
   }
 }
