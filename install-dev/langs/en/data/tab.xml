@@ -61,18 +61,19 @@
   <tab id="Tax_Rules" name="Tax Rules"/>
   <tab id="Translations" name="Translations"/>
   <tab id="Modules_1" name="Modules and Services"/>
-  <tab id="Themes_Catalog" name="Themes Catalog"/>
+  <tab id="Themes_Catalog" name="Theme Catalog"/>
   <tab id="Positions" name="Positions"/>
   <tab id="Payment" name="Payment"/>
   <tab id="General" name="General"/>
+  <tab id="General_1" name="General"/>
   <tab id="Orders_2" name="Orders"/>
   <tab id="Products_1" name="Products"/>
   <tab id="Customers_2" name="Customers"/>
-  <tab id="Themes" name="Theme &amp; Logo Settings"/>
+  <tab id="Themes" name="Theme Settings"/>
   <tab id="SEO_URLs" name="SEO &amp; URLs"/>
   <tab id="Pages" name="Pages"/>
   <tab id="Images" name="Images"/>
-  <tab id="Store_Contacts" name="Contacts"/>
+  <tab id="Store_Contacts" name="Stores"/>
   <tab id="Search_1" name="Search"/>
   <tab id="Maintenance" name="Maintenance"/>
   <tab id="Geolocation" name="Geolocation"/>
@@ -109,9 +110,10 @@
   <tab id="Look_feel" name="Design" />
   <tab id="Image_Settings" name="Image Settings" />
   <tab id="International" name="International" />
-  <tab id="Tax_Management" name="Tax Management" />
+  <tab id="Tax_Management" name="Taxes" />
   <tab id="Shop_parameters" name="Shop Parameters" />
   <tab id="Order_settings" name="Order Settings" />
+  <tab id="Order_settings_2" name="Orders" />
   <tab id="Customer_settings" name="Customer Settings" />
   <tab id="Traffic" name="Traffic" />
   <tab id="Database" name="Database" />
