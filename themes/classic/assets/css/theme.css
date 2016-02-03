@@ -4714,8 +4714,8 @@ label {
       position: absolute;
       background: none;
       border: none;
-      bottom: 0;
-      right: 10px;
+      bottom: 0.3125em;
+      right: 0.625em;
       font-size: 25px;
       color: #878787; }
       .search-widget form button[type=submit] .search:hover {
@@ -4749,11 +4749,12 @@ label {
   box-shadow: inset 0 2px 5px 0 rgba(0, 0, 0, 0.11), 0 5px 5px 3px rgba(0, 0, 0, 0.1);
   min-width: 69.375em;
   left: -11.875em;
-  border: none;
-  top: 3.4375em; }
+  border: none; }
   .sub-menu .category {
     float: left;
     margin: 0 1.25em; }
+  .sub-menu a:hover {
+    color: #2fb5d2; }
 
 #checkout-cart-summary {
   float: right;
@@ -5110,7 +5111,8 @@ img {
     width: 16.875em;
     color: #414141;
     background: white;
-    padding: 0.625em; }
+    padding: 0.625em;
+    cursor: pointer; }
   .products-sort-order .select-list {
     display: block;
     color: #414141;
@@ -5174,6 +5176,27 @@ img {
     color: #2fb5d2;
     text-decoration: none; }
 
+.active_filters {
+  background: #dededd;
+  padding: 1.25em 2.1875em 0; }
+  .active_filters .active-filter-title {
+    font-size: 0.9375em;
+    display: inline; }
+  .active_filters ul {
+    display: inline; }
+  .active_filters .filter-block {
+    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08);
+    background: white;
+    padding: 0.625em;
+    display: inline-block;
+    font-size: 0.8125em; }
+    .active_filters .filter-block .close {
+      color: #414141;
+      font-size: 0.9375em;
+      opacity: 1;
+      margin-top: 0.375em;
+      margin-left: 0.3125em; }
+
 .product-images li {
   display: inline; }
 
@@ -5214,8 +5237,8 @@ img {
     position: absolute;
     background: none;
     border: none;
-    bottom: 0;
-    right: 10px;
+    bottom: 0.3125em;
+    right: 0.625em;
     font-size: 25px;
     color: #878787; }
     .block_newsletter form button[type=submit] .search:hover {
@@ -5356,13 +5379,15 @@ a:hover {
       color: #acaaa6; }
       #header .header-nav #contact-link a {
         color: #acaaa6; }
-  #header .header-top .menu > ul {
-    display: table; }
-    #header .header-top .menu > ul > li {
-      display: table-cell; }
-  #header .header-top a[data-depth="0"] {
-    color: #acaaa6;
-    text-transform: uppercase; }
+  #header .header-top {
+    padding-bottom: 0.625em; }
+    #header .header-top .menu > ul {
+      display: table; }
+      #header .header-top .menu > ul > li {
+        display: table-cell; }
+    #header .header-top a[data-depth="0"] {
+      color: #acaaa6;
+      text-transform: uppercase; }
 
 /*** WRAPPER ***/
 #wrapper {
