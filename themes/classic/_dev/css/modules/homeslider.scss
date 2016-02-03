@@ -1,4 +1,5 @@
 .carousel {
+  box-shadow: 1px 1px 7px 0px rgba(0, 0, 0, 0.15);
   .direction{
     z-index: auto;
     margin-top: em(-40px);
@@ -10,10 +11,11 @@
     height: 100%;
     img {
       width: 100%;
+      margin-left: 0;
     }
     .caption {
       position: absolute;
-      bottom: 0;
+      bottom: 28px;
       left: 90px;
       color: white;
       max-width: 340px;
