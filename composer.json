@@ -30,7 +30,8 @@
     {"type": "vcs", "url": "https://github.com/prestashop/blocknewproducts"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockspecials"},
     {"type": "vcs", "url": "https://github.com/prestashop/crossselling"},
-    {"type": "vcs", "url": "https://github.com/prestashop/blocksocial"}
+    {"type": "vcs", "url": "https://github.com/prestashop/blocksocial"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blockreassurance"}
   ],
   "require": {
     "php": ">=5.4",
@@ -70,7 +71,7 @@
     "prestashop/blocknewsletter": "dev-feat/starter-theme",
     "prestashop/blockpaymentlogo": "dev-master",
     "prestashop/blockpermanentlinks": "dev-master",
-    "prestashop/blockreinsurance": "dev-master",
+    "prestashop/blockreassurance": "dev-feat/starter-theme",
     "prestashop/blockrss": "dev-master",
     "prestashop/blocksearch": "dev-feat/starter-theme",
     "prestashop/blocksharefb": "dev-master",
