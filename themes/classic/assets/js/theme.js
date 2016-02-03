@@ -66,37 +66,37 @@
 	
 	__webpack_require__(19);
 	
-	__webpack_require__(22);
+	__webpack_require__(35);
 	
-	__webpack_require__(25);
+	__webpack_require__(43);
 	
-	__webpack_require__(26);
+	__webpack_require__(38);
 	
-	var _componentsDropDown = __webpack_require__(27);
+	var _componentsDropDown = __webpack_require__(39);
 	
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 	
-	var _componentsTopMenu = __webpack_require__(28);
+	var _componentsTopMenu = __webpack_require__(40);
 	
 	var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
 	
-	var _componentsProductMiniature = __webpack_require__(29);
+	var _componentsProductMiniature = __webpack_require__(41);
 	
 	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 	
-	var _prestashop = __webpack_require__(23);
+	var _prestashop = __webpack_require__(36);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _events = __webpack_require__(30);
+	var _events = __webpack_require__(42);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _common = __webpack_require__(24);
+	var _common = __webpack_require__(37);
 	
-	__webpack_require__(31);
+	__webpack_require__(44);
 	
-	__webpack_require__(32);
+	__webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"bootstrap-validator/dist/validator.min\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
@@ -7602,7 +7602,20 @@
 /***/ },
 /* 20 */,
 /* 21 */,
-/* 22 */
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7613,11 +7626,11 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _prestashop = __webpack_require__(23);
+	var _prestashop = __webpack_require__(36);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _common = __webpack_require__(24);
+	var _common = __webpack_require__(37);
 	
 	function collapsePaymentOptions() {
 	  (0, _jquery2['default'])('.js-additional-information, .js-payment-option-form').hide();
@@ -7713,13 +7726,13 @@
 	(0, _jquery2['default'])(document).ready(setupCheckoutScripts);
 
 /***/ },
-/* 23 */
+/* 36 */
 /***/ function(module, exports) {
 
 	module.exports = prestashop;
 
 /***/ },
-/* 24 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7735,36 +7748,7 @@
 	}
 
 /***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	function initRmaItemSelector() {
-	  (0, _jquery2['default'])('#order-return-form table thead input[type=checkbox]').on('click', function () {
-	    var checked = (0, _jquery2['default'])(this).prop('checked');
-	    (0, _jquery2['default'])('#order-return-form table tbody input[type=checkbox]').each(function (_, checkbox) {
-	      (0, _jquery2['default'])(checkbox).prop('checked', checked);
-	    });
-	  });
-	}
-	
-	function setupCustomerScripts() {
-	  if ((0, _jquery2['default'])('body#order-detail')) {
-	    initRmaItemSelector();
-	  }
-	}
-	
-	(0, _jquery2['default'])(document).ready(setupCustomerScripts);
-
-/***/ },
-/* 26 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7838,7 +7822,7 @@
 	});
 
 /***/ },
-/* 27 */
+/* 39 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7878,7 +7862,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 28 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7897,7 +7881,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _dropDown = __webpack_require__(27);
+	var _dropDown = __webpack_require__(39);
 	
 	var _dropDown2 = _interopRequireDefault(_dropDown);
 	
@@ -7924,7 +7908,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 29 */
+/* 41 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7972,7 +7956,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 30 */
+/* 42 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -8240,7 +8224,36 @@
 	}
 
 /***/ },
-/* 31 */
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	function initRmaItemSelector() {
+	  (0, _jquery2['default'])('#order-return-form table thead input[type=checkbox]').on('click', function () {
+	    var checked = (0, _jquery2['default'])(this).prop('checked');
+	    (0, _jquery2['default'])('#order-return-form table tbody input[type=checkbox]').each(function (_, checkbox) {
+	      (0, _jquery2['default'])(checkbox).prop('checked', checked);
+	    });
+	  });
+	}
+	
+	function setupCustomerScripts() {
+	  if ((0, _jquery2['default'])('body#order-detail')) {
+	    initRmaItemSelector();
+	  }
+	}
+	
+	(0, _jquery2['default'])(document).ready(setupCustomerScripts);
+
+/***/ },
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -8671,111 +8684,6 @@
 	    n.call(a('[data-provide="datepicker-inline"]'));
 	  });
 	});
-
-/***/ },
-/* 32 */
-/***/ function(module, exports) {
-
-	/*!
-	 * Validator v0.9.0 for Bootstrap 3, by @1000hz
-	 * Copyright 2015 Cina Saffary
-	 * Licensed under http://opensource.org/licenses/MIT
-	 *
-	 * https://github.com/1000hz/bootstrap-validator
-	 */
-	
-	"use strict";
-	
-	+(function (a) {
-	  "use strict";function b(b) {
-	    return this.each(function () {
-	      var d = a(this),
-	          e = a.extend({}, c.DEFAULTS, d.data(), "object" == typeof b && b),
-	          f = d.data("bs.validator");(f || "destroy" != b) && (f || d.data("bs.validator", f = new c(this, e)), "string" == typeof b && f[b]());
-	    });
-	  }var c = function c(b, d) {
-	    this.$element = a(b), this.options = d, d.errors = a.extend({}, c.DEFAULTS.errors, d.errors);for (var e in d.custom) if (!d.errors[e]) throw new Error("Missing default error message for custom validator: " + e);a.extend(c.VALIDATORS, d.custom), this.$element.attr("novalidate", !0), this.toggleSubmit(), this.$element.on("input.bs.validator change.bs.validator focusout.bs.validator", a.proxy(this.validateInput, this)), this.$element.on("submit.bs.validator", a.proxy(this.onSubmit, this)), this.$element.find("[data-match]").each(function () {
-	      var b = a(this),
-	          c = b.data("match");a(c).on("input.bs.validator", function () {
-	        b.val() && b.trigger("input.bs.validator");
-	      });
-	    });
-	  };c.INPUT_SELECTOR = ':input:not([type="submit"], button):enabled:visible', c.DEFAULTS = { delay: 500, html: !1, disable: !0, custom: {}, errors: { match: "Does not match", minlength: "Not long enough" }, feedback: { success: "glyphicon-ok", error: "glyphicon-remove" } }, c.VALIDATORS = { "native": function native(a) {
-	      var b = a[0];return b.checkValidity ? b.checkValidity() : !0;
-	    }, match: function match(b) {
-	      var c = b.data("match");return !b.val() || b.val() === a(c).val();
-	    }, minlength: function minlength(a) {
-	      var b = a.data("minlength");return !a.val() || a.val().length >= b;
-	    } }, c.prototype.validateInput = function (b) {
-	    var c = a(b.target),
-	        d = c.data("bs.validator.errors");if ((c.is('[type="radio"]') && (c = this.$element.find('input[name="' + c.attr("name") + '"]')), this.$element.trigger(b = a.Event("validate.bs.validator", { relatedTarget: c[0] })), !b.isDefaultPrevented())) {
-	      var e = this;this.runValidators(c).done(function (f) {
-	        c.data("bs.validator.errors", f), f.length ? e.showErrors(c) : e.clearErrors(c), d && f.toString() === d.toString() || (b = f.length ? a.Event("invalid.bs.validator", { relatedTarget: c[0], detail: f }) : a.Event("valid.bs.validator", { relatedTarget: c[0], detail: d }), e.$element.trigger(b)), e.toggleSubmit(), e.$element.trigger(a.Event("validated.bs.validator", { relatedTarget: c[0] }));
-	      });
-	    }
-	  }, c.prototype.runValidators = function (b) {
-	    function d(a) {
-	      return b.data(a + "-error") || b.data("error") || "native" == a && b[0].validationMessage || g.errors[a];
-	    }var e = [],
-	        f = a.Deferred(),
-	        g = this.options;return b.data("bs.validator.deferred") && b.data("bs.validator.deferred").reject(), b.data("bs.validator.deferred", f), a.each(c.VALIDATORS, a.proxy(function (a, c) {
-	      if ((b.data(a) || "native" == a) && !c.call(this, b)) {
-	        var f = d(a);! ~e.indexOf(f) && e.push(f);
-	      }
-	    }, this)), !e.length && b.val() && b.data("remote") ? this.defer(b, function () {
-	      var c = {};c[b.attr("name")] = b.val(), a.get(b.data("remote"), c).fail(function (a, b, c) {
-	        e.push(d("remote") || c);
-	      }).always(function () {
-	        f.resolve(e);
-	      });
-	    }) : f.resolve(e), f.promise();
-	  }, c.prototype.validate = function () {
-	    var a = this.options.delay;return this.options.delay = 0, this.$element.find(c.INPUT_SELECTOR).trigger("input.bs.validator"), this.options.delay = a, this;
-	  }, c.prototype.showErrors = function (b) {
-	    var c = this.options.html ? "html" : "text";this.defer(b, function () {
-	      var d = b.closest(".form-group"),
-	          e = d.find(".help-block.with-errors"),
-	          f = d.find(".form-control-feedback"),
-	          g = b.data("bs.validator.errors");g.length && (g = a("<ul/>").addClass("list-unstyled").append(a.map(g, function (b) {
-	        return a("<li/>")[c](b);
-	      })), void 0 === e.data("bs.validator.originalContent") && e.data("bs.validator.originalContent", e.html()), e.empty().append(g), d.addClass("has-error"), f.length && f.removeClass(this.options.feedback.success) && f.addClass(this.options.feedback.error) && d.removeClass("has-success"));
-	    });
-	  }, c.prototype.clearErrors = function (a) {
-	    var b = a.closest(".form-group"),
-	        c = b.find(".help-block.with-errors"),
-	        d = b.find(".form-control-feedback");c.html(c.data("bs.validator.originalContent")), b.removeClass("has-error"), d.length && d.removeClass(this.options.feedback.error) && d.addClass(this.options.feedback.success) && b.addClass("has-success");
-	  }, c.prototype.hasErrors = function () {
-	    function b() {
-	      return !!(a(this).data("bs.validator.errors") || []).length;
-	    }return !!this.$element.find(c.INPUT_SELECTOR).filter(b).length;
-	  }, c.prototype.isIncomplete = function () {
-	    function b() {
-	      return "checkbox" === this.type ? !this.checked : "radio" === this.type ? !a('[name="' + this.name + '"]:checked').length : "" === a.trim(this.value);
-	    }return !!this.$element.find(c.INPUT_SELECTOR).filter("[required]").filter(b).length;
-	  }, c.prototype.onSubmit = function (a) {
-	    this.validate(), (this.isIncomplete() || this.hasErrors()) && a.preventDefault();
-	  }, c.prototype.toggleSubmit = function () {
-	    if (this.options.disable) {
-	      var b = a('button[type="submit"], input[type="submit"]').filter('[form="' + this.$element.attr("id") + '"]').add(this.$element.find('input[type="submit"], button[type="submit"]'));b.toggleClass("disabled", this.isIncomplete() || this.hasErrors());
-	    }
-	  }, c.prototype.defer = function (b, c) {
-	    return c = a.proxy(c, this), this.options.delay ? (window.clearTimeout(b.data("bs.validator.timeout")), void b.data("bs.validator.timeout", window.setTimeout(c, this.options.delay))) : c();
-	  }, c.prototype.destroy = function () {
-	    return this.$element.removeAttr("novalidate").removeData("bs.validator").off(".bs.validator"), this.$element.find(c.INPUT_SELECTOR).off(".bs.validator").removeData(["bs.validator.errors", "bs.validator.deferred"]).each(function () {
-	      var b = a(this),
-	          c = b.data("bs.validator.timeout");window.clearTimeout(c) && b.removeData("bs.validator.timeout");
-	    }), this.$element.find(".help-block.with-errors").each(function () {
-	      var b = a(this),
-	          c = b.data("bs.validator.originalContent");b.removeData("bs.validator.originalContent").html(c);
-	    }), this.$element.find('input[type="submit"], button[type="submit"]').removeClass("disabled"), this.$element.find(".has-error").removeClass("has-error"), this;
-	  };var d = a.fn.validator;a.fn.validator = b, a.fn.validator.Constructor = c, a.fn.validator.noConflict = function () {
-	    return a.fn.validator = d, this;
-	  }, a(window).on("load", function () {
-	    a('form[data-toggle="validator"]').each(function () {
-	      var c = a(this);b.call(c, c.data());
-	    });
-	  });
-	})(jQuery);
 
 /***/ }
 /******/ ]);
