@@ -5777,8 +5777,8 @@ a:hover {
     max-height: 50px;
     margin-bottom: 30px; }
     #header .header-nav .right-nav {
-      display: flex;
       -js-display: flex;
+      display: flex;
       flex-wrap: nowrap;
       justify-content: flex-end; }
     #header .header-nav .login {
