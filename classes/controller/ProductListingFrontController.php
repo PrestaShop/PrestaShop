@@ -367,12 +367,21 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             )
         ;
 
-        return array_map(function ($link) {
-            $link['url'] = $this->updateQueryString([
-                'page'  => $link['page']
-            ]);
-            return $link;
-        }, $pagination->buildLinks());
+        $totalItems = $result->getTotalProductsCount();
+        $itemsShownFrom = ($query->getResultsPerPage() * ($query->getPage() - 1)) + 1;
+        $itemsShownTo = $query->getResultsPerPage() * $query->getPage();
+
+        return [
+            'total_items' => $totalItems,
+            'items_shown_from' => $itemsShownFrom,
+            'items_shown_to' => ($itemsShownTo <= $totalItems) ? $itemsShownTo : $totalItems,
+            'pages' => array_map(function ($link) {
+                $link['url'] = $this->updateQueryString([
+                    'page'  => $link['page']
+                ]);
+                return $link;
+            }, $pagination->buildLinks())
+        ];
     }
 
     /**
