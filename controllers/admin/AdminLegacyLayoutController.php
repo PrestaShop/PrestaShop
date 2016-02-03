@@ -44,6 +44,11 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->showContentHeader = $showContentHeader;
     }
 
+    public function setMedia()
+    {
+        parent::setMedia(true);
+    }
+
     public function viewAccess()
     {
         return true;
