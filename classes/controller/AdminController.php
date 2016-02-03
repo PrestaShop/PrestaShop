@@ -2565,16 +2565,8 @@ class AdminControllerCore extends Controller
     public function setMedia($isNewTheme = false)
     {
         if ($isNewTheme) {
-            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/css/bootstrap-prestakit.css', 'all', 1);
-            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/css/material-design-iconic-font.min.css', 'all', 0);
-
-            //loads PrestaKit
-            $this->addJS([
-                __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/tether.min.js',
-                __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/jquery.growl.js',
-                __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/bootstrap.min.js',
-                __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/prestakit.js',
-            ]);
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/theme.css', 'all', 1);
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/bundle.js');
         } else {
 
             //Bootstrap
