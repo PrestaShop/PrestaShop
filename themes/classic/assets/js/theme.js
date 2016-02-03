@@ -66,37 +66,37 @@
 	
 	__webpack_require__(19);
 	
-	__webpack_require__(22);
+	__webpack_require__(35);
 	
-	__webpack_require__(25);
+	__webpack_require__(38);
 	
-	__webpack_require__(26);
+	__webpack_require__(39);
 	
-	var _componentsDropDown = __webpack_require__(27);
+	var _componentsDropDown = __webpack_require__(40);
 	
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 	
-	var _componentsTopMenu = __webpack_require__(28);
+	var _componentsTopMenu = __webpack_require__(41);
 	
 	var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
 	
-	var _componentsProductMiniature = __webpack_require__(29);
+	var _componentsProductMiniature = __webpack_require__(42);
 	
 	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 	
-	var _prestashop = __webpack_require__(23);
+	var _prestashop = __webpack_require__(36);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _events = __webpack_require__(30);
+	var _events = __webpack_require__(43);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _common = __webpack_require__(24);
+	var _common = __webpack_require__(37);
 	
-	__webpack_require__(31);
+	__webpack_require__(44);
 	
-	__webpack_require__(32);
+	__webpack_require__(45);
 	
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
@@ -7602,7 +7602,20 @@
 /***/ },
 /* 20 */,
 /* 21 */,
-/* 22 */
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7613,11 +7626,11 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _prestashop = __webpack_require__(23);
+	var _prestashop = __webpack_require__(36);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _common = __webpack_require__(24);
+	var _common = __webpack_require__(37);
 	
 	function collapsePaymentOptions() {
 	  (0, _jquery2['default'])('.js-additional-information, .js-payment-option-form').hide();
@@ -7713,13 +7726,13 @@
 	(0, _jquery2['default'])(document).ready(setupCheckoutScripts);
 
 /***/ },
-/* 23 */
+/* 36 */
 /***/ function(module, exports) {
 
 	module.exports = prestashop;
 
 /***/ },
-/* 24 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7735,7 +7748,7 @@
 	}
 
 /***/ },
-/* 25 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7764,7 +7777,7 @@
 	(0, _jquery2['default'])(document).ready(setupCustomerScripts);
 
 /***/ },
-/* 26 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7838,7 +7851,7 @@
 	});
 
 /***/ },
-/* 27 */
+/* 40 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7878,7 +7891,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 28 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7897,7 +7910,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _dropDown = __webpack_require__(27);
+	var _dropDown = __webpack_require__(40);
 	
 	var _dropDown2 = _interopRequireDefault(_dropDown);
 	
@@ -7924,7 +7937,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 29 */
+/* 42 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7972,7 +7985,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 30 */
+/* 43 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -8240,7 +8253,7 @@
 	}
 
 /***/ },
-/* 31 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -8673,7 +8686,7 @@
 	});
 
 /***/ },
-/* 32 */
+/* 45 */
 /***/ function(module, exports) {
 
 	/*!
