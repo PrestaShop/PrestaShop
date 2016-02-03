@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="currency-selector dropdown js-dropdown _margin-top-small col-md-2">
+<div class="currency-selector dropdown js-dropdown">
   <span>{l s='Currency' mod='blockcurrencies'} :</span>
   <span class="expand-more _gray-darker" data-toggle="dropdown">{$current_currency.iso_code} {$current_currency.sign}</span>
   <a title="{l s='Expand'}" data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
