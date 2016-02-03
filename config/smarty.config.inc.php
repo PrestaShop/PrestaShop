@@ -94,6 +94,11 @@ smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
 
+$smarty->registerResource('module', new SmartyResourceModule([
+    'theme' => _PS_THEME_DIR_.'modules/',
+    'modules' => _PS_MODULE_DIR_,
+]));
+
 function smartyDieObject($params, &$smarty)
 {
     return Tools::d($params['var']);
