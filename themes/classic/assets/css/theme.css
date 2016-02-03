@@ -5774,12 +5774,22 @@ a:hover {
     border-bottom: #ebebeb 2px solid;
     max-height: 50px;
     margin-bottom: 30px; }
+    #header .header-nav .right-nav {
+      display: flex;
+      -js-display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-end; }
     #header .header-nav .login {
       color: #414141;
       display: inline-block;
       font-weight: 400;
       font-size: 16px; }
+    #header .header-nav .currency-selector {
+      margin-top: 0.9375em;
+      margin-left: 0.9375em; }
     #header .header-nav .user-info {
+      margin-left: 2.5em;
+      margin-top: 0.9375em;
       text-align: right; }
       #header .header-nav .user-info a {
         color: #acaaa6; }
@@ -5787,7 +5797,7 @@ a:hover {
           text-decoration: none;
           color: #2fb5d2; }
     #header .header-nav .language-selector {
-      width: 8.4375em; }
+      margin-top: 0.9375em; }
     #header .header-nav .cart-preview.active {
       background: #2fb5d2; }
       #header .header-nav .cart-preview.active a {
@@ -5802,14 +5812,16 @@ a:hover {
       background: #ebebeb;
       font-size: 16px;
       width: 8.4375em;
-      height: 48px;
-      padding-top: 12px;
-      margin-right: 15px; }
+      height: 3em;
+      padding-top: 0.75em;
+      margin-left: 0.9375em;
+      text-align: center; }
       #header .header-nav .blockcart a {
         color: #acaaa6; }
         #header .header-nav .blockcart a:hover {
           color: #2fb5d2; }
     #header .header-nav #contact-link {
+      margin-top: 0.9375em;
       color: #acaaa6; }
       #header .header-nav #contact-link a {
         color: #acaaa6; }

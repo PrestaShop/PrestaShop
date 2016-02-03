@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div id="contact-link" class="col-md-2 _margin-top-small">
+<div id="contact-link">
   {if $contact_infos.phone}
     {l s='Call us : [1]%s[/1]' tags=['<span class="_gray-darker">'] sprintf=$contact_infos.phone mod='blockcontact'}
   {else}

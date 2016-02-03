@@ -1,4 +1,4 @@
-<div class="blockcart cart-preview col-md-2 _relative {if $cart.total.amount > 0}active{/if}" data-refresh-url="{$refresh_url}">
+<div class="blockcart cart-preview {if $cart.total.amount > 0}active{/if}" data-refresh-url="{$refresh_url}">
   <div class="header">
     <a rel="nofollow" href="{$cart_url}" title="{l s='cart'}">
       <i class="material-icons shopping-cart">shopping_cart</i>

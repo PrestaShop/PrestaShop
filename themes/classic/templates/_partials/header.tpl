@@ -2,7 +2,12 @@
   <nav class="header-nav row">
     <div class="container">
         <div class="row">
-          {hook h='displayNav'}
+          <div class="col-md-6">
+            {hook h='displayNav1'}
+          </div>
+          <div class="col-md-6 right-nav">
+              {hook h='displayNav2'}
+          </div>
         </div>
     </div>
   </nav>
