@@ -2183,7 +2183,7 @@ class AdminControllerCore extends Controller
         //iso_code.css overrides default fonts for every language (optional)
         if ($this->context->language->is_rtl) {
             $this->addJS(_PS_JS_DIR_.'rtl.js');
-            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->context->language->iso_code.'.css', 'all', false);
+            $this->addCSS($this->getAdminMediaPath().'css/'.$this->context->language->iso_code.'.css', 'all', false);
         }
 
         // We assign js and css files on the last step before display template, because controller can add many js and css files
@@ -2581,14 +2581,19 @@ class AdminControllerCore extends Controller
     {
     }
 
+    public function getAdminMediaPath()
+    {
+        return __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/';
+    }
+
     public function setMedia()
     {
         //Bootstrap
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/bootstrap-prestakit.css', 'all', 1);
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
+        $this->addCSS($this->getAdminMediaPath().'css/bootstrap-prestakit.css', 'all', 1);
+        $this->addCSS($this->getAdminMediaPath().'css/'.$this->bo_css, 'all', 0);
 
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/material-design-iconic-font.min.css', 'all', 0);
+        $this->addCSS($this->getAdminMediaPath().'css/vendor/titatoggle-min.css', 'all', 0);
+        $this->addCSS($this->getAdminMediaPath().'css/material-design-iconic-font.min.css', 'all', 0);
         $this->addCSS('https://fonts.googleapis.com/icon?family=Material+Icons', 'all', 0);
 
         $this->addJquery();
@@ -2626,19 +2631,19 @@ class AdminControllerCore extends Controller
 
         //loads PrestaKit
         $this->addJS([
-            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/tether.min.js',
-            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/jquery.growl.js',
-            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/bootstrap.min.js',
-            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/prestakit.js',
+            $this->getAdminMediaPath().'js/tether.min.js',
+            $this->getAdminMediaPath().'js/jquery.growl.js',
+            $this->getAdminMediaPath().'js/bootstrap.min.js',
+            $this->getAdminMediaPath().'js/prestakit.js',
         ]);
 
-        // $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
+        // $this->addJS($this->getAdminMediaPath().'js/vendor/bootstrap.min.js');
+        $this->addJS($this->getAdminMediaPath().'js/vendor/modernizr.min.js');
+        $this->addJS($this->getAdminMediaPath().'js/modernizr-loads.js');
+        $this->addJS($this->getAdminMediaPath().'js/vendor/moment-with-langs.min.js');
 
         if (!$this->lite_display) {
-            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
+            $this->addJS($this->getAdminMediaPath().'js/help.js');
         }
 
         if (!Tools::getValue('submitFormAjax')) {
@@ -2659,7 +2664,7 @@ class AdminControllerCore extends Controller
         Hook::exec('actionAdminControllerSetMedia');
 
         // Specific Admin Theme
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
+        $this->addCSS($this->getAdminMediaPath().'css/overrides.css', 'all', PHP_INT_MAX);
     }
 
     /**
