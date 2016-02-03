@@ -134,13 +134,11 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 if ($addon->active == 0) {
                     $addon->url_active = 'enable';
                     unset(
-                        $addon->urls['update'],
                         $addon->urls['install']
                     );
                 } elseif ($addon->is_configurable == 1) {
                     $addon->url_active = 'configure';
                     unset(
-                        $addon->urls['update'],
                         $addon->urls['enable'],
                         $addon->urls['install']
                     );
@@ -151,6 +149,11 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                         $addon->urls['install'],
                         $addon->urls['enable'],
                         $addon->urls['configure']
+                    );
+                }
+                if (empty($addon->database_version) || version_compare($addon->database_version, $addon->version, '=')) {
+                    unset(
+                        $addon->urls['update']
                     );
                 }
             } elseif (isset($addon->origin) && in_array($addon->origin, ['native', 'native_all', 'partner', 'customer'])) {
@@ -400,6 +403,9 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                             continue;
                         }
                     }
+
+                    // Legacy fix
+                    $installed_module['installed'] = 1;
                 }
                 $this->manage_modules = $this->convertJsonForNewCatalog(['products' => $all_installed_modules]);
                 $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
