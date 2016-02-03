@@ -46,6 +46,7 @@ global_settings:
         - blockcmsinfo
       displayFooterBefore:
         - blocknewsletter
+        - blocksocial
       displayFooter:
         - blockcms
         - blockcontact
