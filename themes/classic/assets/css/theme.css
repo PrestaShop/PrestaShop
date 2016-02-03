@@ -1,4 +1,4 @@
-@import url(//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700);/*!
+@import url(//fonts.googleapis.com/css?family=Open+Sans:400,600,700);/*!
  * Bootstrap v4.0.0-alpha.2 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
@@ -5145,7 +5145,7 @@ label {
   display: block;
   padding: 10px;
   color: #acaaa6;
-  font-weight: 300; }
+  font-weight: 400; }
 
 .top-menu a.dropdown-submenu {
   color: #414141;
@@ -5332,7 +5332,7 @@ section.checkout-step {
         font-weight: 600;
         font-size: 3.4375em; }
       .carousel .carousel-item .caption .caption-description p {
-        font-weight: 300; }
+        font-weight: 400; }
   .carousel .carousel-control {
     opacity: 1; }
     .carousel .carousel-control .icon-prev::before,
@@ -5360,7 +5360,7 @@ section.checkout-step {
   font-size: 14px;
   text-decoration: none;
   text-align: center;
-  font-weight: 300; }
+  font-weight: 400; }
 
 .thumbnail-container {
   margin-bottom: 1.5625em;
@@ -5509,11 +5509,11 @@ img {
     font-weight: 700; }
   #block-cmsinfo p {
     color: #414141;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 1.1em; }
     #block-cmsinfo p .dark {
       color: #acaaa6;
-      font-weight: 300; }
+      font-weight: 400; }
 
 #products {
   color: #878787; }
@@ -5526,7 +5526,7 @@ img {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08); }
   .block-category #category-description p,
   .block-category #category-description strong {
-    font-weight: 300;
+    font-weight: 400;
     color: #acaaa6; }
   .block-category #category-description p {
     color: #414141;
