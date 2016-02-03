@@ -1,4 +1,4 @@
-<div class="user-info col-md-3 _margin-top-small">
+<div class="user-info">
   <i class="material-icons _gray-darker">&#xE7FF;</i>
   {if $logged}
 	<a class="logout"  href="{$logout_url}" rel="nofollow" title="{l s='Log me out' mod='blockuserinfo'}">{l s='Sign out' mod='blockuserinfo'}</a>
