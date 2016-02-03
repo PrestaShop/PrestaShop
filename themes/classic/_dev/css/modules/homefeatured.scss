@@ -17,7 +17,7 @@
   &:hover {
     @include box-shadow;
     .highlighted-informations {
-      bottom: 129px;
+      bottom: 135px;
     }
   }
 }
@@ -26,7 +26,7 @@
   font-size: em(22px);
   font-weight: 700;
   margin: em(50px) 0 em(40px);
-  color: $gray-dark;
+  color: $gray-darker;
 }
 .product-title {
   text-align: center;
@@ -38,7 +38,7 @@
   display: none;
 }
 .product-price-and-shipping {
-  color: $gray-dark;
+  color: $gray-darker;
   font-weight: 700;
   text-align: center;
 }
@@ -90,7 +90,7 @@ img {
 .discount-percentage {
   display: block;
   position: absolute;
-  top: em(-280px);
+  top: em(-242px);
   left: em(-7px);
   padding: em(5px) em(10px);
   color: white;

@@ -20,8 +20,9 @@
 /*** COMMONS ***/
 body {
   font-family: 'Open Sans', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: $gray-light;
+  line-height: 1.25em;
 }
 ul {
   list-style: none;
@@ -102,6 +103,7 @@ a:hover{
     }
   }
   .header-top {
+    padding-bottom: em(10px);
     .menu {
       > ul {
         display: table;

@@ -35,6 +35,7 @@
     color: $gray-darker;
     background: white;
     padding: em(10px);
+    cursor: pointer;
   }
   .select-list {
     display: block;
@@ -49,7 +50,7 @@
   .dropdown-menu {
     right: 0;
     left: auto;
-    width: em(235px);
+    width: em(270px);
     background: $gray-lighter;
     border: none;
     border-radius: 0;
@@ -71,7 +72,8 @@
       .check {
         display: none;
         margin: em(-4px) em(-2px);
-        font-size: em(15px);
+        font-size: 1.1em;
+        color: $gray-darker;
       }
     }
     &:checked + span {
@@ -114,8 +116,33 @@
   .disabled {
     color: $gray;
   }
-  .current a{
+  .current a {
     color: $brand-primary;
     text-decoration: none;
+  }
+}
+.active_filters {
+  background: #dededd;
+  padding: em(20px) em(35px) 0;
+  .active-filter-title {
+    font-size: em(15px);
+    display: inline;
+  }
+  ul {
+    display: inline;
+  }
+  .filter-block {
+    @include box-shadow;
+    background: white;
+    padding: em(10px);
+    display: inline-block;
+    font-size: em(13px);
+    .close {
+      color: $gray-darker;
+      font-size: em(15px);
+      opacity: 1;
+      margin-top: em(6px);
+      margin-left: em(5px);
+    }
   }
 }
