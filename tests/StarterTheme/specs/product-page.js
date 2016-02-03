@@ -89,7 +89,7 @@ describe('The product page', function () {
     });
 
     it('should not display the add to cart button, because the product is not customized yet', function () {
-      return browser.isVisible('form.add-to-cart').should.become(false);
+      return browser.isVisible('form .add-to-cart').should.become(false);
     });
 
     it('should display the add to cart button once the product is customized', function () {
