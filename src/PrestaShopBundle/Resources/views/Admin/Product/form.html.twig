@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <div class="bootstrap"> 
+    <div class="bootstrap">
         {% if is_multishop_context %}
             <div class="alert alert-info" role="alert">{{ trans('Be carefull, you are in a multishop context, all modifcation will be apply to each shop or group shop', {}, 'AdminProducts') }}</div>
         {% endif %}
@@ -52,14 +52,14 @@
 
             <div id="form-loading">
                 <ul class="nav nav-tabs" id="form-nav" role="tablist">
-                    <li id="tab_step1" class="active"><a href="#step1" role="tab" data-toggle="tab">{{ trans('Main information', {}, 'AdminProducts') }}</a></li>
-                    <li id="tab_step3"><a href="#step3" role="tab" data-toggle="tab">{{ trans('Quantity', {}, 'AdminProducts') }}</a></li>
-                    <li id="tab_step4"><a href="#step4" role="tab" data-toggle="tab">{{ trans('Shipping', {}, 'AdminProducts') }}</a></li>
-                    <li id="tab_step2"><a href="#step2" role="tab" data-toggle="tab">{{ trans('Advanced Price', {}, 'AdminProducts') }}</a></li>
-                    <li id="tab_step5"><a href="#step5" role="tab" data-toggle="tab">{{ trans('SEO', {}, 'AdminProducts') }}</a></li>
-                    <li id="tab_step6"><a href="#step6" role="tab" data-toggle="tab">{{ trans('Options', {}, 'AdminProducts') }}</a></li>
+                    <li id="tab_step1" class="nav-item active"><a href="#step1" role="tab" data-toggle="tab" class="nav-link">{{ trans('Main information', {}, 'AdminProducts') }}</a></li>
+                    <li id="tab_step3" class="nav-item"><a href="#step3" role="tab" data-toggle="tab" class="nav-link">{{ trans('Quantity', {}, 'AdminProducts') }}</a></li>
+                    <li id="tab_step4" class="nav-item"><a href="#step4" role="tab" data-toggle="tab" class="nav-link">{{ trans('Shipping', {}, 'AdminProducts') }}</a></li>
+                    <li id="tab_step2" class="nav-item"><a href="#step2" role="tab" data-toggle="tab" class="nav-link">{{ trans('Advanced Price', {}, 'AdminProducts') }}</a></li>
+                    <li id="tab_step5" class="nav-item"><a href="#step5" role="tab" data-toggle="tab" class="nav-link">{{ trans('SEO', {}, 'AdminProducts') }}</a></li>
+                    <li id="tab_step6" class="nav-item"><a href="#step6" role="tab" data-toggle="tab" class="nav-link">{{ trans('Options', {}, 'AdminProducts') }}</a></li>
                     {% if hookcount('displayAdminProductsExtra') > 0 %}
-                        <li id="tab_hooks"><a href="#hooks" role="tab" data-toggle="tab">{{ trans('Additional modules', {}, 'AdminProducts') }}</a></li>
+                        <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">{{ trans('Additional modules', {}, 'AdminProducts') }}</a></li>
                     {% endif %}
                 </ul>
                 <div id="form_content" class="tab-content">
@@ -102,8 +102,8 @@
                                 </div>
 
                                 <ul class="nav nav-tabs">
-                                    <li id="tab_description_short" class="active"><a href="#description_short" data-toggle="tab">{{ trans('Summary', {}, 'AdminProducts') }}</a></li>
-                                    <li id="tab_description"><a href="#description" data-toggle="tab">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
+                                    <li id="tab_description_short" class="nav-item active"><a href="#description_short" data-toggle="tab" class="nav-link">{{ trans('Summary', {}, 'AdminProducts') }}</a></li>
+                                    <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane panel panel-default active" id="description_short">

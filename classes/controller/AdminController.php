@@ -2585,11 +2585,10 @@ class AdminControllerCore extends Controller
     {
         //Bootstrap
         $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/bootstrap-prestakit.css', 'all', 1);
-
         $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
 
-
         $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
+        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/material-design-iconic-font.min.css', 'all', 0);
         $this->addCSS('https://fonts.googleapis.com/icon?family=Material+Icons', 'all', 0);
 
         $this->addJquery();
@@ -2626,10 +2625,12 @@ class AdminControllerCore extends Controller
         ));
 
         //loads PrestaKit
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/tether.min.js',
-                     __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/bootstrap.min.js',
-                     __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/jquery.growl.js'
-        );
+        $this->addJS([
+            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/tether.min.js',
+            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/jquery.growl.js',
+            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/bootstrap.min.js',
+            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/prestakit.js',
+        ]);
 
         // $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
         $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
