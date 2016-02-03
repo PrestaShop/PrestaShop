@@ -32,9 +32,11 @@
   min-width: em(1110px);
   left: em(-190px);
   border: none;
-  top: em(55px);
   .category {
     float: left;
     margin: 0 em(20px);
+  }
+  a:hover{
+    color: $brand-primary;
   }
 }

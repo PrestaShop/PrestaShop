@@ -22,8 +22,8 @@
       position: absolute;
       background: none;
       border: none;
-      bottom: 0;
-      right: 10px;
+      bottom: em(5px);
+      right: em(10px);
       font-size: 25px;
       color: $gray-dark;
       .search:hover {
