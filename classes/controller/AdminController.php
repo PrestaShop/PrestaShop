@@ -2584,7 +2584,11 @@ class AdminControllerCore extends Controller
     public function setMedia()
     {
         //Bootstrap
+        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/bootstrap-prestakit.css', 'all', 1);
+
         $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
+
+
         $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
         $this->addCSS('https://fonts.googleapis.com/icon?family=Material+Icons', 'all', 0);
 
@@ -2621,8 +2625,13 @@ class AdminControllerCore extends Controller
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js'
         ));
 
-        //loads specific javascripts for the admin theme
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
+        //loads PrestaKit
+        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/tether.min.js',
+                     __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/bootstrap.min.js',
+                     __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/jquery.growl.js'
+        );
+
+        // $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
         $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
         $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
         $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');

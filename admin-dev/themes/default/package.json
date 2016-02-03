@@ -1,0 +1,11 @@
+{ "name": "prestashop-default-theme",
+  "author": "PrestaShop",
+  "version": "1.0.0",
+  "description": "install admin theme dependencies",
+  "dependencies": {
+      "PrestaKit": "https://github.com/PrestaShop/prestashop-ui-kit"
+  },
+  "scripts": {
+      "install": "cp node_modules/PrestaKit/dist/js/*.js js; cp node_modules/PrestaKit/dist/css/*.css css; cp node_modules/PrestaKit/dist/fonts/* fonts"
+  }
+}
