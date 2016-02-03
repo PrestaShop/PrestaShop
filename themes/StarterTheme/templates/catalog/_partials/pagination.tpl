@@ -1,6 +1,7 @@
 <nav class="pagination">
+  {l s='Showing %s-%s of %s item(s)' sprintf=[$pagination.items_shown_from ,$pagination.items_shown_to, $pagination.total_items]}
   <ul>
-    {foreach from=$pagination item="page"}
+    {foreach from=$pagination.pages item="page"}
       <li {if $page.current} class="current" {/if}>
         {if $page.type === 'spacer'}
           <span class="spacer">&hellip;</span>
