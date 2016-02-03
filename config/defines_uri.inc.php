@@ -32,7 +32,7 @@ define('_THEME_DIR_', _THEMES_DIR_._THEME_NAME_.'/');
 define('_THEME_IMG_DIR_', _THEME_DIR_.'assets/img/');
 define('_THEME_CSS_DIR_', _THEME_DIR_.'assets/css/');
 define('_THEME_JS_DIR_', _THEME_DIR_.'assets/js/');
-define('_PS_THEME_OVERRIDE_DIR_', _PS_THEME_DIR_.'override/');
+define('_PS_THEME_OVERRIDE_DIR_', _PS_THEME_DIR_.'templates/override/');
 
 /* For mobile devices */
 if (file_exists(_PS_THEME_DIR_.'mobile/')) {

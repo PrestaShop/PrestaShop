@@ -1163,27 +1163,15 @@ class FrontControllerCore extends Controller
      *
      * @param string $default_template
      */
-    public function setTemplate($default_template)
+    public function setTemplate($template)
     {
-        $template = $this->getOverrideTemplate();
-        if ($template) {
-            parent::setTemplate($template);
-        } else {
-            parent::setTemplate($default_template);
-        }
-    }
+        // Legacy: As of today this hook is used by modules to assign
+        // values to smarty.
+        Hook::exec('DisplayOverrideTemplate', array('controller' => $this));
 
-    /**
-     * Returns an overridden template path (if any) for this controller.
-     * If not overridden, will return false. This method can be easily overriden in a
-     * specific controller.
-     *
-    * @since 1.5.0.13
-    * @return string|bool
-    */
-    public function getOverrideTemplate()
-    {
-        return Hook::exec('DisplayOverrideTemplate', array('controller' => $this));
+        $template = $this->getTemplateFile($template);
+
+        parent::setTemplate($template);
     }
 
     /**
@@ -1204,17 +1192,6 @@ class FrontControllerCore extends Controller
     protected function getThemeDir()
     {
         return _PS_THEME_DIR_;
-    }
-
-
-    /**
-     * Returns theme override directory (regular or mobile)
-     *
-     * @return string
-     */
-    protected function getOverrideThemeDir()
-    {
-        return _PS_THEME_OVERRIDE_DIR_;
     }
 
     /**
@@ -1239,17 +1216,6 @@ class FrontControllerCore extends Controller
             $layout = 'layouts/layout-content-only.tpl';
         }
 
-        $id_item = (int)Tools::getValue('id_'.$entity);
-
-        $layout_override_dir  = $this->getOverrideThemeDir();
-        if ($entity) {
-            if ($id_item > 0 && file_exists($layout_override_dir.'layout-'.$entity.'-'.$id_item.'.tpl')) {
-                $layout = basename($layout_override_dir).'/layout-'.$entity.'-'.$id_item.'.tpl';
-            } elseif (file_exists($layout_override_dir.'layout-'.$entity.'.tpl')) {
-                $layout = basename($layout_override_dir).'/layout-'.$entity.'.tpl';
-            }
-        }
-
         return $layout;
     }
 
@@ -1262,6 +1228,29 @@ class FrontControllerCore extends Controller
     public function getTemplatePath($template)
     {
         return $template;
+    }
+
+    public function getTemplateFile($template_file, $id = null)
+    {
+        if ($id === null) {
+            $id = (int)Tools::getValue('id_'.$this->php_self);
+        }
+
+        $template_file_no_extension = substr($template_file, 0, -strlen('.tpl'));
+
+        $specific_template = [
+            $template_file_no_extension.'-'.$id.'.tpl',
+        ];
+
+        foreach ($this->context->smarty->getTemplateDir() as $base_dir) {
+            foreach ($specific_template as $tpl) {
+                if (file_exists($base_dir.$tpl)) {
+                    return $tpl;
+                }
+            }
+        }
+
+        return $template_file;
     }
 
     /**
