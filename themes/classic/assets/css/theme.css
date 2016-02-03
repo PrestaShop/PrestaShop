@@ -5828,14 +5828,8 @@ a:hover {
   background: #ebebeb;
   box-shadow: inset 0 2px 5px 0 rgba(0, 0, 0, 0.11);
   padding-top: 1.5625em; }
-<<<<<<< HEAD
-||||||| parent of 9428bed... // Fix box-shadow
-  #wrapper .featured-products {
-    box-shadow: 1px 1px 7px 0px rgba(0, 0, 0, 0.15); }
-=======
   #wrapper .banner img {
     box-shadow: 1px 1px 7px 0px rgba(0, 0, 0, 0.15); }
->>>>>>> 9428bed... // Fix box-shadow
   #wrapper .breadcrumb {
     background: transparent;
     padding: 0; }
