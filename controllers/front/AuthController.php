@@ -569,7 +569,7 @@ class AuthControllerCore extends FrontController
             }
         }
 
-        if (!@checkdate(Tools::getValue('months'), Tools::getValue('days'), Tools::getValue('years')) && !(Tools::getValue('months') == '' && Tools::getValue('days') == '' && Tools::getValue('years') == '')) {
+        if (!(Tools::getValue('months') == '' && Tools::getValue('days') == '' && Tools::getValue('years') == '') && !@checkdate(Tools::getValue('months'), Tools::getValue('days'), Tools::getValue('years'))) {
             $this->errors[] = Tools::displayError('Invalid date of birth');
         }
 
