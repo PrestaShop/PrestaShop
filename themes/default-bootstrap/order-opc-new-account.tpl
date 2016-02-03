@@ -248,7 +248,7 @@
 						<label for="other">{l s='Additional information'}</label>
 						<textarea class="form-control" name="other" id="other" cols="26" rows="7"></textarea>
 					</div>
-					<div class="form-group is_customer_param">
+					<div class="form-group">
 						<label for="phone">{l s='Home phone'}{if isset($one_phone_at_least) && $one_phone_at_least} <sup>**</sup>{/if}</label>
 						<input type="text" class="text form-control validate" name="phone" id="phone" data-validate="isPhoneNumber" value="{if isset($guestInformations) && isset($guestInformations.phone) && $guestInformations.phone}{$guestInformations.phone}{/if}" />
 					</div>
