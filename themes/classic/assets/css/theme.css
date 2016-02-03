@@ -5750,6 +5750,8 @@ img {
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   color: #ebebeb;
   line-height: 1.25em; }
 
