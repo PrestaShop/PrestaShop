@@ -33,7 +33,7 @@
               </td>
               <td class="text-xs-center">
                 {if $order.url_to_invoice}
-                  <a href="{$order.url_to_invoice}" class="order-invoice-link"><i class="material-icons">&#xE415;</i></a>
+                  <a href="{$order.url_to_invoice}"><i class="material-icons">&#xE415;</i></a>
                 {else}
                   -
                 {/if}

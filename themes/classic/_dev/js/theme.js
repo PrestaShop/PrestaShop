@@ -5,6 +5,7 @@ import 'bootstrap/dist/js/npm';
 
 import '../css/theme';
 import './checkout';
+import './customer';
 import './facets';
 
 import DropDown from './components/drop-down';
@@ -17,6 +18,9 @@ import {
   psShowHide
 }
 from './common';
+
+import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
+import 'bootstrap-validator/dist/validator.min';
 
 // "inherit" EventEmitter
 for (var i in EventEmitter.prototype) {
