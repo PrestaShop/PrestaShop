@@ -30,8 +30,9 @@ global_settings:
     PS_QUICK_VIEW: false
   hooks:
     modules_to_hook:
-      displayNav:
+      displayNav1:
         - blockcontact
+      displayNav2:
         - blocklanguages
         - blockcurrencies
         - blockuserinfo

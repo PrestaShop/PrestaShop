@@ -1,4 +1,4 @@
-@import url('//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
+@import url('//fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3.min";
 @import "~bourbon/app/assets/stylesheets/bourbon";
@@ -22,6 +22,8 @@
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   color: $gray-light;
   line-height: 1.25em;
 }
@@ -46,13 +48,24 @@ a:hover{
     border-bottom: $gray-light 2px solid;
     max-height: 50px;
     margin-bottom: 30px;
+    .right-nav{
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
+    }
     .login {
       color: $gray-darker;
       display: inline-block;
       font-weight: 400;
       font-size: 16px;
     }
+    .currency-selector{
+      margin-top: em(15px);
+      margin-left: em(15px);
+    }
     .user-info {
+      margin-left: em(40px);
+      margin-top: em(15px);
       text-align: right;
       a {
         color: $gray;
@@ -63,7 +76,7 @@ a:hover{
       }
     }
     .language-selector {
-      width: em(135px);
+      margin-top: em(15px);
     }
     .cart-preview {
       &.active {
@@ -86,9 +99,10 @@ a:hover{
       background: $gray-light;
       font-size: 16px;
       width: em(135px);
-      height: 48px;
-      padding-top: 12px;
-      margin-right: 15px;
+      height: em(48px);
+      padding-top: em(12px);
+      margin-left: em(15px);
+      text-align: center;
       a {
         color: $gray;
         &:hover{
@@ -97,6 +111,7 @@ a:hover{
       }
     }
     #contact-link {
+      margin-top: em(15px);
       color: $gray;
       a {
         color: $gray;

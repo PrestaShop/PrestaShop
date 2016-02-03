@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="language-selector dropdown js-dropdown _margin-top-small col-md-2 col-md-offset-2">
+<div class="language-selector dropdown js-dropdown">
   <span class="expand-more" data-toggle="dropdown">{$current_language.name_simple}</span>
   <a data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <i class="material-icons expand-more">&#xE5C5;</i>

@@ -2,6 +2,7 @@
 import $ from 'expose?$!expose?jQuery!jquery';
 import 'expose?Tether!tether';
 import 'bootstrap/dist/js/npm';
+import 'flexibility';
 
 import '../css/theme';
 import './checkout';

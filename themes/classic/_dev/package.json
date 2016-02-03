@@ -19,6 +19,7 @@
     "expose-loader": "^0.7.1",
     "extract-text-webpack-plugin": "^1.0.0",
     "file-loader": "^0.8.5",
+    "flexibility": "^1.0.5",
     "jquery": "^2.1.4",
     "node-sass": "^3.4.2",
     "postcss-loader": "^0.8.0",

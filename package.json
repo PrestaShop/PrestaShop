@@ -7,5 +7,8 @@
     "test": "cd tests/js && grunt test",
     "test-short": "cd tests/js && grunt test-short",
     "test-verbose": "cd tests/js && grunt --stack test-verbose"
+  },
+  "devDependencies": {
+    "postcss-flexibility": "^1.0.2"
   }
 }
