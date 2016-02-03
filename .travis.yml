@@ -1,10 +1,5 @@
 language: php
 
-env:
-  global:
-    - secure: sE9hGYohi3f5w+bPHkxCYVUJfuZz1LQQUwXBO5RqWE+poZlQIpnyQg0t5AxRFIXdXF3myO48rubHuuju4jzkC4L3IZxbRmYmR86qD5pOVIloRPhaQbJChdXJMMqoVTn09I+32O4Odc+jkZfokFRKzouiNAmkLUPx95ZPqvOypNw=
-    - secure: YZ3nMLBHRfE90l+shXJZq/Z7oThLjS/00+g9VS2whM4Z89TyA9FifeALB2yyT/sjie0kr8fokI77vaM+tbcrqxjZkwNamdUxDlz9Hw6HkbTTcXpbMM5ChQ83RPWClhTrYGvMy3N6WRnDA6xyk9jWki6ksd/c6poUUl533xrTXSc=
-
 services:
   - mysql
 
