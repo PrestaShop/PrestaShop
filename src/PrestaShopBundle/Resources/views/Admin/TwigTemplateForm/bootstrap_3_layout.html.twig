@@ -176,8 +176,8 @@
         {% if hideTabs == false and form|length > 1 %}
         <ul class="translationsLocales nav nav-tabs">
             {% for translationsFields in form %}
-                <li {% if defaultLocale.id_lang == translationsFields.vars.name %}class="active"{% endif %}>
-                    <a href="#" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
+                <li class="{% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link">
+                    <a href="#" class="nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
                         {{ translationsFields.vars.label|capitalize }}
                     </a>
                 </li>
