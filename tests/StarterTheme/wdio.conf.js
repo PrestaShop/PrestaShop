@@ -100,7 +100,8 @@ exports.config = {
     mochaOpts: {
         ui: 'bdd',
         compilers: ['js:babel-register'],
-        bail: true
+        bail: true,
+        timeout: 30000
     },
 
     //
