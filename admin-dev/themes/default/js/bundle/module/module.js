@@ -45,6 +45,9 @@ var AdminModule = function() {
     this.categoryGridItemSelector = '.module-category-item';
     this.addonItemGridSelector = '.module-addons-item-grid';
     this.addonItemListSelector = '.module-addons-item-list';
+    this.bulkActionDropDownSelector = '.module-bulk-actions select';
+    this.checkedBulkActionListSelector = '.module-checkbox-bulk-list:checked';
+    this.checkedBulkActionGridSelector = '.module-checkbox-bulk-grid:checked';
 
     /* Selectors for Module Import and Addons connect */
     this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
@@ -70,6 +73,16 @@ var AdminModule = function() {
     this.initAddonsConnect();
     this.initAddModuleAction();
     this.initDropzone();
+    this.initBulkActions();
+  };
+
+  //@TODO: JS Doc
+  this.initBulkActions = function() {
+      var _this = this;
+      $(this.bulkActionDropDownSelector).on('change', function(event){
+          var bulkAction = $(this).attr('value');
+          _this.doBulkAction(bulkAction);
+      });
   };
 
   //@TODO: JS Doc
@@ -98,7 +111,7 @@ var AdminModule = function() {
                     // Success !
                     location.reload();
                 } else {
-                     $.growl.error({ message: responseMsg });
+                    $.growl.error({ message: responseMsg });
                 }
             });
       });
@@ -174,6 +187,15 @@ var AdminModule = function() {
   };
 
   //@TODO: JS Doc
+  this.getBulkActionSelectedSelector = function() {
+      return (
+          this.currentDisplay == 'grid' ?
+          this.checkedBulkActionGridSelector :
+          this.checkedBulkActionListSelector
+      );
+  };
+
+  //@TODO: JS Doc
   this.initAddonsSearch = function() {
       var _this = this;
       $(this.addonItemGridSelector + ', ' + this.addonItemListSelector).on('click', function(event){
@@ -225,6 +247,29 @@ var AdminModule = function() {
         });
     };
 
+    //@TODO: JS Doc
+    this.doBulkAction = function(bulkAction) {
+        var availableBulkActions = [
+                                    'bulk-uninstall',
+                                    'bulk-disable',
+                                    'bulk-enable',
+                                    'bulk-disable-mobile',
+                                    'bulk-enable-mobile',
+                                    'bulk-reset'
+                                ];
+        //@NOTE:
+        // Note no grid selector used yet since we do not needed it at dev time
+        // Maybe usefull to implement this kind of things later if intended to
+        // use this functionnality elsewhere but "manage my module" section
+
+        if ($.inArray(bulkAction, availableBulkActions) === -1) {
+            return false;
+        }
+
+        // Loop over all checked bulk checkboxes
+        var bulkActionSelectedSelector = this.getBulkActionSelectedSelector();
+    };
+
     this.doDropdownSort = function(typeSort) {
         var availableSorts = [
                                 'sort-by-price-asc',
@@ -233,6 +278,7 @@ var AdminModule = function() {
                                 'sort-by-scoring'
                             ];
 
+        //@TODO: use getSelector methods Instead of this mystic ternary
         var selector = (
               this.currentDisplay == 'grid' ?
               this.moduleItemGridSelector :
