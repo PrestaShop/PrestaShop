@@ -10,14 +10,17 @@
 }
 .thumbnail-container {
   margin-bottom: em(25px);
-  height: 370px;
+  height: 318px;
   width: 257px;
   background: white;
   box-shadow: 0 0 5px 3px rgba(0,0,0,0.05);
   &:hover {
     @include box-shadow;
     .highlighted-informations {
-      bottom: 135px;
+      bottom: 117px;
+      &::after{
+        opacity: 1;
+      }
     }
   }
 }
@@ -47,7 +50,7 @@
   position: relative;
   text-align: center;
   width: 100%;
-  top: em(5px);
+  top: 0.25em;
   padding-top: em(5px);
   .color {
     display: block;
@@ -55,32 +58,44 @@
     height: 20px;
     display: inline-block;
     margin: em(5px);
-    @include box-shadow;
+    box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0,0,0,0.05);
+    &:hover{
+      border: 2px solid $gray-darker;
+    }
   }
 }
 .highlighted-informations {
   position: absolute;
-  bottom: 45px;
+  bottom: 43px;
   z-index: 0;
   background: white;
   text-align: center;
   width: 257px;
-  height: 90px;
-  padding-top: em(15px);
+  height: em(50px);
+  padding-top: em(5px);
   box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
-  @include transition(all .7s ease-in-out);
+  @include transition(bottom .7s $ease-out-expo);
   .quick-view {
     color: $gray-dark;
     font-size: 1em;
+    &:hover{
+      color: $brand-primary;
+    }
   }
+}
+.highlighted-informations::after {
+  box-shadow: 1px 1px 16px 2px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  @include transition(bottom .7s $ease-out-expo);
 }
 .product-description {
   position: absolute;
   z-index: 1;
   background: white;
   width: 257px;
-  bottom: 42px;
-  height: 100px;
+  bottom: 25px;
+  height: 70px;
   box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
 }
 img {
@@ -92,11 +107,13 @@ img {
   position: absolute;
   top: em(-242px);
   left: em(-7px);
-  padding: em(5px) em(10px);
+  padding: em(5px) em(7px);
   color: white;
   background: $brand-primary;
   text-transform: uppercase;
   width: 50px;
+  font-size: em(16px);
+  font-weight: 600;
   @include box-shadow;
   &.discount-percentage {
     z-index: 2;
