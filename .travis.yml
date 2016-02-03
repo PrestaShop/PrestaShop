@@ -9,16 +9,11 @@ addons:
         - libapache2-mod-fastcgi
     sauce_connect: true
 php:
-  - 5.4
   - 5.5
   - 5.6
-  - 7.0
 
 matrix:
   fast_finish: true
-  allow_failures:
-    - php: 5.4
-    - php: 7.0
 
 before_install:
   - mysql -e 'create database prestashop;'
