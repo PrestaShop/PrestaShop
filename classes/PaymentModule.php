@@ -483,7 +483,7 @@ abstract class PaymentModuleCore extends Module
                                     $customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
                                 }
 
-                                $customization_quantity = (int)$product['customization_quantity'];
+                                $customization_quantity = (int)$customization['quantity'];
 
                                 $product_var_tpl['customization'][] = array(
                                     'customization_text' => $customization_text,
