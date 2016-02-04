@@ -62,6 +62,12 @@ global_settings:
       displayShoppingCartReassurance:
         - blockreassurance
 
+  image_types:
+    medium_default:
+      width: 125
+      height: 125
+      scope: [products, categories, manufacturers, suppliers, stores]
+
 theme_settings:
   default_layout: layout-full-width
   layouts:
