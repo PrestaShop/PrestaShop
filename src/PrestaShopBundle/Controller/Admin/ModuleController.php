@@ -56,7 +56,7 @@ class ModuleController extends Controller
             shuffle($products);
             $topMenuData = $this->getTopMenuData();
         } catch (Exception $e) {
-            $this->addFlash('error', 'Cannot get catalog data. Please try again later.');
+            $this->addFlash('error', 'Cannot get catalog data, please try again later.');
             $products = [];
             $topMenuData = [];
         }
@@ -244,7 +244,9 @@ class ModuleController extends Controller
             $products->{$subpart} = [];
         }
 
+        $installed_modules = [];
         foreach ($modulesProvider->getManageModules() as $installed_product) {
+            $installed_modules[] = $installed_product->name;
             if (!empty($installed_product->warning)) {
                 $row = 'to_configure';
             } elseif ($installed_product->installed == 1 && $installed_product->database_version !== 0 && version_compare($installed_product->database_version, $installed_product->version, '<')) {
@@ -260,7 +262,7 @@ class ModuleController extends Controller
 
         try {
             foreach ($modulesProvider->getCatalogModules() as $product) {
-                if (isset($product->origin) && $product->origin === 'customer') {
+                if (isset($product->origin) && $product->origin === 'customer' && !in_array($product->name, $installed_modules)) {
                     $products->to_install[] = (object)$product;
                 }
             }
