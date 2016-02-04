@@ -58,7 +58,7 @@ class ImageTypeRepository
 
     public function getScopeList()
     {
-        return ['products', 'categories', 'manufacturers', 'suppliers', 'cms'];
+        return ['products', 'categories', 'manufacturers', 'suppliers', 'stores'];
     }
 
     public function getIdByName($name)

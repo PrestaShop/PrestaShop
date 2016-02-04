@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
+use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
@@ -57,7 +58,8 @@ class ThemeManager implements AddonManagerInterface
         Employee $employee,
         Filesystem $fs,
         Finder $finder,
-        HookConfigurator $hookConfigurator)
+        HookConfigurator $hookConfigurator,
+        ImageTypeRepository $imageTypeRepository)
     {
         $this->shop = $shop;
         $this->configurator = $configurator;
@@ -66,6 +68,7 @@ class ThemeManager implements AddonManagerInterface
         $this->fs = $fs;
         $this->finder = $finder;
         $this->hookConfigurator = $hookConfigurator;
+        $this->imageTypeRepository = $imageTypeRepository;
     }
 
     /**
@@ -147,6 +150,7 @@ class ThemeManager implements AddonManagerInterface
                 ->doApplyConfiguration($theme->get('global_settings.configuration', []))
                 ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
                 ->doEnableModules($theme->get('global_settings.modules.to_enable', []))
+                ->doApplyImageTypes($theme->get('global_settings.image_types'))
                 ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
         $theme->onEnable();
@@ -263,6 +267,12 @@ class ThemeManager implements AddonManagerInterface
     private function doHookModules(array $hooks)
     {
         $this->hookConfigurator->setHooksConfiguration($hooks);
+        return $this;
+    }
+
+    private function doApplyImageTypes(array $types)
+    {
+        $this->imageTypeRepository->setTypes($types);
         return $this;
     }
 
