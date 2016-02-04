@@ -12,13 +12,18 @@
     {block name='product_activation'}
       {include file='catalog/_partials/product-activation.tpl'}
     {/block}
-
     <div class="row">
       <div class="col-md-6">
         {block name='page_content_container'}
           <section id="content" class="page-content">
             {block name='page_content'}
-
+              {block name='product_labels'}
+                <ul class="product-labels">
+                  {foreach from=$product.labels item=label}
+                    <li class="product-label">{$label.label}</li>
+                  {/foreach}
+                </ul>
+              {/block}
               <div class="images-container">
                 {block name='product_cover'}
                   <div class="product-cover _margin-bottom-medium">
@@ -124,7 +129,7 @@
                 {block name='product_variants'}
                   <div class="product-variants">
                     {foreach from=$groups key=id_attribute_group item=group}
-                      <div>
+                      <div class="clearfix _margin-top-medium">
                         <label for="group_{$id_attribute_group}">{$group.name}</label>
                         {if $group.group_type == 'select'}
                           <select data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" id="group_{$id_attribute_group}">
@@ -135,18 +140,18 @@
                         {else if $group.group_type == 'color'}
                           <ul id="group_{$id_attribute_group}">
                             {foreach from=$group.attributes key=id_attribute item=group_attribute}
-                              <li>
-                                <input type="radio" data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
-                                <span style="background-color:{$group_attribute.html_color_code}">{$group_attribute.name}</span>
+                              <li class="_relative pull-xs-left">
+                                <input class="input-color" type="radio" data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
+                                <span class="color" style="background-color:{$group_attribute.html_color_code}"><span class="sr-only">{$group_attribute.name}</span></span>
                               </li>
                             {/foreach}
                           </ul>
                         {else if $group.group_type == 'radio'}
                           <ul id="group_{$id_attribute_group}">
                             {foreach from=$group.attributes key=id_attribute item=group_attribute}
-                              <li>
-                                <input type="radio" data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
-                                <span>{$group_attribute.name}</span>
+                              <li class="_relative _margin-right-small pull-xs-left">
+                                <input class="input-radio" type="radio" data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
+                                <span class="radio-label">{$group_attribute.name}</span>
                               </li>
                             {/foreach}
                           </ul>
@@ -159,8 +164,8 @@
                         {*<form class="add-to-cart" action="{$urls.pages.cart}" method="post">*}
 
                           {block name='product_quantity'}
-                            <p class="product-quantity">
-                              <label for="quantity_wanted">{l s='Quantity'}</label>
+                            <p class="product-quantity _margin-top-medium">
+                              <label for="quantity_wanted">{l s='Quantity'}</label><br>
                               <input type="number" min="1" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" />
                             </p>
                           {/block}
@@ -173,93 +178,106 @@
                             {/if}
                           {/block}
 
-                          <input class="add-to-cart" type="submit" name="add" value="{l s='Add to cart'}" />
+                          <div class="submit-button">
+                            <i class="material-icons">&#xE547;</i>
+                            <input class="add-to-cart" type="submit" name="add" value="{l s='Add to cart'}" />
+                          </div>
 
+                          {block name='product_availability'}
+                           {if $product.show_availability}
+                              <p id="product-availability">{$product.availability_message}</p>
+                           {/if}
+                          {/block}
                           {hook h='displayProductButtons' product=$product}
                         {*</form>*}
                       {/if}
                     {/block}
 
                     {block name='product_refresh'}
-                      <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh'}" />
+                      <input class="product-refresh _margin-top-large ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh'}" />
                     {/block}
                   </div>
                 {/block}
               </form>
             {/block}
           </div>
-          {block name='product_reference'}
-            {if $product.reference}
-              <p id="product-reference">
-                <label>{l s='Reference:'} </label>
-                <span itemprop="sku">{$product.reference}</span>
-              </p>
-            {/if}
-          {/block}
 
-          {block name='product_condition'}
-            {if $product.condition}
-              <p id="product-condition">
-                <label>{l s='Condition:'} </label>
-                <link itemprop="itemCondition" href="{$product_conditions.{$product.condition}.schema_url}"/>
-                <span>{$product_conditions.{$product.condition}.label}</span>
-              </p>
-            {/if}
-          {/block}
+          <div class="tabs _margin-top-large">
+            <ul class="nav nav-tabs">
+              <li class="nav-item">
+                <a href="#description" class="nav-link active" data-toggle = "tab">{l s='Description'}</a>
+              </li>
+              <li class="nav-item">
+                <a href="#details" class="nav-link" data-toggle = "tab">{l s='Product Details'}</a>
+              </li>
+            </ul>
 
-          {block name='product_description'}
-            <div id="product-description">{$product.description nofilter}</div>
-          {/block}
+            <div id = "tab-content" class = "tab-content">
+             <div class = "tab-pane fade in active" id = "description">
+               {block name='product_description'}
+                 <div id="product-description">{$product.description nofilter}</div>
+               {/block}
+             </div>
 
-          {block name='product_quantities'}
-            {if $display_quantities}
-              <p id="product-quantities">{$product.quantity} {$quantity_label}</p>
-            {/if}
-          {/block}
+             <div class = "tab-pane fade" id = "details">
+               {block name='product_reference'}
+                 {if $product.reference}
+                   <p id="product-reference">
+                     <label>{l s='Reference:'} </label>
+                     <span itemprop="sku">{$product.reference}</span>
+                   </p>
+                 {/if}
+               {/block}
+               {block name='product_quantities'}
+                 {if $display_quantities}
+                   <p id="product-quantities">{$product.quantity} {$quantity_label}</p>
+                 {/if}
+               {/block}
+               {block name='product_availability_date'}
+                 {if $product.availability_date}
+                   <p id="product-availability-date">
+                     <label>{l s='Availability date:'} </label>
+                     <span>{$product.availability_date}</span>
+                   </p>
+                 {/if}
+               {/block}
+               {block name='product_out_of_stock'}
+                 <div class="product-out-of-stock">
+                   {hook h='actionProductOutOfStock' product=$product}
+                 </div>
+               {/block}
 
-          {block name='product_availability'}
-            {if $product.show_availability}
-              <p id="product-availability">{$product.availability_message}</p>
-            {/if}
-          {/block}
 
-          {block name='product_availability_date'}
-            {if $product.availability_date}
-              <p id="product-availability-date">
-                <label>{l s='Availability date:'} </label>
-                <span>{$product.availability_date}</span>
-              </p>
-            {/if}
-          {/block}
-
-          {block name='product_out_of_stock'}
-            <div class="product-out-of-stock">
-              {hook h='actionProductOutOfStock' product=$product}
-            </div>
-          {/block}
-
-          {block name='product_extra_right'}
-            <div class="product-extra-right">
-              {hook h='displayRightColumnProduct'}
-            </div>
-          {/block}
-
-          {* StarterTheme: Content Only *}
-          {block name='product_extra_left'}
-            <div class="product-extra-left">
-              {hook h='displayLeftColumnProduct'}
-            </div>
-          {/block}
-          {* StarterTheme: Content Only End *}
+               {block name='product_features'}
+                 {if $product.features}
+                   <section class="product-features">
+                     <h3>{l s='Data sheet'}</h3>
+                     <ul>
+                       {foreach from=$product.features item=feature}
+                       <li>{$feature.name} - {$feature.value}</td>
+                       {/foreach}
+                     </ul>
+                   </section>
+                 {/if}
+               {/block}
+             </div>
+          </div>
         </div>
+          {* StarterTheme: Content Only End *}
+      </div>
 
-        {block name='product_labels'}
-          <ul class="product-labels">
-            {foreach from=$product.labels item=label}
-              <li>{$label.label}</li>
-            {/foreach}
-          </ul>
-        {/block}
+      {block name='product_extra_right'}
+        <div class="product-extra-right">
+          {hook h='displayRightColumnProduct'}
+        </div>
+      {/block}
+
+      {* StarterTheme: Content Only *}
+      {block name='product_extra_left'}
+        <div class="product-extra-left">
+          {hook h='displayLeftColumnProduct'}
+        </div>
+      {/block}
 
 
         {* StarterTheme: Content Only *}
@@ -317,18 +335,7 @@
           {/if}
         {/block}
 
-        {block name='product_features'}
-          {if $product.features}
-            <section class="product-features">
-              <h3>{l s='Data sheet'}</h3>
-              <ul>
-                {foreach from=$product.features item=feature}
-                <li>{$feature.name} - {$feature.value}</td>
-                {/foreach}
-              </ul>
-            </section>
-          {/if}
-        {/block}
+
 
         {block name='product_pack'}
           {if $packItems}

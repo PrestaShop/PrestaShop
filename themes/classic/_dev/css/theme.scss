@@ -34,13 +34,28 @@ ul {
 .material-icons {
   vertical-align: middle;
 }
-a:hover{
+a:hover {
   color: $brand-primary;
   text-decoration: none;
 }
-.dropdown-item:focus, .dropdown-item:hover {
+.dropdown-item:focus,
+.dropdown-item:hover {
   background: none;
 }
+.color {
+  display: block;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin: em(5px);
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0,0,0,0.05);
+  cursor: pointer;
+  &:hover {
+    border: 2px solid $gray-darker;
+  }
+}
+
 /*** HEADER ***/
 #header {
   background: white;
@@ -48,7 +63,7 @@ a:hover{
     border-bottom: $gray-light 2px solid;
     max-height: 50px;
     margin-bottom: 30px;
-    .right-nav{
+    .right-nav {
       display: flex;
       flex-wrap: nowrap;
       justify-content: flex-end;
@@ -59,7 +74,7 @@ a:hover{
       font-weight: 400;
       font-size: 16px;
     }
-    .currency-selector{
+    .currency-selector {
       margin-top: em(15px);
       margin-left: em(15px);
     }
@@ -69,7 +84,7 @@ a:hover{
       text-align: right;
       a {
         color: $gray;
-        &:hover{
+        &:hover {
           text-decoration: none;
           color: $brand-primary;
         }
@@ -105,9 +120,17 @@ a:hover{
       text-align: center;
       a {
         color: $gray;
-        &:hover{
+        &:hover {
           color: $brand-primary;
         }
+      }
+      &.active{
+        a:hover{
+          color: white;
+        }
+      }
+      .header{
+        margin-top: em(2px);
       }
     }
     #contact-link {
@@ -139,8 +162,8 @@ a:hover{
   background: $gray-light;
   box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11);
   padding-top: em(25px);
-  .banner img{
-    box-shadow: 1px 1px 7px 0px rgba(0, 0, 0, 0.15);
+  .banner img {
+    box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
   }
   .breadcrumb {
     background: transparent;
@@ -159,10 +182,9 @@ a:hover{
         margin: em(5px);
       }
       &:last-child {
-        a{
-          color:$gray-darker;
+        a {
+          color: $gray-darker;
         }
-
         &:after {
           content: "";
         }
