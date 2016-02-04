@@ -52,18 +52,6 @@
   width: 100%;
   top: 0.25em;
   padding-top: em(5px);
-  .color {
-    display: block;
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    margin: em(5px);
-    box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(0,0,0,0.05);
-    &:hover{
-      border: 2px solid $gray-darker;
-    }
-  }
 }
 .highlighted-informations {
   position: absolute;
@@ -101,25 +89,29 @@
 img {
   margin-left: 4px;
 }
-.product-labels .new,
-.discount-percentage {
-  display: block;
-  position: absolute;
-  top: em(-242px);
-  left: em(-7px);
-  padding: em(5px) em(7px);
-  color: white;
-  background: $brand-primary;
-  text-transform: uppercase;
-  width: 50px;
-  font-size: em(16px);
-  font-weight: 600;
-  @include box-shadow;
-  &.discount-percentage {
-    z-index: 2;
-    background: $orange;
+
+.product-miniature{
+  .product-labels .new,
+  .discount-percentage {
+    display: block;
+    position: absolute;
+    top: em(-242px);
+    left: em(-7px);
+    padding: em(5px) em(7px);
+    color: white;
+    background: $brand-primary;
+    text-transform: uppercase;
+    width: 50px;
+    font-size: em(16px);
+    font-weight: 600;
+    @include box-shadow;
+    &.discount-percentage {
+      z-index: 2;
+      background: $brand-secondary;
+    }
   }
 }
+
 .comments_note {
   text-align: center;
   color: $gray;
