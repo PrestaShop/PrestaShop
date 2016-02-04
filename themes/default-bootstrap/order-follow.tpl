@@ -49,7 +49,7 @@
 	</p>
 	<form method="POST"  id="returnOrderMessage">
 		<p class="textarea form-group">
-        	<label>{l s='Please provide an explanation for your RMA:'}</label>
+			<label>{l s='Please provide an explanation for your RMA:'}</label>
 			<textarea name="returnText" class="form-control"></textarea>
 		</p>
 		{foreach $ids_order_detail as $id_order_detail}
@@ -61,12 +61,12 @@
 		<input type="hidden" name="id_order" value="{$id_order|intval}"/>
 		<input class="unvisible" type="submit" name="submitReturnMerchandise" value="{l s='Make an RMA slip'}"/>
 		<p>
-	        <button type="submit" name="submitReturnMerchandise" class="btn btn-default button button-small">
-	        	<span>
-	        		{l s='Make an RMA slip'}<i class="icon-chevron-right right"></i>
-	        	</span>
-	        </button>
-	   	</p>
+			<button type="submit" name="submitReturnMerchandise" class="btn btn-default button button-small">
+				<span>
+					{l s='Make an RMA slip'}<i class="icon-chevron-right right"></i>
+				</span>
+			</button>
+		</p>
 	</form>
 
 {/if}

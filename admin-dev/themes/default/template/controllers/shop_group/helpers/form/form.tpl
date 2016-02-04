@@ -34,8 +34,8 @@
 		if (disabled_customer || disabled_stock)
 		{
 			$("input[name=share_order]").each(function(i) {
-	            $(this).attr('disabled', true);
-	        });
+				$(this).attr('disabled', true);
+			});
 
 			$('#share_order_off').attr('checked', true);
 		}

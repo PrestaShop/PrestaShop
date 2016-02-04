@@ -41,7 +41,7 @@
 	<div class="row">
 		<div class="panel-group" id="warehouse-accordion">
 			{foreach from=$warehouses item=warehouse name=data}
-			    <div class="panel panel-default">
+				<div class="panel panel-default">
 					<div class="panel-heading">
 							<a class="accordion-toggle" data-toggle="collapse" data-parent="#warehouse-accordion" href="#warehouse-{$warehouse['id_warehouse']}">{$warehouse['name']}</a>
 					</div>

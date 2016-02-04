@@ -57,7 +57,7 @@
 	{/if}
 	{if isset($use_search) && $use_search == true}
 		$("#{$id|escape:'html':'UTF-8'}-categories-search").bind("typeahead:selected", function(obj, datum) {
-		    $("#{$id|escape:'html':'UTF-8'}").find(":input").each(
+			$("#{$id|escape:'html':'UTF-8'}").find(":input").each(
 				function()
 				{
 					if ($(this).val() == datum.id_category)
@@ -69,7 +69,7 @@
 						$(this).parent().addClass("tree-selected");
 						$(this).parents('ul.tree').each(function(){
 							$(this).show();
-							$(this).prev().find('.icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');	
+							$(this).prev().find('.icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');
 						});
 					}
 				}
@@ -92,7 +92,7 @@
 						$(this).parent().addClass("tree-selected");
 						$(this).parents('ul.tree').each(function(){
 							$(this).show();
-							$(this).prev().find('.icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');	
+							$(this).prev().find('.icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');
 						});
 					}
 				}

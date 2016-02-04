@@ -147,7 +147,7 @@
 							<div class="cart-prices-line first-line">
 								<span class="price cart_block_shipping_cost ajax_cart_shipping_cost{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!$cart_qties || $cart->isVirtualCart() || !isset($cart->id_address_delivery) || !$cart->id_address_delivery || $free_ship)} unvisible{/if}">
 									{if $shipping_cost_float == 0}
-										 {if !($page_name == 'order-opc') && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)}{l s='To be determined' mod='blockcart'}{else}{l s='Free shipping!' mod='blockcart'}{/if}
+										{if !($page_name == 'order-opc') && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)}{l s='To be determined' mod='blockcart'}{else}{l s='Free shipping!' mod='blockcart'}{/if}
 									{else}
 										{$shipping_cost}
 									{/if}
@@ -167,7 +167,7 @@
 									<span>
 										{l s='Wrapping' mod='blockcart'}
 									</span>
-							   </div>
+								</div>
 							{/if}
 							{if $show_tax && isset($tax_cost)}
 								<div class="cart-prices-line">
@@ -284,7 +284,7 @@
 					</strong>
 					<span class="ajax_cart_shipping_cost{if $shipping_cost_float == 0 && (!$cart_qties || $cart->isVirtualCart() || !isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
 						{if $shipping_cost_float == 0}
-							 {if (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)}{l s='To be determined' mod='blockcart'}{else}{l s='Free shipping!' mod='blockcart'}{/if}
+							{if (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)}{l s='To be determined' mod='blockcart'}{else}{l s='Free shipping!' mod='blockcart'}{/if}
 						{else}
 							{$shipping_cost}
 						{/if}

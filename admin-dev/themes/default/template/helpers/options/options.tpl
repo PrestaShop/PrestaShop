@@ -163,7 +163,7 @@
 													{strip}
 													<label for="{$key}_{$k}">
 														<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
-													 	{$v}
+														{$v}
 													</label>
 													{/strip}
 												</p>
@@ -176,7 +176,7 @@
 													{strip}
 													<label class="col-lg-3" for="{$key}{$k}_on">
 														<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
-													 	{$v}
+														{$v}
 													</label>
 													{/strip}
 												</p>
@@ -213,7 +213,7 @@
 											<div class="input-group">
 												<input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'html':'UTF-8'}" />
 											</div>
-							            </div>
+										</div>
 									{elseif $field['type'] == 'price'}
 										<div class="col-lg-9">
 											<div class="input-group fixed-width-lg">

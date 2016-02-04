@@ -74,11 +74,11 @@
 						{else}
 							<div class="layered_filter">
 						{/if}
-                        <div class="layered_subtitle_heading">
-                            <span class="layered_subtitle">{$filter.name|escape:'html':'UTF-8'}</span>
-                            <!--<span class="layered_close">
-                            	<a href="#" data-rel="ul_layered_{$filter.type}_{$filter.id_key}"></a>
-                            </span>-->
+						<div class="layered_subtitle_heading">
+							<span class="layered_subtitle">{$filter.name|escape:'html':'UTF-8'}</span>
+							<!--<span class="layered_close">
+								<a href="#" data-rel="ul_layered_{$filter.type}_{$filter.id_key}"></a>
+							</span>-->
 						</div>
 						<ul id="ul_layered_{$filter.type}_{$filter.id_key}" class="col-lg-12 layered_filter_ul{if isset($filter.is_color_group) && $filter.is_color_group} color-group{/if}">
 							{if !isset($filter.slider)}
@@ -90,7 +90,7 @@
 												<input class="color-option {if isset($value.checked) && $value.checked}on{/if} {if !$value.nbr}disable{/if}" type="button" name="layered_{$filter.type_lite}_{$id_value}" data-rel="{$id_value}_{$filter.id_key}" id="layered_id_attribute_group_{$id_value}" {if !$value.nbr}disabled="disabled"{/if} style="background: {if isset($value.color)}{if file_exists($smarty.const._PS_ROOT_DIR_|cat:"/img/co/$id_value.jpg")}url(img/co/{$id_value}.jpg){else}{$value.color}{/if}{else}#CCC{/if};" />
 												{if isset($value.checked) && $value.checked}<input type="hidden" name="layered_{$filter.type_lite}_{$id_value}" value="{$id_value}" />{/if}
 											{else}
-												<input type="checkbox" class="checkbox" name="layered_{$filter.type_lite}_{$id_value}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{/if}" value="{$id_value}{if $filter.id_key}_{$filter.id_key}{/if}"{if isset($value.checked)} checked="checked"{/if}{if !$value.nbr} disabled="disabled"{/if} /> 
+												<input type="checkbox" class="checkbox" name="layered_{$filter.type_lite}_{$id_value}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{/if}" value="{$id_value}{if $filter.id_key}_{$filter.id_key}{/if}"{if isset($value.checked)} checked="checked"{/if}{if !$value.nbr} disabled="disabled"{/if} />
 											{/if}
 											<label for="layered_{$filter.type_lite}_{$id_value}"{if !$value.nbr} class="disabled"{else}{if isset($filter.is_color_group) && $filter.is_color_group} name="layered_{$filter.type_lite}_{$id_value}" class="layered_color" data-rel="{$id_value}_{$filter.id_key}"{/if}{/if}>
 												{if !$value.nbr}
@@ -111,7 +111,7 @@
 												<input class="radio color-option {if isset($value.checked) && $value.checked}on{/if} {if !$value.nbr}disable{/if}" type="button" name="layered_{$filter.type_lite}_{$id_value}" data-rel="{$id_value}_{$filter.id_key}" id="layered_id_attribute_group_{$id_value}" {if !$value.nbr}disabled="disabled"{/if} style="background: {if isset($value.color)}{if file_exists($smarty.const._PS_ROOT_DIR_|cat:"/img/co/$id_value.jpg")}url(img/co/{$id_value}.jpg){else}{$value.color}{/if}{else}#CCC{/if};"/>
 												{if isset($value.checked) && $value.checked}<input type="hidden" name="layered_{$filter.type_lite}_{$id_value}" value="{$id_value}" />{/if}
 											{else}
-												<input type="radio" class="radio layered_{$filter.type_lite}_{$id_value}" name="layered_{$filter.type_lite}{if $filter.id_key}_{$filter.id_key}{else}_1{/if}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{if $filter.id_key}_{$filter.id_key}{/if}{/if}" value="{$id_value}{if $filter.id_key}_{$filter.id_key}{/if}"{if isset($value.checked)} checked="checked"{/if}{if !$value.nbr} disabled="disabled"{/if} /> 
+												<input type="radio" class="radio layered_{$filter.type_lite}_{$id_value}" name="layered_{$filter.type_lite}{if $filter.id_key}_{$filter.id_key}{else}_1{/if}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{if $filter.id_key}_{$filter.id_key}{/if}{/if}" value="{$id_value}{if $filter.id_key}_{$filter.id_key}{/if}"{if isset($value.checked)} checked="checked"{/if}{if !$value.nbr} disabled="disabled"{/if} />
 											{/if}
 											<label for="layered_{$filter.type_lite}_{$id_value}"{if !$value.nbr} class="disabled"{else}{if isset($filter.is_color_group) && $filter.is_color_group} name="layered_{$filter.type_lite}_{$id_value}" class="layered_color" data-rel="{$id_value}_{$filter.id_key}"{/if}{/if}>
 												{if !$value.nbr}
@@ -140,7 +140,7 @@
 								{if $filter.filter_type == 0}
 									<label for="{$filter.type}">
 										{l s='Range:' mod='blocklayered'}
-									</label> 
+									</label>
 									<span id="layered_{$filter.type}_range"></span>
 									<div class="layered_slider_container">
 										<div class="layered_slider" id="layered_{$filter.type}_slider" data-type="{$filter.type}" data-format="{$filter.format}" data-unit="{$filter.unit}"></div>
@@ -148,20 +148,20 @@
 								{else}
 									{if $filter.filter_type == 1}
 									<li class="nomargin row">
-	                                    <div class="col-xs-6 col-sm-12 col-lg-6 first-item">
-	                                    	{l s='From' mod='blocklayered'} 
-	                                    	<input class="layered_{$filter.type}_range layered_input_range_min layered_input_range form-control grey" id="layered_{$filter.type}_range_min" type="text" value="{$filter.values[0]}"/>
-	                                    	<span class="layered_{$filter.type}_range_unit">
-	                                    		{$filter.unit}
-	                                    	</span>
-	                                    </div>
-	                                    <div class="col-xs-6 col-sm-12 col-lg-6">
-	                                    	{l s='to' mod='blocklayered'} 
-	                                    	<input class="layered_{$filter.type}_range layered_input_range_max layered_input_range form-control grey" id="layered_{$filter.type}_range_max" type="text" value="{$filter.values[1]}"/>
-	                                    	<span class="layered_{$filter.type}_range_unit">
-	                                    		{$filter.unit}
-	                                    	</span>
-	                                    </div>
+										<div class="col-xs-6 col-sm-12 col-lg-6 first-item">
+											{l s='From' mod='blocklayered'}
+											<input class="layered_{$filter.type}_range layered_input_range_min layered_input_range form-control grey" id="layered_{$filter.type}_range_min" type="text" value="{$filter.values[0]}"/>
+											<span class="layered_{$filter.type}_range_unit">
+												{$filter.unit}
+											</span>
+										</div>
+										<div class="col-xs-6 col-sm-12 col-lg-6">
+											{l s='to' mod='blocklayered'}
+											<input class="layered_{$filter.type}_range layered_input_range_max layered_input_range form-control grey" id="layered_{$filter.type}_range_max" type="text" value="{$filter.values[1]}"/>
+											<span class="layered_{$filter.type}_range_unit">
+												{$filter.unit}
+											</span>
+										</div>
 										<span class="layered_{$filter.type}_format" style="display:none;">
 											{$filter.format}
 										</span>

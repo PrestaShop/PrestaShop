@@ -132,7 +132,7 @@
 												{/if}
 												{if isset($input.prefix)}
 													<span class="input-group-addon">
-													  {$input.prefix}
+														{$input.prefix}
 													</span>
 													{/if}
 												<input type="text"
@@ -151,7 +151,7 @@
 													{if isset($input.placeholder) && $input.placeholder} placeholder="{$input.placeholder}"{/if} />
 													{if isset($input.suffix)}
 													<span class="input-group-addon">
-													  {$input.suffix}
+														{$input.suffix}
 													</span>
 													{/if}
 												{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
@@ -208,7 +208,7 @@
 										{/if}
 										{if isset($input.prefix)}
 										<span class="input-group-addon">
-										  {$input.prefix}
+											{$input.prefix}
 										</span>
 										{/if}
 										<input type="text"
@@ -227,7 +227,7 @@
 											/>
 										{if isset($input.suffix)}
 										<span class="input-group-addon">
-										  {$input.suffix}
+											{$input.suffix}
 										</span>
 										{/if}
 
@@ -274,7 +274,7 @@
 											<button type="button" class="btn btn-default{if isset($input.button.attributes['class'])} {$input.button.attributes['class']}{/if}{if isset($input.button.class)} {$input.button.class}{/if}"
 												{foreach from=$input.button.attributes key=name item=value}
 													{if $name|lower != 'class'}
-													 {$name|escape:'html':'UTF-8'}="{$value|escape:'html':'UTF-8'}"
+														{$name|escape:'html':'UTF-8'}="{$value|escape:'html':'UTF-8'}"
 													{/if}
 												{/foreach} >
 												{$input.button.label}

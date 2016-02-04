@@ -35,14 +35,14 @@
 					<span style="margin-top:{math equation='a/2 -10' a=$product.zone_height}px; margin-left:{math equation='a/2 -10' a=$product.zone_width}px;"></span>
 				</a>
 				<div id="scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" style="display:none;">
-                	<div class="product-image-container">
+					<div class="product-image-container">
 						{if isset($imageIds)}
 							<img class="img-responsive replace-2x" src="{$link->getImageLink($product.id_product, $imageIds, 'home_default')|escape:'html':'UTF-8'}" alt="" />
 						{/if}
-                    </div>
+					</div>
 					<p class="product-name"><span class="product_name">{$product.details->name}</span></p>
 					<div class="description">{$product.details->description_short|strip_tags|truncate:170:'...'}</div>
-                    {if !$PS_CATALOG_MODE AND $product.details->show_price}
+					{if !$PS_CATALOG_MODE AND $product.details->show_price}
 					<div class="prices">
 						{if isset($product.details->new) AND $product.details->new}<span class="new-box"><span class="new-label">{l s='New'}</span></span>{/if}
 						<p class="price product-price">{if $priceDisplay}{convertPrice price=$product.details->getPrice(false, $product.details->getDefaultAttribute($product.id_product))}{else}{convertPrice price=$product.details->getPrice(true, $product.details->getDefaultAttribute($product.id_product))}{/if}</p>
@@ -71,8 +71,8 @@
 						<img alt="{$scene->name|escape:'html':'UTF-8'}" src="{$content_dir}img/scenes/thumbs/{$scene->id}-m_scene_default.jpg" width="{$thumbSceneSize.width}" height="{$thumbSceneSize.height}" />
 					</a>
 				</li>
-		 	{/foreach}
-		 	</ul>
+			{/foreach}
+			</ul>
 		</div>
 		<span class="space-keeper">
 			<a class="next" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;">&nbsp;</a>
