@@ -2565,8 +2565,8 @@ class AdminControllerCore extends Controller
     public function setMedia($isNewTheme = false)
     {
         if ($isNewTheme) {
-            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/theme.css', 'all', 1);
-            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/bundle.js');
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/theme.css', 'all', 1);
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/bundle.js');
         } else {
 
             //Bootstrap

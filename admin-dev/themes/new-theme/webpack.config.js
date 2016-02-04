@@ -7,7 +7,7 @@ module.exports = {
     "./js/theme.js"
   ],
   output: {
-    path: '.',
+    path: './public',
     filename: "bundle.js"
   },
   module: {
@@ -32,6 +32,10 @@ module.exports = {
             "style",
             "css"
         )
+      },
+      {
+        test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+        loader: 'file-loader?name=[hash].[ext]'
       }
     ]
   },
