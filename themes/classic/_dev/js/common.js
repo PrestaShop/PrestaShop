@@ -1,4 +1,4 @@
-/* global $ */
+import $ from 'jquery';
 
 export function psShowHide () {
   $('.ps-shown-by-js').show();

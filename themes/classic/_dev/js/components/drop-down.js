@@ -1,4 +1,4 @@
-/* global $ */
+import $ from 'jquery';
 
 export default class DropDown {
   constructor(el) {
