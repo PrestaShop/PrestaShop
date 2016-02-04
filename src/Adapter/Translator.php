@@ -91,7 +91,7 @@ class Translator implements TranslatorInterface
         if ($isAdmin) {
             $domain = preg_replace('/(c|C)ontroller$/', '', $domain); // remove trailing 'Controller'
 
-            return \TranslateCore::getAdminTranslation($id, $domain, (count($parameters) === 0) ? null : $parameters);
+            return \TranslateCore::getAdminTranslation($id, $domain, false, true, (count($parameters) === 0) ? null : $parameters);
         }
 
         // Front / Module case ?
