@@ -51,7 +51,9 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* global document */
 	/* expose jQuery for modules */
+	
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -74,17 +76,17 @@
 	
 	__webpack_require__(40);
 	
-	__webpack_require__(47);
+	__webpack_require__(41);
 	
-	var _componentsDropDown = __webpack_require__(41);
+	var _componentsDropDown = __webpack_require__(42);
 	
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 	
-	var _componentsTopMenu = __webpack_require__(42);
+	var _componentsTopMenu = __webpack_require__(43);
 	
 	var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
 	
-	var _componentsProductMiniature = __webpack_require__(43);
+	var _componentsProductMiniature = __webpack_require__(44);
 	
 	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 	
@@ -92,15 +94,15 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _events = __webpack_require__(44);
+	var _events = __webpack_require__(45);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
 	var _common = __webpack_require__(38);
 	
-	__webpack_require__(45);
-	
 	__webpack_require__(46);
+	
+	__webpack_require__(47);
 	
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
@@ -110,9 +112,14 @@
 	(0, _expose$ExposeJQueryJquery2['default'])(document).ready(function () {
 	  var dropDownEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-dropdown');
 	  var topMenuEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-top-menu ul');
-	  var dropDown = new _componentsDropDown2['default'](dropDownEl).init();
-	  var topMenu = new _componentsTopMenu2['default'](topMenuEl).init();
-	  var productMinitature = new _componentsProductMiniature2['default']().init();
+	  var dropDown = new _componentsDropDown2['default'](dropDownEl);
+	  var topMenu = new _componentsTopMenu2['default'](topMenuEl);
+	  var productMinitature = new _componentsProductMiniature2['default']();
+	
+	  dropDown.init();
+	  topMenu.init();
+	  productMinitature.init();
+	
 	  (0, _common.psShowHide)();
 	});
 
@@ -8048,10 +8055,8 @@
 
 /***/ },
 /* 38 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	/* global $ */
-	
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
@@ -8059,9 +8064,15 @@
 	});
 	exports.psShowHide = psShowHide;
 	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
 	function psShowHide() {
-	  $('.ps-shown-by-js').show();
-	  $('.ps-hidden-by-js').hide();
+	  (0, _jquery2['default'])('.ps-shown-by-js').show();
+	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
 	}
 
 /***/ },
@@ -8173,10 +8184,28 @@
 
 /***/ },
 /* 41 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	/* global $ */
+	/* global document */
 	
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	(0, _jquery2['default'])(document).ready(function () {
+	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute], #quantity_wanted', function () {
+	    (0, _jquery2['default'])("input[name$='refresh']").click();
+	  });
+	});
+
+/***/ },
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
@@ -8185,7 +8214,13 @@
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
 	
 	var DropDown = (function () {
 	  function DropDown(el) {
@@ -8198,11 +8233,11 @@
 	    key: 'init',
 	    value: function init() {
 	      this.el.on('show.bs.dropdown', function (e) {
-	        $(e.target).find('.dropdown-menu').first().stop(true, true).slideDown();
+	        (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideDown();
 	      });
 	
 	      this.el.on('hide.bs.dropdown', function (e) {
-	        $(e.target).find('.dropdown-menu').first().stop(true, true).slideUp();
+	        (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideUp();
 	      });
 	    }
 	  }]);
@@ -8214,7 +8249,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8233,7 +8268,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _dropDown = __webpack_require__(41);
+	var _dropDown = __webpack_require__(42);
 	
 	var _dropDown2 = _interopRequireDefault(_dropDown);
 	
@@ -8260,11 +8295,9 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 43 */
-/***/ function(module, exports) {
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
 
-	/* global $ */
-	
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
@@ -8273,7 +8306,13 @@
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
 	
 	var ProductMinitature = (function () {
 	  function ProductMinitature() {
@@ -8283,20 +8322,20 @@
 	  _createClass(ProductMinitature, [{
 	    key: 'init',
 	    value: function init() {
-	      $('.js-product-miniature').each(function (index, element) {
-	        if ($(element).find('.discount-percentage').length) {
-	          $(element).find('.new').remove();
+	      (0, _jquery2['default'])('.js-product-miniature').each(function (index, element) {
+	        if ((0, _jquery2['default'])(element).find('.discount-percentage').length) {
+	          (0, _jquery2['default'])(element).find('.new').remove();
 	        }
-	        if ($(element).find('.color').length > 5) {
+	        if ((0, _jquery2['default'])(element).find('.color').length > 5) {
 	          (function () {
 	            var count = 0;
-	            $(element).find('.color').each(function (index, element) {
+	            (0, _jquery2['default'])(element).find('.color').each(function (index, element) {
 	              if (index > 4) {
-	                $(element).hide();
+	                (0, _jquery2['default'])(element).hide();
 	                count++;
 	              }
 	            });
-	            $(element).find('.js-count').append('+' + count);
+	            (0, _jquery2['default'])(element).find('.js-count').append('+' + count);
 	          })();
 	        }
 	      });
@@ -8310,7 +8349,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -8578,7 +8617,7 @@
 	}
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -9011,7 +9050,7 @@
 	});
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports) {
 
 	/*!
@@ -9114,26 +9153,6 @@
 	    });
 	  });
 	})(jQuery);
-
-/***/ },
-/* 47 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* global document */
-	
-	'use strict';
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	(0, _jquery2['default'])(document).ready(function () {
-	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute], #quantity_wanted', function () {
-	    (0, _jquery2['default'])("input[name$='refresh']").click();
-	  });
-	});
 
 /***/ }
 /******/ ]);
