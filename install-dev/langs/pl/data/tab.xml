@@ -25,7 +25,7 @@
   <tab id="Customers" name="Klienci"/>
   <tab id="Customers_2" name="Klienci"/>
   <tab id="Customers_1" name="Klienci"/>
-  <tab id="DB_Backup" name="Backup bady danych"/>
+  <tab id="DB_Backup" name="Backup bazy danych"/>
   <tab id="Delivery_Slips" name="Listy przewozowe"/>
   <tab id="E-mail" name="E-mail"/>
   <tab id="Employees" name="Pracownicy"/>
@@ -78,10 +78,10 @@
   <tab id="Shop_URLs" name="Adres URL sklepu"/>
   <tab id="Shopping_Carts" name="Koszyk zakupów"/>
   <tab id="Shops" name="Sklepy"/>
-  <tab id="SQL_Manager" name="Menadźer SQL"/>
+  <tab id="SQL_Manager" name="Menadżer SQL"/>
   <tab id="States" name="Województwa lub regiony"/>
   <tab id="Stats" name="Statystyki"/>
-  <tab id="Stats_1" name="Staystyki"/>
+  <tab id="Stats_1" name="Statystyki"/>
   <tab id="Statuses" name="Statusy"/>
   <tab id="Stock" name="Na magazynie"/>
   <tab id="Stock_Coverage" name="Pokrycie stanu"/>
