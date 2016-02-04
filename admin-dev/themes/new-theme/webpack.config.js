@@ -25,6 +25,13 @@ module.exports = {
             "style",
             "css!sass"
         )
+      },
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract(
+            "style",
+            "css"
+        )
       }
     ]
   },
