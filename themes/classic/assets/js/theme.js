@@ -74,6 +74,8 @@
 
 	__webpack_require__(40);
 
+	__webpack_require__(47);
+
 	var _componentsDropDown = __webpack_require__(41);
 
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
@@ -7929,6 +7931,8 @@
 /* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* global document */
+
 	'use strict';
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -8046,6 +8050,8 @@
 /* 38 */
 /***/ function(module, exports) {
 
+	/* global $ */
+
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -8061,6 +8067,8 @@
 /***/ },
 /* 39 */
 /***/ function(module, exports, __webpack_require__) {
+
+	/* global document */
 
 	'use strict';
 
@@ -8090,6 +8098,8 @@
 /***/ },
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
+
+	/* global document,window */
 
 	'use strict';
 
@@ -8146,16 +8156,16 @@
 	}
 
 	(0, _jquery2['default'])(document).ready(function () {
-	    (0, _jquery2['default'])('body').on('change', '#search_filters input[data-search-url]', function () {
+	    (0, _jquery2['default'])('body').on('change', '#search_filters input[data-search-url]', function (event) {
 	        makeQuery(event.target.dataset.searchUrl);
 	    });
 
-	    (0, _jquery2['default'])('body').on('click', '.js-search-link', function () {
+	    (0, _jquery2['default'])('body').on('click', '.js-search-link', function (event) {
 	        event.preventDefault();
 	        makeQuery((0, _jquery2['default'])(event.target).closest('a').get(0).href);
 	    });
 
-	    (0, _jquery2['default'])('body').on('change', '#search_filters select', function () {
+	    (0, _jquery2['default'])('body').on('change', '#search_filters select', function (event) {
 	        var form = (0, _jquery2['default'])(event.target).closest('form');
 	        makeQuery('?' + form.serialize());
 	    });
@@ -8164,6 +8174,8 @@
 /***/ },
 /* 41 */
 /***/ function(module, exports) {
+
+	/* global $ */
 
 	'use strict';
 
@@ -8184,7 +8196,7 @@
 
 	  _createClass(DropDown, [{
 	    key: 'init',
-	    value: function init(el) {
+	    value: function init() {
 	      this.el.on('show.bs.dropdown', function (e) {
 	        $(e.target).find('.dropdown-menu').first().stop(true, true).slideDown();
 	      });
@@ -8250,6 +8262,8 @@
 /***/ },
 /* 43 */
 /***/ function(module, exports) {
+
+	/* global $ */
 
 	'use strict';
 
@@ -9100,6 +9114,26 @@
 	    });
 	  });
 	})(jQuery);
+
+/***/ },
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global document */
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _jquery = __webpack_require__(4);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	(0, _jquery2['default'])(document).ready(function () {
+	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute], #quantity_wanted', function () {
+	    (0, _jquery2['default'])("input[name$='refresh']").click();
+	  });
+	});
 
 /***/ }
 /******/ ]);

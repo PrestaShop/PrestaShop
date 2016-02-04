@@ -1,3 +1,5 @@
+/* global document */
+
 import $ from 'jquery';
 
 $(document).ready(function () {

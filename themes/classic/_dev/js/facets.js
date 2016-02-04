@@ -1,3 +1,5 @@
+/* global document,window */
+
 import $ from 'jquery';
 
 let pendingQuery = false;
@@ -11,7 +13,7 @@ const onpopstate = e => {
     if (e.state && e.state.rendered_products) {
         updateDOM(e.state);
     }
-}
+};
 
 function updateResults (data) {
     pendingQuery = false;
@@ -52,16 +54,16 @@ function makeQuery (url) {
 }
 
 $(document).ready(function () {
-    $('body').on('change', '#search_filters input[data-search-url]', function () {
+    $('body').on('change', '#search_filters input[data-search-url]', function (event) {
         makeQuery(event.target.dataset.searchUrl);
     });
 
-    $('body').on('click', '.js-search-link', function () {
+    $('body').on('click', '.js-search-link', function (event) {
         event.preventDefault();
         makeQuery($(event.target).closest('a').get(0).href);
     });
 
-    $('body').on('change', '#search_filters select', function () {
+    $('body').on('change', '#search_filters select', function (event) {
         const form = $(event.target).closest('form');
         makeQuery('?' + form.serialize());
     });

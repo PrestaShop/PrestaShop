@@ -1,3 +1,5 @@
+/* global $ */
+
 export default class ProductMinitature {
   init(){
     $('.js-product-miniature').each((index, element) => {
