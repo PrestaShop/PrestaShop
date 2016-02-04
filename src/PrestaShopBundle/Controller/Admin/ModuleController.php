@@ -56,7 +56,7 @@ class ModuleController extends Controller
             shuffle($products);
             $topMenuData = $this->getTopMenuData();
         } catch (Exception $e) {
-            $this->addFlash('error', 'Cannot get catalog data. Please try again later.');
+            $this->addFlash('error', 'Cannot get catalog data, please try again later.');
             $products = [];
             $topMenuData = [];
         }
@@ -184,10 +184,8 @@ class ModuleController extends Controller
             $ret[$module]['msg'] = 'Invalid action';
         }
 
-        if ($ret[$module]['status']) {
-            $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-            $modulesProvider->clearManageCache();
-        }
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $modulesProvider->clearManageCache();
 
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($ret, 200);
@@ -244,10 +242,12 @@ class ModuleController extends Controller
             $products->{$subpart} = [];
         }
 
+        $installed_modules = [];
         foreach ($modulesProvider->getManageModules() as $installed_product) {
+            $installed_modules[] = $installed_product->name;
             if (!empty($installed_product->warning)) {
                 $row = 'to_configure';
-            } elseif ($installed_product->installed == 1 && version_compare($installed_product->database_version, $installed_product->version, '<')) {
+            } elseif ($installed_product->installed == 1 && $installed_product->database_version !== 0 && version_compare($installed_product->database_version, $installed_product->version, '<')) {
                 $row = 'to_update';
             } else {
                 $row = false;
@@ -260,7 +260,7 @@ class ModuleController extends Controller
 
         try {
             foreach ($modulesProvider->getCatalogModules() as $product) {
-                if (isset($product->origin) && $product->origin === 'customer') {
+                if (isset($product->origin) && $product->origin === 'customer' && !in_array($product->name, $installed_modules)) {
                     $products->to_install[] = (object)$product;
                 }
             }
@@ -480,23 +480,35 @@ class ModuleController extends Controller
     protected function updateModule($module_name)
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $module_to_update = null;
+        $additionnal_upgrade_files = 0;
         //$module = $modulesProvider->getModule($module_name);
         foreach ($modulesProvider->getManageModules() as $module) {
             if ($module->name == $module_name) {
                 $old_version = $module->database_version;
+                $module_to_update = $module;
                 break;
             }
         }
 
         $modulesProvider->setModuleOnDiskFromAddons($module_name);
-        $module = $modulesProvider->getModule($module_name);
-        $new_version = $module->database_version;
+        if (\Module::initUpgradeModule($module_to_update)) {
+            $details = $module_to_update->runUpgradeModule();
+            if (isset($details['number_upgrade'])) {
+                $additionnal_upgrade_files = $details['number_upgrade'];
+            }
+        }
+        $new_version = $modulesProvider->getModule($module_name)->version;
 
-        $status = version_compare($old_version, $new_version, '>');
+        $status = \Module::getUpgradeStatus($module_to_update->name);
         if ($status) {
-            $msg = sprintf('Module %s has been updated from %s to %s', $module_name, $old_version, $new_version);
+            $msg = sprintf('Module %s has been updated from %s to %s. Applied %d additionnal upgrade files.', $module_name, $old_version, $new_version, $additionnal_upgrade_files);
         } else {
-            $msg = sprintf('Could not update module %s (Version unchanged)', $module_name);
+            if (!empty($details['version_fail'])) {
+                $msg = sprintf('Could not update module %s, failed while applying upgrade file %s. The module has been disabled.', $module_name, $details['version_fail']);
+            } else {
+                $msg = sprintf('Could not update module %s.', $module_name);
+            }
         }
 
         return array('status' => $status, 'msg' => $msg);

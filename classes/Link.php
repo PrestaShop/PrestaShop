@@ -418,7 +418,7 @@ class LinkCore
                     $params = array_merge($params, $sfRouteParams);
                 }
                 break;
-            case 'AdminModules':
+            case 'AdminModulesSf':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
                 return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/module/catalog';
                 break;

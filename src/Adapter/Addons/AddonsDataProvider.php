@@ -210,6 +210,16 @@ class AddonsDataProvider implements AddonsInterface
         throw new Exception('Cannot execute request '.$action.' to Addons');
     }
 
+    protected function getAddonsCredentials()
+    {
+        $request = Request::createFromGlobals();
+
+        return [
+           'username_addons' => $request->cookies->get('username_addons'),
+           'password_addons' => $request->cookies->get('password_addons'),
+        ];
+    }
+
     /** Does this function should be in a User related class ? **/
     public function getAddonsEmail()
     {
