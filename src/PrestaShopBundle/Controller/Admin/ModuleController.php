@@ -184,10 +184,8 @@ class ModuleController extends Controller
             $ret[$module]['msg'] = 'Invalid action';
         }
 
-        if ($ret[$module]['status']) {
-            $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-            $modulesProvider->clearManageCache();
-        }
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $modulesProvider->clearManageCache();
 
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($ret, 200);
