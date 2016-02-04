@@ -6,11 +6,117 @@
 .product-price {
   color: $brand-primary;
 }
-
-#product-description-short{
+#product-description-short {
   color: $gray-darker;
 }
-
-.product-information{
+.product-information {
   color: $gray-darker;
+}
+.input-color {
+  position: absolute;
+  top: em(7px);
+  left: em(8px);
+  opacity: 0;
+  cursor: pointer;
+  &:hover + span,
+  &:checked + span {
+    border: 2px solid $gray-darker;
+  }
+}
+.input-radio {
+  position: absolute;
+  top: em(5px);
+  left: em(7px);
+  cursor: pointer;
+  opacity: 0;
+}
+.radio-label {
+  @include box-shadow;
+  background: white;
+  display: inline-block;
+  padding: em(2px) em(10px);
+  font-weight: 600;
+}
+.product-quantity{
+  display: inline-block;
+}
+#quantity_wanted {
+  @include box-shadow;
+  text-align: center;
+  width: em(50px);
+  height: em(40px);
+  border: none;
+}
+.product-variants {
+  @include submit-button;
+  .add-to-cart {
+    font-weight: 600;
+    padding: em(3px) em(10px);
+  }
+  .submit-button {
+    @include box-shadow;
+    display: inline-block;
+    max-height: em(45px);
+    background: $brand-primary;
+    padding: em(3px) em(10px);
+    cursor: pointer;
+    width: em(210px);
+    color: white;
+  }
+}
+.product-discount{
+  .regular-price{
+    font-size: em(20px);
+    font-weight: 700;
+  }
+  .discount-percentage{
+    background: $brand-secondary;
+    color: white;
+    font-weight: 700;
+    padding: em(5px);
+  }
+}
+.tabs {
+  @include box-shadow;
+  background: white;
+  padding: em(20px) em(30px);
+  .tab-pane{
+    padding-top: em(30px);
+  }
+  .nav-tabs {
+    border: none;
+    border-bottom: $gray-light 2px solid;
+    .nav-link {
+      color: $gray-dark;
+      &.active {
+        border: none;
+        border-bottom: $brand-primary 3px solid;
+      }
+      &:hover {
+        border: none;
+        border-bottom: $brand-primary 3px solid;
+      }
+    }
+    .nav-item {
+      margin-bottom: -2px;
+    }
+  }
+}
+
+.product-labels{
+  margin-bottom: 0;
+}
+li.product-label{
+  display: none;
+  &:last-child{
+    display:block;
+    position: absolute;
+    background: $brand-primary;
+    font-weight: 700;
+    padding: em(5px) em(7px);
+    text-transform: uppercase;
+    color: white;
+    margin-top: em(10px);
+    margin-left: em(-5px);
+  }
 }
