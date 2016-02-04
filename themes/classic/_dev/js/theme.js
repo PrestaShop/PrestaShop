@@ -8,6 +8,7 @@ import '../css/theme';
 import './checkout';
 import './customer';
 import './facets';
+import './product';
 
 import DropDown from './components/drop-down';
 import TopMenu from './components/top-menu';
