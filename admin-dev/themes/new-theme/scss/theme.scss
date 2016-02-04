@@ -1,4 +1,8 @@
-@import "config/settings";
+
+// Components
+@import "components/main-header";
+
+// Main Layout
 
 body {
   background: $background-color;
