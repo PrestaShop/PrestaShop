@@ -386,7 +386,12 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 $all_installed_modules = $this->getAllInstalledModules();
 
                 // Why all these foreach ? Because we need to join data from 3 different arrays.
-                foreach ($all_installed_modules as &$installed_module) {
+                foreach ($all_installed_modules as $key => &$installed_module) {
+                    // Be careful, if the module is missing from the modules folder, do not display it !
+                    if (!$this->isModuleOnDisk($installed_module['name'])) {
+                        unset($all_installed_modules[$key]);
+                        continue;
+                    }
                     //
                     foreach ($this->catalog_modules as $catalog_module) {
                         if ($catalog_module->name === $installed_module['name']) {
