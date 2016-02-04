@@ -1,4 +1,6 @@
+/* global document */
 /* expose jQuery for modules */
+
 import $ from 'expose?$!expose?jQuery!jquery';
 import 'expose?Tether!tether';
 import 'bootstrap/dist/js/npm';
@@ -32,8 +34,13 @@ for (var i in EventEmitter.prototype) {
 $(document).ready(() => {
   let dropDownEl = $('.js-dropdown');
   let topMenuEl = $('.js-top-menu ul');
-  let dropDown = new DropDown(dropDownEl).init();
-  let topMenu = new TopMenu(topMenuEl).init();
-  let productMinitature = new ProductMinitature().init();
+  let dropDown = new DropDown(dropDownEl);
+  let topMenu = new TopMenu(topMenuEl);
+  let productMinitature = new ProductMinitature();
+
+  dropDown.init();
+  topMenu.init();
+  productMinitature.init();
+
   psShowHide();
 });
