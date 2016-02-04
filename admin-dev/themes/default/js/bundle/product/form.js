@@ -49,6 +49,7 @@ $(document).ready(function() {
 	seo.init();
 	tags.init();
 	rightSidebar.init();
+	recommendedModules.init();
 
 	/** Type product fields display management */
 	$('#form_step1_type_product').change(function(){
@@ -1958,6 +1959,20 @@ var tags = (function() {
 	return {
 		'init': function() {
 			$('#form_step6_tags .tokenfield').tokenfield();
+		}
+	};
+})();
+
+var recommendedModules = (function() {
+	return {
+		'init': function() {
+			this.moduleActionMenuLinkSelectors = 'a.module_action_menu_install, a.module_action_menu_enable, ' +
+				'a.module_action_menu_uninstall, a.module_action_menu_disable, a.module_action_menu_reset, a.module_action_menu_update';
+			$(this.moduleActionMenuLinkSelectors).on('module_card_action_event', this.saveProduct);
+		},
+		'saveProduct': function(event, action) {
+			alert('Sauve qui peut ! '+action);
+			// TODO
 		}
 	};
 })();
