@@ -1971,8 +1971,7 @@ var recommendedModules = (function() {
 			$(this.moduleActionMenuLinkSelectors).on('module_card_action_event', this.saveProduct);
 		},
 		'saveProduct': function(event, action) {
-			alert('Sauve qui peut ! '+action);
-			// TODO
+			form.send();
 		}
 	};
 })();

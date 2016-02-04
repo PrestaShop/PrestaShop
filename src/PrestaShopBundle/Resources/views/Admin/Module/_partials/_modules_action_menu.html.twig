@@ -3,7 +3,9 @@
     {% if module.url_active == 'buy' %}
         <a class="btn btn-default btn-xs light-button module_action_menu_go_to_addons" href="{{module.url}}">{% if module.price.EUR is defined and module.price.EUR > 0 %}{{module.price.EUR}}{% else %}Discover{% endif %}</a>
     {% else %}
-        <a class="btn btn-default btn-xs light-button module_action_menu_{{ module.url_active }}" href="{{module.urls[module.url_active]}}">{{module.url_active|capitalize}}</a>
+        <a class="btn btn-default btn-xs light-button module_action_menu_{{ module.url_active }}"
+           href="{{module.urls[module.url_active]}}"
+           data-confirm_modal="module-modal-confirm-{{module.name}}-{{ module.url_active }}">{{module.url_active|capitalize}}</a>
     {% endif %}
 
     {% if module.urls is defined and module.urls|length > 1 %}
@@ -14,7 +16,9 @@
         <ul class="dropdown-menu">
         {% for module_action, module_url in module.urls %}
             {% if module_action != module.url_active %}
-                <li><a class="module_action_menu_{{ module_action }}" href="{{module_url}}">{{module_action|capitalize}}</a></li>
+                <li><a class="module_action_menu_{{ module_action }}"
+                       href="{{module_url}}"
+                       data-confirm_modal="module-modal-confirm-{{module.name}}-{{ module_action }}">{{module_action|capitalize}}</a></li>
             {% endif %}
         {% endfor %}
         </ul>

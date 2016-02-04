@@ -1,7 +1,7 @@
 <div class="module-item-{{display_type}} {{col_lg}}" data-id="{{ module.id }}" data-name="{{ module.displayName }}"
 data-scoring="{{module.scoring}}" data-logo="{{ module.media.img }}" data-author="{{ module.author }}" data-version="{{ module.version }}" data-description="{{ module.description }}"
 data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" data-type="{{module.productType}}" data-price="{{module.price.EUR}}">
-     <div class="module-item-wrapper-{{display_type}}">
+    <div class="module-item-wrapper-{{display_type}}">
         <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">
             <img class="module-logo-thumb-{{display_type}}" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
             <div class="text-ellipsis module-name-{{display_type}}" data-toggle="tooltip" data-placement="top" title="{{ module.displayName }}">
@@ -39,5 +39,7 @@ data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" d
             {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_action_menu.html.twig' with { 'module': module } %}
         </div>
         {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
+
+        {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_confirm.html.twig' with { 'module': module } %}
     </div>
 </div>

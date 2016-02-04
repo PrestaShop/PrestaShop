@@ -29,9 +29,13 @@ var AdminModuleCard = function() {
 
   this.initActionButtons = function() {
       // action buttons on a module card
-      var confirmAction = function(action) {
-          // TODO : display confirm bootstrap popin, return true only if confirm should let the a.href reloading the page (then execute action)
-          return confirm('This box will be used to confirm action.');
+      var confirmAction = function(action, element) {
+          var modal = $('#'+$(element).data('confirm_modal'));
+          if (modal.length != 1) {
+              return true;
+          }
+          modal.first().modal('show');;
+          return false; // do not allow a.href to reload the page. The confirm modal dialog will do it async if needed.
       };
       var dispatchPreEvent = function(action, element) {
           var event = jQuery.Event('module_card_action_event');
@@ -42,22 +46,22 @@ var AdminModuleCard = function() {
           return (event.result !== false); // explicit false must be set from handlers to stop propagation of the click event.
       };
       $(this.moduleActionMenuInstallLinkSelector).on('click', function() {
-          return dispatchPreEvent('install', this) && confirmAction('install');
+          return dispatchPreEvent('install', this) && confirmAction('install', this);
       });
       $(this.moduleActionMenuEnableLinkSelector).on('click', function() {
-          return dispatchPreEvent('enable', this) && confirmAction('enable');
+          return dispatchPreEvent('enable', this) && confirmAction('enable', this);
       });
       $(this.moduleActionMenuUninstallLinkSelector).on('click', function() {
-          return dispatchPreEvent('uninstall', this) && confirmAction('uninstall');
+          return dispatchPreEvent('uninstall', this) && confirmAction('uninstall', this);
       });
       $(this.moduleActionMenuDisableLinkSelector).on('click', function() {
-          return dispatchPreEvent('disable', this) && confirmAction('disable');
+          return dispatchPreEvent('disable', this) && confirmAction('disable', this);
       });
       $(this.moduleActionMenuResetLinkSelector).on('click', function() {
-          return dispatchPreEvent('reset', this) && confirmAction('reset');
+          return dispatchPreEvent('reset', this) && confirmAction('reset', this);
       });
       $(this.moduleActionMenuUpdateLinkSelector).on('click', function() {
-          return dispatchPreEvent('update', this) && confirmAction('update');
+          return dispatchPreEvent('update', this) && confirmAction('update', this);
       });
   };
 
