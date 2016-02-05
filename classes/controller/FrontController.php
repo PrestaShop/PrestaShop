@@ -1164,13 +1164,9 @@ class FrontControllerCore extends Controller
      */
     public function setTemplate($template)
     {
-        // Legacy: As of today this hook is used by modules to assign
-        // values to smarty.
-        Hook::exec('DisplayOverrideTemplate', array('controller' => $this));
-
-        $template = $this->getTemplateFile($template);
-
-        parent::setTemplate($template);
+        parent::setTemplate(
+            $this->getTemplateFile($template)
+        );
     }
 
     /**
@@ -1231,6 +1227,10 @@ class FrontControllerCore extends Controller
 
     public function getTemplateFile($template_file, $id = null)
     {
+        if ($overriden_template = Hook::exec('DisplayOverrideTemplate', array('controller' => $this))) {
+            return $overriden_template;
+        }
+
         if ($id === null) {
             $id = (int)Tools::getValue('id_'.$this->php_self);
         }
