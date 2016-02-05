@@ -1151,6 +1151,7 @@ var form = (function() {
 			/** show rendrered form after page load */
 			$(window).load(function(){
 				$('#form-loading').fadeIn();
+				imagesProduct.expander();
 			});
 		},
 		'send': function() {
@@ -1396,6 +1397,25 @@ var imagesProduct = (function() {
 	var id_product = $('#form_id_product').val();
 
 	return {
+		'expander': function() {
+			var closedHeight = $('#product-images-dropzone').outerHeight();
+			var realHeight = $('#product-images-dropzone')[0].scrollHeight;
+
+			if(realHeight > closedHeight){
+				$('#product-images-container .dropzone-expander').addClass('expand').show();
+			}
+
+			$(document).on('click', '#product-images-container .dropzone-expander', function() {
+				var realHeight = $('#product-images-dropzone')[0].scrollHeight;
+				if($('#product-images-container .dropzone-expander').hasClass('expand')){
+					$('#product-images-dropzone').css('height', 'auto');
+					$('#product-images-container .dropzone-expander').removeClass('expand').addClass('compress');
+				} else {
+					$('#product-images-dropzone').css('height', closedHeight+'px');
+					$('#product-images-container .dropzone-expander').removeClass('compress').addClass('expand');
+				}
+			});
+		},
 		'init': function() {
 			Dropzone.autoDiscover = false;
 			var dropZoneElem = $('#product-images-dropzone');
@@ -1423,6 +1443,7 @@ var imagesProduct = (function() {
 				dictFileTooBig: translate_javascripts['ToLargeFile'],
 				dictCancelUpload: translate_javascripts['Delete'],
 				sending: function (file, response) {
+					$('#product-images-container .dropzone-expander').addClass('expand').click();
 					errorElem.html('');
 				},
 				queuecomplete: function(){
@@ -1472,16 +1493,22 @@ var imagesProduct = (function() {
 						dropZoneElem.addClass('dz-started');
 					}
 
+					dropZoneElem.find('.openfilemanager').click(function(){
+						dropZoneElem.click();
+					});
+
 					//init sortable
 					dropZoneElem.sortable({
+						items: "div.dz-preview:not(.disabled)",
 						opacity: 0.9,
 						containment: 'parent',
 						distance: 32,
 						tolerance: 'pointer',
 						cursorAt: { left: 64, top: 64 },
+						cancel: '.disabled',
 						stop: function(event, ui) {
 							var sort = {};
-							$.each(dropZoneElem.find('.dz-preview'), function( index, value ) {
+							$.each(dropZoneElem.find('.dz-preview:not(.disabled)'), function( index, value ) {
 								if(!$(value).attr('data-id')) {
 									sort = false;
 									return;
@@ -1523,6 +1550,8 @@ var imagesProduct = (function() {
 var formImagesProduct = (function() {
 	var dropZoneElem = $('#product-images-dropzone');
 	var formZoneElem = $('#product-images-form-container');
+
+	formZoneElem.find('a.open-image').fancybox();
 
 	return {
 		'form': function(id) {

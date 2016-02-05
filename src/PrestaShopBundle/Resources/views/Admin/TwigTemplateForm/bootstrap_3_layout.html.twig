@@ -206,7 +206,7 @@
 {% block date_picker_widget %}
     {% spaceless %}
         {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
-        <div class='input-group'>
+        <div class="input-group datepicker">
             <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
             <span class="input-group-addon">
                 <span class="icon-calendar"></span>
