@@ -251,4 +251,21 @@ class HookConfiguratorTest extends UnitTestCase
 
         $this->assertEquals($expected, $actual);
     }
+
+    public function test_new_hook_is_created()
+    {
+        $config = [
+            "displayTop" => [
+                "blocklanguages"
+            ]
+        ];
+        $this->setCurrentDisplayHooksConfiguration([]);
+
+        $this->assertEquals(
+            $config,
+            $this
+                ->hookConfigurator
+                ->getThemeHooksConfiguration($config)
+        );
+    }
 }
