@@ -49,10 +49,9 @@ var AdminModule = function() {
     this.bulkActionDropDownSelector = '.module-bulk-actions select';
     this.checkedBulkActionListSelector = '.module-checkbox-bulk-list:checked';
     this.checkedBulkActionGridSelector = '.module-checkbox-bulk-grid:checked';
-    this.selectAllBulckActionSelector = '.module-checkbox-bulk-select-all';
-    this.moduleBulkActionModalSelector = '#module-bulk-actions-modal';
-    this.moduleModalsTitleSelector = 'h4.module-modal-title';
-    this.moduleModalBulkActionTableBody = '.bulk-action-module-processing > tbody';
+    this.bulkActionCheckboxGridSelector = '.module-checkbox-bulk-grid';
+    this.bulkActionCheckboxListSelector = '.module-checkbox-bulk-list';
+    this.selectAllBulkActionSelector = '.module-checkbox-bulk-select-all';
 
     /* Selectors for Module Import and Addons connect */
     this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
@@ -88,6 +87,18 @@ var AdminModule = function() {
           var bulkAction = $(this).attr('value');
           var bulkActionName = $(this).find(':selected').text();
           _this.doBulkAction(bulkAction, bulkActionName);
+      });
+      $(this.selectAllBulkActionSelector).on('change', function(event){
+          _this.changeBulkCheckboxesState($(this).is(':checked'));
+      });
+  };
+
+  // @TODO: JS Doc
+  this.changeBulkCheckboxesState = function(hasToCheck) {
+      var checkBoxesSelector = this.getBulkCheckboxesSelector();
+
+      $(checkBoxesSelector).each(function(){
+          $(this).attr('checked', hasToCheck);
       });
   };
 
@@ -153,6 +164,15 @@ var AdminModule = function() {
               $( ".dropzone" ).attr( "action", "manage/action/configure/" + obj.module_name);
           }
       };
+  };
+
+  //@TODO: JS Doc
+  this.getBulkCheckboxesSelector = function() {
+      return (
+            this.currentDisplay == 'grid' ?
+            this.bulkActionCheckboxGridSelector :
+            this.bulkActionCheckboxListSelector
+        );
   };
 
   //@TODO: JS Doc
