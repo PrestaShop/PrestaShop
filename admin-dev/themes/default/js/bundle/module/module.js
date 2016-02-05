@@ -2,7 +2,6 @@ $(document).ready(function() {
 
   var controller = new AdminModule();
   controller.init();
-  $("#datest").psdwl({default: false});
 
 });
 
@@ -23,7 +22,7 @@ var AdminModule = function() {
     this.baseAddonsUrl = 'https://addons.prestashop.com/';
     this.pstaggerInput = null;
 
-    /* Selector into vars to make it easier to change them while keeping same code logic */
+    /* Selectors into vars to make it easier to change them while keeping same code logic */
     this.searchBarSelector = '#module-search-bar';
     this.sortDisplaySelector = '.module-sort-switch';
     this.moduleListSelector = '.modules-list';
@@ -85,8 +84,7 @@ var AdminModule = function() {
       var _this = this;
       $(this.bulkActionDropDownSelector).on('change', function(event){
           var bulkAction = $(this).attr('value');
-          var bulkActionName = $(this).find(':selected').text();
-          _this.doBulkAction(bulkAction, bulkActionName);
+          _this.doBulkAction(bulkAction);
       });
       $(this.selectAllBulkActionSelector).on('change', function(event){
           _this.changeBulkCheckboxesState($(this).is(':checked'));
@@ -117,7 +115,7 @@ var AdminModule = function() {
 
           $.ajax({
                 method: 'POST',
-                url: $(this).attr("action"),
+                url: $(this).attr('action'),
                 dataType: 'json',
                 data: $(this).serialize()
             }).done(function(response) {
@@ -273,16 +271,10 @@ var AdminModule = function() {
     };
 
     //@TODO: JS Doc
-    this.doBulkAction = function(bulkAction, bulkActionName) {
-        var availableBulkActions = [
-                                    'bulk-uninstall',
-                                    'bulk-disable',
-                                    'bulk-enable',
-                                    'bulk-disable-mobile',
-                                    'bulk-enable-mobile',
-                                    'bulk-reset'
-                                ];
-
+    this.doBulkAction = function(requestedBulkAction) {
+        // @NOTE:
+        // This object is used to check if reequested bulkAction is available and give proper
+        // url segement to be called for it
         var bulkActionToUrl = {
             'bulk-uninstall': 'uninstall',
             'bulk-disable': 'disable',
@@ -292,6 +284,8 @@ var AdminModule = function() {
             'bulk-reset': 'reset'
         };
 
+        //@NOTE:
+        // "@" char is used only to be easy to replace by the end of this function ;)
         var baseActionUrl = baseAdminDir + 'module/manage/action/@/';
 
         //@NOTE:
@@ -299,9 +293,8 @@ var AdminModule = function() {
         // Maybe usefull to implement this kind of things later if intended to
         // use this functionnality elsewhere but "manage my module" section
 
-        var actionIndex = $.inArray(bulkAction, availableBulkActions);
-
-        if (actionIndex === -1) {
+        if (typeof bulkActionToUrl[requestedBulkAction] == "undefined") {
+            console.error('Request bulk action "' + requestedBulkAction + '" does not exist');
             return false;
         }
 
@@ -324,8 +317,7 @@ var AdminModule = function() {
 
                 actionMenuObj.fadeOut();
 
-                var urlSegmentKey = availableBulkActions[actionIndex];
-                var urlActionSegment = bulkActionToUrl[urlSegmentKey];
+                var urlActionSegment = bulkActionToUrl[requestedBulkAction];
                 var actionUrlBase = baseActionUrl.replace('@', urlActionSegment);
                 var reconstructedURL = actionUrlBase + moduleTechName;
 
@@ -345,6 +337,7 @@ var AdminModule = function() {
             });
 
         } else {
+            console.warning('Request bulk action "' + requestedBulkAction + '" can\'t be performed if you don\'t select at least 1 module');
             return false;
         }
     };
@@ -356,15 +349,10 @@ var AdminModule = function() {
                                 'sort-by-name',
                                 'sort-by-scoring'
                             ];
-
-        //@TODO: use getSelector methods Instead of this mystic ternary
-        var selector = (
-              this.currentDisplay == 'grid' ?
-              this.moduleItemGridSelector :
-              this.moduleItemListSelector
-          );
+        var moduleItemSelector = this.getModuleItemSelector();
 
         if ($.inArray(typeSort, availableSorts) === -1) {
+            console.error('typeSort "' + typeSort + '" is not a valid sort option');
             return false;
         }
 
@@ -394,7 +382,7 @@ var AdminModule = function() {
         var arrayToSort = {};
         var keysToSort = [];
 
-        $(selector).each(function(index, value) {
+        $(moduleItemSelector).each(function(index, value) {
             var selectorObject = $(this);
             var uniqueID = '';
             $.each(dataAttr, function (index, value) {
@@ -423,29 +411,23 @@ var AdminModule = function() {
             });
         }
         var _this = this;
+        var moduleGlobalSelector = this.getModuleGlobalSelector();
 
-        $(this.moduleGridSelector).fadeOut(function(){
+        $(moduleGlobalSelector).fadeOut(function(){
             var _that = _this;
             var _arrayToSort = arrayToSort;
             $(this).empty();
-            $(_this.moduleGridSelector).append('<div class="row">');
+            $(moduleGlobalSelector).append('<div class="row">');
             $.each(keysToSort, function(index, value){
-                $(_that.moduleGridSelector).append(_arrayToSort[value].get(0).outerHTML);
+                $(moduleGlobalSelector).append(_arrayToSort[value].get(0).outerHTML);
                 delete _arrayToSort[value];
             });
-            $(_this.moduleGridSelector).append('</div>');
-            $(_this.moduleGridSelector).fadeIn();
+            $(moduleGlobalSelector).append('</div>');
+            $(moduleGlobalSelector).fadeIn();
         });
     };
 
   this.initActionButtons = function() {
-      //@TODO: Change with proper getters
-        var selector = (
-                this.currentDisplay == 'grid' ?
-                this.moduleItemGridSelector :
-                this.moduleItemListSelector
-            );
-
         var _this = this;
 
         $(this.moduleInstallBtnSelector).on('click', function(event){
@@ -567,11 +549,9 @@ var AdminModule = function() {
   this.doTagSearch = function(tagsList) {
         var _this = this;
         this.currentTagsList = tagsList;
-
         // Pick the right selector to process search
         var moduleItemSelector = this.getModuleItemSelector();
         var moduleGlobalSelector = this.getModuleGlobalSelector();
-
         var totalResultFound = 0;
         // First reset no result screen if needed
         if (!$('.module-search-no-result').is(':hidden')) {
@@ -714,10 +694,8 @@ var AdminModule = function() {
    */
   this.switchSortingDisplayTo = function(switchTo) {
       var _this = this;
-
       var addonsItemSelector = this.getAddonItemSelector();
       var gridListSelector = this.getModuleGlobalSelector();
-
       var addonItem = $(addonsItemSelector);
 
       if (switchTo == 'grid') {
