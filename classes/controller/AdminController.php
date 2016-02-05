@@ -1163,11 +1163,6 @@ class AdminControllerCore extends Controller
                         if ($back = Tools::getValue('back')) {
                             $this->redirect_after = urldecode($back).'&conf=4';
                         }
-                        // Specific scene feature
-                        // @todo change stay_here submit name (not clear for redirect to scene ... )
-                        if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1') {
-                            $this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$this->token;
-                        }
                         // Save and stay on same form
                         // @todo on the to following if, we may prefer to avoid override redirect_after previous value
                         if (Tools::isSubmit('submitAdd'.$this->table.'AndStay')) {
@@ -1887,17 +1882,6 @@ class AdminControllerCore extends Controller
             'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
             'display_addons_connection' => Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController'))
         ));
-
-        $module = Module::getInstanceByName('themeconfigurator');
-        if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL()) {
-            $request =
-            'live_configurator_token='.$module->getLiveConfiguratorToken()
-            .'&id_employee='.(int)$this->context->employee->id
-            .'&id_shop='.(int)$this->context->shop->id
-            .(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
-            .(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '');
-            $this->context->smarty->assign('base_url_tc', $this->context->link->getPageLink('index', null, $id_lang = null, $request));
-        }
     }
 
     private function getTabs($parentId = 0, $level = 0)
@@ -2832,10 +2816,6 @@ class AdminControllerCore extends Controller
             $this->context->shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
         } elseif ($this->context->shop->id != $shop_id) {
             $this->context->shop = new Shop((int)$shop_id);
-        }
-
-        if ($this->context->shop->id_theme != $this->context->theme->id) {
-            $this->context->theme = new Theme((int)$this->context->shop->id_theme);
         }
 
         // Replace current default country

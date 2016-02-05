@@ -73,7 +73,7 @@ services:
 
     #SECURITY
     prestashop.adapter.security.admin:
-        class: PrestaShop\PrestaShop\Adapter\Security\Admin
+        class: %AdapterSecurityAdminClass%
         arguments:
             - "@prestashop.adapter.legacy.context"
             - "@security.token_storage"

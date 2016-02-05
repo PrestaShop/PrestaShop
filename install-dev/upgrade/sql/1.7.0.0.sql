@@ -1,6 +1,9 @@
 SET NAMES 'utf8';
 
 INSERT INTO `PREFIX_configuration` (`name` , `value` , `date_add` , `date_upd`) VALUES ('PS_SMARTY_LOCAL', '0', NOW(), NOW());
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_ORDER_PROCESS_TYPE';
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_ADVANCED_PAYMENT_API';
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_ONE_PHONE_AT_LEAST';
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('actionCartUpdateQuantityBefore', 'actionBeforeCartUpdateQty');
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('actionAjaxDieBefore', 'actionBeforeAjaxDie');
@@ -41,3 +44,38 @@ ALTER TABLE `PREFIX_stock` ADD `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
 ALTER TABLE `PREFIX_supply_order_detail` ADD `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
 
 ALTER TABLE `PREFIX_cart_product` CHANGE `id_product_attribute` `id_product_attribute` int(10) unsigned DEFAULT '0';
+
+ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_title` VARCHAR( 255 ) NOT NULL;
+ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_description` VARCHAR( 255 ) NOT NULL;
+
+/* PHP:ps1700_stores(); */
+
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
+
+ALTER TABLE `PREFIX_hook` DROP `live_edit`;
+
+/* Remove comparator feature */
+DELETE FROM `PREFIX_hook_alias` WHERE `name` = 'displayProductComparison';
+DELETE FROM `PREFIX_hook` WHERE `name` = 'displayProductComparison';
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_COMPARATOR_MAX_ITEM';
+DELETE FROM `PREFIX_meta` WHERE `page` = 'products-comparison';
+DROP TABLE IF EXISTS PREFIX_compare;
+DROP TABLE IF EXISTS PREFIX_compare_product;
+
+ALTER TABLE `PREFIX_cart` ADD `checkout_session_data` MEDIUMTEXT NULL
+
+DROP TABLE `PREFIX_theme`;
+DROP TABLE `PREFIX_theme_meta`;
+DROP TABLE `PREFIX_theme_specific`;
+
+ALTER TABLE `PREFIX_shop` DROP COLUMN `id_theme`;
+ALTER TABLE `PREFIX_shop` ADD COLUMN `theme_name` VARCHAR(255) AFTER `id_category`;
+UPDATE `PREFIX_shop` SET `theme_name` = 'StarterTheme';
+
+DROP TABLE `PREFIX_scene`;
+DROP TABLE `PREFIX_scene_category`;
+DROP TABLE `PREFIX_scene_lang`;
+DROP TABLE `PREFIX_scene_products`;
+DROP TABLE `PREFIX_scene_shop`;
+ALTER TABLE `PREFIX_image_type` DROP `scenes`;
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_SCENE_FEATURE_ACTIVE';

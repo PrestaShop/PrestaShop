@@ -21,4 +21,10 @@ class FakeConfiguration implements ConfigurationInterface
         }
         return $this->keys[$key];
     }
+
+    public function set($key, $value)
+    {
+        $this->keys[$key] = $value;
+        return $this;
+    }
 }

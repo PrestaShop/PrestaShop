@@ -61,7 +61,7 @@
 {/block}
 {block name="input_row"}
 	{$smarty.block.parent}
-	{if ($input.name == 'thumb')}
-	{$displayBackOfficeCategory}
+	{if ($input.name == 'thumbnail')}
+		{$displayBackOfficeCategory}
 	{/if}
 {/block}

@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+
 class InstallModelInstall extends InstallAbstractModel
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
@@ -356,7 +358,7 @@ class InstallModelInstall extends InstallAbstractModel
         $shop->active = true;
         $shop->id_shop_group = $shop_group->id;
         $shop->id_category = 2;
-        $shop->id_theme = 1;
+        $shop->theme_name = _THEME_NAME_;
         $shop->name = $shop_name;
         if (!$shop->add()) {
             $this->setError($this->language->l('Cannot create shop').' / '.Db::getInstance()->getMsgError());
@@ -459,7 +461,6 @@ class InstallModelInstall extends InstallAbstractModel
             'categories' =>        _PS_CAT_IMG_DIR_,
             'manufacturers' =>    _PS_MANU_IMG_DIR_,
             'suppliers' =>        _PS_SUPP_IMG_DIR_,
-            'scenes' =>            _PS_SCENE_IMG_DIR_,
             'stores' =>            _PS_STORE_IMG_DIR_,
             null =>                _PS_IMG_DIR_.'l/', // Little trick to copy images in img/l/ path with all types
         );
@@ -719,7 +720,6 @@ class InstallModelInstall extends InstallAbstractModel
                 'gridhtml',
                 'homeslider',
                 'homefeatured',
-                'productpaymentlogos',
                 'pagesnotfound',
                 'sekeywords',
                 'statsbestcategories',
@@ -743,7 +743,6 @@ class InstallModelInstall extends InstallAbstractModel
                 'statssearch',
                 'statsstock',
                 'statsvisits',
-                'themeconfigurator',
             );
         }
         return $modules;
@@ -751,12 +750,19 @@ class InstallModelInstall extends InstallAbstractModel
 
     public function getAddonsModulesList($params = array())
     {
+        /**
+         * TODO: Remove blacklist once 1.7 is out.
+         */
+        $blacklist = ['productcomments'];
         $addons_modules = array();
         $content = Tools::addonsRequest('install-modules', $params);
         $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
 
         if ($xml !== false and isset($xml->module)) {
             foreach ($xml->module as $modaddons) {
+                if (in_array($modaddons->name, $blacklist)) {
+                    continue;
+                }
                 $addons_modules[] = array('id_module' => $modaddons->id, 'name' => $modaddons->name);
             }
         }
@@ -807,7 +813,11 @@ class InstallModelInstall extends InstallAbstractModel
 
             $module = Module::getInstanceByName($module_name);
             if (!$module->install()) {
-                $errors[] = $this->language->l('Cannot install module "%s"', $module_name);
+                $module_errors = $module->getErrors();
+                if (empty($module_errors)) {
+                    $module_errors = [$this->language->l('Cannot install module "%s"', $module_name)];
+                }
+                $errors[$module_name] = $module_errors;
             }
         }
 
@@ -907,23 +917,17 @@ class InstallModelInstall extends InstallAbstractModel
         return true;
     }
 
-    /**
-     * PROCESS : installTheme
-     * Install theme
-     */
     public function installTheme()
     {
-        // @todo do a real install of the theme
-        $sql_loader = new InstallSqlLoader();
-        $sql_loader->setMetaData(array(
-            'PREFIX_' => _DB_PREFIX_,
-            'ENGINE_TYPE' => _MYSQL_ENGINE_,
-        ));
+        $builder = new ThemeManagerBuilder(
+            Context::getContext(),
+            Db::getInstance()
+        );
 
-        $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'theme.sql', false);
-        if ($errors = $sql_loader->getErrors()) {
-            $this->setError($errors);
-            return false;
-        }
+        $theme_manager = $builder->build();
+
+        return $theme_manager->install(_THEME_NAME_) &&
+               $theme_manager->enable(_THEME_NAME_)
+        ;
     }
 }

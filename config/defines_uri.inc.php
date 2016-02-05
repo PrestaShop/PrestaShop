@@ -29,30 +29,9 @@ define('_PS_DEFAULT_THEME_NAME_', 'default-bootstrap');
 define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/');
 define('_THEMES_DIR_', __PS_BASE_URI__.'themes/');
 define('_THEME_DIR_', _THEMES_DIR_._THEME_NAME_.'/');
-define('_THEME_IMG_DIR_', _THEME_DIR_.'img/');
-define('_THEME_CSS_DIR_', _THEME_DIR_.'css/');
-define('_THEME_JS_DIR_', _THEME_DIR_.'js/');
-define('_PS_THEME_OVERRIDE_DIR_', _PS_THEME_DIR_.'override/');
-
-/* For mobile devices */
-if (file_exists(_PS_THEME_DIR_.'mobile/')) {
-    define('_PS_THEME_MOBILE_DIR_', _PS_THEME_DIR_.'mobile/');
-    define('_THEME_MOBILE_DIR_', _THEMES_DIR_._THEME_NAME_.'/mobile/');
-} else {
-    define('_PS_THEME_MOBILE_DIR_', _PS_ROOT_DIR_.'/themes/'._PS_DEFAULT_THEME_NAME_.'/mobile/');
-    define('_THEME_MOBILE_DIR_', __PS_BASE_URI__.'themes/'._PS_DEFAULT_THEME_NAME_.'/mobile/');
-}
-define('_PS_THEME_MOBILE_OVERRIDE_DIR_', _PS_THEME_MOBILE_DIR_.'override/');
-
-define('_THEME_MOBILE_IMG_DIR_', _THEME_MOBILE_DIR_.'img/');
-define('_THEME_MOBILE_CSS_DIR_', _THEME_MOBILE_DIR_.'css/');
-define('_THEME_MOBILE_JS_DIR_', _THEME_MOBILE_DIR_.'js/');
-
-/* For touch pad devices */
-define('_PS_THEME_TOUCHPAD_DIR_', _PS_THEME_DIR_.'touchpad/');
-define('_THEME_TOUCHPAD_DIR_', _THEMES_DIR_._THEME_NAME_.'/touchpad/');
-define('_THEME_TOUCHPAD_CSS_DIR_', _THEME_TOUCHPAD_DIR_.'css/');
-define('_THEME_TOUCHPAD_JS_DIR_', _THEME_TOUCHPAD_DIR_.'js/');
+define('_THEME_IMG_DIR_', _THEME_DIR_.'assets/img/');
+define('_THEME_CSS_DIR_', _THEME_DIR_.'assets/css/');
+define('_THEME_JS_DIR_', _THEME_DIR_.'assets/js/');
 
 /* Image URLs */
 define('_PS_IMG_', __PS_BASE_URI__.'img/');
@@ -61,8 +40,6 @@ define('_PS_TMP_IMG_', _PS_IMG_.'tmp/');
 define('_THEME_CAT_DIR_', _PS_IMG_.'c/');
 define('_THEME_PROD_DIR_', _PS_IMG_.'p/');
 define('_THEME_MANU_DIR_', _PS_IMG_.'m/');
-define('_THEME_SCENE_DIR_', _PS_IMG_.'scenes/');
-define('_THEME_SCENE_THUMB_DIR_', _PS_IMG_.'scenes/thumbs');
 define('_THEME_SUP_DIR_', _PS_IMG_.'su/');
 define('_THEME_SHIP_DIR_', _PS_IMG_.'s/');
 define('_THEME_STORE_DIR_', _PS_IMG_.'st/');

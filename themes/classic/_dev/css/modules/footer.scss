@@ -1,0 +1,69 @@
+.block_newsletter {
+  @include search-box;
+  @include submit-button;
+}
+.block-contact {
+  border-left: $gray-light 2px solid;
+  padding-left: em(70px);
+  color: $gray;
+}
+
+.block-cms li a,
+.account-list a {
+  color: $gray;
+  cursor: pointer;
+  &:hover{
+    color:$brand-primary;
+  }
+}
+.blockcms-title,
+.myaccount-title,
+.myaccount-title a,
+.block-contact-title {
+  font-weight: 700;
+  font-size: em(16px);
+}
+.block-social li {
+  height: em(40px);
+  width: em(40px);
+  background-color: $gray-light;
+  background-repeat: no-repeat;
+  display: inline-block;
+  margin: em(2px);
+  cursor: pointer;
+  &:hover {
+    background-color: $brand-primary;
+  }
+  a {
+    white-space: nowrap;
+    text-indent: 100%;
+    overflow: hidden;
+    &:hover {
+      color: transparent;
+    }
+  }
+}
+.facebook {
+  background-image: url(../img/facebook.svg);
+}
+.twitter {
+  background-image: url(../img/twitter.svg);
+}
+.rss {
+  background-image: url(../img/rss.svg);
+}
+.youtube {
+  background-image: url(../img/youtube.svg);
+}
+.googleplus {
+  background-image: url(../img/gplus.svg);
+}
+.pinterest {
+  background-image: url(../img/pinterest.svg);
+}
+.vimeo {
+  background-image: url(../img/vimeo.svg);
+}
+.instagram {
+  background-image: url(../img/instagram.svg);
+}

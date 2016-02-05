@@ -168,7 +168,8 @@ class AdminCountriesControllerCore extends AdminController
 
         $default_layout = '';
 
-        $default_layout_tab = array(
+        // TODO: Use format from XML
+        $default_layout_tab = [
             array('firstname', 'lastname'),
             array('company'),
             array('vat_number'),
@@ -177,7 +178,7 @@ class AdminCountriesControllerCore extends AdminController
             array('postcode', 'city'),
             array('Country:name'),
             array('phone'),
-            array('phone_mobile'));
+        ];
 
         foreach ($default_layout_tab as $line) {
             $default_layout .= implode(' ', $line)."\r\n";

@@ -87,7 +87,7 @@ class LinkCore
      * @param int $ipa ID product attribute
      * @return string
      */
-    public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false, $add_anchor = false)
+    public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false, $add_anchor = false, $extra_params = [])
     {
         $dispatcher = Dispatcher::getInstance();
 
@@ -110,8 +110,8 @@ class LinkCore
         // Set available keywords
         $params = array();
         $params['id'] = $product->id;
-        $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite', $id_lang) : $alias;
-
+        $params['id_product_attribute'] = $ipa;
+        $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
         $params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
         $params['meta_keywords'] =    Tools::str2url($product->getFieldByLang('meta_keywords'));
         $params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));
@@ -153,7 +153,98 @@ class LinkCore
         }
         $anchor = $ipa ? $product->getAnchor((int)$ipa, (bool)$add_anchor) : '';
 
-        return $url.$dispatcher->createUrl('product_rule', $id_lang, $params, $force_routes, $anchor, $id_shop);
+        return $url.$dispatcher->createUrl('product_rule', $id_lang, array_merge($params, $extra_params), $force_routes, $anchor, $id_shop);
+    }
+
+    public function getRemoveFromCartURL(
+        $id_product,
+        $id_product_attribute,
+        $id_customization = null
+    ) {
+        $params = [
+            'delete' => 1,
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        if ($id_customization) {
+            $params['id_customization'] = $id_customization;
+        }
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
+    }
+
+    public function getUpQuantityCartURL(
+        $id_product,
+        $id_product_attribute,
+        $id_customization = null
+    ) {
+        $params = [
+            'update' => 1,
+            'op' => 'up',
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        if ($id_customization) {
+            $params['id_customization'] = $id_customization;
+        }
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
+    }
+
+    public function getDownQuantityCartURL(
+        $id_product,
+        $id_product_attribute,
+        $id_customization = null
+    ) {
+        $params = [
+            'update' => 1,
+            'op' => 'down',
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        if ($id_customization) {
+            $params['id_customization'] = $id_customization;
+        }
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
+    }
+
+    public function getAddToCartURL($id_product, $id_product_attribute)
+    {
+        $params = [
+            'add' => 1,
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
     }
 
     /**
@@ -447,7 +538,7 @@ class LinkCore
         }
 
         // legacy mode or default image
-        $theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').'-'.(int)Context::getContext()->shop->id_theme.'.jpg')) ? '-'.Context::getContext()->shop->id_theme : '');
+        $theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').'-'.Context::getContext()->shop->theme_name.'.jpg')) ? '-'.Context::getContext()->shop->theme_name : '');
         if ((Configuration::get('PS_LEGACY_IMAGES')
             && (file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').$theme.'.jpg')))
             || ($not_default = strpos($ids, 'default') !== false)) {
@@ -460,7 +551,7 @@ class LinkCore
             // if ids if of the form id_product-id_image, we want to extract the id_image part
             $split_ids = explode('-', $ids);
             $id_image = (isset($split_ids[1]) ? $split_ids[1] : $split_ids[0]);
-            $theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_.Image::getImgFolderStatic($id_image).$id_image.($type ? '-'.$type : '').'-'.(int)Context::getContext()->shop->id_theme.'.jpg')) ? '-'.Context::getContext()->shop->id_theme : '');
+            $theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_.Image::getImgFolderStatic($id_image).$id_image.($type ? '-'.$type : '').'-'.(int)Context::getContext()->shop->theme_name.'.jpg')) ? '-'.Context::getContext()->shop->theme_name : '');
             if ($this->allow == 1) {
                 $uri_path = __PS_BASE_URI__.$id_image.($type ? '-'.$type : '').$theme.'/'.$name.'.jpg';
             } else {
@@ -517,6 +608,10 @@ class LinkCore
                 $request = urlencode($request);
             }
             parse_str($request, $request);
+        }
+
+        if ($controller === 'cart' && (!empty($request['add']) || !empty($request['delete'])) && Configuration::get('PS_TOKEN_ENABLE')) {
+            $request['token'] = Tools::getToken(false);
         }
 
         $uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request, false, '', $id_shop);
@@ -735,5 +830,84 @@ class LinkCore
         } else {
             return false;
         }
+    }
+
+    public static function getUrlSmarty($params, &$smarty)
+    {
+        $context = Context::getContext();
+
+        if (!isset($params['params'])) {
+            $params['params'] = [];
+        }
+
+        if (isset($params['id'])) {
+            $entity = str_replace('-', '_', $params['entity']);
+            $id = ['id_'.$entity => $params['id']];
+            $params['params'] = array_merge($id, $params['params']);
+        }
+
+        $default = [
+            'id_lang' => $context->language->id,
+            'id_shop' => null,
+            'alias' => null,
+            'ssl' => null,
+            'relative_protocol' => false,
+        ];
+        $params = array_merge($default, $params);
+
+        $url_parameters = http_build_query($params['params']);
+
+        switch ($params['entity']) {
+            case "category":
+                $params = array_merge(['selected_filters' => null], $params);
+                $link = $context->link->getCategoryLink(
+                    new Category($params['id'], $params['id_lang']),
+                    $params['alias'],
+                    $params['id_lang'],
+                    $params['selected_filters'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
+            case "cms":
+                $link = $context->link->getCMSLink(
+                    new CMS($params['id'], $params['id_lang']),
+                    $params['alias'],
+                    $params['ssl'],
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
+            case "module":
+                $params = array_merge([
+                    'selected_filters' => null,
+                    'params' => array(),
+                    'controller' => 'default',
+                ], $params);
+                $link = $context->link->getModuleLink(
+                    $params['name'],
+                    $params['controller'],
+                    $params['params'],
+                    $params['ssl'],
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
+            default:
+                $link = $context->link->getPageLink(
+                    $params['entity'],
+                    $params['ssl'],
+                    $params['id_lang'],
+                    $url_parameters,
+                    false,
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
+        }
+
+        return $link;
     }
 }

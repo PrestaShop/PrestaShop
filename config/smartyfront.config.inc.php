@@ -25,13 +25,33 @@
  */
 
 global $smarty;
-$smarty->setTemplateDir(_PS_THEME_DIR_.'tpl');
+$smarty->setTemplateDir(array(
+    _PS_THEME_DIR_.'templates',
+));
+$smarty->addPluginsDir(_PS_THEME_DIR_.'plugins');
 
 if (Configuration::get('PS_HTML_THEME_COMPRESSION')) {
     $smarty->registerFilter('output', 'smartyMinifyHTML');
 }
 if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION')) {
     $smarty->registerFilter('output', 'smartyPackJSinHTML');
+}
+
+$smarty->escape_html = true;
+smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');
+
+function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_encode = true)
+{
+    require_once implode(DIRECTORY_SEPARATOR, [
+        _PS_VENDOR_DIR_, 'prestashop', 'smarty', 'plugins',
+        'modifier.escape.php'
+    ]);
+    global $smarty;
+    if ($esc_type === 'html' && $smarty->escape_html) {
+        return $string;
+    } else {
+        return smarty_modifier_escape($string, $esc_type, $char_set, $double_encode);
+    }
 }
 
 function smartyTranslate($params, &$smarty)

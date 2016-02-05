@@ -28,14 +28,18 @@ namespace PrestaShop\PrestaShop\tests\Unit\Core\Crypto;
 use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 
-// FIXME: Defining this here will break all other Unit tests using UnitTestCase class!
-//define('_COOKIE_KEY_', '2349123849231-4123');
-
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
 class Core_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
 {
     public function setup()
     {
-        $this->hashing = new Hashing();
+        if (!defined('_COOKIE_KEY_')) {
+            define('_COOKIE_KEY_', '2349123849231-4123');
+        }
+        $this->hashing = new Hashing;
     }
 
     public function test_simple_check_hash_md5()

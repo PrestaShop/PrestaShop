@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+
 abstract class ModuleCore
 {
     /** @var int Module ID */
@@ -340,6 +342,7 @@ abstract class ModuleCore
         }
 
         if (!$this->installControllers()) {
+            $this->_errors[] = Tools::displayError('Could not install module controllers.');
             return false;
         }
 
@@ -651,7 +654,6 @@ abstract class ModuleCore
             $page_name = 'module-'.$this->name.'-'.$controller;
             $meta = Db::getInstance()->getValue('SELECT id_meta FROM `'._DB_PREFIX_.'meta` WHERE page="'.pSQL($page_name).'"');
             if ((int)$meta > 0) {
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme_meta` WHERE id_meta='.(int)$meta);
                 Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta_lang` WHERE id_meta='.(int)$meta);
                 Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'meta` WHERE id_meta='.(int)$meta);
             }
@@ -891,8 +893,6 @@ abstract class ModuleCore
                 $new_hook = new Hook();
                 $new_hook->name = pSQL($hook_name);
                 $new_hook->title = pSQL($hook_name);
-                $new_hook->live_edit = (bool)preg_match('/^display/i', $new_hook->name);
-                $new_hook->position = (bool)$new_hook->live_edit;
                 $new_hook->add();
                 $id_hook = $new_hook->id;
                 if (!$id_hook) {
@@ -1367,10 +1367,24 @@ abstract class ModuleCore
                     // We check any parse error before including the file.
                     // If (false) is a trick to not load the class with "eval".
                     // This way require_once will works correctly
-                    if (substr(`php -l $file_path`, 0, 16) == 'No syntax errors' || eval('if (false){	'.$file."\n".' }') !== false) {
-                        require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
-                    } else {
-                        $module_errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
+                    // But namespace and use statements need to be removed
+                    $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
+                    $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
+                    try {
+                        if (substr(`php -l $file_path`, 0, 16) == 'No syntax errors' || eval('if (false){	'.$content.' }') !== false) {
+                            require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
+                        } else {
+                            throw new ParseError("Parse error");
+                        }
+                    } catch (ParseError $e) {
+                        $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
+                    }
+
+                    preg_match('/\n[\s\t]*?namespace\s.*?;/', $file, $ns);
+                    if (!empty($ns)) {
+                        $ns = preg_replace('/\n[\s\t]*?namespace\s/', '', $ns[0]);
+                        $ns = rtrim($ns, ';');
+                        $module = $ns.'\\'.$module;
                     }
                 }
 
@@ -1733,7 +1747,7 @@ abstract class ModuleCore
 
         if ($trusted_modules_list_content === null) {
             $trusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST);
-            if (strpos($trusted_modules_list_content, $context->theme->name) === false) {
+            if (strpos($trusted_modules_list_content, $context->shop->theme->getName()) === false) {
                 self::generateTrustedXml();
             }
         }
@@ -1833,11 +1847,10 @@ abstract class ModuleCore
         }
 
         $context = Context::getContext();
-        $theme = new Theme($context->shop->id_theme);
 
         // Save the 2 arrays into XML files
         $trusted_xml = new SimpleXMLElement('<modules_list/>');
-        $trusted_xml->addAttribute('theme', $theme->name);
+        $trusted_xml->addAttribute('theme', $context->shop->theme->getName());
         $modules = $trusted_xml->addChild('modules');
         $modules->addAttribute('type', 'trusted');
         foreach ($trusted as $key => $name) {
@@ -1951,8 +1964,8 @@ abstract class ModuleCore
         }
 
         $hook_payment = 'Payment';
-        if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\'')) {
-            $hook_payment = 'displayPayment';
+        if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'paymentOptions\'')) {
+            $hook_payment = 'paymentOptions';
         }
 
         $list = Shop::getContextListShopID();
@@ -2316,10 +2329,6 @@ abstract class ModuleCore
         if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null) {
             return Tools::displayError('No template found for module').' '.basename($file, '.php');
         } else {
-            if (Tools::getIsset('live_edit') || Tools::getIsset('live_configurator_token')) {
-                $cache_id = null;
-            }
-
             $this->smarty->assign(array(
                 'module_dir' =>    __PS_BASE_URI__.'modules/'.basename($file, '.php').'/',
                 'module_template_dir' => ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/',
@@ -2400,9 +2409,6 @@ abstract class ModuleCore
 
     public function isCached($template, $cache_id = null, $compile_id = null)
     {
-        if (Tools::getIsset('live_edit') || Tools::getIsset('live_configurator_token')) {
-            return false;
-        }
         Tools::enableCache();
         $new_tpl = $this->getTemplatePath($template);
         $is_cached = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->isCached($new_tpl, $cache_id, $compile_id);
@@ -2512,6 +2518,10 @@ abstract class ModuleCore
      */
     public function isHookableOn($hook_name)
     {
+        if ($this instanceof WidgetInterface) {
+            return Hook::isDisplayHookName($hook_name);
+        }
+
         $retro_hook_name = Hook::getRetroHookName($hook_name);
         return (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($retro_hook_name))));
     }
@@ -2699,8 +2709,6 @@ abstract class ModuleCore
      */
     private function installControllers()
     {
-        $themes = Theme::getThemes();
-        $theme_meta_value = array();
         foreach ($this->controllers as $controller) {
             $page = 'module-'.$this->name.'-'.$controller;
             $result = Db::getInstance()->getValue('SELECT * FROM '._DB_PREFIX_.'meta WHERE page="'.pSQL($page).'"');
@@ -2712,22 +2720,6 @@ abstract class ModuleCore
             $meta->page = $page;
             $meta->configurable = 1;
             $meta->save();
-            if ((int)$meta->id > 0) {
-                foreach ($themes as $theme) {
-                    /** @var Theme $theme */
-                    $theme_meta_value[] = array(
-                        'id_theme' => $theme->id,
-                        'id_meta' => $meta->id,
-                        'left_column' => (int)$theme->default_left_column,
-                        'right_column' => (int)$theme->default_right_column
-                    );
-                }
-            } else {
-                $this->_errors[] = sprintf(Tools::displayError('Unable to install controller: %s'), $controller);
-            }
-        }
-        if (count($theme_meta_value) > 0) {
-            return Db::getInstance()->insert('theme_meta', $theme_meta_value);
         }
 
         return true;
@@ -3077,6 +3069,11 @@ abstract class ModuleCore
         return true;
     }
 
+    private function getWidgetHooks()
+    {
+        return array_values(Hook::getHooks(false, true));
+    }
+
     /**
      * Return the hooks list where this module can be hooked.
      *
@@ -3084,6 +3081,10 @@ abstract class ModuleCore
      */
     public function getPossibleHooksList()
     {
+        if ($this instanceof WidgetInterface) {
+            return $this->getWidgetHooks();
+        }
+
         $hooks_list = Hook::getHooks();
         $possible_hooks_list = array();
         foreach ($hooks_list as &$current_hook) {
