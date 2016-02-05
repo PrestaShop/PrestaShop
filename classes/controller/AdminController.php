@@ -385,7 +385,7 @@ class AdminControllerCore extends Controller
     /** @var bool if logged employee has access to AdminImport */
     protected $can_import = false;
 
-    public function __construct()
+    public function __construct($forceControllerName = '')
     {
         global $timer_start;
         $this->timer_start = $timer_start;
@@ -393,7 +393,7 @@ class AdminControllerCore extends Controller
         global $token;
 
         $this->controller_type = 'admin';
-        $this->controller_name = get_class($this);
+        $this->controller_name = !empty($forceControllerName) ? $forceControllerName : get_class($this);
         if (strpos($this->controller_name, 'Controller')) {
             $this->controller_name = substr($this->controller_name, 0, -10);
         }
@@ -1939,7 +1939,7 @@ class AdminControllerCore extends Controller
                 $img = str_replace('png', 'gif', $img);
             }
             // tab[class_name] does not contains the "Controller" suffix
-            if (($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab'])) {
+            if (($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']) || $tab['class_name'] == $this->controller_name) {
                 $tabs[$index]['current'] = true;
                 $tabs[$index]['current_level'] = $level;
             } else {
