@@ -1438,7 +1438,7 @@ var imagesProduct = (function() {
 				thumbnailWidth: 130,
 				thumbnailHeight: null,
 				acceptedFiles: 'image/*',
-				dictDefaultMessage: '<h4>'+translate_javascripts['Drop pictures here']+'</h4>'+translate_javascripts['or select files']+'<div>' + translate_javascripts['files recommandations'] + '</div>',
+				dictDefaultMessage: '<i class="zmdi zmdi-camera"></i><br/>'+translate_javascripts['Drop images here']+'<br/>'+translate_javascripts['or select files']+'<br/><small>' + translate_javascripts['files recommandations'] + '<br/>' + translate_javascripts['files recommandations2'] + '</small></div>',
 				dictRemoveFile: translate_javascripts['Delete'],
 				dictFileTooBig: translate_javascripts['ToLargeFile'],
 				dictCancelUpload: translate_javascripts['Delete'],

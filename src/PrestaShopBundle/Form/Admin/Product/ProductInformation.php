@@ -103,7 +103,7 @@ class ProductInformation extends CommonAbstractType
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&excludeVirtuals=1&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
-            'placeholder' => $this->translator->trans('search in catalog...', [], 'AdminProducts'),
+            'placeholder' => $this->translator->trans('Search for a product', [], 'AdminProducts'),
             'template_collection' => '<span class="title">%s</span><span class="ref">REF: %s</span><span class="quantity">X %s</span><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
             'required' => false,
             'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
@@ -223,7 +223,7 @@ class ProductInformation extends CommonAbstractType
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
-            'placeholder' => $this->translator->trans('search in catalog...', [], 'AdminProducts'),
+            'placeholder' => $this->translator->trans('Search and add a related product', [], 'AdminProducts'),
             'template_collection' => '<div class="title col-xs-10">%s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
             'required' => false,
             'label' =>  $this->translator->trans('Accessories', [], 'AdminProducts')

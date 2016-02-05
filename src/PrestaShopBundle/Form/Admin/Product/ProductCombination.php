@@ -68,12 +68,12 @@ class ProductCombination extends CommonAbstractType
         ))
         ->add('attribute_reference', FormType\TextType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Reference code', [], 'AdminProducts')
+            'label' => $this->translator->trans('Reference', [], 'AdminProducts')
         ))
         ->add('attribute_ean13', FormType\TextType::class, array(
             'required' => false,
             'error_bubbling' => true,
-            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
+            'label' => $this->translator->trans('BAN-13 or JAN barcode', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\Regex("/^[0-9]{0,13}$/"),
             )
@@ -91,7 +91,7 @@ class ProductCombination extends CommonAbstractType
         ))
         ->add('attribute_wholesale_price', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Cost price', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('attribute_price', FormType\MoneyType::class, array(
@@ -109,7 +109,7 @@ class ProductCombination extends CommonAbstractType
         ))
         ->add('attribute_ecotax', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Ecotax', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
@@ -139,7 +139,7 @@ class ProductCombination extends CommonAbstractType
             'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD']
         ))
         ->add('attribute_default', FormType\CheckboxType::class, array(
-            'label'    => $this->translator->trans('Make this combination the default combination for this product.', [], 'AdminProducts'),
+            'label'    => $this->translator->trans('Set as default combination', [], 'AdminProducts'),
             'required' => false,
         ))
         ->add('attribute_quantity', FormType\NumberType::class, array(
@@ -156,7 +156,7 @@ class ProductCombination extends CommonAbstractType
             'required' => false,
             'expanded' => true,
             'multiple' => true,
-            'label' => $this->translator->trans('Images of this combination', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Select images of this combination:', [], 'AdminProducts'),
             'attr' => array('class' => 'images'),
         ));
 

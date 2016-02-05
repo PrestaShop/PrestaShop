@@ -60,7 +60,7 @@ class ProductSeo extends CommonAbstractType
         $builder->add('meta_title', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
             'type' => FormType\TextType::class,
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('Same title as the product, can be edited', [], 'AdminProducts')],
+                'attr' => ['placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'AdminProducts')],
                 'required' => false
             ],
             'locales' => $this->locales,
@@ -71,7 +71,7 @@ class ProductSeo extends CommonAbstractType
         ->add('meta_description', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
             'type' => FormType\TextType::class,
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('Same description as the product, can be edited', [], 'AdminProducts')],
+                'attr' => ['placeholder' => $this->translator->trans('To have a different description than your product summary, enter it here.', [], 'AdminProducts')],
                 'required' => false
             ],
             'locales' => $this->locales,
@@ -94,17 +94,17 @@ class ProductSeo extends CommonAbstractType
             ),
             'choices_as_values' => true,
             'required' => true,
-            'label' => $this->translator->trans('Redirection when inactive', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Redirection when offline', [], 'AdminProducts'),
         ))
         ->add('id_product_redirected', \PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType::class, array(
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
-            'placeholder' => $this->translator->trans('search in catalog...', [], 'AdminProducts'),
+            'placeholder' => $this->translator->trans('To which product the page should redirect?', [], 'AdminProducts'),
             'template_collection' => '<div class="title col-xs-9">%s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
             'limit' => 1,
             'required' => false,
-            'label' => $this->translator->trans('Related product', [], 'AdminProducts')
+            'label' => $this->translator->trans('Target product', [], 'AdminProducts')
         ));
     }
 

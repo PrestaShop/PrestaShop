@@ -79,7 +79,7 @@ class ProductFeature extends CommonAbstractType
             )
         ))
         ->add('value', FormType\ChoiceType::class, array(
-            'label' => $this->translator->trans('Value', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
             'required' =>  false,
             'choices_as_values' => true,
             'attr' => array('class' => 'feature-value-selector')
@@ -90,7 +90,7 @@ class ProductFeature extends CommonAbstractType
             'locales' => $this->locales,
             'hideTabs' => true,
             'required' =>  false,
-            'label' => $this->translator->trans('Custom value', [], 'AdminProducts'),
+            'label' => $this->translator->trans('OR Customized value', [], 'AdminProducts'),
         ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -108,7 +108,7 @@ class ProductFeature extends CommonAbstractType
             );
 
             $form->add('value', FormType\ChoiceType::class, array(
-                'label' => $this->translator->trans('Value', [], 'AdminProducts'),
+                'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
                 'choices' => $choices,
                 'choices_as_values' => true,
                 'required' =>  false,
@@ -132,7 +132,7 @@ class ProductFeature extends CommonAbstractType
             );
 
             $form->add('value', FormType\ChoiceType::class, array(
-                'label' => $this->translator->trans('Value', [], 'AdminProducts'),
+                'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),
                 'choices' => $choices,

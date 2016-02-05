@@ -71,7 +71,7 @@ class ProductShipping extends CommonAbstractType
     {
         $builder->add('width', FormType\NumberType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Package width', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Width', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
@@ -79,7 +79,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('height', FormType\NumberType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Package height', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Height', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
@@ -87,7 +87,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('depth', FormType\NumberType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Package depth', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Depth', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
@@ -95,7 +95,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('weight', FormType\NumberType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Package weight', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Weight', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
@@ -103,7 +103,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('additional_shipping_cost', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Additional shipping fees (for a single item)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Shipping fees', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
@@ -116,7 +116,7 @@ class ProductShipping extends CommonAbstractType
             'expanded' =>  true,
             'multiple' =>  true,
             'required' =>  false,
-            'label' => $this->translator->trans('Carriers', [], 'AdminProducts')
+            'label' => $this->translator->trans('Available carriers', [], 'AdminProducts')
         ));
 
         foreach ($this->warehouses as $warehouse) {
