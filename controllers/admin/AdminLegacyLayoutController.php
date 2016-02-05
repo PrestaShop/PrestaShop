@@ -33,7 +33,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
     public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true)
     {
-        parent::__construct();
+        parent::__construct($controllerName);
 
         $this->title = $title;
         $this->display = $displayType;
