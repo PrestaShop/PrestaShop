@@ -2,10 +2,10 @@
   <nav class="header-nav row">
     <div class="container">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-5">
             {hook h='displayNav1'}
           </div>
-          <div class="col-md-6 right-nav">
+          <div class="col-md-7 right-nav">
               {hook h='displayNav2'}
           </div>
         </div>
