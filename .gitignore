@@ -12,7 +12,7 @@ download/*
 /vendor/*
 docs/phpdoc-sf/
 /composer.lock
-tests/StarterTheme/errorShots/
+tests/selenium/errorShots/
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
@@ -30,7 +30,7 @@ config/settings.inc.php
 config/settings.old.php
 config/xml/*
 !config/xml/themes/default.xml
-tests/StarterTheme/settings.js
+tests/selenium/settings.js
 themes/*/config/settings_*.json
 
 # Themes, modules and overrides

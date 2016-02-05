@@ -1,6 +1,6 @@
 /* global describe, it, browser, before, after */
 
-var fixtures = require('../../fixtures');
+import fixtures from '../../fixtures';
 
 describe('Order history page', function () {
 
@@ -15,7 +15,7 @@ describe('Order history page', function () {
   it('should display a list of orders', function () {
     return browser
         .url(fixtures.urls.orderhistory)
-        .elements('.page-content a.order-detail-link')
+        .elements('a[href*="controller=order-detail"]')
         .then(function (elements) {
           elements.value.length.should.be.greaterThan(0);
         })
@@ -25,7 +25,7 @@ describe('Order history page', function () {
   it('should allow customer to see details', function () {
     return browser
         .url(fixtures.urls.orderhistory)
-        .click('.page-content a.order-detail-link')
+        .click('a[href*="controller=order-detail"]')
         .isExisting('.page-content #order-infos')
         .then(function (isExisting) {
           isExisting.should.be.true;
