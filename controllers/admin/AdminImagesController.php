@@ -63,11 +63,6 @@ class AdminImagesControllerCore extends AdminController
             'stores' => array('title' => $this->l('Stores'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
         );
 
-        // Scenes tab has been removed by default from the installation, but may still exists in updates
-        if (Tab::getIdFromClassName('AdminScenes')) {
-            $this->fields_list['scenes'] = array('title' => $this->l('Scenes'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false);
-        }
-
         // No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
         $this->display_move = false;
         $dir = _PS_PROD_IMG_DIR_;
@@ -309,27 +304,6 @@ class AdminImagesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Scenes'),
-                    'name' => 'scenes',
-                    'required' => false,
-                    'class' => 't',
-                    'is_bool' => true,
-                    'hint' => $this->l('This type will be used for Scene images.'),
-                    'values' => array(
-                        array(
-                            'id' => 'scenes_on',
-                            'value' => 1,
-                            'label' => $this->l('Enabled')
-                        ),
-                        array(
-                            'id' => 'scenes_off',
-                            'value' => 0,
-                            'label' => $this->l('Disabled')
-                        ),
-                    )
-                ),
-                array(
-                    'type' => 'switch',
                     'label' => $this->l('Stores'),
                     'name' => 'stores',
                     'required' => false,
@@ -425,7 +399,6 @@ class AdminImagesControllerCore extends AdminController
             'categories' => $this->l('Categories'),
             'manufacturers' => $this->l('Manufacturers'),
             'suppliers' => $this->l('Suppliers'),
-            'scenes' => $this->l('Scenes'),
             'products' => $this->l('Products'),
             'stores' => $this->l('Stores')
         );
@@ -508,16 +481,12 @@ class AdminImagesControllerCore extends AdminController
         $generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
 
         if (!$productsImages) {
-            $formated_thumb_scene = ImageType::getFormattedName('thumb_scene');
             $formated_medium = ImageType::getFormattedName('medium');
             foreach (scandir($dir) as $image) {
                 if (preg_match('/^[0-9]*\.jpg$/', $image)) {
                     foreach ($type as $k => $imageType) {
                         // Customizable writing dir
                         $newDir = $dir;
-                        if ($imageType['name'] == $formated_thumb_scene) {
-                            $newDir .= 'thumbs/';
-                        }
                         if (!file_exists($newDir)) {
                             continue;
                         }
@@ -651,7 +620,6 @@ class AdminImagesControllerCore extends AdminController
             array('type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_),
             array('type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_),
             array('type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_),
-            array('type' => 'scenes', 'dir' => _PS_SCENE_IMG_DIR_),
             array('type' => 'products', 'dir' => _PS_PROD_IMG_DIR_),
             array('type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_)
         );

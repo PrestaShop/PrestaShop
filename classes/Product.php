@@ -927,7 +927,7 @@ class ProductCore extends ObjectModel
 
         // Removes the product from StockAvailable, for the current shop
         StockAvailable::removeProductFromStockAvailable($this->id);
-        $result &= ($this->deleteProductAttributes() && $this->deleteImages() && $this->deleteSceneProducts());
+        $result &= ($this->deleteProductAttributes() && $this->deleteImages());
         // If there are still entries in product_shop, don't remove completely the product
         if ($this->hasMultishopEntries()) {
             return true;
@@ -1870,19 +1870,6 @@ class ProductCore extends ObjectModel
     {
         return Db::getInstance()->execute(
             'DELETE FROM `'._DB_PREFIX_.'product_sale`
-			WHERE `id_product` = '.(int)$this->id
-        );
-    }
-
-    /**
-    * Delete product in its scenes
-    *
-    * @return array Deletion result
-    */
-    public function deleteSceneProducts()
-    {
-        return Db::getInstance()->execute(
-            'DELETE FROM `'._DB_PREFIX_.'scene_products`
 			WHERE `id_product` = '.(int)$this->id
         );
     }
@@ -3440,7 +3427,7 @@ class ProductCore extends ObjectModel
         return true;
     }
 
-    public static function getAttributesColorList(Array $products, $have_stock = true)
+    public static function getAttributesColorList(array $products, $have_stock = true)
     {
         if (!count($products)) {
             return array();
@@ -6215,7 +6202,7 @@ class ProductCore extends ObjectModel
         return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product p
 		'.Shop::addSqlAssociation('product', 'p').' SET product_shop.pack_stock_type = '.(int)$pack_stock_type.' WHERE p.`id_product` = '.(int)$id_product);
     }
-    
+
     /**
      * Gets a list of IDs from a list of IDs/Refs. The result will avoid duplicates, and checks if given IDs/Refs exists in DB.
      * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
@@ -6235,7 +6222,7 @@ class ProductCore extends ObjectModel
                 $refs[] = '\''.pSQL($id_or_ref).'\'';
             }
         }
-        
+
         // construct WHERE statement with OR combination
         if (count($ids) > 0) {
             $whereStatements[] = ' p.id_product IN ('.implode(',', $ids).') ';

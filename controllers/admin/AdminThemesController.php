@@ -208,15 +208,14 @@ class AdminThemesControllerCore extends AdminController
             foreach ($xml->images->image as $row) {
                 Db::getInstance()->delete('image_type', '`name` = \''.pSQL($row['name']).'\'');
                 Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`)
+					INSERT INTO `'._DB_PREFIX_.'image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`)
 					VALUES (\''.pSQL($row['name']).'\',
 						'.(int)$row['width'].',
 						'.(int)$row['height'].',
 						'.($row['products'] == 'true' ? 1 : 0).',
 						'.($row['categories'] == 'true' ? 1 : 0).',
 						'.($row['manufacturers'] == 'true' ? 1 : 0).',
-						'.($row['suppliers'] == 'true' ? 1 : 0).',
-						'.($row['scenes'] == 'true' ? 1 : 0).')');
+						'.($row['suppliers'] == 'true' ? 1 : 0));
 
                 $return['ok'][] = array(
                         'name' => strval($row['name']),

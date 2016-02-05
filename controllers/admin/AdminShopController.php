@@ -557,7 +557,6 @@ class AdminShopControllerCore extends AdminController
             'meta_lang' => $this->l('Meta information'),
             'product' => $this->l('Products'),
             'product_attribute' => $this->l('Product combinations'),
-            'scene' => $this->l('Scenes'),
             'stock_available' => $this->l('Available quantities for sale'),
             'store' => $this->l('Stores'),
             'warehouse' => $this->l('Warehouses'),
