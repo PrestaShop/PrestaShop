@@ -57,7 +57,7 @@
 											</div>
 										</div>
 									</div>
-									<img class="center-block img-thumbnail" src="../themes/{$theme->getName()}/preview.png" alt="{$theme->getName()}" />
+									<img class="center-block img-thumbnail" src="{$cur_theme->get('preview')}" alt="{$theme->getName()}" />
 								</div>
 							</div>
 						</div>
@@ -80,7 +80,7 @@
 
 			<div class="col-md-3">
 				<a href="{$base_url}" class="_blank">
-					<img class="center-block img-thumbnail" src="../themes/{$cur_theme->getName()}/preview.png" alt="{$cur_theme->getName()}" />
+					<img class="center-block img-thumbnail" src="{$cur_theme->get('preview')}" alt="{$cur_theme->getName()}" />
 				</a>
 			</div>
 
