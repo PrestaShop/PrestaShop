@@ -94,7 +94,7 @@ class ThemeManager implements AddonManagerInterface
      */
     public function uninstall($name)
     {
-        if (!$this->employee->canDelete()
+        if (!$this->employee->can('delete', 'AdminThemes')
             && $this->isThemeUsed($name)) {
             return false;
         }
