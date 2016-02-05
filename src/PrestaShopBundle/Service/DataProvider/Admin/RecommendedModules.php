@@ -64,18 +64,18 @@ class RecommendedModules
         // FIXME: replace static by dynamic call from add-ons when available
         switch ($domain) {
             case 'products_quantity':
-                return [];
+                return ['pm_advancedpack', 'quotation', 'amazon', 'pushoncart', 'cartabandonmentpro'];
             case 'products_shipping':
-                return ['boxdropshipment', 'pqeasypost'];
+                return ['orderpreparation', 'pqeasypost', 'printlabels', 'upstrackingv2'];
             case 'products_price':
-                return ['pm_multiplefeatures', 'groupinc'];
+                return ['ordertaxprofitreport', 'massiveprices', 'giftcards', 'groupinc', 'moneybookers', 'authorizeaim'];
             case 'products_seo':
-                return ['ebay', 'gshopping', 'amazon', 'ec_seo404', 'cdiscount'];
+                return ['ganalytics', 'gshopping', 'leguide', 'seoexpert', 'pm_seointernallinking', 'ec_seo404'];
             case 'products_options':
-                return ['productsbycategoryslider', 'pm_multiplefeatures'];
+                return ['pm_multiplefeatures', 'pm_advancedsearch4', 'banipmod', 'mynewsletter', 'allinone_rewards', 'pm_cachemanager', 'lgcookieslaw', 'customfields'];
             case 'products_others':
             default:
-                return ['favoriteproducts', 'wic_pushproductcms', 'productsbycategoryslider', 'erpillicopresta'];
+                return [];
         }
     }
 
