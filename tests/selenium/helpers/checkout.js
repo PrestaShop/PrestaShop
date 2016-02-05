@@ -5,7 +5,7 @@ import fixtures from '../fixtures';
 export function addSomeProductToCart () {
     return browser
         .url(fixtures.urls.aCategoryWithProducts)
-        .click('[data-link-action="add-to-cart"]')
-        .waitForVisible('#blockcart-modal')
+        .click('.product-miniature:nth-of-type(2)')
+        .click('[name=add]')
     ;
 };
