@@ -943,7 +943,6 @@ CREATE TABLE `PREFIX_image_type` (
   `categories` tinyint(1) NOT NULL DEFAULT '1',
   `manufacturers` tinyint(1) NOT NULL DEFAULT '1',
   `suppliers` tinyint(1) NOT NULL DEFAULT '1',
-  `scenes` tinyint(1) NOT NULL DEFAULT '1',
   `stores` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_image_type`),
   KEY `image_type_name` (`name`)
@@ -1713,35 +1712,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_request_sql` (
   PRIMARY KEY (`id_request_sql`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_scene` (
-  `id_scene` int(10) unsigned NOT NULL auto_increment,
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_scene`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_scene_category` (
-  `id_scene` int(10) unsigned NOT NULL,
-  `id_category` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_scene`,`id_category`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_scene_lang` (
-  `id_scene` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(100) NOT NULL,
-  PRIMARY KEY (`id_scene`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_scene_products` (
-  `id_scene` int(10) unsigned NOT NULL,
-  `id_product` int(10) unsigned NOT NULL,
-  `x_axis` int(4) NOT NULL,
-  `y_axis` int(4) NOT NULL,
-  `zone_width` int(3) NOT NULL,
-  `zone_height` int(3) NOT NULL,
-  PRIMARY KEY (`id_scene`, `id_product`, `x_axis`, `y_axis`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_search_engine` (
   `id_search_engine` int(10) unsigned NOT NULL auto_increment,
   `server` varchar(64) NOT NULL,
@@ -2208,13 +2178,6 @@ CREATE TABLE `PREFIX_webservice_account_shop` (
 `id_webservice_account` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 PRIMARY KEY (`id_webservice_account` , `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_scene_shop` (
-`id_scene` INT( 11 ) UNSIGNED NOT NULL ,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-PRIMARY KEY (`id_scene`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 

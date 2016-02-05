@@ -522,7 +522,7 @@ class InstallXmlLoader
 
         $this->storeId($entity, $identifier, $entity_id);
     }
-    
+
     public function createEntityStockAvailable($identifier, array $data, array $data_lang)
     {
         $stock_available = new StockAvailable();
@@ -591,7 +591,6 @@ class InstallXmlLoader
             'category' => 'categories',
             'manufacturer' => 'manufacturers',
             'supplier' => 'suppliers',
-            'scene' => 'scenes',
             'store' => 'stores',
         );
 
@@ -634,20 +633,6 @@ class InstallXmlLoader
             }
         }
         Image::moveToNewFileSystem();
-    }
-
-    public function copyImagesScene($identifier, array $data)
-    {
-        $this->copyImages('scene', $identifier, 'scenes', $data);
-
-        $from_path = $this->img_path.'scenes/thumbs/';
-        $dst_path =  _PS_IMG_DIR_.'scenes/thumbs/';
-        $entity_id = $this->retrieveId('scene', $identifier);
-
-        if (!@copy($from_path.$identifier.'-m_scene_default.jpg', $dst_path.$entity_id.'-m_scene_default.jpg')) {
-            $this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier, 'scene'));
-            return;
-        }
     }
 
     public function copyImagesOrderState($identifier, array $data)
@@ -1236,7 +1221,6 @@ class InstallXmlLoader
             'category' => 'categories',
             'manufacturer' => 'manufacturers',
             'supplier' => 'suppliers',
-            'scene' => 'scenes',
             'store' => 'stores',
         );
 

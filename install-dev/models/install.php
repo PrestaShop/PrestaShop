@@ -461,7 +461,6 @@ class InstallModelInstall extends InstallAbstractModel
             'categories' =>        _PS_CAT_IMG_DIR_,
             'manufacturers' =>    _PS_MANU_IMG_DIR_,
             'suppliers' =>        _PS_SUPP_IMG_DIR_,
-            'scenes' =>            _PS_SCENE_IMG_DIR_,
             'stores' =>            _PS_STORE_IMG_DIR_,
             null =>                _PS_IMG_DIR_.'l/', // Little trick to copy images in img/l/ path with all types
         );

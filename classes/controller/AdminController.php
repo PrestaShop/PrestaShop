@@ -1163,11 +1163,6 @@ class AdminControllerCore extends Controller
                         if ($back = Tools::getValue('back')) {
                             $this->redirect_after = urldecode($back).'&conf=4';
                         }
-                        // Specific scene feature
-                        // @todo change stay_here submit name (not clear for redirect to scene ... )
-                        if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1') {
-                            $this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$this->token;
-                        }
                         // Save and stay on same form
                         // @todo on the to following if, we may prefer to avoid override redirect_after previous value
                         if (Tools::isSubmit('submitAdd'.$this->table.'AndStay')) {

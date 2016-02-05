@@ -77,8 +77,6 @@ $plugins = array(
                     array('new_file' => 'admin/orders.js', 'name' => 'orders'),
                 'attributesBack.js' =>
                     array('new_file' => 'admin/attributes.js', 'name' => 'attributes'),
-                'admin-scene-cropping.js' =>
-                    array('new_file' => 'admin/scenes.js', 'name' => 'scenes'),
                 'admin-dnd.js' =>
                     array('new_file' => 'admin/dnd.js', 'name' => 'dnd'),
                 'login.js' =>
