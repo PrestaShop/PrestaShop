@@ -437,9 +437,6 @@
   <configuration id="PS_SPECIFIC_PRICE_FEATURE_ACTIVE" name="PS_SPECIFIC_PRICE_FEATURE_ACTIVE">
     <value>1</value>
   </configuration>
-  <configuration id="PS_SCENE_FEATURE_ACTIVE" name="PS_SCENE_FEATURE_ACTIVE">
-    <value>1</value>
-  </configuration>
   <configuration id="PS_VIRTUAL_PROD_FEATURE_ACTIVE" name="PS_VIRTUAL_PROD_FEATURE_ACTIVE">
     <value>0</value>
   </configuration>

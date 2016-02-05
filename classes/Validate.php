@@ -1022,33 +1022,6 @@ class ValidateCore
 
     /**
      *
-     * @param array $zones
-     * @return bool return true if array contain all value required for an image map zone
-     */
-    public static function isSceneZones($zones)
-    {
-        foreach ($zones as $zone) {
-            if (!isset($zone['x1']) || !Validate::isUnsignedInt($zone['x1'])) {
-                return false;
-            }
-            if (!isset($zone['y1']) || !Validate::isUnsignedInt($zone['y1'])) {
-                return false;
-            }
-            if (!isset($zone['width']) || !Validate::isUnsignedInt($zone['width'])) {
-                return false;
-            }
-            if (!isset($zone['height']) || !Validate::isUnsignedInt($zone['height'])) {
-                return false;
-            }
-            if (!isset($zone['id_product']) || !Validate::isUnsignedInt($zone['id_product'])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     *
      * @param array $stock_management
      * @return bool return true if is a valide stock management
      */
