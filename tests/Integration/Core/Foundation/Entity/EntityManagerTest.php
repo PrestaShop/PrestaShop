@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\Core\Foundation\Entity;
+namespace PrestaShop\PrestaShop\tests\Integration\Core\Foundation\Entity;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-use Core_Business_ContainerBuilder;
+use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use CMSRole;
 use CMSRoleRepository;
 use Db;
@@ -40,15 +40,15 @@ class EntityManagerTest extends IntegrationTestCase
 
     public function setup()
     {
-        $containerBuilder = new Core_Business_ContainerBuilder;
+        $containerBuilder = new ContainerBuilder();
         $this->container = $containerBuilder->build();
-        $this->entityManager = $this->container->make('Core_Foundation_Database_EntityManager');
+        $this->entityManager = $this->container->make('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager');
     }
 
     public function test_explicitly_defined_repository_is_found_by_entitymanager()
     {
         $this->assertInstanceOf(
-            'Core_Business_CMS_CMSRoleRepository',
+            '\\PrestaShop\\PrestaShop\\Core\\CMS\\CMSRoleRepository',
             $this->entityManager->getRepository('CMSRole')
         );
     }

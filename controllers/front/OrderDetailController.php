@@ -86,7 +86,7 @@ class OrderDetailControllerCore extends FrontController
                         $ct->status = 'open';
                         $ct->update();
                     }
-                    
+
                     $cm->id_customer_thread = $ct->id;
                     $cm->message = $msgText;
                     $cm->ip_address = (int)ip2long($_SERVER['REMOTE_ADDR']);

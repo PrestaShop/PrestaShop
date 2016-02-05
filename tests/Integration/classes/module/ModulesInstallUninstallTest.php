@@ -35,6 +35,7 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
 {
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         Module::updateTranslationsAfterInstall(false);
         Context::getContext()->employee = new Employee();
         Context::getContext()->employee->id = 1;

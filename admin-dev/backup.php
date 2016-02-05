@@ -33,8 +33,10 @@ if (!Context::getContext()->employee->isLoggedBack()) {
     Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogin'));
 }
 
-$tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile,
-    Tab::getIdFromClassName('AdminBackup'));
+$tabAccess = Profile::getProfileAccess(
+    Context::getContext()->employee->id_profile,
+    Tab::getIdFromClassName('AdminBackup')
+);
 
 if ($tabAccess['view'] !== '1') {
     die(Tools::displayError('You do not have permission to view this.'));

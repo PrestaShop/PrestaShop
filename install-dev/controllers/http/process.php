@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Cldr\Update;
+
 class InstallControllerHttpProcess extends InstallControllerHttp
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
@@ -99,17 +101,12 @@ class InstallControllerHttpProcess extends InstallControllerHttp
             $this->processInstallAddonsModules();
         } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModulesAddons'])) {
             $this->processInstallTheme();
-        } elseif (Tools::getValue('sendEmail') && !empty($this->session->process_validated['installTheme'])) {
-            $this->processSendEmail();
         } else {
             // With no parameters, we consider that we are doing a new install, so session where the last process step
             // was stored can be cleaned
             if (Tools::getValue('restart')) {
                 $this->session->process_validated = array();
                 $this->session->database_clear = true;
-                if (Tools::getSafeModeStatus()) {
-                    $this->session->safe_mode = true;
-                }
             } elseif (!Tools::getValue('submitNext')) {
                 $this->session->step = 'configure';
                 $this->session->last_step = 'configure';
@@ -230,7 +227,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         $this->session->process_validated = array_merge($this->session->process_validated, array('installModules' => true));
         $this->ajaxJsonAnswer(true);
     }
-    
+
     /**
      * PROCESS : installModulesAddons
      * Install modules from addons
@@ -264,7 +261,26 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         }
         $this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
         $this->session->process_validated = array_merge($this->session->process_validated, array('installFixtures' => true));
+
+        $this->installCldrDatas();
+
         $this->ajaxJsonAnswer(true);
+    }
+
+    /**
+     * Install Cldr Datas
+     */
+    public function installCldrDatas()
+    {
+        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+
+        //get each defined languages and fetch cldr datas
+        $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+
+        foreach ($langs as $lang) {
+            $language_code = explode('-', $lang['language_code']);
+            $cldrUpdate->fetchLocale($language_code['0'].'-'.Tools::strtoupper($language_code[1]));
+        }
     }
 
     /**
@@ -331,7 +347,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
             }
         }
         $this->process_steps[] = $install_modules;
-        
+
         $install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install Addons modules'));
 
         $params = array(

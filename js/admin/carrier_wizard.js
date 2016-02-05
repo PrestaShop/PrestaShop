@@ -182,7 +182,7 @@ function displaySummary()
         delay_text = $('#delay_' + id_default_lang).val();
 
 	// Carrier name
-	$('#summary_name').html($('#name').val());
+	$('#summary_name').text($('#name').val());
 
 	// Delay and pricing
 	tmp = summary_translation_meta_informations.replace('@s2', '<strong>' + delay_text + '</strong>');
@@ -204,10 +204,10 @@ function displaySummary()
 
 
 
-	$('#summary_shipping_cost').html(tmp);
+	$('#summary_shipping_cost').text(tmp);
 
 	// Weight or price ranges
-	$('#summary_range').html(summary_translation_range+' '+summary_translation_range_limit);
+	$('#summary_range').text(summary_translation_range+' '+summary_translation_range_limit);
 
 
 	if ($('input[name="shipping_method"]:checked').val() == 1)

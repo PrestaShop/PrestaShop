@@ -46,7 +46,7 @@ class AdminCountriesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-            'affectzone' => array('text' => $this->l('Assign to a new zone'))
+            'AffectZone' => array('text' => $this->l('Assign to a new zone'))
         );
 
         $this->fieldImageSettings = array(
@@ -149,6 +149,9 @@ class AdminCountriesControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         $this->tpl_list_vars['zones'] = Zone::getZones();
+        $this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
+        $this->tpl_list_vars['POST'] = $_POST;
+
         return parent::renderList();
     }
 
@@ -222,7 +225,7 @@ class AdminCountriesControllerCore extends AdminController
                     'label' => $this->l('Default currency'),
                     'name' => 'id_currency',
                     'options' => array(
-                        'query' => Currency::getCurrencies(),
+                        'query' => Currency::getCurrencies(false, true, true),
                         'id' => 'id_currency',
                         'name' => 'name',
                         'default' => array(
@@ -398,12 +401,12 @@ class AdminCountriesControllerCore extends AdminController
     public function postProcess()
     {
         if (!Tools::getValue('id_'.$this->table)) {
-            if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Country::getByIso(Tools::getValue('iso_code'))) {
+            if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && (int)Country::getByIso(Tools::getValue('iso_code'))) {
                 $this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
             }
         } elseif (Validate::isLanguageIsoCode(Tools::getValue('iso_code'))) {
-            $id_country = Country::getByIso(Tools::getValue('iso_code'));
-            if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table)) {
+            $id_country = (int)Country::getByIso(Tools::getValue('iso_code'));
+            if ($id_country != 0 && $id_country != Tools::getValue('id_'.$this->table)) {
                 $this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
             }
         }
@@ -458,21 +461,22 @@ class AdminCountriesControllerCore extends AdminController
         return false;
     }
 
-    public function processBulkStatusSelection($way)
+    /**
+     * Allow the assignation of zone only if the form is displayed.
+     */
+    protected function processBulkAffectZone()
     {
-        if (is_array($this->boxes) && !empty($this->boxes)) {
-            $countries_ids = array();
-            foreach ($this->boxes as $id) {
-                $countries_ids[] = array('id_country' => $id);
-            }
-
-            if (count($countries_ids)) {
-                Country::addModuleRestrictions(array(), $countries_ids, array());
-            }
+        $zone_to_affect = Tools::getValue('zone_to_affect');
+        if ($zone_to_affect && $zone_to_affect !== 0) {
+            parent::processBulkAffectZone();
         }
-        parent::processBulkStatusSelection($way);
-    }
 
+        if (Tools::getIsset('submitBulkAffectZonecountry')) {
+            $this->tpl_list_vars['assign_zone'] = true;
+        }
+
+        return;
+    }
 
     protected function displayValidFields()
     {

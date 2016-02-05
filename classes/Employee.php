@@ -91,6 +91,12 @@ class EmployeeCore extends ObjectModel
     public $id_last_customer_message;
     public $id_last_customer;
 
+    /** @var string Unique token for forgot passsword feature */
+    public $reset_password_token;
+
+    /** @var string token validity date for forgot password feature */
+    public $reset_password_validity;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -122,6 +128,8 @@ class EmployeeCore extends ObjectModel
             'id_last_order' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'id_last_customer_message' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'id_last_customer' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'reset_password_token' =>       array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false),
+            'reset_password_validity' =>    array('type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false),
         ),
     );
 
@@ -280,7 +288,7 @@ class EmployeeCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `email` = \''.pSQL($email).'\'
-		'.($active_only ? ' AND active = 1' : '')
+		'.($active_only ? ' AND `active` = 1' : '')
         .($passwd !== null ? ' AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
         if (!$result) {
             return false;
@@ -324,7 +332,7 @@ class EmployeeCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `id_employee` = '.(int)$id_employee.'
 		AND `passwd` = \''.pSQL($passwd).'\'
-		AND active = 1');
+		AND `active` = 1');
     }
 
     public static function countProfile($id_profile, $active_only = false)
@@ -390,7 +398,7 @@ class EmployeeCore extends ObjectModel
     public function favoriteModulesList()
     {
         return Db::getInstance()->executeS('
-			SELECT module
+			SELECT `module`
 			FROM `'._DB_PREFIX_.'module_preference`
 			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
         );
@@ -492,5 +500,58 @@ class EmployeeCore extends ObjectModel
 			SET `last_connection_date` = CURRENT_DATE()
 			WHERE `id_employee` = '.(int)$id_employee.' AND `last_connection_date`< CURRENT_DATE()
 		');
+    }
+
+    /**
+     * Fill Reset password unique token with random sha1 and its validity date. For forgot password feature.
+     */
+    public function stampResetPasswordToken()
+    {
+        $salt = $this->id.'+'.uniqid(rand(), true);
+        $this->reset_password_token = sha1(time().$salt);
+        $validity = (int)Configuration::get('PS_PASSWD_RESET_VALIDITY')?:1440;
+        $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+'.$validity.' minutes'));
+    }
+
+    /**
+     * Test if a reset password token is present and is recent enough to avoid creating a new one (in case of employee triggering the forgot password link too often).
+     */
+    public function hasRecentResetPasswordToken()
+    {
+        if (!$this->reset_password_token || $this->reset_password_token == '') {
+            return false;
+        }
+
+        // TODO maybe use another 'recent' value for this test. For instance, equals password validity value.
+        if (!$this->reset_password_validity || strtotime($this->reset_password_validity) < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the valid reset password token if it validity date is > now().
+     */
+    public function getValidResetPasswordToken()
+    {
+        if (!$this->reset_password_token || $this->reset_password_token == '') {
+            return false;
+        }
+
+        if (!$this->reset_password_validity || strtotime($this->reset_password_validity) < time()) {
+            return false;
+        }
+
+        return $this->reset_password_token;
+    }
+
+    /**
+     * Delete reset password token data
+     */
+    public function removeResetPasswordToken()
+    {
+        $this->reset_password_token = null;
+        $this->reset_password_validity = null;
     }
 }

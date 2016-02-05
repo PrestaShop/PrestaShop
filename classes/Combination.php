@@ -36,6 +36,8 @@ class CombinationCore extends ObjectModel
 
     public $ean13;
 
+    public $isbn;
+
     public $upc;
 
     public $wholesale_price;
@@ -66,6 +68,7 @@ class CombinationCore extends ObjectModel
             'id_product' =>        array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
             'location' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
             'ean13' =>                array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
+            'isbn' =>                array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 13),
             'upc' =>                array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
             'quantity' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt', 'size' => 10),
             'reference' =>            array('type' => self::TYPE_STRING, 'size' => 32),
@@ -117,6 +120,7 @@ class CombinationCore extends ObjectModel
 
         $this->deleteFromSupplier($this->id_product);
         Product::updateDefaultAttribute($this->id_product);
+        Tools::clearColorListCache((int)$this->id_product);
 
         return true;
     }

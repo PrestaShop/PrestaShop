@@ -56,7 +56,7 @@ var unicode_hack = (function() {
 
 	/* Gets a regex written in a dialect that supports unicode categories and
 	   translates it to a dialect supported by JavaScript. */
-	return function(regexpString, classes) 
+	return function(regexpString, classes)
 	{
 		var modifiers = "";
 		if ( regexpString instanceof RegExp ) {
@@ -126,7 +126,7 @@ function validate_isPostCode(s, pattern, iso_code)
 	else
 	{
 		var replacements = {
-			' ': '(?: |)',
+			' ': '(?:\ |)',
 			'-': '(?:-|)',
 			'N': '[0-9]',
 			'L': '[a-zA-Z]',
@@ -167,7 +167,7 @@ function validate_isDniLite(s)
 function validate_isEmail(s)
 {
 	var reg = unicode_hack(/^[a-z\p{L}0-9!#$%&'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z\p{L}0-9]+$/i, false);
-	return reg.test(s);	
+	return reg.test(s);
 }
 
 function validate_isPasswd(s)
@@ -187,7 +187,7 @@ function validate_field(that)
 
 			var id_country = $(selector + ' option:selected').val();
 
-			if (typeof(countriesNeedZipCode[id_country]) != 'undefined' && typeof(countries[id_country]['iso_code']) != 'undefined')
+			if (typeof(countriesNeedZipCode[id_country]) != 'undefined' && typeof(countries[id_country]) != 'undefined')
 				var result = window['validate_'+$(that).attr('data-validate')]($(that).val(), countriesNeedZipCode[id_country], countries[id_country]['iso_code']);
 		}
 		else if($(that).attr('data-validate'))

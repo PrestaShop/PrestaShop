@@ -486,7 +486,7 @@ class HookCore extends ObjectModel
                 continue;
             }
 
-            if ((bool)$disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($array['module'], self::$native_module)) {
+            if ((bool)$disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($array['module'], Hook::$native_module)) {
                 continue;
             }
 
@@ -726,48 +726,6 @@ class HookCore extends ObjectModel
             return false;
         }
         return Hook::exec('updateCarrier', array('id_carrier' => $id_carrier, 'carrier' => $carrier));
-    }
-
-    /**
-     * Preload hook modules cache
-     *
-     * @deprecated 1.5.0 use Hook::getHookModuleList() instead
-     *
-     * @return bool preload_needed
-     */
-    public static function preloadHookModulesCache()
-    {
-        Tools::displayAsDeprecated();
-
-        if (!is_null(self::$_hook_modules_cache)) {
-            return false;
-        }
-
-        self::$_hook_modules_cache = Hook::getHookModuleList();
-        return true;
-    }
-
-    /**
-     * Return hook ID from name
-     *
-     * @param string $hook_name Hook name
-     * @return int Hook ID
-     *
-     * @deprecated since 1.5.0 use Hook::getIdByName() instead
-     */
-    public static function get($hook_name)
-    {
-        Tools::displayAsDeprecated();
-        if (!Validate::isHookName($hook_name)) {
-            die(Tools::displayError());
-        }
-
-        $result = Db::getInstance()->getRow('
-		SELECT `id_hook`, `name`
-		FROM `'._DB_PREFIX_.'hook`
-		WHERE `name` = \''.pSQL($hook_name).'\'');
-
-        return ($result ? $result['id_hook'] : false);
     }
 
     /**

@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -36,14 +36,24 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
      * @param $smarty
      * @throws PrestaShopException
      */
-    public function __construct(OrderInvoice $order_invoice, $smarty)
+    public function __construct(OrderInvoice $order_invoice, $smarty, $bulk_mode = false)
     {
         $this->order_invoice = $order_invoice;
         $this->order = new Order($this->order_invoice->id_order);
         $this->smarty = $smarty;
 
+        // If shop_address is null, then update it with current one.
+        // But no DB save required here to avoid massive updates for bulk PDF generation case.
+        // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
+        if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
+            $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int)$this->order->id_shop);
+            if (!$bulk_mode) {
+                OrderInvoice::fixAllShopAddresses();
+            }
+        }
+
         // header informations
-        $this->date = Tools::displayDate($this->order->invoice_date);
+        $this->date = Tools::displayDate($order_invoice->date_add);
         $prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
         $this->title = sprintf(HTMLTemplateDeliverySlip::l('%1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
@@ -59,13 +69,11 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array(
-            'header' => $this->l('Delivery'),
-        ));
+        $this->smarty->assign(array('header' => HTMLTemplateDeliverySlip::l('Delivery')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
-    
+
     /**
      * Returns the template's HTML content
      *
@@ -117,7 +125,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             'carrier' => $carrier,
             'display_product_images' => Configuration::get('PS_PDF_IMG_DELIVERY')
         ));
-        
+
         $tpls = array(
             'style_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.style-tab')),
             'addresses_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.addresses-tab')),

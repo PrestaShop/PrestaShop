@@ -588,7 +588,7 @@
 							{if ($customer->isGuest())}
 								{l s='This order has been placed by a guest.'}
 								{if (!Customer::customerExists($customer->email))}
-									<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;token={getAdminToken tab='AdminCustomers'}">
+									<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;id_order={$order->id|intval}&amp;token={getAdminToken tab='AdminCustomers'}">
 										<input type="hidden" name="id_lang" value="{$order->id_lang}" />
 										<input class="btn btn-default" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" />
 										<p class="help-block">{l s='This feature will generate a random password and send an email to the customer.'}</p>
@@ -1084,8 +1084,7 @@
 											<td class="partial_refund_fields current-edit" style="display:none;">
 												<div class="input-group">
 													<div class="input-group-addon">
-														{$currency->prefix}
-														{$currency->suffix}
+														{$currency->sign}
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
@@ -1162,8 +1161,7 @@
 								</label>
 								<div class="input-group col-lg-1 pull-left">
 									<div class="input-group-addon">
-										{$currency->prefix}
-										{$currency->suffix}
+										{$currency->sign}
 									</div>
 									<input type="text" class="input fixed-width-md" name="refund_total_voucher_choose" value="0"/>
 								</div>
@@ -1211,8 +1209,7 @@
 								</label>
 								<div class="input-group col-lg-1 pull-left">
 									<div class="input-group-addon">
-										{$currency->prefix}
-										{$currency->suffix}
+										{$currency->sign}
 									</div>
 									<input type="text" class="input fixed-width-md" name="refund_voucher_choose" value="0"/>
 								</div>
@@ -1351,21 +1348,22 @@
 				}
 			});
 
-			var date = new Date();
-			var hours = date.getHours();
-			if (hours < 10)
-				hours = "0" + hours;
-			var mins = date.getMinutes();
-			if (mins < 10)
-				mins = "0" + mins;
-			var secs = date.getSeconds();
-			if (secs < 10)
-				secs = "0" + secs;
-
 			$('.datepicker').datetimepicker({
 				prevText: '',
 				nextText: '',
-				dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
+				dateFormat: 'yy-mm-dd',
+				// Define a custom regional settings in order to use PrestaShop translation tools
+				currentText: '{l s='Now' js=1}',
+				closeText: '{l s='Done' js=1}',
+				ampm: false,
+				amNames: ['AM', 'A'],
+				pmNames: ['PM', 'P'],
+				timeFormat: 'hh:mm:ss tt',
+				timeSuffix: '',
+				timeOnlyTitle: '{l s='Choose Time' js=1}',
+				timeText: '{l s='Time' js=1}',
+				hourText: '{l s='Hour' js=1}',
+				minuteText: '{l s='Minute' js=1}'
 			});
 		});
 

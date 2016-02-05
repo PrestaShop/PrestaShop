@@ -24,35 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Database;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\Database;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use Phake;
-use Core_Foundation_Database_EntityRepository;
-use Core_Foundation_Database_EntityMetaData;
-use Core_Foundation_Database_Exception;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityRepository;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityMetaData;
+use \PrestaShop\PrestaShop\Core\Foundation\Database\Exception;
 
 class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
 {
     public function setup()
     {
-        $mockEntityManager = Phake::mock('Core_Foundation_Database_EntityManager');
+        $mockEntityManager = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager');
 
-        $mockDb = Phake::mock('Core_Foundation_Database_DatabaseInterface');
+        $mockDb = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface');
 
         Phake::when($mockDb)->select(Phake::anyParameters())->thenReturn(array());
 
         Phake::when($mockEntityManager)->getDatabase()->thenReturn($mockDb);
 
-        $this->repository = new Core_Foundation_Database_EntityRepository(
+        $this->repository = new EntityRepository(
             $mockEntityManager,
             'ps_',
-            new Core_Foundation_Database_EntityMetaData
+            new EntityMetaData
         );
     }
 
     /**
-     * @expectedException Core_Foundation_Database_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
      */
     public function test_call_to_invalid_method_throws_exception()
     {

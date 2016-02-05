@@ -1,0 +1,42 @@
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/module.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/loader.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/loader.js') }}"></script>
+    <script src="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
+{% endblock %}
+
+{% set requireAddonSearch = false %}
+
+{% block content %}
+    {# Addons connect modal #}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_addons_connect.html.twig' %}
+    {# Contains toolbar-nav for module page #}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
+    {# Actual Page Content #}
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <span class="module-search-result-wording">{{modules.to_configure|length}} modules to configure</span>
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid_notification_configure.html.twig' with { 'modules' : modules.to_configure, 'display_type' : 'list'  } %}
+
+            <hr class="top-menu-separator">
+            <span class="module-search-result-wording">{{modules.to_update|length}} modules to update</span>
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid_notification_update.html.twig' with { 'modules' : modules.to_update, 'display_type' : 'list' } %}
+
+            <hr class="top-menu-separator">
+            <span class="module-search-result-wording">{{modules.to_install|length}} modules to install</span>
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.to_install, 'display_type' : 'list' } %}
+        </div>
+    </div>
+{% endblock %}

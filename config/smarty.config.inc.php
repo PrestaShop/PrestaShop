@@ -24,12 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-define('_PS_SMARTY_DIR_', _PS_TOOL_DIR_.'smarty/');
-
-require_once(_PS_SMARTY_DIR_.'Smarty.class.php');
+define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'prestashop/smarty/');
 
 global $smarty;
-$smarty = new SmartyCustom();
+if (Configuration::get('PS_SMARTY_LOCAL')) {
+    $smarty = new SmartyCustom();
+} else {
+    $smarty = new Smarty();
+}
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
 if (!Tools::getSafeModeStatus()) {
@@ -106,7 +108,7 @@ function smartyMaxWords($params, &$smarty)
         }
     }
 
-    return implode(' ',  Tools::htmlentitiesUTF8($words));
+    return implode(' ', Tools::htmlentitiesUTF8($words));
 }
 
 function smartyTruncate($params, &$smarty)

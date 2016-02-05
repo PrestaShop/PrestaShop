@@ -171,7 +171,8 @@ class TranslateCore
             $current_key = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
             $default_key = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
 
-            if ('controller' == ($file = substr($source, 0, - 10))) {
+            if ('controller' == substr($source, -10, 10)) {
+                $file = substr($source, 0, -10);
                 $current_key_file = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$file).'_'.$key;
                 $default_key_file = strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
             }

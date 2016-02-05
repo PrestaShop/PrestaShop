@@ -11,54 +11,27 @@ $min-height: 850px
 	background-color: $main-color
 	@include left(0)
 	ul.menu
-		margin: 0
+		.categorytab
+			padding-top:    15px
+			position:       relative
+			height:         39px
+			line-height:    24px
+			vertical-align: middle
+			font-weight:    bold
+			.line
+				border-bottom: 1px solid #bbcdd2
+				position:      absolute
+				top:           26px
+				left:          5px
+				right:         5px
+			span
+				background: $main-color
+				padding:    0 10px
+				color:      #bbcdd2
+				position:   relative
+		margin: 15px 0 0 0
 		padding: 0
 		list-style: none !important
-		li.searchtab
-			padding: 14px 7px
-			height: 55px
-			position: relative
-			background-color: $main-color
-			#bo_query
-				@include border-radius(0, 55px, 55px, 0)
-				color: $main-color
-				background-color: white
-				border: 1px solid transparent !important
-				@include box-shadow(none)
-				@include transition(none)
-			.input-group-btn
-				@include border-radius(55px, 0, 0, 55px)
-				.btn
-					@include border-radius(55px, 0, 0, 55px)
-					@include box-shadow(none)
-				.btn-default
-					@include box-shadow(none)
-					border: 1px solid transparent !important
-			.form-group.focus-search
-				position: absolute
-				width: 400px
-				height: 55px
-				z-index: 900
-				top: 0
-				background-color: $main-color
-				@include left(0)
-				@include padding(14px, 13px, 0, 7px)
-				#bo_query
-					width: 100%
-				.input-group-btn
-					@include border-radius(55px, 0, 0, 55px)
-					.btn
-						@include border-radius(55px, 0, 0, 55px)
-						@include box-shadow(none)
-					.btn-default
-						@include box-shadow(none)
-			.clear_search
-				position: absolute
-				top: 6px
-				z-index: 10
-				@include right(8px)
-			i
-				font-size: $icon-size-base
 		li.maintab
 			position: relative
 			ul.submenu
@@ -83,6 +56,8 @@ $min-height: 850px
 				white-space: nowrap
 				text-overflow: ellipsis
 				overflow: hidden
+				span
+					padding-left: 20px
 			> a.title
 				display: block
 				position: relative
@@ -96,14 +71,13 @@ $min-height: 850px
 				@include transition-duration(0.2s)
 				@include transition-timing-function(ease-out)
 				i
+					display: none
 					vertical-align: middle
 					margin-top: -5px
 					color: $sidebar-menu-color
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
-				span
-					padding-left: 10px
 			&.hover, &:hover:not(.hover)
 				> a.title
 					color: $sidebar-menu-hover-color
@@ -195,6 +169,9 @@ $min-height: 850px
 		@include margin-left($widthSidebarNav)
 
 .page-sidebar-closed
+	.categorytab
+		span
+			display: none
 	#nav-sidebar
 		overflow: visible
 		width: 50px
@@ -218,6 +195,15 @@ $min-height: 850px
 					display: block
 		li.maintab.active ul.submenu
 			border: none!important
+		.maintab
+			> a
+				> i
+					display: inline-block !important
+				> span
+					display: none
+				&:hover
+					> span
+						display: inline-block
 		a.title
 			text-align: center
 			> span

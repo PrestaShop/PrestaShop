@@ -85,8 +85,10 @@ function displayFatalError()
 /**
  * @deprecated
  */
-function nl2br2($string)
-{
-    Tools::displayAsDeprecated();
-    return Tools::nl2br($string);
+if (method_exists('Tools', 'nl2br')) {
+    function nl2br2($string)
+    {
+        Tools::displayAsDeprecated();
+        return Tools::nl2br($string);
+    }
 }

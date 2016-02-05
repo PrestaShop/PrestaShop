@@ -123,6 +123,14 @@
 			</div>
 		</div>
 		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_isbn">
+				{l s='ISBN'}
+			</label>
+			<div class="col-lg-3">
+				<input maxlength="13" type="text" id="attribute_isbn" name="attribute_isbn" value="" />
+			</div>
+		</div>
+		<div class="form-group">
 			<label class="control-label col-lg-3" for="attribute_upc">
 				{l s='UPC barcode'}
 			</label>

@@ -715,7 +715,7 @@ ul#optional_update li.ok {
 
 /* STEP 5 ******************************************/
 #install_process_form{
-    min-height: 300px;
+    min-height: 340px;
 }
 #progress_bar {
 	display: none;
@@ -754,44 +754,25 @@ ul#optional_update li.ok {
 
 #progress_bar ol {
 	list-style-type: none;
-	margin-left: 20px;
+	margin-left: 4px;
 	margin-top: 10px;
 }
 #progress_bar ol li {
-	margin-bottom: 5px;
+    line-height: 24px;
 }
 #progress_bar ol.process_list li.success {
-	background: url("img/bg-li-tabs-finished.png") no-repeat scroll 0 3px transparent;
-	color: #666;
+	color: green;
     text-decoration: line-through;
-	padding-left: 18px;
 }
 #progress_bar ol.process_list li.fail {
-	background: url("img/pict_error.png") no-repeat scroll 0 1px transparent;
 	color: red;
-	padding-left: 18px;
-}
-#progress_bar ol.process_list li .error_log {
-	background-color: #FBE8D6;
-	border: 1px solid #666666;
-	color: #000000;
-	max-height: 300px;
-	overflow: auto;
-	padding: 7px;
-}
-#progress_bar ol.process_list li .error_log ol {
-	list-style-type: decimal;
-}
-#progress_bar ol.process_list li .error_log li {
-	padding: 3px;
 }
 
 #error_process{
     padding: 5px;
     background-color: #FBE8D6;
     border: 1px solid #666666;
-    margin-left: 37px;
-    margin-bottom: 20px;
+    margin: 20px 4px;
     display: none;
 }
     #error_process h3{

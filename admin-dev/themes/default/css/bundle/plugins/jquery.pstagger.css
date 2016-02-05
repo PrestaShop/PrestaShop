@@ -1,0 +1,33 @@
+.pstaggerAddTagInput:focus {
+     outline: 0;
+}
+
+.pstaggerAddTagWrapper {
+    width: 100%;
+}
+
+.pstaggerResetTagsBtn {
+    pointer: cursor !important;
+}
+.pstaggerTagsWrapper {
+    display: none;
+    position: relative;
+}
+
+.pstaggerTag{
+    float: left;
+    border-radius: 5px;
+    height: 30px;
+    padding: 5px 10px;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+
+.pstaggerClosingCross {
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.pstaggerWrapper {
+    position: relative;
+}

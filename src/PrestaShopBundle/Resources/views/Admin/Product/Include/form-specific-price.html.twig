@@ -1,0 +1,104 @@
+<h4>{{ trans('Specific price conditions', {}, 'AdminProducts') }}</h4>
+{{ form_errors(form) }}
+
+{% if form.sp_id_shop.vars.choices is defined %}
+<div class="form-group">
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">{{ trans('Shop', {}, 'AdminProducts') }}</label>
+        {{ form_errors(form.sp_id_shop) }}
+        {{ form_widget(form.sp_id_shop) }}
+    </div>
+</div>
+{% else %}
+    {{ form_widget(form.sp_id_shop) }}
+{% endif %}
+
+<div class="form-group">
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">{{ trans('For', {}, 'AdminProducts') }}</label>
+        {{ form_errors(form.sp_id_currency) }}
+        {{ form_widget(form.sp_id_currency) }}
+        </div>
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">&nbsp;</label>
+        {{ form_errors(form.sp_id_country) }}
+        {{ form_widget(form.sp_id_country) }}
+    </div>
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">&nbsp;</label>
+        {{ form_errors(form.sp_id_group) }}
+        {{ form_widget(form.sp_id_group) }}
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-xs-8 pull-left">
+        <label class="control-label">{{ trans('Customer', {}, 'AdminProduct') }}</label>
+        {{ form_errors(form.sp_id_customer) }}
+        {{ form_widget(form.sp_id_customer) }}
+    </div>
+</div>
+
+<div id="specific-price-combination-selector" class="form-group {{ has_combinations ? '' : 'hide' }}">
+    <div class="col-xs-8 pull-left">
+        <label class="control-label">{{ form.sp_id_product_attribute.vars.label }}</label>
+        {{ form_errors(form.sp_id_product_attribute) }}
+        {{ form_widget(form.sp_id_product_attribute) }}
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">{{ form.sp_from.vars.label }}</label>
+        {{ form_errors(form.sp_from) }}
+        {{ form_widget(form.sp_from) }}
+    </div>
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">{{ trans('to', {}, 'AdminProducts')|raw }}</label>
+        {{ form_errors(form.sp_to) }}
+        {{ form_widget(form.sp_to) }}
+    </div>
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">{{ form.sp_from_quantity.vars.label }}</label>
+        {{ form_errors(form.sp_from_quantity) }}
+        <div class="input-group">
+            {{ form_widget(form.sp_from_quantity) }}
+            <span class="input-group-addon">{{ trans('Unit(s)', {}, 'Adminproducts') }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <h4>{{ trans('Impact on price', {}, 'Adminproducts') }}</h4>
+    <div class="col-xs-3 pull-left">
+        <label class="control-label">{{ form.sp_price.vars.label }}</label>
+        {{ form_errors(form.sp_price) }}
+        {{ form_widget(form.sp_price) }}
+    </div>
+    <div class="col-xs-3 pull-left">
+        <label class="control-label">&nbsp;</label>
+        {{ form_widget(form.leave_bprice) }}
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">{{ trans('Apply a discount of', {}, 'Adminproducts') }}</label>
+        {{ form_errors(form.sp_reduction) }}
+        {{ form_widget(form.sp_reduction) }}
+    </div>
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">&nbsp;</label>
+        {{ form_errors(form.sp_reduction_type) }}
+        {{ form_widget(form.sp_reduction_type) }}
+    </div>
+    <div class="col-xs-4 pull-left">
+        <label class="control-label">&nbsp;</label>
+        {{ form_widget(form.sp_reduction_tax) }}
+    </div>
+</div>
+
+<div class="form-group text-right">
+    {{ form_widget(form.cancel) }}
+    {{ form_widget(form.save) }}
+</div>

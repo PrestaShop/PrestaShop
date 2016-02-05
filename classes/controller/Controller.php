@@ -374,24 +374,34 @@ abstract class ControllerCore
     {
         if (is_array($js_uri)) {
             foreach ($js_uri as $js_file) {
-                $js_path = $js_file;
+                $js_file = explode('?', $js_file);
+                $version = '';
+                if (isset($js_file[1]) && $js_file[1]) {
+                    $version = $js_file[1];
+                }
+                $js_path = $js_file = $js_file[0];
                 if ($check_path) {
                     $js_path = Media::getJSPath($js_file);
                 }
 
                 // $key = is_array($js_path) ? key($js_path) : $js_path;
                 if ($js_path && !in_array($js_path, $this->js_files)) {
-                    $this->js_files[] = $js_path;
+                    $this->js_files[] = $js_path.($version ? '?'.$version : '');
                 }
             }
         } else {
-            $js_path = $js_uri;
+            $js_uri = explode('?', $js_uri);
+            $version = '';
+            if (isset($js_uri[1]) && $js_uri[1]) {
+                $version = $js_uri[1];
+            }
+            $js_path = $js_uri = $js_uri[0];
             if ($check_path) {
                 $js_path = Media::getJSPath($js_uri);
             }
 
             if ($js_path && !in_array($js_path, $this->js_files)) {
-                $this->js_files[] = $js_path;
+                $this->js_files[] = $js_path.($version ? '?'.$version : '');
             }
         }
     }
@@ -543,11 +553,12 @@ abstract class ControllerCore
 
             $javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
 
-            if ($defer) {
+            if ($defer && (!isset($this->ajax) || ! $this->ajax)) {
                 echo $html.$javascript;
             } else {
-                echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
+                echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html);
             }
+            echo $live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
         } else {
             echo $html;
         }
@@ -589,18 +600,18 @@ abstract class ControllerCore
             case E_USER_ERROR:
             case E_ERROR:
                 die('Fatal error: '.$errstr.' in '.$errfile.' on line '.$errline);
-            break;
+                break;
             case E_USER_WARNING:
             case E_WARNING:
                 $type = 'Warning';
-            break;
+                break;
             case E_USER_NOTICE:
             case E_NOTICE:
                 $type = 'Notice';
-            break;
+                break;
             default:
                 $type = 'Unknown error';
-            break;
+                break;
         }
 
         Controller::$php_errors[] = array(
@@ -633,8 +644,16 @@ abstract class ControllerCore
             $method = $bt[1]['function'];
         }
 
-        Hook::exec('actionBeforeAjaxDie', array('controller' => $controller, 'method' => $method, 'value' => $value));
+        /* @deprecated deprecated since 1.6.1.1 */
+        // Hook::exec('actionBeforeAjaxDie', array('controller' => $controller, 'method' => $method, 'value' => $value));
+        Hook::exec('actionAjaxDieBefore', array('controller' => $controller, 'method' => $method, 'value' => $value));
+
+        /**
+         * @deprecated deprecated since 1.6.1.1
+         * use 'actionAjaxDie'.$controller.$method.'Before' instead
+         */
         Hook::exec('actionBeforeAjaxDie'.$controller.$method, array('value' => $value));
+        Hook::exec('actionAjaxDie'.$controller.$method.'Before', array('value' => $value));
 
         die($value);
     }

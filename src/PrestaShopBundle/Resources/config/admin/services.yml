@@ -1,0 +1,85 @@
+services:
+# CORE ADMIN (prestashop.core.admin.*)
+    # URL generation
+    prestashop.core.admin.url_generator_factory:
+        class: PrestaShopBundle\Service\TransitionalBehavior\AdminUrlGeneratorFactory
+        arguments:
+            - "@router"
+    prestashop.core.admin.url_generator_legacy:
+        class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
+        factory: ["@prestashop.core.admin.url_generator_factory", forLegacy]
+        arguments:
+            - "@prestashop.adapter.legacy.context"
+    prestashop.core.admin.url_generator:
+        class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
+        factory: ["@prestashop.core.admin.url_generator_factory", forSymfony]
+
+    # Interfaced services to decorate
+    prestashop.core.admin.data_provider.product_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\ProductInterface
+    prestashop.core.admin.data_updater.product_interface:
+        class: PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface
+    prestashop.core.admin.page_preference_interface:
+        class: PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface
+    prestashop.core.admin.data_provider.addons_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface
+    prestashop.core.admin.data_provider.module_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
+
+# ADAPTERS (prestashop.adapter.*)
+    # Legacy context service, transitional
+    prestashop.adapter.legacy.context:
+        class: PrestaShop\PrestaShop\Adapter\LegacyContext
+    prestashop.adapter.legacy.logger:
+        class: PrestaShop\PrestaShop\Adapter\LegacyLogger
+    # Adapter services that decorates interfaced services
+    prestashop.adapter.admin.data_provider.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+        decorates: prestashop.core.admin.data_provider.product_interface
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@prestashop.adapter.image_manager"
+        public: false
+    prestashop.adapter.admin.data_updater.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
+        decorates: prestashop.core.admin.data_updater.product_interface
+        public: false
+        arguments:
+            - "@prestashop.hook.dispatcher"
+    prestashop.adapter.admin.wrapper.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
+        arguments: ["@prestashop.adapter.translator", "@prestashop.adapter.legacy.context"]
+    prestashop.adapter.admin.page_preference:
+        class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
+        arguments:
+            - "@session"
+        decorates: prestashop.core.admin.page_preference_interface
+        public: false
+    prestashop.adapter.admin.controller.category:
+        class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
+    prestashop.adapter.admin.data_provider.addons:
+        class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
+        decorates: prestashop.core.admin.data_provider.addons_interface
+        public: false
+    prestashop.adapter.admin.data_provider.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
+        arguments:
+             - "@kernel"
+             - "@router"
+        decorates: prestashop.core.admin.data_provider.module_interface
+        public: false
+    prestashop.adapter.admin.controller.attribute_generator:
+        class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
+
+    #SECURITY
+    prestashop.adapter.security.admin:
+        class: PrestaShop\PrestaShop\Adapter\Security\Admin
+        arguments:
+            - "@prestashop.adapter.legacy.context"
+            - "@security.token_storage"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    prestashop.security.admin.provider:
+        class: PrestaShopBundle\Security\Admin\EmployeeProvider
+        arguments:
+            - "@prestashop.adapter.legacy.context"

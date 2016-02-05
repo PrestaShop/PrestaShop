@@ -234,4 +234,31 @@ class ProductSupplierCore extends ObjectModel
 
         return $row['price_te'];
     }
+
+    /**
+     * For a given product and supplier, gets the product supplier datas
+     *
+     * @param int $id_product
+     * @param int $id_product_attribute
+     * @param int $id_supplier
+     * @return array
+     */
+    public static function getProductSupplierData($id_product, $id_product_attribute, $id_supplier)
+    {
+        // build query
+        $query = new DbQuery();
+        $query->select('ps.product_supplier_reference, ps.product_supplier_price_te as price, ps.id_currency');
+        $query->from('product_supplier', 'ps');
+        $query->where('ps.id_product = '.(int)$id_product.'
+			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
+			AND ps.id_supplier = '.(int)$id_supplier
+        );
+
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+        if (isset($res[0])) {
+            return $res[0];
+        }
+
+        return $res;
+    }
 }

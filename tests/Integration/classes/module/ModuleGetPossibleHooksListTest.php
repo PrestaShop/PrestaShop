@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Tests\Integration;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use Module;
+use Cache;
 use PrestaShopAutoload;
 
 class ModuleGetPossibleHooksListTest extends IntegrationTestCase
@@ -39,6 +40,7 @@ class ModuleGetPossibleHooksListTest extends IntegrationTestCase
     public function testGetRightListForModule()
     {
         $module = Module::getInstanceByName('bankwire');
+        Cache::clean('hook_alias');
         $possible_hooks_list = $module->getPossibleHooksList();
 
         $this->assertCount(3, $possible_hooks_list);

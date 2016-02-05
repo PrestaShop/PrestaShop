@@ -48,11 +48,15 @@ class PasswordControllerCore extends FrontController
                 } elseif ((strtotime($customer->last_passwd_gen.'+'.($min_time = (int)Configuration::get('PS_PASSWD_TIME_FRONT')).' minutes') - time()) > 0) {
                     $this->errors[] = sprintf(Tools::displayError('You can regenerate your password only every %d minute(s)'), (int)$min_time);
                 } else {
+                    if (!$customer->hasRecentResetPasswordToken()) {
+                        $customer->stampResetPasswordToken();
+                        $customer->update();
+                    }
                     $mail_params = array(
                         '{email}' => $customer->email,
                         '{lastname}' => $customer->lastname,
                         '{firstname}' => $customer->firstname,
-                        '{url}' => $this->context->link->getPageLink('password', true, null, 'token='.$customer->secure_key.'&id_customer='.(int)$customer->id)
+                        '{url}' => $this->context->link->getPageLink('password', true, null, 'token='.$customer->secure_key.'&id_customer='.(int)$customer->id.'&reset_token='.$customer->reset_password_token)
                     );
                     if (Mail::Send($this->context->language->id, 'password_query', Mail::l('Password query confirmation'), $mail_params, $customer->email, $customer->firstname.' '.$customer->lastname)) {
                         $this->context->smarty->assign(array('confirmation' => 2, 'customer_email' => $customer->email));
@@ -70,26 +74,53 @@ class PasswordControllerCore extends FrontController
                     $this->errors[] = Tools::displayError('Customer account not found');
                 } elseif (!$customer->active) {
                     $this->errors[] = Tools::displayError('You cannot regenerate the password for this account.');
-                } elseif ((strtotime($customer->last_passwd_gen.'+'.(int)Configuration::get('PS_PASSWD_TIME_FRONT').' minutes') - time()) > 0) {
-                    Tools::redirect('index.php?controller=authentication&error_regen_pwd');
+                }
+                // Case if both password params not posted or different, then "change password" form is not POSTED, show it.
+                if (!(Tools::isSubmit('passwd'))
+                    || !(Tools::isSubmit('confirmation'))
+                    || ($passwd = Tools::getValue('passwd')) !== ($confirmation = Tools::getValue('confirmation'))
+                    || !Validate::isPasswd($passwd) || !Validate::isPasswd($confirmation)) {
+                    // Check if passwords are here anyway, BUT does not match the password validation format
+                    if (Tools::isSubmit('passwd') || Tools::isSubmit('confirmation')) {
+                        $this->errors[] = Tools::displayError('The password and its confirmation do not match.');
+                    }
+                    $this->addJS(_PS_JS_DIR_.'validate.js');
+                    $this->context->smarty->assign(array(
+                        'confirmation' => 1,
+                        'customer_email' => $customer->email,
+                        'customer_token' => $token,
+                        'id_customer' => $id_customer,
+                        'reset_token' => Tools::getValue('reset_token'),
+                    ));
                 } else {
-                    $customer->passwd = Tools::encrypt($password = Tools::passwdGen(MIN_PASSWD_LENGTH, 'RANDOM'));
-                    $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
-                    if ($customer->update()) {
-                        Hook::exec('actionPasswordRenew', array('customer' => $customer, 'password' => $password));
-                        $mail_params = array(
-                            '{email}' => $customer->email,
-                            '{lastname}' => $customer->lastname,
-                            '{firstname}' => $customer->firstname,
-                            '{passwd}' => $password
-                        );
-                        if (Mail::Send($this->context->language->id, 'password', Mail::l('Your new password'), $mail_params, $customer->email, $customer->firstname.' '.$customer->lastname)) {
-                            $this->context->smarty->assign(array('confirmation' => 1, 'customer_email' => $customer->email));
-                        } else {
-                            $this->errors[] = Tools::displayError('An error occurred while sending the email.');
-                        }
+                    // Both password fields posted. Check if all is right and store new password properly.
+                    if (!Tools::getValue('reset_token') || (strtotime($customer->last_passwd_gen.'+'.(int)Configuration::get('PS_PASSWD_TIME_FRONT').' minutes') - time()) > 0) {
+                        Tools::redirect('index.php?controller=authentication&error_regen_pwd');
                     } else {
-                        $this->errors[] = Tools::displayError('An error occurred with your account, which prevents us from sending you a new password. Please report this issue using the contact form.');
+                        // To update password, we must have the temporary reset token that matches.
+                        if ($customer->getValidResetPasswordToken() !== Tools::getValue('reset_token')) {
+                            $this->errors[] = Tools::displayError('The password change request expired. You should ask for a new one.');
+                        } else {
+                            $customer->passwd = Tools::encrypt($password = Tools::getValue('passwd'));
+                            $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
+                            if ($customer->update()) {
+                                Hook::exec('actionPasswordRenew', array('customer' => $customer, 'password' => $password));
+                                $customer->removeResetPasswordToken(); // Delete temporary reset token
+                                $customer->update();
+                                $mail_params = array(
+                                    '{email}' => $customer->email,
+                                    '{lastname}' => $customer->lastname,
+                                    '{firstname}' => $customer->firstname
+                                );
+                                if (Mail::Send($this->context->language->id, 'password', Mail::l('Your new password'), $mail_params, $customer->email, $customer->firstname.' '.$customer->lastname)) {
+                                    $this->context->smarty->assign(array('confirmation' => 3, 'customer_email' => $customer->email));
+                                } else {
+                                    $this->errors[] = Tools::displayError('An error occurred while sending the email.');
+                                }
+                            } else {
+                                $this->errors[] = Tools::displayError('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.');
+                            }
+                        }
                     }
                 }
             } else {

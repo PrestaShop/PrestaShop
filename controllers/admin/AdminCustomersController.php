@@ -249,8 +249,8 @@ class AdminCustomersControllerCore extends AdminController
                 /** @var Customer $customer */
                 if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer)) {
                     array_pop($this->toolbar_title);
+                    $this->toolbar_title[] = sprintf($this->l('Information about Customer: %s'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
                 }
-                    $this->toolbar_title[] = sprintf('Information about Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
                 break;
             case 'add':
             case 'edit':
@@ -763,14 +763,17 @@ class AdminCustomersControllerCore extends AdminController
         for ($i = 0; $i < $total_carts; $i++) {
             $cart = new Cart((int)$carts[$i]['id_cart']);
             $this->context->cart = $cart;
-            $summary = $cart->getSummaryDetails();
             $currency = new Currency((int)$carts[$i]['id_currency']);
+            $this->context->currency = $currency;
+            $summary = $cart->getSummaryDetails();
             $carrier = new Carrier((int)$carts[$i]['id_carrier']);
             $carts[$i]['id_cart'] = sprintf('%06d', $carts[$i]['id_cart']);
             $carts[$i]['date_add'] = Tools::displayDate($carts[$i]['date_add'], null, true);
             $carts[$i]['total_price'] = Tools::displayPrice($summary['total_price'], $currency);
             $carts[$i]['name'] = $carrier->name;
         }
+
+        $this->context->currency = Currency::getDefaultCurrency();
 
         $sql = 'SELECT DISTINCT cp.id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
 				FROM '._DB_PREFIX_.'cart_product cp
@@ -980,7 +983,11 @@ class AdminCustomersControllerCore extends AdminController
         if (Customer::customerExists($customer->email)) {
             $this->errors[] = Tools::displayError('This customer already exists as a non-guest.');
         } elseif ($customer->transformToCustomer(Tools::getValue('id_lang', $this->context->language->id))) {
-            Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&conf=3&token='.$this->token);
+            if ($id_order = (int)Tools::getValue('id_order')) {
+                Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders').'&id_order='.$id_order.'&vieworder&conf=3');
+            } else {
+                Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&viewcustomer&conf=3&token='.$this->token);
+            }
         } else {
             $this->errors[] = Tools::displayError('An error occurred while updating customer information.');
         }
@@ -1073,22 +1080,25 @@ class AdminCustomersControllerCore extends AdminController
             if (!empty($search) && $results = Customer::searchByName($search, 50)) {
                 foreach ($results as $result) {
                     if ($result['active']) {
+                        $result['fullname_and_email'] = $result['firstname'].' '.$result['lastname'].' - '.$result['email'];
                         $customers[$result['id_customer']] = $result;
                     }
                 }
             }
         }
 
-        if (count($customers)) {
+        if (count($customers) && Tools::getValue('sf2')) {
+            $to_return = $customers;
+        } elseif (count($customers) && !Tools::getValue('sf2')) {
             $to_return = array(
                 'customers' => $customers,
                 'found' => true
             );
         } else {
-            $to_return = array('found' => false);
+            $to_return = Tools::getValue('sf2') ? array() : array('found' => false);
         }
 
-        $this->content = Tools::jsonEncode($to_return);
+        $this->content = json_encode($to_return);
     }
 
     /**

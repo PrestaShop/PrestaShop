@@ -9,9 +9,9 @@
     <meta_description/>
   </category>
   <category id="Home" id_shop="1">
-    <name>Home</name>
+    <name>Hem</name>
     <description/>
-    <link_rewrite>home</link_rewrite>
+    <link_rewrite>hem</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>

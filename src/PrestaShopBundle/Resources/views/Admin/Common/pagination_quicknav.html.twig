@@ -1,0 +1,20 @@
+<div>
+    <ul class="pagination">
+        <li class="{% if first_url %}{% else %}disabled{% endif %}">
+            <a class="pagination-link" {% if first_url %}href="{{ first_url }}"{% else %}nohref{% endif %}>1</a>
+        </li>
+        <li class="{% if previous_url %}{% else %}disabled{% endif %}">
+            <a class="pagination-link" {% if previous_url %}href="{{ previous_url }}"{% else %}nohref{% endif %}>&lt;</a>
+        </li>
+        <li style="float: left;">
+            <input name="paginator_jump_page" class="pagination-link" type="text" style="width: 4em;"
+                   value="{{ current_page }}" psurl="{{ jump_page_url }}" psmax="{{ page_count }}" pslimit="{{ limit }}" />
+        </li>
+        <li class="{% if next_url is defined and next_url != false %}{% else %}disabled{% endif %}">
+            <a class="pagination-link" id="pagination_next_url" {% if next_url is defined and next_url != false %}href="{{ next_url }}"{% else %}nohref{% endif %}>&gt;</a>
+        </li>
+        <li class="{% if last_url is defined and last_url != false %}{% else %}disabled{% endif %}">
+            <a class="pagination-link" {% if last_url is defined and last_url != false %}href="{{ last_url }}"{% else %}nohref{% endif %}>{{ page_count }}</a>
+        </li>
+    </ul>
+</div>

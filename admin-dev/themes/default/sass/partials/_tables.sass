@@ -33,6 +33,8 @@
 				border-color: darken(#CAE5F4,10%)
 	input, select
 		margin: 0
+		&.center
+			margin: 0 auto
 	tbody
 		> tr > td
 			border-top: none
@@ -153,9 +155,22 @@ tr.highlighted td
 		table, thead, tbody, th, td, tr
 			display: block
 		thead tr
-			position: absolute
-			top: -9999px
-			left: -9999px
+			display: block
+			float: left
+			width: 70%
+			&:first-child
+				width: 30%
+				th
+					width: 100% !important
+			&:first-child:last-child
+				display: none
+		th
+			height: 48px
+			text-align: center
+		th .fixed-width-md
+			float: left
+		th .fixed-width-sm
+			width: 100% !important
 		tr
 			border: 1px solid #ccc
 			@include box-shadow(#EAEDEF 0 2px 0 0 )

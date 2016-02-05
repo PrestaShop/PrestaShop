@@ -67,7 +67,7 @@
 			<ul style="width:{math equation='(a*b + (a-1)*10)' a=$scenes|@count b=$thumbSceneImageType.width}px; height:{$thumbSceneImageType.height}px;">
 			{foreach $scenes as $scene}
 				<li id="scene_thumb_{$scene->id}" style="{if !$scene@last} padding-right:10px;{/if}">
-					<a style="width:{$thumbSceneImageType.width}px; height:{$thumbSceneImageType.height}px" title="{$scene->name|escape:'html':'UTF-8'}" href="{$base_dir}" data-id_scene="{$scene->id|intval}" class="scene_thumb">
+					<a style="width:{$thumbSceneImageType.width}px; height:{$thumbSceneImageType.height}px" title="{$scene->name|escape:'html':'UTF-8'}" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" data-id_scene="{$scene->id|intval}" class="scene_thumb">
 						<img alt="{$scene->name|escape:'html':'UTF-8'}" src="{$content_dir}img/scenes/thumbs/{$scene->id}-m_scene_default.jpg" width="{$thumbSceneSize.width}" height="{$thumbSceneSize.height}" />
 					</a>
 				</li>
@@ -75,7 +75,7 @@
 		 	</ul>
 		</div>
 		<span class="space-keeper">
-			<a class="next" href="{$base_dir}" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;">&nbsp;</a>
+			<a class="next" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;">&nbsp;</a>
 		</span>
 	</div>
 	{/if}

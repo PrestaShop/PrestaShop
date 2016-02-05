@@ -49,6 +49,8 @@ class LanguageCore extends ObjectModel
     /** @var bool Status */
     public $active = true;
 
+    protected static $_cache_language_installation = null;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -441,7 +443,7 @@ class LanguageCore extends ObjectModel
                 $shop_field_exists = $primary_key_exists = false;
                 $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$name.'`');
                 foreach ($columns as $column) {
-                    $fields .= $column['Field'].', ';
+                    $fields .= '`'.$column['Field'].'`, ';
                     if ($column['Field'] == 'id_shop') {
                         $shop_field_exists = true;
                     }
@@ -480,26 +482,13 @@ class LanguageCore extends ObjectModel
         return $return;
     }
 
+    /**
+     * @deprecated 1.6.1.1 Use Tools::deleteDirectory($dir) instead
+     * @param string $dir is the path of the directory to delete
+     */
     public static function recurseDeleteDir($dir)
     {
-        if (!is_dir($dir)) {
-            return false;
-        }
-        if ($handle = @opendir($dir)) {
-            while (false !== ($file = readdir($handle))) {
-                if ($file != '.' && $file != '..') {
-                    if (is_dir($dir.'/'.$file)) {
-                        Language::recurseDeleteDir($dir.'/'.$file);
-                    } elseif (file_exists($dir.'/'.$file)) {
-                        @unlink($dir.'/'.$file);
-                    }
-                }
-            }
-            closedir($handle);
-        }
-        if (is_writable($dir)) {
-            rmdir($dir);
-        }
+        return Tools::deleteDirectory($dir);
     }
 
     public function delete()
@@ -535,26 +524,26 @@ class LanguageCore extends ObjectModel
 
             $modList = scandir(_PS_MODULE_DIR_);
             foreach ($modList as $mod) {
-                Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/'.$this->iso_code);
+                Tools::deleteDirectory(_PS_MODULE_DIR_.$mod.'/mails/'.$this->iso_code);
                 $files = @scandir(_PS_MODULE_DIR_.$mod.'/mails/');
                 if (count($files) <= 2) {
-                    Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/');
+                    Tools::deleteDirectory(_PS_MODULE_DIR_.$mod.'/mails/');
                 }
 
                 if (file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php')) {
                     unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
                     $files = @scandir(_PS_MODULE_DIR_.$mod);
                     if (count($files) <= 2) {
-                        Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod);
+                        Tools::deleteDirectory(_PS_MODULE_DIR_.$mod);
                     }
                 }
             }
 
             if (file_exists(_PS_MAIL_DIR_.$this->iso_code)) {
-                Language::recurseDeleteDir(_PS_MAIL_DIR_.$this->iso_code);
+                Tools::deleteDirectory(_PS_MAIL_DIR_.$this->iso_code);
             }
             if (file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code)) {
-                Language::recurseDeleteDir(_PS_TRANSLATIONS_DIR_.$this->iso_code);
+                Tools::deleteDirectory(_PS_TRANSLATIONS_DIR_.$this->iso_code);
             }
 
             $images = array(
@@ -797,7 +786,7 @@ class LanguageCore extends ObjectModel
 
         // If the language pack has not been provided, retrieve it from prestashop.com
         if (!$lang_pack) {
-            $lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso_code));
+            $lang_pack = json_decode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso_code));
         }
 
         // If a language pack has been found or provided, prefill the language object with the value
@@ -867,7 +856,6 @@ class LanguageCore extends ObjectModel
         return copy(_PS_ROOT_DIR_.'/img/l/none.jpg', _PS_ROOT_DIR_.'/img/l/'.$id.'.jpg');
     }
 
-    protected static $_cache_language_installation = null;
     public static function isInstalled($iso_code)
     {
         if (self::$_cache_language_installation === null) {
@@ -896,24 +884,36 @@ class LanguageCore extends ObjectModel
         return self::$countActiveLanguages[$id_shop];
     }
 
-    public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null, $install = true)
+    public static function downloadAndInstallLanguagePack($iso, $version = _PS_VERSION_, $params = null, $install = true)
     {
         if (!Validate::isLanguageIsoCode((string)$iso)) {
             return false;
         }
 
-        if ($version == null) {
-            $version = _PS_VERSION_;
-        }
-
-        $lang_pack = false;
-        $lang_pack_ok = false;
         $errors = array();
         $file = _PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip';
 
-        if (!$lang_pack_link = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$version.'&iso_lang='.Tools::strtolower((string)$iso))) {
+        Language::downloadLanguagePack($iso, $version, $errors);
+
+        if (!file_exists($file)) {
+            $errors[] = Tools::displayError('No language pack is available for your version.');
+        } elseif ($install) {
+            Language::installLanguagePack($iso, $params, $errors);
+        }
+
+        return count($errors) ? $errors : true;
+    }
+
+    public static function downloadLanguagePack($iso, $version, &$errors = array())
+    {
+        $file = _PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip';
+
+        $lang_pack = false;
+        $lang_pack_link = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$version.'&iso_lang='.Tools::strtolower((string)$iso));
+
+        if (!$lang_pack_link) {
             $errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
-        } elseif (!$lang_pack = Tools::jsonDecode($lang_pack_link)) {
+        } elseif (!$lang_pack = json_decode($lang_pack_link)) {
             $errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
         } elseif (empty($lang_pack->error) && ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.Tools::strtolower($lang_pack->iso_code.'.gzip')))) {
             if (!@file_put_contents($file, $content)) {
@@ -926,55 +926,57 @@ class LanguageCore extends ObjectModel
             }
         }
 
-        if (!file_exists($file)) {
-            $errors[] = Tools::displayError('No language pack is available for your version.');
-        } elseif ($install) {
-            require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
-            $gz = new Archive_Tar($file, true);
-            $files_list = AdminTranslationsController::filterTranslationFiles(Language::getLanguagePackListContent((string)$iso, $gz));
-            $files_paths = AdminTranslationsController::filesListToPaths($files_list);
+        return ! count($errors);
+    }
 
-            $i = 0;
-            $tmp_array = array();
+    public static function installLanguagePack($iso, $params, &$errors = array())
+    {
+        $file = _PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip';
 
-            foreach ($files_paths as $files_path) {
-                $path = dirname($files_path);
-                if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array)) {
-                    $errors[] = (!$i++? Tools::displayError('The archive cannot be extracted.').' ' : '').Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check rights for %s'), $path);
-                    $tmp_array[] = $path;
+        require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
+        $gz = new Archive_Tar($file, true);
+        $files_list = AdminTranslationsController::filterTranslationFiles(Language::getLanguagePackListContent((string)$iso, $gz));
+        $files_paths = AdminTranslationsController::filesListToPaths($files_list);
+
+        $tmp_array = array();
+
+        foreach ($files_paths as $files_path) {
+            $path = dirname($files_path);
+
+            if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array)) {
+                $error = Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check permissions for %s'), $path);
+                $errors[] = (count($tmp_array) == 0) ? Tools::displayError('The archive cannot be extracted.').' '.$error : $error;
+                $tmp_array[] = $path;
+            }
+        }
+
+        if (defined('_PS_HOST_MODE_')) {
+            $mails_files = array();
+            $other_files = array();
+
+            foreach ($files_list as $key => $data) {
+                if (substr($data['filename'], 0, 5) == 'mails') {
+                    $mails_files[] = $data;
                 }
             }
 
-            if (defined('_PS_HOST_MODE_')) {
-                $mails_files = array();
-                $other_files = array();
+            $files_list = array_diff($files_list, $mails_files);
+        }
 
-                foreach ($files_list as $key => $data) {
-                    if (substr($data['filename'], 0, 5) == 'mails') {
-                        $mails_files[] = $data;
-                    } else {
-                        $other_files[] = $data;
-                    }
-                }
+        if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../')) {
+            $errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), (string)$iso);
+        }
 
-                $files_list = $other_files;
-            }
+        // Clear smarty modules cache
+        Tools::clearCache();
 
-            if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../')) {
-                $errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), (string)$iso);
-            }
-
-            // Clear smarty modules cache
-            Tools::clearCache();
-
-            if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params)) {
-                $errors[] = sprintf(Tools::displayError('An error occurred while creating the language: %s'), (string)$iso);
-            } else {
-                // Reset cache
-                Language::loadLanguages();
-                AdminTranslationsController::checkAndAddMailsFiles((string)$iso, $files_list);
-                AdminTranslationsController::addNewTabs((string)$iso, $files_list);
-            }
+        if (!Language::checkAndAddLanguage((string)$iso, false, false, $params)) {
+            $errors[] = sprintf(Tools::displayError('An error occurred while creating the language: %s'), (string)$iso);
+        } else {
+            // Reset cache
+            Language::loadLanguages();
+            AdminTranslationsController::checkAndAddMailsFiles((string)$iso, $files_list);
+            AdminTranslationsController::addNewTabs((string)$iso, $files_list);
         }
 
         return count($errors) ? $errors : true;

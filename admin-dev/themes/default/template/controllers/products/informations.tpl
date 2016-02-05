@@ -173,6 +173,18 @@
 	</div>
 
 	<div class="form-group">
+		<label class="control-label col-lg-3" for="isbn">
+			<span class="label-tooltip" data-toggle="tooltip"
+				  title="{l s='ISBN code'}">
+				{$bullet_common_field} {l s='ISBN'}
+			</span>
+		</label>
+		<div class="col-lg-3">
+			<input maxlength="13" type="text" id="isbn" name="isbn" value="{$product->isbn|htmlentitiesUTF8}" />
+		</div>
+	</div>
+
+	<div class="form-group">
 		<label class="control-label col-lg-3" for="upc">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.'}">

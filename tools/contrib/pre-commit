@@ -1,0 +1,40 @@
+#!/bin/sh
+
+PROJECT_PATH=`php -r "echo dirname(dirname(dirname(realpath('$0'))));"`
+STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep \\\\.php`
+
+# Determine if a file list is passed
+if [ "$#" -eq 1 ]
+then
+	oIFS=$IFS
+	IFS='
+	'
+	SFILES="$1"
+	IFS=$oIFS
+fi
+SFILES=${SFILES:-$STAGED_FILES_CMD}
+
+
+echo "Checking PHP Lint..."
+for FILE in $SFILES
+do
+	php -l -d display_errors=0 $PROJECT_PATH/$FILE
+	if [ $? != 0 ]
+	then
+		echo "Error(s), please fix it before commit."
+		exit 1
+	fi
+done
+
+echo "Running Code Sniffer..."
+for FILE in $SFILES
+do
+	php bin/php-cs-fixer fix $PROJECT_PATH/$FILE --diff --level=psr2
+	if [ $? != 0 ]
+	then
+		echo "PSR2 errors found, please fix it before commit."
+		exit 1
+	fi
+done
+
+exit $?

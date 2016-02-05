@@ -1,11 +1,11 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Tests\Fake;
+namespace PrestaShop\PrestaShop\tests\Fake;
 
-use Core_Business_ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Exception;
 
-class FakeConfiguration implements Core_Business_ConfigurationInterface
+class FakeConfiguration implements ConfigurationInterface
 {
     private $keys;
 

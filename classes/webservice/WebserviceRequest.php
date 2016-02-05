@@ -277,7 +277,6 @@ class WebserviceRequestCore
             'manufacturers' => array('description' => 'The product manufacturers','class' => 'Manufacturer'),
             'order_carriers' => array('description' => 'The Order carriers','class' => 'OrderCarrier'),
             'order_details' => array('description' => 'Details of an order', 'class' => 'OrderDetail'),
-            'order_discounts' => array('description' => 'Discounts of an order', 'class' => 'OrderDiscount'),
             'order_histories' => array('description' => 'The Order histories','class' => 'OrderHistory'),
             'order_invoices' => array('description' => 'The Order invoices','class' => 'OrderInvoice'),
             'orders' => array('description' => 'The Customers orders','class' => 'Order'),
@@ -1565,7 +1564,10 @@ class WebserviceRequestCore
             } elseif ($matches[1] == '<') {
                 $ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` < "'.pSQL($matches[2])."\"\n";
             } elseif ($matches[1] == '!') {
-                $ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` != "'.pSQL($matches[2])."\"\n";
+                $multiple_values = explode('|', $matches[2]);
+                foreach ($multiple_values as $value) {
+                    $ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` != "'.pSQL($value)."\"\n";
+                }
             }
         } else {
             $ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` '.(Validate::isFloat(pSQL($filterValue)) ? 'LIKE' : '=').' "'.pSQL($filterValue)."\"\n";

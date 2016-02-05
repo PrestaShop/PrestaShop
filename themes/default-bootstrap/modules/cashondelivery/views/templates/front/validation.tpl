@@ -45,10 +45,10 @@
         </p>
         <p>
             <b>{l s='Please confirm your order by clicking \'I confirm my order\'.' mod='cashondelivery'}.</b>
-        </p>        
+        </p>
     </div>
     <p class="cart_navigation" id="cart_navigation">
         <a href="{$link->getPageLink('order', true)}?step=3" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Other payment methods' mod='cashondelivery'}</a>
-        <button type="submit" class="button btn btn-default button-medium"><span>{l s='I confirm my order' mod='cashondelivery'}</span></button>
+        <button type="submit" class="button btn btn-default button-medium" data-trigger="disabled"><span>{l s='I confirm my order' mod='cashondelivery'}</span></button>
     </p>
 </form>

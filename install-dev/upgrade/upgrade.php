@@ -100,11 +100,11 @@ if (defined('_PS_ROOT_DIR_') and !defined('_PS_MODULE_DIR_')) {
 }
 
 if (!defined('_PS_INSTALLER_PHP_UPGRADE_DIR_')) {
-    define('_PS_INSTALLER_PHP_UPGRADE_DIR_',  _PS_INSTALL_PATH_.'upgrade/php/');
+    define('_PS_INSTALLER_PHP_UPGRADE_DIR_', _PS_INSTALL_PATH_.'upgrade/php/');
 }
 
 if (!defined('_PS_INSTALLER_SQL_UPGRADE_DIR_')) {
-    define('_PS_INSTALLER_SQL_UPGRADE_DIR_',  _PS_INSTALL_PATH_.'upgrade/sql/');
+    define('_PS_INSTALLER_SQL_UPGRADE_DIR_', _PS_INSTALL_PATH_.'upgrade/sql/');
 }
 
 
@@ -361,9 +361,8 @@ if (empty($fail_result)) {
                         $func_name = str_replace($pattern[0], '', $php[0]);
                         require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.Tools::strtolower($func_name).'.php');
                         $phpRes = call_user_func_array($func_name, $parameters);
-                    }
-                    /* Or an object method */
-                    else {
+                    } else {
+                        /* Or an object method */
                         $func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
                         $phpRes = call_user_func_array($func_name, $parameters);
                     }
@@ -459,26 +458,19 @@ if (empty($return_type) || $return_type == 'xml') {
     echo $result;
 } else {
     // result in xml to array
-    $result = simplexml_load_string($result);
+    $result = @simplexml_load_string($result);
     if (!class_exists('ToolsInstall', false)) {
         if (file_exists(_PS_INSTALL_PATH_.'/upgrade/classes/ToolsInstall.php')) {
             include_once(_PS_INSTALL_PATH_.'/upgrade/classes/ToolsInstall.php');
         }
     }
 
-    if (class_exists('ToolsInstall', false)) {
+    if ($result && class_exists('ToolsInstall', false)) {
         $result = ToolsInstall::simpleXMLToArray($result);
         switch ($return_type) {
             case 'json':
                 header('Content-Type: application/json');
-                if (function_exists('json_encode')) {
-                    $result = json_encode($result);
-                } else {
-                    include_once(INSTALL_PATH.'/../tools/json/json.php');
-                    $pearJson = new Services_JSON();
-                    $result = $pearJson->encode($result);
-                }
-                echo $result;
+                echo json_encode($result);
                 break;
             case 'eval':
                 return $result;

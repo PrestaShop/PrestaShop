@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
   <tab id="Dashboard" name="Dashboard"/>
   <tab id="CarrierWizard" name="Carrier"/>
@@ -82,7 +82,7 @@
   <tab id="Performance" name="效能"/>
   <tab id="E-mail" name="電子郵件"/>
   <tab id="Multistore" name="多商店"/>
-  <tab id="CSV_Import" name="CSV 匯入"/>
+  <tab id="CSV_Import" name="匯入"/>
   <tab id="DB_Backup" name="資料庫備份"/>
   <tab id="SQL_Manager" name="SQL 管理器"/>
   <tab id="Logs" name="記錄"/>

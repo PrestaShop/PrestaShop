@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -30,6 +30,7 @@
 class HTMLTemplateInvoiceCore extends HTMLTemplate
 {
     public $order;
+    public $order_invoice;
     public $available_in_your_account = false;
 
     /**
@@ -37,11 +38,21 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      * @param $smarty
      * @throws PrestaShopException
      */
-    public function __construct(OrderInvoice $order_invoice, $smarty)
+    public function __construct(OrderInvoice $order_invoice, $smarty, $bulk_mode = false)
     {
         $this->order_invoice = $order_invoice;
         $this->order = new Order((int)$this->order_invoice->id_order);
         $this->smarty = $smarty;
+
+        // If shop_address is null, then update it with current one.
+        // But no DB save required here to avoid massive updates for bulk PDF generation case.
+        // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
+        if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
+            $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int)$this->order->id_shop);
+            if (!$bulk_mode) {
+                OrderInvoice::fixAllShopAddresses();
+            }
+        }
 
         // header informations
         $this->date = Tools::displayDate($order_invoice->date_add);
@@ -60,9 +71,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array(
-            'header' => $this->l('Invoice'),
-        ));
+        $this->smarty->assign(array('header' => HTMLTemplateInvoice::l('Invoice')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
@@ -70,12 +79,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Compute layout elements size
      *
-     * @params $params Array Layout elements
+     * @param $params Array Layout elements
      *
      * @return Array Layout elements columns size
      */
-
-    private function computeLayout($params)
+    protected function computeLayout($params)
     {
         $layout = array(
             'reference' => array(
@@ -134,8 +142,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      */
     public function getContent()
     {
-        $invoiceAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
-        $deliveryAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
+        $invoiceAddressPatternRules = json_decode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
+        $deliveryAddressPatternRules = json_decode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
 
         $invoice_address = new Address((int)$this->order->id_address_invoice);
         $country = new Country((int)$invoice_address->id_country);
@@ -169,7 +177,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 $order_detail['unit_price_tax_excl_before_specific_price'] = $order_detail['unit_price_tax_excl_including_ecotax'] + $order_detail['reduction_amount_tax_excl'];
             } elseif ($order_detail['reduction_percent'] > 0) {
                 $has_discount = true;
-                $order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - 15);
+                $order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - $order_detail['reduction_percent']);
             }
 
             // Set tax_code
@@ -286,7 +294,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             case Order::ROUND_TOTAL:
                 $round_type = 'total';
                 break;
-            case Order::ROUND_LINE;
+            case Order::ROUND_LINE:
                 $round_type = 'line';
                 break;
             case Order::ROUND_ITEM:
@@ -342,7 +350,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'total_tab' => $this->smarty->fetch($this->getTemplate('invoice.total-tab')),
         );
         $this->smarty->assign($tpls);
-
 
         return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));
     }
@@ -486,6 +493,19 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number).'.pdf';
+        $id_lang = Context::getContext()->language->id;
+        $id_shop = (int)$this->order->id_shop;
+        $format = '%1$s%2$06d';
+
+        if (Configuration::get('PS_INVOICE_USE_YEAR')) {
+            $format = Configuration::get('PS_INVOICE_YEAR_POS') ? '%1$s%3$s-%2$06d' : '%1$s%2$06d-%3$s';
+        }
+
+        return sprintf(
+            $format,
+            Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop),
+            $this->order_invoice->number,
+            date('Y', strtotime($this->order_invoice->date_add))
+        ).'.pdf';
     }
 }

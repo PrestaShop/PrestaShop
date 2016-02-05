@@ -157,7 +157,7 @@ class AdminDashboardControllerCore extends AdminController
         $forms['carriers']['description'] = $this->l('Method: Indicate the percentage of your carrier margin. For example, if you charge $10 of shipping fees to your customer for each shipment, but you really pay $4 to this carrier, then you should indicate "40" in the percentage field.');
 
         $forms['other']['fields']['CONF_AVERAGE_PRODUCT_MARGIN'] = array(
-            'title' => $this->l('Average gross margin'),
+            'title' => $this->l('Average gross margin percentage'),
             'desc' => $this->l('You should calculate this percentage as follows: ((total sales revenue) - (cost of goods sold)) / (total sales revenue) * 100. This value is only used to calculate the Dashboard approximate gross margin, if you do not specify the wholesale price for each product.'),
             'validation' => 'isPercentage',
             'cast' => 'intval',
@@ -368,7 +368,7 @@ class AdminDashboardControllerCore extends AdminController
             'extra' => (int)Tools::getValue('extra')
         );
 
-        die(Tools::jsonEncode(Hook::exec('dashboardData', $params, $id_module, true, true, (int)Tools::getValue('dashboard_use_push'))));
+        die(json_encode(Hook::exec('dashboardData', $params, $id_module, true, true, (int)Tools::getValue('dashboard_use_push'))));
     }
 
     public function ajaxProcessSetSimulationMode()
@@ -387,50 +387,55 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         if (!$return['has_errors']) {
-            $rss = simpleXML_load_file(_PS_ROOT_DIR_.'/config/xml/blog-'.$this->context->language->iso_code.'.xml');
+            $rss = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/blog-'.$this->context->language->iso_code.'.xml');
+            if (!$rss) {
+                $return['has_errors'] = true;
+            }
             $articles_limit = 2;
-            foreach ($rss->channel->item as $item) {
-                if ($articles_limit > 0 && Validate::isCleanHtml((string)$item->title) && Validate::isCleanHtml((string)$item->description)
-                    && isset($item->link) && isset($item->title)) {
-                    if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
-                        $utm_content = 'cloud';
+            if ($rss) {
+                foreach ($rss->channel->item as $item) {
+                    if ($articles_limit > 0 && Validate::isCleanHtml((string)$item->title) && Validate::isCleanHtml((string)$item->description)
+                        && isset($item->link) && isset($item->title)) {
+                        if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
+                            $utm_content = 'cloud';
+                        } else {
+                            $utm_content = 'download';
+                        }
+
+                        $shop_default_country_id = (int)Configuration::get('PS_COUNTRY_DEFAULT');
+                        $shop_default_iso_country = (string)Tools::strtoupper(Country::getIsoById($shop_default_country_id));
+                        $analytics_params = array('utm_source' => 'back-office',
+                                                'utm_medium' => 'rss',
+                                                'utm_campaign' => 'back-office-'.$shop_default_iso_country,
+                                                'utm_content' => $utm_content
+
+                                            );
+                        $url_query = parse_url($item->link, PHP_URL_QUERY);
+                        parse_str($url_query, $link_query_params);
+
+                        if ($link_query_params) {
+                            $full_url_params = array_merge($link_query_params, $analytics_params);
+                            $base_url = explode('?', (string)$item->link);
+                            $base_url = (string)$base_url[0];
+                            $article_link = $base_url.'?'.http_build_query($full_url_params);
+                        } else {
+                            $article_link = (string)$item->link.'?'.http_build_query($analytics_params);
+                        }
+
+                        $return['rss'][] = array(
+                            'date' => Tools::displayDate(date('Y-m-d', strtotime((string)$item->pubDate))),
+                            'title' => (string)Tools::htmlentitiesUTF8($item->title),
+                            'short_desc' => Tools::truncateString(strip_tags((string)$item->description), 150),
+                            'link' => (string)$article_link,
+                        );
                     } else {
-                        $utm_content = 'download';
+                        break;
                     }
-
-                    $shop_default_country_id = (int)Configuration::get('PS_COUNTRY_DEFAULT');
-                    $shop_default_iso_country = (string)Tools::strtoupper(Country::getIsoById($shop_default_country_id));
-                    $analytics_params = array('utm_source' => 'back-office',
-                                            'utm_medium' => 'rss',
-                                            'utm_campaign' => 'back-office-'.$shop_default_iso_country,
-                                            'utm_content' => $utm_content
-
-                                        );
-                    $url_query = parse_url($item->link, PHP_URL_QUERY);
-                    parse_str($url_query, $link_query_params);
-
-                    if ($link_query_params) {
-                        $full_url_params = array_merge($link_query_params, $analytics_params);
-                        $base_url = explode('?', (string)$item->link);
-                        $base_url = (string)$base_url[0];
-                        $article_link = $base_url.'?'.http_build_query($full_url_params);
-                    } else {
-                        $article_link = (string)$item->link.'?'.http_build_query($analytics_params);
-                    }
-
-                    $return['rss'][] = array(
-                        'date' => Tools::displayDate(date('Y-m-d', strtotime((string)$item->pubDate))),
-                        'title' => (string)Tools::htmlentitiesUTF8($item->title),
-                        'short_desc' => Tools::truncateString(strip_tags((string)$item->description), 150),
-                        'link' => (string)$article_link,
-                    );
-                } else {
-                    break;
+                    $articles_limit --;
                 }
-                $articles_limit --;
             }
         }
-        die(Tools::jsonEncode($return));
+        die(json_encode($return));
     }
 
     public function ajaxProcessSaveDashConfig()
@@ -468,6 +473,6 @@ class AdminDashboardControllerCore extends AdminController
             $return['widget_html'] = $module_obj->$hook($params);
         }
 
-        die(Tools::jsonEncode($return));
+        die(json_encode($return));
     }
 }

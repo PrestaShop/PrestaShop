@@ -292,7 +292,7 @@ class AdminFeaturesControllerCore extends AdminController
                         }
 
                         if (Validate::isLoadedObject($obj = new FeatureValue((int)Tools::getValue('id_feature_value')))) {
-                            $bread_extended[] =  sprintf($this->l('Edit: %s'), $obj->value[$this->context->employee->id_lang]);
+                            $bread_extended[] = sprintf($this->l('Edit: %s'), $obj->value[$this->context->employee->id_lang]);
                         }
                     } else {
                         $bread_extended[] = $this->l('Edit Value');

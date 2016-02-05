@@ -75,7 +75,7 @@ class OrderOpcControllerCore extends ParentOrderController
                                         $this->getFormatedSummaryDetail()
                                     );
                                     Cart::addExtraCarriers($return);
-                                    $this->ajaxDie(Tools::jsonEncode($return));
+                                    $this->ajaxDie(json_encode($return));
                                 } else {
                                     $this->errors[] = Tools::displayError('An error occurred while updating the cart.');
                                 }
@@ -89,7 +89,7 @@ class OrderOpcControllerCore extends ParentOrderController
                         case 'updateTOSStatusAndGetPayments':
                             if (Tools::isSubmit('checked')) {
                                 $this->context->cookie->checkedTOS = (int)Tools::getValue('checked');
-                                $this->ajaxDie(Tools::jsonEncode(array(
+                                $this->ajaxDie(json_encode(array(
                                     'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
                                     'HOOK_PAYMENT' => $this->_getPaymentMethods()
                                 )));
@@ -97,7 +97,7 @@ class OrderOpcControllerCore extends ParentOrderController
                             break;
 
                         case 'getCarrierList':
-                            $this->ajaxDie(Tools::jsonEncode($this->_getCarrierList()));
+                            $this->ajaxDie(json_encode($this->_getCarrierList()));
                             break;
 
                         case 'editCustomer':
@@ -132,14 +132,14 @@ class OrderOpcControllerCore extends ParentOrderController
                             } else {
                                 $return['isSaved'] = false;
                             }
-                            $this->ajaxDie(Tools::jsonEncode($return));
+                            $this->ajaxDie(json_encode($return));
                             break;
 
                         case 'getAddressBlockAndCarriersAndPayments':
                             if ($this->context->customer->isLogged() || $this->context->customer->isGuest()) {
                                 // check if customer have addresses
                                 if (!Customer::getAddressesTotalById($this->context->customer->id)) {
-                                    $this->ajaxDie(Tools::jsonEncode(array('no_address' => 1)));
+                                    $this->ajaxDie(json_encode(array('no_address' => 1)));
                                 }
                                 if (file_exists(_PS_MODULE_DIR_.'blockuserinfo/blockuserinfo.php')) {
                                     include_once(_PS_MODULE_DIR_.'blockuserinfo/blockuserinfo.php');
@@ -170,6 +170,7 @@ class OrderOpcControllerCore extends ParentOrderController
                                 $return = array_merge(array(
                                     'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.$tpl),
                                     'block_user_info' => (isset($block_user_info) ? $block_user_info->hookDisplayTop(array()) : ''),
+                                    'block_user_info_nav' => (isset($block_user_info) ? $block_user_info->hookDisplayNav(array()) : ''),
                                     'formatedAddressFieldsValuesList' => $formated_address_fields_values_list,
                                     'carrier_data' => ($is_adv_api ? '' : $this->_getCarrierList()),
                                     'HOOK_TOP_PAYMENT' => ($is_adv_api ? '' : Hook::exec('displayPaymentTop')),
@@ -181,7 +182,7 @@ class OrderOpcControllerCore extends ParentOrderController
                                     ),
                                     $this->getFormatedSummaryDetail()
                                 );
-                                $this->ajaxDie(Tools::jsonEncode($return));
+                                $this->ajaxDie(json_encode($return));
                             }
                             die(Tools::displayError());
                             break;
@@ -263,11 +264,11 @@ class OrderOpcControllerCore extends ParentOrderController
                                             'refresh' => (bool)$this->ajax_refresh),
                                             $this->getFormatedSummaryDetail()
                                         );
-                                        $this->ajaxDie(Tools::jsonEncode($result));
+                                        $this->ajaxDie(json_encode($result));
                                     }
                                 }
                                 if (count($this->errors)) {
-                                    $this->ajaxDie(Tools::jsonEncode(array(
+                                    $this->ajaxDie(json_encode(array(
                                         'hasError' => true,
                                         'errors' => $this->errors
                                     )));
@@ -392,6 +393,7 @@ class OrderOpcControllerCore extends ParentOrderController
             'isPaymentStep' => isset($_GET['isPaymentStep']) && $_GET['isPaymentStep'],
             'genders' => Gender::getGenders(),
             'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+            'HOOK_AUTHENTICATE_FORM_BOTTOM' => Hook::exec('displayAuthenticateFormBottom'),
             'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
             'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
         ));

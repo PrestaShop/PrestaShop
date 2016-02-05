@@ -94,6 +94,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                         $exceptions = Tools::getValue('exceptions');
                         $exceptions = (isset($exceptions[0])) ? $exceptions[0] : array();
                         $exceptions = explode(',', str_replace(' ', '', $exceptions));
+                        $exceptions = array_unique($exceptions);
 
                         foreach ($exceptions as $key => $except) {
                             if (empty($except)) {
@@ -133,6 +134,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                     if (is_array($exceptions)) {
                         foreach ($exceptions as $id => $exception) {
                             $exception = explode(',', str_replace(' ', '', $exception));
+                            $exception = array_unique($exception);
                             // Check files name
                             foreach ($exception as $except) {
                                 if (!empty($except) && !Validate::isFileName($except)) {
@@ -153,6 +155,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                         }
                     } else {
                         $exceptions = explode(',', str_replace(' ', '', $exceptions));
+                        $exceptions = array_unique($exceptions);
 
                         // Check files name
                         foreach ($exceptions as $except) {
@@ -404,7 +407,7 @@ class AdminModulesPositionsControllerCore extends AdminController
         $modules = $instances;
 
         $hooks = array();
-        if ($show_modules || (Tools::getValue('id_hook') > 0)) {
+        if ($show_modules || (Tools::getValue('id_hook') > 0)) {
             $module_instance = Module::getInstanceById((int)Tools::getValue('id_module', $show_modules));
             $hooks = $module_instance->getPossibleHooksList();
         }
@@ -549,7 +552,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                 }
             }
             $hookableList['hasError'] = false;
-            die(Tools::jsonEncode($hookableList));
+            die(json_encode($hookableList));
         }
     }
 
@@ -579,7 +582,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                     }
                 }
             }
-            die(Tools::jsonEncode($hookableModulesList));
+            die(json_encode($hookableModulesList));
         }
     }
     public function ajaxProcessSaveHook()

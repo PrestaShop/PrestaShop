@@ -135,7 +135,7 @@ function deleteImage($id_item, $id_image = null)
         }
 
     /* Auto-generated images */
-    $imagesTypes = ImageType::getImagesTypes();
+        $imagesTypes = ImageType::getImagesTypes();
         foreach ($imagesTypes as $k => $imagesType) {
             if (file_exists($path.$id_item.'-'.$imagesType['name'].'.jpg')) {
                 unlink($path.$id_item.'-'.$imagesType['name'].'.jpg');

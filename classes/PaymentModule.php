@@ -170,16 +170,16 @@ abstract class PaymentModuleCore extends Module
         if (!isset($this->context)) {
             $this->context = Context::getContext();
         }
-        $this->context->cart = new Cart($id_cart);
-        $this->context->customer = new Customer($this->context->cart->id_customer);
+        $this->context->cart = new Cart((int)$id_cart);
+        $this->context->customer = new Customer((int)$this->context->cart->id_customer);
         // The tax cart is loaded before the customer so re-cache the tax calculation method
         $this->context->cart->setTaxCalculationMethod();
 
-        $this->context->language = new Language($this->context->cart->id_lang);
-        $this->context->shop = ($shop ? $shop : new Shop($this->context->cart->id_shop));
+        $this->context->language = new Language((int)$this->context->cart->id_lang);
+        $this->context->shop = ($shop ? $shop : new Shop((int)$this->context->cart->id_shop));
         ShopUrl::resetMainDomainCache();
         $id_currency = $currency_special ? (int)$currency_special : (int)$this->context->cart->id_currency;
-        $this->context->currency = new Currency($id_currency, null, $this->context->shop->id);
+        $this->context->currency = new Currency((int)$id_currency, null, (int)$this->context->shop->id);
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
             $context_country = $this->context->country;
         }
@@ -266,8 +266,8 @@ abstract class PaymentModuleCore extends Module
                     $order->product_list = $package['product_list'];
 
                     if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
-                        $address = new Address($id_address);
-                        $this->context->country = new Country($address->id_country, $this->context->cart->id_lang);
+                        $address = new Address((int)$id_address);
+                        $this->context->country = new Country((int)$address->id_country, (int)$this->context->cart->id_lang);
                         if (!$this->context->country->active) {
                             throw new PrestaShopException('The delivery address country is not active.');
                         }
@@ -275,7 +275,7 @@ abstract class PaymentModuleCore extends Module
 
                     $carrier = null;
                     if (!$this->context->cart->isVirtualCart() && isset($package['id_carrier'])) {
-                        $carrier = new Carrier($package['id_carrier'], $this->context->cart->id_lang);
+                        $carrier = new Carrier((int)$package['id_carrier'], (int)$this->context->cart->id_lang);
                         $order->id_carrier = (int)$carrier->id;
                         $id_carrier = (int)$carrier->id;
                     } else {
@@ -317,7 +317,7 @@ abstract class PaymentModuleCore extends Module
                     $order->total_shipping = $order->total_shipping_tax_incl;
 
                     if (!is_null($carrier) && Validate::isLoadedObject($carrier)) {
-                        $order->carrier_tax_rate = $carrier->getTaxesRate(new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+                        $order->carrier_tax_rate = $carrier->getTaxesRate(new Address((int)$this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
                     }
 
                     $order->total_wrapping_tax_excl = (float)abs($this->context->cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $order->product_list, $id_carrier));
@@ -437,8 +437,8 @@ abstract class PaymentModuleCore extends Module
                             }
                             $msg->message = $message;
                             $msg->id_cart = (int)$id_cart;
-                            $msg->id_customer = intval($order->id_customer);
-                            $msg->id_order = intval($order->id);
+                            $msg->id_customer = (int)($order->id_customer);
+                            $msg->id_order = (int)$order->id;
                             $msg->private = 1;
                             $msg->add();
                         }
@@ -531,7 +531,7 @@ abstract class PaymentModuleCore extends Module
                         //	The voucher is cloned with a new value corresponding to the remainder
                         if (count($order_list) == 1 && $values['tax_incl'] > ($order->total_products_wt - $total_reduction_value_ti) && $cart_rule['obj']->partial_use == 1 && $cart_rule['obj']->reduction_amount > 0) {
                             // Create a new voucher from the original
-                            $voucher = new CartRule($cart_rule['obj']->id); // We need to instantiate the CartRule without lang parameter to allow saving it
+                            $voucher = new CartRule((int)$cart_rule['obj']->id); // We need to instantiate the CartRule without lang parameter to allow saving it
                             unset($voucher->id);
 
                             // Set a new voucher code
@@ -567,6 +567,7 @@ abstract class PaymentModuleCore extends Module
                             }
 
                             $voucher->quantity = 1;
+                            $voucher->reduction_currency = $order->id_currency;
                             $voucher->quantity_per_user = 1;
                             $voucher->free_shipping = 0;
                             if ($voucher->add()) {
@@ -604,7 +605,7 @@ abstract class PaymentModuleCore extends Module
                             $cart_rule_used[] = $cart_rule['obj']->id;
 
                             // Create a new instance of Cart Rule without id_lang, in order to update its quantity
-                            $cart_rule_to_update = new CartRule($cart_rule['obj']->id);
+                            $cart_rule_to_update = new CartRule((int)$cart_rule['obj']->id);
                             $cart_rule_to_update->quantity = max(0, $cart_rule_to_update->quantity - 1);
                             $cart_rule_to_update->update();
                         }
@@ -624,7 +625,7 @@ abstract class PaymentModuleCore extends Module
 
                     // Specify order id for message
                     $old_message = Message::getMessageByCartId((int)$this->context->cart->id);
-                    if ($old_message) {
+                    if ($old_message && !$old_message['private']) {
                         $update_message = new Message((int)$old_message['id_message']);
                         $update_message->id_order = (int)$order->id;
                         $update_message->update();
@@ -682,7 +683,7 @@ abstract class PaymentModuleCore extends Module
                     $new_history->addWithemail(true, $extra_vars);
 
                     // Switch to back order if needed
-                    if (Configuration::get('PS_STOCK_MANAGEMENT') && $order_detail->getStockState()) {
+                    if (Configuration::get('PS_STOCK_MANAGEMENT') && ($order_detail->getStockState() || $order_detail->product_quantity_in_stock <= 0)) {
                         $history = new OrderHistory();
                         $history->id_order = (int)$order->id;
                         $history->changeIdOrderState(Configuration::get($order->valid ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);
@@ -692,14 +693,14 @@ abstract class PaymentModuleCore extends Module
                     unset($order_detail);
 
                     // Order is reloaded because the status just changed
-                    $order = new Order($order->id);
+                    $order = new Order((int)$order->id);
 
                     // Send an e-mail to customer (one order = one email)
                     if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && $this->context->customer->id) {
-                        $invoice = new Address($order->id_address_invoice);
-                        $delivery = new Address($order->id_address_delivery);
-                        $delivery_state = $delivery->id_state ? new State($delivery->id_state) : false;
-                        $invoice_state = $invoice->id_state ? new State($invoice->id_state) : false;
+                        $invoice = new Address((int)$order->id_address_invoice);
+                        $delivery = new Address((int)$order->id_address_delivery);
+                        $delivery_state = $delivery->id_state ? new State((int)$delivery->id_state) : false;
+                        $invoice_state = $invoice->id_state ? new State((int)$invoice->id_state) : false;
 
                         $data = array(
                         '{firstname}' => $this->context->customer->firstname,
@@ -898,7 +899,7 @@ abstract class PaymentModuleCore extends Module
         if (!isset($id_currency) || empty($id_currency)) {
             return false;
         }
-        $currency = new Currency($id_currency);
+        $currency = new Currency((int)$id_currency);
         return $currency;
     }
 

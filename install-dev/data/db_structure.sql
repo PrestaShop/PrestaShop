@@ -1,3 +1,4 @@
+SET SESSION sql_mode = '';
 SET NAMES 'utf8';
 
 CREATE TABLE `PREFIX_access` (
@@ -26,8 +27,8 @@ CREATE TABLE `PREFIX_address` (
   `id_warehouse` int(10) unsigned NOT NULL DEFAULT '0',
   `alias` varchar(32) NOT NULL,
   `company` varchar(64) DEFAULT NULL,
-  `lastname` varchar(32) NOT NULL,
-  `firstname` varchar(32) NOT NULL,
+  `lastname` varchar(255) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
   `address1` varchar(128) NOT NULL,
   `address2` varchar(128) DEFAULT NULL,
   `postcode` varchar(12) DEFAULT NULL,
@@ -311,7 +312,7 @@ CREATE TABLE `PREFIX_cart_product` (
   `id_product` int(10) unsigned NOT NULL,
   `id_address_delivery` int(10) UNSIGNED DEFAULT '0',
   `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
-  `id_product_attribute` int(10) unsigned DEFAULT NULL,
+  `id_product_attribute` int(10) unsigned DEFAULT '0',
   `quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   PRIMARY KEY (`id_cart`,`id_product`,`id_product_attribute`,`id_address_delivery`),
@@ -367,7 +368,8 @@ CREATE TABLE `PREFIX_category_product` (
   `id_product` int(10) unsigned NOT NULL,
   `position` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_category`,`id_product`),
-  INDEX (`id_product`)
+  INDEX (`id_product`),
+  INDEX (`id_category`, `position`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_cms` (
@@ -563,11 +565,6 @@ CREATE TABLE `PREFIX_currency` (
   `id_currency` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(32) NOT NULL,
   `iso_code` varchar(3) NOT NULL DEFAULT '0',
-  `iso_code_num` varchar(3) NOT NULL DEFAULT '0',
-  `sign` varchar(8) NOT NULL,
-  `blank` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `format` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `decimals` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `conversion_rate` decimal(13,6) NOT NULL,
   `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
@@ -585,10 +582,10 @@ CREATE TABLE `PREFIX_customer` (
   `company` varchar(64),
   `siret` varchar(14),
   `ape` varchar(5),
-  `firstname` varchar(32) NOT NULL,
-  `lastname` varchar(32) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `lastname` varchar(255) NOT NULL,
   `email` varchar(128) NOT NULL,
-  `passwd` varchar(32) NOT NULL,
+  `passwd` varchar(255) NOT NULL,
   `last_passwd_gen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `birthday` date DEFAULT NULL,
   `newsletter` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -606,6 +603,8 @@ CREATE TABLE `PREFIX_customer` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `reset_password_token` varchar(40) DEFAULT NULL,
+  `reset_password_validity` datetime DEFAULT NULL,
   PRIMARY KEY (`id_customer`),
   KEY `customer_email` (`email`),
   KEY `customer_login` (`email`,`passwd`),
@@ -759,6 +758,8 @@ CREATE TABLE `PREFIX_employee` (
   `id_last_customer_message` int(10) unsigned NOT NULL DEFAULT '0',
   `id_last_customer` int(10) unsigned NOT NULL DEFAULT '0',
   `last_connection_date` date DEFAULT '0000-00-00',
+  `reset_password_token` varchar(40) DEFAULT NULL,
+  `reset_password_validity` datetime DEFAULT NULL,
   PRIMARY KEY (`id_employee`),
   KEY `employee_login` (`email`,`passwd`),
   KEY `id_employee_passwd` (`id_employee`,`passwd`),
@@ -1213,6 +1214,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `group_reduction` DECIMAL(10, 2) NOT NULL DEFAULT '0.000000',
   `product_quantity_discount` decimal(20,6) NOT NULL DEFAULT '0.000000',
   `product_ean13` varchar(13) DEFAULT NULL,
+  `product_isbn` varchar(13) DEFAULT NULL,
   `product_upc` varchar(12) DEFAULT NULL,
   `product_reference` varchar(32) DEFAULT NULL,
   `product_supplier_reference` varchar(32) DEFAULT NULL,
@@ -1235,6 +1237,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `total_shipping_price_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `purchase_supplier_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `original_product_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
+  `original_wholesale_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   PRIMARY KEY (`id_order_detail`),
   KEY `order_detail_order` (`id_order`),
   KEY `product_id` (`product_id`),
@@ -1440,6 +1443,7 @@ CREATE TABLE `PREFIX_product` (
   `on_sale` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `online_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `ean13` varchar(13) DEFAULT NULL,
+  `isbn` varchar(13) DEFAULT NULL,
   `upc` varchar(12) DEFAULT NULL,
   `ecotax` decimal(17,6) NOT NULL DEFAULT '0.00',
   `quantity` int(10) NOT NULL DEFAULT '0',
@@ -1466,6 +1470,7 @@ CREATE TABLE `PREFIX_product` (
   `id_product_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date NOT NULL DEFAULT '0000-00-00',
+  `show_condition` tinyint(1) NOT NULL DEFAULT '1',
   `condition` ENUM('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
@@ -1508,6 +1513,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `id_product_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date NOT NULL DEFAULT '0000-00-00',
+  `show_condition` tinyint(1) NOT NULL DEFAULT '1',
   `condition` enum('new','used','refurbished') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
@@ -1530,6 +1536,7 @@ CREATE TABLE `PREFIX_product_attribute` (
   `supplier_reference` varchar(32) DEFAULT NULL,
   `location` varchar(64) DEFAULT NULL,
   `ean13` varchar(13) DEFAULT NULL,
+  `isbn` varchar(13) DEFAULT NULL,
   `upc` varchar(12) DEFAULT NULL,
   `wholesale_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
   `price` decimal(20,6) NOT NULL DEFAULT '0.000000',
@@ -1760,7 +1767,8 @@ CREATE TABLE `PREFIX_search_index` (
   `id_product` int(11) unsigned NOT NULL,
   `id_word` int(11) unsigned NOT NULL,
   `weight` smallint(4) unsigned NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id_word`, `id_product`)
+  PRIMARY KEY (`id_word`, `id_product`),
+  KEY `id_product` (`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_search_word` (
@@ -1796,7 +1804,12 @@ CREATE TABLE `PREFIX_specific_price` (
 	KEY `from_quantity` (`from_quantity`),
 	KEY (`id_specific_price_rule`),
 	KEY (`id_cart`),
-  UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`)
+  KEY `id_product_attribute` (`id_product_attribute`),
+  KEY `id_shop` (`id_shop`),
+  KEY `id_customer` (`id_customer`),
+  KEY `from` (`from`),
+  KEY `to` (`to`),
+  UNIQUE KEY `id_product_2` (`id_product`,`id_product_attribute`,`id_customer`,`id_cart`,`from`,`to`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`from_quantity`,`id_specific_price_rule`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_state` (
@@ -1841,6 +1854,7 @@ CREATE TABLE `PREFIX_tab` (
   `position` int(10) unsigned NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1,
   `hide_host_mode` tinyint(1) NOT NULL DEFAULT '0',
+  `icon` varchar(32) DEFAULT '',
   PRIMARY KEY (`id_tab`),
   KEY `class_name` (`class_name`),
   KEY `id_parent` (`id_parent`)
@@ -2294,6 +2308,7 @@ CREATE TABLE `PREFIX_stock` (
 `id_product_attribute` INT(11) UNSIGNED NOT NULL,
 `reference`  VARCHAR(32) NOT NULL,
 `ean13`  VARCHAR(13) DEFAULT NULL,
+`isbn`  VARCHAR(13) DEFAULT NULL,
 `upc`  VARCHAR(12) DEFAULT NULL,
 `physical_quantity` INT(11) UNSIGNED NOT NULL,
 `usable_quantity` INT(11) UNSIGNED NOT NULL,
@@ -2395,6 +2410,7 @@ CREATE TABLE `PREFIX_supply_order_detail` (
 `supplier_reference`  VARCHAR(32) NOT NULL,
 `name`  varchar(128) NOT NULL,
 `ean13`  VARCHAR(13) DEFAULT NULL,
+`isbn`  VARCHAR(13) DEFAULT NULL,
 `upc`  VARCHAR(12) DEFAULT NULL,
 `exchange_rate` DECIMAL(20,6) DEFAULT '0.000000',
 `unit_price_te` DECIMAL(20,6) DEFAULT '0.000000',

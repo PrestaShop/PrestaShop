@@ -30,7 +30,7 @@
     {/if}
 {/foreach}
 <h2>{l s='Address(es) Details'}</h2>
-{if ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id)}
+{if ((!empty($delivery_option) AND (!isset($isVirtualCart) || !$isVirtualCart)) OR $delivery->id OR $invoice->id)}
     <div class="order_delivery clearfix row">
         {if !isset($formattedAddresses) || (count($formattedAddresses.invoice) == 0 && count($formattedAddresses.delivery) == 0) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
             {if $delivery->id}

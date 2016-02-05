@@ -25,14 +25,13 @@
 <div class="panel">
 	{if isset($header)}{$header}{/if}
 	{if isset($nodes)}
-	<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
+	<ul id="{$id|escape:'html':'UTF-8'}" class="cattree tree">
 		{$nodes}
 	</ul>
 	{/if}
 </div>
 <script type="text/javascript">
 	var currentToken="{$token|@addslashes}";
-	var idTree="{$id|escape:'html':'UTF-8'}";
 	{if isset($use_checkbox) && $use_checkbox == true}
 		function checkAllAssociatedCategories($tree)
 		{

@@ -322,7 +322,8 @@ class FeatureCore extends ObjectModel
      */
     public static function cleanPositions()
     {
-        $sql = 'SET @i = -1; UPDATE `'._DB_PREFIX_.'feature` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
+        Db::getInstance()->execute('SET @i = -1', false);
+        $sql = 'UPDATE `'._DB_PREFIX_.'feature` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
         return (bool)Db::getInstance()->execute($sql);
     }
 

@@ -102,6 +102,8 @@
 "productTotal": {$product_total|json_encode},
 "freeShipping": {displayWtPrice|json_encode p=$free_shipping},
 "freeShippingFloat": {$free_shipping|json_encode},
+"free_ship": {(!$shipping_cost_float && !count($cart->getDeliveryAddressesWithoutCarriers(true, $errors_back)))|json_encode},
+"isVirtualCart": {$cart->isVirtualCart()|json_encode},
 {if isset($errors) && $errors}
 "hasError" : true,
 "errors" : [

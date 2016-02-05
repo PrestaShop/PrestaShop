@@ -493,6 +493,15 @@ class ValidateCore
         return checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1]);
     }
 
+    public static function isDateOrNull($date)
+    {
+        if (is_null($date) || $date === '0000-00-00 00:00:00') {
+            return true;
+        }
+
+        return self::isDate($date);
+    }
+
     /**
      * Check for birthDate validity
      *
@@ -546,6 +555,17 @@ class ValidateCore
     public static function isEan13($ean13)
     {
         return !$ean13 || preg_match('/^[0-9]{0,13}$/', $ean13);
+    }
+
+    /**
+     * Check for ISBN
+     *
+     * @param string $isbn validate
+     * @return bool Validity is ok or not
+     */
+    public static function isIsbn($isbn)
+    {
+        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;={}]*$/u'), $isbn);
     }
 
     /**
@@ -618,17 +638,6 @@ class ValidateCore
     public static function isTableOrIdentifier($table)
     {
         return preg_match('/^[a-zA-Z0-9_-]+$/', $table);
-    }
-
-    /**
-     * @deprecated 1.5.0 You should not use list like this, please use an array when you build a SQL query
-     */
-    public static function isValuesList()
-    {
-        Tools::displayAsDeprecated();
-        return true;
-        /* For history reason, we keep this line */
-        // return preg_match('/^[0-9,\'(). NULL]+$/', $list);
     }
 
     /**
@@ -925,15 +934,6 @@ class ValidateCore
     public static function isBoolId($ids)
     {
         return (bool)preg_match('#^[01]_[0-9]+$#', $ids);
-    }
-
-    /**
-     * @deprecated 1.5.0 Use Validate::isBoolId()
-     */
-    public static function isBool_Id($ids)
-    {
-        Tools::displayAsDeprecated();
-        return Validate::isBoolId($ids);
     }
 
     /**

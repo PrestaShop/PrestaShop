@@ -350,41 +350,6 @@ abstract class DbCore
     }
 
     /**
-     * Executes SQL query based on selected type
-     *
-     * @deprecated 1.5.0.1 Use insert() or update() method instead.
-     * @param string $table
-     * @param array $data
-     * @param string $type (INSERT, INSERT IGNORE, REPLACE, UPDATE).
-     * @param string $where
-     * @param int $limit
-     * @param bool $use_cache
-     * @param bool $use_null
-     * @return bool
-     * @throws PrestaShopDatabaseException
-     */
-    public function autoExecute($table, $data, $type, $where = '', $limit = 0, $use_cache = true, $use_null = false)
-    {
-        $type = strtoupper($type);
-        switch ($type) {
-            case 'INSERT' :
-                return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT, false);
-
-            case 'INSERT IGNORE' :
-                return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT_IGNORE, false);
-
-            case 'REPLACE' :
-                return $this->insert($table, $data, $use_null, $use_cache, Db::REPLACE, false);
-
-            case 'UPDATE' :
-                return $this->update($table, $data, $where, $limit, $use_null, $use_cache, false);
-
-            default :
-                throw new PrestaShopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
-        }
-    }
-
-    /**
      * Filter SQL query within a blacklist
      *
      * @param string $table Table where insert/update data
@@ -895,50 +860,6 @@ abstract class DbCore
     public static function checkAutoIncrement($server, $user, $pwd)
     {
         return call_user_func_array(array(Db::getClass(), 'checkAutoIncrement'), array($server, $user, $pwd));
-    }
-
-    /**
-     * Executes a query
-     *
-     * @deprecated 1.5.0.1
-     * @param string|DbQuery $sql
-     * @param bool $use_cache
-     * @return array|bool|mysqli_result|PDOStatement|resource
-     * @throws PrestaShopDatabaseException
-     */
-    public static function s($sql, $use_cache = true)
-    {
-        Tools::displayAsDeprecated();
-        return Db::getInstance()->executeS($sql, true, $use_cache);
-    }
-
-    /**
-     * Executes a query
-     *
-     * @deprecated 1.5.0.1
-     * @param $sql
-     * @param int $use_cache
-     * @return array|bool|mysqli_result|PDOStatement|resource
-     */
-    public static function ps($sql, $use_cache = 1)
-    {
-        Tools::displayAsDeprecated();
-        $ret = Db::s($sql, $use_cache);
-        return $ret;
-    }
-
-    /**
-     * Executes a query and kills process (dies)
-     *
-     * @deprecated 1.5.0.1
-     * @param $sql
-     * @param int $use_cache
-     */
-    public static function ds($sql, $use_cache = 1)
-    {
-        Tools::displayAsDeprecated();
-        Db::s($sql, $use_cache);
-        die();
     }
 
     /**

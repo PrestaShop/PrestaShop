@@ -1,0 +1,41 @@
+{#{ dump(modules) }#}
+{# Display type ENUM : 'grid' / 'list' #}
+{% if display_type is not defined %}
+    {% set display_type = 'grid' %}
+{% endif %}
+
+{% if display_type == 'list' %}
+    {% set col_lg = 'col-lg-12' %}
+{% else %}
+    {% set col_lg = 'col-lg-3 col-md-4 col-sm-6' %}
+{% endif %}
+
+<div class="modules-{{display_type}}">
+    <div class="row">
+        {% for module in modules %}
+            {# Module Card #}
+            {% block addon_card %}
+                {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_card.html.twig'
+                    with {
+                        'module': module,
+                        'display_type': display_type,
+                        'col_lg': col_lg
+                    }
+                %}
+            {% endblock %}
+        {% endfor %}
+
+        {% block addon_search_card %}
+            {% if requireAddonSearch is defined and requireAddonSearch == true %}
+                <div class="module-addons-item-{{display_type}} {{col_lg}}">
+                    <div class="module-addons-item-wrapper-{{display_type}}">
+                        <span class="module-icon-addons-exit-{{display_type}}">
+                            <i class="icon-signout"></i>
+                        </span>
+                        Check results on PrestaShop's Addons Marketplace
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock %}
+    </div>
+</div>

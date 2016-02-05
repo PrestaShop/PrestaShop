@@ -71,9 +71,8 @@
 						{else}
 							<i class="icon-remove"></i> {l s='Disabled'}
 						{/if}
-
 					{elseif isset($params.position)}
-						{if $order_by == 'position' && $order_way != 'DESC'}
+						{if !$filters_has_value && $order_by == 'position' && $order_way != 'DESC'}
 							<div class="dragGroup">
 								<div class="positions">
 									{$tr.$key.position + 1}
@@ -174,7 +173,7 @@
 						<ul class="dropdown-menu">
 						{foreach $compiled_actions AS $key => $action}
 							{if $key != 0}
-							<li {if $action == 'divider'}class="divider"{/if}>
+							<li{if $action == 'divider' && $compiled_actions|count > 3} class="divider"{/if}>
 								{if $action != 'divider'}{$action}{/if}
 							</li>
 							{/if}

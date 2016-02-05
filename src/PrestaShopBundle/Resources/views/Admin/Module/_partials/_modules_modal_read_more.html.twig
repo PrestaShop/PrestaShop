@@ -1,0 +1,87 @@
+<div id="module-modal-read-more-{{module.name}}" class="modal modal-vcenter fade" role="dialog">
+    <div class="modal-dialog module-modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content module-modal-content no-padding">
+            <div class="modal-header module-modal-header">
+                <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">X</span></button>
+                <div>
+                    <img class="module-logo-thumb" height="57" width="57" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
+                    <div class="modal-title module-modal-title">
+                        <h4>{{ module.displayName }}</h4>
+                        <div class="x-small-text">
+                            v{{ module.version }} by {{ module.author }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body row module-modal-body">
+                <div class="col-md-12 module-big-cover">
+                    <img src="{% if module.media.cover.big is defined %}{{module.media.cover.big}}{% else %}https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png{% endif %}"/>
+                </div>
+                <div class="col-md-12 module-menu-readmore">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a class="module-readmore-tab" data-toggle="tab" href="#overview-{{module.name}}">Overview</a></li>
+                        <li><a class="module-readmore-tab" data-toggle="tab" href="#benefits-{{module.name}}">Benefits</a></li>
+                        <li><a class="module-readmore-tab" data-toggle="tab" href="#features-{{module.name}}">Features</a></li>
+                        <li><a class="module-readmore-tab" data-toggle="tab" href="#changelog-{{module.name}}">Changelog</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="overview-{{module.name}}" class="tab-pane fade in active">
+                            <p class="module-readmore-tab-content">
+                                {% if module.fullDescription is defined %}
+                                    {{ module.fullDescription|raw }}
+                                {% else %}
+                                    No description found for this module :(
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div id="benefits-{{module.name}}" class="tab-pane fade">
+                            <p class="module-readmore-tab-content">
+                                {% if module.additionalDescription is defined %}
+                                    {{ module.additionalDescription|raw }}
+                                {% else %}
+                                    No benefits description provided for this module :(
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div id="features-{{module.name}}" class="tab-pane fade">
+                            <p class="module-readmore-tab-content">
+                                No feature list provided for this module :(
+                            </p>
+                        </div>
+                        <div id="changelog-{{module.name}}" class="tab-pane fade">
+                            {% if module.changeLog is defined %}
+                                <ul class="module-readmore-tab-content">
+                                    {% for version, lines in module.changeLog|arrayCast|reverse %}
+                                        <li><b>{{version}}:</b>
+                                            {% for line in lines %}
+                                                {{line}}<br/>
+                                            {% endfor %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                No changelog provided for this module :(
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer module-modal-footer">
+                {% if module.media.badges is defined %}
+                <div class="pull-left module-badges-display">
+                    {% for badge in module.media.badges %}
+                    <img src="{{badge.img}}" alt="{{badge.label}}"/> {{badge.label}}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if module.urls.install is defined %}
+                    <a href="{{module.urls.install}}" class="pull-right module-install-button">{{ trans('Install', {}, 'AdminModules') }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

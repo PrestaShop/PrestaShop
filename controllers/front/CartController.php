@@ -91,7 +91,8 @@ class CartControllerCore extends FrontController
                 if (isset($_SERVER['HTTP_REFERER'])) {
                     preg_match('!http(s?)://(.*)/(.*)!', $_SERVER['HTTP_REFERER'], $regs);
                     if (isset($regs[3]) && !Configuration::get('PS_CART_REDIRECT')) {
-                        Tools::redirect($_SERVER['HTTP_REFERER']);
+                        $url = preg_replace('/(\?)+content_only=1/', '', $_SERVER['HTTP_REFERER']);
+                        Tools::redirect($url);
                     }
                 }
 
@@ -117,14 +118,14 @@ class CartControllerCore extends FrontController
             } else {
                 $minimal_quantity = (int)$product->minimal_quantity;
             }
-            
+
             $total_quantity = 0;
             foreach ($customization_product as $custom) {
                 $total_quantity += $custom['quantity'];
             }
 
             if ($total_quantity < $minimal_quantity) {
-                $this->ajaxDie(Tools::jsonEncode(array(
+                $this->ajaxDie(json_encode(array(
                         'hasError' => true,
                         'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity)),
                 )));
@@ -132,13 +133,17 @@ class CartControllerCore extends FrontController
         }
 
         if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery)) {
-            Hook::exec('actionAfterDeleteProductInCart', array(
+            $data = array(
                 'id_cart' => (int)$this->context->cart->id,
                 'id_product' => (int)$this->id_product,
                 'id_product_attribute' => (int)$this->id_product_attribute,
                 'customization_id' => (int)$this->customization_id,
                 'id_address_delivery' => (int)$this->id_address_delivery
-            ));
+            );
+
+            /* @deprecated deprecated since 1.6.1.1 */
+            // Hook::exec('actionAfterDeleteProductInCart', $data);
+            Hook::exec('actionDeleteProductInCartAfter', $data);
 
             if (!Cart::getNbProducts((int)$this->context->cart->id)) {
                 $this->context->cart->setDeliveryOption(null);
@@ -147,8 +152,10 @@ class CartControllerCore extends FrontController
                 $this->context->cart->update();
             }
         }
+
         $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
+
         if (count($removed) && (int)Tools::getValue('allow_refresh')) {
             $this->ajax_refresh = true;
         }
@@ -164,7 +171,7 @@ class CartControllerCore extends FrontController
         $new_id_address_delivery = (int)Tools::getValue('new_id_address_delivery');
 
         if (!count(Carrier::getAvailableCarrierList(new Product($this->id_product), null, $new_id_address_delivery))) {
-            $this->ajaxDie(Tools::jsonEncode(array(
+            $this->ajaxDie(json_encode(array(
                 'hasErrors' => true,
                 'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
             )));
@@ -288,6 +295,7 @@ class CartControllerCore extends FrontController
 
             if (!$this->errors) {
                 $cart_rules = $this->context->cart->getCartRules();
+                $available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart, false, true);
                 $update_quantity = $this->context->cart->updateQty($this->qty, $this->id_product, $this->id_product_attribute, $this->customization_id, Tools::getValue('op', 'up'), $this->id_address_delivery);
                 if ($update_quantity < 0) {
                     // If product has attribute, minimal quantity is set with minimal quantity of attribute
@@ -300,7 +308,7 @@ class CartControllerCore extends FrontController
                     $cart_rules2 = $this->context->cart->getCartRules();
                     if (count($cart_rules2) != count($cart_rules)) {
                         $this->ajax_refresh = true;
-                    } else {
+                    } elseif (count($cart_rules2)) {
                         $rule_list = array();
                         foreach ($cart_rules2 as $rule) {
                             $rule_list[] = $rule['id_cart_rule'];
@@ -309,6 +317,22 @@ class CartControllerCore extends FrontController
                             if (!in_array($rule['id_cart_rule'], $rule_list)) {
                                 $this->ajax_refresh = true;
                                 break;
+                            }
+                        }
+                    } else {
+                        $available_cart_rules2 = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart, false, true);
+                        if (count($available_cart_rules2) != count($available_cart_rules)) {
+                            $this->ajax_refresh = true;
+                        } elseif (count($available_cart_rules2)) {
+                            $rule_list = array();
+                            foreach ($available_cart_rules2 as $rule) {
+                                $rule_list[] = $rule['id_cart_rule'];
+                            }
+                            foreach ($cart_rules2 as $rule) {
+                                if (!in_array($rule['id_cart_rule'], $rule_list)) {
+                                    $this->ajax_refresh = true;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -351,10 +375,10 @@ class CartControllerCore extends FrontController
     public function displayAjax()
     {
         if ($this->errors) {
-            $this->ajaxDie(Tools::jsonEncode(array('hasError' => true, 'errors' => $this->errors)));
+            $this->ajaxDie(json_encode(array('hasError' => true, 'errors' => $this->errors)));
         }
         if ($this->ajax_refresh) {
-            $this->ajaxDie(Tools::jsonEncode(array('refresh' => true)));
+            $this->ajaxDie(json_encode(array('refresh' => true)));
         }
 
         // write cookie if can't on destruct
@@ -392,7 +416,7 @@ class CartControllerCore extends FrontController
 
             $json = '';
             Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
-            $this->ajaxDie(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
+            $this->ajaxDie(json_encode(array_merge($result, (array)json_decode($json, true))));
         }
         // @todo create a hook
         elseif (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php')) {

@@ -24,6 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-$container_builder = new Core_Business_ContainerBuilder;
+$container_builder = new \PrestaShop\PrestaShop\Core\ContainerBuilder;
 $container = $container_builder->build();
-Adapter_ServiceLocator::setServiceContainerInstance($container);
+\PrestaShop\PrestaShop\Adapter\ServiceLocator::setServiceContainerInstance($container);

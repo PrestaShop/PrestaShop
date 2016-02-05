@@ -66,6 +66,11 @@ class SupplyOrderDetailCore extends ObjectModel
     public $ean13;
 
     /**
+     * @var string Product ISBN
+     */
+    public $isbn;
+
+    /**
      * @var string UPC
      */
     public $upc;
@@ -156,6 +161,7 @@ class SupplyOrderDetailCore extends ObjectModel
             'supplier_reference' =>            array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
             'name' =>                            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
             'ean13' =>                            array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
+            'isbn' =>                            array('type' => self::TYPE_STRING, 'validate' => 'isIsbn'),
             'upc' =>                            array('type' => self::TYPE_STRING, 'validate' => 'isUpc'),
             'id_currency' =>                    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'exchange_rate' =>                    array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),

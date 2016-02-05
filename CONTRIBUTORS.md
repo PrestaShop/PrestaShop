@@ -54,9 +54,11 @@ GitHub contributors:
 - ChristopheBoucaut
 - CINS
 - cippest
+- Claire Meuriot
 - cmouleyre
 - codvir
 - Comkwatt
+- Conner Burnett
 - Corentin Delcourt
 - Cosmin Hutanu
 - Cedric Mouleyre
@@ -104,6 +106,7 @@ GitHub contributors:
 - Emilien Puget
 - emilien-puget
 - emily-d
+- Eolia
 - Eric Le Lay
 - Eric Rouvier
 - erickturcios
@@ -139,6 +142,7 @@ GitHub contributors:
 - Gytis Skėma
 - Ha!*!*y
 - ha99y
+- hadjedjvincent
 - harelguy
 - hiousi
 - htrex
@@ -176,11 +180,13 @@ GitHub contributors:
 - Julien Deniau
 - Julien Martin
 - julienbourdeau
+- julvernois
 - Jachym Tousek
 - Kamil Szymański
 - Kelly Karnetsky
 - kermes
 - Kevin Granger
+- Kijam Lopez
 - kiropowered
 - kpodemski
 - Krystian Podemski
@@ -202,6 +208,7 @@ GitHub contributors:
 - Madman
 - Mainmich
 - makk1ntosh
+- manuelbcd
 - marcinsz101
 - Marco Cervellin
 - Marcos
@@ -243,7 +250,9 @@ GitHub contributors:
 - nturato
 - oleacorner
 - Otto Nascarella
+- Pan P
 - Pan P.
+- Pan Ploenes
 - Panagiotis Tigas
 - panesarsandeep
 - Patanock
@@ -259,6 +268,7 @@ GitHub contributors:
 - Pierre
 - Piotr Kaczor
 - Piotr Moćko
+- Presta Module
 - PrestaEdit
 - PrestaLab
 - prestamodule
@@ -273,6 +283,7 @@ GitHub contributors:
 - quadrateam
 - Quentin Leonetti
 - Quentin Montant
+- Quentin MONTANT - KIWIK
 - Quetzacoalt91
 - Racochejl
 - Rafael Cunha

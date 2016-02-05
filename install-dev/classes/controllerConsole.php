@@ -142,7 +142,7 @@ abstract class InstallControllerConsole
             echo 'Errors :'."\n";
             foreach ($errors as $error_process) {
                 foreach ($error_process as $error) {
-                    echo (is_string($error) ? $error : print_r($error, true))."\n";
+                    echo(is_string($error) ? $error : print_r($error, true))."\n";
                 }
             }
             die;

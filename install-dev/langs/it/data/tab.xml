@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
   <tab id="Addresses" name="Indirizzi"/>
   <tab id="Administration" name="Amministrazione"/>
@@ -19,7 +19,7 @@
   <tab id="Contacts" name="Contatti"/>
   <tab id="Countries" name="Nazione"/>
   <tab id="Credit_Slips" name="Note di credito"/>
-  <tab id="CSV_Import" name="Importo CVS"/>
+  <tab id="CSV_Import" name="Importo"/>
   <tab id="Currencies" name="Valute"/>
   <tab id="Customer_Service" name="Servizio clienti"/>
   <tab id="Customers" name="Clienti"/>
@@ -47,7 +47,7 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Tabs"/>
   <tab id="Merchandise_Returns" name="Restituzione prodotto"/>
-  <tab id="Modules_1" name="Moduli"/>
+  <tab id="Modules_1" name="Moduli e Servizi"/>
   <tab id="Modules" name="Moduli"/>
   <tab id="Modules_Themes_Catalog" name="Catalogo Moduli e temi"/>
   <tab id="Monitoring" name="Monitoraggio"/>

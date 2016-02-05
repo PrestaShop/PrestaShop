@@ -80,9 +80,8 @@ class AdminCarrierWizardControllerCore extends AdminController
                 ),
                 array(
                     'title' => $this->l('Summary'),
-                ),
-
-            ));
+                ))
+        );
 
         if (Shop::isFeatureActive()) {
             $multistore_step = array(
@@ -125,7 +124,8 @@ class AdminCarrierWizardControllerCore extends AdminController
                     1 => $this->renderStepThree($carrier),
                     2 => $this->renderStepFour($carrier),
                     3 => $this->renderStepFive($carrier),
-                )),
+                )
+            ),
             'labels' => array('next' => $this->l('Next'), 'previous' => $this->l('Previous'), 'finish' => $this->l('Finish'))
         );
 
@@ -214,9 +214,10 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'label' => $this->l('Tracking URL'),
                         'name' => 'url',
                         'hint' => $this->l('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will be automatically replaced by the tracking number.'),
-                        'desc' => $this->l('For example: \'http://exampl.com/track.php?num=@\' with \'@\' where the tracking number should appear.')
-                    ),
-                )),
+                        'desc' => $this->l('For example: \'http://example.com/track.php?num=@\' with \'@\' where the tracking number should appear.')
+                    )
+                )
+            )
         );
 
         $tpl_vars = array('max_image_size' => (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE') / 1024 / 1024);
@@ -236,7 +237,8 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'label' => $this->l('Shop association'),
                         'name' => 'checkBoxShopAsso',
                     ),
-                ))
+                )
+            )
         );
         $fields_value = $this->getStepTwoFieldsValues($carrier);
 
@@ -347,9 +349,9 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'type' => 'zone',
                         'name' => 'zones'
                     )
-                ),
-
-            ));
+                )
+            )
+        );
 
         if (Configuration::get('PS_ATCP_SHIPWRAP')) {
             unset($this->fields_form['form']['input']['id_tax_rules_group']);
@@ -415,7 +417,8 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'hint' => $this->l('Mark the groups that are allowed access to this carrier.')
                     )
                 )
-            ));
+            )
+        );
 
         $fields_value = $this->getStepFourFieldsValues($carrier);
 
@@ -463,18 +466,13 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'hint' => $this->l('Enable the carrier in the front office.')
                     )
                 )
-            ));
-
+            )
+        );
         $template = $this->createTemplate('controllers/carrier_wizard/summary.tpl');
-
         $fields_value = $this->getStepFiveFieldsValues($carrier);
-
         $active_form = $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
-
         $active_form =  str_replace(array('<fieldset id="fieldset_form">', '</fieldset>'), '', $active_form);
-
         $template->assign('active_form', $active_form);
-
         return $template->fetch('controllers/carrier_wizard/summary.tpl');
     }
 
@@ -653,7 +651,7 @@ class AdminCarrierWizardControllerCore extends AdminController
             $return['errors'] = $this->errors;
         }
         if (count($this->errors) || $die) {
-            die(Tools::jsonEncode($return));
+            die(json_encode($return));
         }
     }
 
@@ -689,19 +687,23 @@ class AdminCarrierWizardControllerCore extends AdminController
                 }
                 $add_range = true;
                 if ($range_type == Carrier::SHIPPING_METHOD_WEIGHT) {
-                    if (!RangeWeight::rangeExist((int)$carrier->id, (float)$delimiter1, (float)$range_sup[$key])) {
+                    if (!RangeWeight::rangeExist(null, (float)$delimiter1, (float)$range_sup[$key], $carrier->id_reference)) {
                         $range = new RangeWeight();
                     } else {
                         $range = new RangeWeight((int)$key);
+                        $range->id_carrier = (int)$carrier->id;
+                        $range->save();
                         $add_range = false;
                     }
                 }
 
                 if ($range_type == Carrier::SHIPPING_METHOD_PRICE) {
-                    if (!RangePrice::rangeExist((int)$carrier->id, (float)$delimiter1, (float)$range_sup[$key])) {
+                    if (!RangePrice::rangeExist(null, (float)$delimiter1, (float)$range_sup[$key], $carrier->id_reference)) {
                         $range = new RangePrice();
                     } else {
                         $range = new RangePrice((int)$key);
+                        $range->id_carrier = (int)$carrier->id;
+                        $range->save();
                         $add_range = false;
                     }
                 }
@@ -723,7 +725,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                             'id_range_weight' => ($range_type == Carrier::SHIPPING_METHOD_WEIGHT ? (int)$range->id : null),
                             'id_carrier' => (int)$carrier->id,
                             'id_zone' => (int)$id_zone,
-                            'price' => isset($fee[$key]) ? (float)$fee[$key] : 0,
+                            'price' => isset($fee[$key]) ? (float)str_replace(',', '.', $fee[$key]) : 0,
                         );
                     }
                 }
@@ -867,7 +869,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                 $return['id_carrier'] = $carrier->id;
             }
         }
-        die(Tools::jsonEncode($return));
+        die(json_encode($return));
     }
 
     protected function changeGroups($id_carrier, $delete = true)

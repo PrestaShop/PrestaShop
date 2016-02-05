@@ -575,16 +575,17 @@ class ToolsCore
 
     public static function getCountry($address = null)
     {
-        if ($id_country = Tools::getValue('id_country')); elseif (isset($address) && isset($address->id_country) && $address->id_country) {
-     $id_country = $address->id_country;
- } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-     preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
-     if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-         $id_country = Country::getByIso($array[0], true);
-     }
- }
+        $id_country = (int)Tools::getValue('id_country');
+        if (!$id_country && isset($address) && isset($address->id_country) && $address->id_country) {
+            $id_country = (int)$address->id_country;
+        } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
+            if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
+                $id_country = (int)Country::getByIso($array[0], true);
+            }
+        }
         if (!isset($id_country) || !$id_country) {
-            $id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+            $id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
         }
         return (int)$id_country;
     }
@@ -628,11 +629,37 @@ class ToolsCore
     }
 
     /**
+     * Return the CLDR associated with the context or given language_code
+     *
+     * @param Context|null $context
+     * @param null         $language_code
+     * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
+     * @throws PrestaShopException
+     */
+    public static function getCldr(Context $context = null, $language_code = null)
+    {
+        static $cldr_cache;
+        if ($context) {
+            $language_code = $context->language->language_code;
+        }
+
+        if (!empty($cldr_cache[$language_code])) {
+            $cldr = $cldr_cache[$language_code];
+        } else {
+            $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository($language_code);
+            $cldr_cache[$language_code] = $cldr;
+        }
+
+        return $cldr;
+    }
+
+    /**
     * Return price with currency sign for a given product
     *
     * @param float $price Product price
     * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
     * @return string Price correctly formated (sign, decimal separator...)
+    * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
     */
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
@@ -644,88 +671,26 @@ class ToolsCore
         }
         if ($currency === null) {
             $currency = $context->currency;
-        }
-        // if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-        elseif (is_int($currency)) {
+        } elseif (is_int($currency)) {
             $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
-        if (is_array($currency)) {
-            $c_char = $currency['sign'];
-            $c_format = $currency['format'];
-            $c_decimals = (int)$currency['decimals'] * _PS_PRICE_DISPLAY_PRECISION_;
-            $c_blank = $currency['blank'];
-        } elseif (is_object($currency)) {
-            $c_char = $currency->sign;
-            $c_format = $currency->format;
-            $c_decimals = (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_;
-            $c_blank = $currency->blank;
-        } else {
-            return false;
-        }
+        $cldr = self::getCldr($context);
 
-        $blank = ($c_blank ? ' ' : '');
-        $ret = 0;
-        if (($is_negative = ($price < 0))) {
-            $price *= -1;
-        }
-        $price = Tools::ps_round($price, $c_decimals);
 
-        /*
-        * If the language is RTL and the selected currency format contains spaces as thousands separator
-        * then the number will be printed in reverse since the space is interpreted as separating words.
-        * To avoid this we replace the currency format containing a space with the one containing a comma (,) as thousand
-        * separator when the language is RTL.
-        *
-        * TODO: This is not ideal, a currency format should probably be tied to a language, not to a currency.
-        */
-        if (($c_format == 2) && ($context->language->is_rtl == 1)) {
-            $c_format = 4;
-        }
-
-        switch ($c_format) {
-            /* X 0,000.00 */
-            case 1:
-                $ret = $c_char.$blank.number_format($price, $c_decimals, '.', ',');
-                break;
-            /* 0 000,00 X*/
-            case 2:
-                $ret = number_format($price, $c_decimals, ',', ' ').$blank.$c_char;
-                break;
-            /* X 0.000,00 */
-            case 3:
-                $ret = $c_char.$blank.number_format($price, $c_decimals, ',', '.');
-                break;
-            /* 0,000.00 X */
-            case 4:
-                $ret = number_format($price, $c_decimals, '.', ',').$blank.$c_char;
-                break;
-            /* X 0'000.00  Added for the switzerland currency */
-            case 5:
-                $ret = number_format($price, $c_decimals, '.', "'").$blank.$c_char;
-                break;
-        }
-        if ($is_negative) {
-            $ret = '-'.$ret;
-        }
-        if ($no_utf8) {
-            return str_replace('€', chr(128), $ret);
-        }
-        return $ret;
+        return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
 
-    /* Just to fix a bug
-     * Need real CLDR functions
+    /*
+     * Return a number well formatted
+     * @param float $number A number
+     * @param nullable $currency / not used anymaore
      */
-    public static function displayNumber($number, $currency)
+    public static function displayNumber($number, $currency = null)
     {
-        if (is_array($currency)) {
-            $format = $currency['format'];
-        } elseif (is_object($currency)) {
-            $format = $currency->format;
-        }
+        $cldr = self::getCldr(Context::getContext());
 
-        return number_format($number, 0, '.', in_array($format, array(1, 4)) ? ',': ' ');
+        return $cldr->getNumber($number);
     }
 
     public static function displayPriceSmarty($params, &$smarty)
@@ -815,16 +780,12 @@ class ToolsCore
      */
     public static function convertPriceFull($amount, Currency $currency_from = null, Currency $currency_to = null)
     {
-        if ($currency_from === $currency_to) {
+        if ($currency_from == $currency_to) {
             return $amount;
         }
 
         if ($currency_from === null) {
             $currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-        }
-
-        if ($currency_to === null) {
-            $currency_to = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
@@ -836,7 +797,8 @@ class ToolsCore
             // Convert to new currency
             $amount *= $currency_to->conversion_rate;
         }
-        return Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_);
+
+        return Tools::ps_round(self::displayPrice($amount, $currency_to), _PS_PRICE_COMPUTE_PRECISION_) ;
     }
 
     /**
@@ -941,7 +903,7 @@ class ToolsCore
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..' && $file != '.svn') {
                         if (is_dir($dirname.$file)) {
-                            Tools::deleteDirectory($dirname.$file, true);
+                            Tools::deleteDirectory($dirname.$file);
                         } elseif (file_exists($dirname.$file)) {
                             @chmod($dirname.$file, 0777); // NT ?
                                 unlink($dirname.$file);
@@ -1058,10 +1020,10 @@ class ToolsCore
         }
 
         echo '
-			<script type="text/javascript">
-				console.'.$type.'('.Tools::jsonEncode($object).');
-			</script>
-		';
+            <script type="text/javascript">
+                console.'.$type.'('.json_encode($object).');
+            </script>
+        ';
     }
 
     /**
@@ -1083,8 +1045,8 @@ class ToolsCore
         }
 
         echo '
-		<div style="margin:10px;padding:10px;border:1px solid #666666">
-			<ul>';
+        <div style="margin:10px;padding:10px;border:1px solid #666666">
+            <ul>';
         $i = 0;
         foreach ($backtrace as $id => $trace) {
             if ((int)$limit && (++$i > $limit)) {
@@ -1094,12 +1056,12 @@ class ToolsCore
             $current_line = (isset($trace['line'])) ? ':'.$trace['line'] : '';
 
             echo '<li>
-				<b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>
-				'.$relative_file.$current_line.'
-			</li>';
+                <b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>
+                '.$relative_file.$current_line.'
+            </li>';
         }
         echo '</ul>
-		</div>';
+        </div>';
     }
 
     /**
@@ -1287,17 +1249,17 @@ class ToolsCore
             $interval_root = Category::getInterval($id_root_category);
             if ($interval) {
                 $sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
-						FROM '._DB_PREFIX_.'category c
-						LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
-						'.Shop::addSqlAssociation('category', 'c').'
-						WHERE c.nleft <= '.$interval['nleft'].'
-							AND c.nright >= '.$interval['nright'].'
-							AND c.nleft >= '.$interval_root['nleft'].'
-							AND c.nright <= '.$interval_root['nright'].'
-							AND cl.id_lang = '.(int)$context->language->id.'
-							AND c.active = 1
-							AND c.level_depth > '.(int)$interval_root['level_depth'].'
-						ORDER BY c.level_depth ASC';
+                        FROM '._DB_PREFIX_.'category c
+                        LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
+                        '.Shop::addSqlAssociation('category', 'c').'
+                        WHERE c.nleft <= '.$interval['nleft'].'
+                            AND c.nright >= '.$interval['nright'].'
+                            AND c.nleft >= '.$interval_root['nleft'].'
+                            AND c.nright <= '.$interval_root['nright'].'
+                            AND cl.id_lang = '.(int)$context->language->id.'
+                            AND c.active = 1
+                            AND c.level_depth > '.(int)$interval_root['level_depth'].'
+                        ORDER BY c.level_depth ASC';
                 $categories = Db::getInstance()->executeS($sql);
 
                 $n = 1;
@@ -1455,7 +1417,7 @@ class ToolsCore
             /* a  */ '/[\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}\x{0101}\x{0103}\x{0105}\x{0430}\x{00C0}-\x{00C3}\x{1EA0}-\x{1EB7}]/u',
             /* b  */ '/[\x{0431}]/u',
             /* c  */ '/[\x{00E7}\x{0107}\x{0109}\x{010D}\x{0446}]/u',
-            /* d  */ '/[\x{010F}\x{0111}\x{0434}\x{0110}]/u',
+            /* d  */ '/[\x{010F}\x{0111}\x{0434}\x{0110}\x{00F0}]/u',
             /* e  */ '/[\x{00E8}\x{00E9}\x{00EA}\x{00EB}\x{0113}\x{0115}\x{0117}\x{0119}\x{011B}\x{0435}\x{044D}\x{00C8}-\x{00CA}\x{1EB8}-\x{1EC7}]/u',
             /* f  */ '/[\x{0444}]/u',
             /* g  */ '/[\x{011F}\x{0121}\x{0123}\x{0433}\x{0491}]/u',
@@ -1492,9 +1454,9 @@ class ToolsCore
 
             /* Uppercase */
             /* A  */ '/[\x{0100}\x{0102}\x{0104}\x{00C0}\x{00C1}\x{00C2}\x{00C3}\x{00C4}\x{00C5}\x{0410}]/u',
-            /* B  */ '/[\x{0411}]]/u',
+            /* B  */ '/[\x{0411}]/u',
             /* C  */ '/[\x{00C7}\x{0106}\x{0108}\x{010A}\x{010C}\x{0426}]/u',
-            /* D  */ '/[\x{010E}\x{0110}\x{0414}]/u',
+            /* D  */ '/[\x{010E}\x{0110}\x{0414}\x{00D0}]/u',
             /* E  */ '/[\x{00C8}\x{00C9}\x{00CA}\x{00CB}\x{0112}\x{0114}\x{0116}\x{0118}\x{011A}\x{0415}\x{042D}]/u',
             /* F  */ '/[\x{0424}]/u',
             /* G  */ '/[\x{011C}\x{011E}\x{0120}\x{0122}\x{0413}\x{0490}]/u',
@@ -2201,20 +2163,8 @@ class ToolsCore
 
     public static function replaceByAbsoluteURL($matches)
     {
-        global $current_css_file;
-        $protocol_link = Tools::getCurrentUrlProtocolPrefix();
-
-        if (array_key_exists(1, $matches) && array_key_exists(2, $matches)) {
-            if (!preg_match('/^(?:https?:)?\/\//iUs', $matches[2])) {
-                $sep = '/';
-                $tmp = substr($matches[2], 0, 1) == $sep ? $matches[2] : dirname($current_css_file).$sep.ltrim($matches[2], $sep);
-                $server = Tools::getMediaServer($tmp);
-                return $matches[1].$protocol_link.$server.$tmp;
-            } else {
-                return $matches[0];
-            }
-        }
-        return false;
+        Tools::displayAsDeprecated();
+        return Media::replaceByAbsoluteURL($matches);
     }
 
     /**
@@ -2382,8 +2332,7 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
-        if (
-            !$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
+        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_2')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
         ) {
@@ -2517,45 +2466,47 @@ class ToolsCore
         fwrite($write_fd, "AddType application/vnd.ms-fontobject .eot\n");
         fwrite($write_fd, "AddType font/ttf .ttf\n");
         fwrite($write_fd, "AddType font/otf .otf\n");
-        fwrite($write_fd, "AddType application/x-font-woff .woff\n");
+        fwrite($write_fd, "AddType application/font-woff .woff\n");
+        fwrite($write_fd, "AddType application/font-woff2 .woff2\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
-	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|svg)$\">
-		Header add Access-Control-Allow-Origin \"*\"
-	</FilesMatch>
+    <FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
+        Header add Access-Control-Allow-Origin \"*\"
+    </FilesMatch>
 </IfModule>\n\n");
 
         // Cache control
         if ($cache_control) {
             $cache_control = "<IfModule mod_expires.c>
-	ExpiresActive On
-	ExpiresByType image/gif \"access plus 1 month\"
-	ExpiresByType image/jpeg \"access plus 1 month\"
-	ExpiresByType image/png \"access plus 1 month\"
-	ExpiresByType text/css \"access plus 1 week\"
-	ExpiresByType text/javascript \"access plus 1 week\"
-	ExpiresByType application/javascript \"access plus 1 week\"
-	ExpiresByType application/x-javascript \"access plus 1 week\"
-	ExpiresByType image/x-icon \"access plus 1 year\"
-	ExpiresByType image/svg+xml \"access plus 1 year\"
-	ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
-	ExpiresByType application/font-woff \"access plus 1 year\"
-	ExpiresByType application/x-font-woff \"access plus 1 year\"
-	ExpiresByType application/vnd.ms-fontobject \"access plus 1 year\"
-	ExpiresByType font/opentype \"access plus 1 year\"
-	ExpiresByType font/ttf \"access plus 1 year\"
-	ExpiresByType font/otf \"access plus 1 year\"
-	ExpiresByType application/x-font-ttf \"access plus 1 year\"
-	ExpiresByType application/x-font-otf \"access plus 1 year\"
+    ExpiresActive On
+    ExpiresByType image/gif \"access plus 1 month\"
+    ExpiresByType image/jpeg \"access plus 1 month\"
+    ExpiresByType image/png \"access plus 1 month\"
+    ExpiresByType text/css \"access plus 1 week\"
+    ExpiresByType text/javascript \"access plus 1 week\"
+    ExpiresByType application/javascript \"access plus 1 week\"
+    ExpiresByType application/x-javascript \"access plus 1 week\"
+    ExpiresByType image/x-icon \"access plus 1 year\"
+    ExpiresByType image/svg+xml \"access plus 1 year\"
+    ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
+    ExpiresByType application/font-woff \"access plus 1 year\"
+    ExpiresByType application/font-woff2 \"access plus 1 year\"
+    ExpiresByType application/x-font-woff \"access plus 1 year\"
+    ExpiresByType application/vnd.ms-fontobject \"access plus 1 year\"
+    ExpiresByType font/opentype \"access plus 1 year\"
+    ExpiresByType font/ttf \"access plus 1 year\"
+    ExpiresByType font/otf \"access plus 1 year\"
+    ExpiresByType application/x-font-ttf \"access plus 1 year\"
+    ExpiresByType application/x-font-otf \"access plus 1 year\"
 </IfModule>
 
 <IfModule mod_headers.c>
-	Header unset Etag
+    Header unset Etag
 </IfModule>
 FileETag none
 <IfModule mod_deflate.c>
-	<IfModule mod_filter.c>
-		AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype
-	</IfModule>
+    <IfModule mod_filter.c>
+        AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype
+    </IfModule>
 </IfModule>\n\n";
             fwrite($write_fd, $cache_control);
         }
@@ -2630,38 +2581,34 @@ exit;
     }
 
     /**
+     * @deprecated Deprecated since 1.7.0
+     * Use json_decode instead
      * jsonDecode convert json string to php array / object
      *
-     * @param string $json
+     * @param string $data
      * @param bool $assoc  (since 1.4.2.4) if true, convert to associativ array
      * @return array
      */
-    public static function jsonDecode($json, $assoc = false)
+    public static function jsonDecode($data, $assoc = false, $depth = 512, $options = 0)
     {
-        if (function_exists('json_decode')) {
-            return json_decode($json, $assoc);
-        } else {
-            include_once(_PS_TOOL_DIR_.'json/json.php');
-            $pear_json = new Services_JSON(($assoc) ? SERVICES_JSON_LOOSE_TYPE : 0);
-            return $pear_json->decode($json);
-        }
+        return json_decode($data, $assoc, $depth, $options);
     }
 
     /**
+     * @deprecated Deprecated since 1.7.0
+     * Use json_encode instead
      * Convert an array to json string
      *
      * @param array $data
      * @return string json
      */
-    public static function jsonEncode($data)
+    public static function jsonEncode($data, $options = 0, $depth = 512)
     {
-        if (function_exists('json_encode')) {
-            return json_encode($data);
-        } else {
-            include_once(_PS_TOOL_DIR_.'json/json.php');
-            $pear_json = new Services_JSON();
-            return $pear_json->encode($data);
+        if (PHP_VERSION_ID < 50500) { /* PHP version < 5.5.0 */
+            return json_encode($data, $options);
         }
+
+        return json_encode($data, $options, $depth);
     }
 
     /**
@@ -2672,9 +2619,11 @@ exit;
         $backtrace = debug_backtrace();
         $callee = next($backtrace);
         $class = isset($callee['class']) ? $callee['class'] : null;
+
         if ($message === null) {
             $message = 'The function '.$callee['function'].' (Line '.$callee['line'].') is deprecated and will be removed in the next major version.';
         }
+
         $error = 'Function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['line'].'</b><br />';
 
         Tools::throwDeprecated($error, $message, $class);
@@ -2774,31 +2723,6 @@ exit;
     }
 
     /**
-     * Function property_exists does not exist in PHP < 5.1
-     *
-     * @deprecated since 1.5.0 (PHP 5.1 required, so property_exists() is now natively supported)
-     * @param object $class
-     * @param string $property
-     * @return bool
-     */
-    public static function property_exists($class, $property)
-    {
-        Tools::displayAsDeprecated();
-
-        if (function_exists('property_exists')) {
-            return property_exists($class, $property);
-        }
-
-        if (is_object($class)) {
-            $vars = get_object_vars($class);
-        } else {
-            $vars = get_class_vars($class);
-        }
-
-        return array_key_exists($property, $vars);
-    }
-
-    /**
      * @desc identify the version of php
      * @return string
      */
@@ -2836,12 +2760,13 @@ exit;
         }
     }
 
+    /**
+     * @deprecated Deprecated since 1.7.0
+     * @return boolean
+     */
     public static function getSafeModeStatus()
     {
-        if (!$safe_mode = @ini_get('safe_mode')) {
-            $safe_mode = '';
-        }
-        return in_array(Tools::strtolower($safe_mode), array(1, 'on'));
+        return false;
     }
 
     /**
@@ -2910,7 +2835,7 @@ exit;
     public static function getProductsOrder($type, $value = null, $prefix = false)
     {
         switch ($type) {
-            case 'by' :
+            case 'by':
                 $list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
                 $value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
                 $value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position');
@@ -2931,7 +2856,7 @@ exit;
                 return $order_by_prefix.$value;
             break;
 
-            case 'way' :
+            case 'way':
                 $value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = array(0 => 'asc', 1 => 'desc');
                 return ((isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc'));
@@ -3070,8 +2995,7 @@ exit;
         // Change template dir if called from the BackOffice
         $current_template_dir = Context::getContext()->smarty->getTemplateDir();
         Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
-        Tools::clearCache(null, 'product-list-colors.tpl',
-            ($id_product ? 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id : 'productlist_colors'));
+        Tools::clearCache(null, _PS_THEME_DIR_.'product-list-colors.tpl', Product::getColorsListCacheId((int)$id_product, false));
         Context::getContext()->smarty->setTemplateDir($current_template_dir);
     }
 
@@ -3363,13 +3287,19 @@ exit;
             return false;
         }
 
-        $post_data = http_build_query(array(
+        $post_query_data = array(
             'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
             'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
             'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
             'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
-            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL')
-        ));
+            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'),
+            'format' => isset($params['format']) ? $params['format'] : 'xml',
+        );
+        if (isset($params['source'])) {
+            $post_query_data['source'] = $params['source'];
+        }
+
+        $post_data = http_build_query($post_query_data);
 
         $protocols = array('https');
         $end_point = 'api.addons.prestashop.com';
@@ -3378,6 +3308,14 @@ exit;
             case 'native':
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=native';
+                break;
+            case 'partner':
+                $protocols[] = 'http';
+                $post_data .= '&method=listing&action=partner';
+                break;
+            case 'service':
+                $protocols[] = 'http';
+                $post_data .= '&method=listing&action=service';
                 break;
             case 'native_all':
                 $protocols[] = 'http';
@@ -3647,9 +3585,7 @@ exit;
                         'type' => 'Text',
                     ));
                     if ($allow_style) {
-                        $def->addElement('style', 'Block', 'Flow', 'Common', array(
-                        'type' => 'Text',
-                    ));
+                        $def->addElement('style', 'Block', 'Flow', 'Common', array('type' => 'Text'));
                     }
                 }
 
@@ -3699,7 +3635,7 @@ exit;
      *                       e.g. if $amount is 1, $precision is 0 and $rows = [['a' => 2], ['a' => 1]]
      *                       then the resulting $rows will be [['a' => 3], ['a' => 1]]
      *                       But if $precision were 1, then the resulting $rows would be [['a' => 2.5], ['a' => 1.5]]
-     * @param &$rows array 	 An array, associative or not, containing arrays that have at least $column and $sort_column fields
+     * @param &$rows array   An array, associative or not, containing arrays that have at least $column and $sort_column fields
      * @param $column string The column on which to perform adjustments
      */
     public static function spreadAmount($amount, $precision, &$rows, $column)

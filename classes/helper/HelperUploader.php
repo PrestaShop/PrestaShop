@@ -187,8 +187,9 @@ class HelperUploaderCore extends Uploader
             $controller_name = strtolower($matches[0][1]);
         }
 
-        if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template)) {
+        if ($this->getContext()->controller instanceof ModuleAdminController
+            && file_exists($this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template)
+        ) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 .$this->getTemplateDirectory().$template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
@@ -270,7 +271,8 @@ class HelperUploaderCore extends Uploader
         }
 
         $template = $this->getContext()->smarty->createTemplate(
-            $this->getTemplateFile($this->getTemplate()), $this->getContext()->smarty
+            $this->getTemplateFile($this->getTemplate()),
+            $this->getContext()->smarty
         );
 
         $template->assign(array(

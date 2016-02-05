@@ -34,7 +34,7 @@
 <tr class="product-line-row">
 	<td>{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>
 	<td>
-		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&amp;id_product={$product['product_id']|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
+		<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product['product_id']|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
 			<span class="productName">{$product['product_name']}</span><br />
 			{if $product.product_reference}{l s='Reference number:'} {$product.product_reference}<br />{/if}
 			{if $product.product_supplier_reference}{l s='Supplier reference:'} {$product.product_supplier_reference}{/if}
@@ -58,7 +58,7 @@
 					<div class="input-group">
 						{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
 						<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}"/>
-						{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
+						{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
 					</div>
 				</div>
 				<br/>
@@ -66,7 +66,7 @@
 					<div class="input-group">
 						{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 						<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}"/>
-						{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
+						{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 					</div>
 				</div>
 			</div>
@@ -186,7 +186,7 @@
 				<div class="input-group">
 					{if $currency->format % 2}<div class="input-group-addon">{$currency->sign}</div>{/if}
 					<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']}]" />
-					{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign}</div>{/if}
+					{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign}</div>{/if}
 				</div>
 				<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($amount_refundable, 2), $currency->id) , $smarty.capture.TaxMethod]}</p>
 			</div>
@@ -257,7 +257,7 @@
                         <td>{l s='Package item'}</td>
                         <td>{if isset($pack_item.image) && $pack_item.image->id}{$pack_item.image_tag}{/if}</td>
                         <td>
-                            <a href="index.php?controller=adminproducts&id_product={$pack_item.id_product}&updateproduct&token={getAdminToken tab='AdminProducts'}">
+                            <a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $pack_item.id_product, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
                                 <span class="productName">{$pack_item.name}</span><br />
                                 {if $pack_item.reference}{l s='Ref:'} {$pack_item.reference}<br />{/if}
                                 {if $pack_item.supplier_reference}{l s='Ref Supplier:'} {$pack_item.supplier_reference}{/if}

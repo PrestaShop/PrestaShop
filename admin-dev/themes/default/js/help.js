@@ -24,7 +24,12 @@
  */
 
 $(function() {
-		var storage = getStorageAvailable();
+
+		var storage = false;
+
+		if (typeof(getStorageAvailable) !== 'undefined') {
+			storage = getStorageAvailable();
+		}
 
 		initHelp = function(){
 			$('#main').addClass('helpOpen');
@@ -65,7 +70,7 @@ $(function() {
 					storage.setItem('helpOpen', false);
 			}
 		});
-		
+
 		// Help persistency
 		if (storage && storage.getItem('helpOpen') == "true") {
 		 	$('a.btn-help').trigger('click');
@@ -97,21 +102,6 @@ $(function() {
 			['en','19726802'],
 			['fr','20840479']
 		];
-
-
-	function getStorageAvailable() {
-		test = 'foo'; 
-		storage =  window.localStorage || window.sessionStorage;
-	    try {
-	        storage.setItem(test, test);
-	        storage.removeItem(test);
-	        		//open help if localstorage helpOpen = true;
-	        return storage;
-	    } 
-	    catch (error) {
-	        return null;
-	    }
-	}
 
 	// change help icon
 	function iconCloseHelp(){

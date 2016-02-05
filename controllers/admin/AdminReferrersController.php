@@ -490,7 +490,7 @@ class AdminReferrersControllerCore extends AdminController
         $this->tpl_view_vars = array(
             'enable_calendar' => $this->enableCalendar(),
             'calendar_form' => $this->displayCalendar($this->action, $this->table, $this->identifier, (int)Tools::getValue($this->identifier)),
-            'referrer' => new Referrer((int)Tools::getValue('id_referrer')),
+            'referrer' => $referrer,
             'display_tab' => $display_tab,
             'id_employee' => (int)$this->context->employee->id,
             'id_lang' => (int)$this->context->language->id

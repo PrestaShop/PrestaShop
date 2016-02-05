@@ -51,42 +51,60 @@ class ModulesOverrideInstallUninstallTest extends IntegrationTestCase
 
     public function testInstall()
     {
+        /**
+         * Both modules install overrides in the same files.
+         * This test only checks that modules are installed properly.
+         */
         $pscsx3241 = array();
         $pscsx3241['pscsx3241'] = Module::getInstanceByName('pscsx3241');
         $pscsx3241['pscsx32412'] = Module::getInstanceByName('pscsx32412');
-        foreach ($pscsx3241 as $module) {
-            if ($module->id) {
-                $this->assertTrue((bool)$module->uninstall());
-                $this->assertTrue((bool)$module->install());
-            } else {
-                $this->assertTrue((bool)$module->install());
-            }
+        foreach ($pscsx3241 as $name => $module) {
+            $this->assertTrue((bool)$module->install(), "Could not install $name");
         }
+    }
+
+    /**
+     * Used to normalize the PHP source code for file comparison
+     * and to strip dates that are inserted in comments when
+     * overrides are installed.
+     */
+    private function cleanup($str)
+    {
+        $withoutDate        = preg_replace('#\* date: .*?\n#m', '', $str);
+        $withoutBlankLines  = preg_replace('#\n?^(?:\s*)$#m', "", $withoutDate);
+        return $withoutBlankLines;
     }
 
     public function testDiffOverrideAndUninstall()
     {
+        /**
+         * This tests first checks that the overrides installed in the previous step
+         * resulted in the expected merged files.
+         */
+
         $ressource_path = realpath(dirname(__FILE__).'/../../../resources/ModulesOverrideInstallUninstallTest/');
         $override_path_cart = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('Cart');
         $override_path_admin_product_controller = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
 
-        $new_override_cart = file_get_contents($override_path_cart);
-        $new_override_admin_product = file_get_contents($override_path_admin_product_controller);
-        $old_override_cart = file_get_contents($ressource_path.'/Cart.php');
-        $old_override_admin_product = file_get_contents($ressource_path.'/AdminProductsController.php');
+        $actual_override_cart = file_get_contents($override_path_cart);
+        $actual_override_admin_product = file_get_contents($override_path_admin_product_controller);
+        $expected_override_cart = file_get_contents($ressource_path.'/Cart.php');
+        $expected_override_admin_product = file_get_contents($ressource_path.'/AdminProductsController.php');
 
-        $new_override_cart = preg_replace('~\* date: .*?\n~ism', '', $new_override_cart);
-        $new_override_admin_product = preg_replace('~\* date: .*?\n~ism', '', $new_override_admin_product);
-        $old_override_cart = preg_replace('~\* date: .*?\n~ism', '', $old_override_cart);
-        $old_override_admin_product = preg_replace('~\* date: .*?\n~ism', '', $old_override_admin_product);
+        $this->assertEquals(
+            $this->cleanup($expected_override_cart),
+            $this->cleanup($actual_override_cart)
+        );
 
-        $new_override_cart = str_replace("\t", "", $new_override_cart);
-        $new_override_admin_product = str_replace("\t", "", $new_override_admin_product);
-        $old_override_cart = str_replace("\t", "", $old_override_cart);
-        $old_override_admin_product = str_replace("\t", "", $old_override_admin_product);
+        $this->assertEquals(
+            $this->cleanup($expected_override_admin_product),
+            $this->cleanup($actual_override_admin_product)
+        );
 
-        $this->assertEquals($new_override_cart, $old_override_cart);
-        $this->assertEquals($new_override_admin_product, $old_override_admin_product);
+        /** Then it checks that the overrides are removed once the modules are
+         *  uninstalled.
+         */
+
         $pscsx3241 = array();
         $pscsx3241[] = Module::getInstanceByName('pscsx3241');
         $pscsx3241[] = Module::getInstanceByName('pscsx32412');

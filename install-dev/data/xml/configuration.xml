@@ -143,6 +143,9 @@
 	<configuration id="PS_PASSWD_TIME_FRONT" name="PS_PASSWD_TIME_FRONT">
 		<value>360</value>
 	</configuration>
+	<configuration id="PS_PASSWD_RESET_VALIDITY" name="PS_PASSWD_RESET_VALIDITY">
+		<value>1440</value>
+	</configuration>
 	<configuration id="PS_DISP_UNAVAILABLE_ATTR" name="PS_DISP_UNAVAILABLE_ATTR">
 		<value>1</value>
 	</configuration>
@@ -805,6 +808,9 @@ Country</value>
 	<configuration id="PS_SMARTY_CACHING_TYPE" name="PS_SMARTY_CACHING_TYPE">
 		<value>filesystem</value>
 	</configuration>
+	<configuration id="PS_SMARTY_LOCAL" name="PS_SMARTY_LOCAL">
+		<value>0</value>
+	</configuration>
 	<configuration id="PS_SMARTY_CLEAR_CACHE" name="PS_SMARTY_CLEAR_CACHE">
 		<value>everytime</value>
 	</configuration>
@@ -846,6 +852,9 @@ Country</value>
     </configuration>
     <configuration id="PS_ADVANCED_PAYMENT_API" name="PS_ADVANCED_PAYMENT_API">
       <value>0</value>
+    </configuration>
+    <configuration id="PS_ACTIVE_CRONJOB_EXCHANGE_RATE" name="PS_ACTIVE_CRONJOB_EXCHANGE_RATE">
+        <value>0</value>
     </configuration>
   </entities>
 </entity_configuration>

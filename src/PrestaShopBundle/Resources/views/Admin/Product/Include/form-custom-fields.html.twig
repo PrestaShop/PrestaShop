@@ -1,0 +1,18 @@
+<div class="form-group">
+    <div class="col-xs-3 pull-left">
+        <label class="control-label">{{ form.label.vars.label }}</label>
+        {{ form_widget(form.label) }}
+    </div>
+    <div class="col-xs-3 pull-left">
+        <label class="control-label">{{ form.type.vars.label }}</label>
+        {{ form_widget(form.type) }}
+    </div>
+    <div class="col-xs-3 pull-left">
+        <label class="control-label"></label>
+        {{ form_widget(form.require) }}
+    </div>
+    <div class="col-xs-2 pull-left">
+        <label class="control-label col-xs-12">&nbsp;</label>
+        <button type="button" class="btn btn-default delete" style="display:inline-block"><i class="icon-trash"></i></button>
+    </div>
+</div>

@@ -27,6 +27,7 @@ body {
 	color: $base-body-color;
 	&.content_only {
 		background: none;
+		min-width: 0px;
 	}
 }
 
@@ -69,7 +70,7 @@ header {
 		}
 	}
 	.nav {
-		background: $dark-background;
+		background: $light-background;
 		.row {
 			margin: 0px;
 		}
@@ -605,6 +606,9 @@ table.table_block td {
 		}
 	}
 	td {
+		ul, ol {
+			margin-bottom: 0 !important;
+		}
 		a.color-myaccount {
 			color: $link-color;
 			text-decoration: underline;
@@ -1034,7 +1038,8 @@ table.table_block td {
 			.product-content {
 				overflow: hidden;
 				h5 {
-					margin: -3px 0 0 0;
+					position: relative;
+					top: -11px;
 				}
 			}
 		}
@@ -2363,6 +2368,11 @@ a.price_discount_delete {
 	margin-top: 20px;
 	border: 1px solid #999999;
 	background: $light-background;
+}
+
+.order_carrier_logo {
+  max-width: 65px;
+  max-height: 65px;
 }
 
 #order_carrier .title_block {

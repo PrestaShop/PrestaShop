@@ -87,7 +87,7 @@ class LinkCore
      * @param int $ipa ID product attribute
      * @return string
      */
-    public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false)
+    public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false, $add_anchor = false)
     {
         $dispatcher = Dispatcher::getInstance();
 
@@ -110,7 +110,7 @@ class LinkCore
         // Set available keywords
         $params = array();
         $params['id'] = $product->id;
-        $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
+        $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite', $id_lang) : $alias;
 
         $params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
         $params['meta_keywords'] =    Tools::str2url($product->getFieldByLang('meta_keywords'));
@@ -151,7 +151,7 @@ class LinkCore
             }
             $params['categories'] = implode('/', $cats);
         }
-        $anchor = $ipa ? $product->getAnchor($ipa, $force_routes) : '';
+        $anchor = $ipa ? $product->getAnchor((int)$ipa, (bool)$add_anchor) : '';
 
         return $url.$dispatcher->createUrl('product_rule', $id_lang, $params, $force_routes, $anchor, $id_shop);
     }
@@ -385,14 +385,48 @@ class LinkCore
      *
      * @param string $controller
      * @param bool $with_token include or not the token in the url
+     * @param array(string) $sfRouteParams Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string.
+     *
      * @return string url
      */
-    public function getAdminLink($controller, $with_token = true)
+    public function getAdminLink($controller, $with_token = true, $sfRouteParams = array())
     {
+        $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
+
+        switch ($controller) {
+            case 'AdminProducts':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                global $kernel; // sf kernel
+                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
+                if (!$redirectLegacy) {
+                    if (array_key_exists('id_product', $sfRouteParams)) {
+                        if (array_key_exists('deleteproduct', $sfRouteParams)) {
+                            return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/unit/delete/' . $sfRouteParams['id_product'];
+                        }
+                        //default: if (array_key_exists('updateproduct', $sfRouteParams))
+                        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/form/' . $sfRouteParams['id_product'];
+                    }
+                    if (array_key_exists('submitFilterproduct', $sfRouteParams)) {
+                        return rtrim($this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog_filters/'
+                            .(array_key_exists('filter_column_sav_quantity', $sfRouteParams)?urlencode($sfRouteParams['filter_column_sav_quantity']):'none').'/'
+                            .(array_key_exists('filter_column_active', $sfRouteParams)?$sfRouteParams['filter_column_active']:'none').'/',
+                        '/');
+                    }
+                    return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog';
+                } else {
+                    $params = array_merge($params, $sfRouteParams);
+                }
+                break;
+            case 'AdminModulesSf':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/module/catalog';
+                break;
+        }
+
         $id_lang = Context::getContext()->language->id;
 
-        $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
-        return Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**
@@ -656,7 +690,7 @@ class LinkCore
         return Language::getIsoById($id_lang).'/';
     }
 
-    protected function getBaseLink($id_shop = null, $ssl = null, $relative_protocol = false)
+    public function getBaseLink($id_shop = null, $ssl = null, $relative_protocol = false)
     {
         static $force_ssl = null;
 

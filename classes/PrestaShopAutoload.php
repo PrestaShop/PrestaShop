@@ -137,9 +137,7 @@ class PrestaShopAutoload
     {
         $classes = array_merge(
             $this->getClassesFromDir('classes/'),
-            $this->getClassesFromDir('controllers/'),
-            $this->getClassesFromDir('Adapter/'),
-            $this->getClassesFromDir('Core/')
+            $this->getClassesFromDir('controllers/')
         );
 
         if ($this->_include_override_path) {
@@ -192,7 +190,16 @@ class PrestaShopAutoload
                     $pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
                                 .'(?:\s+extends\s+'.$namespacePattern.'[a-z][a-z0-9_]*)?(?:\s+implements\s+'.$namespacePattern.'[a-z][\\a-z0-9_]*(?:\s*,\s*'.$namespacePattern.'[a-z][\\a-z0-9_]*)*)?\s*\{#i';
 
-                    if (preg_match($pattern, $content, $m)) {
+                    //DONT LOAD CLASS WITH NAMESPACE - PSR4 autoloaded from composer
+                    $usesNamespace = false;
+                    foreach (token_get_all($content) as $token) {
+                        if ($token[0] === T_NAMESPACE) {
+                            $usesNamespace = true;
+                            break;
+                        }
+                    }
+
+                    if (!$usesNamespace && preg_match($pattern, $content, $m)) {
                         $classes[$m['classname']] = array(
                             'path' => $path.$file,
                             'type' => trim($m[1]),
@@ -224,3 +231,5 @@ class PrestaShopAutoload
         return rtrim($directory, '/\\').DIRECTORY_SEPARATOR;
     }
 }
+
+spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));

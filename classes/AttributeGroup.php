@@ -320,21 +320,12 @@ class AttributeGroupCore extends ObjectModel
     public static function cleanPositions()
     {
         $return = true;
-
-        $sql = '
-			SELECT `id_attribute_group`
-			FROM `'._DB_PREFIX_.'attribute_group`
-			ORDER BY `position`';
-        $result = Db::getInstance()->executeS($sql);
-
-        $i = 0;
-        foreach ($result as $value) {
-            $return = Db::getInstance()->execute('
+        Db::getInstance()->execute('SET @i = -1', false);
+        $return = Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'attribute_group`
-				SET `position` = '.(int)$i++.'
-				WHERE `id_attribute_group` = '.(int)$value['id_attribute_group']
+				SET `position` = @i:=@i+1
+				ORDER BY `position`'
             );
-        }
         return $return;
     }
 

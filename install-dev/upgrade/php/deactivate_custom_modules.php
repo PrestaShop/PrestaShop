@@ -47,22 +47,28 @@ function deactivate_custom_modules()
         }
     }
 
-    $nativeModules = simplexml_load_file($module_list_xml);
-    $nativeModules = $nativeModules->modules;
+    $nativeModules = @simplexml_load_file($module_list_xml);
+    if ($nativeModules) {
+        $nativeModules = $nativeModules->modules;
+    }
     $arrNativeModules = array();
-    foreach ($nativeModules as $nativeModulesType) {
-        if (in_array($nativeModulesType['type'], array('native', 'partner'))) {
-            $arrNativeModules[] = '""';
-            foreach ($nativeModulesType->module as $module) {
-                $arrNativeModules[] = '"'.pSQL($module['name']).'"';
+    if (is_array($nativeModules)) {
+        foreach ($nativeModules as $nativeModulesType) {
+            if (in_array($nativeModulesType['type'], array('native', 'partner'))) {
+                $arrNativeModules[] = '""';
+                foreach ($nativeModulesType->module as $module) {
+                    $arrNativeModules[] = '"'.pSQL($module['name']).'"';
+                }
             }
         }
     }
-
-    $arrNonNative = $db->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'module` m
-		WHERE name NOT IN ('.implode(',', $arrNativeModules).') ');
+    $arrNonNative = array();
+    if ($arrNativeModules) {
+        $arrNonNative = $db->executeS('
+    		SELECT *
+    		FROM `'._DB_PREFIX_.'module` m
+    		WHERE name NOT IN ('.implode(',', $arrNativeModules).') ');
+    }
 
     $uninstallMe = array("undefined-modules");
     if (is_array($arrNonNative)) {

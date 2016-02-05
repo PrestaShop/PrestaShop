@@ -1,0 +1,42 @@
+{% if warehouses|length > 0 %}
+    <hr/>
+    <h3>{{ trans('Product location in warehouses', [], 'AdminProducts') }}</h3>
+
+    <div class="alert alert-info" style="display:block; position: 'auto';">
+        <p>{{ trans('This interface allows you to specify the warehouse in which the product is stocked.', [], 'AdminProducts') }}</p>
+        <p>{{ trans('You can also specify product/product combinations as it relates to warehouse location. ', [], 'AdminProducts') }}</p>
+    </div>
+    <p>{{ trans('Please choose the warehouses associated with this product.', [], 'AdminProducts') }}</p>
+
+    {% for warehouse in warehouses %}
+        <div class="panel panel-default">
+            {% set collectionName = 'warehouse_combination_' ~ warehouse.id_warehouse %}
+            <div class="form-group" id="warehouse_combination_{{ warehouse.id_warehouse }}">
+                <label class="col-sm-2 control-label">
+                    <h4>{{ form[collectionName].vars.label }}</h4><br/>
+                    {% if form[collectionName]|length() > 1 %}
+                        <button type="button" class="btn btn-default check_all_warehouse">
+                            <i class="icon-check-sign"></i> {{ trans('Mark / Unmark all', [], 'AdminTab') }}
+                        </button>
+                    {% endif %}
+                </label>
+                <div class="col-sm-10">
+                    {{ form_errors(form[collectionName]) }}
+                    {% for warehouse_combination in form[collectionName] %}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{ warehouse_combination.vars.value.label }}</label>
+                            <div class="col-sm-10">
+                                <div class="pull-left col-lg-1">{{ form_widget(warehouse_combination.activated) }}</div>
+                                {{ form_label(warehouse_combination.location) }}
+                                <div class="pull-left col-lg-3">{{ form_widget(warehouse_combination.location) }}</div>
+                                {{ form_widget(warehouse_combination.id_product_attribute) }}
+                                {{ form_widget(warehouse_combination.warehouse_id) }}
+                                {{ form_widget(warehouse_combination.product_id) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

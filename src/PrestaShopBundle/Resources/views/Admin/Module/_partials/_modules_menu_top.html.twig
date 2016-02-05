@@ -1,0 +1,44 @@
+<div class="module-top-menu">
+    <div class="row">
+        <div class="col-md-8 module-menu-item">
+            <div class="dropdown">
+                {% for menu in topMenuData %}
+                    <button class="btn btn-default dropdown-toggle module-categories-dropdown" id="{{menu.refMenu}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <div class="module-category-selector-label">
+                            {{menu.name}}
+                        </div>
+                        <span><i class="icon-chevron-sign-down"></i></span>
+                    </button>
+                    <ul class="dropdown-menu module-category-selector" aria-labelledby="{{menu.refMenu}}">
+                        <li class="module-category-reset">
+                            <a href="#">
+                                <span>
+                                    <i class="icon-remove-circle module-category-reset-icon"></i>
+                                </span>
+                            </a>
+                        </li>
+                        {% for subMenu in menu.subMenu|arrayCast %}
+                            <li class="module-category-menu" data-category-ref="{{subMenu.refMenu}}" data-category-display-name="{{subMenu.name}}">
+                                <a href="#">
+                                    {{subMenu.name}}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="input-group module-search-block">
+                <span class="input-group-addon module-search-icon">
+                    <i class="icon-search"></i>
+                </span>
+                <input id="module-search-bar" class="module-search-bar form-control" type="text" data-placeholder="Add filter"/>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<hr class="top-menu-separator"/>

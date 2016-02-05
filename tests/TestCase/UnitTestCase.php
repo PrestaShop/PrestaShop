@@ -1,22 +1,23 @@
 <?php
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace PrestaShop\PrestaShop\tests\TestCase;
 
 use Cache;
 use Configuration;
 use Context;
 use Db;
 use PHPUnit_Framework_TestCase;
-use Core_Business_ContainerBuilder;
-use Core_Foundation_IoC_Container;
-use Adapter_ServiceLocator;
+use PrestaShop\PrestaShop\Core\ContainerBuilder;
+use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
 use PrestaShop\PrestaShop\Tests\Helper\Mocks\FakeEntityMapper;
 use Phake;
+use Symfony\Component\HttpKernel\Kernel;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Core_Foundation_IoC_Container
+     * @var Container
      */
     protected $container;
 
@@ -40,6 +41,11 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
      */
     public $cache;
 
+    /**
+     * @var Kernel
+     */
+    public $sfKernel;
+
     public function setupDatabaseMock()
     {
         $this->database = Phake::mock('Db');
@@ -48,14 +54,14 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->container = new Core_Foundation_IoC_Container;
-        Adapter_ServiceLocator::setServiceContainerInstance($this->container);
+        $this->container = new Container();
+        ServiceLocator::setServiceContainerInstance($this->container);
 
         $this->setupDatabaseMock();
 
         $this->entity_mapper = new FakeEntityMapper();
 
-        $this->container->bind('Adapter_EntityMapper', $this->entity_mapper);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper', $this->entity_mapper);
 
         $this->context = Phake::mock('Context');
 
@@ -72,10 +78,21 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
     {
         $fakeConfiguration = new FakeConfiguration($keys);
         $this->container->bind(
-            'Core_Business_ConfigurationInterface',
+            '\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface',
             $fakeConfiguration
         );
         return $fakeConfiguration;
+    }
+
+    public function setupSfKernel()
+    {
+        // Prepare Symfony kernel to resolve route.
+        $loader = require_once __DIR__.'/../../app/bootstrap.php.cache';
+        require_once __DIR__.'/../../app/AppKernel.php';
+        $this->sfKernel = new \AppKernel('test', true);
+        $this->sfKernel->loadClassCache();
+        $this->sfKernel->boot();
+        return $this->sfKernel;
     }
 
     public function teardown()
@@ -90,8 +107,8 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
          */
         Configuration::clearConfigurationCacheForTesting();
 
-        $container_builder = new Core_Business_ContainerBuilder;
+        $container_builder = new ContainerBuilder();
         $container = $container_builder->build();
-        Adapter_ServiceLocator::setServiceContainerInstance($container);
+        ServiceLocator::setServiceContainerInstance($container);
     }
 }

@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Database\EntityManager;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\Database\EntityManager;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use Core_Foundation_Database_EntityManager_QueryBuilder;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager\QueryBuilder;
 use Phake;
 
 class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestCase
@@ -36,11 +36,11 @@ class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestC
 
     public function setup()
     {
-        $mockDb = Phake::mock('Core_Foundation_Database_DatabaseInterface');
+        $mockDb = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface');
 
         Phake::when($mockDb)->escape(Phake::anyParameters())->thenReturn('escaped');
 
-        $this->queryBuilder = new Core_Foundation_Database_EntityManager_QueryBuilder(
+        $this->queryBuilder = new QueryBuilder(
             $mockDb
         );
     }

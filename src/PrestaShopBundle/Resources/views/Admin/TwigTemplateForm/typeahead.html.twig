@@ -1,0 +1,295 @@
+{% block typeahead_product_collection_widget %}
+    {{ form_errors(form) }}
+
+    <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12">
+        {% if collection is defined and collection|length > 0 %}
+            {% for item in collection %}
+                <li>
+                    <img src="{{ item.image }}" />
+                    {{ template_collection|format(item.name)|raw }}
+                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.id }}" />
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    <script>
+        $( document ).ready(function() {
+
+            //remove collection item
+            $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
+                e.preventDefault();
+                var _this = $(this);
+
+                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                    onContinue: function(){
+                        _this.parent().remove();
+                    }
+                }).show();
+            });
+
+            //define source
+            this['{{ form.vars.id }}_source'] = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                identify: function(obj) {
+                    return obj.{{ mapping_value }};
+                },
+                remote: {
+                    url: '{{ remote_url|raw }}',
+                    cache: false,
+                    wildcard: '%QUERY',
+                    transform: function(response){
+                        if(!response){
+                            return [];
+                        }
+                        return response;
+                    }
+                }
+            });
+
+            //define typeahead
+            $('#{{ form.vars.id }}').typeahead({
+                limit: 20,
+                minLength: 2,
+                highlight: true,
+                cache: false,
+                hint: false,
+            }, {
+                display: '{{ mapping_name }}',
+                source: this['{{ form.vars.id }}_source'],
+                limit: 30,
+                templates: {
+                    suggestion: function(item){
+                        return '<div><img src="'+ item.image +'" style="width:50px" /> '+ item.name +'</div>'
+                    }
+                }
+            }).bind('typeahead:select', function(ev, suggestion) {
+                //if collection length is up to limit, return
+                if({{ limit }} != 0 && $('#{{ form.vars.id }}-data li').length >= {{ limit }}){
+                    return;
+                }
+
+                var value = suggestion.{{ mapping_value }};
+                if (suggestion.id_product_attribute) {
+                    value = value+','+suggestion.id_product_attribute;
+                }
+
+                var html = '<li>';
+                html += '<img src="'+ suggestion.image +'" /> ';
+                html += sprintf('{{ template_collection|raw }}', suggestion.{{ mapping_name }});
+                html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
+                html += '</li>';
+                $('#{{ form.vars.id }}-data').append(html);
+
+            }).bind('typeahead:close', function(ev) {
+                $(ev.target).val('');
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block typeahead_product_pack_collection_widget %}
+    <h4 class="title-products {{ collection is defined and collection|length > 0 ? '' : 'hide' }}">{{ trans('List of products for this pack', {}, 'AdminProducts') }}</h4>
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list pack nostyle">
+        {% if collection is defined and collection|length > 0 %}
+            {% for item in collection %}
+                <li data-product="{{ item.id }}-{{ item.id_product_attribute }}">
+                    <img src="{{ item.image }}" /> {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
+                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
+                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    <div class="clearfix"></div>
+    <h4>{{ form.vars.label }}</h4>
+    <div class="col-xs-6">
+        <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
+    </div>
+    <div class="col-lg-1">
+        <div class="input-group">
+            <span class="input-group-addon">×</span>
+            <input type="number" id="{{ form.vars.id }}-curPackItemQty" class="form-control curPackItemQty" min="1" value="1">
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="input-group">
+            <button id="{{ form.vars.id }}-curPackItemAdd" class="btn">{{ trans("Add", {}, "AdminProducts") }}</button>
+        </div>
+    </div>
+
+    <script>
+        $( document ).ready(function() {
+            //remove collection item
+            $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
+                e.preventDefault();
+                var _this = $(this);
+
+                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                    onContinue: function(){
+                        _this.parent().remove();
+                        if(_this.parent().parent().length == 0){
+                            $('#js_{{ form.vars.id }} h4.title-products').addClass('hide');
+                        }
+                    }
+                }).show();
+            });
+
+            $('#{{ form.vars.id }}-curPackItemAdd').click(function(e){
+                e.preventDefault();
+                if($(this).data('currentItem')){
+                    var number = $('#{{ form.vars.id }}-curPackItemQty').val();
+                    var data = $(this).data('currentItem');
+                    var value = number + 'x' + data.id + 'x' + (data.id_product_attribute ? data.id_product_attribute : 0);
+
+                    var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '">';
+                    html += '<img src="' + data.image +'" /> ';
+                    html += sprintf('{{ template_collection|raw }}', data.{{ mapping_name }}, data.ref, number);
+                    html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
+                    html += '</li>';
+                    $('#{{ form.vars.id }}-data').append(html);
+                    $('#js_{{ form.vars.id }} h4.title-products').removeClass('hide');
+
+                    $('#{{ form.vars.id }}').val('');
+                }
+
+                $(this).data('currentItem', null);
+                $('#{{ form.vars.id }}-curPackItemQty').val(1);
+            });
+
+            //define source
+            this['{{ form.vars.id }}_source'] = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                identify: function(obj) {
+                    return obj.{{ mapping_value }};
+                },
+                remote: {
+                    url: '{{ remote_url|raw }}',
+                    cache: false,
+                    wildcard: '%QUERY',
+                    transform: function(response){
+                        var newResponse = [];
+
+                        if(!response){
+                            return newResponse;
+                        }
+
+                        //generate excludes IDs and filter results
+                        var excludeIds = [];
+                        $.each($('#{{ form.vars.id }}-data li'), function(key, val){
+                            excludeIds.push($(val).attr('data-product'));
+                        });
+
+                        $.each(response, function(key, item){
+                            if(excludeIds.indexOf(item.id + '-' + item.id_product_attribute) === -1){
+                                newResponse.push(item);
+                            }
+                        });
+
+                        return newResponse;
+                    }
+                }
+            });
+
+            //define typeahead
+            $('#{{ form.vars.id }}').typeahead({
+                limit: 20,
+                minLength: 2,
+                highlight: true,
+                hint: false,
+            }, {
+                display: '{{ mapping_name }}',
+                source: this['{{ form.vars.id }}_source'],
+                limit: 30,
+                templates: {
+                    suggestion: function(item){
+                        return '<div><img src="'+ item.image +'" style="width:50px" /> '+ item.name +'</div>'
+                    }
+                }
+            }).bind('typeahead:select', function(ev, suggestion) {
+                $('#{{ form.vars.id }}-curPackItemAdd').data('currentItem', suggestion);
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block typeahead_customer_collection_widget %}
+    {{ form_errors(form) }}
+    <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12"></ul>
+    <script>
+        $( document ).ready(function() {
+            //remove collection item
+            $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
+                e.preventDefault();
+                var _this = $(this);
+
+                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                    onContinue: function(){
+                        _this.parent().remove();
+                    }
+                }).show();
+            });
+
+            //define source
+            this['{{ form.vars.id }}_source'] = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                identify: function(obj) {
+                    return obj.{{ mapping_value }};
+                },
+                remote: {
+                    url: '{{ remote_url|raw }}',
+                    cache: false,
+                    wildcard: '%QUERY',
+                    transform: function(response){
+                        if(!response){
+                            return [];
+                        }
+                        return response;
+                    }
+                }
+            });
+
+            //define typeahead
+            $('#{{ form.vars.id }}').typeahead({
+                limit: 20,
+                minLength: 2,
+                highlight: true,
+                cache: false,
+                hint: false,
+            }, {
+                display: '{{ mapping_name }}',
+                source: this['{{ form.vars.id }}_source'],
+                limit: 30,
+                templates: {
+                    suggestion: function(item){
+                        return '<div>'+ item.{{ mapping_name }} +'</div>'
+                    }
+                }
+            }).bind('typeahead:select', function(ev, suggestion) {
+
+                //if collection length is up to limit, return
+                if({{ limit }} != 0 && $('#{{ form.vars.id }}-data li').length >= {{ limit }}){
+                    return;
+                }
+
+                var value = suggestion.{{ mapping_value }};
+                if (suggestion.id_product_attribute) {
+                    value = value+','+suggestion.id_product_attribute;
+                }
+
+                var html = '<li>';
+                html += sprintf('{{ template_collection|raw }}', suggestion.{{ mapping_name }});
+                html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
+                html += '</li>';
+                $('#{{ form.vars.id }}-data').append(html);
+
+            }).bind('typeahead:close', function(ev) {
+                $(ev.target).val('');
+            });
+        });
+    </script>
+{% endblock %}

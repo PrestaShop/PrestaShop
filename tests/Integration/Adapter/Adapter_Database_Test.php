@@ -24,16 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\Adapter;
+namespace PrestaShop\PrestaShop\tests\Integration\Adapter;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-use Adapter_Database;
+use PrestaShop\PrestaShop\Adapter\Database;
 
 class Adapter_Database_Test extends IntegrationTestCase
 {
     public function setup()
     {
-        $this->db = new Adapter_Database;
+        $this->db = new Database;
     }
 
     public function test_values_are_escaped_dataProvider()

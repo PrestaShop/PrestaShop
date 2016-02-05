@@ -1,0 +1,114 @@
+<script>
+    $(document).ready(function() {
+        var sliderInput = $('#{{ input_name }}');
+        var minInput = $('#{{ input_name }}_min');
+        var maxInput = $('#{{ input_name }}_max');
+
+        // parse and fix init value
+        var value = sliderInput.attr('sql');
+        if (value != '') {
+	        value = value.replace('BETWEEN ', '');
+	        value = value.replace(' AND ', ',');
+	        value = value.replace('<=', '{{ min|default('0') }},');
+	        value = value.replace('>=', '{{ max|default('1000000000') }},');
+	        value = value.split(',');
+	        value[0] = Number(value[0]);
+	        value[1] = Number(value[1]);
+        } else {
+            value = [{{ min|default('0') }}, {{ max|default('1000000000') }}];
+        }
+        value = value.sort(function sortNumber(a,b) {
+            return a - b;
+        });
+
+        // Init inputs
+        if (value[0] > {{ min|default('0') }})
+            minInput.val(value[0]);
+        if (value[1] < {{ max|default('1000000000') }})
+            maxInput.val(value[1]);
+
+        // Change events
+        var inputFlasher = function(input) {
+            // animate input to highlight it (like a pulsate effect on jqueryUI)
+            $(input).stop().delay(100)
+                    .fadeIn(100).fadeOut(100)
+                    .queue(function() { $(this).css("background-color", "#FF5555").dequeue(); })
+                    .fadeIn(160).fadeOut(160).fadeIn(160).fadeOut(160).fadeIn(160)
+                    .animate({ backgroundColor: "#FFFFFF"}, 800);
+        };
+        var updater = function(srcElement) {
+            var isMinModified = (srcElement.attr('id') == minInput.attr('id'));
+
+            // retrieve values, replace ',' by '.', cast them into numbers (float/int)
+            var newValues = [(minInput.val()!='')?Number(minInput.val().replace(',', '.')):{{ min|default('0') }}, (maxInput.val()!='')?Number(maxInput.val().replace(',', '.')):{{ max|default('1000000000') }}];
+
+            // if newValues are out of bounds, or not valid, fix the element.
+            if (isMinModified && !(newValues[0] >= {{ min|default('0') }} && newValues[0] <= {{ max|default('1000000000') }})) {
+                newValues[0] = {{ min|default('0') }};
+                minInput.val('');
+                inputFlasher(minInput);
+            }
+            if (!isMinModified && !(newValues[1] >= {{ min|default('0') }} && newValues[1] <= {{ max|default('1000000000') }})) {
+                newValues[1] = {{ max|default('1000000000') }};
+                maxInput.val('');
+                inputFlasher(maxInput);
+            }
+
+            // if newValues are not ordered, fix the opposite input.
+            if (isMinModified && newValues[0] > newValues[1]) {
+                newValues[1] = newValues[0];
+                maxInput.val(newValues[0]);
+                inputFlasher(maxInput);
+            }
+            if (!isMinModified && newValues[0] > newValues[1]) {
+                newValues[0] = newValues[1];
+                minInput.val(newValues[0]);
+                inputFlasher(minInput);
+            }
+
+            if (newValues[0] == {{ min|default('0') }} && newValues[1] == {{ max|default('1000000000') }}) {
+                sliderInput.attr('sql', '');
+            } else if (newValues[0] == {{ min|default('0') }}) {
+                sliderInput.attr('sql', '<='+newValues[1]);
+            } else if (newValues[1] == {{ max|default('1000000000') }}) {
+                sliderInput.attr('sql', '>='+newValues[0]);
+            } else {
+                sliderInput.attr('sql', 'BETWEEN ' + newValues[0] + ' AND ' + newValues[1]);
+            }
+
+            {% if on_change_func_name is defined %}
+            var afterUpdate = function() {
+                {{ on_change_func_name|raw }}
+            };
+            afterUpdate();
+            {% endif %}
+        }
+        minInput.on('change', function(event) {
+            updater($(event.srcElement));
+        });
+        maxInput.on('change', function(event) {
+            updater($(event.srcElement));
+        });
+    });
+</script>
+<style>
+    <!-- /* To remove once integrated in sass */
+    #{{ input_name }}, #{{ input_name }}_min, #{{ input_name }}_max  {
+        width: 30%;
+        display: inline-block;
+    }
+    #{{ input_name }}_div  {
+        display: block;
+    }
+    span.{{ input_name }}_span  {
+        display: inline;
+    }
+    -->
+</style>
+
+<div id="{{ input_name }}_div">
+    <input type="hidden" id="{{ input_name }}" name="{{ input_name }}" value="" sql="{{ value }}" />
+    <input type="text" id="{{ input_name }}_min" value="" placeholder="{{ minLabel|default('Min') }}" />
+    <span class="{{ input_name }}_span">&nbsp;</span>
+    <input type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" />
+</div>

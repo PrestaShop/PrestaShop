@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
   <tab id="Addresses" name="Адреса"/>
   <tab id="Administration" name="Администрация"/>
@@ -19,7 +19,7 @@
   <tab id="Contacts" name="Контакты"/>
   <tab id="Countries" name="Страны"/>
   <tab id="Credit_Slips" name="Кредитные счета"/>
-  <tab id="CSV_Import" name="Импорт CSV"/>
+  <tab id="CSV_Import" name="Импорт"/>
   <tab id="Currencies" name="Валюта"/>
   <tab id="Customer_Service" name="Служба поддержки"/>
   <tab id="Customers" name="Клиенты"/>
@@ -49,7 +49,7 @@
   <tab id="Marketing" name="Маркетинг"/>
   <tab id="Menus" name="Закладки"/>
   <tab id="Merchandise_Returns" name="Возвраты товаров"/>
-  <tab id="Modules_1" name="Модули"/>
+  <tab id="Modules_1" name="Модули и Сервисы"/>
   <tab id="Modules" name="Модули"/>
   <tab id="Modules_Themes_Catalog" name="Модули &amp; Шаблоны"/>
   <tab id="Monitoring" name="Мониторинг"/>

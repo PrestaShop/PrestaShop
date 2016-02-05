@@ -48,7 +48,7 @@ class AdminStatesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-            'affectzone' => array('text' => $this->l('Affect a new zone'))
+            'AffectZone' => array('text' => $this->l('Assign to a new zone'))
         );
 
         $this->_select = 'z.`name` AS zone, cl.`name` AS country';
@@ -123,6 +123,15 @@ class AdminStatesControllerCore extends AdminController
         }
 
         parent::initPageHeaderToolbar();
+    }
+
+    public function renderList()
+    {
+        $this->tpl_list_vars['zones'] = Zone::getZones();
+        $this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
+        $this->tpl_list_vars['POST'] = $_POST;
+
+        return parent::renderList();
     }
 
     public function renderForm()
@@ -273,5 +282,22 @@ class AdminStatesControllerCore extends AdminController
         }
 
         die($list);
+    }
+
+    /**
+     * Allow the assignation of zone only if the form is displayed.
+     */
+    protected function processBulkAffectZone()
+    {
+        $zone_to_affect = Tools::getValue('zone_to_affect');
+        if ($zone_to_affect && $zone_to_affect !== 0) {
+            parent::processBulkAffectZone();
+        }
+
+        if (Tools::getIsset('submitBulkAffectZonestate')) {
+            $this->tpl_list_vars['assign_zone'] = true;
+        }
+
+        return;
     }
 }

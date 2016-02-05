@@ -106,6 +106,54 @@ class InstallModelInstall extends InstallAbstractModel
             $this->setError($this->language->l('Cannot write settings file'));
             return false;
         }
+
+        return $this->generateSf2ParametersFile($database_server, $database_login, $database_password, $database_name, $database_prefix);
+    }
+
+    /**
+     * Customize SF2 parameters file
+     *
+     * @param $database_server
+     * @param $database_login
+     * @param $database_password
+     * @param $database_name
+     * @param $database_prefix
+     *
+     * @return bool
+     */
+    private function generateSf2ParametersFile($database_server, $database_login, $database_password, $database_name, $database_prefix)
+    {
+        //If ENV is DEV, by pass this step
+        if (_PS_MODE_DEV_) {
+            return true;
+        }
+
+        if (!is_writable(_PS_ROOT_DIR_.'/app/config')) {
+            $this->setError($this->language->l('%s folder is not writable (check permissions)', 'app/config'));
+            return false;
+        }
+
+        umask(0000);
+
+        //generate parameters content file
+        $content = 'parameters:'."\n";
+        $content .= '    database_host: '.$database_server."\n";
+        $content .= '    database_port: ~'."\n";
+        $content .= '    database_name: '.$database_name."\n";
+        $content .= '    database_user: '.$database_login."\n";
+        $content .= '    database_password: '.$database_password."\n";
+        $content .= '    database_prefix: '.$database_prefix."\n";
+        $content .= '    mailer_transport: smtp'."\n";
+        $content .= '    mailer_host: 127.0.0.1'."\n";
+        $content .= '    mailer_user: ~'."\n";
+        $content .= '    mailer_password: ~'."\n";
+        $content .= '    secret: '.Tools::passwdGen(56)."\n";
+
+        if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', $content)) {
+            $this->setError($this->language->l('Cannot write app/config/parameters.yml file'));
+            return false;
+        }
+
         return true;
     }
 
@@ -145,8 +193,33 @@ class InstallModelInstall extends InstallAbstractModel
             return false;
         }
 
+        return $this->generateSf2ProductionEnv();
+    }
+
+    /**
+     * Pass SF2 to production
+     * cache:clear
+     * assetic:dump
+     * doctrine:schema:update
+     *
+     * @return bool
+     */
+    private function generateSf2ProductionEnv()
+    {
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+
+        //If ENV is PROD, execute SF2 production env commands
+        if (!_PS_MODE_DEV_) {
+            $sf2Refresh->addCacheClear();
+            $sf2Refresh->addAsseticDump();
+        }
+
+        $sf2Refresh->addDoctrineSchemaUpdate();
+        $sf2Refresh->execute();
+
         return true;
     }
+
 
     /**
      * Clear database (only tables with same prefix)
@@ -320,6 +393,7 @@ class InstallModelInstall extends InstallAbstractModel
 
         $languages_available = $this->language->getIsoList();
         $languages = array();
+
         foreach ($languages_list as $iso) {
             if (!in_array($iso, $languages_available)) {
                 continue;
@@ -341,14 +415,25 @@ class InstallModelInstall extends InstallAbstractModel
             if (InstallSession::getInstance()->safe_mode) {
                 Language::checkAndAddLanguage($iso, false, true, $params_lang);
             } else {
-                Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_, $params_lang);
+                if (file_exists(_PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip') == false) {
+                    $language = Language::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
+
+                    if ($language == false) {
+                        throw new PrestashopInstallerException($this->language->l('Cannot download language pack "%s"', $iso));
+                    }
+                }
+
+                Language::installLanguagePack($iso, $params_lang, $errors);
             }
 
             Language::loadLanguages();
+
             Tools::clearCache();
+
             if (!$id_lang = Language::getIdByIso($iso, true)) {
                 throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
             }
+
             $languages[$id_lang] = $iso;
 
             // Copy language flag
@@ -460,12 +545,7 @@ class InstallModelInstall extends InstallAbstractModel
         Context::getContext()->shop = new Shop(1);
         Configuration::loadConfiguration();
 
-        // use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
-        if (InstallSession::getInstance()->safe_mode) {
-            Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 1);
-        }
-
-        $id_country = Country::getByIso($data['shop_country']);
+        $id_country = (int)Country::getByIso($data['shop_country']);
 
         // Set default configuration
         Configuration::updateGlobalValue('PS_SHOP_DOMAIN',                Tools::getHttpHost());
@@ -692,13 +772,12 @@ class InstallModelInstall extends InstallAbstractModel
     {
         $addons_modules = $module ? array($module) : $this->getAddonsModulesList();
         $modules = array();
-        if (!InstallSession::getInstance()->safe_mode) {
-            foreach ($addons_modules as $addons_module) {
-                if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module'])))) {
-                    if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_)) {
-                        $modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
-                        unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
-                    }
+
+        foreach ($addons_modules as $addons_module) {
+            if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module'])))) {
+                if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_)) {
+                    $modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
+                    unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
                 }
             }
         }

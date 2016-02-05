@@ -23,9 +23,9 @@
 * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 *}
-<table>
+<table style="width: 100%;">
 	<tr>
-		<td style="text-align: left; font-size: 6pt; color: #444">
+		<td style="text-align: left; font-size: 6pt; color: #444; width:87%;">
 			{$shop_address|escape:'html':'UTF-8'}<br />
 
 			{if !empty($shop_phone) OR !empty($shop_fax)}
@@ -50,6 +50,9 @@
 				{/foreach}
 			{/if}
 		</td>
+		<td style="text-align: right; font-size: 8pt; color: #444;  width:13%;">
+            {literal}{:pnp:} / {:ptp:}{/literal}
+        </td>
 	</tr>
 </table>
 

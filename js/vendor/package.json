@@ -1,0 +1,15 @@
+{
+  "name": "prestashop-common-js",
+  "version": "1.0.0",
+  "dependencies": {
+    "bootstrap-slider": "^5.2.3",
+    "bootstrap-tokenfield": "^0.12.0",
+    "cldrjs": "0.4.1",
+    "dropzone": "^4.0.1",
+    "eonasdan-bootstrap-datetimepicker": "^4.15.35",
+    "globalize": "1.0.0",
+    "jwerty": "^0.3.2",
+    "sprintf-js": "^1.0.3",
+    "typeahead.js": "^0.11.1"
+  }
+}
