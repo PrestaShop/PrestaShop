@@ -142,11 +142,11 @@ class ProductOptions extends CommonAbstractType
         ))
         ->add('reference', FormType\TextType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Reference code', [], 'AdminProducts')
+            'label' => $this->translator->trans('Reference', [], 'AdminProducts')
         ))
         ->add('show_condition', FormType\CheckboxType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Display condition', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Display condition on product page', [], 'AdminProducts'),
         ))
         ->add('condition', FormType\ChoiceType::class, array(
             'choices'  => array(

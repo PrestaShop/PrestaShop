@@ -116,25 +116,25 @@ class ProductPrice extends CommonAbstractType
                     'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
                 ];
             },
-            'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Tax rule', [], 'AdminProducts'),
         ))
         ->add('on_sale', FormType\CheckboxType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Display the on sale icon on the product page, and in the text found within the product listing.', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Display the "sale!" flag on the product page, and in the text found within the product listing.', [], 'AdminProducts'),
         ))
         ->add('wholesale_price', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price - Tax excluded', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('unit_price', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Unit price (tax excl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Unit price', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('unity', FormType\TextType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('per', [], 'AdminProducts')
+            'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'AdminProducts')]
         ))
         ->add('specific_price', \PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice::class)
         ->add('specificPricePriorityToAll', FormType\CheckboxType::class, array(

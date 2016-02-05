@@ -103,7 +103,6 @@
   -webkit-filter: none;
   filter: none;
 }
-
 #product-images-form-container{
   position: absolute!important;
   z-index: 1000;
@@ -126,4 +125,14 @@
 }
 #product-images-form-container .actions{
   padding-top: 15px
+}
+#product-images-dropzone .dz-default.dz-message i{
+  font-size:60px;
+  color:#ccc;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+#product-images-dropzone .dz-default.dz-message small{
+  font-size:12px;
+  font-style: italic;
 }

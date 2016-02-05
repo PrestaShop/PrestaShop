@@ -131,7 +131,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'choices_as_values' => true,
             'required' =>  false,
             'placeholder' => $this->translator->trans('Apply to all combinations', [], 'AdminProducts'),
-            'label' => $this->translator->trans('Combination:s', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Combination', [], 'AdminProducts'),
             'attr' => ['data-action' =>  $this->router->generate('admin_get_product_combinations')],
         ))
         ->add('sp_from', PsFormType\DatePickerType::class, array(
@@ -154,7 +154,7 @@ class ProductSpecificPrice extends CommonAbstractType
         ))
         ->add('sp_price', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Product price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Product price (tax excl.)', [], 'AdminProducts'),
             'attr' => ['class' => 'price'],
             'currency' => $this->currency->iso_code,
         ))
@@ -186,7 +186,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'required' => true,
         ))
         ->add('save', FormType\ButtonType::class, array(
-            'label' => $this->translator->trans('Save', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Done', [], 'AdminProducts'),
             'attr' => array('class' => 'js-save'),
         ))
         ->add('cancel', FormType\ButtonType::class, array(

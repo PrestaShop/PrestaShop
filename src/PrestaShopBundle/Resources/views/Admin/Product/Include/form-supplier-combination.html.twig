@@ -1,11 +1,18 @@
 {% if suppliers|length > 0 %}
     <h4>{{ trans('Supplier reference(s)', {}, 'AdminProducts') }}</h4>
+    <div class="col-sm-12">
+        <div class="alert alert-info" role="alert">
+            {{ trans('You can specify product reference(s) for each associated supplier. Click "Save" after changing selected suppliers to display the associated product references.', {}, 'AdminProducts')|raw }}
+        </div>
+    </div>
+    <div class="clearfix"></div>
 {% endif %}
 
 {% for supplierId in suppliers %}
     {% set collectionName = 'supplier_combination_' ~ supplierId %}
+<div class="panel panel-default">
+    <div class="panel-heading"><strong>{{ form[collectionName].vars.label }}</strong></div>
     <div class="panel-body" id="supplier_combination_{{ supplierId }}">
-        <strong class="text-primary">{{ form[collectionName].vars.label }}</strong>
         <div>
             {{ form_errors(form[collectionName]) }}
             <table class="table table-striped">
@@ -34,4 +41,5 @@
             </table>
         </div>
     </div>
+</div>
 {% endfor %}

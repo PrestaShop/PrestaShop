@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <div class="bootstrap">
+    <div>
         {% if is_multishop_context %}
             <div class="alert alert-info" role="alert">{{ trans('Be carefull, you are in a multishop context, all modifcation will be apply to each shop or group shop', {}, 'AdminProducts') }}</div>
         {% endif %}
@@ -52,14 +52,14 @@
 
             <div id="form-loading">
                 <ul class="nav nav-tabs" id="form-nav" role="tablist">
-                    <li id="tab_step1" class="nav-item active"><a href="#step1" role="tab" data-toggle="tab" class="nav-link">{{ trans('Main information', {}, 'AdminProducts') }}</a></li>
-                    <li id="tab_step3" class="nav-item"><a href="#step3" role="tab" data-toggle="tab" class="nav-link">{{ trans('Quantity', {}, 'AdminProducts') }}</a></li>
+                    <li id="tab_step1" class="nav-item active"><a href="#step1" role="tab" data-toggle="tab" class="nav-link">{{ trans('Basic settings', {}, 'AdminProducts') }}</a></li>
+                    <li id="tab_step3" class="nav-item"><a href="#step3" role="tab" data-toggle="tab" class="nav-link">{{ trans('Quantities', {}, 'AdminProducts') }}</a></li>
                     <li id="tab_step4" class="nav-item"><a href="#step4" role="tab" data-toggle="tab" class="nav-link">{{ trans('Shipping', {}, 'AdminProducts') }}</a></li>
-                    <li id="tab_step2" class="nav-item"><a href="#step2" role="tab" data-toggle="tab" class="nav-link">{{ trans('Advanced Price', {}, 'AdminProducts') }}</a></li>
+                    <li id="tab_step2" class="nav-item"><a href="#step2" role="tab" data-toggle="tab" class="nav-link">{{ trans('Pricing', {}, 'AdminProducts') }}</a></li>
                     <li id="tab_step5" class="nav-item"><a href="#step5" role="tab" data-toggle="tab" class="nav-link">{{ trans('SEO', {}, 'AdminProducts') }}</a></li>
                     <li id="tab_step6" class="nav-item"><a href="#step6" role="tab" data-toggle="tab" class="nav-link">{{ trans('Options', {}, 'AdminProducts') }}</a></li>
                     {% if hookcount('displayAdminProductsExtra') > 0 %}
-                        <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">{{ trans('Additional modules', {}, 'AdminProducts') }}</a></li>
+                        <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">&laquo;{{ trans('Modules options', {}, 'AdminProducts') }}&raquo;</a></li>
                     {% endif %}
                 </ul>
                 <div id="form_content" class="tab-content">
@@ -143,11 +143,11 @@
 
                                 <div id="manufacturer" class="form-group col-xs-6">
                                     <div id="manufacturer-content" class="{{ form.step1.id_manufacturer.vars.value == '' ? 'hide':'' }}">
-                                        <h4>{{ trans("Manufacturer", {}, 'AdminProducts') }}</h4>
+                                        <h4>{{ trans("Brand", {}, 'AdminProducts') }}</h4>
                                         {{ form_errors(form.step1.id_manufacturer) }}
                                         {{ form_widget(form.step1.id_manufacturer) }}
                                     </div>
-                                    <a href="#" class="open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}">{{ trans('+ Add a manufacturer', {}, 'AdminProducts') }}</a>
+                                    <a href="#" class="open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}">{{ trans('+ Add a brand', {}, 'AdminProducts') }}</a>
                                 </div>
                                 <div class="clearfix"></div>
 
@@ -166,10 +166,10 @@
                                     <div class="panel-heading">{{ trans("Product type", {}, 'AdminProducts') }}</div>
                                     <div class="form-group">
                                         <div class="radio">
-                                            <label><input type="radio" name="show_variations" value="0" {% if not has_combinations %}checked="checked"{% endif %}>{{ trans("Product without variations", {}, 'AdminProducts') }}</label>
+                                            <label><input type="radio" name="show_variations" value="0" {% if not has_combinations %}checked="checked"{% endif %}>{{ trans("Simple product", {}, 'AdminProducts') }}</label>
                                         </div>
                                         <div class="radio">
-                                            <label><input type="radio" name="show_variations" value="1" {% if has_combinations %}checked="checked"{% endif %}>{{ trans("Product with variations", {}, 'AdminProducts') }}</label>
+                                            <label><input type="radio" name="show_variations" value="1" {% if has_combinations %}checked="checked"{% endif %}>{{ trans("Product with combinations", {}, 'AdminProducts') }}</label>
                                             <span data-toggle="tooltip" title="{{ trans("Combinations: \n If you're selling a product with attributes that can be combined (color, size, capacity, ...), you will need to create combinations. \n Ex.: Size M in blue and size S in green are 2 different combinations of a t-shirt.", {}, 'AdminProducts')|raw }}">[?]</span>
                                             <br />
                                             <span id="product_type_combinations_shortcut"><a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');">{{ trans("Advanced settings available in Combinations", {}, 'AdminProducts')|raw }}</a></span>
@@ -195,12 +195,12 @@
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-xs-5">
-                                                <label class="control-label">{{ trans("Pre-tax retail price", {}, 'AdminProducts') }}</label>
+                                                <label class="control-label">{{ trans("Tax excl.", {}, 'AdminProducts') }}</label>
                                                 {{ form_widget(form.step1.price_shortcut) }}
                                                 {{ form_errors(form.step1.price_shortcut) }}
                                             </div>
                                             <div class="col-xs-5">
-                                                <label class="control-label">{{ trans("All-tax retail price", {}, 'AdminProducts') }}</label>
+                                                <label class="control-label">{{ trans("Tax incl.", {}, 'AdminProducts') }}</label>
                                                 {{ form_widget(form.step1.price_ttc_shortcut) }}
                                                 {{ form_errors(form.step1.price_ttc_shortcut) }}
                                             </div>
@@ -422,7 +422,7 @@
                     <div role="tabpanel" class="tab-pane panel panel-default" id="step2">
                         <div class="col-lg-9">
                             <div class="form-group">
-                                <h4>{{ trans('Selling price', {}, 'AdminProducts') }}</h4>
+                                <h4>{{ trans('Retail price', {}, 'AdminProducts') }}</h4>
                                 <div class="col-xs-3 pull-left">
                                     <label class="control-label">{{ form.step2.price.vars.label }}</label>
                                     {{ form_errors(form.step2.price) }}
@@ -447,7 +447,7 @@
                                     {{ form_widget(form.step2.unit_price) }}
                                 </div>
                                 <div class="col-xs-3 pull-left">
-                                    <label class="control-label">{{ form.step2.unity.vars.label }}</label>
+                                    <label class="control-label">&nbsp;</label>
                                     {{ form_errors(form.step2.unity) }}
                                     {{ form_widget(form.step2.unity) }}
                                 </div>
@@ -476,7 +476,7 @@
                             </div>
 
                             <div class="form-group" id="specific-price">
-                                <h4>{{ trans('Specific price', {}, 'AdminProducts') }}</h4>
+                                <h4>{{ trans('Specific prices', {}, 'AdminProducts') }}</h4>
 
                                 <div class="col-sm-10">
                                     <table id="js-specific-price-list" class="table table-striped hide" data="{{ path('admin_specific_price_list') }}" data-action-delete="{{ path('admin_delete_specific_price') }}">
@@ -577,11 +577,16 @@
                                 </div>
                             </div>
                             <div class="col-sm-8">
-                                <div class="alert alert-info" role="alert">{{ trans('Each tag has to be followed by a comma.', {}, 'AdminProducts')|raw }}</div>
+                                <div class="alert alert-info" role="alert">
+                                    {{ trans('Separate each tag by pressing Enter.', {}, 'AdminProducts')|raw }}<br/>
+                                    {{ trans('Tags are meant to help your customers find your productvia the search bar.', {}, 'AdminProducts')|raw }}<br/>
+                                    {{ trans('Use terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.', {}, 'AdminProducts')|raw }}<br/>
+                                    {{ trans('You can manage tag aliases in the %link% section.', {'%link%': '<a href="'~ getAdminLink("AdminSearchConf") ~'">'~trans('Alias', {}, 'AdminProducts')~'</a>'}, 'AdminProducts')|raw }}
+                                </div>
                             </div>
                             <div class="clearfix"></div>
                             <div class="form-group">
-                                <h4>{{ trans('Advanced details', {}, 'AdminProducts') }}</h4>
+                                <h4>{{ trans('Condition & References', {}, 'AdminProducts')|raw }}</h4>
                                 <div class="col-xs-4 pull-left">
                                     <label class="control-label">{{ form.step6.condition.vars.label }}</label>
                                     {{ form_errors(form.step6.condition) }}
@@ -628,17 +633,17 @@
                                         </li>
                                     {% endfor %}
                                 </ul>
-                                <a href="#" class="add">{{ trans('+ Add a custom field', {}, 'AdminProducts') }}</a>
+                                <a href="#" class="add">{{ trans('+ Add a customization field', {}, 'AdminProducts') }}</a>
                             </div>
 
                             <div class="form-group col-sm-5">
-                                <h4>{{ trans('Select attachments for this product', {}, 'AdminProducts') }}</h4>
+                                <h4>{{ trans('Attachments', {}, 'AdminProducts') }}</h4>
                                 {{ form_errors(form.step6.attachment_product) }}
                                 {{ form_widget(form.step6.attachments) }}
                             </div>
                             <div class="col-sm-1"></div>
                             <div class="col-sm-4">
-                                <h4>{{ trans('Add an attachment', {}, 'AdminProducts') }}</h4>
+                                <h4>{{ trans('Create a new attachment', {}, 'AdminProducts') }}</h4>
                                 {{ form_errors(form.step6.attachment_product) }}
                                 <div id="form_step6_attachment_product" data-action="{{ form.step6.attachment_product.vars.attr['data-action'] }}">
                                     <div class="form-group">{{ form_widget(form.step6.attachment_product.file) }}</div>
@@ -652,6 +657,12 @@
                             <div class="form-group" id="custom_fields">
                                 <h4>{{ form.step6.suppliers.vars.label }}</h4>
                                 {{ form_errors(form.step6.suppliers) }}
+                                <div class="col-sm-12">
+                                    <div class="alert alert-info" role="alert">
+                                        {{ trans('This interface allows you to specify the suppliers of the current product and eventually its combinations.', {}, 'AdminProducts')|raw }}<br/>
+                                        {{ trans('It is also possible to specify supplier references according to previously associated suppliers.', {}, 'AdminProducts')|raw }}
+                                    </div>
+                                </div>
                                 <div class="col-sm-4">
                                     <label class="control-label">{{ trans('Choose the suppliers associated with this product', {}, 'AdminProducts') }}</label>
                                     {{ form_widget(form.step6.suppliers) }}
@@ -805,9 +816,10 @@
     "Form update errors": trans("Form update errors", {}, 'AdminProducts'),
     "Delete": trans("Delete", {}, 'AdminProducts'),
     "ToLargeFile": trans("The file is too large ({{filesize}}). Allowed maximum size is {{maxFilesize}}.", {}, 'AdminProducts'),
-    "Drop pictures here": trans("Drop pictures here", {}, 'AdminProducts'),
+    "Drop images here": trans("Drop images here", {}, 'AdminProducts'),
     "or select files": trans("or select files", {}, 'AdminProducts'),
-    "files recommandations": trans("Recommanded size 800 x 800px. JPG, GIF or PNG format", {}, 'AdminProducts'),
+    "files recommandations": trans("Recommanded size 800 x 800px for default theme.", {}, 'AdminProducts'),
+    "files recommandations2": trans("JPG, GIF or PNG format.", {}, 'AdminProducts'),
     "Cover": trans("Cover", {}, 'AdminProducts'),
     "Are you sure to disable variations ? they will all be deleted": trans("Are you sure to disable variations ? they will all be deleted", {}, 'AdminProducts'),
     "Are you sure to delete this?": trans("Are you sure to delete this?", {}, 'AdminProducts'),

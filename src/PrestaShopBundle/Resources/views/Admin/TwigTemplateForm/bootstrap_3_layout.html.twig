@@ -216,7 +216,7 @@
 {% endblock date_picker_widget %}
 
 {% block _form_step6_attachments_widget %}
-    <div class="js-options-no-attachments{{ form|length >1 ? 'hide' : '' }}">
+    <div class="js-options-no-attachments {{ form|length >1 ? 'hide' : '' }}">
         <small>{{ trans('There is no attachments yet.', {}, 'AdminProducts') }}</small>
     </div>
     <div class="js-options-with-attachments {{ form|length == 0 ? 'hide' : '' }}">

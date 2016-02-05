@@ -70,7 +70,7 @@ class ProductQuantity extends CommonAbstractType
                 'class' => 'tokenfield',
                 'data-limit' => 20,
                 'data-minLength' => 1,
-                'placeholder' => $this->translator->trans('Type something...', [], 'AdminProducts'),
+                'placeholder' => $this->translator->trans('Search for attributes', [], 'AdminProducts'),
                 'data-prefetch' => $this->router->generate('admin_attribute_get_all'),
                 'data-action' => $this->router->generate('admin_attribute_generator'),
             ],
@@ -125,7 +125,7 @@ class ProductQuantity extends CommonAbstractType
                 'options' => [],
                 'locales' => $this->locales,
                 'hideTabs' => true,
-                'label' =>  $this->translator->trans('Displayed text when backordering is allowed', [], 'AdminProducts')
+                'label' =>  $this->translator->trans('Displayed text when out of stock', [], 'AdminProducts')
             ))
             ->add('available_date', PsFormType\DatePickerType::class, array(
                 'required' => false,
@@ -141,16 +141,16 @@ class ProductQuantity extends CommonAbstractType
             $form = $event->getForm();
 
             //Manage out_of_stock field with contextual values/label
-            $defaultChoiceLabel = $this->translator->trans('Default', [], 'AdminProducts').' (';
+            $defaultChoiceLabel = $this->translator->trans('Use default', [], 'AdminProducts').' (';
             $defaultChoiceLabel .= $this->configuration->get('PS_ORDER_OUT_OF_STOCK') == 1 ?
-                $this->translator->trans('Allow orders', [], 'AdminProducts') :
-                $this->translator->trans('Deny orders', [], 'AdminProducts');
+                $this->translator->trans('Allow', [], 'AdminProducts') :
+                $this->translator->trans('Deny', [], 'AdminProducts');
             $defaultChoiceLabel .= ')';
 
             $form->add('out_of_stock', FormType\ChoiceType::class, array(
                 'choices'  => array(
-                    $this->translator->trans('Deny orders', [], 'AdminProducts') => '0',
-                    $this->translator->trans('Allow orders', [], 'AdminProducts') => '1',
+                    $this->translator->trans('Deny', [], 'AdminProducts') => '0',
+                    $this->translator->trans('Allow', [], 'AdminProducts') => '1',
                     $defaultChoiceLabel => '2',
                 ),
                 'choices_as_values' => true,
