@@ -66,7 +66,7 @@
                     <thead>
                         <tr class="column-headers">
                             <th colspan="2">
-                                {{ trans("ID", {}, 'AdminProducts') }}
+                                {{ trans("ID", {}, 'AdminProducts') }}<br/>
                                 &nbsp;<span psorderby="id_product" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'id_product' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="id_product" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'id_product' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
@@ -74,22 +74,22 @@
                                 {{ trans("Image", {}, 'AdminProducts') }}
                             </th>
                             <th class="col-xs-3">
-                                {{ trans("Name", {}, 'AdminProducts') }}
+                                {{ trans("Name", {}, 'AdminProducts') }}<br/>
                                 &nbsp;<span psorderby="name" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'name' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="name" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'name' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             <th class="col-xs-1">
-                                {{ trans("Reference", {}, 'AdminProducts') }}
+                                {{ trans("Reference", {}, 'AdminProducts') }}<br/>
                                 &nbsp;<span psorderby="reference" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'reference' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="reference" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'reference' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             <th class="col-xs-2">
-                                {{ trans("Category", {}, 'AdminProducts') }}
+                                {{ trans("Category", {}, 'AdminProducts') }}<br/>
                                 &nbsp;<span psorderby="name_category" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'name_category' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="name_category" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'name_category' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             <th class="col-md-1">
-                                {{ trans("Base price", {}, 'AdminProducts') }}
+                                {{ trans("Base price", {}, 'AdminProducts') }}<br/>
                                 &nbsp;<span psorderby="price" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'price' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="price" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'price' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
@@ -97,18 +97,18 @@
                                 {{ trans("Final price", {}, 'AdminProducts') }}
                             </th>
                             <th class="col-xs-1">
-                                {{ trans("Quantity", {}, 'AdminProducts') }}
+                                {{ trans("Quantity", {}, 'AdminProducts') }}<br/>
                                 &nbsp;<span psorderby="sav_quantity" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'sav_quantity' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="sav_quantity" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'sav_quantity' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             <th>
-                                {{ trans("Status", {}, 'AdminProducts') }}
+                                {{ trans("Status", {}, 'AdminProducts') }}<br/>
                                 &nbsp;<span psorderby="active" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'active' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                 &nbsp;<span psorderby="active" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'active' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             {% if has_category_filter == true %}
                                 <th>
-                                    {{ trans("Position", {}, 'AdminProducts') }}
+                                    {{ trans("Position", {}, 'AdminProducts') }}<br/>
                                     &nbsp;<span psorderby="position" psorderway="asc" class="icon-caret-up icon-caret {% if (orderBy == 'position' or orderBy == 'position_ordering') and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
                                     &nbsp;<span psorderby="position" psorderway="desc" class="icon-caret-down icon-caret {% if (orderBy == 'position' or orderBy == 'position_ordering') and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                                 </th>
@@ -248,11 +248,13 @@
                         </span>
                     </div>
                 </div>
-                <div class="pull-right">
-                    {% render controller('PrestaShopBundle:Admin\\Common:pagination',
-                      {'limit': limit, 'offset': offset, 'total': product_count_filtered, 'caller_parameters': pagination_parameters, 'limit_choices': pagination_limit_choices})
-                    %}
-                </div>
+                {% if product_count_filtered > 20 %}
+                    <div class="pull-right">
+                        {% render controller('PrestaShopBundle:Admin\\Common:pagination',
+                          {'limit': limit, 'offset': offset, 'total': product_count_filtered, 'caller_parameters': pagination_parameters, 'limit_choices': pagination_limit_choices})
+                        %}
+                    </div>
+                {% endif %}
             </div>
         </form>
     </div>
