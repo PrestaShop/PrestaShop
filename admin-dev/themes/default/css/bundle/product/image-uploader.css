@@ -1,11 +1,61 @@
 #product-images-dropzone{
   width: 100%;
-  min-height:200px;
+  height:340px;
+  border: dashed 1px #ccc !important;
+  padding:10px !important;
+  margin-bottom:0px !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  overflow-y: hidden;
+}
+#product-images-container .dropzone-expander{
+  border-bottom: dashed 1px #ccc;
+  border-left: dashed 1px #ccc;
+  border-right: dashed 1px #ccc;
+  font-size:12px;
+  color: #3c3c3c;
+  padding: 5px 0;
+  color: #9c9c9c;
+  cursor: pointer;
+}
+#product-images-container .dropzone-expander,
+#product-images-container .dropzone-expander span{
+  display:none;
+}
+#product-images-container .dropzone-expander.expand span.expand{
+  display:block;
+}
+#product-images-container .dropzone-expander.compress span.compress{
+  display:block;
 }
 #product-images-dropzone.dropzone .dz-preview{
   width: 130px;
   height: 130px;
   border:1px solid #ccc;
+}
+#product-images-dropzone.dropzone .dz-preview.openfilemanager{
+  text-align: center;
+  color:#ccc;
+}
+#product-images-dropzone.dropzone .dz-preview.openfilemanager div{
+  display: inline-block;
+  width:50px;
+  height:50px;
+  border-radius:100%;
+  border:5px solid #ccc;
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+#product-images-dropzone.dropzone .dz-preview.openfilemanager div span{
+  text-align: center;
+  display:inline-block;
+  line-height:40px;
+  height:50px;
+  font-size: 30px;
+  font-weight: bold;
 }
 #product-images-dropzone.dropzone .dz-preview .dz-image{
   border-radius: 0;
@@ -23,8 +73,9 @@
   display: inline-block;
 }
 #product-images-dropzone.dropzone .dz-preview .iscover{
-  background: #fff;
-  color:#337ab7;
+  background: #ccc;
+  font-size: 12px;
+  color:#fff;
   text-align:center;
   padding: 5px;
   position: absolute;
@@ -54,12 +105,25 @@
 }
 
 #product-images-form-container{
-
   position: absolute!important;
   z-index: 1000;
   min-height:200px;
-  right: 0;
-  top:0;
+  right: 5px;
+  top:0px;
   cursor: default !important;
   display: none;
+  padding:10px !important;
+  -moz-box-shadow: 0px 0px 10px 0px #656565;
+  -webkit-box-shadow: 0px 0px 10px 0px #656565;
+  -o-box-shadow: 0px 0px 10px 0px #656565;
+  box-shadow: 0px 0px 10px 0px #656565;
+  filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);
+}
+#product-images-form-container .close{
+  position: absolute;
+  right:0;
+  top:0;
+}
+#product-images-form-container .actions{
+  padding-top: 15px
 }

@@ -76,6 +76,11 @@
                                             <div id="product-images-dropzone" class="panel dropzone ui-sortable" url-upload="{{ path('admin_product_image_upload') }}" url-position="{{ path('admin_product_image_positions') }}" url-update="{{ path('admin_product_image_form') }}" url-delete="{{ path('admin_product_image_delete') }}" data-max-size="{{ 'PS_ATTACHMENT_MAXIMUM_SIZE'|configuration }}">
                                                 <div id="product-images-dropzone-error" class="text-danger"></div>
                                                 {% if form.step1.vars.value.images is defined %}
+                                                    {% if form.step1.vars.value.images|length > 0 %}
+                                                        <div class="dz-preview disabled openfilemanager">
+                                                            <div><span>+</span></div>
+                                                        </div>
+                                                    {% endif %}
                                                     {% for image in form.step1.vars.value.images %}
                                                         <div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle" data-id="{{ image.id }}">
                                                             <div class="dz-image bg" style="background-image: url('{{ image.base_image_url }}-home_default.{{ image.format }}');"></div>
@@ -93,6 +98,10 @@
                                                         </div>
                                                     {% endfor %}
                                                 {% endif %}
+                                            </div>
+                                            <div class="dropzone-expander text-center">
+                                                <span class="expand">{{ trans('View all images', {}, 'AdminProducts') }}</span>
+                                                <span class="compress">{{ trans('View less', {}, 'AdminProducts') }}</span>
                                             </div>
                                             <div id="product-images-form-container" class="col-lg-5 panel">
                                                 <div id="product-images-form" class="col-lg-12"></div>
