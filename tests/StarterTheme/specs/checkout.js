@@ -170,6 +170,14 @@ function runScenario (scenario) {
               .waitForVisible('.delivery-options .delivery-option')
             ;
           });
+          it("the delivery options have an impact on cart summary display", function () {
+            var cartSummary = browser.getValue('#checkout-cart-summary');
+            return browser
+              .click('#delivery_option_2')
+              .getValue('#checkout-cart-summary')
+              .should.not.equal(cartSummary)
+            ;
+          });
           it('should be marked as complete after user has clicked continue', function () {
             return browser
               .click('#checkout-delivery-step button')
