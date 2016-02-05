@@ -53,7 +53,7 @@ global_settings:
         - blockcontact
       displayLeftColumn:
         - blocklayered
-        - ~
+        - blockcategories
 
 theme_settings:
   default_layout: layout-full-width
