@@ -95,7 +95,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     {
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
-            $steps = array('database','fixtures','theme','modules','addons_modules');
+            $steps = array('database','fixtures','theme','modules','addons_modules', 'theme');
         }
 
         if (in_array('database', $steps)) {
@@ -138,6 +138,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 
         if (in_array('addons_modules', $steps)) {
             if (!$this->processInstallAddonsModules()) {
+                $this->printErrors();
+            }
+        }
+
+        if (in_array('theme', $steps)) {
+            if (!$this->processInstallTheme()) {
                 $this->printErrors();
             }
         }
@@ -273,5 +279,10 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     public function processInstallAddonsModules()
     {
         return $this->model_install->installModulesAddons();
+    }
+
+    public function processInstallTheme()
+    {
+        return $this->model_install->installTheme();
     }
 }
