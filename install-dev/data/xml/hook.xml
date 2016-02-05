@@ -40,6 +40,9 @@
     <hook id="actionCartSave" live_edit="0">
       <name>actionCartSave</name><title>Cart creation and update</title><description>This hook is displayed when a product is added to the cart or if the cart's content is modified</description>
     </hook>
+    <hook id="actionBeforeCartUpdateQty" live_edit="0">
+      <name>actionBeforeCartUpdateQty</name><title>Cart product update quantity</title><description>This hook is displayed when a quantity of a product is modified in a cart</description>
+    </hook>
     <hook id="actionAuthentication" live_edit="0">
       <name>actionAuthentication</name><title>Successful customer authentication</title><description>This hook is displayed after a customer successfully signs in</description>
     </hook>
@@ -126,7 +129,7 @@
     </hook>
     <hook id="displayAuthenticateFormBottom" live_edit="0">
       <name>displayAuthenticateFormBottom</name><title>Customer authentication form</title><description>This hook displays some information on the bottom of the authentication form</description>
-    </hook>    
+    </hook>
     <hook id="displayCustomerAccountForm" live_edit="0">
       <name>displayCustomerAccountForm</name><title>Customer account creation form</title><description>This hook displays some information on the form to create a customer account</description>
     </hook>
