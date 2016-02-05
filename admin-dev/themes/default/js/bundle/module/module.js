@@ -2,6 +2,7 @@ $(document).ready(function() {
 
   var controller = new AdminModule();
   controller.init();
+  $("#datest").psdwl({default: false});
 
 });
 
@@ -48,6 +49,10 @@ var AdminModule = function() {
     this.bulkActionDropDownSelector = '.module-bulk-actions select';
     this.checkedBulkActionListSelector = '.module-checkbox-bulk-list:checked';
     this.checkedBulkActionGridSelector = '.module-checkbox-bulk-grid:checked';
+    this.selectAllBulckActionSelector = '.module-checkbox-bulk-select-all';
+    this.moduleBulkActionModalSelector = '#module-bulk-actions-modal';
+    this.moduleModalsTitleSelector = 'h4.module-modal-title';
+    this.moduleModalBulkActionTableBody = '.bulk-action-module-processing > tbody';
 
     /* Selectors for Module Import and Addons connect */
     this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
@@ -81,7 +86,8 @@ var AdminModule = function() {
       var _this = this;
       $(this.bulkActionDropDownSelector).on('change', function(event){
           var bulkAction = $(this).attr('value');
-          _this.doBulkAction(bulkAction);
+          var bulkActionName = $(this).find(':selected').text();
+          _this.doBulkAction(bulkAction, bulkActionName);
       });
   };
 
@@ -108,7 +114,6 @@ var AdminModule = function() {
                 var responseMsg = response.message;
 
                 if (responseCode === 1) {
-                    // Success !
                     location.reload();
                 } else {
                     $.growl.error({ message: responseMsg });
@@ -248,7 +253,7 @@ var AdminModule = function() {
     };
 
     //@TODO: JS Doc
-    this.doBulkAction = function(bulkAction) {
+    this.doBulkAction = function(bulkAction, bulkActionName) {
         var availableBulkActions = [
                                     'bulk-uninstall',
                                     'bulk-disable',
@@ -257,17 +262,71 @@ var AdminModule = function() {
                                     'bulk-enable-mobile',
                                     'bulk-reset'
                                 ];
+
+        var bulkActionToUrl = {
+            'bulk-uninstall': 'uninstall',
+            'bulk-disable': 'disable',
+            'bulk-enable': 'enable',
+            'bulk-disable-mobile': 'disable-mobile',
+            'bulk-enable-mobile': 'enable-mobile',
+            'bulk-reset': 'reset'
+        };
+
+        var baseActionUrl = baseAdminDir + 'module/manage/action/@/';
+
         //@NOTE:
         // Note no grid selector used yet since we do not needed it at dev time
         // Maybe usefull to implement this kind of things later if intended to
         // use this functionnality elsewhere but "manage my module" section
 
-        if ($.inArray(bulkAction, availableBulkActions) === -1) {
+        var actionIndex = $.inArray(bulkAction, availableBulkActions);
+
+        if (actionIndex === -1) {
             return false;
         }
 
         // Loop over all checked bulk checkboxes
         var bulkActionSelectedSelector = this.getBulkActionSelectedSelector();
+
+        if ($(bulkActionSelectedSelector).length > 0) {
+            var bulkModulesTechNames = [];
+            $(bulkActionSelectedSelector).each(function(index, value){
+                var moduleTechName = $(this).attr('data-tech-name');
+                bulkModulesTechNames.push({
+                    techName: moduleTechName,
+                    actionMenuObj: $(this).parent().next()
+                });
+            });
+
+            $.each(bulkModulesTechNames, function(index, data) {
+                var actionMenuObj = data.actionMenuObj;
+                var moduleTechName = data.techName;
+
+                actionMenuObj.fadeOut();
+
+                var urlSegmentKey = availableBulkActions[actionIndex];
+                var urlActionSegment = bulkActionToUrl[urlSegmentKey];
+                var actionUrlBase = baseActionUrl.replace('@', urlActionSegment);
+                var reconstructedURL = actionUrlBase + moduleTechName;
+
+                $.ajax({
+                      url: reconstructedURL,
+                      dataType: 'json',
+                  }).done(function(response) {
+                      response = response[moduleTechName];
+                      if (response.status === true) {
+                          $.growl.notice({ message: response.msg });
+                          actionMenuObj.replaceWith(response.action_menu_html);
+                      } else {
+                          $.growl.error({ message: response.msg });
+                      }
+                      actionMenuObj.fadeIn();
+                  });
+            });
+
+        } else {
+            return false;
+        }
     };
 
     this.doDropdownSort = function(typeSort) {
@@ -360,6 +419,7 @@ var AdminModule = function() {
     };
 
   this.initActionButtons = function() {
+      //@TODO: Change with proper getters
         var selector = (
                 this.currentDisplay == 'grid' ?
                 this.moduleItemGridSelector :

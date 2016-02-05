@@ -190,11 +190,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             $this->loadManageData();
         }
 
-        /*foreach ($this->manage_modules as $key => $modules) {
-            $this->manage_modules->$key = $this->applyModuleFilters($modules, $this->manage_categories, $filter);
-        }*/
-
-        return $this->manage_modules;
+        return $this->applyModuleFilters($this->manage_modules, $this->manage_categories, $filter);
     }
 
     public function getManageCategories()
