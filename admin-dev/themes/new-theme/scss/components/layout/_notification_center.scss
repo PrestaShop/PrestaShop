@@ -1,0 +1,9 @@
+.notification-center {
+  > .notification {
+    @include single-line-block($size-header-height);
+    cursor: pointer;
+  }
+  > .notification::after {
+    display: none;
+  }
+}

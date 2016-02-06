@@ -140,14 +140,14 @@ class ProductController extends FrameworkBundleAdminController
             $toolbarButtons['legacy'] = array(
                 'href' => $this->generateUrl('admin_product_use_legacy_setter', array('use' => 1)),
                 'desc' => $translator->trans('Switch back to old Page', array(), 'AdminProducts'),
-                'icon' => 'process-icon-toggle-on',
+                'icon' => 'refresh',
                 'help' => $translator->trans('The new page cannot fit your needs now? Fallback to the old one, and tell us why!', array(), 'AdminProducts')
             );
         }
         $toolbarButtons['add'] = array(
             'href' => $this->generateUrl('admin_product_new'),
             'desc' => $translator->trans('Add new product', array(), 'AdminProducts'),
-            'icon' => 'process-icon-new'
+            'icon' => 'add'
         );
 
         // Fetch product list (and cache it into view subcall to listAction)

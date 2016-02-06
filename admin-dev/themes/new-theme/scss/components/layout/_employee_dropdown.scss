@@ -1,0 +1,7 @@
+.employee-dropdown {
+  > .avatar {
+    cursor: pointer;
+    width: $size-header-height;
+    height: $size-header-height;
+  }
+}

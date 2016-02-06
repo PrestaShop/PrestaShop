@@ -1,0 +1,5 @@
+@mixin single-line-block($line-height) {
+  line-height: $line-height;
+  height: $line-height;
+  vertical-align: middle;
+}

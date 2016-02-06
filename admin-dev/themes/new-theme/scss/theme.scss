@@ -1,9 +1,41 @@
+@import "~bourbon/app/assets/stylesheets/bourbon";
+@import "config/settings";
+
+// Mixins
+
+@import "mixins/single_line_block";
 
 // Components
-@import "components/main-header";
+
+@import "components/layout/employee_dropdown";
+@import "components/layout/content_div";
+@import "components/layout/header_toolbar";
+@import "components/layout/main_header";
+@import "components/layout/nav_bar";
+@import "components/layout/notification_center";
+@import "components/layout/shop_list";
 
 // Main Layout
 
 body {
-  background: $background-color;
+  background: $color-background;
+}
+
+
+// To put into the PrestaKit
+
+.breadcrumb {
+  padding: rem(5px);
+  background: none;
+  border-radius: 0;
+  font-size: rem(12px);
+
+  > li + li::before {
+    padding-right: rem(0px);
+    padding-left: rem(3px);
+  }
+
+  > li > a {
+    color: #363A41; // TODO: Place the text color
+  }
 }

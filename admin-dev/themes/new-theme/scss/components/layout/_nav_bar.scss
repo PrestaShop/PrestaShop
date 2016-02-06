@@ -1,0 +1,90 @@
+.nav-bar {
+  position: fixed;
+  z-index: 500; // TODO: COPIED FROM THE LEGACY: CHECK IF USEFULL (1 WORKS WELL)
+  background: $color-navbar;
+  width: $size-navbar-width;
+  padding-top: 10px + $size-header-height;
+  height: 100%;
+}
+
+.main-menu {
+  padding: 0;
+  margin: 0;
+}
+
+.link-levelone {
+  $padding-size: 20px;
+  > .link {
+    @include single-line-block($size-navbar-link-height);
+    font-size: rem(12px);
+    display:block;
+    color: $color-navbar-text;
+    text-decoration: none;
+    padding-left: $padding-size;
+  }
+  &.-active {
+    border-right: 3px solid $color-navbar-text-hover;
+  }
+  &.-active > .link,
+  &.-hover > .link {
+    background: $color-navbar-hover;
+    color: $color-navbar-text-hover;
+  }
+  > .link > .material-icons {
+    display: none;
+  }
+
+  > .submenu {
+    position: relative;
+    list-style: none;
+    background: $color-navbar-hover;
+    display: none;
+    white-space: nowrap;
+  }
+  &.-hover > .submenu {
+    display: inline-block;
+    position: absolute;
+    left: $size-navbar-width;
+    margin-top: -$size-navbar-link-height;
+    padding: 0;
+  }
+  &.-active > .submenu {
+    margin-top: 0;
+    position: inherit;
+    display: block;
+    padding-left: $padding-size;
+  }
+}
+
+.link-leveltwo {
+  @extend .link-levelone;
+  > .link {
+    padding: 0 20px;
+  }
+  > .link:hover {
+    color: $color-navbar-text-hover;
+  }
+}
+
+.category-title {
+  color: $color-navbar-title;
+  font-weight: bold;
+  font-size: rem(12px);
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 10px 0;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid $color-navbar-title;
+    margin-top: -10px;
+    margin-bottom: 19px;
+  }
+
+  > .title {
+    background: $color-navbar;
+    padding-right: 10px;
+  }
+}

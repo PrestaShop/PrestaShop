@@ -1,0 +1,18 @@
+.main-header {
+  position: fixed;
+  z-index: 501;
+  background: $color-white;
+  height: $size-header-height;
+  width: 100%;
+
+  > .logo {
+    display: inline-block;
+    background: url('img/logo.png') no-repeat center center;
+    height: 100%;
+    width: $size-navbar-width;
+  }
+  > .component {
+    display: inline-block;
+  }
+}
+

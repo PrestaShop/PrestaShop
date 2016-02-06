@@ -1,0 +1,6 @@
+.shop-list {
+  > .link {
+    display: inline-block;
+    @include single-line-block($size-header-height);
+  }
+}

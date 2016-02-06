@@ -30,7 +30,7 @@ module.exports = {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract(
             "style",
-            "css"
+            "css?sourceMap!postcss!sass?sourceMap"
         )
       },
       {

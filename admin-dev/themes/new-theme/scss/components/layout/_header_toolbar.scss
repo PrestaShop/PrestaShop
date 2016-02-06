@@ -1,0 +1,43 @@
+.header-toolbar {
+  position: fixed;
+  background: $color-white;
+  top: $size-header-height;
+  left: $size-navbar-width;
+  right: 0;
+  z-index: 501;
+
+  > .title {
+    margin-top: rem(-10px);
+    padding: rem(5px);
+    font-size: rem(26px);
+  }
+
+  > .breadcrumb {
+    margin: 0;
+  }
+}
+
+.toolbar-icons {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.toolbar-button {
+  text-align: center;
+  display: inline-block;
+  margin: 0 rem(5px);
+
+  > .material-icons {
+    font-size: rem(28px);
+  }
+  > .title {
+    font-size: rem(12px);
+    color: $color-text;
+    display: block;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+}
