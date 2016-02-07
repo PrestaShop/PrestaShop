@@ -48,11 +48,13 @@
     margin-top: -$size-navbar-link-height;
     padding: 0;
   }
-  &.-active > .submenu {
-    margin-top: 0;
-    position: inherit;
-    display: block;
-    padding-left: $padding-size;
+  @media screen and (min-height: 700px) {
+    &.-active > .submenu {
+      margin-top: 0;
+      position: inherit;
+      display: block;
+      padding-left: $padding-size;
+    }
   }
 }
 

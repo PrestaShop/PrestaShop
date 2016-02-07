@@ -2,7 +2,7 @@
   <div class="notification dropdown-toggle" data-toggle="dropdown">
     <i class="material-icons">notifications</i>
     {* TODO: REFACTORING THIS IDENTIFIER *}
-    <span id="orders_notif_value">0</span>
+    <span id="orders_notif_value" class="count">0</span>
   </div>
   <div class="dropdown-menu dropdown-menu-right">
     <div class="notifications">

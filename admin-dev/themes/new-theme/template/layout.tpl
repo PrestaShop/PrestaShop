@@ -117,7 +117,7 @@
       {include file='components/layout/confirmation_messages.tpl'}
       {include file='components/layout/warning_messages.tpl'}
 
-      <div class="row">
+      <div class="row ">
         <div class="col-xs-12">
           {$page}
         </div>
