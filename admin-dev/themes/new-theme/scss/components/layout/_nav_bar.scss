@@ -3,7 +3,7 @@
   z-index: 500; // TODO: COPIED FROM THE LEGACY: CHECK IF USEFULL (1 WORKS WELL)
   background: $color-navbar;
   width: $size-navbar-width;
-  padding-top: 10px + $size-header-height;
+  padding-top: rem(10px) + $size-header-height;
   height: 100%;
 }
 
@@ -13,7 +13,7 @@
 }
 
 .link-levelone {
-  $padding-size: 20px;
+  $padding-size: rem(20px);
   > .link {
     @include single-line-block($size-navbar-link-height);
     font-size: rem(12px);
@@ -23,7 +23,7 @@
     padding-left: $padding-size;
   }
   &.-active {
-    border-right: 3px solid $color-navbar-text-hover;
+    border-right: rem(3px) solid $color-navbar-text-hover;
   }
   &.-active > .link,
   &.-hover > .link {
