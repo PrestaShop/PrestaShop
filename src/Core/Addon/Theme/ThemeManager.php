@@ -187,9 +187,12 @@ class ThemeManager implements AddonManagerInterface
             $dir.'/config/theme.yml'
         );
         $data['directory'] = $dir;
-        $data['settings'] = $this->getConfigFromFile(
-            $dir.'/config/settings_'.$this->shop->id.'.json'
-        );
+        $jsonConfiguration = $dir.'/config/settings_'.$this->shop->id.'.json';
+        if (file_exists($jsonConfiguration)) {
+            $data = array_merge($data, $this->getConfigFromFile(
+                $dir.'/config/settings_'.$this->shop->id.'.json'
+            ));
+        }
 
         return new Theme($data);
     }
@@ -265,8 +268,6 @@ class ThemeManager implements AddonManagerInterface
         $this->hookConfigurator->setHooksConfiguration($hooks);
         return $this;
     }
-
-
 
     private function getThemesOnDisk()
     {
@@ -357,7 +358,7 @@ class ThemeManager implements AddonManagerInterface
     {
         file_put_contents(
             $theme->getDirectory().'/config/settings_'.$this->shop->id.'.json',
-            json_encode($theme->get('settings'))
+            json_encode(['theme_settings' => $theme->get('theme_settings')])
         );
     }
 }
