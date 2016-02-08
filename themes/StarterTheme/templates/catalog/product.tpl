@@ -238,7 +238,7 @@
                             {/if}
                           {/block}
 
-                          <input class="add-to-cart" type="submit" name="add" value="{l s='Add to cart'}" />
+                          <button class="add-to-cart" type="submit" name="add" data-button-action="add-to-cart">{l s='Add to cart'}</button>
 
                           {hook h='displayProductButtons' product=$product}
                         {*</form>*}
