@@ -453,12 +453,13 @@ var nav = (function() {
 		'init': function() {
 			/** Manage tabls hash routes */
 			var hash = document.location.hash;
+			var formNav = $("#form-nav");
 			var prefix = 'tab-';
 			if (hash) {
-				$('#form-nav a[href=' + hash.replace(prefix,'') + ']').tab('show');
+				formNav.find("a[href='" + hash.replace(prefix,'') + "']").tab('show');
 			}
 
-			$('#form-nav a').on('shown.bs.tab', function (e) {
+			formNav.find("a").on('shown.bs.tab', function (e) {
 				if(e.target.hash) {
 					onTabSwitch(e.target.hash);
 					window.location.hash = e.target.hash.replace('#', '#' + prefix);
@@ -1551,7 +1552,7 @@ var formImagesProduct = (function() {
 	var dropZoneElem = $('#product-images-dropzone');
 	var formZoneElem = $('#product-images-form-container');
 
-	formZoneElem.find('a.open-image').fancybox();
+	formZoneElem.magnificPopup({delegate:'a.open-image', type:'image'});
 
 	return {
 		'form': function(id) {

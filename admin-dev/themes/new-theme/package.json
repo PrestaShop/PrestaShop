@@ -24,6 +24,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "jquery": "^2.2.0",
+    "magnific-popup": "^1.0.1",
     "node-sass": "^3.4.2",
     "path": "^0.12.7",
     "postcss-loader": "^0.8.0",
