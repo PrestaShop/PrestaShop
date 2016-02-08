@@ -17,8 +17,6 @@
     <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
 {% endblock %}
 
-{% set requireAddonSearch = false %}
-
 {% block content %}
     {# Addons connect modal #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_addons_connect.html.twig' %}
@@ -26,6 +24,34 @@
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
     {# Contains menu with Selection/Categories/Popular and Tag Search #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
+    <div class="module-sorting-menu">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div class="module-sorting module-bulk-actions pull-right">
+                    <select>
+                      <option value="" disabled selected>Bulk Actions</option>
+                      <option value="bulk-uninstall">Uninstall</option>
+                      <option value="bulk-disable">Disable</option>
+                      <option value="bulk-enable">Enable</option>
+                      <option value="bulk-reset">Reset</option>
+                      <option value="bulk-enable-mobile">Enable Mobile</option>
+                      <option value="bulk-disable-mobile">Disable Mobile</option>
+                    </select>
+                    <input type="checkbox" class="module-checkbox-bulk-select-all" />
+                </div>
+                <div class="module-sorting module-sorting-author pull-right">
+                    <select>
+                      <option value="" disabled selected>- Sort by -</option>
+                      <option value="sort-by-name">Name</option>
+                      <option value="sort-by-price-asc">Increasing Price</option>
+                      <option value="sort-by-price-desc">Decreasing Price</option>
+                      <option value="sort-by-scoring">Score</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {# Actual Page Content #}
     <div class="row">
         <div class="col-lg-10 col-lg-offset-1">

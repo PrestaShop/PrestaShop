@@ -31,8 +31,13 @@ data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" d
 
 
         <div class="module-quick-action-{{display_type}} clearfix">
+            {% if requireBulkActions is defined and requireBulkActions == true %}
+                <div class="pull-right">
+                    <input type="checkbox" data-name="{{ module.displayName }}" data-tech-name="{{module.name}}" class="module-checkbox-bulk-{{display_type}}" />
+                </div>
+            {% endif %}
             {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_action_menu.html.twig' with { 'module': module } %}
         </div>
-        {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_read_more.html.twig' with { 'module': module } %}
+        {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
     </div>
 </div>

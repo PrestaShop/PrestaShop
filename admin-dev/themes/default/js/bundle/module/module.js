@@ -22,7 +22,7 @@ var AdminModule = function() {
     this.baseAddonsUrl = 'https://addons.prestashop.com/';
     this.pstaggerInput = null;
 
-    /* Selector into vars to make it easier to change them while keeping same code logic */
+    /* Selectors into vars to make it easier to change them while keeping same code logic */
     this.searchBarSelector = '#module-search-bar';
     this.sortDisplaySelector = '.module-sort-switch';
     this.moduleListSelector = '.modules-list';
@@ -45,6 +45,12 @@ var AdminModule = function() {
     this.categoryGridItemSelector = '.module-category-item';
     this.addonItemGridSelector = '.module-addons-item-grid';
     this.addonItemListSelector = '.module-addons-item-list';
+    this.bulkActionDropDownSelector = '.module-bulk-actions select';
+    this.checkedBulkActionListSelector = '.module-checkbox-bulk-list:checked';
+    this.checkedBulkActionGridSelector = '.module-checkbox-bulk-grid:checked';
+    this.bulkActionCheckboxGridSelector = '.module-checkbox-bulk-grid';
+    this.bulkActionCheckboxListSelector = '.module-checkbox-bulk-list';
+    this.selectAllBulkActionSelector = '.module-checkbox-bulk-select-all';
 
     /* Selectors for Module Import and Addons connect */
     this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
@@ -70,6 +76,28 @@ var AdminModule = function() {
     this.initAddonsConnect();
     this.initAddModuleAction();
     this.initDropzone();
+    this.initBulkActions();
+  };
+
+  //@TODO: JS Doc
+  this.initBulkActions = function() {
+      var _this = this;
+      $(this.bulkActionDropDownSelector).on('change', function(event){
+          var bulkAction = $(this).attr('value');
+          _this.doBulkAction(bulkAction);
+      });
+      $(this.selectAllBulkActionSelector).on('change', function(event){
+          _this.changeBulkCheckboxesState($(this).is(':checked'));
+      });
+  };
+
+  // @TODO: JS Doc
+  this.changeBulkCheckboxesState = function(hasToCheck) {
+      var checkBoxesSelector = this.getBulkCheckboxesSelector();
+
+      $(checkBoxesSelector).each(function(){
+          $(this).attr('checked', hasToCheck);
+      });
   };
 
   //@TODO: JS Doc
@@ -87,7 +115,7 @@ var AdminModule = function() {
 
           $.ajax({
                 method: 'POST',
-                url: $(this).attr("action"),
+                url: $(this).attr('action'),
                 dataType: 'json',
                 data: $(this).serialize()
             }).done(function(response) {
@@ -95,10 +123,9 @@ var AdminModule = function() {
                 var responseMsg = response.message;
 
                 if (responseCode === 1) {
-                    // Success !
                     location.reload();
                 } else {
-                     $.growl.error({ message: responseMsg });
+                    $.growl.error({ message: responseMsg });
                 }
             });
       });
@@ -138,6 +165,15 @@ var AdminModule = function() {
   };
 
   //@TODO: JS Doc
+  this.getBulkCheckboxesSelector = function() {
+      return (
+            this.currentDisplay == 'grid' ?
+            this.bulkActionCheckboxGridSelector :
+            this.bulkActionCheckboxListSelector
+        );
+  };
+
+  //@TODO: JS Doc
   this.loadVariables = function() {
       if ($(this.moduleListSelector).length) {
           this.currentDisplay = 'list';
@@ -170,6 +206,15 @@ var AdminModule = function() {
           this.currentDisplay == 'grid' ?
           this.addonItemGridSelector :
           this.addonItemListSelector
+      );
+  };
+
+  //@TODO: JS Doc
+  this.getBulkActionSelectedSelector = function() {
+      return (
+          this.currentDisplay == 'grid' ?
+          this.checkedBulkActionGridSelector :
+          this.checkedBulkActionListSelector
       );
   };
 
@@ -225,6 +270,78 @@ var AdminModule = function() {
         });
     };
 
+    //@TODO: JS Doc
+    this.doBulkAction = function(requestedBulkAction) {
+        // @NOTE:
+        // This object is used to check if reequested bulkAction is available and give proper
+        // url segement to be called for it
+        var bulkActionToUrl = {
+            'bulk-uninstall': 'uninstall',
+            'bulk-disable': 'disable',
+            'bulk-enable': 'enable',
+            'bulk-disable-mobile': 'disable-mobile',
+            'bulk-enable-mobile': 'enable-mobile',
+            'bulk-reset': 'reset'
+        };
+
+        //@NOTE:
+        // "@" char is used only to be easy to replace by the end of this function ;)
+        var baseActionUrl = baseAdminDir + 'module/manage/action/@/';
+
+        //@NOTE:
+        // Note no grid selector used yet since we do not needed it at dev time
+        // Maybe usefull to implement this kind of things later if intended to
+        // use this functionnality elsewhere but "manage my module" section
+
+        if (typeof bulkActionToUrl[requestedBulkAction] == "undefined") {
+            console.error('Request bulk action "' + requestedBulkAction + '" does not exist');
+            return false;
+        }
+
+        // Loop over all checked bulk checkboxes
+        var bulkActionSelectedSelector = this.getBulkActionSelectedSelector();
+
+        if ($(bulkActionSelectedSelector).length > 0) {
+            var bulkModulesTechNames = [];
+            $(bulkActionSelectedSelector).each(function(index, value){
+                var moduleTechName = $(this).attr('data-tech-name');
+                bulkModulesTechNames.push({
+                    techName: moduleTechName,
+                    actionMenuObj: $(this).parent().next()
+                });
+            });
+
+            $.each(bulkModulesTechNames, function(index, data) {
+                var actionMenuObj = data.actionMenuObj;
+                var moduleTechName = data.techName;
+
+                actionMenuObj.fadeOut();
+
+                var urlActionSegment = bulkActionToUrl[requestedBulkAction];
+                var actionUrlBase = baseActionUrl.replace('@', urlActionSegment);
+                var reconstructedURL = actionUrlBase + moduleTechName;
+
+                $.ajax({
+                      url: reconstructedURL,
+                      dataType: 'json',
+                  }).done(function(response) {
+                      response = response[moduleTechName];
+                      if (response.status === true) {
+                          $.growl.notice({ message: response.msg });
+                          actionMenuObj.replaceWith(response.action_menu_html);
+                      } else {
+                          $.growl.error({ message: response.msg });
+                      }
+                      actionMenuObj.fadeIn();
+                  });
+            });
+
+        } else {
+            console.warning('Request bulk action "' + requestedBulkAction + '" can\'t be performed if you don\'t select at least 1 module');
+            return false;
+        }
+    };
+
     this.doDropdownSort = function(typeSort) {
         var availableSorts = [
                                 'sort-by-price-asc',
@@ -232,14 +349,10 @@ var AdminModule = function() {
                                 'sort-by-name',
                                 'sort-by-scoring'
                             ];
-
-        var selector = (
-              this.currentDisplay == 'grid' ?
-              this.moduleItemGridSelector :
-              this.moduleItemListSelector
-          );
+        var moduleItemSelector = this.getModuleItemSelector();
 
         if ($.inArray(typeSort, availableSorts) === -1) {
+            console.error('typeSort "' + typeSort + '" is not a valid sort option');
             return false;
         }
 
@@ -269,7 +382,7 @@ var AdminModule = function() {
         var arrayToSort = {};
         var keysToSort = [];
 
-        $(selector).each(function(index, value) {
+        $(moduleItemSelector).each(function(index, value) {
             var selectorObject = $(this);
             var uniqueID = '';
             $.each(dataAttr, function (index, value) {
@@ -298,28 +411,23 @@ var AdminModule = function() {
             });
         }
         var _this = this;
+        var moduleGlobalSelector = this.getModuleGlobalSelector();
 
-        $(this.moduleGridSelector).fadeOut(function(){
+        $(moduleGlobalSelector).fadeOut(function(){
             var _that = _this;
             var _arrayToSort = arrayToSort;
             $(this).empty();
-            $(_this.moduleGridSelector).append('<div class="row">');
+            $(moduleGlobalSelector).append('<div class="row">');
             $.each(keysToSort, function(index, value){
-                $(_that.moduleGridSelector).append(_arrayToSort[value].get(0).outerHTML);
+                $(moduleGlobalSelector).append(_arrayToSort[value].get(0).outerHTML);
                 delete _arrayToSort[value];
             });
-            $(_this.moduleGridSelector).append('</div>');
-            $(_this.moduleGridSelector).fadeIn();
+            $(moduleGlobalSelector).append('</div>');
+            $(moduleGlobalSelector).fadeIn();
         });
     };
 
   this.initActionButtons = function() {
-        var selector = (
-                this.currentDisplay == 'grid' ?
-                this.moduleItemGridSelector :
-                this.moduleItemListSelector
-            );
-
         var _this = this;
 
         $(this.moduleInstallBtnSelector).on('click', function(event){
@@ -441,11 +549,9 @@ var AdminModule = function() {
   this.doTagSearch = function(tagsList) {
         var _this = this;
         this.currentTagsList = tagsList;
-
         // Pick the right selector to process search
         var moduleItemSelector = this.getModuleItemSelector();
         var moduleGlobalSelector = this.getModuleGlobalSelector();
-
         var totalResultFound = 0;
         // First reset no result screen if needed
         if (!$('.module-search-no-result').is(':hidden')) {
@@ -588,10 +694,8 @@ var AdminModule = function() {
    */
   this.switchSortingDisplayTo = function(switchTo) {
       var _this = this;
-
       var addonsItemSelector = this.getAddonItemSelector();
       var gridListSelector = this.getModuleGlobalSelector();
-
       var addonItem = $(addonsItemSelector);
 
       if (switchTo == 'grid') {

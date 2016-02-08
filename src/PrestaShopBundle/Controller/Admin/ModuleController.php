@@ -64,7 +64,9 @@ class ModuleController extends Controller
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'modules' => $modulesProvider->generateAddonsUrls($this->createCatalogModuleList($products)),
-                'topMenuData' => $topMenuData
+                'topMenuData' => $topMenuData,
+                'requireAddonsSearch' => true,
+                'requireBulkActions' => false,
             ));
     }
 
@@ -158,7 +160,9 @@ class ModuleController extends Controller
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'modules' => $products,
-                'topMenuData' => $this->getTopMenuData('manage')
+                'topMenuData' => $this->getTopMenuData('manage'),
+                'requireAddonsSearch' => false,
+                'requireBulkActions' => true,
             ));
     }
 
@@ -166,7 +170,7 @@ class ModuleController extends Controller
     {
         $action = $request->attributes->get('action'). 'Module';
         $module = $request->attributes->get('module_name');
-
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $ret = array();
         if (method_exists($this, $action)) {
             // ToDo : Check if allowed to call this action
@@ -184,10 +188,18 @@ class ModuleController extends Controller
             $ret[$module]['msg'] = 'Invalid action';
         }
 
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+
         $modulesProvider->clearManageCache();
 
         if ($request->isXmlHttpRequest()) {
+            if ($ret[$module]['status'] === true) {
+                $moduleInstance = $modulesProvider->getManageModules(['name' => $module]);
+                $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls($moduleInstance);
+                $ret[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/_partials:_modules_action_menu.html.twig', array(
+                        'module' => array_values($moduleInstanceWithUrl)[0],
+                    ))->getContent();
+            }
+
             return new JsonResponse($ret, 200);
         }
 
@@ -276,6 +288,8 @@ class ModuleController extends Controller
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'modules' => $products,
+                'requireAddonsSearch' => false,
+                'requireBulkActions' => false,
         ));
     }
 
