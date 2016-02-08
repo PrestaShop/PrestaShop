@@ -25,22 +25,3 @@
   top: rem(20px);
   right: rem(10px);
 }
-
-.toolbar-button {
-  text-align: center;
-  display: inline-block;
-  margin: 0 rem(5px);
-
-  > .material-icons {
-    font-size: rem(28px);
-  }
-  > .title {
-    font-size: rem(12px);
-    color: $color-text;
-    display: block;
-  }
-
-  &:hover {
-    text-decoration: none;
-  }
-}

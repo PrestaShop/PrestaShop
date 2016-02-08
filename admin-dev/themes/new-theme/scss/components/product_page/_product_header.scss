@@ -1,0 +1,32 @@
+.product-page {
+
+  // Resets
+
+  .tab-content {
+    padding: 0;
+  }
+
+  // Components
+
+  .product-header {
+    background: $color-white;
+    margin-top: -$grid-gutter-width / 2;
+    margin-bottom: $grid-gutter-width / 2;
+    padding: rem(20px) 0;
+  }
+
+  .big-input {
+    .form-control {
+      font-size: rem(24px);
+    }
+  }
+
+  .product-footer {
+    position: fixed;
+    z-index: 400;
+    background: $color-white;
+    bottom: 0;
+    left: $size-navbar-width;
+    right: 0;
+  }
+}
