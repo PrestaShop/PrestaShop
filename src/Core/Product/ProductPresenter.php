@@ -250,11 +250,7 @@ class ProductPresenter
 
         if ($show_availability) {
             if ($product['quantity'] > 0) {
-                $presentedProduct['availability_message'] = $this->translator->trans(
-                    'In Stock',
-                    [],
-                    'Product'
-                );
+                $presentedProduct['availability_message'] = $product['available_now'];
                 $presentedProduct['availability'] = 'available';
                 $presentedProduct['availability_date'] = null;
             } elseif ($product['allow_oosp']) {
