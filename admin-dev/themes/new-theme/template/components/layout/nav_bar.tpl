@@ -26,7 +26,7 @@
         {else}
 
           <li class="category-title {if $level1.current}-active{/if}">
-              <span class="title">{$level1Name}</title>
+              <span class="title">{$level1Name}</span>
           </li>
 
             {foreach $level1.sub_tabs as $level2}
