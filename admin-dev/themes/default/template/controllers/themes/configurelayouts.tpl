@@ -55,14 +55,20 @@
                     {$page.description}
                   </td>
                 <td>
+                  {assign var="defaultKey" value=""}
                   <select name="layouts[{$page.page}]" id="">
-                    <option value="" {if !isset($page_layouts.{$page.page})}selected="selected"{/if}>
-                      {l s='Default'}
-                    </option>
-                    {foreach $available_layouts as $key => $layout}
-                      <option value="{$key}" {if isset($page_layouts.{$page.page}) && $page_layouts.{$page.page} == $key}selected="selected"{/if}>
-                        {$layout.name} - {$layout.description}
+                    {if !isset($page_layouts.{$page.page})}
+                      {assign var="defaultKey" value="{$default_layout.key}"}
+                      <option value="{$default_layout.key}" selected="selected">
+                        {$default_layout.name} - {$default_layout.description}
                       </option>
+                    {/if}
+                    {foreach $available_layouts as $key => $layout}
+                      {if {$key} !== {$defaultKey} }
+                        <option value="{$key}" {if isset($page_layouts.{$page.page}) && $page_layouts.{$page.page} == $key}selected="selected"{/if}>
+                          {$layout.name} - {$layout.description}
+                        </option>
+                      {/if}
                     {/foreach}
                   </select>
                 </td>
