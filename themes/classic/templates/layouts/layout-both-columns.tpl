@@ -8,6 +8,7 @@
   </head>
 
   <body id="{$page.page_name}" class="{$page.body_classes|classnames}">
+    {hook h='displayAfterBody'}
 
     <main>
       <header id="header">
