@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2015 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,63 +18,52 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Addon\Theme;
+namespace PrestaShop\PrestaShop\Tests\Core\Addon;
 
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Shop;
-use Context;
-use Db;
+use \Context;
+use \Db;
 
-class ThemeManagerBuilder
+class ThemeManagerTest extends \PHPUnit_Framework_TestCase
 {
-    private $context;
-    private $db;
+    private $manager;
 
-    public function __construct(Context $context, Db $db)
+    protected function setUp()
     {
-        $this->context = $context;
-        $this->db = $db;
-    }
+        $context = Context::getContext();
+        $db = Db::getInstance();
 
-    public function build()
-    {
-        return new ThemeManager(
-            $this->context->shop,
-            new Configuration($this->context->shop),
+        $this->manager = new ThemeManager(
+            $context->shop,
+            new Configuration($context->shop),
             new ThemeValidator(),
-            $this->context->employee,
+            $context->employee,
             new Filesystem(),
             new Finder(),
             new HookConfigurator(
                 new HookRepository(
-                    new HookInformationProvider(),
-                    $this->context->shop,
-                    $this->db
+                    new HookInformationProvider,
+                    $context->shop,
+                    $db
                 )
-            ),
-            $this->buildRepository($this->context->shop)
+            )
         );
     }
 
-    public function buildRepository(Shop $shop = null)
+    protected function tearDown()
     {
-        if (!$shop instanceof Shop) {
-            $shop = $this->context->shop;
-        }
-
-        return new ThemeRepository(
-            new Configuration($shop),
-            $shop
-        );
+        $this->manager = null;
     }
 }

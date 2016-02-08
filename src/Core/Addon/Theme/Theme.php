@@ -40,7 +40,7 @@ class Theme implements AddonInterface
         $this->attributes = new ArrayFinder($attributes);
     }
 
-    public function get($attr, $default = null)
+    public function get($attr = null, $default = null)
     {
         return $this->attributes->get($attr, $default);
     }
@@ -133,9 +133,9 @@ class Theme implements AddonInterface
     public function getLayoutNameForPage($page)
     {
         $layout_name = $this->get('theme_settings.default_layout');
-        if (isset($this->attributes['theme_settings']['page_layouts'][$page])
-            && $this->attributes['theme_settings']['page_layouts'][$page]) {
-            $layout_name = $this->attributes['theme_settings']['page_layouts'][$page];
+        if (isset($this->attributes['theme_settings']['layouts'][$page])
+            && $this->attributes['theme_settings']['layouts'][$page]) {
+            $layout_name = $this->attributes['theme_settings']['layouts'][$page];
         }
         return $layout_name;
     }

@@ -27,7 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use Shudrum\Component\ArrayFinder\ArrayFinder;
 
-class ThemeChecker
+class ThemeValidator
 {
     public function isValid(Theme $theme)
     {

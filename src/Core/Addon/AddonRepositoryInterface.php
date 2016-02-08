@@ -25,12 +25,22 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon;
 
-interface AddonManagerInterface
+interface AddonRepositoryInterface
 {
-    public function install($source);
-    public function uninstall($name);
-    public function upgrade($name, $version, $source = null);
-    public function enable($name);
-    public function disable($name);
-    public function reset($name);
+    /**
+     * @param $name theme name
+     * @return AddonInterface the theme or module
+     */
+    public function getInstanceByName($name);
+
+    /**
+     * @param AddonListFilter $filter
+     * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
+     */
+    public function getFilteredList(AddonListFilter $filter);
+
+    /**
+     * @return AddonInterface[] retrieve a list of addons, regardless any $filter
+     */
+    public function getList();
 }
