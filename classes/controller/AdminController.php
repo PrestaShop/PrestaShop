@@ -2579,16 +2579,7 @@ class AdminControllerCore extends Controller
             $this->addjQueryPlugin('growl', null, false);
             $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
-            Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
-            Media::addJsDef(array('baseDir' => __PS_BASE_URI__));
-            Media::addJsDef(array('baseAdminDir' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'));
 
-            Media::addJsDef(array('currency' => array(
-                'iso_code' => Context::getContext()->currency->iso_code,
-                'sign' => Context::getContext()->currency->sign,
-                'name' => Context::getContext()->currency->name,
-                'format' => Context::getContext()->currency->format
-            )));
 
             $this->addJS(array(
                 _PS_JS_DIR_.'admin.js?v='._PS_VERSION_,
@@ -2633,6 +2624,16 @@ class AdminControllerCore extends Controller
             // Specific Admin Theme
             $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
         }
+
+        Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
+        Media::addJsDef(array('baseDir' => __PS_BASE_URI__));
+        Media::addJsDef(array('baseAdminDir' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'));
+        Media::addJsDef(array('currency' => array(
+            'iso_code' => Context::getContext()->currency->iso_code,
+            'sign' => Context::getContext()->currency->sign,
+            'name' => Context::getContext()->currency->name,
+            'format' => Context::getContext()->currency->format,
+        )));
 
         // Execute Hook AdminController SetMedia
         Hook::exec('actionAdminControllerSetMedia');
