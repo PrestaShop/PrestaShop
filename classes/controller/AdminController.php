@@ -2579,29 +2579,12 @@ class AdminControllerCore extends Controller
             $this->addjQueryPlugin('growl', null, false);
             $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
-
-
-            $this->addJS(array(
-                _PS_JS_DIR_.'admin.js?v='._PS_VERSION_,
-                _PS_JS_DIR_.'cldr.js',
-                _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
-                _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
-                _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
-                _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
-                _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
-                _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
-                _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/message.js',
-                _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
-                _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/plural.js',
-                _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/date.js',
-                _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
-                _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js'
-            ));
-
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
+
+            $this->addJS(_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
 
             if (!$this->lite_display) {
                 $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
@@ -2624,6 +2607,22 @@ class AdminControllerCore extends Controller
             // Specific Admin Theme
             $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
         }
+
+        $this->addJS(array(
+            _PS_JS_DIR_.'admin.js?v='._PS_VERSION_,
+            _PS_JS_DIR_.'cldr.js',
+            _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/message.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/plural.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/date.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js',
+        ));
 
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
         Media::addJsDef(array('baseDir' => __PS_BASE_URI__));
