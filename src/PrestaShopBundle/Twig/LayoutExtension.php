@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Twig;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Kernel;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use Exception;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template
@@ -120,6 +121,8 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * @param string $displayType The legacy display type variable
      * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value.
      *
+     * @throws Exception if legacy layout has no $content var replacement
+     *
      * @return string The html layout
      */
     public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true)
@@ -138,6 +141,14 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
 </html>
 EOF;
         }
+
+        $layout = $this->context->getLegacyLayout($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader);
+
+        //test if legacy template from "content.tpl" has '{$content}'
+        if (false === strpos($layout, '{$content}')) {
+            throw new Exception('PrestaShopBundle\Twig\LayoutExtension cannot find the {$content} string in legacy layout template', 1);
+        }
+
         $content = str_replace(
             array(
                 '{$content}',
@@ -151,7 +162,7 @@ EOF;
                 '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
                 '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',
             ),
-            $this->context->getLegacyLayout($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader)
+            $layout
         );
 
         return $content;

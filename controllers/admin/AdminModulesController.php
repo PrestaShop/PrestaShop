@@ -75,6 +75,8 @@ class AdminModulesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
+        $this->template = 'content-legacy.tpl';
+
         register_shutdown_function('displayFatalError');
 
         // Set the modules categories
