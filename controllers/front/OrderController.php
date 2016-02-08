@@ -131,18 +131,24 @@ class OrderControllerCore extends FrontController
         $process->restorePersistedData($data);
     }
 
-    private function renderCartSummary()
+    private function jsonRenderCartSummary()
     {
         $cart = $this->cart_presenter->present(
             $this->context->cart
         );
-        return $this->render('checkout/_partials/cart-summary.tpl', [
+        $return['preview'] = $this->render('checkout/_partials/cart-summary.tpl', [
             'cart' => $cart,
         ]);
+
+        return json_encode($return);
     }
 
     public function initContent()
     {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && $this->ajax) {
+            die($this->jsonRenderCartSummary());
+        }
+
         parent::initContent();
 
         $this->restorePersistedData($this->checkoutProcess);
