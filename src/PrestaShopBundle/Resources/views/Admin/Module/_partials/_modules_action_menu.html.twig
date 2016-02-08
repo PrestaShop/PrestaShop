@@ -1,15 +1,15 @@
 <div class="pull-right btn-group">
 
     {% if module.url_active == 'buy' %}
-        <a class="btn btn-default btn-xs light-button module_action_menu_go_to_addons" href="{{module.url}}">{% if module.price.EUR is defined and module.price.EUR > 0 %}{{module.price.EUR}}{% else %}Discover{% endif %}</a>
+        <a class="btn btn-primary btn-xs light-button module_action_menu_go_to_addons" href="{{module.url}}">{% if module.price.EUR is defined and module.price.EUR > 0 %}{{module.price.EUR}}{% else %}Discover{% endif %}</a>
     {% else %}
-        <a class="btn btn-default btn-xs light-button module_action_menu_{{ module.url_active }}"
+        <a class="btn btn-primary btn-xs light-button module_action_menu_{{ module.url_active }}"
            href="{{module.urls[module.url_active]}}"
            data-confirm_modal="module-modal-confirm-{{module.name}}-{{ module.url_active }}">{{module.url_active|capitalize}}</a>
     {% endif %}
 
     {% if module.urls is defined and module.urls|length > 1 %}
-        <button type="button" class="btn btn-default dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn btn-primary dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="caret"></span>
           <span class="sr-only">Toggle Dropdown</span>
         </button>
@@ -23,14 +23,4 @@
         {% endfor %}
         </ul>
     {% endif %}
-
-    {% if module.url_active == 'install' %}
-        {# Loader for installation process #}
-        <div class="loader module-install-loader">
-            <svg class="circular" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
-           </svg>
-        </div>
-    {% endif %}
-
 </div>
