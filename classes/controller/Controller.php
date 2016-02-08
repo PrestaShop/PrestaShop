@@ -24,6 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
+
 /**
  * @TODO Move undeclared variables and methods to this (base) class: $errors, $layout, checkLiveEditAccess, etc.
  * @since 1.5.0
@@ -77,6 +81,9 @@ abstract class ControllerCore
 
     /** @var string Controller name */
     public $php_self;
+
+    /** @var ContainerBuilder legacy container */
+    public $container;
 
     /**
      * Check if the controller is available for the current user/visitor
@@ -167,6 +174,14 @@ abstract class ControllerCore
             || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
+
+        /* _PS_CACHE_DIR_ */
+        $this->container = new ContainerBuilder();
+        $this->container->addCompilerPass(new LegacyCompilerPass());
+        $loader = new YamlFileLoader($this->container, new FileLocator(__DIR__));
+        $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
+        $loader->load(_PS_CONFIG_DIR_.'services/ps_'. $env .'.yml');
+        $this->container->compile();
     }
 
     /**
@@ -626,6 +641,19 @@ abstract class ControllerCore
         Context::getContext()->smarty->assign('php_errors', Controller::$php_errors);
 
         return true;
+    }
+
+    /**
+     *
+     */
+    public function get($serviceId)
+    {
+        return $this->container->get($serviceId);
+    }
+
+    public function getParameter($parameterId)
+    {
+        return $this->container->getParameter($parameterId);
     }
 
     /**
