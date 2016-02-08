@@ -4,6 +4,7 @@
 
   <form name="form" id="form" method="post" class="form-horizontal product-page" novalidate="novalidate">
 
+    {# PRODUCT HEADER #}
     <div class="product-header row">
 
       {% if is_multishop_context %}
@@ -42,6 +43,7 @@
 
     </div>
 
+    {# PRODUCTS LIST QUICK NAV #}
     <div class="col-lg-2 toolbarBox pull-right text-right">
       <a class="toolbar_btn btn-quicknav" href="#" title="{{ trans('Quick navigation', [], 'AdminTab') }}"
          data-toggle="sidebar" data-target="#right-sidebar"
@@ -64,9 +66,11 @@
       </div>
     </div>
 
+    {# FORM TABS CONTAINER #}
     <div id="form-loading">
+
       <ul class="nav nav-tabs" id="form-nav" role="tablist">
-        <li id="tab_step1" class="nav-item active"><a href="#step1" role="tab" data-toggle="tab" class="nav-link">{{ trans('Basic settings', {}, 'AdminProducts') }}</a></li>
+        <li id="tab_step1" class="nav-item"><a href="#step1" role="tab" data-toggle="tab" class="nav-link active">{{ trans('Basic settings', {}, 'AdminProducts') }}</a></li>
         <li id="tab_step3" class="nav-item"><a href="#step3" role="tab" data-toggle="tab" class="nav-link">{{ trans('Quantities', {}, 'AdminProducts') }}</a></li>
         <li id="tab_step4" class="nav-item"><a href="#step4" role="tab" data-toggle="tab" class="nav-link">{{ trans('Shipping', {}, 'AdminProducts') }}</a></li>
         <li id="tab_step2" class="nav-item"><a href="#step2" role="tab" data-toggle="tab" class="nav-link">{{ trans('Pricing', {}, 'AdminProducts') }}</a></li>
@@ -76,6 +80,7 @@
           <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">&laquo;{{ trans('Modules options', {}, 'AdminProducts') }}&raquo;</a></li>
         {% endif %}
       </ul>
+      
       <div id="form_content" class="tab-content">
         <div role="tabpanel" class="tab-pane panel panel-default active" id="step1">
           <div class="col-lg-12 right-sidebar-flex">
