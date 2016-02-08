@@ -190,6 +190,10 @@ class CartControllerCore extends FrontController
     {
         $mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
 
+        if (Tools::getIsset('group')) {
+            $this->id_product_attribute = (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group'));
+        }
+
         if ($this->qty == 0) {
             $this->errors[] = $this->l('Null quantity.');
         } elseif (!$this->id_product) {
@@ -277,7 +281,11 @@ class CartControllerCore extends FrontController
         CartRule::autoAddToCart();
 
         if (!$this->errors && $this->ajax) {
-            $this->ajaxDie(Tools::jsonEncode(['success' => true]));
+            $this->ajaxDie(Tools::jsonEncode([
+                'success' => true,
+                'id_product' => $this->id_product,
+                'id_product_attribute' => $this->id_product_attribute
+            ]));
         }
     }
 }
