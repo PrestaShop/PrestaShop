@@ -80,190 +80,216 @@
           <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">&laquo;{{ trans('Modules options', {}, 'AdminProducts') }}&raquo;</a></li>
         {% endif %}
       </ul>
-      
+
       <div id="form_content" class="tab-content">
-        <div role="tabpanel" class="tab-pane panel panel-default active" id="step1">
-          <div class="col-lg-12 right-sidebar-flex">
-            <div class="col-lg-9">
-              <div class="form-group" id="js_form_step1_inputPackItems">
-                {{ form_errors(form.step1.inputPackItems) }}
-                {{ form_widget(form.step1.inputPackItems) }}
-              </div>
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <div id="product-images-container">
-                    <div id="product-images-dropzone" class="panel dropzone ui-sortable" url-upload="{{ path('admin_product_image_upload') }}" url-position="{{ path('admin_product_image_positions') }}" url-update="{{ path('admin_product_image_form') }}" url-delete="{{ path('admin_product_image_delete') }}" data-max-size="{{ 'PS_ATTACHMENT_MAXIMUM_SIZE'|configuration }}">
-                      <div id="product-images-dropzone-error" class="text-danger"></div>
-                      {% if form.step1.vars.value.images is defined %}
-                        {% if form.step1.vars.value.images|length > 0 %}
-                          <div class="dz-preview disabled openfilemanager">
-                            <div><span>+</span></div>
-                          </div>
-                        {% endif %}
-                        {% for image in form.step1.vars.value.images %}
-                          <div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle" data-id="{{ image.id }}">
-                            <div class="dz-image bg" style="background-image: url('{{ image.base_image_url }}-home_default.{{ image.format }}');"></div>
-                            <div class="dz-details">
-                              <div class="dz-size"><span data-dz-size=""></span></div>
-                              <div class="dz-filename"><span data-dz-name=""></span></div>
-                            </div>
-                            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress="" style="width: 100%;"></span></div>
-                            <div class="dz-error-message"><span data-dz-errormessage=""></span></div>
-                            <div class="dz-success-mark"></div>
-                            <div class="dz-error-mark"></div>
-                            {% if image.cover %}
-                              <div class="iscover">{{ trans('Cover', {}, 'AdminProducts') }}</div>
+
+        {# STEP 1 #}
+        <div role="tabpanel" class="form-contenttab tab-pane active" id="step1">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="container-fluid">
+                <div class="row">
+
+                  {# LEFT #}
+                  <div class="col-md-9">
+
+                    <div id="js_form_step1_inputPackItems">
+                      {{ form_errors(form.step1.inputPackItems) }}
+                      {{ form_widget(form.step1.inputPackItems) }}
+                    </div>
+
+                    <div class="form-group">
+                      <div id="product-images-container">
+                        <div id="product-images-dropzone" class="panel dropzone ui-sortable" url-upload="{{ path('admin_product_image_upload') }}" url-position="{{ path('admin_product_image_positions') }}" url-update="{{ path('admin_product_image_form') }}" url-delete="{{ path('admin_product_image_delete') }}" data-max-size="{{ 'PS_ATTACHMENT_MAXIMUM_SIZE'|configuration }}">
+                          <div id="product-images-dropzone-error" class="text-danger"></div>
+                          {% if form.step1.vars.value.images is defined %}
+                            {% if form.step1.vars.value.images|length > 0 %}
+                              <div class="dz-preview disabled openfilemanager">
+                                <div><span>+</span></div>
+                              </div>
                             {% endif %}
-                          </div>
-                        {% endfor %}
-                      {% endif %}
+                            {% for image in form.step1.vars.value.images %}
+                              <div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle" data-id="{{ image.id }}">
+                                <div class="dz-image bg" style="background-image: url('{{ image.base_image_url }}-home_default.{{ image.format }}');"></div>
+                                <div class="dz-details">
+                                  <div class="dz-size"><span data-dz-size=""></span></div>
+                                  <div class="dz-filename"><span data-dz-name=""></span></div>
+                                </div>
+                                <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress="" style="width: 100%;"></span></div>
+                                <div class="dz-error-message"><span data-dz-errormessage=""></span></div>
+                                <div class="dz-success-mark"></div>
+                                <div class="dz-error-mark"></div>
+                                {% if image.cover %}
+                                  <div class="iscover">{{ trans('Cover', {}, 'AdminProducts') }}</div>
+                                {% endif %}
+                              </div>
+                            {% endfor %}
+                          {% endif %}
+                        </div>
+                        <div class="dropzone-expander text-center">
+                          <span class="expand">{{ trans('View all images', {}, 'AdminProducts') }}</span>
+                          <span class="compress">{{ trans('View less', {}, 'AdminProducts') }}</span>
+                        </div>
+                        <div id="product-images-form-container" class="col-lg-5 panel">
+                          <div id="product-images-form" class="col-lg-12"></div>
+                        </div>
+                      </div>
                     </div>
-                    <div class="dropzone-expander text-center">
-                      <span class="expand">{{ trans('View all images', {}, 'AdminProducts') }}</span>
-                      <span class="compress">{{ trans('View less', {}, 'AdminProducts') }}</span>
-                    </div>
-                    <div id="product-images-form-container" class="col-lg-5 panel">
-                      <div id="product-images-form" class="col-lg-12"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <ul class="nav nav-tabs">
-                <li id="tab_description_short" class="nav-item active"><a href="#description_short" data-toggle="tab" class="nav-link">{{ trans('Summary', {}, 'AdminProducts') }}</a></li>
-                <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
-              </ul>
-              <div class="tab-content">
-                <div class="tab-pane panel panel-default active" id="description_short">
-                  {{ form_widget(form.step1.description_short) }}
-                </div>
-                <div class="tab-pane panel panel-default " id="description">
-                  {{ form_widget(form.step1.description) }}
-                </div>
-              </div>
+                    <ul class="nav nav-tabs">
+                      <li id="tab_description_short" class="nav-item active"><a href="#description_short" data-toggle="tab" class="nav-link">{{ trans('Summary', {}, 'AdminProducts') }}</a></li>
+                      <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div class="tab-pane panel panel-default active" id="description_short">
+                        {{ form_widget(form.step1.description_short) }}
+                      </div>
+                      <div class="tab-pane panel panel-default " id="description">
+                        {{ form_widget(form.step1.description) }}
+                      </div>
+                    </div>
 
-              <div id="features" class="form-group col-sm-12">
-                <div id="features-content" class="{{ form.step1.features|length == 0 ? 'hide':'' }}">
-                  <h4>{{ trans('Features', [], 'AdminProducts') }}</h4>
-                  {{ form_errors(form.step1.features) }}
-                  <ul class="featureCollection nostyle" data-prototype="
+                    <div id="features" class="form-group">
+                      <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
+                        <h3 class="title">{{ trans('Features', [], 'AdminProducts') }}</h3>
+                        {{ form_errors(form.step1.features) }}
+                        <ul class="featureCollection nostyle" data-prototype="
                                             {% filter escape %}
                                                 {{ include('PrestaShopBundle:Admin/Product/Include:form-feature.html.twig', { 'form': form.step1.features.vars.prototype }) }}
                                             {% endfilter %}">
-                    {% for feature in form.step1.features %}
-                      <li>
-                        {{ include('PrestaShopBundle:Admin/Product/Include:form-feature.html.twig', { 'form': feature }) }}
-                      </li>
-                    {% endfor %}
-                  </ul>
-                </div>
-                <a href="#" class="add">{{ trans('+ Add a feature', {}, 'AdminProducts') }}</a>
-              </div>
-
-              <div id="manufacturer" class="form-group col-xs-6">
-                <div id="manufacturer-content" class="{{ form.step1.id_manufacturer.vars.value == '' ? 'hide':'' }}">
-                  <h4>{{ trans("Brand", {}, 'AdminProducts') }}</h4>
-                  {{ form_errors(form.step1.id_manufacturer) }}
-                  {{ form_widget(form.step1.id_manufacturer) }}
-                </div>
-                <a href="#" class="open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}">{{ trans('+ Add a brand', {}, 'AdminProducts') }}</a>
-              </div>
-              <div class="clearfix"></div>
-
-              <div id="related-product" class="form-group col-xs-6">
-                <div id="related-content" class="{{ form.step1.related_products.vars.value.data|length == 0 ? 'hide':'' }}">
-                  <h4>{{ trans("Related product", {}, 'AdminProducts') }}</h4>
-                  {{ form_errors(form.step1.related_products) }}
-                  {{ form_widget(form.step1.related_products) }}
-                </div>
-                <a href="#" class="open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}">{{ trans('+ Add a related product', {}, 'AdminProducts') }}</a>
-              </div>
-              <div class="clearfix"></div>
-            </div>
-            <div class="col-lg-3">
-              <div class="panel" id="show_variations_selector">
-                <div class="panel-heading">{{ trans("Product type", {}, 'AdminProducts') }}</div>
-                <div class="form-group">
-                  <div class="radio">
-                    <label><input type="radio" name="show_variations" value="0" {% if not has_combinations %}checked="checked"{% endif %}>{{ trans("Simple product", {}, 'AdminProducts') }}</label>
-                  </div>
-                  <div class="radio">
-                    <label><input type="radio" name="show_variations" value="1" {% if has_combinations %}checked="checked"{% endif %}>{{ trans("Product with combinations", {}, 'AdminProducts') }}</label>
-                    <span data-toggle="tooltip" title="{{ trans("Combinations: \n If you're selling a product with attributes that can be combined (color, size, capacity, ...), you will need to create combinations. \n Ex.: Size M in blue and size S in green are 2 different combinations of a t-shirt.", {}, 'AdminProducts')|raw }}">[?]</span>
-                    <br />
-                    <span id="product_type_combinations_shortcut"><a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');">{{ trans("Advanced settings available in Combinations", {}, 'AdminProducts')|raw }}</a></span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel" id="product_qty_0_shortcut_div" style="{% if has_combinations %}display: none;{% endif %}">
-                <div class="panel-heading">{{ trans("Quantity", {}, 'AdminProducts') }}</div>
-                <div class="panel-body">
-                  <div class="form-group">
-                    {{ form_errors(form.step1.qty_0_shortcut) }}
-                    <div class="col-xs-4">
-                      {{ form_widget(form.step1.qty_0_shortcut) }}
+                          {% for feature in form.step1.features %}
+                            <li>
+                              {{ include('PrestaShopBundle:Admin/Product/Include:form-feature.html.twig', { 'form': feature }) }}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      <a href="#" class="add">{{ trans('+ Add a feature', {}, 'AdminProducts') }}</a>
                     </div>
-                  </div>
-                  <span><a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');">{{ trans("Advanced settings available in Quantities", {}, 'AdminProducts') }}</a></span>
-                </div>
-              </div>
 
-              <div class="panel">
-                <div class="panel-heading">{{ trans("Price", {}, 'AdminProducts') }}</div>
-                <div class="panel-body">
-                  <div class="form-group">
-                    <div class="col-xs-5">
-                      <label class="control-label">{{ trans("Tax excl.", {}, 'AdminProducts') }}</label>
-                      {{ form_widget(form.step1.price_shortcut) }}
-                      {{ form_errors(form.step1.price_shortcut) }}
+                    <div id="manufacturer" class="form-group">
+                      <div id="manufacturer-content" class="content {{ form.step1.id_manufacturer.vars.value == '' ? 'hide':'' }}">
+                        <h3 class="title">{{ trans("Brand", {}, 'AdminProducts') }}</h3>
+                        {{ form_errors(form.step1.id_manufacturer) }}
+                        {{ form_widget(form.step1.id_manufacturer) }}
+                      </div>
+                      <a href="#" class="open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}">{{ trans('+ Add a brand', {}, 'AdminProducts') }}</a>
                     </div>
-                    <div class="col-xs-5">
-                      <label class="control-label">{{ trans("Tax incl.", {}, 'AdminProducts') }}</label>
-                      {{ form_widget(form.step1.price_ttc_shortcut) }}
-                      {{ form_errors(form.step1.price_ttc_shortcut) }}
+
+                    <div id="related-product" class="form-group">
+                      <div id="related-content" class="content {{ form.step1.related_products.vars.value.data|length == 0 ? 'hide':'' }}">
+                        <h3 class="title">{{ trans("Related product", {}, 'AdminProducts') }}</h3>
+                        {{ form_errors(form.step1.related_products) }}
+                        {{ form_widget(form.step1.related_products) }}
+                      </div>
+                      <a href="#" class="open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}">{{ trans('+ Add a related product', {}, 'AdminProducts') }}</a>
                     </div>
+
                   </div>
-                  <span><a href="#tab-step2" onclick="$('a[href=\'#step2\']').tab('show');">{{ trans("The tax can be amended in Pricing", {}, 'AdminProducts') }}</a></span>
-                </div>
-              </div>
 
-              <div class="panel">
-                <div class="panel-heading">{{ trans("Categories", {}, 'AdminProducts') }}</div>
-                <div class="panel-body">
-                  {{ form_errors(form.step1.categories) }}
-                  {{ form_widget(form.step1.categories) }}
+                  {# RIGHT #}
+                  <div class="col-md-3">
 
-                  <div id="add-categories" class="row">
-                    <div id="add-categories-content" class="hide">
-                      <h4>{{ trans("Default category", {}, 'AdminProducts') }}</h4>
-                      {{ form_errors(form.step1.id_category_default) }}
-                      {{ form_widget(form.step1.id_category_default) }}
+                    <div class="container-fluid">
+                      <div class="row right-column">
+                        <div class="col-md-12">
 
-                      <div id="form_step1_new_category" data-action="{{ form.step1.new_category.vars.attr["data-action"] }}">
-                        <h4>{{ trans("Add a new category", {}, 'AdminProducts') }}</h4>
-                        <p>
-                          {{ form_errors(form.step1.new_category) }}
-                          {{ form_widget(form.step1.new_category.name) }}
-                        </p>
-                        <p>
-                          <label class="control-label">{{ form.step1.new_category.id_parent.vars.label }}</label>
-                          {{ form_widget(form.step1.new_category.id_parent) }}
-                        </p>
-                        <p><button type="button" id="form_step1_new_category_save" class="submit btn btn-sm pull-right">{{ trans('SAVE', {}, 'AdminProducts') }}</button></p>
+                          <div class="form-group" id="show_variations_selector">
+                            <h3 class="title">{{ trans("Product type", {}, 'AdminProducts') }}</h3>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" name="show_variations" value="0" {% if not has_combinations %}checked="checked"{% endif %}>
+                                {{ trans("Simple product", {}, 'AdminProducts') }}
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" name="show_variations" value="1" {% if has_combinations %}checked="checked"{% endif %}>
+                                {{ trans("Product with combinations", {}, 'AdminProducts') }}
+                              </label>
+                              <span data-toggle="tooltip" title="{{ trans("Combinations: \n If you're selling a product with attributes that can be combined (color, size, capacity, ...), you will need to create combinations. \n Ex.: Size M in blue and size S in green are 2 different combinations of a t-shirt.", {}, 'AdminProducts')|raw }}">[?]</span>
+                              <br />
+                              <span id="product_type_combinations_shortcut" class="small">
+                                <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');">
+                                  {{ trans("Advanced settings available in Combinations", {}, 'AdminProducts')|raw }}
+                                </a>
+                              </span>
+                            </div>
+                          </div>
+
+                          <div class="form-group" id="product_qty_0_shortcut_div" {# style="{% if has_combinations %}display: none;{% endif %}"#}>
+                            <h3 class="title">{{ trans("Quantity", {}, 'AdminProducts') }}</h3>
+                            {{ form_errors(form.step1.qty_0_shortcut) }}
+                            {{ form_widget(form.step1.qty_0_shortcut) }}
+                            <span class="small">
+                              <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');">
+                                {{ trans("Advanced settings available in Quantities", {}, 'AdminProducts') }}
+                              </a>
+                            </span>
+                          </div>
+
+                          <div class="form-group">
+                            <h3 class="title">{{ trans("Price", {}, 'AdminProducts') }}</h3>
+                            <div class="row">
+                              <div class="col-md-5">
+                                <label>{{ trans("Tax excl.", {}, 'AdminProducts') }}</label>
+                                {{ form_widget(form.step1.price_shortcut) }}
+                                {{ form_errors(form.step1.price_shortcut) }}
+                              </div>
+                              <div class="col-md-5 col-offset-md-1">
+                                <label>{{ trans("Tax incl.", {}, 'AdminProducts') }}</label>
+                                {{ form_widget(form.step1.price_ttc_shortcut) }}
+                                {{ form_errors(form.step1.price_ttc_shortcut) }}
+                              </div>
+                            </div>
+                            <span class="small">
+                              <a href="#tab-step2" onclick="$('a[href=\'#step2\']').tab('show');">
+                                {{ trans("The tax can be amended in Pricing", {}, 'AdminProducts') }}
+                              </a>
+                            </span>
+                          </div>
+
+                          <div class="form-group">
+                            <h3 class="title">{{ trans("Categories", {}, 'AdminProducts') }}</h3>
+                            {{ form_errors(form.step1.categories) }}
+                            {{ form_widget(form.step1.categories) }}
+
+                            <div id="add-categories">
+                              <div id="add-categories-content">
+                                <label>{{ trans("Default category", {}, 'AdminProducts') }}</label>
+                                {{ form_errors(form.step1.id_category_default) }}
+                                {{ form_widget(form.step1.id_category_default) }}
+
+                                <div id="form_step1_new_category" data-action="{{ form.step1.new_category.vars.attr["data-action"] }}">
+                                  <label>{{ trans("Add a new category", {}, 'AdminProducts') }}</label>
+                                  {{ form_errors(form.step1.new_category) }}
+                                  {{ form_widget(form.step1.new_category.name) }}
+
+                                  <label>{{ form.step1.new_category.id_parent.vars.label }}</label>
+                                  {{ form_widget(form.step1.new_category.id_parent) }}
+
+                                  <button type="button" id="form_step1_new_category_save" class="btn btn-primary btn-sm">{{ trans('SAVE', {}, 'AdminProducts') }}</button>
+                                </div>
+                              </div>
+                              <a href="#" class="open">{{ trans('+ Add a category', {}, 'AdminProducts') }}</a>
+                            </div>
+                          </div>
+
+                        </div>
                       </div>
                     </div>
-                    <a href="#" class="open">{{ trans('+ Add a category', {}, 'AdminProducts') }}</a>
+
                   </div>
+
                 </div>
               </div>
-              <div class="clearfix"></div>
             </div>
-            <div class="col-lg-3"></div>
+
           </div>
-          <div class="clearfix"></div>
         </div>
-        <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
+
+        {# STEP 2 #}
+        <div role="tabpanel" class="form-contenttab tab-pane" id="step3">
           <div class="col-lg-9">
             <div class="form-group" id="quantities" style="{% if has_combinations or form.step3.depends_on_stock.vars.value != "0" %}display: none;{% endif %}">
               <h4>{{ trans('Quantities', [], 'AdminProducts') }}</h4>
@@ -427,7 +453,9 @@
           </div>
           <div class="clearfix"></div>
         </div>
-        <div role="tabpanel" class="tab-pane panel panel-default" id="step4">
+
+        {# STEP 3 #}
+        <div role="tabpanel" class="form-contenttab tab-pane" id="step4">
           {{ include('PrestaShopBundle:Admin/Product/Include:form-shipping.html.twig',
           {
             'form' : form.step4,
@@ -438,7 +466,9 @@
           })
           }}
         </div>
-        <div role="tabpanel" class="tab-pane panel panel-default" id="step2">
+
+        {# STEP 4 #}
+        <div role="tabpanel" class="form-contenttab tab-pane" id="step2">
           <div class="col-lg-9">
             <div class="form-group">
               <h4>{{ trans('Retail price', {}, 'AdminProducts') }}</h4>
@@ -572,10 +602,14 @@
           </div>
           <div class="clearfix"></div>
         </div>
-        <div role="tabpanel" class="tab-pane panel panel-default" id="step5">
+
+        {# STEP 5 #}
+        <div role="tabpanel" class="form-contenttab tab-pane" id="step5">
           {{ include('PrestaShopBundle:Admin/Product/Include:form-seo.html.twig',{'form' : form.step5}) }}
         </div>
-        <div role="tabpanel" class="tab-pane panel panel-default" id="step6">
+
+        {# STEP 6 #}
+        <div role="tabpanel" class="form-contenttab tab-pane" id="step6">
           <div class="col-lg-9">
             <div class="form-group">
               <h4>{{ trans('Visibility', {}, 'AdminProducts') }}</h4>
@@ -703,6 +737,8 @@
           </div>
           <div class="clearfix"></div>
         </div>
+
+        {# OTHER STEPS #}
         {% if hookcount('displayAdminProductsExtra') > 0 %}
           <div role="tabpanel" class="tab-pane panel panel-default" id="hooks">
             <div class="col-lg-9">
@@ -725,46 +761,87 @@
             <div class="clearfix"></div>
           </div>
         {% endif %}
+
       </div>
       {{ form_widget(form.id_product) }}
       {{ form_widget(form._token) }}
     </div>
-    <nav class="navbar navbar-default navbar-fixed-bottom navbar-form-footer">
-      <div class="form-action-bar">
-        <div class="col-xs-6 pull-left">
-          <a href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
-             class="btn btn-danger delete" data-toggle="tooltip" id="product_form_delete_btn"
-             title="{{ trans('Permanently delete this product.', {}, 'AdminProducts') }}"><i class="icon-trash"></i></a>
-          <span class="spacer"></span>
-          <a href="{{ preview_link }}" target="_blank" class="btn btn-default hidden-xs" data-toggle="tooltip" id="product_form_preview_btn"
-             title="{{ trans('View the product draft on the site.', {}, 'AdminProducts') }}">{{ trans('Preview', {}, 'AdminProducts') }}</a>
 
-          <div class="checkbox-active" data-toggle="tooltip" id="product_form_online_switch"
-               title="{{ trans('Should this product be visible on the store?', {}, 'AdminProducts') }}">
-            {{ trans('Online', {}, 'AdminProducts') }}
-            <div class="checkbox titatoggle unchecked-red checkbox-slider--b-flat" >
-              <label>
-                <input type="checkbox" id="form_step1_active" name="form[step1][active]" value="1" {{ form.step1.vars.value.active ? 'checked="checked"' : '' }}>
-                <span></span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-6 pull-right text-right">
-          <button type="button" class="btn btn-default btn-submit hidden-xs uppercase duplicate" id="product_form_save_duplicate_btn"
-                  data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
-                  data-toggle="tooltip" title="{{ trans('Save and duplicate (CTRL+D) the current product, then go to the new product.', {}, 'AdminProducts') }}">{{ trans('Duplicate', {}, 'AdminProducts')|raw }}</button>
-          <button type="button" class="btn btn-default btn-submit hidden-xs uppercase go-catalog" id="product_form_save_go_to_catalog_btn"
-                  data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
-                  data-toggle="tooltip" title="{{ trans('Save and go back to the catalog (CTRL+Q)', {}, 'AdminProducts') }}">{{ trans('Go to catalog', {}, 'AdminProducts')|raw }}</button>
-          <button type="button" class="btn btn-default btn-submit hidden-xs uppercase new-product" id="product_form_save_new_btn"
-                  data-redirect="{{ path('admin_product_new') }}" data-toggle="tooltip"
-                  title="{{ trans('Save and create (CTRL+P) a new product.', {}, 'AdminProducts') }}">{{ trans('Add new product', {}, 'AdminProducts')|raw }}</button>
-          <input id="submit" type="submit" class="btn btn-primary uppercase" value="{{ trans('Save', {}, 'AdminProducts') }}" data-toggle="tooltip" title="{{ trans('Save (CTRL+S) the product and stay on the current page.', {}, 'AdminProducts') }}" />
-        </div>
-        <div class="clearfix"></div>
+    {# FOOTER #}
+    <div class="product-footer">
+      <div class="col-lg-5">
+        <a
+                href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+                class="btn btn-danger delete"
+                data-toggle="tooltip"
+                id="product_form_delete_btn"
+                title="{{ trans('Permanently delete this product.', {}, 'AdminProducts') }}"
+        >
+          <i class="material-icons">delete</i>
+        </a>
+        <a
+                href="{{ preview_link }}"
+                target="_blank"
+                class="btn btn-default hidden-xs"
+                data-toggle="tooltip"
+                id="product_form_preview_btn"
+                title="{{ trans('View the product draft on the site.', {}, 'AdminProducts') }}"
+        >
+          {{ trans('Preview', {}, 'AdminProducts') }}
+        </a>
+
+        <label>{{ trans('Online', {}, 'AdminProducts') }}</label>
+        <input
+                id="product_form_online_switch"
+                data-toggle="switch"
+                type="checkbox"
+                name="form[step1][active]"
+                value="1"
+                {{ form.step1.vars.value.active ? 'checked="checked"' : '' }}
+        />
+
       </div>
-    </nav>
+      <div class="col-lg-7 text-lg-right">
+        <button
+                type="button"
+                class="btn btn-primary-outline btn-submit hidden-xs uppercase duplicate"
+                id="product_form_save_duplicate_btn"
+                data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+                data-toggle="tooltip"
+                title="{{ trans('Save and duplicate (CTRL+D) the current product, then go to the new product.', {}, 'AdminProducts') }}"
+        >
+          {{ trans('Duplicate', {}, 'AdminProducts')|raw }}
+        </button>
+        <button
+                type="button"
+                class="btn btn-primary-outline btn-submit hidden-xs uppercase go-catalog"
+                id="product_form_save_go_to_catalog_btn"
+                data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
+                data-toggle="tooltip" title="{{ trans('Save and go back to the catalog (CTRL+Q)', {}, 'AdminProducts') }}"
+        >
+          {{ trans('Go to catalog', {}, 'AdminProducts')|raw }}
+        </button>
+        <button
+                type="button"
+                class="btn btn-primary-outline btn-submit hidden-xs uppercase new-product"
+                id="product_form_save_new_btn"
+                data-redirect="{{ path('admin_product_new') }}"
+                data-toggle="tooltip"
+                title="{{ trans('Save and create (CTRL+P) a new product.', {}, 'AdminProducts') }}"
+        >
+          {{ trans('Add new product', {}, 'AdminProducts')|raw }}
+        </button>
+        <input
+                id="submit"
+                type="submit"
+                class="btn btn-primary btn-lg uppercase"
+                value="{{ trans('Save', {}, 'AdminProducts') }}"
+                data-toggle="tooltip"
+                title="{{ trans('Save (CTRL+S) the product and stay on the current page.', {}, 'AdminProducts') }}"
+        />
+      </div>
+    </div>
+
   </form>
 
 
