@@ -15,6 +15,7 @@ import './product';
 import DropDown from './components/drop-down';
 import TopMenu from './components/top-menu';
 import ProductMinitature from './components/product-miniature';
+import ProductSelect from './components/product-select';
 
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
@@ -37,10 +38,10 @@ $(document).ready(() => {
   let dropDown = new DropDown(dropDownEl);
   let topMenu = new TopMenu(topMenuEl);
   let productMinitature = new ProductMinitature();
-
+  let productSelect  = new ProductSelect();
   dropDown.init();
   topMenu.init();
   productMinitature.init();
-
+  productSelect.init();
   psShowHide();
 });
