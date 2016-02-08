@@ -180,7 +180,7 @@
 
                           <div class="submit-button">
                             <i class="material-icons">&#xE547;</i>
-                            <input class="add-to-cart" type="submit" name="add" value="{l s='Add to cart'}" />
+                            <input class="add-to-cart" type="submit" name="add" value="{l s='Add to cart'}" data-button-action="add-to-cart">
                           </div>
 
                           {block name='product_availability'}

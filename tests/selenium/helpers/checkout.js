@@ -7,5 +7,6 @@ export function addSomeProductToCart () {
         .url(fixtures.urls.aCategoryWithProducts)
         .click('.product-miniature:nth-of-type(2)')
         .click('[name=add]')
+        .waitForVisible('#blockcart-modal')
     ;
 };
