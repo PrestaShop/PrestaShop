@@ -1,4 +1,5 @@
 import $ from 'expose?$!expose?jQuery!jquery';
+import '../node_modules/jquery-ui/jquery-ui.js';
 import Tether from 'expose?Tether!tether';
 import '../node_modules/bootstrap/dist/js/bootstrap.min.js';
 import '../node_modules/magnific-popup/dist/jquery.magnific-popup.min.js';
