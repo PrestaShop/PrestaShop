@@ -63,6 +63,7 @@ class ModuleController extends Controller
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'layoutTitle' => $translator->trans('Modules & Services', array(), 'AdminModules'),
                 'modules' => $modulesProvider->generateAddonsUrls($this->createCatalogModuleList($products)),
                 'topMenuData' => $topMenuData,
                 'requireAddonsSearch' => true,
@@ -159,6 +160,7 @@ class ModuleController extends Controller
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'layoutTitle' => $translator->trans('Manage my modules', array(), 'AdminModules'),
                 'modules' => $products,
                 'topMenuData' => $this->getTopMenuData('manage'),
                 'requireAddonsSearch' => false,
@@ -287,6 +289,7 @@ class ModuleController extends Controller
 
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'layoutTitle' => $translator->trans('Module notifications', array(), 'AdminModules'),
                 'modules' => $products,
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => false,

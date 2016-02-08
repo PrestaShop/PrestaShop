@@ -7,6 +7,7 @@ admin_module_catalog:
         category:
         keyword:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::catalogAction
+        _legacy_controller: AdminModules
 
 admin_module_manage:
     path:     /manage/{category}/{keyword}
@@ -15,6 +16,7 @@ admin_module_manage:
         category:
         keyword:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::manageAction
+        _legacy_controller: AdminModules
         
 admin_module_manage_action:
     path:     /manage/action/{action}/{module_name}
@@ -57,3 +59,4 @@ admin_module_notification:
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::notificationAction
+        _legacy_controller: AdminModules
