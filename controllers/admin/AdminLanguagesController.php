@@ -463,7 +463,7 @@ class AdminLanguagesControllerCore extends AdminController
                     $this->errors[] = Tools::displayError('An error occurred while copying "No picture" image to your category folder.');
                 }
                 if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'.jpg')) {
-                    $this->errors[] = Tools::displayError('An error occurred while copying "No picture" image to your manufacturer folder.');
+                    $this->errors[] = Tools::displayError('An error occurred while copying "No picture" image to your brand folder.');
                 } else {
                     $images_types = ImageType::getImagesTypes('products');
                     foreach ($images_types as $k => $image_type) {
@@ -474,7 +474,7 @@ class AdminLanguagesControllerCore extends AdminController
                             $this->errors[] = Tools::displayError('An error occurred while resizing "No picture" image to your category directory.');
                         }
                         if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'])) {
-                            $this->errors[] = Tools::displayError('An error occurred while resizing "No picture" image to your manufacturer directory.');
+                            $this->errors[] = Tools::displayError('An error occurred while resizing "No picture" image to your brand directory.');
                         }
                     }
                 }

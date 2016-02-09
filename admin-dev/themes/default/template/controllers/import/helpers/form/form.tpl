@@ -333,7 +333,7 @@
 					{l s='Sample Addresses file'}
 				</a>
 				<a class="list-group-item _blank" href="../docs/csv_import/manufacturers_import.csv">
-					{l s='Sample Manufacturers file'}
+					{l s='Sample Brands file'}
 				</a>
 				<a class="list-group-item _blank" href="../docs/csv_import/suppliers_import.csv">
 					{l s='Sample Suppliers file'}

@@ -53,7 +53,7 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="id_manufacturer" class="control-label col-lg-3">{l s='Manufacturer'}</label>
+		<label for="id_manufacturer" class="control-label col-lg-3">{l s='Brand'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-8">
 				<select id="id_manufacturer" name="id_manufacturer">
@@ -249,7 +249,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Manufacturer'}</td><td>'+$('#id_manufacturer option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Brand'}</td><td>'+$('#id_manufacturer option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;

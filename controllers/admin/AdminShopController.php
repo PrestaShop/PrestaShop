@@ -551,7 +551,7 @@ class AdminShopControllerCore extends AdminController
             'employee' => $this->l('Employees'),
             'image' => $this->l('Images'),
             'lang' => $this->l('Languages'),
-            'manufacturer' => $this->l('Manufacturers'),
+            'manufacturer' => $this->l('Brands'),
             'module' => $this->l('Modules'),
             'hook_module' => $this->l('Module hooks'),
             'meta_lang' => $this->l('Meta information'),

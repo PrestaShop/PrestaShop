@@ -29,7 +29,7 @@
 <div class="panel">
 	<h3>{l s='Addresses'} <span class="badge">{count($addresses)}</span></h3>
 	{if !count($addresses)}
-		{l s='No address has been found for this manufacturer.'}
+		{l s='No address has been found for this brand.'}
 	{else}
 		{foreach $addresses AS $addresse}
 		<div class="panel">

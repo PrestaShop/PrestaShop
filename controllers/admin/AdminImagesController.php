@@ -58,7 +58,7 @@ class AdminImagesControllerCore extends AdminController
             'height' => array('title' => $this->l('Height'),  'suffix' => ' px'),
             'products' => array('title' => $this->l('Products'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
             'categories' => array('title' => $this->l('Categories'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-            'manufacturers' => array('title' => $this->l('Manufacturers'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+            'manufacturers' => array('title' => $this->l('Brands'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
             'suppliers' => array('title' => $this->l('Suppliers'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
             'stores' => array('title' => $this->l('Stores'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
         );
@@ -264,11 +264,11 @@ class AdminImagesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Manufacturers'),
+                    'label' => $this->l('Brands'),
                     'name' => 'manufacturers',
                     'required' => false,
                     'is_bool' => true,
-                    'hint' => $this->l('This type will be used for Manufacturer images.'),
+                    'hint' => $this->l('This type will be used for Brand images.'),
                     'values' => array(
                         array(
                             'id' => 'manufacturers_on',
@@ -397,7 +397,7 @@ class AdminImagesControllerCore extends AdminController
     {
         $types = array(
             'categories' => $this->l('Categories'),
-            'manufacturers' => $this->l('Manufacturers'),
+            'manufacturers' => $this->l('Brands'),
             'suppliers' => $this->l('Suppliers'),
             'products' => $this->l('Products'),
             'stores' => $this->l('Stores')

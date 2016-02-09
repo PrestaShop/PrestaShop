@@ -255,7 +255,7 @@ class WebserviceRequestCore
     public static function getResources()
     {
         $resources = array(
-            'addresses' => array('description' => 'The Customer, Manufacturer and Customer addresses','class' => 'Address'),
+            'addresses' => array('description' => 'The Customer, Brand and Customer addresses','class' => 'Address'),
             'carriers' => array('description' => 'The Carriers','class' => 'Carrier'),
             'carts' => array('description' => 'Customer\'s carts', 'class' => 'Cart'),
             'cart_rules' => array('description' => 'Cart rules management', 'class' => 'CartRule'),
@@ -274,7 +274,7 @@ class WebserviceRequestCore
             'images' => array('description' => 'The images', 'specific_management' => true),
             'image_types' => array('description' => 'The image types', 'class' => 'ImageType'),
             'languages' => array('description' => 'Shop languages', 'class' => 'Language'),
-            'manufacturers' => array('description' => 'The product manufacturers','class' => 'Manufacturer'),
+            'manufacturers' => array('description' => 'The product brands','class' => 'Manufacturer'),
             'messages' => array('description' => 'The Messages','class' => 'Message'),
             'order_carriers' => array('description' => 'The Order carriers','class' => 'OrderCarrier'),
             'order_details' => array('description' => 'Details of an order', 'class' => 'OrderDetail'),
