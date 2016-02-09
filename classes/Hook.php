@@ -332,8 +332,8 @@ class HookCore extends ObjectModel
             }
             $sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
             $sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
-		 if ($hook_name != 'displayPayment' && $hook_name != 'displayPaymentEU') {
-		    $sql->where('h.name != "displayPayment" AND h.name != "displayPaymentEU"');
+            if ($hook_name != 'displayPayment' && $hook_name != 'displayPaymentEU') {
+                $sql->where('h.name != "displayPayment" AND h.name != "displayPaymentEU"');
             }
             // For payment modules, we check that they are available in the contextual country
             elseif ($frontend) {
@@ -557,7 +557,7 @@ class HookCore extends ObjectModel
                 } else {
                     $output .= $display;
                 }
-            } else {
+            } elseif (Hook::isDisplayHookName($hook_name)) {
                 if ($moduleInstance instanceof WidgetInterface) {
                     $display = $moduleInstance->renderWidget($hook_name, $hook_args);
 
