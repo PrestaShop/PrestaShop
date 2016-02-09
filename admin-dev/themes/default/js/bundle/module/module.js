@@ -139,27 +139,45 @@ var AdminModule = function() {
 
   //@TODO: JS Doc
   this.initDropzone = function () {
+
+      $('.module-import-failure-retry').on('click', function(event){
+           $('.module-import-success, .module-import-failure, .module-import-processing').fadeOut(function(){
+               $('.dz-preview, .dz-message').fadeIn();
+           });
+      });
+
       Dropzone.options.importDropzone = {
           url: 'import',
           acceptedFiles: '.zip, .tar',
-          paramName: "module_file", // The name that will be used to transfer the file
+           // The name that will be used to transfer the file
+          paramName: 'file_uploaded',
           maxFilesize: 5, // MB
           uploadMultiple: false,
           addRemoveLinks: true,
+          dictDefaultMessage: 'Drop a module\'s zip archive here in order to install it',
+          addedfile: function(file) {
+              $('.dz-preview, .dz-message').fadeOut(function() {
+                  // Display our text
+                  $('.module-import-zipname').text('Processing: ' + file.name).parent().fadeIn();
+                  // Display Loader
+                  $('.module-import-loader, .install-message').fadeIn();
+              });
+          },
           processing: function (file, response) {
-              $('.dz-preview').css('display', 'none');
-              $('.module-import-loader').css('display', 'block');
-              $('.install-message').css('display', 'block');
-              $( ".module-import-loader" ).addClass( "onclic" );
+              // Leave it empty ATM since we don't require anything while processing upload
           },
           complete: function (file, response) {
-              setTimeout(function() {
-                  $( ".module-import-loader" ).removeClass( "onclic" );
-                  $( ".module-import-loader" ).addClass( "validate" );
-                  $('.configure-message').css('display', 'block');
-              }, 2250 );
-              var obj = jQuery.parseJSON(file.xhr.response);
-              $( ".dropzone" ).attr( "action", "manage/action/configure/" + obj.module_name);
+              var responseObject = jQuery.parseJSON(file.xhr.response);
+
+              $('.module-import-zipname').parent().fadeOut(function() {
+                  if (responseObject.status === true) {
+                      $('.module-import-name').first().text(responseObject.module_name);
+                      $('.module-import-success').css('display', 'block');
+                  } else {
+                      $('.module-import-error-msg').html(responseObject.msg);
+                      $('.module-import-failure').css('display', 'block');
+                  }
+              });
           }
       };
   };

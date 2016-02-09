@@ -488,3 +488,18 @@
     background-color: lightgray;
     font-size: 20px;
 }
+
+.module-import-processing {
+    display: none;
+    text-align: center;
+}
+
+.module-import-success {
+    display: none;
+    text-align: center;
+}
+
+.module-import-failure {
+    display: none;
+    text-align: center;
+}
