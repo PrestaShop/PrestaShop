@@ -73,7 +73,7 @@ class ProductCombination extends CommonAbstractType
         ->add('attribute_ean13', FormType\TextType::class, array(
             'required' => false,
             'error_bubbling' => true,
-            'label' => $this->translator->trans('BAN-13 or JAN barcode', [], 'AdminProducts'),
+            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\Regex("/^[0-9]{0,13}$/"),
             )
