@@ -5051,7 +5051,7 @@ label {
   margin-bottom: 20px; }
 
 ._margin-bottom-small {
-  margin-bottom: 20px; }
+  margin-bottom: 10px; }
 
 ._margin-top-medium {
   margin-top: 20px; }
@@ -5621,6 +5621,55 @@ img {
       margin-top: 0.375em;
       margin-left: 0.3125em; }
 
+.block-categories {
+  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08);
+  background: white;
+  padding: 0.625em; }
+  .block-categories .category-sub-menu li[data-depth="0"] > a {
+    font-weight: 600;
+    border-bottom: #ebebeb 2px solid;
+    width: 100%;
+    display: inline-block;
+    margin: 0.3125em 0; }
+  .block-categories .category-sub-menu li:not([data-depth="0"]):not([data-depth="1"]) {
+    padding-left: 0.3125em; }
+    .block-categories .category-sub-menu li:not([data-depth="0"]):not([data-depth="1"])::before {
+      content: "-";
+      margin-right: 0.3125em; }
+  .block-categories a {
+    color: #414141; }
+  .block-categories .collapse-icons {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0;
+    cursor: pointer; }
+    .block-categories .collapse-icons[aria-expanded="true"] .add {
+      display: none; }
+    .block-categories .collapse-icons[aria-expanded="true"] .remove {
+      display: block; }
+    .block-categories .collapse-icons .add,
+    .block-categories .collapse-icons .remove {
+      font-size: 1.125em; }
+      .block-categories .collapse-icons .add:hover,
+      .block-categories .collapse-icons .remove:hover {
+        color: #2fb5d2; }
+    .block-categories .collapse-icons .remove {
+      display: none; }
+  .block-categories .arrows .arrow-right,
+  .block-categories .arrows .arrow-down {
+    font-size: 0.875em;
+    cursor: pointer; }
+    .block-categories .arrows .arrow-right:hover,
+    .block-categories .arrows .arrow-down:hover {
+      color: #2fb5d2; }
+  .block-categories .arrows .arrow-down {
+    display: none; }
+  .block-categories .arrows[aria-expanded="true"] .arrow-right {
+    display: none; }
+  .block-categories .arrows[aria-expanded="true"] .arrow-down {
+    display: inline-block; }
+
 .product-images li {
   display: inline; }
 
@@ -5919,7 +5968,7 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #ebebeb;
+  color: #414141;
   line-height: 1.25em; }
 
 ul {
