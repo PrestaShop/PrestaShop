@@ -32,6 +32,7 @@ use Shop;
 
 class ThemeRepositoryTest extends \PHPUnit_Framework_TestCase
 {
+    const NOTICE = '[ThemeRepository] ';
     private $repository;
 
     protected function setUp()
@@ -54,17 +55,38 @@ class ThemeRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstanceByName()
     {
+        $expectedTheme = $this->repository->getInstanceByName('classic');
+        $this->assertInstanceOf('PrestaShop\PrestaShop\Core\Addon\Theme\Theme',
+            $expectedTheme,
+            self::NOTICE.sprintf('expected `getInstanceByName to return Theme, get %s`', gettype($expectedTheme))
+        );
+    }
+
+    public function testGetInstanceByNameNotFound()
+    {
+        $this->setExpectedException('PrestaShopException', '[ThemeRepository] Theme configuration file not found for theme `not_found`.');
+        $this->repository->getInstanceByName('not_found');
     }
 
     public function testGetList()
     {
+        $themeList = $this->repository->getList();
+        $this->assertInternalType('array', $themeList);
+        $this->assertInstanceOf('PrestaShop\PrestaShop\Core\Addon\Theme\Theme', current($themeList));
     }
 
     public function testGetListExcluding()
     {
-    }
+        $themeListWithoutRestrictions = $this->repository->GetListExcluding([]);
+        $themeListWithoutClassic = $this->repository->GetListExcluding(['classic']);
+        $this->assertEquals($themeListWithoutRestrictions,
+            $this->repository->getList(),
+            self::NOTICE.sprintf('expected list excluding without args to return complete list of themes `see ThemeRepository::getListExcluding`')
+        );
 
-    public function testGetFilteredList()
-    {
+        $this->assertCount((count($themeListWithoutRestrictions) - 1),
+            $themeListWithoutClassic,
+            self::NOTICE.sprintf('expected list excluding with classic to list of themes without classic')
+        );
     }
 }

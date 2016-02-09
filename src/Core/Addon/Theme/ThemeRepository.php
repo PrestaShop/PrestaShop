@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Yaml\Parser;
 use \Shop;
+use \PrestaShopException;
 
 class ThemeRepository implements AddonRepositoryInterface
 {
@@ -49,7 +50,8 @@ class ThemeRepository implements AddonRepositoryInterface
         $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$name;
 
         $data = $this->getConfigFromFile(
-            $dir.'/config/theme.yml'
+            $dir.'/config/theme.yml',
+            $name
         );
 
         $data['directory'] = $dir;
@@ -57,7 +59,8 @@ class ThemeRepository implements AddonRepositoryInterface
         $jsonConfiguration = $dir.'/config/settings_'.$this->shop->id.'.json';
         if (file_exists($jsonConfiguration)) {
             $data = array_merge($data, $this->getConfigFromFile(
-                $dir.'/config/settings_'.$this->shop->id.'.json'
+                $dir.'/config/settings_'.$this->shop->id.'.json',
+                $name
             ));
         }
 
@@ -78,7 +81,7 @@ class ThemeRepository implements AddonRepositoryInterface
         $filter = (new AddonListFilter())
             ->setExclude($exclude);
 
-        return $this->getList($filter);
+        return $this->getFilteredList($filter);
     }
 
     public function getFilteredList(AddonListFilter $filter)
@@ -91,8 +94,10 @@ class ThemeRepository implements AddonRepositoryInterface
 
         $themes = $this->getThemesOnDisk();
 
-        foreach ($filter->exclude as $name) {
-            unset($themes[$name]);
+        if (count($filter->exclude) > 0) {
+            foreach ($filter->exclude as $name) {
+                unset($themes[$name]);
+            }
         }
 
         return $themes;
@@ -115,10 +120,10 @@ class ThemeRepository implements AddonRepositoryInterface
         return $themes;
     }
 
-    private function getConfigFromFile($file)
+    private function getConfigFromFile($file, $name)
     {
         if (!file_exists($file)) {
-            return null;
+            throw new \PrestaShopException(sprintf('[ThemeRepository] Theme configuration file not found for theme `%s`.', $name));
         }
 
         $content = file_get_contents($file);
