@@ -33,7 +33,7 @@
   }
 }
 @mixin submit-button {
-  input[type=submit] {
+  input[type=submit], button[type=submit] {
     background: $brand-primary;
     border: none;
     color: white;

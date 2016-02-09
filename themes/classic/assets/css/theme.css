@@ -5667,7 +5667,7 @@ img {
   height: 2.5em;
   border: none; }
 
-.product-variants input[type=submit] {
+.product-variants input[type=submit], .product-variants button[type=submit] {
   background: #2fb5d2;
   border: none;
   color: white;
@@ -5718,6 +5718,74 @@ img {
     .tabs .nav-tabs .nav-item {
       margin-bottom: -2px; }
 
+.product-cover .layer {
+  -js-display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 452px;
+  height: 452px;
+  background: white;
+  position: absolute;
+  left: 2px;
+  top: 0;
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  cursor: pointer;
+  -webkit-transition: opacity 0.7s ease-in-out;
+  -moz-transition: opacity 0.7s ease-in-out;
+  transition: opacity 0.7s ease-in-out; }
+  .product-cover .layer:hover {
+    opacity: 1; }
+  .product-cover .layer .zoom-in {
+    font-size: 6.25em;
+    color: white; }
+
+.modal-content {
+  background: transparent;
+  border: none;
+  padding: 0; }
+  .modal-content .modal-body {
+    -js-display: flex;
+    display: flex;
+    margin-left: -30%; }
+    .modal-content .modal-body .image-caption {
+      background: white;
+      margin-left: 4px;
+      width: 800px;
+      padding: 0.625em 1.25em;
+      border-top: #ebebeb 1px solid; }
+      .modal-content .modal-body .image-caption p {
+        margin-bottom: 0; }
+    .modal-content .modal-body .mask {
+      overflow: hidden;
+      max-height: 51.375em; }
+    .modal-content .modal-body .product-images {
+      margin-left: 2.5em; }
+      .modal-content .modal-body .product-images img {
+        width: 9.25em;
+        cursor: pointer; }
+        .modal-content .modal-body .product-images img:hover {
+          border: #2fb5d2 3px solid; }
+    .modal-content .modal-body .arrows {
+      cursor: pointer; }
+      .modal-content .modal-body .arrows i {
+        font-size: 6.25em;
+        display: inline; }
+
+.thumb {
+  cursor: pointer; }
+  .thumb:hover {
+    border: #2fb5d2 3px solid; }
+
+#product-availability {
+  display: inline-block;
+  font-weight: 700; }
+  #product-availability .check {
+    color: #4cbb6c;
+    margin-right: 0.3125em; }
+
 .product-labels {
   margin-bottom: 0; }
 
@@ -5732,7 +5800,15 @@ li.product-label {
     text-transform: uppercase;
     color: white;
     margin-top: 0.625em;
-    margin-left: -0.3125em; }
+    margin-left: -0.3125em;
+    z-index: 2; }
+
+.product-customization input[type=submit], .product-customization button[type=submit] {
+  background: #2fb5d2;
+  border: none;
+  color: white;
+  text-transform: uppercase;
+  padding: 0.6875em 1.0625em; }
 
 .block_newsletter form {
   position: relative; }
@@ -5769,7 +5845,7 @@ li.product-label {
     .block_newsletter form button[type=submit] .search:hover {
       color: #2fb5d2; }
 
-.block_newsletter input[type=submit] {
+.block_newsletter input[type=submit], .block_newsletter button[type=submit] {
   background: #2fb5d2;
   border: none;
   color: white;

@@ -37,7 +37,7 @@
   padding: em(2px) em(10px);
   font-weight: 600;
 }
-.product-quantity{
+.product-quantity {
   display: inline-block;
 }
 #quantity_wanted {
@@ -64,12 +64,12 @@
     color: white;
   }
 }
-.product-discount{
-  .regular-price{
+.product-discount {
+  .regular-price {
     font-size: em(20px);
     font-weight: 700;
   }
-  .discount-percentage{
+  .discount-percentage {
     background: $brand-secondary;
     color: white;
     font-weight: 700;
@@ -80,7 +80,7 @@
   @include box-shadow;
   background: white;
   padding: em(20px) em(30px);
-  .tab-pane{
+  .tab-pane {
     padding-top: em(30px);
   }
   .nav-tabs {
@@ -102,14 +102,93 @@
     }
   }
 }
+.product-cover {
+  .layer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 452px;
+    height: 452px;
+    background: white;
+    position: absolute;
+    left: 2px;
+    top: 0;
+    opacity: 0;
+    background: rgba(255,255,255,0.7);
+    text-align: center;
+    cursor: pointer;
+    @include transition(opacity .7s ease-in-out);
+    &:hover {
+      opacity: 1;
+    }
+    .zoom-in {
+      font-size: em(100px);
+      color: white;
+    }
+  }
+}
+.modal-content {
+  background: transparent;
+  border: none;
+  padding: 0;
+  .modal-body {
+    display: flex;
+    margin-left: -30%;
+    .image-caption {
+      background: white;
+      margin-left: 4px;
+      width: 800px;
+      padding: em(10px) em(20px);
+      border-top: $gray-light 1px solid;
+      p {
+        margin-bottom: 0;
+      }
+    }
+    .mask {
+      overflow: hidden;
+      max-height: em(822px);
+    }
+    .product-images {
+      margin-left: em(40px);
+      img {
+        width: em(148px);
+        cursor: pointer;
+        &:hover{
+          border: $brand-primary 3px solid;
+        }
+      }
+    }
+    .arrows {
+      i {
+        font-size: em(100px);
+        display: inline;
+      }
+      cursor: pointer;
+    }
+  }
+}
 
-.product-labels{
+.thumb{
+  cursor: pointer;
+  &:hover{
+    border: $brand-primary 3px solid;
+  }
+}
+#product-availability {
+  display: inline-block;
+  font-weight: 700;
+  .check {
+    color: $brand-success;
+    margin-right: em(5px);
+  }
+}
+.product-labels {
   margin-bottom: 0;
 }
-li.product-label{
+li.product-label {
   display: none;
-  &:last-child{
-    display:block;
+  &:last-child {
+    display: block;
     position: absolute;
     background: $brand-primary;
     font-weight: 700;
@@ -118,5 +197,9 @@ li.product-label{
     color: white;
     margin-top: em(10px);
     margin-left: em(-5px);
+    z-index: 2;
   }
+}
+.product-customization {
+  @include submit-button;
 }
