@@ -531,6 +531,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'combinations' => $combinations,
                 'combinationImages' => $combination_images
             ));
+        } else {
+            $this->context->smarty->assign(array(
+                'groups' => [],
+                'colors' => false,
+                'combinations' => [],
+                'combinationImages' => []
+            ));
         }
     }
 
