@@ -78,7 +78,7 @@ var displayFieldsManager = (function() {
 				displayFieldsManager.refresh();
 			});
 
-			$('#form .form-input-title input').on('click', function() {
+			$('#form .form-input-title input').on('focus', function() {
 				$(this).select();
 			});
 		},
