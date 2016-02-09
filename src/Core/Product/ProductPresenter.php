@@ -7,6 +7,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use Symfony\Component\Translation\TranslatorInterface;
+use Configuration;
 use Language;
 use Link;
 
@@ -101,6 +102,8 @@ class ProductPresenter
             $presentedProduct['discount_percentage'] = -round(100 * $product['specific_prices']['reduction'])."%";
             $regular_price = $product['price_without_reduction'];
         }
+
+        $presentedProduct['price_amount'] = $this->pricePresenter->convertAmount($price);
 
         $presentedProduct['price'] = $this->pricePresenter->format(
             $this->pricePresenter->convertAmount($price)
@@ -305,6 +308,8 @@ class ProductPresenter
         );
 
         $presentedProduct['show_price'] = $show_price;
+
+        $presentedProduct['weight_unit'] = Configuration::get('PS_WEIGHT_UNIT');
 
         $presentedProduct = $this->fillImages(
             $presentedProduct,
