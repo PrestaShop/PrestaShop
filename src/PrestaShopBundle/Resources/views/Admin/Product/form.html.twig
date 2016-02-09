@@ -722,11 +722,11 @@
 
                         <div class="checkbox-active" data-toggle="tooltip" id="product_form_online_switch"
                             title="{{ trans('Should this product be visible on the store?', {}, 'AdminProducts') }}">
-                            {{ trans('Online', {}, 'AdminProducts') }}
+
                             <div class="checkbox titatoggle unchecked-red checkbox-slider--b-flat" >
                                 <label>
                                     <input type="checkbox" id="form_step1_active" name="form[step1][active]" value="1" {{ form.step1.vars.value.active ? 'checked="checked"' : '' }}>
-                                    <span></span>
+                                    <span class="indicator-success"><span class="on">{{ trans('Online', {}, 'AdminProducts') }}</span><span class="off">{{ trans('Offline', {}, 'AdminProducts') }}</span></span>
                                 </label>
                             </div>
                         </div>

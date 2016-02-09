@@ -245,3 +245,13 @@ div.quicknav-header h2 {
   height: 120px;
 }
 
+/* TiTaToggle addons */
+input:checked + .indicator-success span.off {
+  display: none;
+}
+input:not(:checked) + .indicator-success span.on {
+  display: none;
+}
+.checkbox-slider--b-flat input + span {
+  margin-left: 0.2em;
+}
