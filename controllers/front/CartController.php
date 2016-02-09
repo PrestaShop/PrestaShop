@@ -88,6 +88,27 @@ class CartControllerCore extends FrontController
                 $this->processChangeProductInCart();
             } elseif (Tools::getIsset('delete')) {
                 $this->processDeleteProductInCart();
+            } elseif (CartRule::isFeatureActive()) {
+                if (Tools::getIsset('addDiscount')) {
+                    if (!($code = trim(Tools::getValue('discount_name')))) {
+                        $this->errors[] = $this->l('You must enter a voucher code.');
+                    } elseif (!Validate::isCleanHtml($code)) {
+                        $this->errors[] = $this->l('The voucher code is invalid.');
+                    } else {
+                        if (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule)) {
+                            if ($error = $cartRule->checkValidity($this->context, false, true)) {
+                                $this->errors[] = $error;
+                            } else {
+                                $this->context->cart->addCartRule($cartRule->id);
+                            }
+                        } else {
+                            $this->errors[] = Tools::displayError('This voucher does not exists.');
+                        }
+                    }
+                } elseif (($id_cart_rule = (int)Tools::getValue('deleteDiscount')) && Validate::isUnsignedId($id_cart_rule)) {
+                    $this->context->cart->removeCartRule($id_cart_rule);
+                    CartRule::autoAddToCart($this->context);
+                }
             }
             // Make redirection
             if (!$this->errors) {

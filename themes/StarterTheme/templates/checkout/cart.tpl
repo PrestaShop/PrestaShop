@@ -15,6 +15,10 @@
 
     {hook h='displayShoppingCart'}
 
+    {block name='cart_voucher'}
+      {include file='checkout/_partials/cart-voucher.tpl'}
+    {/block}
+
     <div class="cart-subtotals">
       {foreach from=$cart.subtotals item="subtotal"}
         <div class="{$subtotal.type}">

@@ -27,6 +27,10 @@
     </div>
   {/block}
 
+  {block name='cart_voucher'}
+    {include file='checkout/_partials/cart-voucher.tpl'}
+  {/block}
+
   {block name='cart_summary_totals'}
     <div class="cart-summary-totals">
       <span class="label">{$cart.total.label}</span>
