@@ -246,8 +246,20 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->assignAttributesCombinations();
 
             // Pack management
-            $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : null;
-            $this->context->smarty->assign('packItems', $pack_items);
+            $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
+
+            $assembler = new ProductAssembler($this->context);
+            $presenter = $this->getProductPresenter();
+            $presentedPackItems = [];
+            foreach ($pack_items as $item) {
+                $presentedPackItems[] = $presenter->presentForListing(
+                    $this->getProductPresentationSettings(),
+                    $assembler->assembleProduct($item),
+                    $this->context->language
+                );
+            }
+
+            $this->context->smarty->assign('packItems', $presentedPackItems);
             $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
             $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < $this->product->getNoPackPrice()) ? true : false);
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
