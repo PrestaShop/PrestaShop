@@ -27,14 +27,13 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Parser;
 use \Tools;
 use \Shop;
 use \Employee;
@@ -42,6 +41,7 @@ use \Exception;
 
 class ThemeManager implements AddonManagerInterface
 {
+    private $hookConfigurator;
     private $shop;
     private $employee;
     private $theme_checker;
@@ -71,7 +71,7 @@ class ThemeManager implements AddonManagerInterface
     /**
      * Add new theme from zipball. This will unzip the file and move the content
      * to the right locations.
-     * A theme can bundle modules, resources, docuementation, email templates and so on.
+     * A theme can bundle modules, resources, documentation, email templates and so on.
      *
      * @param string $source The source can be a module name (installed from either local disk or addons.prestashop.com).
      * or a location (url or path to the zip file)
@@ -88,7 +88,7 @@ class ThemeManager implements AddonManagerInterface
     /**
      * Remove all theme files, resources, documentation and specific modules
      *
-     * @param Addon $theme The source can be a module name (installed from either local disk or addons.prestashop.com).
+     * @param $name The source can be a module name (installed from either local disk or addons.prestashop.com).
      * or a location (url or path to the zip file)
      * @return bool true for success
      */
@@ -108,14 +108,14 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-    * Download new files from source, backup old files, replace files with new ones
-    * and execute all necessary migration scripts form current version to the new one.
-    *
-    * @param Addon $theme the theme you want to upgrade
-    * @param string $version the version you want to up upgrade to
-    * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
-    * @return bool true for success
-    */
+     * Download new files from source, backup old files, replace files with new ones
+     * and execute all necessary migration scripts form current version to the new one.
+     *
+     * @param string $name
+     * @param string $version the version you want to up upgrade to
+     * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
+     * @return bool true for success
+     */
     public function upgrade($name, $version, $source = null)
     {
         return true;
@@ -154,11 +154,13 @@ class ThemeManager implements AddonManagerInterface
         $this->shop->theme_name = $theme->getName();
         $this->shop->update();
 
+        $this->saveTheme($theme);
+
         return $this;
     }
 
     /**
-     * Actions to perform when switchig from this theme to another one.
+     * Actions to perform when switching from this theme to another one.
      *
      * @param  string $name The theme name to enable
      * @return bool         True for success
@@ -169,9 +171,9 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Actions to perform to restaure default settings
+     * Actions to perform to restore default settings
      *
-     * @param  string $name The theme name to reset
+     * @param  string $theme_name The theme name to reset
      * @return bool         True for success
      */
     public function reset($theme_name)
@@ -187,9 +189,12 @@ class ThemeManager implements AddonManagerInterface
             $dir.'/config/theme.yml'
         );
         $data['directory'] = $dir;
-        $data['settings'] = $this->getConfigFromFile(
-            $dir.'/config/settings_'.$this->shop->id.'.json'
-        );
+        $jsonConfiguration = $dir.'/config/settings_'.$this->shop->id.'.json';
+        if (file_exists($jsonConfiguration)) {
+            $data = array_merge($data, $this->getConfigFromFile(
+                $dir.'/config/settings_'.$this->shop->id.'.json'
+            ));
+        }
 
         return new Theme($data);
     }
@@ -302,7 +307,7 @@ class ThemeManager implements AddonManagerInterface
         $directories = iterator_to_array($directories);
         $theme_name = basename(current($directories)->getFileName());
 
-        $theme_data = Yaml::parse($sandbox_path.$theme_name.'/config/theme.yml');
+        $theme_data = (new Parser())->parse($sandbox_path.$theme_name.'/config/theme.yml');
         $theme_data['directory'] = $sandbox_path.$theme_name;
         if (!$this->theme_checker->isValid(new Theme($theme_data))) {
             $this->fs->remove($sandbox_path);
@@ -345,7 +350,7 @@ class ThemeManager implements AddonManagerInterface
         $content = file_get_contents($file);
 
         if (preg_match('/.\.(yml|yaml)$/', $file)) {
-            return Yaml::parse($content);
+            return (new Parser())->parse($content);
         } elseif (preg_match('/.\.json$/', $file)) {
             return json_decode($content, true);
         }
@@ -353,9 +358,9 @@ class ThemeManager implements AddonManagerInterface
 
     public function saveTheme($theme)
     {
-        $test = file_put_contents(
+        file_put_contents(
             $theme->getDirectory().'/config/settings_'.$this->shop->id.'.json',
-            json_encode($theme->get('settings'))
+            json_encode(['theme_settings' => $theme->get('theme_settings')])
         );
     }
 }

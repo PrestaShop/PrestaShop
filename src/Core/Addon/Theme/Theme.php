@@ -106,15 +106,36 @@ class Theme implements AddonInterface
 
     public function setPageLayouts(array $layouts)
     {
-        $this->attributes->set('settings.page_layouts', $layouts);
+        $this->attributes->set('theme_settings.layouts', $layouts);
+    }
+
+    public function getDefaultLayout()
+    {
+        $availableLayouts = $this->getAvailableLayouts();
+        $defaultLayoutIdentifier = $this->attributes->get('theme_settings.default_layout');
+        $defaultLayout = $availableLayouts[$defaultLayoutIdentifier];
+
+        $defaultLayout['key'] = $defaultLayoutIdentifier;
+
+        return $defaultLayout;
+    }
+
+    public function getPageLayouts()
+    {
+        return $this->attributes->get('theme_settings.layouts');
+    }
+
+    public function getAvailableLayouts()
+    {
+        return $this->attributes->get('meta.available_layouts');
     }
 
     public function getLayoutNameForPage($page)
     {
         $layout_name = $this->get('theme_settings.default_layout');
-        if (isset($this->attributes['settings']['page_layouts'][$page])
-            && $this->attributes['settings']['page_layouts'][$page]) {
-            $layout_name = $this->attributes['settings']['page_layouts'][$page];
+        if (isset($this->attributes['theme_settings']['page_layouts'][$page])
+            && $this->attributes['theme_settings']['page_layouts'][$page]) {
+            $layout_name = $this->attributes['theme_settings']['page_layouts'][$page];
         }
         return $layout_name;
     }

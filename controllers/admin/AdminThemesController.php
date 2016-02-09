@@ -713,10 +713,13 @@ class AdminThemesControllerCore extends AdminController
 
     public function initConfigureLayouts()
     {
+        $theme = $this->theme_manager->getInstanceByName($this->context->shop->theme->getName());
+
         $this->context->smarty->assign([
             'pages' => Meta::getAllMeta($this->context->language->id),
-            'page_layouts' => $this->context->shop->theme->get('settings.page_layouts'),
-            'available_layouts' => $this->context->shop->theme->get('meta.available_layouts'),
+            'default_layout' => $theme->getDefaultLayout(),
+            'page_layouts' => $theme->getPageLayouts(),
+            'available_layouts' => $theme->getAvailableLayouts(),
         ]);
 
         $this->setTemplate('controllers/themes/configurelayouts.tpl');

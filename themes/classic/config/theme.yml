@@ -21,7 +21,7 @@ meta:
     layout-left-column:
       name: Two Columns, small left column
       description: Two columns with a small left column
-    layout-left-column:
+    layout-right-column:
       name: Two Columns, small right column
       description: Two columns with a small right column
 
