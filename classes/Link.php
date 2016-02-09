@@ -482,6 +482,11 @@ class LinkCore
      */
     public function getAdminLink($controller, $with_token = true, $sfRouteParams = array())
     {
+        // Cannot generate admin link from front
+        if (!defined('_PS_ADMIN_DIR_')) {
+            return '';
+        }
+
         $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
 
         switch ($controller) {
