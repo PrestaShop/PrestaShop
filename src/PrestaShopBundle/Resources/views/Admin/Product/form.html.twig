@@ -17,7 +17,7 @@
 
       <div class="col-xs-12">
         <div class="row">
-          <div class="col-lg-6 big-input">
+          <div class="col-lg-7 big-input">
             {{ form_widget(form.step1.name) }}
           </div>
           <div class="col-lg-2 form_step1_type_product">
@@ -30,7 +30,26 @@
               {% endfor %}
             </select>
           </div>
-          <div class="col-lg-3">
+          <div class="col-lg-3 text-md-right">
+            <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ trans('Sales', [], 'AdminTab') }}"
+               id="product_form_go_to_sales">
+              <i class="material-icons">assessment</i>
+              <span class="title">{{ trans('Sales', {}, 'AdminProducts') }}</span>
+            </a>
+            <a
+              class="toolbar-button btn-quicknav"
+              href="#" title="{{ trans('Quick navigation', [], 'AdminTab') }}"
+              data-toggle="sidebar" data-target="#right-sidebar"
+              id="product_form_open_quicknav"
+            >
+              <i class="material-icons">list</i>
+              <span class="title">{{ trans('Product list', {}, 'AdminProducts') }}</span>
+            </a>
+            <a class="toolbar-button btn-help" href="{{ help_link }}" title="{{ trans('Help', [], 'AdminTab') }}"
+               id="product_form_open_help">
+              <i class="material-icons">help</i>
+              <span class="title">{{ trans('Help', {}, 'AdminProducts') }}</span>
+            </a>
           </div>
         </div>
         <div class="row">
@@ -43,22 +62,6 @@
 
     </div>
 
-    {# PRODUCTS LIST QUICK NAV #}
-    <div class="col-lg-2 toolbarBox pull-right text-right">
-      <a class="toolbar_btn btn-quicknav" href="#" title="{{ trans('Quick navigation', [], 'AdminTab') }}"
-         data-toggle="sidebar" data-target="#right-sidebar"
-         id="product_form_open_quicknav">
-        <i class="icon-AdminCatalog"></i>
-      </a>
-      <a class="toolbar_btn btn-sales" href="{{ stats_link }}" target="_blank" title="{{ trans('Sales', [], 'AdminTab') }}"
-         id="product_form_go_to_sales">
-        <i class="process-icon-stats"></i>
-      </a>
-      <a class="toolbar_btn btn-help" href="{{ help_link }}" title="{{ trans('Help', [], 'AdminTab') }}"
-         id="product_form_open_help">
-        <i class="process-icon-help"></i>
-      </a>
-    </div>
 
     <div class="col-lg-12">
       <div id="form_bubbling_errors">
@@ -153,34 +156,44 @@
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h3 class="title">{{ trans('Features', [], 'AdminProducts') }}</h3>
                         {{ form_errors(form.step1.features) }}
-                        <ul class="featureCollection nostyle" data-prototype="
+                        <div class="feature-collection nostyle" data-prototype="
                                             {% filter escape %}
                                                 {{ include('PrestaShopBundle:Admin/Product/Include:form-feature.html.twig', { 'form': form.step1.features.vars.prototype }) }}
                                             {% endfilter %}">
                           {% for feature in form.step1.features %}
-                            <li>
                               {{ include('PrestaShopBundle:Admin/Product/Include:form-feature.html.twig', { 'form': feature }) }}
-                            </li>
                           {% endfor %}
-                        </ul>
+                        </div>
                       </div>
                       <a href="#" class="add">{{ trans('+ Add a feature', {}, 'AdminProducts') }}</a>
                     </div>
 
                     <div id="manufacturer" class="form-group">
-                      <div id="manufacturer-content" class="content {{ form.step1.id_manufacturer.vars.value == '' ? 'hide':'' }}">
-                        <h3 class="title">{{ trans("Brand", {}, 'AdminProducts') }}</h3>
-                        {{ form_errors(form.step1.id_manufacturer) }}
-                        {{ form_widget(form.step1.id_manufacturer) }}
+                      <div id="manufacturer-content" class="row {{ form.step1.id_manufacturer.vars.value == '' ? 'hide':'' }}">
+                        <div class="col-md-12">
+                          <h3 class="title">{{ trans("Brand", {}, 'AdminProducts') }}</h3>
+                        </div>
+                        <div class="col-md-8">
+                          {{ form_errors(form.step1.id_manufacturer) }}
+                        </div>
+                        <div class="col-md-8">
+                          {{ form_widget(form.step1.id_manufacturer) }}
+                        </div>
                       </div>
                       <a href="#" class="open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}">{{ trans('+ Add a brand', {}, 'AdminProducts') }}</a>
                     </div>
 
                     <div id="related-product" class="form-group">
-                      <div id="related-content" class="content {{ form.step1.related_products.vars.value.data|length == 0 ? 'hide':'' }}">
-                        <h3 class="title">{{ trans("Related product", {}, 'AdminProducts') }}</h3>
-                        {{ form_errors(form.step1.related_products) }}
-                        {{ form_widget(form.step1.related_products) }}
+                      <div id="related-content" class="row {{ form.step1.related_products.vars.value.data|length == 0 ? 'hide':'' }}">
+                        <div class="col-md-12">
+                          <h3 class="title">{{ trans("Related product", {}, 'AdminProducts') }}</h3>
+                        </div>
+                        <div class="col-md-8">
+                          {{ form_errors(form.step1.related_products) }}
+                        </div>
+                        <div class="col-md-8">
+                          {{ form_widget(form.step1.related_products) }}
+                        </div>
                       </div>
                       <a href="#" class="open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}">{{ trans('+ Add a related product', {}, 'AdminProducts') }}</a>
                     </div>
@@ -250,12 +263,13 @@
                           </div>
 
                           <div class="form-group">
+
                             <h3 class="title">{{ trans("Categories", {}, 'AdminProducts') }}</h3>
                             {{ form_errors(form.step1.categories) }}
                             {{ form_widget(form.step1.categories) }}
 
                             <div id="add-categories">
-                              <div id="add-categories-content">
+                              <div id="add-categories-content" class="hide">
                                 <label>{{ trans("Default category", {}, 'AdminProducts') }}</label>
                                 {{ form_errors(form.step1.id_category_default) }}
                                 {{ form_widget(form.step1.id_category_default) }}
@@ -273,6 +287,7 @@
                               </div>
                               <a href="#" class="open">{{ trans('+ Add a category', {}, 'AdminProducts') }}</a>
                             </div>
+
                           </div>
 
                         </div>

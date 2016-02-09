@@ -63,9 +63,12 @@
   .form-group {
     margin-bottom: rem(50px);
 
-    > .title,
-    > .content > .title {
+    .title {
       margin-bottom: rem(20px);
     }
+  }
+
+  .hide {
+    display: none;
   }
 }

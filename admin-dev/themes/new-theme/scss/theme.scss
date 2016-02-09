@@ -12,7 +12,11 @@
 @import "components/layout/main_header";
 @import "components/layout/nav_bar";
 
-@import "components/product_page/product_header";
+@import "pages/product_page";
+
+// Other
+
+@import "components/tinymce";
 
 // Main Layout
 

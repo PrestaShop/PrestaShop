@@ -276,12 +276,12 @@ var formCategory = (function() {
  */
 var featuresCollection = (function() {
 
-	var collectionHolder = $('ul.featureCollection');
+	var collectionHolder = $('.feature-collection');
 
 	/** Add a feature */
 	function add(){
 		var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
-		collectionHolder.append('<li>'+newForm+'</li>');
+		collectionHolder.append(newForm);
 	}
 
 	return {
@@ -294,19 +294,19 @@ var featuresCollection = (function() {
 			});
 
 			/** Click event on the remove button */
-			$(document).on('click', 'ul.featureCollection .delete', function(e) {
+			$(document).on('click', '.feature-collection .delete', function(e) {
 				e.preventDefault();
 				var _this = $(this);
 
 				modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
 					onContinue: function(){
-						_this.parent().parent().parent().remove();
+						_this.parent().parent().remove();
 					}
 				}).show();
 			});
 
 			/** On feature selector event change, refresh possible values list */
-			$(document).on('change', 'ul.featureCollection select.feature-selector', function() {
+			$(document).on('change', '.feature-collection select.feature-selector', function() {
 				var selector = $(this).parent().parent().parent().find('.feature-value-selector');
 				$.ajax({
 					url: $(this).attr('data-action')+'/'+$(this).val(),

@@ -60,6 +60,9 @@
 
 .link-leveltwo {
   @extend .link-levelone;
+  &.-active {
+    border: none;
+  }
   > .link {
     padding: 0 20px;
   }

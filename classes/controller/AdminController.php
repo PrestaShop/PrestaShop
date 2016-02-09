@@ -2609,7 +2609,7 @@ class AdminControllerCore extends Controller
         }
 
         $this->addJS(array(
-            _PS_JS_DIR_.'admin.js?v='._PS_VERSION_,
+            _PS_JS_DIR_.'admin.js?v='._PS_VERSION_, // TODO: SEE IF REMOVABLE
             _PS_JS_DIR_.'cldr.js',
             _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
             _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
