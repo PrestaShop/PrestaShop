@@ -1,5 +1,5 @@
 <nav class="pagination">
-  <div class="col-md-3">
+  <div class="col-md-4">
     {l s='Showing %s-%s of %s item(s)' sprintf=[$pagination.items_shown_from ,$pagination.items_shown_to, $pagination.total_items]}
   </div>
   <div class="col-md-6">
