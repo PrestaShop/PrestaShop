@@ -40,6 +40,10 @@
             <span class="value">{$cart.total.amount}</span>
           </div>
 
+          {block name='cart_voucher'}
+            {include file='checkout/_partials/cart-voucher.tpl'}
+          {/block}
+
           {foreach from=$cart.subtotals item="subtotal"}
             <div class="card-block cart-summary-line" id="cart-subtotal-{$subtotal.type}">
               <span class="label">{$subtotal.label}</span>

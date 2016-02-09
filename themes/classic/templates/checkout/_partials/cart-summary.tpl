@@ -27,6 +27,9 @@
       {/foreach}
     </div>
   {/block}
+  {block name='cart_voucher'}
+    {include file='checkout/_partials/cart-voucher.tpl'}
+  {/block}
   <hr>
   {block name='cart_summary_totals'}
     <div class="cart-summary-totals">

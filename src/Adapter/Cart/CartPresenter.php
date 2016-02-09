@@ -13,6 +13,8 @@ use Context;
 use Cart;
 use Product;
 use Configuration;
+use CartRule;
+use Tools;
 
 class CartPresenter
 {
@@ -268,6 +270,24 @@ class CartPresenter
             'summary_string' => $summary_string,
             'id_address_delivery' => $cart->id_address_delivery,
             'id_address_invoice' => $cart->id_address_invoice,
+            'vouchers' => $this->getTemplateVarVouchers($cart),
+        ];
+    }
+
+    public function getTemplateVarVouchers(Cart $cart)
+    {
+        $cartVouchers = $cart->getCartRules();
+        $vouchers = [];
+
+        foreach ($cartVouchers as $cartVoucher) {
+            $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
+            $vouchers[$cartVoucher['id_cart_rule']]['name'] = $cartVoucher['name'];
+            $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink('cart', true, null, ['deleteDiscount' => $cartVoucher['id_cart_rule'], 'token' => Tools::getToken(false)]);
+        }
+
+        return [
+            'allowed' => (int)CartRule::isFeatureActive(),
+            'added' => $vouchers,
         ];
     }
 }
