@@ -78,7 +78,7 @@ var displayFieldsManager = (function() {
 				displayFieldsManager.refresh();
 			});
 
-			$('#form .form-input-title input').on('click', function() {
+			$('#form .form-input-title input').on('focus', function() {
 				$(this).select();
 			});
 		},
@@ -1928,12 +1928,21 @@ var seo = (function() {
 				hideShowRedirectToProduct();
 			});
 
+			/** Update friendly URL */
+			var updateFriendlyUrl = function(elem){
+				var id_lang = elem.attr('name').match(/\d+/)[0];
+				$('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
+			};
+
+			/** On product title change, update friendly URL*/
+			$('.form-input-title input').keydown(function(){
+				updateFriendlyUrl($(this));
+			});
 
 			/** Reset all languages title to friendly url*/
 			$('#seo-url-regenerate').click(function(){
 				$.each($('.form-input-title input'), function(){
-					var id_lang = $(this).attr('name').match(/\d+/)[0];
-					$('#form_step5_link_rewrite_' + id_lang).val(str2url($(this).val(), 'UTF-8'));
+					updateFriendlyUrl($(this));
 				});
 			});
 		}
