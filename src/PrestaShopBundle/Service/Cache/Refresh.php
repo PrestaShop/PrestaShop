@@ -55,7 +55,7 @@ class Refresh
         $this->commands = [];
 
         require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
-        $kernel = new \AppKernel($this->env, false);
+        $kernel = new \AppKernel($this->env, true);
         $this->application = new Application($kernel);
         $this->application->setAutoExit(false);
     }
@@ -81,7 +81,7 @@ class Refresh
      */
     public function addDoctrineSchemaUpdate()
     {
-        $this->commands[] = ['command' => 'doctrine:schema:update', '--env' => $this->env, '--no-debug' => true, '--force' => true];
+        $this->commands[] = ['command' => 'doctrine:schema:update', '--env' => $this->env, '--no-debug' => false, '--force' => true];
     }
 
     /**
@@ -91,12 +91,18 @@ class Refresh
      */
     public function execute()
     {
+        $output = [];
         if (empty($this->commands)) {
             throw new \Exception('Error, you need to define at least on command');
         }
 
         foreach ($this->commands as $command) {
-            $this->application->run(new ArrayInput($command), $this->output);
+            $exitCode = $this->application->run(new ArrayInput($command), $this->output);
+            if ($command['command'] == 'doctrine:schema:update' && $exitCode > 0) {
+                $output['sf2_schema_update'] = true;
+            }
         }
+
+        return $output;
     }
 }
