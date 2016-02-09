@@ -154,6 +154,8 @@ class ThemeManager implements AddonManagerInterface
         $this->shop->theme_name = $theme->getName();
         $this->shop->update();
 
+        $this->saveTheme($theme);
+
         return $this;
     }
 
