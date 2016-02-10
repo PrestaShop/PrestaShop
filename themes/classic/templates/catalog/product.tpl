@@ -46,9 +46,9 @@
                 {block name='product_cover'}
                   <div class="product-cover _margin-bottom-medium _relative">
                     <img class="_shadow js-product-cover" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" width="452" itemprop="image" />
-                    <div class="layer" data-toggle="modal" data-target="#product-modal">
+                    {*<div class="layer" data-toggle="modal" data-target="#product-modal">
                       <i class="material-icons zoom-in">&#xE8FF;</i>
-                    </div>
+                    </div>*}
                   </div>
                 {/block}
 
