@@ -202,7 +202,7 @@ class CartPresenter
         if ($this->shouldShowTaxLine()) {
             $subtotals['tax'] = [
                 'type'   => 'tax',
-                'label'  => $this->translator->l('Tax', 'Cart'),
+                'label'  => $this->translator->trans('Tax', [], 'Cart'),
                 'amount' => $this->pricePresenter->convertAndFormat(
                     $total_including_tax - $total_excluding_tax
                 )
@@ -212,8 +212,8 @@ class CartPresenter
         if ($cart->gift) {
             $subtotals['gift_wrapping'] = [
                 'type'   => 'gift_wrapping',
-                'label'  => $this->translator->l('Gift wrapping', 'Cart'),
-                'amount' => $cart->getGiftWrappingPrice($this->includeTaxes()) != 0 ? $this->pricePresenter->convertAndFormat($cart->getGiftWrappingPrice($this->includeTaxes())) : $this->translator->l('Free', 'Cart')
+                'label'  => $this->translator->trans('Gift wrapping', [], 'Cart'),
+                'amount' => $cart->getGiftWrappingPrice($this->includeTaxes()) != 0 ? $this->pricePresenter->convertAndFormat($cart->getGiftWrappingPrice($this->includeTaxes())) : $this->translator->trans('Free', [], 'Cart')
             ];
         }
 
