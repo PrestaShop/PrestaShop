@@ -246,7 +246,7 @@ var formCategory = (function() {
 			beforeSend: function() {
 				$('button.submit', elem).attr('disabled', 'disabled');
 				$('.help-block', elem).remove();
-				$('*.has-error', elem).removeClass('has-error');
+				$('*.has-danger', elem).removeClass('has-danger');
 			},
 			success: function(response){
 				$('#form_step1_new_category_name').val('');
@@ -266,14 +266,14 @@ var formCategory = (function() {
 			},
 			error: function(response){
 				$.each(jQuery.parseJSON(response.responseText), function(key, errors){
-					var html = '<span class="help-block"><ul class="list-unstyled">';
+					var html = '<ul class="list-unstyled text-danger">';
 					$.each(errors, function(key, error){
-						html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
+						html += '<li>' + error + '</li>';
 					});
-					html += '</ul></span>';
+					html += '</ul>';
 
 					$('#form_step1_new_'+key).parent().append(html);
-					$('#form_step1_new_'+key).parent().addClass('has-error');
+					$('#form_step1_new_'+key).parent().addClass('has-danger');
 				});
 			},
 			complete: function(){
@@ -1062,7 +1062,7 @@ var form = (function() {
 				$('#submit', elem).attr('disabled', 'disabled');
 				$('.btn-submit', elem).attr('disabled', 'disabled');
 				$('.help-block').remove();
-				$('*.has-error').removeClass('has-error');
+				$('*.has-danger').removeClass('has-danger');
 			},
 			success: function(response){
 				if(redirect){
@@ -1077,14 +1077,14 @@ var form = (function() {
 				$.each(jQuery.parseJSON(response.responseText), function(key, errors){
 					tabsWithErrors.push(key);
 
-					var html = '<span class="help-block"><ul class="list-unstyled">';
+					var html = '<ul class="list-unstyled text-danger">';
 					$.each(errors, function(key, error){
-						html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
+						html += '<li>' + error + '</li>';
 					});
-					html += '</ul></span>';
+					html += '</ul>';
 
 					$('#form_'+key).parent().append(html);
-					$('#form_'+key).parent().addClass('has-error');
+					$('#form_'+key).parent().addClass('has-danger');
 				});
 
 				/** find first tab with error, then switch to it */
@@ -1093,7 +1093,7 @@ var form = (function() {
 
 				/** scroll to 1st error */
 				$('html, body').animate({
-					scrollTop: $('.has-error').first().offset().top - $('.page-head').height() - $('.navbar-header').height()
+					scrollTop: $('.has-danger').first().offset().top - $('.page-head').height() - $('.navbar-header').height()
 				}, 500);
 			},
 			complete: function(){
@@ -1301,7 +1301,7 @@ var virtualProduct = (function() {
 					beforeSend: function() {
 						_this.prop('disabled', 'disabled');
 						$('.help-block').remove();
-						$('*.has-error').removeClass('has-error');
+						$('*.has-danger').removeClass('has-danger');
 					},
 					success: function(response){
 						showSuccessMessage(translate_javascripts['Form update success']);
@@ -1313,14 +1313,14 @@ var virtualProduct = (function() {
 					},
 					error: function(response){
 						$.each(jQuery.parseJSON(response.responseText), function(key, errors){
-							var html = '<span class="help-block"><ul class="list-unstyled">';
+							var html = '<ul class="list-unstyled text-danger">';
 							$.each(errors, function(key, error){
-								html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
+								html += '<li>' + error + '</li>';
 							});
-							html += '</ul></span>';
+							html += '</ul>';
 
 							$('#form_step3_virtual_product_'+key).parent().append(html);
-							$('#form_step3_virtual_product_'+key).parent().addClass('has-error');
+							$('#form_step3_virtual_product_'+key).parent().addClass('has-danger');
 						});
 					},
 					complete: function(){
@@ -1371,7 +1371,7 @@ var attachmentProduct = (function() {
 					beforeSend: function() {
 						buttonSave.prop('disabled', 'disabled');
 						$('.help-block').remove();
-						$('*.has-error').removeClass('has-error');
+						$('*.has-danger').removeClass('has-danger');
 					},
 					success: function(response){
 						$('#form_step6_attachment_product_file').val('');
@@ -1393,14 +1393,14 @@ var attachmentProduct = (function() {
 					},
 					error: function(response){
 						$.each(jQuery.parseJSON(response.responseText), function(key, errors){
-							var html = '<span class="help-block"><ul class="list-unstyled">';
+							var html = '<ul class="list-unstyled text-danger">';
 							$.each(errors, function(key, error){
-								html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
+								html += '<li>' + error + '</li>';
 							});
-							html += '</ul></span>';
+							html += '</ul>';
 
 							$('#form_step6_attachment_product_'+key).parent().append(html);
-							$('#form_step6_attachment_product_'+key).parent().addClass('has-error');
+							$('#form_step6_attachment_product_'+key).parent().addClass('has-danger');
 						});
 					},
 					complete: function(){
@@ -1460,7 +1460,7 @@ var imagesProduct = (function() {
 				thumbnailWidth: 130,
 				thumbnailHeight: null,
 				acceptedFiles: 'image/*',
-				dictDefaultMessage: '<i class="zmdi zmdi-camera"></i><br/>'+translate_javascripts['Drop images here']+'<br/>'+translate_javascripts['or select files']+'<br/><small>' + translate_javascripts['files recommandations'] + '<br/>' + translate_javascripts['files recommandations2'] + '</small></div>',
+				dictDefaultMessage: '<i class="material-icons">perm_media</i><br/>'+translate_javascripts['Drop images here']+'<br/>'+translate_javascripts['or select files']+'<br/><small>' + translate_javascripts['files recommandations'] + '<br/>' + translate_javascripts['files recommandations2'] + '</small></div>',
 				dictRemoveFile: translate_javascripts['Delete'],
 				dictFileTooBig: translate_javascripts['ToLargeFile'],
 				dictCancelUpload: translate_javascripts['Delete'],
@@ -1595,7 +1595,7 @@ var formImagesProduct = (function() {
 				beforeSend: function() {
 					formZoneElem.find('.actions button').prop('disabled', 'disabled');
 					formZoneElem.find('.help-block').remove();
-					formZoneElem.find('*.has-error').removeClass('has-error');
+					formZoneElem.find('*.has-danger').removeClass('has-danger');
 				},
 				success: function(response){
 					if(formZoneElem.find('#form_image_cover:checked').length){
@@ -1605,14 +1605,14 @@ var formImagesProduct = (function() {
 				error: function(response){
 					if(response && response.responseText) {
 						$.each(jQuery.parseJSON(response.responseText), function (key, errors) {
-							var html = '<span class="help-block"><ul class="list-unstyled">';
+							var html = '<ul class="list-unstyled text-danger">';
 							$.each(errors, function (key, error) {
-								html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
+								html += '<li>' + error + '</li>';
 							});
-							html += '</ul></span>';
+							html += '</ul>';
 
 							$('#form_image_' + key).parent().append(html);
-							$('#form_image_' + key).parent().addClass('has-error');
+							$('#form_image_' + key).parent().addClass('has-danger');
 						});
 					}
 				},

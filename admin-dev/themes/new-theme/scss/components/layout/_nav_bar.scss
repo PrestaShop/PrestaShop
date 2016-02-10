@@ -1,7 +1,7 @@
 .nav-bar {
   position: fixed;
   z-index: 500; // TODO: COPIED FROM THE LEGACY: CHECK IF USEFULL (1 WORKS WELL)
-  background: $color-navbar;
+  background: $dark-grey;
   width: $size-navbar-width;
   padding-top: rem(10px) + $size-header-height;
   height: 100%;
@@ -18,17 +18,17 @@
     @include single-line-block($size-navbar-link-height);
     font-size: rem(12px);
     display:block;
-    color: $color-navbar-text;
+    color: $dark-grey-text;
     text-decoration: none;
     padding-left: $padding-size;
   }
   &.-active {
-    border-right: rem(3px) solid $color-navbar-text-hover;
+    border-right: rem(3px) solid $dark-grey-text-hover;
   }
   &.-active > .link,
   &.-hover > .link {
-    background: $color-navbar-hover;
-    color: $color-navbar-text-hover;
+    background: $dark-grey-hover;
+    color: $dark-grey-text-hover;
   }
   > .link > .material-icons {
     display: none;
@@ -37,7 +37,7 @@
   > .submenu {
     position: relative;
     list-style: none;
-    background: $color-navbar-hover;
+    background: $dark-grey-hover;
     display: none;
     white-space: nowrap;
   }
@@ -67,12 +67,12 @@
     padding: 0 20px;
   }
   > .link:hover {
-    color: $color-navbar-text-hover;
+    color: $dark-grey-text-hover;
   }
 }
 
 .category-title {
-  color: $color-navbar-title;
+  color: $dark-grey-title;
   font-weight: bold;
   font-size: rem(12px);
   padding-left: 10px;
@@ -83,13 +83,13 @@
     content: '';
     display: block;
     width: 100%;
-    border-bottom: 1px solid $color-navbar-title;
+    border-bottom: 1px solid $dark-grey-title;
     margin-top: -10px;
     margin-bottom: 19px;
   }
 
   > .title {
-    background: $color-navbar;
+    background: $dark-grey;
     padding-right: 10px;
   }
 }

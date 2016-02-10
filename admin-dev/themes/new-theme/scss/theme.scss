@@ -1,4 +1,5 @@
 @import "~bourbon/app/assets/stylesheets/bourbon";
+@import "../node_modules/PrestaKit/scss/custom/_variables.scss";
 @import "config/settings";
 
 // Mixins
@@ -11,6 +12,7 @@
 @import "components/layout/header_toolbar";
 @import "components/layout/main_header";
 @import "components/layout/nav_bar";
+@import "components/category_tree";
 
 @import "pages/product_page";
 @import "pages/products_catalog";
@@ -22,7 +24,7 @@
 // Main Layout
 
 body {
-  background: $color-background;
+  background: $body-bg;
 }
 
 
@@ -65,4 +67,9 @@ $color-icons: #6c868e;
   &:hover {
     text-decoration: none;
   }
+}
+
+.col-center {
+  float:none;
+  margin:0 auto;
 }

@@ -104,115 +104,120 @@
     </ul>
     <div class="clearfix"></div>
     <h4>{{ form.vars.label }}</h4>
-    <div class="col-xs-6">
-        <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
-    </div>
-    <div class="col-lg-1">
-        <div class="input-group">
-            <span class="input-group-addon">×</span>
-            <input type="number" id="{{ form.vars.id }}-curPackItemQty" class="form-control curPackItemQty" min="1" value="1">
-        </div>
-    </div>
-    <div class="col-lg-2">
-        <div class="input-group">
-            <button id="{{ form.vars.id }}-curPackItemAdd" class="btn">{{ trans("Add this product", {}, "AdminProducts") }}</button>
-        </div>
-    </div>
 
-    <script>
-        $( document ).ready(function() {
-            //remove collection item
-            $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
-                e.preventDefault();
-                var _this = $(this);
 
-                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-                    onContinue: function(){
-                        _this.parent().remove();
-                        if(_this.parent().parent().length == 0){
-                            $('#js_{{ form.vars.id }} h4.title-products').addClass('hide');
+    <div class="row m-b-2">
+        <div class="col-md-6">
+            <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
+        </div>
+        <div class="col-md-2">
+            <div class="input-group">
+                <span class="input-group-addon">×</span>
+                <input type="number" id="{{ form.vars.id }}-curPackItemQty" class="form-control curPackItemQty" min="1" value="1">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="input-group">
+                <button id="{{ form.vars.id }}-curPackItemAdd" class="btn btn-primary-outline">{{ trans("Add this product", {}, "AdminProducts") }}</button>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <script>
+            $( document ).ready(function() {
+                //remove collection item
+                $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
+                    e.preventDefault();
+                    var _this = $(this);
+
+                    modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                        onContinue: function(){
+                            _this.parent().remove();
+                            if(_this.parent().parent().length == 0){
+                                $('#js_{{ form.vars.id }} h4.title-products').addClass('hide');
+                            }
                         }
+                    }).show();
+                });
+
+                $('#{{ form.vars.id }}-curPackItemAdd').click(function(e){
+                    e.preventDefault();
+                    if($(this).data('currentItem')){
+                        var number = $('#{{ form.vars.id }}-curPackItemQty').val();
+                        var data = $(this).data('currentItem');
+                        var value = number + 'x' + data.id + 'x' + (data.id_product_attribute ? data.id_product_attribute : 0);
+
+                        var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '">';
+                        html += '<img src="' + data.image +'" /> ';
+                        html += sprintf('{{ template_collection|raw }}', data.{{ mapping_name }}, data.ref, number);
+                        html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
+                        html += '</li>';
+                        $('#{{ form.vars.id }}-data').append(html);
+                        $('#js_{{ form.vars.id }} h4.title-products').removeClass('hide');
+
+                        $('#{{ form.vars.id }}').val('');
                     }
-                }).show();
-            });
 
-            $('#{{ form.vars.id }}-curPackItemAdd').click(function(e){
-                e.preventDefault();
-                if($(this).data('currentItem')){
-                    var number = $('#{{ form.vars.id }}-curPackItemQty').val();
-                    var data = $(this).data('currentItem');
-                    var value = number + 'x' + data.id + 'x' + (data.id_product_attribute ? data.id_product_attribute : 0);
+                    $(this).data('currentItem', null);
+                    $('#{{ form.vars.id }}-curPackItemQty').val(1);
+                });
 
-                    var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '">';
-                    html += '<img src="' + data.image +'" /> ';
-                    html += sprintf('{{ template_collection|raw }}', data.{{ mapping_name }}, data.ref, number);
-                    html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
-                    html += '</li>';
-                    $('#{{ form.vars.id }}-data').append(html);
-                    $('#js_{{ form.vars.id }} h4.title-products').removeClass('hide');
+                //define source
+                this['{{ form.vars.id }}_source'] = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.whitespace,
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    identify: function(obj) {
+                        return obj.{{ mapping_value }};
+                    },
+                    remote: {
+                        url: '{{ remote_url|raw }}',
+                        cache: false,
+                        wildcard: '%QUERY',
+                        transform: function(response){
+                            var newResponse = [];
 
-                    $('#{{ form.vars.id }}').val('');
-                }
+                            if(!response){
+                                return newResponse;
+                            }
 
-                $(this).data('currentItem', null);
-                $('#{{ form.vars.id }}-curPackItemQty').val(1);
-            });
+                            //generate excludes IDs and filter results
+                            var excludeIds = [];
+                            $.each($('#{{ form.vars.id }}-data li'), function(key, val){
+                                excludeIds.push($(val).attr('data-product'));
+                            });
 
-            //define source
-            this['{{ form.vars.id }}_source'] = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.whitespace,
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                identify: function(obj) {
-                    return obj.{{ mapping_value }};
-                },
-                remote: {
-                    url: '{{ remote_url|raw }}',
-                    cache: false,
-                    wildcard: '%QUERY',
-                    transform: function(response){
-                        var newResponse = [];
+                            $.each(response, function(key, item){
+                                if(excludeIds.indexOf(item.id + '-' + item.id_product_attribute) === -1){
+                                    newResponse.push(item);
+                                }
+                            });
 
-                        if(!response){
                             return newResponse;
                         }
-
-                        //generate excludes IDs and filter results
-                        var excludeIds = [];
-                        $.each($('#{{ form.vars.id }}-data li'), function(key, val){
-                            excludeIds.push($(val).attr('data-product'));
-                        });
-
-                        $.each(response, function(key, item){
-                            if(excludeIds.indexOf(item.id + '-' + item.id_product_attribute) === -1){
-                                newResponse.push(item);
-                            }
-                        });
-
-                        return newResponse;
                     }
-                }
-            });
+                });
 
-            //define typeahead
-            $('#{{ form.vars.id }}').typeahead({
-                limit: 20,
-                minLength: 2,
-                highlight: true,
-                hint: false,
-            }, {
-                display: '{{ mapping_name }}',
-                source: this['{{ form.vars.id }}_source'],
-                limit: 30,
-                templates: {
-                    suggestion: function(item){
-                        return '<div><img src="'+ item.image +'" style="width:50px" /> '+ item.name +'</div>'
+                //define typeahead
+                $('#{{ form.vars.id }}').typeahead({
+                    limit: 20,
+                    minLength: 2,
+                    highlight: true,
+                    hint: false,
+                }, {
+                    display: '{{ mapping_name }}',
+                    source: this['{{ form.vars.id }}_source'],
+                    limit: 30,
+                    templates: {
+                        suggestion: function(item){
+                            return '<div><img src="'+ item.image +'" style="width:50px" /> '+ item.name +'</div>'
+                        }
                     }
-                }
-            }).bind('typeahead:select', function(ev, suggestion) {
-                $('#{{ form.vars.id }}-curPackItemAdd').data('currentItem', suggestion);
+                }).bind('typeahead:select', function(ev, suggestion) {
+                    $('#{{ form.vars.id }}-curPackItemAdd').data('currentItem', suggestion);
+                });
             });
-        });
-    </script>
+        </script>
+    </div>
 {% endblock %}
 
 {% block typeahead_customer_collection_widget %}
