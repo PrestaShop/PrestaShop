@@ -104,7 +104,7 @@ class ProductInformation extends CommonAbstractType
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => $this->translator->trans('Search for a product', [], 'AdminProducts'),
-            'template_collection' => '<span class="title">%s</span><span class="ref">REF: %s</span><span class="quantity">X %s</span><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
+            'template_collection' => '<span class="title">%s</span><span class="ref">REF: %s</span><span class="quantity">X %s</span><button type="button" class="btn btn-danger btn-sm delete"><i class="material-icons">delete</i></button>',
             'required' => false,
             'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
         ))
@@ -224,7 +224,7 @@ class ProductInformation extends CommonAbstractType
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => $this->translator->trans('Search and add a related product', [], 'AdminProducts'),
-            'template_collection' => '<span class="label label-default">%s <i class="material-icons delete">close</i></span>',
+            'template_collection' => '<div class="title col-xs-10">%s</div><button type="button" class="btn btn-danger btn-sm delete"><i class="material-icons">delete</i></button>',
             'required' => false,
             'label' =>  $this->translator->trans('Accessories', [], 'AdminProducts')
         ));

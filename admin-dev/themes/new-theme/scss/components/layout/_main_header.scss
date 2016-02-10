@@ -1,7 +1,7 @@
 .main-header {
   position: fixed;
   z-index: 501;
-  background: $color-white;
+  background: $white;
   height: $size-header-height;
   width: 100%;
 
@@ -28,7 +28,7 @@
     @include single-line-block($size-header-height);
     position: relative;
     cursor: pointer;
-    color: $color-main;
+    color: $primary;
     width: rem(30px);
   }
   > .notification::after {
@@ -44,8 +44,8 @@
     position: absolute;
     top: rem(2px);
     right: rem(2px);
-    color: $color-white;
-    background: $color-secondary;
+    color: $white;
+    background: $secondary;
     font-size: rem(9px);
     padding: 0 rem(4px);
     border-radius: rem(10px);
@@ -59,7 +59,7 @@
 .shop-list {
   > .link {
     display: inline-block;
-    color: $color-text;
+    color: $dark-grey;
     @include single-line-block($size-header-height);
   }
 }

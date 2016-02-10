@@ -27,10 +27,6 @@
 
 	$.fn.categorytree = function (settings) {
 
-		$.fn.categorytreeFoldStyle = function (pos) {
-			this.attr('style', 'background-image:url("'+ baseDir +'web/bundles/framework/images/blue_picto_'+ pos +'.gif");');
-		};
-
 		var isMethodCall = (typeof settings === 'string'), // is this a method call like $().categorytree("unselect")
 			returnValue = this;
 		// if a method call execute the method on all selected instances
@@ -42,11 +38,11 @@
 					break;
 				case 'unfold':
 					$('ul', this).show();
-					$('li', this).has('ul').categorytreeFoldStyle('less');
+					$('li', this).has('ul').addClass('less');
 					break;
 				case 'fold':
 					$('ul ul', this).hide();
-					$('li', this).has('ul').categorytreeFoldStyle('more');
+					$('li', this).has('ul').addClass('more');
 					break;
 				default:
 					throw 'Unknown method';
@@ -59,15 +55,15 @@
 					var ui = event.target;
 					$(ui).next('ul').toggle();
 					if ($(ui).next('ul').is(':visible')) {
-						$(ui).parent('li').categorytreeFoldStyle('less');
+						$(ui).parent('li').addClass('less');
 					} else {
-						$(ui).parent('li').categorytreeFoldStyle('more');
+						$(ui).parent('li').addClass('more');
 					}
 				});
 				if ($(item).is(':visible')) {
-					$(item).parent('li').categorytreeFoldStyle('less');
+					$(item).parent('li').addClass('less');
 				} else {
-					$(item).parent('li').categorytreeFoldStyle('more');
+					$(item).parent('li').addClass('more');
 				}
 			});
 		}
