@@ -254,10 +254,20 @@
                               </div>
                             </div>
                             <span class="small">
-                              <a href="#tab-step2" onclick="$('a[href=\'#step2\']').tab('show');">
-                                {{ trans("The tax can be amended in Pricing", {}, 'AdminProducts') }}
+                              <a href="#" id="tax_rule_shortcut_opener">
+                                {{ trans("The tax can be amended here", {}, 'AdminProducts') }}
                               </a>
                             </span>
+                            <div class="row hide">
+                              <div class="col-md-12">
+                                <label>{{ trans("Tax rule", {}, 'AdminProducts') }}</label>
+                              </div>
+                              <div class="clearfix"></div>
+                              <div class="col-md-11" id="tax_rule_shortcut">
+
+                              </div>
+                              <a href="#" onclick="$(this).parent().hide()">&times;</a>
+                            </div>
                           </div>
 
                           <div class="form-group">

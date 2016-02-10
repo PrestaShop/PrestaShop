@@ -83,7 +83,7 @@ var displayFieldsManager = (function() {
 			});
 
 			/** Tax rule dropdown shortcut */
-			$('a[href="#tab-step2"]').on('click', function() {
+			$('a#tax_rule_shortcut_opener').on('click', function() {
 				// lazy instantiated
 				var duplicate = $('#form_step2_id_tax_rules_group_shortcut');
 				if (duplicate.length == 0) {
@@ -95,10 +95,10 @@ var displayFieldsManager = (function() {
 					duplicate.on('change', function () {
 						origin.val(duplicate.val()).change();
 					});
-					duplicate.appendTo($(this).parent());
-				} else {
-					duplicate.show();
+					duplicate.appendTo($('#tax_rule_shortcut'));
 				}
+				duplicate.parent().parent().show();
+
 				return false;
 			});
 		},
