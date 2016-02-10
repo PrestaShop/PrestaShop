@@ -189,7 +189,8 @@ class LinkCore
             'update' => 1,
             'op' => 'up',
             'id_product' => $id_product,
-            'id_product_attribute' => $id_product_attribute
+            'id_product_attribute' => $id_product_attribute,
+            'token' => Tools::getToken(false)
         ];
 
         if ($id_customization) {
@@ -214,7 +215,8 @@ class LinkCore
             'update' => 1,
             'op' => 'down',
             'id_product' => $id_product,
-            'id_product_attribute' => $id_product_attribute
+            'id_product_attribute' => $id_product_attribute,
+            'token' => Tools::getToken(false)
         ];
 
         if ($id_customization) {

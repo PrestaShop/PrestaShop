@@ -36,13 +36,15 @@
 
   <!--  product left body: description -->
   <div class="product-line-grid-right product-line-actions col-md-4">
+    {*if $product.down_quantity_url}<a href="{$product.down_quantity_url}" data-link-action="update-quantity">-</a>{/if*}
+    {*if $product.up_quantity_url}<a href="{$product.up_quantity_url}" data-link-action="update-quantity">+</a>{/if*}
     <input class="cart-line-product-quantity" productid="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
     <div class="cart-line-product-actions ">
       <a
           class                       = "remove-from-cart"
           rel                         = "nofollow"
           href                        = "{$product.remove_from_cart_url}"
-          data-link-action            = "remove-from-cart"
+          data-link-action            = "delete-from-cart"
           data-id-product             = "{$product.id_product|escape:'javascript'}"
           data-id-product-attribute   = "{$product.id_product_attribute|escape:'javascript'}"
       >
@@ -57,9 +59,9 @@
         <ul>
           {foreach from=$product.customizations item="customization"}
             <li>
-              {if $customization.down_quantity_url}<a href="{$customization.down_quantity_url}">-</a>{/if}
+              {if $customization.down_quantity_url}<a href="{$customization.down_quantity_url}" data-link-action="update-quantity">-</a>{/if}
               <span class="product-quantity">{$customization.quantity}</span>
-              {if $customization.up_quantity_url}<a href="{$customization.up_quantity_url}">+</a>{/if}
+              {if $customization.up_quantity_url}<a href="{$customization.up_quantity_url}" data-link-action="update-quantity">+</a>{/if}
               <a href="{$customization.remove_from_cart_url}" class="remove-from-cart" rel="nofollow">{l s='Remove'}</a>
               <ul>
                 {foreach from=$customization.fields item="field"}

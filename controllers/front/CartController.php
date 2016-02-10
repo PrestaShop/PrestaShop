@@ -74,8 +74,20 @@ class CartControllerCore extends FrontController
 
         $presenter = new CartPresenter;
         $this->context->smarty->assign([
-            'cart' => $presenter->present($this->context->cart)
+            'cart' => $presenter->present($this->context->cart),
+            'static_token' => Tools::getToken(false),
         ]);
+
+        if (Tools::getValue('ajax')) {
+            ob_end_clean();
+            header('Content-Type: application/json');
+            die(json_encode([
+                'cart_detailed' => $this->render('checkout/_partials/cart-detailed.tpl'),
+                'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals.tpl'),
+                'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals.tpl'),
+                'cart_voucher' => $this->render('checkout/_partials/cart-voucher.tpl'),
+            ]));
+        }
 
         $this->setTemplate('checkout/cart.tpl');
     }
@@ -110,8 +122,17 @@ class CartControllerCore extends FrontController
                     CartRule::autoAddToCart($this->context);
                 }
             }
+
             // Make redirection
             if (!$this->errors) {
+                if (Tools::getValue('ajax')) {
+                    $this->ajaxDie(Tools::jsonEncode([
+                        'success' => true,
+                        'id_product' => $this->id_product,
+                        'id_product_attribute' => $this->id_product_attribute
+                    ]));
+                }
+
                 if (Tools::getValue('refresh')) {
                     $url = $this->context->link->getProductLink(
                         $this->id_product,
@@ -147,7 +168,7 @@ class CartControllerCore extends FrontController
                     }
                 }
             }
-        } elseif (!$this->isTokenValid() && Tools::getValue('action') !== 'show') {
+        } elseif (!$this->isTokenValid() && Tools::getValue('action') !== 'show' && !Tools::getValue('ajax')) {
             Tools::redirect('index.php');
         }
     }

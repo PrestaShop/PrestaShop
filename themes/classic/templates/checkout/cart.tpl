@@ -44,21 +44,11 @@
             {include file='checkout/_partials/cart-voucher.tpl'}
           {/block}
 
-          {foreach from=$cart.subtotals item="subtotal"}
-            <div class="card-block cart-summary-line" id="cart-subtotal-{$subtotal.type}">
-              <span class="label">{$subtotal.label}</span>
-              <span class="value">{$subtotal.amount}</span>
-            </div>
-          {/foreach}
+          {hook h='displayShoppingCart'}
 
-          <hr/>
-
-          <div class="card-block cart-total cart-summary-line">
-            <span class="label">{$cart.total.label}: </span>
-            <span class="value">{$cart.total.amount}</span>
-          </div>
-
-          <hr/>
+          {block name='cart_totals'}
+            {include file='checkout/_partials/cart-detailed-totals.tpl' cart=$cart}
+          {/block}
 
           <div class="checkout text-xs-center card-block">
             <ul>
