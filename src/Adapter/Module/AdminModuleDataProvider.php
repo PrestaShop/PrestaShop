@@ -82,11 +82,15 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     public function clearCatalogCache()
     {
         $this->clearCache([self::_CACHEFILE_CATEGORIES_, self::_CACHEFILE_MODULES_]);
+        $this->catalog_categories      = [];
+        $this->catalog_modules         = [];
     }
 
     public function clearManageCache()
     {
         $this->clearCache([self::_CACHEFILE_INSTALLED_CATEGORIES_, self::_CACHEFILE_INSTALLED_MODULES_]);
+        $this->manage_categories      = [];
+        $this->manage_modules         = [];
     }
 
     public function getAllModules()

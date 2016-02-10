@@ -194,7 +194,7 @@ class ModuleController extends Controller
         $modulesProvider->clearManageCache();
 
         if ($request->isXmlHttpRequest()) {
-            if ($ret[$module]['status'] === true) {
+            if ($ret[$module]['status'] === true && $action != 'uninstallModule') {
                 $moduleInstance = $modulesProvider->getManageModules(['name' => $module]);
                 $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls($moduleInstance);
                 $ret[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/_partials:_modules_action_menu.html.twig', array(
