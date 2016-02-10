@@ -207,10 +207,10 @@
     {% spaceless %}
         {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
         <div class="input-group datepicker">
-            <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-            <span class="input-group-addon">
-                <span class="icon-calendar"></span>
-            </span>
+            <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+            <div class="input-group-addon">
+                <i class="material-icons">date_range</i>
+            </div>
         </div>
     {% endspaceless %}
 {% endblock date_picker_widget %}

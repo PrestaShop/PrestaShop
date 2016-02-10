@@ -301,26 +301,17 @@
                                         <button type="button" id="form_step1_new_category_save" class="btn btn-default btn-sm submit">{{ trans('SAVE', {}, 'AdminProducts') }}</button>
                                     </fieldset>
                                 </div>
-
-
-
-
                               </div>
                               <a href="#" class="open">{{ trans('+ Add a category', {}, 'AdminProducts') }}</a>
                             </div>
-
                           </div>
-
                         </div>
                       </div>
                     </div>
-
                   </div>
-
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -332,67 +323,81 @@
                 <div class="row">
 
                   {# LEFT #}
-                  <div class="col-mg-9">
-                    <div class="form-group" id="quantities" style="{% if has_combinations or form.step3.depends_on_stock.vars.value != "0" %}display: none;{% endif %}">
+                  <div class="col-md-9">
+                    <div id="quantities" style="{% if has_combinations or form.step3.depends_on_stock.vars.value != "0" %}display: none;{% endif %}">
                       <h4>{{ trans('Quantities', [], 'AdminProducts') }}</h4>
-                      <div class="col-sm-2 pull-left">
-                        <label class="control-label">{{ form.step3.qty_0.vars.label }}</label>
-                        {{ form_errors(form.step3.qty_0) }}
-                        {{ form_widget(form.step3.qty_0) }}
+                      <div class="row">
+                          <div class="col-sm-2">
+                              <fieldset class="form-group">
+                                <label>{{ form.step3.qty_0.vars.label }}</label>
+                                {{ form_errors(form.step3.qty_0) }}
+                                {{ form_widget(form.step3.qty_0) }}
+                              </fieldset>
+                          </div>
+                          <div class="col-sm-2">
+                              <fieldset class="form-group">
+                                <label>{{ form.step3.minimal_quantity.vars.label }}</label>
+                                {{ form_errors(form.step3.minimal_quantity) }}
+                                {{ form_widget(form.step3.minimal_quantity) }}
+                              </fieldset>
+                          </div>
+                          <div class="clearfix"></div>
                       </div>
-                      <div class="col-sm-2 pull-left">
-                        <label class="control-label">{{ form.step3.minimal_quantity.vars.label }}</label>
-                        {{ form_errors(form.step3.minimal_quantity) }}
-                        {{ form_widget(form.step3.minimal_quantity) }}
-                      </div>
-                      <div class="clearfix"></div>
                     </div>
 
-                    <div class="form-group" id="virtual_product" data-action="{{ path('admin_product_virtual_save_action') }}" data-action-remove="{{ path('admin_product_virtual_remove_action') }}">
+                    <div id="virtual_product" data-action="{{ path('admin_product_virtual_save_action') }}" data-action-remove="{{ path('admin_product_virtual_remove_action') }}">
                       <h4>{{ form.step3.virtual_product.vars.label }}</h4>
-                      <div class="form-group form-inline">
+                      <fieldset class="form-group form-inline">
                         {{ form_widget(form.step3.virtual_product.is_virtual_file) }}
-                      </div>
-                      <div id="virtual_product_content" class="well col-lg-8">
+                      </fieldset>
+
+                      <div id="virtual_product_content" class="row col-md-8">
                         {{ form_errors(form.step3.virtual_product) }}
-                        <div class="form-group">
-                          <label class="control-label">{{ form.step3.virtual_product.file.vars.label }}</label>
-                          <div id="form_step3_virtual_product_file_input" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'hide' : 'show' }}">
-                            {{ form_widget(form.step3.virtual_product.file) }}
-                          </div>
-                          <div id="form_step3_virtual_product_file_details" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'show' : 'hide' }}">
-                            <a href="{{ form.step3.virtual_product.vars.value.file_download_link is defined ? form.step3.virtual_product.vars.value.file_download_link : '' }}" class="btn btn-default download">{{ trans('Download file', {}, 'AdminProducts') }}</a>
-                            <a href="{{ path('admin_product_virtual_remove_file_action') }}" class="btn btn-default delete">{{ trans('Delete this file', {}, 'AdminProducts') }}</a>
-                          </div>
+                        <div class="col-md-12">
+                            <fieldset class="form-group">
+                                <label>{{ form.step3.virtual_product.file.vars.label }}</label>
+                                <div id="form_step3_virtual_product_file_input" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'hide' : 'show' }}">
+                                    {{ form_widget(form.step3.virtual_product.file) }}
+                                </div>
+                                <div id="form_step3_virtual_product_file_details" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'show' : 'hide' }}">
+                                    <a href="{{ form.step3.virtual_product.vars.value.file_download_link is defined ? form.step3.virtual_product.vars.value.file_download_link : '' }}" class="btn btn-default btn-sm download">{{ trans('Download file', {}, 'AdminProducts') }}</a>
+                                    <a href="{{ path('admin_product_virtual_remove_file_action') }}" class="btn btn-danger btn-sm delete">{{ trans('Delete this file', {}, 'AdminProducts') }}</a>
+                                </div>
+                            </fieldset>
                         </div>
-                        <div class="form-group">
-                          <div class="col-sm-6">
-                            <label class="control-label">{{ form.step3.virtual_product.name.vars.label }}</label>
-                            {{ form_errors(form.step3.virtual_product.name) }}
-                            {{ form_widget(form.step3.virtual_product.name) }}
+                          <div class="col-md-6">
+                              <fieldset class="form-group">
+                                  <label>{{ form.step3.virtual_product.name.vars.label }}</label>
+                                  {{ form_errors(form.step3.virtual_product.name) }}
+                                  {{ form_widget(form.step3.virtual_product.name) }}
+                              </fieldset>
                           </div>
-                          <div class="col-sm-6">
-                            <label class="control-label">{{ form.step3.virtual_product.nb_downloadable.vars.label }}</label>
-                            {{ form_errors(form.step3.virtual_product.nb_downloadable) }}
-                            {{ form_widget(form.step3.virtual_product.nb_downloadable) }}
+                          <div class="col-md-6">
+                              <fieldset class="form-group">
+                                  <label>{{ form.step3.virtual_product.nb_downloadable.vars.label }}</label>
+                                  {{ form_errors(form.step3.virtual_product.nb_downloadable) }}
+                                  {{ form_widget(form.step3.virtual_product.nb_downloadable) }}
+                              </fieldset>
                           </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="col-sm-6">
-                            <label class="control-label">{{ form.step3.virtual_product.expiration_date.vars.label }}</label>
-                            {{ form_errors(form.step3.virtual_product.expiration_date) }}
-                            {{ form_widget(form.step3.virtual_product.expiration_date) }}
+                          <div class="col-md-6">
+                              <fieldset class="form-group">
+                                  <label>{{ form.step3.virtual_product.expiration_date.vars.label }}</label>
+                                  {{ form_errors(form.step3.virtual_product.expiration_date) }}
+                                  {{ form_widget(form.step3.virtual_product.expiration_date) }}
+                              </fieldset>
                           </div>
-                          <div class="col-sm-6">
-                            <label class="control-label">{{ form.step3.virtual_product.nb_days.vars.label }}</label>
-                            {{ form_errors(form.step3.virtual_product.nb_days) }}
-                            {{ form_widget(form.step3.virtual_product.nb_days) }}
+                          <div class="col-md-6">
+                              <fieldset class="form-group">
+                                  <label>{{ form.step3.virtual_product.nb_days.vars.label }}</label>
+                                  {{ form_errors(form.step3.virtual_product.nb_days) }}
+                                  {{ form_widget(form.step3.virtual_product.nb_days) }}
+                              </fieldset>
                           </div>
-                        </div>
-                        <div class="form-group">
-                          {{ form_widget(form.step3.virtual_product.save) }}
-                        </div>
+                          <div class="col-md-12">
+                            {{ form_widget(form.step3.virtual_product.save) }}
+                          </div>
                       </div>
+                      <div class="clearfix"></div>
                     </div>
 
                     {% if asm_globally_activated and form.step1.type_product.vars.value != "2" %}
@@ -415,31 +420,37 @@
                       </div>
                     {% endif %}
 
-                    <div class="form-group" id="pack_stock_type">
+                    <div id="pack_stock_type">
                       <h4>{{ form.step3.pack_stock_type.vars.label }}</h4>
-                      <div class="col-sm-4">
-                        {{ form_errors(form.step3.pack_stock_type) }}
-                        {{ form_widget(form.step3.pack_stock_type) }}
+                      <div class="row col-sm-4">
+                          <fieldset class="form-group">
+                            {{ form_errors(form.step3.pack_stock_type) }}
+                            {{ form_widget(form.step3.pack_stock_type) }}
+                          </fieldset>
                       </div>
+                      <div class="clearfix"></div>
                     </div>
 
                     <div id="combinations">
                       <h4>{{ trans('Product combinations', [], 'AdminProducts') }}</h4>
-                      <div class="form-group" id="attributes-generator">
-                        <p>
-                          {{ trans('Create a series of combinations by entering the related attributes below.', [], 'AdminProducts') }}
-                          <span data-toggle="tooltip" title="{{ trans("Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!", {}, 'AdminProducts')|raw }}">[?]</span>
-                        </p>
-                        <div class="col-sm-10">
-                          {{ form_errors(form.step3.attributes) }}
-                          {{ form_widget(form.step3.attributes) }}
+                      <div id="attributes-generator">
+                          <p>
+                              {{ trans('Create a series of combinations by entering the related attributes below.', [], 'AdminProducts') }}
+                              <span data-toggle="tooltip" title="{{ trans("Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!", {}, 'AdminProducts')|raw }}">[?]</span>
+                          </p>
+
+                        <div class="col-sm-10 row">
+                            <fieldset class="form-group">
+                              {{ form_errors(form.step3.attributes) }}
+                              {{ form_widget(form.step3.attributes) }}
+                            </fieldset>
                         </div>
                         <div class="col-sm-2">
-                          <input type="button" id="create-combinations" class="btn btn-primary" value="Create"/>
+                          <input type="button" id="create-combinations" class="btn btn-primary-outline btn-sm" value="Create"/>
                         </div>
                       </div>
 
-                      <div class="form-group">
+                      <div>
                         {{ form_errors(form.step3.combinations) }}
                         <table class="table table-striped">
                           <thead id="combinations_thead" {% if form.step3.combinations|length == 0 %}style="display: none;"{% endif %}>
@@ -462,29 +473,34 @@
                       </div>
                     </div>
 
-                    <div class="form-group form-inline">
-                      <h4>{{ trans('Availability preferences', [], 'AdminProducts') }}</h4>
-                      <label class="control-label">{{ trans('Behavior when out of stock', [], 'AdminProducts') }}</label>
-                      {{ form_errors(form.step3.out_of_stock) }}
-                      <div>
-                        {{ form_widget(form.step3.out_of_stock) }}
-                      </div>
+                    <div>
+                        <h4>{{ trans('Availability preferences', [], 'AdminProducts') }}</h4>
+                        <fieldset class="form-group form-inline">
+                            <label>{{ trans('Behavior when out of stock', [], 'AdminProducts') }}</label>
+                            {{ form_errors(form.step3.out_of_stock) }}
+                            {{ form_widget(form.step3.out_of_stock) }}
+                        </fieldset>
                     </div>
 
-                    <div class="form-group">
-                      <div class="col-md-4 pull-left">
-                        <label class="control-label">{{ form.step3.available_now.vars.label }}</label>
-                        {{ form_errors(form.step3.available_now) }}
-                        {{ form_widget(form.step3.available_now) }}
+                    <div class="row">
+                      <div class="col-md-4">
+                          <fieldset class="form-group">
+                            <label>{{ form.step3.available_now.vars.label }}</label>
+                            {{ form_errors(form.step3.available_now) }}
+                            {{ form_widget(form.step3.available_now) }}
+                          </fieldset>
                       </div>
-                      <div class="col-md-4 pull-left">
-                        <label class="control-label">{{ form.step3.available_later.vars.label }}</label>
-                        {{ form_errors(form.step3.available_later) }}
-                        {{ form_widget(form.step3.available_later) }}
-
-                        <label class="control-label">{{ form.step3.available_date.vars.label }}</label>
-                        {{ form_errors(form.step3.available_date) }}
-                        {{ form_widget(form.step3.available_date) }}
+                      <div class="col-md-4 ">
+                          <fieldset class="form-group">
+                            <label>{{ form.step3.available_later.vars.label }}</label>
+                            {{ form_errors(form.step3.available_later) }}
+                            {{ form_widget(form.step3.available_later) }}
+                          </fieldset>
+                          <fieldset class="form-group">
+                            <label>{{ form.step3.available_date.vars.label }}</label>
+                            {{ form_errors(form.step3.available_date) }}
+                            {{ form_widget(form.step3.available_date) }}
+                          </fieldset>
                       </div>
                     </div>
                   </div>
@@ -852,6 +868,7 @@
       </div>
       {{ form_widget(form.id_product) }}
       {{ form_widget(form._token) }}
+        <div class="clearfix"></div>
     </div>
 
     {# FOOTER #}

@@ -1,6 +1,5 @@
 .product-page {
-
-  padding-bottom: $grid-gutter-width / 2;
+  padding-bottom: 80px;
   background: $background-grey;
 
   &::before {
@@ -15,6 +14,10 @@
     height:1px;
   }
   // Resets
+
+  #form-loading {
+    visibility: hidden;
+  }
 
   .tab-content {
     padding: 0;
@@ -69,6 +72,51 @@
   .hide {
     display: none;
   }
+
+  // Combination generator
+
+  .tokenfield{
+    height: auto;
+    padding-bottom: 0;
+
+    input.token-input[type="text"]{
+      display: inline-block;
+      border:0;
+      padding: 0;
+      margin-top: -6px;
+      margin-bottom: 0;
+      background-color: transparent;
+      max-width:100%;
+      width: auto !important;
+    }
+  }
+
+  // Combination details form
+
+  #accordion_combinations td.img img{
+    max-width:50px;
+  }
+  #accordion_combinations .combination td.img .fake-img{
+    background: $medium-grey;
+    width:50px;
+    height:50px;
+  }
+  .product-combination-image{
+    display: inline-block;
+    border: 1px solid $primary;
+    outline: solid 4px $white;
+    margin: 5px;
+  }
+  .product-combination-image.img-highlight{
+    outline: solid 4px $primary;
+  }
+  .product-combination-image input{
+    display:none;
+  }
+  .combination-form .title{
+    font-size: 20px;
+  }
+
 
   // Dropzone & Image manager
 
@@ -223,8 +271,8 @@
   .twitter-typeahead{
     .tt-menu{
       width: 100%;
-      border: 1px solid #ccc;
-      background: #fff;
+      border: 1px solid $medium-grey;
+      background: $white;
     }
     .tt-suggestion{
       cursor: pointer

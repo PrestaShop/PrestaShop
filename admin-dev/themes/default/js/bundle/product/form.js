@@ -1172,7 +1172,7 @@ var form = (function() {
 
 			/** show rendered form after page load */
 			$(window).load(function(){
-				$('#form-loading').fadeIn();
+				$('#form-loading').css('visibility','visible').hide().fadeIn();
 				imagesProduct.expander();
 			});
 		},
