@@ -82,6 +82,26 @@ var displayFieldsManager = (function() {
 			$('#form .form-input-title input').on('focus', function() {
 				$(this).select();
 			});
+
+			/** Tax rule dropdown shortcut */
+			$('a#tax_rule_shortcut_opener').on('click', function() {
+				// lazy instantiated
+				var duplicate = $('#form_step2_id_tax_rules_group_shortcut');
+				if (duplicate.length == 0) {
+					var origin = $('select#form_step2_id_tax_rules_group');
+					duplicate = origin.clone(false).attr('id', 'form_step2_id_tax_rules_group_shortcut');
+					origin.on('change', function () {
+						duplicate.val(origin.val()); // no change() here to avoid infinite loop.
+					});
+					duplicate.on('change', function () {
+						origin.val(duplicate.val()).change();
+					});
+					duplicate.appendTo($('#tax_rule_shortcut'));
+				}
+				duplicate.parent().parent().show();
+
+				return false;
+			});
 		},
 		'refresh': function() {
 			$('#virtual_product').hide();
@@ -1150,7 +1170,7 @@ var form = (function() {
 				}).show();
 			});
 
-			/** show rendrered form after page load */
+			/** show rendered form after page load */
 			$(window).load(function(){
 				$('#form-loading').fadeIn();
 				imagesProduct.expander();
