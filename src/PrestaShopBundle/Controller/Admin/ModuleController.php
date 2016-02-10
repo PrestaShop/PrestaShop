@@ -297,53 +297,63 @@ class ModuleController extends Controller
     }
 
     /**
-     * Controller responsible for displaying "Catalog" section of Module management pages
+     * Controller responsible for importing new module from DropFile zone in BO
      * @param  Request $request
      * @return Response
      */
     public function importModuleAction(Request $request)
     {
-        $file = $request->files->get('module_file');
-        $orinal_file_name = $file->getClientOriginalName();
-        $module_name = basename($orinal_file_name, '.'.$file->guessExtension());
+        try {
+            $file_uploaded = $request->files->get('file_uploaded');
+            $file_uploaded_name = $file_uploaded->getClientOriginalName();
+            $file_uploaded_tmp_path = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload';
+            $tmp_filename_uniq = md5(uniqid()).$file_uploaded->guessExtension();
+            $file_uploaded_tmp_fullpath = $file_uploaded_tmp_path.DIRECTORY_SEPARATOR.$tmp_filename_uniq;
+            // Move file from server tmp DIR to PrestaShop tmp DIR
+            $file_uploaded->move($file_uploaded_tmp_path, $tmp_filename_uniq);
+            // Try to inflate archive given, and do check to verify we have a valid module architecture
+            $module_name = $this->inflateModule($file_uploaded_tmp_fullpath);
+            // Install the module
+            $installation_response = $this->installModule($module_name);
+            $installation_response['module_name'] = $module_name;
 
-        if ($file) {
-            $file_name = md5(uniqid()).'.zip';
-            $file->move(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload', $file_name);
-
-            if (!$this->unzipModule($file_name, $module_name)) {
-                // @TODO: clean file
-                return new JsonResponse(array('status' => false, 'msg' => 'unzip failed'), 200, array( 'Content-Type' => 'application/json' ));
-            }
-
-            if (!$this->installModule($module_name)) {
-                // @TODO: clean file
-                return new JsonResponse(array('status' => false, 'msg' => 'Module Failed to install'), 200, array( 'Content-Type' => 'application/json' ));
-            }
-
-            return new JsonResponse(array('status' => true, 'msg' => $module_name.' successfully installed', 'module_name' => $module_name), 200, array( 'Content-Type' => 'application/json' ));
-            ;
+            return new JsonResponse(
+                $installation_response,
+                200,
+                array( 'Content-Type' => 'application/json' )
+            );
+        } catch (Exception $e) {
+            return new JsonResponse(array(
+                'status' => false,
+                'msg' => $e->getMessage()),
+                200,
+                array( 'Content-Type' => 'application/json' )
+            );
         }
-
-        return new JsonResponse(array('status' => false, 'msg' => 'invalid file'), 200, array( 'Content-Type' => 'application/json' ));
     }
 
-    final private function unzipModule($file_name, $module_name)
+    final private function inflateModule($file_to_inflate)
     {
-        $file = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.$file_name;
-
-        if (file_exists($file)) {
+        if (file_exists($file_to_inflate)) {
             $zip_archive = new \ZipArchive();
-            $ret = $zip_archive->open($file);
+            $ret = $zip_archive->open($file_to_inflate);
 
             if ($ret === true) {
-                $zip_archive ->extractTo(_PS_MODULE_DIR_);
-                $zip_archive ->close();
-                return true;
+                // Get module name depending on first folder found in archive and trim all separator that might be there
+                $module_name = str_replace(DIRECTORY_SEPARATOR, '', $zip_archive->statIndex(0)['name']);
+                // Put it in Module directory
+                $zip_archive->extractTo(_PS_MODULE_DIR_);
+                // Close archive
+                $zip_archive->close();
+                // Delete archive from tmp folder
+                unlink($file_to_inflate);
+                return $module_name;
+            } else {
+                throw new Exception('Cannot open the following archive: '.$file_to_inflate.' (error code: '.$ret.')');
             }
+        } else {
+            throw new Exception('Unable to find uploaded module at the following path: '.$file_to_inflate);
         }
-
-        return true;
     }
 
     final private function createCatalogModuleList(array $moduleFullList)
