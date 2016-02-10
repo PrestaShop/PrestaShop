@@ -33,7 +33,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
     public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true)
     {
-        parent::__construct($controllerName);
+        parent::__construct($controllerName, 'new-theme');
 
         $this->title = $title;
         $this->display = $displayType;
@@ -42,6 +42,11 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->id = Tab::getIdFromClassName($this->controller_name);
         $this->headerToolbarBtn = $headerToolbarBtn;
         $this->showContentHeader = $showContentHeader;
+    }
+
+    public function setMedia()
+    {
+        parent::setMedia(true);
     }
 
     public function viewAccess()

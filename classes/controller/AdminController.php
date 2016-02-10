@@ -385,7 +385,7 @@ class AdminControllerCore extends Controller
     /** @var bool if logged employee has access to AdminImport */
     protected $can_import = false;
 
-    public function __construct($forceControllerName = '')
+    public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
         global $timer_start;
         $this->timer_start = $timer_start;
@@ -403,18 +403,15 @@ class AdminControllerCore extends Controller
             $this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
         }
 
-        $default_theme_name = 'default';
-
         if (defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_
             && @filemtime(_PS_BO_ALL_THEMES_DIR_._PS_BO_DEFAULT_THEME_.DIRECTORY_SEPARATOR.'template')) {
             $default_theme_name = _PS_BO_DEFAULT_THEME_;
         }
 
-        $this->bo_theme = ((Validate::isLoadedObject($this->context->employee)
-            && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : $default_theme_name);
+        $this->bo_theme = $default_theme_name;
 
         if (!@filemtime(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template')) {
-            $this->bo_theme = $default_theme_name;
+            $this->bo_theme = 'default';
         }
 
         $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
@@ -2565,37 +2562,56 @@ class AdminControllerCore extends Controller
     {
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        //Bootstrap
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/bootstrap-prestakit.css', 'all', 1);
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
+        if ($isNewTheme) {
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/theme.css', 'all', 1);
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/bundle.js');
+        } else {
 
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/material-design-iconic-font.min.css', 'all', 0);
-        $this->addCSS('https://fonts.googleapis.com/icon?family=Material+Icons', 'all', 0);
+            //Bootstrap
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
+            $this->addCSS('https://fonts.googleapis.com/icon?family=Material+Icons', 'all', 0);
 
-        $this->addJquery();
-        $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
-        $this->addjQueryPlugin('growl', null, false);
-        $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
+            $this->addJquery();
+            $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
+            $this->addjQueryPlugin('growl', null, false);
+            $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
-        Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
-        Media::addJsDef(array('baseDir' => __PS_BASE_URI__));
-        Media::addJsDef(array('baseAdminDir' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'));
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
 
-        Media::addJsDef(array('currency' => array(
-            'iso_code' => Context::getContext()->currency->iso_code,
-            'sign' => Context::getContext()->currency->sign,
-            'name' => Context::getContext()->currency->name,
-            'format' => Context::getContext()->currency->format
-        )));
+            $this->addJS(_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
+
+            if (!$this->lite_display) {
+                $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
+            }
+
+            if (!Tools::getValue('submitFormAjax')) {
+                $this->addJS(_PS_JS_DIR_.'admin/notifications.js');
+            }
+
+            if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
+                $this->addJS('https://cdn.statuspage.io/se-v2.js');
+
+                Media::addJsDefL('status_operational', $this->l('Operational', null, true, false));
+                Media::addJsDefL('status_degraded_performance', $this->l('Degraded Performance', null, true, false));
+                Media::addJsDefL('status_partial_outage', $this->l('Partial Outage', null, true, false));
+                Media::addJsDefL('status_major_outage', $this->l('Major Outage', null, true, false));
+                Media::addJsDef(array('host_cluster' => defined('_PS_HOST_CLUSTER_') ? _PS_HOST_CLUSTER_ : 'fr1'));
+            }
+
+            // Specific Admin Theme
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
+        }
 
         $this->addJS(array(
-            _PS_JS_DIR_.'admin.js?v='._PS_VERSION_,
+            _PS_JS_DIR_.'admin.js?v='._PS_VERSION_, // TODO: SEE IF REMOVABLE
             _PS_JS_DIR_.'cldr.js',
             _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
-            _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
             _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
             _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
             _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
@@ -2605,45 +2621,21 @@ class AdminControllerCore extends Controller
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/plural.js',
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/date.js',
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js'
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js',
         ));
 
-        //loads PrestaKit
-        $this->addJS([
-            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/tether.min.js',
-            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/jquery.growl.js',
-            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/bootstrap.min.js',
-            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/prestakit.js',
-        ]);
-
-        // $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
-
-        if (!$this->lite_display) {
-            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
-        }
-
-        if (!Tools::getValue('submitFormAjax')) {
-            $this->addJS(_PS_JS_DIR_.'admin/notifications.js');
-        }
-
-        if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
-            $this->addJS('https://cdn.statuspage.io/se-v2.js');
-
-            Media::addJsDefL('status_operational', $this->l('Operational', null, true, false));
-            Media::addJsDefL('status_degraded_performance', $this->l('Degraded Performance', null, true, false));
-            Media::addJsDefL('status_partial_outage', $this->l('Partial Outage', null, true, false));
-            Media::addJsDefL('status_major_outage', $this->l('Major Outage', null, true, false));
-            Media::addJsDef(array('host_cluster' => defined('_PS_HOST_CLUSTER_') ? _PS_HOST_CLUSTER_ : 'fr1'));
-        }
+        Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
+        Media::addJsDef(array('baseDir' => __PS_BASE_URI__));
+        Media::addJsDef(array('baseAdminDir' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'));
+        Media::addJsDef(array('currency' => array(
+            'iso_code' => Context::getContext()->currency->iso_code,
+            'sign' => Context::getContext()->currency->sign,
+            'name' => Context::getContext()->currency->name,
+            'format' => Context::getContext()->currency->format,
+        )));
 
         // Execute Hook AdminController SetMedia
         Hook::exec('actionAdminControllerSetMedia');
-
-        // Specific Admin Theme
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
     }
 
     /**

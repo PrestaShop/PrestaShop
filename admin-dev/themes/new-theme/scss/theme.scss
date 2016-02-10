@@ -1,0 +1,68 @@
+@import "~bourbon/app/assets/stylesheets/bourbon";
+@import "config/settings";
+
+// Mixins
+
+@import "mixins/single_line_block";
+
+// Components
+
+@import "components/layout/content_div";
+@import "components/layout/header_toolbar";
+@import "components/layout/main_header";
+@import "components/layout/nav_bar";
+
+@import "pages/product_page";
+@import "pages/products_catalog";
+
+// Other
+
+@import "components/tinymce";
+
+// Main Layout
+
+body {
+  background: $color-background;
+}
+
+
+// To put into the PrestaKit
+
+$color-icons: #6c868e;
+
+.breadcrumb {
+  padding: rem(5px);
+  background: none;
+  border-radius: 0;
+  font-size: rem(12px);
+
+  > li + li::before {
+    padding-right: rem(0px);
+    padding-left: rem(3px);
+  }
+
+  > li > a {
+    color: #363A41; // TODO: Place the text color
+  }
+}
+
+
+.toolbar-button {
+  color: $color-icons;
+  text-align: center;
+  display: inline-block;
+  margin: 0 rem(5px);
+
+  > .material-icons {
+    font-size: rem(24px);
+  }
+  > .title {
+    font-size: rem(12px);
+    color: $color-icons;
+    display: block;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+}
