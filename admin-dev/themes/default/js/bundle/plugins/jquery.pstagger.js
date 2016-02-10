@@ -132,7 +132,7 @@
         // If reset button required add it following user decription
         if (config.clearAllBtn === true) {
             addClearBtnHtml += '<span class="' + immutableConfig.clearAllSpanClass + ' ' + config.clearAllSpanClassAdditional +'">' +
-                                        '<i class="' + immutableConfig.clearAllIconClass + ' ' + config.clearAllIconClassAdditional +'"></i>' +
+                                        '<i class="' + immutableConfig.clearAllIconClass + ' ' + config.clearAllIconClassAdditional +'">clear</i>' +
                                     '</span>';
             // Bind the click on the reset icon
             bindResetTagsEvent();

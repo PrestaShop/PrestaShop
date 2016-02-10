@@ -79,17 +79,17 @@ var AdminModule = function () {
         this.initBulkActions();
     };
 
-    //@TODO: JS Doc
-    this.initBulkActions = function () {
-        var _this = this;
-        $(this.bulkActionDropDownSelector).on('change', function (event) {
-            var bulkAction = $(this).attr('value');
-            _this.doBulkAction(bulkAction);
-        });
-        $(this.selectAllBulkActionSelector).on('change', function (event) {
-            _this.changeBulkCheckboxesState($(this).is(':checked'));
-        });
-    };
+  //@TODO: JS Doc
+  this.initBulkActions = function() {
+      var _this = this;
+      $(this.bulkActionDropDownSelector).on('change', function(event){
+          var bulkAction = $(this).find(':checked').attr('value');
+          _this.doBulkAction(bulkAction);
+      });
+      $(this.selectAllBulkActionSelector).on('change', function(event){
+          _this.changeBulkCheckboxesState($(this).is(':checked'));
+      });
+  };
 
     // @TODO: JS Doc
     this.changeBulkCheckboxesState = function (hasToCheck) {
@@ -282,8 +282,9 @@ var AdminModule = function () {
 
     this.initSortingDropdown = function () {
         var _this = this;
-        $(this.moduleSortingDropdownSelector).on('change', function (event) {
-            var selectedSorting = $(this).attr('value');
+
+        $(this.moduleSortingDropdownSelector).on('change', function(event){
+            var selectedSorting = $(this).find(':checked').attr('value');
             _this.doDropdownSort(selectedSorting);
         });
     };
@@ -356,14 +357,13 @@ var AdminModule = function () {
         }
     };
 
-    this.doDropdownSort = function (typeSort) {
+    this.doDropdownSort = function(typeSort) {
         var availableSorts = [
-            'sort-by-price-asc',
-            'sort-by-price-desc',
-            'sort-by-name',
-            'sort-by-scoring'
-        ];
-        var moduleItemSelector = this.getModuleItemSelector();
+                                'sort-by-price-asc',
+                                'sort-by-price-desc',
+                                'sort-by-name',
+                                'sort-by-scoring'
+                            ];
 
         if ($.inArray(typeSort, availableSorts) === -1) {
             console.error('typeSort "' + typeSort + '" is not a valid sort option');
@@ -373,6 +373,9 @@ var AdminModule = function () {
         var dataAttr = null;
         var sortOrder = 'asc';
         var sortKind = 'alpha';
+        var _this = this;
+        var moduleGlobalSelector = this.getModuleGlobalSelector();
+        var moduleItemSelector = this.getModuleItemSelector();
 
         switch (typeSort) {
             case availableSorts[0]:
@@ -393,51 +396,56 @@ var AdminModule = function () {
                 break;
         }
 
-        var arrayToSort = {};
-        var keysToSort = [];
+        $(moduleGlobalSelector).each(function(index, value) {
 
-        $(moduleItemSelector).each(function (index, value) {
-            var selectorObject = $(this);
-            var uniqueID = '';
-            $.each(dataAttr, function (index, value) {
-                if (uniqueID !== '') {
-                    uniqueID += '#'; // Explode separator
-                }
-                uniqueID += selectorObject.attr(value);
+            var arrayToSort = {};
+            var keysToSort = [];
+
+            $(this).find(moduleItemSelector).each(function(index, value) {
+                var selectorObject = $(this);
+                var uniqueID = '';
+                $.each(dataAttr, function (index, value) {
+                    if (uniqueID !== '') {
+                        uniqueID += '#'; // Explode separator
+                    }
+                    uniqueID += selectorObject.attr(value);
+                });
+                arrayToSort[uniqueID] = $(this);
+                keysToSort.push(uniqueID);
             });
-            arrayToSort[uniqueID] = $(this);
-            keysToSort.push(uniqueID);
-        });
 
-        var keysArrayLength = keysToSort.length;
+            var keysArrayLength = keysToSort.length;
 
-        if (sortKind == 'alpha') {
-            keysToSort.sort();
-        } else {
-            keysToSort.sort(function (elem1, elem2) {
-                var elem1Formatted = parseFloat(elem1.substring(0, elem1.indexOf('#')));
-                var elem2Formatted = parseFloat(elem2.substring(0, elem2.indexOf('#')));
-                if (sortOrder == 'asc') {
-                    return elem1Formatted - elem2Formatted;
-                } else {
-                    return elem2Formatted - elem1Formatted;
-                }
+            if (sortKind == 'alpha') {
+                keysToSort.sort();
+            } else {
+                keysToSort.sort(function(elem1, elem2) {
+                    var elem1Formatted = parseFloat(elem1.substring(0, elem1.indexOf('#')));
+                    var elem2Formatted = parseFloat(elem2.substring(0, elem2.indexOf('#')));
+                    if (sortOrder == 'asc') {
+                        return elem1Formatted - elem2Formatted;
+                    } else {
+                        return elem2Formatted - elem1Formatted;
+                    }
+                });
+            }
+
+            var currentSelector = $(this);
+            currentSelector.fadeOut(function() {
+                var _that = _this;
+                var _arrayToSort = arrayToSort;
+                var _currentSelector = currentSelector;
+
+                currentSelector.empty();
+                currentSelector.append('<div class="row">');
+
+                $.each(keysToSort, function(index, value){
+                    _currentSelector.append(_arrayToSort[value].get(0).outerHTML);
+                    delete _arrayToSort[value];
+                });
+                currentSelector.append('</div>');
+                currentSelector.fadeIn();
             });
-        }
-        var _this = this;
-        var moduleGlobalSelector = this.getModuleGlobalSelector();
-
-        $(moduleGlobalSelector).fadeOut(function () {
-            var _that = _this;
-            var _arrayToSort = arrayToSort;
-            $(this).empty();
-            $(moduleGlobalSelector).append('<div class="row">');
-            $.each(keysToSort, function (index, value) {
-                $(moduleGlobalSelector).append(_arrayToSort[value].get(0).outerHTML);
-                delete _arrayToSort[value];
-            });
-            $(moduleGlobalSelector).append('</div>');
-            $(moduleGlobalSelector).fadeIn();
         });
     };
 
@@ -657,28 +665,28 @@ var AdminModule = function () {
     };
 
 
-    this.initSearchBlock = function () {
+    this.initSearchBlock = function() {
         var _this = this;
-        this.pstaggerInput = $(this.searchBarSelector).pstagger({
-            onTagsChanged: _this.doTagSearch,
-            onResetTags: _this.resetSearch,
-            inputPlaceholder: 'Add tag ...',
-            closingCross: true,
-            context: _this,
-            clearAllBtn: true,
-            clearAllIconClassAdditional: 'icon icon-remove',
-            clearAllSpanClassAdditional: 'module-tags-clear-btn ',
-            tagInputClassAdditional: 'module-tags-input',
-            tagClassAdditional: 'module-tag ',
-            tagsWrapperClassAdditional: 'module-tags-labels',
-        });
+       this.pstaggerInput = $(this.searchBarSelector).pstagger({
+                                                                       onTagsChanged: _this.doTagSearch,
+                                                                       onResetTags: _this.resetSearch,
+                                                                       inputPlaceholder: 'Add tag ...',
+                                                                       closingCross: true,
+                                                                       context: _this,
+                                                                       clearAllBtn: true,
+                                                                       clearAllIconClassAdditional: 'material-icons',
+                                                                       clearAllSpanClassAdditional: 'module-tags-clear-btn ',
+                                                                       tagInputClassAdditional: 'module-tags-input',
+                                                                       tagClassAdditional: 'module-tag ',
+                                                                       tagsWrapperClassAdditional: 'module-tags-labels',
+                                                                   });
 
-        $(this.addonsSearchLinkSelector).on('click', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            var href = $(this).attr('href');
-            window.open(href, '_blank');
-        });
+       $(this.addonsSearchLinkSelector).on('click', function(event){
+           event.preventDefault();
+           event.stopPropagation();
+           var href = $(this).attr('href');
+           window.open(href, '_blank');
+       });
     };
 
     /**
@@ -686,18 +694,18 @@ var AdminModule = function () {
      * @method initSortingDisplaySwitch
      * @memberof AdminModule
      */
-    this.initSortingDisplaySwitch = function () {
-        var _this = this;
+     this.initSortingDisplaySwitch = function() {
+       var _this = this;
 
-        $(this.sortDisplaySelector).on('click', function () {
-            var switchTo = $(this).attr('data-switch');
-            var isAlreadyDisplayed = $(this).hasClass('active-display');
-            if (typeof switchTo != 'undefined' && isAlreadyDisplayed === false) {
-                _this.switchSortingDisplayTo(switchTo);
-                _this.currentDisplay = switchTo;
-            }
-        });
-    };
+       $(this.sortDisplaySelector).on('click', function() {
+         var switchTo = $(this).attr('data-switch');
+         var isAlreadyDisplayed = $(this).hasClass('active-display');
+         if (typeof switchTo != 'undefined' && isAlreadyDisplayed === false) {
+           _this.switchSortingDisplayTo(switchTo);
+           _this.currentDisplay = switchTo;
+         }
+       });
+     };
 
     /**
      * Initialize display switching between List or Grid
