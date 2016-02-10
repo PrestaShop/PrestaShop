@@ -1,5 +1,5 @@
 <div id="footer" class="bootstrap hide">
-
+<!--
   <div class="col-sm-2 hidden-xs">
     <a href="http://www.prestashop.com/" class="_blank">PrestaShop&trade;</a>
     -
@@ -68,4 +68,5 @@
   </div>
 
   <div id="go-top" class="hide"><i class="icon-arrow-up"></i></div>
+  -->
 </div>
