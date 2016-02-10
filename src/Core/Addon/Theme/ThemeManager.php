@@ -27,14 +27,11 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Parser;
 use \Tools;
 use \Shop;
 use \Employee;
@@ -42,36 +39,39 @@ use \Exception;
 
 class ThemeManager implements AddonManagerInterface
 {
+    private $hookConfigurator;
     private $shop;
     private $employee;
-    private $theme_checker;
-    private $configurator;
-    private $fs;
+    private $themeValidator;
+    private $appConfiguration;
+    private $filesystem;
     private $finder;
-    private $themes;
+    private $themeRepository;
 
     public function __construct(
         Shop $shop,
-        ConfigurationInterface $configurator,
-        ThemeChecker $theme_checker,
+        ConfigurationInterface $configuration,
+        ThemeValidator $themeValidator,
         Employee $employee,
-        Filesystem $fs,
+        Filesystem $filesystem,
         Finder $finder,
-        HookConfigurator $hookConfigurator)
+        HookConfigurator $hookConfigurator,
+        ThemeRepository $themeRepository)
     {
         $this->shop = $shop;
-        $this->configurator = $configurator;
-        $this->theme_checker = $theme_checker;
+        $this->appConfiguration = $configuration;
+        $this->themeValidator = $themeValidator;
         $this->employee = $employee;
-        $this->fs = $fs;
+        $this->filesystem = $filesystem;
         $this->finder = $finder;
         $this->hookConfigurator = $hookConfigurator;
+        $this->themeRepository = $themeRepository;
     }
 
     /**
      * Add new theme from zipball. This will unzip the file and move the content
      * to the right locations.
-     * A theme can bundle modules, resources, docuementation, email templates and so on.
+     * A theme can bundle modules, resources, documentation, email templates and so on.
      *
      * @param string $source The source can be a module name (installed from either local disk or addons.prestashop.com).
      * or a location (url or path to the zip file)
@@ -88,7 +88,7 @@ class ThemeManager implements AddonManagerInterface
     /**
      * Remove all theme files, resources, documentation and specific modules
      *
-     * @param Addon $theme The source can be a module name (installed from either local disk or addons.prestashop.com).
+     * @param $name The source can be a module name (installed from either local disk or addons.prestashop.com).
      * or a location (url or path to the zip file)
      * @return bool true for success
      */
@@ -99,23 +99,23 @@ class ThemeManager implements AddonManagerInterface
             return false;
         }
 
-        $theme = $this->getInstanceByName($name);
+        $theme = $this->theme_repository->getInstanceByName($name);
         $theme->onUninstall();
 
-        $this->fs->remove($theme->getDirectory());
+        $this->filesystem->remove($theme->getDirectory());
 
         return true;
     }
 
     /**
-    * Download new files from source, backup old files, replace files with new ones
-    * and execute all necessary migration scripts form current version to the new one.
-    *
-    * @param Addon $theme the theme you want to upgrade
-    * @param string $version the version you want to up upgrade to
-    * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
-    * @return bool true for success
-    */
+     * Download new files from source, backup old files, replace files with new ones
+     * and execute all necessary migration scripts form current version to the new one.
+     *
+     * @param string $name
+     * @param string $version the version you want to up upgrade to
+     * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
+     * @return bool true for success
+     */
     public function upgrade($name, $version, $source = null)
     {
         return true;
@@ -136,29 +136,32 @@ class ThemeManager implements AddonManagerInterface
             return false;
         }
 
-        $theme = $this->getInstanceByName($name);
-        if (!$this->theme_checker->isValid($theme)) {
+        $theme = $this->themeRepository->getInstanceByName($name);
+        if (!$this->themeValidator->isValid($theme)) {
             return false;
         }
 
         $this->disable($this->shop->theme_name);
 
         $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
-                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
-                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
-                ->doEnableModules($theme->get('global_settings.modules.to_enable', []))
-                ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
+            ->doApplyConfiguration($theme->get('global_settings.configuration', []))
+            ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
+            ->doEnableModules($theme->get('global_settings.modules.to_enable', []))
+            ->doHookModules($theme->get('global_settings.hooks.modules_to_hook', []))
+        ;
 
         $theme->onEnable();
 
         $this->shop->theme_name = $theme->getName();
         $this->shop->update();
 
+        $this->saveTheme($theme);
+
         return $this;
     }
 
     /**
-     * Actions to perform when switchig from this theme to another one.
+     * Actions to perform when switching from this theme to another one.
      *
      * @param  string $name The theme name to enable
      * @return bool         True for success
@@ -169,63 +172,14 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Actions to perform to restaure default settings
+     * Actions to perform to restore default settings
      *
-     * @param  string $name The theme name to reset
+     * @param  string $theme_name The theme name to reset
      * @return bool         True for success
      */
     public function reset($theme_name)
     {
         return $this->disable($theme_name) && $this->enable($theme_name);
-    }
-
-    public function getInstanceByName($name)
-    {
-        $dir = $this->configurator->get('_PS_ALL_THEMES_DIR_').$name;
-
-        $data = $this->getConfigFromFile(
-            $dir.'/config/theme.yml'
-        );
-        $data['directory'] = $dir;
-        $data['settings'] = $this->getConfigFromFile(
-            $dir.'/config/settings_'.$this->shop->id.'.json'
-        );
-
-        return new Theme($data);
-    }
-
-    public function getThemeList()
-    {
-        if (!isset($this->themes)) {
-            $this->themes = $this->getAddonList(new AddonListFilter());
-        }
-
-        return $this->themes;
-    }
-
-    public function getThemeListExcluding(array $exclude)
-    {
-        $filter = (new AddonListFilter())
-            ->setExclude($exclude);
-
-        return $this->getAddonList($filter);
-    }
-
-    public function getAddonList(AddonListFilter $filter)
-    {
-        $filter->setType(AddonListFilterType::THEME);
-
-        if (!isset($filter->status)) {
-            $filter->setStatus(AddonListFilterStatus::ALL);
-        }
-
-        $themes = $this->getThemesOnDisk();
-
-        foreach ($filter->exclude as $name) {
-            unset($themes[$name]);
-        }
-
-        return $themes;
     }
 
     private function doCreateCustomHooks(array $hooks)
@@ -243,7 +197,7 @@ class ThemeManager implements AddonManagerInterface
     private function doApplyConfiguration(array $configuration)
     {
         foreach ($configuration as $key => $value) {
-            $this->configurator->set($key, $value);
+            $this->appConfiguration->set($key, $value);
         }
         return $this;
     }
@@ -266,96 +220,66 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
-    private function getThemesOnDisk()
-    {
-        $suffix = 'preview.png';
-        $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/'.$suffix);
-
-        $themes = [];
-        foreach ($all_theme_dirs as $dir) {
-            $name = basename(substr($dir, 0, -strlen($suffix)));
-            $theme = $this->getInstanceByName($name);
-            if (isset($theme)) {
-                $themes[$name] = $theme;
-            }
-        }
-
-        return $themes;
-    }
-
     private function installFromZip($source)
     {
-        $sandbox_path = $this->getSandboxPath();
+        $sandboxPath = $this->getSandboxPath();
 
-        Tools::ZipExtract($source, $sandbox_path);
+        Tools::ZipExtract($source, $sandboxPath);
 
-        $directories = $this->finder->directories()
-                                    ->in($sandbox_path)
-                                    ->depth('== 0')
-                                    ->exclude(['__MACOSX']);
+        $directories = $this->finder
+            ->directories()
+            ->in($sandboxPath)
+            ->depth('== 0')
+            ->exclude(['__MACOSX'])
+        ;
 
         if (iterator_count($directories->directories()) > 1) {
-            $this->fs->remove($sandbox_path);
+            $this->filesystem->remove($sandboxPath);
             throw new Exception("Invalid theme zip");
         }
 
         $directories = iterator_to_array($directories);
         $theme_name = basename(current($directories)->getFileName());
 
-        $theme_data = Yaml::parse($sandbox_path.$theme_name.'/config/theme.yml');
-        $theme_data['directory'] = $sandbox_path.$theme_name;
-        if (!$this->theme_checker->isValid(new Theme($theme_data))) {
-            $this->fs->remove($sandbox_path);
+        $theme_data = (new Parser())->parse($sandboxPath.$theme_name.'/config/theme.yml');
+        $theme_data['directory'] = $sandboxPath.$theme_name;
+        if (!$this->themeValidator->isValid(new Theme($theme_data))) {
+            $this->filesystem->remove($sandboxPath);
             throw new Exception("This theme is not valid for PrestaShop 1.7");
         }
 
-        $modules_to_copy = $sandbox_path.$theme_name.'/dependencies/modules';
-        if ($this->fs->exists($modules_to_copy)) {
-            $this->fs->mirror(
+        $modules_to_copy = $sandboxPath.$theme_name.'/dependencies/modules';
+        if ($this->filesystem->exists($modules_to_copy)) {
+            $this->filesystem->mirror(
                 $modules_to_copy,
-                $this->configurator->get('_PS_MODULE_DIR_')
+                $this->appConfiguration->get('_PS_MODULE_DIR_')
             );
-            $this->fs->remove($modules_to_copy);
+            $this->filesystem->remove($modules_to_copy);
         }
 
-        $dest = $this->configurator->get('_PS_ALL_THEMES_DIR_').$theme_name;
-        $this->fs->mkdir($dest);
-        $this->fs->mirror(
-            $sandbox_path.$theme_name,
-            $dest
+        $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme_name;
+        $this->filesystem->mkdir($themePath);
+        $this->filesystem->mirror(
+            $sandboxPath.$theme_name,
+            $themePath
         );
-        $this->fs->remove($sandbox_path);
+        $this->filesystem->remove($sandboxPath);
     }
 
     private function getSandboxPath()
     {
         if (!isset($this->sandbox)) {
-            $this->sandbox = $this->configurator->get('_PS_CACHE_DIR_').'sandbox/'.uniqid().'/';
-            $this->fs->mkdir($this->sandbox, 0755);
+            $this->sandbox = $this->appConfiguration->get('_PS_CACHE_DIR_').'sandbox/'.uniqid().'/';
+            $this->filesystem->mkdir($this->sandbox, 0755);
         }
         return $this->sandbox;
     }
 
-    private function getConfigFromFile($file)
-    {
-        if (!file_exists($file)) {
-            return null;
-        }
-
-        $content = file_get_contents($file);
-
-        if (preg_match('/.\.(yml|yaml)$/', $file)) {
-            return Yaml::parse($content);
-        } elseif (preg_match('/.\.json$/', $file)) {
-            return json_decode($content, true);
-        }
-    }
-
     public function saveTheme($theme)
     {
-        $test = file_put_contents(
+        file_put_contents(
             $theme->getDirectory().'/config/settings_'.$this->shop->id.'.json',
-            json_encode($theme->get('settings'))
+            json_encode($theme->get(null))
         );
     }
 }

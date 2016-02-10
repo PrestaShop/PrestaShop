@@ -468,21 +468,11 @@ class ShopCore extends ObjectModel
      */
     public function setTheme()
     {
-        $dir = _PS_ALL_THEMES_DIR_.$this->theme_name;
-        $theme_data = Yaml::parse(file_get_contents(
-            $dir.'/config/theme.yml'
-        ));
-        $theme_data['directory'] = $dir;
-        $theme_data['settings'] = null;
+        $context = Context::getContext();
+        $db = Db::getInstance();
+        $themeRepository = (new PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder($context, $db))->buildRepository($this);
 
-        $settings_dir = $theme_data['directory'].'/config/settings_'.$this->id.'.json';
-        if (file_exists($settings_dir)) {
-            $theme_data['settings'] = json_decode(file_get_contents(
-                $settings_dir
-            ), true);
-        }
-
-        $this->theme = new Theme($theme_data);
+        $this->theme = $themeRepository->getInstanceByName($this->theme_name);
     }
 
     /**

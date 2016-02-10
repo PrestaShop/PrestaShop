@@ -50,8 +50,8 @@ class AdminThemesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->theme_manager = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                                ->build();
+        $this->theme_manager = (new ThemeManagerBuilder($this->context, Db::getInstance()))->build();
+        $this->theme_repository = (new ThemeManagerBuilder($this->context, Db::getInstance()))->buildRepository();
     }
 
     public function init()
@@ -545,7 +545,7 @@ class AdminThemesControllerCore extends AdminController
             ),
         );
 
-        $other_themes = $this->theme_manager->getThemeListExcluding([$this->context->shop->theme->getName()]);
+        $other_themes = $this->theme_repository->getListExcluding([$this->context->shop->theme->getName()]);
         if (!empty($other_themes)) {
             $this->fields_options['theme'] = array(
                 'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
@@ -713,10 +713,13 @@ class AdminThemesControllerCore extends AdminController
 
     public function initConfigureLayouts()
     {
+        $theme = $this->theme_repository->getInstanceByName($this->context->shop->theme->getName());
+
         $this->context->smarty->assign([
             'pages' => Meta::getAllMeta($this->context->language->id),
-            'page_layouts' => $this->context->shop->theme->get('settings.page_layouts'),
-            'available_layouts' => $this->context->shop->theme->get('meta.available_layouts'),
+            'default_layout' => $theme->getDefaultLayout(),
+            'page_layouts' => $theme->getPageLayouts(),
+            'available_layouts' => $theme->getAvailableLayouts(),
         ]);
 
         $this->setTemplate('controllers/themes/configurelayouts.tpl');

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,45 +23,58 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use \Context;
-use \Db;
+use Shop;
+use Context;
+use Db;
 
 class ThemeManagerBuilder
 {
-    private $result;
+    private $context;
+    private $db;
 
     public function __construct(Context $context, Db $db)
     {
-        $this->result = new ThemeManager(
-            $context->shop,
-            new Configuration($context->shop),
-            new ThemeChecker,
-            $context->employee,
-            new Filesystem,
-            new Finder,
-            new HookConfigurator(
-                new HookRepository(
-                    new HookInformationProvider,
-                    $context->shop,
-                    $db
-                )
-            )
-        );
+        $this->context = $context;
+        $this->db = $db;
     }
 
     public function build()
     {
-        return $this->result;
+        return new ThemeManager(
+            $this->context->shop,
+            new Configuration($this->context->shop),
+            new ThemeValidator(),
+            $this->context->employee,
+            new Filesystem(),
+            new Finder(),
+            new HookConfigurator(
+                new HookRepository(
+                    new HookInformationProvider(),
+                    $this->context->shop,
+                    $this->db
+                )
+            ),
+            $this->buildRepository($this->context->shop)
+        );
+    }
+
+    public function buildRepository(Shop $shop = null)
+    {
+        if (!$shop instanceof Shop) {
+            $shop = $this->context->shop;
+        }
+
+        return new ThemeRepository(
+            new Configuration($shop),
+            $shop
+        );
     }
 }
