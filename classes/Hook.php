@@ -101,7 +101,7 @@ class HookCore extends ObjectModel
     {
         $hook_name = strtolower(self::normalizeHookName($hook_name));
 
-        if ($hook_name === 'header') {
+        if ($hook_name === 'header' || $hook_name === 'displayheader') {
             // this hook is to add resources to the <head> section of the page
             // so it doesn't display anything by itself
             return false;
