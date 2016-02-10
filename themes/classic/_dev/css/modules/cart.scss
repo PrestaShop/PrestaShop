@@ -6,6 +6,7 @@
   }
 
   > .value {
+    color: $gray-darker;
     @include pull-right;
   }
 }
@@ -82,6 +83,7 @@
     }
 
     > .value {
+      color: $gray-darker;
       font-size: em(12px);
       font-weight: 400;
       padding: .25em .4em;
@@ -103,6 +105,15 @@
   > .bootstrap-touchspin {
     max-width: em(75px);
     @include pull-left;
+
+    > .form-control,
+    > .input-group {
+      color: $gray-darker;
+      background-color: #FFF;
+      border: $input-btn-border-width solid $input-border-color;
+      height: $input-height;
+      padding: .175rem .5rem
+    }
   }
 
   ._vertical-align {

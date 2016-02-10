@@ -150,17 +150,19 @@
         margin: em(5px);
       }
       &:last-child {
-        a {
-          color: $gray-darker;
-        }
-        &:after {
-          content: "";
-        }
+        content: "/";
+        color: $gray-dark;
+        margin: em(5px);
+      }        a {
+        color: $gray-darker;
+      }
+      &:after {
+        content: "";
       }
     }
-    a {
-      color: $gray;
-    }
+  }
+  a {
+    color: $gray;
   }
 }
 /*** PAGE HEADER ***/
@@ -212,37 +214,39 @@
 
 /*** CARD ****/
 .card-shadow {
-    /* @extend .card; */
-    @include box-shadow;
+  /* @extend .card; */
+  @include box-shadow;
 }
 
 .heading-title {
-    @extend .h4;
-    @extend .text-uppercase;
-    @extend ._bolder;
-    @extend ._gray-darker;
+  @extend .h4;
+  @extend .text-uppercase;
+  @extend ._bolder;
+  @extend ._gray-darker;
 }
 
 /*** TOUCHSPIN ***/
 .touchspin-up {
-    &:after {
-        content: "\E5CE";
-    }
+  color: $gray-darker;
+  &:after {
+    content: "\E5CE";
+  }
 }
 
 .touchspin-down {
-    &:after {
-        content: "\E5CF";
-    }
+  color: $gray-darker;
+  &:after {
+    content: "\E5CF";
+  }
 }
 
 .btn-touchspin {
-    @extend .btn-default;
-    background-color: #FFF;
-    border: $input-btn-border-width solid $input-border-color;
-    height: em(20px);
+  @extend .btn-default;
+  background-color: #FFF;
+  border: $input-btn-border-width solid $input-border-color;
+  height: ($input-height / 2) + rem($input-btn-border-width);
 
-    &:hover {
-        background-color: $gray-light
-    }
+  &:hover {
+    background-color: $gray-light
+  }
 }
