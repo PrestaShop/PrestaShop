@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,8 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Yaml\Parser;
-use \Shop;
-use \PrestaShopException;
+use Shop;
 
 class ThemeRepository implements AddonRepositoryInterface
 {
@@ -49,20 +48,20 @@ class ThemeRepository implements AddonRepositoryInterface
     {
         $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$name;
 
-        $data = $this->getConfigFromFile(
-            $dir.'/config/theme.yml',
-            $name
-        );
-
-        $data['directory'] = $dir;
-
         $jsonConfiguration = $dir.'/config/settings_'.$this->shop->id.'.json';
         if (file_exists($jsonConfiguration)) {
-            $data = array_merge($data, $this->getConfigFromFile(
-                $dir.'/config/settings_'.$this->shop->id.'.json',
+            $data = $this->getConfigFromFile(
+                $jsonConfiguration,
                 $name
-            ));
+            );
+        } else {
+            $data = $this->getConfigFromFile(
+                $dir.'/config/theme.yml',
+                $name
+            );
         }
+
+        $data['directory'] = $dir;
 
         return new Theme($data);
     }
