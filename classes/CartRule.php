@@ -1096,6 +1096,25 @@ class CartRuleCore extends ObjectModel
 
                         $previous_cart_rule = new CartRule((int)$current_cart_rule_id['id_cart_rule']);
                         $previous_reduction_amount = $previous_cart_rule->reduction_amount;
+						
+						//start additional code. Calculate previous discount with correct currency.
+                        //To prevent not displaying cart rules added to the shopping cart.
+                        // If we need to convert the voucher value to the cart currency
+                        if (isset($context->currency) && $previous_cart_rule->reduction_currency != $context->currency->id) {
+                            $previous_voucherCurrency = new Currency($previous_cart_rule->reduction_currency);
+
+                            // First we convert the voucher value to the default currency
+                            if ($previous_reduction_amount == 0 || $previous_voucherCurrency->conversion_rate == 0) {
+                                $previous_reduction_amount = 0;
+                            } else {
+                                $previous_reduction_amount /= $previous_voucherCurrency->conversion_rate;
+                            }
+
+                            // Then we convert the voucher value in the default currency into the cart currency
+                            $previous_reduction_amount *= $context->currency->conversion_rate;
+                            $previous_reduction_amount = Tools::ps_round($previous_reduction_amount, _PS_PRICE_COMPUTE_PRECISION_);
+                        }
+                        //end additional code.
 
                         if ($previous_cart_rule->reduction_tax && !$use_tax) {
                             $previous_reduction_amount = $prorata * $previous_reduction_amount / (1 + $cart_average_vat_rate);
