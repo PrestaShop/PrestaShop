@@ -1,12 +1,13 @@
 @import url('//fonts.googleapis.com/css?family=Open+Sans:400,600,700');
+@import "partials/_variables";
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3.min";
 @import "~bourbon/app/assets/stylesheets/bourbon";
-@import "partials/_variables";
 @import "partials/_fonts";
 @import "partials/_forms";
 @import "partials/_mixins";
 @import "partials/_helpers";
+@import "partials/_commons";
 @import "modules/drop-down";
 @import "modules/search-widget";
 @import "modules/top-menu";
@@ -18,43 +19,6 @@
 @import "modules/categories";
 @import "modules/products";
 @import "modules/footer";
-/*** COMMONS ***/
-body {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: $gray-darker;
-  line-height: 1.25em;
-}
-ul {
-  list-style: none;
-  padding-left: 0;
-}
-.material-icons {
-  vertical-align: middle;
-}
-a:hover {
-  color: $brand-primary;
-  text-decoration: none;
-}
-.dropdown-item:focus,
-.dropdown-item:hover {
-  background: none;
-}
-.color {
-  display: block;
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  margin: em(5px);
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(0,0,0,0.05);
-  cursor: pointer;
-  &:hover {
-    border: 2px solid $gray-darker;
-  }
-}
 
 /*** HEADER ***/
 #header {
@@ -214,6 +178,7 @@ a:hover {
 #footer {
   padding-top: em(40px);
 }
+
 @include media-breakpoint-down(md) {
   #checkout-cart-summary {
     float: none;

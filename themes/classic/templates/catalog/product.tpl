@@ -41,13 +41,14 @@
                   {/foreach}
                 </ul>
               {/block}
+
               <div class="images-container">
                 {block name='product_cover'}
                   <div class="product-cover _margin-bottom-medium _relative">
-                      <img class="_shadow js-product-cover" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" width="452" itemprop="image" />
-                      {* <div class="layer" data-toggle="modal" data-target="#modal">
-                        <i class="material-icons zoom-in">&#xE8FF;</i>
-                      </div>*}
+                    <img class="_shadow js-product-cover" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" width="452" itemprop="image" />
+                    <div class="layer" data-toggle="modal" data-target="#product-modal">
+                      <i class="material-icons zoom-in">&#xE8FF;</i>
+                    </div>
                   </div>
                 {/block}
 
@@ -62,7 +63,6 @@
                 {/block}
               </div>
 
-              {* StarterTheme: Content Only End *}
             {/block}
           </section>
         {/block}
@@ -197,9 +197,10 @@
                               {/if}
                             {/block}
 
-                            <div class="submit-button">
-                              <i class="material-icons">&#xE547;</i>
-                              <input class="add-to-cart" type="submit" name="add" value="{l s='Add to cart'}" data-button-action="add-to-cart" />
+                            <div class="btn btn-primary _shadow" data-button-action="add-to-cart">
+                              <input class="add-to-cart text-uppercase" type="submit" name="add" value="{l s='Add to cart'}">
+                                <i class="material-icons pull-xs-left">&#xE547;</i>
+                              </input>
                             </div>
 
                             {block name='product_availability'}
@@ -409,7 +410,7 @@
         {/if}
       {/block}
 
-    <div class="modal fade" id="modal">
+    <div class="modal fade" id="product-modal">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-body">

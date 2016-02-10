@@ -108,6 +108,8 @@
 	
 	__webpack_require__(49);
 	
+	__webpack_require__(50);
+	
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
 	  _prestashop2['default'][i] = _events2['default'].prototype[i];
@@ -9681,6 +9683,28 @@
 	    });
 	  });
 	})(jQuery);
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _prestashop = __webpack_require__(37);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	_prestashop2['default'].blockcart = _prestashop2['default'].blockcart || {};
+	_prestashop2['default'].blockcart.showModal = function (html) {
+	  (0, _jquery2['default'])('body').append(html);
+	  (0, _jquery2['default'])('#blockcart-modal').modal('show');
+	};
 
 /***/ }
 /******/ ]);
