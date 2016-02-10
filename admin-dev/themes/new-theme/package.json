@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "./node_modules/.bin/webpack --progress --colors --debug --display-chunks",
+    "compile": "./node_modules/.bin/webpack --progress --colors --debug --display-chunks",
+    "watch": "./node_modules/.bin/webpack --progress --colors --debug --display-chunks --watch"
   },
   "author": "",
   "license": "ISC",
