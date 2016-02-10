@@ -758,7 +758,11 @@ class InstallModelInstall extends InstallAbstractModel
         /**
          * TODO: Remove blacklist once 1.7 is out.
          */
-        $blacklist = ['productcomments'];
+        $blacklist = [
+            'productcomments',
+            'blockwishlist',
+            'sendtoafriend'
+        ];
         $addons_modules = array();
         $content = Tools::addonsRequest('install-modules', $params);
         $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
