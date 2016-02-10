@@ -17,9 +17,6 @@ services:
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
         class: PrestaShopBundle\Service\DataProvider\StockInterface
-        
-    prestashop.core.logger.log_interface:
-        class: PrestaShopBundle\Service\Log\LogInterface
 
     # DISPATCHERS
 
@@ -43,8 +40,6 @@ services:
         
     prestashop.adapter.legacy.logger:
         class: PrestaShop\PrestaShop\Adapter\LegacyLogger
-        decorates: prestashop.core.logger.log_interface
-        public: false
 
     # Legacy context service, transitional
     prestashop.adapter.translator:

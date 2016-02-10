@@ -18,7 +18,7 @@ class LogHandler extends AbstractProcessingHandler
 
     protected function write(array $record)
     {
-        $logger = $this->container->get('prestashop.core.logger.log_interface');
-        $logger->add($record['message'], $record['level'], $record['context']);
+        $logger = $this->container->get('prestashop.adapter.legacy.logger');
+        $logger->log($record['level'], $record['message'], $record['context']);
     }
 }
