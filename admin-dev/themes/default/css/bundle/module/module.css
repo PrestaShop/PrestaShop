@@ -1,4 +1,35 @@
 /**
+    Class to move in SCSS file !!!!!
+*/
+.module-item-heading-grid {
+        height:50px;
+}
+
+.module-quick-description-grid {
+    margin: 15px 0;
+    height: 100px;
+    max-height: 150px;
+    text-align: justify;
+}
+.module-name-grid {
+    position: relative;
+    margin: 0 0 0 57px;
+    max-height: 2.1rem;
+    overflow: hidden;
+}
+
+.module-version-author-grid {
+    margin: 0 0 0 57px;
+    position: relative;
+}
+
+.module-read-more-list {
+    float:left;
+    line-height:50px;
+    padding-left:1em;
+}
+
+/**
  * Generalist CSS for module pages
  */
 .module-search-bar {
@@ -126,90 +157,6 @@
 .module-category-reset-icon {
     font-size: 30px;
 }
-
-/**
- * Module GRID CSS
- */
-.module-name-grid {
-    color: #1E2024 !important;
-    font-family:"Open Sans", Helvetica, Arial,sans-serif !important;
-    font-weight: bold;
-    font-size: 14px;
-    display: inline-block;
-    width: 75%;
-    margin-left: 5px;
-    /*margin-top: 0.5em;*/
-}
-.module-item-heading-grid {
-    display: inline-block;
-    width: 100%;
-    cursor: pointer;
-}
-
-.module-quick-description-grid {
-    width: 100%;
-    height: 100px;
-    max-height: 100px;
-    margin-top: 10px !important;
-    text-align: justify;
-    display: block; /* Fallback for non-webkit */
-    display: -webkit-box;
-    max-width: 400px;
-    margin: 0 auto;
-    font-size: 12px;
-    line-height: 1.4;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.module-quick-action-grid {
-    margin-top: 10px;
-    height: 30px;
-}
-.module-version-author-grid {
-    margin-left: 5px;
-    display: inline-block;
-    width: 65%;
-}
-.module-logo-thumb-grid {
-    width: 57px;
-    height:57px;
-    float:left;
-    vertical-align: 0 !important;
-}
-@media(max-width: 1430px) {
-    .module-logo-thumb-grid {
-        width: 40px;
-        height:40px;
-        float:left;
-        vertical-align: 0 !important;
-    }
-}
-@media(max-width: 992px) {
-    .module-logo-thumb-grid {
-        width: 20px;
-        height:20px;
-        float:left;
-        vertical-align: 0 !important;
-    }
-}
-.module-item-wrapper-grid  {
-    background: white;
-    padding: 20px;
-    margin-bottom: 10px;
-    box-shadow: 0 1px 0 #C7D6DB;
-}
-.module-read-more-grid {
-    display: inline-block;
-}
-.module-read-more-grid-btn {
-    margin-left: 5px;
-}
-.module-checkbox-bulk-grid {
-    display: none;
-}
-
 /**
  * Module LIST CSS
  */
@@ -221,10 +168,12 @@
  .module-item-list:nth-child(even) {
      background-color: #f5f8f9 !important;
  }
-.module-item-list img {
+img.module-logo-thumb-list {
     float:left;
-    margin-top: 13px;
     margin-right: 15px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .module-name-list {
     color: #1E2024 !important;
@@ -236,10 +185,13 @@
     margin-right: 15px;
     width: 135px;
     cursor: default;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .module-quick-action-list {
     float: right;
-    padding: 10px;
+    padding: 0.5em;
 }
 .module-quick-description-list {
     line-height: 50px;
@@ -255,10 +207,14 @@
     float:left;
     margin-right: 15px;
     width: 145px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .module-item-heading-list {
     float:left;
     line-height: 50px;
+    height:50px;
 }
 .module-logo-thumb-list {
     height:20px;

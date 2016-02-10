@@ -1,34 +1,34 @@
 <div class="module-item-{{display_type}} {{col_lg}}" data-id="{{ module.id }}" data-name="{{ module.displayName }}"
 data-scoring="{{module.scoring}}" data-logo="{{ module.media.img }}" data-author="{{ module.author }}" data-version="{{ module.version }}" data-description="{{ module.description }}"
 data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" data-type="{{module.productType}}" data-price="{{module.price.EUR}}">
-    <div class="module-item-wrapper-{{display_type}}">
+     <div class="module-item-wrapper-{{display_type}}">
         <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">
             <img class="module-logo-thumb-{{display_type}}" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
-            <div class="text-ellipsis module-name-{{display_type}}" data-toggle="tooltip" data-placement="top" title="{{ module.displayName }}">
+            <h3 class="text-ellipsis module-name-{{display_type}}" data-toggle="tooltip" data-placement="top" title="{{ module.displayName }}">
                 {{ module.displayName }}
-            </div>
-            <div class="text-ellipsis x-small-text module-version-author-{{display_type}}">
+            </h3>
+            <div class="text-ellipsis xsmall module-version-author-{{display_type}}">
                 {% block addon_version %}
                     {% if module.productType == "service" %}
-                        Service by {{ module.author }}
+                        Service by  <a class="url" href="#">{{ module.author }}</a>
                     {% else %}
-                        v{{ module.version }} by {{ module.author }}
+                        v{{ module.version }} by  <a class="url" href="#">{{ module.author }}</a>
                     {% endif %}
                 {% endblock %}
             </div>
         </div>
-        <div class="module-quick-description-{{display_type}} no-padding">
+        <div class="module-quick-description-{{display_type}} small no-padding">
             {% block addon_description %}
                 {{ module.description|raw }}
                 {% if module.fullDescription is defined and module.description|length < module.fullDescription|length %}
                     ...
                 {% endif %}
             {% endblock %}
-            <div class="module-read-more-{{display_type}}">
-                <a class="module-read-more-{{display_type}}-btn" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}-{{ additionalModalSuffix|default('') }}">Read More</a>
-            </div>
         </div>
-
+        <div class="module-read-more-{{display_type}} small">
+            <a class="module-read-more-{{display_type}}-btn url" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}-{{ additionalModalSuffix|default('') }}">Read More</a>
+        </div>
+        
 
         <div class="module-quick-action-{{display_type}} clearfix">
             {% if requireBulkActions is defined and requireBulkActions == true %}
