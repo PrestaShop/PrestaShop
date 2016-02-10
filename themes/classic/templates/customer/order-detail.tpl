@@ -72,8 +72,9 @@
     {/if}
 
     {block name='addresses'}
+      <div class="row">
       {if $order.addresses.delivery}
-        <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="col-md-6">
           <article id="delivery-address" class="card address">
             <div class="card-header">
               {l s='Delivery address %s' sprintf=$order.addresses.delivery.alias}
@@ -85,7 +86,7 @@
         </div>
       {/if}
 
-      <div class="col-lg-6 col-md-6 col-sm-6">
+      <div class="col-md-6">
         <article id="invoice-address" class="card address">
           <div class="card-header">
             {l s='Invoice address %s' sprintf=$order.addresses.invoice.alias}
@@ -95,7 +96,7 @@
           </div>
         </article>
       </div>
-      <div class="clearfix"></div>
+      </div>
     {/block}
 
     {$hook_orderdetaildisplayed}
