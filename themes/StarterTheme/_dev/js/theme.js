@@ -3,6 +3,7 @@ import $ from 'jquery';
 window.$ = $;
 window.jQuery = $;
 
+import './cart';
 import './checkout';
 import './facets';
 import './product';

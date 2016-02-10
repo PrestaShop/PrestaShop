@@ -63,19 +63,21 @@
 	
 	__webpack_require__(3);
 	
-	__webpack_require__(6);
+	__webpack_require__(5);
 	
 	__webpack_require__(7);
+	
+	__webpack_require__(8);
 	
 	var _prestashop = __webpack_require__(4);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _events = __webpack_require__(8);
+	var _events = __webpack_require__(9);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _common = __webpack_require__(5);
+	var _common = __webpack_require__(6);
 	
 	// "inherit" EventEmitter
 	window.$ = _jquery2['default'];
@@ -1696,7 +1698,79 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _common = __webpack_require__(5);
+	(0, _jquery2['default'])(document).ready(function () {
+	  _prestashop2['default'].on('cart updated', function (event) {
+	    var refreshURL = (0, _jquery2['default'])('.-js-cart').data('refresh-url');
+	    var requestData = {};
+	
+	    if (event && event.reason) {
+	      requestData = {
+	        id_product_attribute: event.reason.idProductAttribute,
+	        id_product: event.reason.idProduct,
+	        action: event.reason.linkAction
+	      };
+	    }
+	
+	    _jquery2['default'].post(refreshURL, requestData).then(function (resp) {
+	      (0, _jquery2['default'])('.cart-overview').replaceWith(resp.cart_detailed);
+	      (0, _jquery2['default'])('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
+	      (0, _jquery2['default'])('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
+	      (0, _jquery2['default'])('.cart-voucher').replaceWith(resp.cart_voucher);
+	    });
+	  });
+	
+	  (0, _jquery2['default'])('body').on('click', '[data-link-action="add-to-cart"], [data-link-action="update-quantity"], [data-link-action="remove-from-cart"], [data-link-action="remove-voucher"]', function (event) {
+	    event.preventDefault();
+	
+	    // First perform the action using AJAX
+	    var actionURL = event.target.href;
+	    _jquery2['default'].post(actionURL, { ajax: '1' }, null, 'json').then(function () {
+	      // If succesful, refresh cart preview
+	      _prestashop2['default'].emit('cart updated', {
+	        reason: event.target.dataset
+	      });
+	    });
+	  });
+	
+	  (0, _jquery2['default'])('body').on('submit', '[data-link-action="add-voucher"]', function (event) {
+	    event.preventDefault();
+	
+	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'ajax').val('1'));
+	
+	    // First perform the action using AJAX
+	    var actionURL = event.target.action;
+	    _jquery2['default'].post(actionURL, (0, _jquery2['default'])(this).serialize(), null, 'json').then(function () {
+	      // If succesful, refresh cart preview
+	      _prestashop2['default'].emit('cart updated', {
+	        reason: event.target.dataset
+	      });
+	    });
+	  });
+	});
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	module.exports = prestashop;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(2);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var _prestashop = __webpack_require__(4);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	var _common = __webpack_require__(6);
 	
 	function collapsePaymentOptions() {
 	  (0, _jquery2['default'])('.js-additional-information, .js-payment-option-form').hide();
@@ -1794,13 +1868,7 @@
 	});
 
 /***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	module.exports = prestashop;
-
-/***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1816,7 +1884,7 @@
 	}
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1890,7 +1958,7 @@
 	});
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1908,7 +1976,7 @@
 	});
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.

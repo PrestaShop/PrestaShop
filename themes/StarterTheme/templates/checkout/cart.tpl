@@ -18,20 +18,12 @@
     {block name='cart_voucher'}
       {include file='checkout/_partials/cart-voucher.tpl'}
     {/block}
+    
+    {hook h='displayShoppingCart'}
 
-    <div class="cart-subtotals">
-      {foreach from=$cart.subtotals item="subtotal"}
-        <div class="{$subtotal.type}">
-          <span class="label">{$subtotal.label}</span>
-          <span class="value">{$subtotal.amount}</span>
-        </div>
-      {/foreach}
-    </div>
-
-    <div class="cart-total">
-      <span class="label">{$cart.total.label}</span>
-      <span class="value">{$cart.total.amount}</span>
-    </div>
+    {block name='cart_totals'}
+      {include file='checkout/_partials/cart-detailed-totals.tpl' cart=$cart}
+    {/block}
 
     <div class="checkout">
       <ul>

@@ -1,4 +1,4 @@
-<section id="checkout-cart-summary">
+<section id="checkout-cart-summary" class="-js-cart" data-refresh-url="{$urls.pages.cart}?ajax=1">
   {block name='cart_summary_header'}
     <header>
       <h1 class="h3">{l s='Your order'}</h1>
@@ -16,25 +16,11 @@
     </div>
   {/block}
 
-  {block name='cart_summary_body'}
-    <div id="cart-summary">
-      {foreach from=$cart.subtotals item="subtotal"}
-        <div class="{$subtotal.type}">
-          <span class="label">{$subtotal.label}</span>
-          <span class="value">{$subtotal.amount}</span>
-        </div>
-      {/foreach}
-    </div>
-  {/block}
-
   {block name='cart_voucher'}
     {include file='checkout/_partials/cart-voucher.tpl'}
   {/block}
-
-  {block name='cart_summary_totals'}
-    <div class="cart-summary-totals">
-      <span class="label">{$cart.total.label}</span>
-      <span class="value">{$cart.total.amount}</span>
-    </div>
+  
+  {block name='cart_totals'}
+    {include file='checkout/_partials/cart-summary-totals.tpl' cart=$cart}
   {/block}
 </section>
