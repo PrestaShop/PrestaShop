@@ -6,10 +6,10 @@ About PrestaShop
 PrestaShop is a free and Open Source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][1].
 
 <p align="center">
-  <img src="http://www.prestashop.com/images/banners/general/ps161-screenshot-github.png" alt="PrestaShop's back office dashboard"/>
+  <img src="http://www.prestashop.com/images/banners/general/ps161-screenshot-github.png" alt="PrestaShop 1.6.1.0 back office dashboard"/>
 </p>
 
-To download the latest stable public version of PrestaShop, please go to [the download page][2] on the official PrestaShop site.
+To download the latest stable public version of PrestaShop (currently, version 1.6), please go to [the download page][2] on the official PrestaShop site.
 
 
 About the 'develop' branch
@@ -17,7 +17,7 @@ About the 'develop' branch
 
 The 'develop' branch of this repository contains the source code for the latest version of PrestaShop 1.7.
 
-PRESTASHOP IS CURRENTLY IN DEVELOPMENT. It is not production ready yet!
+PRESTASHOP 1.7 IS CURRENTLY IN DEVELOPMENT. It is not production ready yet! Learn more about it on [the Build devblog](http://build.prestashop.com/).
 
 To install it, you will need Composer and NPM/Node.js -- during the development phase, at least. See below for more information. The final release will not need Composer/NPM to be installed.
 
@@ -65,7 +65,7 @@ If you installed PrestaShop from GitHub :
 User documentation
 --------
 
-The official PrestaShop documentation is available online [on its own website][6]
+The official PrestaShop 1.6 documentation is available online [on its own website][6]
 
 First-time users will be particularly interested in the following guides:
 * [Getting Started][13]: How to install PrestaShop, and what you need to know.
@@ -73,6 +73,8 @@ First-time users will be particularly interested in the following guides:
 * [Updating Guide][15]: Switching to the newest version is not trivial. Make sure you do it right.
 * [Merchant's Guide][16]: Tips and tricks for first-time online sellers.
 * The [FAQ][17] and the [Troubleshooting][18] pages should also be of tremendous help to you.
+
+Because version 1.7 of PrestaShop is still under development, there is no public documentation available for it yet.
 
 
 Contributing
