@@ -322,7 +322,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         'schema_url' => 'https://schema.org/RefurbishedCondition',
                         ),
                 ),
-                'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE'),
+                'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')
             ));
 
             // Assign attribute groups to the template

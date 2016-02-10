@@ -23,9 +23,9 @@ class CartPresenter
 
     public function __construct()
     {
-        $this->pricePresenter = new PricePresenter;
+        $this->pricePresenter = new PricePresenter();
         $this->link = Context::getContext()->link;
-        $this->translator = new Translator(new LegacyContext);
+        $this->translator = new Translator(new LegacyContext());
         $this->imageRetriever = new ImageRetriever($this->link);
     }
 
@@ -45,17 +45,29 @@ class CartPresenter
             $this->imageRetriever,
             $this->link,
             $this->pricePresenter,
-            new ProductColorsRetriever,
+            new ProductColorsRetriever(),
             $this->translator
         );
 
-        $settings = new ProductPresentationSettings;
+        $settings = new ProductPresentationSettings();
 
         $settings->catalog_mode = Configuration::get('PS_CATALOG_MODE');
         $settings->include_taxes = $this->includeTaxes();
-        $settings->allow_add_variant_to_cart_from_listing =  (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
+        $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
         $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
 
+        if (is_string($rawProduct['attributes'])) {
+            // return an array of attributes
+            $rawProduct['attributes'] = explode(',', $rawProduct['attributes']);
+            $attributesArray = [];
+
+            foreach ($rawProduct['attributes'] as $attribute) {
+                list($key, $value) = explode(':', $attribute);
+                $attributesArray[trim($key)] = ltrim($value);
+            }
+
+            $rawProduct['attributes'] = $attributesArray;
+        }
         $rawProduct['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
             $rawProduct['id_product'],
             $rawProduct['id_product_attribute']
@@ -110,17 +122,17 @@ class CartPresenter
 
             $product['customizations'] = [];
 
-            $id_product = (int)$product['id_product'];
-            $id_product_attribute = (int)$product['id_product_attribute'];
+            $id_product = (int) $product['id_product'];
+            $id_product_attribute = (int) $product['id_product_attribute'];
             if (array_key_exists($id_product, $data)) {
                 if (array_key_exists($id_product_attribute, $data[$id_product])) {
                     foreach ($data[$id_product] as $byAddress) {
                         foreach ($byAddress as $customizations) {
                             foreach ($customizations as $customization) {
                                 $presentedCustomization = [
-                                    'quantity'              => $customization['quantity'],
-                                    'fields'                => [],
-                                    'id_customization'      => null
+                                    'quantity' => $customization['quantity'],
+                                    'fields' => [],
+                                    'id_customization' => null,
                                 ];
                                 $product['up_quantity_url'] = [];
                                 $product['down_quantity_url'] = [];
@@ -201,33 +213,42 @@ class CartPresenter
 
         if ($this->shouldShowTaxLine()) {
             $subtotals['tax'] = [
-                'type'   => 'tax',
-                'label'  => $this->translator->trans('Tax', [], 'Cart'),
+                'type' => 'tax',
+                'label' => $this->translator->trans('Tax', [], 'Cart'),
                 'amount' => $this->pricePresenter->convertAndFormat(
                     $total_including_tax - $total_excluding_tax
-                )
+                ),
             ];
         }
 
         if ($cart->gift) {
             $subtotals['gift_wrapping'] = [
-                'type'   => 'gift_wrapping',
-                'label'  => $this->translator->trans('Gift wrapping', [], 'Cart'),
-                'amount' => $cart->getGiftWrappingPrice($this->includeTaxes()) != 0 ? $this->pricePresenter->convertAndFormat($cart->getGiftWrappingPrice($this->includeTaxes())) : $this->translator->trans('Free', [], 'Cart')
+                'type' => 'gift_wrapping',
+                'label' => $this->translator->trans('Gift wrapping', [], 'Cart'),
+                'amount' => $cart->getGiftWrappingPrice($this->includeTaxes()) != 0 ? $this->pricePresenter->convertAndFormat($cart->getGiftWrappingPrice($this->includeTaxes())) : $this->translator->trans('Free', [], 'Cart'),
             ];
         }
 
         $shipping_cost = $cart->getTotalShippingCost(null, $this->includeTaxes());
         $subtotals['shipping'] = [
-            'type'   => 'shipping',
-            'label'  => $this->translator->trans('Shipping', [], 'Cart'),
-            'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->trans('Free', [], 'Cart')
+            'type' => 'shipping',
+            'label' => $this->translator->trans('Shipping', [], 'Cart'),
+            'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
         ];
 
         $total = [
-            'type'   => 'total',
-            'label'  => $this->translator->trans('Total', [], 'Cart'),
-            'amount' => $this->pricePresenter->convertAndFormat($this->includeTaxes() ? $total_including_tax : $total_excluding_tax)
+            'type' => 'total',
+            'label' => $this->translator->trans('Total', [], 'Cart'),
+            'amount' => $this->pricePresenter->convertAndFormat($this->includeTaxes() ? $total_including_tax : $total_excluding_tax),
+        ];
+
+        $totalAmount = $this->includeTaxes() ? $total_including_tax : $total_excluding_tax;
+        $shippingAmount = $shipping_cost;
+
+        $subtotals['products'] = [
+            'type' => 'products',
+            'label' => $this->translator->trans('Products', [], 'Cart'),
+            'amount' =>  $this->pricePresenter->convertAndFormat(($totalAmount - $shippingAmount))
         ];
 
         $products_count = array_reduce($products, function ($count, $product) {
@@ -241,8 +262,8 @@ class CartPresenter
 
         return [
             'products' => $products,
-            'total'   => $total,
-            'subtotals'   => $subtotals,
+            'total' => $total,
+            'subtotals' => $subtotals,
             'products_count' => $products_count,
             'summary_string' => $summary_string,
             'id_address_delivery' => $cart->id_address_delivery,
