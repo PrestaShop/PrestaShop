@@ -27,7 +27,7 @@
 .module-sorting {
     margin-left: 35px;
 }
-.module-sorting span {
+.module-sorting i {
     margin-left: 10px;
     cursor: pointer;
     font-size: 15px;
