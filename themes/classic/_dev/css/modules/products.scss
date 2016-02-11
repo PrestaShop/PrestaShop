@@ -3,19 +3,15 @@
     display: inline;
   }
 }
-
 .product-price {
   color: $brand-primary;
 }
-
 #product-description-short {
   color: $gray-darker;
 }
-
 .product-information {
   color: $gray-darker;
 }
-
 .input-color {
   position: absolute;
   top: em(7px);
@@ -27,7 +23,6 @@
     border: 2px solid $gray-darker;
   }
 }
-
 .input-radio {
   position: absolute;
   top: em(5px);
@@ -35,7 +30,6 @@
   cursor: pointer;
   opacity: 0;
 }
-
 .radio-label {
   @include box-shadow;
   background: white;
@@ -43,11 +37,9 @@
   padding: em(2px) em(10px);
   font-weight: 600;
 }
-
 .product-quantity {
   display: inline-block;
 }
-
 #quantity_wanted {
   @include box-shadow;
   text-align: center;
@@ -55,7 +47,6 @@
   height: em(40px);
   border: none;
 }
-
 .product-variants {
   .add-to-cart {
     font-weight: 600;
@@ -67,7 +58,6 @@
     }
   }
 }
-
 .product-discount {
   .regular-price {
     font-size: em(20px);
@@ -80,7 +70,6 @@
     padding: em(5px);
   }
 }
-
 .tabs {
   @include box-shadow;
   background: white;
@@ -200,11 +189,54 @@
     }
   }
 }
-
+#blockcart-modal {
+  color: $gray-darker;
+  .modal-header {
+    background: $brand-success;
+  }
+  .modal-body {
+    background: $gray-light;
+  }
+  .modal-dialog {
+    max-width: 1140px;
+    width: 100%;
+  }
+  .product-image {
+    width: em(210px);
+  }
+  .modal-title {
+    font-weight: 600;
+    color: white;
+    font-size: em(18px);
+  }
+  .product-name {
+    color: $brand-primary;
+    font-size: em(18px);
+  }
+  .cart-products-count {
+    font-size: em(18px);
+  }
+  .cart-content {
+    padding-left: em(40px);
+  }
+}
+.thumb {
+  cursor: pointer;
+  &:hover {
+    border: $brand-primary 3px solid;
+  }
+}
+#product-availability {
+  display: inline-block;
+  font-weight: 700;
+  .check {
+    color: $brand-success;
+    margin-right: em(5px);
+  }
+}
 .product-labels {
   margin-bottom: 0;
 }
-
 li.product-label {
   display: none;
   &:last-child {
@@ -217,6 +249,7 @@ li.product-label {
     color: white;
     margin-top: em(10px);
     margin-left: em(-5px);
+    z-index: 2;
   }
 }
 .product-customization {
