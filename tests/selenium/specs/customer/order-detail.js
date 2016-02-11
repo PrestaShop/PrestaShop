@@ -26,10 +26,7 @@ describe('Order history page', function () {
     return browser
         .url(fixtures.urls.orderhistory)
         .click('(//a[@data-link-action="view-order-details"])[1]')
-        .isExisting('.page-content #order-infos')
-        .then(function (isExisting) {
-          isExisting.should.be.true;
-        })
+        .isVisible('.page-content #order-infos')
       ;
   });
 
@@ -41,57 +38,27 @@ describe('Order history page', function () {
     });
 
     it('should display order infos', function () {
-      return browser
-          .isExisting('.page-content #order-infos')
-          .then(function (isExisting) {
-            isExisting.should.be.true;
-          })
-        ;
+      return browser.isVisible('.page-content #order-infos');
     });
 
     it('should display order statuses', function () {
-      return browser
-          .isExisting('.page-content #order-history')
-          .then(function (isExisting) {
-            isExisting.should.be.true;
-          })
-        ;
+      return browser.isVisible('.page-content #order-history');
     });
 
     it('should display invoice address', function () {
-      return browser
-          .isExisting('.page-content #invoice-address')
-          .then(function (isExisting) {
-            isExisting.should.be.true;
-          })
-        ;
+      return browser.isVisible('.page-content #invoice-address');
     });
 
     it('should display order products', function () {
-      return browser
-          .isExisting('.page-content #order-products')
-          .then(function (isExisting) {
-            isExisting.should.be.true;
-          })
-        ;
+      return browser.isVisible('.page-content #order-products');
     });
 
     it('should display the return button', function () {
-      return browser
-          .isExisting('.page-content button[name=submitReturnMerchandise]')
-          .then(function (isExisting) {
-            isExisting.should.be.true;
-          })
-        ;
+      return browser.isVisible('.page-content button[name=submitReturnMerchandise]');
     });
 
     it('should display a form to add a message', function () {
-      return browser
-          .isExisting('.page-content .order-message-form')
-          .then(function (isExisting) {
-            isExisting.should.be.true;
-          })
-        ;
+      return browser.isVisible('.page-content .order-message-form');
     });
 
     it('should allow customer to add a message', function () {
@@ -99,10 +66,7 @@ describe('Order history page', function () {
           .selectByIndex('.order-message-form select[name=id_product]', 0)
           .setValue('.order-message-form textarea[name=msgText]', 'Message about the first order product')
           .click('.page-content button[name=submitMessage]')
-          .isExisting('.notification-success')
-          .then(function (isExisting) {
-            isExisting.should.be.true;
-          })
+          .isVisible('.notification-success')
         ;
     });
 
