@@ -26,7 +26,7 @@ describe('Order history page', function () {
     return browser
         .url(fixtures.urls.orderhistory)
         .click('(//a[@data-link-action="view-order-details"])[1]')
-        .isVisible('.page-content #order-infos')
+        .waitForVisible('.page-content #order-infos')
       ;
   });
 
@@ -38,27 +38,27 @@ describe('Order history page', function () {
     });
 
     it('should display order infos', function () {
-      return browser.isVisible('.page-content #order-infos');
+      return browser.waitForVisible('.page-content #order-infos');
     });
 
     it('should display order statuses', function () {
-      return browser.isVisible('.page-content #order-history');
+      return browser.waitForVisible('.page-content #order-history');
     });
 
     it('should display invoice address', function () {
-      return browser.isVisible('.page-content #invoice-address');
+      return browser.waitForVisible('.page-content #invoice-address');
     });
 
     it('should display order products', function () {
-      return browser.isVisible('.page-content #order-products');
+      return browser.waitForVisible('.page-content #order-products');
     });
 
     it('should display the return button', function () {
-      return browser.isVisible('.page-content button[name=submitReturnMerchandise]');
+      return browser.waitForVisible('.page-content button[name=submitReturnMerchandise]');
     });
 
     it('should display a form to add a message', function () {
-      return browser.isVisible('.page-content .order-message-form');
+      return browser.waitForVisible('.page-content .order-message-form');
     });
 
     it('should allow customer to add a message', function () {
@@ -66,7 +66,7 @@ describe('Order history page', function () {
           .selectByIndex('.order-message-form select[name=id_product]', 0)
           .setValue('.order-message-form textarea[name=msgText]', 'Message about the first order product')
           .click('.page-content button[name=submitMessage]')
-          .isVisible('.notification-success')
+          .waitForVisible('.notification-success')
         ;
     });
 
