@@ -72,6 +72,7 @@ class ConfigurationTestCore
             'virtual_products_dir' => 'download',
             'app_cache_dir' => 'app/cache',
             'app_logs_dir' => 'app/logs',
+            'config_sf2_dir' => 'app/config',
         );
 
         if (!defined('_PS_HOST_MODE_')) {
@@ -298,6 +299,11 @@ class ConfigurationTestCore
     }
 
     public static function test_app_logs_dir($dir)
+    {
+        return ConfigurationTest::test_dir($dir, true);
+    }
+
+    public static function test_config_sf2_dir($dir)
     {
         return ConfigurationTest::test_dir($dir, true);
     }
