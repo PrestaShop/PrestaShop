@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShopBundle\Service\LogHandler;
+namespace PrestaShopBundle\Service\Log;
 
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
@@ -19,6 +19,6 @@ class LogHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         $logger = $this->container->get('prestashop.adapter.legacy.logger');
-        $logger->add($record['message'], $record['level']);
+        $logger->log($record['level'], $record['message'], $record['context']);
     }
 }

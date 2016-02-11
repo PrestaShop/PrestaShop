@@ -25,22 +25,21 @@ services:
         calls:
             - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
             - [addSubscriber, ["@prestashop.adapter.legacy.block.helper.subscriber"]]
-            
-            
+
     # EVENT HANDLER
     prestashop.handler.log:
-        class: PrestaShopBundle\Service\LogHandler\LogHandler
+        class: PrestaShopBundle\Service\Log\LogHandler
         arguments:
-            - "@service_container"
-        tags:
-            - { name: addon_log_handler }
-
+            - "@service_container" 
 
     # ADAPTERS (prestashop.adapter.*)
 
     # Legacy context service, transitional
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
+        
+    prestashop.adapter.legacy.logger:
+        class: PrestaShop\PrestaShop\Adapter\LegacyLogger
 
     # Legacy context service, transitional
     prestashop.adapter.translator:
