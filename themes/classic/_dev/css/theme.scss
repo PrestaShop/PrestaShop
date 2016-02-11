@@ -191,11 +191,24 @@
   padding-top: em(40px);
 }
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(xs) {
   #checkout-cart-summary {
     float: none;
     width: 100%;
     margin-top: 1rem;
+  }
+  #header .header-nav {
+    max-height: none;
+    .right-nav{
+      flex-direction: column;
+    }
+    .user-info{
+      text-align: left;
+      margin-left: 0;
+    }
+    .blockcart{
+      margin-left: 0;
+    }
   }
   section.checkout-step {
     width: 100%;

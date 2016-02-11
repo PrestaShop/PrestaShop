@@ -58,6 +58,8 @@ global_settings:
         - blocklayered
       displaySearch:
         - blocksearch
+      displayProductButtons:
+        - socialsharing
 
 theme_settings:
   default_layout: layout-full-width

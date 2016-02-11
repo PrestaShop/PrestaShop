@@ -197,9 +197,9 @@
                               {/if}
                             {/block}
 
-                            <div class="btn btn-primary _shadow" data-button-action="add-to-cart">
+                            <div class="btn btn-primary _shadow _relative" data-button-action="add-to-cart">
                               <input class="add-to-cart text-uppercase" type="submit" name="add" value="{l s='Add to cart'}">
-                                <i class="material-icons pull-xs-left">&#xE547;</i>
+                                <i class="material-icons shopping-cart">&#xE547;</i>
                               </input>
                             </div>
 

@@ -2,7 +2,7 @@
   <nav class="header-nav row">
     <div class="container">
         <div class="row">
-          <div class="col-md-5">
+          <div class="col-md-5 col-xs-12">
             {hook h='displayNav1'}
           </div>
           <div class="col-md-7 right-nav">

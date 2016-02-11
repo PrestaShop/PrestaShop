@@ -7,13 +7,12 @@
   padding-left: em(70px);
   color: $gray;
 }
-
 .block-cms li a,
 .account-list a {
   color: $gray;
   cursor: pointer;
-  &:hover{
-    color:$brand-primary;
+  &:hover {
+    color: $brand-primary;
   }
 }
 .blockcms-title,
@@ -45,9 +44,21 @@
 }
 .facebook {
   background-image: url(../img/facebook.svg);
+  &.icon-gray {
+    background-image: url(../img/facebook-gray.svg);
+    &:hover {
+      background-image: url(../img/facebook-blue.svg);
+    }
+  }
 }
 .twitter {
   background-image: url(../img/twitter.svg);
+  &.icon-gray {
+    background-image: url(../img/twitter-gray.svg);
+    &:hover {
+      background-image: url(../img/twitter-blue.svg);
+    }
+  }
 }
 .rss {
   background-image: url(../img/rss.svg);
@@ -57,9 +68,21 @@
 }
 .googleplus {
   background-image: url(../img/gplus.svg);
+  &.icon-gray {
+    background-image: url(../img/gplus-gray.svg);
+    &:hover {
+      background-image: url(../img/gplus-blue.svg);
+    }
+  }
 }
 .pinterest {
   background-image: url(../img/pinterest.svg);
+  &.icon-gray {
+    background-image: url(../img/pinterest-gray.svg);
+    &:hover {
+      background-image: url(../img/pinterest-blue.svg);
+    }
+  }
 }
 .vimeo {
   background-image: url(../img/vimeo.svg);
