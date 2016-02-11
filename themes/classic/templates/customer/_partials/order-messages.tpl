@@ -1,5 +1,6 @@
 {if $order.messages}
-  <h4>{l s='Messages'}</h4>
+<div class="box">
+  <h3>{l s='Messages'}</h3>
   <table class="table table-striped table-bordered">
     <thead class="thead-default">
       <tr>
@@ -19,13 +20,14 @@
     {/foreach}
     </tbody>
   </table>
+</div>
 {/if}
 
-<section class="order-message-form">
+<section class="order-message-form box">
   <form action="{$urls.pages.order_detail}" method="post">
 
     <header>
-      <h4>{l s='Add a message'}</h4>
+      <h3>{l s='Add a message'}</h3>
       <p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
     </header>
 
@@ -33,8 +35,8 @@
 
       <div class="form-group row">
         <label class="col-md-3 form-control-label">{l s='Product'}</label>
-        <div class="col-md-9">
-          <select name="id_product" class="form-control">
+        <div class="col-md-5">
+          <select name="id_product" class="form-control form-control-select">
             <option value="0">{l s='-- Choose --'}</option>
             {foreach from=$order.products item=product}
               <option value="{$product.product_id}">{$product.product_name}</option>
@@ -52,9 +54,9 @@
 
     </section>
 
-    <footer class="form-footer">
+    <footer class="form-footer text-xs-center">
       <input type="hidden" name="id_order" value="{$order.data.id}" />
-      <button type="submit" name="submitMessage" class="btn btn-primary">
+      <button type="submit" name="submitMessage" class="form-control-submit">
         {l s='Send'}
       </button>
     </footer>

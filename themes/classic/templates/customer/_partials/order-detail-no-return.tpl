@@ -1,3 +1,5 @@
+<div class="box">
+
 <table id="order-products" class="table table-bordered">
   <thead class="thead-default">
     <tr>
@@ -71,3 +73,5 @@
     </tr>
   </tfoot>
 </table>
+
+</div>

@@ -1,3 +1,5 @@
+<div class="box">
+
 <form id="order-return-form" action="{$urls.pages.order_follow}" method="post">
 
   <table id="order-products" class="table table-bordered return">
@@ -28,9 +30,9 @@
           </div>
           <div class="select">
             {if !$product.customizedDatas}
-              <select name="order_qte_input[{$product.id_order_detail}]" class="form-control">
+              <select name="order_qte_input[{$product.id_order_detail}]" class="form-control form-control-select">
             {else}
-              <select name="order_qte_input[{$smarty.foreach.products.index}]" class="form-control">
+              <select name="order_qte_input[{$smarty.foreach.products.index}]" class="form-control form-control-select">
             {/if}
                 {section name=quantity start=1 loop=$product.product_quantity+1}
                   <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
@@ -121,8 +123,10 @@
 
   <footer class="form-footer">
     <input type="hidden" name="id_order" value="{$order.data.id}" />
-    <button type="submit" name="submitReturnMerchandise" class="btn btn-primary">
+    <button type="submit" name="submitReturnMerchandise" class="form-control-submit">
       {l s='Make an RMA slip'}
     </button>
   </footer>
 </form>
+
+</div>

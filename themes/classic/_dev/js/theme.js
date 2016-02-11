@@ -26,6 +26,7 @@ from './common';
 
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
 import 'bootstrap-validator/dist/validator.min';
+import './lib/bootstrap-filestyle.min'
 
 import './components/block-cart';
 

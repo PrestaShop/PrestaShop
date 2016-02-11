@@ -8,20 +8,17 @@
   <section id="content" class="page-content page-order page-order-details">
     {block name='order_infos'}
       <div id="order-infos">
-        <div class="card">
-          <div class="card-block">
+        <div class="box">
             <strong>{l s='Order Reference %s - placed on %s' sprintf=[$order.data.reference, $order.data.order_date]}</strong>
             {if $order.data.url_to_reorder}
               <div class="pull-xs-right">
-                <a href="{$order.data.url_to_reorder}" class="btn btn-primary">{l s='Reorder'}</a>
+                <a href="{$order.data.url_to_reorder}" class="button">{l s='Reorder'}</a>
               </div>
               <div class="clearfix"></div>
             {/if}
-          </div>
         </div>
 
-        <div class="card">
-          <div class="card-block">
+        <div class="box">
             <ul>
             <li><strong>{l s='Carrier'}</strong> {$order.carrier.name}</li>
             <li><strong>{l s='Payment method'}</strong> {$order.data.payment}</li>
@@ -39,13 +36,12 @@
               <li>{l s='Message'} {$order.data.gift_message nofilter}</li>
             {/if}
             </ul>
-          </div>
         </div>
       </div>
     {/block}
 
     {block name='order_history'}
-      <section id="order-history">
+      <section id="order-history" class="box">
         <h3>{l s='Follow your order\'s status step-by-step'}</h3>
         <table class="table table-striped table-bordered table-labeled">
           <thead class="thead-default">
@@ -67,35 +63,30 @@
     {/block}
 
     {if $order.data.followup}
-      <p>{l s='Click the following link to track the delivery of your order'}</p>
-      <a href="{$order.data.followup}">{$order.data.followup}</a>
+      <div class="box">
+        <p>{l s='Click the following link to track the delivery of your order'}</p>
+        <a href="{$order.data.followup}">{$order.data.followup}</a>
+      </div>
     {/if}
 
     {block name='addresses'}
-      <div class="row">
-      {if $order.addresses.delivery}
-        <div class="col-md-6">
-          <article id="delivery-address" class="card address">
-            <div class="card-header">
-              {l s='Delivery address %s' sprintf=$order.addresses.delivery.alias}
-            </div>
-            <div class="card-block">
+      <div class="addresses">
+        {if $order.addresses.delivery}
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <article id="delivery-address" class="box">
+              <h4>{l s='Delivery address %s' sprintf=$order.addresses.delivery.alias}</h4>
               <address>{$order.addresses.delivery.formatted nofilter}</address>
-            </div>
+            </article>
+          </div>
+        {/if}
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+          <article id="invoice-address" class="box">
+            <h4>{l s='Invoice address %s' sprintf=$order.addresses.invoice.alias}</h4>
+            <address>{$order.addresses.invoice.formatted nofilter}</address>
           </article>
         </div>
-      {/if}
-
-      <div class="col-md-6">
-        <article id="invoice-address" class="card address">
-          <div class="card-header">
-            {l s='Invoice address %s' sprintf=$order.addresses.invoice.alias}
-          </div>
-          <div class="card-block">
-            <address>{$order.addresses.invoice.formatted nofilter}</address>
-          </div>
-        </article>
-      </div>
+        <div class="clearfix"></div>
       </div>
     {/block}
 
@@ -111,28 +102,30 @@
 
     {block name='order_carriers'}
       {if $order.shipping}
-        <table class="table table-striped table-bordered">
-          <thead class="thead-default">
-            <tr>
-              <th>{l s='Date'}</th>
-              <th>{l s='Carrier'}</th>
-              <th>{l s='Weight'}</th>
-              <th>{l s='Shipping cost'}</th>
-              <th>{l s='Tracking number'}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {foreach from=$order.shipping item=line}
+        <div class="box">
+          <table class="table table-striped table-bordered">
+            <thead class="thead-default">
               <tr>
-                <td>{$line.shipping_date}</td>
-                <td>{$line.carrier_name}</td>
-                <td>{$line.shipping_weight}</td>
-                <td class="text-xs-right">{$line.shipping_cost}</td>
-                <td>{$line.tracking}</td>
+                <th>{l s='Date'}</th>
+                <th>{l s='Carrier'}</th>
+                <th>{l s='Weight'}</th>
+                <th>{l s='Shipping cost'}</th>
+                <th>{l s='Tracking number'}</th>
               </tr>
-            {/foreach}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {foreach from=$order.shipping item=line}
+                <tr>
+                  <td>{$line.shipping_date}</td>
+                  <td>{$line.carrier_name}</td>
+                  <td>{$line.shipping_weight}</td>
+                  <td class="text-xs-right">{$line.shipping_cost}</td>
+                  <td>{$line.tracking}</td>
+                </tr>
+              {/foreach}
+            </tbody>
+          </table>
+        </div>
       {/if}
     {/block}
 

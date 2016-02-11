@@ -1,19 +1,15 @@
 {extends file='customer/page.tpl'}
 
 {block name='page_title'}
-  {l s='Order details'}
+  {l s='Return details'}
 {/block}
 
 {block name='page_content_container'}
-  <section id="content" class="page-content page-order">
+  <section id="content" class="page-content page-order page-order-return">
 
     {block name='order_return_infos'}
       <div id="order-return-infos">
-        <div class="card">
-          <div class="card-block">
-            <strong>{l s='RE#%s on %s' sprintf=[$orderRet.return_number, $orderRet.return_date]}</strong>
-          </div>
-        </div>
+        <p><strong>{l s='RE#%s on %s' sprintf=[$orderRet.return_number, $orderRet.return_date]}</strong></p>
         <p>{l s='We have logged your return request.'}</p>
         <p>{l s='Your package must be returned to us within %s days of receiving your order.' sprintf=$nbdaysreturn}</p>
         <p>{l s='The current status of your merchandise return is: %s' sprintf=$state_name}</p>

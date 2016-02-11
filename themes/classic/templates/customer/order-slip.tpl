@@ -5,7 +5,7 @@
 {/block}
 
 {block name='page_content_container'}
-  <section id="content" class="page-content page-order">
+  <section id="content" class="page-content page-order page-credit-slips">
 
     <h6>{l s='Credit slips you have received after canceled orders'}.</h6>
     {if $credit_slips}
@@ -21,7 +21,7 @@
         <tbody>
           {foreach from=$credit_slips item=slip}
             <tr>
-              <td>{$slip.credit_slip_number}</td>
+              <th scope="row">{$slip.credit_slip_number}</th>
               <td><a href="#">{$slip.order_number}</a></td>
               <td>{$slip.credit_slip_date}</td>
               <td class="text-xs-center">

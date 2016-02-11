@@ -59,3 +59,4 @@ theme_settings:
   default_layout: layout-full-width
   layouts:
     category: layout-left-column
+    contact: layout-left-column
