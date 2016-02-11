@@ -8,7 +8,8 @@ const guestScenario = {
     name: "Guest Checkout",
     customerDoesntHaveAnAccount: true,
     customerOrdersAsGuest: true,
-    deliveryAddressIsInvoiceAddress: true
+    deliveryAddressIsInvoiceAddress: true,
+    customerHasAnAddress: false
 };
 
 const registrationScenario = Object.assign({}, guestScenario, {
@@ -21,10 +22,19 @@ const guestScenarioDifferentAddresses = Object.assign({}, guestScenario, {
   deliveryAddressIsInvoiceAddress: false
 });
 
+const existingCustomerScenario = Object.assign({}, guestScenario, {
+  name: "Checkout by Existing Customer Not Logged-In Yet",
+  customerDoesntHaveAnAccount: false,
+  customerOrdersAsGuest: false,
+  customerHasAnAddress: true,
+  deliveryAddressIsInvoiceAddress: true
+});
+
 const scenarios = [
   guestScenario,
   guestScenarioDifferentAddresses,
-  registrationScenario
+  registrationScenario,
+  existingCustomerScenario
 ];
 
 describe("The Checkout Process", function () {
@@ -47,7 +57,7 @@ function runScenario (scenario) {
         return browser.deleteCookie().url('/');
     });
 
-    describe("by default, customer is expected to order as guest", function () {
+    describe("The Steps Of The Order Process", function () {
         it('should show the personal information step as reachable', function () {
           return browser.waitForVisible(
             '#checkout-personal-information-step.-reachable'
@@ -65,27 +75,39 @@ function runScenario (scenario) {
         });
 
         describe('the personal information step', function () {
-          let infoFormTestText = 'should allow filling the personal info form';
-          if (scenario.customerOrdersAsGuest) {
-            infoFormTestText += ' without password';
-          }
+          if (scenario.customerOrdersAsGuest || scenario.customerDoesntHaveAnAccount) {
+            let infoFormTestText = 'should allow filling the personal info form';
+            if (scenario.customerOrdersAsGuest) {
+              infoFormTestText += ' without password';
+            }
 
-          it(infoFormTestText, function () {
-            return browser
-              .setValue('#customer-form [name=firstname]', user.name.first)
-              .setValue('#customer-form [name=lastname]' , user.name.last)
-              .setValue('#customer-form [name=email]'    , user.email)
-              .then(() => {
-                if (!scenario.customerOrdersAsGuest) {
-                  return browser.setValue('#customer-form [name=password]', '123456789');
-                }
-              })
-              .click('#customer-form button')
-              .waitForVisible(
-                  '#checkout-personal-information-step.-reachable.-complete'
-              )
-            ;
-          });
+            it(infoFormTestText, function () {
+              return browser
+                .setValue('#customer-form [name=firstname]', user.name.first)
+                .setValue('#customer-form [name=lastname]' , user.name.last)
+                .setValue('#customer-form [name=email]'    , user.email)
+                .then(() => {
+                  if (!scenario.customerOrdersAsGuest) {
+                    return browser.setValue('#customer-form [name=password]', '123456789');
+                  }
+                })
+                .click('#customer-form button')
+                .waitForVisible(
+                    '#checkout-personal-information-step.-reachable.-complete'
+                )
+              ;
+            });
+          } else {
+            it('should let the user login instead of registering', function () {
+              return browser
+                .click('[data-link-action="show-login-form"]')
+                .waitForVisible('#login-form')
+                .setValue('#login-form [name=email]', fixtures.customer.email)
+                .setValue('#login-form [name=password]', fixtures.customer.password)
+                .click('#login-form button')
+              ;
+            });
+          }
         });
 
         describe('the addresses step', function () {
@@ -95,33 +117,42 @@ function runScenario (scenario) {
             );
           });
 
-          it("should not show any addresses", function () {
-            return browser.isVisible('.address-item').should.become(false);
-          });
+          if (!scenario.customerHasAnAddress) {
+            it("should not show any addresses", function () {
+              return browser.isVisible('.address-item').should.become(false);
+            });
 
-          it("should show the delivery address form", function () {
-            return browser.waitForVisible('#delivery-address form');
-          });
+            it("should show the delivery address form", function () {
+              return browser.waitForVisible('#delivery-address form');
+            });
 
-          it("the delivery address form should have the customer firstname and lastname pre-filled", function () {
-            return browser
-              .getValue('#delivery-address [name=firstname]')
-              .should.become(user.name.first)
-              .then(() => browser.getValue('#delivery-address [name=lastname]'))
-              .should.become(user.name.last)
-            ;
-          });
+            it("the delivery address form should have the customer firstname and lastname pre-filled", function () {
+              return browser
+                .getValue('#delivery-address [name=firstname]')
+                .should.become(user.name.first)
+                .then(() => browser.getValue('#delivery-address [name=lastname]'))
+                .should.become(user.name.last)
+              ;
+            });
 
-          it("should fill the address form and go to delivery step", function () {
-            return browser
-              .setValue('#delivery-address [name=address1]', user.location.street)
-              .setValue('#delivery-address [name=city]', user.location.city)
-              .setValue('#delivery-address [name=postcode]', '00000')
-              .setValue('#delivery-address [name=phone]', '0123456789')
-              .click('#delivery-address button')
-              .waitForVisible('#checkout-delivery-step.-reachable')
-            ;
-          });
+            it("should fill the address form and go to delivery step", function () {
+              return browser
+                .setValue('#delivery-address [name=address1]', user.location.street)
+                .setValue('#delivery-address [name=city]', user.location.city)
+                .setValue('#delivery-address [name=postcode]', '00000')
+                .setValue('#delivery-address [name=phone]', '0123456789')
+                .click('#delivery-address button')
+                .waitForVisible('#checkout-delivery-step.-reachable')
+              ;
+            });
+          } else {
+            it("should have an existing address pre-selected", function () {
+              return browser.isSelected('[name="id_address_delivery"]');
+            });
+            it("should go to the next step once the customer clicks continue", function () {
+              return browser.click('#checkout-addresses-step button.continue');
+            });
+          }
 
           if (!scenario.deliveryAddressIsInvoiceAddress) {
             it("should open another address form for the invoice address", function () {

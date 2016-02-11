@@ -39,7 +39,7 @@
                 {/if}
               </td>
               <td class="text-xs-center">
-                <a href="{$order.url_details}" class="btn btn-secondary">
+                <a href="{$order.url_details}" class="btn btn-secondary" data-link-action="view-order-details">
                   {l s='Details'}
                 </a>
                 {if $order.url_to_reorder}

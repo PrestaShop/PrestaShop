@@ -8,6 +8,7 @@ addons:
         - apache2
         - libapache2-mod-fastcgi
     sauce_connect: true
+    firefox: latest
 php:
   - 5.5
   - 5.6
@@ -50,3 +51,4 @@ script:
 
 after_script:
   - sudo cat /var/log/apache2/error.log
+  - firefox --version

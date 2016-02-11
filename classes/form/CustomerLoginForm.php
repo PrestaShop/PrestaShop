@@ -62,6 +62,10 @@ class CustomerLoginFormCore extends AbstractForm
 
     public function getTemplateVariables()
     {
+        if (!$this->formFields) {
+            $this->formFields = $this->formatter->getFormat();
+        }
+
         return [
             'action'        => $this->action,
             'urls'          => $this->urls,
