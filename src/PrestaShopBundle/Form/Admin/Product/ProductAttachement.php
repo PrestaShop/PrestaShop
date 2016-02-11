@@ -83,7 +83,7 @@ class ProductAttachement extends CommonAbstractType
         ))
         ->add('add', FormType\ButtonType::class, array(
             'label' =>  $this->translator->trans('Add', [], 'AdminProducts'),
-            'attr' =>  ['class' => 'btn-primary pull-right']
+            'attr' =>  ['class' => 'btn-primary-outline pull-right']
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

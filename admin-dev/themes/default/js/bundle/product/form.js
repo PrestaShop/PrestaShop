@@ -245,12 +245,11 @@ var formCategory = (function() {
 			},
 			beforeSend: function() {
 				$('button.submit', elem).attr('disabled', 'disabled');
-				$('.help-block', elem).remove();
+				$('ul.text-danger', elem).remove();
 				$('*.has-danger', elem).removeClass('has-danger');
+				$('*.has-danger').removeClass('has-danger');
 			},
 			success: function(response){
-				$('#form_step1_new_category_name').val('');
-
 				//inject new category into category tree
 				var html = '<li><div class="checkbox"><label><input type="checkbox" name="form[step1][categories][tree][]" value="'+response.category.id+'">'+response.category.name[1]+'</label></div></li>';
 				var parentElement = $('#form_step1_categories input[value='+response.category.id_parent+']').parent().parent();
@@ -321,7 +320,7 @@ var featuresCollection = (function() {
 
 				modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
 					onContinue: function(){
-						_this.parent().parent().remove();
+						_this.parent().parent().parent().remove();
 					}
 				}).show();
 			});
@@ -863,19 +862,19 @@ var specificPrices = (function() {
 				}
 
 				$.each(specific_prices, function(key, specific_price){
-					var row = '<tr>\
-						<td>'+ specific_price.rule_name +'</td>\
-						<td>'+ specific_price.attributes_name +'</td>\
-						<td>'+ specific_price.currency +'</td>\
-						<td>'+ specific_price.country +'</td>\
-						<td>'+ specific_price.group +'</td>\
-						<td>'+ specific_price.customer +'</td>\
-						<td>'+ specific_price.fixed_price +'</td>\
-						<td>'+ specific_price.impact +'</td>\
-						<td>'+ specific_price.period +'</td>\
-						<td>'+ specific_price.from_quantity +'</td>\
-						<td>'+ (specific_price.can_delete ? '<a href="'+ $('#js-specific-price-list').attr('data-action-delete')+'/'+specific_price.id_specific_price +'" class="btn btn-default js-delete"><i class="icon-trash"></i></a>' : '') +'</td>\
-					</tr>';
+					var row = '<tr>'+
+						'<td>'+ specific_price.rule_name +'</td>'+
+						'<td>'+ specific_price.attributes_name +'</td>'+
+						'<td>'+ specific_price.currency +'</td>'+
+						'<td>'+ specific_price.country +'</td>'+
+						'<td>'+ specific_price.group +'</td>'+
+						'<td>'+ specific_price.customer +'</td>'+
+						'<td>'+ specific_price.fixed_price +'</td>'+
+						'<td>'+ specific_price.impact +'</td>'+
+						'<td>'+ specific_price.period +'</td>'+
+						'<td>'+ specific_price.from_quantity +'</td>'+
+						'<td>'+ (specific_price.can_delete ? '<a href="'+ $('#js-specific-price-list').attr('data-action-delete')+'/'+specific_price.id_specific_price +'" class="btn btn-danger js-delete"><i class="material-icons">delete</i></a>' : '') +'</td>'+
+					'</tr>';
 
 					tbody.append(row);
 				});
@@ -1061,7 +1060,7 @@ var form = (function() {
 			beforeSend: function() {
 				$('#submit', elem).attr('disabled', 'disabled');
 				$('.btn-submit', elem).attr('disabled', 'disabled');
-				$('.help-block').remove();
+				$('ul.text-danger').remove();
 				$('*.has-danger').removeClass('has-danger');
 			},
 			success: function(response){
@@ -1124,19 +1123,19 @@ var form = (function() {
 			/** create keyboard event for save & duplicate */
 			jwerty.key('ctrl+D', function(e) {
 				e.preventDefault();
-				send($('nav.navbar-form-footer .duplicate').attr('data-redirect'));
+				send($('.product-footer .duplicate').attr('data-redirect'));
 			});
 
 			/** create keyboard event for save & new */
 			jwerty.key('ctrl+P', function(e) {
 				e.preventDefault();
-				send($('nav.navbar-form-footer .new-product').attr('data-redirect'));
+				send($('.product-footer .new-product').attr('data-redirect'));
 			});
 
 			/** create keyboard event for save & go catalog */
 			jwerty.key('ctrl+Q', function(e) {
 				e.preventDefault();
-				send($('nav.navbar-form-footer .go-catalog').attr('data-redirect'));
+				send($('.product-footer .go-catalog').attr('data-redirect'));
 			});
 
 			elem.submit(function( event ) {
@@ -1155,12 +1154,12 @@ var form = (function() {
 			});
 
 			/** on active field change, send form */
-			$('#form_step1_active', elem).change(function(){
-				send();
-			});
+      $('#form_step1_active', elem).on('switchChange.bootstrapSwitch', function(event, state) {
+        send();
+      });
 
 			/** on delete product */
-			$('.form-action-bar .delete', elem).click(function(e){
+			$('.product-footer .delete', elem).click(function(e){
 				e.preventDefault();
 				var _this = $(this);
 				modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
@@ -1172,7 +1171,7 @@ var form = (function() {
 
 			/** show rendered form after page load */
 			$(window).load(function(){
-				$('#form-loading').css('visibility','visible').hide().fadeIn();
+				$('#form-loading').fadeIn();
 				imagesProduct.expander();
 			});
 		},
@@ -1300,7 +1299,7 @@ var virtualProduct = (function() {
 					processData: false,
 					beforeSend: function() {
 						_this.prop('disabled', 'disabled');
-						$('.help-block').remove();
+						$('ul.text-danger').remove();
 						$('*.has-danger').removeClass('has-danger');
 					},
 					success: function(response){
@@ -1324,7 +1323,7 @@ var virtualProduct = (function() {
 						});
 					},
 					complete: function(){
-						_this.removeProp('disabled');
+						_this.removeAttr('disabled');
 					}
 				});
 			});
@@ -1345,9 +1344,9 @@ var attachmentProduct = (function() {
 			/** check all attachments files */
 			$('#product-attachment-files-check').change(function(){
 				if($(this).is(":checked")) {
-					$('#product-attachment-file input[type="checkbox"]').attr('checked', true);
+					$('#product-attachment-file input[type="checkbox"]').prop('checked', true);
 				}else{
-					$('#product-attachment-file input[type="checkbox"]').attr('checked', false);
+					$('#product-attachment-file input[type="checkbox"]').prop('checked', false);
 				}
 			});
 
@@ -1370,7 +1369,7 @@ var attachmentProduct = (function() {
 					processData: false,
 					beforeSend: function() {
 						buttonSave.prop('disabled', 'disabled');
-						$('.help-block').remove();
+						$('ul.text-danger').remove();
 						$('*.has-danger').removeClass('has-danger');
 					},
 					success: function(response){
@@ -1404,7 +1403,7 @@ var attachmentProduct = (function() {
 						});
 					},
 					complete: function(){
-						buttonSave.removeProp('disabled');
+						buttonSave.removeAttr('disabled');
 					}
 				});
 			});
@@ -1594,7 +1593,7 @@ var formImagesProduct = (function() {
 				data: formZoneElem.find('input').serialize(),
 				beforeSend: function() {
 					formZoneElem.find('.actions button').prop('disabled', 'disabled');
-					formZoneElem.find('.help-block').remove();
+					formZoneElem.find('ul.text-danger').remove();
 					formZoneElem.find('*.has-danger').removeClass('has-danger');
 				},
 				success: function(response){
