@@ -17,7 +17,9 @@
               <div class="col-md-6">
                 <h6 class="h6 product-name">{$product.name}</h6>
                 <p class="_margin-bottom-medium">{$product.price}</p>
-                <p>{$product.attributes}</p>
+                {foreach from=$product.attributes item="property_value" key="property"}
+                  <span><strong>{$property}</strong>: {$property_value}</span><br>
+                {/foreach}
                 <p><strong>{l s='Quantity:' mod='blockcart'}</strong>&nbsp;{$product.cart_quantity}</p>
               </div>
             </div>
@@ -29,10 +31,11 @@
               {else}
                 <p class="cart-products-count">{l s='There is %s item in your cart.' sprintf=$cart.products_count}</p>
               {/if}
+              <p><strong>{l s='Total products:' mod='blockcart'}</strong>&nbsp;{$cart.subtotals.products.amount}</p>
               <p><strong>{l s='Total shipping:' mod='blockcart'}</strong>&nbsp;{$cart.subtotals.shipping.amount}</p>
               <p><strong>{l s='Total:' mod='blockcart'}</strong>&nbsp;{$cart.total.amount}</p>
               <button type="button" class="btn btn-secondary _bolder text-uppercase _shadow _margin-right-small" data-dismiss="modal">{l s='Continue shopping' mod='blockcart'}</button>
-              <a href="{$link->getPageLink("order", true)|escape:"html":"UTF-8"}" class="btn btn-primary _bolder text-uppercase _shadow"><i class="material-icons _margin-right-small">&#xE876;</i>{l s='proceed to checkout' mod='blockcart'}</a>
+              <a href="{$cart_url}" class="btn btn-primary _bolder text-uppercase _shadow"><i class="material-icons _margin-right-small">&#xE876;</i>{l s='proceed to checkout' mod='blockcart'}</a>
             </div>
           </div>
         </div>
