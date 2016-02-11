@@ -6341,6 +6341,29 @@ li.product-label {
     text-transform: uppercase;
     color: #414141; }
 
+#pagenotfound #main .page-header {
+  margin: 2rem 0 3rem; }
+
+#pagenotfound #main .page-content {
+  margin-bottom: 10rem; }
+
+#pagenotfound .page-not-found {
+  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08);
+  background: white;
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #878787;
+  max-width: 570px;
+  margin: 0 auto; }
+  #pagenotfound .page-not-found h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0.5rem 0 1rem; }
+  #pagenotfound .page-not-found .search-widget {
+    float: none; }
+    #pagenotfound .page-not-found .search-widget input {
+      width: 100%; }
+
 /*** HEADER ***/
 #header {
   background: white; }
