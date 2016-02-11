@@ -39,7 +39,9 @@ global_settings:
         - blockcart
       displayTop:
         - blocktopmenu
-        - blocksearch
+        - blocksearch:
+          - pagenotfound
+
       displayHome:
         - homeslider
         - homefeatured
