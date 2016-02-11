@@ -2553,7 +2553,7 @@ class AdminProductsControllerCore extends AdminController
         if (Configuration::get('PS_STOCK_MANAGEMENT')) {
             $helper = new HelperKpi();
             $helper->id = 'box-products-stock';
-            $helper->icon = 'icon-archive';
+            $helper->icon = 'local_shipping';
             $helper->color = 'color1';
             $helper->title = $this->l('Out of stock items', null, null, false);
             if (ConfigurationKPI::get('PERCENT_PRODUCT_OUT_OF_STOCK') !== false) {
@@ -2570,7 +2570,7 @@ class AdminProductsControllerCore extends AdminController
 
         $helper = new HelperKpi();
         $helper->id = 'box-avg-gross-margin';
-        $helper->icon = 'icon-tags';
+        $helper->icon = 'label';
         $helper->color = 'color2';
         $helper->title = $this->l('Average Gross Margin %', null, null, false);
         if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN') !== false) {
@@ -2583,7 +2583,7 @@ class AdminProductsControllerCore extends AdminController
 
         $helper = new HelperKpi();
         $helper->id = 'box-8020-sales-catalog';
-        $helper->icon = 'icon-beaker';
+        $helper->icon = 'whatshot';
         $helper->color = 'color3';
         $helper->title = $this->l('Catalog popularity', null, null, false);
         $helper->subtitle = $this->l('30 days', null, null, false);
@@ -2600,7 +2600,7 @@ class AdminProductsControllerCore extends AdminController
 
         $helper = new HelperKpi();
         $helper->id = 'box-disabled-products';
-        $helper->icon = 'icon-off';
+        $helper->icon = 'visibility_off';
         $helper->color = 'color4';
         $helper->title = $this->l('Disabled Products', null, null, false);
         if (ConfigurationKPI::get('DISABLED_PRODUCTS') !== false) {
