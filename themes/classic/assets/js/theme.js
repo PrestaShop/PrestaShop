@@ -8386,8 +8386,46 @@
 	  _createClass(ProductSelect, [{
 	    key: 'init',
 	    value: function init() {
+	      var _this = this;
+	
+	      var MAX_THUMBS = 5;
+	      var $arrows = (0, _jquery2['default'])('.js-arrows');
+	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
 	      (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
 	        (0, _jquery2['default'])('.js-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
+	      });
+	      (0, _jquery2['default'])('.js-modal-thumb').on('click', function (event) {
+	        (0, _jquery2['default'])('.js-product-cover-modal').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
+	      });
+	      if ((0, _jquery2['default'])('.js-product-images li').length <= MAX_THUMBS) {
+	        $arrows.css('opacity', '.2');
+	      } else {
+	        $arrows.on('click', function (event) {
+	          if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && (0, _jquery2['default'])('.js-product-images').position().top < 0) {
+	            _this.move('up');
+	            (0, _jquery2['default'])('.js-arrow-down').css('opacity', '1');
+	          } else if ((0, _jquery2['default'])(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > (0, _jquery2['default'])('.js-mask').height()) {
+	            _this.move('down');
+	            (0, _jquery2['default'])('.js-arrow-up').css('opacity', '1');
+	          }
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'move',
+	    value: function move(direction) {
+	      var THUMB_MARGIN = 10;
+	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
+	      var thumbHeight = (0, _jquery2['default'])('.js-product-images li img').height() + THUMB_MARGIN;
+	      var currentPosition = $thumbnails.position().top;
+	      $thumbnails.velocity({
+	        translateY: direction === 'up' ? currentPosition + thumbHeight : currentPosition - thumbHeight
+	      }, function () {
+	        if ($thumbnails.position().top >= 0) {
+	          (0, _jquery2['default'])('.js-arrow-up').css('opacity', '.2');
+	        } else if ($thumbnails.position().top + $thumbnails.height() <= (0, _jquery2['default'])('.js-mask').height()) {
+	          (0, _jquery2['default'])('.js-arrow-down').css('opacity', '.2');
+	        }
 	      });
 	    }
 	  }]);

@@ -32,7 +32,7 @@
               <p><strong>{l s='Total shipping:' mod='blockcart'}</strong>&nbsp;{$cart.subtotals.shipping.amount}</p>
               <p><strong>{l s='Total:' mod='blockcart'}</strong>&nbsp;{$cart.total.amount}</p>
               <button type="button" class="btn btn-secondary _bolder text-uppercase _shadow _margin-right-small" data-dismiss="modal">{l s='Continue shopping' mod='blockcart'}</button>
-              <button type="button" class="btn btn-primary _bolder text-uppercase _shadow"><i class="material-icons _margin-right-small">&#xE876;</i>{l s='proceed to checkout' mod='blockcart'}</button>
+              <a href="{$link->getPageLink("order", true)|escape:"html":"UTF-8"}" class="btn btn-primary _bolder text-uppercase _shadow"><i class="material-icons _margin-right-small">&#xE876;</i>{l s='proceed to checkout' mod='blockcart'}</a>
             </div>
           </div>
         </div>

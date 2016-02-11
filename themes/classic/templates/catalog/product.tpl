@@ -46,9 +46,9 @@
                 {block name='product_cover'}
                   <div class="product-cover _margin-bottom-medium _relative">
                     <img class="_shadow js-product-cover" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" width="452" itemprop="image" />
-                    {*<div class="layer" data-toggle="modal" data-target="#product-modal">
+                    <div class="layer" data-toggle="modal" data-target="#product-modal">
                       <i class="material-icons zoom-in">&#xE8FF;</i>
-                    </div>*}
+                    </div>
                   </div>
                 {/block}
 
@@ -415,7 +415,7 @@
         <div class="modal-content">
           <div class="modal-body">
             <figure>
-              <img src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
+              <img class="js-product-cover-modal" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
               <figcaption class="image-caption">
               {block name='product_description_short'}
                 <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
@@ -424,23 +424,20 @@
             </figure>
             <aside id="thumbnails" class="thumbnails js-thumbnails text-xs-center _relative">
               {block name='product_images'}
-                <div class="mask">
-                  <ul class="product-images">
+                <div class="js-mask mask _relative">
+                  <ul class="product-images js-product-images">
                     {foreach from=$product.images item=image}
-                      <li class="_margin-right-small"><img class="_shadow _margin-bottom-small" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="{$image.medium.width}" itemprop="image" /></li>
+                      <li class="_margin-right-small">
+                        <img data-image-large-src="{$image.large.url}" class="_shadow _margin-bottom-small js-modal-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="{$image.medium.width}" itemprop="image" />
+                      </li>
                     {/foreach}
                   </ul>
                 </div>
               {/block}
-              <div class="arrows">
-                <a class="" href="#thumbnails" data-slide="prev">
-                  <i class="material-icons arrow-up js-arrow-up">&#xE5C7;</i>
-                </a>
-                <a class="" href="#thumbnails" data-slide="next">
-                  <i class="material-icons arrow-down js-arrow-down">&#xE5C5;</i>
-                </a>
+              <div class="arrows js-arrows">
+                <i class="material-icons arrow-up js-arrow-up">&#xE5C7;</i>
+                <i class="material-icons arrow-down js-arrow-down">&#xE5C5;</i>
               </div>
-
             </aside>
           </div>
         </div><!-- /.modal-content -->
