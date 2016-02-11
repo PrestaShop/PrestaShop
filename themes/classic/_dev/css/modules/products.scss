@@ -53,9 +53,12 @@
     padding: em(3px) em(10px);
     background: transparent;
     border: none;
-    + .material-icons {
-      padding-top: em(3px);
-    }
+    text-indent: em(20px);
+  }
+  .shopping-cart{
+    position: absolute;
+    left:em(8px);
+    top:em(7px);
   }
 }
 .product-discount {
@@ -97,7 +100,7 @@
   }
 }
 .product-cover {
-  img{
+  img {
     background: white;
   }
   .layer {
@@ -132,7 +135,7 @@
     .modal-body {
       display: flex;
       margin-left: -30%;
-      .product-cover-modal{
+      .product-cover-modal {
         background: white;
       }
       .image-caption {
@@ -174,7 +177,7 @@
         .arrow-up {
           position: absolute;
           top: -.3em;
-          opacity: .2;
+          opacity: 0.2;
         }
         .arrow-down {
           position: absolute;
@@ -254,4 +257,26 @@ li.product-label {
 }
 .product-customization {
   @include submit-button;
+}
+.social-sharing {
+  width: 100%;
+  li {
+    @include box-shadow;
+    height: 2.5em;
+    width: 2.5em;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: white;
+    cursor: pointer;
+    margin-left: em(15px);
+    @include transition(all .2s ease-in);
+    a {
+      white-space: nowrap;
+      text-indent: 100%;
+      overflow: hidden;
+      &:hover {
+        color: transparent;
+      }
+    }
+  }
 }
