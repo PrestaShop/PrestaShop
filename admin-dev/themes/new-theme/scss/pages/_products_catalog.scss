@@ -6,6 +6,11 @@
       top: $grid-gutter-width / 2;
       bottom: $grid-gutter-width / 2;
     }
+    margin-bottom: 20px;
+  }
+
+  > .content:last-child {
+    margin-bottom: 0;
   }
 
 }
