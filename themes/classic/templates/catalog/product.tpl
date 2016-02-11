@@ -415,7 +415,7 @@
         <div class="modal-content">
           <div class="modal-body">
             <figure>
-              <img class="js-product-cover-modal" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
+              <img class="js-product-cover-modal product-cover-modal" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
               <figcaption class="image-caption">
               {block name='product_description_short'}
                 <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>

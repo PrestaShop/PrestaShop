@@ -5123,6 +5123,11 @@ label {
 ._divide-right {
   border-right: #ebebeb 1px solid; }
 
+._flexbox {
+  -js-display: flex;
+  display: flex;
+  align-items: center; }
+
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
@@ -5990,6 +5995,9 @@ img {
     .tabs .nav-tabs .nav-item {
       margin-bottom: -2px; }
 
+.product-cover img {
+  background: white; }
+
 .product-cover .layer {
   -js-display: flex;
   display: flex;
@@ -6022,6 +6030,8 @@ img {
     -js-display: flex;
     display: flex;
     margin-left: -30%; }
+    #product-modal .modal-content .modal-body .product-cover-modal {
+      background: white; }
     #product-modal .modal-content .modal-body .image-caption {
       background: white;
       margin-left: 4px;
