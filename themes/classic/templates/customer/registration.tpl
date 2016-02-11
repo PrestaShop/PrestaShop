@@ -1,14 +1,12 @@
 {extends file='page.tpl'}
 
-{block name='page_header_container'}{/block}
+{block name='page_title'}
+  {l s='Create an account'}
+{/block}
 
 {block name='page_content_container'}
-  <section id="content" class="page-content page-authentication">
+  <section id="content" class="page-content page-registration">
     {block name='register_form_container'}
-      <header>
-        <h1 class="h1">{l s='Create an account'}</h1>
-      </header>
-
       {$hook_create_account_top nofilter}
       <section class="register-form">
         <p>{l s='Already have an account?'} <a href="{$urls.pages.authentication}">{l s='Log in instead!'}</a></p>

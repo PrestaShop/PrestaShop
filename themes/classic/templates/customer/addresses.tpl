@@ -6,7 +6,6 @@
 
 {block name='page_content_container'}
 <section id="content" class="page-content page-addresses">
-
   {foreach $customer.addresses as $address}
     <div class="col-lg-4 col-md-6 col-sm-6">
     {block name='customer_address'}
@@ -15,11 +14,12 @@
     </div>
   {/foreach}
   <div class="clearfix"></div>
-  <footer>
-    <a href="{$urls.pages.address}" data-link-action="add-address" class="btn btn-primary">
-      {l s='Create new address'}
+  <div class="addresses-footer">
+    <a href="{$urls.pages.address}" data-link-action="add-address">
+      <i class="material-icons">&#xE145;</i>
+      <span class="_valign-middle">{l s='Create new address'}</span>
     </a>
-  </footer>
-
+  </div>
 </section>
+
 {/block}

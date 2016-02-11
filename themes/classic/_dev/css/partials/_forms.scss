@@ -1,19 +1,62 @@
 label {
+  color: $gray-darker;
   text-align: right;
-  font-size: 1rem;
-  &.required {
-    font-weight: bold;
-  }
+  font-size: rem(14px);
 }
 
-.form-footer {
-  text-align: center;
+.form-control-label {
+  padding-top: rem(10px);
 }
 
 .form-control {
-  color: inherit;
+  background: $gray-light;
+  color: $gray;
+  border-color: $gray-light;
+  border-radius: 0;
+  font-size: rem(14px);
+  padding: rem(8px) rem(16px);
+  &:focus {
+    background-color: white;
+    outline: rem(3px) solid $brand-primary;
+  }
+}
+
+.form-control-select {
+  height: rem(42px);
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: $gray-light url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAPklEQVR4Ae3TwREAEBQD0V/6do4SXPZg7EsBhsQ8IEmSMOsiuEfg3gL3oXC7wK0bd1G4o8X9F4yIkyQfSrIByQBjp7QuND8AAAAASUVORK5CYII=') no-repeat scroll right rem(8px) center / rem(20px) rem(20px);
+  padding-right: rem(32px);
 }
 
 .form-control-valign {
-  padding-top: 0.375rem;
+  padding-top: rem(8px);
+}
+
+.form-control-comment {
+  font-size: rem(14px);
+  padding-top: rem(8px);
+  color: $gray-dark;
+}
+
+.form-control-submit {
+  @include primary-button;
+  &.disabled {
+    background: $brand-info;
+    color: white;
+  }
+}
+
+.group-span-filestyle {
+  label {
+    margin: 0;
+  }
+  .btn-default {
+    background: $brand-primary;
+    color: white;
+    text-transform: uppercase;
+    border-radius: 0;
+    font-size: rem(14px);
+    padding: rem(8px) rem(16px);
+  }
 }

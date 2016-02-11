@@ -5,7 +5,7 @@
 {/block}
 
 {block name='page_content_container'}
-  <section id="content" class="page-content page-order">
+  <section id="content" class="page-content page-order page-discount">
 
     {if $cart_rules}
       <table class="table table-striped table-bordered">
@@ -23,9 +23,9 @@
         <tbody>
           {foreach from=$cart_rules item=cart_rule}
             <tr>
-              <td>{$cart_rule.code}</td>
+              <th scope="row">{$cart_rule.code}</th>
               <td>{$cart_rule.name}</td>
-              <td>{$cart_rule.quantity_for_user}</td>
+              <td class="text-xs-right">{$cart_rule.quantity_for_user}</td>
               <td>{$cart_rule.value}</td>
               <td>{$cart_rule.voucher_minimal}</td>
               <td>{$cart_rule.voucher_cumulable}</td>

@@ -32,13 +32,16 @@
     }
   }
 }
-@mixin submit-button {
-  input[type=submit], button[type=submit] {
+@mixin primary-button {
     background: $brand-primary;
     border: none;
     color: white;
     text-transform: uppercase;
     padding: em(11px) em(17px);
+}
+@mixin submit-button {
+  input[type=submit], button[type=submit] {
+    @include primary-button;
   }
 }
 @mixin box-shadow {

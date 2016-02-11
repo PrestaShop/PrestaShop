@@ -6,6 +6,8 @@
 
 {* StarterTheme: Add confirmation/error messages *}
 
-{block name='page_content'}
-  {render file='customer/_partials/customer-form.tpl' ui=$customer_form}
+{block name='page_content_container'}
+  <section id="content" class="page-content page-identity">
+  	{render file='customer/_partials/customer-form.tpl' ui=$customer_form}
+  </section>
 {/block}

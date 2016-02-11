@@ -5,15 +5,9 @@
 {/block}
 
 {block name='page_content_container'}
-  <section id="content" class="page-content page-order">
-
+  <section id="content" class="page-content page-order page-order-return">
     <h6>{l s='Here is a list of pending merchandise returns'}</h6>
 
-      <section class="form-fields">
-        <div class="form-group row">
-          <label class="col-md-3 form-control-label">{l s='Please provide an explanation for your RMA:'}</label>
-          <div class="col-md-9">
-            <textarea cols="67" rows="3" name="returnText" class="form-control"></textarea>
     {if isset($errorMsg) && $errorMsg}
       <form method="post">
 
@@ -26,7 +20,7 @@
           </div>
         </section>
 
-        <footer class="form-footer">
+        <footer class="form-footer text-xs-center">
           {foreach $ids_order_detail as $id_order_detail}
             <input type="hidden" name="ids_order_detail[{$id_order_detail}]" value="{$id_order_detail}"/>
           {/foreach}

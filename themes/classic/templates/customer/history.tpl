@@ -38,12 +38,12 @@
                   -
                 {/if}
               </td>
-              <td class="text-xs-center">
-                <a href="{$order.url_details}" class="btn btn-secondary" data-link-action="view-order-details">
+              <td class="text-xs-center order-actions">
+                <a href="{$order.url_details}" data-link-action="view-order-details">
                   {l s='Details'}
                 </a>
                 {if $order.url_to_reorder}
-                  <a href="{$order.url_to_reorder}" class="btn btn-secondary">{l s='Reorder'}</a>
+                  <a href="{$order.url_to_reorder}">{l s='Reorder'}</a>
                 {/if}
               </td>
             </tr>
