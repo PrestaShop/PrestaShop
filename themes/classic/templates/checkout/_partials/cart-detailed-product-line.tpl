@@ -36,7 +36,7 @@
 
   <!--  product left body: description -->
   <div class="product-line-grid-right product-line-actions col-md-4">
-    <input class="cart-line-product-quantity" maxlength="3" productid="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
+    <input class="cart-line-product-quantity" productid="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
     <div class="cart-line-product-actions ">
       <a
           class                       = "remove-from-cart"
