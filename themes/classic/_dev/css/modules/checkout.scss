@@ -1,5 +1,6 @@
 body#checkout {
-    background-color: $gray-light;    
+    background-color: $gray-light;
+    color: #363A41;
 }
 
 #checkout-cart-summary {
@@ -22,6 +23,12 @@ section.checkout-step {
     
     .form-group {
         margin-left: 10%;
+
+        &.has-error {
+            input, select {
+                border: 1px solid red;
+            }
+        }
         
         input, select {
             width: 75%;
@@ -78,6 +85,7 @@ section.checkout-step {
             }
 
             .step-edit {
+                cursor: pointer;
                 display: block;
                 float: right;
                 margin-right: 2px;
@@ -133,6 +141,10 @@ section.checkout-step {
         display: table-cell;
     }
     .submit-button {
+        &.disabled {
+            background-color: $gray-dark;
+        }
+        background-color: $brand-primary;
         color: white;
         border: none;
         padding: 14px 18px;

@@ -100,5 +100,6 @@ function setupCheckoutScripts () {
 
 $(document).ready(() => {
     if ($('body#checkout').length === 1) {
-        setupCheckoutScripts();  }
+        setupCheckoutScripts();
+    }
 });

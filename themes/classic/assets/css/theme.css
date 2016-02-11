@@ -5278,7 +5278,8 @@ a:hover {
     color: #2fb5d2; }
 
 body#checkout {
-  background-color: #ebebeb; }
+  background-color: #ebebeb;
+  color: #363A41; }
 
 #checkout-cart-summary {
   box-shadow: 4px 2px 3px #878787;
@@ -5299,6 +5300,8 @@ section.checkout-step {
   padding: 15px; }
   section.checkout-step .form-group {
     margin-left: 10%; }
+    section.checkout-step .form-group.has-error input, section.checkout-step .form-group.has-error select {
+      border: 1px solid red; }
     section.checkout-step .form-group input, section.checkout-step .form-group select {
       width: 75%;
       background-color: #ebebeb; }
@@ -5325,6 +5328,7 @@ section.checkout-step {
   section.checkout-step.-reachable.-complete h1 .step-number {
     display: none; }
   section.checkout-step.-reachable.-complete h1 .step-edit {
+    cursor: pointer;
     display: block;
     float: right;
     margin-right: 2px;
@@ -5357,6 +5361,7 @@ section.checkout-step {
   section.checkout-step .payment-option label {
     display: table-cell; }
   section.checkout-step .submit-button {
+    background-color: #2fb5d2;
     color: white;
     border: none;
     padding: 14px 18px;
@@ -5364,6 +5369,8 @@ section.checkout-step {
     text-transform: uppercase;
     font-size: 20px;
     margin-top: 20px; }
+    section.checkout-step .submit-button.disabled {
+      background-color: #878787; }
   section.checkout-step .sub-link {
     margin-left: 65px;
     display: inline-block; }
