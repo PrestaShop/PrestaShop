@@ -1,0 +1,36 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: $gray-light;
+  line-height: 1.25em;
+}
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+.material-icons {
+  vertical-align: middle;
+}
+a:hover {
+  color: $brand-primary;
+  text-decoration: none;
+}
+.dropdown-item:focus,
+.dropdown-item:hover {
+  background: none;
+}
+.color {
+  display: block;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin: em(5px);
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0,0,0,0.05);
+  cursor: pointer;
+  &:hover {
+    border: 2px solid $gray-darker;
+  }
+}

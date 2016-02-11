@@ -27,6 +27,8 @@ from './common';
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
 import 'bootstrap-validator/dist/validator.min';
 
+import './components/block-cart';
+
 // "inherit" EventEmitter
 for (var i in EventEmitter.prototype) {
   prestashop[i] = EventEmitter.prototype[i];
