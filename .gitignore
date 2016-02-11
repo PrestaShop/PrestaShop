@@ -29,6 +29,7 @@ themes/*/cache/*
 config/settings.inc.php
 config/settings.old.php
 config/xml/*
+config/themes/*
 !config/xml/themes/default.xml
 tests/selenium/settings.js
 themes/*/config/settings_*.json

@@ -136,6 +136,9 @@ class ThemeManager implements AddonManagerInterface
             return false;
         }
 
+        /* if file exits, remove it and use YAML configuration file instead */
+        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name .'/shop'.$this->shop->id.'.json');
+
         $theme = $this->themeRepository->getInstanceByName($name);
         if (!$this->themeValidator->isValid($theme)) {
             return false;
@@ -277,8 +280,13 @@ class ThemeManager implements AddonManagerInterface
 
     public function saveTheme($theme)
     {
+        $jsonConfigFolder = $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$theme->getName();
+        if (!file_exists($jsonConfigFolder) && !is_dir($jsonConfigFolder)) {
+            mkdir($jsonConfigFolder);
+        }
+
         file_put_contents(
-            $theme->getDirectory().'/config/settings_'.$this->shop->id.'.json',
+            $jsonConfigFolder.'/shop'.$this->shop->id.'.json',
             json_encode($theme->get(null))
         );
     }
