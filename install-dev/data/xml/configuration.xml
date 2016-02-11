@@ -716,7 +716,7 @@ Country</value>
     <value>Animaux</value>
   </configuration>
   <configuration id="PS_LOGO" name="PS_LOGO">
-    <value>logo.jpg</value>
+    <value>logo.png</value>
   </configuration>
   <configuration id="PS_FAVICON" name="PS_FAVICON">
     <value>favicon.ico</value>
