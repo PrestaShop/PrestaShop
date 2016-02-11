@@ -33,7 +33,7 @@
       <a href="?cancelAddress={$type}">{l s='Cancel'}</a>
     {/if}
     <form>
-      <button type="submit" class="continue submit-button" name="continue" value="1">
+      <button type="submit" class="continue submit-button" name="confirm-addresses" value="1">
           {l s='Continue'}
       </button>
     </form>

@@ -147,7 +147,11 @@ function runScenario (scenario) {
             });
           } else {
             it("should have an existing address pre-selected", function () {
-              return browser.isSelected('[name="id_address_delivery"]');
+              return browser
+                .waitForVisible('#checkout-addresses-step.-js-current')
+                .isSelected('[name="id_address_delivery"]')
+                .should.become.true
+              ;
             });
             it("should go to the next step once the customer clicks continue", function () {
               return browser.click('#checkout-addresses-step button.continue');
@@ -184,7 +188,7 @@ function runScenario (scenario) {
             });
 
             it('should have gone to the next step after clicking on the button in the invoice address form', function () {
-              return browser.waitForVisible('#checkout-delivery-step.-current');
+              return browser.waitForVisible('#checkout-delivery-step.-js-current');
             });
           }
 

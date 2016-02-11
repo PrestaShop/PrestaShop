@@ -165,7 +165,7 @@ class OrderControllerCore extends FrontController
         if (!$this->checkoutProcess->hasErrors()) {
             if ($_SERVER['REQUEST_METHOD'] !== 'GET' && !$this->ajax) {
                 return $this->redirectWithNotifications(
-                    $this->getCurrentURL()
+                    $this->checkoutProcess->getCheckoutSession()->getCheckoutURL()
                 );
             }
         }
