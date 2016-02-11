@@ -1,5 +1,50 @@
 .product-page {
+
+  //@TODO remove this tyniMce hack
+  .mce-tinymce iframe{
+    max-height: 400px !important;
+  }
+
   padding-bottom: 80px;
+
+  .table-fixed {
+    table-layout:fixed;
+    border: 0;
+    thead {
+      width: 90%;
+      border: 0;
+    }
+    thead th {
+      border: 0;
+    }
+    tbody {
+      height: 130px;
+      overflow-y: auto;
+      width: 100%;
+    }
+    thead, tbody, tr, td, th {
+      display: block;
+    }
+    tbody td, thead > tr> th {
+      float: left;
+      border-bottom-width: 0;
+    }
+    tr{
+      clear: both;
+    }
+    td{
+      padding: 5px;
+
+      span{
+        word-break:break-all;
+        word-wrap:break-word;
+      }
+    }
+
+  }
+
+
+
 
   &::before {
     content: '';
@@ -12,10 +57,15 @@
     z-index: 400;
     height:1px;
   }
+
   // Resets
+  ul.nostyle{
+    list-style: none;
+    padding-left:0;
+  }
 
   #form-loading {
-    visibility: hidden;
+    display: none;
   }
 
   .tab-content {
@@ -44,7 +94,7 @@
       top: $grid-gutter-width / 2;
       bottom: $grid-gutter-width / 2;
     }
-    z-index: 400;
+    z-index: 10;
     background: $white;
     bottom: 0;
     left: $size-navbar-width;

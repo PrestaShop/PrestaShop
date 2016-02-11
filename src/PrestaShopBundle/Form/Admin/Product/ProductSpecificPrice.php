@@ -121,7 +121,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'mapping_value' => 'id_customer',
             'mapping_name' => 'fullname_and_email',
             'placeholder' => $this->translator->trans('All customers', [], 'AdminProducts'),
-            'template_collection' => '<div class="title col-xs-10">%s</div><button type="button" class="btn btn-default delete"><i class="icon-trash"></i></button>',
+            'template_collection' => '<div class="title col-md-10">%s</div><button type="button" class="btn btn-danger delete"><i class="material-icons">delete</i></button>',
             'limit' => 1,
             'required' => false,
             'label' => $this->translator->trans('Add customer', [], 'AdminProducts'),
@@ -187,11 +187,11 @@ class ProductSpecificPrice extends CommonAbstractType
         ))
         ->add('save', FormType\ButtonType::class, array(
             'label' => $this->translator->trans('Done', [], 'AdminProducts'),
-            'attr' => array('class' => 'js-save'),
+            'attr' => array('class' => 'btn-primary-outline js-save'),
         ))
         ->add('cancel', FormType\ButtonType::class, array(
             'label' => $this->translator->trans('Cancel', [], 'AdminProducts'),
-            'attr' => array('class' => 'js-cancel'),
+            'attr' => array('class' => 'btn-default-outline js-cancel'),
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

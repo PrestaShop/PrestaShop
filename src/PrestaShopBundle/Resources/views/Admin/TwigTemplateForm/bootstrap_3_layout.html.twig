@@ -220,32 +220,24 @@
         <small>{{ trans('There is no attachments yet.', {}, 'AdminProducts') }}</small>
     </div>
     <div class="js-options-with-attachments {{ form|length == 0 ? 'hide' : '' }}">
-        <table class="table">
+        <table id="product-attachment-file" class="table table-striped table-fixed">
             <thead>
             <tr>
-                <th>
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="product-attachment-files-check">{{ trans('Title', {}, 'AdminProducts') }}</label>
-                    </div>
-                </th>
-                <th>{{ trans('File name', {}, 'AdminProducts') }}</th>
-                <th>{{ trans('Type', {}, 'AdminProducts') }}</th>
+                <th class="col-md-3"><input type="checkbox" id="product-attachment-files-check"> {{ trans('Title', {}, 'AdminProducts') }}</th>
+                <th class="col-md-6">{{ trans('File name', {}, 'AdminProducts') }}</th>
+                <th class="col-md-2">{{ trans('Type', {}, 'AdminProducts') }}</th>
             </tr>
             </thead>
+          <tbody>
+          {%- for child in form %}
+            <tr>
+              <td class="col-md-3">{{ form_widget(child) }}</td>
+              <td class="col-md-6"><span>{{ form.vars.attr.data[loop.index0]['file_name'] }}</span></td>
+              <td class="col-md-2">{{ form.vars.attr.data[loop.index0]['mime'] }}</td>
+            </tr>
+          {% endfor -%}
+          </tbody>
         </table>
-        <div id="product-attachment-file">
-            <table class="table table-striped">
-                <tbody>
-                {%- for child in form %}
-                    <tr>
-                        <td>{{ form_widget(child) }}</td>
-                        <td>{{ form.vars.attr.data[loop.index0]['file_name'] }}</td>
-                        <td>{{ form.vars.attr.data[loop.index0]['mime'] }}</td>
-                    </tr>
-                {% endfor -%}
-                </tbody>
-            </table>
-        </div>
     </div>
 {% endblock %}
 

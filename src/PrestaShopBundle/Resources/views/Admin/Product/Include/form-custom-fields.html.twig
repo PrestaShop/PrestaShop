@@ -1,17 +1,27 @@
-<div class="form-group">
-    <div class="col-xs-3 pull-left">
-        <label class="control-label">{{ form.label.vars.label }}</label>
-        {{ form_widget(form.label) }}
-    </div>
-    <div class="col-xs-3 pull-left">
-        <label class="control-label">{{ form.type.vars.label }}</label>
-        {{ form_widget(form.type) }}
-    </div>
-    <div class="col-xs-5 pull-left">
-        <label class="control-label col-xs-12">&nbsp;</label>
-        <button type="button" class="btn btn-default delete pull-left" ><i class="icon-trash"></i></button>
-        <div class="col-xs-8">
-            {{ form_widget(form.require) }}
-        </div>
-    </div>
+<div class="row">
+  <div class="col-md-3">
+    <fieldset class="form-group">
+      <label>{{ form.label.vars.label }}</label>
+      {{ form_errors(form.label) }}
+      {{ form_widget(form.label) }}
+    </fieldset>
+  </div>
+  <div class="col-md-3">
+    <fieldset class="form-group">
+      <label>{{ form.type.vars.label }}</label>
+      {{ form_errors(form.type) }}
+      {{ form_widget(form.type) }}
+    </fieldset>
+  </div>
+  <div class="col-md-5">
+    <fieldset class="form-group">
+      <label>&nbsp;</label>
+      <div class="clearfix"></div>
+      <button type="button" class="btn btn-danger delete pull-left" ><i class="material-icons">delete</i></button>
+      <div class="col-md-8">
+        {{ form_widget(form.require) }}
+      </div>
+    </fieldset>
+  </div>
+  <div class="clearfix"></div>
 </div>
