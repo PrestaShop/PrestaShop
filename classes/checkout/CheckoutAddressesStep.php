@@ -121,7 +121,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         }
 
         if (!$this->step_is_complete) {
-            $this->step_is_complete = isset($requestParams['continue']) &&
+            $this->step_is_complete = isset($requestParams['confirm-addresses']) &&
                 $this->getCheckoutSession()->getIdAddressInvoice() &&
                 $this->getCheckoutSession()->getIdAddressDelivery()
             ;
