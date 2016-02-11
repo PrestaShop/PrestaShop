@@ -184,7 +184,7 @@ function runScenario (scenario) {
             });
 
             it('should have gone to the next step after clicking on the button in the invoice address form', function () {
-              return browser.waitForVisible('#checkout-delivery-step.-current');
+              return browser.waitForVisible('#checkout-delivery-step.-js-current');
             });
           }
 
