@@ -81,6 +81,12 @@ services:
         class: PrestaShopBundle\Security\Admin\EmployeeProvider
         arguments:
             - "@prestashop.adapter.legacy.context"
+    prestashop.security.admin.tokenized_action_listener:
+            class: PrestaShopBundle\Security\Admin\TokenizedControllerListener
+            arguments:
+                        - "@security.csrf.token_manager"
+            tags:
+                - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
     #LISTENER
     prestashop.core.admin.controllers.listener:

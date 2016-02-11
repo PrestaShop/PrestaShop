@@ -27,6 +27,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Entity\AdminFilter;
+use PrestaShopBundle\Security\Admin\TokenizedController;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +62,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormType;
  *
  * FIXME: to adapt after 1.7.0 when alternative behavior will be removed (@see AdminPagePreferenceInterface::getTemporaryShouldUseLegacyPage()).
  */
-class ProductController extends FrameworkBundleAdminController
+class ProductController extends FrameworkBundleAdminController implements TokenizedController
 {
     /**
      * Get the Catalog page with KPI banner, product list, bulk actions, filters, search, etc...
