@@ -1386,11 +1386,10 @@ class CarrierCore extends ObjectModel
             if ($cart_product['id_product'] == $product->id) {
                 $cart_quantity += $cart_product['cart_quantity'];
             }
-            if ($cart_product['weight_attribute'] > 0) {
-                $cart_weight += ($cart_product['weight_attribute'] * $cart_product['cart_quantity']);
-            } else {
-                $cart_weight += ($cart_product['weight'] * $cart_product['cart_quantity']);
-            }
+			// Don't use $cart_product['weight_attribute'] ... Throw an error if the combination feature is inactive
+			// see Cart->getProducts()
+			// $cart_product['weight'] will contains $cart_product['weight_attribute'] if the product is a combination
+            $cart_weight += ($cart_product['weight'] * $cart_product['cart_quantity']);
         }
 
         if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0 || $cart_weight > 0) {
