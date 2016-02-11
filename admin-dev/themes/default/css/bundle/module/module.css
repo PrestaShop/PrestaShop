@@ -61,7 +61,7 @@
 .module-sorting i {
     margin-left: 10px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 26px;
 }
 .module-sort-active {
     color: #A6B9C0 !important;
@@ -348,8 +348,8 @@ img.module-logo-thumb-list {
 /* Addons module item list/grid */
 
 .module-addons-item-grid {
-    height: 247px;
-    display: table;
+    height: 272px;
+    display: none;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -382,7 +382,7 @@ img.module-logo-thumb-list {
 .module-addons-item-list {
     margin-top: 5px;
     height: 50px;
-    display: table;
+    display: none;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
