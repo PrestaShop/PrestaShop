@@ -120,6 +120,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'translations_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/translations/'),
                         'customizable_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/upload/'),
                         'virtual_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/download/'),
+                        'config_sf2_dir' => $this->l('Write permissions for %1$s user on %2$s', $user, '~/app/config/'),
                     )
                 ),
             ),
