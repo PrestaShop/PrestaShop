@@ -148,8 +148,9 @@ class Update extends Repository
                     }
                 }
             }
+            $archive->close();
         }
-        $archive->close();
+
 
         $this->generateMainDatas($locale);
     }
