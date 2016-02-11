@@ -36,7 +36,7 @@ class FileLoggerCore extends AbstractLogger
     */
     protected function logMessage($message, $level)
     {
-        $formatted_message = '*'.$this->level_value[$level].'* '."\t".date('Y/m/d - H:i:s').': '.$message."\r\n";
+        $formatted_message = '*'.$this->level_value[$level].'* '."\tv"._PS_INSTALL_VERSION_."\t".date('Y/m/d - H:i:s').': '.$message."\r\n";
         return file_put_contents($this->getFilename(), $formatted_message, FILE_APPEND);
     }
 

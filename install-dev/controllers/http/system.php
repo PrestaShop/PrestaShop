@@ -90,11 +90,12 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                     'title' => $this->l('Required PHP parameters'),
                     'success' => 1,
                     'checks' => array(
-                        'phpversion' => $this->l('PHP 5.1.2 or later is not enabled'),
+                        'phpversion' => $this->l('PHP 5.4.0 or later is not enabled'),
                         'upload' => $this->l('Cannot upload files'),
                         'system' => $this->l('Cannot create new files and folders'),
                         'gd' => $this->l('GD library is not installed'),
-                        'mysql_support' => $this->l('MySQL support is not activated')
+                        'mysql_support' => $this->l('MySQL support is not activated'),
+                        'disk_space' => $this->l('Not enough disk space (100 Mo required)'),
                     )
                 ),
                 array(
@@ -129,7 +130,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                     'title' => $this->l('Recommended PHP parameters'),
                     'success' => $this->tests['optional']['success'],
                     'checks' => array(
-                        'new_phpversion' => sprintf($this->l('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!'), phpversion()),
                         'fopen' => $this->l('Cannot open external URLs'),
                         'gz' => $this->l('GZIP compression is not activated'),
                         'mcrypt' => $this->l('Mcrypt extension is not enabled'),

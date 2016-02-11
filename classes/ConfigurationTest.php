@@ -88,6 +88,7 @@ class ConfigurationTestCore
                 'config_dir' => 'config',
                 'files' => false,
                 'mails_dir' => 'mails',
+                'disk_space' => false,
             ));
         }
 
@@ -103,7 +104,6 @@ class ConfigurationTestCore
     public static function getDefaultTestsOp()
     {
         return array(
-            'new_phpversion' => false,
             'fopen' => false,
             'gz' => false,
             'mcrypt' => false,
@@ -137,11 +137,6 @@ class ConfigurationTestCore
     }
 
     public static function test_phpversion()
-    {
-        return version_compare(substr(phpversion(), 0, 5), '5.2.0', '>=');
-    }
-
-    public static function test_new_phpversion()
     {
         return version_compare(substr(phpversion(), 0, 5), '5.4.0', '>=');
     }
@@ -363,6 +358,7 @@ class ConfigurationTestCore
 
         return is_writable($path);
     }
+
     public static function test_dom()
     {
         return extension_loaded('Dom');
@@ -385,5 +381,10 @@ class ConfigurationTestCore
             return $return;
         }
         return true;
+    }
+
+    public static function test_disk_space()
+    {
+        return disk_free_space('.') > 104857600;
     }
 }
