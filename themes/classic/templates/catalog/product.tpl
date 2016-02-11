@@ -382,7 +382,7 @@
             <h3 class="h5 text-uppercase _bolder">{l s='You might also like'}</h3>
             {foreach from=$accessories item="product_accessory"}
               {block name='product_miniature'}
-                {include file='catalog/product-miniature.tpl' product=$product_accessory columns='3'}
+                {include file='catalog/product-miniature.tpl' product=$product_accessory columns='4'}
               {/block}
             {/foreach}
           </section>

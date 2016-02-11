@@ -33,7 +33,7 @@
       <div class="products row">
         {foreach from=$products item="product"}
           {block name='product_miniature'}
-            {include file='catalog/product-miniature.tpl' product=$product columns=4}
+            {include file='catalog/product-miniature.tpl' product=$product columns=3}
           {/block}
         {/foreach}
       </div>
