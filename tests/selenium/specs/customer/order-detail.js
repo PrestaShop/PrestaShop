@@ -15,7 +15,7 @@ describe('Order history page', function () {
   it('should display a list of orders', function () {
     return browser
         .url(fixtures.urls.orderhistory)
-        .elements('a[href*="controller=order-detail"]')
+        .elements('a[data-link-action="view-order-details"]')
         .then(function (elements) {
           elements.value.length.should.be.greaterThan(0);
         })
@@ -25,7 +25,7 @@ describe('Order history page', function () {
   it('should allow customer to see details', function () {
     return browser
         .url(fixtures.urls.orderhistory)
-        .click('a[href*="controller=order-detail"]')
+        .click('(//a[@data-link-action="view-order-details"])[1]')
         .isExisting('.page-content #order-infos')
         .then(function (isExisting) {
           isExisting.should.be.true;
