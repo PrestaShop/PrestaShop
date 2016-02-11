@@ -22,7 +22,7 @@ section.checkout-step {
     box-shadow: 4px 2px 3px $gray-dark;
     
     .form-group {
-        margin-left: 10%;
+        margin-left: 4%;
 
         &.has-error {
             input, select {
@@ -31,7 +31,6 @@ section.checkout-step {
         }
         
         input, select {
-            width: 75%;
             background-color: $gray-light;
         }
     }
@@ -41,6 +40,7 @@ section.checkout-step {
     }
     
     label {
+        font-weight: 700;
         text-align: left;
     }
 

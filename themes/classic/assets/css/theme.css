@@ -5299,15 +5299,15 @@ section.checkout-step {
   border: 1px #ebebeb solid;
   padding: 15px; }
   section.checkout-step .form-group {
-    margin-left: 10%; }
+    margin-left: 4%; }
     section.checkout-step .form-group.has-error input, section.checkout-step .form-group.has-error select {
       border: 1px solid red; }
     section.checkout-step .form-group input, section.checkout-step .form-group select {
-      width: 75%;
       background-color: #ebebeb; }
   section.checkout-step .content {
     padding: 30px; }
   section.checkout-step label {
+    font-weight: 700;
     text-align: left; }
   section.checkout-step .content, section.checkout-step .step-edit, section.checkout-step .done {
     display: none; }
