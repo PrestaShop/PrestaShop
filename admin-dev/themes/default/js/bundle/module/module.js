@@ -376,6 +376,12 @@ var AdminModule = function () {
         var _this = this;
         var moduleGlobalSelector = this.getModuleGlobalSelector();
         var moduleItemSelector = this.getModuleItemSelector();
+        var addonsItemSelector = this.getAddonItemSelector();
+        var addonItemHtmlBackup = null;
+
+        if ($(addonsItemSelector).length) {
+            addonItemHtmlBackup = $(addonsItemSelector).get(0).outerHTML;
+        }
 
         switch (typeSort) {
             case availableSorts[0]:
@@ -431,6 +437,7 @@ var AdminModule = function () {
             }
 
             var currentSelector = $(this);
+
             currentSelector.fadeOut(function() {
                 var _that = _this;
                 var _arrayToSort = arrayToSort;
@@ -440,9 +447,16 @@ var AdminModule = function () {
                 currentSelector.append('<div class="row">');
 
                 $.each(keysToSort, function(index, value){
-                    _currentSelector.append(_arrayToSort[value].get(0).outerHTML);
+                    _currentSelector.find('.row').first().append(_arrayToSort[value].get(0).outerHTML);
                     delete _arrayToSort[value];
                 });
+
+                // Take care of Addons Search Card
+                if ($(moduleItemSelector + ':visible').length != $(moduleItemSelector).length && addonItemHtmlBackup !== null) {
+                    currentSelector.find('.row').first().append(addonItemHtmlBackup);
+                    $(addonsItemSelector).css('display', 'table');
+                }
+
                 currentSelector.append('</div>');
                 currentSelector.fadeIn();
             });
@@ -635,7 +649,7 @@ var AdminModule = function () {
         var addonsItemSelector = this.getAddonItemSelector();
         var resultWordingObject = domObject.prev().find(this.totalResultSelector);
 
-        $(this.addonsSearchSelector).css('display', 'none');
+        $(addonsItemSelector).css('display', 'none');
         var str = resultWordingObject.text();
         var explodedStr = str.split(' ');
         explodedStr[0] = totalResultFound;
@@ -660,7 +674,13 @@ var AdminModule = function () {
                 $(this.categoryGridSelector).fadeOut();
                 this.isCategoryGridDisplayed = false;
             }
-            $(addonsItemSelector).css('display', 'table');
+            var moduleItemSelector = this.getModuleItemSelector();
+
+            if (totalResultFound != $(moduleItemSelector).length) {
+                $(addonsItemSelector).css('display', 'table');
+            } else {
+                $(addonsItemSelector).css('display', 'none');
+            }
         }
     };
 
