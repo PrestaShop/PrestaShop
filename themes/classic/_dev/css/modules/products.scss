@@ -97,6 +97,9 @@
   }
 }
 .product-cover {
+  img{
+    background: white;
+  }
   .layer {
     display: flex;
     align-items: center;
@@ -129,6 +132,9 @@
     .modal-body {
       display: flex;
       margin-left: -30%;
+      .product-cover-modal{
+        background: white;
+      }
       .image-caption {
         background: white;
         margin-left: 4px;
