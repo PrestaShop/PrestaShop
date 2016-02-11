@@ -26,9 +26,9 @@ data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" d
             {% endblock %}
         </div>
         <div class="module-read-more-{{display_type}} small">
-            <a class="module-read-more-{{display_type}}-btn url" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}-{{ additionalModalSuffix|default('') }}">Read More</a>
+            <a class="module-read-more-{{display_type}}-btn url" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}{{ additionalModalSuffix|default('') }}">Read More</a>
         </div>
-        
+
 
         <div class="module-quick-action-{{display_type}} clearfix">
             {% if requireBulkActions is defined and requireBulkActions == true %}
