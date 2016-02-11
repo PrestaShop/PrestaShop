@@ -64,7 +64,8 @@ global_settings:
         # kept hooked to it, and blocksearch will be appended
         # to the list (or moved to the end if already hooked there).
         - ~
-        - blocksearch
+        - blocksearch:
+          - pagenotfound
       displayHeaderBottom:
         # displayHeaderBottom will have blocktopmenu and blockcart
         # prepended to it.
