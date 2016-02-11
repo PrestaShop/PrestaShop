@@ -83,12 +83,16 @@
 }
 
 .sidebar.sidebar-right .quicknav-fixed-bottom {
-  bottom: 8.2em;
+  bottom: 6em;
   margin-bottom: 0;
   position: fixed;
   left: 0;
   right: 3em;
   padding: 0 1em 1em;
+}
+.sidebar.sidebar-right .quicknav-fixed-bottom input {
+  outline-style: none;
+  text-align: center;
 }
 
 .sidebar.sidebar-right .quicknav-header {
