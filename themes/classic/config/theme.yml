@@ -54,6 +54,8 @@ global_settings:
       displayLeftColumn:
         - blockcategories
         - blocklayered
+      displaySearch:
+        - blocksearch
 
 theme_settings:
   default_layout: layout-full-width
