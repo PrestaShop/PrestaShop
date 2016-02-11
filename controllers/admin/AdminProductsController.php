@@ -59,7 +59,7 @@ class AdminProductsControllerCore extends AdminController
 
     protected $id_current_category;
 
-    public function __construct()
+    public function __construct($theme_name = 'default')
     {
         $this->bootstrap = true;
         $this->table = 'product';
@@ -77,7 +77,7 @@ class AdminProductsControllerCore extends AdminController
             $this->multishop_context_group = false;
         }
 
-        parent::__construct();
+        parent::__construct('', $theme_name);
 
         $this->imageType = 'jpg';
         $this->_defaultOrderBy = 'position';

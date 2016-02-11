@@ -60,7 +60,7 @@ class LegacyBlockHelperSubscriber implements EventSubscriberInterface
         }
         $controller = $event->getHookParameters()['kpi_controller'];
 
-        $controller = new $controller();
+        $controller = new $controller('new-theme');
 
         $event->setContent($controller->renderKpis());
     }

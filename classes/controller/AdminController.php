@@ -2536,6 +2536,7 @@ class AdminControllerCore extends Controller
         $helper->languages = $this->_languages;
         $helper->specificConfirmDelete = $this->specificConfirmDelete;
         $helper->imageType = $this->imageType;
+        @
         $helper->no_link = $this->list_no_link;
         $helper->colorOnBackground = $this->colorOnBackground;
         $helper->ajax_params = (isset($this->ajax_params) ? $this->ajax_params : null);
