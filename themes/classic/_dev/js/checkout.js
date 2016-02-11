@@ -99,7 +99,6 @@ function setupCheckoutScripts () {
 }
 
 $(document).ready(() => {
-  if ($('body#checkout').length === 1) {
-    setupCheckoutScripts();
-  }
+    if ($('body#checkout').length === 1) {
+        setupCheckoutScripts();  }
 });
