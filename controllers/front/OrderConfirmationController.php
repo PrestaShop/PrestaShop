@@ -81,11 +81,13 @@ class OrderConfirmationControllerCore extends FrontController
     public function initContent()
     {
         parent::initContent();
+        $order = new Order(Order::getOrderByCartId((int)($this->id_cart)));
 
         $this->context->smarty->assign(array(
             'is_guest' => $this->context->customer->is_guest,
             'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
-            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn()
+            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn(),
+            'url_to_invoice' => HistoryController::getUrlToInvoice($order, $this->context)
         ));
 
         if ($this->context->customer->is_guest) {
