@@ -105,7 +105,7 @@ var AdminModuleCard = function () {
                 } else {
                     $.growl.notice({message: result[moduleTechName].msg});
                     if (action != "uninstall") {
-                        jqElementObj.html(result[moduleTechName].action_menu_html);
+                        jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
                     } else {
                         jqElementObj.html("");
                     }
