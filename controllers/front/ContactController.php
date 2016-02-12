@@ -172,7 +172,12 @@ class ContactControllerCore extends FrontController
 
                     if (isset($ct) && Validate::isLoadedObject($ct) && $ct->id_order) {
                         $order = new Order((int)$ct->id_order);
-                        $var_list['{order_name}'] = $order->getUniqReference();
+                    } elseif($id_order) {
+                        $order = new Order((int)$id_order);
+                    }
+                    
+                    if(Validate::isLoadedObject($order)) {
+                    	$var_list['{order_name}'] = $order->getUniqReference();
                         $var_list['{id_order}'] = (int)$order->id;
                     }
 
