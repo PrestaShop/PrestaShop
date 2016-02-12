@@ -205,7 +205,7 @@
 
         <div class="row">
           <div class="col-md-12">
-            <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('table').find('td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
+            <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('form').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
             {{ trans("Select all", {}, 'AdminTab') }}
           </div>
         </div>
