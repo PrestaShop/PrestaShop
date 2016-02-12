@@ -5,12 +5,14 @@ import $ from 'expose?$!expose?jQuery!jquery';
 import 'expose?Tether!tether';
 import 'bootstrap/dist/js/npm';
 import 'flexibility';
+import 'bootstrap-touchspin';
 
 import '../css/theme';
 import './checkout';
 import './customer';
 import './facets';
 import './product';
+import './cart';
 
 import DropDown from './components/drop-down';
 import TopMenu from './components/top-menu';

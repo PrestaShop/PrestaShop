@@ -1,8 +1,10 @@
+
 @import url('//fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 @import "partials/_variables";
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3.min";
 @import "~bourbon/app/assets/stylesheets/bourbon";
+@import "~bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.css";
 @import "partials/_mixins";
 @import "partials/_fonts";
 @import "partials/_forms";
@@ -18,6 +20,7 @@
 @import "modules/cms-info";
 @import "modules/categories";
 @import "modules/products";
+@import "modules/cart";
 @import "modules/footer";
 @import "modules/contact";
 @import "modules/errors";
@@ -148,17 +151,19 @@
         margin: em(5px);
       }
       &:last-child {
-        a {
-          color: $gray-darker;
-        }
-        &:after {
-          content: "";
-        }
+        content: "/";
+        color: $gray-dark;
+        margin: em(5px);
+      }        a {
+        color: $gray-darker;
+      }
+      &:after {
+        content: "";
       }
     }
-    a {
-      color: $gray;
-    }
+  }
+  a {
+    color: $gray;
   }
 }
 /*** PAGE HEADER ***/
@@ -218,5 +223,44 @@
   }
   label {
     clear: both;
+  }
+}
+
+/*** CARD ****/
+.card-shadow {
+  /* @extend .card; */
+  @include box-shadow;
+}
+
+.heading-title {
+  @extend .h4;
+  @extend .text-uppercase;
+  @extend ._bolder;
+  @extend ._gray-darker;
+}
+
+/*** TOUCHSPIN ***/
+.touchspin-up {
+  color: $gray-darker;
+  &:after {
+    content: "\E5CE";
+  }
+}
+
+.touchspin-down {
+  color: $gray-darker;
+  &:after {
+    content: "\E5CF";
+  }
+}
+
+.btn-touchspin {
+  @extend .btn-default;
+  background-color: #FFF;
+  border: $input-btn-border-width solid $input-border-color;
+  height: ($input-height / 2) + rem($input-btn-border-width);
+
+  &:hover {
+    background-color: $gray-light
   }
 }
