@@ -135,7 +135,8 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'mcrypt' => $this->l('Mcrypt extension is not enabled'),
                         'mbstring' => $this->l('Mbstring extension is not enabled'),
                         'dom' => $this->l('Dom extension is not loaded'),
-                        'pdo_mysql' => $this->l('PDO MySQL extension is not loaded')
+                        'pdo_mysql' => $this->l('PDO MySQL extension is not loaded'),
+                        'php_memory_limit' => sprintf($this->l('We recommend you to increase the PHP memory limit to %sM'), strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN' ? 1024 : 512),
                     )
                 ),
             ),
