@@ -5,7 +5,7 @@
         height:50px;
 }
 
-.btn.onclic {
+.btn.onclick {
     margin-top: -0.5rem;
 }
 
@@ -197,7 +197,7 @@ img.module-logo-thumb-list {
     float: right;
     padding: 0.5em;
 }
-.module-quick-action-list > .onclic {
+.module-quick-action-list > .onclick {
     margin-right: 2rem;
     margin-top: -1.5rem;
 }
