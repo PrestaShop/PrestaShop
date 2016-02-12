@@ -191,8 +191,9 @@
                 </th>
               {% endif %}
               <th>
-                <input type="submit" class="btn btn-primary" name="products_filter_submit" value="{{ trans("Filter", {}, 'AdminProducts') }}" />
-                <input type="reset" class="btn btn-warning" name="products_filter_reset" onclick="productColumnFilterReset($(this).closest('tr.column-filters'))" value="{{ trans("Reset", {}, 'AdminProducts') }}" />
+                <button type="submit" class="btn btn-primary" name="products_filter_submit" title="{{ trans("Filter", {}, 'AdminProducts') }}"><i class="material-icons">search</i></button>
+                <button type="reset" class="btn btn-warning" name="products_filter_reset" onclick="productColumnFilterReset($(this).closest('tr.column-filters'))"
+                        title="{{ trans("Reset", {}, 'AdminProducts') }}"><i class="material-icons">backspace</i></button>
               </th>
             </tr>
           </thead>

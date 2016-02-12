@@ -245,3 +245,7 @@ div.quicknav-header h2 {
   height: 120px;
 }
 
+ul.pagination input {
+  outline-style: none;
+  text-align: center;
+}
