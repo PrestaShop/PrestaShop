@@ -23,7 +23,7 @@
   {/foreach}
   {if $interactive}
     <p>
-      <button class="ps-hidden-by-js submit-button center-block" type="submit">{l s='Save'}</button>
+      <button class="ps-hidden-by-js form-control-submit center-block" type="submit">{l s='Save'}</button>
     </p>
   {/if}
 </form>

@@ -94,7 +94,7 @@
 
   <div id="payment-confirmation">
     <div class="ps-shown-by-js">
-      <button type="submit" {if !$selected_payment_option} disabled {/if} class="submit-button center-block">
+      <button type="submit" {if !$selected_payment_option} disabled {/if} class="form-control-submit center-block">
         {l s='Order with an obligation to pay'}
       </button>
     </div>

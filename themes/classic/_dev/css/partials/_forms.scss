@@ -17,6 +17,7 @@ label {
   padding: rem(8px) rem(16px);
   &:focus {
     background-color: white;
+    border-color: white;
     outline: rem(3px) solid $brand-primary;
   }
 }
@@ -58,5 +59,13 @@ label {
     border-radius: 0;
     font-size: rem(14px);
     padding: rem(8px) rem(16px);
+  }
+}
+
+.form-group {
+  &.has-error {
+    input, select {
+      outline: rem(3px) solid $brand-danger;
+    }
   }
 }
