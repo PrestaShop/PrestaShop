@@ -200,14 +200,6 @@
       margin-bottom: rem(16px);
     }
     #order-infos {
-      a {
-        &.button {
-          @include primary-button;
-          &:hover {
-            @include primary-button;
-          }
-        }
-      }
       ul {
         margin: 0;
       }

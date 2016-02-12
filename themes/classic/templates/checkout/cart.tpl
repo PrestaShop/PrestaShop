@@ -59,9 +59,7 @@
           <div class="checkout text-xs-center card-block">
             <ul>
               <li>
-                <a class="" href="{$urls.pages.order}">
-                  <button type="button" class="btn btn-primary">{l s='Checkout'}</button>
-                </a>
+                <a href="{$urls.pages.order}" class="button-primary">{l s='Checkout'}</a>
               </li>
             </ul>
             {hook h='displayExpressCheckout'}

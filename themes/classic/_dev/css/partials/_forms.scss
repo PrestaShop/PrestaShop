@@ -48,6 +48,14 @@ label {
   }
 }
 
+.form-group {
+  &.has-error {
+    input, select {
+      outline: rem(3px) solid $brand-danger;
+    }
+  }
+}
+
 .group-span-filestyle {
   label {
     margin: 0;
@@ -62,10 +70,45 @@ label {
   }
 }
 
-.form-group {
-  &.has-error {
-    input, select {
-      outline: rem(3px) solid $brand-danger;
+.bootstrap-touchspin {
+  input {
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .btn-touchspin {
+    @extend .btn-default;
+    background-color: white;
+    border: $input-btn-border-width solid $input-border-color;
+    height: ($input-height / 2) + rem($input-btn-border-width);
+    &:hover {
+      background-color: $gray-light
+    }
+  }
+
+  .input-group-btn-vertical {
+    color: $gray-darker;
+    .bootstrap-touchspin-up {
+      border-radius: 0;
+    }
+    .bootstrap-touchspin-down {
+      border-radius: 0;
+    }
+    .touchspin-up {
+      &:after {
+        content: "\E5CE";
+      }
+    }
+    .touchspin-down {
+       &:after {
+         content: "\E5CF";
+       }
+    }
+    i {
+      top: rem(1px);
+      left: rem(3px);
+      font-size: rem(15px);
     }
   }
 }

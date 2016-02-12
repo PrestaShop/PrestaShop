@@ -5081,10 +5081,13 @@ label {
     background: #5bc0de;
     color: white; }
 
+.form-group.has-error input, .form-group.has-error select {
+  outline: 0.1875rem solid #ff4c4c; }
+
 .group-span-filestyle label {
   margin: 0; }
 
-.group-span-filestyle .btn-default, .group-span-filestyle .btn-touchspin {
+.group-span-filestyle .btn-default, .group-span-filestyle .bootstrap-touchspin .btn-touchspin, .bootstrap-touchspin .group-span-filestyle .btn-touchspin {
   background: #2fb5d2;
   color: white;
   text-transform: uppercase;
@@ -5092,8 +5095,30 @@ label {
   font-size: 0.875rem;
   padding: 0.5rem 1rem; }
 
-.form-group.has-error input, .form-group.has-error select {
-  outline: 0.1875rem solid #ff4c4c; }
+.bootstrap-touchspin input:focus {
+  outline: none; }
+
+.bootstrap-touchspin .btn-touchspin {
+  background-color: white;
+  border: 1px solid #ccc;
+  height: 1.1875rem; }
+  .bootstrap-touchspin .btn-touchspin:hover {
+    background-color: #ebebeb; }
+
+.bootstrap-touchspin .input-group-btn-vertical {
+  color: #414141; }
+  .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-up {
+    border-radius: 0; }
+  .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-down {
+    border-radius: 0; }
+  .bootstrap-touchspin .input-group-btn-vertical .touchspin-up:after {
+    content: "\E5CE"; }
+  .bootstrap-touchspin .input-group-btn-vertical .touchspin-down:after {
+    content: "\E5CF"; }
+  .bootstrap-touchspin .input-group-btn-vertical i {
+    top: 0.0625rem;
+    left: 0.1875rem;
+    font-size: 0.9375rem; }
 
 /*** HELPERS ***/
 ._relative {
@@ -5198,6 +5223,20 @@ a:hover {
   cursor: pointer; }
   .color:hover {
     border: 2px solid #414141; }
+
+a.button-primary {
+  color: white !important;
+  background: #2fb5d2;
+  border: none;
+  color: white;
+  text-transform: uppercase;
+  padding: 0.6875em 1.0625em; }
+  a.button-primary:hover {
+    background: #2fb5d2;
+    border: none;
+    color: white;
+    text-transform: uppercase;
+    padding: 0.6875em 1.0625em; }
 
 .dropdown {
   color: #acaaa6; }
@@ -5537,18 +5576,6 @@ section.checkout-step {
       text-transform: uppercase;
       color: #414141;
       margin-bottom: 1rem; }
-    #content.page-order-details #order-infos a.button {
-      background: #2fb5d2;
-      border: none;
-      color: white;
-      text-transform: uppercase;
-      padding: 0.6875em 1.0625em; }
-      #content.page-order-details #order-infos a.button:hover {
-        background: #2fb5d2;
-        border: none;
-        color: white;
-        text-transform: uppercase;
-        padding: 0.6875em 1.0625em; }
     #content.page-order-details #order-infos ul {
       margin: 0; }
     #content.page-order-details .addresses {
@@ -6305,7 +6332,7 @@ li.product-label {
   .product-line-grid-right > .bootstrap-touchspin > .form-control,
   .product-line-grid-right > .bootstrap-touchspin > .input-group {
     color: #414141;
-    background-color: #FFF;
+    background-color: white;
     border: 1px solid #ccc;
     height: 2.25rem;
     padding: .175rem .5rem; }
@@ -6651,23 +6678,5 @@ li.product-label {
 .card-shadow {
   /* @extend .card; */
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08); }
-
-/*** TOUCHSPIN ***/
-.touchspin-up {
-  color: #414141; }
-  .touchspin-up:after {
-    content: "\E5CE"; }
-
-.touchspin-down {
-  color: #414141; }
-  .touchspin-down:after {
-    content: "\E5CF"; }
-
-.btn-touchspin {
-  background-color: #FFF;
-  border: 1px solid #ccc;
-  height: 1.1875rem; }
-  .btn-touchspin:hover {
-    background-color: #ebebeb; }
 
 /*# sourceMappingURL=theme.css.map*/
