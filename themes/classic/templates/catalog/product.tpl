@@ -197,11 +197,12 @@
                               {/if}
                             {/block}
 
-                            <div class="btn btn-primary _shadow _relative" data-button-action="add-to-cart">
-                              <input class="add-to-cart text-uppercase" type="submit" name="add" value="{l s='Add to cart'}">
-                                <i class="material-icons shopping-cart">&#xE547;</i>
-                              </input>
-                            </div>
+
+                            <button class="btn btn-primary add-to-cart text-uppercase _shadow _relative" data-button-action="add-to-cart" type="submit">
+                              <i class="material-icons shopping-cart">&#xE547;</i>
+                              {l s='Add to cart'}"
+                            </button>
+
 
                             {block name='product_availability'}
                              {if $product.show_availability}

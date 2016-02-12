@@ -6038,16 +6038,7 @@ img {
   border: none; }
 
 .product-variants .add-to-cart {
-  font-weight: 600;
-  padding: 0.1875em 0.625em;
-  background: transparent;
-  border: none;
-  text-indent: 1.25em; }
-
-.product-variants .shopping-cart {
-  position: absolute;
-  left: 0.5em;
-  top: 0.4375em; }
+  font-weight: 600; }
 
 .product-discount .regular-price {
   font-size: 1.25em;
@@ -6626,8 +6617,6 @@ li.product-label {
         color: #414141; }
       #wrapper .breadcrumb li:after {
         content: ""; }
-  #wrapper a {
-    color: #acaaa6; }
 
 /*** PAGE HEADER ***/
 .page-header h1 {
