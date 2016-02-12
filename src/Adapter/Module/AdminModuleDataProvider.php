@@ -138,13 +138,15 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 if ($addon->active == 0) {
                     $addon->url_active = 'enable';
                     unset(
-                        $addon->urls['install']
+                        $addon->urls['install'],
+                        $addon->urls['disable']
                     );
                 } elseif ($addon->is_configurable == 1) {
                     $addon->url_active = 'configure';
                     unset(
                         $addon->urls['enable'],
-                        $addon->urls['install']
+                        $addon->urls['install'],
+                        $addon->urls['update']
                     );
                 } else {
                     $addon->url_active = 'disable';
