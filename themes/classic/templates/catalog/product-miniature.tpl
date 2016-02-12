@@ -1,4 +1,11 @@
-<article class="product-miniature js-product-miniature col-md-{$columns}" itemscope itemtype="http://schema.org/Product">
+{if $columns <= 2}
+  {assign var='colClass' value='col-sm-6 col-xs-12'}
+{elseif $columns == 3}
+  {assign var='colClass' value='col-lg-4 col-md-6 col-xs-12'}
+{else}
+  {assign var='colClass' value='col-lg-3 col-md-4 col-sm-6 col-xs-12'}
+{/if}
+<article class="product-miniature js-product-miniature {$colClass}" itemscope itemtype="http://schema.org/Product">
   <div class="thumbnail-container">
     {block name='product_thumbnail'}
       <a href="{$product.url}" class="thumbnail product-thumbnail">
