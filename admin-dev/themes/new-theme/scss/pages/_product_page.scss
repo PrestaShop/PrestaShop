@@ -53,7 +53,7 @@
     top: $size-header-height - rem(1px);
     left: $size-navbar-width;
     right: 0;
-    box-shadow: $dark-grey 0 0 10px;
+    box-shadow: $gray-dark 0 0 10px;
     z-index: 400;
     height:1px;
   }
@@ -88,7 +88,7 @@
   }
 
   .product-footer {
-    box-shadow: $dark-grey 0 0 10px;
+    box-shadow: $gray-dark 0 0 10px;
     position: fixed;
     padding: {
       top: $grid-gutter-width / 2;
@@ -146,7 +146,7 @@
     max-width:50px;
   }
   #accordion_combinations .combination td.img .fake-img{
-    background: $medium-grey;
+    background: $gray-medium;
     width:50px;
     height:50px;
   }
@@ -172,7 +172,7 @@
   #product-images-dropzone {
     width: 100%;
     height: 340px;
-    border: dashed 1px $light-grey;
+    border: dashed 1px $gray-light;
     padding: 10px;
     margin-bottom: 0;
     border-bottom-left-radius: 0;
@@ -182,16 +182,16 @@
       .dz-preview {
         width: 130px;
         height: 130px;
-        border: 1px solid $light-grey;
+        border: 1px solid $gray-light;
         &.openfilemanager {
           text-align: center;
-          color: $light-grey;
+          color: $gray-light;
           div {
             display: inline-block;
             width: 50px;
             height: 50px;
             border-radius: 100%;
-            border: 5px solid $light-grey;
+            border: 5px solid $gray-light;
             position: relative;
             top: 50%;
             transform: translateY(-50%);
@@ -221,7 +221,7 @@
           }
         }
         .iscover {
-          background: $medium-grey;
+          background: $gray-medium;
           font-size: 12px;
           color: $white;
           text-align: center;
@@ -266,7 +266,7 @@
       //margin-top : ;
       i {
         font-size: 60px;
-        color: $light-grey;
+        color: $gray-light;
         opacity: 0.5;
         filter: alpha(opacity=50);
       }
@@ -296,12 +296,12 @@
   }
   #product-images-container{
     .dropzone-expander {
-      border-bottom: dashed 1px $light-grey;
-      border-left: dashed 1px $light-grey;
-      border-right: dashed 1px $light-grey;
+      border-bottom: dashed 1px $gray-light;
+      border-left: dashed 1px $gray-light;
+      border-right: dashed 1px $gray-light;
       font-weight: bold;
       font-size: 12px;
-      color: $medium-grey;
+      color: $gray-medium;
       padding: 5px 0;
       cursor: pointer;
       display: none;
@@ -320,7 +320,7 @@
   .twitter-typeahead{
     .tt-menu{
       width: 100%;
-      border: 1px solid $medium-grey;
+      border: 1px solid $gray-medium;
       background: $white;
     }
     .tt-suggestion{
@@ -346,7 +346,7 @@
       padding: 0;
       li{
         width: 200px;
-        border: 1px solid $light-grey;
+        border: 1px solid $gray-light;
         display: inline-block;
         overflow: hidden;
         margin-right: 10px;
@@ -355,7 +355,7 @@
 
         img{
           width: 100%;
-          border-bottom: 1px solid $light-grey;
+          border-bottom: 1px solid $gray-light;
           margin-bottom: 5px;
         }
         span{
@@ -369,7 +369,7 @@
           white-space: nowrap;
         }
         .quantity, .ref {
-          color: $light-grey;
+          color: $gray-light;
         }
         .delete{
           position : absolute;

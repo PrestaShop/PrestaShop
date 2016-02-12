@@ -85,7 +85,9 @@
 
 	__webpack_require__(30);
 
-	var _nav_bar = __webpack_require__(32);
+	__webpack_require__(32);
+
+	var _nav_bar = __webpack_require__(37);
 
 	var _nav_bar2 = _interopRequireDefault(_nav_bar);
 
@@ -7435,12 +7437,10 @@
 	    // TODO Add templateResult
 	    $('[data-toggle="select2"]').each(function () {
 
-	        var newObj = {};
+	        var newObj = { "minimumResultsForSearch": -1 };
 
 	        for (var attr in $(this).data()) {
-	            if (!attr.localeCompare("templateresult")) newObj["templateResult"] = eval($(this).data()[attr]);else if (!attr.localeCompare("templateselection")) newObj["templateSelection"] = eval($(this).data()[attr]);else if (!attr.localeCompare("minimumresultsforsearch")) newObj["minimumResultsForSearch"] = $(this).data()[attr];else if (attr.localeCompare("toggle")) {
-	                newObj[attr] = $(this).data()[attr];
-	            }
+	            if (!attr.localeCompare("templateresult")) newObj["templateResult"] = eval($(this).data()[attr]);else if (!attr.localeCompare("templateselection")) newObj["templateSelection"] = eval($(this).data()[attr]);else if (!attr.localeCompare("minimumresultsforsearch")) newObj["minimumResultsForSearch"] = $(this).data()[attr];else if (attr.localeCompare("toggle")) newObj[attr] = $(this).data()[attr];
 	        }
 
 	        $(this).select2(newObj);
@@ -7526,7 +7526,7 @@
 
 	        psdwl.click(function () {
 	            psdwl.css('border-left-color', psdwl.css('border-color'));
-	            psdwl.addClass('onclic');
+	            psdwl.addClass('onclick');
 	            psdwl.unbind('mouseenter').unbind('mouseleave').unbind('click');
 	            var nw = parseInt(width, 10);
 	            psdwl.css({
@@ -7536,7 +7536,7 @@
 	            });
 
 	            setTimeout(function () {
-	                psdwl.removeClass("onclic");
+	                psdwl.removeClass("onclick");
 	                psdwl.css({
 	                    'margin-left': '',
 	                    'margin-right': '',
@@ -7635,6 +7635,16 @@
 /***/ },
 /* 31 */,
 /* 32 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

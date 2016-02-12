@@ -59,7 +59,7 @@
 .shop-list {
   > .link {
     display: inline-block;
-    color: $dark-grey;
+    color: $gray-dark;
     @include single-line-block($size-header-height);
   }
 }
