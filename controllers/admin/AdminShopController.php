@@ -521,8 +521,8 @@ class AdminShopControllerCore extends AdminController
         );*/
 
         $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                        ->build()
-                        ->getThemeList();
+                        ->buildRepository()
+                        ->getList();
 
         $this->fields_form['input'][] = array(
             'type' => 'theme',
