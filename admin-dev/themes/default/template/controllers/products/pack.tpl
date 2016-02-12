@@ -33,7 +33,7 @@
 		<p class="alert alert-warning pack-empty-warning" {if $pack_items|@count != 0}style="display:none"{/if}>{l s='This pack is empty. You must add at least one product item.'}</p>
 		<ul id="divPackItems" class="list-unstyled">
 			{foreach $pack_items as $pack_item}
-				<li class="product-pack-item media-product-pack" data-product-name="{$curPackItemName}" data-product-qty="{$pack_item.pack_quantity}" data-product-id="{$pack_item.id}" data-product-id-attribute="{$pack_item.id_product_attribute}">
+				<li class="product-pack-item media-product-pack" data-product-name="{$pack_item.name}" data-product-qty="{$pack_item.pack_quantity}" data-product-id="{$pack_item.id}" data-product-id-attribute="{$pack_item.id_product_attribute}">
 					<img class="media-product-pack-img" src="{$pack_item.image}"/>
 					<span class="media-product-pack-title">{$pack_item.name}</span>
 					<span class="media-product-pack-ref">REF: {$pack_item.reference}</span>
