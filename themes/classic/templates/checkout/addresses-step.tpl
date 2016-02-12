@@ -32,11 +32,11 @@
       }
     </div>
 
-    <a href="?newAddress=delivery">{l s='Add another address'}</a>
+    <a href="{$new_address_delivery_url}">{l s='Add another address'}</a>
 
     {if $use_same_address}
       <p>
-        <a data-link-action="different-invoice-address" href="?use_same_address=0">{l s='Use a different address for invoice?'}</a>
+        <a data-link-action="different-invoice-address" href="{$use_different_address_url}">{l s='Use a different address for invoice?'}</a>
       </p>
     {/if}
 
@@ -66,7 +66,7 @@
         }
       </div>
 
-      <a href="?newAddress=invoice">{l s='Add another address'}</a>
+      <a href="{$new_address_invoice_url}">{l s='Add another address'}</a>
 
     {/if}
 

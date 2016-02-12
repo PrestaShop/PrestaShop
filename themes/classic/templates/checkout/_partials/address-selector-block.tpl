@@ -14,7 +14,7 @@
 
       <footer>
         {if $interactive}
-          <a data-link-action="edit-address" href="?editAddress={$type}&amp;id_address={$address.id}">
+          <a data-link-action="edit-address" href="{$address.url_order_edit}&amp;editAddress={$type}">
             {l s='Edit'}
           </a>
         {/if}

@@ -13,12 +13,14 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     protected $step_is_reachable = false;
     protected $step_is_complete  = false;
     protected $step_is_current   = false;
+    protected $context;
 
     protected $template;
 
-    public function __construct(Smarty $smarty, TranslatorInterface $translator)
+    public function __construct(Context $context, TranslatorInterface $translator)
     {
-        $this->smarty = $smarty;
+        $this->context = $context;
+        $this->smarty = $context->smarty;
         $this->translator = $translator;
     }
 
