@@ -110,8 +110,6 @@ class Update extends Repository
         } else {
             throw new \Exception("Failed to unzip '".$file."'.");
         }
-
-        $this->generateSupplementalDatas();
     }
 
 
@@ -150,55 +148,6 @@ class Update extends Repository
         		$archive->close();
         } else {
             throw new \Exception("Failed to unzip '".$file."'.");
-        }
-
-        $this->generateMainDatas($locale);
-    }
-
-    /**
-     * Generate CLDR supplemental data
-     */
-    private function generateSupplementalDatas()
-    {
-        $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath.'supplemental');
-
-        foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
-                $newFileName = 'supplemental--'.pathinfo($file)['filename'];
-                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName)) {
-                    copy(
-                        $rootPath . 'supplemental' . DIRECTORY_SEPARATOR . $file,
-                        $this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName
-                    );
-                }
-            }
-        }
-    }
-
-    /**
-     * Generate CLDR translations main data
-     *
-     * @param string $locale
-     */
-    private function generateMainDatas($locale)
-    {
-        $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath.'main'.DIRECTORY_SEPARATOR.$locale);
-
-        if (!$files) {
-            return;
-        }
-        foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
-                $newFileName = 'main--'.$locale.'--'.pathinfo($file)['filename'];
-                if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName)) {
-                    copy(
-                        $rootPath . 'main' . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $file,
-                        $this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName
-                    );
-                }
-            }
         }
     }
 }
