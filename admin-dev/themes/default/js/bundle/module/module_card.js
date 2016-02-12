@@ -87,7 +87,7 @@ var AdminModuleCard = function () {
 
     this.requestToController = function (action, element) {
         var jqElementObj = element.closest(".btn-group");
-        var spinnerObj = $("<button class=\"btn btn-primary-reverse btn-lg onclic unbind pull-right\"></button>");
+        var spinnerObj = $("<button class=\"btn btn-primary-reverse btn-lg onclick unbind pull-right\"></button>");
         $.ajax({
             url: "//" + window.location.hostname + element.attr("href"),
             dataType: 'json',
@@ -105,7 +105,7 @@ var AdminModuleCard = function () {
                 } else {
                     $.growl.notice({message: result[moduleTechName].msg});
                     if (action != "uninstall") {
-                        jqElementObj.html(result[moduleTechName].action_menu_html);
+                        jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
                     } else {
                         jqElementObj.html("");
                     }

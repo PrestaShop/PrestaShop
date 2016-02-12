@@ -50,22 +50,20 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <div class="col-xs-6 pull-left text-left">
-                                <input type="button" class="btn btn-default uppercase" data-dismiss="modal" value="{{ trans("Cancel", {}, 'AdminTabs')|raw }}" />
-                                {% if module_action == 'disable' %}				
-				<a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
-					data-tech-name="{{module.name}}"
-					href="{{ module_url }}">{{ trans("Yes, I want to disable", {}, 'AdminModules')|raw }}</a>
-                                {% endif %}
-                                {% if module_action == 'uninstall' %}
-                                    <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
-					href="{{ module_url }}">{{ trans("Yes, I want to uninstall", {}, 'AdminModules')|raw }}</a>
-                                {% endif %}
-                                {% if module_action == 'reset' %}
-                                    <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
-					href="{{ module_url }}">{{ trans("Yes, I want to reset", {}, 'AdminModules')|raw }}</a>
-                                {% endif %}
-                            </div>
+                            <input type="button" class="btn btn-default uppercase" data-dismiss="modal" value="{{ trans("Cancel", {}, 'AdminTabs')|raw }}" />
+                            {% if module_action == 'disable' %}				
+                                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
+                                    data-tech-name="{{module.name}}"
+                                    href="{{ module_url }}">{{ trans("Yes, I want to disable", {}, 'AdminModules')|raw }}</a>
+                            {% endif %}
+                            {% if module_action == 'uninstall' %}
+                                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
+                                    href="{{ module_url }}">{{ trans("Yes, I want to uninstall", {}, 'AdminModules')|raw }}</a>
+                            {% endif %}
+                            {% if module_action == 'reset' %}
+                                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
+                                    href="{{ module_url }}">{{ trans("Yes, I want to reset", {}, 'AdminModules')|raw }}</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

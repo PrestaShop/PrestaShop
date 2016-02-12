@@ -5,6 +5,10 @@
         height:50px;
 }
 
+.btn.onclick {
+    margin-top: -0.5rem;
+}
+
 .module-quick-description-grid {
     margin: 15px 0;
     height: 100px;
@@ -192,6 +196,10 @@ img.module-logo-thumb-list {
 .module-quick-action-list {
     float: right;
     padding: 0.5em;
+}
+.module-quick-action-list > .onclick {
+    margin-right: 2rem;
+    margin-top: -1.5rem;
 }
 .module-quick-description-list {
     line-height: 50px;
