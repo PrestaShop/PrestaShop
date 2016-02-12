@@ -23,17 +23,16 @@
       {/block}
 
       {block name='content'}
-      <section id="content">
+        <section id="content">
+          {include  file = 'checkout/_partials/cart-summary.tpl'
+          cart = $cart
+          }
 
-        {include  file          = 'checkout/_partials/cart-summary.tpl'
-                  cart          = $cart
-        }
+          {render   file = 'checkout/checkout-process.tpl'
+          ui   = $checkout_process
+          }
 
-        {render   file  = 'checkout/checkout-process.tpl'
-                  ui    = $checkout_process
-        }
-
-      </section>
+        </section>
       {/block}
     </main>
     <footer id="footer">
