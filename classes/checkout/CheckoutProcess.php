@@ -13,10 +13,11 @@ class CheckoutProcessCore implements RenderableInterface
     private $template = 'checkout/checkout-process.tpl';
 
     public function __construct(
-        Smarty $smarty,
+        Context $context,
         CheckoutSession $checkoutSession
     ) {
-        $this->smarty = $smarty;
+        $this->context = $context;
+        $this->smarty = $this->context->smarty;
         $this->checkoutSession = $checkoutSession;
     }
 

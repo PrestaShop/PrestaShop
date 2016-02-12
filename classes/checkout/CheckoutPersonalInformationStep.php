@@ -11,12 +11,12 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
     private $show_login_form = false;
 
     public function __construct(
-        Smarty $smarty,
+        Context $context,
         TranslatorInterface $translator,
         CustomerLoginForm $loginForm,
         CustomerForm $registerForm
     ) {
-        parent::__construct($smarty, $translator);
+        parent::__construct($context, $translator);
         $this->loginForm = $loginForm;
         $this->registerForm = $registerForm;
     }
