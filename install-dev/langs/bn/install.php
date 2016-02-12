@@ -70,7 +70,7 @@ return array(
         'Permissions on files and folders' => 'ফাইল এবং ফোল্ডার অনুমতি',
         'Recursive write permissions for %1$s user on %2$s' => ' %1$s ব্যভারকারির %2$s এর জন্য রিকারসিভ রাইট অনুমতি  ',
         'Recommended PHP parameters' => 'প্রস্তাবিত পিএইচপি পরামিতি',
-        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!',
+        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!' => 'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!',
         'Cannot open external URLs' => 'বাহ্যিক URL-খোলা যাচ্ছে না',
         'GZIP compression is not activated' => 'Gzip কম্প্রেশন সক্রিয় করা নেই',
         'Mcrypt extension is not enabled' => 'Mcrypt এক্সটেনশন সক্রিয় করা নেই',
