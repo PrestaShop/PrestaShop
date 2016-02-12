@@ -16,58 +16,61 @@
 {% endblock %}
 
 {% block content %}
-    {# Addons connect modal #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_addons_connect.html.twig' %}
-    {# Contains toolbar-nav for module page #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
-    {# Contains menu with Selection/Categories/Popular and Tag Search #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
-    <div class="module-sorting-menu">
-        <div class="row">
-            <div class="col-lg-10 col-lg-offset-1">
-                <div class="module-sorting module-bulk-actions pull-right">
-                    <select>
-                      <option value="" disabled selected>Bulk Actions</option>
-                      <option value="bulk-uninstall">Uninstall</option>
-                      <option value="bulk-disable">Disable</option>
-                      <option value="bulk-enable">Enable</option>
-                      <option value="bulk-reset">Reset</option>
-                      <option value="bulk-enable-mobile">Enable Mobile</option>
-                      <option value="bulk-disable-mobile">Disable Mobile</option>
-                    </select>
-                    <input type="checkbox" class="module-checkbox-bulk-select-all" />
-                </div>
-                <div class="module-sorting module-sorting-author pull-right">
-                    <select>
-                      <option value="" disabled selected>- Sort by -</option>
-                      <option value="sort-by-name">Name</option>
-                      <option value="sort-by-price-asc">Increasing Price</option>
-                      <option value="sort-by-price-desc">Decreasing Price</option>
-                      <option value="sort-by-scoring">Score</option>
-                    </select>
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            {# Addons connect modal #}
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_addons_connect.html.twig' %}
+            {# Contains toolbar-nav for module page #}
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
+            {# Contains menu with Selection/Categories/Popular and Tag Search #}
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
+            <div class="module-sorting-menu">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="module-sorting module-bulk-actions pull-right">
+                            <select>
+                              <option value="" disabled selected>Bulk Actions</option>
+                              <option value="bulk-uninstall">Uninstall</option>
+                              <option value="bulk-disable">Disable</option>
+                              <option value="bulk-enable">Enable</option>
+                              <option value="bulk-reset">Reset</option>
+                              <option value="bulk-enable-mobile">Enable Mobile</option>
+                              <option value="bulk-disable-mobile">Disable Mobile</option>
+                            </select>
+                            <input type="checkbox" class="module-checkbox-bulk-select-all" />
+                        </div>
+                        <div class="module-sorting module-sorting-author pull-right">
+                            <select>
+                              <option value="" disabled selected>- Sort by -</option>
+                              <option value="sort-by-name">Name</option>
+                              <option value="sort-by-price-asc">Increasing Price</option>
+                              <option value="sort-by-price-desc">Decreasing Price</option>
+                              <option value="sort-by-scoring">Score</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            {# Actual Page Content #}
+		<div class="module-short-list">
+			<span class="module-search-result-wording">{{modules.modules|length}} installed modules</span>
+		</div>
+		{% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.modules, 'display_type' : 'list'  } %}
+
+		<hr class="top-menu-separator">
+
+		<div class="module-short-list">
+			<span class="module-search-result-wording">{{modules.native_modules|length}} preinstalled modules</span>
+		</div>
+		{% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list' } %}
+
+		<hr class="top-menu-separator">
+
+		<div class="module-short-list">
+			<span class="module-search-result-wording">{{[]|length}} theme modules</span>
+		</div>
+		{% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : [], 'display_type' : 'list' } %}
         </div>
     </div>
-
-    {# Actual Page Content #}
-	<div>
-		<span class="module-search-result-wording">{{modules.modules|length}} installed modules</span>
-	</div>
-	{% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.modules, 'display_type' : 'list'  } %}
-
-	<hr class="top-menu-separator">
-
-	<div>
-		<span class="module-search-result-wording">{{modules.native_modules|length}} preinstalled modules</span>
-	</div>
-	{% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list' } %}
-
-
-	<hr class="top-menu-separator">
-
-	<div>
-		<span class="module-search-result-wording">{{[]|length}} theme modules</span>
-	</div>
-	{% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : [], 'display_type' : 'list' } %}
 {% endblock %}
