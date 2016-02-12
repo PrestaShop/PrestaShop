@@ -151,7 +151,7 @@
 
                     <div id="features" class="form-group">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
-                        <h3 class="title">{{ trans('Features', [], 'AdminProducts') }}</h3>
+                        <h4>{{ trans('Features', [], 'AdminProducts') }}</h4>
                         {{ form_errors(form.step1.features) }}
                         <div class="feature-collection nostyle" data-prototype="
                                             {% filter escape %}
@@ -168,7 +168,7 @@
                     <div id="manufacturer" class="form-group">
                       <div id="manufacturer-content" class="row {{ form.step1.id_manufacturer.vars.value == '' ? 'hide':'' }}">
                         <div class="col-md-12">
-                          <h3 class="title">{{ trans("Brand", {}, 'AdminProducts') }}</h3>
+                          <h4>{{ trans("Brand", {}, 'AdminProducts') }}</h4>
                         </div>
                         <div class="col-md-8">
                           {{ form_errors(form.step1.id_manufacturer) }}
@@ -183,7 +183,7 @@
                     <div id="related-product" class="form-group">
                       <div id="related-content" class="row {{ form.step1.related_products.vars.value.data|length == 0 ? 'hide':'' }}">
                         <div class="col-md-12">
-                          <h3 class="title">{{ trans("Related product", {}, 'AdminProducts') }}</h3>
+                          <h4>{{ trans("Related product", {}, 'AdminProducts') }}</h4>
                         </div>
                         <div class="col-md-8">
                           {{ form_errors(form.step1.related_products) }}
@@ -205,7 +205,7 @@
                         <div class="col-md-12">
 
                           <div class="form-group" id="show_variations_selector">
-                            <h3 class="title">{{ trans("Product type", {}, 'AdminProducts') }}</h3>
+                            <h4>{{ trans("Product type", {}, 'AdminProducts') }}</h4>
                             <div class="radio">
                               <label>
                                 <input type="radio" name="show_variations" value="0" {% if not has_combinations %}checked="checked"{% endif %}>
@@ -228,7 +228,7 @@
                           </div>
 
                           <div class="form-group" id="product_qty_0_shortcut_div" {# style="{% if has_combinations %}display: none;{% endif %}"#}>
-                            <h3 class="title">{{ trans("Quantity", {}, 'AdminProducts') }}</h3>
+                            <h4>{{ trans("Quantity", {}, 'AdminProducts') }}</h4>
                             {{ form_errors(form.step1.qty_0_shortcut) }}
                             {{ form_widget(form.step1.qty_0_shortcut) }}
                             <span class="small">
@@ -239,7 +239,7 @@
                           </div>
 
                           <div class="form-group">
-                            <h3 class="title">{{ trans("Price", {}, 'AdminProducts') }}</h3>
+                            <h4>{{ trans("Price", {}, 'AdminProducts') }}</h4>
                             <div class="row">
                               <div class="col-md-5">
                                 <label>{{ trans("Tax excl.", {}, 'AdminProducts') }}</label>
@@ -271,7 +271,7 @@
 
                           <div class="form-group">
 
-                            <h3 class="title">{{ trans("Categories", {}, 'AdminProducts') }}</h3>
+                            <h4>{{ trans("Categories", {}, 'AdminProducts') }}</h4>
                             {{ form_errors(form.step1.categories) }}
                             {{ form_widget(form.step1.categories) }}
 
