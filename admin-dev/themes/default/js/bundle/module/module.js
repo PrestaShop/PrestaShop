@@ -146,6 +146,12 @@ var AdminModule = function () {
            });
       });
 
+      $('#module-modal-import').on('hidden.bs.modal', function (event) {
+          $('.module-import-success').css('display', 'none');
+          $('.module-import-failure').css('display', 'none');
+          $('.module-import-zipname').parent().css('display', 'none');
+      });
+
       Dropzone.options.importDropzone = {
           url: 'import',
           acceptedFiles: '.zip, .tar',
@@ -171,7 +177,9 @@ var AdminModule = function () {
 
               $('.module-import-zipname').parent().fadeOut(function() {
                   if (responseObject.status === true) {
-                      $('.module-import-name').first().text(responseObject.module_name);
+                      $('.module-import-name').first().text(responseObject.msg);
+                      var configureLink = baseAdminDir + '/module/manage/action/configure/' + responseObject.module_name;
+                      $('.module-import-success-configure').attr('href', configureLink);
                       $('.module-import-success').css('display', 'block');
                   } else {
                       $('.module-import-error-msg').html(responseObject.msg);

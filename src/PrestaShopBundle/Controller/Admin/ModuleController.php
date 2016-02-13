@@ -323,6 +323,8 @@ class ModuleController extends Controller
                 array( 'Content-Type' => 'application/json' )
             );
         } catch (Exception $e) {
+            $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+            $modulesProvider->removeModuleFromDisk($module_name);
             return new JsonResponse(array(
                 'status' => false,
                 'msg' => $e->getMessage()),
@@ -403,16 +405,24 @@ class ModuleController extends Controller
     protected function installModule($module_name)
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+
         if (! $modulesProvider->isModuleOnDisk($module_name)) {
             $modulesProvider->setModuleOnDiskFromAddons($module_name);
         }
 
-        $module = $modulesProvider->getModule($module_name);
-        $status = $module->install();
+        try {
+            $module = $modulesProvider->getModule($module_name);
+            $status = $module->install();
+        } catch (Exception $e) {
+            $status = false;
+            $module = $modulesProvider->getModule($module_name);
+        }
+
         if ($status) {
             $msg = sprintf('Module %s is now installed', $module_name);
         } else {
             $msg = sprintf('Could not install module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
+            $modulesProvider->removeModuleFromDisk($module_name);
         }
 
         return array('status' => $status, 'msg' => $msg);
