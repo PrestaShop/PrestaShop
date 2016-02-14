@@ -1,11 +1,25 @@
-{ "name": "prestashop-default-theme",
-  "author": "PrestaShop",
+{
+  "name": "default",
   "version": "1.0.0",
-  "description": "install admin theme dependencies",
-  "dependencies": {
-      "PrestaKit": "https://github.com/PrestaShop/prestashop-ui-kit"
-  },
+  "description": "",
+  "main": "index.js",
   "scripts": {
-      "install": "cp node_modules/PrestaKit/dist/js/*.js js; cp node_modules/PrestaKit/dist/css/*.css css; cp node_modules/PrestaKit/dist/fonts/* fonts"
+    "postinstall": "./node_modules/.bin/webpack --progress",
+    "compile": "./node_modules/.bin/webpack --progress --colors --debug --display-chunks",
+    "watch": "./node_modules/.bin/webpack --progress --colors --debug --display-chunks --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cldr-data": "^28.0.3",
+    "cldrjs": "^0.4.4",
+    "exports-loader": "^0.6.3",
+    "expose-loader": "^0.7.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "globalize": "^1.1.1",
+    "imports-loader": "^0.6.5",
+    "path": "^0.12.7",
+    "webpack": "^1.12.12"
   }
 }

@@ -2584,6 +2584,7 @@ class AdminControllerCore extends Controller
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/public/bundle.js');
 
             $this->addJS(_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
 
@@ -2613,16 +2614,6 @@ class AdminControllerCore extends Controller
             _PS_JS_DIR_.'admin.js?v='._PS_VERSION_, // TODO: SEE IF REMOVABLE
             _PS_JS_DIR_.'cldr.js',
             _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/message.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/plural.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/date.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js',
         ));
 
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
