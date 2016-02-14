@@ -34,6 +34,7 @@ module.exports = {
     'PrestaKit/dist/js/prestashop-ui-kit.js',
     'PrestaKit/dist/js/jquery.growl.js',
     'bootstrap-slider/dist/bootstrap-slider.js',
+    'sprintf-js/src/sprintf.js',
     './js/theme.js'
   ],
   output: {
