@@ -78,14 +78,12 @@ module.exports = {
         /moment\/min\/locales\.js/
       ],
       loader: "imports?this=>window&exports=>false&define=>false"
-    /*
     }, {
-      test: /\.js$/  //,
+      test: path.join(__dirname, 'js'),
       loader: 'babel',
       query: {
         presets: ['es2015']
       }
-    */
     }, {
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract("style", "css!sass")

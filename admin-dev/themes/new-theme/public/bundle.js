@@ -92088,8 +92088,6 @@
 /* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
-	console.log(window);
-
 	(function(window) {
 	    var re = {
 	        not_string: /[^s]/,
@@ -92302,45 +92300,155 @@
 
 /***/ },
 /* 231 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	__webpack_require__(232);
+
+	__webpack_require__(236);
+
+	__webpack_require__(238);
+
+	__webpack_require__(240);
+
+	__webpack_require__(242);
+
+	__webpack_require__(244);
+
+	__webpack_require__(246);
+
+	__webpack_require__(253);
+
+	__webpack_require__(255);
+
+	__webpack_require__(257);
+
+	var _nav_bar = __webpack_require__(262);
+
+	var _nav_bar2 = _interopRequireDefault(_nav_bar);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// Theme SCSS
+
+	new _nav_bar2.default();
+
+	// Theme Javascript
+
+	// Plugins CSS
+
+/***/ },
+/* 232 */
 /***/ function(module, exports) {
 
-	/*
-	 DONE: import $ from 'expose?$!expose?jQuery!jquery';
-	 DONE: import 'jquery-ui/jquery-ui.js';
-	 DONE: import Tether from 'expose?Tether!tether';
-	 DONE: import 'bootstrap/dist/js/bootstrap.min.js';
-	 DONE: import 'magnific-popup/dist/jquery.magnific-popup.min.js';
-	 DONE: import 'PrestaKit/dist/js/select2.min.js';
-	 DONE: import 'PrestaKit/dist/js/bootstrap-switch.min.js';
-	 DONE: import 'PrestaKit/dist/js/jquery.pstagger.min.js';
-	 DONE: import 'PrestaKit/dist/js/prestashop-ui-kit.js';
-	 DONE: import 'cldrjs/dist/cldr.js';
-	 DONE: import 'dropzone/dist/min/dropzone.min.js';
-	 DONE: import 'globalize/dist/globalize-runtime.js';
+	// removed by extract-text-webpack-plugin
 
-	 DONE: "bootstrap-slider": "^5.2.3",
-	 DONE: //"bootstrap-tokenfield": "^0.12.0",
-	 DONE: "eonasdan-bootstrap-datetimepicker": "^4.15.35",
-	 DONE: //"globalize": "1.0.0",
-	 DONE: //"jwerty": "^0.3.2",
-	"sprintf-js": "^1.0.3",
-	/*
+/***/ },
+/* 233 */,
+/* 234 */,
+/* 235 */,
+/* 236 */
+/***/ function(module, exports) {
 
+	// removed by extract-text-webpack-plugin
 
-	// SCSS of the backoffice
+/***/ },
+/* 237 */,
+/* 238 */
+/***/ function(module, exports) {
 
-	import 'bootstrap/dist/css/bootstrap.min.css';
-	import 'magnific-popup/dist/magnific-popup.css';
-	import 'PrestaKit/dist/css/bootstrap-prestashop-ui-kit.css';
-	import 'PrestaKit/dist/css/jquery.growl.css';
-	import 'PrestaKit/dist/css/bootstrap-switch.min.css';
-	import '../scss/theme.scss';
+	// removed by extract-text-webpack-plugin
 
-	import NavBar from './nav_bar.js';
+/***/ },
+/* 239 */,
+/* 240 */
+/***/ function(module, exports) {
 
-	new NavBar();
-	*/
+	// removed by extract-text-webpack-plugin
 
+/***/ },
+/* 241 */,
+/* 242 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 243 */,
+/* 244 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 245 */,
+/* 246 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 247 */,
+/* 248 */,
+/* 249 */,
+/* 250 */,
+/* 251 */,
+/* 252 */,
+/* 253 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 254 */,
+/* 255 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 256 */,
+/* 257 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 258 */,
+/* 259 */,
+/* 260 */,
+/* 261 */,
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _jquery = __webpack_require__(3);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var NavBar = function NavBar() {
+	  _classCallCheck(this, NavBar);
+
+	  (0, _jquery2.default)(function () {
+	    (0, _jquery2.default)(".nav-bar").find(".link-levelone").hover(function () {
+	      (0, _jquery2.default)(this).addClass("-hover");
+	    }, function () {
+	      (0, _jquery2.default)(this).removeClass("-hover");
+	    });
+	  });
+	};
+
+	exports.default = NavBar;
 
 /***/ }
 /******/ ]);
