@@ -3,11 +3,11 @@
   <tab id="Dashboard" name="Dashboard"/>
   <tab id="CMS_Pages" name="CMS-pagina's"/>
   <tab id="CMS_Categories" name="CMS-categorieën"/>
-  <tab id="Combinations_Generator" name="Combinatie generator"/>
+  <tab id="Combinations_Generator" name="Combinatiegenerator"/>
   <tab id="Search" name="Zoeken"/>
   <tab id="Login" name="Inloggen"/>
   <tab id="Shops" name="Winkels"/>
-  <tab id="Shop_URLs" name="Winkel-URLs"/>
+  <tab id="Shop_URLs" name="Winkel-URL's"/>
   <tab id="Catalog" name="Catalogus"/>
   <tab id="Orders" name="Bestellingen"/>
   <tab id="Customers" name="Klanten"/>
@@ -16,7 +16,7 @@
   <tab id="Localization" name="Lokalisatie"/>
   <tab id="Modules" name="Modules"/>
   <tab id="Preferences" name="Instellingen"/>
-  <tab id="Advanced_Parameters" name="Geavanceerde Instellingen"/>
+  <tab id="Advanced_Parameters" name="Geavanceerde instellingen"/>
   <tab id="Administration" name="Administratie"/>
   <tab id="Stats" name="Statistieken"/>
   <tab id="Stock" name="Voorraad"/>
@@ -45,7 +45,7 @@
   <tab id="Titles" name="Sociale titels"/>
   <tab id="Outstanding" name="Openstaand"/>
   <tab id="Cart_Rules" name="Winkelwagenregels"/>
-  <tab id="Catalog_Price_Rules" name="Catalogus prijsregels"/>
+  <tab id="Catalog_Price_Rules" name="Catalogusprijsregels"/>
   <tab id="Marketing" name="Marketing"/>
   <tab id="Shipping_1" name="Instellingen"/>
   <tab id="Carriers" name="Vervoerders"/>
@@ -69,7 +69,7 @@
   <tab id="Products_1" name="Producten"/>
   <tab id="Customers_2" name="Klanten"/>
   <tab id="Themes" name="Thema's"/>
-  <tab id="SEO_URLs" name="SEO &amp; URLs"/>
+  <tab id="SEO_URLs" name="SEO &amp; URL's"/>
   <tab id="CMS" name="CMS"/>
   <tab id="Images" name="Afbeeldingen"/>
   <tab id="Store_Contacts" name="Winkelcontacten"/>
