@@ -2039,14 +2039,20 @@ class ToolsCore
         return file_exists($filename);
     }
 
-    public static function file_get_contents($url, $use_include_path = false, $stream_context = null, $curl_timeout = 5)
+    public static function file_get_contents($url, $use_include_path = false, $stream_context = null, $curl_timeout = 5, $fallback = false)
     {
         if ($stream_context == null && preg_match('/^https?:\/\//', $url)) {
             $stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout)));
         }
-        if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url)) {
-            return @file_get_contents($url, $use_include_path, $stream_context);
-        } elseif (function_exists('curl_init')) {
+
+        $is_local_file = !preg_match('/^https?:\/\//', $url);
+        if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || $is_local_file) {
+            if (($content = @file_get_contents($url, $use_include_path, $stream_context)) !== '' || $is_local_file || !$fallback) {
+                return $content;
+            }
+        }
+
+        if (function_exists('curl_init')) {
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_URL, $url);
@@ -3425,7 +3431,7 @@ exit;
         ));
 
         foreach ($protocols as $protocol) {
-            if ($content = Tools::file_get_contents($protocol.'://'.$end_point, false, $context)) {
+            if ($content = Tools::file_get_contents($protocol.'://'.$end_point, false, $context, 5, true)) {
                 return $content;
             }
         }
