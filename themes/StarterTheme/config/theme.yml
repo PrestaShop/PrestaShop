@@ -22,6 +22,7 @@ meta:
 global_settings:
   configuration:
     PS_QUICK_VIEW: false
+
   hooks:
     custom_hooks:
       - name: displayFooterBefore
@@ -29,10 +30,6 @@ global_settings:
         description: Add a widget area above the footer
     modules_to_hook:
       displayNav:
-        # displayHeaderTop will have exactly the following
-        # modules hooked to it, in the specified order.
-        # Each module in this list will be unhooked
-        # from all other display hooks it is hooked to.
         - blocklanguages
         - blockcurrencies
         - blockuserinfo
@@ -43,6 +40,32 @@ global_settings:
       displayFooter:
         - blocknewsletter
         - blockcontact
+
+  image_types:
+    cart_default:
+      width: 80
+      height: 80
+      scope: [products]
+    small_default:
+      width: 125
+      height: 125
+      scope: [products, categories, manufacturers, suppliers]
+    medium_default:
+      width: 300
+      height: 300
+      scope: [products, categories, manufacturers, suppliers]
+    large_default:
+      width: 500
+      height: 500
+      scope: [products]
+    home_default:
+      width: 250
+      height: 250
+      scope: [products]
+    category_default:
+      width: 960
+      height: 350
+      scope: [categories]
 
 theme_settings:
   default_layout: layout-full-width

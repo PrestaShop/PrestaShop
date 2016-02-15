@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
+use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
@@ -56,6 +57,10 @@ class ThemeManagerBuilder
                     $context->shop,
                     $db
                 )
+            ),
+            new ImageTypeRepository(
+                $context->shop,
+                $db
             )
         );
     }
