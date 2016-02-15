@@ -94,6 +94,7 @@
         method="post"
         action="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
         orderingurl="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': 'name', 'sortOrder': 'desc'}) }}"
+        newproducturl="{{ path('admin_product_new') }}"
       >
         <div class="row">
           <div class="col-md-12">
