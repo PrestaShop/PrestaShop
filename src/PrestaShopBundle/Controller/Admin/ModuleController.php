@@ -551,7 +551,7 @@ class ModuleController extends Controller
             $addonsEmail = $addonsProvider->getAddonsEmail();
             $addonsConnect = [
                 'href' => '#',
-                'desc' => $addonsEmail,
+                'desc' => $addonsEmail['username_addons'],
                 'icon' => 'icon-chain-broken',
                 'help' => $translator->trans('Synchronized with Addons Marketplace!', array(), get_class($this))
             ];
