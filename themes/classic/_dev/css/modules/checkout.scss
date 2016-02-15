@@ -1,8 +1,13 @@
 body#checkout {
   background-color: $gray-light;
   color: #363A41;
+  #header .header-nav{
+    max-height: none;
+    padding: em(80px) 0 em(15px);
+    border: none;
+    @include box-shadow;
+  }
 }
-
 #checkout-cart-summary {
   @include box-shadow;
   background-color: white;
@@ -11,60 +16,57 @@ body#checkout {
   padding: 10px;
   width: 25%;
 }
-
 section#content {
   margin-top: 25px;
 }
-
 section.checkout-step {
-
   @include box-shadow;
   background-color: white;
-  
+  .step-title {
+    font-size: em(18px);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
   .content {
     padding: 30px;
   }
-  
-  .content, .step-edit, .done {
+  .step-edit {
+    font-size: em(12px);
+  }
+  .content,
+  .step-edit,
+  .done {
     display: none;
   }
-
   &.-js-current {
     .content {
       display: block;
     }
   }
-
   &.-js-current.-reachable.-complete {
-
-    .done, .step-edit {
+    .done,
+    .step-edit {
       display: none;
     }
-
     .step-number {
       display: inline-block;
     }
-
     .content {
       display: block;
     }
   }
-
   &.-reachable.-complete {
-    
     h1 {
       .done {
         display: block;
         color: $green;
         display: inline-block;
-        padding: 0px 13px;
+        padding: 0 13px;
         margin-right: 25px;
       }
-
       .step-number {
         display: none;
       }
-
       .step-edit {
         cursor: pointer;
         display: block;
@@ -73,23 +75,17 @@ section.checkout-step {
         color: $gray;
       }
     }
-
     .content {
       display: none;
     }
   }
-
   width: 70%;
   border: 1px $gray-light solid;
   padding: 15px;
-  
-  span {
-    font-weight: 400;
-  }
   small {
     color: $gray;
   }
-  .default-input{
+  .default-input {
     min-width: 40%;
     &[name=address1],
     &[name=address2] {

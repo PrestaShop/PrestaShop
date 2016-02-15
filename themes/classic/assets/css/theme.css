@@ -5335,6 +5335,11 @@ a.button-primary {
 body#checkout {
   background-color: #ebebeb;
   color: #363A41; }
+  body#checkout #header .header-nav {
+    max-height: none;
+    padding: 5em 0 0.9375em;
+    border: none;
+    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08); }
 
 #checkout-cart-summary {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08);
@@ -5353,13 +5358,22 @@ section.checkout-step {
   width: 70%;
   border: 1px #ebebeb solid;
   padding: 15px; }
+  section.checkout-step .step-title {
+    font-size: 1.125em;
+    font-weight: 700;
+    text-transform: uppercase; }
   section.checkout-step .content {
     padding: 30px; }
-  section.checkout-step .content, section.checkout-step .step-edit, section.checkout-step .done {
+  section.checkout-step .step-edit {
+    font-size: 0.75em; }
+  section.checkout-step .content,
+  section.checkout-step .step-edit,
+  section.checkout-step .done {
     display: none; }
   section.checkout-step.-js-current .content {
     display: block; }
-  section.checkout-step.-js-current.-reachable.-complete .done, section.checkout-step.-js-current.-reachable.-complete .step-edit {
+  section.checkout-step.-js-current.-reachable.-complete .done,
+  section.checkout-step.-js-current.-reachable.-complete .step-edit {
     display: none; }
   section.checkout-step.-js-current.-reachable.-complete .step-number {
     display: inline-block; }
@@ -5369,7 +5383,7 @@ section.checkout-step {
     display: block;
     color: #2d798c;
     display: inline-block;
-    padding: 0px 13px;
+    padding: 0 13px;
     margin-right: 25px; }
   section.checkout-step.-reachable.-complete h1 .step-number {
     display: none; }
@@ -5381,8 +5395,6 @@ section.checkout-step {
     color: #acaaa6; }
   section.checkout-step.-reachable.-complete .content {
     display: none; }
-  section.checkout-step span {
-    font-weight: 400; }
   section.checkout-step small {
     color: #acaaa6; }
   section.checkout-step .default-input {
