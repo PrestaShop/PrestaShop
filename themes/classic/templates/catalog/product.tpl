@@ -197,11 +197,12 @@
                               {/if}
                             {/block}
 
-                            <div class="btn btn-primary _shadow _relative" data-button-action="add-to-cart">
-                              <input class="add-to-cart text-uppercase" type="submit" name="add" value="{l s='Add to cart'}">
-                                <i class="material-icons shopping-cart">&#xE547;</i>
-                              </input>
-                            </div>
+
+                            <button class="btn btn-primary add-to-cart text-uppercase _shadow _relative" data-button-action="add-to-cart" type="submit">
+                              <i class="material-icons shopping-cart">&#xE547;</i>
+                              {l s='Add to cart'}"
+                            </button>
+
 
                             {block name='product_availability'}
                              {if $product.show_availability}
@@ -382,7 +383,7 @@
             <h3 class="h5 text-uppercase _bolder">{l s='You might also like'}</h3>
             {foreach from=$accessories item="product_accessory"}
               {block name='product_miniature'}
-                {include file='catalog/product-miniature.tpl' product=$product_accessory columns='3'}
+                {include file='catalog/product-miniature.tpl' product=$product_accessory}
               {/block}
             {/foreach}
           </section>

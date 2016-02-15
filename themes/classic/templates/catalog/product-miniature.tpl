@@ -1,5 +1,5 @@
-<article class="product-miniature js-product-miniature col-md-{$columns}" itemscope itemtype="http://schema.org/Product">
-  <div class="thumbnail-container">
+<article class="product-miniature js-product-miniature" itemscope itemtype="http://schema.org/Product">
+  <div class="thumbnail-container _relative">
     {block name='product_thumbnail'}
       <a href="{$product.url}" class="thumbnail product-thumbnail">
         <img
@@ -12,7 +12,7 @@
 
     <div class="product-description">
       {block name='product_name'}
-        <h1 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name}</a></h1>
+        <h1 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name|truncate:30:'...'}</a></h1>
       {/block}
 
       {block name='product_description_short'}

@@ -1,5 +1,5 @@
 {block name='header_nav'}
-  <nav class="header-nav row">
+  <nav class="header-nav">
     <div class="container">
         <div class="row">
           <div class="col-md-5 col-xs-12">

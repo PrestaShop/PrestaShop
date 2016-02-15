@@ -24,7 +24,7 @@
 *}
 <a class="banner" href="{$banner_link}">
   {if isset($banner_img)}
-    <img src="{$banner_img}" alt="{$banner_desc}" title="{$banner_desc}">
+    <img src="{$banner_img}" alt="{$banner_desc}" title="{$banner_desc}" class="img-fluid">
   {else}
     <span>{$banner_desc}</span>
   {/if}
