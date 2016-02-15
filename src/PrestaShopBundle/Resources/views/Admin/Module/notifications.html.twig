@@ -5,17 +5,14 @@
     <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/module.css') }}" />
     <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
     <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
-    <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/module/loader.js') }}"></script>
-    <script src="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
-    <script src="{{ asset('themes/new-theme/node_modules/PrestaKit/dist/js/jquery.growl.js') }}"></script>
 {% endblock %}
 
 {% block content %}
