@@ -50,7 +50,7 @@
       </a>
     </div>
 
-    <span class="product-price pull-xs-left _vertical-align">{$product.total}</span>
+    <span class="product-price">{$product.total}</span>
 
     {if $product.customizations|count}
       <div class="customizations">

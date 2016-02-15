@@ -1,15 +1,18 @@
-.cart-summary-line {
-
-  > .label {
-    color: $gray-darker;
-    @include pull-left;
-  }
-
-  > .value {
-    color: $gray-darker;
-    @include pull-right;
+.cart-body {
+  @include box-shadow;
+  background: white;
+  .cart-body-header {
+    padding: rem(20px);
+    h1 {
+      text-transform: uppercase;
+      color: $gray-darker;
+      font-weight: 700;
+      font-size: rem(22px);
+    }
   }
 }
+
+
 
 /*** CART ***/
 .cart-grid {
@@ -26,6 +29,10 @@
 
 /** CART BODY **/
 .cart-grid-body {
+
+  h1 {
+    margin: 0;
+  }
 
   > a.label {
     color: $gray-darker;
@@ -78,13 +85,13 @@
 
     > .label {
       color: $gray-darker;
-      font-size: em(12px);
-      font-weight: 800;
+      font-size: em(14px);
+      font-weight: 700;
     }
 
     > .value {
       color: $gray-darker;
-      font-size: em(12px);
+      font-size: em(14px);
       font-weight: 400;
       padding: .25em .4em;
     }
@@ -99,28 +106,66 @@
   }
 }
 
-/** CONTENT LEFT **/
+/** ACTIONS **/
 .product-line-grid-right {
 
-  > .bootstrap-touchspin {
-    max-width: em(75px);
+  .bootstrap-touchspin {
+    max-width: em(55px);
     @include pull-left;
-
-    > .form-control,
-    > .input-group {
+    @include box-shadow;
+    .form-control {
       color: $gray-darker;
       background-color: white;
       border: $input-btn-border-width solid $input-border-color;
       height: $input-height;
-      padding: .175rem .5rem
+      padding: rem(2px) rem(8px);
     }
   }
 
-  ._vertical-align {
-    line-height: 40px;
+  .cart-line-product-actions {
+    i {
+      font-size: rem(20px);
+      margin-left: rem(8px);
+      line-height: $input-height;
+    }
+  }
+
+  .product-price {
+    color: $gray-darker;
+    float: right;
+    margin-right: rem(40px);
+    font-weight: 700;
+    line-height: $input-height;
+  }
+
+}
+
+.cart-summary {
+  @include box-shadow;
+  background: white;
+  font-size: rem(14px);
+  color: $gray-darker;
+  .cart-total {
+    border-top: 1px solid $gray-light;
+    border-bottom: 1px solid $gray-light;
+  }
+  .checkout { 
+    padding: rem(12px) 0;
+    ul {
+      margin: 0;
+    }
   }
 }
 
-.product-price {
-  color: $gray-darker;
+.cart-summary-line {
+  padding: rem(12px) rem(20px);
+  .label {
+    color: inherit;
+    font-size: inherit;
+    @include pull-left;
+  }
+  .value {
+    @include pull-right;
+  }
+  overflow: auto;
 }

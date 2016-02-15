@@ -1,0 +1,28 @@
+#content {
+  &.page-cms {
+    @include box-shadow;
+    background: white;
+    padding: rem(16px);
+    font-size: rem(14px);
+    color: $gray-dark;
+    h1 {
+      font-size: rem(20px);
+      text-transform: uppercase;
+      font-weight: 700;
+      color: $gray-darker;
+      margin-bottom: rem(16px);
+    }
+    h2 {
+      font-size: rem(18px);
+      text-transform: uppercase;
+      font-weight: 700;
+      color: $gray-darker;
+      margin-bottom: rem(16px);
+    }
+    h3 {
+      font-size: rem(16px);
+      font-weight: 700;
+      color: $gray-darker;
+    }
+  }
+}
