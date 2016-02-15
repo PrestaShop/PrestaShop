@@ -34,3 +34,12 @@ a:hover {
     border: 2px solid $gray-darker;
   }
 }
+a {
+  &.button-primary {
+    color: white !important;
+    @include primary-button;
+    &:hover {
+      @include primary-button;
+    }
+  }
+}

@@ -238,29 +238,3 @@
   @extend ._bolder;
   @extend ._gray-darker;
 }
-
-/*** TOUCHSPIN ***/
-.touchspin-up {
-  color: $gray-darker;
-  &:after {
-    content: "\E5CE";
-  }
-}
-
-.touchspin-down {
-  color: $gray-darker;
-  &:after {
-    content: "\E5CF";
-  }
-}
-
-.btn-touchspin {
-  @extend .btn-default;
-  background-color: #FFF;
-  border: $input-btn-border-width solid $input-border-color;
-  height: ($input-height / 2) + rem($input-btn-border-width);
-
-  &:hover {
-    background-color: $gray-light
-  }
-}

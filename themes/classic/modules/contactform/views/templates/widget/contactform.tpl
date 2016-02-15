@@ -4,8 +4,7 @@
     <section class="form-fields">
 
       <div class="form-group row">
-        <div class="col-md-3"></div>
-        <div class="col-md-9">
+        <div class="col-md-9 col-md-offset-3">
           <h3>{l s='Send a message'}</h3>
         </div>
       </div>

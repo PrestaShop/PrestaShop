@@ -49,7 +49,7 @@
       {if $feature_active.voucher}
         <div class="col-lg-4 col-md-6 col-sm-6">
           <a id="discounts-link" href="{$urls.pages.discount}">
-            <i class="material-icons">&#xE8F7;</i>
+            <i class="material-icons">&#xE54E;</i>
             {l s='Vouchers'}
           </a>
         </div>
@@ -58,7 +58,7 @@
       {if $feature_active.return}
         <div class="col-lg-4 col-md-6 col-sm-6">
           <a id="returns-link" href="{$urls.pages.order_follow}">
-            <i class="material-icons">&#xE8BA;</i>
+            <i class="material-icons">&#xE860;</i>
             {l s='Merchandise returns'}
           </a>
         </div>

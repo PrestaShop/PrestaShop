@@ -1,177 +1,136 @@
 body#checkout {
-    background-color: $gray-light;
-    color: #363A41;
+  background-color: $gray-light;
+  color: #363A41;
 }
 
 #checkout-cart-summary {
-    box-shadow: 4px 2px 3px $gray-dark;
-    background-color: $gray-lighter;    
-    float: right;
-    border: 1px $gray-light solid;
-    padding: 10px;
-    width: 25%;
+  @include box-shadow;
+  background-color: white;
+  float: right;
+  border: 1px $gray-light solid;
+  padding: 10px;
+  width: 25%;
 }
 
 section#content {
-    margin-top: 25px;
+  margin-top: 25px;
 }
 
 section.checkout-step {
 
-    background-color: $gray-lighter;    
-    box-shadow: 4px 2px 3px $gray-dark;
-    
-    .form-group {
-        margin-left: 4%;
+  @include box-shadow;
+  background-color: white;
+  
+  .content {
+    padding: 30px;
+  }
+  
+  .content, .step-edit, .done {
+    display: none;
+  }
 
-        &.has-error {
-            input, select {
-                border: 1px solid red;
-            }
-        }
-        
-        input, select {
-            background-color: $gray-light;
-        }
+  &.-js-current {
+    .content {
+      display: block;
     }
-    
-     .content {
-        padding: 30px;
-    }
-    
-    label {
-        font-weight: 700;
-        text-align: left;
+  }
+
+  &.-js-current.-reachable.-complete {
+
+    .done, .step-edit {
+      display: none;
     }
 
-    .content, .step-edit, .done {
-        display: none;
-    }
-
-    &.-js-current {
-        .content {
-            display: block;
-        }
-    }
-
-    &.-js-current.-reachable.-complete {
-
-        .done, .step-edit {
-            display: none;
-        }
-
-        .step-number {
-            display: inline-block;
-        }
-
-        .content {
-            display: block;
-        }
-    }
-
-    &.-reachable.-complete {
-        
-        h1 {
-            .done {
-                display: block;
-                color: $green;
-                display: inline-block;
-                padding: 0px 13px;
-                margin-right: 25px;
-            }
-
-            .step-number {
-                display: none;
-            }
-
-            .step-edit {
-                cursor: pointer;
-                display: block;
-                float: right;
-                margin-right: 2px;
-                color: $gray;
-            }
-        }
-
-        .content {
-            display: none;
-        }
-    }
-
-    width: 70%;
-    border: 1px $gray-light solid;
-    padding: 15px;
-    
-    span {
-        font-weight: 400;
-    }
-    label {
-        display: block;
-    }
-    small {
-        color: $gray;
-    }
-    .default-input{
-        min-width: 40%;
-        &[name=address1],
-        &[name=address2] {
-            min-width: 60%;
-        }
-    }
-    .radio-field {
-        margin-top: 30px;
-        label {
-            display: inline;
-        }
-    }
-    .checkbox-field div {
-        margin-top: 60px;
-    }
-    .checkbox-field + .checkbox-field div {
-        margin-top: 0;
-    }
-    .select-field div {
-        background: $gray-lighter;
-        padding: 10px 50px;
-    }
-    .form-footer {
-        text-align: center;
-    }
-    .payment-option label {
-        display: table-cell;
-    }
-    .submit-button {
-        &.disabled {
-            background-color: $gray-dark;
-        }
-        background-color: $brand-primary;
-        color: white;
-        border: none;
-        padding: 14px 18px;
-        border-radius: 2px;
-        text-transform: uppercase;
-        font-size: 20px;
-        margin-top: 20px;
-    }
-    .sub-link {
-        margin-left: 65px;
-        display: inline-block;
-    }
     .step-number {
+      display: inline-block;
+    }
+
+    .content {
+      display: block;
+    }
+  }
+
+  &.-reachable.-complete {
+    
+    h1 {
+      .done {
+        display: block;
+        color: $green;
         display: inline-block;
-        padding: 6px 13px;
+        padding: 0px 13px;
         margin-right: 25px;
+      }
+
+      .step-number {
+        display: none;
+      }
+
+      .step-edit {
+        cursor: pointer;
+        display: block;
+        float: right;
+        margin-right: 2px;
+        color: $gray;
+      }
     }
-    input[type=text],
-    input[type=password],
-    input[type=date] {
-        border: $gray-light 2px solid;
-        border-radius: 2px;
+
+    .content {
+      display: none;
     }
+  }
+
+  width: 70%;
+  border: 1px $gray-light solid;
+  padding: 15px;
+  
+  span {
+    font-weight: 400;
+  }
+  small {
+    color: $gray;
+  }
+  .default-input{
+    min-width: 40%;
+    &[name=address1],
+    &[name=address2] {
+      min-width: 60%;
+    }
+  }
+  .radio-field {
+    margin-top: 30px;
+    label {
+      display: inline;
+    }
+  }
+  .checkbox-field div {
+    margin-top: 60px;
+  }
+  .checkbox-field + .checkbox-field div {
+    margin-top: 0;
+  }
+  .select-field div {
+    background: $gray-lighter;
+    padding: 10px 50px;
+  }
+  .form-footer {
+    text-align: center;
+  }
+  .payment-option label {
+    display: table-cell;
+  }
+  .sub-link {
+    margin-left: 65px;
+    display: inline-block;
+  }
+  .step-number {
+    display: inline-block;
+    padding: 6px 13px;
+    margin-right: 25px;
+  }
 }
 .shipping .label {
-    color: $gray-light;
+  color: $gray-light;
 }
 .cart-summary-totals .label {
-    color: $gray-light;
+  color: $gray-light;
 }
