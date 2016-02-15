@@ -535,7 +535,7 @@ class InstallModelInstall extends InstallAbstractModel
             'shop_name' => 'My Shop',
             'shop_activity' => '',
             'shop_country' => 'us',
-            'shop_timezone' => 'US/Eastern',
+            'shop_timezone' => 'US/Eastern', // TODO : this timezone is deprecated
             'use_smtp' => false,
             'smtp_encryption' => 'off',
             'smtp_port' => 25,

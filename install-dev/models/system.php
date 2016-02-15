@@ -44,16 +44,6 @@ class InstallModelSystem extends InstallAbstractModel
         $symfonyRequirements = new SymfonyRequirements();
         $errors = $symfonyRequirements->getFailedRequirements();
 
-        if ($symfonyRequirements->hasPhpIniConfigIssue() && $symfonyRequirements->getPhpIniConfigPath()) {
-            $errors[] =  new Requirement(
-                false,
-                'Php.ini requirement problem',
-                'Changes to the php.ini file must be done in "'.$symfonyRequirements->getPhpIniConfigPath().'"',
-                '',
-                false
-            );
-        }
-
         return $errors;
     }
 
