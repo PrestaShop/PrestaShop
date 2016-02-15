@@ -1038,10 +1038,6 @@
   {{ parent() }}
   <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/product/right-sidebar.css') }}" />
   <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/module.css') }}" />
-  <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css') }}" />
-  <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css') }}" />
-  <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css') }}" />
-  <link rel="stylesheet" href="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
@@ -1050,21 +1046,9 @@
   <script src="{{ asset('themes/default/js/bundle/product/right-sidebar.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/node_modules/PrestaKit/dist/js/jquery.growl.js') }}"></script>
   <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
   <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
   <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
-  <script src="{{ asset('../js/vendor/node_modules/typeahead.js/dist/typeahead.jquery.min.js') }}"></script>
-  <script src="{{ asset('../js/vendor/node_modules/typeahead.js/dist/bloodhound.min.js') }}"></script>
-  <script src="{{ asset('../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js') }}"></script>
-  <script src="{{ asset('../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js') }}"></script>
-  <script src="{{ asset('../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js') }}"></script>
-  <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/min/moment.min.js') }}"></script>
-  <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
-  <script src="{{ asset('../js/vendor/node_modules/jwerty/jwerty.js') }}"></script>
-  {% if default_language_iso != 'en' %}
-    <script src="{{ asset('../js/vendor/node_modules/eonasdan-bootstrap-datetimepicker/node_modules/moment/locale/'~ default_language_iso ~'.js' ) }}"></script>
-  {% endif %}
 {% endblock %}
 
 {% set js_translatable = {
