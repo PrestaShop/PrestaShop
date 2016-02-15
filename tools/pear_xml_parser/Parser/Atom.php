@@ -23,7 +23,7 @@
 
 /**
  * This is the class that determines how we manage Atom 1.0 feeds
- * 
+ *
  * How we deal with constructs:
  *  date - return as unix datetime for use with the 'date' function unless specified otherwise
  *  text - return as is. optional parameter will give access to attributes
@@ -36,37 +36,37 @@
 class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
 {
     /**
-     * The URI of the RelaxNG schema used to (optionally) validate the feed 
+     * The URI of the RelaxNG schema used to (optionally) validate the feed
      * @var string
      */
     protected $relax = 'atom.rng';
 
     /**
-     * We're likely to use XPath, so let's keep it global 
+     * We're likely to use XPath, so let's keep it global
      * @var DOMXPath
      */
     public $xpath;
 
     /**
-     * When performing XPath queries we will use this prefix 
+     * When performing XPath queries we will use this prefix
      * @var string
      */
     private $xpathPrefix = '//';
 
     /**
-     * The feed type we are parsing 
+     * The feed type we are parsing
      * @var string
      */
     public $version = 'Atom 1.0';
 
-    /** 
-     * The class used to represent individual items 
+    /**
+     * The class used to represent individual items
      * @var string
      */
     protected $itemClass = 'XML_Feed_Parser_AtomElement';
-    
-    /** 
-     * The element containing entries 
+
+    /**
+     * The element containing entries
      * @var string
      */
     protected $itemElement = 'entry';
@@ -108,7 +108,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
 
     /**
      * Our constructor does nothing more than its parent.
-     * 
+     *
      * @param    DOMDocument    $xml    A DOM object representing the feed
      * @param    bool (optional) $string    Whether or not to validate this feed
      */
@@ -134,7 +134,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
      * is available, we also use that to store a reference to the entry in the array
      * used by getEntryByOffset so that method does not have to seek out the entry
      * if it's requested that way.
-     * 
+     *
      * @param    string    $id    any valid Atom ID.
      * @return    XML_Feed_Parser_AtomElement
      */
@@ -149,7 +149,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         if ($entries->length > 0) {
             $xmlBase = $entries->item(0)->baseURI;
             $entry = new $this->itemClass($entries->item(0), $this, $xmlBase);
-            
+
             if (in_array('evaluate', get_class_methods($this->xpath))) {
                 $offset = $this->xpath->evaluate("count(preceding-sibling::atom:entry)", $entries->item(0));
                 $this->entries[$offset] = $entry;
@@ -159,7 +159,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
 
             return $entry;
         }
-        
+
     }
 
     /**
@@ -167,7 +167,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
      *
      * Get a person construct. We default to the 'name' element but allow
      * access to any of the elements.
-     * 
+     *
      * @param    string    $method    The name of the person construct we want
      * @param    array     $arguments    An array which we hope gives a 'param'
      * @return    string|false
@@ -177,7 +177,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         $offset = empty($arguments[0]) ? 0 : $arguments[0];
         $parameter = empty($arguments[1]['param']) ? 'name' : $arguments[1]['param'];
         $section = $this->model->getElementsByTagName($method);
-        
+
         if ($parameter == 'url') {
             $parameter = 'uri';
         }
@@ -223,11 +223,11 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         }
         $type = $content->getAttribute('type');
 
-        if (! empty($attribute) and 
-            ! ($method == 'generator' and $attribute == 'name')) {
+        if (! empty($attribute) &&
+            ! ($method == 'generator' && $attribute == 'name')) {
             if ($content->hasAttribute($attribute)) {
                 return $content->getAttribute($attribute);
-            } elseif ($attribute == 'href' and $content->hasAttribute('uri')) {
+            } elseif ($attribute == 'href' && $content->hasAttribute('uri')) {
                 return $content->getAttribute('uri');
             }
             return false;
@@ -235,7 +235,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
 
         return $this->parseTextConstruct($content);
     }
-    
+
     /**
      * Extract content appropriately from atom text constructs
      *
@@ -295,7 +295,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
      *
      * A feed or entry can have any number of categories. A category can have the
      * attributes term, scheme and label.
-     * 
+     *
      * @param    string    $method    The name of the text construct we want
      * @param    array     $arguments    An array which we hope gives a 'param'
      * @return    string
@@ -315,8 +315,8 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
     }
 
     /**
-     * This element must be present at least once with rel="feed". This element may be 
-     * present any number of further times so long as there is no clash. If no 'rel' is 
+     * This element must be present at least once with rel="feed". This element may be
+     * present any number of further times so long as there is no clash. If no 'rel' is
      * present and we're asked for one, we follow the example of the Universal Feed
      * Parser and presume 'alternate'.
      *
@@ -327,7 +327,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
      */
     function getLink($offset = 0, $attribute = 'href', $params = false)
     {
-        if (is_array($params) and !empty($params)) {
+        if (is_array($params) && !empty($params)) {
             $terms = array();
             $alt_predicate = '';
             $other_predicate = '';

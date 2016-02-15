@@ -42,7 +42,7 @@ if (Tools::getValue('page') == 'prestastore' and @fsockopen('addons.prestashop.c
     readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
 }
 
-if (Tools::isSubmit('getAvailableFields') and Tools::isSubmit('entity')) {
+if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $jsonArray = array();
     $import = new AdminImportController();
 
