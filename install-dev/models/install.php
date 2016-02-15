@@ -767,7 +767,7 @@ class InstallModelInstall extends InstallAbstractModel
         $content = Tools::addonsRequest('install-modules', $params);
         $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
 
-        if ($xml !== false and isset($xml->module)) {
+        if ($xml !== false && isset($xml->module)) {
             foreach ($xml->module as $modaddons) {
                 if (in_array($modaddons->name, $blacklist)) {
                     continue;

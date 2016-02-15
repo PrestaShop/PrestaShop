@@ -174,7 +174,7 @@ class Localize
             $locale = self::getEnvironmentLocale();
         }
 
-        if (($locale === 'auto') or ($locale === null)) {
+        if (($locale === 'auto') || ($locale === null)) {
             $locale = self::getBrowserLocales();
             $locale += self::getEnvironmentLocale();
         }
