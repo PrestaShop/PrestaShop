@@ -19,6 +19,28 @@
 
       <div class="col-md-12">
         <div class="row">
+          <div class="pull-right">
+            <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
+                <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Export", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                    <i class="material-icons">cloud_upload</i>
+                </span>
+            </a>
+            <a id="desc-product-import" class="list-toolbar-btn" href="{{ import_link }}">
+                <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Import", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                    <i class="material-icons">cloud_download</i>
+                </span>
+            </a>
+            <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
+                <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Show SQL query", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                    <i class="material-icons">code</i>
+                </span>
+            </a>
+            <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
+                <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Export to SQL Manager", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                    <i class="material-icons">storage</i>
+                </span>
+            </a>
+          </div>
           <h2>{{ trans("Products", {}, 'AdminProducts') }}
             {% if has_category_filter == true and activate_drag_and_drop == true %}
               {{ trans("(ordering)", {}, 'AdminProducts') }}
