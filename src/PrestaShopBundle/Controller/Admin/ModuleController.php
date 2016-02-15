@@ -87,13 +87,8 @@ class ModuleController extends Controller
             'icon' => 'process-icon-new',
             'help' => $translator->trans('Add a module', array(), get_class($this))
         );
-        // @TODO Check if connected to addons or not
-        $toolbarButtons['addons_connect'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-            'icon' => 'icon-chain-broken',
-            'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-        );
+        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
+
         return $this->render('PrestaShopBundle:Admin/Module:import.html.twig', array(
             'layoutHeaderToolbarBtn' => $toolbarButtons
         ));
@@ -123,13 +118,8 @@ class ModuleController extends Controller
             'icon' => 'process-icon-new',
             'help' => $translator->trans('Add a module', array(), get_class($this))
         );
-        // @TODO Check if connected to addons or not
-        $toolbarButtons['addons_connect'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-            'icon' => 'icon-chain-broken',
-            'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-        );
+        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
+
         $filter = [];
         if ($keyword !== null) {
             $filter['search'] = $keyword;
@@ -244,13 +234,8 @@ class ModuleController extends Controller
             'icon' => 'process-icon-new',
             'help' => $translator->trans('Add a module', array(), get_class($this))
         );
-        // @TODO Check if connected to addons or not
-        $toolbarButtons['addons_connect'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-            'icon' => 'icon-chain-broken',
-            'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-        );
+        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
+
         $products = new \stdClass;
         foreach (['to_configure', 'to_update', 'to_install'] as $subpart) {
             $products->{$subpart} = [];
