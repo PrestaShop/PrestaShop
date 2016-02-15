@@ -5361,7 +5361,8 @@ section.checkout-step {
   section.checkout-step .step-title {
     font-size: 1.125em;
     font-weight: 700;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    cursor: pointer; }
   section.checkout-step .content {
     padding: 30px; }
   section.checkout-step .step-edit {
@@ -5424,11 +5425,29 @@ section.checkout-step {
     padding: 6px 13px;
     margin-right: 25px; }
 
-.shipping .label {
-  color: #ebebeb; }
+.products, .shipping, .cart-summary-totals {
+  margin-top: 1.25em; }
 
-.cart-summary-totals .label {
-  color: #ebebeb; }
+.cart-summary-totals .label, .cart-summary-totals .value {
+  font-weight: 700;
+  color: #414141;
+  padding: 0;
+  font-size: 1.125em; }
+  .cart-summary-totals .label .sub, .cart-summary-totals .value .sub {
+    font-weight: normal;
+    bottom: 0; }
+
+.shipping .label,
+.products .label {
+  color: #414141;
+  padding: 0;
+  font-weight: 400; }
+
+#cart-summary-product-list {
+  font-size: 0.875em; }
+  #cart-summary-product-list img {
+    border: #ebebeb 1px solid;
+    width: 3.125em; }
 
 /*** SOME GENERIC STYLES ***/
 .table-labeled th {

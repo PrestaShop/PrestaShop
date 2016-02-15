@@ -1,7 +1,7 @@
 body#checkout {
   background-color: $gray-light;
   color: #363A41;
-  #header .header-nav{
+  #header .header-nav {
     max-height: none;
     padding: em(80px) 0 em(15px);
     border: none;
@@ -26,6 +26,7 @@ section.checkout-step {
     font-size: em(18px);
     font-weight: 700;
     text-transform: uppercase;
+    cursor: pointer;
   }
   .content {
     padding: 30px;
@@ -124,9 +125,29 @@ section.checkout-step {
     margin-right: 25px;
   }
 }
-.shipping .label {
-  color: $gray-light;
+.products,.shipping,.cart-summary-totals {
+  margin-top: em(20px);
 }
-.cart-summary-totals .label {
-  color: $gray-light;
+.cart-summary-totals .label,.cart-summary-totals .value{
+  font-weight: 700;
+  color: $gray-darker;
+  padding: 0;
+  font-size: em(18px);
+  .sub{
+    font-weight: normal;
+    bottom: 0;
+  }
+}
+.shipping .label,
+.products .label {
+  color: $gray-darker;
+  padding: 0;
+  font-weight: 400;
+}
+#cart-summary-product-list {
+  font-size: em(14px);
+  img {
+    border: $gray-light 1px solid;
+    width: em(50px);
+  }
 }
