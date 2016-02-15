@@ -13,11 +13,11 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     private $form_has_continue_button = false;
 
     public function __construct(
-        Smarty $smarty,
+        Context $context,
         TranslatorInterface $translator,
         CustomerAddressForm $addressForm
     ) {
-        parent::__construct($smarty, $translator);
+        parent::__construct($context, $translator);
         $this->addressForm = $addressForm;
     }
 
@@ -162,6 +162,10 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         return [
             'address_form'          => $this->addressForm->getProxy(),
             'use_same_address'      => $this->use_same_address,
+            'use_same_address'      => $this->use_same_address,
+            'use_different_address_url' => $this->context->link->getPageLink('order', true, null, ['use_same_address' => 0]),
+            'new_address_delivery_url' => $this->context->link->getPageLink('order', true, null, ['newAddress' => 'delivery']),
+            'new_address_invoice_url' => $this->context->link->getPageLink('order', true, null, ['newAddress' => 'invoice']),
             'id_address_delivery'   => $this
                                         ->getCheckoutSession()
                                         ->getIdAddressDelivery(),

@@ -8,7 +8,7 @@
     <a href="{$urls.pages.order}">{l s='No account?'}</a>
     {render file='checkout/_partials/login-form.tpl' ui=$login_form}
   {else}
-    <a data-link-action="show-login-form" href="?login">{l s='Already have an account?'}</a>
+    <a data-link-action="show-login-form" href="{$urls.pages.order_login}">{l s='Already have an account?'}</a>
     {render file='checkout/_partials/customer-form.tpl' ui=$register_form guest_allowed=$guest_allowed}
   {/if}
 {/block}
