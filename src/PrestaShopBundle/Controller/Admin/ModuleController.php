@@ -71,29 +71,6 @@ class ModuleController extends Controller
             ));
     }
 
-    /**
-     * Controller responsible for displaying "Catalog" section of Module management pages
-     * @param  Request $request
-     * @return Response
-     */
-    public function importAction(Request $request)
-    {
-        $translator = $this->container->get('prestashop.adapter.translator');
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['add_module'] = array(
-            'href' => $this->generateUrl('admin_module_import'),
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), get_class($this))
-        );
-        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
-
-        return $this->render('PrestaShopBundle:Admin/Module:import.html.twig', array(
-            'layoutHeaderToolbarBtn' => $toolbarButtons
-        ));
-    }
-
     public function manageAction(Request $request, $category = null, $keyword = null)
     {
         $translator = $this->container->get('prestashop.adapter.translator');
