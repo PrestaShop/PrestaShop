@@ -5673,6 +5673,12 @@ section.checkout-step {
     .carousel .carousel-control.right, .carousel .carousel-control.left {
       background: none; }
 
+.products {
+  -js-display: flex;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; }
+
 .product-thumbnail {
   display: block; }
 
@@ -5692,7 +5698,7 @@ section.checkout-step {
   .thumbnail-container:hover {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08); }
     .thumbnail-container:hover .highlighted-informations {
-      bottom: 117px; }
+      bottom: 5.625em; }
       .thumbnail-container:hover .highlighted-informations::after {
         opacity: 1; }
 
@@ -5723,11 +5729,12 @@ section.checkout-step {
   text-align: center;
   width: 100%;
   top: 0.25em;
-  padding-top: 0.3125em; }
+  padding-top: 0.3125em;
+  min-height: 2.5em; }
 
 .highlighted-informations {
   position: absolute;
-  bottom: 43px;
+  bottom: 1.25em;
   z-index: 0;
   background: white;
   text-align: center;
@@ -5756,7 +5763,7 @@ section.checkout-step {
   z-index: 1;
   background: white;
   width: 257px;
-  bottom: 25px;
+  bottom: 0;
   height: 70px;
   box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2); }
 

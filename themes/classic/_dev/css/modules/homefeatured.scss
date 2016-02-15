@@ -1,3 +1,8 @@
+.products {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 .product-thumbnail {
   display: block;
 }
@@ -17,7 +22,7 @@
   &:hover {
     @include box-shadow;
     .highlighted-informations {
-      bottom: 117px;
+      bottom: em(90px);
       &::after{
         opacity: 1;
       }
@@ -52,10 +57,11 @@
   width: 100%;
   top: 0.25em;
   padding-top: em(5px);
+  min-height: em(40px);
 }
 .highlighted-informations {
   position: absolute;
-  bottom: 43px;
+  bottom: em(20px);
   z-index: 0;
   background: white;
   text-align: center;
@@ -82,7 +88,7 @@
   z-index: 1;
   background: white;
   width: 257px;
-  bottom: 25px;
+  bottom: 0;
   height: 70px;
   box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
 }

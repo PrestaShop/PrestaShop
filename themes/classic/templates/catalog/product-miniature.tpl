@@ -1,12 +1,5 @@
-{if $columns <= 2}
-  {assign var='colClass' value='col-sm-6 col-xs-12'}
-{elseif $columns == 3}
-  {assign var='colClass' value='col-lg-4 col-md-6 col-xs-12'}
-{else}
-  {assign var='colClass' value='col-lg-3 col-md-4 col-sm-6 col-xs-12'}
-{/if}
-<article class="product-miniature js-product-miniature {$colClass}" itemscope itemtype="http://schema.org/Product">
-  <div class="thumbnail-container">
+<article class="product-miniature js-product-miniature" itemscope itemtype="http://schema.org/Product">
+  <div class="thumbnail-container _relative">
     {block name='product_thumbnail'}
       <a href="{$product.url}" class="thumbnail product-thumbnail">
         <img
@@ -19,7 +12,7 @@
 
     <div class="product-description">
       {block name='product_name'}
-        <h1 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name}</a></h1>
+        <h1 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name|truncate:30:'...'}</a></h1>
       {/block}
 
       {block name='product_description_short'}
