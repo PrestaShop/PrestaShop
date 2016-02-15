@@ -94,7 +94,7 @@ class ThemeManager implements AddonManagerInterface
      */
     public function uninstall($name)
     {
-        if (!$this->employee->canDelete()
+        if (!$this->employee->can('delete', 'AdminThemes')
             && $this->isThemeUsed($name)) {
             return false;
         }
@@ -229,12 +229,11 @@ class ThemeManager implements AddonManagerInterface
 
         Tools::ZipExtract($source, $sandboxPath);
 
-        $directories = $this->finder
-            ->directories()
-            ->in($sandboxPath)
-            ->depth('== 0')
-            ->exclude(['__MACOSX'])
-        ;
+        $directories = $this->finder->directories()
+                                    ->in($sandbox_path)
+                                    ->depth('== 0')
+                                    ->exclude(['__MACOSX'])
+                                    ->ignoreVCS();
 
         if (iterator_count($directories->directories()) > 1) {
             $this->filesystem->remove($sandboxPath);
@@ -251,13 +250,25 @@ class ThemeManager implements AddonManagerInterface
             throw new Exception("This theme is not valid for PrestaShop 1.7");
         }
 
-        $modules_to_copy = $sandboxPath.$theme_name.'/dependencies/modules';
-        if ($this->filesystem->exists($modules_to_copy)) {
-            $this->filesystem->mirror(
-                $modules_to_copy,
-                $this->appConfiguration->get('_PS_MODULE_DIR_')
-            );
-            $this->filesystem->remove($modules_to_copy);
+        $module_root_dir = $this->configurator->get('_PS_MODULE_DIR_');
+        $modules_parent_dir = $sandbox_path.$theme_name.'/dependencies/modules';
+        if ($this->fs->exists($modules_parent_dir)) {
+            $module_dirs = $this->finder->directories()
+                                        ->in($modules_parent_dir)
+                                        ->depth('== 0')
+                                        ->exclude($theme_name);
+
+            foreach (iterator_to_array($module_dirs) as $dir) {
+                $dest = $module_root_dir.basename($dir->getFileName());
+                if (!$this->fs->exists($dest)) {
+                    $this->fs->mkdir($dest);
+                    $this->fs->mirror(
+                        $dir->getPathName(),
+                        $dest
+                    );
+                }
+            }
+            $this->fs->remove($modules_parent_dir);
         }
 
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme_name;
