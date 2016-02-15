@@ -142,6 +142,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
             }
         }
 
+        if (in_array('theme', $steps)) {
+            if (!$this->processInstallTheme()) {
+                $this->printErrors();
+            }
+        }
+
         if ($this->datas->newsletter) {
             $params = http_build_query(array(
                     'email' => $this->datas->admin_email,
@@ -273,5 +279,15 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     public function processInstallAddonsModules()
     {
         return $this->model_install->installModulesAddons();
+    }
+
+    /**
+     * PROCESS : installTheme
+     * Install theme
+     */
+    public function processInstallTheme()
+    {
+        $this->initializeContext();
+        return $this->model_install->installTheme();
     }
 }
