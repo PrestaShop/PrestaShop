@@ -25,8 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
-use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
+use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
 
 /**
  * @property Theme $object
@@ -41,6 +40,9 @@ class AdminThemesControllerCore extends AdminController
     protected $toolbar_scroll = false;
     private $img_error;
 
+    /* @var LogoUploader $logo_uploader */
+    private $logo_uploader;
+
     // temp
     const CACHE_FILE_CUSTOMER_THEMES_LIST = '/config/xml/customer_themes_list.xml';
     const CACHE_FILE_MUST_HAVE_THEMES_LIST = '/config/xml/must_have_themes_list.xml';
@@ -52,6 +54,7 @@ class AdminThemesControllerCore extends AdminController
 
         $this->theme_manager = (new ThemeManagerBuilder($this->context, Db::getInstance()))->build();
         $this->theme_repository = (new ThemeManagerBuilder($this->context, Db::getInstance()))->buildRepository();
+        $this->logo_uploader = new LogoUploader($this->context->shop);
     }
 
     public function init()
@@ -200,34 +203,6 @@ class AdminThemesControllerCore extends AdminController
         die(Tools::file_get_contents($addons_url));
     }
 
-    private function updateImages($xml)
-    {
-        $return = array();
-
-        if (isset($xml->images->image)) {
-            foreach ($xml->images->image as $row) {
-                Db::getInstance()->delete('image_type', '`name` = \''.pSQL($row['name']).'\'');
-                Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`)
-					VALUES (\''.pSQL($row['name']).'\',
-						'.(int)$row['width'].',
-						'.(int)$row['height'].',
-						'.($row['products'] == 'true' ? 1 : 0).',
-						'.($row['categories'] == 'true' ? 1 : 0).',
-						'.($row['manufacturers'] == 'true' ? 1 : 0).',
-						'.($row['suppliers'] == 'true' ? 1 : 0));
-
-                $return['ok'][] = array(
-                        'name' => strval($row['name']),
-                        'width' => (int)$row['width'],
-                        'height' => (int)$row['height']
-                    );
-            }
-        }
-
-        return $return;
-    }
-
     public function renderView()
     {
         $this->tpl_view_vars = array(
@@ -257,9 +232,10 @@ class AdminThemesControllerCore extends AdminController
                 $path = _PS_ALL_THEMES_DIR_.$filename;
                 if ($this->processUploadFile($path)) {
                     $this->theme_manager->install($path);
+                    @unlink($path);
                 }
             } elseif ($source = Tools::getValue('themearchiveUrl')) {
-                $this->theme_manager->install($path);
+                $this->theme_manager->install($source);
             }
             $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
         } elseif (Tools::getValue('action') == 'submitConfigureLayouts') {
@@ -273,6 +249,30 @@ class AdminThemesControllerCore extends AdminController
             $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
         } elseif (Tools::getValue('action') == 'resetToDefaults') {
             $this->theme_manager->reset(Tools::getValue('theme_name'));
+        }
+
+        if (Tools::isSubmit('submitOptionsconfiguration')) {
+            Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
+
+            try {
+                if (!empty(Tools::getValue('PS_LOGO'))) {
+                    $this->logo_uploader->updateHeader();
+                }
+                if (!empty(Tools::getValue('PS_LOGO_MAIL'))) {
+                    $this->logo_uploader->updateMail();
+                }
+                if (!empty(Tools::getValue('PS_LOGO_INVOICE'))) {
+                    $this->logo_uploader->updateInvoice();
+                }
+                if (!empty(Tools::getValue('PS_FAVICON'))) {
+                    $this->logo_uploader->updateFavicon();
+                    $this->redirect_after = self::$currentIndex.'&token='.$this->token;
+                }
+
+                Hook::exec('actionAdminThemesControllerUpdate_optionsAfter');
+            } catch (PrestaShopException $e) {
+                $this->errors[] = $e->getMessage();
+            }
         }
 
         return parent::postProcess();
@@ -318,154 +318,6 @@ class AdminThemesControllerCore extends AdminController
         }
 
         return true;
-    }
-
-    /**
-     * Update PS_LOGO
-     */
-    public function updateOptionPsLogo()
-    {
-        $this->updateLogo('PS_LOGO', 'logo');
-    }
-
-    /**
-     * Update PS_LOGO_MOBILE
-     */
-    public function updateOptionPsLogoMobile()
-    {
-        $this->updateLogo('PS_LOGO_MOBILE', 'logo_mobile');
-    }
-
-    /**
-     * Update PS_LOGO_MAIL
-     */
-    public function updateOptionPsLogoMail()
-    {
-        $this->updateLogo('PS_LOGO_MAIL', 'logo_mail');
-    }
-
-    /**
-     * Update PS_LOGO_INVOICE
-     */
-    public function updateOptionPsLogoInvoice()
-    {
-        $this->updateLogo('PS_LOGO_INVOICE', 'logo_invoice');
-    }
-
-    /**
-     * Update PS_STORES_ICON
-     */
-    public function updateOptionPsStoresIcon()
-    {
-        $this->updateLogo('PS_STORES_ICON', 'logo_stores');
-    }
-
-    /**
-     * Generic function which allows logo upload
-     *
-     * @param $field_name
-     * @param $logo_prefix
-     *
-     * @return bool
-     */
-    protected function updateLogo($field_name, $logo_prefix)
-    {
-        $id_shop = Context::getContext()->shop->id;
-        if (isset($_FILES[$field_name]['tmp_name']) && $_FILES[$field_name]['tmp_name'] && $_FILES[$field_name]['size']) {
-            if ($error = ImageManager::validateUpload($_FILES[$field_name], Tools::getMaxUploadSize())) {
-                $this->errors[] = $error;
-                return false;
-            }
-            $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-
-            if (!$tmp_name || !move_uploaded_file($_FILES[$field_name]['tmp_name'], $tmp_name)) {
-                return false;
-            }
-
-            $ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.jpg';
-            $logo_name = Tools::link_rewrite(Context::getContext()->shop->name).'-'
-                .$logo_prefix.'-'.(int)Configuration::get('PS_IMG_UPDATE_TIME').(int)$id_shop.$ext;
-
-            if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0
-                || Shop::isFeatureActive() == false) {
-                $logo_name = Tools::link_rewrite(Context::getContext()->shop->name).'-'
-                .$logo_prefix.'-'.(int)Configuration::get('PS_IMG_UPDATE_TIME').$ext;
-            }
-
-            if ($field_name == 'PS_STORES_ICON') {
-                if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name, null, null, 'gif', true)) {
-                    $this->errors[] = Tools::displayError('An error occurred while attempting to copy your logo.');
-                }
-            } else {
-                if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name)) {
-                    $this->errors[] = Tools::displayError('An error occurred while attempting to copy your logo.');
-                }
-            }
-            $id_shop = null;
-            $id_shop_group = null;
-            if (!count($this->errors) && @filemtime(_PS_IMG_DIR_.Configuration::get($field_name))) {
-                if (Shop::isFeatureActive()) {
-                    if (Shop::getContext() == Shop::CONTEXT_SHOP) {
-                        $id_shop = Shop::getContextShopID();
-                        $id_shop_group = Shop::getContextShopGroupID();
-                        Shop::setContext(Shop::CONTEXT_ALL);
-                        $logo_all = Configuration::get($field_name);
-                        Shop::setContext(Shop::CONTEXT_GROUP);
-                        $logo_group = Configuration::get($field_name);
-                        Shop::setContext(Shop::CONTEXT_SHOP);
-                        $logo_shop = Configuration::get($field_name);
-                        if ($logo_all != $logo_shop && $logo_group != $logo_shop && $logo_shop != false) {
-                            @unlink(_PS_IMG_DIR_.Configuration::get($field_name));
-                        }
-                    } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
-                        $id_shop_group = Shop::getContextShopGroupID();
-                        Shop::setContext(Shop::CONTEXT_ALL);
-                        $logo_all = Configuration::get($field_name);
-                        Shop::setContext(Shop::CONTEXT_GROUP);
-                        if ($logo_all != Configuration::get($field_name)) {
-                            @unlink(_PS_IMG_DIR_.Configuration::get($field_name));
-                        }
-                    }
-                } else {
-                    @unlink(_PS_IMG_DIR_.Configuration::get($field_name));
-                }
-            }
-            Configuration::updateValue($field_name, $logo_name, false, $id_shop_group, $id_shop);
-            Hook::exec('actionAdminThemesControllerUpdate_optionsAfter');
-            @unlink($tmp_name);
-        }
-    }
-
-    /**
-     * Update PS_FAVICON
-     */
-    public function updateOptionPsFavicon()
-    {
-        $id_shop = Context::getContext()->shop->id;
-        if ($id_shop == Configuration::get('PS_SHOP_DEFAULT')) {
-            $this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon.ico');
-        }
-        if ($this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon-'.(int)$id_shop.'.ico')) {
-            Configuration::updateValue('PS_FAVICON', 'favicon-'.(int)$id_shop.'.ico');
-        }
-
-        Configuration::updateGlobalValue('PS_FAVICON', 'favicon.ico');
-        $this->redirect_after = self::$currentIndex.'&token='.$this->token;
-    }
-
-    protected function uploadIco($name, $dest)
-    {
-        if (isset($_FILES[$name]['tmp_name']) && !empty($_FILES[$name]['tmp_name'])) {
-            // Check ico validity
-            if ($error = ImageManager::validateIconUpload($_FILES[$name])) {
-                $this->errors[] = $error;
-            } elseif (!copy($_FILES[$name]['tmp_name'], $dest)) {
-                // Copy new ico
-                $this->errors[] = sprintf(Tools::displayError('An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".'), $_FILES[$name]['tmp_name'], $dest);
-            }
-        }
-
-        return !count($this->errors);
     }
 
     /**
