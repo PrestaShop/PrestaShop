@@ -65,12 +65,12 @@ class OrderControllerCore extends FrontController
         $session = $this->getCheckoutSession();
 
         $this->checkoutProcess = new CheckoutProcess(
-            $this->context->smarty,
+            $this->context,
             $session
         );
 
         $checkoutDeliveryStep = new CheckoutDeliveryStep(
-            $this->context->smarty,
+            $this->context,
             $translator
         );
 
@@ -92,19 +92,19 @@ class OrderControllerCore extends FrontController
 
         $this->checkoutProcess
             ->addStep(new CheckoutPersonalInformationStep(
-                $this->context->smarty,
+                $this->context,
                 $translator,
                 $this->makeLoginForm(),
                 $this->makeCustomerForm()
             ))
             ->addStep(new CheckoutAddressesStep(
-                $this->context->smarty,
+                $this->context,
                 $translator,
                 $this->makeAddressForm()
             ))
             ->addStep($checkoutDeliveryStep)
             ->addStep(new CheckoutPaymentStep(
-                $this->context->smarty,
+                $this->context,
                 $translator,
                 new PaymentOptionsFinder,
                 new ConditionsToApproveFinder(
