@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "./node_modules/.bin/webpack --progress",
-    "compile": "./node_modules/.bin/webpack --progress --colors --debug --display-chunks",
-    "watch": "./node_modules/.bin/webpack --progress --colors --debug --display-chunks --watch"
+    "postinstall": "webpack --progress",
+    "build": "webpack --progress --colors --debug --display-chunks",
+    "watch": "webpack --progress --colors --debug --display-chunks --watch"
   },
   "author": "",
   "license": "ISC",
