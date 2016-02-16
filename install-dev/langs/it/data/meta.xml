@@ -44,7 +44,7 @@
   </meta>
   <meta id='prices-drop' id_shop='1'>
     <title>Offerte</title>
-    <description>I nostri prodotti in offerta</description>
+    <description>I nostri prodotti in offerte</description>
     <keywords>speciali, riduzione prezzi</keywords>
     <url_rewrite>offerte</url_rewrite>
   </meta>
