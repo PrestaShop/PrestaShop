@@ -407,7 +407,7 @@ output {
   display: none !important; }
 
 h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .heading-title, .h5, .h6 {
+.h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 0.5rem;
   font-family: inherit;
   font-weight: 500;
@@ -441,7 +441,7 @@ h6 {
 .h3 {
   font-size: 1.75rem; }
 
-.h4, .heading-title {
+.h4 {
   font-size: 1.5rem; }
 
 .h5 {
@@ -4222,7 +4222,7 @@ button.close {
 .text-lowercase {
   text-transform: lowercase !important; }
 
-.text-uppercase, .heading-title {
+.text-uppercase {
   text-transform: uppercase !important; }
 
 .text-capitalize {
@@ -5165,10 +5165,10 @@ label {
 ._gray-dark {
   color: #878787; }
 
-._gray-darker, .heading-title {
+._gray-darker {
   color: #414141; }
 
-._bolder, .heading-title {
+._bolder {
   font-weight: 700; }
 
 ._shadow {
@@ -6345,6 +6345,10 @@ li.product-label {
     padding-right: 0.9375rem; }
 
 /** CONTENT LEFT **/
+.product-line-grid-left img {
+  width: 100%;
+  max-width: 250px; }
+
 /** CONTENT BODY **/
 .product-line-grid-body > .product-line-info > .label {
   color: #414141;
@@ -6383,9 +6387,15 @@ li.product-label {
 .product-line-grid-right .product-price {
   color: #414141;
   float: right;
-  margin-right: 2.5rem;
+  margin-right: 10%;
   font-weight: 700;
   line-height: 2.25rem; }
+
+.product-line-grid-right .customizations {
+  color: #414141;
+  margin-top: 0.75rem; }
+  .product-line-grid-right .customizations label {
+    font-weight: 700; }
 
 .cart-summary {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08);
@@ -6593,6 +6603,29 @@ li.product-label {
     #pagenotfound .page-not-found .search-widget input {
       width: 100%; }
 
+#content.page-cms {
+  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08);
+  background: white;
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #878787; }
+  #content.page-cms h1 {
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #414141;
+    margin-bottom: 1rem; }
+  #content.page-cms h2 {
+    font-size: 1.125rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #414141;
+    margin-bottom: 1rem; }
+  #content.page-cms h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #414141; }
+
 /*** HEADER ***/
 #header {
   background: white; }
@@ -6738,10 +6771,5 @@ li.product-label {
     min-width: 100%; }
   label {
     clear: both; } }
-
-/*** CARD ****/
-.card-shadow {
-  /* @extend .card; */
-  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.08); }
 
 /*# sourceMappingURL=theme.css.map*/
