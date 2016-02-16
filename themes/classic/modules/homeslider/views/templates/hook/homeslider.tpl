@@ -25,16 +25,18 @@
 *}
 
 {if $homeslider.slides}
-  <div id="carousel" data-ride="carousel" class="carousel slide" data-transition-speed="{$homeslider.speed}" data-interval="{$homeslider.pause}" data-autoplay="{$homeslider.autoplay}">
+  <div id="carousel" data-ride="carousel" class="carousel slide" data-interval="{$homeslider.speed}" data-wrap="{(string)$homeslider.wrap}" data-pause="{$homeslider.pause}">
     <ul class="carousel-inner" role="listbox">
       {foreach from=$homeslider.slides item=slide name='homeslider'}
         <li class="carousel-item {if $smarty.foreach.homeslider.first}active{/if}">
           <figure>
-            <img src="{$link->getMediaLink("`$smarty.const._MODULE_DIR_`homeslider/images/`$slide.image`")}" alt="{$slide.legend|escape}" />
-            <figcaption class="caption">
-              <h2 class="h1 text-uppercase caption-title">{$slide.title}</h2>
-              <div class="caption-description">{$slide.description nofilter}</div>
-            </figcaption>
+            <img src="{$slide.image_url}" alt="{$slide.legend|escape}" />
+            {if $slide.title || $slide.description}
+              <figcaption class="caption">
+                <h2 class="h1 text-uppercase caption-title">{$slide.title}</h2>
+                <div class="caption-description">{$slide.description nofilter}</div>
+              </figcaption>
+            {/if}
           </figure>
         </li>
       {/foreach}
