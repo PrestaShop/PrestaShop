@@ -1,7 +1,7 @@
 <div class="pull-right btn-group">
 
     {% if module.url_active == 'buy' %}
-        <a class="btn btn-primary btn-sm light-button module_action_menu_go_to_addons" href="{{module.url}}">{% if module.price.EUR is defined and module.price.EUR > 0 %}{{module.price.EUR}}{% else %}Discover{% endif %}</a>
+        <a class="btn btn-primary btn-sm light-button module_action_menu_go_to_addons" href="{{module.url}}" target="_blank">{% if module.price.EUR is defined and module.price.EUR > 0 %}{{module.price.EUR}}{% else %}Discover{% endif %}</a>
     {% else %}
         <a class="btn btn-primary btn-sm light-button module_action_menu_{{ module.url_active }}"
            href="{{module.urls[module.url_active]}}"

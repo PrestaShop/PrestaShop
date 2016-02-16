@@ -21,28 +21,6 @@ class ModuleController extends Controller
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
 
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['manage_module'] = array(
-            'href' => $this->generateUrl('admin_module_manage'),
-            'desc' => $translator->trans('[TEMP] Manage my modules', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Manage', array(), get_class($this)),
-        );
-        $toolbarButtons['notifications_module'] = array(
-            'href' => $this->generateUrl('admin_module_notification'),
-            'desc' => $translator->trans('[TEMP] Module notifications', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Notifications', array(), get_class($this)),
-        );
-        $toolbarButtons['add_module'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), get_class($this)),
-        );
-        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
-
         $filter = [];
         if ($keyword !== null) {
             $filter['search'] = $keyword;
@@ -62,7 +40,7 @@ class ModuleController extends Controller
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
-                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Modules & Services', array(), 'AdminModules'),
                 'modules' => $modulesProvider->generateAddonsUrls($this->createCatalogModuleList($products)),
                 'topMenuData' => $topMenuData,
@@ -75,27 +53,6 @@ class ModuleController extends Controller
     {
         $translator = $this->container->get('prestashop.adapter.translator');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['catalog_module'] = array(
-            'href' => $this->generateUrl('admin_module_catalog'),
-            'desc' => $translator->trans('[TEMP] Modules catalog', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Catalog', array(), get_class($this)),
-        );
-        $toolbarButtons['notifications_module'] = array(
-            'href' => $this->generateUrl('admin_module_notification'),
-            'desc' => $translator->trans('[TEMP] Module notifications', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Notifications', array(), get_class($this)),
-        );
-        $toolbarButtons['add_module'] = array(
-            'href' => $this->generateUrl('admin_module_import'),
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), get_class($this))
-        );
-        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
 
         $filter = [];
         if ($keyword !== null) {
@@ -126,7 +83,7 @@ class ModuleController extends Controller
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
-                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Manage my modules', array(), 'AdminModules'),
                 'modules' => $products,
                 'topMenuData' => $this->getTopMenuData('manage'),
@@ -191,28 +148,6 @@ class ModuleController extends Controller
         $translator = $this->container->get('prestashop.adapter.translator');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
 
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['catalog_module'] = array(
-            'href' => $this->generateUrl('admin_module_catalog'),
-            'desc' => $translator->trans('[TEMP] Modules catalog', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Catalog', array(), get_class($this)),
-        );
-        $toolbarButtons['manage_module'] = array(
-            'href' => $this->generateUrl('admin_module_manage'),
-            'desc' => $translator->trans('[TEMP] Manage my modules', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Manage', array(), get_class($this)),
-        );
-        $toolbarButtons['add_module'] = array(
-            'href' => $this->generateUrl('admin_module_import'),
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), get_class($this))
-        );
-        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
-
         $products = new \stdClass;
         foreach (['to_configure', 'to_update', 'to_install'] as $subpart) {
             $products->{$subpart} = [];
@@ -250,7 +185,7 @@ class ModuleController extends Controller
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
-                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Module notifications', array(), 'AdminModules'),
                 'modules' => $products,
                 'requireAddonsSearch' => false,
@@ -339,6 +274,41 @@ class ModuleController extends Controller
         }
 
         return $moduleFullList;
+    }
+
+    protected function getToolbarButtons()
+    {
+        $translator = $this->container->get('prestashop.adapter.translator');
+
+        // toolbarButtons
+        $toolbarButtons = array();
+        $toolbarButtons['catalog_module'] = array(
+            'href' => $this->generateUrl('admin_module_catalog'),
+            'desc' => $translator->trans('[TEMP] Modules catalog', array(), get_class($this)),
+            'icon' => 'icon-share-square',
+            'help' => $translator->trans('Catalog', array(), get_class($this)),
+        );
+        $toolbarButtons['manage_module'] = array(
+            'href' => $this->generateUrl('admin_module_manage'),
+            'desc' => $translator->trans('[TEMP] Manage my modules', array(), get_class($this)),
+            'icon' => 'icon-share-square',
+            'help' => $translator->trans('Manage', array(), get_class($this)),
+        );
+        $toolbarButtons['notifications_module'] = array(
+            'href' => $this->generateUrl('admin_module_notification'),
+            'desc' => $translator->trans('[TEMP] Module notifications', array(), get_class($this)),
+            'icon' => 'icon-share-square',
+            'help' => $translator->trans('Notifications', array(), get_class($this)),
+        );
+        $toolbarButtons['add_module'] = array(
+            'href' => '#',
+            'desc' => $translator->trans('Add a module', array(), get_class($this)),
+            'icon' => 'process-icon-new',
+            'help' => $translator->trans('Add a module', array(), get_class($this)),
+        );
+        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
+
+        return $toolbarButtons;
     }
 
     final private function getTopMenuData($source = 'catalog', $activeMenu = null)
@@ -522,7 +492,7 @@ class ModuleController extends Controller
         if ($addonsProvider->isAddonsAuthenticated()) {
             $addonsEmail = $addonsProvider->getAddonsEmail();
             $addonsConnect = [
-                'href' => '#',
+                'href' => $this->generateUrl('admin_addons_logout'),
                 'desc' => $addonsEmail['username_addons'],
                 'icon' => 'icon-chain-broken',
                 'help' => $translator->trans('Synchronized with Addons Marketplace!', array(), get_class($this))

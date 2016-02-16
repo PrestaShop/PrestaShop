@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AddonsController extends Controller
 {
@@ -55,19 +56,29 @@ class AddonsController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function logoutAction()
+    public function logoutAction(Request $request)
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $modulesProvider->clearCatalogCache();
 
-        $response = new JsonResponse();
-        $response->headers->clearCookie('username_addons');
-        $response->headers->clearCookie('password_addons');
-        $response->headers->clearCookie('is_contributor');
-        $response->setData([
+        if ($request->isXmlHttpRequest()) {
+            $response = new JsonResponse();
+            $response->setData([
                 'success' => 1,
                 'message' => ''
             ]);
+        } else {
+            if ($request->server->get('HTTP_REFERER')) {
+                $url = $request->server->get('HTTP_REFERER');
+            } else {
+                $url = $this->redirect($this->generateUrl('admin_module_catalog'));
+            }
+            $response = new RedirectResponse($url);
+        }
+        $response->headers->clearCookie('username_addons');
+        $response->headers->clearCookie('password_addons');
+        $response->headers->clearCookie('is_contributor');
+
         return $response;
     }
 }
