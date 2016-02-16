@@ -52,6 +52,7 @@ global_settings:
         - blocksocial
       displayFooter:
         - blockcms
+        - blockmyaccount
         - blockcontact
       displayLeftColumn:
         - blockcategories
