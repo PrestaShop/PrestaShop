@@ -1,62 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
-  <tab id="SELL" name="SELL" />
-  <tab id="IMPROVE" name="IMPROVE" />
-  <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Indirizzi"/>
   <tab id="Administration" name="Amministrazione"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="AdminModulesSf" name="Module Catalog" />
   <tab id="Advanced_Parameters" name="Parametri avanzati"/>
   <tab id="Attachments" name="Allegati"/>
-  <tab id="Attributes_and_features" name="Attributes &amp; Features" />
   <tab id="Attributes_and_Values" name="Attributi"/>
-  <tab id="Carriers" name="Corrieri"/>
-  <tab id="CarrierWizard" name="Corriere"/>
+  <tab id="Carriers" name="Vettori"/>
   <tab id="Cart_Rules" name="Regole carrello"/>
-  <tab id="Catalog_Price_Rules" name="Regole catalogo"/>
   <tab id="Catalog" name="Catalogo"/>
+  <tab id="Catalog_Price_Rules" name="Regole catalogo"/>
   <tab id="Categories" name="Categorie"/>
+  <tab id="CMS" name="CMS"/>
   <tab id="CMS_Categories" name="Categorie CMS"/>
   <tab id="CMS_Pages" name="Pagine CMS"/>
   <tab id="Combinations_Generator" name="Generatore di combinazioni"/>
   <tab id="Configuration" name="Configurazione"/>
-  <tab id="Contact" name="Contact" />
+  <tab id="Configuration_Information" name="Informazioni"/>
   <tab id="Contacts" name="Contatti"/>
   <tab id="Countries" name="Nazioni"/>
   <tab id="Credit_Slips" name="Note di credito"/>
-  <tab id="CSV_Import" name="Importazione"/>
+  <tab id="CSV_Import" name="Importazione CSV"/>
   <tab id="Currencies" name="Valute"/>
-  <tab id="Customer_Service_2" name="Customer Service" />
   <tab id="Customer_Service" name="Assistenza clienti"/>
-  <tab id="Customer_settings" name="Customer Settings" />
-  <tab id="Customers_1" name="Clienti"/>
-  <tab id="Customers_2" name="Clienti"/>
   <tab id="Customers" name="Clienti"/>
-  <tab id="Dashboard" name="Pannello di controllo"/>
-  <tab id="Database" name="Database" />
+  <tab id="Customers_2" name="Clienti"/>
+  <tab id="Customers_1" name="Clienti"/>
   <tab id="DB_Backup" name="Backup database"/>
-  <tab id="Delivery_Slips" name="Note di consegna"/>
+  <tab id="Delivery_Slips" name="Note di accompagnamento"/>
   <tab id="E-mail" name="E-mail"/>
-  <tab id="Employees_1" name="Employees" />
   <tab id="Employees" name="Dipendenti"/>
   <tab id="Features" name="Caratteristiche"/>
-  <tab id="General_1" name="General" />
   <tab id="General" name="Generale"/>
   <tab id="Geolocation" name="Geolocalizzazione"/>
   <tab id="Groups" name="Gruppi"/>
-  <tab id="Image_Settings" name="Image Settings" />
+  <tab id="Dashboard" name="Pannello di controllo"/>
   <tab id="Images" name="Immagini"/>
-  <tab id="Information" name="Information" />
   <tab id="Instant_Stock_Status" name="Stato dello Stock Istantaneo"/>
-  <tab id="International" name="International" />
   <tab id="Invoices" name="Fatture"/>
   <tab id="Languages" name="Lingue"/>
-  <tab id="Localization_1" name="Localizzazione"/>
   <tab id="Localization" name="Localizzazione"/>
-  <tab id="Locations" name="Locations" />
+  <tab id="Localization_1" name="Localizzazione"/>
   <tab id="Login" name="Accesso"/>
   <tab id="Logs" name="Log"/>
-  <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Manutenzione"/>
   <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
   <tab id="Manufacturers" name="Produttori"/>
@@ -65,18 +51,14 @@
   <tab id="Merchandise_Returns" name="Resi"/>
   <tab id="Modules_1" name="Moduli e servizi"/>
   <tab id="Modules" name="Moduli"/>
+  <tab id="Modules_Themes_Catalog" name="Catalogo moduli e temi"/>
   <tab id="Monitoring" name="Monitoraggio"/>
   <tab id="Multistore" name="Multi-negozio"/>
   <tab id="Order_Messages" name="Messaggi predefiniti"/>
-  <tab id="Order_settings_2" name="Order Settings" />
-  <tab id="Order_settings" name="Order Settings" />
-  <tab id="Orders_1" name="Ordini"/>
   <tab id="Orders_2" name="Ordini"/>
   <tab id="Orders" name="Ordini"/>
+  <tab id="Orders_1" name="Ordini"/>
   <tab id="Outstanding" name="In sospeso"/>
-  <tab id="Pages" name="Pages" />
-  <tab id="Payment_methods" name="Payment Methods" />
-  <tab id="Payment_preferences" name="Preferences" />
   <tab id="Payment" name="Pagamento"/>
   <tab id="Performance" name="Prestazioni"/>
   <tab id="Permissions" name="Permessi"/>
@@ -90,35 +72,31 @@
   <tab id="Quick_Access" name="Accesso veloce"/>
   <tab id="Referrers" name="Affiliati"/>
   <tab id="Search_1" name="Cerca"/>
-  <tab id="Search_Engines" name="Motori di ricerca"/>
   <tab id="Search" name="Cerca"/>
+  <tab id="Search_Engines" name="Motori di ricerca"/>
   <tab id="SEO_URLs" name="URL e SEO"/>
-  <tab id="Shipping_1" name="Preferenze"/>
   <tab id="Shipping" name="Spedizione"/>
-  <tab id="Shop_parameters" name="Shop Parameters" />
+  <tab id="Shipping_1" name="Preferenze"/>
   <tab id="Shop_URLs" name="URL negozi"/>
   <tab id="Shopping_Carts" name="Carrello"/>
   <tab id="Shops" name="Negozi associati"/>
   <tab id="SQL_Manager" name="Manager SQL"/>
   <tab id="States" name="Stati"/>
-  <tab id="Stats_1" name="Statistiche"/>
   <tab id="Stats" name="Statistiche"/>
+  <tab id="Stats_1" name="Statistiche"/>
   <tab id="Statuses" name="Stati"/>
+  <tab id="Stock" name="Magazzino"/>
   <tab id="Stock_Coverage" name="Copertura magazzino"/>
   <tab id="Stock_Management" name="Gestione magazzino"/>
   <tab id="Stock_Movement" name="Movimento magazzino"/>
-  <tab id="Stock" name="Magazzino"/>
   <tab id="Store_Contacts" name="Contatti del negozio"/>
   <tab id="Suppliers" name="Fornitori"/>
   <tab id="Supply_orders" name="Ordini fornitura"/>
   <tab id="Tags" name="Tag"/>
-  <tab id="Tax_Management" name="Taxes" />
   <tab id="Tax_Rules" name="Regole tasse"/>
   <tab id="Taxes" name="Tasse"/>
-  <tab id="Themes_Catalog" name="Theme Catalog" />
   <tab id="Themes" name="Temi"/>
   <tab id="Titles" name="Titoli"/>
-  <tab id="Traffic" name="Traffic" />
   <tab id="Translations" name="Traduzioni"/>
   <tab id="Warehouses" name="Magazzini"/>
   <tab id="Webservice" name="Webservice"/>
