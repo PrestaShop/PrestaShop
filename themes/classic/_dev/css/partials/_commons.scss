@@ -37,6 +37,7 @@ a:hover {
 a {
   &.button-primary {
     color: white !important;
+    display: inline-block;
     @include primary-button;
     &:hover {
       @include primary-button;

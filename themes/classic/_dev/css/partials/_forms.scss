@@ -91,9 +91,11 @@ label {
     color: $gray-darker;
     .bootstrap-touchspin-up {
       border-radius: 0;
+      border-bottom: 0;
     }
     .bootstrap-touchspin-down {
       border-radius: 0;
+      border-top: 0;
     }
     .touchspin-up {
       &:after {

@@ -1,13 +1,13 @@
 <div class="product-line-grid">
   <!--  product left content: image-->
-  <div class="product-line-grid-left col-md-2">
+  <div class="product-line-grid-left col-md-3 col-xs-3">
     <span class="product-image media-middle">
-      <img class="" src="{$product.cover.small.url}">
+      <img src="{$product.cover.medium.url}">
     </span>
   </div>
 
   <!--  product left body: description -->
-  <div class="product-line-grid-body col-md-6">
+  <div class="product-line-grid-body col-md-4 col-xs-4">
     <div class="product-line-info">
       <a class="label" href="{$product.url}">{$product.name}</a>
     </div>
@@ -35,7 +35,7 @@
   </div>
 
   <!--  product left body: description -->
-  <div class="product-line-grid-right product-line-actions col-md-4">
+  <div class="product-line-grid-right product-line-actions col-md-5 col-xs-5">
     <input class="cart-line-product-quantity" productid="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
     <div class="cart-line-product-actions ">
       <a
@@ -50,9 +50,10 @@
       </a>
     </div>
 
-    <span class="product-price pull-xs-left _vertical-align">{$product.total}</span>
+    <span class="product-price">{$product.total}</span>
 
     {if $product.customizations|count}
+      <div class="clearfix"></div>
       <div class="customizations">
         <ul>
           {foreach from=$product.customizations item="customization"}
