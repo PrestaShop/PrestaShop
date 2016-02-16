@@ -103,9 +103,8 @@
     width: 100%;
 }
 .module-tags-labels {
+    border: 0;
     height: 50px;
-    min-height: 50px;
-    max-height: 50px;
 }
 .module-tags-clear-btn {
     margin-right: 10px;
@@ -117,9 +116,6 @@
         cursor: pointer;
         top: 0;
         right: 0;
-}
-.module-tag {
-    background: lightblue;
 }
 .module-search-result-wording {
     color: #1E2024 !important;
