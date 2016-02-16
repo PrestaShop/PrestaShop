@@ -10,11 +10,6 @@ body#checkout {
 }
 #checkout-cart-summary {
   @include box-shadow;
-  background-color: white;
-  float: right;
-  border: 1px $gray-light solid;
-  padding: 10px;
-  width: 25%;
 }
 section#content {
   margin-top: 25px;
@@ -22,17 +17,26 @@ section#content {
 section.checkout-step {
   @include box-shadow;
   background-color: white;
+  border: 1px $gray-light solid;
+  padding: 15px;
   .step-title {
     font-size: em(18px);
     font-weight: 700;
     text-transform: uppercase;
     cursor: pointer;
+    margin-bottom: 0;
+    color: $gray-darker;
   }
   .content {
-    padding: 30px;
+    padding: 0 em(37px);
   }
   .step-edit {
-    font-size: em(12px);
+    font-size: em(14px);
+    text-transform: lowercase;
+    font-weight: normal;
+    .edit {
+      font-size: 1em;
+    }
   }
   .content,
   .step-edit,
@@ -60,7 +64,7 @@ section.checkout-step {
     h1 {
       .done {
         display: block;
-        color: $green;
+        color: $brand-success;
         display: inline-block;
         padding: 0 13px;
         margin-right: 25px;
@@ -80,9 +84,6 @@ section.checkout-step {
       display: none;
     }
   }
-  width: 70%;
-  border: 1px $gray-light solid;
-  padding: 15px;
   small {
     color: $gray;
   }
@@ -121,21 +122,76 @@ section.checkout-step {
   }
   .step-number {
     display: inline-block;
-    padding: 6px 13px;
-    margin-right: 25px;
+    padding: em(10px);
+  }
+  .address-selector {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .address-item {
+    width: 45%;
+    background: $gray-light;
+  }
+  .address-alias {
+    display: inline-block;
+    font-weight: 600;
+    font-size: em(18px);
+    margin-left: em(20px);
+    margin-bottom: em(10px);
+  }
+  .address {
+    margin-left: em(42px);
+  }
+  .radio-block {
+    padding: em(15px);
+    text-align: left;
+  }
+  .edit-address,.delete-address {
+    color: $gray;
+    font-size: em(14px);
+    display: inline-block;
+    margin: 0 em(5px);
+    .edit,.delete {
+      font-size: 1em;
+    }
+  }
+  hr {
+    margin: 0;
+  }
+  .address-footer {
+    text-align: center;
+    padding: em(10px);
+  }
+  #delivery-addresses,
+  #invoice-addresses {
+    margin-top: em(20px);
+  }
+  .add-address {
+    margin-top: em(20px);
+    a{
+      color: $gray-darker;
+      i{
+        font-size: em(15px);
+      }
+    }
   }
 }
-.products,.shipping,.cart-summary-totals {
+.products,
+.shipping,
+.cart-summary-totals {
   margin-top: em(20px);
 }
-.cart-summary-totals .label,.cart-summary-totals .value{
+.cart-summary-totals .label,
+.cart-summary-totals .value {
   font-weight: 700;
   color: $gray-darker;
   padding: 0;
   font-size: em(18px);
-  .sub{
+  .sub {
     font-weight: normal;
     bottom: 0;
+    font-size: em(15px);
   }
 }
 .shipping .label,
@@ -143,6 +199,7 @@ section.checkout-step {
   color: $gray-darker;
   padding: 0;
   font-weight: 400;
+  font-size: em(15px);
 }
 #cart-summary-product-list {
   font-size: em(14px);

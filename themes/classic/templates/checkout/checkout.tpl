@@ -16,21 +16,25 @@
     </header>
 
     <main class="container">
-      
+
       {block name='notifications'}
         {include file='_partials/notifications.tpl'}
       {/block}
 
       {block name='content'}
         <section id="content">
-          {include  file = 'checkout/_partials/cart-summary.tpl'
-          cart = $cart
-          }
-
-          {render   file = 'checkout/checkout-process.tpl'
-          ui   = $checkout_process
-          }
-
+          <div class="row">
+            <div class="col-md-8">
+              {render   file = 'checkout/checkout-process.tpl'
+              ui   = $checkout_process
+              }
+            </div>
+            <div class="col-md-4">
+              {include  file = 'checkout/_partials/cart-summary.tpl'
+              cart = $cart
+              }
+            </div>
+          </div>
         </section>
       {/block}
     </main>
