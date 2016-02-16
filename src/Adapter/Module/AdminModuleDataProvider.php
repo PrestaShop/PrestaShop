@@ -95,6 +95,23 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $this->manage_modules         = [];
     }
 
+    public function clearModuleFromManageCache($module_name)
+    {
+        $this->getManageModules();
+
+        foreach ($this->manage_modules as $key => &$module) {
+            if ($module->name === $module_name) {
+                // First of all, we remove the module from the modules list
+                unset($this->manage_modules[$key]);
+                $this->registerModuleCache(self::_CACHEFILE_INSTALLED_MODULES_, array_values($this->manage_modules));
+
+                // Mandatory in order to call again the function $this->getManageModules()
+                $this->manage_modules = [];
+                return;
+            }
+        }
+    }
+
     public function getAllModules()
     {
         $addons_provider = new AddonsDataProvider();
@@ -226,7 +243,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             return false;
         }
 
-        if (substr(`php -l $path`, 0, 16) != 'No syntax errors') {
+        $php_l_result = substr(`php -l $path`, 0, 16);
+        if (!empty($php_l_result) && $php_l_result != 'No syntax errors') {
             throw new \Exception('Parse error in '.$name.' class');
         }
 
@@ -387,59 +405,78 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $this->manage_modules    = $this->getModuleCache(self::_CACHEFILE_INSTALLED_MODULES_);
 
         if (!$this->manage_categories || !$this->manage_modules) {
-            try {
-                $cache_data = true;
-                try {
-                    // We need to load the catalog to get native modules later
-                    $this->getCatalogModules();
-                } catch (\Exception $e) {
-                    $cache_data = false;
+            $this->manage_modules = [];
+            $this->manage_categories = [];
+        }
+
+        try {
+            $only_cached_data = true;
+            $missing_module_list = [];
+            $modules_in_cache = [];
+
+            $all_modules = null;
+            $all_installed_modules = null;
+            // Get all references to modules in cache
+            foreach ($this->manage_modules as $key => $module) {
+                $modules_in_cache[$module->name] = $key;
+            }
+
+            $all_installed_modules = $this->getAllInstalledModules();
+
+            // Why all these foreach ? Because we need to join data from 3 different arrays.
+            foreach ($all_installed_modules as $key => &$installed_module) {
+
+                // Already in cache, continue ....
+                if (array_key_exists($installed_module['name'], $modules_in_cache)) {
+                    continue;
                 }
 
-                $this->manage_modules = new \stdClass;
-                $all_modules = $this->getAllModules();
-                $all_installed_modules = $this->getAllInstalledModules();
+                // We need to load the catalog to get native modules later
+                $this->getCatalogModules();
+                if ($all_modules === null) {
+                    $all_modules = $this->getAllModules();
+                    $only_cached_data = false;
+                }
 
-                // Why all these foreach ? Because we need to join data from 3 different arrays.
-                foreach ($all_installed_modules as $key => &$installed_module) {
-                    // Be careful, if the module is missing from the modules folder, do not display it !
-                    if (!$this->isModuleOnDisk($installed_module['name'])) {
-                        unset($all_installed_modules[$key]);
+                // Be careful, if the module is missing from the modules folder, do not display it !
+                if (!$this->isModuleOnDisk($installed_module['name'])) {
+                    unset($all_installed_modules[$key]);
+                    continue;
+                }
+
+                foreach ($this->catalog_modules as $catalog_module) {
+                    if ($catalog_module->name === $installed_module['name']) {
+                        $installed_module = array_merge($installed_module, (array)$catalog_module);
                         continue;
                     }
-                    //
-                    foreach ($this->catalog_modules as $catalog_module) {
-                        if ($catalog_module->name === $installed_module['name']) {
-                            $installed_module = array_merge($installed_module, (array)$catalog_module);
-                            continue;
-                        }
-                    }
-
-                    foreach ($all_modules as $module) {
-                        if ($module->name === $installed_module['name']) {
-                            unset($module->version);
-                            unset($module->badges);
-                            $installed_module = array_merge($installed_module, (array)$module);
-                            continue;
-                        }
-                    }
-
-                    // Legacy fix
-                    $installed_module['installed'] = 1;
                 }
-                $this->manage_modules = $this->convertJsonForNewCatalog(['products' => $all_installed_modules]);
+
+                foreach ($all_modules as $module) {
+                    if ($module->name === $installed_module['name']) {
+                        unset($module->version);
+                        unset($module->badges);
+                        $installed_module = array_merge($installed_module, (array)$module);
+                        continue;
+                    }
+                }
+
+                // Legacy fix
+                $installed_module['installed'] = 1;
+
+                $missing_module_list[$installed_module['name']] = $installed_module;
+            }
+            if ($only_cached_data === false) {
+                $this->manage_modules = array_merge($this->manage_modules, $this->convertJsonForNewCatalog(['products' => $missing_module_list]));
                 $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
 
-                if ($cache_data) {
-                    $this->registerModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, $this->manage_categories);
-                    $this->registerModuleCache(self::_CACHEFILE_INSTALLED_MODULES_, $this->manage_modules);
-                }
-            } catch (\Exception $e) {
-                if (! $this->fallbackOnManageCache()) {
-                    $this->manage_categories      = new \stdClass;
-                    $this->manage_modules         = [];
-                    throw new \Exception("Data from shop is invalid, and cannot fallback on cache", 0, $e);
-                }
+                $this->registerModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, $this->manage_categories);
+                $this->registerModuleCache(self::_CACHEFILE_INSTALLED_MODULES_, $this->manage_modules);
+            }
+        } catch (\Exception $e) {
+            if (! $this->fallbackOnManageCache()) {
+                $this->manage_categories      = [];
+                $this->manage_modules         = [];
+                throw new \Exception("Data from shop is invalid, and cannot fallback on cache", 0, $e);
             }
         }
     }

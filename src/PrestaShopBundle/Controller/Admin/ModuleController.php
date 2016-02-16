@@ -115,7 +115,7 @@ class ModuleController extends Controller
         }
 
 
-        $modulesProvider->clearManageCache();
+        $modulesProvider->clearModuleFromManageCache($module);
 
         if ($request->isXmlHttpRequest()) {
             if ($ret[$module]['status'] === true && $action != 'uninstallModule') {
