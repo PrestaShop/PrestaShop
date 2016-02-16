@@ -16,19 +16,22 @@
 {% endblock %}
 
 {% block content %}
-    {# Addons connect modal #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_addons_connect.html.twig' %}
-    {# Contains toolbar-nav for module page #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
-    {# Contains menu with Selection/Categories/Popular and Tag Search #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
-    {# Contains sorting options #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_sorting.html.twig' with { 'totalModules' : modules|length } %}
-    {# Actual Page Content #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' %}
-    {# Module Categories Grid #}
-    {% if topMenuData.categories is defined %}
-        {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_categories_grid.html.twig' with { 'categories' : topMenuData.categories }  %}
-    {% endif %}
-
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            {# Addons connect modal #}
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_addons_connect.html.twig' %}
+            {# Contains toolbar-nav for module page #}
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
+            {# Contains menu with Selection/Categories/Popular and Tag Search #}
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
+            {# Contains sorting options #}
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_sorting.html.twig' with { 'totalModules' : modules|length } %}
+            {# Actual Page Content #}
+            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' %}
+            {# Module Categories Grid #}
+            {% if topMenuData.categories is defined %}
+                {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_categories_grid.html.twig' with { 'categories' : topMenuData.categories }  %}
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

@@ -23,15 +23,21 @@
     {# Actual Page Content #}
     <div class="row">
         <div class="col-lg-10 col-lg-offset-1">
-            <span class="module-search-result-wording">{{modules.to_configure|length}} modules to configure</span>
+            <div class="module-short-list">
+                <span class="module-search-result-wording">{{modules.to_configure|length}} modules to configure</span>
+            </div>
             {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid_notification_configure.html.twig' with { 'modules' : modules.to_configure, 'display_type' : 'list'  } %}
 
             <hr class="top-menu-separator">
-            <span class="module-search-result-wording">{{modules.to_update|length}} modules to update</span>
+            <div class="module-short-list">
+                <span class="module-search-result-wording">{{modules.to_update|length}} modules to update</span>
+            </div>
             {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid_notification_update.html.twig' with { 'modules' : modules.to_update, 'display_type' : 'list' } %}
 
             <hr class="top-menu-separator">
-            <span class="module-search-result-wording">{{modules.to_install|length}} modules to install</span>
+            <div class="module-short-list">
+                <span class="module-search-result-wording">{{modules.to_install|length}} modules to install</span>
+            </div>
             {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' with { 'modules' : modules.to_install, 'display_type' : 'list' } %}
         </div>
     </div>

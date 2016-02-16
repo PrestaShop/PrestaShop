@@ -71,34 +71,6 @@ class ModuleController extends Controller
             ));
     }
 
-    /**
-     * Controller responsible for displaying "Catalog" section of Module management pages
-     * @param  Request $request
-     * @return Response
-     */
-    public function importAction(Request $request)
-    {
-        $translator = $this->container->get('prestashop.adapter.translator');
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['add_module'] = array(
-            'href' => $this->generateUrl('admin_module_import'),
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), get_class($this))
-        );
-        // @TODO Check if connected to addons or not
-        $toolbarButtons['addons_connect'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-            'icon' => 'icon-chain-broken',
-            'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-        );
-        return $this->render('PrestaShopBundle:Admin/Module:import.html.twig', array(
-            'layoutHeaderToolbarBtn' => $toolbarButtons
-        ));
-    }
-
     public function manageAction(Request $request, $category = null, $keyword = null)
     {
         $translator = $this->container->get('prestashop.adapter.translator');
@@ -123,13 +95,8 @@ class ModuleController extends Controller
             'icon' => 'process-icon-new',
             'help' => $translator->trans('Add a module', array(), get_class($this))
         );
-        // @TODO Check if connected to addons or not
-        $toolbarButtons['addons_connect'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-            'icon' => 'icon-chain-broken',
-            'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-        );
+        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
+
         $filter = [];
         if ($keyword !== null) {
             $filter['search'] = $keyword;
@@ -244,13 +211,8 @@ class ModuleController extends Controller
             'icon' => 'process-icon-new',
             'help' => $translator->trans('Add a module', array(), get_class($this))
         );
-        // @TODO Check if connected to addons or not
-        $toolbarButtons['addons_connect'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-            'icon' => 'icon-chain-broken',
-            'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-        );
+        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
+
         $products = new \stdClass;
         foreach (['to_configure', 'to_update', 'to_install'] as $subpart) {
             $products->{$subpart} = [];
@@ -323,6 +285,8 @@ class ModuleController extends Controller
                 array( 'Content-Type' => 'application/json' )
             );
         } catch (Exception $e) {
+            $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+            $modulesProvider->removeModuleFromDisk($module_name);
             return new JsonResponse(array(
                 'status' => false,
                 'msg' => $e->getMessage()),
@@ -403,16 +367,24 @@ class ModuleController extends Controller
     protected function installModule($module_name)
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+
         if (! $modulesProvider->isModuleOnDisk($module_name)) {
             $modulesProvider->setModuleOnDiskFromAddons($module_name);
         }
 
-        $module = $modulesProvider->getModule($module_name);
-        $status = $module->install();
+        try {
+            $module = $modulesProvider->getModule($module_name);
+            $status = $module->install();
+        } catch (Exception $e) {
+            $status = false;
+            $module = $modulesProvider->getModule($module_name);
+        }
+
         if ($status) {
             $msg = sprintf('Module %s is now installed', $module_name);
         } else {
             $msg = sprintf('Could not install module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
+            $modulesProvider->removeModuleFromDisk($module_name);
         }
 
         return array('status' => $status, 'msg' => $msg);

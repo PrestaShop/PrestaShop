@@ -431,3 +431,8 @@ img.module-logo-thumb-list {
     display: none;
     text-align: center;
 }
+
+.module-short-list {
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
