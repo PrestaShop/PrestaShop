@@ -39,6 +39,7 @@
     "symfony/symfony": "~2.8.0",
     "doctrine/dbal": "~2.5.0",
     "doctrine/orm": "~2.5.0",
+    "ext-zip": "*",
     "doctrine/doctrine-bundle": "1.5.2",
     "symfony/swiftmailer-bundle": "2.3.8",
     "symfony/monolog-bundle": "2.8.2",
