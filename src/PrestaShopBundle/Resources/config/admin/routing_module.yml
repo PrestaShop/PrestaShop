@@ -1,5 +1,4 @@
 #All the module related routes
-
 admin_module_catalog:
     path:     /catalog/{category}/{keyword}
     methods:  [GET]
@@ -8,6 +7,12 @@ admin_module_catalog:
         keyword:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::catalogAction
         _legacy_controller: AdminModules
+
+admin_module_catalog_post:
+    path:     /catalog
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ModuleController::getPreferredModulesAction
 
 admin_module_manage:
     path:     /manage/{category}/{keyword}
