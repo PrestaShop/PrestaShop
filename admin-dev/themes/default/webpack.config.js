@@ -28,6 +28,12 @@ module.exports = {
       ],
       loader: 'imports?this=>window&exports=>false&module=>false&define=>false'
     }, {
+      test: path.join(__dirname, 'js'),
+      loader: 'babel',
+      query: {
+        presets: ['es2015']
+      }
+    }, {
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract('style', 'css!sass')
     }, {
