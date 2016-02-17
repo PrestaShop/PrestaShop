@@ -2,20 +2,20 @@
   {foreach $addresses as $address}
     <article id="{$name|classname}-address-{$address.id}" class="address-item">
       <header class="h4">
-        {$address.alias}
+        <label class="radio-block">
+          <input type="radio" name="{$name}" value="{$address.id}" {if $address.id == $selected}checked{/if} />
+          <span class="address-alias">{$address.alias}</span>
+          <div class="address">{$address.formatted nofilter}</div>
+        </label>
       </header>
-
-      <label class="radio-block">
-          <div class="_display-table">
-            <input type="radio" class="_display-table-cell _margin-right-small" name="{$name}" value="{$address.id}" {if $address.id == $selected}checked{/if} />
-            <div class="_display-table-cell">{$address.formatted nofilter}</div>
-          </div>
-      </label>
-
-      <footer>
+      <hr>
+      <footer class="address-footer">
         {if $interactive}
-          <a data-link-action="edit-address" href="{$address.url_order_edit}&amp;editAddress={$type}">
-            {l s='Edit'}
+          <a class="edit-address" data-link-action="edit-address" href="{$address.url_order_edit}&amp;editAddress={$type}">
+            <i class="material-icons edit">&#xE254;</i>{l s='Edit'}
+          </a>
+          <a class="delete-address" href="#">
+            <i class="material-icons delete">&#xE872;</i>{l s='Delete'}
           </a>
         {/if}
       </footer>

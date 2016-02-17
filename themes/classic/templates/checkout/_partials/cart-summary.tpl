@@ -1,4 +1,4 @@
-<section id="checkout-cart-summary">
+<section id="checkout-cart-summary" class="card card-block">
   {block name='cart_summary_header'}
     <header>
       <p class="_bolder">{$cart.summary_string}<span class="pull-xs-right">{$cart.total.amount}</span></p>
@@ -30,7 +30,7 @@
   <hr>
   {block name='cart_summary_totals'}
     <div class="cart-summary-totals">
-      <span class="label">{$cart.total.label}<span class="sub">{l s='(tax ecl)'}</span></span>
+      <span class="label">{$cart.total.label}<span class="sub">&nbsp;{l s='(tax ecl)'}</span></span>
       <span class="value pull-xs-right">{$cart.total.amount}</span>
     </div>
   {/block}

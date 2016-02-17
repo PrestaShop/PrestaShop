@@ -1,7 +1,7 @@
 .products {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 .product-thumbnail {
   display: block;
@@ -97,6 +97,7 @@ img {
 }
 
 .product-miniature{
+  margin: 0 em(10px);
   .product-labels .new,
   .discount-percentage {
     display: block;

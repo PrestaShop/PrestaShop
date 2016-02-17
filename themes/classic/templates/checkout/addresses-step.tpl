@@ -3,7 +3,7 @@
 {block name='step_content'}
 
   {if !$use_same_address}
-    <h2 class="h2">{l s='Your Delivery Address'}</h2>
+    <h2 class="h4">{l s='Your Delivery Address'}</h2>
   {/if}
 
   {if $use_same_address}
@@ -32,7 +32,9 @@
       }
     </div>
 
-    <a href="{$new_address_delivery_url}">{l s='Add another address'}</a>
+    <p class="add-address">
+      <a href="{$new_address_delivery_url}"><i class="material-icons">&#xE145;</i>{l s='add new address'}</a>
+    </p>
 
     {if $use_same_address}
       <p>
@@ -44,7 +46,7 @@
 
   {if !$use_same_address}
 
-    <h2 class="h2">{l s='Your Invoice Address'}</h2>
+    <h2 class="h4">{l s='Your Invoice Address'}</h2>
 
     {if $show_invoice_address_form}
       <div id="invoice-address">
@@ -66,15 +68,16 @@
         }
       </div>
 
-      <a href="{$new_address_invoice_url}">{l s='Add another address'}</a>
-
+      <p class="add-address">
+        <a href="{$new_address_invoice_url}"><i class="material-icons">&#xE145;</i>{l s='add new address'}</a>
+      </p>
     {/if}
 
   {/if}
 
   {if !$form_has_continue_button}
-    <form>
-      <button type="submit" class="continue form-control-submit center-block" name="confirm-addresses" value="1">
+    <form class="clearfix">
+      <button type="submit" class="btn btn-primary continue pull-xs-right" name="confirm-addresses" value="1">
           {l s='Continue'}
       </button>
     </form>

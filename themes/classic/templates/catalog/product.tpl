@@ -198,9 +198,9 @@
                             {/block}
 
 
-                            <button class="btn btn-primary add-to-cart text-uppercase _shadow _relative" data-button-action="add-to-cart" type="submit">
+                            <button class="btn btn-primary add-to-cart _relative" data-button-action="add-to-cart" type="submit">
                               <i class="material-icons shopping-cart">&#xE547;</i>
-                              {l s='Add to cart'}"
+                              {l s='Add to cart'}
                             </button>
 
 
