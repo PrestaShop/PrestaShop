@@ -132,16 +132,20 @@ section.checkout-step {
   .address-item {
     width: 45%;
     background: $gray-light;
+    &.selected{
+      background: white;
+      border: $brand-primary 3px solid;
+    }
   }
   .address-alias {
     display: inline-block;
     font-weight: 600;
     font-size: em(18px);
-    margin-left: em(20px);
     margin-bottom: em(10px);
   }
   .address {
-    margin-left: em(42px);
+    margin-left: em(62px);
+    font-weight: normal;
   }
   .radio-block {
     padding: em(15px);

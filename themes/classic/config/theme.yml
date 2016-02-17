@@ -41,7 +41,6 @@ global_settings:
         - blocktopmenu
         - blocksearch:
           - pagenotfound
-
       displayHome:
         - homeslider
         - homefeatured
@@ -60,6 +59,8 @@ global_settings:
         - blocksearch
       displayProductButtons:
         - socialsharing
+      displayShoppingCartReassurance:
+        - blockreassurance
 
 theme_settings:
   default_layout: layout-full-width

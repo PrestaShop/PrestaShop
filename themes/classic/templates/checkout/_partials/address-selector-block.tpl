@@ -1,9 +1,10 @@
 <form method="POST" action="{$urls.pages.order}" class="address-selector js-address-selector">
   {foreach $addresses as $address}
-    <article id="{$name|classname}-address-{$address.id}" class="address-item">
+    <article id="{$name|classname}-address-{$address.id}" class="address-item{if $address.id == $selected} selected{/if}">
       <header class="h4">
         <label class="radio-block">
           <input type="radio" name="{$name}" value="{$address.id}" {if $address.id == $selected}checked{/if} />
+          <span class="custom-radio"></span>
           <span class="address-alias">{$address.alias}</span>
           <div class="address">{$address.formatted nofilter}</div>
         </label>

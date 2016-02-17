@@ -1,4 +1,3 @@
-
 @import url('//fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 @import "partials/_variables";
 @import "~bootstrap/scss/bootstrap";
@@ -7,7 +6,6 @@
 @import "~bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.css";
 @import "partials/_mixins";
 @import "partials/_fonts";
-@import "partials/_forms";
 @import "partials/_helpers";
 @import "partials/_commons";
 @import "modules/drop-down";
@@ -24,7 +22,6 @@
 @import "modules/footer";
 @import "modules/contact";
 @import "modules/errors";
-
 /*** HEADER ***/
 #header {
   background: white;
@@ -93,12 +90,12 @@
           color: $brand-primary;
         }
       }
-      &.active{
-        a:hover{
+      &.active {
+        a:hover {
           color: white;
         }
       }
-      .header{
+      .header {
         margin-top: em(2px);
       }
     }
@@ -145,7 +142,7 @@
     }
     li {
       display: inline;
-      &:after {
+      &::after {
         content: "/";
         color: $gray-dark;
         margin: em(5px);
@@ -154,11 +151,12 @@
         content: "/";
         color: $gray-dark;
         margin: em(5px);
-      }        a {
-        color: $gray-darker;
+        &::after{
+          content:"";
+        }
       }
-      &:after {
-        content: "";
+      a {
+        color: $gray-darker;
       }
     }
   }
@@ -192,7 +190,6 @@
 #footer {
   padding-top: em(40px);
 }
-
 @include media-breakpoint-down(xs) {
   #checkout-cart-summary {
     float: none;
@@ -201,14 +198,14 @@
   }
   #header .header-nav {
     max-height: none;
-    .right-nav{
+    .right-nav {
       flex-direction: column;
     }
-    .user-info{
+    .user-info {
       text-align: left;
       margin-left: 0;
     }
-    .blockcart{
+    .blockcart {
       margin-left: 0;
     }
   }
@@ -222,13 +219,11 @@
     clear: both;
   }
 }
-
 /*** CARD ****/
 .card-shadow {
   /* @extend .card; */
   @include box-shadow;
 }
-
 .heading-title {
   @extend .h4;
   @extend .text-uppercase;

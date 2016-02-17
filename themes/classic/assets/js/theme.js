@@ -16410,6 +16410,8 @@
 	}
 	
 	function selectAddress(event) {
+	  (0, _jquery2['default'])('.address-item').removeClass('selected');
+	  (0, _jquery2['default'])(event.target).parents('.address-item').addClass('selected');
 	  var form = (0, _jquery2['default'])(event.target).closest('form');
 	  _jquery2['default'].post('', form.serialize(), null, 'json').then(function (resp) {
 	    // TODO
