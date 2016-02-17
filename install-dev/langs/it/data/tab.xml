@@ -5,7 +5,7 @@
   <tab id="Advanced_Parameters" name="Parametri avanzati"/>
   <tab id="Attachments" name="Allegati"/>
   <tab id="Attributes_and_Values" name="Attributi"/>
-  <tab id="Carriers" name="Vettori"/>
+  <tab id="Carriers" name="Corrieri"/>
   <tab id="Cart_Rules" name="Regole carrello"/>
   <tab id="Catalog" name="Catalogo"/>
   <tab id="Catalog_Price_Rules" name="Regole catalogo"/>
@@ -26,7 +26,7 @@
   <tab id="Customers_2" name="Clienti"/>
   <tab id="Customers_1" name="Clienti"/>
   <tab id="DB_Backup" name="Backup database"/>
-  <tab id="Delivery_Slips" name="Note di accompagnamento"/>
+  <tab id="Delivery_Slips" name="Note di consegna"/>
   <tab id="E-mail" name="E-mail"/>
   <tab id="Employees" name="Dipendenti"/>
   <tab id="Features" name="Caratteristiche"/>
@@ -99,5 +99,5 @@
   <tab id="Warehouses" name="Magazzini"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="Zone"/>
-  <tab id="CarrierWizard" name="Vettore"/>
+  <tab id="CarrierWizard" name="Corriere"/>
 </entity_tab>
