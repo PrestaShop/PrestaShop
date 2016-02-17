@@ -1,48 +1,16 @@
 {extends file='checkout/checkout-step.tpl'}
 
 {block name='step_content'}
-
-  {if $conditions_to_approve|count}
-    <p class="ps-hidden-by-js">
-      {* At the moment, we're not showing the checkboxes when JS is disabled
-         because it makes ensuring they were checked very tricky and overcomplicates
-         the template. Might change later.
-      *}
-      {l s='By confirming your order, I certify that I have read and agree with all of the conditions below:'}
-    </p>
-
-    <form id="conditions-to-approve" method="GET">
-      <ul>
-        {foreach from=$conditions_to_approve item="condition" key="condition_name"}
-          <li class="_display-table">
-            <div class="_display-table-cell">
-              <input  id    = "conditions_to_approve[{$condition_name}]"
-                      name  = "conditions_to_approve[{$condition_name}]"
-                      required
-                      type  = "checkbox"
-                      value = "1"
-                      class = "ps-shown-by-js _margin-right-small"
-              >
-            </div>
-            <div class="_display-table-cell">
-              <label for="conditions_to_approve[{$condition_name}]">
-                {$condition nofilter}
-              </label>
-            </div>
-          </li>
-        {/foreach}
-      </ul>
-    </form>
-  {/if}
-
   <div class="payment-options">
     {foreach from=$payment_options item="module_options"}
       {foreach from=$module_options item="option"}
         <div>
           <div id="{$option.id}-container" class="payment-option clearfix _display-table">
-
             {* This is the way an option should be selected when Javascript is enabled *}
-            <input class="ps-shown-by-js _margin-right-small" id="{$option.id}" type="radio" name="payment-option" required {if $selected_payment_option == $option.id} checked {/if}>
+            <span class="custom-radio">
+              <input class="ps-shown-by-js _margin-right-small" id="{$option.id}" type="radio" name="payment-option" required {if $selected_payment_option == $option.id} checked {/if}>
+              <span></span>
+            </span>
             {* This is the way an option should be selected when Javascript is disabled *}
             <form method="GET" class="ps-hidden-by-js">
               {if $option.id === $selected_payment_option}
@@ -91,6 +59,39 @@
       {/foreach}
     {/foreach}
   </div>
+
+  {if $conditions_to_approve|count}
+    <p class="ps-hidden-by-js">
+      {* At the moment, we're not showing the checkboxes when JS is disabled
+         because it makes ensuring they were checked very tricky and overcomplicates
+         the template. Might change later.
+      *}
+      {l s='By confirming your order, I certify that I have read and agree with all of the conditions below:'}
+    </p>
+
+    <form id="conditions-to-approve" method="GET">
+      <ul>
+        {foreach from=$conditions_to_approve item="condition" key="condition_name"}
+          <li>
+            <div>
+              <input  id    = "conditions_to_approve[{$condition_name}]"
+                      name  = "conditions_to_approve[{$condition_name}]"
+                      required
+                      type  = "checkbox"
+                      value = "1"
+                      class = "ps-shown-by-js _margin-right-small"
+              >
+            </div>
+            <div>
+              <label for="conditions_to_approve[{$condition_name}]">
+                {$condition nofilter}
+              </label>
+            </div>
+          </li>
+        {/foreach}
+      </ul>
+    </form>
+  {/if}
 
   <div id="payment-confirmation">
     <div class="ps-shown-by-js">

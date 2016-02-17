@@ -131,7 +131,7 @@ section.checkout-step {
   }
   .address-item {
     width: 45%;
-    background: $gray-light;
+    background: $gray-lighter;
     &.selected{
       background: white;
       border: $brand-primary 3px solid;
@@ -179,6 +179,23 @@ section.checkout-step {
         font-size: em(15px);
       }
     }
+  }
+  .delivery-option-2{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .delivery-option{
+    background: $gray-lighter;
+    padding: em(15px);
+    margin-bottom: em(15px);
+  }
+  .carrier-name{
+    display: inline-block;
+    margin: 0 em(20px);
+  }
+  .carrier-price{
+    font-weight: 700;
   }
 }
 .products,

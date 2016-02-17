@@ -3,8 +3,10 @@
     <article id="{$name|classname}-address-{$address.id}" class="address-item{if $address.id == $selected} selected{/if}">
       <header class="h4">
         <label class="radio-block">
-          <input type="radio" name="{$name}" value="{$address.id}" {if $address.id == $selected}checked{/if} />
-          <span class="custom-radio"></span>
+          <span class="custom-radio">
+            <input type="radio" name="{$name}" value="{$address.id}" {if $address.id == $selected}checked{/if}>
+            <span></span>
+          </span>
           <span class="address-alias">{$address.alias}</span>
           <div class="address">{$address.formatted nofilter}</div>
         </label>
