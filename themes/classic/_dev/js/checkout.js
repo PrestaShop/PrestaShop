@@ -63,6 +63,8 @@ function hideOrShow () {
 }
 
 function selectAddress (event) {
+  $('.address-item').removeClass('selected');
+  $(event.target).parents('.address-item').addClass('selected');
   const form = $(event.target).closest('form');
   $
     .post('', form.serialize(), null, 'json')
