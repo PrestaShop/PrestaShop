@@ -37,6 +37,7 @@ var AdminModule = function () {
     this.totalResultSelector = '.module-search-result-wording';
     this.addonsSearchSelector = '.module-addons-search';
     this.addonsSearchLinkSelector = '.module-addons-search-link';
+    this.addonsLoginButtonSelector = '#addons_login_btn';
     this.categoryResetBtnSelector = '.module-category-reset';
     this.moduleInstallBtnSelector = 'input.module-install-btn';
     this.moduleInstallLoaderSelector = '.module-install-loader';
@@ -117,7 +118,11 @@ var AdminModule = function () {
                 method: 'POST',
                 url: $(this).attr('action'),
                 dataType: 'json',
-                data: $(this).serialize()
+                data: $(this).serialize(),
+                beforeSend: function() {
+                    $(_that.addonsLoginButtonSelector).show()
+                    $("button.btn[type='submit']", _that.addonsConnectForm).hide();
+                }
             }).done(function (response) {
                 var responseCode = response.success;
                 var responseMsg = response.message;
@@ -126,6 +131,8 @@ var AdminModule = function () {
                     location.reload();
                 } else {
                     $.growl.error({message: responseMsg});
+                    $(_that.addonsLoginButtonSelector).hide();
+                    $("button.btn[type='submit']", _that.addonsConnectForm).fadeIn();
                 }
             });
         });
@@ -133,8 +140,10 @@ var AdminModule = function () {
 
     //@TODO: JS Doc
     this.initAddModuleAction = function () {
-        $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
-        $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
+        if ($(this.addonsConnectModalBtnSelector).attr('href') == '#') {
+            $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
+            $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
+        }
     };
 
   //@TODO: JS Doc
