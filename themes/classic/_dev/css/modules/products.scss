@@ -242,7 +242,10 @@ li.product-label {
     z-index: 2;
   }
 }
-.product-customization {
+.product-customization {  
+  @include box-shadow;
+  background: white;
+  padding: em(20px) em(30px);
   @include submit-button;
 }
 .social-sharing {
