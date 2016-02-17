@@ -1,19 +1,19 @@
 var path = require('path');
 var webpack = require('webpack');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: [
-    require.resolve('tether'),
-    require.resolve('jquery'),
-    require.resolve('jquery-ui'),
-    require.resolve('bootstrap'),
-    require.resolve('bootstrap-tokenfield'),
-    require.resolve('moment'),
-    require.resolve('eonasdan-bootstrap-datetimepicker'),
-    require.resolve('jwerty'),
-    require.resolve('magnific-popup'),
-    require.resolve('dropzone'),
+    'tether/dist/js/tether.js',
+    'jquery/dist/jquery.js',
+    'jquery-ui/jquery-ui.js',
+    'bootstrap/dist/js/npm.js',
+    'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
+    'moment/moment.js',
+    'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+    'jwerty/jwerty.js',
+    'magnific-popup/dist/jquery.magnific-popup.js',
+    'dropzone/dist/dropzone.js',
     'cldrjs/dist/cldr.js',
     'cldrjs/dist/cldr/event.js',
     'cldrjs/dist/cldr/supplemental.js',
@@ -39,45 +39,45 @@ module.exports = {
   ],
   output: {
     path: './public',
-    filename: "bundle.js"
+    filename: 'bundle.js'
   },
   module: {
     loaders: [{
-      test: require.resolve("jquery"),
-      loader: "expose?jquery!expose?jQuery!expose?$"
+      test: /jquery\/dist\/jquery\.js/,
+      loader: 'expose?jquery!expose?jQuery!expose?$'
     }, {
-      test: require.resolve("tether"),
-      loader: "expose?Tether"
+      test: /tether\/dist\/js\/tether\.js/,
+      loader: 'expose?Tether'
     }, {
-      test: require.resolve("jwerty"),
-      loader: "imports?this=>window&module=>false"
+      test: /jwerty\/jwerty\.js/,
+      loader: 'imports?this=>window&module=>false'
     }, {
-      test: require.resolve('bootstrap-tokenfield'),
-      loader: "imports?define=>false&exports=>false"
+      test: /bootstrap-tokenfield\/dist\/bootstrap-tokenfield\.js/,
+      loader: 'imports?define=>false&exports=>false'
     }, {
       test: /typeahead\.jquery\.js/,
-      loader: "imports?define=>false&exports=>false&this=>window"
+      loader: 'imports?define=>false&exports=>false&this=>window'
     }, {
       test: /bloodhound\.js/,
-      loader: "exports?Bloodhound!imports?define=>false&exports=>false&this=>window"
+      loader: 'exports?Bloodhound!imports?define=>false&exports=>false&this=>window'
     }, {
-      test: require.resolve('dropzone'),
-      loader: "imports?this=>window&module=>null"
+      test: /dropzone\/dist\/dropzone\.js/,
+      loader: 'imports?this=>window&module=>null'
     }, {
       test: [
         /cldrjs\/dist\/cldr/,
         /globalize\/dist\/globalize/
       ],
-      loader: "imports?this=>window&exports=>false&module=>false&define=>false"
+      loader: 'imports?this=>window&exports=>false&module=>false&define=>false'
     }, {
-      test: require.resolve('eonasdan-bootstrap-datetimepicker'),
-      loader: "imports?this=>window&exports=>false&define=>false"
+      test: /eonasdan-bootstrap-datetimepicker\/src\/js\/bootstrap-datetimepicker\.js/,
+      loader: 'imports?this=>window&exports=>false&define=>false'
     }, {
       test: [
         /moment\/moment\.js/,
         /moment\/min\/locales\.js/
       ],
-      loader: "imports?this=>window&exports=>false&define=>false"
+      loader: 'imports?this=>window&exports=>false&define=>false'
     }, {
       test: path.join(__dirname, 'js'),
       loader: 'babel',
@@ -86,10 +86,10 @@ module.exports = {
       }
     }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract("style", "css!sass")
+      loader: ExtractTextPlugin.extract('style', 'css!sass')
     }, {
       test: /\.css$/,
-      loader: ExtractTextPlugin.extract("style",  "css?sourceMap!postcss!sass?sourceMap")
+      loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass?sourceMap')
     }, {
       test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
       loader: 'file-loader?name=[hash].[ext]'

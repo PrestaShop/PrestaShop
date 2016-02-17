@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: [
@@ -12,11 +13,12 @@ module.exports = {
     'globalize/dist/globalize/plural.js',
     'globalize/dist/globalize/date.js',
     'globalize/dist/globalize/currency.js',
-    'globalize/dist/globalize/relative-time.js'
+    'globalize/dist/globalize/relative-time.js',
+    './js/theme.js'
   ],
   output: {
     path: './public',
-    filename: "bundle.js"
+    filename: 'bundle.js'
   },
   module: {
     loaders: [{
@@ -24,10 +26,20 @@ module.exports = {
         /cldrjs\/dist\/cldr/,
         /globalize\/dist\/globalize/
       ],
-      loader: "imports?this=>window&exports=>false&module=>false&define=>false"
+      loader: 'imports?this=>window&exports=>false&module=>false&define=>false'
+    }, {
+      test: /\.scss$/,
+      loader: ExtractTextPlugin.extract('style', 'css!sass')
+    }, {
+      test: /\.css$/,
+      loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass?sourceMap')
+    }, {
+      test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+      loader: 'file-loader?name=[hash].[ext]'
     }]
   },
   plugins: [
+    new ExtractTextPlugin('theme.css'),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: false,
       compress: {
