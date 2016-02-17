@@ -338,25 +338,37 @@
       {block name='product_customization'}
         {if $product.is_customizable}
           <section class="product-customization _margin-top-large">
-            <h3 class="h5 text-uppercase _bolder">{l s='Product customization'}</h3>
             <form method="post" action="{$customizationFormTarget}" enctype="multipart/form-data">
-              <ul>
+              <section class="form-fields">
+                <div class="form-group row">
+                  <div class="col-md-9 col-md-offset-3">
+                    <h3 class="h5 text-uppercase _bolder">{l s='Product customization'}</h3>
+                  </div>
+                </div>
                 {foreach from=$product.customizations.fields item="field"}
-                  <li>
-                    <label>{$field.label}</label>
-                    {if $field.type == 'text'}
-                      <textarea {if $field.required} required {/if} name="{$field.input_name}">{$field.text}</textarea>
-                    {elseif $field.type == 'image'}
-                      {if $field.is_customized}
-                        <img src="{$field.image.small.url}">
-                        <a class="remove-image" href="{$field.remove_image_url}" rel="nofollow">{l s='Remove Image'}</a>
+                  <div class="form-group row">
+                    <label class="col-md-3 form-control-label">{$field.label}</label>
+                    <div class="col-md-4">
+                      {if $field.type == 'text'}
+                        <textarea {if $field.required} required {/if} name="{$field.input_name}" class="form-control">{$field.text}</textarea>
+                      {elseif $field.type == 'image'}
+                        {if $field.is_customized}
+                          <div class="_margin-bottom-small">
+                            <img src="{$field.image.small.url}">
+                            <a class="remove-image" href="{$field.remove_image_url}" rel="nofollow">{l s='Remove Image'}</a>
+                          </div>
+                        {/if}
+                        <input {if $field.required} required {/if} type="file" name="{$field.input_name}" class="filestyle">
                       {/if}
-                      <input {if $field.required} required {/if} type="file" name="{$field.input_name}">
-                    {/if}
-                  </li>
+                    </div>
+                  </div>
                 {/foreach}
-              </ul>
-              <button type="submit" name="submitCustomizedDatas">{l s='Save Customization'}</button>
+              </section>
+              <footer class="form-footer row text-xs-right">
+                <div class="col-md-7">
+                  <button type="submit" name="submitCustomizedDatas">{l s='Save Customization'}</button>
+                </div>
+              </footer>
             </form>
           </section>
         {/if}
