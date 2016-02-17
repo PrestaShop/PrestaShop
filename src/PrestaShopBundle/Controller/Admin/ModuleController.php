@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ModuleController extends Controller
+class ModuleController extends FrameworkBundleAdminController
 {
     /**
      * Controller responsible for displaying "Catalog" section of Module management pages

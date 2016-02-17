@@ -81,3 +81,12 @@ services:
         class: PrestaShopBundle\Security\Admin\EmployeeProvider
         arguments:
             - "@prestashop.adapter.legacy.context"
+
+    #LISTENER
+    prestashop.core.admin.controllers.listener:
+        class: PrestaShopBundle\Service\Listeners\AdminControllersListener
+        arguments:
+            - "@router"
+            - "@twig"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

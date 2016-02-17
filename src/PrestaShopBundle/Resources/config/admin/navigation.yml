@@ -1,0 +1,10 @@
+# Module Page Tabs
+
+ModuleController:
+    module_tab_manage:
+        title: "Manage my modules"
+        route: "admin_module_manage"
+
+    module_tab_notifications:
+        title: "Modules notifications"
+        route: "admin_module_notification"
