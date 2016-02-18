@@ -47,15 +47,16 @@
   }
 }
 
-/*** MAIN CONTENT ***/
+/*** Most of the customer accpunt pages ***/
+.page-customer-account {
+  #content {
+    @include customer-area-box;
 
-#content {
-
-  /*** Login page ***/
-  &.page-authentication {
-    @include customer-area-base-box;
-    max-width: 640px;
-    margin: 0 auto;
+    .order-actions {
+      a {
+        padding: 0 rem(2px);
+      }
+    }
     .forgot-password {
       text-align: center;
       font-size: rem(14px);
@@ -66,197 +67,161 @@
       font-size: rem(16px);
     }
   }
+}
 
-  /*** Registration page ***/
-  &.page-registration {
-    @include customer-area-box;
-  }
-
-  /*** Forgot password page ***/
-  &.password-form {
-    @include customer-area-box;
-  }
-
-  /*** My account landing page ***/
-  &.page-my-account {
-    .links {
-      margin: 0 rem(-15px);
-      a {
-        @include customer-area-base-box;
-        text-align: center;
-        display: inline-block;
-        font-size: rem(16px);
-        font-weight: 700;
-        text-transform: uppercase;
-        color: $gray-dark;
-        width: 100%;
-        margin-bottom: rem(30px);
-        i {
-          display: block;
-          font-size: rem(48px);
-          width: 100%;
-          color: $gray-darker;
-          padding-bottom: rem(24px);
-        }
-        &:hover {
-          color: $gray-darker;
-          i {
-            color: $brand-primary;
-          }
-        }
-      }
-    }
-  }
-
-  /*** Edit account page ***/
-  &.page-identity {
+/*** Login page ***/
+.page-authentication {
+  #content {
     @include customer-area-base-box;
+    max-width: 640px;
+    margin: 0 auto;
   }
+}
 
-  /*** Addresses page ***/
-  &.page-address {
-    @include customer-area-base-box;
-  }
-
-  /*** Addresses page ***/
-  &.page-addresses {
-    margin: 0 rem(-15px);
-    .address {
-      @include box-shadow;
-      background: white;
-      margin-bottom: rem(30px);
-      font-size: rem(14px);
-      color: $gray-darker;
-      .address-body {
-        padding: rem(16px);
-        h4 {
-          font-size: rem(16px);
-          font-weight: 700;
-        }
-        address {
-          min-height: rem(144px);
-        }
-      }
-      .address-footer {
-        border-top: 1px solid $gray;
-        padding: rem(8px) rem(16px);
-        a {
-          color: $gray-dark;
-          margin-right: rem(8px);
-          &:hover {
-            color: $gray-darker;
-          }
-          i {
-            font-size: em(16px);
-          }
-          span {
-            font-size: em(14px);
-            vertical-align: middle;
-          }
-        }
-      }
-    }
-    .addresses-footer {
-      margin: 0 rem(15px);
-      a {
-          color: $gray-darker;
-          &:hover {
-            color: $gray-darker;
-          }
-          i {
-            font-size: em(18px);
-          }
-          span {
-            font-size: em(16px);
-            vertical-align: middle;
-          }
-      }
-    }
-  }
-
-  /*** Order history page ***/
-  &.page-order-history {
-    @include customer-area-box;
-    .order-actions {
-      a {
-        padding: 0 rem(2px);
-      }
-    }
-  }
-
-  /*** Order details page ***/
-  &.page-order-details {
+/*** Addresses page ***/
+.page-addresses {
+  margin: 0 rem(-15px);
+  .address {
+    @include box-shadow;
+    background: white;
+    margin-bottom: rem(30px);
     font-size: rem(14px);
-    color: $gray-dark;
-    .box {
-      @include customer-area-base-box;
-      margin-bottom: rem(16px);
-    }
-    h3 {
-      font-size: rem(16px);
-      font-weight: 700;
-      text-transform: uppercase;
-      color: $gray-darker;
-      margin-bottom: rem(16px);
-    }
-    #order-infos {
-      ul {
-        margin: 0;
-      }
-    }
-    .addresses {
-      margin: 0 rem(-15px);
+    color: $gray-darker;
+    .address-body {
+      padding: rem(16px);
       h4 {
         font-size: rem(16px);
         font-weight: 700;
       }
+      address {
+        min-height: rem(144px);
+      }
     }
-    #order-products {
-      &.return {
-        margin-bottom: rem(16px);
-        th {
-          &.head-checkbox {
-            width: 30px;
-          }
+    .address-footer {
+      border-top: 1px solid $gray;
+      padding: rem(8px) rem(16px);
+      a {
+        color: $gray-dark;
+        margin-right: rem(8px);
+        &:hover {
+          color: $gray-darker;
         }
-        td {
-          padding: 1.375rem 0.75rem;
-          &.qty {
-            min-width: 125px;
-            .current {
-              width: 30%;
-              float: left;
-              text-align: right;
-              padding-right: 0.5rem;
-            }
-            .select {
-              width: 70%;
-              float: left;
-              margin: -0.625rem 0;
-              padding-left: 0.25rem;
-              select {
-                text-align: center;
-              }
+        i {
+          font-size: em(16px);
+        }
+        span {
+          font-size: em(14px);
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+  .addresses-footer {
+    margin: 0 rem(15px);
+    a {
+      color: $gray-darker;
+      &:hover {
+        color: $gray-darker;
+      }
+      i {
+        font-size: em(18px);
+      }
+      span {
+        font-size: em(16px);
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+/*** Order details page ***/
+.page-order-detail {
+  font-size: rem(14px);
+  color: $gray-dark;
+  .box {
+    @include customer-area-base-box;
+    margin-bottom: rem(16px);
+  }
+  h3 {
+    font-size: rem(16px);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $gray-darker;
+    margin-bottom: rem(16px);
+  }
+  #order-infos {
+    ul {
+      margin: 0;
+    }
+  }
+  .addresses {
+    margin: 0 rem(-15px);
+    h4 {
+      font-size: rem(16px);
+      font-weight: 700;
+    }
+  }
+  #order-products {
+    &.return {
+      margin-bottom: rem(16px);
+      th {
+        &.head-checkbox {
+          width: 30px;
+        }
+      }
+      td {
+        padding: 1.375rem 0.75rem;
+        &.qty {
+          min-width: 125px;
+          .current {
+            width: 30%;
+            float: left;
+            text-align: right;
+            padding-right: 0.5rem;
+          }
+          .select {
+            width: 70%;
+            float: left;
+            margin: -0.625rem 0;
+            padding-left: 0.25rem;
+            select {
+              text-align: center;
             }
           }
         }
       }
     }
   }
-  
-  /*** Credit slips page ***/
-  &.page-credit-slips {
-    @include customer-area-box;
-  }
+}
 
-  /*** Discount page ***/
-  &.page-discount {
-    @include customer-area-box;
-  }
-
-  /*** RMA page ***/
-  &.page-order-return {
-    @include customer-area-box;
+/*** My account landing page ***/
+.page-my-account {
+  .links {
+    margin: 0 rem(-15px);
+    a {
+      @include customer-area-base-box;
+      text-align: center;
+      display: inline-block;
+      font-size: rem(16px);
+      font-weight: 700;
+      text-transform: uppercase;
+      color: $gray-dark;
+      width: 100%;
+      margin-bottom: rem(30px);
+      i {
+        display: block;
+        font-size: rem(48px);
+        width: 100%;
+        color: $gray-darker;
+        padding-bottom: rem(24px);
+      }
+      &:hover {
+        color: $gray-darker;
+        i {
+          color: $brand-primary;
+        }
+      }
+    }
   }
 }
 

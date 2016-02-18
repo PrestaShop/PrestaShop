@@ -5649,183 +5649,140 @@ body#checkout {
 .page-order table thead th {
   text-align: center; }
 
-/*** MAIN CONTENT ***/
-#content {
-  /*** Login page ***/
-  /*** Registration page ***/
-  /*** Forgot password page ***/
-  /*** My account landing page ***/
-  /*** Edit account page ***/
-  /*** Addresses page ***/
-  /*** Addresses page ***/
-  /*** Order history page ***/
-  /*** Order details page ***/
-  /*** Credit slips page ***/
-  /*** Discount page ***/
-  /*** RMA page ***/ }
-  #content.page-authentication {
-    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-    background: white;
-    padding: 1rem;
-    max-width: 640px;
-    margin: 0 auto; }
-    #content.page-authentication .forgot-password {
-      text-align: center;
-      font-size: 0.875rem;
-      margin-top: 1rem; }
-    #content.page-authentication .no-account {
-      text-align: center;
-      font-size: 1rem; }
-  #content.page-registration {
-    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-    background: white;
-    padding: 1rem;
+/*** Most of the customer accpunt pages ***/
+.page-customer-account #content {
+  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #878787; }
+  .page-customer-account #content .order-actions a {
+    padding: 0 0.125rem; }
+  .page-customer-account #content .forgot-password {
+    text-align: center;
     font-size: 0.875rem;
-    color: #878787; }
-  #content.password-form {
+    margin-top: 1rem; }
+  .page-customer-account #content .no-account {
+    text-align: center;
+    font-size: 1rem; }
+
+/*** Login page ***/
+.page-authentication #content {
+  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 1rem;
+  max-width: 640px;
+  margin: 0 auto; }
+
+/*** Addresses page ***/
+.page-addresses {
+  margin: 0 -0.9375rem; }
+  .page-addresses .address {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     background: white;
-    padding: 1rem;
+    margin-bottom: 1.875rem;
     font-size: 0.875rem;
-    color: #878787; }
-  #content.page-my-account .links {
-    margin: 0 -0.9375rem; }
-    #content.page-my-account .links a {
-      box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-      background: white;
-      padding: 1rem;
-      text-align: center;
-      display: inline-block;
-      font-size: 1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: #878787;
-      width: 100%;
-      margin-bottom: 1.875rem; }
-      #content.page-my-account .links a i {
-        display: block;
-        font-size: 3rem;
-        width: 100%;
-        color: #414141;
-        padding-bottom: 1.5rem; }
-      #content.page-my-account .links a:hover {
-        color: #414141; }
-        #content.page-my-account .links a:hover i {
-          color: #2fb5d2; }
-  #content.page-identity {
-    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-    background: white;
-    padding: 1rem; }
-  #content.page-address {
-    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-    background: white;
-    padding: 1rem; }
-  #content.page-addresses {
-    margin: 0 -0.9375rem; }
-    #content.page-addresses .address {
-      box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-      background: white;
-      margin-bottom: 1.875rem;
-      font-size: 0.875rem;
-      color: #414141; }
-      #content.page-addresses .address .address-body {
-        padding: 1rem; }
-        #content.page-addresses .address .address-body h4 {
-          font-size: 1rem;
-          font-weight: 700; }
-        #content.page-addresses .address .address-body address {
-          min-height: 9rem; }
-      #content.page-addresses .address .address-footer {
-        border-top: 1px solid #acaaa6;
-        padding: 0.5rem 1rem; }
-        #content.page-addresses .address .address-footer a {
-          color: #878787;
-          margin-right: 0.5rem; }
-          #content.page-addresses .address .address-footer a:hover {
-            color: #414141; }
-          #content.page-addresses .address .address-footer a i {
-            font-size: 1em; }
-          #content.page-addresses .address .address-footer a span {
-            font-size: 0.875em;
-            vertical-align: middle; }
-    #content.page-addresses .addresses-footer {
-      margin: 0 0.9375rem; }
-      #content.page-addresses .addresses-footer a {
-        color: #414141; }
-        #content.page-addresses .addresses-footer a:hover {
-          color: #414141; }
-        #content.page-addresses .addresses-footer a i {
-          font-size: 1.125em; }
-        #content.page-addresses .addresses-footer a span {
-          font-size: 1em;
-          vertical-align: middle; }
-  #content.page-order-history {
-    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-    background: white;
-    padding: 1rem;
-    font-size: 0.875rem;
-    color: #878787; }
-    #content.page-order-history .order-actions a {
-      padding: 0 0.125rem; }
-  #content.page-order-details {
-    font-size: 0.875rem;
-    color: #878787; }
-    #content.page-order-details .box {
-      box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-      background: white;
-      padding: 1rem;
-      margin-bottom: 1rem; }
-    #content.page-order-details h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: #414141;
-      margin-bottom: 1rem; }
-    #content.page-order-details #order-infos ul {
-      margin: 0; }
-    #content.page-order-details .addresses {
-      margin: 0 -0.9375rem; }
-      #content.page-order-details .addresses h4 {
+    color: #414141; }
+    .page-addresses .address .address-body {
+      padding: 1rem; }
+      .page-addresses .address .address-body h4 {
         font-size: 1rem;
         font-weight: 700; }
-    #content.page-order-details #order-products.return {
-      margin-bottom: 1rem; }
-      #content.page-order-details #order-products.return th.head-checkbox {
-        width: 30px; }
-      #content.page-order-details #order-products.return td {
-        padding: 1.375rem 0.75rem; }
-        #content.page-order-details #order-products.return td.qty {
-          min-width: 125px; }
-          #content.page-order-details #order-products.return td.qty .current {
-            width: 30%;
-            float: left;
-            text-align: right;
-            padding-right: 0.5rem; }
-          #content.page-order-details #order-products.return td.qty .select {
-            width: 70%;
-            float: left;
-            margin: -0.625rem 0;
-            padding-left: 0.25rem; }
-            #content.page-order-details #order-products.return td.qty .select select {
-              text-align: center; }
-  #content.page-credit-slips {
+      .page-addresses .address .address-body address {
+        min-height: 9rem; }
+    .page-addresses .address .address-footer {
+      border-top: 1px solid #acaaa6;
+      padding: 0.5rem 1rem; }
+      .page-addresses .address .address-footer a {
+        color: #878787;
+        margin-right: 0.5rem; }
+        .page-addresses .address .address-footer a:hover {
+          color: #414141; }
+        .page-addresses .address .address-footer a i {
+          font-size: 1em; }
+        .page-addresses .address .address-footer a span {
+          font-size: 0.875em;
+          vertical-align: middle; }
+  .page-addresses .addresses-footer {
+    margin: 0 0.9375rem; }
+    .page-addresses .addresses-footer a {
+      color: #414141; }
+      .page-addresses .addresses-footer a:hover {
+        color: #414141; }
+      .page-addresses .addresses-footer a i {
+        font-size: 1.125em; }
+      .page-addresses .addresses-footer a span {
+        font-size: 1em;
+        vertical-align: middle; }
+
+/*** Order details page ***/
+.page-order-detail {
+  font-size: 0.875rem;
+  color: #878787; }
+  .page-order-detail .box {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     background: white;
     padding: 1rem;
-    font-size: 0.875rem;
-    color: #878787; }
-  #content.page-discount {
+    margin-bottom: 1rem; }
+  .page-order-detail h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #414141;
+    margin-bottom: 1rem; }
+  .page-order-detail #order-infos ul {
+    margin: 0; }
+  .page-order-detail .addresses {
+    margin: 0 -0.9375rem; }
+    .page-order-detail .addresses h4 {
+      font-size: 1rem;
+      font-weight: 700; }
+  .page-order-detail #order-products.return {
+    margin-bottom: 1rem; }
+    .page-order-detail #order-products.return th.head-checkbox {
+      width: 30px; }
+    .page-order-detail #order-products.return td {
+      padding: 1.375rem 0.75rem; }
+      .page-order-detail #order-products.return td.qty {
+        min-width: 125px; }
+        .page-order-detail #order-products.return td.qty .current {
+          width: 30%;
+          float: left;
+          text-align: right;
+          padding-right: 0.5rem; }
+        .page-order-detail #order-products.return td.qty .select {
+          width: 70%;
+          float: left;
+          margin: -0.625rem 0;
+          padding-left: 0.25rem; }
+          .page-order-detail #order-products.return td.qty .select select {
+            text-align: center; }
+
+/*** My account landing page ***/
+.page-my-account .links {
+  margin: 0 -0.9375rem; }
+  .page-my-account .links a {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     background: white;
     padding: 1rem;
-    font-size: 0.875rem;
-    color: #878787; }
-  #content.page-order-return {
-    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-    background: white;
-    padding: 1rem;
-    font-size: 0.875rem;
-    color: #878787; }
+    text-align: center;
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #878787;
+    width: 100%;
+    margin-bottom: 1.875rem; }
+    .page-my-account .links a i {
+      display: block;
+      font-size: 3rem;
+      width: 100%;
+      color: #414141;
+      padding-bottom: 1.5rem; }
+    .page-my-account .links a:hover {
+      color: #414141; }
+      .page-my-account .links a:hover i {
+        color: #2fb5d2; }
 
 /*** FOOTER ***/
 .page-footer .account-link {
