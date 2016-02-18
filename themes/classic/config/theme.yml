@@ -60,7 +60,7 @@ global_settings:
         - blocksearch
       displayProductButtons:
         - socialsharing
-      displayShoppingCartReassurance:
+      displayReassurance:
         - blockreassurance
 
 theme_settings:
