@@ -25,13 +25,11 @@ $(document).ready(() => {
       $('.cart-voucher').replaceWith(resp.cart_voucher);
     });
   });
-
   $('body').on(
     'click',
-    '[data-link-action="add-to-cart"], [data-link-action="update-quantity"], [data-link-action="remove-from-cart"], [data-link-action="remove-voucher"]',
+    '[data-link-action="update-quantity"], [data-link-action="remove-from-cart"], [data-link-action="remove-voucher"]',
     function (event) {
       event.preventDefault();
-
       // First perform the action using AJAX
       var actionURL = event.target.href;
       $.post(actionURL, { ajax: '1'}, null, 'json').then(function () {
@@ -39,6 +37,25 @@ $(document).ready(() => {
         prestashop.emit('cart updated', {
             reason: event.target.dataset
         });
+      });
+    }
+  );
+  $('body').on(
+    'click',
+    '[data-button-action="add-to-cart"]',
+    function (event) {
+      event.preventDefault();
+      var $form = $($(event.target).closest('form'));
+      var query = $form.serialize() + '&add=1';
+      var actionURL = $form.attr('action');
+      $.post(actionURL, query, null, 'json').then(function (resp) {
+          prestashop.emit('cart updated', {
+              reason: {
+                  idProduct: resp.id_product,
+                  idProductAttribute: resp.id_product_attribute,
+                  linkAction: 'add-to-cart'
+              }
+          });
       });
     }
   );

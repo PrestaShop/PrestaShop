@@ -16644,16 +16644,29 @@
 	      (0, _jquery2['default'])('.cart-voucher').replaceWith(resp.cart_voucher);
 	    });
 	  });
-	
-	  (0, _jquery2['default'])('body').on('click', '[data-link-action="add-to-cart"], [data-link-action="update-quantity"], [data-link-action="remove-from-cart"], [data-link-action="remove-voucher"]', function (event) {
+	  (0, _jquery2['default'])('body').on('click', '[data-link-action="update-quantity"], [data-link-action="remove-from-cart"], [data-link-action="remove-voucher"]', function (event) {
 	    event.preventDefault();
-	
 	    // First perform the action using AJAX
 	    var actionURL = event.target.href;
 	    _jquery2['default'].post(actionURL, { ajax: '1' }, null, 'json').then(function () {
 	      // If succesful, refresh cart preview
 	      _prestashop2['default'].emit('cart updated', {
 	        reason: event.target.dataset
+	      });
+	    });
+	  });
+	  (0, _jquery2['default'])('body').on('click', '[data-button-action="add-to-cart"]', function (event) {
+	    event.preventDefault();
+	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
+	    var query = $form.serialize() + '&add=1';
+	    var actionURL = $form.attr('action');
+	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
+	      _prestashop2['default'].emit('cart updated', {
+	        reason: {
+	          idProduct: resp.id_product,
+	          idProductAttribute: resp.id_product_attribute,
+	          linkAction: 'add-to-cart'
+	        }
 	      });
 	    });
 	  });
