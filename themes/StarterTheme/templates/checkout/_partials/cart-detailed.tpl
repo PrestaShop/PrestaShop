@@ -1,4 +1,4 @@
-<div class="cart-overview">
+<div class="cart-overview -js-cart" data-refresh-url="{$urls.pages.cart}?ajax=1">
   <div class="body">
     <ul>
       {foreach from=$cart.products item=product}

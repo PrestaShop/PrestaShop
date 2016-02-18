@@ -133,11 +133,13 @@ class OrderControllerCore extends FrontController
 
     private function jsonRenderCartSummary()
     {
+        parent::initContent();
         $cart = $this->cart_presenter->present(
             $this->context->cart
         );
         $return['preview'] = $this->render('checkout/_partials/cart-summary.tpl', [
             'cart' => $cart,
+            'static_token' => Tools::getToken(false),
         ]);
 
         return json_encode($return);
