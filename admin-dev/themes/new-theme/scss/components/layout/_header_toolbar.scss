@@ -42,5 +42,10 @@
         color: #363a41;
         box-sizing: border-box;
         font-size: 16px;
+        text-decoration: none;
+    }
+
+    > .current {
+        border-bottom: 3px solid #3ed2f0;
     }
 }

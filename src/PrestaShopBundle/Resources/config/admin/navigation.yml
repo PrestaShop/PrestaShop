@@ -1,6 +1,10 @@
 # Module Page Tabs
 
 ModuleController:
+    module_tab_catalog:
+        title: "Modules catalog"
+        route: "admin_module_catalog"
+
     module_tab_manage:
         title: "Manage my modules"
         route: "admin_module_manage"

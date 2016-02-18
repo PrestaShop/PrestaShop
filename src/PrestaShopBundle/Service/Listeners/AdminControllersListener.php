@@ -64,7 +64,14 @@ class AdminControllersListener
         if (isset($tabConfiguration[$controllerName])) {
             // Construct tabs and inject into twig tpl
             $tabDataContent = [];
+            // Get current route name to know when to put "current" class on HTML dom
+            $currentRouteName = $this->request->get('_route');
+
             foreach ($tabConfiguration[$controllerName] as $tabName => $tabData) {
+                $tabData['isCurrent'] = false;
+                if ($currentRouteName === $tabData['route']) {
+                    $tabData['isCurrent'] = true;
+                }
                 $tabData['route'] = $this->router->generate($tabData['route']);
                 $tabDataContent[] = $this->renderer->render(
                     'PrestaShopBundle:Admin/Common/_partials:_header_tab.html.twig',
