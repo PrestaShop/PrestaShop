@@ -148,7 +148,6 @@
   "scripts": {
     "post-install-cmd": [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-      "bash tools/contrib/install.sh",
       "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
