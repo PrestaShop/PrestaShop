@@ -5,10 +5,10 @@
     {foreach from=$payment_options item="module_options"}
       {foreach from=$module_options item="option"}
         <div>
-          <div id="{$option.id}-container" class="payment-option clearfix _display-table">
+          <div id="{$option.id}-container" class="payment-option clearfix">
             {* This is the way an option should be selected when Javascript is enabled *}
-            <span class="custom-radio">
-              <input class="ps-shown-by-js _margin-right-small" id="{$option.id}" type="radio" name="payment-option" required {if $selected_payment_option == $option.id} checked {/if}>
+            <span class="custom-radio pull-xs-left">
+              <input class="ps-shown-by-j"s id="{$option.id}" type="radio" name="payment-option" required {if $selected_payment_option == $option.id} checked {/if}>
               <span></span>
             </span>
             {* This is the way an option should be selected when Javascript is disabled *}
@@ -22,7 +22,7 @@
               {/if}
             </form>
 
-            <label for="{$option.id}" class="_margin-right-small">
+            <label for="{$option.id}">
               <span>{$option.call_to_action_text}</span>
               {if $option.logo}
                 <img src="{$option.logo}">
@@ -35,7 +35,7 @@
         {if $option.additionalInformation}
           <div
             id="{$option.id}-additional-information"
-            class="js-additional-information {if $option.id != $selected_payment_option} ps-hidden {/if}"
+            class="js-additional-information additional-information{if $option.id != $selected_payment_option} ps-hidden {/if}"
           >
             {$option.additionalInformation nofilter}
           </div>
@@ -73,16 +73,16 @@
       <ul>
         {foreach from=$conditions_to_approve item="condition" key="condition_name"}
           <li>
-            <div>
+            <div class="pull-xs-left">
               <input  id    = "conditions_to_approve[{$condition_name}]"
                       name  = "conditions_to_approve[{$condition_name}]"
                       required
                       type  = "checkbox"
                       value = "1"
-                      class = "ps-shown-by-js _margin-right-small"
+                      class = "ps-shown-by-js"
               >
             </div>
-            <div>
+            <div class="condition-label">
               <label for="conditions_to_approve[{$condition_name}]">
                 {$condition nofilter}
               </label>
@@ -95,7 +95,7 @@
 
   <div id="payment-confirmation">
     <div class="ps-shown-by-js">
-      <button type="submit" {if !$selected_payment_option} disabled {/if} class="form-control-submit center-block">
+      <button type="submit" {if !$selected_payment_option} disabled {/if} class="btn btn-primary center-block">
         {l s='Order with an obligation to pay'}
       </button>
     </div>
