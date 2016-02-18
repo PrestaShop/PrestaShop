@@ -16606,16 +16606,74 @@
 
 /***/ },
 /* 52 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var _prestashop = __webpack_require__(47);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
 	function spinFinish() {
-	  return console.log($(this).attr('productid') + ": " + $(this).val());
+	  return console.log((0, _jquery2['default'])(this).attr('productid') + ": " + (0, _jquery2['default'])(this).val());
 	}
 	
-	$(document).ready(function () {
-	  $("input[name='product-quantity-spin']").TouchSpin({
+	(0, _jquery2['default'])(document).ready(function () {
+	  _prestashop2['default'].on('cart updated', function (event) {
+	    var refreshURL = (0, _jquery2['default'])('.-js-cart').data('refresh-url');
+	    var requestData = {};
+	
+	    if (event && event.reason) {
+	      requestData = {
+	        id_product_attribute: event.reason.idProductAttribute,
+	        id_product: event.reason.idProduct,
+	        action: event.reason.linkAction
+	      };
+	    }
+	
+	    _jquery2['default'].post(refreshURL, requestData).then(function (resp) {
+	      (0, _jquery2['default'])('.cart-overview').replaceWith(resp.cart_detailed);
+	      (0, _jquery2['default'])('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
+	      (0, _jquery2['default'])('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
+	      (0, _jquery2['default'])('.cart-voucher').replaceWith(resp.cart_voucher);
+	    });
+	  });
+	
+	  (0, _jquery2['default'])('body').on('click', '[data-link-action="add-to-cart"], [data-link-action="update-quantity"], [data-link-action="remove-from-cart"], [data-link-action="remove-voucher"]', function (event) {
+	    event.preventDefault();
+	
+	    // First perform the action using AJAX
+	    var actionURL = event.target.href;
+	    _jquery2['default'].post(actionURL, { ajax: '1' }, null, 'json').then(function () {
+	      // If succesful, refresh cart preview
+	      _prestashop2['default'].emit('cart updated', {
+	        reason: event.target.dataset
+	      });
+	    });
+	  });
+	
+	  (0, _jquery2['default'])('body').on('submit', '[data-link-action="add-voucher"]', function (event) {
+	    event.preventDefault();
+	
+	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'ajax').val('1'));
+	
+	    // First perform the action using AJAX
+	    var actionURL = event.target.action;
+	    _jquery2['default'].post(actionURL, (0, _jquery2['default'])(this).serialize(), null, 'json').then(function () {
+	      // If succesful, refresh cart preview
+	      _prestashop2['default'].emit('cart updated', {
+	        reason: event.target.dataset
+	      });
+	    });
+	  });
+	
+	  (0, _jquery2['default'])("input[name='product-quantity-spin']").TouchSpin({
 	    verticalbuttons: true,
 	    verticalupclass: 'material-icons touchspin-up',
 	    verticaldownclass: 'material-icons touchspin-down',
