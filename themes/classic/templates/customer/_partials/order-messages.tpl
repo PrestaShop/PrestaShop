@@ -39,7 +39,7 @@
           <select name="id_product" class="form-control form-control-select">
             <option value="0">{l s='-- Choose --'}</option>
             {foreach from=$order.products item=product}
-              <option value="{$product.product_id}">{$product.product_name}</option>
+              <option value="{$product.id}">{$product.name}</option>
             {/foreach}
           </select>
         </div>
@@ -55,7 +55,7 @@
     </section>
 
     <footer class="form-footer text-xs-center">
-      <input type="hidden" name="id_order" value="{$order.data.id}" />
+      <input type="hidden" name="id_order" value="{$order.details.id}" />
       <button type="submit" name="submitMessage" class="form-control-submit">
         {l s='Send'}
       </button>

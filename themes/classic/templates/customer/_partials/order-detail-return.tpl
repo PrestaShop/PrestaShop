@@ -22,11 +22,11 @@
             <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}" />
           {/if}
         </td>
-        <td>{$product.product_reference}</td>
-        <td>{$product.product_name}</td>
+        <td>{$product.reference}</td>
+        <td>{$product.name}</td>
         <td class="qty">
           <div class="current">
-            {$product.product_quantity}
+            {$product.quantity}
           </div>
           <div class="select">
             {if !$product.customizedDatas}
@@ -79,33 +79,35 @@
     <tfoot>
       {if $priceDisplay && $use_tax}
         <tr>
-          <td colspan="2">{l s='Items (tax excl.)'}</td>
-          <td colspan="5" class="text-xs-right">{$order.data.total_products}</td>
+          <td>{l s='Items (tax excl.)'}</td>
+          <td colspan="4" class="text-xs-right">{$order.total.amount}</td>
         </tr>
       {/if}
-      <tr>
-        <td colspan="2">{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
-        <td colspan="5" class="text-xs-right">{$order.data.total_products_wt}</td>
-      </tr>
-      {if $order.data.total_discounts}
+      {if isset($order.amounts.subtotals.tax)}
         <tr>
-          <td colspan="2">{l s='Total vouchers'}</td>
-          <td colspan="5" class="text-xs-right">{$order.data.total_discounts}</td>
+          <td>{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
+          <td colspan="4" class="text-xs-right">{$order.subtotals.tax.amount}</td>
         </tr>
       {/if}
-      {if $order.data.total_wrapping}
-      <tr>
-        <td colspan="2">{l s='Total gift wrapping cost'}</td>
-        <td colspan="5" class="text-xs-right">{$order.data.total_wrapping}</td>
-      </tr>
+      {if $order.amounts.subtotals.discounts}
+        <tr>
+          <td>{l s='Total vouchers'}</td>
+          <td colspan="4" class="text-xs-right">{$order.subtotals.discounts.amount}</td>
+        </tr>
+      {/if}
+      {if isset($order.amounts.subtotals.gift_wrapping)}
+        <tr>
+          <td>{l s='Total gift wrapping cost'}</td>
+          <td colspan="4" class="text-xs-right">{$order.subtotals.gift_wrapping.amount}</td>
+        </tr>
       {/if}
       <tr>
-        <td colspan="2">{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
-        <td colspan="5" class="text-xs-right">{$order.data.total_shipping}</td>
+        <td>{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
+        <td colspan="4" class="text-xs-right">{$order.subtotals.shipping.amount}</td>
       </tr>
       <tr>
-        <td colspan="2">{l s='Total'}</td>
-        <td colspan="5" class="text-xs-right">{$order.data.total_paid}</td>
+        <td>{l s='Total'}</td>
+        <td colspan="4" class="text-xs-right">{$order.total.total_paid.amount}</td>
       </tr>
     </tfoot>
   </table>
@@ -122,7 +124,7 @@
   </section>
 
   <footer class="form-footer">
-    <input type="hidden" name="id_order" value="{$order.data.id}" />
+    <input type="hidden" name="id_order" value="{$order.details.id}" />
     <button type="submit" name="submitReturnMerchandise" class="form-control-submit">
       {l s='Make an RMA slip'}
     </button>
