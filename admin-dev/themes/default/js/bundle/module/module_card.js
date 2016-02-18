@@ -43,7 +43,6 @@ var AdminModuleCard = function () {
                 return true;
             }
             modal.first().modal('show');
-            ;
             return false; // do not allow a.href to reload the page. The confirm modal dialog will do it async if needed.
         };
         var dispatchPreEvent = function (action, element) {
@@ -100,7 +99,7 @@ var AdminModuleCard = function () {
                 $.growl.error({message: "No answer received from server"});
             } else {
                 var moduleTechName = Object.keys(result)[0];
-                if (result[moduleTechName].status == false) {
+                if (result[moduleTechName].status === false) {
                     $.growl.error({message: result[moduleTechName].msg});
                 } else {
                     $.growl.notice({message: result[moduleTechName].msg});
