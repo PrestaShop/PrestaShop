@@ -410,7 +410,7 @@ h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .heading-title, .h5, .h6 {
   margin-bottom: 0.5rem;
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.1;
   color: inherit; }
 
@@ -424,7 +424,7 @@ h3 {
   font-size: 1.75rem; }
 
 h4 {
-  font-size: 1.5rem; }
+  font-size: em(18px); }
 
 h5 {
   font-size: 1.25rem; }
@@ -442,7 +442,7 @@ h6 {
   font-size: 1.75rem; }
 
 .h4, .heading-title {
-  font-size: 1.5rem; }
+  font-size: em(18px); }
 
 .h5 {
   font-size: 1.25rem; }
@@ -5157,10 +5157,6 @@ a.button-primary {
     text-transform: uppercase;
     padding: 0.6875em 1.0625em; }
 
-.h4, .heading-title {
-  font-size: 1.125em;
-  font-weight: 700; }
-
 .btn-primary {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
@@ -5454,9 +5450,6 @@ body#checkout {
       text-align: center; }
     body#checkout section.checkout-step .payment-option label {
       display: table-cell; }
-    body#checkout section.checkout-step .sub-link {
-      margin-left: 65px;
-      display: inline-block; }
     body#checkout section.checkout-step .step-number {
       display: inline-block;
       padding: 0.625em; }
@@ -5521,6 +5514,16 @@ body#checkout {
       margin: 0 1.25em; }
     body#checkout section.checkout-step .carrier-price {
       font-weight: 700; }
+    body#checkout section.checkout-step #customer-form {
+      margin-left: 0.3125em; }
+      body#checkout section.checkout-step #customer-form .form-control-label {
+        text-align: left; }
+      body#checkout section.checkout-step #customer-form .radio-inline {
+        padding: 0; }
+      body#checkout section.checkout-step #customer-form .create-account {
+        font-size: 0.875em; }
+    body#checkout section.checkout-step .sign-in {
+      font-size: 0.875em; }
   body#checkout .products,
   body#checkout .shipping,
   body#checkout .cart-summary-totals {
@@ -5552,12 +5555,14 @@ body#checkout {
       flex-wrap: wrap; }
       body#checkout .additional-information dl dt {
         font-weight: normal; }
-      body#checkout .additional-information dl dt, body#checkout .additional-information dl dd {
+      body#checkout .additional-information dl dt,
+      body#checkout .additional-information dl dd {
         flex: 0 0 45%;
         background: #ebebeb;
         padding: 0.625em;
         margin: 0.125em; }
-        body#checkout .additional-information dl dt:nth-of-type(even), body#checkout .additional-information dl dd:nth-of-type(even) {
+        body#checkout .additional-information dl dt:nth-of-type(even),
+        body#checkout .additional-information dl dd:nth-of-type(even) {
           background: #f6f6f6; }
   body#checkout .condition-label {
     margin-left: 2.5em;
@@ -5829,57 +5834,60 @@ body#checkout {
     .carousel .carousel-control.right, .carousel .carousel-control.left {
       background: none; }
 
-#products .products {
+#products .products, .featured-products .products {
   -js-display: flex;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start; }
 
-#products .product-thumbnail {
+#products .product-thumbnail, .featured-products .product-thumbnail {
   display: block; }
 
-#products .product-title a {
+#products .product-title a, .featured-products .product-title a {
   color: #acaaa6;
   font-size: 14px;
   text-decoration: none;
   text-align: center;
   font-weight: 400; }
 
-#products .thumbnail-container {
+#products .thumbnail-container, .featured-products .thumbnail-container {
   margin-bottom: 1.5625em;
   height: 318px;
   width: 257px;
   background: white;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05); }
-  #products .thumbnail-container:hover {
+  #products .thumbnail-container:hover, .featured-products .thumbnail-container:hover {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
-    #products .thumbnail-container:hover .highlighted-informations {
+    #products .thumbnail-container:hover .highlighted-informations, .featured-products .thumbnail-container:hover .highlighted-informations {
       bottom: 5.625em; }
-      #products .thumbnail-container:hover .highlighted-informations::after {
+      #products .thumbnail-container:hover .highlighted-informations::after, .featured-products .thumbnail-container:hover .highlighted-informations::after {
         opacity: 1; }
 
-#products .products-section-title {
+#products .products-section-title, .featured-products .products-section-title {
   text-align: center;
   font-size: 1.375em;
   font-weight: 700;
   margin: 3.125em 0 2.5em;
   color: #414141; }
 
-#products .product-title {
+#products .product-title, .featured-products .product-title {
   text-align: center; }
 
 #products .product-description-short,
 #products .product-list-actions,
 #products .discount,
-#products .product-availability {
+#products .product-availability, .featured-products .product-description-short,
+.featured-products .product-list-actions,
+.featured-products .discount,
+.featured-products .product-availability {
   display: none; }
 
-#products .product-price-and-shipping {
+#products .product-price-and-shipping, .featured-products .product-price-and-shipping {
   color: #414141;
   font-weight: 700;
   text-align: center; }
 
-#products .variant-links {
+#products .variant-links, .featured-products .variant-links {
   background: #ebebeb;
   position: relative;
   text-align: center;
@@ -5888,7 +5896,7 @@ body#checkout {
   padding-top: 0.3125em;
   min-height: 2.5em; }
 
-#products .highlighted-informations {
+#products .highlighted-informations, .featured-products .highlighted-informations {
   position: absolute;
   bottom: 1.25em;
   z-index: 0;
@@ -5901,20 +5909,20 @@ body#checkout {
   -webkit-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   -moz-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1); }
-  #products .highlighted-informations .quick-view {
+  #products .highlighted-informations .quick-view, .featured-products .highlighted-informations .quick-view {
     color: #878787;
     font-size: 1em; }
-    #products .highlighted-informations .quick-view:hover {
+    #products .highlighted-informations .quick-view:hover, .featured-products .highlighted-informations .quick-view:hover {
       color: #2fb5d2; }
 
-#products .highlighted-informations::after {
+#products .highlighted-informations::after, .featured-products .highlighted-informations::after {
   box-shadow: 1px 1px 16px 2px rgba(0, 0, 0, 0.1);
   opacity: 0;
   -webkit-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   -moz-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1); }
 
-#products .product-description {
+#products .product-description, .featured-products .product-description {
   position: absolute;
   z-index: 1;
   background: white;
@@ -5923,13 +5931,14 @@ body#checkout {
   height: 70px;
   box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2); }
 
-#products img {
+#products img, .featured-products img {
   margin-left: 4px; }
 
-#products .product-miniature {
+#products .product-miniature, .featured-products .product-miniature {
   margin: 0 0.625em; }
   #products .product-miniature .product-labels .new,
-  #products .product-miniature .discount-percentage {
+  #products .product-miniature .discount-percentage, .featured-products .product-miniature .product-labels .new,
+  .featured-products .product-miniature .discount-percentage {
     display: block;
     position: absolute;
     top: -15.125em;
@@ -5943,27 +5952,28 @@ body#checkout {
     font-weight: 600;
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
     #products .product-miniature .product-labels .new.discount-percentage,
-    #products .product-miniature .discount-percentage.discount-percentage {
+    #products .product-miniature .discount-percentage.discount-percentage, .featured-products .product-miniature .product-labels .new.discount-percentage,
+    .featured-products .product-miniature .discount-percentage.discount-percentage {
       z-index: 2;
       background: #f39d72; }
 
-#products .comments_note {
+#products .comments_note, .featured-products .comments_note {
   text-align: center;
   color: #acaaa6; }
 
-#products .regular-price {
+#products .regular-price, .featured-products .regular-price {
   color: #acaaa6;
   text-decoration: line-through;
   font-size: 0.875em; }
 
-#products .count {
+#products .count, .featured-products .count {
   color: #878787;
   font-weight: 700;
   position: relative;
   bottom: 0.5em;
   font-size: 1.125em; }
 
-#products .all-product-link {
+#products .all-product-link, .featured-products .all-product-link {
   clear: both;
   color: #878787;
   font-weight: 700;

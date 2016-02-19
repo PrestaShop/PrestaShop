@@ -11,7 +11,7 @@
     {/block}
   </section>
 
-  <footer class="form-footer text-xs-center">
+  <footer class="form-footer clearfix">
     <input type="hidden" name="submitCreate" value="1">
     {block "form_buttons"}
       <button type="submit" class="form-control-submit">

@@ -46,10 +46,7 @@ a {
     }
   }
 }
-.h4 {
-  font-size: em(18px);
-  font-weight: 700;
-}
+
 .btn-primary {
   @include box-shadow;
   text-transform: uppercase;

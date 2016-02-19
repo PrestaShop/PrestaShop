@@ -1,18 +1,18 @@
 {extends "customer/_partials/customer-form.tpl"}
 
 {block "form_field"}
-  {if $field.name === 'password' and $guest_allowed}
-    <div>
-      <p class="col-md-11 col-md-offset-1 _margin-top-medium">{l s='Choose a password to create an account and save time on your next order (optional)'}</p>
+  <div>
+    {if $field.name === 'password' and $guest_allowed}
+        <p class="create-account">{l s='Create an account and save time on your next order (optional)'}</p>
+        {$smarty.block.parent}
+    {else}
       {$smarty.block.parent}
-    </div>
-  {else}
-    {$smarty.block.parent}
-  {/if}
+    {/if}
+  </div>
 {/block}
 
 {block "form_buttons"}
-    <button type="submit" class="continue _margin-top-medium form-control-submit center-block" name="continue" value="1">
+    <button type="submit" class="continue form-control-submit pull-xs-right" name="continue" value="1">
         {l s='Continue'}
     </button>
 {/block}
