@@ -56,6 +56,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['reduction'] = false;
         $this->product['on_sale'] = false;
         $this->product['new'] = false;
+        $this->product['pack'] = false;
         $this->language = new Language;
     }
 
