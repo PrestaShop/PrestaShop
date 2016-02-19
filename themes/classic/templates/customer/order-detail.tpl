@@ -23,7 +23,7 @@
           <li><strong>{l s='Payment method'}</strong> {$order.details.payment}</li>
 
           {if $order.details.url_to_invoice}
-            <li><a href="{$order.data.url_to_invoice}">{l s='Download your invoice as a PDF file.'}</a></li>
+            <li><a href="{$order.details.url_to_invoice}">{l s='Download your invoice as a PDF file.'}</a></li>
           {/if}
 
           {if $order.details.recyclable}
