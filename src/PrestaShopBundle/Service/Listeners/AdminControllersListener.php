@@ -34,10 +34,11 @@ class AdminControllersListener
     protected $request;
     protected $router;
     protected $renderer;
-    protected $response;
+    protected $translator;
 
-    public function __construct(Router $router, \Twig_Environment $twig)
+    public function __construct(Router $router, \Twig_Environment $twig, $translator)
     {
+        $this->translator = $translator;
         $this->router = $router;
         $this->renderer = $twig;
     }
@@ -72,6 +73,7 @@ class AdminControllersListener
                 if ($currentRouteName === $tabData['route']) {
                     $tabData['isCurrent'] = true;
                 }
+                $tabData['title'] = $this->translator->trans($tabData['title'], [], 'AdminControllersListener');
                 $tabData['route'] = $this->router->generate($tabData['route']);
                 $tabDataContent[] = $this->renderer->render(
                     'PrestaShopBundle:Admin/Common/_partials:_header_tab.html.twig',

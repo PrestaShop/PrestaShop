@@ -88,5 +88,6 @@ services:
         arguments:
             - "@router"
             - "@twig"
+            - "@prestashop.adapter.translator"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
