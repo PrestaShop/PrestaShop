@@ -30,8 +30,9 @@ class AdminLegacyLayoutControllerCore extends AdminController
     private $headerToolbarBtn = array();
     private $title;
     private $showContentHeader = true;
+    private $headerTabContent = '';
 
-    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true)
+    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '')
     {
         parent::__construct($controllerName, 'new-theme');
 
@@ -42,6 +43,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->id = Tab::getIdFromClassName($this->controller_name);
         $this->headerToolbarBtn = $headerToolbarBtn;
         $this->showContentHeader = $showContentHeader;
+        $this->headerTabContent = $headerTabContent;
     }
 
     public function setMedia()
@@ -83,6 +85,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
         $this->context->smarty->assign(array(
             'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
+            'headerTabContent' => $this->headerTabContent,
             'content' => '{$content}', //replace content by original smarty tag var
         ));
     }

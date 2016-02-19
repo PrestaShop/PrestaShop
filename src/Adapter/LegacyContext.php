@@ -129,9 +129,9 @@ class LegacyContext
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true)
+    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '')
     {
-        $originCtrl = new \AdminLegacyLayoutControllerCore($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader);
+        $originCtrl = new \AdminLegacyLayoutControllerCore($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader, $headerTabContent);
         $originCtrl->run();
 
         return $originCtrl->outPutHtml;
