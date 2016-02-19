@@ -16430,8 +16430,10 @@
 	  (0, _jquery2['default'])('body').on('change', '.js-address-selector input', selectAddress);
 	
 	  (0, _jquery2['default'])('body').on('click', '.checkout-step.-reachable h1', function (event) {
-	    (0, _jquery2['default'])('.-js-current, .-current').removeClass('-js-current -current');
-	    (0, _jquery2['default'])(event.target).closest('.checkout-step').toggleClass('-js-current');
+	    if ((0, _jquery2['default'])('.js-cancel-adress').length === 0) {
+	      (0, _jquery2['default'])('.-js-current, .-current').removeClass('-js-current -current');
+	      (0, _jquery2['default'])(event.target).closest('.checkout-step').toggleClass('-js-current');
+	    }
 	  });
 	
 	  collapsePaymentOptions();

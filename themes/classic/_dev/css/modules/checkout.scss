@@ -142,7 +142,7 @@ body#checkout {
       margin-bottom: em(10px);
     }
     .address {
-      margin-left: em(62px);
+      margin-left: em(50px);
       font-weight: normal;
     }
     .radio-block {
@@ -197,8 +197,9 @@ body#checkout {
     .carrier-price {
       font-weight: 700;
     }
-    #customer-form {
+    #customer-form,#login-form {
       margin-left: em(5px);
+      margin-top: em(25px);
       .form-control-label {
         text-align: left;
       }
@@ -211,6 +212,9 @@ body#checkout {
     }
     .sign-in{
       font-size: em(14px);
+    }
+    .forgot-password{
+      margin-left: em(230px);
     }
   }
   .products,

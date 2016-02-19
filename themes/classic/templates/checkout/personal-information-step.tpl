@@ -5,7 +5,7 @@
     <p class="identity">{l s='Connected as %1$s %2$s.' sprintf=[$customer.firstname, $customer.lastname]}</p>
     <p>{l s='Not you? [1]Log out[/1]' tags=["<a href='{$urls.actions.logout}'>"]}</p>
   {elseif $show_login_form}
-    <a href="{$urls.pages.order}">{l s='No account?'}</a>
+    <a href="{$urls.pages.order}">{l s='Don\'t have an account?'}</a>
     {render file='checkout/_partials/login-form.tpl' ui=$login_form}
   {else}
     <p class="sign-in">{l s='Have an account?'}<a data-link-action="show-login-form" href="{$urls.pages.order_login}"> {l s='Sign in'}</a></p>

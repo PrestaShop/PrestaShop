@@ -5157,6 +5157,10 @@ a.button-primary {
     text-transform: uppercase;
     padding: 0.6875em 1.0625em; }
 
+.h4, .heading-title {
+  font-size: 1.125em;
+  font-weight: 700; }
+
 .btn-primary {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
@@ -5470,7 +5474,7 @@ body#checkout {
       font-size: 1.125em;
       margin-bottom: 0.625em; }
     body#checkout section.checkout-step .address {
-      margin-left: 3.875em;
+      margin-left: 3.125em;
       font-weight: normal; }
     body#checkout section.checkout-step .radio-block {
       padding: 0.9375em;
@@ -5514,16 +5518,19 @@ body#checkout {
       margin: 0 1.25em; }
     body#checkout section.checkout-step .carrier-price {
       font-weight: 700; }
-    body#checkout section.checkout-step #customer-form {
-      margin-left: 0.3125em; }
-      body#checkout section.checkout-step #customer-form .form-control-label {
+    body#checkout section.checkout-step #customer-form, body#checkout section.checkout-step #login-form {
+      margin-left: 0.3125em;
+      margin-top: 1.5625em; }
+      body#checkout section.checkout-step #customer-form .form-control-label, body#checkout section.checkout-step #login-form .form-control-label {
         text-align: left; }
-      body#checkout section.checkout-step #customer-form .radio-inline {
+      body#checkout section.checkout-step #customer-form .radio-inline, body#checkout section.checkout-step #login-form .radio-inline {
         padding: 0; }
-      body#checkout section.checkout-step #customer-form .create-account {
+      body#checkout section.checkout-step #customer-form .create-account, body#checkout section.checkout-step #login-form .create-account {
         font-size: 0.875em; }
     body#checkout section.checkout-step .sign-in {
       font-size: 0.875em; }
+    body#checkout section.checkout-step .forgot-password {
+      margin-left: 14.375em; }
   body#checkout .products,
   body#checkout .shipping,
   body#checkout .cart-summary-totals {
@@ -6281,7 +6288,6 @@ body#checkout {
       background: white; }
     #product-modal .modal-content .modal-body .image-caption {
       background: white;
-      margin-left: 4px;
       width: 800px;
       padding: 0.625em 1.25em;
       border-top: #ebebeb 1px solid; }

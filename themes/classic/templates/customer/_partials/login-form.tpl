@@ -12,9 +12,14 @@
         {/block}
       {/foreach}
     {/block}
+    <div class="forgot-password">
+      <a href="{$urls.pages.password}" rel="nofollow">
+        {l s='Forgot your password?'}
+      </a>
+    </div>
   </section>
 
-  <footer class="form-footer text-xs-center">
+  <footer class="form-footer text-xs-center clearfix">
     <input type="hidden" name="submitLogin" value="1">
     {block name='form_buttons'}
       <button type="submit" class="form-control-submit">
@@ -22,12 +27,4 @@
       </button>
     {/block}
   </footer>
-
-    <div class="forgot-password">
-      <a href="{$urls.pages.password}" rel="nofollow">
-        {l s='Forgot your password?'}
-      </a>
-    </div>
-
-
 </form>
