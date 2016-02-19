@@ -211,7 +211,6 @@ class ModuleController extends FrameworkBundleAdminController
      */
     public function importModuleAction(Request $request)
     {
-
         try {
             $file_uploaded = $request->files->get('file_uploaded');
             $file_uploaded_name = $file_uploaded->getClientOriginalName();
@@ -294,28 +293,10 @@ class ModuleController extends FrameworkBundleAdminController
 
         // toolbarButtons
         $toolbarButtons = array();
-        $toolbarButtons['catalog_module'] = array(
-            'href' => $this->generateUrl('admin_module_catalog'),
-            'desc' => $translator->trans('[TEMP] Modules catalog', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Catalog', array(), get_class($this)),
-        );
-        $toolbarButtons['manage_module'] = array(
-            'href' => $this->generateUrl('admin_module_manage'),
-            'desc' => $translator->trans('[TEMP] Manage my modules', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Manage', array(), get_class($this)),
-        );
-        $toolbarButtons['notifications_module'] = array(
-            'href' => $this->generateUrl('admin_module_notification'),
-            'desc' => $translator->trans('[TEMP] Module notifications', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Notifications', array(), get_class($this)),
-        );
         $toolbarButtons['add_module'] = array(
             'href' => '#',
             'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'process-icon-new',
+            'icon' => 'cloud_upload',
             'help' => $translator->trans('Add a module', array(), get_class($this)),
         );
         $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
@@ -505,14 +486,14 @@ class ModuleController extends FrameworkBundleAdminController
             $addonsConnect = [
                 'href' => $this->generateUrl('admin_addons_logout'),
                 'desc' => $addonsEmail['username_addons'],
-                'icon' => 'icon-chain-broken',
+                'icon' => 'exit_to_app',
                 'help' => $translator->trans('Synchronized with Addons Marketplace!', array(), get_class($this))
             ];
         } else {
             $addonsConnect = [
                 'href' => '#',
                 'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-                'icon' => 'icon-chain-broken',
+                'icon' => 'vpn_key',
                 'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this))
             ];
         }

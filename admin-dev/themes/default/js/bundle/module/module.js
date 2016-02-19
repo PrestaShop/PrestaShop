@@ -120,7 +120,7 @@ var AdminModule = function () {
                 dataType: 'json',
                 data: $(this).serialize(),
                 beforeSend: function() {
-                    $(_that.addonsLoginButtonSelector).show()
+                    $(_that.addonsLoginButtonSelector).show();
                     $("button.btn[type='submit']", _that.addonsConnectForm).hide();
                 }
             }).done(function (response) {
