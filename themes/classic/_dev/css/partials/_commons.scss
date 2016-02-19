@@ -1,3 +1,6 @@
+html,body{
+  height: 100%;
+}
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
@@ -158,10 +161,6 @@ label {
   }
 }
 
-input[type="radio"] {
-  opacity: 0;
-}
-
 .custom-radio {
   display: inline-block;
   position: relative;
@@ -172,19 +171,19 @@ input[type="radio"] {
   border-radius: 50%;
   border: $gray 2px solid;
   background: white;
-  margin-right:em(20px);
-}
-input[type="radio"] + .custom-radio {
-  background-color: white;
-}
-input[type="radio"]:checked + .custom-radio::after{
-  content:"";
-  display: block;
-  background-color: $brand-primary;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  position: absolute;
-  left:3px;
-  top:3px;
+  margin-right: em(20px);
+  input[type="radio"] {
+    opacity: 0;
+    cursor: pointer;
+  }
+  input[type="radio"]:checked + span{
+    display: block;
+    background-color: $brand-primary;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+  }
 }

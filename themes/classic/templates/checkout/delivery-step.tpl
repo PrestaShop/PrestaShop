@@ -14,13 +14,17 @@
               {foreach from=$delivery_options item=carrier key=carrier_id}
                 <div>
                   <div class="delivery-option">
-                    <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if} />
-                    <span class="custom-radio"></span>
-                    <label for="delivery_option_{$carrier.id}">
-                      <span>{$carrier.label}</span>
+                    <span class="custom-radio pull-xs-left">
+                      <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if} />
+                      <span></span>
+                    </span>
+                    <label for="delivery_option_{$carrier.id}" class="delivery-option-2">
                       {if $carrier.logo}
                         <img src="{$carrier.logo}" alt="{$carrier.name}" />
                       {/if}
+                      <span class="carrier-name">{$carrier.name}</span>
+                      <span class="carrier-delay">{$carrier.delay}</span>
+                      <span class="carrier-price">{$carrier.price}</span>
                     </label>
                   </div>
                 </div>
