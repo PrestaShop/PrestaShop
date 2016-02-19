@@ -1,6 +1,6 @@
 <div class="blockcart cart-preview {if $cart.total.amount > 0}active{/if}" data-refresh-url="{$refresh_url}">
   <div class="header">
-    <a rel="nofollow" href="{$cart_url}" title="{l s='cart'}">
+    <a rel="nofollow" href="{if $cart.total.amount > 0}{$cart_url}{else}#{/if}" title="{l s='cart'}">
       <i class="material-icons shopping-cart">shopping_cart</i>
       <span>{l s='Cart' mod='blockcart'}</span>
       <span class="cart-products-count">({$cart.products_count})</span>

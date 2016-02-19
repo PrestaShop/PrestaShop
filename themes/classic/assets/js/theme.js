@@ -16429,8 +16429,12 @@
 	  (0, _jquery2['default'])('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
 	  (0, _jquery2['default'])('body').on('change', '.js-address-selector input', selectAddress);
 	
+	  if ((0, _jquery2['default'])('.js-cancel-address').length !== 0) {
+	    (0, _jquery2['default'])('.checkout-step:not(.-js-current) .step-title').addClass('not-allowed');
+	  }
+	
 	  (0, _jquery2['default'])('body').on('click', '.checkout-step.-reachable h1', function (event) {
-	    if ((0, _jquery2['default'])('.js-cancel-adress').length === 0) {
+	    if ((0, _jquery2['default'])('.js-cancel-address').length === 0) {
 	      (0, _jquery2['default'])('.-js-current, .-current').removeClass('-js-current -current');
 	      (0, _jquery2['default'])(event.target).closest('.checkout-step').toggleClass('-js-current');
 	    }

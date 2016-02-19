@@ -22,16 +22,16 @@
 
 {block name='form_buttons'}
   {if !$form_has_continue_button}
-    <a lass="js-cancel-adress" href="?cancelAddress={$type}">{l s='Cancel'}</a>
-    <button type="submit" class="form-control-submit">{l s='Save Address'}</button>
+    <button type="submit" class="btn btn-primary pull-xs-right">{l s='Save'}</button>
+    <a class="js-cancel-address cancel-address pull-xs-right" href="?cancelAddress={$type}">{l s='Cancel'}</a>
   {else}
-    {if $customer.addresses|count > 0}
-      <a class="js-cancel-adress" href="?cancelAddress={$type}">{l s='Cancel'}</a>
-    {/if}
     <form>
-      <button type="submit" class="continue form-control-submit" name="confirm-addresses" value="1">
+      <button type="submit" class="continue btn btn-primary pull-xs-right" name="confirm-addresses" value="1">
           {l s='Continue'}
       </button>
+      {if $customer.addresses|count > 0}
+        <a class="js-cancel-address cancel-address pull-xs-right" href="?cancelAddress={$type}">{l s='Cancel'}</a>
+      {/if}
     </form>
   {/if}
 {/block}

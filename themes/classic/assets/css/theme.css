@@ -5404,6 +5404,9 @@ body#checkout {
       font-weight: normal; }
       body#checkout section.checkout-step .step-edit .edit {
         font-size: 1em; }
+    body#checkout section.checkout-step .not-allowed {
+      cursor: not-allowed;
+      opacity: 0.5; }
     body#checkout section.checkout-step .content,
     body#checkout section.checkout-step .step-edit,
     body#checkout section.checkout-step .done {
@@ -5518,14 +5521,26 @@ body#checkout {
       margin: 0 1.25em; }
     body#checkout section.checkout-step .carrier-price {
       font-weight: 700; }
-    body#checkout section.checkout-step #customer-form, body#checkout section.checkout-step #login-form {
+    body#checkout section.checkout-step #customer-form,
+    body#checkout section.checkout-step #login-form,
+    body#checkout section.checkout-step #invoice-address,
+    body#checkout section.checkout-step #delivery-address {
       margin-left: 0.3125em;
       margin-top: 1.5625em; }
-      body#checkout section.checkout-step #customer-form .form-control-label, body#checkout section.checkout-step #login-form .form-control-label {
+      body#checkout section.checkout-step #customer-form .form-control-label,
+      body#checkout section.checkout-step #login-form .form-control-label,
+      body#checkout section.checkout-step #invoice-address .form-control-label,
+      body#checkout section.checkout-step #delivery-address .form-control-label {
         text-align: left; }
-      body#checkout section.checkout-step #customer-form .radio-inline, body#checkout section.checkout-step #login-form .radio-inline {
+      body#checkout section.checkout-step #customer-form .radio-inline,
+      body#checkout section.checkout-step #login-form .radio-inline,
+      body#checkout section.checkout-step #invoice-address .radio-inline,
+      body#checkout section.checkout-step #delivery-address .radio-inline {
         padding: 0; }
-      body#checkout section.checkout-step #customer-form .create-account, body#checkout section.checkout-step #login-form .create-account {
+      body#checkout section.checkout-step #customer-form .create-account,
+      body#checkout section.checkout-step #login-form .create-account,
+      body#checkout section.checkout-step #invoice-address .create-account,
+      body#checkout section.checkout-step #delivery-address .create-account {
         font-size: 0.875em; }
     body#checkout section.checkout-step .sign-in {
       font-size: 0.875em; }
@@ -5574,6 +5589,11 @@ body#checkout {
   body#checkout .condition-label {
     margin-left: 2.5em;
     margin-top: 0.625em; }
+  body#checkout .cancel-address {
+    margin: 0.625em;
+    display: block;
+    color: #878787;
+    text-decoration: underline; }
   body#checkout #cart-summary-product-list {
     font-size: 0.875em; }
     body#checkout #cart-summary-product-list img {

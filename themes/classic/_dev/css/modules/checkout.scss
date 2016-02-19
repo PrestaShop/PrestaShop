@@ -40,6 +40,10 @@ body#checkout {
         font-size: 1em;
       }
     }
+    .not-allowed {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
     .content,
     .step-edit,
     .done {
@@ -197,23 +201,26 @@ body#checkout {
     .carrier-price {
       font-weight: 700;
     }
-    #customer-form,#login-form {
+    #customer-form,
+    #login-form,
+    #invoice-address,
+    #delivery-address {
       margin-left: em(5px);
       margin-top: em(25px);
       .form-control-label {
         text-align: left;
       }
-      .radio-inline{
+      .radio-inline {
         padding: 0;
       }
-      .create-account{
+      .create-account {
         font-size: em(14px);
       }
     }
-    .sign-in{
+    .sign-in {
       font-size: em(14px);
     }
-    .forgot-password{
+    .forgot-password {
       margin-left: em(230px);
     }
   }
@@ -266,6 +273,12 @@ body#checkout {
   .condition-label {
     margin-left: em(40px);
     margin-top: em(10px);
+  }
+  .cancel-address {
+    margin: em(10px);
+    display: block;
+    color: $gray-dark;
+    text-decoration: underline;
   }
   #cart-summary-product-list {
     font-size: em(14px);
