@@ -223,6 +223,8 @@
               {/block}
             </div>
 
+            {hook h='displayReassurance'}
+
             <div class="tabs _margin-top-large">
               <ul class="nav nav-tabs">
                 <li class="nav-item">

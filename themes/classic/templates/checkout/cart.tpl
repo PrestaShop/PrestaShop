@@ -61,7 +61,7 @@
 
         </div>
 
-        {hook h='displayShoppingCartReassurance'}
+        {hook h='displayReassurance'}
 
       </div>
 
