@@ -56,6 +56,12 @@ class ThemeValidator
             'author.name',
             'meta.compatibility.from',
             'meta.available_layouts',
+            'global_settings.image_types.cart_default',
+            'global_settings.image_types.small_default',
+            'global_settings.image_types.medium_default',
+            'global_settings.image_types.large_default',
+            'global_settings.image_types.home_default',
+            'global_settings.image_types.category_default',
         ];
     }
 

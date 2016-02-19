@@ -84,6 +84,19 @@ global_settings:
               - category
               - index
 
+  image_types:
+    # When theme will be enabled, all image types will be removed
+    # Template must declare their image type.
+    product_listing:
+      width: 220
+      height: 220
+      scope: [products, categories, manufacturers, suppliers]
+    large_banner:
+      width: 960
+      height: 400
+      scope: [categories]
+
+
 theme_settings:
   # All the settings below can be changed through
   # an interface in the theme's administration panel,

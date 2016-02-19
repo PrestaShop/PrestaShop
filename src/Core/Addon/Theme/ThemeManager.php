@@ -27,6 +27,8 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
+use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use Symfony\Component\Filesystem\Filesystem;
@@ -56,7 +58,8 @@ class ThemeManager implements AddonManagerInterface
         Filesystem $filesystem,
         Finder $finder,
         HookConfigurator $hookConfigurator,
-        ThemeRepository $themeRepository)
+        ThemeRepository $themeRepository,
+        ImageTypeRepository $imageTypeRepository)
     {
         $this->shop = $shop;
         $this->appConfiguration = $configuration;
@@ -66,6 +69,7 @@ class ThemeManager implements AddonManagerInterface
         $this->finder = $finder;
         $this->hookConfigurator = $hookConfigurator;
         $this->themeRepository = $themeRepository;
+        $this->imageTypeRepository = $imageTypeRepository;
     }
 
     /**
@@ -147,11 +151,11 @@ class ThemeManager implements AddonManagerInterface
         $this->disable($this->shop->theme_name);
 
         $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
-            ->doApplyConfiguration($theme->get('global_settings.configuration', []))
-            ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
-            ->doEnableModules($theme->get('global_settings.modules.to_enable', []))
-            ->doHookModules($theme->get('global_settings.hooks.modules_to_hook', []))
-        ;
+                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
+                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
+                ->doEnableModules($theme->get('global_settings.modules.to_enable', []))
+                ->doApplyImageTypes($theme->get('global_settings.image_types'))
+                ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
         $theme->onEnable();
 
@@ -221,6 +225,29 @@ class ThemeManager implements AddonManagerInterface
     {
         $this->hookConfigurator->setHooksConfiguration($hooks);
         return $this;
+    }
+
+    private function doApplyImageTypes(array $types)
+    {
+        $this->imageTypeRepository->setTypes($types);
+        return $this;
+    }
+
+    private function getThemesOnDisk()
+    {
+        $suffix = 'preview.png';
+        $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/'.$suffix);
+
+        $themes = [];
+        foreach ($all_theme_dirs as $dir) {
+            $name = basename(substr($dir, 0, -strlen($suffix)));
+            $theme = $this->getInstanceByName($name);
+            if (isset($theme)) {
+                $themes[$name] = $theme;
+            }
+        }
+
+        return $themes;
     }
 
     private function installFromZip($source)

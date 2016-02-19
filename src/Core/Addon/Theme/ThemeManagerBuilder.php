@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
+use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Filesystem\Filesystem;
@@ -62,7 +63,11 @@ class ThemeManagerBuilder
                     $this->db
                 )
             ),
-            $this->buildRepository($this->context->shop)
+            $this->buildRepository($this->context->shop),
+            new ImageTypeRepository(
+                $this->context->shop,
+                $this->db
+            )
         );
     }
 

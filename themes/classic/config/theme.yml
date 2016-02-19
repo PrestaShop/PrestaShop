@@ -63,6 +63,32 @@ global_settings:
       displayReassurance:
         - blockreassurance
 
+  image_types:
+    cart_default:
+      width: 80
+      height: 80
+      scope: [products]
+    small_default:
+      width: 98
+      height: 98
+      scope: [products, manufacturers, suppliers]
+    medium_default:
+      width: 125
+      height: 125
+      scope: [products, categories, manufacturers, suppliers, stores]
+    home_default:
+      width: 250
+      height: 250
+      scope: [products]
+    large_default:
+      width: 458
+      height: 458
+      scope: [products, manufacturers, suppliers]
+    category_default:
+      width: 870
+      height: 217
+      scope: [categories]
+
 theme_settings:
   default_layout: layout-full-width
   layouts:

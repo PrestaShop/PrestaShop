@@ -3,7 +3,7 @@
     {block name='product_thumbnail'}
       <a href="{$product.url}" class="thumbnail product-thumbnail">
         <img
-          src = "{$product.cover.medium.url}"
+          src = "{$product.cover.bySize.home_default.url}"
           alt = "{$product.cover.legend}"
           data-full-size-image-url = "{$product.cover.large.url}"
         >
