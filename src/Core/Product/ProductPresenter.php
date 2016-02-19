@@ -232,6 +232,13 @@ class ProductPresenter
             ];
         }
 
+        if ($product['pack']) {
+            $labels['pack'] = [
+                'type' => 'pack',
+                'label' => $this->translator->trans('Pack', [], 'Product')
+            ];
+        }
+
         $presentedProduct['labels'] = $labels;
 
         return $presentedProduct;
