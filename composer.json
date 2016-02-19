@@ -164,8 +164,8 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
-    "git-hook-install": "bash tools/contrib/install.sh",
-    "git-hook-uninstall": "bash tools/contrib/uninstall.sh",
+    "git-hook-install": "php tools/contrib/install.php",
+    "git-hook-uninstall": "php tools/contrib/uninstall.php",
     "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
     "phpunit-sf": "php bin/phpunit -c admin-dev/",
     "phpdoc-sf": "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d src -t docs/phpdoc-sf --template=\"responsive-twig\""
