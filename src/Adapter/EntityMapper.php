@@ -40,31 +40,34 @@ class EntityMapper
     public function load($id, $id_lang, $entity, $entity_defs, $id_shop, $should_cache_objects)
     {
         // Load object from database if object id is present
-        $cache_id = 'objectmodel_' . $entity_defs['classname'] . '_' . (int)$id . '_' . (int)$id_shop . '_' . (int)$id_lang;
+        $id = (int)$id;
+        $id_shop = (int)$id_shop;
+        $id_lang = (int)$id_lang;
+        $cache_id = 'objectmodel_' . $entity_defs['classname'] . '_' . $id . '_' . $id_shop . '_' . $id_lang;
         if (!$should_cache_objects || !\Cache::isStored($cache_id)) {
             $sql = new \DbQuery();
             $sql->from($entity_defs['table'], 'a');
-            $sql->where('a.`' . bqSQL($entity_defs['primary']) . '` = ' . (int)$id);
+            $sql->where('a.`' . bqSQL($entity_defs['primary']) . '` = ' . $id);
 
             // Get lang informations
             if ($id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
-                $sql->leftJoin($entity_defs['table'] . '_lang', 'b', 'a.`' . bqSQL($entity_defs['primary']) . '` = b.`' . bqSQL($entity_defs['primary']) . '` AND b.`id_lang` = ' . (int)$id_lang);
+                $sql->leftJoin($entity_defs['table'] . '_lang', 'b', 'a.`' . bqSQL($entity_defs['primary']) . '` = b.`' . bqSQL($entity_defs['primary']) . '` AND b.`id_lang` = ' . $id_lang);
                 if ($id_shop && !empty($entity_defs['multilang_shop'])) {
-                    $sql->where('b.`id_shop` = ' . (int)$id_shop);
+                    $sql->where('b.`id_shop` = ' . $id_shop);
                 }
             }
 
             // Get shop informations
             if (\ShopCore::isTableAssociated($entity_defs['table'])) {
-                $sql->leftJoin($entity_defs['table'] . '_shop', 'c', 'a.`' . bqSQL($entity_defs['primary']) . '` = c.`' . bqSQL($entity_defs['primary']) . '` AND c.`id_shop` = ' . (int)$id_shop);
+                $sql->leftJoin($entity_defs['table'] . '_shop', 'c', 'a.`' . bqSQL($entity_defs['primary']) . '` = c.`' . bqSQL($entity_defs['primary']) . '` AND c.`id_shop` = ' . $id_shop);
             }
 
             if ($object_datas = \Db::getInstance()->getRow($sql)) {
                 if (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
                     $sql = 'SELECT *
 							FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
-							WHERE `' . bqSQL($entity_defs['primary']) . '` = ' . (int)$id
-                            .(($id_shop && $entity->isLangMultishop()) ? ' AND `id_shop` = ' . (int)$id_shop : '');
+							WHERE `' . bqSQL($entity_defs['primary']) . '` = ' . $id
+                            .(($id_shop && $entity->isLangMultishop()) ? ' AND `id_shop` = ' . $id_shop : '');
 
                     if ($object_datas_lang = \Db::getInstance()->executeS($sql)) {
                         foreach ($object_datas_lang as $row) {
@@ -80,7 +83,7 @@ class EntityMapper
                         }
                     }
                 }
-                $entity->id = (int)$id;
+                $entity->id = $id;
                 foreach ($object_datas as $key => $value) {
                     if (array_key_exists($key, $entity)) {
                         $entity->{$key} = $value;
@@ -95,7 +98,7 @@ class EntityMapper
         } else {
             $object_datas = \Cache::retrieve($cache_id);
             if ($object_datas) {
-                $entity->id = (int)$id;
+                $entity->id = $id;
                 foreach ($object_datas as $key => $value) {
                     $entity->{$key} = $value;
                 }
