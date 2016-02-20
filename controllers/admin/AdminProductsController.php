@@ -4925,12 +4925,13 @@ class AdminProductsControllerCore extends AdminController
                 if ($value === false) {
                     die(json_encode(array('error' =>  $this->l('Undefined value'))));
                 }
-                if ((int)$value != 0 && (int)$value != 1
-                    && (int)$value != 2 && (int)$value != 3) {
+                $value = (int)$value;
+                if ($value != 0 && $value != 1
+                    && $value != 2 && $value != 3) {
                     die(json_encode(array('error' =>  $this->l('Incorrect value'))));
                 }
-                if ($product->depends_on_stock && !Pack::allUsesAdvancedStockManagement($product->id) && ((int)$value == 1
-                    || (int)$value == 2 || ((int)$value == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 1 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))) {
+                if ($product->depends_on_stock && !Pack::allUsesAdvancedStockManagement($product->id) && ($value == 1
+                    || $value == 2 || ($value == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 1 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))) {
                     die(json_encode(array('error' => $this->l('You cannot use this stock management option because:').'<br />'.
                         $this->l('- advanced stock management is not enabled for these products').'<br />'.
                         $this->l('- advanced stock management is enabled for the pack'))));
@@ -5216,7 +5217,7 @@ class AdminProductsControllerCore extends AdminController
                 if (preg_match('/^legend_([0-9]+)/i', $key, $match)) {
                     foreach ($language_ids as $id_lang) {
                         if ($val && $id_lang == $match[1]) {
-                            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE '.($id_image ? 'id_image = '.(int)$id_image : 'EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int)$product->id.')').' AND id_lang = '.(int)$id_lang);
+                            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE '.($id_image ? 'id_image = '.$id_image : 'EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int)$product->id.')').' AND id_lang = '.(int)$id_lang);
                         }
                     }
                 }
