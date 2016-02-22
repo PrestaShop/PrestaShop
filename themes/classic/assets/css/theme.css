@@ -424,7 +424,7 @@ h3 {
   font-size: 1.75rem; }
 
 h4 {
-  font-size: em(18px); }
+  font-size: 1.5rem; }
 
 h5 {
   font-size: 1.25rem; }
@@ -442,7 +442,7 @@ h6 {
   font-size: 1.75rem; }
 
 .h4, .heading-title {
-  font-size: em(18px); }
+  font-size: 1.5rem; }
 
 .h5 {
   font-size: 1.25rem; }
@@ -5157,6 +5157,12 @@ a.button-primary {
     text-transform: uppercase;
     padding: 0.6875em 1.0625em; }
 
+.h1 {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #414141;
+  text-transform: uppercase; }
+
 .h4, .heading-title {
   font-size: 1.125em;
   font-weight: 700; }
@@ -6478,6 +6484,9 @@ li.product-label {
 .cart-grid-body > a.label {
   color: #414141; }
 
+.cart-grid-body hr {
+  margin-top: 0; }
+
 /** CART RIGHT **/
 .cart-grid-right > a.label {
   color: #414141; }
@@ -6517,12 +6526,12 @@ li.product-label {
 /** CONTENT BODY **/
 .product-line-grid-body > .product-line-info > .label {
   color: #414141;
-  font-size: 0.75em;
+  font-size: 0.9375em;
   font-weight: 800; }
 
 .product-line-grid-body > .product-line-info > .value {
   color: #414141;
-  font-size: 0.75em;
+  font-size: 0.9375em;
   font-weight: 400;
   padding: .25em .4em; }
 
@@ -6533,19 +6542,27 @@ li.product-label {
   color: #4cbb6c; }
 
 /** CONTENT LEFT **/
-.product-line-grid-right > .bootstrap-touchspin {
+.product-line-grid-right .bootstrap-touchspin {
   max-width: 4.6875em;
-  float: left !important; }
-  .product-line-grid-right > .bootstrap-touchspin > .form-control,
-  .product-line-grid-right > .bootstrap-touchspin > .input-group {
+  float: left !important;
+  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
+  .product-line-grid-right .bootstrap-touchspin > .form-control,
+  .product-line-grid-right .bootstrap-touchspin > .input-group {
     color: #414141;
     background-color: white;
     border: 1px solid #ccc;
     height: 2.25rem;
-    padding: .175rem .5rem; }
+    padding: .175rem .5rem;
+    width: 2.5em; }
+  .product-line-grid-right .bootstrap-touchspin > .input-group-btn-vertical {
+    width: auto; }
 
-.product-line-grid-right ._vertical-align {
+.product-line-grid-right .product-price, .product-line-grid-right .cart-line-product-actions {
   line-height: 40px; }
+  .product-line-grid-right .product-price .remove-from-cart, .product-line-grid-right .cart-line-product-actions .remove-from-cart {
+    color: #414141;
+    display: inline-block;
+    margin-top: 0.3125em; }
 
 .product-price {
   color: #414141; }

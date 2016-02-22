@@ -11,9 +11,9 @@
         <!-- cart products detailed -->
         <div class="card card-shadow">
           <div class="card-block">
-            <h1 class="card-title heading-title">{l s='Shopping Cart'}</h1>
+            <h1 class="h1">{l s='Shopping Cart'}</h1>
           </div>
-
+          <hr>
           {block name='cart_overview'}
             {include file='checkout/_partials/cart-detailed.tpl' cart=$cart}
           {/block}

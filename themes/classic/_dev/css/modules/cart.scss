@@ -30,6 +30,10 @@
   > a.label {
     color: $gray-darker;
   }
+
+  hr{
+    margin-top: 0;
+  }
 }
 
 /** CART RIGHT **/
@@ -73,18 +77,17 @@
 
 /** CONTENT BODY **/
 .product-line-grid-body {
-
   > .product-line-info {
 
     > .label {
       color: $gray-darker;
-      font-size: em(12px);
+      font-size: em(15px);
       font-weight: 800;
     }
 
     > .value {
       color: $gray-darker;
-      font-size: em(12px);
+      font-size: em(15px);
       font-weight: 400;
       padding: .25em .4em;
     }
@@ -102,22 +105,33 @@
 /** CONTENT LEFT **/
 .product-line-grid-right {
 
-  > .bootstrap-touchspin {
+   .bootstrap-touchspin {
     max-width: em(75px);
     @include pull-left;
-
+    @include box-shadow;
+    
     > .form-control,
     > .input-group {
       color: $gray-darker;
       background-color: white;
       border: $input-btn-border-width solid $input-border-color;
       height: $input-height;
-      padding: .175rem .5rem
+      padding: .175rem .5rem;
+      width:em(40px);
+    }
+
+    > .input-group-btn-vertical{
+      width: auto;
     }
   }
 
-  ._vertical-align {
+  .product-price, .cart-line-product-actions  {
     line-height: 40px;
+    .remove-from-cart{
+      color:$gray-darker;
+      display: inline-block;
+      margin-top: em(5px);
+    }
   }
 }
 
