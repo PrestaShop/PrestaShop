@@ -188,3 +188,32 @@ label {
     top: 2px;
   }
 }
+
+.custom-checkbox{
+  position: relative;
+  input[type="checkbox"]{
+    margin-top: 4px;
+    opacity: 0;
+    cursor: pointer;
+    position: absolute;
+    + span {
+      display: inline-block;
+      width: em(15px);
+      height: em(15px);
+      vertical-align: middle;
+      cursor: pointer;
+      border: 2px $gray-darker solid;
+      .check {
+        display: none;
+        margin: em(-4px) em(-2px);
+        font-size: 1.1em;
+        color: $gray-darker;
+      }
+    }
+    &:checked + span {
+      .check {
+        display: block;
+      }
+    }
+  }
+}

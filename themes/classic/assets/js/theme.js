@@ -16447,6 +16447,10 @@
 	      (0, _jquery2['default'])('#checkout-cart-summary').replaceWith(resp.preview);
 	    });
 	  });
+	
+	  (0, _jquery2['default'])('.js-customer-form').on('invalid.bs.validator', function (event) {
+	    (0, _jquery2['default'])(event.relatedTarget).next('.tooltip').css('opacity', 1).show();
+	  });
 	}
 	
 	(0, _jquery2['default'])(document).ready(function () {

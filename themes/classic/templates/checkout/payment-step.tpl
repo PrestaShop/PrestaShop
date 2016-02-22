@@ -74,13 +74,16 @@
         {foreach from=$conditions_to_approve item="condition" key="condition_name"}
           <li>
             <div class="pull-xs-left">
-              <input  id    = "conditions_to_approve[{$condition_name}]"
-                      name  = "conditions_to_approve[{$condition_name}]"
-                      required
-                      type  = "checkbox"
-                      value = "1"
-                      class = "ps-shown-by-js"
-              >
+              <span class="custom-checkbox">
+                <input  id    = "conditions_to_approve[{$condition_name}]"
+                        name  = "conditions_to_approve[{$condition_name}]"
+                        required
+                        type  = "checkbox"
+                        value = "1"
+                        class = "ps-shown-by-js"
+                >
+                <span><i class="material-icons check">&#xE5CA;</i></span>
+              </span>
             </div>
             <div class="condition-label">
               <label for="conditions_to_approve[{$condition_name}]">

@@ -11,22 +11,24 @@
                 <li>
                   <label class="facet-label">
                     {if $facet.multipleSelectionAllowed}
-                      <input
-                        id="facet-checkbox"
-                        data-search-url="{$filter.nextEncodedFacetsURL}"
-                        type="checkbox"
-                        {if $filter.active } checked {/if}
-                      >
-                      <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons check">&#xE5CA;</i></span>
+                      <span class="custom-checkbox">
+                        <input
+                          data-search-url="{$filter.nextEncodedFacetsURL}"
+                          type="checkbox"
+                          {if $filter.active } checked {/if}
+                        >
+                        <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons check">&#xE5CA;</i></span>
+                      </span>
                     {else}
-                      <input
-                        id="facet-checkbox"
-                        data-search-url="{$filter.nextEncodedFacetsURL}"
-                        type="radio"
-                        name="filter {$facet.label}"
-                        {if $filter.active } checked {/if}
-                      >
-                      <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons check">&#xE5CA;</i></span>
+                      <span class="custom-checkbox">
+                        <input
+                          data-search-url="{$filter.nextEncodedFacetsURL}"
+                          type="radio"
+                          name="filter {$facet.label}"
+                          {if $filter.active } checked {/if}
+                        >
+                        <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons check">&#xE5CA;</i></span>
+                      </span>
                     {/if}
 
                     <a
