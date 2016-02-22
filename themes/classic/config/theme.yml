@@ -75,14 +75,14 @@ global_settings:
     medium_default:
       width: 125
       height: 125
-      scope: [products, categories, manufacturers, suppliers, stores]
+      scope: [products, categories, manufacturers, suppliers]
     home_default:
       width: 250
       height: 250
       scope: [products]
     large_default:
-      width: 458
-      height: 458
+      width: 800
+      height: 800
       scope: [products, manufacturers, suppliers]
     category_default:
       width: 870

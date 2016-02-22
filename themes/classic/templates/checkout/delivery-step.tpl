@@ -7,7 +7,7 @@
 
   <div class="delivery-options-list">
     {if $delivery_options|count}
-      <form id="delivery-method" method="post">
+      <form id="delivery-method" method="post" class="clearfix">
         <div class="form-fields">
           {block name='delivery_options'}
             <div class="delivery-options">
@@ -48,7 +48,7 @@
             {/if}
           </div>
         </div>
-        <button type="submit" class="continue form-control-submit center-block" name="confirmDeliveryOption" value="1">
+        <button type="submit" class="continue btn btn-primary pull-xs-right" name="confirmDeliveryOption" value="1">
           {l s='Continue'}
         </button>
       </form>
