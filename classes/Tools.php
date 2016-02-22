@@ -1923,6 +1923,34 @@ class ToolsCore
         }
     }
 
+    /**
+     * Create a local file from url
+     * required because ZipArchive is unable to extract from remote files.
+     * @param string $url the remote location
+     * @return bool|string false if failure, else the local filename
+     */
+    public static function createFileFromUrl($url)
+    {
+        $remoteFile = fopen($url, "r");
+        if (!$remoteFile) {
+            return false;
+        }
+        $localFile = fopen(basename(url), "w");
+        if (!$localFile) {
+            return false;
+        }
+
+        while (!feof($remoteFile)) {
+            $data = fread($remoteFile, 1024);
+            fwrite($localFile, $data, 1024);
+        }
+
+        fclose($remoteFile);
+        fclose($localFile);
+
+        return basename($url);
+    }
+
     public static function simplexml_load_file($url, $class_name = null)
     {
         $cache_id = 'Tools::simplexml_load_file'.$url;
