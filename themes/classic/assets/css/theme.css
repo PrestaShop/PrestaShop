@@ -6550,6 +6550,25 @@ li.product-label {
 .product-price {
   color: #414141; }
 
+#block-reassurance {
+  margin-top: 3.75em; }
+  #block-reassurance img {
+    opacity: .7;
+    width: 25px;
+    margin-right: 0.625em; }
+  #block-reassurance span {
+    color: #414141;
+    font-size: 0.9375em; }
+  #product #block-reassurance {
+    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
+    background: white; }
+    #product #block-reassurance li {
+      padding: 0.9375em; }
+    #product #block-reassurance hr {
+      margin: 0; }
+    #product #block-reassurance span {
+      font-weight: 700; }
+
 .block_newsletter form {
   position: relative; }
   .block_newsletter form input[type=text] {
