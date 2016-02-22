@@ -236,23 +236,6 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
-    private function getThemesOnDisk()
-    {
-        $suffix = 'preview.png';
-        $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/'.$suffix);
-
-        $themes = [];
-        foreach ($all_theme_dirs as $dir) {
-            $name = basename(substr($dir, 0, -strlen($suffix)));
-            $theme = $this->getInstanceByName($name);
-            if (isset($theme)) {
-                $themes[$name] = $theme;
-            }
-        }
-
-        return $themes;
-    }
-
     private function installFromZip($source)
     {
         $sandboxPath = $this->getSandboxPath();
@@ -280,9 +263,9 @@ class ThemeManager implements AddonManagerInterface
             throw new Exception("This theme is not valid for PrestaShop 1.7");
         }
 
-        $module_root_dir = $this->configurator->get('_PS_MODULE_DIR_');
+        $module_root_dir = $this->appConfiguration->get('_PS_MODULE_DIR_');
         $modules_parent_dir = $sandboxPath.$theme_name.'/dependencies/modules';
-        if ($this->fs->exists($modules_parent_dir)) {
+        if ($this->filesystem->exists($modules_parent_dir)) {
             $module_dirs = $this->finder->directories()
                                         ->in($modules_parent_dir)
                                         ->depth('== 0')

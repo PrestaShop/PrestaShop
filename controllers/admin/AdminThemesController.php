@@ -228,7 +228,7 @@ class AdminThemesControllerCore extends AdminController
             if ($filename = Tools::getValue('theme_archive_server')) {
                 $path = _PS_ALL_THEMES_DIR_.$filename;
                 $this->theme_manager->install($path);
-            } elseif ($filename = Tools::getValue('filename')) {
+            } elseif ($filename = Tools::getValue('themearchive')) {
                 $path = _PS_ALL_THEMES_DIR_.$filename;
                 if ($this->processUploadFile($path)) {
                     $this->theme_manager->install($path);
