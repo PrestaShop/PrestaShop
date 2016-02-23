@@ -1085,7 +1085,7 @@ class FrontControllerCore extends Controller
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
     {
-        return FrontController::addMedia($css_uri, $css_media_type, $offset = null, false, $check_path);
+        return FrontController::addMedia($css_uri, $css_media_type, $offset, false, $check_path);
     }
 
     /**
