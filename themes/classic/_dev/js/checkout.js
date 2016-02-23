@@ -106,6 +106,10 @@ function setupCheckoutScripts () {
       $('#checkout-cart-summary').replaceWith(resp.preview);
     });
   });
+
+  $('.js-customer-form').on('invalid.bs.validator',(event)=>{
+    $(event.relatedTarget).next('.tooltip').css('opacity',1).show();
+  });
 }
 
 $(document).ready(() => {

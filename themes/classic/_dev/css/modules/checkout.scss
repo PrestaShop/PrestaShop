@@ -280,6 +280,20 @@ body#checkout {
     color: $gray-dark;
     text-decoration: underline;
   }
+  .tooltip {
+    position: relative;
+    display: none;
+    .tooltip-arrow {
+      left: 10%;
+    }
+    .tooltip-inner {
+      text-align: left;
+    }
+    .info {
+      font-size: em(18px);
+    }
+  }
+
   #cart-summary-product-list {
     font-size: em(14px);
     img {

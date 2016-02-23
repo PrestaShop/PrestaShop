@@ -47,10 +47,18 @@ a {
   }
 }
 
+.h1{
+  font-size: em(24px);
+  font-weight:$headings-font-weight;
+  color: $gray-darker;
+  text-transform: uppercase;
+}
+
 .h4{
   font-size: em(18px);
   font-weight:$headings-font-weight;
 }
+
 .btn-primary {
   @include box-shadow;
   text-transform: uppercase;
@@ -186,5 +194,34 @@ label {
     position: absolute;
     left: 2px;
     top: 2px;
+  }
+}
+
+.custom-checkbox{
+  position: relative;
+  input[type="checkbox"]{
+    margin-top: 4px;
+    opacity: 0;
+    cursor: pointer;
+    position: absolute;
+    + span {
+      display: inline-block;
+      width: em(15px);
+      height: em(15px);
+      vertical-align: middle;
+      cursor: pointer;
+      border: 2px $gray-darker solid;
+      .check {
+        display: none;
+        margin: em(-4px) em(-2px);
+        font-size: 1.1em;
+        color: $gray-darker;
+      }
+    }
+    &:checked + span {
+      .check {
+        display: block;
+      }
+    }
   }
 }

@@ -25,6 +25,10 @@
     position: absolute;
     right: em(60px);
     bottom: 0;
+    img{
+      width: 141px;
+      height: 180px;
+    }
   }
 }
 .products-sort-order {
@@ -60,28 +64,6 @@
   @include box-shadow;
   background: white;
   padding: em(20px);
-  #facet-checkbox {
-    display: none;
-    + span {
-      display: inline-block;
-      width: em(15px);
-      height: em(15px);
-      vertical-align: middle;
-      cursor: pointer;
-      border: 2px $gray solid;
-      .check {
-        display: none;
-        margin: em(-4px) em(-2px);
-        font-size: 1.1em;
-        color: $gray-darker;
-      }
-    }
-    &:checked + span {
-      .check {
-        display: block;
-      }
-    }
-  }
   .facet {
     .facet-title {
       color: $gray;
