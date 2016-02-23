@@ -522,6 +522,9 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
                     // Delete from the reference_id and not from the carrier id
                     $carrier = new Carrier((int)$id);
                     Warehouse::removeCarrier($carrier->id_reference);
+                    Hook::exec('actionCarrierDelete', array(
+                                'id_carrier' => (int)$id
+                            ));
                 } elseif (Tools::isSubmit($this->table.'Box') && count(Tools::isSubmit($this->table.'Box')) > 0) {
                     $ids = Tools::getValue($this->table.'Box');
                     array_walk($ids, 'intval');
