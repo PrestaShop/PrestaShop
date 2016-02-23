@@ -88,7 +88,7 @@ var AdminModuleCard = function () {
         var jqElementObj = element.closest(".btn-group");
         var spinnerObj = $("<button class=\"btn btn-primary-reverse btn-lg onclick unbind pull-right\"></button>");
         $.ajax({
-            url: "//" + window.location.hostname + element.attr("href"),
+            url: "//" + window.location.host + element.attr("href"),
             dataType: 'json',
             beforeSend: function () {
                 jqElementObj.hide();
