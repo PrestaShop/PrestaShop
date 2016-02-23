@@ -9,10 +9,10 @@
     {block name='order_infos'}
       <div id="order-infos">
         <div class="box">
-            <strong>{l s='Order Reference %s - placed on %s' sprintf=[$order.data.reference, $order.data.order_date]}</strong>
-            {if $order.data.url_to_reorder}
+            <strong>{l s='Order Reference %s - placed on %s' sprintf=[$order.details.reference, $order.details.order_date]}</strong>
+            {if $order.details.url_to_reorder}
               <div class="pull-xs-right">
-                <a href="{$order.data.url_to_reorder}" class="button-primary">{l s='Reorder'}</a>
+                <a href="{$order.details.url_to_reorder}" class="button-primary">{l s='Reorder'}</a>
               </div>
               <div class="clearfix"></div>
             {/if}
@@ -21,19 +21,19 @@
         <div class="box">
             <ul>
             <li><strong>{l s='Carrier'}</strong> {$order.carrier.name}</li>
-            <li><strong>{l s='Payment method'}</strong> {$order.data.payment}</li>
+            <li><strong>{l s='Payment method'}</strong> {$order.details.payment}</li>
 
-            {if $order.data.url_to_invoice}
-              <li><a href="{$order.data.url_to_invoice}">{l s='Download your invoice as a PDF file.'}</a></li>
+            {if $order.details.url_to_invoice}
+              <li><a href="{$order.details.url_to_invoice}">{l s='Download your invoice as a PDF file.'}</a></li>
             {/if}
 
-            {if $order.data.recyclable}
+            {if $order.details.recyclable}
               <li>{l s='You have given permission to receive your order in recycled packaging.'}</li>
             {/if}
 
-            {if $order.data.gift}
+            {if $order.details.gift_message}
               <li>{l s='You have requested gift wrapping for this order.'}</li>
-              <li>{l s='Message'} {$order.data.gift_message nofilter}</li>
+              <li>{l s='Message'} {$order.details.gift_message nofilter}</li>
             {/if}
             </ul>
         </div>
@@ -62,10 +62,10 @@
       </section>
     {/block}
 
-    {if $order.data.followup}
+    {if $order.follow_up}
       <div class="box">
         <p>{l s='Click the following link to track the delivery of your order'}</p>
-        <a href="{$order.data.followup}">{$order.data.followup}</a>
+        <a href="{$order.follow_up}">{$order.follow_up}</a>
       </div>
     {/if}
 
@@ -93,7 +93,7 @@
     {$hook_orderdetaildisplayed}
 
     {block name='order_detail'}
-      {if $order.data.return_allowed}
+      {if $order.details.return_allowed}
         {include file='customer/_partials/order-detail-return.tpl'}
       {else}
         {include file='customer/_partials/order-detail-no-return.tpl'}

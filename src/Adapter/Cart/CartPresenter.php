@@ -36,11 +36,6 @@ class CartPresenter
         return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
     }
 
-    private function shouldShowTaxLine()
-    {
-        return Configuration::get('PS_TAX_DISPLAY');
-    }
-
     protected function presentProduct(array $rawProduct)
     {
         $presenter = new ProductPresenter(
@@ -212,8 +207,9 @@ class CartPresenter
 
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
+        $total_discount      = $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
 
-        if ($this->shouldShowTaxLine()) {
+        if (Configuration::get('PS_TAX_DISPLAY')) {
             $subtotals['tax'] = [
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', [], 'Cart'),
@@ -236,6 +232,12 @@ class CartPresenter
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', [], 'Cart'),
             'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
+        ];
+
+        $subtotals['discounts'] = [
+            'type' => 'discount',
+            'label' => $this->translator->trans('Discount', [], 'Cart'),
+            'amount' => $this->pricePresenter->convertAndFormat($total_discount),
         ];
 
         $total = [
