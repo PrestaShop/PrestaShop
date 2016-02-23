@@ -28,7 +28,6 @@
 }
 .contact-form {
   @include box-shadow;
-  @include submit-button;
   background: white;
   padding: rem(16px);
   color: $gray-dark;

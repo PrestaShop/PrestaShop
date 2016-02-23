@@ -25,7 +25,7 @@
         </a>
 
         <!-- shipping informations -->
-        <div class="card card-shadow">
+        <div class="card">
           {hook h='displayShoppingCart'}
         </div>
       </div>
@@ -35,10 +35,9 @@
 
         <div class="card card-shadow cart-summary">
 
-          <div class="card-block cart-summary-line" id="items-subtotal">
-            <span class="label _bolder">{$cart.summary_string}</span>
-            <span class="value">{$cart.total.amount}</span>
-          </div>
+          {block name='cart_summary_line'}
+            {include file='checkout/_partials/cart-summary-items-subtotal.tpl' cart=$cart}
+          {/block}
 
           {block name='cart_voucher'}
             {include file='checkout/_partials/cart-voucher.tpl'}
@@ -53,7 +52,7 @@
           <div class="checkout text-xs-center card-block">
             <ul>
               <li>
-                <a href="{$urls.pages.order}" class="button-primary">{l s='Checkout'}</a>
+                <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Checkout'}</a>
               </li>
             </ul>
             {hook h='displayExpressCheckout'}

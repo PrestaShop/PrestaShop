@@ -12,7 +12,7 @@
             <strong>{l s='Order Reference %s - placed on %s' sprintf=[$order.details.reference, $order.details.order_date]}</strong>
             {if $order.details.url_to_reorder}
               <div class="pull-xs-right">
-                <a href="{$order.details.url_to_reorder}" class="button-primary">{l s='Reorder'}</a>
+                <a href="{$order.details.url_to_reorder}" class="btn btn-primary">{l s='Reorder'}</a>
               </div>
               <div class="clearfix"></div>
             {/if}
