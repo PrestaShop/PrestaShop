@@ -47,19 +47,19 @@
         <td colspan="4" class="text-xs-right">{$order.total.amount}</td>
     </tr>
     {/if}
-    {if isset($order.amounts.subtotals.tax)}
+    {if isset($order.subtotals.tax)}
     <tr>
       <td>{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
       <td colspan="4" class="text-xs-right">{$order.subtotals.tax.amount}</td>
     </tr>
     {/if}
-    {if $order.amounts.subtotals.discounts}
+    {if $order.subtotals.discounts}
       <tr>
         <td>{l s='Total vouchers'}</td>
         <td colspan="4" class="text-xs-right">{$order.subtotals.discounts.amount}</td>
       </tr>
     {/if}
-    {if isset($order.amounts.subtotals.gift_wrapping)}
+    {if isset($order.subtotals.gift_wrapping)}
     <tr>
       <td>{l s='Total gift wrapping cost'}</td>
       <td colspan="4" class="text-xs-right">{$order.subtotals.gift_wrapping.amount}</td>
