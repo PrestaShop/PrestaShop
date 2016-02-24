@@ -44,8 +44,8 @@
 
               <div class="images-container">
                 {block name='product_cover'}
-                  <div class="product-cover _margin-bottom-medium _relative">
-                    <img class="_shadow js-product-cover" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" width="452" itemprop="image" />
+                  <div class="product-cover _relative">
+                    <img class="js-product-cover" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" width="452" itemprop="image" />
                     <div class="layer" data-toggle="modal" data-target="#product-modal">
                       <i class="material-icons zoom-in">&#xE8FF;</i>
                     </div>
@@ -55,8 +55,8 @@
                 {block name='product_images'}
                   <ul class="product-images">
                     {foreach from=$product.images item=image}
-                      <li class="_margin-right-small">
-                        <img data-image-large-src = "{$image.large.url}" class="_shadow _margin-bottom-small thumb js-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="100" itemprop="image" />
+                      <li class="thumb-container">
+                        <img data-image-large-src = "{$image.large.url}" class="thumb js-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="100" itemprop="image" />
                       </li>
                     {/foreach}
                   </ul>
@@ -70,7 +70,7 @@
         <div class="col-md-6">
           {block name='page_header_container'}
             {block name='page_header'}
-              <h1 class="_gray-darker text-uppercase h5 _bolder" itemprop="name">{block name='page_title'}{$product.name}{/block}</h1>
+              <h1 class="h1" itemprop="name">{block name='page_title'}{$product.name}{/block}</h1>
             {/block}
           {/block}
           {block name='product_prices'}
@@ -148,7 +148,7 @@
                   {block name='product_variants'}
                     <div class="product-variants">
                       {foreach from=$groups key=id_attribute_group item=group}
-                        <div class="clearfix _margin-top-medium">
+                        <div class="clearfix product-variants-item">
                           <label for="group_{$id_attribute_group}">{$group.name}</label>
                           {if $group.group_type == 'select'}
                             <select data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" id="group_{$id_attribute_group}">
@@ -231,7 +231,7 @@
                   <a href="#description" class="nav-link active" data-toggle = "tab">{l s='Description'}</a>
                 </li>
                 <li class="nav-item">
-                  <a href="#details" class="nav-link" data-toggle = "tab">{l s='Product Details'}</a>
+                  <a href="#product-details" class="nav-link" data-toggle = "tab">{l s='Product Details'}</a>
                 </li>
                 {if $quantity_discounts}
                   <li class="nav-item">
@@ -243,30 +243,33 @@
               <div id = "tab-content" class = "tab-content">
                <div class = "tab-pane fade in active" id = "description">
                  {block name='product_description'}
-                   <div id="product-description">{$product.description nofilter}</div>
+                   <div class="product-description">{$product.description nofilter}</div>
                  {/block}
                </div>
 
-               <div class = "tab-pane fade" id = "details">
+               <div class = "tab-pane fade" id = "product-details">
                  {block name='product_reference'}
                    {if $product.reference}
-                     <p id="product-reference">
-                       <label>{l s='Reference:'} </label>
+                     <div class="product-reference">
+                       <label class="label">{l s='Reference'} </label>
                        <span itemprop="sku">{$product.reference}</span>
-                     </p>
+                     </div>
                    {/if}
                  {/block}
                  {block name='product_quantities'}
                    {if $display_quantities}
-                     <p id="product-quantities">{$product.quantity} {$quantity_label}</p>
+                     <div class="product-quantities">
+                       <label class="label">{l s='In stock'}</label>
+                       <span>{$product.quantity} {$quantity_label}</span>
+                    </div>
                    {/if}
                  {/block}
                  {block name='product_availability_date'}
                    {if $product.availability_date}
-                     <p id="product-availability-date">
+                     <div class="product-availability-date">
                        <label>{l s='Availability date:'} </label>
                        <span>{$product.availability_date}</span>
-                     </p>
+                     </div>
                    {/if}
                  {/block}
                  {block name='product_out_of_stock'}
@@ -279,10 +282,11 @@
                  {block name='product_features'}
                    {if $product.features}
                      <section class="product-features">
-                       <h3>{l s='Data sheet'}</h3>
-                       <ul>
+                       <h3 class="h6">{l s='Data sheet'}</h3>
+                       <dl class="data-sheet">
                          {foreach from=$product.features item=feature}
-                         <li>{$feature.name} - {$feature.value}</td>
+                           <dt class="name">{$feature.name}</dt>
+                           <dd class="value">{$feature.value}</dd>
                          {/foreach}
                        </ul>
                      </section>
@@ -363,9 +367,6 @@
           </section>
         {/if}
       {/block}
-
-
-
       {block name='product_pack'}
         {if $packItems}
           <section class="product-pack">
@@ -418,7 +419,7 @@
         <div class="modal-content">
           <div class="modal-body">
             <figure>
-              <img class="js-product-cover-modal product-cover-modal" width="{$image.large.width}" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
+              <img class="js-product-cover product-cover-modal" width="{$image.large.width}" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
               <figcaption class="image-caption">
               {block name='product_description_short'}
                 <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
@@ -430,8 +431,8 @@
                 <div class="js-mask mask _relative">
                   <ul class="product-images js-product-images">
                     {foreach from=$product.images item=image}
-                      <li class="_margin-right-small">
-                        <img data-image-large-src="{$image.large.url}" class="_shadow _margin-bottom-small js-modal-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="{$image.medium.width}" itemprop="image" />
+                      <li class="thumb-container">
+                        <img data-image-large-src="{$image.large.url}" class="thumb js-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="{$image.medium.width}" itemprop="image" />
                       </li>
                     {/foreach}
                   </ul>

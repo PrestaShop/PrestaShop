@@ -1,8 +1,3 @@
-.product-images {
-  li {
-    display: inline;
-  }
-}
 .product-price {
   color: $brand-primary;
 }
@@ -34,7 +29,7 @@
   @include box-shadow;
   background: white;
   display: inline-block;
-  padding: em(2px) em(10px);
+  padding: em(2px) $small-space;
   font-weight: 600;
 }
 .product-quantity {
@@ -47,7 +42,6 @@
   height: em(40px);
   border: none;
 }
-
 .product-discount {
   .regular-price {
     font-size: em(20px);
@@ -63,9 +57,9 @@
 .tabs {
   @include box-shadow;
   background: white;
-  padding: em(20px) em(30px);
+  padding: $medium-space $large-space;
   .tab-pane {
-    padding-top: em(30px);
+    padding-top: $medium-space;
   }
   .nav-tabs {
     border: none;
@@ -87,7 +81,9 @@
   }
 }
 .product-cover {
+  margin-bottom: $medium-space;
   img {
+    @include box-shadow;
     background: white;
   }
   .layer {
@@ -141,8 +137,8 @@
         z-index: 1;
       }
       .product-images {
-        margin-left: em(40px);
-        margin-top: em(10px);
+        margin-left: $extra-large-space;
+        margin-top: $small-space;
         img {
           width: em(148px);
           cursor: pointer;
@@ -158,7 +154,7 @@
         position: absolute;
         top: 0;
         color: white;
-        right: em(25px);
+        right: $large-space;
         z-index: 0;
         .arrow-up {
           position: absolute;
@@ -206,13 +202,24 @@
     font-size: em(18px);
   }
   .cart-content {
-    padding-left: em(40px);
+    padding-left: $extra-large-space;
   }
 }
-.thumb {
-  cursor: pointer;
-  &:hover {
-    border: $brand-primary 3px solid;
+.product-images {
+  > li.thumb-container {
+    display: inline;
+    > .thumb {
+      @include box-shadow;
+      cursor: pointer;
+      margin-bottom: $small-space;
+      .images-container & {
+        margin-right: em(13px);
+      }
+      &:hover,
+      &.selected {
+        border: $brand-primary 3px solid;
+      }
+    }
   }
 }
 #product-availability {
@@ -221,6 +228,38 @@
   .check {
     color: $brand-success;
     margin-right: em(5px);
+  }
+}
+.product-reference,
+.product-quantities {
+  > .label {
+    font-size: $font-size-base;
+    color: $gray-darker;
+    font-weight: bold;
+  }
+}
+.product-features{
+  margin-top: $medium-space;
+  margin-left: em(5px);
+  > dl.data-sheet{
+    display: flex;
+    flex-wrap: wrap;
+    dt.name,dd.value{
+      flex: 0 0 40%;
+      font-weight: normal;
+      background: $gray-light;
+      padding: $small-space;
+      margin-right: $small-space;
+      height: em(40px);
+      &:nth-of-type(even) {
+        background: $gray-lighter;
+      }
+    }
+  }
+}
+.product-variants {
+  > .product-variants-item {
+    margin-top: $medium-space;
   }
 }
 .product-labels {
@@ -236,7 +275,7 @@ li.product-label {
     padding: em(5px) em(7px);
     text-transform: uppercase;
     color: white;
-    margin-top: em(10px);
+    margin-top: $small-space;
     margin-left: em(-5px);
     z-index: 2;
   }
@@ -252,7 +291,7 @@ li.product-label {
     display: inline-block;
     background-color: white;
     cursor: pointer;
-    margin-left: em(15px);
+    margin-left: $font-size-base;
     @include transition(all .2s ease-in);
     a {
       white-space: nowrap;

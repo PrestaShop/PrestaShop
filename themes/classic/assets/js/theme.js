@@ -16904,11 +16904,13 @@
 	      var $arrows = (0, _jquery2['default'])('.js-arrows');
 	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
 	      (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
+	        if ((0, _jquery2['default'])('.js-thumb').hasClass('selected')) {
+	          (0, _jquery2['default'])('.js-thumb').removeClass('selected');
+	        }
+	        (0, _jquery2['default'])(event.currentTarget).addClass('selected');
 	        (0, _jquery2['default'])('.js-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
 	      });
-	      (0, _jquery2['default'])('.js-modal-thumb').on('click', function (event) {
-	        (0, _jquery2['default'])('.js-product-cover-modal').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
-	      });
+	
 	      if ((0, _jquery2['default'])('.js-product-images li').length <= MAX_THUMBS) {
 	        $arrows.css('opacity', '.2');
 	      } else {
