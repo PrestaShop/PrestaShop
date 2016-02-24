@@ -208,10 +208,18 @@ class AdminStatusesControllerCore extends AdminController
      */
     public function renderList()
     {
-        //init and render the first list
+	    // statuses protected from being deleted
+	    $delete_skip_list = array();
+	    foreach ( OrderState::getOrderStates( $this->context->language->id ) as $aState ) {
+		    if ( $aState['unremovable'] ) {
+			    $delete_skip_list[] = $aState['id_order_state'];
+		    }
+	    }
+
+	    //init and render the first list
         $this->addRowAction('edit');
         $this->addRowAction('delete');
-        $this->addRowActionSkipList('delete', range(1, 14));
+        $this->addRowActionSkipList('delete', $delete_skip_list);
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
