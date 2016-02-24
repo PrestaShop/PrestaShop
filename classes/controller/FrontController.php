@@ -860,6 +860,7 @@ class FrontControllerCore extends Controller
         ]);
 
         $this->addJS([
+            _THEMES_DIR_.'core.js',
             _THEME_JS_DIR_.'theme.js',
             _THEME_JS_DIR_.'custom.js',
         ]);
