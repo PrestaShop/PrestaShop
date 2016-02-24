@@ -178,6 +178,33 @@
                         </div>
                       {/foreach}
 
+                      {block name='product_discounts'}
+                        {if $quantity_discounts}
+                          <section class="product-discounts">
+                            <h3 class="h6 product-discounts-title">{l s='Volume discounts'}</h3>
+                            <table class="table-product-discounts">
+                              <thead>
+                                <tr>
+                                  <th>{l s='Quantity'}</th>
+                                  <th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
+                                  <th>{l s='You Save'}</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
+                                  <tr data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value}" data-discount-quantity="{$quantity_discount.quantity}">
+                                    <td>{$quantity_discount.quantity}</td>
+                                    <td>{$quantity_discount.discount}</td>
+                                    <td>{l s='Up to %s' sprintf=$quantity_discount.save}</td>
+                                  </tr>
+                                {/foreach}
+                              </tbody>
+                            </table>
+                          </section>
+                          <hr>
+                        {/if}
+                      {/block}
+
                       {block name='product_add_to_cart'}
                         {if $product.add_to_cart_url}
                           {*<form class="add-to-cart" action="{$urls.pages.cart}" method="post">*}
@@ -233,11 +260,6 @@
                 <li class="nav-item">
                   <a href="#product-details" class="nav-link" data-toggle = "tab">{l s='Product Details'}</a>
                 </li>
-                {if $quantity_discounts}
-                  <li class="nav-item">
-                    <a href="#volume" class="nav-link" data-toggle = "tab">{l s='Volume discounts'}</a>
-                  </li>
-                {/if}
               </ul>
 
               <div id = "tab-content" class = "tab-content">
@@ -289,33 +311,6 @@
                            <dd class="value">{$feature.value}</dd>
                          {/foreach}
                        </ul>
-                     </section>
-                   {/if}
-                 {/block}
-               </div>
-               <div class = "tab-pane fade" id = "volume">
-                 {block name='product_discounts'}
-                   {if $quantity_discounts}
-                     <section class="product-discounts">
-                       <h3 class="h5 text-uppercase _bolder">{l s='Volume discounts'}</h3>
-                       <table class="table-product-discounts">
-                         <thead>
-                           <tr>
-                             <th>{l s='Quantity'}</th>
-                             <th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
-                             <th>{l s='You Save'}</th>
-                           </tr>
-                         </thead>
-                         <tbody>
-                           {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-                             <tr data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value}" data-discount-quantity="{$quantity_discount.quantity}">
-                               <td>{$quantity_discount.quantity}</td>
-                               <td>{$quantity_discount.discount}</td>
-                               <td>{l s='Up to %s' sprintf=$quantity_discount.save}</td>
-                             </tr>
-                           {/foreach}
-                         </tbody>
-                       </table>
                      </section>
                    {/if}
                  {/block}

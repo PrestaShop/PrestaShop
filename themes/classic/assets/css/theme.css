@@ -6190,6 +6190,26 @@ body#checkout {
 .product-quantity {
   display: inline-block; }
 
+.product-discounts {
+  margin: 40px 0; }
+  .product-discounts > .product-discounts-title {
+    font-weight: normal;
+    font-size: 0.875em; }
+  .product-discounts > .table-product-discounts thead tr th {
+    width: 33%;
+    padding: 10px 20px;
+    background: white;
+    border: 0.3125em #ebebeb solid;
+    text-align: center; }
+  .product-discounts > .table-product-discounts tbody tr {
+    background: #f6f6f6; }
+    .product-discounts > .table-product-discounts tbody tr:nth-of-type(even) {
+      background: white; }
+    .product-discounts > .table-product-discounts tbody tr td {
+      padding: 10px 20px;
+      text-align: center;
+      border: 0.3125em #ebebeb solid; }
+
 #quantity_wanted {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -6361,14 +6381,16 @@ body#checkout {
     -js-display: flex;
     display: flex;
     flex-wrap: wrap; }
-    .product-features > dl.data-sheet dt.name, .product-features > dl.data-sheet dd.value {
+    .product-features > dl.data-sheet dt.name,
+    .product-features > dl.data-sheet dd.value {
       flex: 0 0 40%;
       font-weight: normal;
       background: #ebebeb;
       padding: 10px;
       margin-right: 10px;
       height: 2.5em; }
-      .product-features > dl.data-sheet dt.name:nth-of-type(even), .product-features > dl.data-sheet dd.value:nth-of-type(even) {
+      .product-features > dl.data-sheet dt.name:nth-of-type(even),
+      .product-features > dl.data-sheet dd.value:nth-of-type(even) {
         background: #f6f6f6; }
 
 .product-variants > .product-variants-item {
