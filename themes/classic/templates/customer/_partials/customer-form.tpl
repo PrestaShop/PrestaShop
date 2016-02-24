@@ -14,7 +14,7 @@
   <footer class="form-footer clearfix">
     <input type="hidden" name="submitCreate" value="1">
     {block "form_buttons"}
-      <button type="submit" class="form-control-submit">
+      <button class="btn btn-primary" type="submit" class="form-control-submit">
         {l s='Save'}
       </button>
     {/block}

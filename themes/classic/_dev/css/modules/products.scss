@@ -241,9 +241,7 @@ li.product-label {
     z-index: 2;
   }
 }
-.product-customization {
-  @include submit-button;
-}
+
 .social-sharing {
   width: 100%;
   li {

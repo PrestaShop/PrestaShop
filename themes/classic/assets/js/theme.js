@@ -16618,6 +16618,8 @@
 /* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* global document */
+	
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -16629,10 +16631,6 @@
 	var _prestashop = __webpack_require__(47);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
-	
-	function spinFinish() {
-	  return console.log((0, _jquery2['default'])(this).attr('productid') + ": " + (0, _jquery2['default'])(this).val());
-	}
 	
 	(0, _jquery2['default'])(document).ready(function () {
 	  _prestashop2['default'].on('cart updated', function (event) {
@@ -16650,15 +16648,34 @@
 	    _jquery2['default'].post(refreshURL, requestData).then(function (resp) {
 	      (0, _jquery2['default'])('.cart-overview').replaceWith(resp.cart_detailed);
 	      (0, _jquery2['default'])('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
+	      (0, _jquery2['default'])('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
 	      (0, _jquery2['default'])('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
 	      (0, _jquery2['default'])('.cart-voucher').replaceWith(resp.cart_voucher);
+	      (0, _jquery2['default'])('input[name="product-quantity-spin"]').TouchSpin({
+	        verticalbuttons: true,
+	        verticalupclass: 'material-icons touchspin-up',
+	        verticaldownclass: 'material-icons touchspin-down',
+	        buttondown_class: 'btn btn-touchspin js-touchspin',
+	        buttonup_class: 'btn btn-touchspin js-touchspin'
+	      });
 	    });
 	  });
-	  (0, _jquery2['default'])('body').on('click', '[data-link-action="update-quantity"], [data-link-action="remove-from-cart"], [data-link-action="remove-voucher"]', function (event) {
+	  (0, _jquery2['default'])('body').on('click', '.js-touchspin, [data-link-action="remove-from-cart"], [data-link-action="remove-voucher"]', function (event) {
 	    event.preventDefault();
 	    // First perform the action using AJAX
-	    var actionURL = event.target.href;
-	    _jquery2['default'].post(actionURL, { ajax: '1' }, null, 'json').then(function () {
+	    var actionURL = null;
+	
+	    if ((0, _jquery2['default'])(event.currentTarget).hasClass('bootstrap-touchspin-up')) {
+	      actionURL = (0, _jquery2['default'])('[data-up-url]').data('up-url');
+	    } else if ((0, _jquery2['default'])(event.currentTarget).hasClass('bootstrap-touchspin-down')) {
+	      actionURL = (0, _jquery2['default'])('[data-down-url]').data('down-url');
+	    } else {
+	      actionURL = (0, _jquery2['default'])(event.target).attr('href');
+	    }
+	
+	    _jquery2['default'].post(actionURL, {
+	      ajax: '1'
+	    }, null, 'json').then(function () {
 	      // If succesful, refresh cart preview
 	      _prestashop2['default'].emit('cart updated', {
 	        reason: event.target.dataset
@@ -16696,13 +16713,13 @@
 	    });
 	  });
 	
-	  (0, _jquery2['default'])("input[name='product-quantity-spin']").TouchSpin({
+	  (0, _jquery2['default'])('input[name="product-quantity-spin"]').TouchSpin({
 	    verticalbuttons: true,
 	    verticalupclass: 'material-icons touchspin-up',
 	    verticaldownclass: 'material-icons touchspin-down',
-	    buttondown_class: 'btn btn-touchspin',
-	    buttonup_class: 'btn btn-touchspin'
-	  }).change(spinFinish);
+	    buttondown_class: 'btn btn-touchspin js-touchspin',
+	    buttonup_class: 'btn btn-touchspin js-touchspin'
+	  });
 	});
 
 /***/ },

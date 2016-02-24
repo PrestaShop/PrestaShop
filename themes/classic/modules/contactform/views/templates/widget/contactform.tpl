@@ -60,7 +60,7 @@
     </section>
 
     <footer class="form-footer text-xs-right">
-      <input type="submit" name="submitMessage" value="{l s='Send'}" />
+      <input class="btn btn-primary" type="submit" name="submitMessage" value="{l s='Send'}" />
     </footer>
 
   </form>

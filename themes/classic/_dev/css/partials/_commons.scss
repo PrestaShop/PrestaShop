@@ -37,15 +37,6 @@ a:hover {
     border: 2px solid $gray-darker;
   }
 }
-a {
-  &.button-primary {
-    color: white !important;
-    @include primary-button;
-    &:hover {
-      @include primary-button;
-    }
-  }
-}
 
 .h1{
   font-size: em(24px);
@@ -102,7 +93,6 @@ label {
   color: $gray-dark;
 }
 .form-control-submit {
-  @include primary-button;
   &.disabled {
     background: $brand-info;
     color: white;

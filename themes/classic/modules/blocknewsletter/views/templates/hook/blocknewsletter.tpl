@@ -37,7 +37,7 @@
             {/if}
           </div>
           <div class="col-md-4">
-            <input type="submit" value="{l s='Subscribe' mod='blocknewsletter'}" name="submitNewsletter" />
+            <input class="btn btn-primary" type="submit" value="{l s='Subscribe' mod='blocknewsletter'}" name="submitNewsletter" />
             <input type="hidden" name="action" value="0" />
           </div>
         </div>

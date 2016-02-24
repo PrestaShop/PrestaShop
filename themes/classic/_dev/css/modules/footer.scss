@@ -1,6 +1,5 @@
 .block_newsletter {
   @include search-box;
-  @include submit-button;
 }
 .block-contact {
   border-left: $gray-light 2px solid;

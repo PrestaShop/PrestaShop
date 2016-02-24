@@ -84,6 +84,7 @@ class CartControllerCore extends FrontController
             die(json_encode([
                 'cart_detailed' => $this->render('checkout/_partials/cart-detailed.tpl'),
                 'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals.tpl'),
+                'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal.tpl'),
                 'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals.tpl'),
                 'cart_voucher' => $this->render('checkout/_partials/cart-voucher.tpl'),
             ]));
