@@ -78,7 +78,7 @@ class CartControllerCore extends FrontController
             'static_token' => Tools::getToken(false),
         ]);
 
-        if (Tools::getValue('ajax')) {
+        if (Tools::getValue('refreshajax')) {
             ob_end_clean();
             header('Content-Type: application/json');
             die(json_encode([

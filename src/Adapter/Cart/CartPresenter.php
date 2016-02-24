@@ -234,11 +234,13 @@ class CartPresenter
             'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
         ];
 
-        $subtotals['discounts'] = [
-            'type' => 'discount',
-            'label' => $this->translator->trans('Discount', [], 'Cart'),
-            'amount' => $this->pricePresenter->convertAndFormat($total_discount),
-        ];
+        if ($total_discount > 0) {
+            $subtotals['discounts'] = [
+                'type' => 'discount',
+                'label' => $this->translator->trans('Discount', [], 'Cart'),
+                'amount' => $this->pricePresenter->convertAndFormat($total_discount),
+            ];
+        }
 
         $total = [
             'type' => 'total',
