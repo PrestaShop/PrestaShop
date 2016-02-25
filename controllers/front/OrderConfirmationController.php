@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
+
 class OrderConfirmationControllerCore extends FrontController
 {
     public $ssl = true;
@@ -33,6 +35,7 @@ class OrderConfirmationControllerCore extends FrontController
     public $id_order;
     public $reference;
     public $secure_key;
+    public $order_presenter;
 
     /**
      * Initialize order confirmation controller
@@ -72,6 +75,7 @@ class OrderConfirmationControllerCore extends FrontController
         if ($order->module != $module->name) {
             Tools::redirect($redirectLink);
         }
+        $this->order_presenter = new OrderPresenter();
     }
 
     /**
@@ -82,12 +86,18 @@ class OrderConfirmationControllerCore extends FrontController
     {
         parent::initContent();
         $order = new Order(Order::getOrderByCartId((int)($this->id_cart)));
+        $register_form = $this
+            ->makeCustomerForm()
+            ->setGuestAllowed(false)
+        ;
 
         $this->context->smarty->assign(array(
             'is_guest' => $this->context->customer->is_guest,
             'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn(),
-            'url_to_invoice' => HistoryController::getUrlToInvoice($order, $this->context)
+            'url_to_invoice' => HistoryController::getUrlToInvoice($order, $this->context),
+            'order' => $this->order_presenter->present($order),
+            'register_form' => $register_form
         ));
 
         if ($this->context->customer->is_guest) {
