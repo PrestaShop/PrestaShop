@@ -53,7 +53,7 @@
       <td colspan="4" class="text-xs-right">{$order.subtotals.tax.amount}</td>
     </tr>
     {/if}
-    {if isset($order.subtotals.discounts)}
+    {if $order.subtotals.discounts.amount}
       <tr>
         <td>{l s='Total vouchers'}</td>
         <td colspan="4" class="text-xs-right">{$order.subtotals.discounts.amount}</td>
