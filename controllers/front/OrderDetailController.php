@@ -129,7 +129,7 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
                         );
                     }
 
-                    $this->success[] = $this->l('Message successfully sent');
+                    Tools::redirect('index.php?controller=order-detail&id_order='.$idOrder.'&messagesent');
                 } else {
                     $this->redirect_after = '404';
                     $this->redirect();
@@ -150,6 +150,20 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
             $this->redirect_after = '404';
             $this->redirect();
         } else {
+            if (Tools::getIsset('errorQuantity')) {
+                $this->errors[] = $this->l('You do not have enough products to request an additional merchandise return.');
+            } elseif (Tools::getIsset('errorMsg')) {
+                $this->errors[] = $this->l('Please provide an explanation for your RMA.');
+            } elseif (Tools::getIsset('errorDetail1')) {
+                $this->errors[] = $this->l('Please check at least one product you would like to return.');
+            } elseif (Tools::getIsset('errorDetail2')) {
+                $this->errors[] = $this->l('For each product you wish to add, please specify the desired quantity.');
+            } elseif (Tools::getIsset('errorNotReturnable')) {
+                $this->errors[] = $this->l('This order cannot be returned');
+            } elseif (Tools::getIsset('messagesent')) {
+                $this->success[] = $this->l('Message successfully sent');
+            }
+
             $order = new Order($id_order);
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
                 $this->order_to_display = (new OrderPresenter())->present($order);
