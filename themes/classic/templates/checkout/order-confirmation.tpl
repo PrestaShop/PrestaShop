@@ -48,10 +48,12 @@
             <hr>
 
             <table>
+                {if isset($order.subtotals.discounts)}
                 <tr>
                     <td>{l s='Promo code'}</td>
                     <td>{$order.subtotals.discounts.amount}</td>
                 </tr>
+                {/if}
                 <tr>
                     <td>{l s='Shipping cost'}</td>
                     <td>{$order.subtotals.shipping.amount}</td>
