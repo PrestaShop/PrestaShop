@@ -1,9 +1,11 @@
 <div class="cart-detailed-totals">
   {foreach from=$cart.subtotals item="subtotal"}
-    <div class="card-block cart-summary-line" id="cart-subtotal-{$subtotal.type}">
-      <span class="label">{$subtotal.label}</span>
-      <span class="value">{$subtotal.amount}</span>
-    </div>
+    {if $subtotal.amount}
+      <div class="card-block cart-summary-line" id="cart-subtotal-{$subtotal.type}">
+        <span class="label">{$subtotal.label}</span>
+        <span class="value">{$subtotal.amount}</span>
+      </div>
+    {/if}
   {/foreach}
 
   <hr/>

@@ -15,6 +15,7 @@ use Context;
 use CustomerMessage;
 use HistoryController;
 use Order;
+use OrderReturn;
 use Tools;
 
 class OrderPresenter
@@ -76,7 +77,20 @@ class OrderPresenter
     {
         $cartPresenter = $this->getCart($order);
 
-        return $cartPresenter['products'];
+        $products = $cartPresenter['products'];
+
+        $orderProductsDetails = $order->getProductsDetail();
+
+        foreach($products as &$product) {
+            foreach($orderProductsDetails as $orderProduct) {
+                if ($product['id_product'] == $orderProduct['product_id']) {
+                    $product['id_order_detail'] = $orderProduct['id_order_detail'];
+                }
+            }
+        }
+        OrderReturn::addReturnedQuantity($products, $order->id);
+
+        return $products;
     }
 
     /**
@@ -119,6 +133,7 @@ class OrderPresenter
             'payment' => $order->payment,
             'recyclable' => (bool) $order->recyclable,
             'shipping' => $this->getShipping($order),
+            'is_valid' => $order->valid
         ];
     }
 
