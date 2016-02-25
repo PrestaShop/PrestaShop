@@ -308,6 +308,53 @@ li.product-label {
     z-index: 2;
   }
 }
+.product-customization {
+  @include box-shadow;
+  margin: $extra-large-space 0;
+  .product-customization-item{
+    margin: $medium-space 0;
+  }
+  .product-message {
+    background: $gray-light;
+    border: none;
+    width: 100%;
+    height: em(50px);
+    resize: none;
+    @include placeholder {
+      color: $gray;
+    }
+  }
+  .file-input {
+    margin-top: $medium-space;
+    width: 100%;
+    opacity: 0;
+    left:0;
+    z-index: 1;
+    cursor: pointer;
+    height: em(42px);
+    overflow: hidden;
+    position: absolute;
+  }
+  .custom-file{
+    position: relative;
+    background: $gray-light;
+    width: 100%;
+    height: em(42px);
+    line-height: em(42px);
+    text-indent: em(10px);
+    display: block;
+    color: $gray;
+    button{
+      z-index: 0;
+      position: absolute;
+      right: 0;
+      top:0;
+    }
+  }
+  small{
+    color:$gray;
+  }
+}
 .social-sharing {
   width: 100%;
   li {
