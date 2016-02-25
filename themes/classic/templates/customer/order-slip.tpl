@@ -20,7 +20,7 @@
         {foreach from=$credit_slips item=slip}
           <tr>
             <th scope="row">{$slip.credit_slip_number}</th>
-            <td><a href="#">{$slip.order_number}</a></td>
+            <td><a href="{$slip.order_url_details}" data-link-action="view-order-details">{$slip.order_reference}</a></td>
             <td>{$slip.credit_slip_date}</td>
             <td class="text-xs-center">
               <a href="{$slip.url}"><i class="material-icons">&#xE415;</i></a>
