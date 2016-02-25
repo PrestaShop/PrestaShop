@@ -16612,6 +16612,18 @@
 	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute], #quantity_wanted', function () {
 	    (0, _jquery2['default'])("input[name$='refresh']").click();
 	  });
+	
+	  (0, _jquery2['default'])('.js-file-input').on('change', function (event) {
+	    (0, _jquery2['default'])('.js-file-name').text((0, _jquery2['default'])(event.currentTarget).val());
+	  });
+	
+	  (0, _jquery2['default'])('#quantity_wanted').TouchSpin({
+	    verticalbuttons: true,
+	    verticalupclass: 'material-icons touchspin-up',
+	    verticaldownclass: 'material-icons touchspin-down',
+	    buttondown_class: 'btn btn-touchspin js-touchspin',
+	    buttonup_class: 'btn btn-touchspin js-touchspin'
+	  });
 	});
 
 /***/ },

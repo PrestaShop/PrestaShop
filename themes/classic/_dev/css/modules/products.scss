@@ -34,6 +34,22 @@
 }
 .product-quantity {
   display: inline-block;
+  .bootstrap-touchspin{
+    float: right;
+    margin-left: $small-space;
+    margin-top: em(-6px);
+  }
+  #quantity_wanted {
+    color: $gray-darker;
+    background-color: white;
+    border: 1px solid $gray-light;
+    height: 2.25rem;
+    padding: 0.175rem 0.5rem;
+    width: 3em;
+  }
+  .input-group-btn-vertical{
+    float: left;
+  }
 }
 .product-discounts {
   margin: $extra-large-space 0;
@@ -62,13 +78,7 @@
     }
   }
 }
-#quantity_wanted {
-  @include box-shadow;
-  text-align: center;
-  width: em(50px);
-  height: em(40px);
-  border: none;
-}
+
 .product-discount {
   .regular-price {
     font-size: em(20px);
@@ -311,7 +321,7 @@ li.product-label {
 .product-customization {
   @include box-shadow;
   margin: $extra-large-space 0;
-  .product-customization-item{
+  .product-customization-item {
     margin: $medium-space 0;
   }
   .product-message {
@@ -328,14 +338,14 @@ li.product-label {
     margin-top: $medium-space;
     width: 100%;
     opacity: 0;
-    left:0;
+    left: 0;
     z-index: 1;
     cursor: pointer;
     height: em(42px);
     overflow: hidden;
     position: absolute;
   }
-  .custom-file{
+  .custom-file {
     position: relative;
     background: $gray-light;
     width: 100%;
@@ -344,15 +354,54 @@ li.product-label {
     text-indent: em(10px);
     display: block;
     color: $gray;
-    button{
+    margin-top: $medium-space;
+    button {
       z-index: 0;
       position: absolute;
       right: 0;
-      top:0;
+      top: 0;
     }
   }
-  small{
-    color:$gray;
+  small {
+    color: $gray;
+  }
+}
+.product-pack {
+  margin-top: $extra-large-space;
+  .card{
+    @include box-shadow;
+  }
+  .mask {
+    position: relative;
+    width: em(55px);
+    height: em(55px);
+    overflow: hidden;
+    border: $gray-light 1px solid;
+    margin: $small-space 0;
+    .pack-product-image {
+      position: absolute;
+      left: -34px;
+      top: -26px;
+    }
+  }
+  .pack-product-container {
+    display: flex;
+    justify-content: space-around;
+    .pack-product-name {
+      flex: 0 0 50%;
+      font-size: em(14px);
+      color: $gray;
+    }
+    .pack-product-quantity {
+      border-left: $gray-light 2px solid;
+      padding-left: $small-space;
+    }
+    .pack-product-price,
+    .pack-product-quantity,
+    .pack-product-name {
+      display: flex;
+      align-items: center;
+    }
   }
 }
 .social-sharing {

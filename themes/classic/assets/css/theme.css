@@ -5474,7 +5474,6 @@ body#checkout {
       justify-content: space-between;
       align-items: flex-start; }
     body#checkout section.checkout-step .address-item {
-      width: 45%;
       background: #f6f6f6; }
       body#checkout section.checkout-step .address-item.selected {
         background: white;
@@ -6189,6 +6188,19 @@ body#checkout {
 
 .product-quantity {
   display: inline-block; }
+  .product-quantity .bootstrap-touchspin {
+    float: right;
+    margin-left: 10px;
+    margin-top: -0.375em; }
+  .product-quantity #quantity_wanted {
+    color: #414141;
+    background-color: white;
+    border: 1px solid #ebebeb;
+    height: 2.25rem;
+    padding: 0.175rem 0.5rem;
+    width: 3em; }
+  .product-quantity .input-group-btn-vertical {
+    float: left; }
 
 .product-discounts {
   margin: 40px 0; }
@@ -6209,13 +6221,6 @@ body#checkout {
       padding: 10px 20px;
       text-align: center;
       border: 0.3125em #ebebeb solid; }
-
-#quantity_wanted {
-  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 3.125em;
-  height: 2.5em;
-  border: none; }
 
 .product-discount .regular-price {
   font-size: 1.25em;
@@ -6450,7 +6455,8 @@ li.product-label {
     line-height: 2.625em;
     text-indent: 0.625em;
     display: block;
-    color: #acaaa6; }
+    color: #acaaa6;
+    margin-top: 20px; }
     .product-customization .custom-file button {
       z-index: 0;
       position: absolute;
@@ -6458,6 +6464,39 @@ li.product-label {
       top: 0; }
   .product-customization small {
     color: #acaaa6; }
+
+.product-pack {
+  margin-top: 40px; }
+  .product-pack .card {
+    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
+  .product-pack .mask {
+    position: relative;
+    width: 3.4375em;
+    height: 3.4375em;
+    overflow: hidden;
+    border: #ebebeb 1px solid;
+    margin: 10px 0; }
+    .product-pack .mask .pack-product-image {
+      position: absolute;
+      left: -34px;
+      top: -26px; }
+  .product-pack .pack-product-container {
+    -js-display: flex;
+    display: flex;
+    justify-content: space-around; }
+    .product-pack .pack-product-container .pack-product-name {
+      flex: 0 0 50%;
+      font-size: 0.875em;
+      color: #acaaa6; }
+    .product-pack .pack-product-container .pack-product-quantity {
+      border-left: #ebebeb 2px solid;
+      padding-left: 10px; }
+    .product-pack .pack-product-container .pack-product-price,
+    .product-pack .pack-product-container .pack-product-quantity,
+    .product-pack .pack-product-container .pack-product-name {
+      -js-display: flex;
+      display: flex;
+      align-items: center; }
 
 .social-sharing {
   width: 100%; }

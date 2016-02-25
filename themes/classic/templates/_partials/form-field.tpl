@@ -5,7 +5,7 @@
         {$field.label}
       {/if}
     </label>
-    <div class="col-md-5{if ($field.type === 'radio-buttons')} form-control-valign{/if}">
+    <div class="col-md-6{if ($field.type === 'radio-buttons')} form-control-valign{/if}">
       {if $field.type === 'select'}
         <select {if $field.required} required {/if} name="{$field.name}" class="form-control form-control-select">
           <option value disabled selected>{l s='-- please choose --'}</option>
@@ -46,7 +46,7 @@
       {/if}
     </div>
     {if $field.type === 'password'}
-      <span class="col-md-4 form-control-comment">
+      <span class="col-md-3 form-control-comment">
         {l s='Five characters minimum'}
       </span>
     {elseif (!$field.required && $field.type !== 'radio-buttons' && $field.type !== 'checkbox') || $field.name === 'company' }
