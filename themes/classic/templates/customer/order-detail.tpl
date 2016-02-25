@@ -61,10 +61,10 @@
     </section>
   {/block}
 
-  {if $order.followup}
+  {if $order.follow_up}
     <div class="box">
       <p>{l s='Click the following link to track the delivery of your order'}</p>
-      <a href="{$order.followup}">{$order.followup}</a>
+      <a href="{$order.follow_up}">{$order.follow_up}</a>
     </div>
   {/if}
 
