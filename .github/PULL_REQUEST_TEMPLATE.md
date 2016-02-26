@@ -1,36 +1,45 @@
 <!--
 Thank you for contributing to the PrestaShop project!
+This text is a template text for your pull request description. Click the "Preview" button to see how it displays.
 
-This text is a template text for your pull request description. Click the "Preview" button to see how it displays. You can edit/remove everything in this template, and use HTML, Markdown (https://daringfireball.net/projects/markdown/syntax) or advanced formatting (https://help.github.com/articles/working-with-advanced-formatting/).
+Please provide a general summary of your changes in the title field above, following this naming convention:
+"[<type>] <category> : <short description>".
+
+<type> can be:
+* [-] for a bug fix.
+* [*] for an improvement.
+* [+] for a new feature.
+
+<category> can be:
+* FO : Front office (theme, front controller, images, CSS, JavaScript, etc.).
+* BO : Back office (theme, admin controller, images, CSS, JavaScript, etc.).
+* CORE :	The core of the software itself: classes, controllers, etc.
+
+Sample title: "[-] FO : Fix cart warning for IE9."
+
+IMPORTANT: Your commits' names MUST also follow this convention. For more details, please read http://doc.prestashop.com/display/PS16/How+to+write+a+commit+message
 
 Guidelines:
-
-* PrestaShop 1.7 happens on the 'develop' branch
-* PrestaShop 1.6 happens on the '1.6.1.x' branch -- and only accept bugfixes, not improvements/new features.
+* PrestaShop 1.7 development happens on the 'develop' branch
+* PrestaShop 1.6 development happens on the '1.6.1.x' branch -- and only accept bugfixes, not improvements/new features.
 * Don't target the 'master' branch!
 * Make sure your local branch is up to date before commiting your changes!
-* The PR of your title and the name of your commit should match the PrestaShop naming convention: http://doc.prestashop.com/display/PS16/How+to+write+a+commit+message
+* Your code MUST respect the PSR-2 Coding Style: http://doc.prestashop.com/display/PS16/Coding+Standards !
 * Use 'git rebase' (in the command line) to squash/fixup dummy/unnecessary commits into only one commit, or to remove "Merge branch XXX:" commits.
-
-Please be as descriptive as possible: the more details you give, the quicker your PR can be merged!
-
-IMPORTANT: Your code MUST respect the PSR-2 Coding Style: http://doc.prestashop.com/display/PS16/Coding+Standards !
-
-Remember to delete the comments from the PR template! :)
- -->
+-->
 
 
 ## Description
 
 <!--
-A few sentences describing the overall goals of the pull request's commit(s). 
-Explain the motivation for making this change. What existing problem does the pull request solve? Why is it the best way to solve it? Give us as much details as possible: you want to convince the PS that your PR must be merged :)
+Please enter few sentences describing the overall goals of the pull request's commit(s). 
+Please be as descriptive as possible: the more details you give, the quicker your PR can be reviewed!
+
+Explain the motivation for making this change. What existing problem does the pull request solve? Why is it the best way to solve it? Give us as much details as possible: you want to convince the PS Core team that your PR must be merged :)
 Describe any possible limitations, side effects, etc.
+
 Reference any other pull requests that might be related (for instance, if you are rebasing a PR from another branch).
 -->
- 
-This PR is a (BUG FIX / NEW FEATURE  / TEXT CHANGE). 
-<!-- Delete the unneeded mentions and add your long description right below. -->
 
 
 ## Steps to Test this Fix
