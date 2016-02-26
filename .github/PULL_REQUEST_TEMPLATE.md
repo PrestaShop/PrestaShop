@@ -1,6 +1,6 @@
 <!--
 Thank you for contributing to the PrestaShop project!
-This text is a template text for your pull request description. Click the "Preview" button to see how it displays.
+This text is a template text for your GitHub pull request description. Click the "Preview" button to see how it displays.
 
 Please provide a general summary of your changes in the title field above, following this naming convention:
 "[<type>] <category> : <short description>".
@@ -11,9 +11,10 @@ Please provide a general summary of your changes in the title field above, follo
 * [+] for a new feature.
 
 <category> can be:
-* FO : Front office (theme, front controller, images, CSS, JavaScript, etc.).
-* BO : Back office (theme, admin controller, images, CSS, JavaScript, etc.).
-* CORE :	The core of the software itself: classes, controllers, etc.
+* FO : Related to the Front Office. Default theme (images, CSS, JavaScript, etc.), 'front' controllers, etc.
+* BO : Related to the Back Office. BO theme, 'admin' controllers, images, CSS, JavaScript, etc.
+* CORE : Related to the core of the software itself Classes, controllers, etc.
+* MO : Modules. Please specify the module's name in the content of commit message.
 
 Sample title: "[-] FO : Fix cart warning for IE9."
 
@@ -25,15 +26,15 @@ Guidelines:
 * Don't target the 'master' branch!
 * Make sure your local branch is up to date before commiting your changes!
 * Your code MUST respect the PSR-2 Coding Style: http://doc.prestashop.com/display/PS16/Coding+Standards !
-* Use 'git rebase' (in the command line) to squash/fixup dummy/unnecessary commits into only one commit, or to remove "Merge branch XXX:" commits.
+* Use 'git rebase' (in the command line) to squash/fixup unnecessary commits into only one commit, or to remove "Merge branch XXX:" commits.
 -->
 
 
 ## Description
 
 <!--
-Please enter few sentences describing the overall goals of the pull request's commit(s). 
-Please be as descriptive as possible: the more details you give, the quicker your PR can be reviewed!
+Please enter a few sentences describing the overall goals of the pull request's commit(s). 
+You should be as descriptive as possible: the more details you give, the quicker your PR can be reviewed!
 
 Explain the motivation for making this change. What existing problem does the pull request solve? Why is it the best way to solve it? Give us as much details as possible: you want to convince the PS Core team that your PR must be merged :)
 Describe any possible limitations, side effects, etc.
