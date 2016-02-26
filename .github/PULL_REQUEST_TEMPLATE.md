@@ -14,7 +14,7 @@ Please provide a general summary of your changes in the title field above, follo
 * FO : Related to the Front Office. Default theme (images, CSS, JavaScript, etc.), 'front' controllers, etc.
 * BO : Related to the Back Office. BO theme, 'admin' controllers, images, CSS, JavaScript, etc.
 * CORE : Related to the core of the software itself Classes, controllers, etc.
-* MO : Modules. Please specify the module's name in the content of commit message.
+* MO : Related to modules. Please specify the module's name in the content of commit message.
 
 Sample title: "[-] FO : Fix cart warning for IE9."
 
