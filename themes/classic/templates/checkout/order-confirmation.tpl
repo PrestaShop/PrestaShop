@@ -51,7 +51,7 @@
                 {if isset($order.subtotals.discounts)}
                 <tr>
                     <td>{l s='Promo code'}</td>
-                    <td>{$order.subtotals.discounts.amount}</td>
+                    <td>- {$order.subtotals.discounts.amount}</td>
                 </tr>
                 {/if}
                 <tr>
