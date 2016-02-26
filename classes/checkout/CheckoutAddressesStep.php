@@ -118,6 +118,19 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 $this->show_invoice_address_form = true;
             }
             $this->addressForm->loadAddressById($requestParams['id_address']);
+        } elseif (isset($requestParams['deleteAddress'])) {
+            $addressPersister = new CustomerAddressPersister(
+                $this->context->customer,
+                $this->context->cart,
+                Tools::getToken(true, $this->context)
+            );
+
+            if ($addressPersister->delete(new Address((int)Tools::getValue('id_address'), $this->context->language->id), Tools::getValue('token'))) {
+                $this->success[] = $this->getTranslator()->trans('Address successfully deleted!', [], 'Checkout');
+            } else {
+                $this->getCheckoutProcess()->setHasErrors(true);
+                $this->context->controller->errors[] = $this->getTranslator()->trans('Could not delete address.', [], 'Checkout');
+            }
         }
 
         if (!$this->step_is_complete) {

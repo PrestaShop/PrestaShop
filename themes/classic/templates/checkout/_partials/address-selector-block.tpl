@@ -14,10 +14,10 @@
       <hr>
       <footer class="address-footer">
         {if $interactive}
-          <a class="edit-address" data-link-action="edit-address" href="{$address.url_order_edit}&amp;editAddress={$type}">
+          <a class="edit-address" data-link-action="edit-address" href="{$address.url_order_address}&amp;editAddress={$type}">
             <i class="material-icons edit">&#xE254;</i>{l s='Edit'}
           </a>
-          <a class="delete-address" href="#">
+          <a class="delete-address" data-link-action="delete-address" href="{$address.url_order_address}&amp;deleteAddress=1">
             <i class="material-icons delete">&#xE872;</i>{l s='Delete'}
           </a>
         {/if}
