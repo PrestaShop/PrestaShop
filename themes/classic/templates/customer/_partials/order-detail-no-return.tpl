@@ -56,7 +56,7 @@
     {if $order.subtotals.discounts.amount}
       <tr>
         <td>{l s='Total vouchers'}</td>
-        <td colspan="4" class="text-xs-right">{$order.subtotals.discounts.amount}</td>
+        <td colspan="4" class="text-xs-right">- {$order.subtotals.discounts.amount}</td>
       </tr>
     {/if}
     {if isset($order.subtotals.gift_wrapping)}
