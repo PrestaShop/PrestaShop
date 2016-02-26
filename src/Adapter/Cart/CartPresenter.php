@@ -244,6 +244,7 @@ class CartPresenter
         $total = [
             'type' => 'total',
             'label' => $this->translator->trans('Total', [], 'Cart'),
+            'raw_amount' => $this->includeTaxes() ? $total_including_tax : $total_excluding_tax,
             'amount' => $this->pricePresenter->convertAndFormat($this->includeTaxes() ? $total_including_tax : $total_excluding_tax),
         ];
 
