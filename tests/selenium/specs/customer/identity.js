@@ -21,7 +21,7 @@ describe('Customer Identity', function () {
       return browser
         .setValue('[name="password"]', 'wrong password')
         .click('#customer-form button')
-        .waitForVisible('.notification-error')
+        .waitForVisible('.alert-danger')
       ;
     });
 
@@ -29,7 +29,7 @@ describe('Customer Identity', function () {
       return browser
         .setValue('[name="password"]', '123456789')
         .click('#customer-form button')
-        .waitForVisible('.notification-success')
+        .waitForVisible('.alert-success')
       ;
     });
 
@@ -39,7 +39,7 @@ describe('Customer Identity', function () {
         .setValue('[name="password"]', '123456789')
         .setValue('[name="new_password"]', 'new password')
         .click('#customer-form button')
-        .waitForVisible('.notification-success')
+        .waitForVisible('.alert-success')
         // try to login with the new password
         .logout()
         .loginDefaultCustomer({password: 'new password'})
@@ -48,7 +48,7 @@ describe('Customer Identity', function () {
         .setValue('[name="password"]', 'new password')
         .setValue('[name="new_password"]', '123456789')
         .click('#customer-form button')
-        .waitForVisible('.notification-success')
+        .waitForVisible('.alert-success')
       ;
     });
 
