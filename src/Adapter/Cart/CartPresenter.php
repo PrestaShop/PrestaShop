@@ -85,6 +85,7 @@ class CartPresenter
         $rawProduct['online_only'] = '';
         $rawProduct['reduction'] = '';
         $rawProduct['new'] = '';
+        $rawProduct['pack'] = '';
 
         $rawProduct['price'] = $this->pricePresenter->convertAndFormat(
             $this->includeTaxes() ?
