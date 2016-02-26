@@ -21,6 +21,7 @@ var AdminModule = function () {
     this.areAllModuleDisplayed = true;
     this.baseAddonsUrl = 'https://addons.prestashop.com/';
     this.pstaggerInput = null;
+    this.lastBulkAction = null;
 
     /* Selectors into vars to make it easier to change them while keeping same code logic */
     this.searchBarSelector = '#module-search-bar';
@@ -52,6 +53,10 @@ var AdminModule = function () {
     this.bulkActionCheckboxGridSelector = '.module-checkbox-bulk-grid';
     this.bulkActionCheckboxListSelector = '.module-checkbox-bulk-list';
     this.selectAllBulkActionSelector = '.module-checkbox-bulk-select-all';
+    this.bulkConfirmModalSelector = '#module-modal-bulk-confirm';
+    this.bulkConfirmModalActionNameSelector = '#module-modal-bulk-confirm-action-name';
+    this.bulkConfirmModalListSelector = '#module-modal-bulk-confirm-list';
+    this.bulkConfirmModalAckBtnSelector = '#module-modal-confirm-bulk-ack';
 
     /* Selectors for Module Import and Addons connect */
     this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
@@ -83,13 +88,49 @@ var AdminModule = function () {
   //@TODO: JS Doc
   this.initBulkActions = function() {
       var _this = this;
+
       $(this.bulkActionDropDownSelector).on('change', function(event){
-          var bulkAction = $(this).find(':checked').attr('value');
-          _this.doBulkAction(bulkAction);
+          _this.lastBulkAction = $(this).find(':checked').attr('value');
+          var modulesListString = _this.buildBulkActionModuleList();
+          var actionString = $(this).find(':checked').text().toLowerCase();
+          $(_this.bulkConfirmModalListSelector).html(modulesListString);
+          $(_this.bulkConfirmModalActionNameSelector).text(actionString);
+          $(_this.bulkConfirmModalSelector).modal('show');
       });
+
       $(this.selectAllBulkActionSelector).on('change', function(event){
           _this.changeBulkCheckboxesState($(this).is(':checked'));
       });
+
+      $(this.bulkConfirmModalAckBtnSelector).on('click', function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          $(_this.bulkConfirmModalSelector).modal('hide');
+          _this.doBulkAction(_this.lastBulkAction);
+      });
+  };
+
+  this.buildBulkActionModuleList = function() {
+      var checkBoxesSelector = this.getBulkCheckboxesSelector();
+      var moduleItemSelector = this.getModuleItemSelector();
+      var _this = this;
+      var alreadyDoneFlag = 0;
+      var htmlGenerated = '';
+
+
+      $(checkBoxesSelector + ':checked').each(function(index, value){
+          if (alreadyDoneFlag != 10) {
+              var currentElement = $(this).parents(moduleItemSelector);
+              htmlGenerated += '- ' + currentElement.attr('data-name') + '<br/>';
+              alreadyDoneFlag += 1;
+          } else {
+              // Break each
+              htmlGenerated += '- ...';
+              return false;
+          }
+      });
+
+      return htmlGenerated;
   };
 
     // @TODO: JS Doc
@@ -97,7 +138,7 @@ var AdminModule = function () {
         var checkBoxesSelector = this.getBulkCheckboxesSelector();
 
         $(checkBoxesSelector).each(function () {
-            $(this).attr('checked', hasToCheck);
+            $(this).prop('checked', hasToCheck);
         });
     };
 
