@@ -13,7 +13,7 @@
     </div>
 
     <div class="product-line-info">
-      <span class="value">{$product.total}</span>
+      <span class="value">{$product.price}</span>
     </div>
 
     <br/>

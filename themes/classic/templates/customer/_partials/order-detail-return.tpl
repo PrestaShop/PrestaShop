@@ -18,7 +18,7 @@
     {foreach from=$order.products item=product name=products}
       <tr>
         <td>
-          {if !$product.customizedDatas}
+          {if !$product.customizations}
             <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}" />
           {/if}
         </td>
@@ -29,12 +29,12 @@
             {$product.quantity}
           </div>
           <div class="select">
-            {if !$product.customizedDatas}
+            {if !$product.customizations}
               <select name="order_qte_input[{$product.id_order_detail}]" class="form-control form-control-select">
             {else}
               <select name="order_qte_input[{$smarty.foreach.products.index}]" class="form-control form-control-select">
             {/if}
-                {section name=quantity start=1 loop=$product.product_quantity+1}
+                {section name=quantity start=1 loop=$product.quantity+1-$product.qty_returned}
                   <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
                 {/section}
               </select>
@@ -42,8 +42,8 @@
           <div class="clearfix"></div>
         </td>
         <td class="text-xs-right">{$product.qty_returned}</td>
-        <td class="text-xs-right">{$product.unit_price}</td>
-        <td class="text-xs-right">{$product.total_price}</td>
+        <td class="text-xs-right">{$product.price}</td>
+        <td class="text-xs-right">{$product.total}</td>
       </tr>
       {if $product.customizations}
         {foreach $product.customizations  as $customization}
@@ -79,35 +79,35 @@
     <tfoot>
       {if $priceDisplay && $use_tax}
         <tr>
-          <td>{l s='Items (tax excl.)'}</td>
-          <td colspan="4" class="text-xs-right">{$order.total.amount}</td>
+          <td colspan="2">{l s='Items (tax excl.)'}</td>
+          <td colspan="5" class="text-xs-right">{$order.total.amount}</td>
         </tr>
       {/if}
       {if isset($order.subtotals.tax)}
         <tr>
-          <td>{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
-          <td colspan="4" class="text-xs-right">{$order.subtotals.tax.amount}</td>
+          <td colspan="2">{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
+          <td colspan="5" class="text-xs-right">{$order.subtotals.tax.amount}</td>
         </tr>
       {/if}
-      {if isset($order.subtotals.discounts)}
+      {if $order.subtotals.discounts.amount}
         <tr>
-          <td>{l s='Total vouchers'}</td>
-          <td colspan="4" class="text-xs-right">{$order.subtotals.discounts.amount}</td>
+          <td colspan="2">{l s='Total vouchers'}</td>
+          <td colspan="5" class="text-xs-right">{$order.subtotals.discounts.amount}</td>
         </tr>
       {/if}
       {if isset($order.subtotals.gift_wrapping)}
         <tr>
-          <td>{l s='Total gift wrapping cost'}</td>
-          <td colspan="4" class="text-xs-right">{$order.subtotals.gift_wrapping.amount}</td>
+          <td colspan="2">{l s='Total gift wrapping cost'}</td>
+          <td colspan="5" class="text-xs-right">{$order.subtotals.gift_wrapping.amount}</td>
         </tr>
       {/if}
       <tr>
-        <td>{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
-        <td colspan="4" class="text-xs-right">{$order.subtotals.shipping.amount}</td>
+        <td colspan="2">{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
+        <td colspan="5" class="text-xs-right">{$order.subtotals.shipping.amount}</td>
       </tr>
       <tr>
-        <td>{l s='Total'}</td>
-        <td colspan="4" class="text-xs-right">{$order.total.total_paid.amount}</td>
+        <td colspan="2">{l s='Total'}</td>
+        <td colspan="5" class="text-xs-right">{$order.total.total_paid.amount}</td>
       </tr>
     </tfoot>
   </table>

@@ -39,7 +39,7 @@
           <select name="id_product" class="form-control form-control-select">
             <option value="0">{l s='-- Choose --'}</option>
             {foreach from=$order.products item=product}
-              <option value="{$product.id}">{$product.name}</option>
+              <option value="{$product.id_product}">{$product.name}</option>
             {/foreach}
           </select>
         </div>

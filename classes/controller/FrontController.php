@@ -1459,16 +1459,33 @@ class FrontControllerCore extends Controller
         $page_name = $this->getPageName();
         $meta_tags = Meta::getMetaTags($this->context->language->id, $page_name);
 
+        $my_account_controllers = [
+            'address',
+            'authentication',
+            'discount',
+            'history',
+            'identity',
+            'order-follow',
+            'order-slip',
+            'password',
+        ];
+
+        $body_classes = [
+            $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
+            'page-'.$this->php_self => true,
+        ];
+
+        if (in_array($this->php_self, $my_account_controllers)) {
+            $body_classes['page-customer-account'] = true;
+        }
+
         $page = [
             'canonical' => $this->getCanonicalURL(),
             'title' => $meta_tags['meta_title'],
             'description' => $meta_tags['meta_description'],
             'keywords' => $meta_tags['meta_keywords'],
             'page_name' => $page_name,
-            'body_classes' => [
-                $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
-                'page-'.$this->php_self => true,
-            ],
+            'body_classes' => $body_classes,
         ];
 
         return $page;
