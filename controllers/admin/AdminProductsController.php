@@ -2519,8 +2519,6 @@ class AdminProductsControllerCore extends AdminController
                     unset($this->context->cookie->{$this->table.'Orderby'});
                     unset($this->context->cookie->{$this->table.'Orderway'});
                 }
-            }
-            if (!$id_category) {
                 $id_category = Configuration::get('PS_ROOT_CATEGORY');
             }
             $this->tpl_list_vars['is_category_filter'] = (bool)$this->id_current_category;
@@ -5169,7 +5167,7 @@ class AdminProductsControllerCore extends AdminController
 
                         if ($product = new Product((int)$pos[2])) {
                             if (isset($position) && $product->updatePosition($way, $position)) {
-                                $category = new Category((int)$id_category);
+                                $category = new Category($id_category);
                                 if (Validate::isLoadedObject($category)) {
                                     hook::Exec('categoryUpdate', array('category' => $category));
                                 }
