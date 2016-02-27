@@ -272,10 +272,6 @@ class AdminModulesControllerCore extends AdminController
     public function ajaxProcessGetTabModulesList()
     {
         $tab_modules_list = Tools::getValue('tab_modules_list');
-        $back = Tools::getValue('back_tab_modules_list');
-        if ($back) {
-            $back .= '&tab_modules_open=1';
-        }
         if ($tab_modules_list) {
             $tab_modules_list = explode(',', $tab_modules_list);
             $modules_list_unsort = $this->getModulesByInstallation($tab_modules_list, Tools::getValue('admin_list_from_source'));
