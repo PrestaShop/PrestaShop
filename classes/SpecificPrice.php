@@ -209,7 +209,7 @@ class SpecificPriceCore extends ObjectModel
      * @return string
      * @throws PrestaShopDatabaseException
      */
-    protected static function filterOutField($field_name, $field_value, $threshold = 1000)
+    private static function filterOutField($field_name, $field_value, $threshold = 1000)
     {
         $query_extra = 'AND `'.$field_name.'` = 0 ';
         if ($field_value == 0 || array_key_exists($field_name, self::$_no_specific_values)) {
