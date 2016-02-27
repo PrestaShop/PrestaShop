@@ -4928,8 +4928,7 @@ class AdminProductsControllerCore extends AdminController
                     die(json_encode(array('error' =>  $this->l('Undefined value'))));
                 }
                 $value = (int)$value;
-                if ($value != 0 && $value != 1
-                    && $value != 2 && $value != 3) {
+                if ($value < 0 || $value > 3) {
                     die(json_encode(array('error' =>  $this->l('Incorrect value'))));
                 }
                 if ($product->depends_on_stock && !Pack::allUsesAdvancedStockManagement($product->id) && ($value == 1
@@ -4948,7 +4947,7 @@ class AdminProductsControllerCore extends AdminController
                     die(json_encode(array('error' =>  $this->l('Undefined value'))));
                 }
                 $value = (int)$value;
-                if (!in_array($value, array(0, 1, 2))) {
+                if ($value < 0 || $value > 2) {
                     die(json_encode(array('error' =>  $this->l('Incorrect value'))));
                 }
 
