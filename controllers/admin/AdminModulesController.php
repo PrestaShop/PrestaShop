@@ -539,16 +539,11 @@ class AdminModulesControllerCore extends AdminController
             $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
             return;
         }
-        $redirectUrl = self::$currentIndex . '&conf=21&token=' . $this->token
-            . '&tab_module=' . $module->tab
-            . '&module_name=' . $module->name
-            . '&anchor=' . ucfirst($module->name);
         if (Tools::getValue('keep_data') == '1' && method_exists($module, 'reset')) {
             if (!$module->reset()) {
                 $this->errors[] = Tools::displayError('Cannot reset this module.');
                 return;
             }
-            Tools::redirectAdmin($redirectUrl);
         } else {
             if (!$module->uninstall()) {
                 $this->errors[] = Tools::displayError('Cannot uninstall this module.');
@@ -558,8 +553,12 @@ class AdminModulesControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('Cannot install this module.');
                 return;
             }
-            Tools::redirectAdmin($redirectUrl);
         }
+        $redirectUrl = self::$currentIndex . '&conf=21&token=' . $this->token
+            . '&tab_module=' . $module->tab
+            . '&module_name=' . $module->name
+            . '&anchor=' . ucfirst($module->name);
+        Tools::redirectAdmin($redirectUrl);
     }
 
     public function postProcessDownload()
