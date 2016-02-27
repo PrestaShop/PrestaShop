@@ -4900,16 +4900,17 @@ class AdminProductsControllerCore extends AdminController
         $product = new Product((int)Tools::getValue('id_product'), true);
         switch (Tools::getValue('actionQty')) {
             case 'depends_on_stock':
-                if (Tools::getValue('value') === false) {
+                $value = Tools::getValue('value');
+                if ($value === false) {
                     die(json_encode(array('error' =>  $this->l('Undefined value'))));
                 }
-                if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1) {
+                if ((int)$value != 0 && (int)$value != 1) {
                     die(json_encode(array('error' =>  $this->l('Incorrect value'))));
                 }
-                if (!$product->advanced_stock_management && (int)Tools::getValue('value') == 1) {
+                if (!$product->advanced_stock_management && (int)$value == 1) {
                     die(json_encode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
                 }
-                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1 && (Pack::isPack($product->id) && !Pack::allUsesAdvancedStockManagement($product->id)
+                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)$value == 1 && (Pack::isPack($product->id) && !Pack::allUsesAdvancedStockManagement($product->id)
                     && ($product->pack_stock_type == 2 || $product->pack_stock_type == 1 ||
                         ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 1 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))))) {
                     die(json_encode(array('error' => $this->l('You cannot use advanced stock management for this pack because').'<br />'.
@@ -4917,7 +4918,7 @@ class AdminProductsControllerCore extends AdminController
                         $this->l('- you have chosen to decrement products quantities.'))));
                 }
 
-                StockAvailable::setProductDependsOnStock($product->id, (int)Tools::getValue('value'));
+                StockAvailable::setProductDependsOnStock($product->id, (int)$value);
                 break;
 
             case 'pack_stock_type':
@@ -4941,25 +4942,27 @@ class AdminProductsControllerCore extends AdminController
                 break;
 
             case 'out_of_stock':
-                if (Tools::getValue('value') === false) {
+                $value = Tools::getValue('value');
+                if ($value === false) {
                     die(json_encode(array('error' =>  $this->l('Undefined value'))));
                 }
-                if (!in_array((int)Tools::getValue('value'), array(0, 1, 2))) {
+                if (!in_array((int)$value, array(0, 1, 2))) {
                     die(json_encode(array('error' =>  $this->l('Incorrect value'))));
                 }
 
-                StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
+                StockAvailable::setProductOutOfStock($product->id, (int)$value);
                 break;
 
             case 'set_qty':
-                if (Tools::getValue('value') === false || (!is_numeric(trim(Tools::getValue('value'))))) {
+                $value = Tools::getValue('value');
+                if ($value === false || (!is_numeric(trim($value)))) {
                     die(json_encode(array('error' =>  $this->l('Undefined value'))));
                 }
                 if (Tools::getValue('id_product_attribute') === false) {
                     die(json_encode(array('error' =>  $this->l('Undefined id product attribute'))));
                 }
 
-                StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
+                StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)$value);
                 Hook::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
 
                 // Catch potential echo from modules
@@ -4971,18 +4974,19 @@ class AdminProductsControllerCore extends AdminController
                 }
                 break;
             case 'advanced_stock_management' :
-                if (Tools::getValue('value') === false) {
+                $value = Tools::getValue('value');
+                if ($value === false) {
                     die(json_encode(array('error' =>  $this->l('Undefined value'))));
                 }
-                if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0) {
+                if ((int)$value != 1 && (int)$value != 0) {
                     die(json_encode(array('error' =>  $this->l('Incorrect value'))));
                 }
-                if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1) {
+                if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)$value == 1) {
                     die(json_encode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
                 }
 
-                $product->setAdvancedStockManagement((int)Tools::getValue('value'));
-                if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0) {
+                $product->setAdvancedStockManagement((int)$value);
+                if (StockAvailable::dependsOnStock($product->id) == 1 && (int)$value == 0) {
                     StockAvailable::setProductDependsOnStock($product->id, 0);
                 }
                 break;
