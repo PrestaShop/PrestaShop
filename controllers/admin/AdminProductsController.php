@@ -1609,22 +1609,22 @@ class AdminProductsControllerCore extends AdminController
         $id_product = (int)Tools::getValue('id_product');
         if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int)Tools::getValue('id_shop'))) {
             if (Tools::getValue('active') == 'true') {
-                $res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_product`, `id_image`, `id_shop`, `cover`) VALUES(' . $id_product . ', '.(int)$id_image.', '.(int)$id_shop.', NULL)');
+                $res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_product`, `id_image`, `id_shop`, `cover`) VALUES(' . $id_product . ', '.(int)$id_image.', ' . $id_shop . ', NULL)');
             } else {
-                $res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int)$id_image.' AND `id_shop` = '.(int)$id_shop);
+                $res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int)$id_image.' AND `id_shop` = ' . $id_shop);
             }
         }
 
         // Clean covers in image table
         $count_cover_image = Db::getInstance()->getValue('
 			SELECT COUNT(*) FROM '._DB_PREFIX_.'image i
-			INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.')
+			INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = ' . $id_shop . ')
 			WHERE i.cover = 1 AND i.`id_product` = ' . $id_product);
 
         if (!$id_image) {
             $id_image = Db::getInstance()->getValue('
                 SELECT i.`id_image` FROM '._DB_PREFIX_.'image i
-                INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.')
+                INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = ' . $id_shop . ')
                 WHERE i.`id_product` = ' . $id_product);
         }
 
@@ -1636,10 +1636,10 @@ class AdminProductsControllerCore extends AdminController
         $count_cover_image_shop = Db::getInstance()->getValue('
 			SELECT COUNT(*)
 			FROM '._DB_PREFIX_.'image_shop ish
-			WHERE ish.`id_product` = ' . $id_product . ' AND ish.id_shop = '.(int)$id_shop.' AND ish.cover = 1');
+			WHERE ish.`id_product` = ' . $id_product . ' AND ish.id_shop = ' . $id_shop . ' AND ish.cover = 1');
 
         if ($count_cover_image_shop < 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.`id_product` = ' . $id_product . ' AND ish.id_shop =  '.(int)$id_shop.' LIMIT 1');
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.`id_product` = ' . $id_product . ' AND ish.id_shop =  ' . $id_shop . ' LIMIT 1');
         }
 
         if ($res) {
