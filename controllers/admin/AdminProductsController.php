@@ -147,7 +147,7 @@ class AdminProductsControllerCore extends AdminController
         }
         /* Join categories table */
         if ($id_category = (int)Tools::getValue('productFilter_cl!name')) {
-            $this->_category = new Category((int)$id_category);
+            $this->_category = new Category($id_category);
             $_POST['productFilter_cl!name'] = $this->_category->name[$this->context->language->id];
         } else {
             if ($id_category = (int)Tools::getValue('id_category')) {
@@ -780,7 +780,7 @@ class AdminProductsControllerCore extends AdminController
                 if (!count($this->errors)) {
                     if ($object->delete()) {
                         $id_category = (int)Tools::getValue('id_category');
-                        $category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
+                        $category_url = empty($id_category) ? '' : '&id_category=' . $id_category;
                         PrestaShopLogger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
                         $this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
                     } else {
@@ -796,7 +796,7 @@ class AdminProductsControllerCore extends AdminController
     public function processImage()
     {
         $id_image = (int)Tools::getValue('id_image');
-        $image = new Image((int)$id_image);
+        $image = new Image($id_image);
         if (Validate::isLoadedObject($image)) {
             /* Update product image/legend */
             // @todo : move in processEditProductImage
@@ -880,7 +880,7 @@ class AdminProductsControllerCore extends AdminController
 
                     if ($success) {
                         $id_category = (int)Tools::getValue('id_category');
-                        $category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
+                        $category_url = empty($id_category) ? '' : '&id_category=' . $id_category;
                         $this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token.$category_url;
                     } else {
                         $this->errors[] = Tools::displayError('An error occurred while deleting this selection.');
@@ -1186,7 +1186,7 @@ class AdminProductsControllerCore extends AdminController
             if (!$id_specific_price || !Validate::isUnsignedId($id_specific_price)) {
                 $error = Tools::displayError('The specific price ID is invalid.');
             } else {
-                $specificPrice = new SpecificPrice((int)$id_specific_price);
+                $specificPrice = new SpecificPrice($id_specific_price);
                 if (!$specificPrice->delete()) {
                     $error = Tools::displayError('An error occurred while attempting to delete the specific price.');
                 }
@@ -1516,7 +1516,7 @@ class AdminProductsControllerCore extends AdminController
                         'message'=> $this->l('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.')
                     );
                 } else {
-                    $product->deleteAttributeCombination((int)$id_product_attribute);
+                    $product->deleteAttributeCombination($id_product_attribute);
                     $product->checkDefaultAttributes();
                     Tools::clearColorListCache((int)$product->id);
                     if (!$product->hasAttributes()) {
@@ -1535,7 +1535,7 @@ class AdminProductsControllerCore extends AdminController
                         $json = array(
                             'status' => 'ok',
                             'message'=> $this->_conf[1],
-                            'id_product_attribute' => (int)$id_product_attribute
+                            'id_product_attribute' => $id_product_attribute
                         );
                     }
                 }
@@ -1585,7 +1585,7 @@ class AdminProductsControllerCore extends AdminController
         if ($this->tabAccess['edit'] === '1') {
             $id_product = (int)Tools::getValue('id_product');
             $id_product_attribute = (int)Tools::getValue('id_product_attribute');
-            if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product((int)$id_product))) {
+            if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product))) {
                 $combinations = $product->getAttributeCombinationsById($id_product_attribute, $this->context->language->id);
                 foreach ($combinations as $key => $combination) {
                     $combinations[$key]['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);
