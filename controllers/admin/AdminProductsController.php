@@ -2519,7 +2519,7 @@ class AdminProductsControllerCore extends AdminController
                     unset($this->context->cookie->{$this->table.'Orderby'});
                     unset($this->context->cookie->{$this->table.'Orderway'});
                 }
-                $id_category = Configuration::get('PS_ROOT_CATEGORY');
+                $id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
             }
             $this->tpl_list_vars['is_category_filter'] = (bool)$this->id_current_category;
 
@@ -2529,7 +2529,7 @@ class AdminProductsControllerCore extends AdminController
                 ->setAttribute('base_url', preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token)
                 ->setInputName('id-category')
                 ->setRootCategory(Category::getRootCategory()->id)
-                ->setSelectedCategories(array((int)$id_category));
+                ->setSelectedCategories(array($id_category));
             $this->tpl_list_vars['category_tree'] = $tree->render();
 
             // used to build the new url when changing category
@@ -3092,7 +3092,7 @@ class AdminProductsControllerCore extends AdminController
                         $product_supplier_id = (int)ProductSupplier::getIdByProductAndSupplier($product->id, $attribute['id_product_attribute'], $supplier->id_supplier);
 
                         if (!$product_supplier_id) {
-                            $product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)$price, (int)$id_currency);
+                            $product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)$price, $id_currency);
                             if ($product->id_supplier == $supplier->id_supplier) {
                                 if ((int)$attribute['id_product_attribute'] > 0) {
                                     $data = array(
@@ -3111,7 +3111,7 @@ class AdminProductsControllerCore extends AdminController
                             }
                         } else {
                             $product_supplier = new ProductSupplier($product_supplier_id);
-                            $product_supplier->id_currency = (int)$id_currency;
+                            $product_supplier->id_currency = $id_currency;
                             $product_supplier->product_supplier_price_te = (float)$price;
                             $product_supplier->product_supplier_reference = pSQL($reference);
                             $product_supplier->update();
@@ -3141,7 +3141,8 @@ class AdminProductsControllerCore extends AdminController
     */
     public function processWarehouses()
     {
-        if ((int)Tools::getValue('warehouse_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)$id_product = Tools::getValue('id_product')))) {
+        $id_product = (int)Tools::getValue('id_product');
+        if ((int)Tools::getValue('warehouse_loaded') === 1 && Validate::isLoadedObject($product = new Product($id_product))) {
             // Get all id_product_attribute
             $attributes = $product->getAttributesResume($this->context->language->id);
             if (empty($attributes)) {
@@ -3205,7 +3206,7 @@ class AdminProductsControllerCore extends AdminController
                     }
                 }
             }
-            StockAvailable::synchronize((int)$id_product);
+            StockAvailable::synchronize($id_product);
         }
     }
 
