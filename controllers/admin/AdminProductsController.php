@@ -1606,10 +1606,10 @@ class AdminProductsControllerCore extends AdminController
 
     public function ajaxProcessUpdateProductImageShopAsso()
     {
-        $id_product = Tools::getValue('id_product');
+        $id_product = (int)Tools::getValue('id_product');
         if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int)Tools::getValue('id_shop'))) {
             if (Tools::getValue('active') == 'true') {
-                $res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_product`, `id_image`, `id_shop`, `cover`) VALUES('.(int)$id_product.', '.(int)$id_image.', '.(int)$id_shop.', NULL)');
+                $res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_product`, `id_image`, `id_shop`, `cover`) VALUES(' . $id_product . ', '.(int)$id_image.', '.(int)$id_shop.', NULL)');
             } else {
                 $res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int)$id_image.' AND `id_shop` = '.(int)$id_shop);
             }
@@ -1619,27 +1619,27 @@ class AdminProductsControllerCore extends AdminController
         $count_cover_image = Db::getInstance()->getValue('
 			SELECT COUNT(*) FROM '._DB_PREFIX_.'image i
 			INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.')
-			WHERE i.cover = 1 AND i.`id_product` = '.(int)$id_product);
+			WHERE i.cover = 1 AND i.`id_product` = ' . $id_product);
 
         if (!$id_image) {
             $id_image = Db::getInstance()->getValue('
                 SELECT i.`id_image` FROM '._DB_PREFIX_.'image i
                 INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.')
-                WHERE i.`id_product` = '.(int)$id_product);
+                WHERE i.`id_product` = ' . $id_product);
         }
 
         if ($count_cover_image < 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = 1 WHERE i.id_image = '.(int)$id_image.' AND i.`id_product` = '.(int)$id_product.' LIMIT 1');
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = 1 WHERE i.id_image = '.(int)$id_image.' AND i.`id_product` = ' . $id_product . ' LIMIT 1');
         }
 
         // Clean covers in image_shop table
         $count_cover_image_shop = Db::getInstance()->getValue('
 			SELECT COUNT(*)
 			FROM '._DB_PREFIX_.'image_shop ish
-			WHERE ish.`id_product` = '.(int)$id_product.' AND ish.id_shop = '.(int)$id_shop.' AND ish.cover = 1');
+			WHERE ish.`id_product` = ' . $id_product . ' AND ish.id_shop = '.(int)$id_shop.' AND ish.cover = 1');
 
         if ($count_cover_image_shop < 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.`id_product` = '.(int)$id_product.' AND ish.id_shop =  '.(int)$id_shop.' LIMIT 1');
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.`id_product` = ' . $id_product . ' AND ish.id_shop =  '.(int)$id_shop.' LIMIT 1');
         }
 
         if ($res) {
@@ -2886,7 +2886,7 @@ class AdminProductsControllerCore extends AdminController
 
         $page = (int)Tools::getValue('page');
 
-        $this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'updateproduct&id_product='.(int)$id_product : 'addproduct').($page > 1 ? '&page=' . $page : '');
+        $this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'updateproduct&id_product=' . $id_product : 'addproduct').($page > 1 ? '&page=' . $page : '');
         $this->tpl_form_vars['id_product'] = $id_product;
 
         // Transform configuration option 'upload_max_filesize' in octets
@@ -5175,10 +5175,10 @@ class AdminProductsControllerCore extends AdminController
                                 }
                                 echo 'ok position '.(int)$position.' for product '.(int)$pos[2]."\r\n";
                             } else {
-                                echo '{"hasError" : true, "errors" : "Can not update product '.(int)$id_product.' to position '.(int)$position.' "}';
+                                echo '{"hasError" : true, "errors" : "Can not update product ' . $id_product . ' to position '.(int)$position.' "}';
                             }
                         } else {
-                            echo '{"hasError" : true, "errors" : "This product ('.(int)$id_product.') can t be loaded"}';
+                            echo '{"hasError" : true, "errors" : "This product (' . $id_product . ') can t be loaded"}';
                         }
 
                         break;
@@ -5198,7 +5198,7 @@ class AdminProductsControllerCore extends AdminController
                     die($bo_product_url);
                 }
 
-                $product = new Product((int)$id_product);
+                $product = new Product($id_product);
                 if (!Validate::isLoadedObject($product)) {
                     die('error: invalid id');
                 }
