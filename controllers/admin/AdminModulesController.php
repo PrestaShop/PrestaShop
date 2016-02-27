@@ -527,6 +527,9 @@ class AdminModulesControllerCore extends AdminController
             $this->errors[] = Tools::displayError('You do not have permission to add this.');
         } else {
             $module = Module::getInstanceByName(Tools::getValue('module_name'));
+            if (($errors = $module->getErrors()) && is_array($errors)) {
+                $this->errors[] = $errors;
+            }
             if (!Validate::isLoadedObject($module)) {
                 $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
             } else {
@@ -551,10 +554,6 @@ class AdminModulesControllerCore extends AdminController
                         }
                     }
                 }
-            }
-
-            if (($errors = $module->getErrors()) && is_array($errors)) {
-                $this->errors = array_merge($this->errors, $errors);
             }
         }
     }
