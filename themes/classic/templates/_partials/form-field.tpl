@@ -24,8 +24,11 @@
           </label>
         {/foreach}
       {elseif $field.type === 'checkbox'}
-        <input type="checkbox" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
-        <label>{$field.label}</label>
+        <span class="custom-checkbox">
+          <input type="checkbox" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
+          <span><i class="material-icons check">&#xE5CA;</i></span>
+          <label>{$field.label}</label>
+        </span>
       {elseif $field.type === 'date'}
         <input type="text" class="form-control" placeholder="MM/DD/YYYY">
         <span class="form-control-comment">
@@ -33,6 +36,13 @@
         </span>
       {else}
         <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
+        <div class="tooltip bottom tooltip-bottom" role="tooltip">
+          <div class="tooltip-arrow"></div>
+          <div class="tooltip-inner">
+            <i class="material-icons info">&#xE88F;</i>
+            {l s='This field is required'}
+          </div>
+        </div>
       {/if}
     </div>
     {if $field.type === 'password'}

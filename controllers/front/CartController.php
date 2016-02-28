@@ -78,12 +78,13 @@ class CartControllerCore extends FrontController
             'static_token' => Tools::getToken(false),
         ]);
 
-        if (Tools::getValue('ajax')) {
+        if (Tools::getValue('refreshajax')) {
             ob_end_clean();
             header('Content-Type: application/json');
             die(json_encode([
                 'cart_detailed' => $this->render('checkout/_partials/cart-detailed.tpl'),
                 'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals.tpl'),
+                'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal.tpl'),
                 'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals.tpl'),
                 'cart_voucher' => $this->render('checkout/_partials/cart-voucher.tpl'),
             ]));

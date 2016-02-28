@@ -4,8 +4,7 @@
   {l s='Log into your account'}
 {/block}
 
-{block name='page_content_container'}
-  <section id="content" class="page-content page-authentication">
+{block name='page_content'}
     {block name='login_form_container'}
       <section class="login-form">
         {render file='customer/_partials/login-form.tpl' ui=$login_form}
@@ -17,5 +16,4 @@
         </a>
       </div>
     {/block}
-  </section>
 {/block}

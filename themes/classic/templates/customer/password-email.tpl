@@ -4,31 +4,29 @@
   {l s='Forgot your password?'}
 {/block}
 
-{block name='page_content_container'}
-  <section id="content" class="page-content password-form">
-    <form action="{$urls.pages.password}" method="post" data-toggle="validator">
+{block name='page_content'}
+  <form action="{$urls.pages.password}" method="post" data-toggle="validator">
 
-      <header>
-        <p>{l s='Please enter the email address you used to register. You will receive a temporary link to reset your password.'}</p>
-      </header>
+    <header>
+      <p>{l s='Please enter the email address you used to register. You will receive a temporary link to reset your password.'}</p>
+    </header>
 
-      <section class="form-fields">
-        <div class="form-group row">
-          <label class="col-md-3 form-control-label required">{l s='Email address'}</label>
-          <div class="col-md-5">
-            <input type="email" name="email" id="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" class="form-control" required />
-          </div>
+    <section class="form-fields">
+      <div class="form-group row">
+        <label class="col-md-3 form-control-label required">{l s='Email address'}</label>
+        <div class="col-md-5">
+          <input type="email" name="email" id="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" class="form-control" required />
         </div>
-      </section>
+      </div>
+    </section>
 
-      <footer class="form-footer text-xs-center">
-        <button type="submit" name="submit" class="form-control-submit">
-          {l s='Send reset link'}
-        </button>
-      </footer>
+    <footer class="form-footer text-xs-center">
+      <button type="submit" name="submit" class="form-control-submit">
+        {l s='Send reset link'}
+      </button>
+    </footer>
 
-    </form>
-  </section>
+  </form>
 {/block}
 
 {block name='page_footer'}

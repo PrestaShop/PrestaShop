@@ -53,7 +53,7 @@
     <template>payment</template>
   </order_state>
   <order_state id="Awaiting_cod_validation">
-    <name>Awaiting cod validation</name>
+    <name>In attesa verifica contrassegno</name>
     <template>cashondelivery</template>
   </order_state>
 </entity_order_state>

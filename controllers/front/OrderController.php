@@ -38,6 +38,24 @@ class OrderControllerCore extends FrontController
     public function postProcess()
     {
         parent::postProcess();
+
+        if (Tools::isSubmit('submitReorder') && $id_order = (int)Tools::getValue('id_order')) {
+            $oldCart = new Cart(Order::getCartIdStatic($id_order, $this->context->customer->id));
+            $duplication = $oldCart->duplicate();
+            if (!$duplication || !Validate::isLoadedObject($duplication['cart'])) {
+                $this->errors[] = $this->getTranslator()->trans('Sorry. We cannot renew your order.', [], 'Order');
+            } elseif (!$duplication['success']) {
+                $this->errors[] = $this->getTranslator()->trans('Some items are no longer available, and we are unable to renew your order.', [], 'Order');
+            } else {
+                $this->context->cookie->id_cart = $duplication['cart']->id;
+                $context = $this->context;
+                $context->cart = $duplication['cart'];
+                CartRule::autoAddToCart($context);
+                $this->context->cookie->write();
+                Tools::redirect('index.php?controller=order');
+            }
+        }
+
         $this->bootstrap();
     }
 

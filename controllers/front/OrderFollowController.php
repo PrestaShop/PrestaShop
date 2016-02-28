@@ -45,16 +45,16 @@ class OrderFollowControllerCore extends FrontController
             if (!$id_order = (int)Tools::getValue('id_order')) {
                 Tools::redirect('index.php?controller=history');
             }
-            if (!$order_qte_input && !$customizationQtyInput && !$customizationIds) {
-                Tools::redirect('index.php?controller=order-follow&errorDetail1');
+            if (!($ids_order_detail = Tools::getValue('ids_order_detail')) && !$customizationQtyInput && !$customizationIds) {
+                Tools::redirect('index.php?controller=order-detail&id_order='.$id_order.'&errorDetail1');
             }
-            if (!$customizationIds && !$ids_order_detail = Tools::getValue('ids_order_detail')) {
-                Tools::redirect('index.php?controller=order-follow&errorDetail2');
+            if (!$customizationIds && !$order_qte_input) {
+                Tools::redirect('index.php?controller=order-detail&id_order='.$id_order.'&errorDetail2');
             }
 
             $order = new Order((int)$id_order);
             if (!$order->isReturnable()) {
-                Tools::redirect('index.php?controller=order-follow&errorNotReturnable');
+                Tools::redirect('index.php?controller=order-detail&id_order='.$id_order.'&errorNotReturnable');
             }
             if ($order->id_customer != $this->context->customer->id) {
                 die(Tools::displayError());
@@ -64,7 +64,7 @@ class OrderFollowControllerCore extends FrontController
             $orderReturn->id_order = $id_order;
             $orderReturn->question = htmlspecialchars(Tools::getValue('returnText'));
             if (empty($orderReturn->question)) {
-                Tools::redirect('index.php?controller=order-follow&errorMsg&'.
+                Tools::redirect('index.php?controller=order-detail&id_order='.$id_order.'&errorMsg&'.
                     http_build_query(array(
                         'ids_order_detail' => $ids_order_detail,
                         'order_qte_input' => $order_qte_input,
@@ -73,7 +73,7 @@ class OrderFollowControllerCore extends FrontController
             }
 
             if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput)) {
-                Tools::redirect('index.php?controller=order-follow&errorQuantity');
+                Tools::redirect('index.php?controller=order-detail&id_order='.$id_order.'&errorQuantity');
             }
 
             $orderReturn->state = 1;
@@ -93,25 +93,7 @@ class OrderFollowControllerCore extends FrontController
         parent::initContent();
 
         $ordersReturn = $this->getTemplateVarOrdersReturns();
-        if (Tools::isSubmit('errorQuantity')) {
-            $this->errors[] = $this->l('You do not have enough products to request an additional merchandise return.');
-        } elseif (Tools::isSubmit('errorMsg')) {
-            $this->errors[] = $this->l('Please provide an explanation for your RMA.');
-            $this->context->smarty->assign(
-                array(
-                    'errorMsg' => true,
-                    'ids_order_detail' => Tools::getValue('ids_order_detail', array()),
-                    'order_qte_input' => Tools::getValue('order_qte_input', array()),
-                    'id_order' => (int)Tools::getValue('id_order'),
-                )
-            );
-        } elseif (Tools::isSubmit('errorDetail1')) {
-            $this->errors[] = $this->l('Please check at least one product you would like to return.');
-        } elseif (Tools::isSubmit('errorDetail2')) {
-            $this->errors[] = $this->l('For each product you wish to add, please specify the desired quantity.');
-        } elseif (Tools::isSubmit('errorNotReturnable')) {
-            $this->errors[] = $this->l('This order cannot be returned');
-        } elseif (count($ordersReturn) <= 0) {
+        if (count($ordersReturn) <= 0) {
             $this->errors[] = $this->l('You have no merchandise return authorizations.');
         }
 

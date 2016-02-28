@@ -83,6 +83,9 @@ class ThemeManager implements AddonManagerInterface
      */
     public function install($source)
     {
+        if ((filter_var($source, FILTER_VALIDATE_URL))) {
+            $source = Tools::createFileFromUrl($source);
+        }
         if (preg_match('/\.zip$/', $source)) {
             $this->installFromZip($source);
         }
@@ -233,23 +236,6 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
-    private function getThemesOnDisk()
-    {
-        $suffix = 'preview.png';
-        $all_theme_dirs = glob($this->configurator->get('_PS_ALL_THEMES_DIR_').'*/'.$suffix);
-
-        $themes = [];
-        foreach ($all_theme_dirs as $dir) {
-            $name = basename(substr($dir, 0, -strlen($suffix)));
-            $theme = $this->getInstanceByName($name);
-            if (isset($theme)) {
-                $themes[$name] = $theme;
-            }
-        }
-
-        return $themes;
-    }
-
     private function installFromZip($source)
     {
         $sandboxPath = $this->getSandboxPath();
@@ -270,28 +256,28 @@ class ThemeManager implements AddonManagerInterface
         $directories = iterator_to_array($directories);
         $theme_name = basename(current($directories)->getFileName());
 
-        $theme_data = (new Parser())->parse($sandboxPath.$theme_name.'/config/theme.yml');
+        $theme_data = (new Parser())->parse(file_get_contents($sandboxPath.$theme_name.'/config/theme.yml'));
         $theme_data['directory'] = $sandboxPath.$theme_name;
         if (!$this->themeValidator->isValid(new Theme($theme_data))) {
             $this->filesystem->remove($sandboxPath);
             throw new Exception("This theme is not valid for PrestaShop 1.7");
         }
 
-        $module_root_dir = $this->configurator->get('_PS_MODULE_DIR_');
-        $modules_parent_dir = $sandbox_path.$theme_name.'/dependencies/modules';
-        if ($this->fs->exists($modules_parent_dir)) {
+        $module_root_dir = $this->appConfiguration->get('_PS_MODULE_DIR_');
+        $modules_parent_dir = $sandboxPath.$theme_name.'/dependencies/modules';
+        if ($this->filesystem->exists($modules_parent_dir)) {
             $module_dirs = $this->finder->directories()
                                         ->in($modules_parent_dir)
                                         ->depth('== 0')
                                         ->exclude($theme_name);
 
             foreach (iterator_to_array($module_dirs) as $dir) {
-                $dest = $module_root_dir.basename($dir->getFileName());
-                if (!$this->fs->exists($dest)) {
-                    $this->fs->mkdir($dest);
+                $destination = $module_root_dir.basename($dir->getFileName());
+                if (!$this->fs->exists($destination)) {
+                    $this->fs->mkdir($destination);
                     $this->fs->mirror(
                         $dir->getPathName(),
-                        $dest
+                        $destination
                     );
                 }
             }

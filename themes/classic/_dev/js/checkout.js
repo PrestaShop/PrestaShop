@@ -86,9 +86,17 @@ function setupCheckoutScripts () {
   $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
   $('body').on('change', '.js-address-selector input', selectAddress);
 
+
+
+  if($('.js-cancel-address').length !== 0){
+    $('.checkout-step:not(.-js-current) .step-title').addClass('not-allowed');
+  }
+
   $('body').on('click', '.checkout-step.-reachable h1', function (event) {
-    $('.-js-current, .-current').removeClass('-js-current -current');
-    $(event.target).closest('.checkout-step').toggleClass('-js-current');
+    if($('.js-cancel-address').length === 0){
+      $('.-js-current, .-current').removeClass('-js-current -current');
+      $(event.target).closest('.checkout-step').toggleClass('-js-current');
+    }
   });
 
   collapsePaymentOptions();
@@ -97,6 +105,10 @@ function setupCheckoutScripts () {
     $.post(location.href, null, null, 'json').then(function (resp) {
       $('#checkout-cart-summary').replaceWith(resp.preview);
     });
+  });
+
+  $('.js-customer-form').on('invalid.bs.validator',(event)=>{
+    $(event.relatedTarget).next('.tooltip').css('opacity',1).show();
   });
 }
 
