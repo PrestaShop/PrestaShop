@@ -2263,7 +2263,7 @@ class AdminProductsController extends AdminProductsControllerCore
         static $irow;
         $content = '';
 
-        if (!$category) {
+        if (!$id_category) {
             $id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
         }
 

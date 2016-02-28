@@ -2445,7 +2445,7 @@ class AdminProductsController extends AdminProductsControllerCore
         global $done;
         static $irow;
         $content = '';
-        if (!$category) {
+        if (!$id_category) {
             $id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
         }
         if (!isset($done[$current['infos']['id_parent']])) {
