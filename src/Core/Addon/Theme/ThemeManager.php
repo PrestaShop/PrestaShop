@@ -257,7 +257,7 @@ class ThemeManager implements AddonManagerInterface
         Tools::ZipExtract($source, $sandboxPath);
 
         $directories = $this->finder->directories()
-                                    ->in($sandbox_path)
+                                    ->in($sandboxPath)
                                     ->depth('== 0')
                                     ->exclude(['__MACOSX'])
                                     ->ignoreVCS();

@@ -73,7 +73,7 @@ class ProductSearchQuery
 
     public function setSortOption(SortOption $option)
     {
-        $this->sortOption = $sortOption;
+        $this->sortOption = $option;
         return $this;
     }
 
