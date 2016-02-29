@@ -99,12 +99,9 @@
                 <tab id="Addresses" id_parent="Customers" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminAddresses</class_name>
                 </tab>
-
-            <!--TO ADD ON CUSTOMERS
-            <tab id="Outstanding" id_parent="Customers" active="0" hide_host_mode="0" icon="">
-                <class_name>AdminOutstanding</class_name>
-            </tab>
-            -->
+                <tab id="Outstanding" id_parent="Customers" active="0" hide_host_mode="0" icon="">
+                    <class_name>AdminOutstanding</class_name>
+                </tab>
 
             <!--CUSTOMER SERVICE-->
             <tab id="Customer_Service" id_parent="SELL" active="1" hide_host_mode="0" icon="chat">
