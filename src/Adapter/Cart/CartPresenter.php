@@ -87,12 +87,12 @@ class CartPresenter
         $rawProduct['new'] = '';
         $rawProduct['pack'] = '';
 
-        $rawProduct['price'] = $this->pricePresenter->convertAndFormat(
-            $this->includeTaxes() ?
-            $rawProduct['price_wt'] :
-            $rawProduct['price']
-        );
-
+        if($this->includeTaxes()) {
+            $rawProduct['price'] = $this->pricePresenter->convertAndFormat($rawProduct['price_wt']);
+        } else {
+            $rawProduct['price'] = $rawProduct['price_tax_exc'] = $this->pricePresenter->convertAndFormat($rawProduct['price']);
+        }
+        
         $rawProduct['total'] = $this->pricePresenter->convertAndFormat(
             $this->includeTaxes() ?
             $rawProduct['total_wt'] :
