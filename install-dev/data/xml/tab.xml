@@ -186,7 +186,7 @@
                     <class_name>AdminThemes</class_name>
                 </tab>
                 <tab id="Themes_Catalog" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminAddonsCatalog</class_name>
+                    <class_name>AdminThemeCatalog</class_name>
                 </tab>
                 <tab id="Pages" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminCmsContent</class_name>
