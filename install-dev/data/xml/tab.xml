@@ -201,7 +201,7 @@
                     <class_name>AdminModules</class_name>
                 </tab>
                 <tab id="Marketing_tools" id_parent="Modules" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminMarketing</class_name>
+                    <class_name>AdminAddonsCatalog</class_name>
                 </tab>
 
 
