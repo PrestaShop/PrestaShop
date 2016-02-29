@@ -16699,6 +16699,7 @@
 	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
 	    var query = $form.serialize() + '&add=1';
 	    var actionURL = $form.attr('action');
+	
 	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
 	      _prestashop2['default'].emit('cart updated', {
 	        reason: {

@@ -6438,7 +6438,6 @@ li.product-label {
     .product-customization .product-message:-ms-input-placeholder {
       color: #acaaa6; }
   .product-customization .file-input {
-    margin-top: 20px;
     width: 100%;
     opacity: 0;
     left: 0;

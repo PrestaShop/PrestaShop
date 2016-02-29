@@ -66,6 +66,7 @@ $(document).ready(() => {
       var $form = $($(event.target).closest('form'));
       var query = $form.serialize() + '&add=1';
       var actionURL = $form.attr('action');
+
       $.post(actionURL, query, null, 'json').then(function(resp) {
         prestashop.emit('cart updated', {
           reason: {
