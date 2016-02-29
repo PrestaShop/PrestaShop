@@ -134,7 +134,7 @@ class CartControllerCore extends FrontController
                     ]));
                 }
 
-                if (Tools::getValue('refresh')) {
+                if (Tools::getValue('refresh') || Tools::getValue('productajax')) {
                     $url = $this->context->link->getProductLink(
                         $this->id_product,
                         null,
@@ -148,6 +148,10 @@ class CartControllerCore extends FrontController
                         true,
                         ['quantity_wanted' => (int)$this->qty]
                     );
+                    $this->ajaxDie(Tools::jsonEncode([
+                        'success' => true,
+                        'productUrl' => $url
+                    ]));
                     return Tools::redirect($url);
                 }
 
