@@ -602,6 +602,7 @@ abstract class DbCore
             }
         }
 
+
         // This method must be used only with queries which display results
         if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc)\s#i', $sql)) {
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
