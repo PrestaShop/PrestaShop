@@ -46,8 +46,21 @@ class DbMySQLiCore extends Db
      */
     public function connect()
     {
-        if (strpos($this->server, ':') !== false) {
+        $socket = false;
+        $port = false;
+        if (Tools::strpos($this->server, ':') !== false) {
             list($server, $port) = explode(':', $this->server);
+            if (is_numeric($port) === false) {
+                $socket = $port;
+                $port = false;
+            }
+        } elseif (Tools::strpos($this->server, '/') !== false) {
+            $socket = $this->server;
+        }
+
+        if ($socket) {
+            $this->link = @new mysqli(null, $this->user, $this->password, $this->database, null, $socket);
+        } elseif ($port) {
             $this->link = @new mysqli($server, $this->user, $this->password, $this->database, $port);
         } else {
             $this->link = @new mysqli($this->server, $this->user, $this->password, $this->database);

@@ -239,7 +239,7 @@ class StockAvailableCore extends ObjectModel
                                     'id_product_attribute' => (int)$id_product_attribute,
                                 )
                             );
-                            StockAvailable::addSqlShopParams($query['data']);
+                            StockAvailable::addSqlShopParams($query['data'], $id_shop);
                             Db::getInstance()->insert($query['table'], $query['data']);
                         }
 
@@ -257,13 +257,15 @@ class StockAvailableCore extends ObjectModel
                 }
                 // updates
                 // if $id_product has attributes, it also updates the sum for all attributes
-                $query = array(
-                    'table' => 'stock_available',
-                    'data' => array('quantity' => $product_quantity),
-                    'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = 0'.
-                    StockAvailable::addSqlShopRestriction(null, $id_shop)
-                );
-                Db::getInstance()->update($query['table'], $query['data'], $query['where']);
+                if (($order_id_shop != null && array_intersect($warehouses, $order_warehouses)) || $order_id_shop == null) {
+                    $query = array(
+                        'table' => 'stock_available',
+                        'data' => array('quantity' => $product_quantity),
+                        'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = 0'.
+                        StockAvailable::addSqlShopRestriction(null, $id_shop)
+                    );
+                    Db::getInstance()->update($query['table'], $query['data'], $query['where']);
+                }
             }
         }
         // In case there are no warehouses, removes product from StockAvailable
@@ -449,6 +451,7 @@ class StockAvailableCore extends ObjectModel
 
     /**
      * For a given id_product and id_product_attribute updates the quantity available
+     * If $avoid_parent_pack_update is true, then packs containing the given product won't be updated
      *
      * @param int $id_product
      * @param int $id_product_attribute Optional
@@ -460,50 +463,13 @@ class StockAvailableCore extends ObjectModel
         if (!Validate::isUnsignedId($id_product)) {
             return false;
         }
-
-        $id_stock_available = StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
-
-        if (!$id_stock_available) {
+        $product = new Product((int)$id_product);
+        if (!Validate::isLoadedObject($product)) {
             return false;
         }
 
-        // Update quantity of the pack products
-        if (Pack::isPack($id_product)) {
-            if (Validate::isLoadedObject($product = new Product((int)$id_product))) {
-                if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
-                    $products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
-                    foreach ($products_pack as $product_pack) {
-                        StockAvailable::updateQuantity($product_pack->id, $product_pack->id_pack_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_shop);
-                    }
-                }
-
-
-                $stock_available = new StockAvailable($id_stock_available);
-                $stock_available->quantity = $stock_available->quantity + $delta_quantity;
-
-                if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
-                    ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))) {
-                    $stock_available->update();
-                }
-            } else {
-                return false;
-            }
-        } else {
-            $stock_available = new StockAvailable($id_stock_available);
-            $stock_available->quantity = $stock_available->quantity + $delta_quantity;
-            $stock_available->update();
-        }
-
-        Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
-
-        Hook::exec('actionUpdateQuantity',
-                array(
-                    'id_product' => $id_product,
-                    'id_product_attribute' => $id_product_attribute,
-                    'quantity' => $stock_available->quantity
-                )
-        );
-
+        $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
+        $stockManager->updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null);
         return true;
     }
 

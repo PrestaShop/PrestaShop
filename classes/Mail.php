@@ -114,7 +114,7 @@ class MailCore extends ObjectModel
         // Get the path of theme by id_shop if exist
         if (is_numeric($id_shop) && $id_shop) {
             $shop = new Shop((int)$id_shop);
-            $theme_name = $shop->getTheme();
+            $theme_name = $shop->theme->getName();
 
             if (_THEME_NAME_ != $theme_name) {
                 $theme_path = _PS_ROOT_DIR_.'/themes/'.$theme_name.'/';
@@ -234,7 +234,7 @@ class MailCore extends ObjectModel
             if (!$connection) {
                 return false;
             }
-            $swift = new Swift($connection, Configuration::get('PS_MAIL_DOMAIN', null, null, $id_shop));
+            $swift = new SwiftPs($connection, Configuration::get('PS_MAIL_DOMAIN', null, null, $id_shop));
             /* Get templates content */
             $iso = Language::getIsoById((int)$id_lang);
             if (!$iso) {
@@ -419,9 +419,9 @@ class MailCore extends ObjectModel
                 $smtp->setUsername($smtpLogin);
                 $smtp->setpassword($smtpPassword);
                 $smtp->setTimeout(5);
-                $swift = new Swift($smtp, Configuration::get('PS_MAIL_DOMAIN'));
+                $swift = new SwiftPs($smtp, Configuration::get('PS_MAIL_DOMAIN'));
             } else {
-                $swift = new Swift(new Swift_Connection_NativeMail(), Configuration::get('PS_MAIL_DOMAIN'));
+                $swift = new SwiftPs(new Swift_Connection_NativeMail(), Configuration::get('PS_MAIL_DOMAIN'));
             }
 
             $message = new Swift_Message($subject, $content, $type);

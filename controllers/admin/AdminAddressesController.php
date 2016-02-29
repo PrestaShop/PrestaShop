@@ -315,18 +315,16 @@ class AdminAddressesControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->l('Home phone'),
                     'name' => 'phone',
-                    'required' => in_array('phone', $required_fields) || Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+                    'required' => in_array('phone', $required_fields),
                     'col' => '4',
-                    'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
                 );
             } elseif ($addr_field_item == 'phone_mobile') {
                 $temp_fields[] = array(
                     'type' => 'text',
                     'label' => $this->l('Mobile phone'),
                     'name' => 'phone_mobile',
-                    'required' =>  in_array('phone_mobile', $required_fields) || Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+                    'required' =>  in_array('phone_mobile', $required_fields),
                     'col' => '4',
-                    'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
                 );
             }
         }
@@ -387,10 +385,6 @@ class AdminAddressesControllerCore extends AdminController
             $this->errors[] = Tools::displayError('A Zip/postal code is required.');
         } elseif ($postcode && !Validate::isPostCode($postcode)) {
             $this->errors[] = Tools::displayError('The Zip/postal code is invalid.');
-        }
-
-        if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile')) {
-            $this->errors[] = Tools::displayError('You must register at least one phone number.');
         }
 
         /* If this address come from order's edition and is the same as the other one (invoice or delivery one)
@@ -481,7 +475,7 @@ class AdminAddressesControllerCore extends AdminController
             $customer = Customer::searchByName($email);
             if (!empty($customer)) {
                 $customer = $customer['0'];
-                echo Tools::jsonEncode(array('infos' => pSQL($customer['firstname']).'_'.pSQL($customer['lastname']).'_'.pSQL($customer['company'])));
+                echo json_encode(array('infos' => pSQL($customer['firstname']).'_'.pSQL($customer['lastname']).'_'.pSQL($customer['company'])));
             }
         }
         die;

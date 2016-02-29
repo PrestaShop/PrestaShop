@@ -67,7 +67,7 @@ interface Swift_Connection
    * Execute logic needed after SMTP greetings
    * @param Swift An instance of Swift
    */
-  public function postConnect(Swift $instance);
+  public function postConnect(SwiftPs $instance);
   /**
    * Returns TRUE if the connection needs a EHLO greeting.
    * @return boolean

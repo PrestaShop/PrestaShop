@@ -90,6 +90,14 @@ class HelperFormCore extends Helper
                         unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
                     }
                     switch ($params['type']) {
+                        case 'select':
+                            $field_name = (string)$params['name'];
+                            // If multiple select check that 'name' field is suffixed with '[]'
+                            if (isset($params['multiple']) && $params['multiple'] && stripos($field_name, '[]') === false) {
+                                $params['name'] .= '[]';
+                            }
+                            break;
+
                         case 'categories':
                             if ($categories) {
                                 if (!isset($params['tree']['id'])) {
@@ -129,7 +137,7 @@ class HelperFormCore extends Helper
                                 $this->context->smarty->assign('categories_tree', $tree->render());
                                 $categories = false;
                             }
-                        break;
+                            break;
 
                         case 'file':
                             $uploader = new HelperUploader();
@@ -145,34 +153,37 @@ class HelperFormCore extends Helper
                             } elseif (isset($params['image']) && $params['image']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
-                                    'type'       => HelperUploader::TYPE_IMAGE,
-                                    'image'      => isset($params['image'])?$params['image']:null,
-                                    'size'       => isset($params['size'])?$params['size']:null,
-                                    'delete_url' => isset($params['delete_url'])?$params['delete_url']:null
-                                )));
+                                        'type'       => HelperUploader::TYPE_IMAGE,
+                                        'image'      => isset($params['image'])?$params['image']:null,
+                                        'size'       => isset($params['size'])?$params['size']:null,
+                                        'delete_url' => isset($params['delete_url'])?$params['delete_url']:null
+                                    )
+                                ));
                             }
 
                             if (isset($params['file']) && $params['file']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
-                                    'type'       => HelperUploader::TYPE_FILE,
-                                    'size'       => isset($params['size'])?$params['size']:null,
-                                    'delete_url' => isset($params['delete_url'])?$params['delete_url']:null,
-                                    'download_url' => isset($params['file'])?$params['file']:null
-                                )));
+                                        'type'       => HelperUploader::TYPE_FILE,
+                                        'size'       => isset($params['size'])?$params['size']:null,
+                                        'delete_url' => isset($params['delete_url'])?$params['delete_url']:null,
+                                        'download_url' => isset($params['file'])?$params['file']:null
+                                    )
+                                ));
                             }
 
                             if (isset($params['thumb']) && $params['thumb']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
-                                    'type'       => HelperUploader::TYPE_IMAGE,
-                                    'image'      => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />':null,
-                                )));
+                                        'type'  => HelperUploader::TYPE_IMAGE,
+                                        'image' => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />':null,
+                                    )
+                                ));
                             }
 
                             $uploader->setTitle(isset($params['title'])?$params['title']:null);
                             $params['file'] = $uploader->render();
-                        break;
+                            break;
 
                         case 'color':
                             if ($color) {
@@ -180,14 +191,14 @@ class HelperFormCore extends Helper
                                 $this->context->controller->addJqueryPlugin('colorpicker');
                                 $color = false;
                             }
-                        break;
+                            break;
 
                         case 'date':
                             if ($date) {
                                 $this->context->controller->addJqueryUI('ui.datepicker');
                                 $date = false;
                             }
-                        break;
+                            break;
 
                         case 'textarea':
                             if ($tinymce) {
@@ -206,9 +217,9 @@ class HelperFormCore extends Helper
                                 $this->context->controller->addJqueryPlugin('autosize');
                                 $textarea_autosize = false;
                             }
-                        break;
+                            break;
 
-                        case 'shop' :
+                        case 'shop':
                             $disable_shops = isset($params['disable_shared']) ? $params['disable_shared'] : false;
                             $params['html'] = $this->renderAssoShop($disable_shops);
                             if (Shop::getTotalShops(false) == 1) {
@@ -216,7 +227,7 @@ class HelperFormCore extends Helper
                                     unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
                                 }
                             }
-                        break;
+                            break;
                     }
                 }
             }
@@ -293,21 +304,21 @@ class HelperFormCore extends Helper
             }
         } else {
             switch (Shop::getContext()) {
-                case Shop::CONTEXT_SHOP :
+                case Shop::CONTEXT_SHOP:
                         $assos[Shop::getContextShopID()] = Shop::getContextShopID();
-                break;
+                    break;
 
-                case Shop::CONTEXT_GROUP :
+                case Shop::CONTEXT_GROUP:
                     foreach (Shop::getShops(false, Shop::getContextShopGroupID(), true) as $id_shop) {
                         $assos[$id_shop] = $id_shop;
                     }
-                break;
+                    break;
 
-                default :
-                        foreach (Shop::getShops(false, null, true) as $id_shop) {
-                            $assos[$id_shop] = $id_shop;
-                        }
-                break;
+                default:
+                    foreach (Shop::getShops(false, null, true) as $id_shop) {
+                        $assos[$id_shop] = $id_shop;
+                    }
+                    break;
             }
         }
 

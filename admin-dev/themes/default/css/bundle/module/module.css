@@ -1,0 +1,440 @@
+/**
+    Class to move in SCSS file !!!!!
+*/
+
+#module-modal-bulk-confirm-action-name {
+    font-weight: bold;
+}
+
+
+.module-item-heading-grid {
+    height:50px;
+}
+
+.btn.onclick {
+    margin-top: -0.5rem;
+}
+
+.module-quick-description-grid {
+    margin: 15px 0;
+    height: 100px;
+    max-height: 150px;
+    text-align: justify;
+}
+.module-name-grid {
+    position: relative;
+    margin: 0 0 0 57px;
+    max-height: 2.1rem;
+    overflow: hidden;
+}
+
+.module-version-author-grid {
+    margin: 0 0 0 57px;
+    position: relative;
+}
+
+.module-read-more-list {
+    float:left;
+    line-height:50px;
+    padding-left:1em;
+}
+
+/**
+ * Generalist CSS for module pages
+ */
+.module-search-bar {
+    height: 50px !important;
+    border: 0 !important;
+    background-color: white !important;
+ }
+.module-search-block {
+    padding: 5px;
+    background: white;
+    border: 1px solid #C7D6DB;
+    border-radius: 5px;
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
+ }
+.module-menu-item {
+    color: #363A41 !important;
+    padding: 20px;
+    font-size: 16px;
+    font-family: "Open Sans Semibold", Helvetica,Arial,sans-serif;;
+}
+.module-sorting-menu {
+    margin-bottom: 30px;
+}
+.module-sorting {
+    margin-left: 35px;
+}
+.module-sorting i {
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 26px;
+}
+.module-sort-active {
+    color: #A6B9C0 !important;
+}
+.module-sort-switch {
+    color: #C7D6DB;
+}
+.module-category-selector-label {
+    float: left;
+    margin-right: 5px;
+}
+.module-category-selector {
+    z-index: 498 !important;
+    padding: 0 !important;
+}
+.module-category-menu {
+    padding: 6px 0 0 0;
+}
+.module-category-menu a {
+    color: #555 !important;
+}
+.module-category-menu a:hover {
+    background-color: transparent !important;
+    color: #2eacce !important;
+}
+.module-search-icon {
+    background: transparent !important;
+    border: 0 !important;
+}
+.module-tags-input {
+    border: 0;
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
+    width: 100%;
+}
+.module-tags-labels {
+    border: 0;
+    height: 50px;
+}
+.module-tags-clear-btn {
+    margin-right: 10px;
+        margin-top: 10px;
+        position: absolute;
+        color: #2eacce;
+        font-size: 20px;
+        z-index: 498 !important;
+        cursor: pointer;
+        top: 0;
+        right: 0;
+}
+.module-search-result-wording {
+    color: #1E2024 !important;
+    font-family: "Open Sans", Helvetica, Arial,sans-serif !important;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 1em;
+}
+.module-addons-search {
+    font-family: "Open Sans", Helvetica, Arial,sans-serif !important;
+    font-weight: bold;
+    font-size: 14px;
+    display: none;
+}
+.module-categories-dropdown {
+    outline: 0 !important;
+    background-color: transparent !important;
+    border: none !important;
+    font-size: 15px !important;
+}
+.module-categories-dropdown:hover {
+    color: #1E2024 !important;
+}
+.module-category-reset {
+    display: none;
+}
+.module-category-reset a {
+    color: #2eacce !important;
+    text-align: center;
+    border-bottom: 1px solid #E7E8E8;
+}
+
+.module-category-reset a:hover {
+    color: white !important;
+    background-color: #2eacce !important;
+    text-align: center;
+    border-bottom: 1px solid #E7E8E8;
+}
+.module-category-reset-icon {
+    font-size: 30px;
+}
+/**
+ * Module LIST CSS
+ */
+.module-item-list {
+    background-color: white;
+    max-height: 50px;
+    height: 50px;
+ }
+ .module-item-list:nth-child(even) {
+     background-color: #f5f8f9 !important;
+ }
+img.module-logo-thumb-list {
+    float:left;
+    margin-right: 15px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.module-name-list {
+    color: #1E2024 !important;
+    font-family:"Open Sans", Helvetica, Arial,sans-serif !important;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
+    float: left;
+    margin-right: 15px;
+    width: 135px;
+    cursor: default;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.module-quick-action-list {
+    float: right;
+    padding: 0.5em;
+}
+.module-quick-action-list > .onclick {
+    margin-right: 2rem;
+    margin-top: -1.5rem;
+}
+.module-quick-description-list {
+    line-height: 50px;
+    max-width: 35%;
+    float: left;
+    height: 50px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.module-version-author-list {
+    display: inline-block;
+    float:left;
+    margin-right: 15px;
+    width: 145px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.module-item-heading-list {
+    float:left;
+    line-height: 50px;
+    height:50px;
+}
+.module-logo-thumb-list {
+    height:20px;
+    width:20px;
+}
+.module-checkbox-bulk-list {
+    display: block;
+    margin-left: 15px !important;
+    margin-top: 7px;
+}
+
+/**
+ * Module Modal CSS
+ */
+.module-modal-title {
+    display: inline-block;
+    padding-left: 1em;
+    display: table-cell;
+    vertical-align: top;
+}
+.module-modal-title > h4 {
+    color: #1E2024 !important;
+    font-family: "Open Sans", Helvetica, Arial,sans-serif !important;
+    font-weight: bold !important;
+    font-size: 14px;
+}
+
+.module-badges-display {
+    display: inline-block;
+}
+.module-modal-header button.close {
+    width: auto;
+}
+.module-modal-header > div {
+    display: table-row;
+}
+.module-big-cover {
+    height: 240px;
+    overflow: hidden;
+    margin-top: -15px;
+    text-align: center;
+    box-shadow: -1px 0px 6px 1px rgba(0, 0, 0, 0.3) inset;
+}
+
+.module-big-cover > img {
+    max-height: 100%;
+    max-width: 100%;
+    height: auto;
+    padding: 4px;
+}
+
+.module-menu-readmore {
+    margin-top: 2px;
+}
+
+.module-readmore-tab-content {
+    text-align: justify;
+    padding: 5px 15px;
+    line-height: 20px;
+    margin-bottom: 61px !important;
+}
+
+.module-readmore-tab {
+    border: none !important;
+}
+
+.module-menu-readmore > .tab-content {
+    margin-top: 5px;
+    color: black;
+    text-align: justify;
+}
+
+.module-modal-badges {
+    margin-top: 1em;
+}
+
+.module-modal-badges > img {
+    margin-right: 1em;
+}
+
+.module-modal-dialog {
+    height: 85%;
+    width: 50%;
+}
+
+.module-modal-content {
+    border: none;
+    box-shadow: none;
+}
+
+.module-modal-close {
+    width: auto !important;
+    margin-right: 5px;
+}
+
+/*
+*
+* Module Categories Grid
+*
+*/
+
+#modules-categories-grid {
+    display: none;
+}
+
+.module-category-item {
+    display: table;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.module-category-item-wrapper {
+    background: white;
+    padding: 20px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 0 #C7D6DB;
+    height: 247px;
+    max-height: 247px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 15px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Addons module item list/grid */
+
+.module-addons-item-grid {
+    height: 272px;
+    display: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.module-addons-item-grid i {
+    font-size: 110px;
+}
+
+.module-icon-addons-exit-grid {
+    display: block;
+}
+
+.module-addons-item-wrapper-grid {
+    background: white;
+    padding: 20px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 0 #C7D6DB;
+    height: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 15px;
+}
+
+.module-addons-item-list {
+    margin-top: 5px;
+    height: 50px;
+    display: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.module-addons-item-list i {
+    font-size: 25px;
+    display:block;
+}
+
+.module-icon-addons-exit-list {
+    display: inline-block;
+}
+
+.module-addons-item-wrapper-list {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    background-color: lightgray;
+    font-size: 20px;
+}
+
+.module-import-processing {
+    display: none;
+    text-align: center;
+}
+
+.module-import-success {
+    display: none;
+    text-align: center;
+}
+
+.module-import-failure {
+    display: none;
+    text-align: center;
+}
+
+.module-short-list {
+    padding-bottom: 15px;
+    padding-top: 15px;
+}

@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
   <tab id="CarrierWizard" name="Carrier"/>
   <tab id="Dashboard" name="Dashboard"/>
@@ -80,7 +80,7 @@
   <tab id='Performance' name='সম্পাদন'/>
   <tab id='E-mail' name='ই মেইল'/>
   <tab id='Multistore' name='মাল্টি স্টোর'/>
-  <tab id='CSV_Import' name='কারেক্টের সেপারেট ভ্যালূ আমদানি'/>
+  <tab id='CSV_Import' name='আমদানি'/>
   <tab id='DB_Backup' name='ডাঁটা বেইজ ব্যাক আপ'/>
   <tab id='SQL_Manager' name='এস কিউ এল বাবস্ত্যাপক'/>
   <tab id='Logs' name='তথ্য বই'/>

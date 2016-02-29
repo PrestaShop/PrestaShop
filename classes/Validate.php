@@ -493,6 +493,15 @@ class ValidateCore
         return checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1]);
     }
 
+    public static function isDateOrNull($date)
+    {
+        if (is_null($date) || $date === '0000-00-00 00:00:00') {
+            return true;
+        }
+
+        return self::isDate($date);
+    }
+
     /**
      * Check for birthDate validity
      *
@@ -546,6 +555,17 @@ class ValidateCore
     public static function isEan13($ean13)
     {
         return !$ean13 || preg_match('/^[0-9]{0,13}$/', $ean13);
+    }
+
+    /**
+     * Check for ISBN
+     *
+     * @param string $isbn validate
+     * @return bool Validity is ok or not
+     */
+    public static function isIsbn($isbn)
+    {
+        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;={}]*$/u'), $isbn);
     }
 
     /**
@@ -618,17 +638,6 @@ class ValidateCore
     public static function isTableOrIdentifier($table)
     {
         return preg_match('/^[a-zA-Z0-9_-]+$/', $table);
-    }
-
-    /**
-     * @deprecated 1.5.0 You should not use list like this, please use an array when you build a SQL query
-     */
-    public static function isValuesList()
-    {
-        Tools::displayAsDeprecated();
-        return true;
-        /* For history reason, we keep this line */
-        // return preg_match('/^[0-9,\'(). NULL]+$/', $list);
     }
 
     /**
@@ -928,15 +937,6 @@ class ValidateCore
     }
 
     /**
-     * @deprecated 1.5.0 Use Validate::isBoolId()
-     */
-    public static function isBool_Id($ids)
-    {
-        Tools::displayAsDeprecated();
-        return Validate::isBoolId($ids);
-    }
-
-    /**
      * Check the localization pack part selected
      *
      * @param string $data Localization pack to check
@@ -956,6 +956,18 @@ class ValidateCore
     public static function isSerializedArray($data)
     {
         return $data === null || (is_string($data) && preg_match('/^a:[0-9]+:{.*;}$/s', $data));
+    }
+
+    /**
+     * Check for PHP serialized data
+     *
+     * @param string $data json data to validate
+     * @return bool Validity is ok or not
+     */
+    public static function isJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
     }
 
     /**
@@ -1003,33 +1015,6 @@ class ValidateCore
                 if ($id == 0 || !Validate::isUnsignedInt($id)) {
                     return false;
                 }
-            }
-        }
-        return true;
-    }
-
-    /**
-     *
-     * @param array $zones
-     * @return bool return true if array contain all value required for an image map zone
-     */
-    public static function isSceneZones($zones)
-    {
-        foreach ($zones as $zone) {
-            if (!isset($zone['x1']) || !Validate::isUnsignedInt($zone['x1'])) {
-                return false;
-            }
-            if (!isset($zone['y1']) || !Validate::isUnsignedInt($zone['y1'])) {
-                return false;
-            }
-            if (!isset($zone['width']) || !Validate::isUnsignedInt($zone['width'])) {
-                return false;
-            }
-            if (!isset($zone['height']) || !Validate::isUnsignedInt($zone['height'])) {
-                return false;
-            }
-            if (!isset($zone['id_product']) || !Validate::isUnsignedInt($zone['id_product'])) {
-                return false;
             }
         }
         return true;
@@ -1094,5 +1079,10 @@ class ValidateCore
     public static function isOrderInvoiceNumber($id)
     {
         return (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id));
+    }
+
+    public static function isThemeName($theme_name)
+    {
+        return (bool)preg_match('/^[\w-]{3,255}$/u', $theme_name);
     }
 }

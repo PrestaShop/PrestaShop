@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Cldr\Update;
+
 class LocalizationPackCore
 {
     public $name;
@@ -35,19 +37,27 @@ class LocalizationPackCore
 
     public function loadLocalisationPack($file, $selection, $install_mode = false, $iso_localization_pack = null)
     {
-        if (!$xml = simplexml_load_string($file)) {
+        if (!$xml = @simplexml_load_string($file)) {
             return false;
         }
+        libxml_clear_errors();
         $main_attributes = $xml->attributes();
         $this->name = (string)$main_attributes['name'];
         $this->version = (string)$main_attributes['version'];
         if ($iso_localization_pack) {
-            $id_country = Country::getByIso($iso_localization_pack);
-            $country = new Country($id_country);
+            $id_country = (int)Country::getByIso($iso_localization_pack);
+
+            if ($id_country) {
+                $country = new Country($id_country);
+            }
+            if (!$id_country || !Validate::isLoadedObject($country)) {
+                $this->_errors[] = Tools::displayError(sprintf('Cannot load country : %1d', $id_country));
+                return false;
+            }
             if (!$country->active) {
                 $country->active = 1;
                 if (!$country->update()) {
-                    $this->_errors[] = Tools::displayError('Cannot enable the associated country: ').$country->name;
+                    $this->_errors[] = Tools::displayError(sprintf('Cannot enable the associated country: %1s', $country->name));
                 }
             }
         }
@@ -87,6 +97,18 @@ class LocalizationPackCore
             foreach ($selection as $selected) {
                 // No need to specify the install_mode because if the selection mode is used, then it's not the install
                 $res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install'.$selected}($xml) : false;
+            }
+        }
+
+        //get/update cldr datas for each language
+        if ($iso_localization_pack) {
+            foreach ($xml->languages->language as $lang) {
+                //use this to get correct language code ex : qc become fr
+                $languageCode = explode('-', Language::getLanguageCodeByIso($lang['iso_code']));
+                $isoCode = $languageCode[0].'-'.strtoupper($iso_localization_pack);
+
+                $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+                $cldrUpdate->fetchLocale($isoCode);
             }
         }
 
@@ -222,7 +244,7 @@ class LocalizationPackCore
                         continue;
                     }
 
-                    $id_country = Country::getByIso(strtoupper($rule_attributes['iso_code_country']));
+                    $id_country = (int)Country::getByIso(strtoupper($rule_attributes['iso_code_country']));
                     if (!$id_country) {
                         continue;
                     }
@@ -275,7 +297,7 @@ class LocalizationPackCore
             foreach ($xml->currencies->currency as $data) {
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
-                if (Currency::exists($attributes['iso_code'], (int)$attributes['iso_code_num'])) {
+                if (Currency::exists($attributes['iso_code'])) {
                     continue;
                 }
                 $currency = new Currency();
@@ -292,7 +314,7 @@ class LocalizationPackCore
                     $this->_errors[] = Tools::displayError('Invalid currency properties.');
                     return false;
                 }
-                if (!Currency::exists($currency->iso_code, $currency->iso_code_num)) {
+                if (!Currency::exists($currency->iso_code)) {
                     if (!$currency->add()) {
                         $this->_errors[] = Tools::displayError('An error occurred while importing the currency: ').strval($attributes['name']);
                         return false;
@@ -313,6 +335,8 @@ class LocalizationPackCore
 
         return true;
     }
+
+
 
     /**
      * @param SimpleXMLElement $xml
@@ -413,7 +437,7 @@ class LocalizationPackCore
     /**
      * Update a configuration variable from a localization file
      * <configuration>
-     *	<configuration name="variable_name" value="variable_value" />
+     * <configuration name="variable_name" value="variable_value" />
      *
      * @param SimpleXMLElement $xml
      * @return bool

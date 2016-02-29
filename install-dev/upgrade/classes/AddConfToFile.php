@@ -86,13 +86,11 @@ class    AddConfToFile
 
     public function checkString($string)
     {
-        if (get_magic_quotes_gpc()) {
-            $string = stripslashes($string);
-        }
         if (!is_numeric($string)) {
             $string = addslashes($string);
             $string = str_replace(array("\n", "\r"), '', $string);
         }
+
         return $string;
     }
 }

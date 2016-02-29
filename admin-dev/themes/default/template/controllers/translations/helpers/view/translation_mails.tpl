@@ -123,7 +123,25 @@
 							// when user first open email
 							if (frame.find('iframe.email-frame').length == 0) {
 								// load iframe
-								frame.append('<iframe class="email-frame" src="'+src+'"/>');
+								frame.append('<iframe class="email-frame" />');
+								$.ajax({
+									url:'ajax.php',
+									type: 'POST',
+									async: false,
+									dataType: 'html',
+									data: {
+										getEmailHTML : true,
+										email : src
+									},
+									success: function(result)
+									{
+										var doc = frame.find('iframe')[0].contentWindow.document;
+										doc.open();
+										doc.write(result);
+										doc.close();
+									}
+								});
+
 								// init tinyMCE with special config
 								tinySetup(rte_mail_config);
 							}

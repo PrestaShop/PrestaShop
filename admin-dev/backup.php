@@ -33,8 +33,10 @@ if (!Context::getContext()->employee->isLoggedBack()) {
     Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogin'));
 }
 
-$tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile,
-    Tab::getIdFromClassName('AdminBackup'));
+$tabAccess = Profile::getProfileAccess(
+    Context::getContext()->employee->id_profile,
+    Tab::getIdFromClassName('AdminBackup')
+);
 
 if ($tabAccess['view'] !== '1') {
     die(Tools::displayError('You do not have permission to view this.'));
@@ -53,7 +55,7 @@ if (!$backupfile = Tools::getValue('filename')) {
 // Check the realpath so we can validate the backup file is under the backup directory
 $backupfile = realpath($backupdir.DIRECTORY_SEPARATOR.$backupfile);
 
-if ($backupfile === false or strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
+if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
     die(Tools::dieOrLog('The backup file does not exist.'));
 }
 

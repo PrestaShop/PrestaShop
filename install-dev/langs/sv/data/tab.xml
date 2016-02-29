@@ -1,9 +1,10 @@
-<entity_tab encoding="UTF-8">
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_tab>
   <tab id="Dashboard" name="Kontrollpanel"/>
   <tab id="CMS_Pages" name="CMS Sidor"/>
   <tab id="CMS_Categories" name="CMS Kategorier"/>
   <tab id="Combinations_Generator" name="Kombinationsgenerator"/>
-  <tab id="Search" name="S&#xF6;k"/>
+  <tab id="Search" name="Sök"/>
   <tab id="Login" name="Inloggning"/>
   <tab id="Shops" name="Butiker:"/>
   <tab id="Shop_URLs" name="Butik URLs"/>
@@ -14,24 +15,24 @@
   <tab id="Shipping" name="Leverans"/>
   <tab id="Localization" name="Lokalisering"/>
   <tab id="Modules" name="Moduler"/>
-  <tab id="Preferences" name="Inst&#xE4;llningar"/>
-  <tab id="Advanced_Parameters" name="Avancerade inst&#xE4;llningar"/>
+  <tab id="Preferences" name="Inställningar"/>
+  <tab id="Advanced_Parameters" name="Avancerade inställningar"/>
   <tab id="Administration" name="Administration"/>
   <tab id="Stats" name="Statistik"/>
   <tab id="Stock" name="Lager"/>
   <tab id="Products" name="Produkter"/>
   <tab id="Categories" name="Kategorier"/>
-  <tab id="Monitoring" name="&#xD6;vervakning"/>
+  <tab id="Monitoring" name="Övervakning"/>
   <tab id="Attributes_and_Values" name="Attribut &amp; grupper"/>
   <tab id="Features" name="Egenskaper"/>
   <tab id="Manufacturers" name="Tillverkare"/>
-  <tab id="Suppliers" name="Leverant&#xF6;rer"/>
+  <tab id="Suppliers" name="Leverantörer"/>
   <tab id="Tags" name="Taggar"/>
   <tab id="Attachments" name="Bilagor"/>
   <tab id="Orders_1" name="Ordrar"/>
   <tab id="Invoices" name="Fakturor"/>
   <tab id="Merchandise_Returns" name="Varureturer"/>
-  <tab id="Delivery_Slips" name="F&#xF6;ljesedel"/>
+  <tab id="Delivery_Slips" name="Följesedel"/>
   <tab id="Credit_Slips" name="Kreditnota"/>
   <tab id="Statuses" name="Statusar"/>
   <tab id="Order_Messages" name="Ordermeddelanden"/>
@@ -39,29 +40,29 @@
   <tab id="Addresses" name="Adresser"/>
   <tab id="Groups" name="Grupper"/>
   <tab id="Shopping_Carts" name="Kundvagnar"/>
-  <tab id="Customer_Service" name="Kundtj&#xE4;nst"/>
+  <tab id="Customer_Service" name="Kundtjänst"/>
   <tab id="Contacts" name="Kontakter"/>
   <tab id="Titles" name="Titlar"/>
-  <tab id="Outstanding" name="Utest&#xE5;ende"/>
+  <tab id="Outstanding" name="Utestående"/>
   <tab id="Cart_Rules" name="Rabattkoder"/>
-  <tab id="Catalog_Price_Rules" name="Prisregler f&#xF6;r katalog"/>
-  <tab id="Marketing" name="Marknadsf&#xF6;ring"/>
-  <tab id="Shipping_1" name="Inst&#xE4;llningar"/>
-  <tab id="Carriers" name="Transport&#xF6;r"/>
+  <tab id="Catalog_Price_Rules" name="Prisregler för katalog"/>
+  <tab id="Marketing" name="Marknadsföring"/>
+  <tab id="Shipping_1" name="Inställningar"/>
+  <tab id="Carriers" name="Transportör"/>
   <tab id="Localization_1" name="Lokalisering"/>
-  <tab id="Languages" name="Spr&#xE5;k"/>
+  <tab id="Languages" name="Språk"/>
   <tab id="Zones" name="Zoner"/>
-  <tab id="Countries" name="L&#xE4;nder"/>
+  <tab id="Countries" name="Länder"/>
   <tab id="States" name="Staterna"/>
   <tab id="Currencies" name="Valutor"/>
   <tab id="Taxes" name="Skatter"/>
   <tab id="Tax_Rules" name="Momsregler"/>
-  <tab id="Translations" name="&#xD6;vers&#xE4;ttningar"/>
-  <tab id="Modules_1" name="Moduler"/>
+  <tab id="Translations" name="Översättningar"/>
+  <tab id="Modules_1" name="Moduler och Tjänster"/>
   <tab id="Modules_Themes_Catalog" name="Katalog med moduler &amp; teman"/>
   <tab id="Positions" name="Positioner"/>
   <tab id="Payment" name="Betalning"/>
-  <tab id="General" name="Allm&#xE4;nt"/>
+  <tab id="General" name="Allmänt"/>
   <tab id="Orders_2" name="Ordrar"/>
   <tab id="Products_1" name="Produkter"/>
   <tab id="Customers_2" name="Kunder"/>
@@ -70,33 +71,33 @@
   <tab id="CMS" name="CMS"/>
   <tab id="Images" name="Bilder"/>
   <tab id="Store_Contacts" name="Butikskontakter"/>
-  <tab id="Search_1" name="S&#xF6;k"/>
-  <tab id="Maintenance" name="Underh&#xE5;ll"/>
+  <tab id="Search_1" name="Sök"/>
+  <tab id="Maintenance" name="Underhåll"/>
   <tab id="Geolocation" name="Geolokalisering"/>
   <tab id="Configuration_Information" name="Information"/>
   <tab id="Performance" name="Prestanda"/>
   <tab id="E-mail" name="E-post"/>
   <tab id="Multistore" name="Multibutiker"/>
-  <tab id="CSV_Import" name="CSV Import"/>
+  <tab id="CSV_Import" name="Import"/>
   <tab id="DB_Backup" name="DB Backup"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
   <tab id="Logs" name="Loggar"/>
   <tab id="Webservice" name="Webbservice"/>
-  <tab id="Preferences_1" name="Inst&#xE4;llningar"/>
+  <tab id="Preferences_1" name="Inställningar"/>
   <tab id="Quick_Access" name="Snabbmeny"/>
-  <tab id="Employees" name="Anst&#xE4;llda"/>
+  <tab id="Employees" name="Anställda"/>
   <tab id="Profiles" name="Profiler"/>
-  <tab id="Permissions" name="Beh&#xF6;righeter"/>
+  <tab id="Permissions" name="Behörigheter"/>
   <tab id="Menus" name="Flikar"/>
   <tab id="Stats_1" name="Statistik"/>
-  <tab id="Search_Engines" name="S&#xF6;kmotorer"/>
-  <tab id="Referrers" name="H&#xE4;nvisningar"/>
+  <tab id="Search_Engines" name="Sökmotorer"/>
+  <tab id="Referrers" name="Hänvisningar"/>
   <tab id="Warehouses" name="Varulager"/>
   <tab id="Stock_Management" name="Lagerhantering"/>
-  <tab id="Stock_Movement" name="Lagerr&#xF6;relse"/>
+  <tab id="Stock_Movement" name="Lagerrörelse"/>
   <tab id="Instant_Stock_Status" name="Lagerstatus (instant)"/>
-  <tab id="Stock_Coverage" name="Lagert&#xE4;ckning"/>
-  <tab id="Supply_orders" name="Leverant&#xF6;rsordrar"/>
+  <tab id="Stock_Coverage" name="Lagertäckning"/>
+  <tab id="Supply_orders" name="Leverantörsordrar"/>
   <tab id="Configuration" name="Konfiguration"/>
-  <tab id="CarrierWizard" name="Leverant&#xF6;r"/>
+  <tab id="CarrierWizard" name="Leverantör"/>
 </entity_tab>

@@ -112,7 +112,8 @@ class ImageManagerCore
             $channel = isset($infos['channels']) ? ($infos['channels'] / 8) : 1;
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-            if (($infos[0] * $infos[1] * $infos['bits'] * $channel + pow(2, 16)) * 1.8 + $current_memory > $memory_limit - 1024 * 1024) {
+            // For perfs, avoid computing static maths formulas in the code. pow(2, 16) = 65536 ; 1024 * 1024 = 1048576
+            if (($infos[0] * $infos[1] * $infos['bits'] * $channel + 65536) * 1.8 + $current_memory > $memory_limit - 1048576) {
                 return false;
             }
         }
@@ -257,6 +258,7 @@ class ImageManagerCore
             ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
         }
         $write_file = ImageManager::write($file_type, $dest_image, $dst_file);
+        Hook::exec('actionOnImageResizeAfter', array('dst_file' => $dst_file, 'file_type' => $file_type));
         @imagedestroy($src_image);
         return $write_file;
     }
@@ -457,6 +459,7 @@ class ImageManagerCore
         imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
         imagecolortransparent($dest['ressource'], $white);
         $return = ImageManager::write($file_type, $dest['ressource'], $dst_file);
+        Hook::exec('actionOnImageCutAfter', array('dst_file' => $dst_file, 'file_type' => $file_type));
         @imagedestroy($src['ressource']);
         return    $return;
     }

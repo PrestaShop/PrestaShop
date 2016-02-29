@@ -217,7 +217,7 @@
 									{elseif $field['type'] == 'price'}
 										<div class="col-lg-9">
 											<div class="input-group fixed-width-lg">
-												<span class="input-group-addon">{$currency_left_sign}{$currency_right_sign} {l s='(tax excl.)'}</span>
+												<span class="input-group-addon">{$currency_left_sign} {l s='(tax excl.)'}</span>
 												<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" />
 											</div>
 										</div>

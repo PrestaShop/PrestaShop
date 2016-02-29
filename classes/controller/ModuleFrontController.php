@@ -44,14 +44,6 @@ class ModuleFrontControllerCore extends FrontController
         parent::__construct();
 
         $this->controller_type = 'modulefront';
-
-        $in_base = isset($this->page_name) && is_object(Context::getContext()->theme) && Context::getContext()->theme->hasColumnsSettings($this->page_name);
-
-        $tmp = isset($this->display_column_left) ? (bool)$this->display_column_left : true;
-        $this->display_column_left = $in_base ? Context::getContext()->theme->hasLeftColumn($this->page_name) : $tmp;
-
-        $tmp = isset($this->display_column_right) ? (bool)$this->display_column_right : true;
-        $this->display_column_right = $in_base ? Context::getContext()->theme->hasRightColumn($this->page_name) : $tmp;
     }
 
     /**
@@ -86,5 +78,18 @@ class ModuleFrontControllerCore extends FrontController
         }
 
         return false;
+    }
+
+    public function initContent()
+    {
+        if (Tools::isSubmit('module') && Tools::getValue('controller') == 'payment') {
+            $currency = Currency::getCurrency((int)$this->context->cart->id_currency);
+            $orderTotal = $this->context->cart->getOrderTotal();
+            $minimal_purchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
+            if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase) {
+                Tools::redirect('index.php?controller=order&step=1');
+            }
+        }
+        parent::initContent();
     }
 }

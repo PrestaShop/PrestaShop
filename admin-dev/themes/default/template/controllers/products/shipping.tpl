@@ -71,7 +71,7 @@
 
 		</label>
 		<div class="input-group col-lg-2">
-			<span class="input-group-addon">{$currency->prefix}{$currency->suffix} {if $country_display_tax_label}({l s='tax excl.'}){/if}</span>
+			<span class="input-group-addon">{$currency->sign} {if $country_display_tax_label}({l s='tax excl.'}){/if}</span>
 			<input type="text" id="additional_shipping_cost" name="additional_shipping_cost" onchange="this.value = this.value.replace(/,/g, '.');" value="{$product->additional_shipping_cost|htmlentities}" />
 		</div>
 	</div>

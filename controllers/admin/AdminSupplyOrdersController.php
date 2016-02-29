@@ -1017,6 +1017,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                         $entry->reference = Tools::getValue('input_reference_'.$id, '');
                         $entry->supplier_reference = Tools::getValue('input_supplier_reference_'.$id, '');
                         $entry->ean13 = Tools::getValue('input_ean13_'.$id, '');
+                        $entry->isbn = Tools::getValue('input_isbn_'.$id, '');
                         $entry->upc = Tools::getValue('input_upc_'.$id, '');
 
                         //get the product name in the order language
@@ -1054,6 +1055,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                                 'reference' => $entry->reference,
                                 'supplier_reference' => $entry->supplier_reference,
                                 'ean13' => $entry->ean13,
+                                'isbn' => $entry->isbn,
                                 'upc' => $entry->upc,
                             );
 
@@ -1721,7 +1723,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
             }
         }
         if ($items) {
-            die(Tools::jsonEncode($items));
+            die(json_encode($items));
         }
 
         die(1);
@@ -2063,10 +2065,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
 			IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc');
         $query->from('product_supplier', 'ps');
-        $query->leftJoin('stock', 's', '
-			s.id_product = ps.id_product
-			AND s.id_product_attribute = ps.id_product_attribute
-			AND s.id_warehouse = '.(int)$supply_order->id_warehouse);
         $query->innerJoin('warehouse_product_location', 'wpl', '
 			wpl.id_product = ps.id_product
 			AND wpl.id_product_attribute = ps.id_product_attribute
@@ -2109,6 +2107,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                 $supply_order_detail->supplier_reference = $item['supplier_reference'];
                 $supply_order_detail->name = Product::getProductName($item['id_product'], $item['id_product_attribute'], $supply_order->id_lang);
                 $supply_order_detail->ean13 = $item['ean13'];
+                $supply_order_detail->isbn = $item['isbn'];
                 $supply_order_detail->upc = $item['upc'];
                 $supply_order_detail->quantity_expected = ((int)$diff == 0) ? 1 : (int)$diff;
                 $supply_order_detail->exchange_rate = $order_currency->conversion_rate;

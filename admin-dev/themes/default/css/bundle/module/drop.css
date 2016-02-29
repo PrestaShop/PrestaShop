@@ -1,0 +1,7 @@
+form#importDropzone {
+    border: 3px dashed #0087F7;
+}
+
+.modal-content {
+    padding: 1%;
+}

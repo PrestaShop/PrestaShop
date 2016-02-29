@@ -42,7 +42,7 @@
 						{/if}
 					</td>
 					<td class="fixed-width-xs">
-						<img width="32" alt="{$module->displayName|escape:'html':'UTF-8'}" title="{$module->displayName|escape:'html':'UTF-8'}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
+						<img width="57" alt="{$module->displayName|escape:'html':'UTF-8'}" title="{$module->displayName|escape:'html':'UTF-8'}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
 					</td>
 					<td>
 						<div id="anchor{$module->name|ucfirst}" title="{$module->displayName|escape:'html':'UTF-8'}">
@@ -217,18 +217,21 @@
 	</table>
 	{/if}
 <script type="text/javascript">
-	$(document).ready(function(){
-		$('.fancybox-quick-view').fancybox({
-			type: 'ajax',
-			autoDimensions: false,
-			autoSize: false,
-			width: 600,
-			height: 'auto',
-			helpers: {
-				overlay: {
-					locked: false
-				}
-			}
-		});
+    $(document).ready(function(){
+        $('.fancybox-quick-view').each(function() {
+            $(this).fancybox({
+                type: 'ajax',
+                autoDimensions: false,
+                autoSize: false,
+                width: 600,
+                height: 'auto',
+                helpers: {
+                    overlay: {
+                        locked: false
+                    }
+                },
+                href: $(this).attr('href')+'&admin_list_from_source='+getControllerActionMap('read-more')
+            });
+        });
 	});
 </script>

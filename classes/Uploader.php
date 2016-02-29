@@ -225,7 +225,7 @@ class UploaderCore
             case 8:
                 $error = Tools::displayError('A PHP extension stopped the file upload');
                 break;
-            default;
+            default:
                 break;
         }
         return $error;

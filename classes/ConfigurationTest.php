@@ -36,7 +36,6 @@ class ConfigurationTestCore
         '/controllers/admin/AdminLoginController.php',
         '/css/index.php',
         '/download/index.php',
-        '/img/404.gif',
         '/js/tools.js',
         '/js/jquery/plugins/fancybox/jquery.fancybox.js',
         '/localization/fr.xml',
@@ -44,7 +43,6 @@ class ConfigurationTestCore
         '/modules/index.php',
         '/override/controllers/front/index.php',
         '/pdf/order-return.tpl',
-        '/themes/default-bootstrap/css/global.css',
         '/translations/export/index.php',
         '/webservice/dispatcher.php',
         '/upload/index.php',
@@ -71,7 +69,10 @@ class ConfigurationTestCore
             'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache/',
             'translations_dir' => 'translations',
             'customizable_products_dir' => 'upload',
-            'virtual_products_dir' => 'download'
+            'virtual_products_dir' => 'download',
+            'app_cache_dir' => 'app/cache',
+            'app_logs_dir' => 'app/logs',
+            'config_sf2_dir' => 'app/config',
         );
 
         if (!defined('_PS_HOST_MODE_')) {
@@ -82,6 +83,7 @@ class ConfigurationTestCore
                     'getcwd', 'chdir', 'chmod'
                 ),
                 'phpversion' => false,
+                'apache_mod_rewrite' => false,
                 'gd' => false,
                 'mysql_support' => false,
                 'config_dir' => 'config',
@@ -104,11 +106,9 @@ class ConfigurationTestCore
         return array(
             'new_phpversion' => false,
             'fopen' => false,
-            'register_globals' => false,
             'gz' => false,
             'mcrypt' => false,
             'mbstring' => false,
-            'magicquotes' => false,
             'dom' => false,
             'pdo_mysql' => false,
         );
@@ -139,12 +139,20 @@ class ConfigurationTestCore
 
     public static function test_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.2.0', '>=');
+        return version_compare(substr(phpversion(), 0, 5), '5.5.0', '>=');
+    }
+
+    public static function test_apache_mod_rewrite()
+    {
+        if (strpos(strtolower($_SERVER["SERVER_SOFTWARE"]), 'apache') === false || !function_exists('apache_get_modules')) {
+            return true;
+        }
+        return in_array('mod_rewrite', apache_get_modules());
     }
 
     public static function test_new_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.4.0', '>=');
+        return version_compare(substr(phpversion(), 0, 5), '5.5.0', '>=');
     }
 
     public static function test_mysql_support()
@@ -155,11 +163,6 @@ class ConfigurationTestCore
     public static function test_pdo_mysql()
     {
         return extension_loaded('pdo_mysql');
-    }
-
-    public static function test_magicquotes()
-    {
-        return !get_magic_quotes_gpc();
     }
 
     public static function test_upload()
@@ -185,11 +188,6 @@ class ConfigurationTestCore
     public static function test_gd()
     {
         return function_exists('imagecreatetruecolor');
-    }
-
-    public static function test_register_globals()
-    {
-        return !ini_get('register_globals');
     }
 
     public static function test_gz()
@@ -300,6 +298,21 @@ class ConfigurationTestCore
     }
 
     public static function test_translations_dir($dir)
+    {
+        return ConfigurationTest::test_dir($dir, true);
+    }
+
+    public static function test_app_cache_dir($dir)
+    {
+        return ConfigurationTest::test_dir($dir, true);
+    }
+
+    public static function test_app_logs_dir($dir)
+    {
+        return ConfigurationTest::test_dir($dir, true);
+    }
+
+    public static function test_config_sf2_dir($dir)
     {
         return ConfigurationTest::test_dir($dir, true);
     }

@@ -56,10 +56,10 @@ class ConfigurationKPICore extends Configuration
         return $r;
     }
 
-    public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
+    public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null, $default = false)
     {
         ConfigurationKPI::setKpiDefinition();
-        $r = parent::get($key, $id_lang, $id_shop_group, $id_shop);
+        $r = parent::get($key, $id_lang, $id_shop_group, $id_shop, $default);
         ConfigurationKPI::unsetKpiDefinition();
         return $r;
     }

@@ -371,6 +371,13 @@ if (secs < 10)
 	secs = "0" + secs;
 
 $('.datepicker').datetimepicker({
+	beforeShow: function (input, inst) {
+        setTimeout(function () {
+            inst.dpDiv.css({
+                'z-index': 1031
+            });
+        }, 0);
+    },
 	prevText: '',
 	nextText: '',
 	dateFormat: 'yy-mm-dd',

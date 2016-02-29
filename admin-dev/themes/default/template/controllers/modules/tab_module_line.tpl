@@ -24,7 +24,7 @@
 *}
 <tr>
 	<td class="fixed-width-sm center">
-		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}{/if}" />
+		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image_absolute)}{$module->image_absolute}{else}{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}{/if}" />
 	</td>
 	<td>
 		<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
@@ -49,7 +49,7 @@
 					{$module->description}
 				{/if}
 				{if isset($module->show_quick_view) &&  $module->show_quick_view}
-					<br><a href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;ajax=1&amp;action=GetModuleQuickView&amp;module={$module->name|urlencode}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
+					<br><a href="#" class="controller-quick-view" data-name="{$module->name|escape:'html':'UTF-8'}"><i class="icon-search"></i> {l s='Read more'}</a>
 				{/if}
 			</p>
 			{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
@@ -59,7 +59,7 @@
 		<td>&nbsp;</td>
 		<td style="text-align: right;">
 			<p>
-				<a href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}" class="button updated _blank">
+				<a href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}" onclick="return !window.open(this.href, '_blank');" class="button updated _blank">
 					<span class="btn btn-default">
 						<i class="icon-shopping-cart"></i>{if isset($module->price)}{if $module->price|floatval == 0}{l s='Free'}{elseif isset($module->id_currency)} &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}{/if}{/if}
 					</span>

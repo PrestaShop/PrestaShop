@@ -41,8 +41,9 @@ if (!defined('_PS_CORE_DIR_')) {
     define('_PS_CORE_DIR_', realpath(dirname(__FILE__).'/..'));
 }
 
+$themes = glob(dirname(dirname(__FILE__)).'/themes/*/config/theme.yml');
 if (!defined('_THEME_NAME_')) {
-    define('_THEME_NAME_', 'default-bootstrap');
+    define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
 }
 
 
@@ -79,9 +80,6 @@ require_once(_PS_INSTALL_PATH_.'classes/simplexml.php');
 if (!@ini_get('date.timezone')) {
     @date_default_timezone_set('UTC');
 }
-
-// Some hosting still have magic_quotes_runtime configured
-ini_set('magic_quotes_runtime', 0);
 
 // Try to improve memory limit if it's under 64M
 $current_memory_limit = psinstall_get_memory_limit();

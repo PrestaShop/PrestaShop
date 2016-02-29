@@ -97,17 +97,14 @@
 			{/foreach}
 		{/if}
 
-		{assign var=total_cart_rule value=0}
 		{if is_array($cart_rules) && count($cart_rules)}
 			{foreach $cart_rules as $cart_rule}
 				<tr class="discount">
 					<td class="white left" colspan="3">{$cart_rule.name}</td>
 					<td class="white right">
 						{if $tax_excluded_display}
-							{$total_cart_rule = $total_cart_rule + $cart_rule.value_tax_excl}
 							+ {$cart_rule.value_tax_excl}
 						{else}
-							{$total_cart_rule = $total_cart_rule + $cart_rule.value}
 							+ {$cart_rule.value}
 						{/if}
 					</td>

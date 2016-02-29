@@ -12,3 +12,19 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.fancybox-quick-view').fancybox({
+			type: 'ajax',
+			autoDimensions: false,
+			autoSize: false,
+			width: 600,
+			height: 'auto',
+			helpers: {
+				overlay: {
+					locked: false
+				}
+			}
+		});
+	});
+</script>

@@ -33,7 +33,7 @@ class AdminCarriersControllerCore extends AdminController
 
     public function __construct()
     {
-        if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier') && !Tools::isSubmit('onboarding_carrier')) {
+        if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier')) {
             Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard').'&id_carrier='.(int)$id_carrier);
         }
 
@@ -109,18 +109,14 @@ class AdminCarriersControllerCore extends AdminController
             )
         );
         parent::__construct();
-        
-        if (Tools::isSubmit('onboarding_carrier')) {
-            $this->display = 'view';
-        }
     }
 
     public function initToolbar()
     {
         parent::initToolbar();
-        
+
         if (isset($this->toolbar_btn['new']) && $this->display != 'view') {
-            $this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminCarriers').'&onboarding_carrier';
+            $this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminCarrierWizard');
         }
     }
 
@@ -129,7 +125,7 @@ class AdminCarriersControllerCore extends AdminController
         $this->page_header_toolbar_title = $this->l('Carriers');
         if ($this->display != 'view') {
             $this->page_header_toolbar_btn['new_carrier'] = array(
-                'href' => $this->context->link->getAdminLink('AdminCarriers').'&onboarding_carrier',
+                'href' => $this->context->link->getAdminLink('AdminCarrierWizard'),
                 'desc' => $this->l('Add new carrier', null, null, false),
                 'icon' => 'process-icon-new'
             );
@@ -137,22 +133,27 @@ class AdminCarriersControllerCore extends AdminController
 
         parent::initPageHeaderToolbar();
     }
-    
-    public function renderView()
-    {
-        $this->initTabModuleList();
-        $this->filterTabModuleList();
-        $this->context->smarty->assign('panel_title', $this->l('Use one of our recommended carrier modules'));
-        $this->tpl_view_vars = array('modules_list' => $this->renderModulesList());
-        unset($this->page_header_toolbar_btn['modules-list']);
-        return parent::renderView();
-    }
-    
+
     public function renderList()
     {
         $this->_select = 'b.*';
-        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
+        $this->_join = 'INNER JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
         $this->_use_found_rows = false;
+
+        // Removes the Recommended modules button
+        unset($this->page_header_toolbar_btn['modules-list']);
+
+        // test if need to show header alert.
+        $sql = 'SELECT COUNT(1) FROM `'._DB_PREFIX_.'carrier` WHERE deleted = 0 AND id_reference > 2';
+        $showHeaderAlert = (Db::getInstance()->query($sql)->fetchColumn(0) == 0);
+
+        // Assign them in two steps! Because renderModulesList needs it before to be called.
+        $this->context->smarty->assign('panel_title', $this->l('Use one of our recommended carrier modules'));
+        $this->context->smarty->assign(array(
+            'showHeaderAlert' => $showHeaderAlert,
+            'modules_list' => $this->renderModulesList('back-office,AdminCarriers,new')
+        ));
+
         return parent::renderList();
     }
 
@@ -414,7 +415,7 @@ class AdminCarriersControllerCore extends AdminController
         if (Tools::getValue('action') == 'GetModuleQuickView' && Tools::getValue('ajax') == '1') {
             $this->ajaxProcessGetModuleQuickView();
         }
-        
+
         if (Tools::getValue('submitAdd'.$this->table)) {
             /* Checking fields validity */
             $this->validateRules();
@@ -710,7 +711,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
             return;
         }
     }
-    
+
     public function displayDeleteLink($token = null, $id, $name = null)
     {
         if ($this->tabAccess['delete'] == 1) {
@@ -749,12 +750,10 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
             return;
         }
     }
-    
+
     protected function initTabModuleList()
     {
-        if (Tools::isSubmit('onboarding_carrier')) {
-            parent::initTabModuleList();
-            $this->filter_modules_list = $this->tab_modules_list['default_list'] = $this->tab_modules_list['slider_list'];
-        }
+        parent::initTabModuleList();
+        $this->filter_modules_list = $this->tab_modules_list['default_list'] = $this->tab_modules_list['slider_list'];
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
   <tab id="Dashboard" name="Tablou de bord"/>
   <tab id="CMS_Pages" name="Pagini CMS"/>
@@ -58,7 +58,7 @@
   <tab id="Taxes" name="Taxe"/>
   <tab id="Tax_Rules" name="Reguli de taxare"/>
   <tab id="Translations" name="Traduceri"/>
-  <tab id="Modules_1" name="Module"/>
+  <tab id="Modules_1" name="Module și servicii"/>
   <tab id="Modules_Themes_Catalog" name="Catalog de teme și module"/>
   <tab id="Positions" name="Poziții"/>
   <tab id="Payment" name="Plată"/>
@@ -78,7 +78,7 @@
   <tab id="Performance" name="Performanță"/>
   <tab id="E-mail" name="E-mail"/>
   <tab id="Multistore" name="Magazine multiple"/>
-  <tab id="CSV_Import" name="Import CSV"/>
+  <tab id="CSV_Import" name="Import"/>
   <tab id="DB_Backup" name="Creare backup pentru baza de date"/>
   <tab id="SQL_Manager" name="Administrare SQL"/>
   <tab id="Logs" name="Jurnale"/>

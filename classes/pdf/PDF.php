@@ -33,6 +33,7 @@ class PDFCore
     public $pdf_renderer;
     public $objects;
     public $template;
+    public $send_bulk_flag = false;
 
     const TEMPLATE_INVOICE = 'Invoice';
     const TEMPLATE_ORDER_RETURN = 'OrderReturn';
@@ -50,11 +51,26 @@ class PDFCore
     {
         $this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'), $orientation);
         $this->template = $template;
-        $this->smarty = $smarty;
+
+        /**
+         * We need a Smarty instance that does NOT escape
+         * HTML.
+         * Since in BO Smarty does not autoescape
+         * and in FO Smarty does autoescape, we use
+         * a new Smarty of which we're sure it does not escape
+         * the HTML.
+         */
+
+        $this->smarty = clone $smarty;
+        $this->smarty->escape_html = false;
 
         $this->objects = $objects;
         if (!($objects instanceof Iterator) && !is_array($objects)) {
             $this->objects = array($objects);
+        }
+
+        if (count($this->objects)>1) { // when bulk mode only
+            $this->send_bulk_flag = true;
         }
     }
 
@@ -115,7 +131,9 @@ class PDFCore
         $class_name = 'HTMLTemplate'.$this->template;
 
         if (class_exists($class_name)) {
-            $class = new $class_name($object, $this->smarty);
+            // Some HTMLTemplateXYZ implementations won't use the third param but this is not a problem (no warning in PHP),
+            // the third param is then ignored if not added to the method signature.
+            $class = new $class_name($object, $this->smarty, $this->send_bulk_flag);
 
             if (!($class instanceof HTMLTemplate)) {
                 throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');

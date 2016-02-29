@@ -126,24 +126,27 @@ class HelperTreeShopsCore extends TreeCore
                     'Collapse All',
                     '#',
                     '$(\'#'.$this->getId().'\').tree(\'collapseAll\'); return false;',
-                    'icon-collapse-alt'),
+                    'icon-collapse-alt'
+                ),
                 new TreeToolbarLink(
                     'Expand All',
                     '#',
                     '$(\'#'.$this->getId().'\').tree(\'expandAll\'); return false;',
-                    'icon-expand-alt'),
+                    'icon-expand-alt'
+                ),
                 new TreeToolbarLink(
                     'Check All',
                     '#',
                     'checkAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
-                    'icon-check-sign'),
+                    'icon-check-sign'
+                ),
                 new TreeToolbarLink(
                     'Uncheck All',
                     '#',
                     'uncheckAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
-                    'icon-check-empty')
+                    'icon-check-empty'
                 )
-            );
+            ));
         }
 
         if ($use_selected_shop) {

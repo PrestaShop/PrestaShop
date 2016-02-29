@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
   <tab id="Dashboard" name="Dashboard"/>
   <tab id="CMS_Pages" name="CMS Pages"/>
@@ -58,7 +58,7 @@
   <tab id="Taxes" name="Taxes"/>
   <tab id="Tax_Rules" name="Tax Rules"/>
   <tab id="Translations" name="Translations"/>
-  <tab id="Modules_1" name="Modules"/>
+  <tab id="Modules_1" name="Moduler og tjenester"/>
   <tab id="Modules_Themes_Catalog" name="Modules &amp; Themes Catalog"/>
   <tab id="Positions" name="Positions"/>
   <tab id="Payment" name="Payment"/>
@@ -78,7 +78,7 @@
   <tab id="Performance" name="Performance"/>
   <tab id="E-mail" name="E-mail"/>
   <tab id="Multistore" name="Multistore"/>
-  <tab id="CSV_Import" name="CSV Import"/>
+  <tab id="CSV_Import" name="Import"/>
   <tab id="DB_Backup" name="DB Backup"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
   <tab id="Logs" name="Logs"/>

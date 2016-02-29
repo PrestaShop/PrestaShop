@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterface
+abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
 {
     /**
      * List of field types
@@ -229,7 +229,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
         }
 
         if ($id) {
-            $entity_mapper = Adapter_ServiceLocator::get("Adapter_EntityMapper");
+            $entity_mapper = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get("\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper");
             $entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
         }
     }
@@ -899,7 +899,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
                 continue;
             }
 
-            if (is_array($this->update_fields) && empty($this->update_fields[$field])) {
+            if (is_array($this->update_fields) && empty($this->update_fields[$field]) && isset($this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop']) {
                 continue;
             }
 
@@ -1097,18 +1097,6 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
     }
 
     /**
-     * @deprecated 1.5.0.1 Use validateController() instead
-     * @param bool $htmlentities
-     *
-     * @return array
-     */
-    public function validateControler($htmlentities = true)
-    {
-        Tools::displayAsDeprecated();
-        return $this->validateController($htmlentities);
-    }
-
-    /**
      * Validates submitted values and returns an array of errors, if any.
      *
      * @param bool $htmlentities If true, uses htmlentities() for field name translations in errors.
@@ -1146,8 +1134,12 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
             // Checking for fields validity
             // Hack for postcode required for country which does not have postcodes
             if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0')) {
-                if (isset($data['validate']) && !Validate::$data['validate']($value) && (!empty($value) || $data['required'])) {
-                    $errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
+                if (isset($data['validate'])) {
+                    $data_validate = $data['validate'];
+                    if (!Validate::$data_validate($value) && (!empty($value) || $data['required'])) {
+                        $errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).
+                            '</b> '.Tools::displayError('is invalid.');
+                    }
                 } else {
                     if (isset($data['copy_post']) && !$data['copy_post']) {
                         continue;
@@ -1818,6 +1810,11 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
 
         if ($field !== null || !Cache::isStored($cache_id)) {
             $reflection = new ReflectionClass($class);
+
+            if (!$reflection->hasProperty('definition')) {
+                return false;
+            }
+
             $definition = $reflection->getStaticPropertyValue('definition');
 
             $definition['classname'] = $class;

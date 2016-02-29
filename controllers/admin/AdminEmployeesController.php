@@ -124,7 +124,7 @@ class AdminEmployeesControllerCore extends AdminController
         $path = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR;
         foreach (scandir($path) as $theme) {
             if ($theme[0] != '.' && is_dir($path.$theme) && (@filemtime($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'admin-theme.css'))) {
-                $this->themes[] = array('id' => $theme.'|admin-theme'.$rtl.'.css', 'name' => $this->l('Default'));
+                $this->themes[] = array('id' => $theme.'|admin-theme'.$rtl.'.css', 'name' => $theme == 'default' ? $this->l('Default') : ucfirst($theme));
                 if (file_exists($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes'.$rtl)) {
                     foreach (scandir($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes'.$rtl) as $css) {
                         if ($css[0] != '.' && preg_match('/\.css$/', $css)) {
@@ -286,7 +286,7 @@ class AdminEmployeesControllerCore extends AdminController
         $this->fields_form['input'] = array_merge($this->fields_form['input'], array(
             array(
                 'type' => 'switch',
-                'label' => $this->l('Connect to PrestaShop'),
+                'label' => $this->l('Subscribe to PrestaShop newsletter'),
                 'name' => 'optin',
                 'required' => false,
                 'is_bool' => true,
@@ -302,7 +302,7 @@ class AdminEmployeesControllerCore extends AdminController
                         'label' => $this->l('No')
                     )
                 ),
-                'hint' => $this->l('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, please uncheck this box.')
+                'hint' => $this->l('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.')
             ),
             array(
                 'type' => 'default_tab',
@@ -641,18 +641,9 @@ class AdminEmployeesControllerCore extends AdminController
     {
         $res = parent::afterUpdate($object);
         // Update cookie if needed
-        if (Tools::getValue('id_employee') == $this->context->employee->id && ($passwd = Tools::getValue('passwd'))
+        if (Tools::getValue('id_employee') == $this->context->employee->id && Tools::getValue('passwd')
             && $object->passwd != $this->context->employee->passwd) {
             $this->context->cookie->passwd = $this->context->employee->passwd = $object->passwd;
-            if (Tools::getValue('passwd_send_email')) {
-                $params = array(
-                    '{email}' => $object->email,
-                    '{lastname}' => $object->lastname,
-                    '{firstname}' => $object->firstname,
-                    '{passwd}' => $passwd
-                );
-                Mail::Send($object->id_lang, 'password', Mail::l('Your new password', $object->id_lang), $params, $object->email, $object->firstname.' '.$object->lastname);
-            }
         }
 
         return $res;
@@ -687,6 +678,6 @@ class AdminEmployeesControllerCore extends AdminController
                 }
             }
         }
-        die(Tools::jsonEncode($this->tabs_list));
+        die(json_encode($this->tabs_list));
     }
 }

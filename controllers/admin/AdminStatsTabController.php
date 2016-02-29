@@ -288,14 +288,14 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         
         if ($this->isXmlHttpRequest()) {
             if (is_array($this->errors) && count($this->errors)) {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'has_errors' => true,
                     'errors' => array($this->errors),
                     'date_from' => $this->context->employee->stats_date_from,
                     'date_to' => $this->context->employee->stats_date_to)
                 ));
             } else {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'has_errors' => false,
                     'date_from' => $this->context->employee->stats_date_from,
                     'date_to' => $this->context->employee->stats_date_to)

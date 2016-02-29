@@ -58,6 +58,36 @@ $(document).ready(function() {
 			}
 		}
 	});
+	
+	$("#reset_password_form").validate({
+		rules: {
+			"reset_passwd": {
+				"required": true
+			},
+			"reset_confirm": {
+				"required": true
+			}
+		},
+		submitHandler: function(form) {
+		  doAjaxReset();
+		},
+		// override jquery validate plugin defaults for bootstrap 3
+		highlight: function(element) {
+			$(element).closest('.form-group').addClass('has-error');
+		},
+		unhighlight: function(element) {
+			$(element).closest('.form-group').removeClass('has-error');
+		},
+		errorElement: 'span',
+		errorClass: 'help-block',
+		errorPlacement: function(error, element) {
+			if(element.parent('.input-group').length) {
+				error.insertAfter(element.parent());
+			} else {
+				error.insertAfter(element);
+			}
+		}
+	});
 
 	$('.show-forgot-password').on('click',function(e) {
 		e.preventDefault();
@@ -69,7 +99,8 @@ $(document).ready(function() {
 		displayLogin();
 	});
 
-	$('#email').focus();
+	if ($('.front_reset')) $('#reset_passwd').focus();
+	else $('#email').focus();
 
 	//Tab-index loop
 	$('form').each(function(){
@@ -106,16 +137,41 @@ function displayForgotPassword() {
 	$('#error').hide();
 	$("#login").find('.flip-container').toggleClass("flip");
 	setTimeout(function(){$('.front').hide()},200);
-	setTimeout(function(){$('.back').show()},200);
-	$('#email_forgot').select();
+	setTimeout(function(){$('.back').show();$('#email_forgot').select();},200);
+	return false;
+}
+
+function displayForgotConfirm() {
+	$('#error').hide();
+	$("#login").find('.flip-container').toggleClass("flip");
+	setTimeout(function(){$('.back').hide()},200);
+	setTimeout(function(){$('.forgot_confirm').show()},300);
+	return false;
+}
+
+function displayResetPassword() {
+	$('#error').hide();
+	$("#login").find('.flip-container').toggleClass("flip");
+	setTimeout(function(){$('.front').hide()},200);
+	setTimeout(function(){$('.front_reset').show();$('#reset_passwd').select();},200);
+	return false;
+}
+
+function displayResetConfirm() {
+	$('#error').hide();
+	$('.show-forgot-password').hide();
+	$("#login").find('.flip-container').toggleClass("flip");
+	setTimeout(function(){$('.front').hide()},200);
+	setTimeout(function(){$('.back_reset').show()},200);
+	setTimeout(function(){displayLogin()},5000);
+	return false;
 }
 
 function displayLogin() {
 	$('#error').hide();
 	$("#login").find('.flip-container').toggleClass("flip");
 	setTimeout(function(){$('.back').hide()},200);
-	setTimeout(function(){$('.front').show()},200);
-	$('#email').select();
+	setTimeout(function(){$('.front_login').show();$('#email').select();},200);
 	return false;
 }
 
@@ -183,10 +239,44 @@ function doAjaxForgot() {
 				if (jsonData.hasErrors) {
 					displayErrors(jsonData.errors);
 				} else {
-					alert(jsonData.confirm);
 					$('#forgot_password_form').hide();
 					$('.show-forgot-password').hide();
-					displayLogin();
+					displayForgotConfirm();
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				$('#error').html(XMLHttpRequest.responseText).removeClass('hide').fadeIn('slow');
+			}
+		});
+	});
+}
+
+function doAjaxReset() {
+	$('#error').hide();
+	$('#reset_password_form').fadeIn('slow', function() {
+		$.ajax({
+			type: 'POST',
+			headers: {'cache-control': 'no-cache'},
+			url: 'ajax-tab.php' + '?rand=' + new Date().getTime(),
+			async: true,
+			dataType: 'json',
+			data: {
+				ajax: 1,
+				controller: 'AdminLogin',
+				submitReset: 1,
+				reset_token: $('#reset_token').val(),
+				id_employee: $('#id_employee').val(),
+				reset_email: $('#reset_email').val(),
+				reset_passwd: $('#reset_passwd').val(),
+				reset_confirm: $('#reset_confirm').val()
+			},
+			success: function(jsonData) {
+				if (jsonData.hasErrors) {
+					displayErrors(jsonData.errors);
+				} else {
+					$('#reset_password_form').hide();
+					$('.show-forgot-password').hide();
+					displayResetConfirm();
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {

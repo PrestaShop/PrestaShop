@@ -44,9 +44,9 @@ class RangeWeightCore extends ObjectModel
     );
 
     protected $webserviceParameters = array(
-            'objectNodeName' => 'weight_range',
-            'objectsNodeName' => 'weight_ranges',
-            'fields' => array(
+        'objectNodeName' => 'weight_range',
+        'objectsNodeName' => 'weight_ranges',
+        'fields' => array(
             'id_carrier' => array('xlink_resource' => 'carriers'),
         )
     );
@@ -64,12 +64,14 @@ class RangeWeightCore extends ObjectModel
         if (!parent::add($autodate, $null_values) || !Validate::isLoadedObject($this)) {
             return false;
         }
-
+        if (defined('PS_INSTALLATION_IN_PROGRESS')) {
+            return true;
+        }
         $carrier = new Carrier((int)$this->id_carrier);
         $price_list = array();
         foreach ($carrier->getZones() as $zone) {
             $price_list[] = array(
-                'id_range_price' => 0,
+                'id_range_price' => null,
                 'id_range_weight' => (int)$this->id,
                 'id_carrier' => (int)$this->id_carrier,
                 'id_zone' => (int)$zone['id_zone'],
@@ -89,32 +91,36 @@ class RangeWeightCore extends ObjectModel
     public static function getRanges($id_carrier)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'range_weight`
-			WHERE `id_carrier` = '.(int)$id_carrier.'
-			ORDER BY `delimiter1` ASC');
+            SELECT *
+            FROM `'._DB_PREFIX_.'range_weight`
+            WHERE `id_carrier` = '.(int)$id_carrier.'
+            ORDER BY `delimiter1` ASC');
     }
 
-    public static function rangeExist($id_carrier, $delimiter1, $delimiter2)
+    public static function rangeExist($id_carrier, $delimiter1, $delimiter2, $id_reference = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT count(*)
-			FROM `'._DB_PREFIX_.'range_weight`
-			WHERE `id_carrier` = '.(int)$id_carrier.'
-			AND `delimiter1` = '.(float)$delimiter1.' AND `delimiter2`='.(float)$delimiter2);
+            SELECT count(*)
+            FROM `'._DB_PREFIX_.'range_weight` rw'.
+            (is_null($id_carrier) && $id_reference ? '
+            INNER JOIN `'._DB_PREFIX_.'carrier` c on (rw.`id_carrier` = c.`id_carrier`)' : '').'
+            WHERE'.
+            ($id_carrier ? ' `id_carrier` = '.(int)$id_carrier : '').
+            (is_null($id_carrier) && $id_reference ? ' c.`id_reference` = '.(int)$id_reference : '').'
+            AND `delimiter1` = '.(float)$delimiter1.' AND `delimiter2` = '.(float)$delimiter2);
     }
 
     public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_rang = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT count(*)
-			FROM `'._DB_PREFIX_.'range_weight`
-			WHERE `id_carrier` = '.(int)$id_carrier.'
-			AND ((`delimiter1` >= '.(float)$delimiter1.' AND `delimiter1` < '.(float)$delimiter2.')
-			    OR (`delimiter2` > '.(float)$delimiter1.' AND `delimiter2` < '.(float)$delimiter2.')
-			    OR ('.(float)$delimiter1.' > `delimiter1` AND '.(float)$delimiter1.' < `delimiter2`)
-			    OR ('.(float)$delimiter2.' < `delimiter1` AND '.(float)$delimiter2.' > `delimiter2`)
-			    )
-			'.(!is_null($id_rang) ? ' AND `id_range_weight` != '.(int)$id_rang : ''));
+            SELECT count(*)
+            FROM `'._DB_PREFIX_.'range_weight`
+            WHERE `id_carrier` = '.(int)$id_carrier.'
+            AND ((`delimiter1` >= '.(float)$delimiter1.' AND `delimiter1` < '.(float)$delimiter2.')
+                OR (`delimiter2` > '.(float)$delimiter1.' AND `delimiter2` < '.(float)$delimiter2.')
+                OR ('.(float)$delimiter1.' > `delimiter1` AND '.(float)$delimiter1.' < `delimiter2`)
+                OR ('.(float)$delimiter2.' < `delimiter1` AND '.(float)$delimiter2.' > `delimiter2`)
+            )
+            '.(!is_null($id_rang) ? ' AND `id_range_weight` != '.(int)$id_rang : ''));
     }
 }

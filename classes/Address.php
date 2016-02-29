@@ -133,7 +133,6 @@ class AddressCore extends ObjectModel
         ),
     );
 
-    protected $_includeVars = array('addressType' => 'table');
     protected $_includeContainer = false;
 
     protected $webserviceParameters = array(
@@ -306,13 +305,13 @@ class AddressCore extends ObjectModel
      */
     public function isUsed()
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+        $result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(`id_order`) AS used
 		FROM `'._DB_PREFIX_.'orders`
 		WHERE `id_address_delivery` = '.(int)$this->id.'
 		OR `id_address_invoice` = '.(int)$this->id);
 
-        return isset($result['used']) ? $result['used'] : false;
+        return $result > 0 ? (int)$result : false;
     }
 
     public static function getCountryAndState($id_address)

@@ -35,7 +35,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div id="add_product_product_attribute_area" class="form-group" style="display: none;">
 			<label>{l s='Combinations'}</label>
 			<select name="add_product[product_attribute_id]" id="add_product_product_attribute_id"></select>
@@ -50,20 +50,17 @@
 	<td style="display:none;">
 		<div class="row">
 			<div class="input-group fixed-width-xl">
-				<div class="input-group-addon">
-					{$currency->sign}
-					{l s='tax excl.'}
-				</div>
+				{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
 				<input type="text" name="add_product[product_price_tax_excl]" id="add_product_product_price_tax_excl" value="" disabled="disabled" />
+				{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
 			</div>
 		</div>
+		<br/>
 		<div class="row">
 			<div class="input-group fixed-width-xl">
-				<div class="input-group-addon">
-					{$currency->sign}
-					{l s='tax incl.'}
-				</div>
+				{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 				<input type="text" name="add_product[product_price_tax_incl]" id="add_product_product_price_tax_incl" value="" disabled="disabled" />
+				{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 			</div>
 		</div>
 	</td>

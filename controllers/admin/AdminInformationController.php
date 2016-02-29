@@ -61,7 +61,8 @@ class AdminInformationControllerCore extends AdminController
                     'php' => phpversion(),
                     'server' => $_SERVER['SERVER_SOFTWARE'],
                     'memory_limit' => ini_get('memory_limit'),
-                    'max_execution_time' => ini_get('max_execution_time')
+                    'max_execution_time' => ini_get('max_execution_time'),
+                    'upload_max_filesize' => ini_get('upload_max_filesize')
                 ),
                 'database' => array(
                     'version' => Db::getInstance()->getVersion(),
@@ -70,6 +71,7 @@ class AdminInformationControllerCore extends AdminController
                     'user' => _DB_USER_,
                     'prefix' => _DB_PREFIX_,
                     'engine' => _MYSQL_ENGINE_,
+                    'driver' => Db::getClass(),
                 ),
                 'uname' => function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '',
                 'apache_instaweb' => Tools::apacheModExists('mod_instaweb')
@@ -80,7 +82,7 @@ class AdminInformationControllerCore extends AdminController
             'shop' => array(
                 'ps' => _PS_VERSION_,
                 'url' => $this->context->shop->getBaseURL(),
-                'theme' => $this->context->shop->theme_name,
+                'theme' => $this->context->shop->theme->getName(),
             ),
             'mail' => Configuration::get('PS_MAIL_METHOD') == 1,
             'smtp' => array(
@@ -123,10 +125,10 @@ class AdminInformationControllerCore extends AdminController
             'customizable_products_dir' => $this->l('Set write permissions for the "upload" folder and subfolders.'),
             'virtual_products_dir' => $this->l('Set write permissions for the "download" folder and subfolders.'),
             'fopen' => $this->l('Allow the PHP fopen() function on your server.'),
-            'register_globals' => $this->l('Set PHP "register_globals" option to "Off".'),
             'gz' => $this->l('Enable GZIP compression on your server.'),
             'files' => $this->l('Some PrestaShop files are missing from your server.'),
-            'new_phpversion' => sprintf($this->l('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!'), phpversion())
+            'new_phpversion' => sprintf($this->l('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!'), phpversion()),
+            'apache_mod_rewrite' => $this->l('Enable the Apache mod_rewrite module')
         );
 
         // Functions list to test with 'test_system'
@@ -167,11 +169,11 @@ class AdminInformationControllerCore extends AdminController
         $this->file_list = array('missing' => array(), 'updated' => array());
         $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'._PS_VERSION_.'.xml');
         if (!$xml) {
-            die(Tools::jsonEncode($this->file_list));
+            die(json_encode($this->file_list));
         }
 
         $this->getListOfUpdatedFiles($xml->ps_root_dir[0]);
-        die(Tools::jsonEncode($this->file_list));
+        die(json_encode($this->file_list));
     }
 
     public function getListOfUpdatedFiles(SimpleXMLElement $dir, $path = '')

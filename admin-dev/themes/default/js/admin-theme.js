@@ -475,4 +475,43 @@ $(document).ready(function() {
 
 	//scroll_if_anchor(window.location.hash);
 	$("body").on("click", "a.anchor", scroll_if_anchor);
+
+	//manage curency status switcher
+	$('#currencyStatus input').change(function(){
+		var parentZone = $(this).parent().parent().parent().parent();
+		parentZone.find('.status').addClass('hide');
+
+		if($(this).attr('checked') == 'checked'){
+			parentZone.find('.enabled').removeClass('hide');
+			$('#currency_form #active').val(1);
+		}else{
+			parentZone.find('.disabled').removeClass('hide');
+			$('#currency_form #active').val(0);
+		}
+	});
+
+
+	$('#currencyCronjobLiveExchangeRate input').change(function(){
+		var enable = 0;
+		var parentZone = $(this).parent().parent().parent().parent();
+		parentZone.find('.status').addClass('hide');
+
+		if($(this).attr('checked') == 'checked'){
+			enable = 1;
+			parentZone.find('.enabled').removeClass('hide');
+		}else{
+			enable = 0;
+			parentZone.find('.disabled').removeClass('hide');
+		}
+
+		$.ajax({
+			url: "index.php?controller=AdminCurrencies&token="+token,
+			cache: false,
+			data: "ajax=1&action=cronjobLiveExchangeRate&tab=AdminCurrencies&enable="+enable
+		});
+	});
+
+
+
+
 }); //end dom ready

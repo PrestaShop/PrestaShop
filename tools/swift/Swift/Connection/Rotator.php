@@ -7,7 +7,7 @@
  * @package Swift_Connection
  * @license GNU Lesser General Public License
  */
- 
+
 require_once dirname(__FILE__) . "/../ClassLoader.php";
 Swift_ClassLoader::load("Swift_ConnectionBase");
 
@@ -34,7 +34,7 @@ class Swift_Connection_Rotator extends Swift_ConnectionBase
    * @var array
    */
   protected $dead = array();
-  
+
   /**
    * Constructor
    */
@@ -69,11 +69,11 @@ class Swift_Connection_Rotator extends Swift_ConnectionBase
     {
       $log->add(" <==> Rotating connection.");
     }
-    
+
     $total = count($this->connections);
     $start = $this->active === null ? 0 : ($this->active + 1);
     if ($start >= $total) $start = 0;
-    
+
     $fail_messages = array();
     for ($id = $start; $id < $total; $id++)
     {
@@ -95,7 +95,7 @@ class Swift_Connection_Rotator extends Swift_ConnectionBase
         $fail_messages[] = $id . ": " . $e->getMessage();
       }
     }
-    
+
     $failure = implode("<br />", $fail_messages);
     throw new Swift_ConnectionException("No connections were started.<br />" . $failure);
   }
@@ -164,7 +164,7 @@ class Swift_Connection_Rotator extends Swift_ConnectionBase
   /**
    * Call the current connection's postConnect() method
    */
-  public function postConnect(Swift $instance)
+  public function postConnect(SwiftPs $instance)
   {
     Swift_ClassLoader::load("Swift_Plugin_ConnectionRotator");
     if (!$instance->getPlugin("_ROTATOR")) $instance->attachPlugin(new Swift_Plugin_ConnectionRotator(), "_ROTATOR");

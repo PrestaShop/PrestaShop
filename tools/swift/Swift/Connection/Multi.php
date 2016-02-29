@@ -7,7 +7,7 @@
  * @package Swift_Connection
  * @license GNU Lesser General Public License
  */
- 
+
 require_once dirname(__FILE__) . "/../ClassLoader.php";
 Swift_ClassLoader::load("Swift_ConnectionBase");
 
@@ -29,7 +29,7 @@ class Swift_Connection_Multi extends Swift_ConnectionBase
    * @var string
    */
   protected $active = null;
-  
+
   /**
    * Constructor
    */
@@ -133,7 +133,7 @@ class Swift_Connection_Multi extends Swift_ConnectionBase
   /**
    * Call the current connection's postConnect() method
    */
-  public function postConnect(Swift $instance)
+  public function postConnect(SwiftPs $instance)
   {
     $this->connections[$this->active]->postConnect($instance);
   }

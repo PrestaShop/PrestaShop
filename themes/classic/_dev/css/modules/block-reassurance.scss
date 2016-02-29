@@ -1,0 +1,25 @@
+#block-reassurance{
+  margin-top: em(60px);
+  img{
+    opacity: .7;
+    width: 25px;
+    margin-right: em(10px);
+  }
+  span{
+    color:$gray-darker;
+    font-size: em(15px);
+  }
+  #product &{
+    @include box-shadow;
+    background: white;
+    li{
+      padding: em(15px);
+    }
+    hr{
+      margin: 0;
+    }
+    span{
+      font-weight: 700;
+    }
+  }
+}

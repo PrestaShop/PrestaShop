@@ -56,7 +56,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->shop = new Shop((int)$this->order->id_shop);
     }
-    
+
     /**
      * Returns the template's HTML header
      *
@@ -66,7 +66,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     {
         $this->assignCommonHeaderData();
         $this->smarty->assign(array(
-            'header' => $this->l('Credit slip'),
+            'header' => HTMLTemplateOrderSlip::l('Credit slip'),
         ));
 
         return $this->smarty->fetch($this->getTemplate('header'));
@@ -79,7 +79,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getContent()
     {
-        $invoice_address = new Address((int)$this->order->id_address_invoice);
+        $delivery_address = $invoice_address = new Address((int)$this->order->id_address_invoice);
         $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
         $formatted_delivery_address = '';
 
@@ -98,9 +98,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
                 if ($this->order_slip->partial == 1) {
                     $order_slip_detail = Db::getInstance()->getRow('
-						SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
-						WHERE `id_order_slip` = '.(int)$this->order_slip->id.'
-						AND `id_order_detail` = '.(int)$product['id_order_detail']);
+                        SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
+                        WHERE `id_order_slip` = '.(int)$this->order_slip->id.'
+                        AND `id_order_detail` = '.(int)$product['id_order_detail']);
 
                     $product['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
                     $product['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
@@ -142,6 +142,18 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
         $this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
+
+        $total_cart_rule = 0;
+        if ($this->order_slip->order_slip_type == 1 && is_array($cart_rules = $this->order->getCartRules($this->order_invoice->id))) {
+            foreach ($cart_rules as $cart_rule) {
+                if ($tax_excluded_display) {
+                    $total_cart_rule += $cart_rule['value_tax_excl'];
+                } else {
+                    $total_cart_rule += $cart_rule['value'];
+                }
+            }
+        }
+
         $this->smarty->assign(array(
             'order' => $this->order,
             'order_slip' => $this->order_slip,
@@ -152,6 +164,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'invoice_address' => $formatted_invoice_address,
             'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
             'tax_excluded_display' => $tax_excluded_display,
+            'total_cart_rule' => $total_cart_rule
         ));
 
         $tpls = array(
@@ -164,7 +177,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'tax_tab' => $this->getTaxTabContent(),
         );
         $this->smarty->assign($tpls);
-        
+
         return $this->smarty->fetch($this->getTemplate('order-slip'));
     }
 
@@ -202,13 +215,13 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->smarty->assign(array(
             'tax_exempt' => $tax_exempt,
-            'use_one_after_another_method' => $this->order->useOneAfterAnotherTaxComputationMethod(),
             'product_tax_breakdown' => $this->getProductTaxesBreakdown(),
             'shipping_tax_breakdown' => $this->getShippingTaxesBreakdown(),
             'order' => $this->order,
             'ecotax_tax_breakdown' => $this->order_slip->getEcoTaxTaxesBreakdown(),
             'is_order_slip' => true,
             'tax_breakdowns' => $this->getTaxBreakdown(),
+            'display_tax_bases_in_breakdowns' => false
         ));
 
         return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
@@ -255,34 +268,12 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
     public function getProductTaxesBreakdown()
     {
-        $sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
-
         // $breakdown will be an array with tax rates as keys and at least the columns:
         // 	- 'total_price_tax_excl'
         // 	- 'total_amount'
         $breakdown = array();
 
-        $details = $this->order->getProductTaxesDetails();
-
-        if ($sum_composite_taxes) {
-            $grouped_details = array();
-            foreach ($details as $row) {
-                if (!isset($grouped_details[$row['id_order_detail']])) {
-                    $grouped_details[$row['id_order_detail']] = array(
-                        'tax_rate' => 0,
-                        'total_tax_base' => 0,
-                        'total_amount' => 0,
-                        'id_tax' => $row['id_tax'],
-                    );
-                }
-
-                $grouped_details[$row['id_order_detail']]['tax_rate'] += $row['tax_rate'];
-                $grouped_details[$row['id_order_detail']]['total_tax_base'] += $row['total_tax_base'];
-                $grouped_details[$row['id_order_detail']]['total_amount'] += $row['total_amount'];
-            }
-
-            $details = $grouped_details;
-        }
+        $details = $this->order->getProductTaxesDetails($this->order->products);
 
         foreach ($details as $row) {
             $rate = sprintf('%.3f', $row['tax_rate']);
@@ -300,26 +291,13 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         }
 
         foreach ($breakdown as $rate => $data) {
-            $breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
-            $breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
+            $breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+            $breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
         }
 
         ksort($breakdown);
 
         return $breakdown;
-    }
-
-    public function useOneAfterAnotherTaxComputationMethod()
-    {
-        // if one of the order details use the tax computation method the display will be different
-        return Db::getInstance()->getValue('
-		SELECT od.`tax_computation_method`
-		FROM `'._DB_PREFIX_.'order_detail_tax` odt
-		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-		WHERE od.`id_order` = '.(int)$this->id_order.'
-		AND od.`id_order_invoice` = '.(int)$this->id.'
-		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
-        ) || Configuration::get('PS_INVOICE_TAXES_BREAKDOWN');
     }
 
     /**

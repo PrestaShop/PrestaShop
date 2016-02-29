@@ -92,42 +92,27 @@ class AdminPreferencesControllerCore extends AdminController
                 $activities2[] = array('value' => $value, 'name' => $name);
             }
 
-            $disable_ssl = false;
-
-            if (defined('_PS_HOST_DOMAINS_') && defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
-                $host_mode_domains = explode(',', (string)_PS_HOST_DOMAINS_);
-                $domain_parts = array_reverse(explode('.', $this->context->shop->domain_ssl));
-
-                if (isset($host_mode_domains) && isset($domain_parts[1]) && isset($domain_parts[0])
-                    && !in_array($domain_parts[1].'.'.$domain_parts[0], $host_mode_domains)) {
-                    $disable_ssl = true;
-                }
-            }
-
             $fields = array(
                 'PS_SSL_ENABLED' => array(
                     'title' => $this->l('Enable SSL'),
-                    'desc' => $disable_ssl
-                        ? $this->l('It is not possible to enable SSL while you are using a custom domain name for your shop. SSL has thus been disabled.')
-                        : $this->l('If your hosting provider allows SSL, you can activate SSL encryption (https://) for customer account identification and order processing.'),
-                    'validation' => 'isBool',
-                    'cast' => 'intval',
-                    'type' => 'bool',
-                    'default' => '0',
-                    'disabled' => $disable_ssl
-                ),
-            );
-
-            if (Tools::getValue('PS_SSL_ENABLED', Configuration::get('PS_SSL_ENABLED'))) {
-                $fields['PS_SSL_ENABLED_EVERYWHERE'] = array(
-                    'title' => $this->l('Force the SSL on all the pages'),
-                    'desc' => $this->l('Force all your store to use SSL.'),
+                    'desc' => $this->l('If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.'),
+                    'hint' => $this->l('If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
                     'default' => '0'
-                );
-            }
+                ),
+            );
+
+            $fields['PS_SSL_ENABLED_EVERYWHERE'] = array(
+                'title' => $this->l('Enable SSL on all pages'),
+                'desc' => $this->l('When enabled, all the pages of your shop will be SSL-secured.'),
+                'validation' => 'isBool',
+                'cast' => 'intval',
+                'type' => 'bool',
+                'default' => '0',
+                'disabled' => (Tools::getValue('PS_SSL_ENABLED', Configuration::get('PS_SSL_ENABLED'))) ? false : true
+            );
 
             $fields = array_merge($fields, array(
                 'PS_TOKEN_ENABLE' => array(
@@ -229,7 +214,7 @@ class AdminPreferencesControllerCore extends AdminController
             if (!Tools::usingSecureMode() && !Configuration::get('PS_SSL_ENABLED')) {
                 $fields['PS_SSL_ENABLED']['type'] = 'disabled';
                 $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://'.Tools::getShopDomainSsl().Tools::safeOutput($_SERVER['REQUEST_URI']).'">'.
-                    $this->l('Please click here to use HTTPS protocol before enabling SSL.').'</a>';
+                    $this->l('Please click here to check if your shop supports HTTPS.').'</a>';
             }
 
             $this->fields_options = array(

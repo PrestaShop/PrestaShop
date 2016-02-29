@@ -138,12 +138,6 @@
     <keywords/>
     <url_rewrite>magasins</url_rewrite>
   </meta>
-  <meta id='order-opc' id_shop='1'>
-    <title>Commande</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>commande-rapide</url_rewrite>
-  </meta>
   <meta id='guest-tracking' id_shop='1'>
     <title>Suivi de commande invité</title>
     <description/>
@@ -155,11 +149,5 @@
     <description/>
     <keywords/>
     <url_rewrite>confirmation-commande</url_rewrite>
-  </meta>
-    <meta id='products-comparison' id_shop='1'>
-    <title>Comparaison de produits</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>comparaison-produits</url_rewrite>
   </meta>
 </entity_meta>
