@@ -48,7 +48,7 @@ ALTER TABLE `PREFIX_cart_product` CHANGE `id_product_attribute` `id_product_attr
 ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_title` VARCHAR( 255 ) NOT NULL;
 ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_description` VARCHAR( 255 ) NOT NULL;
 
-/* PHP:ps1700_stores(); */
+/* PHP:ps1700_stores(); */;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
 
@@ -62,7 +62,7 @@ DELETE FROM `PREFIX_meta` WHERE `page` = 'products-comparison';
 DROP TABLE IF EXISTS PREFIX_compare;
 DROP TABLE IF EXISTS PREFIX_compare_product;
 
-ALTER TABLE `PREFIX_cart` ADD `checkout_session_data` MEDIUMTEXT NULL
+ALTER TABLE `PREFIX_cart` ADD `checkout_session_data` MEDIUMTEXT NULL;
 
 DROP TABLE `PREFIX_theme`;
 DROP TABLE `PREFIX_theme_meta`;
