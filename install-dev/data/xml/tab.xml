@@ -121,18 +121,6 @@
                     <class_name>AdminReturn</class_name>
                 </tab>
 
-            <!--SHIPPING-->
-            <tab id="Shipping" id_parent="SELL" active="1" hide_host_mode="0" icon="local_shipping">
-                <class_name>AdminParentShipping</class_name>
-            </tab>
-
-                <tab id="Carriers" id_parent="Shipping" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminCarriers</class_name>
-                </tab>
-                <tab id="Shipping_1" id_parent="Shipping" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminShipping</class_name>
-                </tab>
-
             <!--PAYMENTS-->
             <tab id="Payment" id_parent="SELL" active="1" hide_host_mode="0" icon="payment">
                 <class_name>AdminParentPayment</class_name>
@@ -225,6 +213,17 @@
                 <tab id="Image_Settings" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminImages</class_name>
                 </tab>
+
+                <tab id="Shipping" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="local_shipping">
+                    <class_name>AdminParentShipping</class_name>
+                </tab>
+
+                    <tab id="Carriers" id_parent="Shipping" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminCarriers</class_name>
+                    </tab>
+                    <tab id="Shipping_1" id_parent="Shipping" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminShipping</class_name>
+                    </tab>
 
             <!--INTERNATIONAL OK-->
             <tab id="International" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="language">
