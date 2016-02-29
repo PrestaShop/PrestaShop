@@ -1,10 +1,9 @@
 <article>
   <div class="card">
     <div class="pack-product-container">
-      <div>
+      <div class="thumb-mask">
         <div class="mask">
           <img
-            class="pack-product-image"
             src = "{$product.cover.medium.url}"
             alt = "{$product.cover.legend}"
             data-full-size-image-url = "{$product.cover.large.url}"

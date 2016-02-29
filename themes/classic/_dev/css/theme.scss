@@ -220,14 +220,3 @@
     clear: both;
   }
 }
-/*** CARD ****/
-.card-shadow {
-  /* @extend .card; */
-  @include box-shadow;
-}
-.heading-title {
-  @extend .h4;
-  @extend .text-uppercase;
-  @extend ._bolder;
-  @extend ._gray-darker;
-}

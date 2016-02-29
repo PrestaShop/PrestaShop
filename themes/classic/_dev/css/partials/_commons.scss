@@ -1,4 +1,5 @@
-html,body{
+html,
+body {
   height: 100%;
 }
 body {
@@ -6,7 +7,7 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: $gray-light;
+  color: $gray-darker;
   line-height: 1.25em;
 }
 ul {
@@ -37,24 +38,36 @@ a:hover {
     border: 2px solid $gray-darker;
   }
 }
-
-.h1{
-  font-size: em(24px);
-  font-weight:$headings-font-weight;
+.h1,
+.h2,
+.h3 {
+  font-weight: $headings-font-weight;
   color: $gray-darker;
   text-transform: uppercase;
 }
-
-.h4{
-  font-size: em(18px);
-  font-weight:$headings-font-weight;
+.h1 {
+  font-size: em(24px);
 }
-
-.btn-primary {
+.h1 {
+  font-size: em(20px);
+}
+.h3,
+.h4 {
+  font-size: em(18px);
+}
+.btn-primary,
+.btn-secondary {
   @include box-shadow;
   text-transform: uppercase;
   font-weight: 600;
   padding: em(8px) em(20px);
+  .material-icons {
+    margin-right: $small-space;
+  }
+}
+.card {
+  @include box-shadow;
+  padding: $medium-space;
 }
 label {
   color: $gray-darker;
@@ -159,7 +172,6 @@ label {
     }
   }
 }
-
 .custom-radio {
   display: inline-block;
   position: relative;
@@ -175,7 +187,7 @@ label {
     opacity: 0;
     cursor: pointer;
   }
-  input[type="radio"]:checked + span{
+  input[type="radio"]:checked + span {
     display: block;
     background-color: $brand-primary;
     width: 12px;
@@ -186,10 +198,9 @@ label {
     top: 2px;
   }
 }
-
-.custom-checkbox{
+.custom-checkbox {
   position: relative;
-  input[type="checkbox"]{
+  input[type="checkbox"] {
     margin-top: 4px;
     opacity: 0;
     cursor: pointer;
@@ -212,6 +223,31 @@ label {
       .check {
         display: block;
       }
+    }
+  }
+}
+.text-muted {
+  font-size: em(14px);
+}
+.done {
+  color: $brand-success;
+  display: inline-block;
+  padding: 0 em(13px);
+  margin-right: em(25px);
+}
+
+.thumb-mask{
+  > .mask {
+    position: relative;
+    width: em(55px);
+    height: em(55px);
+    overflow: hidden;
+    border: $gray-light 1px solid;
+    margin: $small-space 0;
+    img{
+      position: absolute;
+      left: -34px;
+      top: -26px;
     }
   }
 }

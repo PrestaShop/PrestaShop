@@ -70,10 +70,6 @@ body#checkout {
       h1 {
         .done {
           display: block;
-          color: $brand-success;
-          display: inline-block;
-          padding: 0 13px;
-          margin-right: 25px;
         }
         .step-number {
           display: none;
@@ -130,9 +126,12 @@ body#checkout {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      flex-wrap: wrap;
     }
     .address-item {
       background: $gray-lighter;
+      flex: 0 0 49%;
+      margin-bottom: $small-space;
       &.selected {
         background: white;
         border: $brand-primary 3px solid;
@@ -292,7 +291,6 @@ body#checkout {
       font-size: em(18px);
     }
   }
-
   #cart-summary-product-list {
     font-size: em(14px);
     img {
@@ -306,5 +304,26 @@ body#checkout {
     padding: em(15px);
     background: white;
     color: $gray;
+  }
+}
+/**** ORDER CONFIRMATION *****/
+#content-hook_order_confirmation {
+  .card-title {
+    margin: 0;
+  }
+  .card-block {
+    padding: $small-space;
+  }
+}
+#order-items {
+  border-right: $gray-light 1px solid;
+  hr{
+    border-top-color: $gray-darker;
+  }
+  table{
+    width: 100%;
+    tr td:last-child{
+      text-align: right;
+    }
   }
 }
