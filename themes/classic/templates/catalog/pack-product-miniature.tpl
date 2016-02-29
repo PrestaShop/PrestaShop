@@ -1,18 +1,25 @@
 <article>
   <div class="card">
-    <h1 class="p-l-2 _margin-top-medium h5">{$product.name}</h1>
-    <div class="_flexbox">
-        <img
-          src = "{$product.cover.medium.url}"
-          alt = "{$product.cover.legend}"
-          data-full-size-image-url = "{$product.cover.large.url}"
-        >
-        <div class="card-block">
-          <div class="card-text">
-            {$product.description_short nofilter}
-            {$product.description nofilter}
-          </div>
+    <div class="pack-product-container">
+      <div>
+        <div class="mask">
+          <img
+            class="pack-product-image"
+            src = "{$product.cover.medium.url}"
+            alt = "{$product.cover.legend}"
+            data-full-size-image-url = "{$product.cover.large.url}"
+          >
         </div>
+      </div>
+      <div class="pack-product-name">
+        {$product.name}
+      </div>
+      <div class="pack-product-price">
+        <strong>{$product.price}</strong>
+      </div>
+      <div class="pack-product-quantity">
+        <span>x {$product.pack_quantity}</span>
+      </div>
     </div>
   </div>
 </article>

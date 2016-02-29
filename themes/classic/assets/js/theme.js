@@ -16612,6 +16612,18 @@
 	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute], #quantity_wanted', function () {
 	    (0, _jquery2['default'])("input[name$='refresh']").click();
 	  });
+	
+	  (0, _jquery2['default'])('.js-file-input').on('change', function (event) {
+	    (0, _jquery2['default'])('.js-file-name').text((0, _jquery2['default'])(event.currentTarget).val());
+	  });
+	
+	  (0, _jquery2['default'])('#quantity_wanted').TouchSpin({
+	    verticalbuttons: true,
+	    verticalupclass: 'material-icons touchspin-up',
+	    verticaldownclass: 'material-icons touchspin-down',
+	    buttondown_class: 'btn btn-touchspin js-touchspin',
+	    buttonup_class: 'btn btn-touchspin js-touchspin'
+	  });
 	});
 
 /***/ },
@@ -16687,6 +16699,7 @@
 	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
 	    var query = $form.serialize() + '&add=1';
 	    var actionURL = $form.attr('action');
+	
 	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
 	      _prestashop2['default'].emit('cart updated', {
 	        reason: {
@@ -16904,11 +16917,13 @@
 	      var $arrows = (0, _jquery2['default'])('.js-arrows');
 	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
 	      (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
+	        if ((0, _jquery2['default'])('.js-thumb').hasClass('selected')) {
+	          (0, _jquery2['default'])('.js-thumb').removeClass('selected');
+	        }
+	        (0, _jquery2['default'])(event.currentTarget).addClass('selected');
 	        (0, _jquery2['default'])('.js-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
 	      });
-	      (0, _jquery2['default'])('.js-modal-thumb').on('click', function (event) {
-	        (0, _jquery2['default'])('.js-product-cover-modal').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
-	      });
+	
 	      if ((0, _jquery2['default'])('.js-product-images li').length <= MAX_THUMBS) {
 	        $arrows.css('opacity', '.2');
 	      } else {

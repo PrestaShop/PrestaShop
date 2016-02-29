@@ -7,7 +7,7 @@
   </div>
 
   <!--  product left body: description -->
-  <div class="product-line-grid-body col-md-4">
+  <div class="product-line-grid-body col-md-5">
     <div class="product-line-info">
       <a class="label" href="{$product.url}">{$product.name}</a>
     </div>
@@ -35,7 +35,7 @@
   </div>
 
   <!--  product left body: description -->
-  <div class="product-line-grid-right product-line-actions col-md-5">
+  <div class="product-line-grid-right product-line-actions col-md-4">
     <div class="row">
       <div class="col-md-4">
         {*if $product.down_quantity_url}<a href="{$product.down_quantity_url}" data-link-action="update-quantity">-</a>{/if*}

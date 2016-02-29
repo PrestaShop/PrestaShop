@@ -44,8 +44,8 @@
 
               <div class="images-container">
                 {block name='product_cover'}
-                  <div class="product-cover _margin-bottom-medium _relative">
-                    <img class="_shadow js-product-cover" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" width="452" itemprop="image" />
+                  <div class="product-cover _relative">
+                    <img class="js-product-cover" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" width="452" itemprop="image" />
                     <div class="layer" data-toggle="modal" data-target="#product-modal">
                       <i class="material-icons zoom-in">&#xE8FF;</i>
                     </div>
@@ -55,8 +55,8 @@
                 {block name='product_images'}
                   <ul class="product-images">
                     {foreach from=$product.images item=image}
-                      <li class="_margin-right-small">
-                        <img data-image-large-src = "{$image.large.url}" class="_shadow _margin-bottom-small thumb js-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="100" itemprop="image" />
+                      <li class="thumb-container">
+                        <img data-image-large-src = "{$image.large.url}" class="thumb js-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="100" itemprop="image" />
                       </li>
                     {/foreach}
                   </ul>
@@ -70,7 +70,7 @@
         <div class="col-md-6">
           {block name='page_header_container'}
             {block name='page_header'}
-              <h1 class="_gray-darker text-uppercase h5 _bolder" itemprop="name">{block name='page_title'}{$product.name}{/block}</h1>
+              <h1 class="h1" itemprop="name">{block name='page_title'}{$product.name}{/block}</h1>
             {/block}
           {/block}
           {block name='product_prices'}
@@ -139,6 +139,43 @@
             {block name='product_description_short'}
               <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
             {/block}
+            {block name='product_customization'}
+              {if $product.is_customizable}
+                <section class="product-customization card card-block">
+                  <h3 class="h4 card-title">{l s='Product customization'}</h3>
+                  {l s='Don\'t forget to save your customization to be able to add to cart'}
+                  <form method="post" action="{$customizationFormTarget}" enctype="multipart/form-data">
+                    <ul class="clearfix">
+                      {foreach from=$product.customizations.fields item="field"}
+                        <li class="product-customization-item">
+                          <label> {$field.label}</label>
+                            {if $field.type == 'text'}
+                              <label>{$field.text}</label>
+                              <textarea placeholder="{l s='Your message here'}" class="product-message" maxlength="250" type="text" {if $field.required} required {/if} name="{$field.input_name}"></textarea>
+                              <small class="pull-xs-right">{l s='250 char. max'}</small>
+                            {elseif $field.type == 'image'}
+                            {if $field.is_customized}
+                              <br>
+                              <img src="{$field.image.small.url}">
+                              <a class="remove-image" href="{$field.remove_image_url}" rel="nofollow">{l s='Remove Image'}</a>
+                            {/if}
+                            <span class="custom-file">
+                              <span class="js-file-name">{l s='No selected file'}</span>
+                              <input class="file-input js-file-input" {if $field.required} required {/if} type="file" name="{$field.input_name}" />
+                              <button class="btn btn-primary">{l s='Choose file'}</button>
+                            </span>
+                            <small class="pull-xs-right">{l s='.png .jpg .gif'}</small>
+                          {/if}
+                        </li>
+                      {/foreach}
+                    </ul>
+                    <div class="clearfix">
+                      <button class="btn btn-primary pull-xs-right" type="submit" name="submitCustomizedDatas">{l s='Save Customization'}</button>
+                    </div>
+                  </form>
+                </section>
+              {/if}
+            {/block}
             <div class="product-actions">
               {block name='product_buy'}
                 <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
@@ -148,7 +185,7 @@
                   {block name='product_variants'}
                     <div class="product-variants">
                       {foreach from=$groups key=id_attribute_group item=group}
-                        <div class="clearfix _margin-top-medium">
+                        <div class="clearfix product-variants-item">
                           <label for="group_{$id_attribute_group}">{$group.name}</label>
                           {if $group.group_type == 'select'}
                             <select data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" id="group_{$id_attribute_group}">
@@ -178,14 +215,56 @@
                         </div>
                       {/foreach}
 
+
+
+                      {block name='product_pack'}
+                        {if $packItems}
+                          <section class="product-pack">
+                            <h3 class="h4">{l s='This pack contains'}</h3>
+                            {foreach from=$packItems item="product_pack"}
+                              {block name='product_miniature'}
+                                {include file='catalog/pack-product-miniature.tpl' product=$product_pack}
+                              {/block}
+                            {/foreach}
+                        </section>
+                        {/if}
+                      {/block}
+
+                      {block name='product_discounts'}
+                        {if $quantity_discounts}
+                          <section class="product-discounts">
+                            <h3 class="h6 product-discounts-title">{l s='Volume discounts'}</h3>
+                            <table class="table-product-discounts">
+                              <thead>
+                                <tr>
+                                  <th>{l s='Quantity'}</th>
+                                  <th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
+                                  <th>{l s='You Save'}</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
+                                  <tr data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value}" data-discount-quantity="{$quantity_discount.quantity}">
+                                    <td>{$quantity_discount.quantity}</td>
+                                    <td>{$quantity_discount.discount}</td>
+                                    <td>{l s='Up to %s' sprintf=$quantity_discount.save}</td>
+                                  </tr>
+                                {/foreach}
+                              </tbody>
+                            </table>
+                          </section>
+                          <hr>
+                        {/if}
+                      {/block}
+
                       {block name='product_add_to_cart'}
-                        {if $product.add_to_cart_url}
+
                           {*<form class="add-to-cart" action="{$urls.pages.cart}" method="post">*}
 
                             {block name='product_quantity'}
                               <p class="product-quantity _margin-top-medium">
-                                <label for="quantity_wanted">{l s='Quantity'}</label><br>
-                                <input type="number" min="1" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" />
+                                <label for="quantity_wanted">{l s='Quantity'}</label>
+                                <input type="number" min="1" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" class="input-group" />
                               </p>
                             {/block}
 
@@ -197,8 +276,7 @@
                               {/if}
                             {/block}
 
-
-                            <button class="btn btn-primary add-to-cart _relative" data-button-action="add-to-cart" type="submit">
+                            <button class="btn btn-primary add-to-cart _relative" data-button-action="add-to-cart" type="submit" {if !$product.add_to_cart_url}disabled{/if}>
                               <i class="material-icons shopping-cart">&#xE547;</i>
                               {l s='Add to cart'}
                             </button>
@@ -211,7 +289,7 @@
                             {/block}
                             {hook h='displayProductButtons' product=$product}
                           {*</form>*}
-                        {/if}
+
                       {/block}
 
                       {block name='product_refresh'}
@@ -221,6 +299,7 @@
                   {/block}
                 </form>
               {/block}
+
             </div>
 
             {hook h='displayReassurance'}
@@ -231,42 +310,40 @@
                   <a href="#description" class="nav-link active" data-toggle = "tab">{l s='Description'}</a>
                 </li>
                 <li class="nav-item">
-                  <a href="#details" class="nav-link" data-toggle = "tab">{l s='Product Details'}</a>
+                  <a href="#product-details" class="nav-link" data-toggle = "tab">{l s='Product Details'}</a>
                 </li>
-                {if $quantity_discounts}
-                  <li class="nav-item">
-                    <a href="#volume" class="nav-link" data-toggle = "tab">{l s='Volume discounts'}</a>
-                  </li>
-                {/if}
               </ul>
 
               <div id = "tab-content" class = "tab-content">
                <div class = "tab-pane fade in active" id = "description">
                  {block name='product_description'}
-                   <div id="product-description">{$product.description nofilter}</div>
+                   <div class="product-description">{$product.description nofilter}</div>
                  {/block}
                </div>
 
-               <div class = "tab-pane fade" id = "details">
+               <div class = "tab-pane fade" id = "product-details">
                  {block name='product_reference'}
                    {if $product.reference}
-                     <p id="product-reference">
-                       <label>{l s='Reference:'} </label>
+                     <div class="product-reference">
+                       <label class="label">{l s='Reference'} </label>
                        <span itemprop="sku">{$product.reference}</span>
-                     </p>
+                     </div>
                    {/if}
                  {/block}
                  {block name='product_quantities'}
                    {if $display_quantities}
-                     <p id="product-quantities">{$product.quantity} {$quantity_label}</p>
+                     <div class="product-quantities">
+                       <label class="label">{l s='In stock'}</label>
+                       <span>{$product.quantity} {$quantity_label}</span>
+                    </div>
                    {/if}
                  {/block}
                  {block name='product_availability_date'}
                    {if $product.availability_date}
-                     <p id="product-availability-date">
+                     <div class="product-availability-date">
                        <label>{l s='Availability date:'} </label>
                        <span>{$product.availability_date}</span>
-                     </p>
+                     </div>
                    {/if}
                  {/block}
                  {block name='product_out_of_stock'}
@@ -279,39 +356,13 @@
                  {block name='product_features'}
                    {if $product.features}
                      <section class="product-features">
-                       <h3>{l s='Data sheet'}</h3>
-                       <ul>
+                       <h3 class="h6">{l s='Data sheet'}</h3>
+                       <dl class="data-sheet">
                          {foreach from=$product.features item=feature}
-                         <li>{$feature.name} - {$feature.value}</td>
+                           <dt class="name">{$feature.name}</dt>
+                           <dd class="value">{$feature.value}</dd>
                          {/foreach}
                        </ul>
-                     </section>
-                   {/if}
-                 {/block}
-               </div>
-               <div class = "tab-pane fade" id = "volume">
-                 {block name='product_discounts'}
-                   {if $quantity_discounts}
-                     <section class="product-discounts">
-                       <h3 class="h5 text-uppercase _bolder">{l s='Volume discounts'}</h3>
-                       <table class="table-product-discounts">
-                         <thead>
-                           <tr>
-                             <th>{l s='Quantity'}</th>
-                             <th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
-                             <th>{l s='You Save'}</th>
-                           </tr>
-                         </thead>
-                         <tbody>
-                           {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-                             <tr data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value}" data-discount-quantity="{$quantity_discount.quantity}">
-                               <td>{$quantity_discount.quantity}</td>
-                               <td>{$quantity_discount.discount}</td>
-                               <td>{l s='Up to %s' sprintf=$quantity_discount.save}</td>
-                             </tr>
-                           {/foreach}
-                         </tbody>
-                       </table>
                      </section>
                    {/if}
                  {/block}
@@ -333,51 +384,6 @@
         {hook h='displayLeftColumnProduct'}
       </div>
     {/block}
-
-
-      {* StarterTheme: Content Only *}
-
-      {block name='product_customization'}
-        {if $product.is_customizable}
-          <section class="product-customization _margin-top-large">
-            <h3 class="h5 text-uppercase _bolder">{l s='Product customization'}</h3>
-            <form method="post" action="{$customizationFormTarget}" enctype="multipart/form-data">
-              <ul>
-                {foreach from=$product.customizations.fields item="field"}
-                  <li>
-                    <label>{$field.label}</label>
-                    {if $field.type == 'text'}
-                      <textarea {if $field.required} required {/if} name="{$field.input_name}">{$field.text}</textarea>
-                    {elseif $field.type == 'image'}
-                      {if $field.is_customized}
-                        <img src="{$field.image.small.url}">
-                        <a class="remove-image" href="{$field.remove_image_url}" rel="nofollow">{l s='Remove Image'}</a>
-                      {/if}
-                      <input {if $field.required} required {/if} type="file" name="{$field.input_name}">
-                    {/if}
-                  </li>
-                {/foreach}
-              </ul>
-              <button type="submit" name="submitCustomizedDatas">{l s='Save Customization'}</button>
-            </form>
-          </section>
-        {/if}
-      {/block}
-
-
-
-      {block name='product_pack'}
-        {if $packItems}
-          <section class="product-pack">
-            <h3 class="text-uppercase _bolder">{l s='Pack content'}</h3>
-            {foreach from=$packItems item="product_pack"}
-              {block name='product_miniature'}
-                {include file='catalog/pack-product-miniature.tpl' product=$product_pack}
-              {/block}
-            {/foreach}
-        </section>
-        {/if}
-      {/block}
 
       {block name='product_accessories'}
         {if $accessories}
@@ -418,7 +424,7 @@
         <div class="modal-content">
           <div class="modal-body">
             <figure>
-              <img class="js-product-cover-modal product-cover-modal" width="{$image.large.width}" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
+              <img class="js-product-cover product-cover-modal" width="{$image.large.width}" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
               <figcaption class="image-caption">
               {block name='product_description_short'}
                 <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
@@ -430,8 +436,8 @@
                 <div class="js-mask mask _relative">
                   <ul class="product-images js-product-images">
                     {foreach from=$product.images item=image}
-                      <li class="_margin-right-small">
-                        <img data-image-large-src="{$image.large.url}" class="_shadow _margin-bottom-small js-modal-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="{$image.medium.width}" itemprop="image" />
+                      <li class="thumb-container">
+                        <img data-image-large-src="{$image.large.url}" class="thumb js-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="{$image.medium.width}" itemprop="image" />
                       </li>
                     {/foreach}
                   </ul>
@@ -454,7 +460,6 @@
         {/block}
       </footer>
     {/block}
-
   </section>
 
 {/block}
