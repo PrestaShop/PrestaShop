@@ -135,7 +135,7 @@
 
             <!--PAYMENTS-->
             <tab id="Payment" id_parent="SELL" active="1" hide_host_mode="0" icon="payment">
-                <class_name>AdminPayment</class_name>
+                <class_name>AdminParentPayment</class_name>
             </tab>
 
                 <tab id="Payment_methods" id_parent="Payment" active="1" hide_host_mode="0" icon="">
@@ -160,7 +160,7 @@
                     <class_name>AdminWarehouses</class_name>
                 </tab>
                 <tab id="Stock_Management" id_parent="Advanced_stock_management" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminStockManagement</class_name>
+                    <class_name>AdminParentStockManagement</class_name>
                 </tab>
 
                     <tab id="Stock_Management" id_parent="Stock_Management" active="1" hide_host_mode="0" icon="">
@@ -207,7 +207,7 @@
 
             <!--LOOK & FEEL-->
             <tab id="Look_feel" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="desktop_mac">
-                <class_name>AdminThemes</class_name>
+                <class_name>AdminParentThemes</class_name>
             </tab>
 
                 <tab id="Themes" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
@@ -228,11 +228,11 @@
 
             <!--INTERNATIONAL OK-->
             <tab id="International" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="language">
-                <class_name>AdminParentLocalization</class_name>
+                <class_name>AdminInternational</class_name>
             </tab>
 
                 <tab id="Localization" id_parent="International" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminLocalization</class_name>
+                    <class_name>AdminParentLocalization</class_name>
                 </tab>
 
                     <tab id="Localization_1" id_parent="Localization" active="1" hide_host_mode="0" icon="">
@@ -249,7 +249,7 @@
                     </tab>
 
                 <tab id="Locations" id_parent="International" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminCountries</class_name>
+                    <class_name>AdminParentCountries</class_name>
                 </tab>
 
                     <tab id="Countries" id_parent="Locations" active="1" hide_host_mode="0" icon="">
@@ -263,7 +263,7 @@
                     </tab>
 
                 <tab id="Tax_Management" id_parent="International" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminTaxes</class_name>
+                    <class_name>AdminParentTaxes</class_name>
                 </tab>
 
                     <tab id="Taxes" id_parent="Tax_Management" active="1" hide_host_mode="0" icon="">
@@ -284,11 +284,11 @@
 
             <!--SHOP PARAMETERS-->
             <tab id="Shop_parameters" id_parent="CONFIGURE" active="1" hide_host_mode="0" icon="settings">
-                <class_name>AdminPreferences</class_name>
+                <class_name>ShopParameters</class_name>
             </tab>
 
                 <tab id="General" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminPreferences</class_name>
+                    <class_name>AdminParentPreferences</class_name>
                 </tab>
 
                     <tab id="General_1" id_parent="General" active="1" hide_host_mode="0" icon="">
@@ -313,7 +313,7 @@
                     <class_name>AdminPPreferences</class_name>
                 </tab>
                 <tab id="Customer_settings" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminCustomerPreferences</class_name>
+                    <class_name>AdminParentCustomerPreferences</class_name>
                 </tab>
 
                     <tab id="Customers_2" id_parent="Customer_settings" active="1" hide_host_mode="0" icon="">
@@ -338,7 +338,7 @@
                     </tab>
 
                 <tab id="Traffic" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminMeta</class_name>
+                    <class_name>AdminParentMeta</class_name>
                 </tab>
 
                     <tab id="SEO_URLs" id_parent="Traffic" active="1" hide_host_mode="0" icon="">
@@ -352,7 +352,7 @@
                     </tab>
 
                 <tab id="Search" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminSearchConf</class_name>
+                    <class_name>AdminParentSearchConf</class_name>
                 </tab>
 
                     <tab id="Search_1" id_parent="Search" active="1" hide_host_mode="0" icon="">
@@ -363,7 +363,7 @@
                     </tab>
 
                 <tab id="Employees" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminEmployees</class_name>
+                    <class_name>AdminParentEmployees</class_name>
                 </tab>
 
                     <tab id="Employees_1" id_parent="Employees" active="1" hide_host_mode="0" icon="">
@@ -397,7 +397,7 @@
                     <class_name>AdminImport</class_name>
                 </tab>
                 <tab id="Database" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminRequestSql</class_name>
+                    <class_name>AdminParentRequestSql</class_name>
                 </tab>
 
                     <tab id="SQL_Manager" id_parent="Database" active="1" hide_host_mode="0" icon="">
