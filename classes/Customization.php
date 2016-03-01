@@ -142,7 +142,7 @@ class CustomizationCore extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `name`
 		FROM `'._DB_PREFIX_.'customization_field_lang`
-		WHERE `id_customization_field` = '.(int)$id_customization.((int)$id_shop ? ' AND cfl.`id_shop` = '.(int)$id_shop : '').'
+		WHERE `id_customization_field` = '.(int)$id_customization.((int)$id_shop ? ' AND `id_shop` = '.(int)$id_shop : '').'
 		AND `id_lang` = '.(int)$id_lang
         );
 
