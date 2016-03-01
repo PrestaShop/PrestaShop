@@ -317,16 +317,12 @@ class ConfigurationCore extends ObjectModel
         $id_lang = (int)$id_lang;
 
         if ($id_shop) {
-            return (isset(self::$_new_cache[$key][$id_lang]['shop']) &&
-                (isset(self::$_new_cache[$key][$id_lang]['shop'][$id_shop])
-                || array_key_exists($id_shop, self::$_new_cache[$key][$id_lang]['shop'])));
+            return isset(self::$_new_cache[$key][$id_lang]['shop'][$id_shop]);
         } elseif ($id_shop_group) {
-            return (isset(self::$_new_cache[$key][$id_lang]['group']) &&
-                (isset(self::$_new_cache[$key][$id_lang]['group'][$id_shop_group])
-                || array_key_exists($id_shop_group, self::$_new_cache[$key][$id_lang]['group'])));
+            return isset(self::$_new_cache[$key][$id_lang]['group'][$id_shop_group]);
         }
 
-        return isset(self::$_new_cache[$key][$id_lang]);
+        return isset(self::$_new_cache[$key][$id_lang]['global']);
     }
 
     /**
