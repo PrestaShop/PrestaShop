@@ -1,0 +1,22 @@
+ul.category-tree {
+  padding: 0;
+  .more {
+    background-image:url(img/blue_picto_more.png);
+  }
+  .less {
+    background-image:url(img/blue_picto_less.png);
+  }
+  li {
+    list-style: none;
+    background-repeat: no-repeat;
+    background-size: 12px 12px;
+    background-position: 0 3px;
+    .checkbox, .radio {
+      padding-left: 20px;
+      padding-top: 0;
+    }
+    > ul {
+      display: none;
+    }
+  }
+}

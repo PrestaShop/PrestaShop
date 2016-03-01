@@ -61,7 +61,8 @@ class AdminInformationControllerCore extends AdminController
                     'php' => phpversion(),
                     'server' => $_SERVER['SERVER_SOFTWARE'],
                     'memory_limit' => ini_get('memory_limit'),
-                    'max_execution_time' => ini_get('max_execution_time')
+                    'max_execution_time' => ini_get('max_execution_time'),
+                    'upload_max_filesize' => ini_get('upload_max_filesize')
                 ),
                 'database' => array(
                     'version' => Db::getInstance()->getVersion(),
@@ -81,7 +82,7 @@ class AdminInformationControllerCore extends AdminController
             'shop' => array(
                 'ps' => _PS_VERSION_,
                 'url' => $this->context->shop->getBaseURL(),
-                'theme' => $this->context->shop->theme_name,
+                'theme' => $this->context->shop->theme->getName(),
             ),
             'mail' => Configuration::get('PS_MAIL_METHOD') == 1,
             'smtp' => array(
@@ -126,7 +127,8 @@ class AdminInformationControllerCore extends AdminController
             'fopen' => $this->l('Allow the PHP fopen() function on your server.'),
             'gz' => $this->l('Enable GZIP compression on your server.'),
             'files' => $this->l('Some PrestaShop files are missing from your server.'),
-            'new_phpversion' => sprintf($this->l('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!'), phpversion())
+            'new_phpversion' => sprintf($this->l('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!'), phpversion()),
+            'apache_mod_rewrite' => $this->l('Enable the Apache mod_rewrite module')
         );
 
         // Functions list to test with 'test_system'

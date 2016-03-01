@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -56,7 +55,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $groups = $this->container->get('prestashop.adapter.data_provider.group')->getGroups($locales[0]['id_lang']);
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
         if (!is_object($product) || empty($product->id)) {
             $response->setStatusCode(400);
             return $response;

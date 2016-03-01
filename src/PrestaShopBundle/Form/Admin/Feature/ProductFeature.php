@@ -27,9 +27,9 @@ namespace PrestaShopBundle\Form\Admin\Feature;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product options form
@@ -68,19 +68,30 @@ class ProductFeature extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('feature', 'choice', array(
+        $builder->add('feature', FormType\ChoiceType::class, array(
+            'label' => $this->translator->trans('Feature', [], 'AdminProducts'),
             'choices' =>  $this->features,
+            'choices_as_values' => true,
             'required' =>  false,
             'attr' => array(
                 'data-action' => $this->router->generate('admin_feature_get_feature_values'),
                 'class' => 'feature-selector',
             )
         ))
-        ->add('value', 'choice', array(
+        ->add('value', FormType\ChoiceType::class, array(
+            'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
             'required' =>  false,
+            'choices_as_values' => true,
             'attr' => array('class' => 'feature-value-selector')
         ))
-        ->add('custom_value', new TranslateType('text', array(), $this->locales, true), array('required' =>  false));
+        ->add('custom_value', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [],
+            'locales' => $this->locales,
+            'hideTabs' => true,
+            'required' =>  false,
+            'label' => $this->translator->trans('OR Customized value', [], 'AdminProducts'),
+        ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
@@ -96,8 +107,10 @@ class ProductFeature extends CommonAbstractType
                 'value'
             );
 
-            $form->add('value', 'choice', array(
+            $form->add('value', FormType\ChoiceType::class, array(
+                'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
                 'choices' => $choices,
+                'choices_as_values' => true,
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),
             ));
@@ -118,20 +131,22 @@ class ProductFeature extends CommonAbstractType
                 'value'
             );
 
-            $form->add('value', 'choice', array(
+            $form->add('value', FormType\ChoiceType::class, array(
+                'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),
                 'choices' => $choices,
+                'choices_as_values' => true,
             ));
         });
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_feature';
     }

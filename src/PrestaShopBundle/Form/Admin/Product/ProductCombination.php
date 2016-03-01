@@ -30,9 +30,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use PrestaShopBundle\Form\Admin\Type as PsFormType;
 
 /**
- * This form class is responsible to generate the basic product information form
+ * This form class is responsible to generate the product combination form
  */
 class ProductCombination extends CommonAbstractType
 {
@@ -51,6 +53,7 @@ class ProductCombination extends CommonAbstractType
         $this->translator = $translator;
         $this->contextLegacy = $legacyContext->getContext();
         $this->configuration = $this->getConfiguration();
+        $this->currency = $this->contextLegacy->currency;
     }
 
     /**
@@ -60,14 +63,14 @@ class ProductCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('id_product_attribute', 'hidden', array(
+        $builder->add('id_product_attribute', FormType\HiddenType::class, array(
             'required' => false,
         ))
-        ->add('attribute_reference', 'text', array(
+        ->add('attribute_reference', FormType\TextType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Reference code', [], 'AdminProducts')
+            'label' => $this->translator->trans('Reference', [], 'AdminProducts')
         ))
-        ->add('attribute_ean13', 'text', array(
+        ->add('attribute_ean13', FormType\TextType::class, array(
             'required' => false,
             'error_bubbling' => true,
             'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
@@ -75,66 +78,54 @@ class ProductCombination extends CommonAbstractType
                 new Assert\Regex("/^[0-9]{0,13}$/"),
             )
         ))
-        ->add('attribute_isbn', 'text', array(
+        ->add('attribute_isbn', FormType\TextType::class, array(
             'required' => false,
             'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
         ))
-        ->add('attribute_upc', 'text', array(
+        ->add('attribute_upc', FormType\TextType::class, array(
             'required' => false,
             'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\Regex("/^[0-9]{0,12}$/"),
             )
         ))
-        ->add('attribute_wholesale_price', 'number', array(
+        ->add('attribute_wholesale_price', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts')
+            'label' => $this->translator->trans('Cost price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
-        ->add('attribute_price_impact', 'choice', array(
-            'choices'  => array(
-                '0' => $this->translator->trans('None', [], 'AdminProducts'),
-                '1' => $this->translator->trans('Increase', [], 'AdminProducts'),
-                '-1' => $this->translator->trans('Decrease', [], 'AdminProducts'),
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Impact on price', [], 'AdminProducts'),
-        ))
-        ->add('attribute_price', 'number', array(
+        ->add('attribute_price', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('(tax excl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_priceTE']
         ))
-        ->add('attribute_priceTI', 'number', array(
+        ->add('attribute_priceTI', FormType\MoneyType::class, array(
             'required' => false,
             'mapped' => false,
-            'label' => $this->translator->trans('(tax incl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
+            'attr' => ['class' => 'attribute_priceTI']
         ))
-        ->add('attribute_weight_impact', 'choice', array(
-            'choices'  => array(
-                '0' => $this->translator->trans('None', [], 'AdminProducts'),
-                '1' => $this->translator->trans('Increase', [], 'AdminProducts'),
-                '-1' => $this->translator->trans('Decrease', [], 'AdminProducts'),
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts'),
-        ))
-        ->add('attribute_weight', 'number', array(
+        ->add('attribute_ecotax', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans($this->configuration->get('PS_WEIGHT_UNIT'), [], 'AdminProducts')
+            'label' => $this->translator->trans('Ecotax', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
         ))
-        ->add('attribute_unit_impact', 'choice', array(
-            'choices'  => array(
-                '0' => $this->translator->trans('None', [], 'AdminProducts'),
-                '1' => $this->translator->trans('Increase', [], 'AdminProducts'),
-                '-1' => $this->translator->trans('Decrease', [], 'AdminProducts'),
-            ),
-            'required' => true,
+        ->add('attribute_weight', FormType\NumberType::class, array(
+            'required' => false,
+            'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts')
+        ))
+        ->add('attribute_unity', FormType\MoneyType::class, array(
+            'required' => false,
             'label' => $this->translator->trans('Impact on unit price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
-        ->add('attribute_unity', 'number', array(
-            'required' => false,
-            'label' => $this->translator->trans($this->contextLegacy->currency->sign.'/', [], 'AdminProducts')
-        ))
-        ->add('attribute_minimal_quantity', 'number', array(
+        ->add('attribute_minimal_quantity', FormType\NumberType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
             'constraints' => array(
@@ -142,16 +133,16 @@ class ProductCombination extends CommonAbstractType
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('available_date_attribute', 'text', array(
+        ->add('available_date_attribute', PsFormType\DatePickerType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Availability date', [], 'AdminProducts'),
-            'attr' => ['class' => 'date', 'placeholder' => 'YYY-MM-DD']
+            'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD']
         ))
-        ->add('attribute_default', 'checkbox', array(
-            'label'    => $this->translator->trans('Make this combination the default combination for this product.', [], 'AdminProducts'),
+        ->add('attribute_default', FormType\CheckboxType::class, array(
+            'label'    => $this->translator->trans('Set as default combination', [], 'AdminProducts'),
             'required' => false,
         ))
-        ->add('attribute_quantity', 'number', array(
+        ->add('attribute_quantity', FormType\NumberType::class, array(
             'required' => true,
             'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
             'constraints' => array(
@@ -159,25 +150,15 @@ class ProductCombination extends CommonAbstractType
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('id_image_attr', 'choice', array(
+        ->add('id_image_attr', FormType\ChoiceType::class, array(
             'choices'  => array(),
+            'choices_as_values' => true,
             'required' => false,
             'expanded' => true,
             'multiple' => true,
-            'label' => $this->translator->trans('Images', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Select images of this combination:', [], 'AdminProducts'),
             'attr' => array('class' => 'images'),
         ));
-
-        //set default minimal values for collection prototype
-        $builder->setData([
-            'attribute_wholesale_price' => 0,
-            'attribute_price' => 0,
-            'attribute_weight' => 0,
-            'attribute_unity' => 0,
-            'attribute_minimal_quantity' => 1,
-            'available_date_attribute' => '0000-00-00',
-            'attribute_quantity' => 0,
-        ]);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
@@ -190,21 +171,22 @@ class ProductCombination extends CommonAbstractType
                 }
             }
 
-            $form->add('id_image_attr', 'choice', array(
+            $form->add('id_image_attr', FormType\ChoiceType::class, array(
                 'choices' => $choices,
                 'required' => false,
                 'expanded' => true,
                 'multiple' => true,
+                'choices_as_values' => true,
             ));
         });
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_combination';
     }

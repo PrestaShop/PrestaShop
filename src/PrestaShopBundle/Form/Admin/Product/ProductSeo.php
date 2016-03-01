@@ -27,7 +27,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product SEO form
@@ -46,6 +46,7 @@ class ProductSeo extends CommonAbstractType
     public function __construct($translator, $legacyContext)
     {
         $this->translator = $translator;
+        $this->context = $legacyContext;
         $this->locales = $legacyContext->getLanguages();
     }
 
@@ -56,38 +57,63 @@ class ProductSeo extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('meta_title', new TranslateType(
-            'text',
-            array('required' => false),
-            $this->locales,
-            true
-        ), array(
+        $builder->add('meta_title', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [
+                'attr' => ['placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'AdminProducts')],
+                'required' => false
+            ],
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'label' => $this->translator->trans('Meta title', [], 'AdminProducts'),
             'required' => false
         ))
-        ->add('meta_description', new TranslateType(
-            'text',
-            array('required' => false),
-            $this->locales,
-            true
-        ), array(
+        ->add('meta_description', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [
+                'attr' => ['placeholder' => $this->translator->trans('To have a different description than your product summary, enter it here.', [], 'AdminProducts')],
+                'required' => false
+            ],
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'label' => $this->translator->trans('Meta description', [], 'AdminProducts'),
             'required' => false
         ))
-        ->add('link_rewrite', new TranslateType(
-            'text',
-            array(),
-            $this->locales,
-            true
-        ), array('label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts')));
+        ->add('link_rewrite', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
+            'type' => FormType\TextType::class,
+            'options' => [],
+            'locales' => $this->locales,
+            'hideTabs' => true,
+            'label' => $this->translator->trans('Friendly URL', [], 'AdminProducts'),
+        ))
+        ->add('redirect_type', FormType\ChoiceType::class, array(
+            'choices'  => array(
+                $this->translator->trans('No redirect (404)', [], 'AdminProducts') => '404',
+                $this->translator->trans('Catalog Redirected permanently (301)', [], 'AdminProducts') => '301',
+                $this->translator->trans('Redirected temporarily (302)', [], 'AdminProducts') => '302',
+            ),
+            'choices_as_values' => true,
+            'required' => true,
+            'label' => $this->translator->trans('Redirection when offline', [], 'AdminProducts'),
+        ))
+        ->add('id_product_redirected', \PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType::class, array(
+            'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            'mapping_value' => 'id',
+            'mapping_name' => 'name',
+            'placeholder' => $this->translator->trans('To which product the page should redirect?', [], 'AdminProducts'),
+            'template_collection' => '<div class="title col-md-8">%s</div><button type="button" class="btn btn-danger delete"><i class="material-icons">delete</i></button>',
+            'limit' => 1,
+            'required' => false,
+            'label' => $this->translator->trans('Target product', [], 'AdminProducts')
+        ));
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_seo';
     }

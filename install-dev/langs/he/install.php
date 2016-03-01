@@ -70,7 +70,7 @@ return array(
         'Permissions on files and folders' => 'הרשאות קבצים וספריות',
         'Recursive write permissions for %1$s user on %2$s' => 'הרשאות כתיבה רקורסיביות עבור המשתמש %1$s ב %2$s',
         'Recommended PHP parameters' => 'פרמטרי PHP מומלצים',
-        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!',
+        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!' => 'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!',
         'Cannot open external URLs' => 'אין אפשרות לפתוח קישורים חיצוניים',
         'GZIP compression is not activated' => 'דחיסת GZIP לא מופעלת',
         'Mcrypt extension is not enabled' => 'ההרחבה Mcrypt לא מופעלת',

@@ -28,10 +28,9 @@ namespace PrestaShopBundle\Controller\Admin;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
 
 /**
- * Admin controller for the virtual produc
+ * Admin controller for the virtual product on the /product/form page.
  */
 class VirtualProductController extends FrameworkBundleAdminController
 {
@@ -57,16 +56,20 @@ class VirtualProductController extends FrameworkBundleAdminController
             return $response;
         }
 
-        $form = $this->createForm(new ProductVirtual(
-            $this->container->get('prestashop.adapter.translator'),
-            $this->container->get('prestashop.adapter.legacy.context')
-        ), null, array('csrf_protection' => false));
+        $form = $this->createForm(
+            \PrestaShopBundle\Form\Admin\Product\ProductVirtual::class,
+            null,
+            array('csrf_protection' => false)
+        );
 
         $form->handleRequest($request);
         if ($form->isValid()) {
             $data = $form->getData();
             $res = $adminProductWrapper->updateDownloadProduct($product, $data);
             $res->file_download_link = $res->filename ? $legacyContext->getAdminBaseUrl().$res->getTextLink(true) : '';
+
+            $product->is_virtual = 1;
+            $product->save();
 
             $response->setData($res);
         } else {
@@ -92,7 +95,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
 
         if (!$product || !$request->isXmlHttpRequest()) {
             return $response;
@@ -118,7 +121,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
 
         if (!$product || !$request->isXmlHttpRequest()) {
             return $response;

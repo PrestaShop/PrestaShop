@@ -2,7 +2,7 @@
 
 namespace PrestaShop\PrestaShop\tests\Fake;
 
-use PrestaShop\PrestaShop\Core\Business\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Exception;
 
 class FakeConfiguration implements ConfigurationInterface
@@ -20,5 +20,11 @@ class FakeConfiguration implements ConfigurationInterface
             throw new Exception("Key $key does not exist in the fake configuration.");
         }
         return $this->keys[$key];
+    }
+
+    public function set($key, $value)
+    {
+        $this->keys[$key] = $value;
+        return $this;
     }
 }

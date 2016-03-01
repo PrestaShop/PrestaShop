@@ -1,4 +1,8 @@
 # include subparts of the Admin interface
+_admin_addons_routing:
+    resource: "admin/routing_addons.yml"
+    prefix: /addons
+
 _admin_product_routing:
     resource: "admin/routing_product.yml"
     prefix: /product
@@ -10,6 +14,10 @@ _admin_category_routing:
 _admin_feature_routing:
     resource: "admin/routing_feature.yml"
     prefix: /feature
+
+_admin_module_routing:
+    resource: "admin/routing_module.yml"
+    prefix: /module
 
 _admin_attribute_routing:
     resource: "admin/routing_attribute.yml"
@@ -29,14 +37,27 @@ _admin_warehouse_routing:
 
 # include common routes for Admin interface
 admin_common_pagination:
-    path:     /common/pagination/{offset}/{limit}/{total}
+    path:     /common/pagination/{offset}/{limit}/{total}/{view}
     methods:  [GET]
-    defaults: 
+    defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::paginationAction'
         offset: 0
         limit: 20
         total: 0
+        view: full
     requirements:
         offset: \d+
         limit: \d+
         total: \d+
+        view: full|quicknav
+
+admin_common_recommended_modules:
+    path:     /common/recommended_modules/{domain}/{limit}/{randomize}
+    methods:  [GET]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::recommendedModulesAction'
+        limit: 0
+        randomize: 0
+    requirements:
+        limit: \d+
+        randomize: 0|1

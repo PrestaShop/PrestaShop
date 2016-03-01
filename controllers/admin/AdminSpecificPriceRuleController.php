@@ -28,7 +28,7 @@
  * @property SpecificPriceRule $object
  */
 
-use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
+use PrestaShop\PrestaShop\Core\Cldr\Repository;
 
 class AdminSpecificPriceRuleControllerCore extends AdminController
 {
@@ -41,7 +41,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->className = 'SpecificPriceRule';
         $this->lang = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
-        $this->cldr = new Repository(Context::getContext()->language);
+        $this->cldr = Tools::getCldr(Context::getContext());
 
         /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
         if ($this->id_shop = (int)Tools::getValue('shop_id')) {

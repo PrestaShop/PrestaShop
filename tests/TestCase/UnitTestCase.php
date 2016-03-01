@@ -6,7 +6,7 @@ use Configuration;
 use Context;
 use Db;
 use PHPUnit_Framework_TestCase;
-use PrestaShop\PrestaShop\Core\Business\ContainerBuilder;
+use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
@@ -78,7 +78,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
     {
         $fakeConfiguration = new FakeConfiguration($keys);
         $this->container->bind(
-            '\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface',
+            '\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface',
             $fakeConfiguration
         );
         return $fakeConfiguration;

@@ -39,7 +39,7 @@ class UrlGeneratorTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->context->language = new \stdClass();
+        $this->context->language = new \Language;
         $this->context->language->id = 42;
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');
@@ -49,8 +49,9 @@ class UrlGeneratorTest extends UnitTestCase
 
     public function test_generate_equivalent_route()
     {
-        // FIXME: cannot use kernel in unit tests while legacy is here. To fix when legacy will be fully refactored.
-        /*
+        return $this->markTestSkipped(
+            "Cannot use kernel in unit tests while legacy is here. To fix when legacy will be fully refactored."
+        );
         $router = $this->sfKernel->getContainer()->get('router');
         $generator = new UrlGenerator($this->legacyContext, $router);
 
@@ -58,6 +59,5 @@ class UrlGeneratorTest extends UnitTestCase
         list($controller, $parameters) = $generator->getLegacyOptions('admin_product_catalog');
         $this->assertEquals('AdminProducts', $controller);
         $this->assertCount(0, $parameters);
-        */
     }
 }

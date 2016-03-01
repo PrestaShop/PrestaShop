@@ -3,10 +3,14 @@
 
 Hi {firstname} {lastname}, 
 
-Your guest account for {shop_name} has been successfully converted to a customer
+Your guest account for {shop_name} was converted to a customer
 account. 
 
-E-MAIL ADDRESS: {email} 
+E-MAIL ADDRESS: {email}
+
+PASSWORD: {passwd}
+
+Please be careful when sharing these login details with others.
 
 You can access your customer account on our shop: {shop_url} 
 

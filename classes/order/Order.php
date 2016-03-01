@@ -1190,9 +1190,12 @@ class OrderCore extends ObjectModel
         if ($number) {
             $sql .= (int)$number;
         } else {
-            $sql .= '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
-            FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ?
+            $getNumberSql = '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
+                FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ?
                 ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int)date('Y') : '').') AS result)';
+            $getNumberSqlRow = Db::getInstance()->getRow($getNumberSql);
+            $newInvoiceNumber = $getNumberSqlRow['new_number'];
+            $sql .= $newInvoiceNumber;
         }
 
         $sql .= ' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
@@ -1393,8 +1396,10 @@ class OrderCore extends ObjectModel
         if ($number) {
             $sql .= (int)$number;
         } else {
-            $sql .= '(SELECT new_number FROM (SELECT (MAX(`delivery_number`) + 1) AS new_number
-            FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+            $getNumberSql = '(SELECT new_number FROM (SELECT (MAX(`delivery_number`) + 1) AS new_number
+                FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+            $newInvoiceNumber = Db::getInstance()->getValue($getNumberSql);
+            $sql .= $newInvoiceNumber;
         }
 
         $sql .= ' WHERE `id_order_invoice` = '.(int)$order_invoice_id;

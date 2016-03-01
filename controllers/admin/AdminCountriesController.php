@@ -46,7 +46,7 @@ class AdminCountriesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-            'affectzone' => array('text' => $this->l('Assign to a new zone'))
+            'AffectZone' => array('text' => $this->l('Assign to a new zone'))
         );
 
         $this->fieldImageSettings = array(
@@ -149,6 +149,9 @@ class AdminCountriesControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         $this->tpl_list_vars['zones'] = Zone::getZones();
+        $this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
+        $this->tpl_list_vars['POST'] = $_POST;
+
         return parent::renderList();
     }
 
@@ -165,7 +168,8 @@ class AdminCountriesControllerCore extends AdminController
 
         $default_layout = '';
 
-        $default_layout_tab = array(
+        // TODO: Use format from XML
+        $default_layout_tab = [
             array('firstname', 'lastname'),
             array('company'),
             array('vat_number'),
@@ -174,7 +178,7 @@ class AdminCountriesControllerCore extends AdminController
             array('postcode', 'city'),
             array('Country:name'),
             array('phone'),
-            array('phone_mobile'));
+        ];
 
         foreach ($default_layout_tab as $line) {
             $default_layout .= implode(' ', $line)."\r\n";
@@ -458,21 +462,22 @@ class AdminCountriesControllerCore extends AdminController
         return false;
     }
 
-    public function processBulkStatusSelection($way)
+    /**
+     * Allow the assignation of zone only if the form is displayed.
+     */
+    protected function processBulkAffectZone()
     {
-        if (is_array($this->boxes) && !empty($this->boxes)) {
-            $countries_ids = array();
-            foreach ($this->boxes as $id) {
-                $countries_ids[] = array('id_country' => $id);
-            }
-
-            if (count($countries_ids)) {
-                Country::addModuleRestrictions(array(), $countries_ids, array());
-            }
+        $zone_to_affect = Tools::getValue('zone_to_affect');
+        if ($zone_to_affect && $zone_to_affect !== 0) {
+            parent::processBulkAffectZone();
         }
-        parent::processBulkStatusSelection($way);
-    }
 
+        if (Tools::getIsset('submitBulkAffectZonecountry')) {
+            $this->tpl_list_vars['assign_zone'] = true;
+        }
+
+        return;
+    }
 
     protected function displayValidFields()
     {

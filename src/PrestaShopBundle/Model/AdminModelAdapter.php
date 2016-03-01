@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Model;
 /**
  * This form class is responsible to map the form data to the posted object.
  *
- * For this parent class, onyl hook sub fields are handled.
+ * For this parent class, only hook sub fields are handled.
  */
 class AdminModelAdapter
 {

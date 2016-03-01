@@ -70,7 +70,7 @@ return array(
         'Permissions on files and folders' => 'Práva k souborům a složkám',
         'Recursive write permissions for %1$s user on %2$s' => 'Rekurzivní práva k zápisu pro %1$s použité na %2$s',
         'Recommended PHP parameters' => 'Doporučené parametry PHP',
-        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'Používáte verzi PHP %s. Prosím aktualizujte na verzi PHP 5.4 nyní!',
+        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!' => 'Používáte verzi PHP %s. Prosím aktualizujte na verzi PHP 5.5 nyní!',
         'Cannot open external URLs' => 'Není možné otevřít externí URL adresy',
         'GZIP compression is not activated' => 'GZIP komprese není aktivní',
         'Mcrypt extension is not enabled' => 'Mcrypt rozšíření není povoleno',

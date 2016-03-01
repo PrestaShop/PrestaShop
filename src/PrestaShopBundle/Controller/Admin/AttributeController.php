@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,10 +43,22 @@ class AttributeController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
         $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $translator = $this->container->get('prestashop.adapter.translator');
         $attributes = $this->container->get('prestashop.adapter.data_provider.attribute')->getAttributes($locales[0]['id_lang'], true);
 
+        $dataGroupAttributes = [];
         $data = [];
         foreach ($attributes as $attribute) {
+            /** Construct attribute group selector. Ex : Color : All */
+            $dataGroupAttributes[$attribute['id_attribute_group']] = [
+                'value' => 'group-'.$attribute['id_attribute_group'],
+                'label' => $attribute['public_name'].' : '.$translator->trans('All', [], 'AdminTabs'),
+                'data' => [
+                    'id_group' => $attribute['id_attribute_group'],
+                    'name' => $attribute['public_name'],
+                ]
+            ];
+
             $data[] = [
                 'value' => $attribute['id_attribute'],
                 'label' => $attribute['public_name'].' : '.$attribute['name'],
@@ -57,6 +68,8 @@ class AttributeController extends FrameworkBundleAdminController
                 ]
             ];
         }
+
+        $data = array_merge($dataGroupAttributes, $data);
 
         $response->setData($data);
         return $response;
@@ -72,12 +85,13 @@ class AttributeController extends FrameworkBundleAdminController
     public function attributesGeneratorAction(Request $request)
     {
         $response = new JsonResponse();
+        $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
         $options = $request->get('options');
         $idProduct = isset($request->get('form')['id_product']) ? $request->get('form')['id_product'] : null;
 
         //get product
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
 
         if (!is_object($product) || empty($product->id) || empty($options) || !is_array($options)) {
             $response->setStatusCode(400);
@@ -85,7 +99,7 @@ class AttributeController extends FrameworkBundleAdminController
         }
 
         $modelMapper = new ProductAdminModelAdapter(
-            $product->id,
+            $product,
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),
@@ -93,7 +107,8 @@ class AttributeController extends FrameworkBundleAdminController
             $this->container->get('prestashop.adapter.data_provider.supplier'),
             $this->container->get('prestashop.adapter.data_provider.warehouse'),
             $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack')
+            $this->container->get('prestashop.adapter.data_provider.pack'),
+            $this->container->get('prestashop.adapter.shop.context')
         );
 
         //store exisiting product combinations
@@ -101,8 +116,24 @@ class AttributeController extends FrameworkBundleAdminController
             return $o['id_product_attribute'];
         }, $product->getAttributeCombinations(1, false));
 
+        //get clean attributes ids
+        $newOptions = [];
+        foreach ($options as $idGroup => $attributes) {
+            foreach ($attributes as $attribute) {
+                //If attribute is a group attribute, replace group data by all attributes group
+                if (false !== strpos($attribute, 'group')) {
+                    $allGroupAttributes = $this->container->get('prestashop.adapter.data_provider.attribute')->getAttributeIdsByGroup((int)$idGroup, true);
+                    foreach ($allGroupAttributes as $groupAttribute) {
+                        $newOptions[$idGroup][$groupAttribute] = $groupAttribute;
+                    }
+                } else {
+                    $newOptions[$idGroup][$attribute] = $attribute;
+                }
+            }
+        }
+
         //create attributes
-        $this->container->get('prestashop.adapter.admin.controller.attribute_generator')->processGenerate($product, $options);
+        $this->container->get('prestashop.adapter.admin.controller.attribute_generator')->processGenerate($product, $newOptions);
 
         //get all product combinations
         $allCombinations = $product->getAttributeCombinations(1, false);
@@ -116,8 +147,22 @@ class AttributeController extends FrameworkBundleAdminController
 
         $newCombinations = [];
         foreach ($newCombinationIds as $combinationId) {
-            $attribute = $product->getAttributeCombinationsById($combinationId, 1);
-            $newCombinations[] = $modelMapper->getFormCombination($attribute[0]);
+            $attribute = $product->getAttributeCombinationsById($combinationId, $locales[0]['id_lang']);
+
+            $form = $this->createForm(
+                \PrestaShopBundle\Form\Admin\Product\ProductCombination::class,
+                $modelMapper->getFormCombination($attribute[0])
+            );
+
+            $formRender = $this->renderView(
+                'PrestaShopBundle:Admin/Product/Include:form-combination.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'id_product' => $idProduct
+                )
+            );
+
+            $newCombinations[] = $formRender;
         }
 
         $response->setData($newCombinations);
@@ -126,7 +171,7 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete a product atrtibute
+     * Delete a product attribute
      *
      * @param int $idAttribute The attribute ID
      * @param int $idProduct The product ID
@@ -155,6 +200,42 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Delete all product attributes
+     *
+     * @param int $idProduct The product ID
+     * @param Request $request The request
+     *
+     * @return string
+     */
+    public function deleteAllAttributeAction($idProduct, Request $request)
+    {
+        $translator = $this->container->get('prestashop.adapter.translator');
+        $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
+        $response = new JsonResponse();
+
+        //get all attribute for a product
+        $combinations = $attributeAdapter->getProductCombinations($idProduct);
+
+        if (!$combinations || !$request->isXmlHttpRequest()) {
+            return $response;
+        }
+
+        foreach ($combinations as $combination) {
+            $res = $this->container->get('prestashop.adapter.admin.controller.attribute_generator')
+                ->ajaxProcessDeleteProductAttribute($combination['id_product_attribute'], $idProduct);
+
+            if ($res['status'] == 'error') {
+                $response->setStatusCode(400);
+                break;
+            }
+        }
+
+        $response->setData(['message' => $translator->trans($res['message'], [], 'AdminProducts')]);
+
+        return $response;
+    }
+
+    /**
      * get All Combinations for a product
      *
      * @param int $idProduct The product id
@@ -167,9 +248,13 @@ class AttributeController extends FrameworkBundleAdminController
         $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
         $combinations = $attributeAdapter->getProductCombinations($idProduct);
 
+        //get product
+        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $product = $productAdapter->getProduct((int)$idProduct);
+
         //get combinations
         $modelMapper = new ProductAdminModelAdapter(
-            $idProduct,
+            $product,
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),
@@ -177,7 +262,8 @@ class AttributeController extends FrameworkBundleAdminController
             $this->container->get('prestashop.adapter.data_provider.supplier'),
             $this->container->get('prestashop.adapter.data_provider.warehouse'),
             $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack')
+            $this->container->get('prestashop.adapter.data_provider.pack'),
+            $this->container->get('prestashop.adapter.shop.context')
         );
 
         $combinationList = [];
@@ -207,7 +293,7 @@ class AttributeController extends FrameworkBundleAdminController
         $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
 
         //get product images
         $productImages = $productAdapter->getImages($idProduct, $locales[0]['id_lang']);

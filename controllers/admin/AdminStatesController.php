@@ -48,7 +48,7 @@ class AdminStatesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-            'affectzone' => array('text' => $this->l('Assign a new zone'))
+            'AffectZone' => array('text' => $this->l('Assign to a new zone'))
         );
 
         $this->_select = 'z.`name` AS zone, cl.`name` AS country';
@@ -123,6 +123,15 @@ class AdminStatesControllerCore extends AdminController
         }
 
         parent::initPageHeaderToolbar();
+    }
+
+    public function renderList()
+    {
+        $this->tpl_list_vars['zones'] = Zone::getZones();
+        $this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
+        $this->tpl_list_vars['POST'] = $_POST;
+
+        return parent::renderList();
     }
 
     public function renderForm()
@@ -258,7 +267,7 @@ class AdminStatesControllerCore extends AdminController
 		WHERE s.id_country = '.(int)(Tools::getValue('id_country')).' AND s.active = 1 AND c.`contains_states` = 1
 		ORDER BY s.`name` ASC');
 
-        if (is_array($states) and !empty($states)) {
+        if (is_array($states) && !empty($states)) {
             $list = '';
             if ((bool)Tools::getValue('no_empty') != true) {
                 $empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '-';
@@ -273,5 +282,22 @@ class AdminStatesControllerCore extends AdminController
         }
 
         die($list);
+    }
+
+    /**
+     * Allow the assignation of zone only if the form is displayed.
+     */
+    protected function processBulkAffectZone()
+    {
+        $zone_to_affect = Tools::getValue('zone_to_affect');
+        if ($zone_to_affect && $zone_to_affect !== 0) {
+            parent::processBulkAffectZone();
+        }
+
+        if (Tools::getIsset('submitBulkAffectZonestate')) {
+            $this->tpl_list_vars['assign_zone'] = true;
+        }
+
+        return;
     }
 }

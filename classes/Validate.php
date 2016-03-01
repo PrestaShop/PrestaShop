@@ -959,6 +959,18 @@ class ValidateCore
     }
 
     /**
+     * Check for PHP serialized data
+     *
+     * @param string $data json data to validate
+     * @return bool Validity is ok or not
+     */
+    public static function isJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
+    /**
      * Check for Latitude/Longitude
      *
      * @param string $data Coordinate to validate
@@ -1003,33 +1015,6 @@ class ValidateCore
                 if ($id == 0 || !Validate::isUnsignedInt($id)) {
                     return false;
                 }
-            }
-        }
-        return true;
-    }
-
-    /**
-     *
-     * @param array $zones
-     * @return bool return true if array contain all value required for an image map zone
-     */
-    public static function isSceneZones($zones)
-    {
-        foreach ($zones as $zone) {
-            if (!isset($zone['x1']) || !Validate::isUnsignedInt($zone['x1'])) {
-                return false;
-            }
-            if (!isset($zone['y1']) || !Validate::isUnsignedInt($zone['y1'])) {
-                return false;
-            }
-            if (!isset($zone['width']) || !Validate::isUnsignedInt($zone['width'])) {
-                return false;
-            }
-            if (!isset($zone['height']) || !Validate::isUnsignedInt($zone['height'])) {
-                return false;
-            }
-            if (!isset($zone['id_product']) || !Validate::isUnsignedInt($zone['id_product'])) {
-                return false;
             }
         }
         return true;
@@ -1094,5 +1079,10 @@ class ValidateCore
     public static function isOrderInvoiceNumber($id)
     {
         return (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id));
+    }
+
+    public static function isThemeName($theme_name)
+    {
+        return (bool)preg_match('/^[\w-]{3,255}$/u', $theme_name);
     }
 }

@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the product price form
@@ -37,6 +37,10 @@ class ProductPrice extends CommonAbstractType
 {
     private $translator;
     private $tax_rules;
+    private $tax_rules_rates;
+    private $configuration;
+    private $eco_tax_rate;
+    private $customerDataprovider;
 
     /**
      * Constructor
@@ -49,16 +53,22 @@ class ProductPrice extends CommonAbstractType
      * @param object $currencyDataprovider
      * @param object $groupDataprovider
      * @param object $legacyContext
+     * @param object $customerDataprovider
      */
-    public function __construct($translator, $taxDataProvider, $router, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext)
+    public function __construct($translator, $taxDataProvider, $router, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext, $customerDataprovider)
     {
         $this->translator = $translator;
         $this->router = $router;
+        $this->configuration = $this->getConfiguration();
         $this->shopContextAdapter = $shopContextAdapter;
         $this->countryDataprovider = $countryDataprovider;
         $this->currencyDataprovider = $currencyDataprovider;
-        $this->groupDataprovider= $groupDataprovider;
+        $this->groupDataprovider = $groupDataprovider;
+        $this->customerDataprovider = $customerDataprovider;
         $this->legacyContext = $legacyContext;
+        $this->tax_rules_rates = $taxDataProvider->getTaxRulesGroupWithRates();
+        $this->eco_tax_rate = $taxDataProvider->getProductEcotaxRate();
+        $this->currency = $legacyContext->getContext()->currency;
         $this->tax_rules = $this->formatDataChoicesList(
             $taxDataProvider->getTaxRulesGroups(true),
             'id_tax_rules_group'
@@ -67,81 +77,94 @@ class ProductPrice extends CommonAbstractType
 
     /**
      * {@inheritdoc}
-     *
-     * Builds form
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('price', 'number', array(
+        $builder->add('price', FormType\MoneyType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'attr' => ['data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')],
+            'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('id_tax_rules_group', 'choice', array(
-            'choices' =>  $this->tax_rules,
-            'required' => true,
-            'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
-        ))
-        ->add('price_ttc', 'number', array(
+        ->add('price_ttc', FormType\MoneyType::class, array(
             'required' => false,
             'mapped' => false,
             'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
-        ->add('on_sale', 'checkbox', array(
+        ->add('ecotax', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('On sale', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            ),
+            'attr' => ['data-eco-tax-rate' => $this->eco_tax_rate],
         ))
-        ->add('wholesale_price', 'number', array(
+        ->add('id_tax_rules_group', FormType\ChoiceType::class, array(
+            'choices' =>  $this->tax_rules,
+            'required' => true,
+            'choices_as_values' => true,
+            'choice_attr' => function ($val) {
+                return [
+                    'data-rates' => implode(',', $this->tax_rules_rates[$val]['rates']),
+                    'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
+                ];
+            },
+            'label' => $this->translator->trans('Tax rule', [], 'AdminProducts'),
+        ))
+        ->add('on_sale', FormType\CheckboxType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts')
+            'label' => $this->translator->trans('Display the "sale!" flag on the product page, and in the text found within the product listing.', [], 'AdminProducts'),
         ))
-        ->add('unit_price', 'number', array(
+        ->add('wholesale_price', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Unit price (tax excl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('Price - Tax excluded', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
-        ->add('unity', 'text', array(
+        ->add('unit_price', FormType\MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('per', [], 'AdminProducts')
+            'label' => $this->translator->trans('Unit price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
-        ->add('specific_price', new ProductSpecificPrice(
-            $this->router,
-            $this->translator,
-            $this->shopContextAdapter,
-            $this->countryDataprovider,
-            $this->currencyDataprovider,
-            $this->groupDataprovider,
-            $this->legacyContext
+        ->add('unity', FormType\TextType::class, array(
+            'required' => false,
+            'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'AdminProducts')]
         ))
-        ->add('specificPricePriorityToAll', 'checkbox', array(
+        ->add('specific_price', \PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice::class)
+        ->add('specificPricePriorityToAll', FormType\CheckboxType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Apply to all products', [], 'AdminProducts'),
         ));
 
         //generates fields for price priority
         $specificPricePriorityChoices = [
-            'id_shop' => $this->translator->trans('Shop', [], 'AdminProducts'),
-            'id_currency' => $this->translator->trans('Currency', [], 'AdminProducts'),
-            'id_country' => $this->translator->trans('Country', [], 'AdminProducts'),
-            'id_group' => $this->translator->trans('Group', [], 'AdminProducts'),
+             $this->translator->trans('Shop', [], 'AdminProducts') => 'id_shop',
+             $this->translator->trans('Currency', [], 'AdminProducts') => 'id_currency',
+             $this->translator->trans('Country', [], 'AdminProducts') => 'id_country',
+             $this->translator->trans('Group', [], 'AdminProducts') => 'id_group',
         ];
 
         for ($i=0; $i < count($specificPricePriorityChoices); $i++) {
-            $builder->add('specificPricePriority_'.$i, 'choice', array(
+            $builder->add('specificPricePriority_'.$i, FormType\ChoiceType::class, array(
                 'choices' => $specificPricePriorityChoices,
+                'choices_as_values' => true,
                 'required' => true
             ));
         }
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_price';
     }

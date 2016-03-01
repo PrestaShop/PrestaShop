@@ -34,7 +34,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
     public $tax_calculator;
 
     /**
-     * @var \PrestaShop\PrestaShop\Core\Business\ConfigurationInterface
+     * @var \PrestaShop\PrestaShop\Core\ConfigurationInterface
      */
     private $configurationManager;
 
@@ -43,10 +43,10 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
      * @param Address $address
      * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
      */
-    public function __construct(Address $address, $type, \PrestaShop\PrestaShop\Core\Business\ConfigurationInterface $configurationManager = null)
+    public function __construct(Address $address, $type, \PrestaShop\PrestaShop\Core\ConfigurationInterface $configurationManager = null)
     {
         if ($configurationManager === null) {
-            $this->configurationManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface');
+            $this->configurationManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
         } else {
             $this->configurationManager = $configurationManager;
         }

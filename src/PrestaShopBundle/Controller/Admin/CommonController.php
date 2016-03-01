@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,7 @@ use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 
 /**
  * Admin controller for the common actions across the whole admin interface.
@@ -61,9 +63,10 @@ class CommonController extends FrameworkBundleAdminController
      * @param integer $limit
      * @param integer $offset
      * @param integer $total
+     * @param string $view full|quicknav To change default template used to render the content
      * @return array Template vars
      */
-    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0)
+    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
     {
         // base elements
         if ($limit <= 0) {
@@ -81,52 +84,53 @@ class CommonController extends FrameworkBundleAdminController
                 unset($callerParameters[$k]);
             }
         }
-        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters')['_route']);
-        $nextPageUrl = ($offset+$limit >= $total) ? false : $this->generateUrl($routeName, array_merge(
+        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
+        $nextPageUrl = (!$routeName || ($offset+$limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => min($total-1, $offset+$limit),
                 'limit' => $limit
             )
         ));
-        $previousPageUrl = ($offset == 0) ? false : $this->generateUrl($routeName, array_merge(
+        $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => max(0, $offset-$limit),
                 'limit' => $limit
             )
         ));
-        $firstPageUrl = ($offset == 0) ? false : $this->generateUrl($routeName, array_merge(
+        $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
                 'limit' => $limit
             )
         ));
-        $lastPageUrl = ($offset+$limit >= $total) ? false : $this->generateUrl($routeName, array_merge(
+        $lastPageUrl = (!$routeName || ($offset+$limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => ($pageCount-1)*$limit,
                 'limit' => $limit
             )
         ));
-        $changeLimitUrl = $this->generateUrl($routeName, array_merge(
+        $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
                 'limit' => '_limit'
             )
         ));
-        $jumpPageUrl = $this->generateUrl($routeName, array_merge(
+        $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 999999,
                 'limit' => $limit
             )
         ));
+        $limitChoices = $request->attributes->get('limit_choices', array(20, 50, 100));
 
         // Template vars injection
-        return array(
+        $vars = array(
             'limit' => $limit,
             'changeLimitUrl' => $changeLimitUrl,
             'first_url' => $firstPageUrl,
@@ -139,6 +143,60 @@ class CommonController extends FrameworkBundleAdminController
             'next_url' => $nextPageUrl,
             'last_url' => $lastPageUrl,
             'jump_page_url' => $jumpPageUrl,
+            'limit_choices' => $limitChoices,
+        );
+        if ($view != 'full') {
+            return $this->render('PrestaShopBundle:Admin:Common/pagination_'.$view.'.html.twig', $vars);
+        }
+        return $vars;
+    }
+
+    /**
+     * This will allow you to retrieve an HTML code with a list of recommended modules depending on the domain.
+     *
+     * @Template
+     * @param string $domain
+     * @param integer $limit
+     * @param integer $randomize
+     * @return array Template vars
+     */
+    public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
+    {
+        $recommendedModules = $this->container->get('prestashop.data_provider.modules.recommended');
+        /* @var $recommendedModules RecommendedModules */
+        $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
+
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        /* @var $modulesProvider AdminModuleDataProvider */
+
+        $modules = array();
+        foreach ($moduleIdList as $id) {
+            try {
+                $module = array_values($modulesProvider->getCatalogModules(['name' => $id]));
+            } catch (\Exception $e) {
+                continue;
+            }
+
+            if (count($module) == 1) {
+                $module = $module[0];
+            } elseif (count($module) > 1) {
+                throw new \Exception("Module ID $id matches multiple times on the catalog.");
+            } else {
+                continue; // module not found
+            }
+            $modules[] = $module;
+        }
+
+        if ($randomize == 1) {
+            shuffle($modules);
+        }
+
+        $modules = $recommendedModules->filterInstalledAndBadModules($modules);
+        $modules = $modulesProvider->generateAddonsUrls($modules);
+
+        return array(
+            'domain' => $domain,
+            'modules' => array_slice($modules, 0, $limit, true),
         );
     }
 }

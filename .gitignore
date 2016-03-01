@@ -3,6 +3,7 @@
 /.htaccess
 *.log
 npm-debug.log.*
+.sass-cache/
 /cache/*
 download/*
 /img/*
@@ -11,11 +12,15 @@ download/*
 /vendor/*
 docs/phpdoc-sf/
 /composer.lock
-tests/StarterTheme/errorShots/
+tests/selenium/errorShots/
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
 admin-dev/import/*
+
+admin-dev/import/*
+!admin-dev/import/.htaccess
+!admin-dev/import/index.php
 
 themes/*/cache/*
 
@@ -24,8 +29,10 @@ themes/*/cache/*
 config/settings.inc.php
 config/settings.old.php
 config/xml/*
+config/themes/*
 !config/xml/themes/default.xml
-tests/StarterTheme/settings.js
+tests/selenium/settings.js
+themes/*/config/settings_*.json
 
 # Themes, modules and overrides
 

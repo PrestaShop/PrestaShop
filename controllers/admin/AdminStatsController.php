@@ -24,6 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+
 class AdminStatsControllerCore extends AdminStatsTabController
 {
     public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
@@ -139,7 +143,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getPercentProductOutOfStock()
     {
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT SUM(IF(IFNULL(stock.quantity, 0) = 0, 1, 0)) as without_stock, COUNT(*) as products
+		SELECT SUM(IF(IFNULL(stock.quantity, 0) <= 0, 1, 0)) as without_stock, COUNT(*) as products
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
@@ -684,13 +688,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'frontoffice_translations':
-                $themes = Theme::getThemes();
+                $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
+                                ->buildRepository()
+                                ->getList();
                 $languages = Language::getLanguages();
                 $total = $translated = 0;
                 foreach ($themes as $theme) {
                     /** @var Theme $theme */
                     foreach ($languages as $language) {
-                        $kpi_key = substr(strtoupper($theme->name.'_'.$language['iso_code']), 0, 16);
+                        $kpi_key = substr(strtoupper($theme->getName().'_'.$language['iso_code']), 0, 16);
                         $total += ConfigurationKPI::get('TRANSLATE_TOTAL_'.$kpi_key);
                         $translated += ConfigurationKPI::get('TRANSLATE_DONE_'.$kpi_key);
                     }

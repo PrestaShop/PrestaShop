@@ -500,47 +500,17 @@
 // Inverse navbar
 
 .navbar-inverse {
-  background-color: $navbar-inverse-bg;
-
+  background: $contrasted-light-default;
   .navbar-brand {
-    color: $navbar-inverse-brand-color;
+    color: $main-color;
     &:hover,
     &:focus {
-      color: $navbar-inverse-brand-hover-color;
-      background-color: $navbar-inverse-brand-hover-bg;
+      color: $toolbar-buttons-hover-color;
     }
   }
 
   .navbar-text {
     color: $navbar-inverse-color;
-  }
-
-  .navbar-nav {
-    > li > a {
-      color: $navbar-inverse-link-color;
-
-      &:hover,
-      &:focus {
-        color: $navbar-inverse-link-hover-color;
-        background-color: $navbar-inverse-link-hover-bg;
-      }
-    }
-    > .active > a {
-      &,
-      &:hover,
-      &:focus {
-        color: $navbar-inverse-link-active-color;
-        background-color: $navbar-inverse-link-active-bg;
-      }
-    }
-    > .disabled > a {
-      &,
-      &:hover,
-      &:focus {
-        color: $navbar-inverse-link-disabled-color;
-        background-color: $navbar-inverse-link-disabled-bg;
-      }
-    }
   }
 
   // Darken the responsive nav toggle

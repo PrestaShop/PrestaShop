@@ -75,6 +75,8 @@ class AdminModulesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
+        $this->template = 'content-legacy.tpl';
+
         register_shutdown_function('displayFatalError');
 
         // Set the modules categories
@@ -307,7 +309,8 @@ class AdminModulesControllerCore extends AdminController
             'currentIndex' => self::$currentIndex,
             'tab_modules_list' => $modules_list_sort,
             'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
-            'lang_iso' => $this->context->language->iso_code
+            'lang_iso' => $this->context->language->iso_code,
+            'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
         ));
 
         if ($admin_list_from_source = Tools::getValue('admin_list_from_source')) {
@@ -1502,7 +1505,7 @@ class AdminModulesControllerCore extends AdminController
                     require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
                 }
 
-                if ($object = new $module->name()) {
+                if ($object = Adapter_ServiceLocator::get($module->name)) {
                     /** @var Module $object */
                     $object->runUpgradeModule();
                     if ((count($errors_module_list = $object->getErrors()))) {
@@ -1520,7 +1523,7 @@ class AdminModulesControllerCore extends AdminController
                 if (!class_exists($module->name)) {
                     if (file_exists(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php')) {
                         require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
-                        $object = new $module->name();
+                        $object = Adapter_ServiceLocator::get($module->name);
                         $module_success[] = array('name' => $module->name, 'message' => array(
                             0 => sprintf($this->l('Current version: %s'), $object->version),
                             1 => $this->l('No file upgrades applied (none exist).'))

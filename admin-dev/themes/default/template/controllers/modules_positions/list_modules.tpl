@@ -169,18 +169,6 @@
 		</div>
 	</div>
 	<div class="col-lg-3">
-		<div class="panel">
-			<h3><i class="icon-eye-open"></i> {l s='Live Edit'}</h3>
-			{if $live_edit}
-				<p>{l s='You have to select a shop to use Live Edit'}</p>
-			{else}
-				<p>{l s='Click here to be redirected to the front office of your shop where you can move and delete modules directly.'}</p>
-					<a class="btn btn-default _blank" href="{$url_live_edit|escape:'html':'UTF-8'}">
-						<i class="icon-edit"></i>
-						{l s='Run Live Edit'}
-					</a>
-			{/if}
-		</div>
 		<div class="panel" id="modules-position-selection-panel">
 			<h3><i class="icon-check"></i> {l s='Selection'}</h3>
 			<p>

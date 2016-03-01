@@ -70,7 +70,7 @@ return array(
         'Permissions on files and folders' => 'Rättigheter till filer och kataloger',
         'Recursive write permissions for %1$s user on %2$s' => 'Rekursiva skrivrättigheter för användare %1$s till %2$s',
         'Recommended PHP parameters' => 'Rekommenderade PHP-inställningar',
-        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'Du använder PHP version %s. Snart så kommer den senaste versionen som stöds av PrestaShop att vara 5.4. Se till att uppgradera till version 5.4 för att vara redo för framtiden!',
+        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!' => 'Du använder PHP version %s. Snart så kommer den senaste versionen som stöds av PrestaShop att vara 5.5. Se till att uppgradera till version 5.5 för att vara redo för framtiden!',
         'Cannot open external URLs' => 'Kan inte öppna externa URLer',
         'PHP register_globals option is enabled' => 'PHP-inställningen register_globals är aktiverad',
         'GZIP compression is not activated' => 'GZIP-komprimering är inte aktiverad',

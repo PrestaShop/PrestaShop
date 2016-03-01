@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Business\Cldr;
+use PrestaShop\PrestaShop\Core\Cldr;
 
 class AdminControllerCore extends Controller
 {
@@ -385,7 +385,7 @@ class AdminControllerCore extends Controller
     /** @var bool if logged employee has access to AdminImport */
     protected $can_import = false;
 
-    public function __construct()
+    public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
         global $timer_start;
         $this->timer_start = $timer_start;
@@ -393,7 +393,7 @@ class AdminControllerCore extends Controller
         global $token;
 
         $this->controller_type = 'admin';
-        $this->controller_name = get_class($this);
+        $this->controller_name = !empty($forceControllerName) ? $forceControllerName : get_class($this);
         if (strpos($this->controller_name, 'Controller')) {
             $this->controller_name = substr($this->controller_name, 0, -10);
         }
@@ -403,18 +403,15 @@ class AdminControllerCore extends Controller
             $this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
         }
 
-        $default_theme_name = 'default';
-
         if (defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_
             && @filemtime(_PS_BO_ALL_THEMES_DIR_._PS_BO_DEFAULT_THEME_.DIRECTORY_SEPARATOR.'template')) {
             $default_theme_name = _PS_BO_DEFAULT_THEME_;
         }
 
-        $this->bo_theme = ((Validate::isLoadedObject($this->context->employee)
-            && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : $default_theme_name);
+        $this->bo_theme = $default_theme_name;
 
         if (!@filemtime(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template')) {
-            $this->bo_theme = $default_theme_name;
+            $this->bo_theme = 'default';
         }
 
         $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
@@ -1163,11 +1160,6 @@ class AdminControllerCore extends Controller
                         if ($back = Tools::getValue('back')) {
                             $this->redirect_after = urldecode($back).'&conf=4';
                         }
-                        // Specific scene feature
-                        // @todo change stay_here submit name (not clear for redirect to scene ... )
-                        if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1') {
-                            $this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$this->token;
-                        }
                         // Save and stay on same form
                         // @todo on the to following if, we may prefer to avoid override redirect_after previous value
                         if (Tools::isSubmit('submitAdd'.$this->table.'AndStay')) {
@@ -1818,77 +1810,12 @@ class AdminControllerCore extends Controller
             }
         }
 
-        // Tab list
-        $tabs = Tab::getTabs($this->context->language->id, 0);
-        $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
-        foreach ($tabs as $index => $tab) {
-            if (!Tab::checkTabRights($tab['id_tab'])
-                || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
-                || $tab['class_name'] == 'AdminCarrierWizard') {
-                unset($tabs[$index]);
-                continue;
-            }
-
-            $img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
-            $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
-            // retrocompatibility : change png to gif if icon not exists
-            if (!$img_exists_cache) {
-                $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
-            }
-
-            if ($img_exists_cache) {
-                $path_img = $img = $img_exists_cache;
-            } else {
-                $path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
-                // Relative link will always work, whatever the base uri set in the admin
-                $img = '../img/t/'.$tab['class_name'].'.png';
-            }
-
-            if (trim($tab['module']) != '') {
-                $path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
-                // Relative link will always work, whatever the base uri set in the admin
-                $img = '../modules/'.$tab['module'].'/'.$tab['class_name'].'.png';
-            }
-
-            // retrocompatibility
-            if (!file_exists($path_img)) {
-                $img = str_replace('png', 'gif', $img);
-            }
-            // tab[class_name] does not contains the "Controller" suffix
-            $tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
-            $tabs[$index]['img'] = $img;
-            $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
-
-            $sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
-            foreach ($sub_tabs as $index2 => $sub_tab) {
-                //check if module is enable and
-                if (isset($sub_tab['module']) && !empty($sub_tab['module'])) {
-                    $module = Module::getInstanceByName($sub_tab['module']);
-                    if (is_object($module) && !$module->isEnabledForShopContext()) {
-                        unset($sub_tabs[$index2]);
-                        continue;
-                    }
-                }
-
-                // class_name is the name of the class controller
-                if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard') {
-                    $sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
-                    $sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
-                } elseif ($sub_tab['class_name'] == 'AdminCarrierWizard' && $sub_tab['class_name'].'Controller' == get_class($this)) {
-                    foreach ($sub_tabs as $i => $tab) {
-                        if ($tab['class_name'] == 'AdminCarriers') {
-                            break;
-                        }
-                    }
-
-                    $sub_tabs[$i]['current'] = true;
-                    unset($sub_tabs[$index2]);
-                } else {
-                    unset($sub_tabs[$index2]);
-                }
-            }
-            $tabs[$index]['sub_tabs'] = array_values($sub_tabs);
+        $tabs = $this->getTabs();
+        $currentTabLevel = 0;
+        foreach ($tabs as &$tab) {
+            $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
         }
+
 
         if (Validate::isLoadedObject($this->context->employee)) {
             $accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
@@ -1941,9 +1868,9 @@ class AdminControllerCore extends Controller
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
             'base_url' => $this->context->shop->getBaseURL(),
-            'tab' => isset($tab) ? $tab : null, // Deprecated, this tab is declared in the foreach, so it's the last tab in the foreach
             'current_parent_id' => (int)Tab::getCurrentParentId(),
             'tabs' => $tabs,
+            'current_tab_level' => $currentTabLevel,
             'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
             'pic_dir' => _THEME_PROD_PIC_DIR_,
             'controller_name' => htmlentities(Tools::getValue('controller')),
@@ -1952,17 +1879,68 @@ class AdminControllerCore extends Controller
             'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
             'display_addons_connection' => Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController'))
         ));
+    }
 
-        $module = Module::getInstanceByName('themeconfigurator');
-        if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL()) {
-            $request =
-            'live_configurator_token='.$module->getLiveConfiguratorToken()
-            .'&id_employee='.(int)$this->context->employee->id
-            .'&id_shop='.(int)$this->context->shop->id
-            .(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
-            .(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '');
-            $this->context->smarty->assign('base_url_tc', $this->context->link->getPageLink('index', null, $id_lang = null, $request));
+    private function getTabs($parentId = 0, $level = 0)
+    {
+        $tabs = Tab::getTabs($this->context->language->id, $parentId);
+        $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
+        foreach ($tabs as $index => $tab) {
+            if (!Tab::checkTabRights($tab['id_tab'])
+                || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+                || $tab['class_name'] == 'AdminCarrierWizard') {
+                unset($tabs[$index]);
+                continue;
+            }
+
+            $img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
+            $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
+
+            // retrocompatibility : change png to gif if icon not exists
+            if (!$img_exists_cache) {
+                $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
+            }
+
+            if ($img_exists_cache) {
+                $path_img = $img = $img_exists_cache;
+            } else {
+                $path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
+                // Relative link will always work, whatever the base uri set in the admin
+                $img = '../img/t/'.$tab['class_name'].'.png';
+            }
+
+            if (trim($tab['module']) != '') {
+                $path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
+                // Relative link will always work, whatever the base uri set in the admin
+                $img = '../modules/'.$tab['module'].'/'.$tab['class_name'].'.png';
+            }
+
+            // retrocompatibility
+            if (!file_exists($path_img)) {
+                $img = str_replace('png', 'gif', $img);
+            }
+            // tab[class_name] does not contains the "Controller" suffix
+            if (($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']) || $tab['class_name'] == $this->controller_name) {
+                $tabs[$index]['current'] = true;
+                $tabs[$index]['current_level'] = $level;
+            } else {
+                $tabs[$index]['current'] = false;
+            }
+
+            $tabs[$index]['img'] = $img;
+            $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
+
+            $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
+
+            foreach ($tabs[$index]['sub_tabs'] as $sub_tab) {
+                if ((int)$sub_tab['current'] == true) {
+                    $tabs[$index]['current'] = true;
+                    $tabs[$index]['current_level'] = $sub_tab['current_level'];
+                }
+            }
         }
+
+        return $tabs;
     }
 
     /**
@@ -2584,74 +2562,72 @@ class AdminControllerCore extends Controller
     {
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        //Bootstrap
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
+        if ($isNewTheme) {
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/theme.css', 'all', 1);
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/bundle.js');
+            $this->addjQueryPlugin(array('chosen'));
+        } else {
 
-        $this->addJquery();
-        $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
-        $this->addjQueryPlugin('growl', null, false);
-        $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
+            //Bootstrap
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/public/theme.css', 'all', 0);
+
+            $this->addJquery();
+            $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
+            $this->addjQueryPlugin('growl', null, false);
+            $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
+
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/public/bundle.js');
+
+            $this->addJS(_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
+
+            if (!$this->lite_display) {
+                $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
+            }
+
+            if (!Tools::getValue('submitFormAjax')) {
+                $this->addJS(_PS_JS_DIR_.'admin/notifications.js');
+            }
+
+            if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
+                $this->addJS('https://cdn.statuspage.io/se-v2.js');
+
+                Media::addJsDefL('status_operational', $this->l('Operational', null, true, false));
+                Media::addJsDefL('status_degraded_performance', $this->l('Degraded Performance', null, true, false));
+                Media::addJsDefL('status_partial_outage', $this->l('Partial Outage', null, true, false));
+                Media::addJsDefL('status_major_outage', $this->l('Major Outage', null, true, false));
+                Media::addJsDef(array('host_cluster' => defined('_PS_HOST_CLUSTER_') ? _PS_HOST_CLUSTER_ : 'fr1'));
+            }
+
+            // Specific Admin Theme
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
+        }
+
+        $this->addJS(array(
+            _PS_JS_DIR_.'admin.js?v='._PS_VERSION_, // TODO: SEE IF REMOVABLE
+            _PS_JS_DIR_.'cldr.js',
+            _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
+        ));
 
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
         Media::addJsDef(array('baseDir' => __PS_BASE_URI__));
         Media::addJsDef(array('baseAdminDir' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'));
-
         Media::addJsDef(array('currency' => array(
             'iso_code' => Context::getContext()->currency->iso_code,
             'sign' => Context::getContext()->currency->sign,
             'name' => Context::getContext()->currency->name,
-            'format' => Context::getContext()->currency->format
+            'format' => Context::getContext()->currency->format,
         )));
-
-        $this->addJS(array(
-            _PS_JS_DIR_.'admin.js?v='._PS_VERSION_,
-            _PS_JS_DIR_.'cldr.js',
-            _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
-            _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/message.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/plural.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/date.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js'
-        ));
-
-        //loads specific javascripts for the admin theme
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
-
-        if (!$this->lite_display) {
-            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
-        }
-
-        if (!Tools::getValue('submitFormAjax')) {
-            $this->addJS(_PS_JS_DIR_.'admin/notifications.js');
-        }
-
-        if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
-            $this->addJS('https://cdn.statuspage.io/se-v2.js');
-
-            Media::addJsDefL('status_operational', $this->l('Operational', null, true, false));
-            Media::addJsDefL('status_degraded_performance', $this->l('Degraded Performance', null, true, false));
-            Media::addJsDefL('status_partial_outage', $this->l('Partial Outage', null, true, false));
-            Media::addJsDefL('status_major_outage', $this->l('Major Outage', null, true, false));
-            Media::addJsDef(array('host_cluster' => defined('_PS_HOST_CLUSTER_') ? _PS_HOST_CLUSTER_ : 'fr1'));
-        }
 
         // Execute Hook AdminController SetMedia
         Hook::exec('actionAdminControllerSetMedia');
-
-        // Specific Admin Theme
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
     }
 
     /**
@@ -2824,10 +2800,6 @@ class AdminControllerCore extends Controller
             $this->context->shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
         } elseif ($this->context->shop->id != $shop_id) {
             $this->context->shop = new Shop((int)$shop_id);
-        }
-
-        if ($this->context->shop->id_theme != $this->context->theme->id) {
-            $this->context->theme = new Theme((int)$this->context->shop->id_theme);
         }
 
         // Replace current default country

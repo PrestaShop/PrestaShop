@@ -273,22 +273,21 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     }
 
     /**
-     * PROCESS : installTheme
-     * Install theme
-     */
-    public function processInstallTheme()
-    {
-        $this->initializeContext();
-
-        return $this->model_install->installTheme();
-    }
-
-    /**
      * PROCESS : installModulesAddons
      * Install modules from addons
      */
     public function processInstallAddonsModules()
     {
         return $this->model_install->installModulesAddons();
+    }
+
+    /**
+     * PROCESS : installTheme
+     * Install theme
+     */
+    public function processInstallTheme()
+    {
+        $this->initializeContext();
+        return $this->model_install->installTheme();
     }
 }

@@ -28,13 +28,20 @@ namespace PrestaShopBundle\Twig;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Kernel;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use Exception;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template
  */
-class LayoutExtension extends \Twig_Extension
+class LayoutExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
+    /**
+     * @var LegacyContext
+     */
     private $context;
+    /**
+     * @var string
+     */
     private $environment;
 
     /**
@@ -52,6 +59,11 @@ class LayoutExtension extends \Twig_Extension
         $this->configuration = new Configuration();
     }
 
+    /**
+     * Provides globals for Twig templates
+     *
+     * @return array The base globals available in twig templates.
+     */
     public function getGlobals()
     {
         return array(
@@ -68,7 +80,6 @@ class LayoutExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('admin_asset_path', array($this, 'getAdminAssetPath')),
             new \Twig_SimpleFilter('configuration', array($this, 'getConfiguration')),
         );
     }
@@ -82,6 +93,7 @@ class LayoutExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('getLegacyLayout', array($this, 'getLegacyLayout')),
+            new \Twig_SimpleFunction('getAdminLink', array($this, 'getAdminLink')),
         );
     }
 
@@ -109,9 +121,11 @@ class LayoutExtension extends \Twig_Extension
      * @param string $displayType The legacy display type variable
      * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value.
      *
+     * @throws Exception if legacy layout has no $content var replacement
+     *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true)
+    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '')
     {
         if ($this->environment == 'test') {
             return <<<EOF
@@ -127,6 +141,14 @@ class LayoutExtension extends \Twig_Extension
 </html>
 EOF;
         }
+
+        $layout = $this->context->getLegacyLayout($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader, $headerTabContent);
+
+        //test if legacy template from "content.tpl" has '{$content}'
+        if (false === strpos($layout, '{$content}')) {
+            throw new Exception('PrestaShopBundle\Twig\LayoutExtension cannot find the {$content} string in legacy layout template', 1);
+        }
+
         $content = str_replace(
             array(
                 '{$content}',
@@ -140,33 +162,24 @@ EOF;
                 '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
                 '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',
             ),
-            $this->context->getLegacyLayout($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader)
+            $layout
         );
 
         return $content;
     }
 
     /**
-     * Get admin asset path filter
-     * Rewrite css/js assets urls for prod env
+     * This is a Twig port of the Smarty {$link->getAdminLink()} function
      *
-     * @param string $path The original path
+     * @param string $controller the controller name
+     * @param bool $withToken
+     * @param array[string] $extraParams
      *
-     * @return string The new asset url
+     * @return string
      */
-    public function getAdminAssetPath($path)
+    public function getAdminLink($controllerName, $withToken = true, $extraParams = [])
     {
-        $validExtensions = ['css', 'js'];
-        $pathSplit = explode('?', $path);
-        $pathInfo = pathinfo($pathSplit[0]);
-
-        if ($this->environment == 'dev' || !in_array($pathInfo['extension'], $validExtensions)) {
-            return $path;
-        }
-
-        $pathBase = end(explode(DIRECTORY_SEPARATOR, $pathInfo['dirname']));
-
-        return dirname($pathInfo['dirname']).'/../web/'.$pathBase.'/'.$pathInfo['basename'].(!empty($pathSplit[1]) ? '?'.$pathSplit[1] : '');
+        return $this->context->getAdminLink($controllerName, $withToken = true, $extraParams = []);
     }
 
     /**

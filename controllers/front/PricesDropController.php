@@ -24,39 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class PricesDropControllerCore extends FrontController
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Adapter\PricesDrop\PricesDropProductSearchProvider;
+use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+
+class PricesDropControllerCore extends ProductListingFrontController
 {
     public $php_self = 'prices-drop';
 
-    public function setMedia()
+    /**
+     * Initializes controller
+     *
+     * @see FrontController::init()
+     * @throws PrestaShopException
+     */
+    public function init()
     {
-        parent::setMedia();
-        $this->addCSS(_THEME_CSS_DIR_.'product_list.css');
+        parent::init();
+        $this->doProductSearch('catalog/prices-drop.tpl');
     }
 
-    /**
-     * Assign template vars related to page content
-     * @see FrontController::initContent()
-     */
-    public function initContent()
+    protected function getProductSearchQuery()
     {
-        parent::initContent();
+        $query = new ProductSearchQuery;
+        $query
+            //->setQueryType('prices-drop')
+            ->setSortOrder(new SortOrder('product', 'name', 'asc'))
+        ;
+        return $query;
+    }
 
-        $this->productSort();
-        $nbProducts = Product::getPricesDrop($this->context->language->id, null, null, true);
-        $this->pagination($nbProducts);
-
-        $products = Product::getPricesDrop($this->context->language->id, (int)$this->p - 1, (int)$this->n, false, $this->orderBy, $this->orderWay);
-        $this->addColorsToProductList($products);
-
-        $this->context->smarty->assign(array(
-            'products' => $products,
-            'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-            'nbProducts' => $nbProducts,
-            'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
-            'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')
-        ));
-
-        $this->setTemplate(_PS_THEME_DIR_.'prices-drop.tpl');
+    protected function getDefaultProductSearchProvider()
+    {
+        $translator = new Translator(new LegacyContext);
+        return new PricesDropProductSearchProvider(
+            $translator
+        );
     }
 }

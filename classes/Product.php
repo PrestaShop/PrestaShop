@@ -181,6 +181,9 @@ class ProductCore extends ObjectModel
     /** @var string Object available order date */
     public $available_date = '0000-00-00';
 
+    /** @var bool Will the condition select should be visible for this product ? */
+    public $show_condition = true;
+
     /** @var string Enumerated (enum) product condition (new, used, refurbished) */
     public $condition;
 
@@ -306,6 +309,7 @@ class ProductCore extends ObjectModel
             'id_product_redirected' =>        array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
             'available_for_order' =>        array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'available_date' =>            array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
+            'show_condition' =>            array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'condition' =>                    array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isGenericName', 'values' => array('new', 'used', 'refurbished'), 'default' => 'new'),
             'show_price' =>                array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'indexed' =>                    array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
@@ -923,7 +927,7 @@ class ProductCore extends ObjectModel
 
         // Removes the product from StockAvailable, for the current shop
         StockAvailable::removeProductFromStockAvailable($this->id);
-        $result &= ($this->deleteProductAttributes() && $this->deleteImages() && $this->deleteSceneProducts());
+        $result &= ($this->deleteProductAttributes() && $this->deleteImages());
         // If there are still entries in product_shop, don't remove completely the product
         if ($this->hasMultishopEntries()) {
             return true;
@@ -1866,19 +1870,6 @@ class ProductCore extends ObjectModel
     {
         return Db::getInstance()->execute(
             'DELETE FROM `'._DB_PREFIX_.'product_sale`
-			WHERE `id_product` = '.(int)$this->id
-        );
-    }
-
-    /**
-    * Delete product in its scenes
-    *
-    * @return array Deletion result
-    */
-    public function deleteSceneProducts()
-    {
-        return Db::getInstance()->execute(
-            'DELETE FROM `'._DB_PREFIX_.'scene_products`
 			WHERE `id_product` = '.(int)$this->id
         );
     }
@@ -3436,7 +3427,7 @@ class ProductCore extends ObjectModel
         return true;
     }
 
-    public static function getAttributesColorList(Array $products, $have_stock = true)
+    public static function getAttributesColorList(array $products, $have_stock = true)
     {
         if (!count($products)) {
             return array();
@@ -3509,7 +3500,8 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Delete product accessories
+     * Delete product accessories.
+     * Wrapper to static method deleteAccessories($product_id).
      *
      * @return mixed Deletion result
      */
@@ -3608,14 +3600,26 @@ class ProductCore extends ObjectModel
 
     /**
      * Link accessories with product
+     * Wrapper to static method changeAccessories($accessories_id, $product_id).
      *
      * @param array $accessories_id Accessories ids
      */
     public function changeAccessories($accessories_id)
     {
+        self::changeAccessoriesForProduct($accessories_id, $this->id);
+    }
+
+    /**
+     * Link accessories with product. No need to inflate a full Product (better performances).
+     *
+     * @param array $accessories_id Accessories ids
+     * @param int The product ID to link accessories on.
+     */
+    public static function changeAccessoriesForProduct($accessories_id, $product_id)
+    {
         foreach ($accessories_id as $id_product_2) {
             Db::getInstance()->insert('accessory', array(
-                'id_product_1' => (int)$this->id,
+                'id_product_1' => (int)$product_id,
                 'id_product_2' => (int)$id_product_2
             ));
         }
@@ -4237,6 +4241,12 @@ class ProductCore extends ObjectModel
 
     public static function getProductProperties($id_lang, $row, Context $context = null)
     {
+        Hook::exec('actionGetProductPropertiesBefore', [
+            'id_lang'   => $id_lang,
+            'product'   => $row,
+            'context'   => $context
+        ]);
+
         if (!$row['id_product']) {
             return false;
         }
@@ -4273,6 +4283,7 @@ class ProductCore extends ObjectModel
 
         // Datas
         $row['category'] = Category::getLinkRewrite((int)$row['id_category_default'], (int)$id_lang);
+        $row['category_name'] = Db::getInstance()->getValue('SELECT name FROM '._DB_PREFIX_.'category_lang WHERE id_shop = '.(int)$context->shop->id.' AND id_lang = '.(int)$id_lang.' AND id_category = '.(int)$row['id_category_default']);
         $row['link'] = $context->link->getProductLink((int)$row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
 
         $row['attribute_price'] = 0;
@@ -4280,11 +4291,22 @@ class ProductCore extends ObjectModel
             $row['attribute_price'] = (float)Combination::getPrice($id_product_attribute);
         }
 
+        if (isset($row['quantity_wanted'])) {
+            // 'quantity_wanted' may very well be zero even if set
+            $quantity = max(1, (int)$row['quantity_wanted']);
+        } else {
+            $quantity = 1;
+        }
+
         $row['price_tax_exc'] = Product::getPriceStatic(
             (int)$row['id_product'],
             false,
             $id_product_attribute,
-            (self::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6)
+            (self::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6),
+            null,
+            false,
+            true,
+            $quantity
         );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
@@ -4293,7 +4315,11 @@ class ProductCore extends ObjectModel
                 (int)$row['id_product'],
                 true,
                 $id_product_attribute,
-                6
+                6,
+                null,
+                false,
+                true,
+                $quantity
             );
             $row['price_without_reduction'] = Product::getPriceStatic(
                 (int)$row['id_product'],
@@ -4302,7 +4328,8 @@ class ProductCore extends ObjectModel
                 2,
                 null,
                 false,
-                false
+                false,
+                $quantity
             );
         } else {
             $row['price'] = Tools::ps_round(
@@ -4310,7 +4337,11 @@ class ProductCore extends ObjectModel
                     (int)$row['id_product'],
                     true,
                     $id_product_attribute,
-                    6
+                    6,
+                    null,
+                    false,
+                    true,
+                    $quantity
                 ),
                 (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION')
             );
@@ -4321,7 +4352,8 @@ class ProductCore extends ObjectModel
                 6,
                 null,
                 false,
-                false
+                false,
+                $quantity
             );
         }
 
@@ -4333,7 +4365,7 @@ class ProductCore extends ObjectModel
             null,
             true,
             true,
-            1,
+            $quantity,
             true,
             null,
             null,
@@ -4384,7 +4416,20 @@ class ProductCore extends ObjectModel
             }
         }
 
+        $attributes = Product::getAttributesParams($row['id_product'], $row['id_product_attribute']);
+
+        foreach ($attributes as $attribute) {
+            $row['attributes'][$attribute['id_attribute_group']] = $attribute;
+        }
+
         $row = Product::getTaxesInformations($row, $context);
+
+        Hook::exec('actionGetProductPropertiesAfter', [
+            'id_lang'   => $id_lang,
+            'product'   => $row,
+            'context'   => $context
+        ]);
+
         self::$producPropertiesCache[$cache_key] = $row;
         return self::$producPropertiesCache[$cache_key];
     }
@@ -5692,6 +5737,21 @@ class ProductCore extends ObjectModel
         return $result;
     }
 
+    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes)
+    {
+        if (!is_array($id_attributes)) {
+            return 0;
+        }
+
+        return Db::getInstance()->getValue('
+        SELECT pac.`id_product_attribute`
+        FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+        WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', $id_attributes).')
+        GROUP BY id_product_attribute
+        HAVING COUNT(id_product) = '.count($id_attributes));
+    }
+
     /**
      * Get the combination url anchor of the product
      *
@@ -6141,5 +6201,50 @@ class ProductCore extends ObjectModel
     {
         return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product p
 		'.Shop::addSqlAssociation('product', 'p').' SET product_shop.pack_stock_type = '.(int)$pack_stock_type.' WHERE p.`id_product` = '.(int)$id_product);
+    }
+
+    /**
+     * Gets a list of IDs from a list of IDs/Refs. The result will avoid duplicates, and checks if given IDs/Refs exists in DB.
+     * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
+     *
+     * @return array The IDs list, whithout duplicate and only existing ones.
+     */
+    public static function getExistingIdsFromIdsOrRefs($ids_or_refs)
+    {
+        // separate IDs and Refs
+        $ids = array();
+        $refs = array();
+        $whereStatements = array();
+        foreach ((is_array($ids_or_refs) ? $ids_or_refs : array($ids_or_refs)) as $id_or_ref) {
+            if (is_numeric($id_or_ref)) {
+                $ids[] = (int)$id_or_ref;
+            } elseif (is_string($id_or_ref)) {
+                $refs[] = '\''.pSQL($id_or_ref).'\'';
+            }
+        }
+
+        // construct WHERE statement with OR combination
+        if (count($ids) > 0) {
+            $whereStatements[] = ' p.id_product IN ('.implode(',', $ids).') ';
+        }
+        if (count($refs) > 0) {
+            $whereStatements[] = ' p.reference IN ('.implode(',', $refs).') ';
+        }
+        if (!count($whereStatements)) {
+            return false;
+        }
+
+        $results = Db::getInstance()->executeS('
+		SELECT DISTINCT `id_product`
+		FROM `'._DB_PREFIX_.'product` p
+		WHERE '. implode(' OR ', $whereStatements));
+
+        // simplify array since there is 1 useless dimension.
+        // FIXME : find a better way to avoid this, directly in SQL?
+        foreach ($results as $k => $v) {
+            $results[$k] = (int)$v['id_product'];
+        }
+
+        return $results;
     }
 }

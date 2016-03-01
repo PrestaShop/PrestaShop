@@ -26,17 +26,17 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination;
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * Admin controller for warehouse
+ * Admin controller for warehouse on the /product/form page
  */
 class WarehouseController extends FrameworkBundleAdminController
 {
     /**
-     * refreshProductWarehouseCombinationFormAction
+     * Refresh the WarehouseCombination data for the given product ID
      *
      * @param int $idProduct
      * @return string|Response
@@ -48,7 +48,7 @@ class WarehouseController extends FrameworkBundleAdminController
         $response = new Response();
 
         //get product and all warehouses
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
         if (!is_object($product) || empty($product->id)) {
             $response->setStatusCode(400);
             return $response;
@@ -56,7 +56,7 @@ class WarehouseController extends FrameworkBundleAdminController
         $warehouses = $warehouseAdapter->getWarehouses();
 
         $modelMapper = new ProductAdminModelAdapter(
-            $idProduct,
+            $product,
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),
@@ -64,19 +64,19 @@ class WarehouseController extends FrameworkBundleAdminController
             $this->container->get('prestashop.adapter.data_provider.supplier'),
             $this->container->get('prestashop.adapter.data_provider.warehouse'),
             $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack')
+            $this->container->get('prestashop.adapter.data_provider.pack'),
+            $this->container->get('prestashop.adapter.shop.context')
         );
-        $allFormData = $modelMapper->getFormDatas();
+        $allFormData = $modelMapper->getFormData();
 
         $form = $this->createFormBuilder($allFormData);
         $simpleSubForm = $form->create('step4', 'form');
 
         foreach ($warehouses as $warehouse) {
-            $simpleSubForm->add('warehouse_combination_'.$warehouse['id_warehouse'], 'collection', array(
-                'type' => new ProductWarehouseCombination(
-                    $warehouse['id_warehouse'],
-                    $this->container->get('prestashop.adapter.translator'),
-                    $this->container->get('prestashop.adapter.legacy.context')
+            $simpleSubForm->add('warehouse_combination_'.$warehouse['id_warehouse'], FormType\CollectionType::class, array(
+                'entry_type' => \PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination::class,
+                'entry_options' => array(
+                    'id_warehouse' => $warehouse['id_warehouse'],
                 ),
                 'allow_add' => true,
                 'required' => false,

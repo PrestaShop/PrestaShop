@@ -78,7 +78,7 @@
   <tab id="Performance" name="Производителност"/>
   <tab id="E-mail" name="E-mail"/>
   <tab id="Multistore" name="Multiboutique"/>
-  <tab id="CSV_Import" name="Импортиране на CSV"/>
+  <tab id="CSV_Import" name="Импортиране"/>
   <tab id="DB_Backup" name="Архив на БД"/>
   <tab id="SQL_Manager" name="SQL мениджър"/>
   <tab id="Logs" name="Логове"/>

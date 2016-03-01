@@ -29,7 +29,7 @@ use Symfony\Component\Form\AbstractType;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
- * This subclass contains common functions for PrestaShop needs.
+ * This subclass contains common functions for specific Form types needs.
  */
 abstract class CommonAbstractType extends AbstractType
 {
@@ -55,7 +55,7 @@ abstract class CommonAbstractType extends AbstractType
     {
         $new_list = array();
         foreach ($list as $item) {
-            $new_list[$item[$mapping_value]] = $item[$mapping_name];
+            $new_list[$item[$mapping_name]] = $item[$mapping_value];
         }
         return $new_list;
     }

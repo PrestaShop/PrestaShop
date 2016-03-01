@@ -53,14 +53,6 @@ class AdminPPreferencesControllerCore extends AdminController
                         'required' => false,
                         'type' => 'bool'
                     ),
-                    'PS_COMPARATOR_MAX_ITEM' => array(
-                        'title' => $this->l('Product comparison'),
-                        'hint' => $this->l('Set the maximum number of products that can be selected for comparison. Set to "0" to disable this feature.'),
-                        'validation' => 'isUnsignedId',
-                        'required' => true,
-                        'cast' => 'intval',
-                        'type' => 'text'
-                    ),
                     'PS_NB_DAYS_NEW_PRODUCT' => array(
                         'title' => $this->l('Number of days for which the product is considered \'new\''),
                         'validation' => 'isUnsignedInt',
@@ -104,6 +96,14 @@ class AdminPPreferencesControllerCore extends AdminController
                     'PS_FORCE_FRIENDLY_PRODUCT' => array(
                         'title' => $this->l('Force update of friendly URL'),
                         'hint' => $this->l('When active, friendly URL will be updated on every save.'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'required' => false,
+                        'type' => 'bool'
+                    ),
+                    'PS_PRODUCT_ACTIVATION_DEFAULT' => array(
+                        'title' => $this->l('Default activation state'),
+                        'hint' => $this->l('When active, new products will be activated by default during creation.'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'required' => false,
@@ -238,7 +238,7 @@ class AdminPPreferencesControllerCore extends AdminController
                             'off' => 'onchange="stockManagementActivationAuthorization()"'
                         )
                     ),
-                    'PS_ADVANCED_STOCK_MANAGEMENT' => array(
+                    /*'PS_ADVANCED_STOCK_MANAGEMENT' => array(
                         'title' => $this->l('Enable advanced stock management'),
                         'hint' => $this->l('Allows you to manage physical stock, warehouses and supply orders in a new Stock menu.'),
                         'validation' => 'isBool',
@@ -266,7 +266,7 @@ class AdminPPreferencesControllerCore extends AdminController
                         'type' => 'select',
                         'list' => $warehouse_list,
                         'identifier' => 'id_warehouse'
-                    ),
+                    ),*/
                     'PS_PACK_STOCK_TYPE' => array(
                         'title' =>  $this->l('Default pack stock management'),
                         'type' => 'select',

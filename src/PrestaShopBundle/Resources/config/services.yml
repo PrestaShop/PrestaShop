@@ -1,10 +1,18 @@
 imports:
     - { resource: admin/services.yml }
+    - { resource: admin/services-form.yml }
 
 services:
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
         arguments: ["%database_prefix%"]
+
+    prestashop.csv:
+        class: PrestaShopBundle\Service\Csv
+
+    prestashop.data_provider.modules.recommended:
+        class: PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules
+        arguments: ["@router"]
 
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
@@ -18,12 +26,20 @@ services:
             - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
             - [addSubscriber, ["@prestashop.adapter.legacy.block.helper.subscriber"]]
 
+    # EVENT HANDLER
+    prestashop.handler.log:
+        class: PrestaShopBundle\Service\Log\LogHandler
+        arguments:
+            - "@service_container"
 
     # ADAPTERS (prestashop.adapter.*)
 
     # Legacy context service, transitional
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
+
+    prestashop.adapter.legacy.logger:
+        class: PrestaShop\PrestaShop\Adapter\LegacyLogger
 
     # Legacy context service, transitional
     prestashop.adapter.translator:
@@ -82,6 +98,9 @@ services:
     prestashop.adapter.data_provider.attribute:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
 
+    prestashop.adapter.data_provider.customer:
+        class: PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider
+
     prestashop.adapter.stock_manager:
         class: PrestaShop\PrestaShop\Adapter\StockManager
         decorates: prestashop.core.data_provider.stock_interface
@@ -126,5 +145,10 @@ services:
     prestashop.twig.extension.layout:
         class: PrestaShopBundle\Twig\LayoutExtension
         arguments: ["@prestashop.adapter.legacy.context", "@kernel"]
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.dataFormatter:
+        class: PrestaShopBundle\Twig\DataFormatterExtension
         tags:
             - { name: twig.extension }

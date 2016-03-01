@@ -28,11 +28,9 @@ namespace PrestaShopBundle\Controller\Admin;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PrestaShopBundle\Form\Admin\Product\ProductAttachement;
-use Symfony\Component\Form\FormError;
 
 /**
- * Admin controller for the virtual produc
+ * Admin controller for product attachments (in /product/form page)
  */
 class AttachementProductController extends FrameworkBundleAdminController
 {
@@ -52,16 +50,17 @@ class AttachementProductController extends FrameworkBundleAdminController
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int)$idProduct);
 
         if (!$product || !$request->isXmlHttpRequest()) {
             return $response;
         }
 
-        $form = $this->createForm(new ProductAttachement(
-            $this->container->get('prestashop.adapter.translator'),
-            $this->container->get('prestashop.adapter.legacy.context')
-        ), null, array('csrf_protection' => false));
+        $form = $this->createForm(
+            \PrestaShopBundle\Form\Admin\Product\ProductAttachement::class,
+            null,
+            array('csrf_protection' => false)
+        );
 
         $form->handleRequest($request);
 

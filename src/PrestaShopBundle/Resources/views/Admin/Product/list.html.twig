@@ -1,4 +1,5 @@
-<tbody {% if activate_drag_and_drop %}class="sortable"{% endif %}>
+<tbody {% if activate_drag_and_drop %}class="sortable"{% endif %}
+        last_sql="{{ last_sql_query|escape('html_attr') }}">
     {% for product in products %}
         <tr uniturl="{{ product.unit_action_url|default('#') }}" productid="{{ product.id_product }}">
             <td class="checkbox-column">
@@ -14,7 +15,7 @@
                 <a href="{{ product.url|default('') }}#tab-step1">{{ product.name|default(trans('N/A', {}, 'AdminTab')) }}</a>
             </td>
             <td>
-                <a href="{{ product.url|default('') }}#tab-step1">{{ product.reference|default(trans('N/A', {}, 'AdminTab')) }}</a>
+                <a href="{{ product.url|default('') }}#tab-step6">{{ product.reference|default(trans('N/A', {}, 'AdminTab')) }}</a>
             </td>
             <td>
                 <a href="{{ product.url|default('') }}#tab-step1">{{ product.name_category|default('') }}</a>
@@ -36,9 +37,13 @@
             </td>
             <td>
                 {% if product.active|default(0) == 0 %}
-                    <i class="icon-remove"></i>
+                    <a href="#" onclick="unitProductAction(this, 'activate'); return false;">
+                        <i class="icon-remove list-action-enable action-disabled"></i>
+                    </a>
                 {% else %}
-                    <i class="icon-check"></i>
+                    <a href="#" onclick="unitProductAction(this, 'deactivate'); return false;">
+                        <i class="icon-check list-action-enable action-enabled"></i>
+                    </a>
                 {% endif %}
             </td>
             {% if product.position is defined %}
