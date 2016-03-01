@@ -29,6 +29,8 @@ define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'prestashop/smarty/');
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new SmartyCustom();
+} elseif (_PS_MODE_DEV_) {
+    $smarty = new SmartyDev();
 } else {
     $smarty = new Smarty();
 }
@@ -286,11 +288,7 @@ function smartyRender($params, &$smarty)
         $ui->setTemplate($params['file']);
     }
 
-    return implode('', [
-        '<!-- begin '.$ui->getTemplate().'-->',
-        $ui->render($params),
-        '<!-- end '.$ui->getTemplate().'-->'
-    ]);
+    return $ui->render($params);
 }
 
 function smartyFormField($params, &$smarty)
