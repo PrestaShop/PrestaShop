@@ -11,15 +11,19 @@ use Address;
 use AddressFormat;
 use Carrier;
 use Cart;
+use Configuration;
 use Context;
 use CustomerMessage;
 use HistoryController;
 use Order;
 use OrderReturn;
+use Product;
 use Tools;
 
 class OrderPresenter
 {
+    /* @var CartPresenter */
+    private $cartPresenter;
     /* @var ObjectSerializer */
     private $objectSerializer;
     /* @var PricePresenter */
@@ -29,6 +33,7 @@ class OrderPresenter
 
     public function __construct()
     {
+        $this->cartPresenter = new CartPresenter();
         $this->objectSerializer = new ObjectSerializer();
         $this->pricePresenter = new PricePresenter();
         $this->translator = new Translator(new LegacyContext());
@@ -63,34 +68,22 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getCart(Order $order)
-    {
-        return (new CartPresenter())->present(new Cart($order->id_cart));
-    }
-
-    /**
-     * @param Order $order
-     *
-     * @return array
-     */
     public function getProducts(Order $order)
     {
-        $cartPresenter = $this->getCart($order);
+        $cart = new Cart($order->id_cart);
 
-        $products = $cartPresenter['products'];
+        $orderProducts = $order->getCartProducts();
 
-        $orderProductsDetails = $order->getProductsDetail();
-
-        foreach($products as &$product) {
-            foreach($orderProductsDetails as $orderProduct) {
-                if ($product['id_product'] == $orderProduct['product_id']) {
-                    $product['id_order_detail'] = $orderProduct['id_order_detail'];
-                }
-            }
+        foreach($orderProducts as &$orderProduct) {
+            $orderProduct['name'] = $orderProduct['product_name'];
+            $orderProduct['price'] = $this->pricePresenter->convertAndFormat($orderProduct['product_price']);
+            $orderProduct['quantity'] = $orderProduct['product_quantity'];
+            $orderProduct['total'] = $this->pricePresenter->convertAndFormat($orderProduct['total_price']);
         }
-        OrderReturn::addReturnedQuantity($products, $order->id);
 
-        return $products;
+        $orderProducts = $this->cartPresenter->addCustomizedData($orderProducts, $cart);
+
+        return $orderProducts;
     }
 
     /**
@@ -101,14 +94,50 @@ class OrderPresenter
     public function getAmounts(Order $order)
     {
         $amounts = [];
-        $cartPresenter = $this->getCart($order);
-        $amounts['total'] = $cartPresenter['total'];
-        $amounts['subtotals'] = $cartPresenter['subtotals'];
+
+        if (Configuration::get('PS_TAX_DISPLAY')) {
+            $amounts['subtotals']['tax'] = [
+                'type' => 'tax',
+                'label' => $this->translator->trans('Tax', [], 'Cart'),
+                'amount' => $this->pricePresenter->convertAndFormat(
+                    $order->total_paid_tax_incl - $order->total_paid_tax_excl
+                ),
+            ];
+        }
+
+        $subtotals['products'] = [
+            'type' => 'products',
+            'label' => $this->translator->trans('Products', [], 'Cart'),
+            'amount' =>  $this->pricePresenter->convertAndFormat($order->total_products)
+        ];
+
+        $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
+
+        $subtotals['shipping'] = [
+            'type' => 'shipping',
+            'label' => $this->translator->trans('Shipping', [], 'Cart'),
+            'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
+        ];
+
+        $discount_amount = ($this->includeTaxes()) ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
+        $subtotals['discounts'] = [
+            'type' => 'discount',
+            'label' => $this->translator->trans('Discount', [], 'Cart'),
+            'amount' => $discount_amount != 0 ? $this->pricePresenter->convertAndFormat($discount_amount) : 0,
+        ];
+
+        $amounts['total']['total'] = [
+            'type' => 'total',
+            'label' => $this->translator->trans('Total', [], 'Order'),
+            'amount' => $this->pricePresenter->convertAndFormat($order->total_paid),
+        ];
         $amounts['total']['total_paid'] = [
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', [], 'Order'),
-            'amount' => $this->pricePresenter->convertAndFormat($order->total_paid),
+            'amount' => $this->pricePresenter->convertAndFormat($order->total_paid_real),
         ];
+
+        $amounts['subtotals'] = $subtotals;
 
         return $amounts;
     }
@@ -270,5 +299,10 @@ class OrderPresenter
         }
 
         return '';
+    }
+
+    private function includeTaxes()
+    {
+        return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
     }
 }
