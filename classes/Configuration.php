@@ -61,10 +61,10 @@ class ConfigurationCore extends ObjectModel
     );
 
     /** @var array Configuration cache (kept for backward compat) */
-    protected static $_cache = array();
+    protected static $_cache = null;
 
     /** @var array Configuration cache with optimised key order */
-    protected static $_new_cache = array();
+    protected static $_new_cache = null;
 
     /** @var array Vars types */
     protected static $types = array();
@@ -119,7 +119,7 @@ class ConfigurationCore extends ObjectModel
             return $loaded;
         }
 
-        if (isset(self::$_new_cache) && count(self::$_new_cache)) {
+        if (self::$_new_cache !== null) {
             $loaded = true;
             return $loaded;
         }
@@ -134,8 +134,8 @@ class ConfigurationCore extends ObjectModel
      */
     public static function clearConfigurationCacheForTesting()
     {
-        self::$_cache = array();
-        self::$_new_cache = array();
+        self::$_cache = null;
+        self::$_new_cache = null;
     }
 
     /**
@@ -197,7 +197,7 @@ class ConfigurationCore extends ObjectModel
         }
 
         // If conf if not initialized, try manual query
-        if (self::$_new_cache === array()) {
+        if (self::$_new_cache === null) {
             Configuration::loadConfiguration();
             if (self::$_new_cache === array()) {
                 return Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` WHERE `name` = "'.pSQL($key).'"');
@@ -502,8 +502,8 @@ class ConfigurationCore extends ObjectModel
         DELETE FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'`
         WHERE `name` = "'.pSQL($key).'"');
 
-        self::$_cache[self::$definition['table']] = array();
-        self::$_new_cache = array();
+        self::$_cache = null;
+        self::$_new_cache = null;
 
         return ($result && $result2);
     }
@@ -533,8 +533,8 @@ class ConfigurationCore extends ObjectModel
         DELETE FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang`
         WHERE `'.bqSQL(self::$definition['primary']).'` = '.(int)$id);
 
-        self::$_cache[self::$definition['table']] = array();
-        self::$_new_cache = array();
+        self::$_cache = null;
+        self::$_new_cache = null;
     }
 
     /**
