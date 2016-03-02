@@ -175,13 +175,6 @@ class AdminPPreferencesControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'text'
                     ),
-                    'PS_DISPLAY_JQZOOM' => array(
-                        'title' => $this->l('Enable JqZoom instead of Fancybox on the product page'),
-                        'validation' => 'isBool',
-                        'cast' => 'intval',
-                        'required' => false,
-                        'type' => 'bool'
-                    ),
                     'PS_DISP_UNAVAILABLE_ATTR' => array(
                         'title' => $this->l('Display unavailable product attributes on the product page'),
                         'validation' => 'isBool',
