@@ -177,8 +177,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // Assign to the template the id of the virtual product. "0" if the product is not downloadable.
             $this->context->smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)$this->product->id));
 
-            $this->context->smarty->assign('customizationFormTarget', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
-
             $priceDisplay = Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer);
             $productPrice = 0;
             $productPriceWithoutReduction = 0;
@@ -200,7 +198,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 }
                 $this->pictureUpload();
                 $this->textRecord();
-                $this->formTargetFormat();
             } elseif (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture'))) {
                 $this->errors[] = $this->l('An error occurred while deleting the selected picture.');
             }
@@ -709,17 +706,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->context->cart->deleteCustomizationToProduct((int)$this->product->id, $indexes[$field_name]);
             }
         }
-    }
-
-    protected function formTargetFormat()
-    {
-        $customization_form_target = Tools::safeOutput(urldecode($_SERVER['REQUEST_URI']));
-        foreach ($_GET as $field => $value) {
-            if (strncmp($field, 'group_', 6) == 0) {
-                $customization_form_target = preg_replace('/&group_([[:digit:]]+)=([[:digit:]]+)/', '', $customization_form_target);
-            }
-        }
-        $this->context->smarty->assign('customizationFormTarget', $customization_form_target);
     }
 
     protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
