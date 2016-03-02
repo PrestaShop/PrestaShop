@@ -457,27 +457,20 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
-        $customer = $this->getTemplateVarCustomer();
-        $urls = $this->getTemplateVarUrls();
-
-        /**
-         * Template vars assignation
-         */
-        $this->context->smarty->assign([
+        $templateVars = [
             'currency' => $this->getTemplateVarCurrency(),
-            'customer' => $customer,
+            'customer' => $this->getTemplateVarCustomer(),
             'language' => $this->objectSerializer->toArray($this->context->language),
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
-            'urls' => $urls,
+            'urls' => $this->getTemplateVarUrls(),
             'feature_active' => $this->getTemplateVarFeatureActive(),
             'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
             'breadcrumb' => $this->getBreadcrumb(),
-        ]);
-        Media::addJsDef(['prestashop' => [
-            'customer' => $customer,
-            'urls' => $urls,
-        ]]);
+        ];
+
+        $this->context->smarty->assign($templateVars);
+        Media::addJsDef(['prestashop' => $templateVars]);
     }
 
     /**
