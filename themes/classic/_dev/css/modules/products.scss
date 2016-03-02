@@ -1,5 +1,6 @@
 .product-price {
   color: $brand-primary;
+  display: inline-block;
 }
 #product-description-short {
   color: $gray-darker;
@@ -20,10 +21,11 @@
 }
 .input-radio {
   position: absolute;
-  top: em(5px);
-  left: em(7px);
+  top: 0;
   cursor: pointer;
   opacity: 0;
+  width: 100%;
+  height: 100%;
 }
 .radio-label {
   @include box-shadow;
@@ -79,18 +81,35 @@
   }
 }
 
+.product-prices{
+  margin-top: $medium-space;
+}
+
 .product-discount {
+  display: inline-block;
   .regular-price {
     font-size: em(20px);
-    font-weight: 700;
+    text-decoration: line-through;
+    color: $gray;
+    font-weight: normal;
+    margin-right: $small-space;
+  }
+}
+
+.has-discount{
+  &.product-price{
+    color: $brand-secondary;
   }
   .discount-percentage {
     background: $brand-secondary;
     color: white;
-    font-weight: 700;
-    padding: em(5px);
+    font-weight: 600;
+    padding: em(5px) $small-space;
+    font-size: $font-size-base;
+    margin-left: $small-space;
   }
 }
+
 .tabs {
   @include box-shadow;
   background: white;
@@ -124,7 +143,7 @@
     background: white;
   }
   .layer {
-    display: flex;
+    @include display(flex);
     align-items: center;
     justify-content: center;
     width: 452px;
@@ -153,7 +172,7 @@
     border: none;
     padding: 0;
     .modal-body {
-      display: flex;
+      @include display(flex);
       margin-left: -30%;
       .product-cover-modal {
         background: white;
@@ -243,7 +262,9 @@
   }
 }
 .product-image {
-  @include box-shadow;
+  img{
+    @include box-shadow;
+  }
 }
 .product-images {
   > li.thumb-container {
@@ -282,11 +303,11 @@
   margin-top: $medium-space;
   margin-left: em(5px);
   > dl.data-sheet {
-    display: flex;
-    flex-wrap: wrap;
+    @include display(flex);
+    @include flex-wrap(wrap);
     dt.name,
     dd.value {
-      flex: 0 0 40%;
+      @include flex(0 0 40%);
       font-weight: normal;
       background: $gray-light;
       padding: $small-space;
@@ -301,6 +322,9 @@
 .product-variants {
   > .product-variants-item {
     margin-top: $medium-space;
+    ul li{
+      margin-right: $small-space;
+    }
   }
 }
 .product-labels {
@@ -371,10 +395,10 @@ li.product-label {
 .product-pack {
   margin-top: $extra-large-space;
   .pack-product-container {
-    display: flex;
+    @include display(flex);
     justify-content: space-around;
     .pack-product-name {
-      flex: 0 0 50%;
+      @include flex(0 0 50%);
       font-size: em(14px);
       color: $gray;
     }
@@ -385,7 +409,7 @@ li.product-label {
     .pack-product-price,
     .pack-product-quantity,
     .pack-product-name {
-      display: flex;
+      @include display(flex);
       align-items: center;
     }
   }

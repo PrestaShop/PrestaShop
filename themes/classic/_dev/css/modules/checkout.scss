@@ -69,7 +69,7 @@ body#checkout {
     &.-reachable.-complete {
       h1 {
         .done {
-          display: block;
+          display: inline-block;
         }
         .step-number {
           display: none;
@@ -123,14 +123,14 @@ body#checkout {
       padding: em(10px);
     }
     .address-selector {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
+      @include display(flex);
+      @include justify-content(space-between);
+      @include align-items(flex-start);
+      @include flex-wrap(wrap);
     }
     .address-item {
       background: $gray-lighter;
-      flex: 0 0 49%;
+      @include flex(0 0 49%);
       margin-bottom: $small-space;
       &.selected {
         background: white;
@@ -183,7 +183,7 @@ body#checkout {
       }
     }
     .delivery-option-2 {
-      display: flex;
+      @include display(flex);
       align-items: center;
       justify-content: space-between;
     }
@@ -240,6 +240,7 @@ body#checkout {
     }
   }
   .shipping .label,
+  .discount .label,
   .products .label {
     color: $gray-darker;
     padding: 0;
@@ -250,23 +251,6 @@ body#checkout {
     font-size: em(14px);
     margin-left: em(46px);
     margin-top: em(20px);
-    dl {
-      display: flex;
-      flex-wrap: wrap;
-      dt {
-        font-weight: normal;
-      }
-      dt,
-      dd {
-        flex: 0 0 45%;
-        background: $gray-light;
-        padding: em(10px);
-        margin: em(2px);
-        &:nth-of-type(even) {
-          background: $gray-lighter;
-        }
-      }
-    }
   }
   .condition-label {
     margin-left: em(40px);
@@ -290,6 +274,10 @@ body#checkout {
     .info {
       font-size: em(18px);
     }
+  }
+  .modal-content{
+    padding: $medium-space;
+    background-color: $gray-light;
   }
   #cart-summary-product-list {
     font-size: em(14px);
@@ -315,15 +303,39 @@ body#checkout {
     padding: $small-space;
   }
 }
+#order-details {
+  padding-left: $large-space;
+  > .card-title {
+    margin-bottom: $large-space;
+  }
+  ul {
+    margin-bottom: $medium-space;
+    li {
+      margin-bottom: $small-space;
+    }
+  }
+}
 #order-items {
   border-right: $gray-light 1px solid;
-  hr{
+  padding: 0 $extra-large-space 0 $large-space;
+  hr {
     border-top-color: $gray-darker;
   }
-  table{
+  table {
     width: 100%;
-    tr td:last-child{
-      text-align: right;
+    tr {
+      height: $large-space;
+      td {
+        &:last-child {
+          text-align: right;
+        }
+      }
     }
+  }
+}
+#order-confirmation{
+  #registration-form{
+    width: 50%;
+    margin: 0 auto;
   }
 }

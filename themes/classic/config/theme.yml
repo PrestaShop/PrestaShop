@@ -39,8 +39,7 @@ global_settings:
         - blockcart
       displayTop:
         - blocktopmenu
-        - blocksearch:
-          - pagenotfound
+        - blocksearch
       displayHome:
         - homeslider
         - homefeatured
@@ -62,6 +61,8 @@ global_settings:
         - socialsharing
       displayReassurance:
         - blockreassurance
+      displayOrderConfirmation2:
+        - homefeatured
 
   image_types:
     cart_default:

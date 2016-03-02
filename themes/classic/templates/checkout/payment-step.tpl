@@ -35,7 +35,7 @@
         {if $option.additionalInformation}
           <div
             id="{$option.id}-additional-information"
-            class="js-additional-information additional-information{if $option.id != $selected_payment_option} ps-hidden {/if}"
+            class="js-additional-information definition-list additional-information{if $option.id != $selected_payment_option} ps-hidden {/if}"
           >
             {$option.additionalInformation nofilter}
           </div>
@@ -86,7 +86,7 @@
               </span>
             </div>
             <div class="condition-label">
-              <label for="conditions_to_approve[{$condition_name}]">
+              <label class="js-terms" for="conditions_to_approve[{$condition_name}]">
                 {$condition nofilter}
               </label>
             </div>
@@ -106,6 +106,12 @@
       {if $selected_payment_option and $all_conditions_approved}
         <label for="pay-with-{$selected_payment_option}">{l s='Order with an obligation to pay'}</label>
       {/if}
+    </div>
+  </div>
+  <div class="modal fade" id="modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+      </div>
     </div>
   </div>
 {/block}

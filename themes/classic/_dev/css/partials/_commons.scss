@@ -251,3 +251,23 @@ label {
     }
   }
 }
+
+.definition-list{
+  dl {
+    @include display(flex);
+    @include flex-wrap(wrap);
+    dt {
+      font-weight: normal;
+    }
+    dt,
+    dd {
+      @include flex(0 0 45%);
+      background: $gray-light;
+      padding: em(10px);
+      margin: em(2px);
+      &:nth-of-type(even) {
+        background: $gray-lighter;
+      }
+    }
+  }
+}

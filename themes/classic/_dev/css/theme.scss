@@ -31,9 +31,9 @@
     max-height: 50px;
     margin-bottom: 30px;
     .right-nav {
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: flex-end;
+      @include display(flex);
+      @include flex-wrap(nowrap);
+      @include justify-content(flex-end);
     }
     .login {
       color: $gray-darker;
@@ -200,7 +200,7 @@
   #header .header-nav {
     max-height: none;
     .right-nav {
-      flex-direction: column;
+      @include flex-direction(column);
     }
     .user-info {
       text-align: left;
