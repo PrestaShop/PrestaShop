@@ -584,21 +584,24 @@ class CategoryCore extends ObjectModel
 				'.($sql_limit != '' ? $sql_limit : '')
             );
 
-            $categories = array();
-            $buff = array();
-
             if (!isset($root_category)) {
                 $root_category = Category::getRootCategory()->id;
             }
 
-            foreach ($result as $row) {
-                $current = &$buff[$row['id_category']];
-                $current = $row;
+            $categories = array();
 
+            foreach ($result as $row) {
                 if ($row['id_category'] == $root_category) {
-                    $categories[$row['id_category']] = &$current;
+                    foreach ($row as $index => $value) {
+                        $categories[$row['id_category']][$index] = $value;
+                    }
                 } else {
-                    $buff[$row['id_parent']]['children'][$row['id_category']] = &$current;
+                    if (!isset($categories[$row['id_parent']])) {
+                        $categories[$row['id_parent']] = array(
+                            'children' => array()
+                        );
+                    }
+                    $categories[$row['id_parent']]['children'][$row['id_category']] = $row;
                 }
             }
 
