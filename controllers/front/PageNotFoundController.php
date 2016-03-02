@@ -30,6 +30,11 @@ class PageNotFoundControllerCore extends FrontController
     public $page_name = 'pagenotfound';
     public $ssl = true;
 
+    private function endsWithImageExtension($string)
+    {
+        return preg_match('/\.(gif|jpe?g|png|ico)$/i', $string);
+    }
+
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
@@ -38,15 +43,28 @@ class PageNotFoundControllerCore extends FrontController
     {
         header('HTTP/1.1 404 Not Found');
         header('Status: 404 Not Found');
-
-        if (preg_match('/\.(gif|jpe?g|png|ico)$/i', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))) {
+        if ($this->endsWithImageExtension(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))) {
             $this->context->cookie->disallowWriting();
-            if (!isset($_SERVER['REDIRECT_URL'])) {
-                $_SERVER['REDIRECT_URL'] = '';
-                if (preg_match('@^'.__PS_BASE_URI__.'([0-9]+)\-([_a-zA-Z0-9-]+)(/[_a-zA-Z0-9-]+)?\.jpg$@', $_SERVER['REQUEST_URI'], $matches)) {
-                    $_SERVER['REDIRECT_URL'] = __PS_BASE_URI__.'p/'.Image::getImgFolderStatic($matches[0]).'/'.$matches[0].'-'.$matches[1].'.jpg';
-                }
+
+            if (
+                !isset($_SERVER['REDIRECT_URL']) ||
+                !$this->endsWithImageExtension($_SERVER['REDIRECT_URL'])
+            ) {
+                // In most cases, the webserver is apache and the
+                // rewritten image URL that we need to look at is inside
+                // REDIRECT_URL.
+                //
+                // However, apache + php-fpm and probably other servers
+                // will use REQUEST_URI.
+                $_SERVER['REDIRECT_URL'] = $_SERVER['REQUEST_URI'];
             }
+            if (preg_match('#'.__PS_BASE_URI__.'(\d+)-([\w-]+)/[^/]+\.jpg$#', $_SERVER['REDIRECT_URL'], $matches)) {
+                // Sometimes (when URL rewriting is on)
+                // we don't have access to the original image path,
+                // so we need to reverse-engineer it.
+                $_SERVER['REDIRECT_URL'] = '/p/'.Image::getImgFolderStatic($matches[1]).$matches[1].'-'.$matches[2].'.jpg';
+            }
+
             if (preg_match('#/p[0-9/]*/([0-9]+)\-([_a-zA-Z]*)\.(png|jpe?g|gif)$#', $_SERVER['REDIRECT_URL'], $matches)) {
                 // Backward compatibility since we suffixed the template image with _default
                 if (Tools::strtolower(substr($matches[2], -8)) != '_default') {
@@ -60,12 +78,22 @@ class PageNotFoundControllerCore extends FrontController
                         $file = $matches[1];
                         $ext = '.'.$matches[3];
 
-                        if (file_exists($root.$folder.$file.$ext)) {
-                            if (ImageManager::resize($root.$folder.$file.$ext, $root.$folder.$file.'-'.$matches[2].$ext, (int)$image_type['width'], (int)$image_type['height'])) {
+                        $source_image_path = $root.$folder.$file.$ext;
+                        $resized_image_path = $root.$folder.$file.'-'.$matches[2].$ext;
+
+                        if (file_exists($source_image_path)) {
+                            $successfully_resized = ImageManager::resize(
+                                $source_image_path,
+                                $resized_image_path,
+                                (int)$image_type['width'],
+                                (int)$image_type['height']
+                            );
+
+                            if ($successfully_resized) {
                                 header('HTTP/1.1 200 Found');
                                 header('Status: 200 Found');
                                 header('Content-Type: image/jpg');
-                                readfile($root.$folder.$file.'-'.$matches[2].$ext);
+                                readfile($resized_image_path);
                                 exit;
                             }
                         }
