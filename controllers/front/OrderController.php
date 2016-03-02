@@ -64,7 +64,7 @@ class OrderControllerCore extends FrontController
         $deliveryOptionsFinder = new DeliveryOptionsFinder(
             $this->context,
             $this->getTranslator(),
-            $this->objectSerializer,
+            $this->objectPresenter,
             new PricePresenter
         );
 

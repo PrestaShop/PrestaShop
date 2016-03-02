@@ -91,7 +91,7 @@ class CmsControllerCore extends FrontController
 
         if ($this->assignCase == 1) {
             $this->context->smarty->assign(array(
-                'cms' => $this->objectSerializer->toArray($this->cms),
+                'cms' => $this->objectPresenter->present($this->cms),
             ));
 
             if ($this->cms->indexation == 0) {
@@ -161,7 +161,7 @@ class CmsControllerCore extends FrontController
     {
         $categoryCms = [];
 
-        $categoryCms['cms_category'] = $this->objectSerializer->toArray($this->cms_category);
+        $categoryCms['cms_category'] = $this->objectPresenter->present($this->cms_category);
         $categoryCms['sub_categories'] = [];
         $categoryCms['cms_pages'] = [];
 

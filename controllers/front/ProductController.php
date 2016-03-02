@@ -774,7 +774,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function getTemplateVarProduct()
     {
-        $product = $this->objectSerializer->toArray($this->product);
+        $product = $this->objectPresenter->present($this->product);
         $product['id_product'] = (int)$this->product->id;
         $product['out_of_stock'] = (int)$this->product->out_of_stock;
         $product['new'] = (int)$this->product->new;

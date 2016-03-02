@@ -27,7 +27,7 @@
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
-use PrestaShop\PrestaShop\Adapter\ObjectSerializer;
+use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 
 class FrontControllerCore extends Controller
@@ -139,7 +139,7 @@ class FrontControllerCore extends Controller
     /**
      * @var object ObjectSerializer
      */
-    public $objectSerializer;
+    public $objectPresenter;
 
     /**
      * @var object CartPresenter
@@ -171,8 +171,8 @@ class FrontControllerCore extends Controller
             $useSSL = $this->ssl;
         }
 
-        $this->objectSerializer = new ObjectSerializer();
-        $this->cart_presenter = new CartPresenter;
+        $this->objectPresenter = new ObjectPresenter();
+        $this->cart_presenter  = new CartPresenter;
     }
 
     /**
@@ -460,7 +460,7 @@ class FrontControllerCore extends Controller
         $templateVars = [
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
-            'language' => $this->objectSerializer->toArray($this->context->language),
+            'language' => $this->objectPresenter->present($this->context->language),
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
             'urls' => $this->getTemplateVarUrls(),
@@ -1330,9 +1330,9 @@ class FrontControllerCore extends Controller
     public function getTemplateVarCustomer($customer = null)
     {
         if (Validate::isLoadedObject($customer)) {
-            $cust = $this->objectSerializer->toArray($customer);
+            $cust = $this->objectPresenter->present($customer);
         } else {
-            $cust = $this->objectSerializer->toArray($this->context->customer);
+            $cust = $this->objectPresenter->present($this->context->customer);
         }
 
         unset($cust['secure_key']);
@@ -1343,10 +1343,10 @@ class FrontControllerCore extends Controller
 
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 
-        $cust['gender'] = $this->objectSerializer->toArray(new Gender($cust['id_gender']));
+        $cust['gender'] = $this->objectPresenter->present(new Gender($cust['id_gender']));
         unset($cust['id_gender']);
 
-        $cust['risk'] = $this->objectSerializer->toArray(new Risk($cust['id_risk']));
+        $cust['risk'] = $this->objectPresenter->present(new Risk($cust['id_risk']));
         unset($cust['id_risk']);
 
         $addresses = $this->context->customer->getSimpleAddresses();
