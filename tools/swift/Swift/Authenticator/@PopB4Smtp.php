@@ -20,7 +20,7 @@ Swift_ClassLoader::load("Swift_LogContainer");
  */
 class Swift_Authenticator_PopB4Smtp implements Swift_Authenticator
 {
-  protected $connection = null;
+    protected $connection = null;
   /**
    * Constructor
    * @param mixed Swift_Authenticator_PopB4Smtp_Pop3Connection or string FQDN of POP3 server
@@ -29,12 +29,12 @@ class Swift_Authenticator_PopB4Smtp implements Swift_Authenticator
    */
   public function __construct($conn=null, $port=110, $encryption=0)
   {
-    if (is_object($conn)) $this->connection = $conn;
-    else
-    {
-      Swift_ClassLoader::load("Swift_Authenticator_PopB4Smtp_Pop3Connection");
-      $this->connection = new Swift_Authenticator_PopB4Smtp_Pop3Connection($conn, $port, $encryption);
-    }
+      if (is_object($conn)) {
+          $this->connection = $conn;
+      } else {
+          Swift_ClassLoader::load("Swift_Authenticator_PopB4Smtp_Pop3Connection");
+          $this->connection = new Swift_Authenticator_PopB4Smtp_Pop3Connection($conn, $port, $encryption);
+      }
   }
   /**
    * Try to authenticate using the username and password
@@ -44,36 +44,34 @@ class Swift_Authenticator_PopB4Smtp implements Swift_Authenticator
    * @param Swift The instance of Swift this authenticator is used in
    * @return boolean
    */
-  public function isAuthenticated($user, $pass, Swift $swift)
+  public function isAuthenticated($user, $pass, SwiftPs $swift)
   {
-    $log = Swift_LogContainer::getLog();
-    if ($log->hasLevel(Swift_Log::LOG_EVERYTHING))
-    {
-      $log->add("Trying POP3 Before SMTP authentication.  Disconnecting from SMTP first.");
-    }
-    $swift->disconnect();
-    try {
-      $this->connection->start();
-      $this->connection->assertOk($this->connection->read());
-      $this->connection->write("USER " . $user);
-      $this->connection->assertOk($this->connection->read());
-      $this->connection->write("PASS " . $pass);
-      $this->connection->assertOk($this->connection->read());
-      $this->connection->write("QUIT");
-      $this->connection->assertOk($this->connection->read());
-      $this->connection->stop();
-    } catch (Swift_ConnectionException $e) {
-      if ($log->hasLevel(Swift_Log::LOG_ERRORS))
-      {
-        $log->add("POP3 authentication failed.");
+      $log = Swift_LogContainer::getLog();
+      if ($log->hasLevel(Swift_Log::LOG_EVERYTHING)) {
+          $log->add("Trying POP3 Before SMTP authentication.  Disconnecting from SMTP first.");
       }
-      return false;
-    }
-    $options = $swift->getOptions();
-    $swift->setOptions($options | Swift::NO_POST_CONNECT);
-    $swift->connect();
-    $swift->setOptions($options);
-    return true;
+      $swift->disconnect();
+      try {
+          $this->connection->start();
+          $this->connection->assertOk($this->connection->read());
+          $this->connection->write("USER " . $user);
+          $this->connection->assertOk($this->connection->read());
+          $this->connection->write("PASS " . $pass);
+          $this->connection->assertOk($this->connection->read());
+          $this->connection->write("QUIT");
+          $this->connection->assertOk($this->connection->read());
+          $this->connection->stop();
+      } catch (Swift_ConnectionException $e) {
+          if ($log->hasLevel(Swift_Log::LOG_ERRORS)) {
+              $log->add("POP3 authentication failed.");
+          }
+          return false;
+      }
+      $options = $swift->getOptions();
+      $swift->setOptions($options | Swift::NO_POST_CONNECT);
+      $swift->connect();
+      $swift->setOptions($options);
+      return true;
   }
   /**
    * Return the name of the AUTH extension this is for
@@ -81,6 +79,6 @@ class Swift_Authenticator_PopB4Smtp implements Swift_Authenticator
    */
   public function getAuthExtensionName()
   {
-    return "*PopB4Smtp";
+      return "*PopB4Smtp";
   }
 }
