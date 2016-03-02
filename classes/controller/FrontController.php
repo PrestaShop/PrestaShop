@@ -261,7 +261,6 @@ class FrontControllerCore extends Controller
 
         // If account created with the 2 steps register process, remove 'account_created' from cookie
         if (isset($this->context->cookie->account_created)) {
-            $this->context->smarty->assign('account_created', 1);
             unset($this->context->cookie->account_created);
         }
 
@@ -400,10 +399,6 @@ class FrontControllerCore extends Controller
 
         $this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
-        /* Breadcrumb */
-        $navigation_pipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
-        $this->context->smarty->assign('navigationPipe', $navigation_pipe);
-
         // Automatically redirect to the canonical URL if needed
         if (!empty($this->php_self) && !Tools::getValue('ajax')) {
             $this->canonicalRedirection($this->context->link->getPageLink($this->php_self, $this->ssl, $this->context->language->id));
@@ -426,40 +421,6 @@ class FrontControllerCore extends Controller
         foreach ($languages as $lang) {
             $meta_language[] = $lang['iso_code'];
         }
-
-        /* StarterTheme: Legacy - Should we remove old smarty vars */
-        $this->context->smarty->assign(array(
-            // Useful for layout.tpl
-            'mobile_device'       => $this->context->getMobileDevice(),
-            'link'                => $link,
-            'cart'                => $cart,
-            'cookie'              => $this->context->cookie,
-            'hide_left_column'    => !$this->display_column_left,
-            'hide_right_column'   => !$this->display_column_right,
-            'base_dir'            => _PS_BASE_URL_.__PS_BASE_URI__,
-            'base_dir_ssl'        => $protocol_link.Tools::getShopDomainSsl().__PS_BASE_URI__,
-            'force_ssl'           => Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'),
-            'content_dir'         => $protocol_content.Tools::getHttpHost().__PS_BASE_URI__,
-            'base_uri'            => $protocol_content.Tools::getHttpHost().__PS_BASE_URI__.(!Configuration::get('PS_REWRITING_SETTINGS') ? 'index.php' : ''),
-            'tpl_dir'             => _PS_THEME_DIR_,
-            'tpl_uri'             => _THEME_DIR_,
-            'modules_dir'         => _MODULE_DIR_,
-            'mail_dir'            => _MAIL_DIR_,
-            'language_code'       => $this->context->language->language_code ? $this->context->language->language_code : $this->context->language->iso_code, // done
-            'come_from'           => Tools::getHttpHost(true, true).Tools::htmlentitiesUTF8(str_replace(array('\'', '\\'), '', urldecode($_SERVER['REQUEST_URI']))),
-            'cart_qties'          => (int)$cart->nbProducts(),
-            'priceDisplay'        => Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer),
-            'add_prod_display'    => (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-            'roundMode'           => (int)Configuration::get('PS_PRICE_ROUND_MODE'),
-            'use_taxes'           => (int)Configuration::get('PS_TAX'),
-            'show_taxes'          => (int)(Configuration::get('PS_TAX_DISPLAY') == 1 && (int)Configuration::get('PS_TAX')),
-            'display_tax_label'   => (bool)$display_tax_label,
-            'vat_management'      => (int)Configuration::get('VATNUMBER_MANAGEMENT'),
-            'PS_CATALOG_MODE'     => (bool)Configuration::get('PS_CATALOG_MODE') || (Group::isFeatureActive() && !(bool)Group::getCurrent()->show_prices),
-            'b2b_enable'          => (bool)Configuration::get('PS_B2B_ENABLE'),
-            'request'             => $link->getPaginationLink(false, false, false, true),
-            'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
-        ));
 
         /**
          * These shortcuts are DEPRECATED as of version 1.5.0.1
@@ -515,7 +476,6 @@ class FrontControllerCore extends Controller
         ]);
         Media::addJsDef(['prestashop' => [
             'customer' => $customer,
-            'cart' => ['id_address_delivery' => 1, 'id_address_invoice' => 1, ], // StarterTheme: Set proposer ids
             'urls' => $urls,
         ]]);
     }
@@ -536,8 +496,13 @@ class FrontControllerCore extends Controller
         $this->context->smarty->assign(array(
             'HOOK_HEADER'       => Hook::exec('displayHeader'),
             'HOOK_TOP'          => Hook::exec('displayTop'),
-            'HOOK_LEFT_COLUMN'  => ($this->display_column_left  ? Hook::exec('displayLeftColumn') : ''),
-            'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
+        ));
+    }
+
+    public function initFooter()
+    {
+        $this->context->smarty->assign(array(
+            'HOOK_FOOTER'       => Hook::exec('displayFooter'),
         ));
     }
 
@@ -638,7 +603,7 @@ class FrontControllerCore extends Controller
         Tools::safePostVars();
 
         // assign css_files and js_files at the very last time
-        if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache')) {
+        if (is_writable(_PS_THEME_DIR_.'cache')) {
             // CSS compressor management
             if (Configuration::get('PS_CSS_THEME_CACHE')) {
                 $this->css_files = Media::cccCss($this->css_files);
@@ -655,8 +620,6 @@ class FrontControllerCore extends Controller
             'js_files'       => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
             'js_defer'       => (bool)Configuration::get('PS_JS_DEFER'),
             'notifications'  => $this->prepareNotifications(),
-            'display_header' => $this->display_header,
-            'display_footer' => $this->display_footer,
         ));
 
         $this->smartyOutputContent($this->template);
@@ -859,6 +822,12 @@ class FrontControllerCore extends Controller
             _THEME_CSS_DIR_ . 'custom.css',
         ]);
 
+        if ($this->context->language->is_rtl) {
+            $this->addCSS([
+                _THEME_CSS_DIR_.'rtl.css',
+            ]);
+        }
+
         $this->addJS([
             _THEMES_DIR_.'core.js',
             _THEME_JS_DIR_.'theme.js',
@@ -882,35 +851,11 @@ class FrontControllerCore extends Controller
 
         // Hooks are voluntary out the initialize array (need those variables already assigned)
         $this->context->smarty->assign(array(
+            'link'                  => $this->context->link,
             'time'                  => time(),
             'static_token'          => Tools::getToken(false),
             'token'                 => Tools::getToken(),
-            'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
         ));
-    }
-
-    /**
-     * Initializes page footer variables
-     */
-    public function initFooter()
-    {
-        $this->context->smarty->assign(array(
-            'HOOK_FOOTER'            => Hook::exec('displayFooter'),
-            'conditions'             => Configuration::get('PS_CONDITIONS'),
-            'id_cgv'                 => Configuration::get('PS_CONDITIONS_CMS_ID'),
-            'PS_SHOP_NAME'           => Configuration::get('PS_SHOP_NAME'),
-            'PS_ALLOW_MOBILE_DEVICE' => isset($_SERVER['HTTP_USER_AGENT']) && (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE') && @filemtime(_PS_THEME_MOBILE_DIR_)
-        ));
-
-        /**
-         * RTL support
-         * rtl.css overrides theme css files for RTL
-         * iso_code.css overrides default font for every language (optional)
-         */
-        if ($this->context->language->is_rtl) {
-            $this->addCSS(_THEME_CSS_DIR_.'rtl.css');
-            $this->addCSS(_THEME_CSS_DIR_.$this->context->language->iso_code.'.css');
-        }
     }
 
     /**
