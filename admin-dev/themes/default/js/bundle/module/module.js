@@ -239,7 +239,7 @@ var AdminModule = function () {
       });
 
       // Change the way Dropzone.js lib handle file input trigger
-      $('.dropzone').on('click', ':not(' + this.moduleImportSelectFileManualSelector + ')', function(event, manual_select){
+      $('.dropzone').on('click', ':not(' + this.moduleImportSelectFileManualSelector + ', ' + this.moduleImportSuccessConfigureBtnSelector + ')', function(event, manual_select){
           // if click comes from .module-import-start-select-manual, stop everything
           if (typeof manual_select == "undefined") {
               event.stopPropagation();
@@ -262,6 +262,14 @@ var AdminModule = function () {
           } else {
               $(_this.dropZoneModalSelector).modal('hide');
           }
+      });
+
+      // Fix issue on click configure button
+      $(this.moduleImportSuccessConfigureBtnSelector).on('click', function(event) {
+          event.stopPropagation();
+          event.preventDefault();
+          window.location = $(this).attr('href');
+          return;
       });
 
       // Open failure message details box
