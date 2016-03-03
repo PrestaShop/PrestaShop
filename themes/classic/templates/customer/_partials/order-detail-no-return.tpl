@@ -71,7 +71,7 @@
     </tr>
     <tr>
       <td>{l s='Total'}</td>
-      <td colspan="4" class="text-xs-right">{$order.total.total.amount}</td>
+      <td colspan="4" class="text-xs-right">{$order.total.amount}</td>
     </tr>
   </tfoot>
 </table>

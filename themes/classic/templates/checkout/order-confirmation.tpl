@@ -66,7 +66,7 @@
                 {/if}
                 <tr>
                     <td>{l s='Total'}</td>
-                    <td>{$order.total.total.amount}</td>
+                    <td>{$order.total.amount}</td>
                 </tr>
             </table>
 

@@ -104,9 +104,10 @@ class OrderPresenter
     public function getAmounts(Order $order)
     {
         $amounts = [];
+        $ubtotals = [];
 
         if (Configuration::get('PS_TAX_DISPLAY')) {
-            $amounts['subtotals']['tax'] = [
+            $subtotals['tax'] = [
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', [], 'Cart'),
                 'amount' => $this->pricePresenter->convertAndFormat(
@@ -136,12 +137,12 @@ class OrderPresenter
             'amount' => $discount_amount != 0 ? $this->pricePresenter->convertAndFormat($discount_amount) : 0,
         ];
 
-        $amounts['total']['total'] = [
+        $amounts['total'] = [
             'type' => 'total',
             'label' => $this->translator->trans('Total', [], 'Order'),
             'amount' => $this->pricePresenter->convertAndFormat($order->total_paid),
         ];
-        $amounts['total']['total_paid'] = [
+        $amounts['total_paid'] = [
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', [], 'Order'),
             'amount' => $this->pricePresenter->convertAndFormat($order->total_paid_real),
