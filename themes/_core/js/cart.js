@@ -30,7 +30,7 @@ $(document).ready(() => {
 
       // First perform the action using AJAX
       var actionURL = event.target.href;
-      $.post(actionURL, { ajax: '1'}, null, 'json').then(function () {
+      $.post(actionURL, { ajax: '1'}, null, 'json').then(function (event) {
         // If succesful, refresh cart preview
         prestashop.emit('cart updated', {
             reason: event.target.dataset
@@ -52,7 +52,7 @@ $(document).ready(() => {
 
       // First perform the action using AJAX
       var actionURL = event.target.action;
-      $.post(actionURL, $(this).serialize(), null, 'json').then(function () {
+      $.post(actionURL, $(this).serialize(), null, 'json').then(function (event) {
         // If succesful, refresh cart preview
         prestashop.emit('cart updated', {
             reason: event.target.dataset
