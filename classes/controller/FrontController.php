@@ -1252,12 +1252,13 @@ class FrontControllerCore extends Controller
     public function getTemplateVarUrls()
     {
         $http = Tools::getCurrentUrlProtocolPrefix();
+        $base_url = $this->context->shop->getBaseURL(true, true);
 
         $urls = [
-            'base_url' => $this->context->shop->getBaseURL(true, true),
+            'base_url' => $base_url,
+            'current_url' => $base_url.$_SERVER['REQUEST_URI'],
         ];
 
-        /* StarterTheme: Are these URLs really useful ? */
         $assign_array = array(
             'img_ps_url'    => _PS_IMG_,
             'img_cat_url'   => _THEME_CAT_DIR_,
