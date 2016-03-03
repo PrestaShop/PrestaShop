@@ -4293,9 +4293,9 @@ class ProductCore extends ObjectModel
 
         if (isset($row['quantity_wanted'])) {
             // 'quantity_wanted' may very well be zero even if set
-            $quantity = max(1, (int)$row['quantity_wanted']);
+            $quantity = max((int)$row['minimal_quantity'], (int)$row['quantity_wanted']);
         } else {
-            $quantity = 1;
+            $quantity = (int)$row['minimal_quantity'];
         }
 
         $row['price_tax_exc'] = Product::getPriceStatic(
