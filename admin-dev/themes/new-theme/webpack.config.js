@@ -14,16 +14,6 @@ module.exports = {
     'jwerty/jwerty.js',
     'magnific-popup/dist/jquery.magnific-popup.js',
     'dropzone/dist/dropzone.js',
-    'cldrjs/dist/cldr.js',
-    'cldrjs/dist/cldr/event.js',
-    'cldrjs/dist/cldr/supplemental.js',
-    'globalize/dist/globalize.js',
-    'globalize/dist/globalize/message.js',
-    'globalize/dist/globalize/number.js',
-    'globalize/dist/globalize/plural.js',
-    'globalize/dist/globalize/date.js',
-    'globalize/dist/globalize/currency.js',
-    'globalize/dist/globalize/relative-time.js',
     'typeahead.js/dist/typeahead.jquery.js',
     'typeahead.js/dist/bloodhound.js',
     'moment/moment.js',
@@ -63,12 +53,6 @@ module.exports = {
     }, {
       test: /dropzone\/dist\/dropzone\.js/,
       loader: 'imports?this=>window&module=>null'
-    }, {
-      test: [
-        /cldrjs\/dist\/cldr/,
-        /globalize\/dist\/globalize/
-      ],
-      loader: 'imports?this=>window&exports=>false&module=>false&define=>false'
     }, {
       test: /eonasdan-bootstrap-datetimepicker\/src\/js\/bootstrap-datetimepicker\.js/,
       loader: 'imports?this=>window&exports=>false&define=>false'

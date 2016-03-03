@@ -158,6 +158,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         // @todo remove true in populateDatabase for 1.5.0 RC version
         $result = $this->model_install->installDefaultData($this->session->shop_name, $this->session->shop_country, false, true);
 
+        $this->installCldrDatas();
+
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
@@ -262,8 +264,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         $this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
         $this->session->process_validated = array_merge($this->session->process_validated, array('installFixtures' => true));
 
-        $this->installCldrDatas();
-
         $this->ajaxJsonAnswer(true);
     }
 
@@ -273,6 +273,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
     public function installCldrDatas()
     {
         $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+        $cldrUpdate->init();
 
         //get each defined languages and fetch cldr datas
         $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
