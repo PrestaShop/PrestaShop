@@ -16,7 +16,6 @@ class ProductPresenter
     private $imageRetriever;
     private $link;
     private $pricePresenter;
-    private $productPriceCalculator;
     private $productColorsRetriever;
     private $translator;
 
@@ -30,7 +29,6 @@ class ProductPresenter
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
         $this->pricePresenter = $pricePresenter;
-        $this->productPriceCalculator = new PriceCalculator();
         $this->productColorsRetriever = $productColorsRetriever;
         $this->translator = $translator;
     }
