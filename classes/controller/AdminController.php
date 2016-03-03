@@ -2614,6 +2614,7 @@ class AdminControllerCore extends Controller
             _PS_JS_DIR_.'admin.js?v='._PS_VERSION_, // TODO: SEE IF REMOVABLE
             _PS_JS_DIR_.'cldr.js',
             _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
+            __PS_BASE_URI__.$this->admin_webpath.'/public/bundle.js',
         ));
 
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
