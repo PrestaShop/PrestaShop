@@ -73,12 +73,22 @@ class OrderPresenter
         $cart = new Cart($order->id_cart);
 
         $orderProducts = $order->getCartProducts();
+        $cartProducts = $this->cartPresenter->present($cart);
 
         foreach($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
             $orderProduct['price'] = $this->pricePresenter->convertAndFormat($orderProduct['product_price']);
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
             $orderProduct['total'] = $this->pricePresenter->convertAndFormat($orderProduct['total_price']);
+
+            foreach($cartProducts['products'] as $cartProduct) {
+                if($cartProduct['id_product'] === $orderProduct['product_id']) {
+                    $orderProduct['attributes'] = $cartProduct['attributes'];
+                    $orderProduct['cover'] = $cartProduct['cover'];
+                }
+            }
+
+            OrderReturn::addReturnedQuantity($orderProducts, $order->id);
         }
 
         $orderProducts = $this->cartPresenter->addCustomizedData($orderProducts, $cart);
