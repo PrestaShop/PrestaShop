@@ -161,11 +161,11 @@ class TranslateCore
         $cache_key = $name.'|'.$string.'|'.$source.'|'.(int)$js;
 
         if (!isset($lang_cache[$cache_key])) {
-            if ($_MODULES == null) {
+            if ($_MODULES === null) {
                 if ($sprintf !== null) {
                     $string = Translate::checkAndReplaceArgs($string, $sprintf);
                 }
-                return str_replace('"', '&quot;', $string);
+                return stripslashes(str_replace('"', '&quot;', $string));
             }
 
             $current_key = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
