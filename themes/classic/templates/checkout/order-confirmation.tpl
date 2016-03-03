@@ -38,6 +38,29 @@
                             {foreach from=$product.attributes key="attribute" item="value"}
                                 - <span class="value">{$value}</span>
                             {/foreach}
+                            {if $product.customizations|count}
+                                <div class="customizations">
+                                    <ul>
+                                        {foreach from=$product.customizations item="customization"}
+                                            <li>
+                                                <span class="product-quantity">{l s='Quantity'} {$customization.quantity}</span>
+                                                <ul>
+                                                    {foreach from=$customization.fields item="field"}
+                                                        <li>
+                                                            <label>{$field.label}</label>
+                                                            {if $field.type == 'text'}
+                                                                <span>{$field.text}</span>
+                                                            {else if $field.type == 'image'}
+                                                                <img src="{$field.image.small.url}">
+                                                            {/if}
+                                                        </li>
+                                                    {/foreach}
+                                                </ul>
+                                            </li>
+                                        {/foreach}
+                                    </ul>
+                                </div>
+                            {/if}
                         </td>
                         <td>{$product.quantity}</td>
                         <td>{$product.price}</td>
