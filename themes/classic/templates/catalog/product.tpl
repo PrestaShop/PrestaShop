@@ -173,12 +173,12 @@
                       {l s='Add to cart'}
                     </button>
 
-                      {block name='product_availability'}
-                       {if $product.show_availability}
-                          <p id="product-availability" class="_margin-left-medium"><i class="material-icons check">&#xE5CA;</i>{$product.availability_message}</p>
-                       {/if}
-                      {/block}
-                      {hook h='displayProductButtons' product=$product}
+                    {block name='product_availability'}
+                     {if $product.show_availability}
+                        <p id="product-availability" class="_margin-left-medium"><i class="material-icons check">&#xE5CA;</i>{$product.availability_message}</p>
+                     {/if}
+                    {/block}
+                    {hook h='displayProductButtons' product=$product}
 
                   {/block}
 
