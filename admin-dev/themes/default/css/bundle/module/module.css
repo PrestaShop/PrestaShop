@@ -6,7 +6,6 @@
     font-weight: bold;
 }
 
-
 .module-item-heading-grid {
     height:50px;
 }
@@ -419,9 +418,24 @@ img.module-logo-thumb-list {
     font-size: 20px;
 }
 
+.module-short-list {
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
 .module-import-processing {
     display: none;
     text-align: center;
+}
+
+.module-import-processing .btn {
+    margin: 25px;
+}
+
+.module-import-processing-footer-text {
+    font-size: smaller;
+    font-style: italic;
+    color: #CECCCC;
 }
 
 .module-import-success {
@@ -429,12 +443,73 @@ img.module-logo-thumb-list {
     text-align: center;
 }
 
+.module-import-success-icon {
+    color: #1c8ca3;
+    font-size: 70px;
+}
+
 .module-import-failure {
     display: none;
     text-align: center;
 }
 
-.module-short-list {
-    padding-bottom: 15px;
-    padding-top: 15px;
+.module-import-failure-icon {
+    color: #C45C67;
+    font-size: 70px;
+}
+
+.module-import-failure-msg {
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.module-import-failure-details-action {
+    display: block;
+    cursor: pointer !important;
+}
+
+.module-import-failure-details {
+    word-wrap: break-word;
+    font-size: small;
+    color: #CECCCC;
+    max-height: 120px;
+    overflow: scroll;
+    margin: 35px 5px 20px 5px;
+    text-align: justify;
+    display: none;
+}
+
+.module-import-start-icon {
+    font-size: 70px;
+    color: #CECCCC;
+}
+
+.module-import-start-select-manual {
+    cursor: pointer !important;
+}
+
+.module-import-start-select-manual:hover {
+    text-decoration: none;
+}
+
+.module-import-start-footer-text {
+    font-size: smaller;
+    font-style: italic;
+    color: #CECCCC;
+}
+
+form#importDropzone {
+    border: 2px dashed #6c868e;
+}
+
+.dropzone.dz-clickable {
+    cursor: auto !important;
+}
+
+.module-import-start {
+    text-align: center;
+}
+
+.module-import-failure-retry {
+    margin-top: 15px;
 }

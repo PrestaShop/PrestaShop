@@ -22,6 +22,7 @@ var AdminModule = function () {
     this.baseAddonsUrl = 'https://addons.prestashop.com/';
     this.pstaggerInput = null;
     this.lastBulkAction = null;
+    this.isUploadStarted = false;
 
     /* Selectors into vars to make it easier to change them while keeping same code logic */
     this.searchBarSelector = '#module-search-bar';
@@ -62,8 +63,20 @@ var AdminModule = function () {
     this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
     this.addonsConnectModalBtnSelector = '#page-header-desc-configuration-addons_connect';
     this.dropZoneModalSelector = '#module-modal-import';
+    this.dropZoneImportZoneSelector = '#importDropzone';
     this.addonsConnectModalSelector = '#module-modal-addons-connect';
     this.addonsConnectForm = '#addons-connect-form';
+    this.moduleImportModalCloseBtn = '#module-modal-import-closing-cross';
+    this.moduleImportStartSelector = '.module-import-start';
+    this.moduleImportProcessingSelector = '.module-import-processing';
+    this.moduleImportSuccessSelector = '.module-import-success';
+    this.moduleImportSuccessConfigureBtnSelector = '.module-import-success-configure';
+    this.moduleImportFailureSelector = '.module-import-failure';
+    this.moduleImportFailureRetrySelector = '.module-import-failure-retry';
+    this.moduleImportFailureDetailsBtnSelector = '.module-import-failure-details-action';
+    this.moduleImportSelectFileManualSelector = '.module-import-start-select-manual';
+    this.moduleImportFailureMsgDetailsSelector = '.module-import-failure-details';
+
 
     /**
      * Initialize all listners and bind everything
@@ -82,33 +95,45 @@ var AdminModule = function () {
         this.initAddonsConnect();
         this.initAddModuleAction();
         this.initDropzone();
+        this.initPageChangeProtection();
         this.initBulkActions();
     };
 
-  //@TODO: JS Doc
-  this.initBulkActions = function() {
-      var _this = this;
+    //@TODO: JS Doc
+    this.initPageChangeProtection = function() {
+        var _this = this;
 
-      $(this.bulkActionDropDownSelector).on('change', function(event){
+        $(window).on('beforeunload', function(event){
+            if (_this.isUploadStarted === true) {
+                return "It seems some critical operation are running, are you sure you want to change page ? It might cause some unexepcted behaviors.";
+            }
+        });
+    };
+
+    //@TODO: JS Doc
+    this.initBulkActions = function() {
+        var _this = this;
+
+        $(this.bulkActionDropDownSelector).on('change', function(event){
           _this.lastBulkAction = $(this).find(':checked').attr('value');
           var modulesListString = _this.buildBulkActionModuleList();
           var actionString = $(this).find(':checked').text().toLowerCase();
           $(_this.bulkConfirmModalListSelector).html(modulesListString);
           $(_this.bulkConfirmModalActionNameSelector).text(actionString);
           $(_this.bulkConfirmModalSelector).modal('show');
-      });
+        });
 
-      $(this.selectAllBulkActionSelector).on('change', function(event){
+        $(this.selectAllBulkActionSelector).on('change', function(event){
           _this.changeBulkCheckboxesState($(this).is(':checked'));
-      });
+        });
 
-      $(this.bulkConfirmModalAckBtnSelector).on('click', function(event) {
+        $(this.bulkConfirmModalAckBtnSelector).on('click', function(event) {
           event.preventDefault();
           event.stopPropagation();
           $(_this.bulkConfirmModalSelector).modal('hide');
           _this.doBulkAction(_this.lastBulkAction);
-      });
-  };
+        });
+    };
 
   this.buildBulkActionModuleList = function() {
       var checkBoxesSelector = this.getBulkCheckboxesSelector();
@@ -116,7 +141,6 @@ var AdminModule = function () {
       var _this = this;
       var alreadyDoneFlag = 0;
       var htmlGenerated = '';
-
 
       $(checkBoxesSelector + ':checked').each(function(index, value){
           if (alreadyDoneFlag != 10) {
@@ -144,10 +168,13 @@ var AdminModule = function () {
 
     //@TODO: JS Doc
     this.initAddonsConnect = function () {
-        $(this.dropModuleBtnSelector).attr('data-toggle', 'modal');
-        $(this.dropModuleBtnSelector).attr('data-target', this.dropZoneModalSelector);
-
         var _this = this;
+
+        // Make addons connect modal ready to be clicked
+        if ($(this.addonsConnectModalBtnSelector).attr('href') == '#') {
+            $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
+            $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
+        }
 
         $(this.addonsConnectForm).on('submit', function (event) {
             event.preventDefault();
@@ -181,26 +208,67 @@ var AdminModule = function () {
 
     //@TODO: JS Doc
     this.initAddModuleAction = function () {
-        if ($(this.addonsConnectModalBtnSelector).attr('href') == '#') {
-            $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
-            $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
-        }
+        $(this.dropModuleBtnSelector).attr('data-toggle', 'modal');
+        $(this.dropModuleBtnSelector).attr('data-target', this.dropZoneModalSelector);
     };
 
   //@TODO: JS Doc
   this.initDropzone = function () {
+      var _this = this;
 
-      $('.module-import-failure-retry').on('click', function(event){
-           $('.module-import-success, .module-import-failure, .module-import-processing').fadeOut(function(){
-               $('.dz-preview, .dz-message').fadeIn();
+      // Reset modal when click on Retry in case of failure
+      $(this.moduleImportFailureRetrySelector).on('click', function(event){
+          var _that = _this;
+           $(_this.moduleImportSuccessSelector + ', ' + _this.moduleImportFailureSelector + ', ' + _this.moduleImportProcessingSelector).fadeOut(function(){
+               var _these = _that;
+               // Added timeout for a better render of animation and avoid to have displayed at the same time
+               setTimeout(function() {
+                   $(_these.moduleImportStartSelector).fadeIn(function(event){
+                       $('.dropzone').removeAttr('style');
+                   });
+               }, 550);
            });
       });
 
-      $('#module-modal-import').on('hidden.bs.modal', function (event) {
-          $('.module-import-success').css('display', 'none');
-          $('.module-import-failure').css('display', 'none');
-          $('.module-import-zipname').parent().css('display', 'none');
+      // Reinit modal on quit, but check if not already processing something
+      $(this.dropZoneModalSelector).on('hidden.bs.modal', function (event) {
+          $(_this.moduleImportSuccessSelector + ', ' + _this.moduleImportFailureSelector).css('display', 'none');
+          $(_this.moduleImportStartSelector).css('display', 'block');
+          $('.dropzone').removeAttr('style');
+          $(_this.moduleImportFailureMsgDetailsSelector).css('display', 'none');
       });
+
+      // Change the way Dropzone.js lib handle file input trigger
+      $('.dropzone').on('click', ':not(' + this.moduleImportSelectFileManualSelector + ')', function(event, manual_select){
+          // if click comes from .module-import-start-select-manual, stop everything
+          if (typeof manual_select == "undefined") {
+              event.stopPropagation();
+              event.preventDefault();
+          }
+      });
+
+      $(this.moduleImportSelectFileManualSelector).on('click', function(event){
+          event.stopPropagation();
+          event.preventDefault();
+          // Trigger click on hidden file input, and pass extra data to .dropzone click handler fro it to notice it comes from here
+          $('.dz-hidden-input').trigger('click', ["manual_select"]);
+      });
+
+      // Handle modal closure
+      $(this.moduleImportModalCloseBtn).on('click', function(event) {
+          if (_this.isUploadStarted === true) {
+              //@TODO: Display tooltip saying you can't escape
+              return;
+          } else {
+              $(_this.dropZoneModalSelector).modal('hide');
+          }
+      });
+
+      // Open failure message details box
+      $(this.moduleImportFailureDetailsBtnSelector).on('click', function(event){
+          $(_this.moduleImportFailureMsgDetailsSelector).slideDown();
+      });
+
 
       Dropzone.options.importDropzone = {
           url: 'import',
@@ -210,14 +278,16 @@ var AdminModule = function () {
           maxFilesize: 5, // MB
           uploadMultiple: false,
           addRemoveLinks: true,
-          dictDefaultMessage: 'Drop a module\'s zip archive here in order to install it',
+          dictDefaultMessage: '',
+          hiddenInputContainer: _this.dropZoneImportZoneSelector,
           addedfile: function(file) {
-              $('.dz-preview, .dz-message').fadeOut(function() {
-                  // Display our text
-                  $('.module-import-zipname').text('Processing: ' + file.name).parent().fadeIn();
-                  // Display Loader
-                  $('.module-import-loader, .install-message').fadeIn();
-              });
+              // State that we start module upload
+              _this.isUploadStarted = true;
+              var _that = _this;
+             $(_this.moduleImportStartSelector).fadeOut(function(){
+                 $('.dropzone').css('border', 'none');
+                 $(_that.moduleImportProcessingSelector).fadeIn();
+             });
           },
           processing: function (file, response) {
               // Leave it empty ATM since we don't require anything while processing upload
@@ -225,16 +295,17 @@ var AdminModule = function () {
           complete: function (file, response) {
               var responseObject = jQuery.parseJSON(file.xhr.response);
 
-              $('.module-import-zipname').parent().fadeOut(function() {
+             $(_this.moduleImportProcessingSelector).fadeOut(function() {
                   if (responseObject.status === true) {
-                      $('.module-import-name').first().text(responseObject.msg);
-                      var configureLink = baseAdminDir + '/module/manage/action/configure/' + responseObject.module_name;
-                      $('.module-import-success-configure').attr('href', configureLink);
-                      $('.module-import-success').css('display', 'block');
+                      var configureLink = baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
+                      $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+                      $(_this.moduleImportSuccessSelector).fadeIn();
                   } else {
-                      $('.module-import-error-msg').html(responseObject.msg);
-                      $('.module-import-failure').css('display', 'block');
+                      $(_this.moduleImportFailureMsgDetailsSelector).html(responseObject.msg);
+                      $(_this.moduleImportFailureSelector).fadeIn();
                   }
+                  // State that we have finish the process to unlock some actions
+                  _this.isUploadStarted = false;
               });
           }
       };
