@@ -8,7 +8,7 @@ class PricePresenter
 {
     public function convertAmount($price)
     {
-        return Tools::convertPrice($price);
+        return (float)Tools::convertPrice($price);
     }
 
     public function format($price)
