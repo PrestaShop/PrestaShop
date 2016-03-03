@@ -215,8 +215,19 @@ function runScenario (scenario) {
           });
           it('should be marked as complete after user has clicked continue', function () {
             return browser
+              .pause(5000)
               .click('#checkout-delivery-step button')
               .waitForVisible('#checkout-delivery-step.-complete')
+              .catch(err =>
+                browser
+                  .getSource()
+                  .then(
+                    source => console.log(source)
+                  )
+                  .then(function () {
+                    throw err;
+                  })
+              )
             ;
           });
         });

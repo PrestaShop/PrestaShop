@@ -2018,6 +2018,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign(array(
             'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
+            'debug_mode' => (bool)_PS_MODE_DEV_,
             'content' => $this->content,
             'lite_display' => $this->lite_display,
             'url_post' => self::$currentIndex.'&token='.$this->token,
