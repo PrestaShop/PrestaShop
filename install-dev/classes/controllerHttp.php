@@ -119,7 +119,22 @@ abstract class InstallControllerHttp
 
         // Set timezone
         if ($session->shop_timezone) {
-            @date_default_timezone_set($session->shop_timezone);
+            try {
+                // Search if the session timezone is known in the present zones list.
+                // An unknown timezone can be stored here, in case of upgrade of PHP version (change in many timezones, as disappeared US/Eastern for example).
+                foreach (DateTimeZone::listAbbreviations() as $abbreviations) {
+                    foreach ($abbreviations as $abbreviation) {
+                        if ($session->shop_timezone == $abbreviation['timezone_id']) {
+                            @date_default_timezone_set($session->shop_timezone);
+                            break 2;
+                        }
+                    }
+                }
+                // If not know, does not affect PHP settings. Another default setting is forced before.
+            } catch (\Exception $e) {
+                // for older behavior, keep old way to affect timezone.
+                @date_default_timezone_set($session->shop_timezone);
+            }
         }
 
         // Get current step (check first if step is changed, then take it from session)

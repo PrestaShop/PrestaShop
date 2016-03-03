@@ -78,7 +78,7 @@ require_once(_PS_INSTALL_PATH_.'classes/simplexml.php');
 
 @set_time_limit(0);
 if (!@ini_get('date.timezone')) {
-    @date_default_timezone_set('UTC');
+    @date_default_timezone_set('Europe/Paris');
 }
 
 // Try to improve memory limit if it's under 64M
