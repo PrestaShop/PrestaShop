@@ -217,6 +217,16 @@ function runScenario (scenario) {
             return browser
               .click('#checkout-delivery-step button')
               .waitForVisible('#checkout-delivery-step.-complete')
+              .catch(err =>
+                browser
+                  .getSource()
+                  .then(
+                    source => console.log(source)
+                  )
+                  .then(function () {
+                    throw err;
+                  })
+              )
             ;
           });
         });
