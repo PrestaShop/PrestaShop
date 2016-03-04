@@ -108,7 +108,7 @@ class CartPresenter
         );
     }
 
-    protected function addCustomizedData(array $products, Cart $cart)
+    public function addCustomizedData(array $products, Cart $cart)
     {
         $data = Product::getAllCustomizedDatas($cart->id);
 
