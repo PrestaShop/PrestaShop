@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
 use GuzzleHttp\Client;
+use Tools;
 
 class ApiClient
 {
@@ -35,12 +36,19 @@ class ApiClient
         'format' => 'json',
     );
 
+    /**
+     * @var \PrestaShop\PrestaShop\Adapter\Tools
+     */
+    private $toolsAdapter;
+
     public function __construct(
         Client $addonsApiClient,
         $isoLang,
-        $isoCode
+        $isoCode,
+        $toolsAdapter
     ) {
         $this->addonsApiClient = $addonsApiClient;
+        $this->toolsAdapter = $toolsAdapter;
 
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
@@ -50,6 +58,7 @@ class ApiClient
 
     public function setSslVerification($verifySsl)
     {
+        $this->toolsAdapter->refreshCaCertFile();
         $this->addonsApiClient->setDefaultOption('verify', $verifySsl);
     }
 
