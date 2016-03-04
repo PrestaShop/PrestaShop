@@ -17,7 +17,11 @@
                           type="checkbox"
                           {if $filter.active } checked {/if}
                         >
-                        <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons check">&#xE5CA;</i></span>
+                        {if isset($filter.properties.color)}
+                          <span class="color" style="background-color:{$filter.properties.color}"></span>
+                          {else}
+                          <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons check">&#xE5CA;</i></span>
+                        {/if}
                       </span>
                     {else}
                       <span class="custom-checkbox">
@@ -37,7 +41,7 @@
                     >
                       {$filter.label}
                       {if $filter.magnitude}
-                        <span class="magnitude">{$filter.magnitude}</span>
+                        <span class="magnitude">({$filter.magnitude})</span>
                       {/if}
                     </a>
                   </label>
