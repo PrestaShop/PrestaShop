@@ -2,7 +2,7 @@
   <!--  product left content: image-->
   <div class="product-line-grid-left col-md-3">
     <span class="product-image media-middle">
-      <img class="" src="{$product.cover.medium.url}">
+      <img class="" src="{$product.cover.bySize.cart_default.url}">
     </span>
   </div>
 

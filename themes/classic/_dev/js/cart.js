@@ -22,13 +22,7 @@ $(document).ready(() => {
       $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
       $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
       $('.cart-voucher').replaceWith(resp.cart_voucher);
-      $('input[name="product-quantity-spin"]').TouchSpin({
-        verticalbuttons: true,
-        verticalupclass: 'material-icons touchspin-up',
-        verticaldownclass: 'material-icons touchspin-down',
-        buttondown_class: 'btn btn-touchspin js-touchspin',
-        buttonup_class: 'btn btn-touchspin js-touchspin'
-      });
+      createSpin();
     });
   });
   $('body').on(
@@ -48,7 +42,8 @@ $(document).ready(() => {
       }
 
       $.post(actionURL, {
-        ajax: '1'
+        ajax: '1',
+        action: 'update'
       }, null, 'json').then(function() {
         // If succesful, refresh cart preview
         prestashop.emit('cart updated', {
@@ -64,7 +59,7 @@ $(document).ready(() => {
     function(event) {
       event.preventDefault();
       var $form = $($(event.target).closest('form'));
-      var query = $form.serialize() + '&add=1';
+      var query = $form.serialize() + '&add=1&action=update';
       var actionURL = $form.attr('action');
 
       $.post(actionURL, query, null, 'json').then(function(resp) {
@@ -89,6 +84,10 @@ $(document).ready(() => {
         .attr('type', 'hidden')
         .attr('name', 'ajax').val('1')
       );
+      $(this).append($('<input>')
+        .attr('type', 'hidden')
+        .attr('name', 'action').val('update')
+      );
 
       // First perform the action using AJAX
       var actionURL = event.target.action;
@@ -101,6 +100,11 @@ $(document).ready(() => {
     }
   );
 
+  createSpin();
+});
+
+function createSpin()
+{
   $('input[name="product-quantity-spin"]').TouchSpin({
     verticalbuttons: true,
     verticalupclass: 'material-icons touchspin-up',
@@ -108,4 +112,4 @@ $(document).ready(() => {
     buttondown_class: 'btn btn-touchspin js-touchspin',
     buttonup_class: 'btn btn-touchspin js-touchspin'
   });
-});
+}

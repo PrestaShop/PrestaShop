@@ -66,8 +66,8 @@ global_settings:
 
   image_types:
     cart_default:
-      width: 80
-      height: 80
+      width: 125
+      height: 125
       scope: [products]
     small_default:
       width: 98

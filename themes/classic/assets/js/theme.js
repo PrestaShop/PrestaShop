@@ -16619,7 +16619,7 @@
 	
 	(0, _jquery2['default'])(document).ready(function () {
 	  prestashop.on('product updated', function (event) {
-	    _jquery2['default'].post(event.reason.productUrl, { productajax: '1' }, null, 'json').then(function (resp) {
+	    _jquery2['default'].post(event.reason.productUrl, { ajax: '1', action: 'refresh' }, null, 'json').then(function (resp) {
 	      (0, _jquery2['default'])('.product-prices').replaceWith(resp.product_prices);
 	      (0, _jquery2['default'])('.product-variants').replaceWith(resp.product_variants);
 	      (0, _jquery2['default'])('.images-container').replaceWith(resp.product_cover_thumbnails);
@@ -16648,7 +16648,7 @@
 	  (0, _jquery2['default'])('body').on('click', 'input.product-refresh', function (event) {
 	    event.preventDefault();
 	
-	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&productajax=1';
+	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&ajax=1&action=productrefresh';
 	    var actionURL = (0, _jquery2['default'])(event.target.form).attr('action');
 	
 	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
@@ -16698,13 +16698,7 @@
 	      (0, _jquery2['default'])('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
 	      (0, _jquery2['default'])('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
 	      (0, _jquery2['default'])('.cart-voucher').replaceWith(resp.cart_voucher);
-	      (0, _jquery2['default'])('input[name="product-quantity-spin"]').TouchSpin({
-	        verticalbuttons: true,
-	        verticalupclass: 'material-icons touchspin-up',
-	        verticaldownclass: 'material-icons touchspin-down',
-	        buttondown_class: 'btn btn-touchspin js-touchspin',
-	        buttonup_class: 'btn btn-touchspin js-touchspin'
-	      });
+	      createSpin();
 	    });
 	  });
 	  (0, _jquery2['default'])('body').on('click', '.js-touchspin, [data-link-action="remove-from-cart"], [data-link-action="remove-voucher"]', function (event) {
@@ -16721,7 +16715,8 @@
 	    }
 	
 	    _jquery2['default'].post(actionURL, {
-	      ajax: '1'
+	      ajax: '1',
+	      action: 'update'
 	    }, null, 'json').then(function () {
 	      // If succesful, refresh cart preview
 	      _prestashop2['default'].emit('cart updated', {
@@ -16732,7 +16727,7 @@
 	  (0, _jquery2['default'])('body').on('click', '[data-button-action="add-to-cart"]', function (event) {
 	    event.preventDefault();
 	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
-	    var query = $form.serialize() + '&add=1';
+	    var query = $form.serialize() + '&add=1&action=update';
 	    var actionURL = $form.attr('action');
 	
 	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
@@ -16750,6 +16745,7 @@
 	    event.preventDefault();
 	
 	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'ajax').val('1'));
+	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'action').val('update'));
 	
 	    // First perform the action using AJAX
 	    var actionURL = event.target.action;
@@ -16761,6 +16757,10 @@
 	    });
 	  });
 	
+	  createSpin();
+	});
+	
+	function createSpin() {
 	  (0, _jquery2['default'])('input[name="product-quantity-spin"]').TouchSpin({
 	    verticalbuttons: true,
 	    verticalupclass: 'material-icons touchspin-up',
@@ -16768,7 +16768,7 @@
 	    buttondown_class: 'btn btn-touchspin js-touchspin',
 	    buttonup_class: 'btn btn-touchspin js-touchspin'
 	  });
-	});
+	}
 
 /***/ },
 /* 53 */

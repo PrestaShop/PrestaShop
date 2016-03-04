@@ -4,7 +4,7 @@ import $ from 'jquery';
 
 $(document).ready(function () {
   prestashop.on('product updated', function(event) {
-    $.post(event.reason.productUrl, {productajax: '1'}, null, 'json').then(function(resp) {
+    $.post(event.reason.productUrl, {ajax: '1', action: 'refresh'}, null, 'json').then(function(resp) {
       $('.product-prices').replaceWith(resp.product_prices);
       $('.product-variants').replaceWith(resp.product_variants);
       $('.images-container').replaceWith(resp.product_cover_thumbnails);
@@ -36,7 +36,7 @@ $(document).ready(function () {
     function(event) {
       event.preventDefault();
 
-      var query = $(event.target.form).serialize() + '&productajax=1';
+      var query = $(event.target.form).serialize() + '&ajax=1&action=productrefresh';
       var actionURL = $(event.target.form).attr('action');
 
       $.post(actionURL, query, null, 'json').then(function(resp) {

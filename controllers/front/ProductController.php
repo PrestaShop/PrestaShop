@@ -329,31 +329,34 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->assignAttributesGroups($product_for_template);
         }
 
-        if (Tools::getValue('productajax')) {
-            ob_end_clean();
-            header('Content-Type: application/json');
-            die(json_encode([
-                'product_prices' => $this->render('catalog/_partials/product-prices.tpl'),
-                'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails.tpl'),
-                'product_details' => $this->render('catalog/_partials/product-details.tpl'),
-                'product_variants' => $this->render('catalog/_partials/product-variants.tpl'),
-                'product_url' => $this->context->link->getProductLink(
-                    $product_for_template['id_product'],
-                    null,
-                    null,
-                    null,
-                    $this->context->language->id,
-                    null,
-                    $product_for_template['id_product_attribute'],
-                    false,
-                    false,
-                    true
-                ),
-                'id_product_attribute' => $product_for_template['id_product_attribute']
-            ]));
-        }
-
         $this->setTemplate('catalog/product.tpl');
+    }
+
+    public function displayAjaxRefresh()
+    {
+        $product_for_template = $this->getTemplateVarProduct();
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxDie(Tools::jsonEncode([
+            'product_prices' => $this->render('catalog/_partials/product-prices.tpl'),
+            'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails.tpl'),
+            'product_details' => $this->render('catalog/_partials/product-details.tpl'),
+            'product_variants' => $this->render('catalog/_partials/product-variants.tpl'),
+            'product_url' => $this->context->link->getProductLink(
+                $product_for_template['id_product'],
+                null,
+                null,
+                null,
+                $this->context->language->id,
+                null,
+                $product_for_template['id_product_attribute'],
+                false,
+                false,
+                true
+            ),
+            'id_product_attribute' => $product_for_template['id_product_attribute']
+        ]));
     }
 
     /**
