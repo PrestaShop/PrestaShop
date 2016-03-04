@@ -8,6 +8,8 @@
   position: relative;
   @include box-shadow;
   #category-description {
+    font-size: em(14px);
+    color: $gray-dark;
     p,
     strong {
       font-weight: 400;
@@ -17,15 +19,15 @@
       color: $gray-darker;
       margin-bottom: 0;
       &:first-child {
-        margin-bottom: em(20px);
+        margin-bottom: $medium-space;
       }
     }
   }
   .category-cover {
     position: absolute;
-    right: em(60px);
+    right: 0.75em;
     bottom: 0;
-    img{
+    img {
       width: 141px;
       height: 180px;
     }
@@ -38,13 +40,13 @@
     width: em(270px);
     color: $gray-darker;
     background: white;
-    padding: em(10px);
+    padding: $small-space;
     cursor: pointer;
   }
   .select-list {
     display: block;
     color: $gray-darker;
-    padding: em(10px) em(25px);
+    padding: $small-space $medium-space;
     &:hover {
       background: $brand-primary;
       color: white;
@@ -105,16 +107,21 @@
 }
 .active_filters {
   background: #dededd;
-  padding: em(20px) em(35px) 0;
+  padding: $small-space $large-space 0;
+  margin-bottom: $medium-space;
   .active-filter-title {
     font-size: em(15px);
     display: inline;
+    margin-right: $small-space;
   }
   ul {
     display: inline;
   }
   .filter-block {
     @include box-shadow;
+    color: $gray-darker;
+    margin-right: $small-space;
+    margin-bottom: $small-space;
     background: white;
     padding: em(10px);
     display: inline-block;
@@ -131,7 +138,7 @@
 .block-categories {
   @include box-shadow;
   background: white;
-  padding: em(10px);
+  padding: $small-space;
   .category-sub-menu {
     li[data-depth="0"] > a {
       font-weight: 600;
@@ -197,4 +204,7 @@
       }
     }
   }
+}
+.facets-title {
+  color: $gray-darker;
 }
