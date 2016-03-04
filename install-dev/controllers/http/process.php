@@ -75,6 +75,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
     public function process()
     {
+        /* avoid exceptions on re-installation */
+        $this->clearConfigXML() && $this->clearConfigThemes();
+
         if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE)) {
             require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
         }
@@ -367,5 +370,26 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         $this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
 
         $this->displayTemplate('process');
+    }
+
+    private function clearConfigXML()
+    {
+        $cacheFiles = glob(_PS_ROOT_DIR_.'/config/xml');
+        $excludes = ['.htaccess', 'index.php'];
+        foreach($cacheFiles as $file) {
+            if (is_file($file) && !in_array($file, $excludes)) {
+                unlink($file);
+            }
+        }
+    }
+
+    private function clearConfigThemes()
+    {
+        $cacheFiles = glob(_PS_ROOT_DIR_.'/config/themes');
+        foreach($cacheFiles as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
     }
 }
