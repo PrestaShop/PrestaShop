@@ -76,33 +76,35 @@
           {block name='product_prices'}
             {if $product.show_price}
               <div class="product-prices">
-                {block name='product_price'}
-                  <p class="product-price h5 text-uppercase _bolder" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-                    <link itemprop="availability" href="https://schema.org/InStock"/>
-                    <span itemprop="price" content="{$productPrice}">{$product.price}</span>
-                    {if $display_taxes_label}
-                     {if $priceDisplay} {l s='tax excl.'}{else} {l s='tax incl.'}{/if}
-                    {/if}
-                    <meta itemprop="priceCurrency" content="{$currency.iso_code}" />
-                    {hook h='displayProductPriceBlock' product=$product type="price"}
-                  </p>
-                {/block}
-
                 {block name='product_discount'}
                   {if $product.has_discount}
                     <p class="product-discount">
                       <span class="regular-price">{$product.regular_price}</span>
-                      {if $product.discount_type === 'percentage'}
-                        <span class="discount-percentage">{$product.discount_percentage}</span>
-                      {/if}
                       {hook h='displayProductPriceBlock' product=$product type="old_price"}
                     </p>
                   {/if}
                 {/block}
 
+                {block name='product_price'}
+                  <p class="product-price h5 text-uppercase {if $product.has_discount}has-discount{/if}" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                    <link itemprop="availability" href="https://schema.org/InStock"/>
+                    <span itemprop="price" content="{$productPrice}">{$product.price}</span>
+                    {if $display_taxes_label}
+                     <small class="text-capitalize">{if $priceDisplay} {l s='tax excl.'}{else} {l s='Tax incl.'}{/if}</small>
+                    {/if}
+                    <meta itemprop="priceCurrency" content="{$currency.iso_code}" />
+                    {hook h='displayProductPriceBlock' product=$product type="price"}
+                    {if $product.has_discount}
+                      {if $product.discount_type === 'percentage'}
+                        <span class="discount-percentage">{l s='SAVE %s' sprintf=$product.discount_percentage}</span>
+                      {/if}
+                    {/if}
+                  </p>
+                {/block}
+
                 {block name='product_without_taxes'}
                   {if $priceDisplay == 2}
-                    <p class="product-without-taxes">{$product.price_tax_exc}</span> {l s='tax excl.'}</p>
+                    <p class="product-without-taxes">{l s='%s tax excl.' sprintf=$product.price_tax_exc}</p>
                   {/if}
                 {/block}
 
@@ -205,7 +207,7 @@
                           {else if $group.group_type == 'radio'}
                             <ul id="group_{$id_attribute_group}">
                               {foreach from=$group.attributes key=id_attribute item=group_attribute}
-                                <li class="_relative _margin-right-small pull-xs-left">
+                                <li class="_relative pull-xs-left">
                                   <input class="input-radio" type="radio" data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
                                   <span class="radio-label">{$group_attribute.name}</span>
                                 </li>
@@ -362,7 +364,7 @@
                            <dt class="name">{$feature.name}</dt>
                            <dd class="value">{$feature.value}</dd>
                          {/foreach}
-                       </ul>
+                       </dl>
                      </section>
                    {/if}
                  {/block}

@@ -1,8 +1,8 @@
 <section id="products">
   {if $products|count}
-      <div class="row _margin-top-large _margin-bottom-medium">
+      <div class="row products-selection">
         <div class="col-md-4">
-          <h1 class="h4 text-uppercase _bolder _gray-dark">{$category.name}</h1>
+          <h1 class="h1 title">{$category.name}</h1>
         </div>
         <div class="col-md-8">
           <div class="_display-table pull-xs-right">

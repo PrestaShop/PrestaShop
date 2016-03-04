@@ -133,6 +133,7 @@
   }
   .product-price,
   .cart-line-product-actions {
+    color: $gray-darker;
     line-height: 40px;
     .remove-from-cart {
       color: $gray-darker;
@@ -144,7 +145,4 @@
       }
     }
   }
-}
-.product-price {
-  color: $gray-darker;
 }

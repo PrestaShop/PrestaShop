@@ -12,7 +12,7 @@
           <div class="col-md-6 _divide-right">
             <div class="row">
               <div class="col-md-6">
-                <img class="_shadow product-image" src="{$product.cover.medium.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
+                <img class="product-image" src="{$product.cover.medium.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
               </div>
               <div class="col-md-6">
                 <h6 class="h6 product-name">{$product.name}</h6>
@@ -34,8 +34,8 @@
               <p><strong>{l s='Total products:' mod='blockcart'}</strong>&nbsp;{$cart.subtotals.products.amount}</p>
               <p><strong>{l s='Total shipping:' mod='blockcart'}</strong>&nbsp;{$cart.subtotals.shipping.amount}</p>
               <p><strong>{l s='Total:' mod='blockcart'}</strong>&nbsp;{$cart.total.amount}</p>
-              <button type="button" class="btn btn-secondary _bolder text-uppercase _shadow _margin-right-small" data-dismiss="modal">{l s='Continue shopping' mod='blockcart'}</button>
-              <a href="{$cart_url}" class="btn btn-primary _bolder text-uppercase _shadow"><i class="material-icons _margin-right-small">&#xE876;</i>{l s='proceed to checkout' mod='blockcart'}</a>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">{l s='Continue shopping' mod='blockcart'}</button>
+              <a href="{$cart_url}" class="btn btn-primary"><i class="material-icons">&#xE876;</i>{l s='proceed to checkout' mod='blockcart'}</a>
             </div>
           </div>
         </div>

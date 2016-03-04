@@ -1,8 +1,8 @@
 #products,.featured-products {
   .products {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    @include display(flex);
+    @include flex-wrap(wrap);
+    @include justify-content(flex-start);
   }
   .product-thumbnail {
     display: block;

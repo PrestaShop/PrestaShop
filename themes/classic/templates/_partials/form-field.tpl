@@ -50,7 +50,7 @@
         {l s='Five characters minimum'}
       </span>
     {elseif (!$field.required && $field.type !== 'radio-buttons' && $field.type !== 'checkbox') || $field.name === 'company' }
-      <span class="col-md-4 form-control-comment">
+      <span class="col-md-3 form-control-comment">
         {l s='optional'}
       </span>
     {/if}

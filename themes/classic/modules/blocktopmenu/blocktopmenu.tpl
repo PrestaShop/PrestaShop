@@ -9,7 +9,7 @@
           {if $node.children|count}
             <li class="{$node.type}{if $node.current} current {/if}">
               <a {if $depth === 0} data-toggle="dropdown" {/if}
-                 class = "{if $depth >= 0}dropdown-item{/if}{if $depth === 1} dropdown-submenu{/if}"
+                 class = "{if $depth >= 0}dropdown-item{/if}{if $depth === 1} dropdown-submenu{/if}" 
                  href  = "{$node.url nofilter}"
                  {if $node.open_in_new_window} target="_blank" {/if}
                  data-depth="{$depth}"
@@ -21,12 +21,14 @@
               </div>
             </li>
           {else}
-            <a href  = "{$node.url nofilter}"
-               {if $node.open_in_new_window} target="_blank" {/if}
-               data-depth="{$depth}"
-            >
-              {$node.label}
-            </a>
+            <li>
+              <a href  = "{$node.url nofilter}"
+                 {if $node.open_in_new_window} target="_blank" {/if}
+                 data-depth="{$depth}"
+              >
+                {$node.label}
+              </a>
+            </li>
           {/if}
         {/foreach}
       </ul>

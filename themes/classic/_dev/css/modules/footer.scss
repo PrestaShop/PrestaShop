@@ -89,3 +89,8 @@
 .instagram {
   background-image: url(../img/instagram.svg);
 }
+
+.footer-container{
+  margin-top: $medium-space;
+  @include box-shadow;
+}

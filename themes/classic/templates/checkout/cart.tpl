@@ -9,7 +9,7 @@
       <div class="cart-grid-body col-xs-12 col-md-8">
 
         <!-- cart products detailed -->
-        <div class="card card-shadow">
+        <div class="card">
           <div class="card-block">
             <h1 class="h1">{l s='Shopping Cart'}</h1>
           </div>
@@ -33,7 +33,7 @@
       <!-- Right Block: cart subtotal & cart total -->
       <div class="cart-grid-right col-xs-6 col-md-4">
 
-        <div class="card card-shadow cart-summary">
+        <div class="card cart-summary">
 
           {block name='cart_summary_line'}
             {include file='checkout/_partials/cart-summary-items-subtotal.tpl' cart=$cart}
