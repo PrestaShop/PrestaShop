@@ -1310,9 +1310,15 @@ class FrontControllerCore extends Controller
     public function getTemplateVarFeatureActive()
     {
         return [
-            'b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
-            'optin' => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
-            'newsletter' => Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active),
+            'is_b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
+            'is_catalog' => (bool)Configuration::get('PS_CATALOG_MODE'),
+            'show_prices' => (Configuration::get('PS_CATALOG_MODE')
+                            || (Group::isFeatureActive() && !(bool)Group::getCurrent()->show_prices)),
+            'opt_in' => [
+                'partner' => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
+                'newsletter' => (Configuration::get('PS_CUSTOMER_NWSL')
+                                || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active)),
+            ],
         ];
     }
 
