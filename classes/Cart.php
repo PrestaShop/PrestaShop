@@ -342,6 +342,20 @@ class CartCore extends ObjectModel
     {
         $cart_amount_ti = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
         $cart_amount_te = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+		
+    	$products = $this->getProducts();
+    	$product_no_tax = 0;
+    	foreach ($products as $product) {
+    		if( $product['total'] == $product['total_wt']) {
+    			$product_no_tax = $product_no_tax+ $product['total_wt'];
+    		}
+    	}
+    	
+    	//if te and ti equalation (it's mean all product no tax), should minus notax value
+		if($cart_amount_ti != $cart_amount_te) {
+			$cart_amount_ti = $cart_amount_ti - $product_no_tax;
+			$cart_amount_te = $cart_amount_te - $product_no_tax;
+		}
 
         $cart_vat_amount = $cart_amount_ti - $cart_amount_te;
 
