@@ -93,6 +93,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 
     public function process()
     {
+        /* avoid exceptions on re-installation */
+        $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
             $steps = array('database','fixtures','theme','modules','addons_modules');
@@ -289,5 +291,26 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     {
         $this->initializeContext();
         return $this->model_install->installTheme();
+    }
+
+    private function clearConfigXML()
+    {
+        $cacheFiles = glob(_PS_ROOT_DIR_.'/config/xml');
+        $excludes = ['.htaccess', 'index.php'];
+        foreach($cacheFiles as $file) {
+            if (is_file($file) && !in_array($file, $excludes)) {
+                unlink($file);
+            }
+        }
+    }
+
+    private function clearConfigThemes()
+    {
+        $cacheFiles = glob(_PS_ROOT_DIR_.'/config/themes');
+        foreach($cacheFiles as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
     }
 }
