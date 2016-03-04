@@ -25,7 +25,8 @@ a:hover {
 .dropdown-item:hover {
   background: none;
 }
-.color {
+.color,
+.custom-checkbox input[type="checkbox"] + span.color {
   display: block;
   width: 20px;
   height: 20px;
@@ -34,16 +35,10 @@ a:hover {
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(0,0,0,0.05);
   cursor: pointer;
+  background-size: contain;
   &:hover {
     border: 2px solid $gray-darker;
   }
-}
-.h1,
-.h2,
-.h3 {
-  font-weight: $headings-font-weight;
-  color: $gray-darker;
-  text-transform: uppercase;
 }
 .h1 {
   font-size: em(24px);
@@ -54,6 +49,8 @@ a:hover {
 .h3,
 .h4 {
   font-size: em(18px);
+  font-weight: $headings-font-weight;
+  color: $gray-darker;
 }
 .btn-primary,
 .btn-secondary {
@@ -235,8 +232,7 @@ label {
   padding: 0 em(13px);
   margin-right: em(25px);
 }
-
-.thumb-mask{
+.thumb-mask {
   > .mask {
     position: relative;
     width: em(55px);
@@ -244,15 +240,14 @@ label {
     overflow: hidden;
     border: $gray-light 1px solid;
     margin: $small-space 0;
-    img{
+    img {
       position: absolute;
       left: -34px;
       top: -26px;
     }
   }
 }
-
-.definition-list{
+.definition-list {
   dl {
     @include display(flex);
     @include flex-wrap(wrap);
