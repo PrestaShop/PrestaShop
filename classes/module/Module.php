@@ -2381,6 +2381,8 @@ abstract class ModuleCore
         }
         Tools::enableCache();
         $new_tpl = $this->getTemplatePath($template);
+        if (empty($new_tpl))
+        	return false;
         $is_cached = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->isCached($new_tpl, $cache_id, $compile_id);
         Tools::restoreCacheSettings();
         return $is_cached;
