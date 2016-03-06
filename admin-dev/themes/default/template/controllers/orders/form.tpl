@@ -61,7 +61,7 @@
 			wait: 750,
 			callback: function(){ searchProducts(); }
 		});
-		$('#payment_module_name').change(function() {
+		$('#payment_module_name').live(function() {
 			var id_order_state = defaults_order_state[this.value];
 			if (typeof(id_order_state) == 'undefined')
 				id_order_state = defaults_order_state['other'];
