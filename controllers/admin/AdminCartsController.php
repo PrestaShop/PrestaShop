@@ -564,9 +564,11 @@ class AdminCartsControllerCore extends AdminController
                 $errors[] = Tools::displayError('The order cannot be renewed.');
             } else {
                 $this->context->cart = $new_cart['cart'];
-                echo json_encode($this->ajaxReturnVars());
+                die(Tools::jsonEncode($this->ajaxReturnVars()));
             }
         }
+        $array = array('hasError' => true, 'errors' => $errors);
+        die(Tools::jsonEncode($array));
     }
 
     public function ajaxProcessDeleteVoucher()

@@ -388,9 +388,21 @@
 				},
 			success : function(res)
 			{
-				id_cart = res.cart.id;
-				$('#id_cart').val(id_cart);
-				displaySummary(res);
+				if (res.hasError)
+				{
+					var errors = '';
+					for (error in res.errors)
+						//IE6 bug fix
+						if (error != 'indexOf')
+							errors += $('<div />').html(res.errors[error]).text() + "\n";
+					jAlert(errors);
+				}
+				else
+				{
+					id_cart = res.cart.id;
+					$('#id_cart').val(id_cart);
+					displaySummary(res);
+				}
 			}
 		});
 	}
