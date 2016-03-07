@@ -209,7 +209,7 @@ label {
       vertical-align: middle;
       cursor: pointer;
       border: 2px $gray-darker solid;
-      .check {
+      .checkbox-checked {
         display: none;
         margin: em(-4px) em(-2px);
         font-size: 1.1em;
@@ -217,7 +217,7 @@ label {
       }
     }
     &:checked + span {
-      .check {
+      .checkbox-checked {
         display: block;
       }
     }

@@ -1,6 +1,6 @@
 #products {
   color: $gray-dark;
-  .products-select{
+  .products-select {
     @include display(flex);
     @include align-items(baseline);
     @include justify-content(space-between);
@@ -69,6 +69,7 @@
 }
 #search_filters {
   @include box-shadow;
+  margin: $medium-space 0;
   background: white;
   padding: em(20px);
   .facet {
@@ -80,6 +81,12 @@
     }
     .facet-label {
       margin-bottom: 0;
+      a {
+        margin-top: em(7px);
+        color: $gray-darker;
+        display: inline-block;
+        font-size: em(15px);
+      }
     }
   }
 }
@@ -145,6 +152,13 @@
   background: white;
   padding: $small-space;
   .category-sub-menu {
+    margin-top: $small-space;
+    .category-sub-link{
+      font-size: em(14px);
+    }
+    li{
+      position: relative;
+    }
     li[data-depth="0"] > a {
       font-weight: 600;
       border-bottom: $gray-light 2px solid;

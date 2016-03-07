@@ -28,20 +28,20 @@
     {if $nodes|count}
       <ul class="category-sub-menu">
         {foreach from=$nodes item=node}
-          <li data-depth="{$depth}" class="_relative">
+          <li data-depth="{$depth}">
             {if $depth===0}
               <a href="{$node.link nofilter}">{$node.name}</a>
               {if $node.children}
                 <div class="navbar-toggler collapse-icons" data-toggle="collapse" data-target="#exCollapsingNavbar{$node.id}">
-                  <i class="material-icons add _gray-dark _bolder">&#xE145;</i>
-                  <i class="material-icons remove _gray-dark _bolder">&#xE15B;</i>
+                  <i class="material-icons add">&#xE145;</i>
+                  <i class="material-icons remove">&#xE15B;</i>
                 </div>
                 <div class="collapse" id="exCollapsingNavbar{$node.id}">
                   {categories nodes=$node.children depth=$depth+1}
                 </div>
               {/if}
             {else}
-              <a class="_smaller-text" href="{$node.link nofilter}">{$node.name}</a>
+              <a class="category-sub-link" href="{$node.link nofilter}">{$node.name}</a>
               {if $node.children}
                 <span class="_gray-darker arrows" data-toggle="collapse" data-target="#exCollapsingNavbar{$node.id}">
                   <i class="material-icons arrow-right">&#xE315;</i>
@@ -61,7 +61,7 @@
 
 <div class="block-categories">
   <ul class="category-top-menu">
-    <li class="_margin-bottom-small"><a class="text-uppercase h6 _bolder" href="{$categories.link nofilter}">{$categories.name}</a></li>
+    <li><a class="text-uppercase h6" href="{$categories.link nofilter}">{$categories.name}</a></li>
     {categories nodes=$categories.children}
   </ul>
 </div>

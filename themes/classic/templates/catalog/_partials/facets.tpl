@@ -1,4 +1,4 @@
-<div id="search_filters" class="_margin-bottom-medium _margin-top-medium">
+<div id="search_filters">
   <h4 class="h5 facets-title">{l s='Filter By'}</h4>
   {foreach from=$facets item="facet"}
     {if $facet.displayed}
@@ -22,7 +22,7 @@
                           {elseif isset($filter.properties.texture)}
                             <span class="color texture" style="background-image:url({$filter.properties.texture})"></span>
                           {else}
-                          <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons check">&#xE5CA;</i></span>
+                          <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
                         {/if}
                       </span>
                     {else}
@@ -33,7 +33,7 @@
                           name="filter {$facet.label}"
                           {if $filter.active } checked {/if}
                         >
-                        <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons check">&#xE5CA;</i></span>
+                        <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
                       </span>
                     {/if}
 
