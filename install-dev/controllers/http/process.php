@@ -374,20 +374,24 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
     private function clearConfigXML()
     {
-        $cacheFiles = scandir(_PS_ROOT_DIR_.'/config/xml/');
+        $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
+        $cacheFiles = scandir($configXMLPath);
         $excludes = ['.htaccess', 'index.php'];
 
         foreach($cacheFiles as $file) {
-            if (is_file($file) && !in_array($file, $excludes)) {
-                unlink($file);
+            $filepath = $configXMLPath.$file;
+            if (is_file($filepath) && !in_array($file, $excludes)) {
+                unlink($filepath);
             }
         }
     }
 
     private function clearConfigThemes()
     {
-        $cacheFiles = scandir(_PS_ROOT_DIR_.'/config/themes');
+        $themesPath = _PS_ROOT_DIR_.'/config/themes/';
+        $cacheFiles = scandir($themesPath);
         foreach($cacheFiles as $file) {
+            $file = $themesPath.$file;
             if (is_file($file)) {
                 unlink($file);
             }
