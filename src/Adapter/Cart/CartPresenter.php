@@ -202,6 +202,10 @@ class CartPresenter implements PresenterInterface
 
     public function present(ObjectModel $cart)
     {
+        if (!is_a($cart, 'Cart')) {
+            throw new \Exception("CartPresenter can only present instance of Cart");
+        }
+
         $rawProducts = $cart->getProducts(true);
 
         $products = array_map([$this, 'presentProduct'], $rawProducts);

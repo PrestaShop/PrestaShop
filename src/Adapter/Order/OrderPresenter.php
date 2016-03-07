@@ -50,6 +50,10 @@ class OrderPresenter implements ObjectModel
      */
     public function present(ObjectModel $order)
     {
+        if (!is_a($order, 'Order')) {
+            throw new \Exception("OrderPresenter can only present instance of Order");
+        }
+
         return [
             'products' => $this->getProducts($order),
             'products_count' => count($this->getProducts($order)),
