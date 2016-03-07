@@ -3,7 +3,7 @@
     <img class="media-object" src="{$product.cover.small.url}" alt="{$product.name}" />
   </a>
 </div>
-<div class="media-body _valign-middle">
+<div class="media-body">
   <span class="product-name">{$product.name}</span>
   <span class="product-quantity">x{$product.quantity}</span>
   <span class="product-price pull-xs-right">{$product.price}</span>

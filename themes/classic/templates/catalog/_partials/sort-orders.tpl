@@ -1,5 +1,5 @@
 <div class="products-sort-order dropdown">
-  <span class="_margin-right-small">{l s='Sort by:'}</span>
+  <span>{l s='Sort by:'}</span>
   <a class="select-title" rel="nofollow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     {l s='Select'}
     <i class="material-icons pull-xs-right">&#xE5C5;</i>

@@ -6,7 +6,6 @@
 @import "~bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.css";
 @import "partials/_mixins";
 @import "partials/_fonts";
-@import "partials/_helpers";
 @import "partials/_commons";
 @import "modules/drop-down";
 @import "modules/search-widget";
@@ -109,7 +108,7 @@
     }
   }
   .header-top {
-    padding-bottom: em(10px);
+    padding-bottom: $small-space;
     .menu {
       > ul {
         display: table;
@@ -122,6 +121,9 @@
       color: $gray;
       text-transform: uppercase;
     }
+  }
+  .top-menu-link{
+    margin-left: $medium-space;
   }
 }
 /*** WRAPPER ***/

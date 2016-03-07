@@ -24,14 +24,12 @@
 *}
 
 {block name='social_sharing'}
-  <div class="social-sharing _display-table _divide-top _margin-top-large">
-    <div class="_margin-top-medium">
-      <span class="_display-table-cell _valign-middle">{l s='Share' mod='socialsharing'}</span>
-      <ul class="_display-table-cell">
-        {foreach from=$social_share_links item='social_share_link'}
-          <li class="{$social_share_link.class} icon-gray"><a href="{$social_share_link.url}" class="text-hide" title="{$social_share_link.label}">{$social_share_link.label}</a></li>
-        {/foreach}
-      </ul>
-    </div>
+  <div class="social-sharing">
+    <span>{l s='Share' mod='socialsharing'}</span>
+    <ul>
+      {foreach from=$social_share_links item='social_share_link'}
+        <li class="{$social_share_link.class} icon-gray"><a href="{$social_share_link.url}" class="text-hide" title="{$social_share_link.label}">{$social_share_link.label}</a></li>
+      {/foreach}
+    </ul>
   </div>
 {/block}

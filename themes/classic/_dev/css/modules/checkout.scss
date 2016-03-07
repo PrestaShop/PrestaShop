@@ -285,6 +285,9 @@ body#checkout {
       border: $gray-light 1px solid;
       width: em(50px);
     }
+    .media-body{
+      vertical-align: middle;
+    }
   }
   #footer {
     @include box-shadow;

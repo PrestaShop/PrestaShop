@@ -19,6 +19,9 @@
     border: 2px solid $gray-darker;
   }
 }
+.input-container{
+  position: relative;
+}
 .input-radio {
   position: absolute;
   top: 0;
@@ -112,6 +115,7 @@
 
 .tabs {
   @include box-shadow;
+  margin-top: $medium-space;
   background: white;
   padding: $medium-space $large-space;
   .tab-pane {
@@ -138,6 +142,7 @@
 }
 .product-cover {
   margin-bottom: $medium-space;
+  position: relative;
   img {
     @include box-shadow;
     background: white;
@@ -186,7 +191,11 @@
           margin-bottom: 0;
         }
       }
+      .thumbnails{
+        position: relative;
+      }
       .mask {
+        position: relative;
         overflow: hidden;
         max-height: em(790px);
         margin-top: em(35px);
@@ -249,6 +258,9 @@
     font-weight: 600;
     color: white;
     font-size: em(18px);
+    i.material-icons{
+      margin-right: $large-space;
+    }
   }
   .product-name {
     color: $brand-primary;
@@ -259,6 +271,9 @@
   }
   .cart-content {
     padding-left: $extra-large-space;
+  }
+  .divide-right{
+    border-right: $gray 1px solid;
   }
 }
 .product-image {
@@ -286,7 +301,8 @@
 #product-availability {
   display: inline-block;
   font-weight: 700;
-  .check {
+  margin-left:$small-space;
+  .product-available {
     color: $brand-success;
     margin-right: em(5px);
   }
@@ -321,7 +337,7 @@
 }
 .product-variants {
   > .product-variants-item {
-    margin-top: $medium-space;
+    margin: $medium-space 0;
     ul li{
       margin-right: $small-space;
     }
@@ -414,8 +430,17 @@ li.product-label {
     }
   }
 }
+.product-refresh{
+  margin-top: $medium-space;
+}
 .social-sharing {
   width: 100%;
+  @include display(flex);
+  @include align-items(center);
+  margin-top: $medium-space;
+  ul{
+    margin-bottom: 0;
+  }
   li {
     @include box-shadow;
     height: 2.5em;

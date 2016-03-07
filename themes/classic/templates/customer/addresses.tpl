@@ -16,7 +16,7 @@
   <div class="addresses-footer">
     <a href="{$urls.pages.address}" data-link-action="add-address">
       <i class="material-icons">&#xE145;</i>
-      <span class="_valign-middle">{l s='Create new address'}</span>
+      <span>{l s='Create new address'}</span>
     </a>
   </div>
 {/block}

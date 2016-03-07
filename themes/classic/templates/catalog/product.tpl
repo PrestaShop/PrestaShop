@@ -23,7 +23,7 @@
 
 {block name='content'}
 
-  <section id="main" class="_gray-darker" itemscope itemtype="https://schema.org/Product">
+  <section id="main" itemscope itemtype="https://schema.org/Product">
     <meta itemprop="url" content="{$product.url}">
 
     {block name='product_activation'}
@@ -44,7 +44,7 @@
 
               <div class="images-container">
                 {block name='product_cover'}
-                  <div class="product-cover _relative">
+                  <div class="product-cover">
                     <img class="js-product-cover" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" width="452" itemprop="image" />
                     <div class="layer" data-toggle="modal" data-target="#product-modal">
                       <i class="material-icons zoom-in">&#xE8FF;</i>
@@ -198,11 +198,11 @@
                           {else if $group.group_type == 'color'}
                             <ul id="group_{$id_attribute_group}">
                               {foreach from=$group.attributes key=id_attribute item=group_attribute}
-                                <li class="_relative pull-xs-left">
+                                <li class="pull-xs-left input-container">
                                   <input class="input-color" type="radio" data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
-                                  <span class="color"
-                                    {if $group_attribute.html_color_code} style="background-color: {$group_attribute.html_color_code}" {/if}
-                                    {if $group_attribute.texture} style="background-image: url({$group_attribute.texture})" {/if}
+                                  <span
+                                    {if $group_attribute.html_color_code}class="color" style="background-color: {$group_attribute.html_color_code}" {/if}
+                                    {if $group_attribute.texture}class="color texture" style="background-image: url({$group_attribute.texture})" {/if}
                                   ><span class="sr-only">{$group_attribute.name}</span></span>
                                 </li>
                               {/foreach}
@@ -210,7 +210,7 @@
                           {else if $group.group_type == 'radio'}
                             <ul id="group_{$id_attribute_group}">
                               {foreach from=$group.attributes key=id_attribute item=group_attribute}
-                                <li class="_relative pull-xs-left">
+                                <li class="input-container pull-xs-left">
                                   <input class="input-radio" type="radio" data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
                                   <span class="radio-label">{$group_attribute.name}</span>
                                 </li>
@@ -267,7 +267,7 @@
                           {*<form class="add-to-cart" action="{$urls.pages.cart}" method="post">*}
 
                             {block name='product_quantity'}
-                              <p class="product-quantity _margin-top-medium">
+                              <p class="product-quantity">
                                 <label for="quantity_wanted">{l s='Quantity'}</label>
                                 <input type="text" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" class="input-group" />
                               </p>
@@ -281,7 +281,7 @@
                               {/if}
                             {/block}
 
-                            <button class="btn btn-primary add-to-cart _relative" data-button-action="add-to-cart" type="submit" {if !$product.add_to_cart_url}disabled{/if}>
+                            <button class="btn btn-primary add-to-cart" data-button-action="add-to-cart" type="submit" {if !$product.add_to_cart_url}disabled{/if}>
                               <i class="material-icons shopping-cart">&#xE547;</i>
                               {l s='Add to cart'}
                             </button>
@@ -289,7 +289,7 @@
 
                             {block name='product_availability'}
                              {if $product.show_availability}
-                                <p id="product-availability" class="_margin-left-medium"><i class="material-icons check">&#xE5CA;</i>{$product.availability_message}</p>
+                                <p id="product-availability"><i class="material-icons product-available">&#xE5CA;</i>{$product.availability_message}</p>
                              {/if}
                             {/block}
                             {hook h='displayProductButtons' product=$product}
@@ -298,7 +298,7 @@
                       {/block}
 
                       {block name='product_refresh'}
-                        <input class="product-refresh _margin-top-large ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh'}" />
+                        <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh'}" />
                       {/block}
                     </div>
                   {/block}
@@ -309,7 +309,7 @@
 
             {hook h='displayReassurance'}
 
-            <div class="tabs _margin-top-large">
+            <div class="tabs">
               <ul class="nav nav-tabs">
                 <li class="nav-item">
                   <a href="#description" class="nav-link active" data-toggle = "tab">{l s='Description'}</a>
@@ -392,8 +392,8 @@
 
       {block name='product_accessories'}
         {if $accessories}
-          <section class="product-accessories clearfix _margin-top-large">
-            <h3 class="h5 text-uppercase _bolder">{l s='You might also like'}</h3>
+          <section class="product-accessories clearfix">
+            <h3 class="h5 text-uppercase">{l s='You might also like'}</h3>
             {foreach from=$accessories item="product_accessory"}
               {block name='product_miniature'}
                 {include file='catalog/product-miniature.tpl' product=$product_accessory}
@@ -409,8 +409,8 @@
 
       {block name='product_attachments'}
         {if $product.attachments}
-          <section class="product-attachments _gray-darker">
-            <h3 class="h5 text-uppercase _bolder">{l s='Download'}</h3>
+          <section class="product-attachments">
+            <h3 class="h5 text-uppercase">{l s='Download'}</h3>
             {foreach from=$product.attachments item=attachment}
               <div class="attachment">
                 <h4><a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}">{$attachment.name}</a></h4>
@@ -436,9 +436,9 @@
               {/block}
             </figcaption>
             </figure>
-            <aside id="thumbnails" class="thumbnails js-thumbnails text-xs-center _relative">
+            <aside id="thumbnails" class="thumbnails js-thumbnails text-xs-center">
               {block name='product_images'}
-                <div class="js-mask mask _relative">
+                <div class="js-mask mask">
                   <ul class="product-images js-product-images">
                     {foreach from=$product.images item=image}
                       <li class="thumb-container">
