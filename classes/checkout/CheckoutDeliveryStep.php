@@ -1,6 +1,6 @@
 <?php
 
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
 class CheckoutDeliveryStepCore extends AbstractCheckoutStep
 {
@@ -71,7 +71,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     {
         if ($this->getGiftCost() != 0) {
             $taxLabel = '';
-            $pricePresenter = new PricePresenter();
+            $priceFormatter = new PriceFormatter();
 
             if ($this->getIncludeTaxes() && $this->getDisplayTaxesLabel()) {
                 $taxLabel .= ' tax incl.';
@@ -85,7 +85,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                     [],
                     'Checkout'
                 ),
-                $pricePresenter->convertAndFormat($this->getGiftCost()),
+                $priceFormatter->convertAndFormat($this->getGiftCost()),
                 $taxLabel
             );
         }

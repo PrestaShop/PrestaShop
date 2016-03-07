@@ -4,7 +4,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Tools;
 
-class PricePresenter
+class PriceFormatter
 {
     public function convertAmount($price)
     {

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
@@ -710,7 +710,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
     {
-        $pricePresenter = new PricePresenter();
+        $priceFormatter = new PriceFormatter();
 
         foreach ($specific_prices as $key => &$row) {
             $row['quantity'] = &$row['from_quantity'];
@@ -728,12 +728,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $discountPrice = $price - $row['real_value'];
                 if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                     if ($row['reduction_tax'] == 0 && !$row['price']) {
-                        $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
+                        $row['discount'] = $priceFormatter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
                     } else {
-                        $row['discount'] = $pricePresenter->convertAndFormat($price - $row['real_value']);
+                        $row['discount'] = $priceFormatter->convertAndFormat($price - $row['real_value']);
                     }
                 } else {
-                    $row['discount'] = $pricePresenter->convertAndFormat($row['real_value']);
+                    $row['discount'] = $priceFormatter->convertAndFormat($row['real_value']);
                 }
                 $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
             } else {
@@ -747,21 +747,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $discountPrice = $price - $row['real_value'];
                     if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                         if ($row['reduction_tax'] == 0 && !$row['price']) {
-                            $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
+                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
                         } else {
-                            $row['discount'] = $pricePresenter->convertAndFormat($price - $row['real_value']);
+                            $row['discount'] = $priceFormatter->convertAndFormat($price - $row['real_value']);
                         }
                     } else {
-                        $row['discount'] = $pricePresenter->convertAndFormat($row['real_value']);
+                        $row['discount'] = $priceFormatter->convertAndFormat($row['real_value']);
                     }
                 } else {
                     $row['real_value'] = $row['reduction'] * 100;
                     $discountPrice = $price - $price*$row['reduction'];
                     if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                         if ($row['reduction_tax'] == 0) {
-                            $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
+                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
                         } else {
-                            $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction']));
+                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price*$row['reduction']));
                         }
                     } else {
                         $row['discount'] = $row['real_value'].'%';
@@ -769,7 +769,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 }
             }
 
-            $row['save'] = $pricePresenter->convertAndFormat((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
+            $row['save'] = $priceFormatter->convertAndFormat((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
             $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : - 1);
         }
 

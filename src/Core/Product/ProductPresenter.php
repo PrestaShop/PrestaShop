@@ -3,7 +3,7 @@
 namespace PrestaShop\PrestaShop\Core\Product;
 
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -15,22 +15,22 @@ class ProductPresenter
 {
     private $imageRetriever;
     private $link;
-    private $pricePresenter;
+    private $priceFormatter;
     private $productColorsRetriever;
     private $translator;
 
     public function __construct(
         ImageRetriever $imageRetriever,
         Link $link,
-        PricePresenter $pricePresenter,
+        PriceFormatter $priceFormatter,
         ProductColorsRetriever $productColorsRetriever,
         TranslatorInterface $translator
     ) {
-        $this->imageRetriever = $imageRetriever;
-        $this->link = $link;
-        $this->pricePresenter = $pricePresenter;
+        $this->imageRetriever         = $imageRetriever;
+        $this->link                   = $link;
+        $this->priceFormatter         = $priceFormatter;
         $this->productColorsRetriever = $productColorsRetriever;
-        $this->translator = $translator;
+        $this->translator             = $translator;
     }
 
     private function shouldShowPrice(
@@ -102,10 +102,10 @@ class ProductPresenter
         }
 
         $presentedProduct['price_amount'] = $price;
-        $presentedProduct['price'] = $this->pricePresenter->format($price);
+        $presentedProduct['price'] = $this->priceFormatter->format($price);
 
-        $presentedProduct['regular_price'] = $this->pricePresenter->format(
-            $this->pricePresenter->convertAmount($regular_price)
+        $presentedProduct['regular_price'] = $this->priceFormatter->format(
+            $this->priceFormatter->convertAmount($regular_price)
         );
 
         return $presentedProduct;

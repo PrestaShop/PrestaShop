@@ -12,9 +12,9 @@ use Language;
 use Link;
 use Context;
 use Adapter_ProductPriceCalculator;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter as BasePricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
 
-class PricePresenter extends BasePricePresenter
+class PriceFormatter extends BasePricePresenter
 {
     public function convertAmount($price)
     {
@@ -76,7 +76,7 @@ class ProductPresenterTest extends UnitTestCase
         $presenter = new ProductPresenter(
             $imageRetriever,
             $link,
-            new PricePresenter,
+            new PriceFormatter,
             Phake::mock('PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever'),
             $translator
         );

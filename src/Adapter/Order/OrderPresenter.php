@@ -4,7 +4,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Address;
@@ -28,18 +28,18 @@ class OrderPresenter
     /* @var ObjectPresenter */
     private $objectPresenter;
 
-    /* @var PricePresenter */
-    private $pricePresenter;
+    /* @var PriceFormatter */
+    private $priceFormatter;
 
     /* @var Translator */
     private $translator;
 
     public function __construct()
     {
-        $this->cartPresenter = new CartPresenter();
+        $this->cartPresenter   = new CartPresenter();
         $this->objectPresenter = new ObjectPresenter();
-        $this->pricePresenter = new PricePresenter();
-        $this->translator = new Translator(new LegacyContext());
+        $this->priceFormatter  = new PriceFormatter();
+        $this->translator      = new Translator(new LegacyContext());
     }
 
     /**
@@ -78,14 +78,14 @@ class OrderPresenter
         $orderProducts = $order->getCartProducts();
         $cartProducts = $this->cartPresenter->present($cart);
 
-        foreach($orderProducts as &$orderProduct) {
+        foreach ($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
-            $orderProduct['price'] = $this->pricePresenter->format($orderProduct['product_price']);
+            $orderProduct['price'] = $this->priceFormatter->format($orderProduct['product_price']);
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
-            $orderProduct['total'] = $this->pricePresenter->format($orderProduct['total_price']);
+            $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price']);
 
-            foreach($cartProducts['products'] as $cartProduct) {
-                if($cartProduct['id_product'] === $orderProduct['product_id']) {
+            foreach ($cartProducts['products'] as $cartProduct) {
+                if ($cartProduct['id_product'] === $orderProduct['product_id']) {
                     $orderProduct['attributes'] = $cartProduct['attributes'];
                     $orderProduct['cover'] = $cartProduct['cover'];
                 }
@@ -113,7 +113,7 @@ class OrderPresenter
             $subtotals['tax'] = [
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', [], 'Cart'),
-                'amount' => $this->pricePresenter->format(
+                'amount' => $this->priceFormatter->format(
                     $order->total_paid_tax_incl - $order->total_paid_tax_excl
                 ),
             ];
@@ -122,7 +122,7 @@ class OrderPresenter
         $subtotals['products'] = [
             'type' => 'products',
             'label' => $this->translator->trans('Products', [], 'Cart'),
-            'amount' =>  $this->pricePresenter->format($order->total_products)
+            'amount' =>  $this->priceFormatter->format($order->total_products)
         ];
 
         $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
@@ -130,25 +130,25 @@ class OrderPresenter
         $subtotals['shipping'] = [
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', [], 'Cart'),
-            'amount' => $shipping_cost != 0 ? $this->pricePresenter->format($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
+            'amount' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
         ];
 
         $discount_amount = ($this->includeTaxes()) ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
         $subtotals['discounts'] = [
             'type' => 'discount',
             'label' => $this->translator->trans('Discount', [], 'Cart'),
-            'amount' => $discount_amount != 0 ? $this->pricePresenter->format($discount_amount) : 0,
+            'amount' => $discount_amount != 0 ? $this->priceFormatter->format($discount_amount) : 0,
         ];
 
         $amounts['total'] = [
             'type' => 'total',
             'label' => $this->translator->trans('Total', [], 'Order'),
-            'amount' => $this->pricePresenter->format($order->total_paid),
+            'amount' => $this->priceFormatter->format($order->total_paid),
         ];
         $amounts['total_paid'] = [
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', [], 'Order'),
-            'amount' => $this->pricePresenter->format($order->total_paid_real),
+            'amount' => $this->priceFormatter->format($order->total_paid_real),
         ];
 
         $amounts['subtotals'] = $subtotals;
