@@ -1,5 +1,10 @@
 #products {
   color: $gray-dark;
+  .products-select{
+    @include display(flex);
+    @include align-items(baseline);
+    @include justify-content(space-between);
+  }
 }
 .block-category {
   background: white;

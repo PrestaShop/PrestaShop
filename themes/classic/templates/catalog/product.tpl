@@ -200,9 +200,9 @@
                               {foreach from=$group.attributes key=id_attribute item=group_attribute}
                                 <li class="_relative pull-xs-left">
                                   <input class="input-color" type="radio" data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
-                                  <span class="color"
-                                    {if $group_attribute.html_color_code} style="background-color: {$group_attribute.html_color_code}" {/if}
-                                    {if $group_attribute.texture} style="background-image: url({$group_attribute.texture})" {/if}
+                                  <span
+                                    {if $group_attribute.html_color_code}class="color" style="background-color: {$group_attribute.html_color_code}" {/if}
+                                    {if $group_attribute.texture}class="color texture" style="background-image: url({$group_attribute.texture})" {/if}
                                   ><span class="sr-only">{$group_attribute.name}</span></span>
                                 </li>
                               {/foreach}

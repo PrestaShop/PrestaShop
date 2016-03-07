@@ -5040,11 +5040,9 @@ a.bg-danger:focus, a.bg-danger:hover {
 ._relative {
   position: relative; }
 
-._display-table {
-  display: table; }
-
-._display-table-cell {
-  display: table-cell; }
+._flex {
+  -js-display: flex;
+  display: flex; }
 
 ._margin-right-large {
   margin-right: 30px; }
@@ -6147,6 +6145,33 @@ body#checkout {
 
 #products {
   color: #878787; }
+  #products .products-select {
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    display: flex;
+    -webkit-box-align: baseline;
+    -moz-box-align: baseline;
+    box-align: baseline;
+    -webkit-align-items: baseline;
+    -moz-align-items: baseline;
+    -ms-align-items: baseline;
+    -o-align-items: baseline;
+    align-items: baseline;
+    -ms-flex-align: baseline;
+    -webkit-box-pack: justify;
+    -moz-box-pack: justify;
+    box-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    -o-justify-content: space-between;
+    justify-content: space-between;
+    -ms-flex-pack: justify; }
 
 .block-category {
   background: white;
