@@ -55,6 +55,22 @@ class Theme implements AddonInterface
         return $this->attributes->get('directory');
     }
 
+    public function getModulesToEnable()
+    {
+        $modulesToEnable = $this->get('global_settings.modules.to_enable', []);
+        $modulesToHook = $this->get('global_settings.hooks.modules_to_hook', []);
+
+        foreach ($modulesToHook as $hookName => $modules) {
+            foreach (array_values($modules) as $module) {
+                if (!in_array($module, $modulesToEnable)) {
+                    $modulesToEnable[] = $module;
+                }
+            }
+        }
+
+        return $modulesToEnable;
+    }
+
     public function onInstall()
     {
         return true;
