@@ -2,6 +2,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart;
 
+use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
@@ -15,8 +16,9 @@ use Product;
 use Configuration;
 use CartRule;
 use Tools;
+use ObjectModel;
 
-class CartPresenter
+class CartPresenter implements PresenterInterface
 {
     private $priceFormatter;
     private $link;
@@ -198,7 +200,7 @@ class CartPresenter
         }, $products);
     }
 
-    public function present(Cart $cart)
+    public function present(ObjectModel $cart)
     {
         $rawProducts = $cart->getProducts(true);
 
