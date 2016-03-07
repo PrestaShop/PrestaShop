@@ -38,7 +38,7 @@ class CartPresenter implements PresenterInterface
         return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
     }
 
-    protected function presentProduct(array $rawProduct)
+    private function presentProduct(array $rawProduct)
     {
         $presenter = new ProductPresenter(
             $this->imageRetriever,
@@ -284,7 +284,7 @@ class CartPresenter implements PresenterInterface
         ];
     }
 
-    public function getTemplateVarVouchers(Cart $cart)
+    private function getTemplateVarVouchers(Cart $cart)
     {
         $cartVouchers = $cart->getCartRules();
         $vouchers = [];

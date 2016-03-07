@@ -72,7 +72,7 @@ class OrderPresenter implements ObjectModel
      *
      * @return array
      */
-    public function getProducts(Order $order)
+    private function getProducts(Order $order)
     {
         $cart = new Cart($order->id_cart);
 
@@ -105,7 +105,7 @@ class OrderPresenter implements ObjectModel
      *
      * @return array
      */
-    public function getAmounts(Order $order)
+    private function getAmounts(Order $order)
     {
         $amounts = [];
         $subtotals = [];
@@ -162,7 +162,7 @@ class OrderPresenter implements ObjectModel
      *
      * @return array
      */
-    public function getDetails(Order $order)
+    private function getDetails(Order $order)
     {
         $context = Context::getContext();
 
@@ -186,7 +186,7 @@ class OrderPresenter implements ObjectModel
      *
      * @return array
      */
-    public function getHistory(Order $order)
+    private function getHistory(Order $order)
     {
         $orderHistory = [];
         $context = Context::getContext();
@@ -206,7 +206,7 @@ class OrderPresenter implements ObjectModel
      *
      * @return array
      */
-    public function getShipping(Order $order)
+    private function getShipping(Order $order)
     {
         $shippingList = $order->getShipping();
         $orderShipping = [];
@@ -240,7 +240,7 @@ class OrderPresenter implements ObjectModel
      *
      * @return array
      */
-    public function getMessages(Order $order)
+    private function getMessages(Order $order)
     {
         $messages = [];
         $customerMessages = CustomerMessage::getMessagesByOrderId((int) $order->id, false);
@@ -266,7 +266,7 @@ class OrderPresenter implements ObjectModel
      *
      * @return array
      */
-    public function getCarrier(Order $order)
+    private function getCarrier(Order $order)
     {
         $carrier = new Carrier((int) $order->id_carrier, (int) $order->id_lang);
         $orderCarrier = $this->objectPresenter->present($carrier);
@@ -280,7 +280,7 @@ class OrderPresenter implements ObjectModel
      *
      * @return array
      */
-    public function getAddresses(Order $order)
+    private function getAddresses(Order $order)
     {
         $orderAddresses = [
             'delivery' => [],
@@ -306,7 +306,7 @@ class OrderPresenter implements ObjectModel
      *
      * @return string
      */
-    public function getFollowUp(Order $order)
+    private function getFollowUp(Order $order)
     {
         $carrier = $this->getCarrier($order);
         if (!empty($carrier['url']) && !empty($order->shipping_number)) {
