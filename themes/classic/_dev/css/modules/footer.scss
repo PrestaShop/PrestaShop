@@ -90,6 +90,12 @@
     }
   }
 }
+#block_myaccount_infos{
+  margin-top: $medium-space;
+  .myaccount-title a{
+    color:$gray-darker;
+  }
+}
 .pinterest {
   background-image: url(../img/pinterest.svg);
   &.icon-gray {

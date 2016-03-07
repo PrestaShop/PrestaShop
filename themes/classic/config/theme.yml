@@ -89,6 +89,10 @@ global_settings:
       width: 141
       height: 180
       scope: [categories]
+    stores_default:
+      width: 170
+      height: 115
+      scope: [stores]
 
 theme_settings:
   default_layout: layout-full-width

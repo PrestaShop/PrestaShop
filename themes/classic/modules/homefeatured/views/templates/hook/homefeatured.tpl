@@ -5,5 +5,5 @@
       {include file="catalog/product-miniature.tpl" product=$product}
     {/foreach}
   </div>
-  <a class="all-product-link pull-xs-right" href="{$allProductsLink}">{l s='All products' mod='homefeatured'}<i class="material-icons">&#xE315;</i></a>
+  <a class="all-product-link pull-xs-left pull-md-right" href="{$allProductsLink}">{l s='All products' mod='homefeatured'}<i class="material-icons">&#xE315;</i></a>
 </section>

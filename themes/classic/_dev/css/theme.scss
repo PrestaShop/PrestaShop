@@ -19,6 +19,7 @@
 @import "modules/products";
 @import "modules/cart";
 @import "modules/block-reassurance";
+@import "modules/stores";
 @import "modules/footer";
 @import "modules/contact";
 @import "modules/errors";
@@ -193,7 +194,7 @@
 #footer {
   padding-top: em(40px);
 }
-@include media-breakpoint-down(xs) {
+@include media-breakpoint-down(sm) {
   #checkout-cart-summary {
     float: none;
     width: 100%;
@@ -201,15 +202,22 @@
   }
   #header .header-nav {
     max-height: none;
+    min-height: 150px;
     .right-nav {
       @include flex-direction(column);
     }
     .user-info {
       text-align: left;
       margin-left: 0;
+      position: absolute;
+      right: $small-space;
+      top: -$large-space;
     }
     .blockcart {
       margin-left: 0;
+      position: absolute;
+      right: $small-space;
+      margin-top: -$small-space;
     }
   }
   section.checkout-step {
@@ -220,5 +228,22 @@
   }
   label {
     clear: both;
+  }
+  #products .product-miniature, .featured-products .product-miniature{
+    margin: 0 auto;
+  }
+  .block-contact{
+    padding-left: 0.9375rem;
+    border:none;
+  }
+  .menu,.dropdown-item{
+    padding-left: 0;
+  }
+  .sub-menu {
+    left: 0;
+    min-width: 100%;
+  }
+  .products-select{
+    @include flex-wrap(wrap);
   }
 }

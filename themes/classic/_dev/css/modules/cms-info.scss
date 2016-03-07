@@ -1,10 +1,8 @@
 #block-cmsinfo {
-  background: white;
   border-radius: 2px;
   margin: em(70px) 0;
   padding: em(50px) em(290px);
   text-align: center;
-  @include box-shadow;
   h3 {
     text-transform: uppercase;
     color: $gray-darker;
@@ -19,5 +17,10 @@
       color: $gray;
       font-weight: 400;
     }
+  }
+}
+@include media-breakpoint-down(md) {
+  #block-cmsinfo {
+    padding: $medium-space $large-space;
   }
 }

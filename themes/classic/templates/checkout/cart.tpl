@@ -25,7 +25,7 @@
         </a>
 
         <!-- shipping informations -->
-        <div class="card">
+        <div>
           {hook h='displayShoppingCart'}
         </div>
       </div>
