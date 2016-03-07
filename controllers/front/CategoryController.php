@@ -108,7 +108,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
     protected function getTemplateVarCategory()
     {
-        $category = $this->objectSerializer->toArray($this->category);
+        $category = $this->objectPresenter->present($this->category);
         $category['image'] = $this->getImage(
             $this->category,
             $this->category->id_image

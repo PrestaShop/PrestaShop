@@ -6,7 +6,7 @@
 
 {block name='head' append}
   <meta property="og:type" content="product" />
-  <meta property="og:url" content="{$request}" />
+  <meta property="og:url" content="{$urls.current_url}" />
   <meta property="og:title" content="{$page.title}" />
   <meta property="og:site_name" content="{$shop.name}" />
   <meta property="og:description" content="{$page.description}" />

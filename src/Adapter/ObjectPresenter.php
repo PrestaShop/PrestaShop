@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-class ObjectSerializer
+class ObjectPresenter
 {
-    public function toArray($object)
+    public function present($object)
     {
         $arr = array();
 

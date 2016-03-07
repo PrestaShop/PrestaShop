@@ -3,7 +3,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
-use PrestaShop\PrestaShop\Adapter\ObjectSerializer;
+use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -24,17 +24,20 @@ class OrderPresenter
 {
     /* @var CartPresenter */
     private $cartPresenter;
-    /* @var ObjectSerializer */
-    private $objectSerializer;
+
+    /* @var ObjectPresenter */
+    private $objectPresenter;
+
     /* @var PricePresenter */
     private $pricePresenter;
+
     /* @var Translator */
     private $translator;
 
     public function __construct()
     {
         $this->cartPresenter = new CartPresenter();
-        $this->objectSerializer = new ObjectSerializer();
+        $this->objectPresenter = new ObjectPresenter();
         $this->pricePresenter = new PricePresenter();
         $this->translator = new Translator(new LegacyContext());
     }
@@ -265,7 +268,7 @@ class OrderPresenter
     public function getCarrier(Order $order)
     {
         $carrier = new Carrier((int) $order->id_carrier, (int) $order->id_lang);
-        $orderCarrier = $this->objectSerializer->toArray($carrier);
+        $orderCarrier = $this->objectPresenter->present($carrier);
         $orderCarrier['name'] = ($carrier->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
 
         return $orderCarrier;
@@ -287,11 +290,11 @@ class OrderPresenter
         $addressInvoice = new Address((int) $order->id_address_invoice);
 
         if (!$order->isVirtual()) {
-            $orderAddresses['delivery'] = $this->objectSerializer->toArray($addressDelivery);
+            $orderAddresses['delivery'] = $this->objectPresenter->present($addressDelivery);
             $orderAddresses['delivery']['formatted'] = AddressFormat::generateAddress($addressDelivery, array(), '<br />');
         }
 
-        $orderAddresses['invoice'] = $this->objectSerializer->toArray($addressInvoice);
+        $orderAddresses['invoice'] = $this->objectPresenter->present($addressInvoice);
         $orderAddresses['invoice']['formatted'] = AddressFormat::generateAddress($addressInvoice, array(), '<br />');
 
         return $orderAddresses;
