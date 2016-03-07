@@ -19,8 +19,9 @@ use Order;
 use OrderReturn;
 use Product;
 use Tools;
+use ObjectModel;
 
-class OrderPresenter
+class OrderPresenter implements ObjectModel
 {
     /* @var CartPresenter */
     private $cartPresenter;
@@ -47,7 +48,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function present(Order $order)
+    public function present(ObjectModel $order)
     {
         return [
             'products' => $this->getProducts($order),
@@ -107,7 +108,7 @@ class OrderPresenter
     public function getAmounts(Order $order)
     {
         $amounts = [];
-        $ubtotals = [];
+        $subtotals = [];
 
         if (Configuration::get('PS_TAX_DISPLAY')) {
             $subtotals['tax'] = [
