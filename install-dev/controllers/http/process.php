@@ -382,6 +382,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
                 unlink($file);
             }
         }
+        die('clearConfig');
     }
 
     private function clearConfigThemes()
