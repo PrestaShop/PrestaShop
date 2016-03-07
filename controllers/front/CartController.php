@@ -191,6 +191,58 @@ class CartControllerCore extends FrontController
                     CartRule::autoAddToCart($this->context);
                 }
             }
+
+            // Make redirection
+            if (!$this->errors) {
+                if (Tools::getValue('ajax')) {
+                    $this->ajaxDie(Tools::jsonEncode([
+                        'success' => true,
+                        'id_product' => $this->id_product,
+                        'id_product_attribute' => $this->id_product_attribute
+                    ]));
+                }
+
+                if (Tools::getValue('refresh')) {
+                    $url = $this->context->link->getProductLink(
+                        $this->id_product,
+                        null,
+                        null,
+                        null,
+                        $this->context->language->id,
+                        null,
+                        (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group')),
+                        false,
+                        false,
+                        true,
+                        ['quantity_wanted' => (int)$this->qty]
+                    );
+
+                    if(Tools::getValue('group') && !Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group'))) {
+                        $this->errors[] = $this->l('This combination does not exist for this product. Please select another combination.');
+                    }
+
+                    return $this->redirectWithNotifications($url);
+                }
+
+                if ($back = Tools::getValue('back')) {
+                    Tools::redirect(urldecode($back));
+                }
+
+                $queryString = Tools::safeOutput(Tools::getValue('query', null));
+                if ($queryString && !Configuration::get('PS_CART_REDIRECT')) {
+                    Tools::redirect('index.php?controller=search&search='.$queryString);
+                }
+
+                // Redirect to previous page
+                if (isset($_SERVER['HTTP_REFERER'])) {
+                    preg_match('!http(s?)://(.*)/(.*)!', $_SERVER['HTTP_REFERER'], $regs);
+                    if (isset($regs[3]) && !Configuration::get('PS_CART_REDIRECT')) {
+                        $url = preg_replace('/(\?)+content_only=1/', '', $_SERVER['HTTP_REFERER']);
+                        Tools::redirect($url);
+                    }
+                }
+            }
+
         } elseif (!$this->isTokenValid() && Tools::getValue('action') !== 'show' && !Tools::getValue('ajax')) {
             Tools::redirect('index.php');
         }
