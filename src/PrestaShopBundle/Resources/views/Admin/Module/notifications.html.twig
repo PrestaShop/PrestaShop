@@ -20,9 +20,12 @@
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_addons_connect.html.twig' %}
     {# Contains toolbar-nav for module page #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_import.html.twig' %}
+    {# Module notification KPI's #}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_notification_kpis.html.twig' %}
     {# Actual Page Content #}
     <div class="row">
         <div class="col-lg-10 col-lg-offset-1">
+
             <div class="module-short-list">
                 <span class="module-search-result-wording">{{modules.to_configure|length}} modules to configure</span>
             </div>

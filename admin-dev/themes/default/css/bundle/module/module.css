@@ -513,3 +513,23 @@ form#importDropzone {
 .module-import-failure-retry {
     margin-top: 15px;
 }
+
+.module-notification-kpis {
+    margin: auto;
+}
+
+.module-kpi {
+    margin-right: 15px;
+    display: initial;
+}
+
+.module-kpi i {
+    font-size: 30px;
+    vertical-align: sub;
+}
+
+.module-kpi-number {
+    margin: auto;
+    font-size: 30px;
+    font-weight: bold;
+}
