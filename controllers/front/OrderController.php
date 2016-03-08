@@ -101,7 +101,6 @@ class OrderControllerCore extends FrontController
         )->setDisplayTaxesLabel(
             (Configuration::get('PS_TAX')
             && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
-            && $this->context->smarty->tpl_vars['display_tax_label']->value
         )->setGiftCost(
             $this->context->cart->getGiftWrappingPrice(
                 $checkoutDeliveryStep->getIncludeTaxes()
