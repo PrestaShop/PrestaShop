@@ -78,22 +78,90 @@ class CartControllerCore extends FrontController
             'static_token' => Tools::getToken(false),
         ]);
 
-        if (Tools::getValue('refreshajax')) {
-            ob_end_clean();
-            header('Content-Type: application/json');
-            die(json_encode([
-                'cart_detailed' => $this->render('checkout/_partials/cart-detailed.tpl'),
-                'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals.tpl'),
-                'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal.tpl'),
-                'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals.tpl'),
-                'cart_voucher' => $this->render('checkout/_partials/cart-voucher.tpl'),
-            ]));
-        }
-
         $this->setTemplate('checkout/cart.tpl');
     }
 
+    public function displayAjaxUpdate()
+    {
+        $this->updateCart();
+
+        if (!$this->errors) {
+            $this->ajaxDie(Tools::jsonEncode([
+                'success' => true,
+                'id_product' => $this->id_product,
+                'id_product_attribute' => $this->id_product_attribute
+            ]));
+        } else {
+            $this->ajaxDie(Tools::jsonEncode([
+                'hasError' => true,
+                'errors' => [$this->l('Something went wrong during cart update')],
+            ]));
+        }
+    }
+
+    public function displayAjaxRefresh()
+    {
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxDie(Tools::jsonEncode([
+            'cart_detailed' => $this->render('checkout/_partials/cart-detailed.tpl'),
+            'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals.tpl'),
+            'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal.tpl'),
+            'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals.tpl'),
+            'cart_voucher' => $this->render('checkout/_partials/cart-voucher.tpl'),
+        ]));
+    }
+
+    public function displayAjaxProductRefresh()
+    {
+        $url = $this->context->link->getProductLink(
+            $this->id_product,
+            null,
+            null,
+            null,
+            $this->context->language->id,
+            null,
+            (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group')),
+            false,
+            false,
+            true,
+            ['quantity_wanted' => (int)$this->qty]
+        );
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxDie(Tools::jsonEncode([
+            'success' => true,
+            'productUrl' => $url
+        ]));
+    }
+
     public function postProcess()
+    {
+        $this->updateCart();
+
+        // Make redirection
+        if (!$this->errors) {
+            if ($back = Tools::getValue('back')) {
+                Tools::redirect(urldecode($back));
+            }
+
+            $queryString = Tools::safeOutput(Tools::getValue('query', null));
+            if ($queryString && !Configuration::get('PS_CART_REDIRECT')) {
+                Tools::redirect('index.php?controller=search&search='.$queryString);
+            }
+
+            // Redirect to previous page
+            if (isset($_SERVER['HTTP_REFERER'])) {
+                preg_match('!http(s?)://(.*)/(.*)!', $_SERVER['HTTP_REFERER'], $regs);
+                if (isset($regs[3]) && !Configuration::get('PS_CART_REDIRECT')) {
+                    $url = preg_replace('/(\?)+content_only=1/', '', $_SERVER['HTTP_REFERER']);
+                    Tools::redirect($url);
+                }
+            }
+        }
+    }
+
+    protected function updateCart()
     {
         // Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
         if ($this->context->cookie->exists() && !$this->errors && !($this->context->customer->isLogged() && !$this->isTokenValid())) {
@@ -123,52 +191,6 @@ class CartControllerCore extends FrontController
                     CartRule::autoAddToCart($this->context);
                 }
             }
-
-            // Make redirection
-            if (!$this->errors) {
-                if (Tools::getValue('ajax')) {
-                    $this->ajaxDie(Tools::jsonEncode([
-                        'success' => true,
-                        'id_product' => $this->id_product,
-                        'id_product_attribute' => $this->id_product_attribute
-                    ]));
-                }
-
-                if (Tools::getValue('refresh')) {
-                    $url = $this->context->link->getProductLink(
-                        $this->id_product,
-                        null,
-                        null,
-                        null,
-                        $this->context->language->id,
-                        null,
-                        (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group')),
-                        false,
-                        false,
-                        true,
-                        ['quantity_wanted' => (int)$this->qty]
-                    );
-                    return Tools::redirect($url);
-                }
-
-                if ($back = Tools::getValue('back')) {
-                    Tools::redirect(urldecode($back));
-                }
-
-                $queryString = Tools::safeOutput(Tools::getValue('query', null));
-                if ($queryString && !Configuration::get('PS_CART_REDIRECT')) {
-                    Tools::redirect('index.php?controller=search&search='.$queryString);
-                }
-
-                // Redirect to previous page
-                if (isset($_SERVER['HTTP_REFERER'])) {
-                    preg_match('!http(s?)://(.*)/(.*)!', $_SERVER['HTTP_REFERER'], $regs);
-                    if (isset($regs[3]) && !Configuration::get('PS_CART_REDIRECT')) {
-                        $url = preg_replace('/(\?)+content_only=1/', '', $_SERVER['HTTP_REFERER']);
-                        Tools::redirect($url);
-                    }
-                }
-            }
         } elseif (!$this->isTokenValid() && Tools::getValue('action') !== 'show' && !Tools::getValue('ajax')) {
             Tools::redirect('index.php');
         }
@@ -196,10 +218,8 @@ class CartControllerCore extends FrontController
             }
 
             if ($total_quantity < $minimal_quantity) {
-                $this->ajaxDie(json_encode(array(
-                    'hasError' => true,
-                    'errors' => array(sprintf($this->l('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity)),
-                )));
+                $this->errors[] = sprintf($this->l('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity);
+                return false;
             }
         }
 
@@ -322,13 +342,5 @@ class CartControllerCore extends FrontController
 
         $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
-
-        if (!$this->errors && $this->ajax) {
-            $this->ajaxDie(Tools::jsonEncode([
-                'success' => true,
-                'id_product' => $this->id_product,
-                'id_product_attribute' => $this->id_product_attribute
-            ]));
-        }
     }
 }

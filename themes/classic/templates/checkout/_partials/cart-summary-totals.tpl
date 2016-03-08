@@ -2,10 +2,12 @@
   {block name='cart_summary_body'}
     <div id="cart-summary">
       {foreach from=$cart.subtotals item="subtotal"}
-        <div class="{$subtotal.type}">
-          <span class="label">{$subtotal.label}</span>
-          <span class="value pull-xs-right">{$subtotal.amount}</span>
-        </div>
+        {if $subtotal.amount}
+          <div class="{$subtotal.type}">
+            <span class="label">{$subtotal.label}</span>
+            <span class="value pull-xs-right">{$subtotal.amount}</span>
+          </div>
+        {/if}
       {/foreach}
     </div>
   {/block}
