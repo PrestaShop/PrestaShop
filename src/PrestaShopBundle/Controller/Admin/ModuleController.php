@@ -162,8 +162,13 @@ class ModuleController extends FrameworkBundleAdminController
             // ToDo : Check if allowed to call this action
             try {
                 $ret[$module]['status'] = $moduleManager->{$action}($module);
-                $ret[$module]['msg'] = ucfirst($action). ' action on module '. $module;
-                $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
+                if ($ret[$module]['status'] == null) {
+                    $ret[$module]['status'] = false;
+                    $ret[$module]['msg'] = $module .' did not returned a valid response on '.$action .' action';
+                } else {
+                    $ret[$module]['msg'] = ucfirst($action). ' action on module '. $module;
+                    $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
+                }
             } catch (Exception $e) {
                 $ret[$module]['status'] = false;
                 $ret[$module]['msg'] = sprintf('Exception thrown by addon %s on %s. %s', $module, $request->attributes->get('action'), $e->getMessage());
