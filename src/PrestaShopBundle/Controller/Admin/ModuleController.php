@@ -3,8 +3,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Filesystem\Filesystem;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -136,14 +135,18 @@ class ModuleController extends FrameworkBundleAdminController
 
     public function moduleAction(Request $request)
     {
-        $action = $request->attributes->get('action'). 'Module';
+        $action = $request->attributes->get('action');
         $module = $request->attributes->get('module_name');
+        $moduleManager = (new ModuleManagerBuilder())->build();
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+
         $ret = array();
-        if (method_exists($this, $action)) {
+        if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
             try {
-                $ret[$module] = $this->{$action}($module);
+                $ret[$module]['status'] = $moduleManager->{$action}($module);
+                $ret[$module]['msg'] = ucfirst($action). ' action on module '. $module;
+                $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
             } catch (Exception $e) {
                 $ret[$module]['status'] = false;
                 $ret[$module]['msg'] = sprintf('Exception thrown by addon %s on %s. %s', $module, $request->attributes->get('action'), $e->getMessage());
@@ -156,11 +159,8 @@ class ModuleController extends FrameworkBundleAdminController
             $ret[$module]['msg'] = 'Invalid action';
         }
 
-
-        $modulesProvider->clearModuleFromManageCache($module);
-
         if ($request->isXmlHttpRequest()) {
-            if ($ret[$module]['status'] === true && $action != 'uninstallModule') {
+            if ($ret[$module]['status'] === true && $action != 'uninstall') {
                 $moduleInstance = $modulesProvider->getManageModules(['name' => $module]);
                 $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls($moduleInstance);
                 $ret[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/_partials:_modules_action_menu.html.twig', array(
@@ -370,54 +370,6 @@ class ModuleController extends FrameworkBundleAdminController
 
         return (array)$topMenuData;
     }
-
-    protected function installModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-
-        if (! $modulesProvider->isModuleOnDisk($module_name)) {
-            $modulesProvider->setModuleOnDiskFromAddons($module_name);
-        }
-
-        try {
-            $module = $modulesProvider->getModule($module_name);
-            $status = $module->install();
-        } catch (Exception $e) {
-            $status = false;
-            $module = $modulesProvider->getModule($module_name);
-        }
-
-        if ($status) {
-            $msg = sprintf('Module %s is now installed', $module_name);
-        } else {
-            $msg = sprintf('Could not install module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
-            $modulesProvider->removeModuleFromDisk($module_name);
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
-    protected function uninstallModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-
-        // Module uninstall
-        $module = $modulesProvider->getModule($module_name);
-        $status = $module->uninstall();
-
-        if ($status) {
-            // Module files deletion
-            $fs = new Filesystem();
-            $fs->remove(_PS_MODULE_DIR_.$module_name);
-
-            $msg = sprintf('Module %s is now uninstalled', $module_name);
-        } else {
-            $msg = sprintf('Could not uninstall module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
     public function configureModuleAction($module_name)
     {
         $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
@@ -430,96 +382,6 @@ class ModuleController extends FrameworkBundleAdminController
         return $this->redirect($legacyUrlGenerator->generate('admin_module_configure_action',
                     $redirectionParams), 302);
     }
-
-    protected function enableModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $module = $modulesProvider->getModule($module_name);
-        $status = $module->enable();
-
-        if ($status) {
-            $msg = sprintf('Module %s is now enabled', $module_name);
-        } else {
-            $msg = sprintf('Could not enable module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
-    protected function disableModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $module = $modulesProvider->getModule($module_name);
-        $status = $module->disable();
-
-        if ($status) {
-            $msg = sprintf('Module %s is now disabled', $module_name);
-        } else {
-            $msg = sprintf('Could not disable module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
-    protected function resetModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $request = Request::createFromGlobals();
-
-        $module = $modulesProvider->getModule($module_name);
-        if ($request->request->has('keep_data') && method_exists($this, 'reset')) {
-            $status = $module->disable();
-        } else {
-            $status = ($module->uninstall() && $module->install());
-        }
-
-        if ($status) {
-            $msg = sprintf('Module %s has been reset', $module_name);
-        } else {
-            $msg = sprintf('Could not reset module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
-    protected function updateModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-
-        $module_to_update = null;
-        $additionnal_upgrade_files = 0;
-
-        foreach ($modulesProvider->getManageModules() as $module) {
-            if ($module->name == $module_name) {
-                $old_version = $module->database_version;
-                $module_to_update = $module;
-                break;
-            }
-        }
-
-        $modulesProvider->setModuleOnDiskFromAddons($module_name);
-        if (\Module::initUpgradeModule($module_to_update)) {
-            $details = $module_to_update->runUpgradeModule();
-            if (isset($details['number_upgrade'])) {
-                $additionnal_upgrade_files = $details['number_upgrade'];
-            }
-        }
-        $new_version = $modulesProvider->getModule($module_name)->version;
-
-        $status = \Module::getUpgradeStatus($module_to_update->name);
-        if ($status) {
-            $msg = sprintf('Module %s has been updated from %s to %s. Applied %d additionnal upgrade files.', $module_name, $old_version, $new_version, $additionnal_upgrade_files);
-        } else {
-            if (!empty($details['version_fail'])) {
-                $msg = sprintf('Could not update module %s, failed while applying upgrade file %s. The module has been disabled.', $module_name, $details['version_fail']);
-            } else {
-                $msg = sprintf('Could not update module %s.', $module_name);
-            }
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
     final private function getAddonsConnectToolbar()
     {
         $addonsProvider = $this->container->get('prestashop.core.admin.data_provider.addons_interface');

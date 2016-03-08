@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -48,9 +49,6 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     const _CACHEFILE_CATEGORIES_ = 'catalog_categories.json';
     const _CACHEFILE_MODULES_ = 'catalog_modules.json';
 
-    const _CACHEFILE_INSTALLED_CATEGORIES_ = 'catalog_installed_categories.json';
-    const _CACHEFILE_INSTALLED_MODULES_ = 'catalog_installed_modules.json';
-
     /* Cache for One Day */
     const _WATCH_DOG_ = 86400;
 
@@ -60,7 +58,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
      */
     private $router;
 
-    private $cache_dir;
+    private $cache_dir = _PS_ROOT_DIR_.'cache/';
 
     protected $catalog_categories;
     protected $catalog_modules;
@@ -68,7 +66,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     protected $manage_categories;
     protected $manage_modules;
 
-    public function __construct(\AppKernel $kernel, Router $router)
+    public function __construct(\AppKernel $kernel = null, Router $router = null)
     {
         $this->catalog_categories      = [];
         $this->catalog_modules         = [];
@@ -78,7 +76,9 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
         $this->kernel = $kernel;
         $this->router = $router;
-        $this->cache_dir = $this->kernel->getCacheDir().'/modules/';
+        if ($this->kernel) {
+            $this->cache_dir = $this->kernel->getCacheDir().'/modules/';
+        }
     }
 
     public function clearCatalogCache()
@@ -88,30 +88,6 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $this->catalog_modules         = [];
     }
 
-    public function clearManageCache()
-    {
-        $this->clearCache([self::_CACHEFILE_INSTALLED_CATEGORIES_, self::_CACHEFILE_INSTALLED_MODULES_]);
-        $this->manage_categories      = [];
-        $this->manage_modules         = [];
-    }
-
-    public function clearModuleFromManageCache($module_name)
-    {
-        $this->getManageModules();
-
-        foreach ($this->manage_modules as $key => &$module) {
-            if ($module->name === $module_name) {
-                // First of all, we remove the module from the modules list
-                unset($this->manage_modules[$key]);
-                $this->registerModuleCache(self::_CACHEFILE_INSTALLED_MODULES_, array_values($this->manage_modules));
-
-                // Mandatory in order to call again the function $this->getManageModules()
-                $this->manage_modules = [];
-                return;
-            }
-        }
-    }
-
     public function getAllModules()
     {
         $addons_provider = new AddonsDataProvider();
@@ -119,11 +95,6 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return \Module::getModulesOnDisk(true,
                 $addons_provider->isAddonsAuthenticated(),
                 (int)\Context::getContext()->employee->id);
-    }
-
-    public function getAllInstalledModules()
-    {
-        return \Module::getModulesInstalled();
     }
 
     public function getCatalogModules(array $filter = [])
@@ -225,15 +196,6 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         }
 
         return $this->manage_categories;
-    }
-
-    public function getModule($name)
-    {
-        if ($this->isModuleOnDisk($name)) {
-            return \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
-        }
-
-        throw new \Exception('Module '.$name.' not found');
     }
 
     public function isModuleOnDisk($name)
@@ -401,83 +363,33 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     protected function loadManageData()
     {
-        $this->manage_categories = $this->getModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_);
-        $this->manage_modules    = $this->getModuleCache(self::_CACHEFILE_INSTALLED_MODULES_);
-
-        if (!$this->manage_categories || !$this->manage_modules) {
-            $this->manage_modules = [];
-            $this->manage_categories = [];
-        }
+        $this->manage_modules = [];
+        $this->manage_categories = [];
 
         try {
-            $only_cached_data = true;
-            $missing_module_list = [];
-            $modules_in_cache = [];
-
-            $all_modules = null;
-            $all_installed_modules = null;
-            // Get all references to modules in cache
-            foreach ($this->manage_modules as $key => $module) {
-                $modules_in_cache[$module->name] = $key;
-            }
-
-            $all_installed_modules = $this->getAllInstalledModules();
+            $all_installed_modules = (new ModuleManagerBuilder())->buildRepository()->getInstalledModules();
 
             // Why all these foreach ? Because we need to join data from 3 different arrays.
             foreach ($all_installed_modules as $key => &$installed_module) {
-
-                // Already in cache, continue ....
-                if (array_key_exists($installed_module['name'], $modules_in_cache)) {
-                    continue;
-                }
-
                 // We need to load the catalog to get native modules later
                 $this->getCatalogModules();
-                if ($all_modules === null) {
-                    $all_modules = $this->getAllModules();
-                    $only_cached_data = false;
-                }
-
-                // Be careful, if the module is missing from the modules folder, do not display it !
-                if (!$this->isModuleOnDisk($installed_module['name'])) {
-                    unset($all_installed_modules[$key]);
-                    continue;
-                }
 
                 foreach ($this->catalog_modules as $catalog_module) {
-                    if ($catalog_module->name === $installed_module['name']) {
-                        $installed_module = array_merge($installed_module, (array)$catalog_module);
+                    if ($catalog_module->name === $installed_module->attributes->get('name')) {
+                        $installed_module->attributes->add((array)$catalog_module);
                         continue;
                     }
                 }
 
-                foreach ($all_modules as $module) {
-                    if ($module->name === $installed_module['name']) {
-                        unset($module->version);
-                        unset($module->badges);
-                        $installed_module = array_merge($installed_module, (array)$module);
-                        continue;
-                    }
-                }
-
-                // Legacy fix
-                $installed_module['installed'] = 1;
-
-                $missing_module_list[$installed_module['name']] = $installed_module;
+                $module_list[] = array_merge($installed_module->attributes->all(), $installed_module->database->all(), $installed_module->disk->all());
             }
-            if ($only_cached_data === false) {
-                $this->manage_modules = array_merge($this->manage_modules, $this->convertJsonForNewCatalog(['products' => $missing_module_list]));
-                $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
 
-                $this->registerModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, $this->manage_categories);
-                $this->registerModuleCache(self::_CACHEFILE_INSTALLED_MODULES_, $this->manage_modules);
-            }
+            $this->manage_modules = $this->convertJsonForNewCatalog(['products' => $module_list]);
+            $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
         } catch (\Exception $e) {
-            if (! $this->fallbackOnManageCache()) {
-                $this->manage_categories      = [];
-                $this->manage_modules         = [];
-                throw new \Exception("Data from shop is invalid, and cannot fallback on cache", 0, $e);
-            }
+            $this->manage_categories      = [];
+            $this->manage_modules         = [];
+            throw new \Exception("Data from shop is invalid, and cannot fallback on cache", 0, $e);
         }
     }
 
@@ -572,10 +484,6 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                         'videoUrl' => null,
                 ];
 
-                //unset($product->badges);
-                //unset($module->categoryName);
-                //unset($product->cover);
-
                 $remixed_json[] = $product;
             }
         }
@@ -609,15 +517,6 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_, false);
 
         return ($this->catalog_categories && $this->catalog_modules);
-    }
-
-    protected function fallbackOnManageCache()
-    {
-        // Fallback on data from cache if exists
-        $this->manage_categories = $this->getModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, false);
-        $this->manage_modules    = $this->getModuleCache(self::_CACHEFILE_INSTALLED_MODULES_, false);
-
-        return ($this->manage_categories && $this->manage_modules);
     }
 
     private function getModuleCache($file, $check_freshness = true)

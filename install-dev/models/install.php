@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 class InstallModelInstall extends InstallAbstractModel
@@ -816,18 +817,18 @@ class InstallModelInstall extends InstallAbstractModel
 
         Module::updateTranslationsAfterInstall(false);
 
+        $moduleManager = (new ModuleManagerBuilder())->build();
         $errors = array();
         foreach ($modules as $module_name) {
             if (!file_exists(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php')) {
                 continue;
             }
 
-            $module = Module::getInstanceByName($module_name);
-            if (!$module->install()) {
-                $module_errors = $module->getErrors();
-                if (empty($module_errors)) {
+            if (!$moduleManager->install($module_name)) {
+                /*$module_errors = $module->getErrors();
+                if (empty($module_errors)) {*/
                     $module_errors = [$this->language->l('Cannot install module "%s"', $module_name)];
-                }
+                /*}*/
                 $errors[$module_name] = $module_errors;
             }
         }
