@@ -101,11 +101,8 @@ class ProductPresenter
             $regular_price = $product['price_without_reduction'];
         }
 
-        $presentedProduct['price_amount'] = $this->pricePresenter->convertAmount($price);
-
-        $presentedProduct['price'] = $this->pricePresenter->format(
-            $this->pricePresenter->convertAmount($price)
-        );
+        $presentedProduct['price_amount'] = $price;
+        $presentedProduct['price'] = $this->pricePresenter->format($price);
 
         $presentedProduct['regular_price'] = $this->pricePresenter->format(
             $this->pricePresenter->convertAmount($regular_price)
