@@ -539,9 +539,9 @@ class WebserviceOutputBuilderCore
                 unset($field['xlink_resource']);
             }
         } elseif (isset($field['getter']) && $object != null && method_exists($object, $field['getter'])) {
-            $field['value'] = $object->$field['getter']();
+            $field['value'] = $object->{$field['getter']}();
         } elseif (!isset($field['value'])) {
-            $field['value'] = $object->$field_name;
+            $field['value'] = $object->{$field_name};
         }
 
         // this apply specific function for a particular field on a choosen entity
