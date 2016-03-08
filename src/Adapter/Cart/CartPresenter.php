@@ -3,7 +3,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart;
 
 use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
-use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
+use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
@@ -40,7 +40,7 @@ class CartPresenter implements PresenterInterface
 
     private function presentProduct(array $rawProduct)
     {
-        $presenter = new ProductPresenter(
+        $presenter = new ProductListingPresenter(
             $this->imageRetriever,
             $this->link,
             $this->priceFormatter,
@@ -104,7 +104,7 @@ class CartPresenter implements PresenterInterface
 
         $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
 
-        return $presenter->presentForListing(
+        return $presenter->present(
             $settings,
             $rawProduct,
             Context::getContext()->language

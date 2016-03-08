@@ -60,7 +60,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->language = new Language;
     }
 
-    private function _presentProduct($method, $field)
+    private function _presentProduct($presenterClass, $field)
     {
         $translator = Phake::mock('Symfony\Component\Translation\TranslatorInterface');
         Phake::when($translator)->trans(Phake::anyParameters())->thenReturn('some label');
@@ -73,7 +73,7 @@ class ProductPresenterTest extends UnitTestCase
             ['id_image' => 0, 'associatedVariants' => []]
         ]);
 
-        $presenter = new ProductPresenter(
+        $presenter = new $presenterClass(
             $imageRetriever,
             $link,
             new PriceFormatter,
@@ -81,7 +81,7 @@ class ProductPresenterTest extends UnitTestCase
             $translator
         );
 
-        $product = $presenter->$method(
+        $product = $presenter->present(
             $this->settings,
             $this->product,
             $this->language
@@ -96,12 +96,12 @@ class ProductPresenterTest extends UnitTestCase
 
     private function getPresentedProduct($field = null)
     {
-        return $this->_presentProduct('present', $field);
+        return $this->_presentProduct('ProductPresenter', $field);
     }
 
     private function getPresentedProductForListing($field = null)
     {
-        return $this->_presentProduct('presentForListing', $field);
+        return $this->_presentProduct('ProductListingPresenter', $field);
     }
 
 

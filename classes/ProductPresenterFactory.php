@@ -1,6 +1,7 @@
 <?php
 
 use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
+use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
@@ -35,6 +36,16 @@ class ProductPresenterFactoryCore
         $imageRetriever = new ImageRetriever(
             $this->context->link
         );
+
+        if (is_a($this->context->controller, 'ProductListingFrontControllerCore')) {
+            return new ProductListingPresenter(
+                $imageRetriever,
+                $this->context->link,
+                new PriceFormatter,
+                new ProductColorsRetriever,
+                new Translator(new LegacyContext)
+            );
+        }
 
         return new ProductPresenter(
             $imageRetriever,

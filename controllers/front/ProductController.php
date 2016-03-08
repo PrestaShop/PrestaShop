@@ -26,6 +26,10 @@
 
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
+use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
@@ -243,10 +247,20 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
 
             $assembler = new ProductAssembler($this->context);
-            $presenter = $this->getProductPresenter();
+            $presenter = new ProductListingPresenter(
+                new ImageRetriever(
+                    $this->context->link
+                ),
+                $this->context->link,
+                new PriceFormatter(),
+                new ProductColorsRetriever(),
+                new Translator(new LegacyContext())
+            );
+            $presentationSettings = $this->getProductPresentationSettings();
+
             $presentedPackItems = [];
             foreach ($pack_items as $item) {
-                $presentedPackItems[] = $presenter->presentForListing(
+                $presentedPackItems[] = $presenter->present(
                     $this->getProductPresentationSettings(),
                     $assembler->assembleProduct($item),
                     $this->context->language
@@ -258,12 +272,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < $this->product->getNoPackPrice()) ? true : false);
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
-            $presenter = $this->getProductPresenter();
-            $presentationSettings = $this->getProductPresentationSettings();
             $accessories = $this->product->getAccessories($this->context->language->id);
             if (is_array($accessories)) {
                 foreach ($accessories as &$accessory) {
-                    $accessory = $presenter->presentForListing(
+                    $accessory = $presenter->present(
                         $presentationSettings,
                         Product::getProductProperties($this->context->language->id, $accessory, $this->context),
                         $this->context->language
