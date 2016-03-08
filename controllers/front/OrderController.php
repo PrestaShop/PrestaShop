@@ -171,6 +171,12 @@ class OrderControllerCore extends FrontController
 
         parent::initContent();
 
+        $presentedCart = $this->cart_presenter->present($this->context->cart);
+
+        if (count($presentedCart['products']) <= 0) {
+            Tools::redirect('index.php?controller=cart');
+        }
+
         $this->restorePersistedData($this->checkoutProcess);
         $this->checkoutProcess->handleRequest(
             Tools::getAllValues()
@@ -192,9 +198,7 @@ class OrderControllerCore extends FrontController
 
         $this->context->smarty->assign([
             'checkout_process'  => new RenderableProxy($this->checkoutProcess),
-            'cart'              => $this->cart_presenter->present(
-                                        $this->context->cart
-                                    )
+            'cart'              => $presentedCart
         ]);
         $this->setTemplate('checkout/checkout.tpl');
     }
