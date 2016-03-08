@@ -14,10 +14,14 @@
       <hr>
       <footer class="address-footer">
         {if $interactive}
-          <a class="edit-address" data-link-action="edit-address" href="{$address.url_order_address}&amp;editAddress={$type}">
+          <a  class="edit-address"
+              data-link-action="edit-address"
+              href="{url entity='order' params=['id_address' => $address.id, 'editAddress' => $type, 'token' => $token]}">
             <i class="material-icons edit">&#xE254;</i>{l s='Edit'}
           </a>
-          <a class="delete-address" data-link-action="delete-address" href="{$address.url_order_address}&amp;deleteAddress=1">
+          <a  class="delete-address"
+              data-link-action="delete-address"
+            href="{url entity='order' params=['id_address' => $address.id, 'deleteAddress' => true, 'token' => $token]}">
             <i class="material-icons delete">&#xE872;</i>{l s='Delete'}
           </a>
         {/if}

@@ -1354,7 +1354,6 @@ class FrontControllerCore extends Controller
         $addresses = $this->context->customer->getSimpleAddresses();
         foreach ($addresses as &$a) {
             $a['formatted'] = AddressFormat::generateAddress(new Address($a['id']), array(), '<br />');
-            $a['url_order_address'] = $this->context->link->getPageLink('order', true, null, ['id_address' => $a['id'], 'token' => Tools::getToken()]);
         }
         $cust['addresses'] = $addresses;
 
