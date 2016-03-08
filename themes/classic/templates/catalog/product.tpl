@@ -154,9 +154,9 @@
                   {block name='product_add_to_cart'}
 
                     {block name='product_quantity'}
-                      <p class="product-quantity _margin-top-medium">
+                      <p class="product-quantity">
                         <label for="quantity_wanted">{l s='Quantity'}</label>
-                        <input type="number" min="1" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" class="input-group" />
+                        <input type="text" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" class="input-group" />
                       </p>
                     {/block}
 
@@ -168,14 +168,14 @@
                       {/if}
                     {/block}
 
-                    <button class="btn btn-primary add-to-cart _relative" data-button-action="add-to-cart" type="submit" {if !$product.add_to_cart_url}disabled{/if}>
+                    <button class="btn btn-primary add-to-cart" data-button-action="add-to-cart" type="submit" {if !$product.add_to_cart_url}disabled{/if}>
                       <i class="material-icons shopping-cart">&#xE547;</i>
                       {l s='Add to cart'}
                     </button>
 
                     {block name='product_availability'}
                      {if $product.show_availability}
-                        <p id="product-availability" class="_margin-left-medium"><i class="material-icons check">&#xE5CA;</i>{$product.availability_message}</p>
+                        <p id="product-availability"><i class="material-icons product-available">&#xE5CA;</i>{$product.availability_message}</p>
                      {/if}
                     {/block}
                     {hook h='displayProductButtons' product=$product}
@@ -183,7 +183,7 @@
                   {/block}
 
                   {block name='product_refresh'}
-                    <input class="product-refresh _margin-top-large ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh'}" />
+                    <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh'}" />
                   {/block}
                 </form>
               {/block}
@@ -269,7 +269,7 @@
         <div class="modal-content">
           <div class="modal-body">
             <figure>
-              <img class="js-product-cover product-cover-modal" width="{$image.large.width}" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
+              <img class="js-product-cover product-cover-modal" width="{$product.cover.large.width}" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image" />
               <figcaption class="image-caption">
               {block name='product_description_short'}
                 <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
