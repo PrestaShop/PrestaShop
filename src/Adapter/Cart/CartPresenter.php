@@ -88,12 +88,12 @@ class CartPresenter
         $rawProduct['pack'] = '';
 
         if($this->includeTaxes()) {
-            $rawProduct['price'] = $this->pricePresenter->convertAndFormat($rawProduct['price_wt']);
+            $rawProduct['price'] = $this->pricePresenter->format($rawProduct['price_wt']);
         } else {
-            $rawProduct['price'] = $rawProduct['price_tax_exc'] = $this->pricePresenter->convertAndFormat($rawProduct['price']);
+            $rawProduct['price'] = $rawProduct['price_tax_exc'] = $this->pricePresenter->format($rawProduct['price']);
         }
         
-        $rawProduct['total'] = $this->pricePresenter->convertAndFormat(
+        $rawProduct['total'] = $this->pricePresenter->format(
             $this->includeTaxes() ?
             $rawProduct['total_wt'] :
             $rawProduct['total']
@@ -214,7 +214,7 @@ class CartPresenter
             $subtotals['tax'] = [
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', [], 'Cart'),
-                'amount' => $this->pricePresenter->convertAndFormat(
+                'amount' => $this->pricePresenter->format(
                     $total_including_tax - $total_excluding_tax
                 ),
             ];
@@ -224,7 +224,7 @@ class CartPresenter
             $subtotals['gift_wrapping'] = [
                 'type' => 'gift_wrapping',
                 'label' => $this->translator->trans('Gift wrapping', [], 'Cart'),
-                'amount' => $cart->getGiftWrappingPrice($this->includeTaxes()) != 0 ? $this->pricePresenter->convertAndFormat($cart->getGiftWrappingPrice($this->includeTaxes())) : $this->translator->trans('Free', [], 'Cart'),
+                'amount' => $cart->getGiftWrappingPrice($this->includeTaxes()) != 0 ? $this->pricePresenter->format($cart->getGiftWrappingPrice($this->includeTaxes())) : $this->translator->trans('Free', [], 'Cart'),
             ];
         }
 
@@ -232,20 +232,20 @@ class CartPresenter
         $subtotals['shipping'] = [
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', [], 'Cart'),
-            'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
+            'amount' => $shipping_cost != 0 ? $this->pricePresenter->format($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
         ];
 
         $subtotals['discounts'] = [
             'type' => 'discount',
             'label' => $this->translator->trans('Discount', [], 'Cart'),
-            'amount' => $total_discount != 0 ? $this->pricePresenter->convertAndFormat($total_discount) : 0,
+            'amount' => $total_discount != 0 ? $this->pricePresenter->format($total_discount) : 0,
         ];
 
         $total = [
             'type' => 'total',
             'label' => $this->translator->trans('Total', [], 'Cart'),
             'raw_amount' => $this->includeTaxes() ? $total_including_tax : $total_excluding_tax,
-            'amount' => $this->pricePresenter->convertAndFormat($this->includeTaxes() ? $total_including_tax : $total_excluding_tax),
+            'amount' => $this->pricePresenter->format($this->includeTaxes() ? $total_including_tax : $total_excluding_tax),
         ];
 
         $totalAmount = $this->includeTaxes() ? $total_including_tax : $total_excluding_tax;
@@ -254,7 +254,7 @@ class CartPresenter
         $subtotals['products'] = [
             'type' => 'products',
             'label' => $this->translator->trans('Products', [], 'Cart'),
-            'amount' =>  $this->pricePresenter->convertAndFormat(($totalAmount - $shippingAmount))
+            'amount' =>  $this->pricePresenter->format(($totalAmount - $shippingAmount))
         ];
 
         $products_count = array_reduce($products, function ($count, $product) {
