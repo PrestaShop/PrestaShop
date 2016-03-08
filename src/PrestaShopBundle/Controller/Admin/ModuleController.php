@@ -231,8 +231,10 @@ class ModuleController extends FrameworkBundleAdminController
                 array( 'Content-Type' => 'application/json' )
             );
         } catch (Exception $e) {
-            $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-            $modulesProvider->removeModuleFromDisk($module_name);
+            if (isset($module_name)) {
+                $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+                $modulesProvider->removeModuleFromDisk($module_name);
+            }
             return new JsonResponse(array(
                 'status' => false,
                 'msg' => $e->getMessage()),
