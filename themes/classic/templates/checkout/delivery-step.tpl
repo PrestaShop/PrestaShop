@@ -20,7 +20,9 @@
                     </span>
                     <label for="delivery_option_{$carrier.id}" class="delivery-option-2">
                       {if $carrier.logo}
-                        <img src="{$carrier.logo}" alt="{$carrier.name}" />
+                        <div class="logo-container">
+                          <img src="{$carrier.logo}" alt="{$carrier.name}" />
+                        </div>
                       {/if}
                       <span class="carrier-name">{$carrier.name}</span>
                       <span class="carrier-delay">{$carrier.delay}</span>

@@ -184,17 +184,26 @@ body#checkout {
     }
     .delivery-option-2 {
       @include display(flex);
-      align-items: center;
-      justify-content: space-between;
+      @include align-items(center);
+      @include justify-content(space-between);
+      div.logo-container {
+        @include flex(0 0 30%);
+      }
+      img {
+        max-width: 50%;
+        float: left;
+      }
     }
     .delivery-option {
       background: $gray-lighter;
       padding: em(15px);
       margin-bottom: em(15px);
     }
-    .carrier-name {
+    .carrier-name,.carrier-delay {
       display: inline-block;
       margin: 0 em(20px);
+      word-break: break-word;
+      text-align: left;
     }
     .carrier-price {
       font-weight: 700;
@@ -275,7 +284,7 @@ body#checkout {
       font-size: em(18px);
     }
   }
-  .modal-content{
+  .modal-content {
     padding: $medium-space;
     background-color: $gray-light;
   }
@@ -285,7 +294,7 @@ body#checkout {
       border: $gray-light 1px solid;
       width: em(50px);
     }
-    .media-body{
+    .media-body {
       vertical-align: middle;
     }
   }
@@ -336,8 +345,8 @@ body#checkout {
     }
   }
 }
-#order-confirmation{
-  #registration-form{
+#order-confirmation {
+  #registration-form {
     width: 50%;
     margin: 0 auto;
   }
