@@ -1651,6 +1651,7 @@ var priceCalculation = (function() {
 	var priceTTCShorcutElem = $('#form_step1_price_ttc_shortcut');
 	var ecoTaxElem = $('#form_step2_ecotax');
 	var taxElem = $('#form_step2_id_tax_rules_group');
+	var reTaxElem = $('#step2_id_tax_rules_group_rendered');
 	var displayPricePrecision = priceHTElem.attr('data-display-price-precision');
 	var ecoTaxRate = ecoTaxElem.attr('data-eco-tax-rate');
 
@@ -1727,8 +1728,16 @@ var priceCalculation = (function() {
 		'init': function() {
 			/** on update tax recalculate tax include price */
 			taxElem.change(function(){
+				if(reTaxElem.val() !== taxElem.val()) {
+					reTaxElem.val(taxElem.val()).trigger('change');
+				}
+
 				priceCalculation.taxInclude();
 				priceTTCElem.change();
+			});
+
+			reTaxElem.change(function(){
+				taxElem.val(reTaxElem.val()).trigger('change');
 			});
 
 			/** update without tax price and shortcut price field on change */

@@ -789,4 +789,38 @@ class ProductController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_product_catalog');
     }
+
+    public function renderFieldAction($productId, $step, $fieldName)
+    {
+        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $product = $productAdapter->getProduct($productId);
+
+        $modelMapper = new ProductAdminModelAdapter(
+            $product,
+            $this->container->get('prestashop.adapter.legacy.context'),
+            $this->container->get('prestashop.adapter.admin.wrapper.product'),
+            $this->container->get('prestashop.adapter.tools'),
+            $productAdapter,
+            $this->container->get('prestashop.adapter.data_provider.supplier'),
+            $this->container->get('prestashop.adapter.data_provider.warehouse'),
+            $this->container->get('prestashop.adapter.data_provider.feature'),
+            $this->container->get('prestashop.adapter.data_provider.pack'),
+            $this->container->get('prestashop.adapter.shop.context')
+        );
+
+        $form = $this->createFormBuilder($modelMapper->getFormData())
+            ->add('id_product', FormType\HiddenType::class)
+            ->add('step1', \PrestaShopBundle\Form\Admin\Product\ProductInformation::class)
+            ->add('step2', \PrestaShopBundle\Form\Admin\Product\ProductPrice::class)
+            ->add('step3', \PrestaShopBundle\Form\Admin\Product\ProductQuantity::class)
+            ->add('step4', \PrestaShopBundle\Form\Admin\Product\ProductShipping::class)
+            ->add('step5', \PrestaShopBundle\Form\Admin\Product\ProductSeo::class)
+            ->add('step6', \PrestaShopBundle\Form\Admin\Product\ProductOptions::class)
+            ->getForm();
+
+        return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
+            'form' => $form->get($step)->get($fieldName)->createView(),
+            'formId' => $step.'_'.$fieldName.'_rendered'
+        ]);
+    }
 }
