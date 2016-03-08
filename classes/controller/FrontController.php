@@ -550,7 +550,7 @@ class FrontControllerCore extends Controller
         Tools::redirectLink($this->redirect_after);
     }
 
-    protected function redirectWithNotifications()
+    public function redirectWithNotifications()
     {
         $notifications = json_encode([
             'error' => $this->errors,
