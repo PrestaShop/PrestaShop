@@ -174,9 +174,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $this->product->description = $this->transformDescriptionWithImg($this->product->description);
 
-            // Assign to the template the id of the virtual product. "0" if the product is not downloadable.
-            $this->context->smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)$this->product->id));
-
             $priceDisplay = Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer);
             $productPrice = 0;
             $productPriceWithoutReduction = 0;
@@ -295,16 +292,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'unit_price' => ($this->product->unit_price_ratio > 0) ? ($productPrice / $this->product->unit_price_ratio) : 0,
                 'quantity_label' => ($product_for_template['quantity'] > 1) ? $this->l('Items') : $this->l('Item'),
                 'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
-                'token' => Tools::getToken(false),
                 'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
                 'display_taxes_label' => true,
-                'errors' => $this->errors,
-                'body_classes' => array(
-                    $this->php_self.'-'.$this->product->id,
-                    $this->php_self.'-'.$this->product->link_rewrite,
-                    'category-'.(isset($this->category) ? $this->category->id : ''),
-                    'category-'.(isset($this->category) ? $this->category->getFieldByLang('link_rewrite') : '')
-                ),
                 'product_conditions' => array(
                     'new' => array(
                         'label' => $this->l('New product'),
