@@ -289,7 +289,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'priceDisplay' => $priceDisplay,
                 'productPrice' => $productPrice,
                 'productPriceWithoutReduction' => $productPriceWithoutReduction,
-                'display_quantities' => ((bool)Configuration::get('PS_DISPLAY_QTIES') && (bool)Configuration::get('PS_STOCK_MANAGEMENT') && $this->product->quantity > 0 && (bool)$this->product->available_for_order && !($this->context->smarty->tpl_vars['PS_CATALOG_MODE']->value)) ? true : false,
+                'display_quantities' => ((bool)Configuration::get('PS_DISPLAY_QTIES') && (bool)Configuration::get('PS_STOCK_MANAGEMENT') && $this->product->quantity > 0 && (bool)$this->product->available_for_order && !(Configuration::get('PS_CATALOG_MODE'))) ? true : false,
                 'customizationFields' => $customization_fields,
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
@@ -300,7 +300,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
                 'token' => Tools::getToken(false),
                 'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
-                'display_taxes_label' => ((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')) && $this->context->smarty->tpl_vars['display_tax_label']->value) ? true : false,
+                'display_taxes_label' => true,
                 'errors' => $this->errors,
                 'body_classes' => array(
                     $this->php_self.'-'.$this->product->id,
