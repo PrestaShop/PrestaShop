@@ -73,12 +73,21 @@ class CartControllerCore extends FrontController
         parent::initContent();
 
         $presenter = new CartPresenter;
+        $presented_cart = $presenter->present($this->context->cart);
+
         $this->context->smarty->assign([
-            'cart' => $presenter->present($this->context->cart),
+            'cart' => $presented_cart,
             'static_token' => Tools::getToken(false),
         ]);
 
-        $this->setTemplate('checkout/cart.tpl');
+        if (count($presented_cart['products']) > 0) {
+            $this->setTemplate('checkout/cart.tpl');
+        } else {
+            $this->context->smarty->assign([
+                'allProductsLink' => $this->context->link->getCategoryLink(Configuration::get('PS_HOME_CATEGORY')),
+            ]);
+            $this->setTemplate('checkout/cart-empty.tpl');
+        }
     }
 
     public function displayAjaxUpdate()
@@ -98,6 +107,7 @@ class CartControllerCore extends FrontController
             ]));
         }
     }
+
 
     public function displayAjaxRefresh()
     {
