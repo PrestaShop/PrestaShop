@@ -112,7 +112,7 @@ class CartControllerCore extends FrontController
         ]));
     }
 
-    public function displayAjaxProductrefresh()
+    public function displayAjaxProductRefresh()
     {
         $url = $this->context->link->getProductLink(
             $this->id_product,
