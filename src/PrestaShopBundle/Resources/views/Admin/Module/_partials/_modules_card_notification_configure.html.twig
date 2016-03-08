@@ -4,5 +4,5 @@
 
 {# Display the warning message instead of the addon description #}
 {% block addon_description %}
-    {{module.warning}}
+    {{module.attributes.get('warning')}}
 {% endblock %}

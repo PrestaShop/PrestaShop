@@ -28,12 +28,11 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
@@ -62,17 +61,12 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     protected $catalog_categories;
     protected $catalog_modules;
-
-    protected $manage_categories;
-    protected $manage_modules;
+    protected $catalog_modules_names;
 
     public function __construct(\AppKernel $kernel = null, Router $router = null)
     {
         $this->catalog_categories      = [];
         $this->catalog_modules         = [];
-
-        $this->manage_categories      = [];
-        $this->manage_modules         = [];
 
         $this->kernel = $kernel;
         $this->router = $router;
@@ -108,64 +102,78 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         );
     }
 
+    public function getCatalogModulesNames(array $filter = [])
+    {
+        $objects = $this->getCatalogModules($filter);
+        $names = [];
+        foreach ($objects as $object) {
+            $names[] = $object->name;
+        }
+
+        return $names;
+    }
+
     public function generateAddonsUrls(array $addons)
     {
         foreach ($addons as &$addon) {
-            $addon->urls = [];
+            $urls = [];
             foreach (['install', 'uninstall', 'enable', 'disable', 'reset', 'update'] as $action) {
-                $addon->urls[$action] = $this->router->generate('admin_module_manage_action', [
+                $urls[$action] = $this->router->generate('admin_module_manage_action', [
                     'action' => $action,
-                    'module_name' => $addon->name,
+                    'module_name' => $addon->attributes->get('name'),
                 ]);
             }
-            $addon->urls['configure'] = $this->router->generate('admin_module_configure_action', [
-                'module_name' => $addon->name,
+            $urls['configure'] = $this->router->generate('admin_module_configure_action', [
+                'module_name' => $addon->attributes->get('name'),
             ]);
 
             // Which button should be displayed first ?
-            $addon->url_active = '';
-            if (isset($addon->installed) && $addon->installed == 1) {
-                if ($addon->active == 0) {
-                    $addon->url_active = 'enable';
+            $url_active = '';
+            if ($addon->database->has('installed') && $addon->database->get('installed') == 1) {
+                if ($addon->database->get('active') == 0) {
+                    $url_active = 'enable';
                     unset(
-                        $addon->urls['install'],
-                        $addon->urls['disable']
+                        $urls['install'],
+                        $urls['disable']
                     );
-                } elseif ($addon->is_configurable == 1) {
-                    $addon->url_active = 'configure';
+                } elseif ($addon->attributes->get('is_configurable') == 1) {
+                    $url_active = 'configure';
                     unset(
-                        $addon->urls['enable'],
-                        $addon->urls['install'],
-                        $addon->urls['update']
+                        $urls['enable'],
+                        $urls['install'],
+                        $urls['update']
                     );
                 } else {
-                    $addon->url_active = 'disable';
+                    $url_active = 'disable';
                     unset(
-                        $addon->urls['update'],
-                        $addon->urls['install'],
-                        $addon->urls['enable'],
-                        $addon->urls['configure']
+                        $urls['update'],
+                        $urls['install'],
+                        $urls['enable'],
+                        $urls['configure']
                     );
                 }
-                if (empty($addon->database_version) || version_compare($addon->database_version, $addon->version, '=')) {
+                if ($addon->database->get('installed') == 1 || version_compare($addon->database->get('version'), $addon->attributes->get('version'), '=')) {
                     unset(
-                        $addon->urls['update']
+                        $urls['update']
                     );
                 }
-            } elseif (isset($addon->origin) && in_array($addon->origin, ['native', 'native_all', 'partner', 'customer'])) {
-                $addon->url_active = 'install';
+            } elseif (!$addon->attributes->has('origin') || in_array($addon->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'])) {
+                $url_active = 'install';
                 unset(
-                    $addon->urls['uninstall'],
-                    $addon->urls['enable'],
-                    $addon->urls['disable'],
-                    $addon->urls['reset'],
-                    $addon->urls['update'],
-                    $addon->urls['configure']
+                    $urls['uninstall'],
+                    $urls['enable'],
+                    $urls['disable'],
+                    $urls['reset'],
+                    $urls['update'],
+                    $urls['configure']
                 );
             } else {
-                $addon->url_active = 'buy';
-                unset($addon->urls);
+                $url_active = 'buy';
             }
+            if (count($urls)) {
+                $addon->attributes->set('urls', $urls);
+            }
+            $addon->attributes->set('url_active', $url_active);
         }
 
         return $addons;
@@ -180,23 +188,36 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return $this->catalog_categories;
     }
 
-    public function getManageModules(array $filter = [])
+    public function getCategoriesFromModules(&$modules)
     {
-        if (count($this->manage_modules) === 0) {
-            $this->loadManageData();
+        $categories = [];
+
+        // Only Tab: Categories
+        $categories['categories'] = $this->createMenuObject('categories',
+            'Categories');
+
+        foreach ($modules as &$module) {
+            foreach ($module->attributes->get('refs') as $key => $name) {
+                $ref  = $this->getRefFromModuleCategoryName($name);
+
+                if (!isset($categories['categories']->subMenu[$ref])) {
+                    $categories['categories']->subMenu[$ref] = $this->createMenuObject($ref,
+                        $name
+                    );
+                }
+
+                $categories['categories']->subMenu[$ref]->modulesRef[] = $module->attributes->get('name');
+                $module->refs[$key] = $ref;
+            }
         }
 
-        return $this->applyModuleFilters($this->manage_modules, $this->manage_categories, $filter);
+        usort($categories['categories']->subMenu, function ($a, $b) {
+            return strcmp($a->name, $b->name);
+        });
+
+        return $categories;
     }
 
-    public function getManageCategories()
-    {
-        if (count($this->manage_categories) === 0) {
-            $this->loadManageData();
-        }
-
-        return $this->manage_categories;
-    }
 
     public function isModuleOnDisk($name)
     {
@@ -327,100 +348,42 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         if (!$this->catalog_categories || !$this->catalog_modules) {
             $addons_provider = new AddonsDataProvider();
             $params = ['format' => 'json'];
-            $requests = ['must-have', 'service', 'partner', 'native', 'native_all'];
+            $requests = [
+                AddonListFilterOrigin::ADDONS_MUST_HAVE => 'must-have',
+                AddonListFilterOrigin::ADDONS_SERVICE => 'service',
+                AddonListFilterOrigin::ADDONS_PARTNER => 'partner',
+                AddonListFilterOrigin::ADDONS_NATIVE => 'native',
+                AddonListFilterOrigin::ADDONS_NATIVE_ALL => 'native_all'
+            ];
             if ($addons_provider->isAddonsAuthenticated()) {
                 // customer is more important, so we set it at the beginning of the array
-                array_unshift($requests, 'customer');
+                array_unshift($requests, [AddonListFilterOrigin::ADDONS_CUSTOMER => 'customer']);
             }
 
             try {
                 $jsons = [];
                 // We execute each addons request
-                foreach ($requests as $action) {
+                foreach ($requests as $action_filter_value => $action) {
                     // We add the request name in each product returned by Addons,
                     // so we know whether is bought
-                    $jsons = array_merge_recursive($jsons, array_map(function ($array) use ($action) {
+                    $jsons = array_merge_recursive($jsons, array_map(function ($array) use ($action_filter_value, $action) {
                         foreach ($array as $elem) {
                             $elem->origin = $action;
+                            $elem->origin_filter_value = $action_filter_value;
                         }
                         return $array;
                     }, (array) $addons_provider->request($action, $params)));
                 }
 
                 $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
-                $this->catalog_categories = $this->getCategoriesFromModules($this->catalog_modules);
-                $this->registerModuleCache(self::_CACHEFILE_CATEGORIES_, $this->catalog_categories);
                 $this->registerModuleCache(self::_CACHEFILE_MODULES_, $this->catalog_modules);
             } catch (\Exception $e) {
                 if (! $this->fallbackOnCatalogCache()) {
-                    $this->catalog_categories = new \stdClass;
                     $this->catalog_modules = [];
                     throw new \Exception("Data from PrestaShop Addons is invalid, and cannot fallback on cache", 0, $e);
                 }
             }
         }
-    }
-
-    protected function loadManageData()
-    {
-        $this->manage_modules = [];
-        $this->manage_categories = [];
-
-        try {
-            $all_installed_modules = (new ModuleManagerBuilder())->buildRepository()->getInstalledModules();
-
-            // Why all these foreach ? Because we need to join data from 3 different arrays.
-            foreach ($all_installed_modules as $key => &$installed_module) {
-                // We need to load the catalog to get native modules later
-                $this->getCatalogModules();
-
-                foreach ($this->catalog_modules as $catalog_module) {
-                    if ($catalog_module->name === $installed_module->attributes->get('name')) {
-                        $installed_module->attributes->add((array)$catalog_module);
-                        continue;
-                    }
-                }
-
-                $module_list[] = array_merge($installed_module->attributes->all(), $installed_module->database->all(), $installed_module->disk->all());
-            }
-
-            $this->manage_modules = $this->convertJsonForNewCatalog(['products' => $module_list]);
-            $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
-        } catch (\Exception $e) {
-            $this->manage_categories      = [];
-            $this->manage_modules         = [];
-            throw new \Exception("Data from shop is invalid, and cannot fallback on cache", 0, $e);
-        }
-    }
-
-    protected function getCategoriesFromModules(&$modules)
-    {
-        $categories = [];
-
-        // Only Tab: Categories
-        $categories['categories'] = $this->createMenuObject('categories',
-            'Categories');
-
-        foreach ($modules as &$module) {
-            foreach ($module->refs as $key => $name) {
-                $ref  = $this->getRefFromModuleCategoryName($name);
-
-                if (!isset($categories['categories']->subMenu[$ref])) {
-                    $categories['categories']->subMenu[$ref] = $this->createMenuObject($ref,
-                        $name
-                    );
-                }
-
-                $categories['categories']->subMenu[$ref]->modulesRef[] = $module->id;
-                $module->refs[$key] = $ref;
-            }
-        }
-
-        usort($categories['categories']->subMenu, function ($a, $b) {
-            return strcmp($a->name, $b->name);
-        });
-
-        return $categories;
     }
 
     protected function convertJsonForNewCatalog($original_json)
@@ -451,25 +414,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     $product->productType = $product->product_type;
                     //unset($product->product_type);
                 }
-                if (! isset($product->price)) {
-                    $product->price = new \stdClass;
-                    $product->price->EUR = 0;
-                    $product->price->USD = 0;
-                    $product->price->GBP = 0;
-                }
                 if (! isset($product->url)) {
                     $product->url = '';
                 }
-                // ToDo: Does this test should be in the Addon service ?
-                //if (isset($product->installed) && $product->installed == 1) {
-                    foreach (['logo.png', 'logo.gif'] as $logo) {
-                        $logo_path = _PS_MODULE_DIR_.$product->name.DIRECTORY_SEPARATOR.$logo;
-                        if (file_exists($logo_path)) {
-                            $product->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$product->name.'/'.$logo;
-                            break;
-                        }
-                    }
-                //}
+
                 $product->conditions = [];
                 $product->rating     = (object)[
                         'score' => !empty($product->avg_rate)?$product->avg_rate:0.0,

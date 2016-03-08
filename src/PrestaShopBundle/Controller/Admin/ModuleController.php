@@ -3,6 +3,10 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +22,12 @@ class ModuleController extends FrameworkBundleAdminController
     public function catalogAction(Request $request)
     {
         $translator = $this->container->get('prestashop.adapter.translator');
+        $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
+
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
+            ->setOrigin(AddonListFilterOrigin::ADDONS_ALL)
+            ->setStatus(~ AddonListFilterStatus::INSTALLED);
 
         try {
             $topMenuData = $this->getTopMenuData();
@@ -60,19 +70,19 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         try {
-            $products = $modulesProvider->getCatalogModules($filters);
+            $products = $moduleRepository->getFilteredList($filters);
             shuffle($products);
-            $modules = $modulesProvider->generateAddonsUrls($this->createCatalogModuleList($products));
+            $topMenuData = $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products));
             $responseArray['content'] = $this->render(
                 'PrestaShopBundle:Admin/Module/_partials:_modules_sorting.html.twig',
                 [
-                    'totalModules' => count($modules)
+                    'totalModules' => count($products)
                 ]
             )->getContent();
             $responseArray['content'] .= $this->render(
                 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig',
                 [
-                    'modules' => $modules,
+                    'modules' => $modulesProvider->generateAddonsUrls($products),
                     'requireAddonsSearch' => true
                 ]
             )->getContent();
@@ -94,6 +104,12 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $translator = $this->container->get('prestashop.adapter.translator');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
+
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
+            ->setStatus(AddonListFilterStatus::INSTALLED);
+        $installed_products = $moduleRepository->getFilteredList($filters);
 
         $filter = [];
         if ($keyword !== null) {
@@ -108,8 +124,8 @@ class ModuleController extends FrameworkBundleAdminController
             $products->{$subpart} = [];
         }
 
-        foreach ($modulesProvider->getManageModules($filter) as $installed_product) {
-            if (isset($installed_product->origin) && $installed_product->origin === 'native' && $installed_product->author === 'PrestaShop') {
+        foreach ($installed_products as $installed_product) {
+            if ($installed_product->attributes->has('origin') && $installed_product->attributes->get('origin') === 'native' && $installed_product->attributes->get('author') === 'PrestaShop') {
                 $row = 'native_modules';
             } elseif (0 /* ToDo: insert condition for theme related modules*/) {
                 $row = 'theme_bundle';
@@ -127,7 +143,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Manage my modules', array(), 'AdminModules'),
                 'modules' => $products,
-                'topMenuData' => $this->getTopMenuData('manage'),
+                'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($installed_products)),
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => true,
             ));
@@ -138,6 +154,7 @@ class ModuleController extends FrameworkBundleAdminController
         $action = $request->attributes->get('action');
         $module = $request->attributes->get('module_name');
         $moduleManager = (new ModuleManagerBuilder())->build();
+        $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
 
         $ret = array();
@@ -161,8 +178,8 @@ class ModuleController extends FrameworkBundleAdminController
 
         if ($request->isXmlHttpRequest()) {
             if ($ret[$module]['status'] === true && $action != 'uninstall') {
-                $moduleInstance = $modulesProvider->getManageModules(['name' => $module]);
-                $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls($moduleInstance);
+                $moduleInstance = $moduleRepository->getModule($module);
+                $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls(array($moduleInstance));
                 $ret[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/_partials:_modules_action_menu.html.twig', array(
                         'module' => array_values($moduleInstanceWithUrl)[0],
                     ))->getContent();
@@ -189,6 +206,12 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $translator = $this->container->get('prestashop.adapter.translator');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
+
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
+            ->setStatus(AddonListFilterStatus::INSTALLED);
+        $installed_products = $moduleRepository->getFilteredList($filters);
 
         $products = new \stdClass;
         foreach (['to_configure', 'to_update', 'to_install'] as $subpart) {
@@ -196,11 +219,11 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         $installed_modules = [];
-        foreach ($modulesProvider->getManageModules() as $installed_product) {
-            $installed_modules[] = $installed_product->name;
-            if (!empty($installed_product->warning)) {
+        foreach ($installed_products as $installed_product) {
+            $installed_modules[] = $installed_product->attributes->get('name');
+            if (!empty($installed_product->attributes->get('warning'))) {
                 $row = 'to_configure';
-            } elseif ($installed_product->installed == 1 && $installed_product->database_version !== 0 && version_compare($installed_product->database_version, $installed_product->version, '<')) {
+            } elseif ($installed_product->database->get('installed') == 1 && $installed_product->database->get('version') !== 0 && version_compare($installed_product->database->get('version'), $installed_product->attributes->get('version'), '<')) {
                 $row = 'to_update';
             } else {
                 $row = false;
@@ -211,16 +234,11 @@ class ModuleController extends FrameworkBundleAdminController
             }
         }
 
-        try {
-            foreach ($modulesProvider->getCatalogModules() as $product) {
-                if (isset($product->origin) && $product->origin === 'customer' && !in_array($product->name, $installed_modules)) {
-                    $products->to_install[] = (object)$product;
-                }
-            }
-        } catch (Exception $e) {
-            // Todo: To be replaced by a warning when implemented
-            $this->addFlash('error', 'Cannot get catalog data from PrestaShop Addons. This page can be incomplete.');
-        }
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE)
+            ->setStatus(~ AddonListFilterStatus::INSTALLED)
+            ->setOrigin(AddonListFilterOrigin::DISK | AddonListFilterOrigin::ADDONS_CUSTOMER);
+        $products->to_install = $moduleRepository->getFilteredList($filters);
 
         foreach ($products as $product_label => $products_part) {
             $products->$product_label = $modulesProvider->generateAddonsUrls($products_part);
@@ -310,27 +328,6 @@ class ModuleController extends FrameworkBundleAdminController
         }
     }
 
-    final private function createCatalogModuleList(array $moduleFullList)
-    {
-        $installed_modules = [];
-        array_map(function ($module) use (&$installed_modules) {
-            $installed_modules[$module['name']] = $module;
-        }, \Module::getModulesInstalled());
-
-        foreach ($moduleFullList as $key => $module) {
-            if ((bool)array_key_exists($module->name, $installed_modules) === true) {
-                unset($moduleFullList[$key]);
-            }
-
-            // @TODO: Check why some of the module dont have any image attached, meanwhile just remove it from the list
-            if (!isset($module->media->img)) {
-                unset($moduleFullList[$key]);
-            }
-        }
-
-        return $moduleFullList;
-    }
-
     protected function getToolbarButtons()
     {
         $translator = $this->container->get('prestashop.adapter.translator');
@@ -348,18 +345,8 @@ class ModuleController extends FrameworkBundleAdminController
         return $toolbarButtons;
     }
 
-    final private function getTopMenuData($source = 'catalog', $activeMenu = null)
+    final private function getTopMenuData(array $topMenuData, $activeMenu = null)
     {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        //@TODO: To be made ultra flexible, hardcoded for dev purpose ATM
-        if ($source === 'catalog') {
-            $topMenuData = $modulesProvider->getCatalogCategories();
-        } elseif ($source === 'manage') {
-            $topMenuData = $modulesProvider->getManageCategories();
-        } else {
-            throw new Exception("ModuleController::getTopMenuData() was given a bad source parameter (given: '$source')", 1);
-        }
-
         if (isset($activeMenu)) {
             if (!isset($topMenuData[$activeMenu])) {
                 throw new Exception("Menu '$activeMenu' not found in Top Menu data", 1);

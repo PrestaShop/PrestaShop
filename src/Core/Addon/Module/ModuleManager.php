@@ -38,17 +38,17 @@ class ModuleManager implements AddonManagerInterface
      * Admin Module Data Provider
      * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
      */
-    private $adminModulesProvider;
+    private $adminModuleProvider;
     /**
      * Module Data Provider
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
      */
-    private $modulesProvider;
+    private $moduleProvider;
     /**
      * Module Data Provider
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
      */
-    private $modulesUpdater;
+    private $moduleUpdater;
 
     /**
      * Module Repository
@@ -66,9 +66,9 @@ class ModuleManager implements AddonManagerInterface
         ModuleDataUpdater $modulesUpdater,
         ModuleRepository $moduleRepository)
     {
-        $this->adminModulesProvider = $adminModulesProvider;
-        $this->modulesProvider = $modulesProvider;
-        $this->modulesUpdater = $modulesUpdater;
+        $this->adminModuleProvider = $adminModulesProvider;
+        $this->moduleProvider = $modulesProvider;
+        $this->moduleUpdater = $modulesUpdater;
         $this->moduleRepository = $moduleRepository;
         $this->msgs_success = $this->msgs_warning = $this->msgs_error = [];
     }
@@ -84,12 +84,12 @@ class ModuleManager implements AddonManagerInterface
      */
     public function install($name)
     {
-        if ($this->modulesProvider->isInstalled($name)) {
+        if ($this->moduleProvider->isInstalled($name)) {
             throw new Exception('This module is already installed');
         }
 
-        if (! $this->modulesProvider->isOnDisk($name)) {
-            $this->modulesUpdater->setModuleOnDiskFromAddons($name);
+        if (! $this->moduleProvider->isOnDisk($name)) {
+            $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -110,7 +110,7 @@ class ModuleManager implements AddonManagerInterface
         // * Employee can delete this specific module
 
         // Is module installed ?
-        if (! $this->isInstalled($name)) {
+        if (! $this->moduleProvider->isInstalled($name)) {
             return false;
         }
 
@@ -146,7 +146,7 @@ class ModuleManager implements AddonManagerInterface
     */
     public function upgrade($name, $version = 'latest', $source = null)
     {
-        if (! $this->isInstalled($name)) {
+        if (! $this->moduleProvider->isInstalled($name)) {
             $this->msgs_error[$name][] = 'This module must be installed';
             return false;
         }

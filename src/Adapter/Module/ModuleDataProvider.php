@@ -34,7 +34,7 @@ class ModuleDataProvider
         $result = \Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
         if ($result) {
             $result['installed'] = 1;
-            $result['active'] = $this->modulesProvider->isEnabled($name);
+            $result['active'] = $this->isEnabled($name);
             return $result;
         }
 

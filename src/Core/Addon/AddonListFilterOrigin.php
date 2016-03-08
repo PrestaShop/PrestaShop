@@ -35,6 +35,8 @@ class AddonListFilterOrigin
     const ADDONS_PARTNER = 8;
     const ADDONS_NATIVE = 16;
     const ADDONS_NATIVE_ALL = 32;
+    const ADDONS_CUSTOMER = 64;
+    const ADDONS_ALL = 126;
 
-    const ALL = 63;
+    const ALL = 127;
 }
