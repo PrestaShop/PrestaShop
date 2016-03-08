@@ -220,4 +220,26 @@ class ModuleManager implements AddonManagerInterface
         }
         return $status;
     }
+
+    /**
+     * Shortcut to the module data provider in order to know if a module is enabled
+     *
+     * @param string $name The technical module name
+     * @return bool
+     */
+    public function isEnabled($name)
+    {
+        return $this->moduleProvider->isEnabled($name);
+    }
+
+    /**
+     * Shortcut to the module data provider in order to know if a module is installed
+     *
+     * @param string $name The technical module name
+     * @return bool
+     */
+    public function isInstalled($name)
+    {
+        return $this->moduleProvider->isInstalled($name);
+    }
 }
