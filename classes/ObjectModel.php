@@ -1587,11 +1587,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param string $classname
      * @param array  $data
      * @param string $where
-     * @param string $specific_where Only executed for common table
      *
      * @return bool
      */
-    public static function updateMultishopTable($classname, $data, $where = '', $specific_where = '')
+    public static function updateMultishopTable($classname, $data, $where = '')
     {
         $def = ObjectModel::getDefinition($classname);
         $update_data = array();
