@@ -294,20 +294,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
                 'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
                 'display_taxes_label' => true,
-                'product_conditions' => array(
-                    'new' => array(
-                        'label' => $this->l('New product'),
-                        'schema_url' => 'https://schema.org/NewCondition',
-                        ),
-                    'used' => array(
-                        'label' => $this->l('Used'),
-                        'schema_url' => 'https://schema.org/UsedCondition',
-                        ),
-                    'refurbished' => array(
-                        'label' => $this->l('Refurbished'),
-                        'schema_url' => 'https://schema.org/RefurbishedCondition',
-                        ),
-                ),
                 'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')
             ));
 

@@ -220,13 +220,6 @@ class ProductPresenter
             ];
         }
 
-        if ($product['new']) {
-            $labels['new'] = [
-                'type' => 'new',
-                'label' => $this->translator->trans('New', [], 'Product')
-            ];
-        }
-
         if ($product['pack']) {
             $labels['pack'] = [
                 'type' => 'pack',
@@ -235,6 +228,38 @@ class ProductPresenter
         }
 
         $presentedProduct['labels'] = $labels;
+
+        return $presentedProduct;
+    }
+
+    private function addConditionInformation(
+        array $presentedProduct,
+        ProductPresentationSettings $settings,
+        array $product
+    ) {
+        switch ($product['condition']) {
+            case 'used':
+                $presentedProduct['condition'] = [
+                    'type' => 'used',
+                    'label' => $this->translator->trans('Used', [], 'Product'),
+                    'schema_url' => 'https://schema.org/UsedCondition',
+                ];
+                break;
+            case 'refurbished':
+                $presentedProduct['condition'] = [
+                    'type' => 'refurbished',
+                    'label' => $this->translator->trans('Refurbished', [], 'Product'),
+                    'schema_url' => 'https://schema.org/RefurbishedCondition',
+                ];
+                break;
+            default:
+                $presentedProduct['condition'] = [
+                    'type' => 'new',
+                    'label' => $this->translator->trans('New product', [], 'Product'),
+                    'schema_url' => 'https://schema.org/NewCondition',
+                ];
+                break;
+        }
 
         return $presentedProduct;
     }
@@ -343,6 +368,12 @@ class ProductPresenter
         );
 
         $presentedProduct = $this->addLabels(
+            $presentedProduct,
+            $settings,
+            $product
+        );
+
+        $presentedProduct = $this->addConditionInformation(
             $presentedProduct,
             $settings,
             $product

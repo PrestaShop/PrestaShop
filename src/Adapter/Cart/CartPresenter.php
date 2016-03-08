@@ -87,6 +87,7 @@ class CartPresenter implements PresenterInterface
         $rawProduct['online_only'] = '';
         $rawProduct['reduction'] = '';
         $rawProduct['new'] = '';
+        $rawProduct['condition'] = '';
         $rawProduct['pack'] = '';
 
         if ($this->includeTaxes()) {
