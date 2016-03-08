@@ -43,7 +43,8 @@ class ModuleManagerBuilder
             self::$modulesManager = new ModuleManager(new AdminModuleDataProvider($kernel),
                 new ModuleDataProvider(),
                 new ModuleDataUpdater(),
-                $this->buildRepository());
+                $this->buildRepository(),
+                \Context::getContext()->employee);
         }
         return self::$modulesManager;
     }

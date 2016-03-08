@@ -168,7 +168,7 @@ class ModuleRepository implements AddonRepositoryInterface
             $this->getModulesOnDisk());
     }
 
-    public function getAddonsCatalogModules()
+    private function getAddonsCatalogModules()
     {
         $modules = [];
         foreach ($this->adminModuleProvider->getCatalogModulesNames() as $name) {
@@ -187,7 +187,7 @@ class ModuleRepository implements AddonRepositoryInterface
         return $modules;
     }
 
-    public function getInstalledModules()
+    private function getInstalledModules()
     {
         $modules_list = $this->getModulesOnDisk();
         foreach ($modules_list as $key => &$module) {
@@ -297,7 +297,7 @@ class ModuleRepository implements AddonRepositoryInterface
         return new Module($attributes, $disk, $database);
     }
 
-    public function getModulesOnDisk()
+    private function getModulesOnDisk()
     {
         $modules         = [];
         $all_module_dirs = glob(_PS_MODULE_DIR_.'*', GLOB_ONLYDIR);
@@ -327,7 +327,7 @@ class ModuleRepository implements AddonRepositoryInterface
      * @param  string $name The technical module name to find
      * @return array         Module data stored in file
      */
-    protected function generateCacheFile($data)
+    private function generateCacheFile($data)
     {
         $yml_file_path = self::CACHE_FILE; //_PS_MODULE_DIR_.$name.'/'.$name.'.yml';
         /* $dumper = new Dumper();
@@ -345,7 +345,7 @@ class ModuleRepository implements AddonRepositoryInterface
      *
      * @return array         Module data loaded in file
      */
-    protected function readCacheFile()
+    private function readCacheFile()
     {
         $file_path = self::CACHE_FILE;
 

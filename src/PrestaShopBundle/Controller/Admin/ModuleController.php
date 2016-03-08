@@ -162,7 +162,7 @@ class ModuleController extends FrameworkBundleAdminController
             // ToDo : Check if allowed to call this action
             try {
                 $ret[$module]['status'] = $moduleManager->{$action}($module);
-                if ($ret[$module]['status'] == null) {
+                if ($ret[$module]['status'] === null) {
                     $ret[$module]['status'] = false;
                     $ret[$module]['msg'] = $module .' did not returned a valid response on '.$action .' action';
                 } else {

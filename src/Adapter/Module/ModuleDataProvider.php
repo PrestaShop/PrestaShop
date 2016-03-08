@@ -41,6 +41,20 @@ class ModuleDataProvider
         return ['installed' => 0];
     }
 
+    /**
+     * Check current employee permission on a given module
+     * @param string $action
+     * @param string $name
+     * @return bool True if allowed
+     */
+    public function can($action, $name)
+    {
+        return \Module::getPermissionStatic(
+            \Module::getModuleIdByName($name),
+            $action
+        );
+    }
+
     public function isEnabled($name)
     {
         $id_shops = (new Context())->getContextListShopID();

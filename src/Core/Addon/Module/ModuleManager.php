@@ -25,6 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
+use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -56,21 +57,19 @@ class ModuleManager implements AddonManagerInterface
      */
     private $moduleRepository;
 
-    private $msgs_success;
-    private $msgs_warning;
-    private $msgs_error;
-
+    private $employee;
 
     public function __construct(AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
-        ModuleRepository $moduleRepository)
+        ModuleRepository $moduleRepository,
+        Employee $employee)
     {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->moduleProvider = $modulesProvider;
         $this->moduleUpdater = $modulesUpdater;
         $this->moduleRepository = $moduleRepository;
-        $this->msgs_success = $this->msgs_warning = $this->msgs_error = [];
+        $this->employee = $employee;
     }
 
     /**
@@ -84,6 +83,10 @@ class ModuleManager implements AddonManagerInterface
      */
     public function install($name)
     {
+        if (!$this->employee->can('add', 'AdminModules')) {
+            throw new Exception('You are not allowed to install a module');
+        }
+
         if ($this->moduleProvider->isInstalled($name)) {
             throw new Exception('This module is already installed');
         }
@@ -108,6 +111,10 @@ class ModuleManager implements AddonManagerInterface
         // Check permissions:
         // * Employee can delete
         // * Employee can delete this specific module
+        if (!$this->employee->can('delete', 'AdminModules')
+            || !$this->moduleProvider->can('uninstall', $name)) {
+            throw new Exception('You are not allowed to uninstall this module');
+        }
 
         // Is module installed ?
         if (! $this->moduleProvider->isInstalled($name)) {
@@ -146,9 +153,13 @@ class ModuleManager implements AddonManagerInterface
     */
     public function upgrade($name, $version = 'latest', $source = null)
     {
+        if (!$this->employee->can('edit', 'AdminModules')
+            || !$this->moduleProvider->can('configure', $name)) {
+            throw new Exception('You are not allowed to upgrade this module');
+        }
+
         if (! $this->moduleProvider->isInstalled($name)) {
-            $this->msgs_error[$name][] = 'This module must be installed';
-            return false;
+            throw new Exception('This module must be installed');
         }
 
         // Get new module
@@ -178,12 +189,16 @@ class ModuleManager implements AddonManagerInterface
      */
     public function disable($name)
     {
+        if (!$this->employee->can('edit', 'AdminModules')
+            || !$this->moduleProvider->can('configure', $name)) {
+            throw new Exception('You are not allowed to disable this module');
+        }
+
         $module = $this->moduleRepository->getModule($name);
         try {
             return $module->onDisable();
         } catch (Exception $e) {
-            $this->msgs_error[$name][] = 'Error when disabling module. '. $e->getMessage();
-            return false;
+            throw new Exception('Error when disabling module. '. $e->getMessage(), 0, $e);
         }
     }
 
@@ -195,12 +210,16 @@ class ModuleManager implements AddonManagerInterface
      */
     public function enable($name)
     {
+        if (!$this->employee->can('edit', 'AdminModules')
+            || !$this->moduleProvider->can('configure', $name)) {
+            throw new Exception('You are not allowed to enable this module');
+        }
+
         $module = $this->moduleRepository->getModule($name);
         try {
             return $module->onEnable();
         } catch (Exception $e) {
-            $this->msgs_error[$name][] = 'Error when enabling module. '. $e->getMessage();
-            return false;
+            throw new Exception('Error when enabling module. '. $e->getMessage(), 0, $e);
         }
     }
 
@@ -212,13 +231,23 @@ class ModuleManager implements AddonManagerInterface
      */
     public function reset($name, $keep_data = false)
     {
-        $module = $this->moduleRepository->getModule($name);
-        if ((bool)$keep_data && method_exists($this, 'reset')) {
-            $status = $module->onReset();
-        } else {
-            $status = ($module->onUninstall() && $module->onInstall());
+        if (!$this->employee->can('add', 'AdminModules')
+            || !$this->employee->can('delete', 'AdminModules')
+            || !$this->moduleProvider->can('uninstall', $name)) {
+            throw new Exception('You are not allowed to reset this module');
         }
-        return $status;
+
+        $module = $this->moduleRepository->getModule($name);
+        try {
+            if ((bool)$keep_data && method_exists($this, 'reset')) {
+                $status = $module->onReset();
+            } else {
+                $status = ($module->onUninstall() && $module->onInstall());
+            }
+            return $status;
+        } catch (Exception $e) {
+            throw new Exception('Error when resetting module. '. $e->getMessage(), 0, $e);
+        }
     }
 
     /**
