@@ -4,14 +4,15 @@
   <section id="main">
 
     {block name='category_header'}
-      <div class="block-category">
-        <h1 class="h1">{$category.name}</h1>
-        <div id="category-description" class="text-muted">{$category.description nofilter}</div>
-        <div class="category-cover">
-          <img src="{$category.image.large.url}" alt="{$category.image.legend}">
+      {if $category.description}
+        <div class="block-category card">
+          <h1 class="h1">{$category.name}</h1>
+          <div id="category-description" class="text-muted">{$category.description nofilter}</div>
+          <div class="category-cover">
+            <img src="{$category.image.large.url}" alt="{$category.image.legend}">
+          </div>
         </div>
-
-      </div>
+      {/if}
     {/block}
 
     {block name='category_products'}

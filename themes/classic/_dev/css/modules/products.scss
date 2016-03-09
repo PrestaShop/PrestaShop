@@ -469,7 +469,7 @@ li.product-label {
   }
 }
 
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
   .product-cover{
     img{
       width: 100%;

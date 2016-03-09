@@ -1251,7 +1251,8 @@ class FrontControllerCore extends Controller
 
         $urls = [
             'base_url' => $base_url,
-            'current_url' => rtrim($base_url, '/').'/'.ltrim($_SERVER['REQUEST_URI'], '/'),
+            'current_url' => $this->context->shop->getBaseURL(true, false).$_SERVER['REQUEST_URI'],
+            'shop_domain_url' => $this->context->shop->getBaseURL(true, false),
         ];
 
         $assign_array = array(
