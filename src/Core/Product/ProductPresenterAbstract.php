@@ -217,6 +217,13 @@ abstract class ProductPresenterAbstract
             ];
         }
 
+        if ($product['new']) {
+            $labels['new'] = [
+                'type' => 'new',
+                'label' => $this->translator->trans('New', [], 'Product')
+            ];
+        }
+
         if ($product['pack']) {
             $labels['pack'] = [
                 'type' => 'pack',
