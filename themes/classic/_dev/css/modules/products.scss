@@ -469,3 +469,11 @@ li.product-label {
     color: $gray-dark;
   }
 }
+
+@include media-breakpoint-down(sm) {
+  .product-cover{
+    img{
+      width: 100%;
+    }
+  }
+}

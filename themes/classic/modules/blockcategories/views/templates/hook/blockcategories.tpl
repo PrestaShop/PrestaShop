@@ -43,7 +43,7 @@
             {else}
               <a class="category-sub-link" href="{$node.link nofilter}">{$node.name}</a>
               {if $node.children}
-                <span class="_gray-darker arrows" data-toggle="collapse" data-target="#exCollapsingNavbar{$node.id}">
+                <span class="arrows" data-toggle="collapse" data-target="#exCollapsingNavbar{$node.id}">
                   <i class="material-icons arrow-right">&#xE315;</i>
                   <i class="material-icons arrow-down">&#xE313;</i>
                 </span>
