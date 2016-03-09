@@ -160,6 +160,13 @@ var AdminModule = function () {
                     $(_that.placeholderFailureGlobalSelector).fadeIn(800);
                 });
             }
+        }).fail(function (response){
+            var _that = _this;
+
+            $(_this.placeholderGlobalSelector).fadeOut(800, function(){
+                $(_that.placeholderFailureMsgSelector).text(response.statusText);
+                $(_that.placeholderFailureGlobalSelector).fadeIn(800);
+            });
         });
     };
 
@@ -288,6 +295,7 @@ var AdminModule = function () {
                // Added timeout for a better render of animation and avoid to have displayed at the same time
                setTimeout(function() {
                    $(_these.moduleImportStartSelector).fadeIn(function(event){
+                       $(_these.moduleImportFailureMsgDetailsSelector).css('display', 'none');
                        $('.dropzone').removeAttr('style');
                    });
                }, 550);
@@ -321,7 +329,7 @@ var AdminModule = function () {
       // Handle modal closure
       $('body').on('click', this.moduleImportModalCloseBtn, function(event) {
           if (_this.isUploadStarted === true) {
-              //@TODO: Display tooltip saying you can't escape
+              //@TODO: Display tooltip saying you can't escape at this stage
               return;
           } else {
               $(_this.dropZoneModalSelector).modal('hide');
@@ -365,20 +373,29 @@ var AdminModule = function () {
               // Leave it empty ATM since we don't require anything while processing upload
           },
           complete: function (file, response) {
-              var responseObject = jQuery.parseJSON(file.xhr.response);
+              //console.log(file, response);
 
-             $(_this.moduleImportProcessingSelector).fadeOut(function() {
-                  if (responseObject.status === true) {
-                      var configureLink = baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
-                      $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
-                      $(_this.moduleImportSuccessSelector).fadeIn();
-                  } else {
-                      $(_this.moduleImportFailureMsgDetailsSelector).html(responseObject.msg);
-                      $(_this.moduleImportFailureSelector).fadeIn();
-                  }
-                  // State that we have finish the process to unlock some actions
-                  _this.isUploadStarted = false;
-              });
+              if (file.status !== 'error') {
+                  var responseObject = jQuery.parseJSON(file.xhr.response);
+
+                 $(_this.moduleImportProcessingSelector).fadeOut(function() {
+                      if (responseObject.status === true) {
+                          var configureLink = baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
+                          $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+                          $(_this.moduleImportSuccessSelector).fadeIn();
+                      } else {
+                          $(_this.moduleImportFailureMsgDetailsSelector).html(responseObject.msg);
+                          $(_this.moduleImportFailureSelector).fadeIn();
+                      }
+                  });
+              } else {
+                  $(_this.moduleImportProcessingSelector).fadeOut(function() {
+                       $(_this.moduleImportFailureMsgDetailsSelector).html(file.xhr.responseText);
+                       $(_this.moduleImportFailureSelector).fadeIn();
+                   });
+              }
+              // State that we have finish the process to unlock some actions
+              _this.isUploadStarted = false;
           }
       };
   };
@@ -949,12 +966,12 @@ var AdminModule = function () {
                 $(_this.moduleSortListSelector).removeClass('module-sort-active');
                 $(_this.moduleSortGridSelector).addClass('module-sort-active');
                 $(this).removeClass();
-                $(this).addClass('module-item-grid col-lg-3 col-md-4 col-sm-6');
+                $(this).addClass('module-item-grid col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12');
                 _this.setNewDisplay($(this), '-list', '-grid');
             });
             // Change module addons item
             addonItem.removeClass();
-            addonItem.addClass('module-addons-item-grid col-lg-3 col-md-4 col-sm-6');
+            addonItem.addClass('module-addons-item-grid col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12');
             this.setNewDisplay(addonItem, '-list', '-grid');
 
         } else if (switchTo == 'list') {
@@ -964,12 +981,12 @@ var AdminModule = function () {
                 $(_this.moduleSortGridSelector).removeClass('module-sort-active');
                 $(_this.moduleSortListSelector).addClass('module-sort-active');
                 $(this).removeClass();
-                $(this).addClass('module-item-list col-md-12');
+                $(this).addClass('module-item-list col-lg-12');
                 _this.setNewDisplay($(this), '-grid', '-list');
             });
             // Change module addons item
             addonItem.removeClass();
-            addonItem.addClass('module-addons-item-list col-md-12');
+            addonItem.addClass('module-addons-item-list col-lg-12');
             this.setNewDisplay(addonItem, '-grid', '-list');
         } else {
             console.error('Can\'t switch to undefined display property "' + switchTo + '"');
