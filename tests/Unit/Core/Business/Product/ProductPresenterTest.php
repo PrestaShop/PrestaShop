@@ -4,7 +4,6 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Core\Product;
 
 use Phake;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Core\Price\PricePresenterInterface;
 use Product;
@@ -96,12 +95,12 @@ class ProductPresenterTest extends UnitTestCase
 
     private function getPresentedProduct($field = null)
     {
-        return $this->_presentProduct('ProductPresenter', $field);
+        return $this->_presentProduct('PrestaShop\PrestaShop\Core\Product\ProductPresenter', $field);
     }
 
     private function getPresentedProductForListing($field = null)
     {
-        return $this->_presentProduct('ProductListingPresenter', $field);
+        return $this->_presentProduct('PrestaShop\PrestaShop\Core\Product\ProductListingPresenter', $field);
     }
 
 
