@@ -1,0 +1,33 @@
+{#Simulate a bunch of module card #}
+<div class="module-placeholders-wrapper row">
+    {% for i in 0..8 %}
+
+      <div class="timeline-item col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12">
+        <div class="animated-background">
+          <div class="background-masker header-top"></div>
+          <div class="background-masker header-left"></div>
+          <div class="background-masker header-right"></div>
+          <div class="background-masker header-bottom"></div>
+          <div class="background-masker subheader-left"></div>
+          <div class="background-masker subheader-right"></div>
+          <div class="background-masker subheader-bottom"></div>
+          <div class="background-masker content-top"></div>
+          <div class="background-masker content-first-end"></div>
+          <div class="background-masker content-second-line"></div>
+          <div class="background-masker content-second-end"></div>
+          <div class="background-masker content-third-line"></div>
+          <div class="background-masker content-third-end"></div>
+        </div>
+      </div>
+
+    {% endfor %}
+</div>
+
+<div class="module-placeholders-failure row">
+      <div class="module-placeholders-failure-wrapper col-md-12">
+          <div class='module-placeholders-failure-msg'>
+          </div>
+          <button id='module-placeholders-failure-retry' type="button" class="btn btn-primary">Retry</button>
+      </div>
+
+</div>
