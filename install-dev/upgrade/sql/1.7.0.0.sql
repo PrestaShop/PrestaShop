@@ -28,8 +28,8 @@ INSERT INTO `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_sho
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `firstname` `firstname` varchar(255) NOT NULL;
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `lastname` `lastname` varchar(255) NOT NULL;
 
-ALTER TABLE `PREFIX_product` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '1' AFTER `available_date`;
-ALTER TABLE `PREFIX_product_shop` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '1' AFTER `available_date`;
+ALTER TABLE `PREFIX_product` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '0' AFTER `available_date`;
+ALTER TABLE `PREFIX_product_shop` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '0' AFTER `available_date`;
 
 /* Add Payment Preferences tab. SuperAdmin profile is the only one to access it. */
 /* PHP:ps_1701_add_payment_preferences_tab(); */;

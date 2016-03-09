@@ -242,6 +242,13 @@ abstract class ProductPresenterAbstract
         array $product
     ) {
         switch ($product['condition']) {
+            case 'new':
+                $presentedProduct['condition'] = [
+                    'type' => 'new',
+                    'label' => $this->translator->trans('New product', [], 'Product'),
+                    'schema_url' => 'https://schema.org/NewCondition',
+                ];
+                break;
             case 'used':
                 $presentedProduct['condition'] = [
                     'type' => 'used',
@@ -257,12 +264,7 @@ abstract class ProductPresenterAbstract
                 ];
                 break;
             default:
-                $presentedProduct['condition'] = [
-                    'type' => 'new',
-                    'label' => $this->translator->trans('New product', [], 'Product'),
-                    'schema_url' => 'https://schema.org/NewCondition',
-                ];
-                break;
+                $presentedProduct['condition'] = false;
         }
 
         return $presentedProduct;
@@ -377,11 +379,15 @@ abstract class ProductPresenterAbstract
             $product
         );
 
-        $presentedProduct = $this->addConditionInformation(
-            $presentedProduct,
-            $settings,
-            $product
-        );
+        if (isset($product['show_condition']) && $product['show_condition']) {
+            $presentedProduct = $this->addConditionInformation(
+                $presentedProduct,
+                $settings,
+                $product
+            );
+        } else {
+            $presentedProduct['condition'] = false;
+        }
 
         $presentedProduct = $this->addQuantityInformation(
             $presentedProduct,

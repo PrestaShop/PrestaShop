@@ -266,6 +266,20 @@ class ProductPresenterTest extends UnitTestCase
         );
     }
 
+    public function test_product_has_new_label_if_condition_must_be_shown()
+    {
+        $this->product['show_condition'] = true;
+        $this->product['condition'] = 'new';
+        $this->assertEquals(
+            [
+                'type'  => 'new',
+                'label' => 'some label',
+                'schema_url' => 'https://schema.org/NewCondition',
+            ],
+            $this->getPresentedProduct('condition')
+        );
+    }
+
     public function test_product_has_no_labels_if_not_available_for_order()
     {
         $this->product['online_only'] = true;
