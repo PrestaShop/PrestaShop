@@ -101,15 +101,9 @@ abstract class ProductPresenterAbstract
             $regular_price = $product['price_without_reduction'];
         }
 
-        $presentedProduct['price_amount'] = $this->priceFormatter->convertAmount($price);
-
-        $presentedProduct['price'] = $this->priceFormatter->format(
-            $this->priceFormatter->convertAmount($price)
-        );
-
-        $presentedProduct['regular_price'] = $this->priceFormatter->format(
-            $this->priceFormatter->convertAmount($regular_price)
-        );
+        $presentedProduct['price_amount'] = $this->priceFormatter->format($price);
+        $presentedProduct['price'] = $this->priceFormatter->format($price);
+        $presentedProduct['regular_price'] = $this->priceFormatter->format($regular_price);
 
         return $presentedProduct;
     }
