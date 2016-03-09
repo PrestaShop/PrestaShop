@@ -1251,7 +1251,7 @@ class FrontControllerCore extends Controller
 
         $urls = [
             'base_url' => $base_url,
-            'current_url' => $base_url.$_SERVER['REQUEST_URI'],
+            'current_url' => rtrim($base_url, '/').'/'.ltrim($_SERVER['REQUEST_URI'], '/'),
         ];
 
         $assign_array = array(
