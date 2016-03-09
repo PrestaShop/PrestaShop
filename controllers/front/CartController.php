@@ -83,8 +83,6 @@ class CartControllerCore extends FrontController
 
     public function displayAjaxUpdate()
     {
-        $this->updateCart();
-
         if (!$this->errors) {
             $this->ajaxDie(Tools::jsonEncode([
                 'success' => true,
