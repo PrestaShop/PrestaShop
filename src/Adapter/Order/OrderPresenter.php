@@ -7,6 +7,7 @@ use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 use Address;
 use AddressFormat;
 use Carrier;
@@ -19,9 +20,8 @@ use Order;
 use OrderReturn;
 use Product;
 use Tools;
-use ObjectModel;
 
-class OrderPresenter implements ObjectModel
+class OrderPresenter implements PresenterInterface
 {
     /* @var CartPresenter */
     private $cartPresenter;
@@ -48,7 +48,7 @@ class OrderPresenter implements ObjectModel
      *
      * @return array
      */
-    public function present(ObjectModel $order)
+    public function present($order)
     {
         if (!is_a($order, 'Order')) {
             throw new \Exception("OrderPresenter can only present instance of Order");

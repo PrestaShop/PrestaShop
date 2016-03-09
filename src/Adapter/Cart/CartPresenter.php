@@ -16,7 +16,6 @@ use Product;
 use Configuration;
 use CartRule;
 use Tools;
-use ObjectModel;
 
 class CartPresenter implements PresenterInterface
 {
@@ -201,7 +200,7 @@ class CartPresenter implements PresenterInterface
         }, $products);
     }
 
-    public function present(ObjectModel $cart)
+    public function present($cart)
     {
         if (!is_a($cart, 'Cart')) {
             throw new \Exception("CartPresenter can only present instance of Cart");

@@ -26,9 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Foundation\Templating;
 
-use ObjectModel;
-
 interface PresenterInterface
 {
-    public function present(ObjectModel $object); // must return an array
+    public function present($object); // must return an array
 }

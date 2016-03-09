@@ -27,12 +27,15 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
-use ObjectModel;
 
 class ObjectPresenter implements PresenterInterface
 {
-    public function present(ObjectModel $object)
+    public function present($object)
     {
+        if (!is_a($object, 'ObjectModel')) {
+            throw new \Exception('ObjectPresenter can only present ObjectModel classes');
+        }
+
         $presentedObject = array();
 
         $fields = $object::$definition['fields'];
