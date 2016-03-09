@@ -11,7 +11,7 @@ const onpopstate = e => {
     if (e.state && e.state.rendered_products) {
         updateDOM(e.state);
     }
-}
+};
 
 function updateResults (data) {
     pendingQuery = false;

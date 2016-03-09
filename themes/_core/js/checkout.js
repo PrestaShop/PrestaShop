@@ -60,19 +60,6 @@ function hideOrShow () {
   }
 }
 
-function selectAddress (event) {
-  const form = $(event.target).closest('form');
-  $
-    .post('', form.serialize(), null, 'json')
-    .then(resp => {
-      // TODO
-    })
-    .fail(resp => {
-      // TODO
-    })
-  ;
-}
-
 function setupCheckoutScripts () {
   $('#payment-confirmation button').on('click', confirmPayment);
   $('#payment-section input[type="checkbox"][disabled]').attr('disabled', false);
@@ -80,7 +67,6 @@ function setupCheckoutScripts () {
   $('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
-  $('body').on('change', '.js-address-selector input', selectAddress);
 
   $('body').on('click', '.checkout-step.-reachable h1', function (event) {
     $('.-js-current, .-current').removeClass('-js-current -current');
