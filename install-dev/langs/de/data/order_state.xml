@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
 <entity_order_state>
-  <order_state id="Awaiting_cheque_payment">
-    <name>Warten auf Scheckzahlung</name>
-    <template>cheque</template>
-  </order_state>
   <order_state id="Payment_accepted">
     <name>Zahlung eingegangen</name>
     <template>payment</template>
@@ -33,7 +29,7 @@
     <template>payment_error</template>
   </order_state>
   <order_state id="On_backorder_paid">
-    <name>Artikel nicht auf Lager</name>
+    <name>Artikel nicht auf Lager (bezahlt)</name>
     <template>outofstock</template>
   </order_state>
   <order_state id="On_backorder_unpaid">
