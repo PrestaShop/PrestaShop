@@ -126,7 +126,10 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             );
 
             if ($addressPersister->delete(new Address((int)Tools::getValue('id_address'), $this->context->language->id), Tools::getValue('token'))) {
-                $this->success[] = $this->getTranslator()->trans('Address successfully deleted!', [], 'Checkout');
+                $this->context->controller->success[] = $this->getTranslator()->trans('Address successfully deleted!', [], 'Checkout');
+                $this->context->controller->redirectWithNotifications(
+                    $this->getCheckoutSession()->getCheckoutURL()
+                );
             } else {
                 $this->getCheckoutProcess()->setHasErrors(true);
                 $this->context->controller->errors[] = $this->getTranslator()->trans('Could not delete address.', [], 'Checkout');
