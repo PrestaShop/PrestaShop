@@ -63,9 +63,6 @@ class Module implements AddonInterface
      */
     public $database;
 
-
-    private $legacyFunctions = ['install', 'uninstall', 'reset'];
-
     /**
      *
      * @param array $attributes

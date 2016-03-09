@@ -249,17 +249,6 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return false;
     }
 
-    public function removeModuleFromDisk($name)
-    {
-        $fs = new FileSystem();
-        try {
-            $fs->remove(_PS_MODULE_DIR_ .'/'. $name);
-            return true;
-        } catch (IOExceptionInterface $e) {
-            return false;
-        }
-    }
-
     protected function applyModuleFilters(array $products, $categories, array $filters)
     {
         if (! count($filters)) {

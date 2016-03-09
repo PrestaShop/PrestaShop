@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleManager implements AddonManagerInterface
 {
@@ -88,7 +87,7 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if ($this->moduleProvider->isInstalled($name)) {
-            throw new Exception('This module is already installed');
+            throw new Exception(sprintf('The module %s is already installed', $name));
         }
 
         if (! $this->moduleProvider->isOnDisk($name)) {
@@ -131,12 +130,7 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if ($result && (bool)$file_deletion) {
-            $fs = new Filesystem();
-            try {
-                $fs->remove(_PS_MODULE_DIR_.$name);
-            } catch (IOException $e) {
-                $result &= false;
-            }
+            $result &= $this->removeModuleFromDisk($name);
         }
 
         return $result;
@@ -270,5 +264,10 @@ class ModuleManager implements AddonManagerInterface
     public function isInstalled($name)
     {
         return $this->moduleProvider->isInstalled($name);
+    }
+
+    public function removeModuleFromDisk($name)
+    {
+        return $this->moduleUpdater->removeModuleFromDisk($name);
     }
 }

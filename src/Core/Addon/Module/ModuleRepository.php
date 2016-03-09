@@ -246,7 +246,6 @@ class ModuleRepository implements AddonRepositoryInterface
                     [
                     'warning' => $tmp_module->warning,
                     'name' => $tmp_module->name,
-                    'version' => $tmp_module->version,
                     'tab' => $tmp_module->tab,
                     'displayName' => $tmp_module->displayName,
                     'description' => stripslashes($tmp_module->description),
@@ -290,6 +289,7 @@ class ModuleRepository implements AddonRepositoryInterface
                     }
                 }
                 $disk['is_valid'] = 1;
+                $disk['version'] = $tmp_module->version;
             }
 
             $this->cache[$name]['attributes'] = $attributes;

@@ -277,6 +277,8 @@ class ModuleController extends FrameworkBundleAdminController
      */
     public function importModuleAction(Request $request)
     {
+        $moduleManager = (new ModuleManagerBuilder())->build();
+
         try {
             $file_uploaded = $request->files->get('file_uploaded');
             $file_uploaded_name = $file_uploaded->getClientOriginalName();
@@ -288,8 +290,19 @@ class ModuleController extends FrameworkBundleAdminController
             // Try to inflate archive given, and do check to verify we have a valid module architecture
             $module_name = $this->inflateModule($file_uploaded_tmp_fullpath);
             // Install the module
-            $installation_response = $this->installModule($module_name);
-            $installation_response['module_name'] = $module_name;
+            $installation_response = [
+                'status' => $moduleManager->install($module_name),
+                'msg' => '',
+                'module_name' => $module_name,
+            ];
+
+            if ($installation_response['status'] === null) {
+                $installation_response['status'] = false;
+                $installation_response['msg'] = $module_name .' did not returned a valid response on install action';
+            } else {
+                $installation_response['msg'] = 'Install action on module '. $module_name;
+                $installation_response['msg'] .= $installation_response['status']?' succeeded':' failed';
+            }
 
             return new JsonResponse(
                 $installation_response,
@@ -298,8 +311,8 @@ class ModuleController extends FrameworkBundleAdminController
             );
         } catch (Exception $e) {
             if (isset($module_name)) {
-                $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-                $modulesProvider->removeModuleFromDisk($module_name);
+                $moduleManager->uninstall($module_name);
+                $moduleManager->removeModuleFromDisk($module_name);
             }
             return new JsonResponse(array(
                 'status' => false,

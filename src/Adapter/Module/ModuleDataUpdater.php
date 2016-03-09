@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleDataUpdater
 {
@@ -44,5 +45,16 @@ class ModuleDataUpdater
         }
 
         return false;
+    }
+
+    public function removeModuleFromDisk($name)
+    {
+        $fs = new FileSystem();
+        try {
+            $fs->remove(_PS_MODULE_DIR_ .'/'. $name);
+            return true;
+        } catch (IOException $e) {
+            return false;
+        }
     }
 }
