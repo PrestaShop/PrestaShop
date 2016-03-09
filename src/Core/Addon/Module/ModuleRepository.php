@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 
 class ModuleRepository implements AddonRepositoryInterface
@@ -99,20 +102,17 @@ class ModuleRepository implements AddonRepositoryInterface
     {
         // Init missing values
         if (empty($filter->type)) {
-            $filter->setType(\PrestaShop\PrestaShop\Core\Addon\AddonListFilterType::MODULE);
+            $filter->setType(AddonListFilterType::MODULE);
         }
         if (empty($filter->status)) {
-            $filter->setStatus(\PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus::ALL);
+            $filter->setStatus(AddonListFilterStatus::ALL);
         }
         if (empty($filter->origin)) {
-            $filter->setOrigin(\PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin::ALL);
+            $filter->setOrigin(AddonListFilterOrigin::ALL);
         }
 
-        if ($filter->status >= \PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus::INSTALLED
-            && $filter->status != \PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus::ALL) {
-            $modules = $this->getInstalledModules();
-        } elseif ($filter->status >= \PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus::ON_DISK
-            && $filter->status != \PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus::ALL) {
+        if ($filter->status >= AddonListFilterStatus::ON_DISK
+            && $filter->status != AddonListFilterStatus::ALL) {
             $modules = $this->getModulesOnDisk();
         } else {
             $modules = $this->getList();
@@ -122,10 +122,10 @@ class ModuleRepository implements AddonRepositoryInterface
 
             // Part One : Removing addons not related to the selected product type
             if ($module->attributes->get('productType') == 'Module') {
-                $productType = \PrestaShop\PrestaShop\Core\Addon\AddonListFilterType::MODULE;
+                $productType = AddonListFilterType::MODULE;
             }
             if ($module->attributes->get('productType') == 'Service') {
-                $productType = \PrestaShop\PrestaShop\Core\Addon\AddonListFilterType::SERVICE;
+                $productType = AddonListFilterType::SERVICE;
             }
             if (isset($productType) && $productType & ~ $filter->type) {
                 unset($modules[$key]);
@@ -133,25 +133,41 @@ class ModuleRepository implements AddonRepositoryInterface
             }
 
             // Part Two : Remove module not installed if specified
-            if ($module->database->get('installed') == 1 && $filter->status & ~ \PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus::INSTALLED) {
-                unset($modules[$key]);
-                continue;
-            }
+            if ($filter->status != AddonListFilterStatus::ALL) {
+                if ($module->database->get('installed') == 1 && $filter->status & ~ AddonListFilterStatus::INSTALLED) {
+                    unset($modules[$key]);
+                    continue;
+                }
 
-            if ($module->database->get('active') == 1 && $filter->status & ~ \PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus::ENABLED) {
-                unset($modules[$key]);
-                continue;
+                if ($module->database->get('installed') == 0 && $filter->status & AddonListFilterStatus::INSTALLED) {
+                    unset($modules[$key]);
+                    continue;
+                }
+
+                if ($module->database->get('installed') == 1
+                    && $module->database->get('active') == 1
+                    && $filter->status & ~ AddonListFilterStatus::ENABLED) {
+                    unset($modules[$key]);
+                    continue;
+                }
+
+                if ($module->database->get('installed') == 1
+                    && $module->database->get('active') == 0
+                    && $filter->status & AddonListFilterStatus::ENABLED) {
+                    unset($modules[$key]);
+                    continue;
+                }
             }
 
             // Part Three : Remove addons not related to the proper source (ex Addons)
-            if (!$module->attributes->has('origin_filter_value') && ~ $filter->origin
-                & \PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin::DISK
+            if (!$module->attributes->has('origin_filter_value') &&
+                ~ $filter->origin & AddonListFilterOrigin::DISK
             ) {
                 unset($modules[$key]);
                 continue;
             }
-            if ($module->attributes->has('origin_filter_value') && !($module->attributes->get('origin_filter_value')
-                & $filter->origin)) {
+            if ($module->attributes->has('origin_filter_value') &&
+                !($module->attributes->get('origin_filter_value') & $filter->origin)) {
                 unset($modules[$key]);
                 continue;
             }
@@ -185,17 +201,6 @@ class ModuleRepository implements AddonRepositoryInterface
         }
 
         return $modules;
-    }
-
-    private function getInstalledModules()
-    {
-        $modules_list = $this->getModulesOnDisk();
-        foreach ($modules_list as $key => &$module) {
-            if ($module->database->get('installed') === 0) {
-                unset($modules_list[$key]);
-            }
-        }
-        return $modules_list;
     }
 
     public function getModule($name)

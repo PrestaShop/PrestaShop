@@ -59,13 +59,12 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     private $cache_dir = _PS_ROOT_DIR_.'cache/';
 
-    protected $catalog_categories;
+    protected $catalog_categories; // deprecated
     protected $catalog_modules;
     protected $catalog_modules_names;
 
     public function __construct(\AppKernel $kernel = null, Router $router = null)
     {
-        $this->catalog_categories      = [];
         $this->catalog_modules         = [];
 
         $this->kernel = $kernel;
@@ -78,7 +77,6 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     public function clearCatalogCache()
     {
         $this->clearCache([self::_CACHEFILE_CATEGORIES_, self::_CACHEFILE_MODULES_]);
-        $this->catalog_categories      = [];
         $this->catalog_modules         = [];
     }
 
@@ -342,10 +340,9 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     protected function loadCatalogData()
     {
-        $this->catalog_categories = $this->getModuleCache(self::_CACHEFILE_CATEGORIES_);
         $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_);
 
-        if (!$this->catalog_categories || !$this->catalog_modules) {
+        if (!$this->catalog_modules) {
             $addons_provider = new AddonsDataProvider();
             $params = ['format' => 'json'];
             $requests = [
