@@ -21,6 +21,7 @@ class ModuleController extends FrameworkBundleAdminController
      */
     public function catalogAction(Request $request)
     {
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
         $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
 
@@ -29,10 +30,12 @@ class ModuleController extends FrameworkBundleAdminController
             ->setOrigin(AddonListFilterOrigin::ADDONS_ALL)
             ->setStatus(~ AddonListFilterStatus::INSTALLED);
 
+        $products = $moduleRepository->getFilteredList($filters);
+
         try {
-            $topMenuData = $this->getTopMenuData();
+            $topMenuData = $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products));
         } catch (Exception $e) {
-            $this->addFlash('error', 'Cannot get catalog data, please try again later.');
+            $this->addFlash('error', 'Cannot get catalog data, please try again later. '. $e->getMessage());
             $topMenuData = [];
         }
 
@@ -50,7 +53,7 @@ class ModuleController extends FrameworkBundleAdminController
      * @param  Request $request
      * @return Response
      */
-    public function refreshCatalogAction(Request $request, $category = null, $keyword = null)
+    public function refreshCatalogAction(Request $request)
     {
         if (!$request->isXmlHttpRequest()) {
             // Bad request
@@ -59,20 +62,18 @@ class ModuleController extends FrameworkBundleAdminController
 
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
+        $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
         $responseArray = [];
-        $filters = [];
 
-        if ($keyword !== null) {
-            $filters['search'] = $keyword;
-        }
-        if ($category !== null) {
-            $filters['category'] = $category;
-        }
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
+            ->setOrigin(AddonListFilterOrigin::ADDONS_ALL)
+            ->setStatus(~ AddonListFilterStatus::INSTALLED);
 
         try {
             $products = $moduleRepository->getFilteredList($filters);
             shuffle($products);
-            $topMenuData = $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products));
+            //$topMenuData = $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products));
             $responseArray['content'] = $this->render(
                 'PrestaShopBundle:Admin/Module/_partials:_modules_sorting.html.twig',
                 [
