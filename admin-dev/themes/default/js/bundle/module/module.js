@@ -22,6 +22,7 @@ var AdminModule = function () {
     this.baseAddonsUrl = 'https://addons.prestashop.com/';
     this.pstaggerInput = null;
     this.lastBulkAction = null;
+    this.isUploadStarted = false;
 
     /* Selectors into vars to make it easier to change them while keeping same code logic */
     this.searchBarSelector = '#module-search-bar';
@@ -57,13 +58,29 @@ var AdminModule = function () {
     this.bulkConfirmModalActionNameSelector = '#module-modal-bulk-confirm-action-name';
     this.bulkConfirmModalListSelector = '#module-modal-bulk-confirm-list';
     this.bulkConfirmModalAckBtnSelector = '#module-modal-confirm-bulk-ack';
+    this.placeholderGlobalSelector = '.module-placeholders-wrapper';
+    this.placeholderFailureGlobalSelector = '.module-placeholders-failure';
+    this.placeholderFailureMsgSelector = '.module-placeholders-failure-msg';
+    this.placeholderFailureRetryBtnSelector = '#module-placeholders-failure-retry';
 
     /* Selectors for Module Import and Addons connect */
     this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
     this.addonsConnectModalBtnSelector = '#page-header-desc-configuration-addons_connect';
     this.dropZoneModalSelector = '#module-modal-import';
+    this.dropZoneImportZoneSelector = '#importDropzone';
     this.addonsConnectModalSelector = '#module-modal-addons-connect';
     this.addonsConnectForm = '#addons-connect-form';
+    this.moduleImportModalCloseBtn = '#module-modal-import-closing-cross';
+    this.moduleImportStartSelector = '.module-import-start';
+    this.moduleImportProcessingSelector = '.module-import-processing';
+    this.moduleImportSuccessSelector = '.module-import-success';
+    this.moduleImportSuccessConfigureBtnSelector = '.module-import-success-configure';
+    this.moduleImportFailureSelector = '.module-import-failure';
+    this.moduleImportFailureRetrySelector = '.module-import-failure-retry';
+    this.moduleImportFailureDetailsBtnSelector = '.module-import-failure-details-action';
+    this.moduleImportSelectFileManualSelector = '.module-import-start-select-manual';
+    this.moduleImportFailureMsgDetailsSelector = '.module-import-failure-details';
+
 
     /**
      * Initialize all listners and bind everything
@@ -82,33 +99,105 @@ var AdminModule = function () {
         this.initAddonsConnect();
         this.initAddModuleAction();
         this.initDropzone();
+        this.initPageChangeProtection();
         this.initBulkActions();
+        this.initPlaceholderMechanism();
     };
 
-  //@TODO: JS Doc
-  this.initBulkActions = function() {
-      var _this = this;
+    //@TODO: JS Doc
+    this.initPlaceholderMechanism = function() {
+        var _this = this;
 
-      $(this.bulkActionDropDownSelector).on('change', function(event){
+        if ($(this.placeholderGlobalSelector).length) {
+            this.ajaxLoadPage();
+        }
+
+        // Retry loading mechanism
+        $('body').on('click', this.placeholderFailureRetryBtnSelector, function(event){
+            $(_this.placeholderFailureGlobalSelector).fadeOut();
+            $(_this.placeholderGlobalSelector).fadeIn();
+            _this.ajaxLoadPage();
+        });
+    };
+
+    //@TODO: JS Doc
+    this.ajaxLoadPage = function() {
+        var urlToCall = baseAdminDir + 'module/catalog/refresh';
+        var _this = this;
+
+        $.ajax({
+            method: 'GET',
+            url: urlToCall,
+        }).done(function (response) {
+            var _that = _this;
+
+            if (response.status === true) {
+                var stylesheet = document.styleSheets[0];
+                var stylesheetRule = '{display: none}';
+                var moduleGlobalSelector = _this.getModuleGlobalSelector();
+                var requiredSelectorCombination = moduleGlobalSelector + ', .module-sorting-menu ';
+
+                if (stylesheet.insertRule) {
+                    stylesheet.insertRule(
+                        requiredSelectorCombination +
+                        stylesheetRule, stylesheet.cssRules.length
+                    );
+                } else if (stylesheet.addRule) {
+                    stylesheet.addRule(
+                        requiredSelectorCombination,
+                        stylesheetRule,
+                        -1
+                    );
+                }
+
+                $(_this.placeholderGlobalSelector).fadeOut(800, function(){
+                    $(_that.placeholderGlobalSelector).replaceWith(response.content);
+                    $(requiredSelectorCombination).fadeIn(800);
+                });
+            } else {
+                $(_this.placeholderGlobalSelector).fadeOut(800, function(){
+                    $(_that.placeholderFailureMsgSelector).text(response.msg);
+                    $(_that.placeholderFailureGlobalSelector).fadeIn(800);
+                });
+            }
+        });
+    };
+
+    //@TODO: JS Doc
+    this.initPageChangeProtection = function() {
+        var _this = this;
+
+        $(window).on('beforeunload', function(event){
+            if (_this.isUploadStarted === true) {
+                return "It seems some critical operation are running, are you sure you want to change page ? It might cause some unexepcted behaviors.";
+            }
+        });
+    };
+
+    //@TODO: JS Doc
+    this.initBulkActions = function() {
+        var _this = this;
+
+        $('body').on('change', this.bulkActionDropDownSelector, function(event){
           _this.lastBulkAction = $(this).find(':checked').attr('value');
           var modulesListString = _this.buildBulkActionModuleList();
           var actionString = $(this).find(':checked').text().toLowerCase();
           $(_this.bulkConfirmModalListSelector).html(modulesListString);
           $(_this.bulkConfirmModalActionNameSelector).text(actionString);
           $(_this.bulkConfirmModalSelector).modal('show');
-      });
+        });
 
-      $(this.selectAllBulkActionSelector).on('change', function(event){
+        $('body').on('change', this.selectAllBulkActionSelector, function(event){
           _this.changeBulkCheckboxesState($(this).is(':checked'));
-      });
+        });
 
-      $(this.bulkConfirmModalAckBtnSelector).on('click', function(event) {
+        $('body').on('click', this.bulkConfirmModalAckBtnSelector, function(event) {
           event.preventDefault();
           event.stopPropagation();
           $(_this.bulkConfirmModalSelector).modal('hide');
           _this.doBulkAction(_this.lastBulkAction);
-      });
-  };
+        });
+    };
 
   this.buildBulkActionModuleList = function() {
       var checkBoxesSelector = this.getBulkCheckboxesSelector();
@@ -116,7 +205,6 @@ var AdminModule = function () {
       var _this = this;
       var alreadyDoneFlag = 0;
       var htmlGenerated = '';
-
 
       $(checkBoxesSelector + ':checked').each(function(index, value){
           if (alreadyDoneFlag != 10) {
@@ -144,12 +232,15 @@ var AdminModule = function () {
 
     //@TODO: JS Doc
     this.initAddonsConnect = function () {
-        $(this.dropModuleBtnSelector).attr('data-toggle', 'modal');
-        $(this.dropModuleBtnSelector).attr('data-target', this.dropZoneModalSelector);
-
         var _this = this;
 
-        $(this.addonsConnectForm).on('submit', function (event) {
+        // Make addons connect modal ready to be clicked
+        if ($(this.addonsConnectModalBtnSelector).attr('href') == '#') {
+            $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
+            $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
+        }
+
+        $('body').on('submit', this.addonsConnectForm, function (event) {
             event.preventDefault();
             event.stopPropagation();
 
@@ -181,26 +272,75 @@ var AdminModule = function () {
 
     //@TODO: JS Doc
     this.initAddModuleAction = function () {
-        if ($(this.addonsConnectModalBtnSelector).attr('href') == '#') {
-            $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
-            $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
-        }
+        $(this.dropModuleBtnSelector).attr('data-toggle', 'modal');
+        $(this.dropModuleBtnSelector).attr('data-target', this.dropZoneModalSelector);
     };
 
   //@TODO: JS Doc
   this.initDropzone = function () {
+      var _this = this;
 
-      $('.module-import-failure-retry').on('click', function(event){
-           $('.module-import-success, .module-import-failure, .module-import-processing').fadeOut(function(){
-               $('.dz-preview, .dz-message').fadeIn();
+      // Reset modal when click on Retry in case of failure
+      $('body').on('click', this.moduleImportFailureRetrySelector, function(event){
+          var _that = _this;
+           $(_this.moduleImportSuccessSelector + ', ' + _this.moduleImportFailureSelector + ', ' + _this.moduleImportProcessingSelector).fadeOut(function(){
+               var _these = _that;
+               // Added timeout for a better render of animation and avoid to have displayed at the same time
+               setTimeout(function() {
+                   $(_these.moduleImportStartSelector).fadeIn(function(event){
+                       $('.dropzone').removeAttr('style');
+                   });
+               }, 550);
            });
       });
 
-      $('#module-modal-import').on('hidden.bs.modal', function (event) {
-          $('.module-import-success').css('display', 'none');
-          $('.module-import-failure').css('display', 'none');
-          $('.module-import-zipname').parent().css('display', 'none');
+      // Reinit modal on quit, but check if not already processing something
+      $('body').on('hidden.bs.modal', this.dropZoneModalSelector, function (event) {
+          $(_this.moduleImportSuccessSelector + ', ' + _this.moduleImportFailureSelector).css('display', 'none');
+          $(_this.moduleImportStartSelector).css('display', 'block');
+          $('.dropzone').removeAttr('style');
+          $(_this.moduleImportFailureMsgDetailsSelector).css('display', 'none');
       });
+
+      // Change the way Dropzone.js lib handle file input trigger
+      $('body').on('click', '.dropzone:not(' + this.moduleImportSelectFileManualSelector + ', ' + this.moduleImportSuccessConfigureBtnSelector + ')', function(event, manual_select){
+          // if click comes from .module-import-start-select-manual, stop everything
+          if (typeof manual_select == "undefined") {
+              event.stopPropagation();
+              event.preventDefault();
+          }
+      });
+
+      $('body').on('click', this.moduleImportSelectFileManualSelector, function(event){
+          event.stopPropagation();
+          event.preventDefault();
+          // Trigger click on hidden file input, and pass extra data to .dropzone click handler fro it to notice it comes from here
+          $('.dz-hidden-input').trigger('click', ["manual_select"]);
+      });
+
+      // Handle modal closure
+      $('body').on('click', this.moduleImportModalCloseBtn, function(event) {
+          if (_this.isUploadStarted === true) {
+              //@TODO: Display tooltip saying you can't escape
+              return;
+          } else {
+              $(_this.dropZoneModalSelector).modal('hide');
+          }
+      });
+
+      // Fix issue on click configure button
+      $('body').on('click', this.moduleImportSuccessConfigureBtnSelector, function(event) {
+          event.stopPropagation();
+          event.preventDefault();
+          window.location = $(this).attr('href');
+          return;
+      });
+
+      // Open failure message details box
+      $('body').on('click', this.moduleImportFailureDetailsBtnSelector, function(event){
+          $(_this.moduleImportFailureMsgDetailsSelector).slideDown();
+      });
+
 
       Dropzone.options.importDropzone = {
           url: 'import',
@@ -210,14 +350,16 @@ var AdminModule = function () {
           maxFilesize: 5, // MB
           uploadMultiple: false,
           addRemoveLinks: true,
-          dictDefaultMessage: 'Drop a module\'s zip archive here in order to install it',
+          dictDefaultMessage: '',
+          hiddenInputContainer: _this.dropZoneImportZoneSelector,
           addedfile: function(file) {
-              $('.dz-preview, .dz-message').fadeOut(function() {
-                  // Display our text
-                  $('.module-import-zipname').text('Processing: ' + file.name).parent().fadeIn();
-                  // Display Loader
-                  $('.module-import-loader, .install-message').fadeIn();
-              });
+              // State that we start module upload
+              _this.isUploadStarted = true;
+              var _that = _this;
+             $(_this.moduleImportStartSelector).fadeOut(function(){
+                 $('.dropzone').css('border', 'none');
+                 $(_that.moduleImportProcessingSelector).fadeIn();
+             });
           },
           processing: function (file, response) {
               // Leave it empty ATM since we don't require anything while processing upload
@@ -225,16 +367,17 @@ var AdminModule = function () {
           complete: function (file, response) {
               var responseObject = jQuery.parseJSON(file.xhr.response);
 
-              $('.module-import-zipname').parent().fadeOut(function() {
+             $(_this.moduleImportProcessingSelector).fadeOut(function() {
                   if (responseObject.status === true) {
-                      $('.module-import-name').first().text(responseObject.msg);
-                      var configureLink = baseAdminDir + '/module/manage/action/configure/' + responseObject.module_name;
-                      $('.module-import-success-configure').attr('href', configureLink);
-                      $('.module-import-success').css('display', 'block');
+                      var configureLink = baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
+                      $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+                      $(_this.moduleImportSuccessSelector).fadeIn();
                   } else {
-                      $('.module-import-error-msg').html(responseObject.msg);
-                      $('.module-import-failure').css('display', 'block');
+                      $(_this.moduleImportFailureMsgDetailsSelector).html(responseObject.msg);
+                      $(_this.moduleImportFailureSelector).fadeIn();
                   }
+                  // State that we have finish the process to unlock some actions
+                  _this.isUploadStarted = false;
               });
           }
       };
@@ -297,7 +440,7 @@ var AdminModule = function () {
     //@TODO: JS Doc
     this.initAddonsSearch = function () {
         var _this = this;
-        $(this.addonItemGridSelector + ', ' + this.addonItemListSelector).on('click', function (event) {
+        $('body').on('click', this.addonItemGridSelector + ', ' + this.addonItemListSelector, function (event) {
             var searchQuery = '';
             if (_this.currentTagsList.length) {
                 searchQuery = encodeURIComponent(_this.currentTagsList.join(' '));
@@ -310,7 +453,7 @@ var AdminModule = function () {
     this.initCategoriesGrid = function () {
         var _this = this;
 
-        $(this.categoryGridItemSelector).on('click', function (event) {
+        $('body').on('click', this.categoryGridItemSelector, function (event) {
             event.stopPropagation();
             event.preventDefault();
             var refCategory = $(this).attr('data-category-ref');
@@ -341,7 +484,7 @@ var AdminModule = function () {
     this.initSortingDropdown = function () {
         var _this = this;
 
-        $(this.moduleSortingDropdownSelector).on('change', function(event){
+        $('body').on('change', this.moduleSortingDropdownSelector, function(event){
             var selectedSorting = $(this).find(':checked').attr('value');
             _this.doDropdownSort(selectedSorting);
         });
@@ -524,7 +667,7 @@ var AdminModule = function () {
     this.initActionButtons = function () {
         var _this = this;
 
-        $(this.moduleInstallBtnSelector).on('click', function (event) {
+        $('body').on('click', this.moduleInstallBtnSelector, function (event) {
             event.preventDefault();
             var _that = _this;
             var next = $(this).next();
@@ -541,7 +684,7 @@ var AdminModule = function () {
 
     this.initCategorySelect = function () {
         var _this = this;
-        $(this.categoryItemSelector).on('click', function () {
+        $('body').on('click', this.categoryItemSelector, function () {
             // Get data from li DOM input
             _this.currentRefMenu = $(this).attr('data-category-ref');
             var categorySelectedDisplayName = $(this).attr('data-category-display-name');
@@ -552,7 +695,7 @@ var AdminModule = function () {
             _this.doCategorySearch(_this.currentRefMenu);
         });
 
-        $(this.categoryResetBtnSelector).on('click', function () {
+        $('body').on('click', this.categoryResetBtnSelector, function () {
             var rawText = $(_this.categorySelector).attr('aria-labelledby');
             var upperFirstLetter = rawText.charAt(0).toUpperCase();
             var removedFirstLetter = rawText.slice(1);
@@ -673,6 +816,7 @@ var AdminModule = function () {
                     }
                     // If no match on data-name, data-description or data-author hide module item
                     var dataName = $(this).attr('data-name').toLowerCase();
+                    var dataTechName = $(this).attr('data-tech-name').toLowerCase();
                     var dataDescription = $(this).attr('data-description').toLowerCase();
                     var dataAuthor = $(this).attr('data-author').toLowerCase();
                     var moduleItem = $(this);
@@ -683,7 +827,7 @@ var AdminModule = function () {
                         // If match any on these attrbute  its a match
                         value = value.toLowerCase();
                         if (dataName.indexOf(value) != -1 || dataDescription.indexOf(value) != -1 ||
-                                dataAuthor.indexOf(value) != -1) {
+                                dataAuthor.indexOf(value) != -1 || dataTechName.indexOf(value) != -1) {
                             matchedTagsCount += 1;
                         }
                     });
@@ -759,7 +903,7 @@ var AdminModule = function () {
                                                                        tagsWrapperClassAdditional: 'module-tags-labels',
                                                                    });
 
-       $(this.addonsSearchLinkSelector).on('click', function(event){
+       $('body').on('click', this.addonsSearchLinkSelector, function(event){
            event.preventDefault();
            event.stopPropagation();
            var href = $(this).attr('href');
@@ -775,7 +919,7 @@ var AdminModule = function () {
      this.initSortingDisplaySwitch = function() {
        var _this = this;
 
-       $(this.sortDisplaySelector).on('click', function() {
+       $('body').on('click', this.sortDisplaySelector, function() {
          var switchTo = $(this).attr('data-switch');
          var isAlreadyDisplayed = $(this).hasClass('active-display');
          if (typeof switchTo != 'undefined' && isAlreadyDisplayed === false) {

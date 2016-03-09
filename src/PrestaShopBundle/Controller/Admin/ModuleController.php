@@ -16,37 +16,79 @@ class ModuleController extends FrameworkBundleAdminController
      * @param  Request $request
      * @return Response
      */
-    public function catalogAction(Request $request, $category = null, $keyword = null)
+    public function catalogAction(Request $request)
     {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
 
-        $filter = [];
-        if ($keyword !== null) {
-            $filter['search'] = $keyword;
-        }
-        if ($category !== null) {
-            $filter['category'] = $category;
-        }
-
         try {
-            $products = $modulesProvider->getCatalogModules($filter);
-            shuffle($products);
             $topMenuData = $this->getTopMenuData();
         } catch (Exception $e) {
             $this->addFlash('error', 'Cannot get catalog data, please try again later.');
-            $products = [];
             $topMenuData = [];
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Modules & Services', array(), 'AdminModules'),
-                'modules' => $modulesProvider->generateAddonsUrls($this->createCatalogModuleList($products)),
                 'topMenuData' => $topMenuData,
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
             ));
+    }
+
+    /**
+     * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax
+     * @param  Request $request
+     * @return Response
+     */
+    public function refreshCatalogAction(Request $request, $category = null, $keyword = null)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            // Bad request
+            return new Response('', 400);
+        }
+
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $translator = $this->container->get('prestashop.adapter.translator');
+        $responseArray = [];
+        $filters = [];
+
+        if ($keyword !== null) {
+            $filters['search'] = $keyword;
+        }
+        if ($category !== null) {
+            $filters['category'] = $category;
+        }
+
+        try {
+            $products = $modulesProvider->getCatalogModules($filters);
+            shuffle($products);
+            $modules = $modulesProvider->generateAddonsUrls($this->createCatalogModuleList($products));
+            $responseArray['content'] = $this->render(
+                'PrestaShopBundle:Admin/Module/_partials:_modules_sorting.html.twig',
+                [
+                    'totalModules' => count($modules)
+                ]
+            )->getContent();
+            $responseArray['content'] .= $this->render(
+                'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig',
+                [
+                    'modules' => $modules,
+                    'requireAddonsSearch' => true
+                ]
+            )->getContent();
+            $responseArray['status'] = true;
+        } catch (Exception $e) {
+            $responseArray['msg'] = $translator->trans(
+                'Cannot get catalog data, please try again later. Reason: '.
+                print_r($e->getMessage(), true),
+                array(),
+                'AdminModules'
+            );
+            $responseArray['status'] = false;
+        }
+
+        return new JsonResponse($responseArray, 200);
     }
 
     public function manageAction(Request $request, $category = null, $keyword = null)
