@@ -28,13 +28,13 @@
           {/block}
 
           {block name="left_column"}
-            <div id="left-column" class="col-xs-12 col-sm-3">
+            <div id="left-column" class="col-xs-12 col-sm-4">
               {hook h="displayLeftColumn"}
             </div>
           {/block}
 
           {block name="right_column"}
-            <div id="right-column" class="col-xs-12 col-sm-9">
+            <div id="right-column" class="col-xs-12 col-sm-8">
               {hook h="displayRightColumn"}
             </div>
           {/block}

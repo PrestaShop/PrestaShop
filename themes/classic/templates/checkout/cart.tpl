@@ -31,7 +31,7 @@
       </div>
 
       <!-- Right Block: cart subtotal & cart total -->
-      <div class="cart-grid-right col-xs-6 col-md-4">
+      <div class="cart-grid-right col-xs-12 col-md-4">
 
         <div class="card cart-summary">
 

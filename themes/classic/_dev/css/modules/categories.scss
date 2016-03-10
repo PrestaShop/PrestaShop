@@ -7,11 +7,7 @@
   }
 }
 .block-category {
-  background: white;
-  padding: em(40px) em(25px);
   min-height: em(220px);
-  position: relative;
-  @include box-shadow;
   #category-description {
     font-size: em(14px);
     color: $gray-dark;

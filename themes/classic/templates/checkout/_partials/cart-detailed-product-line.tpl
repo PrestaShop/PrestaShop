@@ -7,7 +7,7 @@
   </div>
 
   <!--  product left body: description -->
-  <div class="product-line-grid-body col-md-5">
+  <div class="product-line-grid-body col-md-4">
     <div class="product-line-info">
       <a class="label" href="{$product.url}">{$product.name}</a>
     </div>
@@ -35,17 +35,17 @@
   </div>
 
   <!--  product left body: description -->
-  <div class="product-line-grid-right product-line-actions col-md-4">
+  <div class="product-line-grid-right product-line-actions col-md-5">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-3">
         {*if $product.down_quantity_url}<a href="{$product.down_quantity_url}" data-link-action="update-quantity">-</a>{/if*}
         {*if $product.up_quantity_url}<a href="{$product.up_quantity_url}" data-link-action="update-quantity">+</a>{/if*}
         <input class="cart-line-product-quantity" data-down-url="{$product.down_quantity_url}" data-up-url="{$product.up_quantity_url}" productid="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
       </div>
-      <div class="col-md-4">
+      <div class="col-md-7">
         <span class="product-price pull-xs-left"><strong>{$product.total}</strong></span>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-2">
         <div class="cart-line-product-actions ">
           <a
               class                       = "remove-from-cart"
