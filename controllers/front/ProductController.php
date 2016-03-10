@@ -24,8 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
+use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
@@ -174,11 +178,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $this->product->description = $this->transformDescriptionWithImg($this->product->description);
 
-            // Assign to the template the id of the virtual product. "0" if the product is not downloadable.
-            $this->context->smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)$this->product->id));
-
-            $this->context->smarty->assign('customizationFormTarget', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
-
             $priceDisplay = Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer);
             $productPrice = 0;
             $productPriceWithoutReduction = 0;
@@ -200,7 +199,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 }
                 $this->pictureUpload();
                 $this->textRecord();
-                $this->formTargetFormat();
             } elseif (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture'))) {
                 $this->errors[] = $this->l('An error occurred while deleting the selected picture.');
             }
@@ -249,10 +247,20 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
 
             $assembler = new ProductAssembler($this->context);
-            $presenter = $this->getProductPresenter();
+            $presenter = new ProductListingPresenter(
+                new ImageRetriever(
+                    $this->context->link
+                ),
+                $this->context->link,
+                new PriceFormatter(),
+                new ProductColorsRetriever(),
+                new Translator(new LegacyContext())
+            );
+            $presentationSettings = $this->getProductPresentationSettings();
+
             $presentedPackItems = [];
             foreach ($pack_items as $item) {
-                $presentedPackItems[] = $presenter->presentForListing(
+                $presentedPackItems[] = $presenter->present(
                     $this->getProductPresentationSettings(),
                     $assembler->assembleProduct($item),
                     $this->context->language
@@ -264,12 +272,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < $this->product->getNoPackPrice()) ? true : false);
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
-            $presenter = $this->getProductPresenter();
-            $presentationSettings = $this->getProductPresentationSettings();
             $accessories = $this->product->getAccessories($this->context->language->id);
             if (is_array($accessories)) {
                 foreach ($accessories as &$accessory) {
-                    $accessory = $presenter->presentForListing(
+                    $accessory = $presenter->present(
                         $presentationSettings,
                         Product::getProductProperties($this->context->language->id, $accessory, $this->context),
                         $this->context->language
@@ -298,30 +304,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'unit_price' => ($this->product->unit_price_ratio > 0) ? ($productPrice / $this->product->unit_price_ratio) : 0,
                 'quantity_label' => ($product_for_template['quantity'] > 1) ? $this->l('Items') : $this->l('Item'),
                 'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
-                'token' => Tools::getToken(false),
                 'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
                 'display_taxes_label' => true,
-                'errors' => $this->errors,
-                'body_classes' => array(
-                    $this->php_self.'-'.$this->product->id,
-                    $this->php_self.'-'.$this->product->link_rewrite,
-                    'category-'.(isset($this->category) ? $this->category->id : ''),
-                    'category-'.(isset($this->category) ? $this->category->getFieldByLang('link_rewrite') : '')
-                ),
-                'product_conditions' => array(
-                    'new' => array(
-                        'label' => $this->l('New product'),
-                        'schema_url' => 'https://schema.org/NewCondition',
-                        ),
-                    'used' => array(
-                        'label' => $this->l('Used'),
-                        'schema_url' => 'https://schema.org/UsedCondition',
-                        ),
-                    'refurbished' => array(
-                        'label' => $this->l('Refurbished'),
-                        'schema_url' => 'https://schema.org/RefurbishedCondition',
-                        ),
-                ),
                 'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')
             ));
 
@@ -711,20 +695,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
     }
 
-    protected function formTargetFormat()
-    {
-        $customization_form_target = Tools::safeOutput(urldecode($_SERVER['REQUEST_URI']));
-        foreach ($_GET as $field => $value) {
-            if (strncmp($field, 'group_', 6) == 0) {
-                $customization_form_target = preg_replace('/&group_([[:digit:]]+)=([[:digit:]]+)/', '', $customization_form_target);
-            }
-        }
-        $this->context->smarty->assign('customizationFormTarget', $customization_form_target);
-    }
-
     protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
     {
-        $pricePresenter = new PricePresenter();
+        $priceFormatter = new PriceFormatter();
 
         foreach ($specific_prices as $key => &$row) {
             $row['quantity'] = &$row['from_quantity'];
@@ -742,12 +715,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $discountPrice = $price - $row['real_value'];
                 if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                     if ($row['reduction_tax'] == 0 && !$row['price']) {
-                        $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
+                        $row['discount'] = $priceFormatter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
                     } else {
-                        $row['discount'] = $pricePresenter->convertAndFormat($price - $row['real_value']);
+                        $row['discount'] = $priceFormatter->convertAndFormat($price - $row['real_value']);
                     }
                 } else {
-                    $row['discount'] = $pricePresenter->convertAndFormat($row['real_value']);
+                    $row['discount'] = $priceFormatter->convertAndFormat($row['real_value']);
                 }
                 $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
             } else {
@@ -761,21 +734,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $discountPrice = $price - $row['real_value'];
                     if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                         if ($row['reduction_tax'] == 0 && !$row['price']) {
-                            $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
+                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
                         } else {
-                            $row['discount'] = $pricePresenter->convertAndFormat($price - $row['real_value']);
+                            $row['discount'] = $priceFormatter->convertAndFormat($price - $row['real_value']);
                         }
                     } else {
-                        $row['discount'] = $pricePresenter->convertAndFormat($row['real_value']);
+                        $row['discount'] = $priceFormatter->convertAndFormat($row['real_value']);
                     }
                 } else {
                     $row['real_value'] = $row['reduction'] * 100;
                     $discountPrice = $price - $price*$row['reduction'];
                     if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                         if ($row['reduction_tax'] == 0) {
-                            $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
+                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
                         } else {
-                            $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction']));
+                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price*$row['reduction']));
                         }
                     } else {
                         $row['discount'] = $row['real_value'].'%';
@@ -783,7 +756,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 }
             }
 
-            $row['save'] = $pricePresenter->convertAndFormat((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
+            $row['save'] = $priceFormatter->convertAndFormat((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
             $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : - 1);
         }
 

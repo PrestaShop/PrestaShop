@@ -4,11 +4,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Tools;
 
-class PricePresenter
+class PriceFormatter
 {
     public function convertAmount($price)
     {
-        return Tools::convertPrice($price);
+        return (float)Tools::convertPrice($price);
     }
 
     public function format($price)

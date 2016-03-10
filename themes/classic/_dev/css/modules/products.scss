@@ -307,9 +307,8 @@
     margin-right: em(5px);
   }
 }
-.product-reference,
-.product-quantities {
-  > .label {
+#product-details {
+  .label {
     font-size: $font-size-base;
     color: $gray-darker;
     font-weight: bold;

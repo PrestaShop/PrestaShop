@@ -35,7 +35,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
 
-        return $presenter->presentForListing(
+        return $presenter->present(
             $settings,
             $product,
             $this->context->language

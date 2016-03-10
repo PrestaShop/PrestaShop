@@ -26,32 +26,34 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-class ObjectPresenter
+use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
+
+class ObjectPresenter implements PresenterInterface
 {
     public function present($object)
     {
-        $arr = array();
-
-        if (is_a($object, 'ObjectModel')) {
-            $fields = $object::$definition['fields'];
-            foreach ($fields as $field_name => $null) {
-                $arr[$field_name] = $object->{$field_name};
-            }
-            $must_have = ['id'];
-            foreach ($must_have as $field_name) {
-                $arr[$field_name] = $object->{$field_name};
-            }
-        } else {
-            $arr = (array)$object;
+        if (!is_a($object, 'ObjectModel')) {
+            throw new \Exception('ObjectPresenter can only present ObjectModel classes');
         }
 
-        $must_remove = ['deleted', 'active'];
-        foreach ($must_remove as $field_name) {
-            if (isset($arr[$field_name])) {
-                unset($arr[$field_name]);
+        $presentedObject = array();
+
+        $fields = $object::$definition['fields'];
+        foreach ($fields as $fieldName => $null) {
+            $presentedObject[$fieldName] = $object->{$fieldName};
+        }
+        $mustHave = ['id'];
+        foreach ($mustHave as $fieldName) {
+            $presentedObject[$fieldName] = $object->{$fieldName};
+        }
+
+        $mustRemove = ['deleted', 'active'];
+        foreach ($mustRemove as $fieldName) {
+            if (isset($presentedObject[$fieldName])) {
+                unset($presentedObject[$fieldName]);
             }
         }
 
-        return $arr;
+        return $presentedObject;
     }
 }
