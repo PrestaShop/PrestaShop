@@ -43,13 +43,13 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
  *
  * FIXME: rewrite persistence of filter parameters -> into DB
  */
-class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements ModuleInterface
+class AdminModuleDataProvider implements ModuleInterface
 {
     const _CACHEFILE_CATEGORIES_ = 'catalog_categories.json';
     const _CACHEFILE_MODULES_ = 'catalog_modules.json';
 
     /* Cache for One Day */
-    const _WATCH_DOG_ = 86400;
+    const _DAY_IN_SECONDS_ = 86400;
 
     private $kernel;
     /**
@@ -115,7 +115,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     {
         foreach ($addons as &$addon) {
             $urls = [];
-            foreach (['install', 'uninstall', 'enable', 'disable', 'reset', 'update'] as $action) {
+            foreach (['install', 'uninstall', 'enable', 'disable', 'reset', 'upgrade'] as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', [
                     'action' => $action,
                     'module_name' => $addon->attributes->get('name'),
@@ -150,9 +150,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                         $urls['configure']
                     );
                 }
-                if ($addon->database->get('installed') == 1 || version_compare($addon->database->get('version'), $addon->attributes->get('version'), '=')) {
+                if ($addon->database->get('installed') == 0 || version_compare($addon->database->get('version'), $addon->disk->get('version'), '<=')
+                    && version_compare($addon->attributes->get('version'), $addon->database->get('version'), '<=')) {
                     unset(
-                        $urls['update']
+                        $urls['upgrade']
                     );
                 }
             } elseif (!$addon->attributes->has('origin') || in_array($addon->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'])) {
@@ -214,39 +215,6 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         });
 
         return $categories;
-    }
-
-
-    public function isModuleOnDisk($name)
-    {
-        $path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
-        if (!file_exists($path)) {
-            return false;
-        }
-
-        $php_l_result = substr(`php -l $path`, 0, 16);
-        if (!empty($php_l_result) && $php_l_result != 'No syntax errors') {
-            throw new \Exception('Parse error in '.$name.' class');
-        }
-
-        include_once(_PS_MODULE_DIR_.$name.'/'.$name.'.php');
-
-        return (bool)\PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
-    }
-
-    public function setModuleOnDiskFromAddons($name)
-    {
-        // Note : Data caching should be handled by the addons data provider
-
-        $addons_provider = new AddonsDataProvider();
-        // Check if the module can be downloaded from addons
-        foreach ($this->getCatalogModules() as $catalog_module) {
-            if ($catalog_module->name == $name && in_array($catalog_module->origin, ['native', 'native_all', 'partner', 'customer'])) {
-                return $addons_provider->downloadModule($catalog_module->id);
-            }
-        }
-
-        return false;
     }
 
     protected function applyModuleFilters(array $products, $categories, array $filters)
@@ -461,7 +429,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         }
 
         try {
-            if ($check_freshness && (filemtime($cacheFile) + self::_WATCH_DOG_) <= time()) {
+            if ($check_freshness && (filemtime($cacheFile) + self::_DAY_IN_SECONDS_) <= time()) {
                 return false;
             }
 

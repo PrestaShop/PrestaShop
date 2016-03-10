@@ -28,8 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use ReflectionObject;
-use Exception;
 
 /**
  * This class is the interface to the legacy Module class.
@@ -40,7 +38,6 @@ class Module implements AddonInterface
 {
     /** @var legacyInstance Module The instance of the legacy module */
     public $instance = null;
-    protected $reflector;
 
     /**
      * Module attributes (name, displayName etc.)
@@ -178,6 +175,5 @@ class Module implements AddonInterface
     {
         require_once _PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->attributes->get('name') . DIRECTORY_SEPARATOR . $this->attributes->get('name') . '.php';
         $this->instance = \Module::getInstanceByName($this->attributes->get('name'));
-        $this->reflector = new ReflectionObject($this->instance);
     }
 }

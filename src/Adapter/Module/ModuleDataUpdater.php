@@ -37,8 +37,9 @@ class ModuleDataUpdater
         // Note : Data caching should be handled by the addons data provider
 
         $addons_provider = new AddonsDataProvider();
+        $admin_module_provider = new AdminModuleDataProvider();
         // Check if the module can be downloaded from addons
-        foreach ((new AdminModuleDataProvider())->getCatalogModules() as $catalog_module) {
+        foreach ($admin_module_provider->getCatalogModules(['name' => $name]) as $catalog_module) {
             if ($catalog_module->name == $name && in_array($catalog_module->origin, ['native', 'native_all', 'partner', 'customer'])) {
                 return $addons_provider->downloadModule($catalog_module->id);
             }
@@ -56,5 +57,30 @@ class ModuleDataUpdater
         } catch (IOException $e) {
             return false;
         }
+    }
+
+    public function upgrade($name)
+    {
+        // Calling this function will init legacy module data
+        $module_list = \ModuleCore::getModulesOnDisk();
+
+        foreach ($module_list as $module) {
+            if ($module->name != $name) {
+                continue;
+            }
+
+            if (\ModuleCore::initUpgradeModule($module)) {
+                $legacy_instance = \ModuleCore::getInstanceByName($name);
+                $legacy_instance->runUpgradeModule();
+
+                \ModuleCore::upgradeModuleVersion($name, $module->version);
+
+                return (!count($legacy_instance->getErrors()));
+            } elseif (\ModuleCore::getUpgradeStatus($name)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -62,7 +62,7 @@ class AddonsDataProvider implements AddonsInterface
 
         $temp_filename = tempnam('', 'mod');
         if (file_put_contents($temp_filename, $module_data) !== false) {
-            $this->unZip($temp_filename);
+            return $this->unZip($temp_filename);
         } else {
             throw new Exception('Cannot store module content in temporary folder !');
         }
@@ -233,10 +233,11 @@ class AddonsDataProvider implements AddonsInterface
     protected function unZip($filename)
     {
         $zip = new \ZipArchive();
+        $result = false;
 
         if ($zip->open($filename) === true) {
             try {
-                $zip->extractTo(_PS_MODULE_DIR_);
+                $result = $zip->extractTo(_PS_MODULE_DIR_);
                 $zip->close();
             } catch (Exception $exception) {
                 throw new Exception('Cannot unzip the module', 0, $exception);
@@ -244,5 +245,6 @@ class AddonsDataProvider implements AddonsInterface
         } else {
             throw new Exception('Cannot open the zip file');
         }
+        return $result;
     }
 }

@@ -23,7 +23,8 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
-        $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
+        $moduleManager_Factory = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManager_Factory->buildRepository();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
@@ -62,7 +63,8 @@ class ModuleController extends FrameworkBundleAdminController
 
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
-        $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
         $responseArray = [];
 
         $filters = new AddonListFilter();
@@ -105,7 +107,8 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $translator = $this->container->get('prestashop.adapter.translator');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
@@ -154,29 +157,30 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $action = $request->attributes->get('action');
         $module = $request->attributes->get('module_name');
-        $moduleManager = (new ModuleManagerBuilder())->build();
-        $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerFactory->build();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
 
         $ret = array();
         if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
-            try {
+            //try {
                 $ret[$module]['status'] = $moduleManager->{$action}($module);
-                if ($ret[$module]['status'] === null) {
-                    $ret[$module]['status'] = false;
-                    $ret[$module]['msg'] = $module .' did not returned a valid response on '.$action .' action';
-                } else {
-                    $ret[$module]['msg'] = ucfirst($action). ' action on module '. $module;
-                    $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
-                }
-            } catch (Exception $e) {
+            if ($ret[$module]['status'] === null) {
+                $ret[$module]['status'] = false;
+                $ret[$module]['msg'] = $module .' did not return a valid response on '.$action .' action';
+            } else {
+                $ret[$module]['msg'] = ucfirst($action). ' action on module '. $module;
+                $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
+            }
+            /*} catch (Exception $e) {
                 $ret[$module]['status'] = false;
                 $ret[$module]['msg'] = sprintf('Exception thrown by addon %s on %s. %s', $module, $request->attributes->get('action'), $e->getMessage());
 
                 $logger = $this->get('logger');
                 $logger->error($ret[$module]['msg']);
-            }
+            }*/
         } else {
             $ret[$module]['status'] = false;
             $ret[$module]['msg'] = 'Invalid action';
@@ -212,7 +216,8 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $translator = $this->container->get('prestashop.adapter.translator');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $moduleRepository = (new ModuleManagerBuilder())->buildRepository();
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
@@ -277,7 +282,8 @@ class ModuleController extends FrameworkBundleAdminController
      */
     public function importModuleAction(Request $request)
     {
-        $moduleManager = (new ModuleManagerBuilder())->build();
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerFactory->build();
 
         try {
             $file_uploaded = $request->files->get('file_uploaded');
@@ -298,7 +304,7 @@ class ModuleController extends FrameworkBundleAdminController
 
             if ($installation_response['status'] === null) {
                 $installation_response['status'] = false;
-                $installation_response['msg'] = $module_name .' did not returned a valid response on install action';
+                $installation_response['msg'] = $module_name .' did not return a valid response on install action';
             } else {
                 $installation_response['msg'] = 'Install action on module '. $module_name;
                 $installation_response['msg'] .= $installation_response['status']?' succeeded':' failed';
@@ -323,7 +329,7 @@ class ModuleController extends FrameworkBundleAdminController
         }
     }
 
-    final private function inflateModule($file_to_inflate)
+    private function inflateModule($file_to_inflate)
     {
         if (file_exists($file_to_inflate)) {
             $zip_archive = new \ZipArchive();
@@ -364,7 +370,7 @@ class ModuleController extends FrameworkBundleAdminController
         return $toolbarButtons;
     }
 
-    final private function getTopMenuData(array $topMenuData, $activeMenu = null)
+    private function getTopMenuData(array $topMenuData, $activeMenu = null)
     {
         if (isset($activeMenu)) {
             if (!isset($topMenuData[$activeMenu])) {
@@ -388,7 +394,7 @@ class ModuleController extends FrameworkBundleAdminController
         return $this->redirect($legacyUrlGenerator->generate('admin_module_configure_action',
                     $redirectionParams), 302);
     }
-    final private function getAddonsConnectToolbar()
+    private function getAddonsConnectToolbar()
     {
         $addonsProvider = $this->container->get('prestashop.core.admin.data_provider.addons_interface');
         $translator = $this->container->get('prestashop.adapter.translator');

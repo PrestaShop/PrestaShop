@@ -37,7 +37,7 @@ admin_module_manage_action:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction
     requirements:
-        action: install|uninstall|enable|disable|reset|update
+        action: install|uninstall|enable|disable|reset|upgrade
 
 admin_module_configure_action:
     path:     /manage/action/configure/{module_name}
@@ -52,7 +52,7 @@ admin_module_manage_action_bulk:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction
     requirements:
-        action: install|uninstall|configure|enable|disable|reset|update
+        action: install|uninstall|configure|enable|disable|reset|upgrade
 
 admin_module_manage_update_all:
     path:     /manage/update/all

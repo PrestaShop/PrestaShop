@@ -281,6 +281,10 @@ class ModuleRepository implements AddonRepositoryInterface
                     $attributes['price']->GBP = 0;
                 }
 
+                if (!isset($attributes['version'])) {
+                    $attributes['version'] = $tmp_module->version;
+                }
+
                 foreach (['logo.png', 'logo.gif'] as $logo) {
                     $logo_path = _PS_MODULE_DIR_.$tmp_module->name.DIRECTORY_SEPARATOR.$logo;
                     if (file_exists($logo_path)) {
@@ -334,13 +338,10 @@ class ModuleRepository implements AddonRepositoryInterface
      */
     private function generateCacheFile($data)
     {
-        $yml_file_path = self::CACHE_FILE; //_PS_MODULE_DIR_.$name.'/'.$name.'.yml';
-        /* $dumper = new Dumper();
+        $cache_file_path = self::CACHE_FILE;
+        $encoded_data          = json_encode($data);
 
-          $yaml = $dumper->dump($data, 3); */
-        $yaml          = json_encode($data);
-
-        file_put_contents($yml_file_path, $yaml);
+        file_put_contents($cache_file_path, $encoded_data);
 
         return $data;
     }

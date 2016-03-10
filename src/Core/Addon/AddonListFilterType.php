@@ -33,5 +33,5 @@ class AddonListFilterType
     const MODULE = 2;
     const SERVICE = 4;
 
-    const ALL = 7; /* = 1 & 2 & 4 */
+    const ALL = 7; /* = 1 | 2 | 4 */
 }

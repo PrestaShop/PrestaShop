@@ -52,7 +52,7 @@ class ModuleManager implements AddonManagerInterface
 
     /**
      * Module Repository
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+     * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
      */
     private $moduleRepository;
 
@@ -153,25 +153,27 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if (! $this->moduleProvider->isInstalled($name)) {
-            throw new Exception('This module must be installed');
+            throw new Exception(sprintf('The module %s must be installed first', $name));
         }
+
+        $result = true;
 
         // Get new module
         // 1- From source
         if ($source != null) {
+            throw new \Symfony\Component\Intl\Exception\NotImplementedException('Upgrading with a specifi zip is not implemented yep');
         }
         // 2- From Addons
         else {
+            $result &= $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
-        // If files properly inserted on the module folder
-        Db::getInstance()->execute('
-            UPDATE `'._DB_PREFIX_.'module` m
-            SET m.version = \''.pSQL($version).'\'
-            WHERE m.name = \''.pSQL($name).'\'');
+        if ($result) {
+            // Load and execute upgrade files
+            $result &= $this->moduleUpdater->upgrade($name);
+        }
 
-        // Load and execute upgrade files
-        return true;
+        return $result;
     }
 
     /**
