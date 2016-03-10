@@ -24,7 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
+ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
+ /**
  * @since 1.5.0
  */
 class HelperFormCore extends Helper
@@ -233,6 +235,8 @@ class HelperFormCore extends Helper
             }
         }
 
+        $moduleManager = (new ModuleManagerBuilder())->build();
+
         $this->tpl->assign(array(
             'title' => $this->title,
             'toolbar_btn' => $this->toolbar_btn,
@@ -254,7 +258,7 @@ class HelperFormCore extends Helper
             'fields' => $this->fields_form,
             'fields_value' => $this->fields_value,
             'required_fields' => $this->getFieldsRequired(),
-            'vat_number' => Module::isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
+            'vat_number' => $moduleManager->isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
             'module_dir' => _MODULE_DIR_,
             'base_url' => $this->context->shop->getBaseURL(),
             'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,

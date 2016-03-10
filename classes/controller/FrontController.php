@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class FrontControllerCore extends Controller
 {
@@ -1306,6 +1307,8 @@ class FrontControllerCore extends Controller
 
     public function getTemplateVarFeatureActive()
     {
+        $moduleManager = (new ModuleManagerBuilder())->build();
+
         return [
             'is_b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
             'is_catalog' => (bool)Configuration::get('PS_CATALOG_MODE'),
@@ -1314,7 +1317,7 @@ class FrontControllerCore extends Controller
             'opt_in' => [
                 'partner' => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
                 'newsletter' => (Configuration::get('PS_CUSTOMER_NWSL')
-                                || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active)),
+                                || ($moduleManager->isInstalled('ps_emailsubscription') && Module::getInstanceByName('ps_emailsubscription')->active)),
             ],
         ];
     }

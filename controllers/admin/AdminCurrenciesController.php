@@ -29,6 +29,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Cldr\Repository;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminCurrenciesControllerCore extends AdminController
 {
@@ -301,7 +302,8 @@ class AdminCurrenciesControllerCore extends AdminController
 
     public function ajaxProcessCronjobLiveExchangeRate()
     {
-        if (!Module::isInstalled('cronjobs')) {
+        $moduleManager = (new ModuleManagerBuilder())->build();
+        if (!$moduleManager->isInstalled('cronjobs')) {
             die(json_encode(array()));
         }
 
