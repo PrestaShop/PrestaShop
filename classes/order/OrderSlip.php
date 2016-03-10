@@ -247,7 +247,7 @@ class OrderSlipCore extends ObjectModel
      */
     public static function createOrderSlip($order, $productList, $qtyList, $shipping_cost = false)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use OrderSlip::create() instead');
 
         $product_list = array();
         foreach ($productList as $id_order_detail) {

@@ -1543,7 +1543,7 @@ class ProductCore extends ObjectModel
     public function updateProductAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
         $id_images, $reference, $id_supplier = null, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date, $isbn = '')
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use updateAttribute() instead');
 
         $return = $this->updateAttribute(
             $id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
