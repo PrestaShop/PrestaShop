@@ -272,10 +272,6 @@ class AdminModulesControllerCore extends AdminController
     public function ajaxProcessGetTabModulesList()
     {
         $tab_modules_list = Tools::getValue('tab_modules_list');
-        $back = Tools::getValue('back_tab_modules_list');
-        if ($back) {
-            $back .= '&tab_modules_open=1';
-        }
         if ($tab_modules_list) {
             $tab_modules_list = explode(',', $tab_modules_list);
             $modules_list_unsort = $this->getModulesByInstallation($tab_modules_list, Tools::getValue('admin_list_from_source'));
@@ -523,40 +519,42 @@ class AdminModulesControllerCore extends AdminController
 
     public function postProcessReset()
     {
-        if ($this->tabAccess['edit'] === '1') {
-            $module = Module::getInstanceByName(Tools::getValue('module_name'));
-            if (Validate::isLoadedObject($module)) {
-                if (!$module->getPermission('configure')) {
-                    $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
-                } else {
-                    if (Tools::getValue('keep_data') == '1' && method_exists($module, 'reset')) {
-                        if ($module->reset()) {
-                            Tools::redirectAdmin(self::$currentIndex.'&conf=21&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name));
-                        } else {
-                            $this->errors[] = Tools::displayError('Cannot reset this module.');
-                        }
-                    } else {
-                        if ($module->uninstall()) {
-                            if ($module->install()) {
-                                Tools::redirectAdmin(self::$currentIndex.'&conf=21&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name));
-                            } else {
-                                $this->errors[] = Tools::displayError('Cannot install this module.');
-                            }
-                        } else {
-                            $this->errors[] = Tools::displayError('Cannot uninstall this module.');
-                        }
-                    }
-                }
-            } else {
-                $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
-            }
-
-            if (($errors = $module->getErrors()) && is_array($errors)) {
-                $this->errors = array_merge($this->errors, $errors);
+        if ($this->tabAccess['edit'] !== '1') {
+            $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            return;
+        }
+        $module = Module::getInstanceByName(Tools::getValue('module_name'));
+        if (($errors = $module->getErrors()) && is_array($errors)) {
+            $this->errors[] = $errors;
+        }
+        if (!Validate::isLoadedObject($module)) {
+            $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
+            return;
+        }
+        if (!$module->getPermission('configure')) {
+            $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+            return;
+        }
+        if (Tools::getValue('keep_data') == '1' && method_exists($module, 'reset')) {
+            if (!$module->reset()) {
+                $this->errors[] = Tools::displayError('Cannot reset this module.');
+                return;
             }
         } else {
-            $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            if (!$module->uninstall()) {
+                $this->errors[] = Tools::displayError('Cannot uninstall this module.');
+                return;
+            }
+            if (!$module->install()) {
+                $this->errors[] = Tools::displayError('Cannot install this module.');
+                return;
+            }
         }
+        $redirectUrl = self::$currentIndex . '&conf=21&token=' . $this->token
+            . '&tab_module=' . $module->tab
+            . '&module_name=' . $module->name
+            . '&anchor=' . ucfirst($module->name);
+        Tools::redirectAdmin($redirectUrl);
     }
 
     public function postProcessDownload()
@@ -610,63 +608,63 @@ class AdminModulesControllerCore extends AdminController
 
     public function postProcessEnable()
     {
-        if ($this->tabAccess['edit'] === '1') {
-            $module = Module::getInstanceByName(Tools::getValue('module_name'));
-            if (Validate::isLoadedObject($module)) {
-                if (!$module->getPermission('configure')) {
-                    $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
-                } else {
-                    if (Tools::getValue('enable')) {
-                        $module->enable();
-                    } else {
-                        $module->disable();
-                    }
-                    Tools::redirectAdmin($this->getCurrentUrl('enable'));
-                }
-            } else {
-                $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
-            }
-        } else {
+        if ($this->tabAccess['edit'] !== '1') {
             $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            return;
         }
+        $module = Module::getInstanceByName(Tools::getValue('module_name'));
+        if (!Validate::isLoadedObject($module)) {
+            $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
+            return;
+        }
+        if (!$module->getPermission('configure')) {
+            $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+            return;
+        }
+        if (Tools::getValue('enable')) {
+            $module->enable();
+        } else {
+            $module->disable();
+        }
+        Tools::redirectAdmin($this->getCurrentUrl('enable'));
     }
 
     public function postProcessEnable_Device()
     {
-        if ($this->tabAccess['edit'] === '1') {
-            $module = Module::getInstanceByName(Tools::getValue('module_name'));
-            if (Validate::isLoadedObject($module)) {
-                if (!$module->getPermission('configure')) {
-                    $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
-                } else {
-                    $module->enableDevice((int)Tools::getValue('enable_device'));
-                    Tools::redirectAdmin($this->getCurrentUrl('enable_device'));
-                }
-            } else {
-                $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
-            }
-        } else {
+        if ($this->tabAccess['edit'] !== '1') {
             $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            return;
         }
+        $module = Module::getInstanceByName(Tools::getValue('module_name'));
+        if (!Validate::isLoadedObject($module)) {
+            $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
+            return;
+        }
+        if (!$module->getPermission('configure')) {
+            $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+            return;
+        }
+        $module->enableDevice((int)Tools::getValue('enable_device'));
+        Tools::redirectAdmin($this->getCurrentUrl('enable_device'));
     }
 
     public function postProcessDisable_Device()
     {
-        if ($this->tabAccess['edit'] === '1') {
-            $module = Module::getInstanceByName(Tools::getValue('module_name'));
-            if (Validate::isLoadedObject($module)) {
-                if (!$module->getPermission('configure')) {
-                    $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
-                } else {
-                    $module->disableDevice((int)Tools::getValue('disable_device'));
-                    Tools::redirectAdmin($this->getCurrentUrl('disable_device'));
-                }
-            } else {
-                $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
-            }
-        } else {
+        if ($this->tabAccess['edit'] !== '1') {
             $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            return;
         }
+        $module = Module::getInstanceByName(Tools::getValue('module_name'));
+        if (!Validate::isLoadedObject($module)) {
+            $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
+            return;
+        }
+        if (!$module->getPermission('configure')) {
+            $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+            return;
+        }
+        $module->disableDevice((int)Tools::getValue('disable_device'));
+        Tools::redirectAdmin($this->getCurrentUrl('disable_device'));
     }
 
     public function postProcessDelete()
@@ -677,27 +675,28 @@ class AdminModulesControllerCore extends AdminController
             return;
         }
 
-        if ($this->tabAccess['delete'] === '1') {
-            if (Tools::getValue('module_name') != '') {
-                $module = Module::getInstanceByName(Tools::getValue('module_name'));
-                if (Validate::isLoadedObject($module) && !$module->getPermission('configure')) {
-                    $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
-                } else {
-                    // Uninstall the module before deleting the files, but do not block the process if uninstall returns false
-                    if (Module::isInstalled($module->name)) {
-                        $module->uninstall();
-                    }
-                    $moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
-                    $this->recursiveDeleteOnDisk($moduleDir);
-                    if (!file_exists($moduleDir)) {
-                        Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
-                    } else {
-                        $this->errors[] = Tools::displayError('Sorry, the module cannot be deleted. Please check if you have the right permissions on this folder.');
-                    }
-                }
-            }
-        } else {
+        if ($this->tabAccess['delete'] !== '1') {
             $this->errors[] = Tools::displayError('You do not have permission to delete this.');
+            return;
+        }
+        if (Tools::getValue('module_name') == '') {
+            return;
+        }
+        $module = Module::getInstanceByName(Tools::getValue('module_name'));
+        if (Validate::isLoadedObject($module) && !$module->getPermission('configure')) {
+            $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+            return;
+        }
+        // Uninstall the module before deleting the files, but do not block the process if uninstall returns false
+        if (Module::isInstalled($module->name)) {
+            $module->uninstall();
+        }
+        $moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
+        $this->recursiveDeleteOnDisk($moduleDir);
+        if (!file_exists($moduleDir)) {
+            Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
+        } else {
+            $this->errors[] = Tools::displayError('Sorry, the module cannot be deleted. Please check if you have the right permissions on this folder.');
         }
     }
 
@@ -1418,11 +1417,9 @@ class AdminModulesControllerCore extends AdminController
         $autocomplete_list = 'var moduleList = [';
         $category_filtered = array();
         $filter_categories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
-        if (count($filter_categories) > 0) {
-            foreach ($filter_categories as $fc) {
-                if (!empty($fc)) {
-                    $category_filtered[$fc] = 1;
-                }
+        foreach ($filter_categories as $fc) {
+            if (!empty($fc)) {
+                $category_filtered[$fc] = 1;
             }
         }
 
