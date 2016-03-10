@@ -1100,7 +1100,7 @@ class ToolsCore
      */
     public static function getMetaTags($id_lang, $page_name, $title = '')
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Meta::getMetaTags($id_lang, $page_name, $title) instead');
         return Meta::getMetaTags($id_lang, $page_name, $title);
     }
 
@@ -1109,7 +1109,7 @@ class ToolsCore
      */
     public static function getHomeMetaTags($id_lang, $page_name)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Meta::getHomeMetas($id_lang, $page_name) instead');
         return Meta::getHomeMetas($id_lang, $page_name);
     }
 
@@ -1118,7 +1118,7 @@ class ToolsCore
      */
     public static function completeMetaTags($meta_tags, $default_value, Context $context = null)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Meta::completeMetaTags($meta_tags, $default_value, $context) instead');
         return Meta::completeMetaTags($meta_tags, $default_value, $context);
     }
 
@@ -1975,7 +1975,7 @@ class ToolsCore
      */
     public static function minifyHTML($html_content)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::minifyHTML($html_content) instead');
         return Media::minifyHTML($html_content);
     }
 
@@ -2039,7 +2039,7 @@ class ToolsCore
     */
     public static function minifyHTMLpregCallback($preg_matches)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::minifyHTMLpregCallback($preg_matches) instead');
         return Media::minifyHTMLpregCallback($preg_matches);
     }
 
@@ -2048,7 +2048,7 @@ class ToolsCore
     */
     public static function packJSinHTML($html_content)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::packJSinHTML($html_content) instead');
         return Media::packJSinHTML($html_content);
     }
 
@@ -2057,7 +2057,7 @@ class ToolsCore
     */
     public static function packJSinHTMLpregCallback($preg_matches)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::packJSinHTMLpregCallback($preg_matches) instead');
         return Media::packJSinHTMLpregCallback($preg_matches);
     }
 
@@ -2066,7 +2066,7 @@ class ToolsCore
     */
     public static function packJS($js_content)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::packJS($js_content) instead');
         return Media::packJS($js_content);
     }
 
@@ -2086,13 +2086,13 @@ class ToolsCore
      */
     public static function minifyCSS($css_content, $fileuri = false)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::minifyCSS($css_content, $fileuri) instead');
         return Media::minifyCSS($css_content, $fileuri);
     }
 
     public static function replaceByAbsoluteURL($matches)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::replaceByAbsoluteURL($matches) instead');
         return Media::replaceByAbsoluteURL($matches);
     }
 
@@ -2105,7 +2105,7 @@ class ToolsCore
      */
     public static function addJS($js_uri)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use FrontController->addJS() instead');
         $context = Context::getContext();
         $context->controller->addJs($js_uri);
     }
@@ -2115,7 +2115,7 @@ class ToolsCore
      */
     public static function addCSS($css_uri, $css_media_type = 'all')
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use FrontController->addCSS() instead');
         $context = Context::getContext();
         $context->controller->addCSS($css_uri, $css_media_type);
     }
@@ -2125,7 +2125,7 @@ class ToolsCore
     */
     public static function cccCss($css_files)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::cccCss() instead');
         return Media::cccCss($css_files);
     }
 
@@ -2135,7 +2135,7 @@ class ToolsCore
     */
     public static function cccJS($js_files)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Media::cccJS() instead');
         return Media::cccJS($js_files);
     }
 

@@ -1909,7 +1909,7 @@ abstract class ModuleCore
      */
     public static function hookExec($hook_name, $hook_args = array(), $id_module = null)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Hook::exec($hook_name, $hook_args, $id_module) instead');
         return Hook::exec($hook_name, $hook_args, $id_module);
     }
 
@@ -1920,7 +1920,7 @@ abstract class ModuleCore
      */
     public static function hookExecPayment()
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Hook::exec(\'displayPayment\') instead');
         return Hook::exec('displayPayment');
     }
 

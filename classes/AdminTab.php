@@ -550,7 +550,7 @@ abstract class AdminTabCore
      */
     public function deleteImage($id)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use ObjectModel->deleteImage instead');
         $dir = null;
         /* Deleting object images and thumbnails (cache) */
         if (array_key_exists('dir', $this->fieldImageSettings)) {

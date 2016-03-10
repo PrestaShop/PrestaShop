@@ -2706,7 +2706,7 @@ class CartCore extends ObjectModel
      */
     public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Cart->getPackageShippingCost()');
         return $this->getPackageShippingCost((int)$id_carrier, $use_tax, $default_country, $product_list);
     }
 
@@ -3391,7 +3391,7 @@ class CartCore extends ObjectModel
      */
     public function deletePictureToProduct($id_product, $index)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use deleteCustomizationToProduct() instead');
         return $this->deleteCustomizationToProduct($id_product, 0);
     }
 
