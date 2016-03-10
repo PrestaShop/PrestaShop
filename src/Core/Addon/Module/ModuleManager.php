@@ -62,7 +62,7 @@ class ModuleManager implements AddonManagerInterface
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
         ModuleRepository $moduleRepository,
-        Employee $employee)
+        Employee $employee = null)
     {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->moduleProvider = $modulesProvider;
