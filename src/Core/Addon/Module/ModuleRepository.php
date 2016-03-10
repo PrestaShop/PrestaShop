@@ -261,39 +261,43 @@ class ModuleRepository implements AddonRepositoryInterface
                     'productType' => 'Module',
                 ]);
 
-                if (!isset($attributes['refs'])) {
-                    $attributes['refs'] = ['unknown'];
-                }
-
-                if (!isset($attributes['media'])) {
-                    $attributes['media'] = (object)[
-                            'img' => '../../img/questionmark.png',
-                            'badges' => [],
-                            'cover' => [],
-                            'screenshotsUrls' => [],
-                            'videoUrl' => null,
-                    ];
-                }
-                if (!isset($attributes['price'])) {
-                    $attributes['price']      = new \stdClass;
-                    $attributes['price']->EUR = 0;
-                    $attributes['price']->USD = 0;
-                    $attributes['price']->GBP = 0;
-                }
-
-                if (!isset($attributes['version'])) {
-                    $attributes['version'] = $tmp_module->version;
-                }
-
-                foreach (['logo.png', 'logo.gif'] as $logo) {
-                    $logo_path = _PS_MODULE_DIR_.$tmp_module->name.DIRECTORY_SEPARATOR.$logo;
-                    if (file_exists($logo_path)) {
-                        $attributes['media']->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$tmp_module->name.'/'.$logo;
-                        break;
-                    }
-                }
                 $disk['is_valid'] = 1;
                 $disk['version'] = $tmp_module->version;
+            } else {
+                $attributes['warning'] = 'Invalid module class';
+            }
+
+            if (!isset($attributes['refs'])) {
+                $attributes['refs'] = ['unknown'];
+            }
+
+            if (!isset($attributes['media'])) {
+                $attributes['media'] = (object)[
+                        'img' => '../../img/questionmark.png',
+                        'badges' => [],
+                        'cover' => [],
+                        'screenshotsUrls' => [],
+                        'videoUrl' => null,
+                ];
+            }
+
+            if (!isset($attributes['price'])) {
+                $attributes['price']      = new \stdClass;
+                $attributes['price']->EUR = 0;
+                $attributes['price']->USD = 0;
+                $attributes['price']->GBP = 0;
+            }
+
+            if (!isset($attributes['version'])) {
+                $attributes['version'] = $tmp_module->version;
+            }
+
+            foreach (['logo.png', 'logo.gif'] as $logo) {
+                $logo_path = _PS_MODULE_DIR_.$tmp_module->name.DIRECTORY_SEPARATOR.$logo;
+                if (file_exists($logo_path)) {
+                    $attributes['media']->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$tmp_module->name.'/'.$logo;
+                    break;
+                }
             }
 
             $this->cache[$name]['attributes'] = $attributes;

@@ -6,7 +6,11 @@ data-categories="{{ module.attributes.get('refs')|join('|') }}" data-type="{{mod
         <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.get('name')}}">
             <img class="module-logo-thumb-{{display_type}}" src="{{ module.attributes.get('media').img }}" alt="{{ module.attributes.get('displayName') }}" />
             <h3 class="text-ellipsis module-name-{{display_type}}" data-toggle="tooltip" data-placement="top" title="{{ module.attributes.get('displayName') }}">
+              {% if module.attributes.has('displayName') %}
                 {{ module.attributes.get('displayName') }}
+              {% else %}
+                {{ module.attributes.get('name') }}
+              {% endif %}
             </h3>
             <div class="text-ellipsis xsmall module-version-author-{{display_type}}">
                 {% block addon_version %}
