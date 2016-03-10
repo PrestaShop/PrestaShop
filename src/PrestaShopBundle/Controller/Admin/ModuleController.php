@@ -75,13 +75,13 @@ class ModuleController extends FrameworkBundleAdminController
             shuffle($products);
             //$topMenuData = $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products));
             $responseArray['content'] = $this->render(
-                'PrestaShopBundle:Admin/Module/_partials:_modules_sorting.html.twig',
+                'PrestaShopBundle:Admin/Module/Includes:sorting.html.twig',
                 [
                     'totalModules' => count($products)
                 ]
             )->getContent();
             $responseArray['content'] .= $this->render(
-                'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig',
+                'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
                 [
                     'modules' => $modulesProvider->generateAddonsUrls($products),
                     'requireAddonsSearch' => true
@@ -186,7 +186,7 @@ class ModuleController extends FrameworkBundleAdminController
             if ($ret[$module]['status'] === true && $action != 'uninstall') {
                 $moduleInstance = $moduleRepository->getModule($module);
                 $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls(array($moduleInstance));
-                $ret[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/_partials:_modules_action_menu.html.twig', array(
+                $ret[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig', array(
                         'module' => array_values($moduleInstanceWithUrl)[0],
                     ))->getContent();
             }

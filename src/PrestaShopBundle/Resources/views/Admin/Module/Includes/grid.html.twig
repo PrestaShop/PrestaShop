@@ -1,4 +1,3 @@
-{#{ dump(modules) }#}
 {# Display type ENUM : 'grid' / 'list' #}
 {% if display_type is not defined %}
     {% set display_type = 'grid' %}
@@ -15,7 +14,7 @@
         {% for module in modules %}
             {# Module Card #}
             {% block addon_card %}
-                {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_card.html.twig'
+                {% include 'PrestaShopBundle:Admin/Module/Includes:card.html.twig'
                     with {
                         'module': module,
                         'display_type': display_type,

@@ -37,10 +37,10 @@ data-categories="{{ module.attributes.get('refs')|join('|') }}" data-type="{{mod
                     <input type="checkbox" data-name="{{ module.attributes.get('displayName') }}" data-tech-name="{{module.attributes.get('name')}}" class="module-checkbox-bulk-{{display_type}}" />
                 </div>
             {% endif %}
-            {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_action_menu.html.twig' with { 'module': module } %}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}
         </div>
-        {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
+        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
 
-        {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_modal_confirm.html.twig' with { 'module': module } %}
+        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm.html.twig' with { 'module': module } %}
     </div>
 </div>
