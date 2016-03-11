@@ -57,8 +57,8 @@ class ProductSeo extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('meta_title', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
-            'type' => FormType\TextType::class,
+        $builder->add('meta_title', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [
                 'attr' => ['placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'AdminProducts')],
                 'required' => false
@@ -68,8 +68,8 @@ class ProductSeo extends CommonAbstractType
             'label' => $this->translator->trans('Meta title', [], 'AdminProducts'),
             'required' => false
         ))
-        ->add('meta_description', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
-            'type' => FormType\TextType::class,
+        ->add('meta_description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [
                 'attr' => ['placeholder' => $this->translator->trans('To have a different description than your product summary, enter it here.', [], 'AdminProducts')],
                 'required' => false
@@ -79,14 +79,14 @@ class ProductSeo extends CommonAbstractType
             'label' => $this->translator->trans('Meta description', [], 'AdminProducts'),
             'required' => false
         ))
-        ->add('link_rewrite', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
-            'type' => FormType\TextType::class,
+        ->add('link_rewrite', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [],
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' => $this->translator->trans('Friendly URL', [], 'AdminProducts'),
         ))
-        ->add('redirect_type', FormType\ChoiceType::class, array(
+        ->add('redirect_type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => array(
                 $this->translator->trans('No redirect (404)', [], 'AdminProducts') => '404',
                 $this->translator->trans('Catalog Redirected permanently (301)', [], 'AdminProducts') => '301',
@@ -96,7 +96,7 @@ class ProductSeo extends CommonAbstractType
             'required' => true,
             'label' => $this->translator->trans('Redirection when offline', [], 'AdminProducts'),
         ))
-        ->add('id_product_redirected', \PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType::class, array(
+        ->add('id_product_redirected', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',

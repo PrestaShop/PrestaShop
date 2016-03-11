@@ -70,7 +70,7 @@ return array(
         'Permissions on files and folders' => 'Permisiuni pe fișiere și foldere',
         'Recursive write permissions for %1$s user on %2$s' => 'Permisiuni de scriere recursivă pentru %1$s  utilizator de pe %2$s',
         'Recommended PHP parameters' => 'Parametri PHP recomandați',
-        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!' => 'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!',
+        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!',
         'Cannot open external URLs' => 'Nu se pot deschide URL-uri externe',
         'GZIP compression is not activated' => 'Reducerea GZIP nu este activată',
         'Mcrypt extension is not enabled' => 'Extensia Mcrypt nu este activă',

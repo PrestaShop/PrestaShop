@@ -73,8 +73,8 @@ class WarehouseController extends FrameworkBundleAdminController
         $simpleSubForm = $form->create('step4', 'form');
 
         foreach ($warehouses as $warehouse) {
-            $simpleSubForm->add('warehouse_combination_'.$warehouse['id_warehouse'], FormType\CollectionType::class, array(
-                'entry_type' => \PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination::class,
+            $simpleSubForm->add('warehouse_combination_'.$warehouse['id_warehouse'], 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
+                'entry_type' =>'PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination',
                 'entry_options' => array(
                     'id_warehouse' => $warehouse['id_warehouse'],
                 ),
