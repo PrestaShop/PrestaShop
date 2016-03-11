@@ -32,11 +32,24 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 
 class ModuleManagerBuilder
 {
+    /**
+     * Singleton of ModuleManager
+     * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+     */
     public static $modulesManager = null;
+    /**
+     * Singleton of ModuleRepository
+     * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
+     */
     public static $modulesRepository = null;
 
     public function build()
     {
+        /**
+        * Return an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+        * @global type $kernel
+        * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+        */
         if (is_null(self::$modulesManager)) {
             global $kernel;
 
@@ -49,6 +62,11 @@ class ModuleManagerBuilder
         return self::$modulesManager;
     }
 
+    /**
+     * Return an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
+     * @global type $kernel
+     * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
+     */
     public function buildRepository()
     {
         if (is_null(self::$modulesRepository)) {

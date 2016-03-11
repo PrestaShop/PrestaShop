@@ -195,8 +195,6 @@ class ModuleRepository implements AddonRepositoryInterface
                 }
             } catch (\ParseError $e) {
                 // Bypass this module
-            } catch (Exception $e) {
-                // Bypass this module
             }
         }
 
@@ -215,12 +213,18 @@ class ModuleRepository implements AddonRepositoryInterface
         // Get filemtime of module main class (We do this directly with an error suppressor to go faster)
         $current_filemtime = (int)@filemtime($php_file_path);
 
-        // Check that cache is up to date
+        // We check that we have data from the marketplace
+        $module_catalog_data = $this->adminModuleProvider->getCatalogModules(['name' => $name]);
+        $attributes = array_merge($attributes,
+            (array)array_shift($module_catalog_data));
+
+
+        // Now, we check that cache is up to date
         if (isset($this->cache[$name]['disk']['filemtime']) && $this->cache[$name]['disk']['filemtime']
             === $current_filemtime) {
             // OK, cache can be loaded and used directly
 
-            $attributes = $this->cache[$name]['attributes'];
+            $attributes = array_merge($attributes, $this->cache[$name]['attributes']);
             $disk       = $this->cache[$name]['disk'];
         } else {
             // NOPE, we have to fulfil the cache with the module data
@@ -232,18 +236,12 @@ class ModuleRepository implements AddonRepositoryInterface
                 'version' => null,
             ];
 
-            $module_catalog_data = $this->adminModuleProvider->getCatalogModules(['name' => $name]);
-
-            $attributes = array_merge($attributes,
-                (array)array_shift($module_catalog_data));
-
             if ($this->moduleProvider->isModuleMainClassValid($name)) {
                 require_once $php_file_path;
 
                 // We load the main class of the module, and get its properties
                 $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
-                $attributes = array_merge($attributes,
-                    [
+                $main_class_attributes = [
                     'warning' => $tmp_module->warning,
                     'name' => $tmp_module->name,
                     'tab' => $tmp_module->tab,
@@ -259,49 +257,53 @@ class ModuleRepository implements AddonRepositoryInterface
                     'need_instance' => isset($tmp_module->need_instance)?$tmp_module->need_instance
                             :0,
                     'productType' => 'Module',
-                ]);
+                ];
 
                 $disk['is_valid'] = 1;
                 $disk['version'] = $tmp_module->version;
+
+                $this->cache[$name]['attributes'] = $main_class_attributes;
+                $this->cache[$name]['disk']       = $disk;
+
+                $attributes = array_merge($attributes, $main_class_attributes);
             } else {
                 $attributes['warning'] = 'Invalid module class';
             }
+        }
 
-            if (!isset($attributes['refs'])) {
-                $attributes['refs'] = ['unknown'];
+        // ToDo: We need to remove all the parts from this function.
+        // A new class will be created in order to
+         if (!isset($attributes['refs'])) {
+             $attributes['refs'] = ['unknown'];
+         }
+
+        if (!isset($attributes['media'])) {
+            $attributes['media'] = (object)[
+                    'img' => '../../img/questionmark.png',
+                    'badges' => [],
+                    'cover' => [],
+                    'screenshotsUrls' => [],
+                    'videoUrl' => null,
+            ];
+        }
+
+        if (!isset($attributes['price'])) {
+            $attributes['price']      = new \stdClass;
+            $attributes['price']->EUR = 0;
+            $attributes['price']->USD = 0;
+            $attributes['price']->GBP = 0;
+        }
+
+        if (!isset($attributes['version'])) {
+            $attributes['version'] = !empty($disk['version'])?$disk['version']:null;
+        }
+
+        foreach (['logo.png', 'logo.gif'] as $logo) {
+            $logo_path = _PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$logo;
+            if (file_exists($logo_path)) {
+                $attributes['media']->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
+                break;
             }
-
-            if (!isset($attributes['media'])) {
-                $attributes['media'] = (object)[
-                        'img' => '../../img/questionmark.png',
-                        'badges' => [],
-                        'cover' => [],
-                        'screenshotsUrls' => [],
-                        'videoUrl' => null,
-                ];
-            }
-
-            if (!isset($attributes['price'])) {
-                $attributes['price']      = new \stdClass;
-                $attributes['price']->EUR = 0;
-                $attributes['price']->USD = 0;
-                $attributes['price']->GBP = 0;
-            }
-
-            if (!isset($attributes['version'])) {
-                $attributes['version'] = $tmp_module->version;
-            }
-
-            foreach (['logo.png', 'logo.gif'] as $logo) {
-                $logo_path = _PS_MODULE_DIR_.$tmp_module->name.DIRECTORY_SEPARATOR.$logo;
-                if (file_exists($logo_path)) {
-                    $attributes['media']->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$tmp_module->name.'/'.$logo;
-                    break;
-                }
-            }
-
-            $this->cache[$name]['attributes'] = $attributes;
-            $this->cache[$name]['disk']       = $disk;
         }
 
         // Get data from database
@@ -323,8 +325,6 @@ class ModuleRepository implements AddonRepositoryInterface
                     $modules[$name] = $module;
                 }
             } catch (\ParseError $e) {
-                // Bypass this module
-            } catch (Exception $e) {
                 // Bypass this module
             }
         }

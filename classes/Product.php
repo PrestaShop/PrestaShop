@@ -5559,9 +5559,11 @@ class ProductCore extends ObjectModel
      */
     public static function getAttributesParams($id_product, $id_product_attribute)
     {
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerFactory->build();
+
         $id_lang = (int)Context::getContext()->language->id;
         $id_shop = (int)Context::getContext()->shop->id;
-        $moduleManager = (new ModuleManagerBuilder())->build();
         $cache_id = 'Product::getAttributesParams_'.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_lang.'-'.(int)$id_shop;
 
         // if blocklayered module is installed we check if user has set custom attribute name

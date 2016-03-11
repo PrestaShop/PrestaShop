@@ -165,22 +165,22 @@ class ModuleController extends FrameworkBundleAdminController
         $ret = array();
         if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
-            //try {
+            try {
                 $ret[$module]['status'] = $moduleManager->{$action}($module);
-            if ($ret[$module]['status'] === null) {
-                $ret[$module]['status'] = false;
-                $ret[$module]['msg'] = $module .' did not return a valid response on '.$action .' action';
-            } else {
-                $ret[$module]['msg'] = ucfirst($action). ' action on module '. $module;
-                $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
-            }
-            /*} catch (Exception $e) {
+                if ($ret[$module]['status'] === null) {
+                    $ret[$module]['status'] = false;
+                    $ret[$module]['msg'] = $module .' did not return a valid response on '.$action .' action';
+                } else {
+                    $ret[$module]['msg'] = ucfirst($action). ' action on module '. $module;
+                    $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
+                }
+            } catch (Exception $e) {
                 $ret[$module]['status'] = false;
                 $ret[$module]['msg'] = sprintf('Exception thrown by addon %s on %s. %s', $module, $request->attributes->get('action'), $e->getMessage());
 
                 $logger = $this->get('logger');
                 $logger->error($ret[$module]['msg']);
-            }*/
+            }
         } else {
             $ret[$module]['status'] = false;
             $ret[$module]['msg'] = 'Invalid action';
