@@ -67,7 +67,8 @@ class OrderPresenter implements PresenterInterface
             'follow_up' => $this->getFollowUp($order),
             'shipping' => $this->getShipping($order),
             'id_address_delivery' => $order->id_address_delivery,
-            'id_address_invoice' => $order->id_address_invoice
+            'id_address_invoice' => $order->id_address_invoice,
+            'tax_label' => $this->getTaxLabel(),
         ];
     }
 
@@ -111,52 +112,60 @@ class OrderPresenter implements PresenterInterface
      */
     private function getAmounts(Order $order)
     {
+        $tax_label = $this->getTaxLabel();
         $amounts = [];
         $subtotals = [];
 
-        if (Configuration::get('PS_TAX_DISPLAY')) {
+        $tax = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
+        if ((float)$tax && Configuration::get('PS_TAX_DISPLAY')) {
             $subtotals['tax'] = [
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', [], 'Cart'),
-                'amount' => $this->priceFormatter->format(
-                    $order->total_paid_tax_incl - $order->total_paid_tax_excl
-                ),
+                'amount' => $tax,
+                'value' => $this->priceFormatter->format($tax),
             ];
         }
 
         $subtotals['products'] = [
             'type' => 'products',
-            'label' => $this->translator->trans('Products', [], 'Cart'),
-            'amount' =>  $this->priceFormatter->format($order->total_products)
+            'label' => $this->translator->trans('Products', [], 'Cart').' '.$tax_label,
+            'amount' => $order->total_products,
+            'value' => $this->priceFormatter->format($order->total_products),
         ];
 
         $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
-
         $subtotals['shipping'] = [
             'type' => 'shipping',
-            'label' => $this->translator->trans('Shipping', [], 'Cart'),
-            'amount' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
+            'label' => $this->translator->trans('Shipping and handling', [], 'Cart').' '.$tax_label,
+            'amount' => $shipping_cost,
+            'value' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
         ];
 
         $discount_amount = ($this->includeTaxes()) ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
-        $subtotals['discounts'] = [
-            'type' => 'discount',
-            'label' => $this->translator->trans('Discount', [], 'Cart'),
-            'amount' => $discount_amount != 0 ? $this->priceFormatter->format($discount_amount) : 0,
-        ];
+        if ((float)$discount_amount) {
+            $subtotals['discounts'] = [
+                'type' => 'discount',
+                'label' => $this->translator->trans('Discount', [], 'Cart').' '.$tax_label,
+                'amount' => $discount_amount,
+                'value' => $this->priceFormatter->format($discount_amount),
+            ];
+        }
+
+        $amounts['subtotals'] = $subtotals;
 
         $amounts['total'] = [
             'type' => 'total',
             'label' => $this->translator->trans('Total', [], 'Order'),
-            'amount' => $this->priceFormatter->format($order->total_paid),
+            'amount' => $order->total_paid,
+            'value' => $this->priceFormatter->format($order->total_paid),
         ];
+
         $amounts['total_paid'] = [
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', [], 'Order'),
-            'amount' => $this->priceFormatter->format($order->total_paid_real),
+            'amount' => $order->total_paid_real,
+            'value' => $this->priceFormatter->format($order->total_paid_real),
         ];
-
-        $amounts['subtotals'] = $subtotals;
 
         return $amounts;
     }
@@ -323,5 +332,12 @@ class OrderPresenter implements PresenterInterface
     private function includeTaxes()
     {
         return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
+    }
+
+    private function getTaxLabel()
+    {
+        return ($this->includeTaxes())
+                ? $this->translator->trans('(tax incl.)', [], 'Cart')
+                : $this->translator->trans('(tax excl.)', [], 'Cart');
     }
 }
