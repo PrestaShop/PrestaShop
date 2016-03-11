@@ -61,8 +61,8 @@ class ModuleDataProvider
         // ToDo: Load list of all installed modules ?
 
         $result = \Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
-        FROM `ps_module` m
-        LEFT JOIN `ps_module_shop` ms ON m.`id_module` = ms.`id_module`
+        FROM `'._DB_PREFIX_.'module` m
+        LEFT JOIN `'._DB_PREFIX_.'module_shop` ms ON m.`id_module` = ms.`id_module`
         WHERE `name` = "'. pSQL($name) .'"
         AND ms.`id_shop` IN ('.implode(',', array_map('intval', $id_shops)).')');
         if ($result) {
