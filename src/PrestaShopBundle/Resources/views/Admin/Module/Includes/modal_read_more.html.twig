@@ -78,7 +78,7 @@
                 </div>
                 {% endif %}
                 {% if module.attributes.get('urls').install is defined %}
-                    <a href="{{module.attributes.get('urls').install}}" class="pull-right module-install-button">{{ trans('Install', {}, 'AdminModules') }}</a>
+                    <a href="{{module.attributes.get('urls').install}}" class="pull-right module-install-button btn btn-primary btn-sm light-button">{{ trans('Install', {}, 'AdminModules') }}</a>
                 {% endif %}
             </div>
         </div>
