@@ -70,7 +70,7 @@ return array(
         'Permissions on files and folders' => '文件和文件夹的权限',
         'Recursive write permissions for %1$s user on %2$s' => 'Recursive write permissions for %1$s user on %2$s',
         'Recommended PHP parameters' => 'Recommended PHP parameters',
-        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!' => 'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!',
+        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!',
         'Cannot open external URLs' => '无法打开外部链接',
         'GZIP compression is not activated' => 'GZIP压缩未激活',
         'Mcrypt extension is not enabled' => 'Mcrypt扩展未启用',
