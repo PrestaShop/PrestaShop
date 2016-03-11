@@ -6736,6 +6736,8 @@ li.product-label {
 
 .account-list a {
   color: #acaaa6; }
+  .account-list a:hover {
+    color: #2fb5d2; }
 
 .blockcms-title,
 .myaccount-title,

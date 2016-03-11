@@ -29,6 +29,9 @@
 }
 .account-list a {
   color:$gray;
+  &:hover{
+  color: $brand-primary;
+  }
 }
 .blockcms-title,
 .myaccount-title,
