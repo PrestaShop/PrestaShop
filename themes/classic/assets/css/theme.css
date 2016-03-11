@@ -6395,6 +6395,24 @@ li.product-label {
 
 @media (max-width: 991px) {
   .product-cover img {
+    width: 100%; }
+  #product-modal .modal-content .modal-body {
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    box-direction: normal;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-direction: column;
+    margin-left: 0; }
+    #product-modal .modal-content .modal-body img.product-cover-modal {
+      width: 100%; }
+    #product-modal .modal-content .modal-body .arrows {
+      display: none; }
+  #product-modal .modal-content .modal-body .image-caption {
     width: 100%; } }
 
 .cart-summary-line > .label {

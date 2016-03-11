@@ -475,4 +475,17 @@ li.product-label {
       width: 100%;
     }
   }
+  #product-modal .modal-content .modal-body{
+    @include flex-direction(column);
+    margin-left: 0;
+    img.product-cover-modal{
+      width: 100%;
+    }
+    .arrows{
+      display: none;
+    }
+  }
+  #product-modal .modal-content .modal-body .image-caption{
+    width: 100%;
+  }
 }
