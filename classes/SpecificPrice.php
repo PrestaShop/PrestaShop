@@ -254,7 +254,7 @@ class SpecificPriceCore extends ObjectModel
      * @param string|null $ending
      * @return string
      */
-    private static function computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart, $beginning = null, $ending = null)
+    protected static function computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart, $beginning = null, $ending = null)
     {
         $first_date = date('Y-m-d 00:00:00');
         $last_date = date('Y-m-d 23:59:59');
@@ -313,7 +313,7 @@ class SpecificPriceCore extends ObjectModel
         return $query_extra;
     }
 
-    private static function formatIntInQuery($first_value, $second_value) {
+    protected static function formatIntInQuery($first_value, $second_value) {
         $first_value = (int)$first_value;
         $second_value = (int)$second_value;
         if ($first_value != $second_value) {
