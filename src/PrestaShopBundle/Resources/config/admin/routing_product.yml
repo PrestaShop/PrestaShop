@@ -4,6 +4,7 @@ admin_product_catalog:
     methods:  [GET, POST]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::catalogAction
+        _csrf_id: admin_product_catalog
         _legacy_controller: AdminProducts
         limit: last
         offset: 0
@@ -55,6 +56,7 @@ admin_product_form:
     methods:  [GET, POST]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::formAction
+        _csrf_id: admin_product_form
         _legacy_controller: AdminProducts
         _legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
         _legacy_param_mapper_method: mapLegacyParametersProductForm

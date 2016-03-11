@@ -235,11 +235,13 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row"
+             massediturl="{{ path('admin_product_mass_edit_action', {'action': 'sort'}) }}"
+             redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
+             redirecturlnextpage="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset+limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}">
           <div
             class="col-md-4"
             bulkurl="{{ path('admin_product_bulk_action', {'action': 'activate_all'}) }}"
-            massediturl="{{ path('admin_product_mass_edit_action', {'action': 'sort'}) }}"
             redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
             redirecturlnextpage="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset+limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
           >

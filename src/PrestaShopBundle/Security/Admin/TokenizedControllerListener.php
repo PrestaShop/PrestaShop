@@ -84,7 +84,7 @@ class TokenizedControllerListener
             return;
         }
 
-        // For now, if it's not a POST, do not check token
+        // For now, if it's not a POST or if controller does not implement TokenizedController, do not check token
         if (!$request->isMethod('POST') || !($controller[0] instanceof TokenizedController)) {
             return;
         }
@@ -100,10 +100,13 @@ class TokenizedControllerListener
         if ($clientToken === false) {
             $request->getSession()->getFlashBag()->add('error', 'CSRF token missing');
             //throw new AccessDeniedHttpException('This action needs a token!');
+            // TODO: remplacer le flashBag par l'exception pour rendre l'erreur bloquante.
+            return;
         }
         if ($clientToken !== $serverToken) {
             $request->getSession()->getFlashBag()->add('error', 'CSRF tokens not equal: '.$clientToken.' != '.$serverToken);
             //throw new AccessDeniedHttpException('This action needs a valid token!');
+            // TODO: remplacer le flashBag par l'exception pour rendre l'erreur bloquante.
         }
     }
 }
