@@ -284,6 +284,7 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $moduleManagerFactory = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerFactory->build();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
 
         try {
             $file_uploaded = $request->files->get('file_uploaded');
@@ -307,7 +308,12 @@ class ModuleController extends FrameworkBundleAdminController
                 $installation_response['msg'] = $module_name .' did not return a valid response on install action';
             } else {
                 $installation_response['msg'] = 'Install action on module '. $module_name;
-                $installation_response['msg'] .= $installation_response['status']?' succeeded':' failed';
+                if ($installation_response['status'] === true) {
+                    $installation_response['is_configurable'] = (bool)$moduleRepository->getModule($module_name)->attributes->get('is_configurable');
+                    $installation_response['msg'] .= 'succeeded';
+                } else {
+                    $installation_response['msg'] .= 'failed';
+                }
             }
 
             return new JsonResponse(

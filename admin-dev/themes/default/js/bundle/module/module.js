@@ -294,6 +294,7 @@ var AdminModuleController = function () {
                setTimeout(function() {
                    $(_these.moduleImportStartSelector).fadeIn(function(event){
                        $(_these.moduleImportFailureMsgDetailsSelector).hide();
+                       $(_these.moduleImportSuccessConfigureBtnSelector).hide();
                        $('.dropzone').removeAttr('style');
                    });
                }, 550);
@@ -306,6 +307,7 @@ var AdminModuleController = function () {
           $(_this.moduleImportStartSelector).show();
           $('.dropzone').removeAttr('style');
           $(_this.moduleImportFailureMsgDetailsSelector).hide();
+          $(_this.moduleImportSuccessConfigureBtnSelector).hide();
       });
 
       // Change the way Dropzone.js lib handle file input trigger
@@ -377,8 +379,11 @@ var AdminModuleController = function () {
 
                  $(_this.moduleImportProcessingSelector).fadeOut(function() {
                       if (responseObject.status === true) {
-                          var configureLink = baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
-                          $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+                          if (responseObject.is_configurable === true) {
+                              var configureLink = baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
+                              $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+                              $(_this.moduleImportSuccessConfigureBtnSelector).show();
+                          }
                           $(_this.moduleImportSuccessSelector).fadeIn();
                       } else {
                           $(_this.moduleImportFailureMsgDetailsSelector).html(responseObject.msg);
