@@ -371,7 +371,6 @@ var AdminModuleController = function () {
               // Leave it empty ATM since we don't require anything while processing upload
           },
           complete: function (file, response) {
-              //console.log(file, response);
 
               if (file.status !== 'error') {
                   var responseObject = jQuery.parseJSON(file.xhr.response);
