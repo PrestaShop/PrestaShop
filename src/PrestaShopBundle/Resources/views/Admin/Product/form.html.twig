@@ -14,7 +14,7 @@
         </div>
       {% endif %}
 
-      <div class="col-md-12">
+      <div class="col-md-10 col-md-offset-1">
         <div class="row">
           <div class="col-md-7 big-input">
             {{ form_widget(form.step1.name) }}
@@ -61,14 +61,14 @@
       <div class="clearfix"></div>
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-10 col-md-offset-1">
       <div id="form_bubbling_errors">
         {{ form_errors(form) }}
       </div>
     </div>
 
     {# FORM TABS CONTAINER #}
-    <div id="form-loading" class="col-sm-11 col-center">
+    <div id="form-loading" class="col-md-10 col-md-offset-1">
 
       <ul class="nav nav-tabs" id="form-nav" role="tablist">
         <li id="tab_step1" class="nav-item"><a href="#step1" role="tab" data-toggle="tab" class="nav-link active">{{ trans('Basic settings', {}, 'AdminProducts') }}</a></li>
@@ -200,12 +200,18 @@
                   {# RIGHT #}
                   <div class="col-md-3">
 
-                    <div class="container-fluid">
                       <div class="row right-column">
                         <div class="col-md-12">
 
                           <div class="form-group" id="show_variations_selector">
-                            <h4>{{ trans("Product type", {}, 'AdminProducts') }}</h4>
+                            <h2>
+                              {{ trans("Product type", {}, 'AdminProducts') }}
+                              <span
+                                class="help-box"
+                                data-toggle="tooltip"
+                                title="{{ trans("Combinations: \n If you're selling a product with attributes that can be combined (color, size, capacity, ...), you will need to create combinations. \n Ex.: Size M in blue and size S in green are 2 different combinations of a t-shirt.",{}, 'AdminProducts')|raw }}"
+                              ></span>
+                            </h2>
                             <div class="radio">
                               <label>
                                 <input type="radio" name="show_variations" value="0" {% if not has_combinations %}checked="checked"{% endif %}>
@@ -217,20 +223,24 @@
                                 <input type="radio" name="show_variations" value="1" {% if has_combinations %}checked="checked"{% endif %}>
                                 {{ trans("Product with combinations", {}, 'AdminProducts') }}
                               </label>
-                              <span data-toggle="tooltip" title="{{ trans("Combinations: \n If you're selling a product with attributes that can be combined (color, size, capacity, ...), you will need to create combinations. \n Ex.: Size M in blue and size S in green are 2 different combinations of a t-shirt.", {}, 'AdminProducts')|raw }}">[?]</span>
-                              <br />
-                              <span id="product_type_combinations_shortcut" class="small">
-                                <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');">
-                                  {{ trans("Advanced settings available in Combinations", {}, 'AdminProducts')|raw }}
-                                </a>
-                              </span>
+                              <div>
+                                <span id="product_type_combinations_shortcut" class="small">
+                                  <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');">
+                                    {{ trans("Advanced settings available in Combinations", {}, 'AdminProducts')|raw }}
+                                  </a>
+                                </span>
+                              </div>
                             </div>
                           </div>
 
                           <div class="form-group" id="product_qty_0_shortcut_div" {# style="{% if has_combinations %}display: none;{% endif %}"#}>
-                            <h4>{{ trans("Quantity", {}, 'AdminProducts') }}</h4>
+                            <h2>{{ trans("Quantity", {}, 'AdminProducts') }}</h2>
                             {{ form_errors(form.step1.qty_0_shortcut) }}
-                            {{ form_widget(form.step1.qty_0_shortcut) }}
+                            <div class="row">
+                              <div class="col-md-6">
+                                {{ form_widget(form.step1.qty_0_shortcut) }}
+                              </div>
+                            </div>
                             <span class="small">
                               <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');">
                                 {{ trans("Advanced settings available in Quantities", {}, 'AdminProducts') }}
@@ -239,15 +249,15 @@
                           </div>
 
                           <div class="form-group">
-                            <h4>{{ trans("Price", {}, 'AdminProducts') }}</h4>
+                            <h2>{{ trans("Price", {}, 'AdminProducts') }}</h2>
                             <div class="row">
-                              <div class="col-md-5">
-                                <label>{{ trans("Tax excl.", {}, 'AdminProducts') }}</label>
+                              <div class="col-md-6">
+                                <label class="form-control-label">{{ trans("Tax excl.", {}, 'AdminProducts') }}</label>
                                 {{ form_widget(form.step1.price_shortcut) }}
                                 {{ form_errors(form.step1.price_shortcut) }}
                               </div>
-                              <div class="col-md-5 col-offset-md-1">
-                                <label>{{ trans("Tax incl.", {}, 'AdminProducts') }}</label>
+                              <div class="col-md-6 col-offset-md-1">
+                                <label class="form-control-label">{{ trans("Tax incl.", {}, 'AdminProducts') }}</label>
                                 {{ form_widget(form.step1.price_ttc_shortcut) }}
                                 {{ form_errors(form.step1.price_ttc_shortcut) }}
                               </div>
@@ -278,7 +288,7 @@
 
                           <div class="form-group">
 
-                            <h4>{{ trans("Categories", {}, 'AdminProducts') }}</h4>
+                            <h2>{{ trans("Categories", {}, 'AdminProducts') }}</h2>
                             {{ form_errors(form.step1.categories) }}
                             {{ form_widget(form.step1.categories) }}
 
@@ -286,21 +296,20 @@
                               <div id="add-categories-content" class="hide">
 
                                 <fieldset class="form-group">
-                                  <label>{{ trans("Default category", {}, 'AdminProducts') }}</label>
+                                  <label class="form-control-label">{{ trans("Default category", {}, 'AdminProducts') }}</label>
                                   {{ form_errors(form.step1.id_category_default) }}
                                   {{ form_widget(form.step1.id_category_default) }}
                                 </fieldset>
 
-
                                 <div id="form_step1_new_category" data-action="{{ form.step1.new_category.vars.attr["data-action"] }}">
                                   <fieldset class="form-group">
-                                    <label>{{ trans("Add a new category", {}, 'AdminProducts') }}</label>
+                                    <label class="form-control-label">{{ trans("Add a new category", {}, 'AdminProducts') }}</label>
                                     {{ form_errors(form.step1.new_category) }}
                                     {{ form_widget(form.step1.new_category.name) }}
                                   </fieldset>
 
                                   <fieldset class="form-group">
-                                    <label>{{ form.step1.new_category.id_parent.vars.label }}</label>
+                                    <label class="form-control-label">{{ form.step1.new_category.id_parent.vars.label }}</label>
                                     {{ form_widget(form.step1.new_category.id_parent) }}
                                   </fieldset>
 
@@ -314,7 +323,6 @@
                           </div>
                         </div>
                       </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -331,25 +339,23 @@
 
                   {# LEFT #}
                   <div class="col-md-9">
+
                     <div id="quantities" style="{% if has_combinations or form.step3.depends_on_stock.vars.value != "0" %}display: none;{% endif %}">
-                      <h4>{{ trans('Quantities', [], 'AdminProducts') }}</h4>
-                      <div class="row">
-                        <div class="col-sm-2">
-                          <fieldset class="form-group">
-                            <label>{{ form.step3.qty_0.vars.label }}</label>
+                      <h2>{{ trans('Quantities', [], 'AdminProducts') }}</h2>
+                      <fieldset class="form-group">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <label class="form-control-label">{{ form.step3.qty_0.vars.label }}</label>
                             {{ form_errors(form.step3.qty_0) }}
                             {{ form_widget(form.step3.qty_0) }}
-                          </fieldset>
-                        </div>
-                        <div class="col-sm-2">
-                          <fieldset class="form-group">
-                            <label>{{ form.step3.minimal_quantity.vars.label }}</label>
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-control-label">{{ form.step3.minimal_quantity.vars.label }}</label>
                             {{ form_errors(form.step3.minimal_quantity) }}
                             {{ form_widget(form.step3.minimal_quantity) }}
-                          </fieldset>
+                          </div>
                         </div>
-                        <div class="clearfix"></div>
-                      </div>
+                      </fieldset>
                     </div>
 
                     <div id="virtual_product" data-action="{{ path('admin_product_virtual_save_action') }}" data-action-remove="{{ path('admin_product_virtual_remove_action') }}">
@@ -480,14 +486,12 @@
                       </div>
                     </div>
 
-                    <div>
-                      <h4>{{ trans('Availability preferences', [], 'AdminProducts') }}</h4>
-                      <fieldset class="form-group form-inline">
-                        <label>{{ trans('Behavior when out of stock', [], 'AdminProducts') }}</label>
-                        {{ form_errors(form.step3.out_of_stock) }}
-                        {{ form_widget(form.step3.out_of_stock) }}
-                      </fieldset>
-                    </div>
+                    <h2>{{ trans('Availability preferences', [], 'AdminProducts') }}</h2>
+                    <fieldset class="form-group form-inline">
+                      {{ trans('Behavior when out of stock', [], 'AdminProducts') }}
+                      {{ form_errors(form.step3.out_of_stock) }}
+                      {{ form_widget(form.step3.out_of_stock) }}
+                    </fieldset>
 
                     <div class="row">
                       <div class="col-md-4">
