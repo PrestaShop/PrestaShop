@@ -61,25 +61,25 @@ class ProductSupplierCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('supplier_reference', FormType\TextType::class, array(
+        $builder->add('supplier_reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
             'label' => null
         ))
-        ->add('product_price', FormType\NumberType::class, array(
+        ->add('product_price', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('product_price_currency', FormType\ChoiceType::class, array(
+        ->add('product_price_currency', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
             'choices_as_values' => true,
             'required' => true,
         ))
-        ->add('id_product_attribute', FormType\HiddenType::class)
-        ->add('product_id', FormType\HiddenType::class)
-        ->add('supplier_id', FormType\HiddenType::class);
+        ->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+        ->add('product_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+        ->add('supplier_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType');
 
         //set default minimal values for collection prototype
         $builder->setData([

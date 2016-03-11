@@ -167,7 +167,7 @@ class ProductController extends FrameworkBundleAdminController
 
             // Category tree
             $categories = $this->createForm(
-                \PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType::class,
+                'PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType',
                 null,
                 array(
                     'label' => $translator->trans('Categories', array(), 'AdminProducts'),
@@ -374,13 +374,13 @@ class ProductController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
 
         $form = $this->createFormBuilder($modelMapper->getFormData())
-            ->add('id_product', FormType\HiddenType::class)
-            ->add('step1', \PrestaShopBundle\Form\Admin\Product\ProductInformation::class)
-            ->add('step2', \PrestaShopBundle\Form\Admin\Product\ProductPrice::class)
-            ->add('step3', \PrestaShopBundle\Form\Admin\Product\ProductQuantity::class)
-            ->add('step4', \PrestaShopBundle\Form\Admin\Product\ProductShipping::class)
-            ->add('step5', \PrestaShopBundle\Form\Admin\Product\ProductSeo::class)
-            ->add('step6', \PrestaShopBundle\Form\Admin\Product\ProductOptions::class)
+            ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+            ->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation')
+            ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
+            ->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity')
+            ->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping')
+            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo')
+            ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions')
             ->getForm();
 
         $form->handleRequest($request);
@@ -809,13 +809,13 @@ class ProductController extends FrameworkBundleAdminController
         );
 
         $form = $this->createFormBuilder($modelMapper->getFormData())
-            ->add('id_product', FormType\HiddenType::class)
-            ->add('step1', \PrestaShopBundle\Form\Admin\Product\ProductInformation::class)
-            ->add('step2', \PrestaShopBundle\Form\Admin\Product\ProductPrice::class)
-            ->add('step3', \PrestaShopBundle\Form\Admin\Product\ProductQuantity::class)
-            ->add('step4', \PrestaShopBundle\Form\Admin\Product\ProductShipping::class)
-            ->add('step5', \PrestaShopBundle\Form\Admin\Product\ProductSeo::class)
-            ->add('step6', \PrestaShopBundle\Form\Admin\Product\ProductOptions::class)
+            ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+            ->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation')
+            ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
+            ->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity')
+            ->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping')
+            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo')
+            ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions')
             ->getForm();
 
         return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [

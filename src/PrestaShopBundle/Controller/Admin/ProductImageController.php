@@ -57,7 +57,7 @@ class ProductImageController extends FrameworkBundleAdminController
         }
 
         $form = $this->createFormBuilder(null, array('csrf_protection' => false))
-            ->add('file', FormType\FileType::class, array(
+            ->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
                 'error_bubbling' => true,
                 'constraints' => [
                     new Assert\NotNull(array('message' => $translator->trans('Please select a file', [], 'AdminProducts'))),
@@ -127,15 +127,15 @@ class ProductImageController extends FrameworkBundleAdminController
         $image = $productAdapter->getImage((int)$idImage);
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form_image', 'form', $image, array('csrf_protection' => false))
-            ->add('legend', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
-                'type' => FormType\TextType::class,
+            ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+                'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
                 'options' => [],
                 'locales' => $locales,
                 'hideTabs' => true,
                 'label' => $translator->trans('Legend', [], 'AdminProducts'),
                 'required' => false,
             ))
-            ->add('cover', FormType\CheckboxType::class, array(
+            ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
                 'label'    => $translator->trans('Choose as cover image', [], 'AdminProducts'),
                 'required' => false,
             ))
