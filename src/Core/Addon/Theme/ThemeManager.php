@@ -264,7 +264,7 @@ class ThemeManager implements AddonManagerInterface
                                     ->in($sandboxPath)
                                     ->depth('== 0')
                                     ->exclude(['__MACOSX'])
-                                    ->ignoreVCS();
+                                    ->ignoreVCS(true);
 
         if (iterator_count($directories->directories()) > 1) {
             $this->filesystem->remove($sandboxPath);
