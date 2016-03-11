@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
+use Symfony\Component\Finder\Finder;
 
 class ModuleRepository implements AddonRepositoryInterface
 {
@@ -63,7 +64,6 @@ class ModuleRepository implements AddonRepositoryInterface
      */
     private $cacheFilePath;
 
-
     /**
      * Contains data from cache file about modules on disk
      *
@@ -79,6 +79,7 @@ class ModuleRepository implements AddonRepositoryInterface
         $this->adminModuleProvider = $adminModulesProvider;
         $this->moduleProvider      = $modulesProvider;
         $this->moduleUpdater       = $modulesUpdater;
+        $this->finder              = new Finder();
         $this->cacheFilePath       = _PS_CACHE_DIR_.'modules.json';
         $this->cache               = $this->readCacheFile();
     }
@@ -330,19 +331,26 @@ class ModuleRepository implements AddonRepositoryInterface
     private function getModulesOnDisk()
     {
         $modules         = [];
-        $all_module_dirs = glob(_PS_MODULE_DIR_.'*', GLOB_ONLYDIR);
+        $modulesDirsList = $this->finder->directories()
+                                    ->in(_PS_MODULE_DIR_)
+                                    ->depth('== 0')
+                                    ->exclude(['__MACOSX'])
+                                    ->ignoreVCS(true);
 
-        foreach ($all_module_dirs as $dir) {
-            $name = basename($dir);
+        $modulesDirsList = iterator_to_array($modulesDirsList);
+
+        foreach ($modulesDirsList as $moduleDir) {
+            $moduleName = $moduleDir->getFilename();
             try {
-                $module = $this->getModule($name);
+                $module = $this->getModule($moduleName);
                 if ($module instanceof Module) {
-                    $modules[$name] = $module;
+                    $modules[$moduleName] = $module;
                 }
             } catch (\ParseError $e) {
                 // Bypass this module
             }
         }
+
         return $modules;
     }
     /*
