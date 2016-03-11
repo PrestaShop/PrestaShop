@@ -19,7 +19,7 @@ class ModuleController extends FrameworkBundleAdminController
      * @param  Request $request
      * @return Response
      */
-    public function catalogAction(Request $request)
+    public function catalogAction()
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
@@ -290,7 +290,7 @@ class ModuleController extends FrameworkBundleAdminController
             $file_uploaded_name = $file_uploaded->getClientOriginalName();
             $file_uploaded_tmp_path = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload';
             $tmp_filename_uniq = md5(uniqid()).$file_uploaded->guessExtension();
-            $file_uploaded_tmp_fullpath = $file_uploaded_tmp_path.DIRECTORY_SEPARATOR.$tmp_filename_uniq;
+            $file_uploaded_tmp_fullpath = $file_uploaded_tmp_path.'/'.$tmp_filename_uniq;
             // Move file from server tmp DIR to PrestaShop tmp DIR
             $file_uploaded->move($file_uploaded_tmp_path, $tmp_filename_uniq);
             // Try to inflate archive given, and do check to verify we have a valid module architecture
@@ -337,7 +337,7 @@ class ModuleController extends FrameworkBundleAdminController
 
             if ($ret === true) {
                 // Get module name depending on first folder found in archive and trim all separator that might be there
-                $module_name = str_replace(DIRECTORY_SEPARATOR, '', $zip_archive->statIndex(0)['name']);
+                $module_name = str_replace('/', '', $zip_archive->statIndex(0)['name']);
                 // Put it in Module directory
                 $zip_archive->extractTo(_PS_MODULE_DIR_);
                 // Close archive

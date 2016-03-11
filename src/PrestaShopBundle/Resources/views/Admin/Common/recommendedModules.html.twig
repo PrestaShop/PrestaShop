@@ -1,6 +1,6 @@
 <div id="recommended_module_{{ domain }}">
     {% for module in modules %}
-        {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_card.html.twig'
+        {% include 'PrestaShopBundle:Admin/Module/Includes:card.html.twig'
             with {
                 'module': module,
                 'display_type': 'grid',
