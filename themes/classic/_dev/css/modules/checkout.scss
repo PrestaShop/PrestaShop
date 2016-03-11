@@ -190,7 +190,7 @@ body#checkout {
         @include flex(0 0 30%);
       }
       img {
-        max-width: 50%;
+        max-width: em(100px);
         float: left;
       }
     }
@@ -199,7 +199,8 @@ body#checkout {
       padding: em(15px);
       margin-bottom: em(15px);
     }
-    .carrier-name,.carrier-delay {
+    .carrier-name,
+    .carrier-delay {
       display: inline-block;
       margin: 0 em(20px);
       word-break: break-word;
@@ -349,5 +350,45 @@ body#checkout {
   #registration-form {
     width: 50%;
     margin: 0 auto;
+  }
+}
+@include media-breakpoint-down(md) {
+  .done {
+    margin: 0;
+    padding: 0;
+  }
+  .cart-grid-body{
+    width: 100%;
+  }
+  .cart-grid-right{
+    width: 100%;
+  }
+  body#checkout section.checkout-step.-reachable.-complete h1 .step-edit {
+    float: none;
+    margin-left: $medium-space;
+  }
+  body#checkout section.checkout-step .address-item {
+    @include flex-grow(1);
+  }
+  body#checkout section.checkout-step .delivery-option-2 {
+    @include flex-direction(column);
+  }
+  .delivery-option {
+    @include display(flex);
+    margin: auto;
+    .custom-radio {
+      @include flex(0 0 auto);
+    }
+  }
+  #payment-confirmation {
+    button[type="submit"] {
+      font-size: em(12px);
+      width: 100%;
+    }
+  }
+  .condition-label {
+    label[for="conditions_to_approve[terms-and-conditions]"] {
+      text-align: left;
+    }
   }
 }

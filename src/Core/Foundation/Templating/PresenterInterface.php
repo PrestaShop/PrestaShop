@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * 2007-2015 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -24,10 +24,9 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Core\Foundation\Templating;
+namespace PrestaShop\PrestaShop\Core\Foundation\Templating;
 
 interface PresenterInterface
 {
-    public function preset(ObjectModel $object); // must return an array
-    public function setSettings(PresentationSettingsInterface $settings);
+    public function present($object); // must return an array
 }

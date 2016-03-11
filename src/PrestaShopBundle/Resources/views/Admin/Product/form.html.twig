@@ -252,9 +252,16 @@
                                 {{ form_errors(form.step1.price_ttc_shortcut) }}
                               </div>
                             </div>
+                            <div class="row">
+                              <br />
+                              <div class="col-md-10">
+                                {{ render(controller('PrestaShopBundle:Admin/Product:renderField', {'productId': id_product, 'step': 'step2', 'fieldName': 'id_tax_rules_group' })) }}
+                              </div>
+                            </div>
                             <span class="small">
-                              <a href="#" id="tax_rule_shortcut_opener">
-                                {{ trans("The tax can be amended here", {}, 'AdminProducts') }}
+                              {{ trans("Advanced settings available in the tab", {}, 'AdminProducts') }}
+                              <a href="#tab-step2" onclick="$('a[href=\'#step2\']').tab('show');">
+                                {{ trans("Pricing", {}, 'AdminProducts') }}
                               </a>
                             </span>
                             <div class="row hide">

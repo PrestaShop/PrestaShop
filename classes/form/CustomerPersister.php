@@ -98,7 +98,7 @@ class CustomerPersisterCore
             // guest cannot update their email to that of an existing real customer
             if (Customer::customerExists($customer->email, false, true)) {
                 $this->errors['email'][] = $this->translator->trans(
-                    'An account was already registed with this email address',
+                    'An account was already registered with this email address',
                     [],
                     'Customer'
                 );
@@ -154,7 +154,7 @@ class CustomerPersisterCore
 
         if (Customer::customerExists($customer->email, false, $customer->is_guest)) {
             $this->errors['email'][] = $this->translator->trans(
-                'An account was already registed with this email address',
+                'An account was already registered with this email address',
                 [],
                 'Customer'
             );

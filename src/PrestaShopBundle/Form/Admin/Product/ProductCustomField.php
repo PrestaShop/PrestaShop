@@ -57,8 +57,8 @@ class ProductCustomField extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('label', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
-            'type' => FormType\TextType::class,
+        $builder->add('label', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [ 'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Length(array('min' => 2))
@@ -67,7 +67,7 @@ class ProductCustomField extends CommonAbstractType
             'hideTabs' => true,
             'label' => $this->translator->trans('Label', [], 'AdminProducts')
         ))
-        ->add('type', FormType\ChoiceType::class, array(
+        ->add('type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Type', [], 'AdminProducts'),
             'choices'  => array(
                 $this->translator->trans('Text', [], 'AdminProducts') => 1,
@@ -75,7 +75,7 @@ class ProductCustomField extends CommonAbstractType
             ),
             'choices_as_values' => true,
             'required' =>  true
-        ))->add('require', FormType\CheckboxType::class, array(
+        ))->add('require', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'label'    => $this->translator->trans('Required', [], 'AdminProducts'),
             'required' => false,
         ));

@@ -80,7 +80,7 @@ class ProductPrice extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('price', FormType\MoneyType::class, array(
+        $builder->add('price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
             'attr' => ['data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')],
@@ -90,13 +90,13 @@ class ProductPrice extends CommonAbstractType
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('price_ttc', FormType\MoneyType::class, array(
+        ->add('price_ttc', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'mapped' => false,
             'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
-        ->add('ecotax', FormType\MoneyType::class, array(
+        ->add('ecotax', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
@@ -106,7 +106,7 @@ class ProductPrice extends CommonAbstractType
             ),
             'attr' => ['data-eco-tax-rate' => $this->eco_tax_rate],
         ))
-        ->add('id_tax_rules_group', FormType\ChoiceType::class, array(
+        ->add('id_tax_rules_group', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->tax_rules,
             'required' => true,
             'choices_as_values' => true,
@@ -118,26 +118,26 @@ class ProductPrice extends CommonAbstractType
             },
             'label' => $this->translator->trans('Tax rule', [], 'AdminProducts'),
         ))
-        ->add('on_sale', FormType\CheckboxType::class, array(
+        ->add('on_sale', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
             'label' => $this->translator->trans('Display the "sale!" flag on the product page, and in the text found within the product listing.', [], 'AdminProducts'),
         ))
-        ->add('wholesale_price', FormType\MoneyType::class, array(
+        ->add('wholesale_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Price - Tax excluded', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
-        ->add('unit_price', FormType\MoneyType::class, array(
+        ->add('unit_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Unit price', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
-        ->add('unity', FormType\TextType::class, array(
+        ->add('unity', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
             'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'AdminProducts')]
         ))
-        ->add('specific_price', \PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice::class)
-        ->add('specificPricePriorityToAll', FormType\CheckboxType::class, array(
+        ->add('specific_price', 'PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice')
+        ->add('specificPricePriorityToAll', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
             'label' => $this->translator->trans('Apply to all products', [], 'AdminProducts'),
         ));
@@ -151,7 +151,7 @@ class ProductPrice extends CommonAbstractType
         ];
 
         for ($i=0; $i < count($specificPricePriorityChoices); $i++) {
-            $builder->add('specificPricePriority_'.$i, FormType\ChoiceType::class, array(
+            $builder->add('specificPricePriority_'.$i, 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices' => $specificPricePriorityChoices,
                 'choices_as_values' => true,
                 'required' => true

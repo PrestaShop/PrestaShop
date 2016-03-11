@@ -95,8 +95,8 @@ class TypeaheadProductCollectionType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('data', \Symfony\Component\Form\Extension\Core\Type\CollectionType::class, array(
-            'entry_type' => \Symfony\Component\Form\Extension\Core\Type\HiddenType::class,
+        $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
+            'entry_type' =>'Symfony\Component\Form\Extension\Core\Type\HiddenType',
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,

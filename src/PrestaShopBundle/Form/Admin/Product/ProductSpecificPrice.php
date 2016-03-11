@@ -82,11 +82,11 @@ class ProductSpecificPrice extends CommonAbstractType
         //If context multi-shop, hide shop selector
         //Else show selector
         if (count($this->shops) == 1) {
-            $builder->add('sp_id_shop', FormType\HiddenType::class, array(
+            $builder->add('sp_id_shop', 'Symfony\Component\Form\Extension\Core\Type\HiddenType', array(
                 'required' =>  false,
             ));
         } else {
-            $builder->add('sp_id_shop', FormType\ChoiceType::class, array(
+            $builder->add('sp_id_shop', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices' =>  $this->shops,
                 'choices_as_values' => true,
                 'required' =>  false,
@@ -95,28 +95,28 @@ class ProductSpecificPrice extends CommonAbstractType
             ));
         }
 
-        $builder->add('sp_id_currency', FormType\ChoiceType::class, array(
+        $builder->add('sp_id_currency', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->currencies,
             'choices_as_values' => true,
             'required' =>  false,
             'label' =>  false,
             'placeholder' =>  $this->translator->trans('All currencies', [], 'AdminProducts'),
         ))
-        ->add('sp_id_country', FormType\ChoiceType::class, array(
+        ->add('sp_id_country', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->countries,
             'choices_as_values' => true,
             'required' =>  false,
             'label' =>  false,
             'placeholder' => $this->translator->trans('All countries', [], 'AdminProducts'),
         ))
-        ->add('sp_id_group', FormType\ChoiceType::class, array(
+        ->add('sp_id_group', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->groups,
             'choices_as_values' => true,
             'required' =>  false,
             'label' =>  false,
             'placeholder' => $this->translator->trans('All groups', [], 'AdminProducts'),
         ))
-        ->add('sp_id_customer', \PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType::class, array(
+        ->add('sp_id_customer', 'PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType', array(
             'remote_url' => $this->context->getAdminLink('AdminCustomers', true).'&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
             'mapping_value' => 'id_customer',
             'mapping_name' => 'fullname_and_email',
@@ -126,7 +126,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Add customer', [], 'AdminProducts'),
         ))
-        ->add('sp_id_product_attribute', FormType\ChoiceType::class, array(
+        ->add('sp_id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  [],
             'choices_as_values' => true,
             'required' =>  false,
@@ -134,17 +134,17 @@ class ProductSpecificPrice extends CommonAbstractType
             'label' => $this->translator->trans('Combination', [], 'AdminProducts'),
             'attr' => ['data-action' =>  $this->router->generate('admin_get_product_combinations')],
         ))
-        ->add('sp_from', PsFormType\DatePickerType::class, array(
+        ->add('sp_from', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
             'label' => $this->translator->trans('Available from', [], 'AdminProducts'),
             'attr' => ['placeholder' => 'YYYY-MM-DD HH:II']
         ))
-        ->add('sp_to', PsFormType\DatePickerType::class, array(
+        ->add('sp_to', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
             'label' => $this->translator->trans('to', [], 'AdminProducts'),
             'attr' => ['placeholder' => 'YYYY-MM-DD HH:II']
         ))
-        ->add('sp_from_quantity', FormType\NumberType::class, array(
+        ->add('sp_from_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
             'label' => $this->translator->trans('Starting at', [], 'AdminProducts'),
             'constraints' => array(
@@ -152,22 +152,22 @@ class ProductSpecificPrice extends CommonAbstractType
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('sp_price', FormType\MoneyType::class, array(
+        ->add('sp_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Product price (tax excl.)', [], 'AdminProducts'),
             'attr' => ['class' => 'price'],
             'currency' => $this->currency->iso_code,
         ))
-        ->add('leave_bprice', FormType\CheckboxType::class, array(
+        ->add('leave_bprice', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'label'    => $this->translator->trans('Leave base price:', [], 'AdminProducts'),
             'required' => false,
         ))
-        ->add('sp_reduction', FormType\MoneyType::class, array(
+        ->add('sp_reduction', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'label' => $this->translator->trans('Reduction', [], 'AdminProducts'),
             'required' => false,
             'currency' => $this->currency->iso_code,
         ))
-        ->add('sp_reduction_type', FormType\ChoiceType::class, array(
+        ->add('sp_reduction_type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Reduction type', [], 'AdminProducts'),
             'choices'  => array(
                 '€' => 'amount',
@@ -176,7 +176,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'choices_as_values' => true,
             'required' => true,
         ))
-        ->add('sp_reduction_tax', FormType\ChoiceType::class, array(
+        ->add('sp_reduction_tax', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Reduction tax', [], 'AdminProducts'),
             'choices'  => array(
                 $this->translator->trans('Tax excluded', [], 'AdminProducts') => '0',
@@ -185,11 +185,11 @@ class ProductSpecificPrice extends CommonAbstractType
             'choices_as_values' => true,
             'required' => true,
         ))
-        ->add('save', FormType\ButtonType::class, array(
+        ->add('save', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' => $this->translator->trans('Done', [], 'AdminProducts'),
             'attr' => array('class' => 'btn-primary-outline js-save'),
         ))
-        ->add('cancel', FormType\ButtonType::class, array(
+        ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' => $this->translator->trans('Cancel', [], 'AdminProducts'),
             'attr' => array('class' => 'btn-default-outline js-cancel'),
         ));
@@ -203,7 +203,7 @@ class ProductSpecificPrice extends CommonAbstractType
             }
 
             //bypass SF validation, define submitted value in choice list
-            $form->add('sp_id_product_attribute', FormType\ChoiceType::class, array(
+            $form->add('sp_id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices' =>  [$data['sp_id_product_attribute'] => ''],
                 'choices_as_values' => true,
                 'required' =>  false,

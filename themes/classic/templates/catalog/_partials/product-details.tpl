@@ -41,5 +41,15 @@
           </dl>
         </section>
       {/if}
-  {/block}
+    {/block}
+
+    {block name='product_condition'}
+      {if $product.condition}
+        <div class="product-condition">
+          <label class="label">{l s='Condition'} </label>
+          <link itemprop="itemCondition" href="{$product.condition.schema_url}"/>
+          <span>{$product.condition.label}</span>
+        </div>
+      {/if}
+    {/block}
 </div>

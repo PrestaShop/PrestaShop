@@ -12,7 +12,7 @@
     <ul class="product-images">
       {foreach from=$product.images item=image}
         <li class="thumb-container">
-          <img data-image-large-src="{$image.large.url}" class="thumb js-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="100" itemprop="image" />
+          <img data-image-large-src="{$image.bySize.medium_default.url}" class="thumb js-thumb" src="{$image.bySize.home_default.url}" alt="{$image.legend}" title="{$image.legend}" width="100" itemprop="image" />
         </li>
       {/foreach}
     </ul>

@@ -4,7 +4,6 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Core\Product;
 
 use Phake;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Core\Price\PricePresenterInterface;
 use Product;
@@ -12,9 +11,9 @@ use Language;
 use Link;
 use Context;
 use Adapter_ProductPriceCalculator;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter as BasePricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
 
-class PricePresenter extends BasePricePresenter
+class PriceFormatter extends BasePricePresenter
 {
     public function convertAmount($price)
     {
@@ -60,7 +59,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->language = new Language;
     }
 
-    private function _presentProduct($method, $field)
+    private function _presentProduct($presenterClass, $field)
     {
         $translator = Phake::mock('Symfony\Component\Translation\TranslatorInterface');
         Phake::when($translator)->trans(Phake::anyParameters())->thenReturn('some label');
@@ -73,15 +72,15 @@ class ProductPresenterTest extends UnitTestCase
             ['id_image' => 0, 'associatedVariants' => []]
         ]);
 
-        $presenter = new ProductPresenter(
+        $presenter = new $presenterClass(
             $imageRetriever,
             $link,
-            new PricePresenter,
+            new PriceFormatter,
             Phake::mock('PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever'),
             $translator
         );
 
-        $product = $presenter->$method(
+        $product = $presenter->present(
             $this->settings,
             $this->product,
             $this->language
@@ -96,12 +95,12 @@ class ProductPresenterTest extends UnitTestCase
 
     private function getPresentedProduct($field = null)
     {
-        return $this->_presentProduct('present', $field);
+        return $this->_presentProduct('PrestaShop\PrestaShop\Core\Product\ProductPresenter', $field);
     }
 
     private function getPresentedProductForListing($field = null)
     {
-        return $this->_presentProduct('presentForListing', $field);
+        return $this->_presentProduct('PrestaShop\PrestaShop\Core\Product\ProductListingPresenter', $field);
     }
 
 
@@ -264,6 +263,20 @@ class ProductPresenterTest extends UnitTestCase
                 'label' => 'some label'
             ]],
             $this->getPresentedProduct('labels')
+        );
+    }
+
+    public function test_product_has_new_label_if_condition_must_be_shown()
+    {
+        $this->product['show_condition'] = true;
+        $this->product['condition'] = 'new';
+        $this->assertEquals(
+            [
+                'type'  => 'new',
+                'label' => 'some label',
+                'schema_url' => 'https://schema.org/NewCondition',
+            ],
+            $this->getPresentedProduct('condition')
         );
     }
 

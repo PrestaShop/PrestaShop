@@ -1455,7 +1455,7 @@ CREATE TABLE `PREFIX_product` (
   `id_product_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date NOT NULL DEFAULT '0000-00-00',
-  `show_condition` tinyint(1) NOT NULL DEFAULT '1',
+  `show_condition` tinyint(1) NOT NULL DEFAULT '0',
   `condition` ENUM('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',

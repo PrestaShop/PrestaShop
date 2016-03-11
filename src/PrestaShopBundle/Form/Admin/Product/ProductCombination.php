@@ -63,14 +63,14 @@ class ProductCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('id_product_attribute', FormType\HiddenType::class, array(
+        $builder->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType', array(
             'required' => false,
         ))
-        ->add('attribute_reference', FormType\TextType::class, array(
+        ->add('attribute_reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
             'label' => $this->translator->trans('Reference', [], 'AdminProducts')
         ))
-        ->add('attribute_ean13', FormType\TextType::class, array(
+        ->add('attribute_ean13', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
             'error_bubbling' => true,
             'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
@@ -78,36 +78,36 @@ class ProductCombination extends CommonAbstractType
                 new Assert\Regex("/^[0-9]{0,13}$/"),
             )
         ))
-        ->add('attribute_isbn', FormType\TextType::class, array(
+        ->add('attribute_isbn', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
             'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
         ))
-        ->add('attribute_upc', FormType\TextType::class, array(
+        ->add('attribute_upc', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
             'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\Regex("/^[0-9]{0,12}$/"),
             )
         ))
-        ->add('attribute_wholesale_price', FormType\MoneyType::class, array(
+        ->add('attribute_wholesale_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Cost price', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
-        ->add('attribute_price', FormType\MoneyType::class, array(
+        ->add('attribute_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
             'attr' => ['class' => 'attribute_priceTE']
         ))
-        ->add('attribute_priceTI', FormType\MoneyType::class, array(
+        ->add('attribute_priceTI', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'mapped' => false,
             'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
             'attr' => ['class' => 'attribute_priceTI']
         ))
-        ->add('attribute_ecotax', FormType\MoneyType::class, array(
+        ->add('attribute_ecotax', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Ecotax', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
@@ -116,16 +116,16 @@ class ProductCombination extends CommonAbstractType
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('attribute_weight', FormType\NumberType::class, array(
+        ->add('attribute_weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
             'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts')
         ))
-        ->add('attribute_unity', FormType\MoneyType::class, array(
+        ->add('attribute_unity', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Impact on unit price', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
-        ->add('attribute_minimal_quantity', FormType\NumberType::class, array(
+        ->add('attribute_minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
             'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
             'constraints' => array(
@@ -133,16 +133,16 @@ class ProductCombination extends CommonAbstractType
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('available_date_attribute', PsFormType\DatePickerType::class, array(
+        ->add('available_date_attribute', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
             'label' => $this->translator->trans('Availability date', [], 'AdminProducts'),
             'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD']
         ))
-        ->add('attribute_default', FormType\CheckboxType::class, array(
+        ->add('attribute_default', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'label'    => $this->translator->trans('Set as default combination', [], 'AdminProducts'),
             'required' => false,
         ))
-        ->add('attribute_quantity', FormType\NumberType::class, array(
+        ->add('attribute_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => true,
             'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
             'constraints' => array(
@@ -150,7 +150,7 @@ class ProductCombination extends CommonAbstractType
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('id_image_attr', FormType\ChoiceType::class, array(
+        ->add('id_image_attr', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => array(),
             'choices_as_values' => true,
             'required' => false,
@@ -171,7 +171,7 @@ class ProductCombination extends CommonAbstractType
                 }
             }
 
-            $form->add('id_image_attr', FormType\ChoiceType::class, array(
+            $form->add('id_image_attr', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices' => $choices,
                 'required' => false,
                 'expanded' => true,

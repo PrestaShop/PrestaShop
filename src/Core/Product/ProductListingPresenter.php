@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * 2007-2015 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -24,9 +24,29 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Core\Foundation\Templating;
+namespace PrestaShop\PrestaShop\Core\Product;
 
-interface PresentationSettingsInterface
+class ProductListingPresenter extends ProductPresenterAbstract
 {
+    public function present(
+        ProductPresentationSettings $settings,
+        array $product,
+        \Language $language
+    ) {
+        $presentedProduct = parent::present(
+            $settings,
+            $product,
+            $language
+        );
 
+        if ($product['id_product_attribute'] != 0 && !$settings->allow_add_variant_to_cart_from_listing) {
+            $presentedProduct['add_to_cart_url'] = null;
+        }
+
+        if ($product['customizable'] == 2 || !empty($product['customization_required'])) {
+            $presentedProduct['add_to_cart_url'] = null;
+        }
+
+        return $presentedProduct;
+    }
 }

@@ -4,9 +4,10 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 use Address;
 use AddressFormat;
 use Carrier;
@@ -20,7 +21,7 @@ use OrderReturn;
 use Product;
 use Tools;
 
-class OrderPresenter
+class OrderPresenter implements PresenterInterface
 {
     /* @var CartPresenter */
     private $cartPresenter;
@@ -28,18 +29,18 @@ class OrderPresenter
     /* @var ObjectPresenter */
     private $objectPresenter;
 
-    /* @var PricePresenter */
-    private $pricePresenter;
+    /* @var PriceFormatter */
+    private $priceFormatter;
 
     /* @var Translator */
     private $translator;
 
     public function __construct()
     {
-        $this->cartPresenter = new CartPresenter();
+        $this->cartPresenter   = new CartPresenter();
         $this->objectPresenter = new ObjectPresenter();
-        $this->pricePresenter = new PricePresenter();
-        $this->translator = new Translator(new LegacyContext());
+        $this->priceFormatter  = new PriceFormatter();
+        $this->translator      = new Translator(new LegacyContext());
     }
 
     /**
@@ -47,8 +48,12 @@ class OrderPresenter
      *
      * @return array
      */
-    public function present(Order $order)
+    public function present($order)
     {
+        if (!is_a($order, 'Order')) {
+            throw new \Exception("OrderPresenter can only present instance of Order");
+        }
+
         return [
             'products' => $this->getProducts($order),
             'products_count' => count($this->getProducts($order)),
@@ -71,21 +76,21 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getProducts(Order $order)
+    private function getProducts(Order $order)
     {
         $cart = new Cart($order->id_cart);
 
         $orderProducts = $order->getCartProducts();
         $cartProducts = $this->cartPresenter->present($cart);
 
-        foreach($orderProducts as &$orderProduct) {
+        foreach ($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
-            $orderProduct['price'] = $this->pricePresenter->format($orderProduct['product_price']);
+            $orderProduct['price'] = $this->priceFormatter->format($orderProduct['product_price']);
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
-            $orderProduct['total'] = $this->pricePresenter->format($orderProduct['total_price']);
+            $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price']);
 
-            foreach($cartProducts['products'] as $cartProduct) {
-                if($cartProduct['id_product'] === $orderProduct['product_id']) {
+            foreach ($cartProducts['products'] as $cartProduct) {
+                if ($cartProduct['id_product'] === $orderProduct['product_id']) {
                     $orderProduct['attributes'] = $cartProduct['attributes'];
                     $orderProduct['cover'] = $cartProduct['cover'];
                 }
@@ -104,16 +109,16 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getAmounts(Order $order)
+    private function getAmounts(Order $order)
     {
         $amounts = [];
-        $ubtotals = [];
+        $subtotals = [];
 
         if (Configuration::get('PS_TAX_DISPLAY')) {
             $subtotals['tax'] = [
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', [], 'Cart'),
-                'amount' => $this->pricePresenter->format(
+                'amount' => $this->priceFormatter->format(
                     $order->total_paid_tax_incl - $order->total_paid_tax_excl
                 ),
             ];
@@ -122,7 +127,7 @@ class OrderPresenter
         $subtotals['products'] = [
             'type' => 'products',
             'label' => $this->translator->trans('Products', [], 'Cart'),
-            'amount' =>  $this->pricePresenter->format($order->total_products)
+            'amount' =>  $this->priceFormatter->format($order->total_products)
         ];
 
         $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
@@ -130,25 +135,25 @@ class OrderPresenter
         $subtotals['shipping'] = [
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', [], 'Cart'),
-            'amount' => $shipping_cost != 0 ? $this->pricePresenter->format($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
+            'amount' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
         ];
 
         $discount_amount = ($this->includeTaxes()) ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
         $subtotals['discounts'] = [
             'type' => 'discount',
             'label' => $this->translator->trans('Discount', [], 'Cart'),
-            'amount' => $discount_amount != 0 ? $this->pricePresenter->format($discount_amount) : 0,
+            'amount' => $discount_amount != 0 ? $this->priceFormatter->format($discount_amount) : 0,
         ];
 
         $amounts['total'] = [
             'type' => 'total',
             'label' => $this->translator->trans('Total', [], 'Order'),
-            'amount' => $this->pricePresenter->format($order->total_paid),
+            'amount' => $this->priceFormatter->format($order->total_paid),
         ];
         $amounts['total_paid'] = [
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', [], 'Order'),
-            'amount' => $this->pricePresenter->format($order->total_paid_real),
+            'amount' => $this->priceFormatter->format($order->total_paid_real),
         ];
 
         $amounts['subtotals'] = $subtotals;
@@ -161,7 +166,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getDetails(Order $order)
+    private function getDetails(Order $order)
     {
         $context = Context::getContext();
 
@@ -185,7 +190,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getHistory(Order $order)
+    private function getHistory(Order $order)
     {
         $orderHistory = [];
         $context = Context::getContext();
@@ -205,7 +210,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getShipping(Order $order)
+    private function getShipping(Order $order)
     {
         $shippingList = $order->getShipping();
         $orderShipping = [];
@@ -239,7 +244,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getMessages(Order $order)
+    private function getMessages(Order $order)
     {
         $messages = [];
         $customerMessages = CustomerMessage::getMessagesByOrderId((int) $order->id, false);
@@ -265,7 +270,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getCarrier(Order $order)
+    private function getCarrier(Order $order)
     {
         $carrier = new Carrier((int) $order->id_carrier, (int) $order->id_lang);
         $orderCarrier = $this->objectPresenter->present($carrier);
@@ -279,7 +284,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getAddresses(Order $order)
+    private function getAddresses(Order $order)
     {
         $orderAddresses = [
             'delivery' => [],
@@ -305,7 +310,7 @@ class OrderPresenter
      *
      * @return string
      */
-    public function getFollowUp(Order $order)
+    private function getFollowUp(Order $order)
     {
         $carrier = $this->getCarrier($order);
         if (!empty($carrier['url']) && !empty($order->shipping_number)) {

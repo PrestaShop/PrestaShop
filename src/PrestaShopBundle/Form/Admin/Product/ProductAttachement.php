@@ -61,7 +61,7 @@ class ProductAttachement extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('file', FormType\FileType::class, array(
+        $builder->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
             'required' => false,
             'label' => $this->translator->trans('File', [], 'AdminProducts'),
             'constraints' => array(
@@ -69,7 +69,7 @@ class ProductAttachement extends CommonAbstractType
                 new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
             )
         ))
-        ->add('name', FormType\TextType::class, array(
+        ->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'label' =>  $this->translator->trans('Filename', [], 'AdminProducts'),
             'attr' =>  ['placeholder' => $this->translator->trans('Title', [], 'AdminProducts')],
             'constraints' => array(
@@ -77,11 +77,11 @@ class ProductAttachement extends CommonAbstractType
                 new Assert\Length(array('min' => 2))
             )
         ))
-        ->add('description', FormType\TextType::class, array(
+        ->add('description', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
             'attr' =>  ['placeholder' => $this->translator->trans('Description', [], 'AdminProducts')],
         ))
-        ->add('add', FormType\ButtonType::class, array(
+        ->add('add', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' =>  $this->translator->trans('Add', [], 'AdminProducts'),
             'attr' =>  ['class' => 'btn-primary-outline pull-right']
         ));
@@ -92,8 +92,8 @@ class ProductAttachement extends CommonAbstractType
             //if this partial form is submit from a parent form, disable it
             if ($form->getParent()) {
                 $event->setData([]);
-                $form->add('file', FormType\FileType::class, array('mapped' => false));
-                $form->add('name', FormType\TextType::class, array('mapped' => false));
+                $form->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array('mapped' => false));
+                $form->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array('mapped' => false));
             }
         });
     }

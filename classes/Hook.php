@@ -292,6 +292,133 @@ class HookCore extends ObjectModel
         return $module_list;
     }
 
+    public function isModuleRegisteredOnHook($module_instance, $hook_name, $id_shop)
+    {
+        $prefix = _DB_PREFIX_;
+        $id_hook = (int)Hook::getIdByName($hook_name);
+        $sql = "SELECT * FROM {$prefix}hook_module
+                  WHERE `id_hook` = $id_hook
+                  AND `id_module` = {$module_instance->id}
+                  AND `id_shop` = $id_shop";
+
+        $rows = Db::getInstance()->executeS($sql);
+        return !empty($rows);
+    }
+
+    public static function registerHook($module_instance, $hook_name, $shop_list = null)
+    {
+        $return = true;
+        if (is_array($hook_name)) {
+            $hook_names = $hook_name;
+        } else {
+            $hook_names = array($hook_name);
+        }
+
+        foreach ($hook_names as $hook_name) {
+            // Check hook name validation and if module is installed
+            if (!Validate::isHookName($hook_name)) {
+                throw new PrestaShopException('Invalid hook name');
+            }
+            if (!isset($module_instance->id) || !is_numeric($module_instance->id)) {
+                return false;
+            }
+
+            // Retrocompatibility
+            $hook_name_bak = $hook_name;
+            if ($alias = Hook::getRetroHookName($hook_name)) {
+                $hook_name = $alias;
+            }
+
+            Hook::exec('actionModuleRegisterHookBefore', array('object' => $module_instance, 'hook_name' => $hook_name));
+            // Get hook id
+            $id_hook = Hook::getIdByName($hook_name);
+
+            // If hook does not exist, we create it
+            if (!$id_hook) {
+                $new_hook = new Hook();
+                $new_hook->name = pSQL($hook_name);
+                $new_hook->title = pSQL($hook_name);
+                $new_hook->add();
+                $id_hook = $new_hook->id;
+                if (!$id_hook) {
+                    return false;
+                }
+            }
+
+            // If shop lists is null, we fill it with all shops
+            if (is_null($shop_list)) {
+                $shop_list = Shop::getCompleteListOfShopsID();
+            }
+
+            $shop_list_employee = Shop::getShops(true, null, true);
+
+            foreach ($shop_list as $shop_id) {
+                // Check if already register
+                $sql = 'SELECT hm.`id_module`
+                    FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
+                    WHERE hm.`id_module` = '.(int)$module_instance->id.' AND h.`id_hook` = '.$id_hook.'
+                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int)$shop_id;
+                if (Db::getInstance()->getRow($sql)) {
+                    continue;
+                }
+
+                // Get module position in hook
+                $sql = 'SELECT MAX(`position`) AS position
+                    FROM `'._DB_PREFIX_.'hook_module`
+                    WHERE `id_hook` = '.(int)$id_hook.' AND `id_shop` = '.(int)$shop_id;
+                if (!$position = Db::getInstance()->getValue($sql)) {
+                    $position = 0;
+                }
+
+                // Register module in hook
+                $return &= Db::getInstance()->insert('hook_module', array(
+                    'id_module' => (int)$module_instance->id,
+                    'id_hook' => (int)$id_hook,
+                    'id_shop' => (int)$shop_id,
+                    'position' => (int)($position + 1),
+                ));
+
+                if (!in_array($shop_id, $shop_list_employee)) {
+                    $where = '`id_module` = '.(int)$module_instance->id.' AND `id_shop` = '.(int)$shop_id;
+                    $return &= Db::getInstance()->delete('module_shop', $where);
+                }
+            }
+
+            Hook::exec('actionModuleRegisterHookAfter', array('object' => $module_instance, 'hook_name' => $hook_name));
+        }
+        return $return;
+    }
+
+    public static function unregisterHook($module_instance, $hook_name, $shop_list = null)
+    {
+        if (is_numeric($hook_name)) {
+            // $hook_name passed it the id_hook
+            $hook_id = $hook_name;
+            $hook_name = Hook::getNameById((int)$hook_id);
+        } else {
+            $hook_id = Hook::getIdByName($hook_name);
+        }
+
+        if (!$hook_id) {
+            return false;
+        }
+
+        Hook::exec('actionModuleUnRegisterHookBefore', array('object' => $module_instance, 'hook_name' => $hook_name));
+
+        // Unregister module on hook by id
+        $sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
+            WHERE `id_module` = '.(int)$module_instance->id.' AND `id_hook` = '.(int)$hook_id
+            .(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
+        $result = Db::getInstance()->execute($sql);
+
+        // Clean modules position
+        $module_instance->cleanPositions($hook_id, $shop_list);
+
+        Hook::exec('actionModuleUnRegisterHookAfter', array('object' => $module_instance, 'hook_name' => $hook_name));
+
+        return $result;
+    }
+
     /**
      * Get list of modules we can execute per hook
      *

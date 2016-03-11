@@ -150,7 +150,7 @@ class AttributeController extends FrameworkBundleAdminController
             $attribute = $product->getAttributeCombinationsById($combinationId, $locales[0]['id_lang']);
 
             $form = $this->createForm(
-                \PrestaShopBundle\Form\Admin\Product\ProductCombination::class,
+                'PrestaShopBundle\Form\Admin\Product\ProductCombination',
                 $modelMapper->getFormCombination($attribute[0])
             );
 

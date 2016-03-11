@@ -1,6 +1,6 @@
 <?php
 
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
 class CheckoutDeliveryStepCore extends AbstractCheckoutStep
 {
@@ -71,7 +71,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     {
         if ($this->getGiftCost() != 0) {
             $taxLabel = '';
-            $pricePresenter = new PricePresenter();
+            $priceFormatter = new PriceFormatter();
 
             if ($this->getIncludeTaxes() && $this->getDisplayTaxesLabel()) {
                 $taxLabel .= ' tax incl.';
@@ -85,7 +85,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                     [],
                     'Checkout'
                 ),
-                $pricePresenter->convertAndFormat($this->getGiftCost()),
+                $priceFormatter->convertAndFormat($this->getGiftCost()),
                 $taxLabel
             );
         }
@@ -114,8 +114,9 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             // - user has clicked on "continue"
             // - there are delivery options
             // - the is a selected delivery option
+            $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
             $this->step_is_complete =
-                !empty($this->getCheckoutSession()->getDeliveryOptions()) && $this->getCheckoutSession()->getSelectedDeliveryOption()
+                !empty($deliveryOptions) && $this->getCheckoutSession()->getSelectedDeliveryOption()
             ;
         }
 
