@@ -4642,12 +4642,15 @@ a:hover {
     border: 2px solid #414141; }
 
 .h1 {
-  font-size: 1.5em; }
-
-.h1 {
   font-size: 1.25em; }
 
-.h3,
+.h3 {
+  font-size: 1em; }
+
+.h1, .h2, .h3 {
+  text-transform: uppercase;
+  color: #414141; }
+
 .h4 {
   font-size: 1.125em;
   font-weight: 700;
@@ -5353,6 +5356,13 @@ body#checkout {
 
 .page-order table thead th {
   text-align: center; }
+
+#authentication .form-control-comment {
+  display: none; }
+
+#authentication .tooltip.tooltip-bottom {
+  padding: 0;
+  margin: 0; }
 
 /*** Most of the customer accpunt pages ***/
 .page-customer-account #content {
@@ -6713,14 +6723,14 @@ li.product-label {
   .block-contact .block-contact-title {
     color: #414141; }
 
-.block-cms {
-  margin-top: 20px; }
-  .block-cms li a {
+.linklist {
+  padding-top: 20px; }
+  .linklist li a {
     color: #acaaa6;
     cursor: pointer; }
-    .block-cms li a:hover {
+    .linklist li a:hover {
       color: #2fb5d2; }
-  .block-cms .blockcms-title a {
+  .linklist .blockcms-title a {
     color: #414141; }
 
 .account-list a {
@@ -6777,10 +6787,8 @@ li.product-label {
     .googleplus.icon-gray:hover {
       background-image: url(../css/c1a65805f759901a39d10eb854c1dcf2.svg); }
 
-#block_myaccount_infos {
-  margin-top: 20px; }
-  #block_myaccount_infos .myaccount-title a {
-    color: #414141; }
+#block_myaccount_infos .myaccount-title a {
+  color: #414141; }
 
 .pinterest {
   background-image: url(../css/afb2ed6d67613a724a420a39b4fe5b0d.svg); }
