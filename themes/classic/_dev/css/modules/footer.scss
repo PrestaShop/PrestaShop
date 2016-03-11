@@ -14,8 +14,8 @@
     color:$gray-darker;
   }
 }
-.block-cms {
-  margin-top: $medium-space;
+.linklist {
+  padding-top: $medium-space;
   li a{
     color: $gray;
     cursor: pointer;
@@ -91,7 +91,6 @@
   }
 }
 #block_myaccount_infos{
-  margin-top: $medium-space;
   .myaccount-title a{
     color:$gray-darker;
   }

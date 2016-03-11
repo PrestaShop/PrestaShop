@@ -28,6 +28,9 @@ meta:
 global_settings:
   configuration:
     PS_IMAGE_QUALITY: png
+  modules:
+   to_enable:
+     - ps_linklist
   hooks:
     modules_to_hook:
       displayNav1:
@@ -49,7 +52,6 @@ global_settings:
         - blocknewsletter
         - blocksocial
       displayFooter:
-        - blockcms
         - blockmyaccount
         - blockcontact
       displayLeftColumn:
