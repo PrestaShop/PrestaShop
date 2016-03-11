@@ -114,8 +114,9 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             // - user has clicked on "continue"
             // - there are delivery options
             // - the is a selected delivery option
+            $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
             $this->step_is_complete =
-                !empty($this->getCheckoutSession()->getDeliveryOptions()) && $this->getCheckoutSession()->getSelectedDeliveryOption()
+                !empty($deliveryOptions) && $this->getCheckoutSession()->getSelectedDeliveryOption()
             ;
         }
 
