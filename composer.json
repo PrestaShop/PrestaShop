@@ -37,8 +37,8 @@
   "require": {
     "php": ">=5.4",
     "symfony/symfony": "~2.8.0",
-    "doctrine/dbal": "~2.5.0",
-    "doctrine/orm": "~2.5.0",
+    "doctrine/dbal": "~2.5.3",
+    "doctrine/orm": "~2.5.3",
     "ext-zip": "*",
     "doctrine/doctrine-bundle": "1.5.2",
     "symfony/swiftmailer-bundle": "2.3.8",
