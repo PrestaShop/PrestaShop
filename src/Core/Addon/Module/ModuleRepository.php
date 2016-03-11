@@ -57,7 +57,12 @@ class ModuleRepository implements AddonRepositoryInterface
      */
     private $moduleUpdater;
 
-    const CACHE_FILE = _PS_CACHE_DIR_.'modules.json';
+    /**
+     * Module Data Provider
+     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+     */
+    private $cacheFilePath;
+
 
     /**
      * Contains data from cache file about modules on disk
@@ -66,13 +71,15 @@ class ModuleRepository implements AddonRepositoryInterface
      */
     private $cache;
 
-    public function __construct(AdminModuleDataProvider $adminModulesProvider,
-                                ModuleDataProvider $modulesProvider,
-                                ModuleDataUpdater $modulesUpdater)
-    {
+    public function __construct(
+        AdminModuleDataProvider $adminModulesProvider,
+        ModuleDataProvider $modulesProvider,
+        ModuleDataUpdater $modulesUpdater
+    ) {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->moduleProvider      = $modulesProvider;
         $this->moduleUpdater       = $modulesUpdater;
+        $this->cacheFilePath       = _PS_CACHE_DIR_.'modules.json';
         $this->cache               = $this->readCacheFile();
     }
 
@@ -180,8 +187,10 @@ class ModuleRepository implements AddonRepositoryInterface
      */
     public function getList()
     {
-        return array_merge($this->getAddonsCatalogModules(),
-            $this->getModulesOnDisk());
+        return array_merge(
+            $this->getAddonsCatalogModules(),
+            $this->getModulesOnDisk()
+        );
     }
 
     private function getAddonsCatalogModules()
@@ -215,8 +224,10 @@ class ModuleRepository implements AddonRepositoryInterface
 
         // We check that we have data from the marketplace
         $module_catalog_data = $this->adminModuleProvider->getCatalogModules(['name' => $name]);
-        $attributes = array_merge($attributes,
-            (array)array_shift($module_catalog_data));
+        $attributes = array_merge(
+            $attributes,
+            (array)array_shift($module_catalog_data)
+        );
 
 
         // Now, we check that cache is up to date
@@ -252,8 +263,10 @@ class ModuleRepository implements AddonRepositoryInterface
                             ?$tmp_module->author_uri:false,
                     'limited_countries' => $tmp_module->limited_countries,
                     'parent_class' => get_parent_class($name),
-                    'is_configurable' => $tmp_module->is_configurable = method_exists($tmp_module,
-                        'getContent')?1:0,
+                    'is_configurable' => $tmp_module->is_configurable = method_exists(
+                        $tmp_module,
+                        'getContent'
+                        ) ? 1 : 0,
                     'need_instance' => isset($tmp_module->need_instance)?$tmp_module->need_instance
                             :0,
                     'productType' => 'Module',
@@ -273,9 +286,9 @@ class ModuleRepository implements AddonRepositoryInterface
 
         // ToDo: We need to remove all the parts from this function.
         // A new class will be created in order to
-         if (!isset($attributes['refs'])) {
-             $attributes['refs'] = ['unknown'];
-         }
+        if (!isset($attributes['refs'])) {
+            $attributes['refs'] = ['unknown'];
+        }
 
         if (!isset($attributes['media'])) {
             $attributes['media'] = (object)[
@@ -285,6 +298,8 @@ class ModuleRepository implements AddonRepositoryInterface
                     'screenshotsUrls' => [],
                     'videoUrl' => null,
             ];
+        } else {
+            $attributes['media'] = (object)$attributes['media'];
         }
 
         if (!isset($attributes['price'])) {
@@ -342,10 +357,8 @@ class ModuleRepository implements AddonRepositoryInterface
      */
     private function generateCacheFile($data)
     {
-        $cache_file_path = self::CACHE_FILE;
         $encoded_data          = json_encode($data);
-
-        file_put_contents($cache_file_path, $encoded_data);
+        file_put_contents($this->cacheFilePath, $encoded_data);
 
         return $data;
     }
@@ -357,13 +370,11 @@ class ModuleRepository implements AddonRepositoryInterface
      */
     private function readCacheFile()
     {
-        $file_path = self::CACHE_FILE;
-
-        // YML file not found ? Generate it
-        if (!file_exists($file_path)) {
+        // JSON file not found ? Generate it
+        if (!file_exists($this->cacheFilePath)) {
             return [];
         }
-        $data = json_decode(file_get_contents($file_path), true);
+        $data = json_decode(file_get_contents($this->cacheFilePath), true);
         return ($data == null)?[]:$data;
     }
 }
