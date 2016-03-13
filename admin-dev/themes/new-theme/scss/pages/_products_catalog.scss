@@ -14,3 +14,10 @@
   }
 
 }
+
+.emptycatalog-icon {
+  > .material-icons {
+    color: $gray-light;
+    font-size: 12rem;
+  }
+}
