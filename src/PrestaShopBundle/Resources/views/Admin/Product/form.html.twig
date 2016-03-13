@@ -384,16 +384,23 @@
                     </div>
 
                     <div id="virtual_product" data-action="{{ path('admin_product_virtual_save_action') }}" data-action-remove="{{ path('admin_product_virtual_remove_action') }}">
-                      <h2>{{ form.step3.virtual_product.vars.label }}</h2>
-                      <fieldset class="form-group form-inline">
-                        {{ form_widget(form.step3.virtual_product.is_virtual_file) }}
-                      </fieldset>
+
+                      <div class="row">
+                        <div class="col-md-4">
+                          <h2>{{ form.step3.virtual_product.vars.label }}</h2>
+                        </div>
+                        <div class="col-md-8">
+                          <fieldset class="form-group">
+                            {{ form_widget(form.step3.virtual_product.is_virtual_file) }}
+                          </fieldset>
+                        </div>
+                      </div>
 
                       <div id="virtual_product_content" class="row col-md-8">
                         {{ form_errors(form.step3.virtual_product) }}
                         <div class="col-md-12">
                           <fieldset class="form-group">
-                            <label>{{ form.step3.virtual_product.file.vars.label }}</label>
+                            <label class="form-control-label">{{ form.step3.virtual_product.file.vars.label }}</label>
                             <div id="form_step3_virtual_product_file_input" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'hide' : 'show' }}">
                               {{ form_widget(form.step3.virtual_product.file) }}
                             </div>
@@ -405,28 +412,28 @@
                         </div>
                         <div class="col-md-6">
                           <fieldset class="form-group">
-                            <label>{{ form.step3.virtual_product.name.vars.label }}</label>
+                            <label class="form-control-label">{{ form.step3.virtual_product.name.vars.label }}</label>
                             {{ form_errors(form.step3.virtual_product.name) }}
                             {{ form_widget(form.step3.virtual_product.name) }}
                           </fieldset>
                         </div>
                         <div class="col-md-6">
                           <fieldset class="form-group">
-                            <label>{{ form.step3.virtual_product.nb_downloadable.vars.label }}</label>
+                            <label class="form-control-label">{{ form.step3.virtual_product.nb_downloadable.vars.label }}</label>
                             {{ form_errors(form.step3.virtual_product.nb_downloadable) }}
                             {{ form_widget(form.step3.virtual_product.nb_downloadable) }}
                           </fieldset>
                         </div>
                         <div class="col-md-6">
                           <fieldset class="form-group">
-                            <label>{{ form.step3.virtual_product.expiration_date.vars.label }}</label>
+                            <label class="form-control-label">{{ form.step3.virtual_product.expiration_date.vars.label }}</label>
                             {{ form_errors(form.step3.virtual_product.expiration_date) }}
                             {{ form_widget(form.step3.virtual_product.expiration_date) }}
                           </fieldset>
                         </div>
                         <div class="col-md-6">
                           <fieldset class="form-group">
-                            <label>{{ form.step3.virtual_product.nb_days.vars.label }}</label>
+                            <label class="form-control-label">{{ form.step3.virtual_product.nb_days.vars.label }}</label>
                             {{ form_errors(form.step3.virtual_product.nb_days) }}
                             {{ form_widget(form.step3.virtual_product.nb_days) }}
                           </fieldset>
