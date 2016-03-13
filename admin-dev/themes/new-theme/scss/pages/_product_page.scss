@@ -96,6 +96,12 @@
     bottom: 0;
     left: $size-navbar-width;
     right: 0;
+
+    .for-switch {
+      display: inline-block;
+      margin-left: rem(20px);
+      margin-right: rem(4px);
+    }
   }
 
   .form-contenttab {
@@ -319,30 +325,29 @@
       cursor: pointer
     }
   }
-}
 
+  .pack-product {
+    position: relative;
+    border: rem(1px) solid $gray-light;
+    border-radius: $border-radius;
 
-.pack-product {
-  position: relative;
-  border: rem(1px) solid $gray-light;
-  border-radius: $border-radius;
+    > .cover {
+      width: 100%;
+    }
 
-  > .cover {
-    width: 100%;
-  }
-
-  > .btn-danger {
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    top: rem(1px);
-    right: rem(1px);
-  }
-
-  &:hover {
     > .btn-danger {
-      opacity: 1;
-      visibility: visible;
+      opacity: 0;
+      visibility: hidden;
+      position: absolute;
+      top: rem(1px);
+      right: rem(1px);
+    }
+
+    &:hover {
+      > .btn-danger {
+        opacity: 1;
+        visibility: visible;
+      }
     }
   }
 }

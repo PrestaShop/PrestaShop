@@ -986,7 +986,7 @@
       <div class="col-lg-5">
         <a
           href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
-          class="btn btn-danger delete"
+          class="btn btn-invisible btn-lg delete"
           data-toggle="tooltip"
           id="product_form_delete_btn"
           title="{{ trans('Permanently delete this product.', {}, 'AdminProducts') }}"
@@ -996,13 +996,14 @@
         <a
           href="{{ preview_link }}"
           target="_blank"
-          class="btn btn-default hidden-xs"
+          class="btn btn-tertiary btn-lg hidden-xs"
           data-toggle="tooltip"
           id="product_form_preview_btn"
           title="{{ trans('View the product draft on the site.', {}, 'AdminProducts') }}"
         >
           {{ trans('Preview', {}, 'AdminProducts') }}
         </a>
+        <h2 class="for-switch">{{ trans('Online', {}, 'AdminProducts') }}</h2>
         <input
           id="form_step1_active"
           data-toggle="switch"
@@ -1056,9 +1057,16 @@
 
   </form>
 
-  <nav id="right-sidebar" role="navigation" class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-xs-center"
-       data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}">
-    <img src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}" style="margin-top: 10em;" alt="{{ trans('Loading...', [], 'AdminTab') }}" />
+  <nav
+    id="right-sidebar"
+    role="navigation"
+    class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-xs-center"
+    data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}"
+  >
+    <img
+      src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"
+      style="margin-top: 10em;" alt="{{ trans('Loading...', [], 'AdminTab') }}"
+    />
   </nav>
 
   {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
