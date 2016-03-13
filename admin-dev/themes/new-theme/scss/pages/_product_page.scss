@@ -76,6 +76,10 @@
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
     padding: rem(20px) 0;
+
+    .select2 {
+      margin-top: rem(8px);
+    }
   }
 
   .big-input {
