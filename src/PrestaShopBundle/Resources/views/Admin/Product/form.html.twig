@@ -475,21 +475,31 @@
                     </div>
 
                     <div id="combinations">
-                      <h2>{{ trans('Product combinations', [], 'AdminProducts') }}</h2>
+                      <h2>
+                        {{ trans('Product combinations', [], 'AdminProducts') }}
+                        <span
+                          class="help-box"
+                          data-toggle="tooltip"
+                          title="{{ trans("Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!", {}, 'AdminProducts')|raw }}"
+                        ></span>
+                      </h2>
                       <div id="attributes-generator">
                         <p>
                           {{ trans('Create a series of combinations by entering the related attributes below.', [], 'AdminProducts') }}
-                          <span data-toggle="tooltip" title="{{ trans("Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!", {}, 'AdminProducts')|raw }}">[?]</span>
                         </p>
-
-                        <div class="col-sm-10 row">
-                          <fieldset class="form-group">
-                            {{ form_errors(form.step3.attributes) }}
-                            {{ form_widget(form.step3.attributes) }}
-                          </fieldset>
-                        </div>
-                        <div class="col-sm-2">
-                          <input type="button" id="create-combinations" class="btn btn-primary-outline btn-sm" value="Create"/>
+                        <div class="row">
+                          <div class="col-md-10">
+                            <fieldset class="form-group">
+                              {{ form_errors(form.step3.attributes) }}
+                              {{ form_widget(form.step3.attributes) }}
+                            </fieldset>
+                          </div>
+                          <div class="col-md-2">
+                            <button id="create-combinations" class="btn btn-action btn-block">
+                              <i class="material-icons">add</i>
+                              Create
+                            </button>
+                          </div>
                         </div>
                       </div>
 
@@ -509,7 +519,7 @@
 
                           <tbody class="panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
                           {% for combination in form.step3.combinations %}
-                            {{ include('PrestaShopBundle:Admin/Product/Include:form-combination.html.twig', { 'form': combination, 'loop_index': loop.index0, 'id_product': id_product }) }}
+                            {{ include('PrestaShopBundle:Admin/Product/Include:form_combination.html.twig', { 'form': combination, 'loop_index': loop.index0, 'id_product': id_product }) }}
                           {% endfor %}
                           </tbody>
                         </table>
