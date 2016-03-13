@@ -874,15 +874,18 @@
                           {{ form_errors(form.step6.custom_fields) }}
                           <ul class="customFieldCollection nostyle" data-prototype="
                                       {% filter escape %}
-                                      {{ include('PrestaShopBundle:Admin/Product/Include:form-custom-fields.html.twig', { 'form': form.step6.custom_fields.vars.prototype }) }}
+                                      {{ include('PrestaShopBundle:Admin/Product/Include:form_custom_fields.html.twig', { 'form': form.step6.custom_fields.vars.prototype }) }}
                                       {% endfilter %}">
                             {% for field in form.step6.custom_fields %}
                               <li>
-                                {{ include('PrestaShopBundle:Admin/Product/Include:form-custom-fields.html.twig', { 'form': field }) }}
+                                {{ include('PrestaShopBundle:Admin/Product/Include:form_custom_fields.html.twig', { 'form': field }) }}
                               </li>
                             {% endfor %}
                           </ul>
-                          <a href="#" class="add">{{ trans('+ Add a customization field', {}, 'AdminProducts') }}</a>
+                          <a href="#" class="btn btn-action">
+                            <i class="material-icons">add</i>
+                            {{ trans('Add a customization field', {}, 'AdminProducts') }}
+                          </a>
                         </div>
                       </div>
                     </div>
