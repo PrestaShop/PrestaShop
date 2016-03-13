@@ -153,10 +153,12 @@
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h2>{{ trans('Features', [], 'AdminProducts') }}</h2>
                         {{ form_errors(form.step1.features) }}
-                        <div class="feature-collection nostyle" data-prototype="
-                                            {% filter escape %}
-                                                {{ include('PrestaShopBundle:Admin/Product/Include:form_feature.html.twig', { 'form': form.step1.features.vars.prototype }) }}
-                                            {% endfilter %}">
+                        <div
+                          class="feature-collection nostyle"
+                          data-prototype="{% filter escape %}
+                            {{ include('PrestaShopBundle:Admin/Product/Include:form_feature.html.twig', { 'form': form.step1.features.vars.prototype }) }}
+                          {% endfilter %}"
+                        >
                           {% for feature in form.step1.features %}
                             {{ include('PrestaShopBundle:Admin/Product/Include:form_feature.html.twig', { 'form': feature }) }}
                           {% endfor %}

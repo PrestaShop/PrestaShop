@@ -1,14 +1,14 @@
 .product-page {
 
   //@TODO remove this tyniMce hack
-  .mce-tinymce iframe{
+  .mce-tinymce iframe {
     max-height: 400px !important;
   }
 
   padding-bottom: 80px;
 
   .table-fixed {
-    table-layout:fixed;
+    table-layout: fixed;
     border: 0;
     thead {
       width: 90%;
@@ -25,26 +25,23 @@
     thead, tbody, tr, td, th {
       display: block;
     }
-    tbody td, thead > tr> th {
+    tbody td, thead > tr > th {
       float: left;
       border-bottom-width: 0;
     }
-    tr{
+    tr {
       clear: both;
     }
-    td{
+    td {
       padding: 5px;
 
-      span{
-        word-break:break-all;
-        word-wrap:break-word;
+      span {
+        word-break: break-all;
+        word-wrap: break-word;
       }
     }
 
   }
-
-
-
 
   &::before {
     content: '';
@@ -55,13 +52,13 @@
     right: 0;
     box-shadow: $gray-dark 0 0 10px;
     z-index: 400;
-    height:1px;
+    height: 1px;
   }
 
   // Resets
-  ul.nostyle{
+  ul.nostyle {
     list-style: none;
-    padding-left:0;
+    padding-left: 0;
   }
 
   #form-loading {
@@ -108,10 +105,6 @@
     }
   }
 
-  .right-column {
-    @extend .form-contenttab;
-  }
-
   .form-group {
     .title {
       margin-bottom: rem(20px);
@@ -124,48 +117,47 @@
 
   // Combination generator
 
-  .tokenfield{
+  .tokenfield {
     height: auto;
     padding-bottom: 0;
 
-    input.token-input[type="text"]{
+    input.token-input[type="text"] {
       display: inline-block;
-      border:0;
+      border: 0;
       padding: 0;
       margin-top: -6px;
       margin-bottom: 0;
       background-color: transparent;
-      max-width:100%;
+      max-width: 100%;
       width: auto !important;
     }
   }
 
   // Combination details form
 
-  #accordion_combinations td.img img{
-    max-width:50px;
+  #accordion_combinations td.img img {
+    max-width: 50px;
   }
-  #accordion_combinations .combination td.img .fake-img{
+  #accordion_combinations .combination td.img .fake-img {
     background: $gray-medium;
-    width:50px;
-    height:50px;
+    width: 50px;
+    height: 50px;
   }
-  .product-combination-image{
+  .product-combination-image {
     display: inline-block;
     border: 1px solid $primary;
     outline: solid 4px $white;
     margin: 5px;
   }
-  .product-combination-image.img-highlight{
+  .product-combination-image.img-highlight {
     outline: solid 4px $primary;
   }
-  .product-combination-image input{
-    display:none;
+  .product-combination-image input {
+    display: none;
   }
-  .combination-form .title{
+  .combination-form .title {
     font-size: 20px;
   }
-
 
   // Dropzone & Image manager
 
@@ -277,7 +269,7 @@
     }
   }
   #product-images-form-container {
-    position: absolute!important;
+    position: absolute !important;
     z-index: 1000;
     min-height: 200px;
     right: 5px;
@@ -294,7 +286,7 @@
       padding-top: 15px;
     }
   }
-  #product-images-container{
+  #product-images-container {
     .dropzone-expander {
       border-bottom: dashed 1px $gray-light;
       border-left: dashed 1px $gray-light;
@@ -317,74 +309,40 @@
     }
   }
 
-  .twitter-typeahead{
-    .tt-menu{
+  .twitter-typeahead {
+    .tt-menu {
       width: 100%;
       border: 1px solid $gray-medium;
       background: $white;
     }
-    .tt-suggestion{
+    .tt-suggestion {
       cursor: pointer
     }
   }
+}
 
 
-  ul.typeahead-list{
-    list-style: none;
-    li{
-      margin-top:5px;
-      img{
-        width: 50px;
-      }
-      .title{
-        display:inline-block;
-        float:none;
-      }
-    }
+.pack-product {
+  position: relative;
+  border: rem(1px) solid $gray-light;
+  border-radius: $border-radius;
 
-    &.pack{
-      padding: 0;
-      li{
-        width: 200px;
-        border: 1px solid $gray-light;
-        display: inline-block;
-        overflow: hidden;
-        margin-right: 10px;
-        position: relative;
-        cursor: pointer;
-
-        img{
-          width: 100%;
-          border-bottom: 1px solid $gray-light;
-          margin-bottom: 5px;
-        }
-        span{
-          display: inline-block;
-          width: 100%;
-          padding: 0 5px;
-        }
-        .title, .ref {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        .quantity, .ref {
-          color: $gray-light;
-        }
-        .delete{
-          position : absolute;
-          right: 2px;
-          top: 2px;
-          display: none;
-        }
-      }
-      li:hover{
-        border: 1px solid $primary;
-        .delete{
-          display: block;
-        }
-      }
-    }
+  > .cover {
+    width: 100%;
   }
 
+  > .btn-danger {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: rem(1px);
+    right: rem(1px);
+  }
+
+  &:hover {
+    > .btn-danger {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 }
