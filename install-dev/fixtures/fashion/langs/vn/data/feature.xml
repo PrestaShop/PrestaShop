@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <entity_feature>
   <feature id="Height">
-    <name>Height</name>
+    <name>Chiều cao</name>
   </feature>
   <feature id="Width">
-    <name>Width</name>
+    <name>Chiều rộng</name>
   </feature>
   <feature id="Depth">
-    <name>Depth</name>
+    <name>Chiều sâu</name>
   </feature>
   <feature id="Weight">
-    <name>Weight</name>
+    <name>Trọng lượng</name>
   </feature>
   <feature id="Compositions">
     <name>Compositions</name>
