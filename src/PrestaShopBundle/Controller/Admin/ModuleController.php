@@ -232,7 +232,8 @@ class ModuleController extends FrameworkBundleAdminController
         $installed_modules = [];
         foreach ($installed_products as $installed_product) {
             $installed_modules[] = $installed_product->attributes->get('name');
-            if (!empty($installed_product->attributes->get('warning'))) {
+            $warnings = $installed_product->attributes->get('warning');
+            if (!empty($warnings)) {
                 $row = 'to_configure';
             } elseif ($installed_product->database->get('installed') == 1 && $installed_product->database->get('version') !== 0 && version_compare($installed_product->database->get('version'), $installed_product->attributes->get('version'), '<')) {
                 $row = 'to_update';

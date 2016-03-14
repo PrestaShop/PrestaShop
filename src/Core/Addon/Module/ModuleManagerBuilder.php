@@ -33,33 +33,25 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 class ModuleManagerBuilder
 {
     /**
-     * Singleton of ModuleManager
-     * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
-     */
-    public static $modulesManager = null;
-    /**
      * Singleton of ModuleRepository
      * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
      */
     public static $modulesRepository = null;
 
+    /**
+    * Return an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+    * @global type $kernel
+    * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+    */
     public function build()
     {
-        /**
-        * Return an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
-        * @global type $kernel
-        * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
-        */
-        if (is_null(self::$modulesManager)) {
-            global $kernel;
+        global $kernel;
 
-            self::$modulesManager = new ModuleManager(new AdminModuleDataProvider($kernel),
-                new ModuleDataProvider(),
-                new ModuleDataUpdater(),
-                $this->buildRepository(),
-                \Context::getContext()->employee);
-        }
-        return self::$modulesManager;
+        return new ModuleManager(new AdminModuleDataProvider($kernel),
+            new ModuleDataProvider(),
+            new ModuleDataUpdater(),
+            $this->buildRepository(),
+            \Context::getContext()->employee);
     }
 
     /**
