@@ -295,14 +295,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'priceDisplay' => $priceDisplay,
                 'productPrice' => $productPrice,
                 'productPriceWithoutReduction' => $productPriceWithoutReduction,
-                'display_quantities' => ((bool)Configuration::get('PS_DISPLAY_QTIES') && (bool)Configuration::get('PS_STOCK_MANAGEMENT') && $this->product->quantity > 0 && (bool)$this->product->available_for_order && !(Configuration::get('PS_CATALOG_MODE'))) ? true : false,
                 'customizationFields' => $customization_fields,
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
                 'product' => $product_for_template,
                 'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
                 'unit_price' => ($this->product->unit_price_ratio > 0) ? ($productPrice / $this->product->unit_price_ratio) : 0,
-                'quantity_label' => ($product_for_template['quantity'] > 1) ? $this->l('Items') : $this->l('Item'),
                 'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
                 'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
                 'display_taxes_label' => true,
@@ -785,6 +783,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
         $product_full = $this->addProductCustomizationData($product_full);
+
+        $product_full['show_quantities'] = (bool)(
+            Configuration::get('PS_DISPLAY_QTIES')
+            && Configuration::get('PS_STOCK_MANAGEMENT')
+            && $this->product->quantity > 0
+            && $this->product->available_for_order
+            && !Configuration::get('PS_CATALOG_MODE'));
+        $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->l('Items') : $this->l('Item');
 
         $presenter = $this->getProductPresenter();
 
