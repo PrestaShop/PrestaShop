@@ -35,10 +35,9 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 use Symfony\Component\Finder\Finder;
 
-class ModuleRepository implements AddonRepositoryInterface
+class ModuleRepository implements ModuleRepositoryInterface
 {
     /**
      * Admin Module Data Provider
@@ -90,11 +89,10 @@ class ModuleRepository implements AddonRepositoryInterface
     }
 
     /**
-     * Get the Module object from its name
-     * = findByName($name)
+     * Get the **Legacy** Module object from its name
      *
      * @param  string $name The technical module name to instanciate
-     * @return \PrestaShop\PrestaShop\Adapter\Module\Module|null         Instance of legacy Module, if valid
+     * @return \Module|null         Instance of legacy Module, if valid
      */
     public function getInstanceByName($name)
     {
@@ -211,6 +209,13 @@ class ModuleRepository implements AddonRepositoryInterface
         return $modules;
     }
 
+    /**
+     * Get the new module presenter class of the specified name provided.
+     * It contains data from its instance, the disk, the database and from the marketplace if exists.
+     *
+     * @param string $name The technical name of the module
+     * @return \PrestaShop\PrestaShop\Adapter\Module\Module
+     */
     public function getModule($name)
     {
         $php_file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
@@ -328,6 +333,11 @@ class ModuleRepository implements AddonRepositoryInterface
         return new Module($attributes, $disk, $database);
     }
 
+    /**
+     * Instanciate every module present if the modules folder
+     *
+     * @return \PrestaShop\PrestaShop\Adapter\Module\Module[]
+     */
     private function getModulesOnDisk()
     {
         $modules         = [];

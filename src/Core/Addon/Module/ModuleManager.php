@@ -261,13 +261,19 @@ class ModuleManager implements AddonManagerInterface
      * Shortcut to the module data provider in order to know if a module is installed
      *
      * @param string $name The technical module name
-     * @return bool
-     */
+     * @return bool True is installed
+    */
     public function isInstalled($name)
     {
         return $this->moduleProvider->isInstalled($name);
     }
 
+    /**
+     * Shortcut to the module data updater to remove the module from the disk
+     *
+     * @param string $name The technical module name
+     * @return bool True if files were properly removed
+     */
     public function removeModuleFromDisk($name)
     {
         return $this->moduleUpdater->removeModuleFromDisk($name);
