@@ -412,7 +412,9 @@ class LocalizationPackCore
                 $name = (string)$attributes['name'];
                 if (isset($name) && $module = Module::getInstanceByName($name)) {
                     $install = ($attributes['install'] == 1) ? true : false;
-                    $moduleManager = (new ModuleManagerBuilder())->build();
+                    $moduleManagerBuilder = new ModuleManagerBuilder();
+                    $moduleManager = $moduleManagerBuilder->build();
+    
 
                     if ($install) {
                         if (!$moduleManager->isInstalled($name)) {

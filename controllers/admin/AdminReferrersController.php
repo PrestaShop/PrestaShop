@@ -232,7 +232,9 @@ class AdminReferrersControllerCore extends AdminController
             'submit' => array('title' => $this->l('Save')),
         ));
 
-        $moduleManager = (new ModuleManagerBuilder())->build();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
         if ($moduleManager->isInstalled('trackingfront')) {
             $this->fields_form[0]['form']['desc'] = array(
                 $this->l('Affiliates can access their data with this name and password.'),

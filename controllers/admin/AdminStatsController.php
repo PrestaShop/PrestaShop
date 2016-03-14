@@ -34,7 +34,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
     {
         $visits = ($granularity == false) ? 0 : array();
-        $moduleManager = (new ModuleManagerBuilder())->build();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
         /** @var Gapi $gapi */
         $gapi = $moduleManager->isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
         if (Validate::isLoadedObject($gapi) && $gapi->isConfigured()) {
@@ -666,7 +668,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'newsletter_registrations':
-                $moduleManager = (new ModuleManagerBuilder())->build();
+                $moduleManagerBuilder = new ModuleManagerBuilder();
+    $moduleManager = $moduleManagerBuilder->build();
+    
                 $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'customer`

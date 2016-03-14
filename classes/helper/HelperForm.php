@@ -235,7 +235,9 @@ class HelperFormCore extends Helper
             }
         }
 
-        $moduleManager = (new ModuleManagerBuilder())->build();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
 
         $this->tpl->assign(array(
             'title' => $this->title,

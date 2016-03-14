@@ -5655,7 +5655,9 @@ class ProductCore extends ObjectModel
      */
     public static function getAttributesInformationsByProduct($id_product)
     {
-        $moduleManager = (new ModuleManagerBuilder())->build();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
         // if blocklayered module is installed we check if user has set custom attribute name
         if ($moduleManager->isInstalled('blocklayered') && $moduleManager->isEnabled('blocklayered')) {
             $nb_custom_values = Db::getInstance()->executeS('

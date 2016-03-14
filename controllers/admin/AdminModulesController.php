@@ -687,7 +687,9 @@ class AdminModulesControllerCore extends AdminController
                     $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
                 } else {
                     // Uninstall the module before deleting the files, but do not block the process if uninstall returns false
-                    $moduleManager = (new ModuleManagerBuilder())->build();
+                    $moduleManagerBuilder = new ModuleManagerBuilder();
+                    $moduleManager = $moduleManagerBuilder->build();
+    
                     if ($moduleManager->isInstalled($module->name)) {
                         $module->uninstall();
                     }
@@ -835,7 +837,9 @@ class AdminModulesControllerCore extends AdminController
                         continue;
                     }
 
-                    $moduleManager = (new ModuleManagerBuilder())->build();
+                    $moduleManagerBuilder = new ModuleManagerBuilder();
+                    $moduleManager = $moduleManagerBuilder->build();
+    
 
                     // Check potential error
                     if (!($module = Module::getInstanceByName(urldecode($name)))) {
@@ -1026,7 +1030,9 @@ class AdminModulesControllerCore extends AdminController
 
         if ($return) {
             $params = (count($installed_modules)) ? '&installed_modules='.implode('|', $installed_modules) : '';
-            $moduleManager = (new ModuleManagerBuilder())->build();
+            $moduleManagerBuilder = new ModuleManagerBuilder();
+            $moduleManager = $moduleManagerBuilder->build();
+    
 
             // If redirect parameter is present and module installed with success, we redirect on configuration module page
             if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $return == '12' && $moduleManager->isInstalled(pSQL(Tools::getValue('module_name')))) {
@@ -1116,7 +1122,9 @@ class AdminModulesControllerCore extends AdminController
             Context::getContext()->smarty->assign('installed_modules', json_encode(explode('|', $list)));
         }
 
-        $moduleManager = (new ModuleManagerBuilder())->build();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
 
         // If redirect parameter is present and module already installed, we redirect on configuration module page
         if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $moduleManager->isInstalled(pSQL(Tools::getValue('module_name')))) {

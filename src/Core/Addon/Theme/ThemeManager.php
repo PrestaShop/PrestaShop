@@ -215,7 +215,9 @@ class ThemeManager implements AddonManagerInterface
 
     private function doDisableModules(array $modules)
     {
-        $moduleManager = (new ModuleManagerBuilder())->build();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
 
         foreach ($modules as $key => $moduleName) {
             if ($moduleManager->isInstalled($moduleName) && $moduleManager->isEnabled($moduleName)) {
@@ -228,7 +230,9 @@ class ThemeManager implements AddonManagerInterface
 
     private function doEnableModules(array $modules)
     {
-        $moduleManager = (new ModuleManagerBuilder())->build();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
 
         foreach ($modules as $key => $moduleName) {
             if (!$moduleManager->isInstalled($moduleName)) {

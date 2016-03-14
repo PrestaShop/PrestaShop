@@ -1307,7 +1307,9 @@ class FrontControllerCore extends Controller
 
     public function getTemplateVarFeatureActive()
     {
-        $moduleManager = (new ModuleManagerBuilder())->build();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
 
         return [
             'is_b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
