@@ -39,8 +39,8 @@
     {/block}
 
     {block name='product_ecotax'}
-      {if $displayEcotax}
-        <p class="price-ecotax">{l s='Including %s for ecotax' sprintf=$ecotax}
+      {if $product.ecotax}
+        <p class="price-ecotax">{l s='Including %s for ecotax' sprintf=$product.ecotax.value}
           {if $product.has_discount}
             {l s='(not impacted by the discount)'}
           {/if}

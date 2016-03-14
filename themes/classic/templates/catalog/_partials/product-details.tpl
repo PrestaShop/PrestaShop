@@ -8,10 +8,10 @@
     {/if}
     {/block}
     {block name='product_quantities'}
-      {if $display_quantities}
+      {if $product.show_quantities}
         <div class="product-quantities">
           <label class="label">{l s='In stock'}</label>
-          <span>{$product.quantity} {$quantity_label}</span>
+          <span>{$product.quantity} {$product.quantity_label}</span>
         </div>
       {/if}
     {/block}

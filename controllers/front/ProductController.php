@@ -41,6 +41,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /** @var Category */
     protected $category;
 
+    private $quantity_discounts;
+
     public function canonicalRedirection($canonical_url = '')
     {
         $id_product_attribute = Tools::getValue('id_product_attribute');
@@ -295,14 +297,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'priceDisplay' => $priceDisplay,
                 'productPrice' => $productPrice,
                 'productPriceWithoutReduction' => $productPriceWithoutReduction,
-                'display_quantities' => ((bool)Configuration::get('PS_DISPLAY_QTIES') && (bool)Configuration::get('PS_STOCK_MANAGEMENT') && $this->product->quantity > 0 && (bool)$this->product->available_for_order && !(Configuration::get('PS_CATALOG_MODE'))) ? true : false,
                 'customizationFields' => $customization_fields,
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
                 'product' => $product_for_template,
                 'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
                 'unit_price' => ($this->product->unit_price_ratio > 0) ? ($productPrice / $this->product->unit_price_ratio) : 0,
-                'quantity_label' => ($product_for_template['quantity'] > 1) ? $this->l('Items') : $this->l('Item'),
                 'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
                 'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
                 'display_taxes_label' => true,
@@ -352,11 +352,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $id_group = (int)Group::getCurrent()->id;
         $id_country = $id_customer ? (int)Customer::getCurrentCountry($id_customer) : (int)Tools::getCountry();
 
-        $group_reduction = GroupReduction::getValueForProduct($this->product->id, $id_group);
-        if ($group_reduction === false) {
-            $group_reduction = Group::getReduction((int)$this->context->cookie->id_customer) / 100;
-        }
-
         // Tax
         $tax = (float)$this->product->getTaxesRate(new Address((int)$this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
         $this->context->smarty->assign('tax_rate', $tax);
@@ -364,13 +359,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_price_with_tax = Product::getPriceStatic($this->product->id, true, null, 6);
         if (Product::$_taxCalculationMethod == PS_TAX_INC) {
             $product_price_with_tax = Tools::ps_round($product_price_with_tax, 2);
-        }
-        $product_price_without_eco_tax = (float)$product_price_with_tax - $this->product->ecotax;
-
-        $ecotax_rate = (float)Tax::getProductEcotaxRate($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-        $ecotax_tax_amount = Tools::ps_round($this->product->ecotax, 2);
-        if (Product::$_taxCalculationMethod == PS_TAX_INC && (int)Configuration::get('PS_TAX')) {
-            $ecotax_tax_amount = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 2);
         }
 
         $id_currency = (int)$this->context->cookie->id_currency;
@@ -394,15 +382,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
         $address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+        $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $this->product->ecotax);
+
         $this->context->smarty->assign(array(
-            'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $ecotax_tax_amount),
-            'displayEcotax' => ($ecotax_tax_amount > 0) ? true : false,
-            'ecotax' => (Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer) == 2) ? Product::convertAndFormatPrice($this->product->ecotax, false, $this->context) : Product::convertAndFormatPrice($ecotax_tax_amount, false, $this->context),
-            'ecotaxTax_rate' => $ecotax_rate,
-            'productPriceWithoutEcoTax' => (float)$product_price_without_eco_tax,
-            'group_reduction' => $group_reduction,
             'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
-            'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
             'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
             'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
         ));
@@ -785,6 +768,23 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
         $product_full = $this->addProductCustomizationData($product_full);
+
+        $product_full['show_quantities'] = (bool)(
+            Configuration::get('PS_DISPLAY_QTIES')
+            && Configuration::get('PS_STOCK_MANAGEMENT')
+            && $this->product->quantity > 0
+            && $this->product->available_for_order
+            && !Configuration::get('PS_CATALOG_MODE')
+        );
+        $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->l('Items') : $this->l('Item');
+        $product_full['quantity_discounts'] = $this->quantity_discounts;
+
+
+        $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int)Group::getCurrent()->id);
+        if ($group_reduction === false) {
+            $group_reduction = Group::getReduction((int)$this->context->cookie->id_customer) / 100;
+        }
+        $product_full['customer_group_discount'] = $group_reduction;
 
         $presenter = $this->getProductPresenter();
 
