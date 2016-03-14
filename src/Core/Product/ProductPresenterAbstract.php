@@ -108,6 +108,19 @@ abstract class ProductPresenterAbstract
         return $presentedProduct;
     }
 
+    private function addEcotaxInformation(
+        array $presentedProduct,
+        array $product
+    ) {
+        $presentedProduct['ecotax'] = [
+            'value' => $this->priceFormatter->format($product['ecotax']),
+            'amount' => $product['ecotax'],
+            'rate' => $product['ecotax_rate'],
+        ];
+
+        return $presentedProduct;
+    }
+
     private function shouldShowAddToCartButton(
         ProductPresentationSettings $settings,
         array $product
@@ -394,6 +407,13 @@ abstract class ProductPresenterAbstract
             $settings,
             $product
         );
+
+        if (isset($product['ecotax'])) {
+            $presentedProduct = $this->addEcotaxInformation(
+                $presentedProduct,
+                $product
+            );
+        }
 
         return $presentedProduct;
     }

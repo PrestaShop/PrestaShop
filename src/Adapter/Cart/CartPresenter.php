@@ -81,6 +81,7 @@ class CartPresenter implements PresenterInterface
             $rawProduct['id_product_attribute']
         );
 
+        $rawProduct['ecotax_rate'] = '';
         $rawProduct['specific_prices'] = '';
         $rawProduct['customizable'] = '';
         $rawProduct['online_only'] = '';

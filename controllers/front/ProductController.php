@@ -363,13 +363,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if (Product::$_taxCalculationMethod == PS_TAX_INC) {
             $product_price_with_tax = Tools::ps_round($product_price_with_tax, 2);
         }
-        $product_price_without_eco_tax = (float)$product_price_with_tax - $this->product->ecotax;
-
-        $ecotax_rate = (float)Tax::getProductEcotaxRate($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-        $ecotax_tax_amount = Tools::ps_round($this->product->ecotax, 2);
-        if (Product::$_taxCalculationMethod == PS_TAX_INC && (int)Configuration::get('PS_TAX')) {
-            $ecotax_tax_amount = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 2);
-        }
 
         $id_currency = (int)$this->context->cookie->id_currency;
         $id_product = (int)$this->product->id;
@@ -393,14 +386,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
         $address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $this->context->smarty->assign(array(
-            'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $ecotax_tax_amount),
-            'displayEcotax' => ($ecotax_tax_amount > 0) ? true : false,
-            'ecotax' => (Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer) == 2) ? Product::convertAndFormatPrice($this->product->ecotax, false, $this->context) : Product::convertAndFormatPrice($ecotax_tax_amount, false, $this->context),
-            'ecotaxTax_rate' => $ecotax_rate,
-            'productPriceWithoutEcoTax' => (float)$product_price_without_eco_tax,
+            'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $this->product->ecotax),
             'group_reduction' => $group_reduction,
             'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
-            'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
             'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
             'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
         ));
@@ -789,7 +777,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             && Configuration::get('PS_STOCK_MANAGEMENT')
             && $this->product->quantity > 0
             && $this->product->available_for_order
-            && !Configuration::get('PS_CATALOG_MODE'));
+            && !Configuration::get('PS_CATALOG_MODE')
+        );
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->l('Items') : $this->l('Item');
 
         $presenter = $this->getProductPresenter();
