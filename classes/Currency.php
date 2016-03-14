@@ -454,7 +454,7 @@ class CurrencyCore extends ObjectModel
      */
     public static function getCurrent()
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use $context->currency instead');
         return Context::getContext()->currency;
     }
 
