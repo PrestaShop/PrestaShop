@@ -155,7 +155,7 @@ class AttributeController extends FrameworkBundleAdminController
             );
 
             $formRender = $this->renderView(
-                'PrestaShopBundle:Admin/Product/Include:form-combination.html.twig',
+                'PrestaShopBundle:Admin/Product/Include:form_combination.html.twig',
                 array(
                     'form' => $form->createView(),
                     'id_product' => $idProduct

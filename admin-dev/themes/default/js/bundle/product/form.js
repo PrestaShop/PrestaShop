@@ -1202,7 +1202,7 @@ var form = (function() {
 			});
 
 			/** on active field change, send form */
-      $('#form_step1_active', elem).on('switchChange.bootstrapSwitch', function(event, state) {
+      $('#form_step1_active', elem).on('change', function() {
         send();
       });
 

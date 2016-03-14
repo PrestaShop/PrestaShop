@@ -104,7 +104,9 @@ class ProductQuantity extends CommonAbstractType
                 'allow_add' => true,
                 'allow_delete' => true
             ))
-            ->add('out_of_stock', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', ['choices_as_values' => true, ]) //see eventListener for details
+            ->add('out_of_stock', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices_as_values' => true,
+            ))
             ->add('minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => true,
                 'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
