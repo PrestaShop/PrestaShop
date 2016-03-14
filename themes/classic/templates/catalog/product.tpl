@@ -95,7 +95,7 @@
                   {/block}
 
                   {block name='product_discounts'}
-                    {if $quantity_discounts}
+                    {if $product.quantity_discounts}
                       <section class="product-discounts">
                         <h3 class="h6 product-discounts-title">{l s='Volume discounts'}</h3>
                         <table class="table-product-discounts">
@@ -107,7 +107,7 @@
                             </tr>
                           </thead>
                           <tbody>
-                            {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
+                            {foreach from=$product.quantity_discounts item='quantity_discount' name='quantity_discounts'}
                               <tr data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value}" data-discount-quantity="{$quantity_discount.quantity}">
                                 <td>{$quantity_discount.quantity}</td>
                                 <td>{$quantity_discount.discount}</td>

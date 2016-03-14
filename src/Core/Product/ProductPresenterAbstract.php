@@ -121,6 +121,16 @@ abstract class ProductPresenterAbstract
         return $presentedProduct;
     }
 
+    private function addQuantityDiscountInformation(
+        array $presentedProduct,
+        array $product
+    ) {
+        $presentedProduct['quantity_discounts'] =
+            (isset($product['quantity_discounts'])) ? $product['quantity_discounts'] : [];
+
+        return $presentedProduct;
+    }
+
     private function shouldShowAddToCartButton(
         ProductPresentationSettings $settings,
         array $product
@@ -414,6 +424,11 @@ abstract class ProductPresenterAbstract
                 $product
             );
         }
+
+        $presentedProduct = $this->addQuantityDiscountInformation(
+            $presentedProduct,
+            $product
+        );
 
         return $presentedProduct;
     }

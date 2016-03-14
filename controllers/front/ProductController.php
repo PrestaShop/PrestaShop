@@ -41,6 +41,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /** @var Category */
     protected $category;
 
+    private $quantity_discounts;
+
     public function canonicalRedirection($canonical_url = '')
     {
         $id_product_attribute = Tools::getValue('id_product_attribute');
@@ -385,8 +387,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
         $address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+        $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $this->product->ecotax);
+
         $this->context->smarty->assign(array(
-            'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $this->product->ecotax),
             'group_reduction' => $group_reduction,
             'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
             'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
@@ -780,6 +783,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             && !Configuration::get('PS_CATALOG_MODE')
         );
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->l('Items') : $this->l('Item');
+        $product_full['quantity_discounts'] = $this->quantity_discounts;
 
         $presenter = $this->getProductPresenter();
 
