@@ -958,13 +958,13 @@ class FrontControllerCore extends Controller
                     $file = $media;
                 }
                 if (strpos($file, __PS_BASE_URI__.'modules/') === 0) {
-                    $override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
+                    $override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/modules/', $file, $different);
                     if (strrpos($override_path, $type.'/'.basename($file)) !== false) {
                         $override_path_css = str_replace($type.'/'.basename($file), basename($file), $override_path, $different_css);
                     }
 
                     if ($different && @filemtime($override_path)) {
-                        $file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
+                        $file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/modules/', $file, $different);
                     } elseif ($different_css && @filemtime($override_path_css)) {
                         $file = $override_path_css;
                     }
