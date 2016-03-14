@@ -748,6 +748,7 @@ class InstallModelInstall extends InstallAbstractModel
                 'statssearch',
                 'statsstock',
                 'statsvisits',
+                'welcome',
             );
         }
         return $modules;
@@ -761,7 +762,8 @@ class InstallModelInstall extends InstallAbstractModel
         $blacklist = [
             'productcomments',
             'blockwishlist',
-            'sendtoafriend'
+            'sendtoafriend',
+            'onboarding'
         ];
         $addons_modules = array();
         $content = Tools::addonsRequest('install-modules', $params);

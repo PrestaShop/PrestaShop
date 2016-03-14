@@ -125,7 +125,8 @@
     "prestashop/statsstock": "dev-master",
     "prestashop/statsvisits": "dev-master",
     "prestashop/trackingfront": "dev-master",
-    "prestashop/vatnumber": "dev-master"
+    "prestashop/vatnumber": "dev-master",
+    "prestashop/welcome": "develop-master"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.5",
