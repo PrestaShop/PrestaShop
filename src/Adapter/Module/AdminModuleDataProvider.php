@@ -57,7 +57,7 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     private $router;
 
-    private $cache_dir = _PS_ROOT_DIR_.'cache/';
+    private $cache_dir;
 
     protected $catalog_categories; // deprecated
     protected $catalog_modules;
@@ -65,7 +65,8 @@ class AdminModuleDataProvider implements ModuleInterface
 
     public function __construct(\AppKernel $kernel = null, Router $router = null)
     {
-        $this->catalog_modules         = [];
+        $this->catalog_modules  = [];
+        $this->cache_dir        = _PS_ROOT_DIR_.'cache/';
 
         $this->kernel = $kernel;
         $this->router = $router;
