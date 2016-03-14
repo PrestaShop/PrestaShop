@@ -352,11 +352,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $id_group = (int)Group::getCurrent()->id;
         $id_country = $id_customer ? (int)Customer::getCurrentCountry($id_customer) : (int)Tools::getCountry();
 
-        $group_reduction = GroupReduction::getValueForProduct($this->product->id, $id_group);
-        if ($group_reduction === false) {
-            $group_reduction = Group::getReduction((int)$this->context->cookie->id_customer) / 100;
-        }
-
         // Tax
         $tax = (float)$this->product->getTaxesRate(new Address((int)$this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
         $this->context->smarty->assign('tax_rate', $tax);
@@ -390,7 +385,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $this->product->ecotax);
 
         $this->context->smarty->assign(array(
-            'group_reduction' => $group_reduction,
             'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
             'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
             'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
@@ -784,6 +778,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         );
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->l('Items') : $this->l('Item');
         $product_full['quantity_discounts'] = $this->quantity_discounts;
+
+
+        $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int)Group::getCurrent()->id);
+        if ($group_reduction === false) {
+            $group_reduction = Group::getReduction((int)$this->context->cookie->id_customer) / 100;
+        }
+        $product_full['customer_group_discount'] = $group_reduction;
 
         $presenter = $this->getProductPresenter();
 
