@@ -16506,7 +16506,8 @@
 	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'action').val('update'));
 	
 	    // First perform the action using AJAX
-	    var actionURL = event.target.action;
+	    var actionURL = (0, _jquery2['default'])(this).attr('action');
+	
 	    _jquery2['default'].post(actionURL, (0, _jquery2['default'])(this).serialize(), null, 'json').then(function () {
 	      // If succesful, refresh cart preview
 	      _prestashop2['default'].emit('cart updated', {
