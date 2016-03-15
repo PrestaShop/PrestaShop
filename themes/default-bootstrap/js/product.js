@@ -801,7 +801,12 @@ function updatePrice()
 
 	if (priceWithDiscountsDisplay > 0)
 	{
-		$('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay, currencyFormat, currencySign, currencyBlank)).trigger('change');
+    if(findSpecificPrice()){
+      $('#our_price_display').text(findSpecificPrice()).trigger('change');
+    }
+    else{
+      $('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay, currencyFormat, currencySign, currencyBlank)).trigger('change');
+    }
 	}
 	else
 	{
