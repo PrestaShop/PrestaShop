@@ -6736,6 +6736,8 @@ li.product-label {
 
 .account-list a {
   color: #acaaa6; }
+  .account-list a:hover {
+    color: #2fb5d2; }
 
 .blockcms-title,
 .myaccount-title,
@@ -7059,7 +7061,9 @@ li.product-label {
     border: none; }
   .menu,
   .dropdown-item {
-    padding-left: 0; } }
+    padding-left: 0; }
+  input[name="submitNewsletter"] {
+    margin-top: 10px; } }
 
 @media (max-width: 991px) {
   #products .product-miniature,
@@ -7086,7 +7090,8 @@ li.product-label {
     padding-left: 0; }
     #blockcart-modal .cart-content button {
       margin-bottom: 10px; }
-  #blockcart-modal .product-name, #product-availability {
+  #blockcart-modal .product-name,
+  #product-availability {
     margin-top: 10px; }
   #search_filters .facet .facet-label {
     text-align: left; }
@@ -7095,7 +7100,7 @@ li.product-label {
     text-align: center; }
   .block-category {
     padding-bottom: 0; }
-  input[name="submitNewsletter"] {
-    margin-top: 10px; } }
+  .block_newsletter {
+    width: 100%; } }
 
 /*# sourceMappingURL=theme.css.map*/

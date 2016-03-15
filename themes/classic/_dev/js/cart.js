@@ -70,7 +70,8 @@ $(document).ready(() => {
       );
 
       // First perform the action using AJAX
-      var actionURL = event.target.action;
+      var actionURL = $(this).attr('action');
+
       $.post(actionURL, $(this).serialize(), null, 'json').then(function() {
         // If succesful, refresh cart preview
         prestashop.emit('cart updated', {
