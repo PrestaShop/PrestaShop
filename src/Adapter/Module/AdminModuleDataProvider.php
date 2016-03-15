@@ -194,6 +194,7 @@ class AdminModuleDataProvider implements ModuleInterface
             'Categories');
 
         foreach ($modules as &$module) {
+            $refs = [];
             foreach ($module->attributes->get('refs') as $key => $name) {
                 $ref  = $this->getRefFromModuleCategoryName($name);
 
@@ -204,8 +205,9 @@ class AdminModuleDataProvider implements ModuleInterface
                 }
 
                 $categories['categories']->subMenu[$ref]->modulesRef[] = $module->attributes->get('name');
-                $module->refs[$key] = $ref;
+                $refs[] = $ref;
             }
+            $module->attributes->set('refs', $refs);
         }
 
         usort($categories['categories']->subMenu, function ($a, $b) {

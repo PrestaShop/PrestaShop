@@ -85,6 +85,7 @@ class ModuleController extends FrameworkBundleAdminController
             $responseArray['content'] .= $this->render(
                 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
                 [
+                    'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products)),
                     'modules' => $modulesProvider->generateAddonsUrls($products),
                     'requireAddonsSearch' => true
                 ]
