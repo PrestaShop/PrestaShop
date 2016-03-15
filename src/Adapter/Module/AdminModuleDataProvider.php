@@ -66,13 +66,10 @@ class AdminModuleDataProvider implements ModuleInterface
     public function __construct(\AppKernel $kernel = null, Router $router = null)
     {
         $this->catalog_modules  = [];
-        $this->cache_dir        = _PS_ROOT_DIR_.'cache/';
+        $this->cache_dir        = _PS_CACHE_DIR_;
 
         $this->kernel = $kernel;
         $this->router = $router;
-        if ($this->kernel) {
-            $this->cache_dir = $this->kernel->getCacheDir().'/modules/';
-        }
     }
 
     public function clearCatalogCache()
