@@ -52,6 +52,7 @@ global_settings:
         - ps_emailsubscription
         - ps_socialfollow
       displayFooter:
+        - ps_linklist
         - blockmyaccount
         - ps_contactinfo
       displayLeftColumn:
