@@ -6082,7 +6082,7 @@ body#checkout {
     height: 452px;
     background: white;
     position: absolute;
-    left: 2px;
+    left: 0;
     top: 0;
     opacity: 0;
     background: rgba(255, 255, 255, 0.7);
