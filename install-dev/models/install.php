@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 class InstallModelInstall extends InstallAbstractModel
@@ -687,35 +688,21 @@ class InstallModelInstall extends InstallAbstractModel
             }
         } else {
             $modules = array(
-                'socialsharing',
-                'blockbanner',
                 'bankwire',
-                'blockbestsellers',
+                // 'blockbestsellers',
                 'blockcart',
-                'blocksocial',
-                'blockcategories',
+                'ps_categorytree',
                 'blockcurrencies',
-                'blockfacebook',
+                // 'blockfacebook',
                 'blocklanguages',
                 'blocklayered',
-                'blockcms',
-                'blockcmsinfo',
-                'blockcontact',
-                'blockcontactinfos',
-                'blockmanufacturer',
+                // 'blockmanufacturer',
                 'blockmyaccount',
-                'blockmyaccountfooter',
                 'blocknewproducts',
-                'blocknewsletter',
-                'blockpaymentlogo',
                 'blocksearch',
-                'blockspecials',
-                'blockstore',
-                'blocksupplier',
-                'blocktags',
-                'blocktopmenu',
-                'blockuserinfo',
-                'blockviewed',
+                // 'blockspecials',
+                // 'blocksupplier',
+                // 'blockviewed',
                 'cheque',
                 'dashactivity',
                 'dashtrends',
@@ -723,8 +710,17 @@ class InstallModelInstall extends InstallAbstractModel
                 'dashproducts',
                 'graphnvd3',
                 'gridhtml',
-                'homeslider',
-                'homefeatured',
+                'ps_banner',
+                'ps_contactinfo',
+                'ps_customersignin',
+                'ps_customtext',
+                'ps_emailsubscription',
+                'ps_featuredproducts',
+                'ps_imageslider',
+                'ps_linklist',
+                'ps_mainmenu',
+                'ps_sharebuttons',
+                'ps_socialfollow',
                 'pagesnotfound',
                 'sekeywords',
                 'statsbestcategories',
@@ -816,18 +812,20 @@ class InstallModelInstall extends InstallAbstractModel
 
         Module::updateTranslationsAfterInstall(false);
 
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
         $errors = array();
         foreach ($modules as $module_name) {
             if (!file_exists(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php')) {
                 continue;
             }
 
-            $module = Module::getInstanceByName($module_name);
-            if (!$module->install()) {
-                $module_errors = $module->getErrors();
-                if (empty($module_errors)) {
+            if (!$moduleManager->install($module_name)) {
+                /*$module_errors = $module->getErrors();
+                if (empty($module_errors)) {*/
                     $module_errors = [$this->language->l('Cannot install module "%s"', $module_name)];
-                }
+                /*}*/
                 $errors[$module_name] = $module_errors;
             }
         }

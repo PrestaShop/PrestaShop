@@ -720,3 +720,7 @@ form#importDropzone {
 #module-placeholders-failure-retry {
     margin-top: 10px;
 }
+
+.module-import-success-configure {
+    display: none;
+}

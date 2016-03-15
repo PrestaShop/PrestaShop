@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
@@ -158,7 +159,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $id_category = (int)$this->product->id_category_default;
                 }
                 $this->category = new Category((int)$id_category, (int)$this->context->cookie->id_lang);
-                if (isset($this->context->cookie) && isset($this->category->id_category) && !(Module::isInstalled('blockcategories') && Module::isEnabled('blockcategories'))) {
+                $moduleManagerBuilder = new ModuleManagerBuilder();
+                $moduleManager = $moduleManagerBuilder->build();
+    
+                if (isset($this->context->cookie) && isset($this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
                     $this->context->cookie->last_visited_category = (int)$this->category->id_category;
                 }
             }

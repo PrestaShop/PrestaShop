@@ -34,37 +34,37 @@ global_settings:
   hooks:
     modules_to_hook:
       displayNav1:
-        - blockcontact
+        - ps_contactinfo
       displayNav2:
         - blocklanguages
         - blockcurrencies
-        - blockuserinfo
+        - ps_customersignin
         - blockcart
       displayTop:
-        - blocktopmenu
+        - ps_mainmenu
         - blocksearch
       displayHome:
-        - homeslider
-        - homefeatured
-        - blockbanner
-        - blockcmsinfo
+        - ps_imageslider
+        - ps_featuredproducts
+        - ps_banner
+        - ps_customtext
       displayFooterBefore:
-        - blocknewsletter
-        - blocksocial
+        - ps_emailsubscription
+        - ps_socialfollow
       displayFooter:
         - blockmyaccount
-        - blockcontact
+        - ps_contactinfo
       displayLeftColumn:
-        - blockcategories
+        - ps_categorytree
         - blocklayered
       displaySearch:
         - blocksearch
       displayProductButtons:
-        - socialsharing
+        - ps_sharebuttons
       displayReassurance:
         - blockreassurance
       displayOrderConfirmation2:
-        - homefeatured
+        - ps_featuredproducts
 
   image_types:
     cart_default:

@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Parser;
@@ -156,7 +157,7 @@ class ThemeManager implements AddonManagerInterface
         $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
                 ->doApplyConfiguration($theme->get('global_settings.configuration', []))
                 ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
-                ->doEnableModules($theme->get('global_settings.modules.to_enable', []))
+                ->doEnableModules($theme->getModulesToEnable())
                 ->doApplyImageTypes($theme->get('global_settings.image_types'))
                 ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
@@ -214,13 +215,34 @@ class ThemeManager implements AddonManagerInterface
 
     private function doDisableModules(array $modules)
     {
-        // TODO: implements doDisableModules
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
+
+        foreach ($modules as $key => $moduleName) {
+            if ($moduleManager->isInstalled($moduleName) && $moduleManager->isEnabled($moduleName)) {
+                $moduleManager->disable($moduleName);
+            }
+        }
+
         return $this;
     }
 
     private function doEnableModules(array $modules)
     {
-        // TODO: implements doEnableModules
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
+
+        foreach ($modules as $key => $moduleName) {
+            if (!$moduleManager->isInstalled($moduleName)) {
+                $moduleManager->install($moduleName);
+            }
+            if (!$moduleManager->isEnabled($moduleName)) {
+                $moduleManager->enable($moduleName);
+            }
+        }
+
         return $this;
     }
 
@@ -246,7 +268,7 @@ class ThemeManager implements AddonManagerInterface
                                     ->in($sandboxPath)
                                     ->depth('== 0')
                                     ->exclude(['__MACOSX'])
-                                    ->ignoreVCS();
+                                    ->ignoreVCS(true);
 
         if (iterator_count($directories->directories()) > 1) {
             $this->filesystem->remove($sandboxPath);

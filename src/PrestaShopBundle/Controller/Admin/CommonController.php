@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -168,21 +169,14 @@ class CommonController extends FrameworkBundleAdminController
 
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         /* @var $modulesProvider AdminModuleDataProvider */
+        $modulesRepository = (new ModuleManagerBuilder())->buildRepository();
 
         $modules = array();
         foreach ($moduleIdList as $id) {
             try {
-                $module = array_values($modulesProvider->getCatalogModules(['name' => $id]));
+                $module = $modulesRepository->getModule($id);
             } catch (\Exception $e) {
                 continue;
-            }
-
-            if (count($module) == 1) {
-                $module = $module[0];
-            } elseif (count($module) > 1) {
-                throw new \Exception("Module ID $id matches multiple times on the catalog.");
-            } else {
-                continue; // module not found
             }
             $modules[] = $module;
         }

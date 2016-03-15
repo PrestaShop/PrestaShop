@@ -33,6 +33,8 @@ define('_CUSTOMIZE_FILE_', 0);
  */
 define('_CUSTOMIZE_TEXTFIELD_', 1);
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class ProductCore extends ObjectModel
 {
     /** @var string Tax name */
@@ -5559,12 +5561,15 @@ class ProductCore extends ObjectModel
      */
     public static function getAttributesParams($id_product, $id_product_attribute)
     {
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerFactory->build();
+
         $id_lang = (int)Context::getContext()->language->id;
         $id_shop = (int)Context::getContext()->shop->id;
         $cache_id = 'Product::getAttributesParams_'.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_lang.'-'.(int)$id_shop;
 
         // if blocklayered module is installed we check if user has set custom attribute name
-        if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered')) {
+        if ($moduleManager->isInstalled('blocklayered') && $moduleManager->isEnabled('blocklayered')) {
             $nb_custom_values = Db::getInstance()->executeS('
 			SELECT DISTINCT la.`id_attribute`, la.`url_name` as `name`
 			FROM `'._DB_PREFIX_.'attribute` a
@@ -5652,8 +5657,11 @@ class ProductCore extends ObjectModel
      */
     public static function getAttributesInformationsByProduct($id_product)
     {
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
         // if blocklayered module is installed we check if user has set custom attribute name
-        if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered')) {
+        if ($moduleManager->isInstalled('blocklayered') && $moduleManager->isEnabled('blocklayered')) {
             $nb_custom_values = Db::getInstance()->executeS('
 			SELECT DISTINCT la.`id_attribute`, la.`url_name` as `attribute`
 			FROM `'._DB_PREFIX_.'attribute` a

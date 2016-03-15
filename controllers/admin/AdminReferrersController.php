@@ -53,6 +53,8 @@ if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers'.(int)Tab::
     }
 }
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 /**
  * @property Referrer $object
  */
@@ -172,7 +174,7 @@ class AdminReferrersControllerCore extends AdminController
                 'icon' => 'process-icon-new'
             );
         }
-        
+
         parent::initPageHeaderToolbar();
     }
 
@@ -230,7 +232,10 @@ class AdminReferrersControllerCore extends AdminController
             'submit' => array('title' => $this->l('Save')),
         ));
 
-        if (Module::isInstalled('trackingfront')) {
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
+        if ($moduleManager->isInstalled('trackingfront')) {
             $this->fields_form[0]['form']['desc'] = array(
                 $this->l('Affiliates can access their data with this name and password.'),
                 $this->l('Front access:').' <a class="btn btn-link" href="'.$uri.'modules/trackingfront/stats.php" onclick="return !window.open(this.href);"><i class="icon-external-link-sign"></i> '.$uri.'modules/trackingfront/stats.php</a>'

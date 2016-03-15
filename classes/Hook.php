@@ -665,7 +665,7 @@ class HookCore extends ObjectModel
             $hook_callable = is_callable(array($moduleInstance, 'hook'.$hook_name));
             $hook_retro_callable = is_callable(array($moduleInstance, 'hook'.$retro_hook_name));
 
-            if (($hook_callable || $hook_retro_callable) && Module::preCall($moduleInstance->name)) {
+            if ($hook_callable || $hook_retro_callable) {
                 $hook_args['altern'] = ++$altern;
 
                 if ($use_push && isset($moduleInstance->push_filename) && file_exists($moduleInstance->push_filename)) {

@@ -28,6 +28,20 @@ INSERT INTO `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_sho
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `firstname` `firstname` varchar(255) NOT NULL;
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `lastname` `lastname` varchar(255) NOT NULL;
 
+/* Changes regarding modules */
+ALTER TABLE `PREFIX_module` ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC);
+
+DROP TABLE `PREFIX_modules_perfs`;
+
+CREATE TABLE `PREFIX_module_history` (
+  `id_employee` int(10) unsigned NOT NULL,
+  `id_module` int(10) unsigned NOT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_employee`,`id_module`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+
 ALTER TABLE `PREFIX_product` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '0' AFTER `available_date`;
 ALTER TABLE `PREFIX_product_shop` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '0' AFTER `available_date`;
 

@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Cldr\Update;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class LocalizationPackCore
 {
@@ -411,14 +412,17 @@ class LocalizationPackCore
                 $name = (string)$attributes['name'];
                 if (isset($name) && $module = Module::getInstanceByName($name)) {
                     $install = ($attributes['install'] == 1) ? true : false;
+                    $moduleManagerBuilder = new ModuleManagerBuilder();
+                    $moduleManager = $moduleManagerBuilder->build();
+    
 
                     if ($install) {
-                        if (!Module::isInstalled($name)) {
+                        if (!$moduleManager->isInstalled($name)) {
                             if (!$module->install()) {
                                 $this->_errors[] = Tools::displayError('An error occurred while installing the module:').$name;
                             }
                         }
-                    } elseif (Module::isInstalled($name)) {
+                    } elseif ($moduleManager->isInstalled($name)) {
                         if (!$module->uninstall()) {
                             $this->_errors[] = Tools::displayError('An error occurred while uninstalling the module:').$name;
                         }

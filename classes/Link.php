@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class LinkCore
 {
     /** @var bool Rewriting activation */
@@ -538,9 +540,12 @@ class LinkCore
     public function getImageLink($name, $ids, $type = null)
     {
         $not_default = false;
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
 
         // Check if module is installed, enabled, customer is logged in and watermark logged option is on
-        if (Configuration::get('WATERMARK_LOGGED') && (Module::isInstalled('watermark') && Module::isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
+        if (Configuration::get('WATERMARK_LOGGED') && ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
             $type .= '-'.Configuration::get('WATERMARK_HASH');
         }
 

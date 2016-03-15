@@ -1,15 +1,13 @@
 $(document).ready(function () {
-
-    var controller = new AdminModule();
+    var controller = new AdminModuleController();
     controller.init();
-
 });
 
 /**
- * AdminModule Page Controller.
+ * Module Admin Page Controller.
  * @constructor
  */
-var AdminModule = function () {
+var AdminModuleController = function () {
 
     /* Global configuration */
     this.keywordsSplitCharacter = ' ';
@@ -160,6 +158,13 @@ var AdminModule = function () {
                     $(_that.placeholderFailureGlobalSelector).fadeIn(800);
                 });
             }
+        }).fail(function (response){
+            var _that = _this;
+
+            $(_this.placeholderGlobalSelector).fadeOut(800, function(){
+                $(_that.placeholderFailureMsgSelector).text(response.statusText);
+                $(_that.placeholderFailureGlobalSelector).fadeIn(800);
+            });
         });
     };
 
@@ -288,6 +293,8 @@ var AdminModule = function () {
                // Added timeout for a better render of animation and avoid to have displayed at the same time
                setTimeout(function() {
                    $(_these.moduleImportStartSelector).fadeIn(function(event){
+                       $(_these.moduleImportFailureMsgDetailsSelector).hide();
+                       $(_these.moduleImportSuccessConfigureBtnSelector).hide();
                        $('.dropzone').removeAttr('style');
                    });
                }, 550);
@@ -296,10 +303,11 @@ var AdminModule = function () {
 
       // Reinit modal on quit, but check if not already processing something
       $('body').on('hidden.bs.modal', this.dropZoneModalSelector, function (event) {
-          $(_this.moduleImportSuccessSelector + ', ' + _this.moduleImportFailureSelector).css('display', 'none');
-          $(_this.moduleImportStartSelector).css('display', 'block');
+          $(_this.moduleImportSuccessSelector + ', ' + _this.moduleImportFailureSelector).hide();
+          $(_this.moduleImportStartSelector).show();
           $('.dropzone').removeAttr('style');
-          $(_this.moduleImportFailureMsgDetailsSelector).css('display', 'none');
+          $(_this.moduleImportFailureMsgDetailsSelector).hide();
+          $(_this.moduleImportSuccessConfigureBtnSelector).hide();
       });
 
       // Change the way Dropzone.js lib handle file input trigger
@@ -321,7 +329,7 @@ var AdminModule = function () {
       // Handle modal closure
       $('body').on('click', this.moduleImportModalCloseBtn, function(event) {
           if (_this.isUploadStarted === true) {
-              //@TODO: Display tooltip saying you can't escape
+              //@TODO: Display tooltip saying you can't escape at this stage
               return;
           } else {
               $(_this.dropZoneModalSelector).modal('hide');
@@ -365,20 +373,31 @@ var AdminModule = function () {
               // Leave it empty ATM since we don't require anything while processing upload
           },
           complete: function (file, response) {
-              var responseObject = jQuery.parseJSON(file.xhr.response);
 
-             $(_this.moduleImportProcessingSelector).fadeOut(function() {
-                  if (responseObject.status === true) {
-                      var configureLink = baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
-                      $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
-                      $(_this.moduleImportSuccessSelector).fadeIn();
-                  } else {
-                      $(_this.moduleImportFailureMsgDetailsSelector).html(responseObject.msg);
-                      $(_this.moduleImportFailureSelector).fadeIn();
-                  }
-                  // State that we have finish the process to unlock some actions
-                  _this.isUploadStarted = false;
-              });
+              if (file.status !== 'error') {
+                  var responseObject = jQuery.parseJSON(file.xhr.response);
+
+                 $(_this.moduleImportProcessingSelector).fadeOut(function() {
+                      if (responseObject.status === true) {
+                          if (responseObject.is_configurable === true) {
+                              var configureLink = baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
+                              $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+                              $(_this.moduleImportSuccessConfigureBtnSelector).show();
+                          }
+                          $(_this.moduleImportSuccessSelector).fadeIn();
+                      } else {
+                          $(_this.moduleImportFailureMsgDetailsSelector).html(responseObject.msg);
+                          $(_this.moduleImportFailureSelector).fadeIn();
+                      }
+                  });
+              } else {
+                  $(_this.moduleImportProcessingSelector).fadeOut(function() {
+                       $(_this.moduleImportFailureMsgDetailsSelector).html(file.xhr.responseText);
+                       $(_this.moduleImportFailureSelector).fadeIn();
+                   });
+              }
+              // State that we have finish the process to unlock some actions
+              _this.isUploadStarted = false;
           }
       };
   };
@@ -690,7 +709,7 @@ var AdminModule = function () {
             var categorySelectedDisplayName = $(this).attr('data-category-display-name');
             // Change dropdown label to set it to the current category's displayname
             $(_this.categorySelectorLabelSelector).text(categorySelectedDisplayName);
-            $(_this.categoryResetBtnSelector).css('display', 'block');
+            $(_this.categoryResetBtnSelector).show();
             // Do Search on categoryRef
             _this.doCategorySearch(_this.currentRefMenu);
         });
@@ -701,7 +720,7 @@ var AdminModule = function () {
             var removedFirstLetter = rawText.slice(1);
             var originalText = upperFirstLetter + removedFirstLetter;
             $(_this.categorySelectorLabelSelector).text(originalText);
-            $(this).css('display', 'none');
+            $(this).hide();
             _this.currentRefMenu = null;
             _this.doTagSearch(_this.currentTagsList);
         });
@@ -724,13 +743,13 @@ var AdminModule = function () {
                 var moduleItem = $(this);
 
                 if (dataCategories === categoryRef.toLowerCase()) {
-                    moduleItem.css('display', 'block');
+                    moduleItem.show();
                     totalModules += 1;
                     // Match found, return true to continue to iterate
                     return true;
                 } else {
                     // Nothing found so we have to return true to apply 'display: none' on item
-                    moduleItem.css('display', 'none');
+                    moduleItem.hide();
                 }
             });
             // If any tags already here redo search, with new categeory
@@ -766,12 +785,12 @@ var AdminModule = function () {
                             totalModules += 1;
                         }
                         if ($(this).is(':hidden') && isFromFilterCategory === true) {
-                            $(this).css('display', 'block');
+                            $(this).show();
                         }
                     } else {
                         totalModules += 1;
                         if ($(this).is(':hidden')) {
-                            $(this).css('display', 'block');
+                            $(this).show();
                         }
                     }
                 });
@@ -792,7 +811,7 @@ var AdminModule = function () {
         var totalResultFound = 0;
         // First reset no result screen if needed
         if (!$('.module-search-no-result').is(':hidden')) {
-            $('.module-search-no-result').css('display', 'none');
+            $('.module-search-no-result').hide();
         }
         // Avoid redisplaying modules if there are already all here
         if (this.areAllModuleDisplayed === false && this.currentTagsList.length === 0) {
@@ -807,7 +826,7 @@ var AdminModule = function () {
                     if (_that.currentRefMenu !== null) {
                         if ($(this).attr('data-categories') !== _that.currentRefMenu) {
                             if (!$(this).is(':hidden')) {
-                                $(this).css('display', 'none');
+                                $(this).hide();
                                 _that.areAllModuleDisplayed = false;
                             }
                             // Iterate to next item
@@ -834,10 +853,10 @@ var AdminModule = function () {
 
                     // If module has matched all the tags display it, else hide it
                     if (matchedTagsCount == _that.currentTagsList.length) {
-                        moduleItem.css('display', 'block');
+                        moduleItem.show();
                         matchCounter += 1;
                     } else {
-                        moduleItem.css('display', 'none');
+                        moduleItem.hide();
                         _that.areAllModuleDisplayed = false;
                     }
                 });
@@ -851,7 +870,7 @@ var AdminModule = function () {
         var addonsItemSelector = this.getAddonItemSelector();
         var resultWordingObject = domObject.prev().find(this.totalResultSelector);
 
-        $(addonsItemSelector).css('display', 'none');
+        $(addonsItemSelector).hide();
         var str = resultWordingObject.text();
         var explodedStr = str.split(' ');
         explodedStr[0] = totalResultFound;
@@ -863,13 +882,13 @@ var AdminModule = function () {
             var searchQuery = encodeURIComponent(this.currentTagsList.join(' '));
             var hrefUrl = this.baseAddonsUrl + 'search.php?search_query=' + searchQuery;
             $(this.addonsSearchLinkSelector).attr('href', hrefUrl);
-            $(this.addonsSearchSelector).css('display', 'block');
+            $(this.addonsSearchSelector).show();
             // Display category grid
             if (this.isCategoryGridDisplayed === false) {
                 $(this.categoryGridSelector).fadeIn();
                 this.isCategoryGridDisplayed = true;
             }
-            $(addonsItemSelector).css('display', 'none');
+            $(addonsItemSelector).hide();
 
         } else {
             if (this.isCategoryGridDisplayed === true) {
@@ -881,7 +900,7 @@ var AdminModule = function () {
             if (totalResultFound != $(moduleItemSelector).length) {
                 $(addonsItemSelector).css('display', 'table');
             } else {
-                $(addonsItemSelector).css('display', 'none');
+                $(addonsItemSelector).hide();
             }
         }
     };
@@ -949,12 +968,12 @@ var AdminModule = function () {
                 $(_this.moduleSortListSelector).removeClass('module-sort-active');
                 $(_this.moduleSortGridSelector).addClass('module-sort-active');
                 $(this).removeClass();
-                $(this).addClass('module-item-grid col-lg-3 col-md-4 col-sm-6');
+                $(this).addClass('module-item-grid col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12');
                 _this.setNewDisplay($(this), '-list', '-grid');
             });
             // Change module addons item
             addonItem.removeClass();
-            addonItem.addClass('module-addons-item-grid col-lg-3 col-md-4 col-sm-6');
+            addonItem.addClass('module-addons-item-grid col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12');
             this.setNewDisplay(addonItem, '-list', '-grid');
 
         } else if (switchTo == 'list') {
@@ -964,12 +983,12 @@ var AdminModule = function () {
                 $(_this.moduleSortGridSelector).removeClass('module-sort-active');
                 $(_this.moduleSortListSelector).addClass('module-sort-active');
                 $(this).removeClass();
-                $(this).addClass('module-item-list col-md-12');
+                $(this).addClass('module-item-list col-lg-12');
                 _this.setNewDisplay($(this), '-grid', '-list');
             });
             // Change module addons item
             addonItem.removeClass();
-            addonItem.addClass('module-addons-item-list col-md-12');
+            addonItem.addClass('module-addons-item-list col-lg-12');
             this.setNewDisplay(addonItem, '-grid', '-list');
         } else {
             console.error('Can\'t switch to undefined display property "' + switchTo + '"');

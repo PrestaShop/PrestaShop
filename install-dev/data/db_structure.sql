@@ -1031,8 +1031,10 @@ CREATE TABLE `PREFIX_module` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `version` VARCHAR(8) NOT NULL,
   PRIMARY KEY (`id_module`),
+  UNIQUE KEY `name_UNIQUE` (`name`),
   KEY `name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
 
 CREATE TABLE `PREFIX_module_access` (
   `id_profile` int(10) unsigned NOT NULL,
@@ -1063,6 +1065,14 @@ CREATE TABLE `PREFIX_module_group` (
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_group` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_module`,`id_shop`, `id_group`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+CREATE TABLE `PREFIX_module_history` (
+  `id_employee` int(10) unsigned NOT NULL,
+  `id_module` int(10) unsigned NOT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_employee`,`id_module`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_operating_system` (
@@ -2558,19 +2568,6 @@ CREATE TABLE `PREFIX_smarty_last_flush` (
   `type` ENUM('compile', 'template'),
   `last_flush` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`type`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_modules_perfs` (
-  `id_modules_perfs` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `session` int(11) unsigned NOT NULL,
-  `module` varchar(62) NOT NULL,
-  `method` varchar(126) NOT NULL,
-  `time_start` double unsigned NOT NULL,
-  `time_end` double unsigned NOT NULL,
-  `memory_start` int unsigned NOT NULL,
-  `memory_end` int unsigned NOT NULL,
-  PRIMARY KEY (`id_modules_perfs`),
-  KEY (`session`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_cms_role` (
