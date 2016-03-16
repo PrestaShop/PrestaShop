@@ -5554,7 +5554,7 @@ body#checkout {
     .carousel .carousel-control.right, .carousel .carousel-control.left {
       background: none; }
 
-#products .products, .featured-products .products {
+#products .products, .featured-products .products, .product-accessories .products {
   display: -webkit-box;
   display: -moz-box;
   display: box;
@@ -5580,38 +5580,38 @@ body#checkout {
   justify-content: flex-start;
   -ms-flex-pack: start; }
 
-#products .product-thumbnail, .featured-products .product-thumbnail {
+#products .product-thumbnail, .featured-products .product-thumbnail, .product-accessories .product-thumbnail {
   display: block; }
 
-#products .product-title a, .featured-products .product-title a {
+#products .product-title a, .featured-products .product-title a, .product-accessories .product-title a {
   color: #acaaa6;
   font-size: 14px;
   text-decoration: none;
   text-align: center;
   font-weight: 400; }
 
-#products .thumbnail-container, .featured-products .thumbnail-container {
+#products .thumbnail-container, .featured-products .thumbnail-container, .product-accessories .thumbnail-container {
   position: relative;
   margin-bottom: 1.5625em;
   height: 318px;
   width: 257px;
   background: white;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05); }
-  #products .thumbnail-container:hover, .featured-products .thumbnail-container:hover {
+  #products .thumbnail-container:hover, .featured-products .thumbnail-container:hover, .product-accessories .thumbnail-container:hover {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
-    #products .thumbnail-container:hover .highlighted-informations, .featured-products .thumbnail-container:hover .highlighted-informations {
+    #products .thumbnail-container:hover .highlighted-informations, .featured-products .thumbnail-container:hover .highlighted-informations, .product-accessories .thumbnail-container:hover .highlighted-informations {
       bottom: 5.625em; }
-      #products .thumbnail-container:hover .highlighted-informations::after, .featured-products .thumbnail-container:hover .highlighted-informations::after {
+      #products .thumbnail-container:hover .highlighted-informations::after, .featured-products .thumbnail-container:hover .highlighted-informations::after, .product-accessories .thumbnail-container:hover .highlighted-informations::after {
         opacity: 1; }
 
-#products .products-section-title, .featured-products .products-section-title {
+#products .products-section-title, .featured-products .products-section-title, .product-accessories .products-section-title {
   text-align: center;
   font-size: 1.375em;
   font-weight: 700;
   margin: 3.125em 0 2.5em;
   color: #414141; }
 
-#products .product-title, .featured-products .product-title {
+#products .product-title, .featured-products .product-title, .product-accessories .product-title {
   text-align: center; }
 
 #products .product-description-short,
@@ -5620,15 +5620,18 @@ body#checkout {
 #products .product-availability, .featured-products .product-description-short,
 .featured-products .product-list-actions,
 .featured-products .discount,
-.featured-products .product-availability {
+.featured-products .product-availability, .product-accessories .product-description-short,
+.product-accessories .product-list-actions,
+.product-accessories .discount,
+.product-accessories .product-availability {
   display: none; }
 
-#products .product-price-and-shipping, .featured-products .product-price-and-shipping {
+#products .product-price-and-shipping, .featured-products .product-price-and-shipping, .product-accessories .product-price-and-shipping {
   color: #414141;
   font-weight: 700;
   text-align: center; }
 
-#products .variant-links, .featured-products .variant-links {
+#products .variant-links, .featured-products .variant-links, .product-accessories .variant-links {
   background: #ebebeb;
   position: relative;
   text-align: center;
@@ -5637,7 +5640,7 @@ body#checkout {
   padding-top: 0.3125em;
   min-height: 2.5em; }
 
-#products .highlighted-informations, .featured-products .highlighted-informations {
+#products .highlighted-informations, .featured-products .highlighted-informations, .product-accessories .highlighted-informations {
   position: absolute;
   bottom: 1.25em;
   z-index: 0;
@@ -5650,20 +5653,20 @@ body#checkout {
   -webkit-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   -moz-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1); }
-  #products .highlighted-informations .quick-view, .featured-products .highlighted-informations .quick-view {
+  #products .highlighted-informations .quick-view, .featured-products .highlighted-informations .quick-view, .product-accessories .highlighted-informations .quick-view {
     color: #878787;
     font-size: 1em; }
-    #products .highlighted-informations .quick-view:hover, .featured-products .highlighted-informations .quick-view:hover {
+    #products .highlighted-informations .quick-view:hover, .featured-products .highlighted-informations .quick-view:hover, .product-accessories .highlighted-informations .quick-view:hover {
       color: #2fb5d2; }
 
-#products .highlighted-informations::after, .featured-products .highlighted-informations::after {
+#products .highlighted-informations::after, .featured-products .highlighted-informations::after, .product-accessories .highlighted-informations::after {
   box-shadow: 1px 1px 16px 2px rgba(0, 0, 0, 0.1);
   opacity: 0;
   -webkit-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   -moz-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1); }
 
-#products .product-description, .featured-products .product-description {
+#products .product-description, .featured-products .product-description, .product-accessories .product-description {
   position: absolute;
   z-index: 1;
   background: white;
@@ -5672,14 +5675,15 @@ body#checkout {
   height: 70px;
   box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2); }
 
-#products img, .featured-products img {
+#products img, .featured-products img, .product-accessories img {
   margin-left: 4px; }
 
-#products .product-miniature, .featured-products .product-miniature {
+#products .product-miniature, .featured-products .product-miniature, .product-accessories .product-miniature {
   margin: 0 0.625em; }
   #products .product-miniature .product-labels .new,
   #products .product-miniature .discount-percentage, .featured-products .product-miniature .product-labels .new,
-  .featured-products .product-miniature .discount-percentage {
+  .featured-products .product-miniature .discount-percentage, .product-accessories .product-miniature .product-labels .new,
+  .product-accessories .product-miniature .discount-percentage {
     display: block;
     position: absolute;
     top: -15.125em;
@@ -5694,27 +5698,28 @@ body#checkout {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
     #products .product-miniature .product-labels .new.discount-percentage,
     #products .product-miniature .discount-percentage.discount-percentage, .featured-products .product-miniature .product-labels .new.discount-percentage,
-    .featured-products .product-miniature .discount-percentage.discount-percentage {
+    .featured-products .product-miniature .discount-percentage.discount-percentage, .product-accessories .product-miniature .product-labels .new.discount-percentage,
+    .product-accessories .product-miniature .discount-percentage.discount-percentage {
       z-index: 2;
       background: #f39d72; }
 
-#products .comments_note, .featured-products .comments_note {
+#products .comments_note, .featured-products .comments_note, .product-accessories .comments_note {
   text-align: center;
   color: #acaaa6; }
 
-#products .regular-price, .featured-products .regular-price {
+#products .regular-price, .featured-products .regular-price, .product-accessories .regular-price {
   color: #acaaa6;
   text-decoration: line-through;
   font-size: 0.875em; }
 
-#products .count, .featured-products .count {
+#products .count, .featured-products .count, .product-accessories .count {
   color: #878787;
   font-weight: 700;
   position: relative;
   bottom: 0.5em;
   font-size: 1.125em; }
 
-#products .all-product-link, .featured-products .all-product-link {
+#products .all-product-link, .featured-products .all-product-link, .product-accessories .all-product-link {
   clear: both;
   color: #878787;
   font-weight: 700;
