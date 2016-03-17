@@ -1016,7 +1016,9 @@
         >
           {{ trans('Preview', {}, 'AdminProducts') }}
         </a>
-        <h2 class="for-switch">{{ trans('Online', {}, 'AdminProducts') }}</h2>
+
+        <h2 class="for-switch online-title" {% if not form.step1.vars.value.active %}style="display:none;"{% endif %}>{{ trans('Online', {}, 'AdminProducts') }}</h2>
+        <h2 class="for-switch offline-title" {% if form.step1.vars.value.active %}style="display:none;"{% endif %}>{{ trans('Offline', {}, 'AdminProducts') }}</h2>
         <input
           id="form_step1_active"
           data-toggle="switch"
