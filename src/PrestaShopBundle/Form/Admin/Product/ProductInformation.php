@@ -86,6 +86,7 @@ class ProductInformation extends CommonAbstractType
      * {@inheritdoc}
      *
      * Builds form
+     *
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -137,7 +138,7 @@ class ProductInformation extends CommonAbstractType
             'required' => false
         ))
         ->add('description_short', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
-            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType', // https://github.com/symfony/symfony/issues/5906
             'options' => [
                 'attr' => array('class' => 'autoload_rte'),
                 'constraints' => array(
