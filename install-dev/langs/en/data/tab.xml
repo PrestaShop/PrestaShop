@@ -120,4 +120,9 @@
     <tab id="Database" name="Database" />
     <tab id="Countries" name="Countries" />
     <tab id="AdminModulesSf" name="Module Catalog" />
+
+    <!-- Tab categories definition -->
+    <tab id="SELL" name="SELL" />
+    <tab id="IMPROVE" name="IMPROVE" />
+    <tab id="CONFIGURE" name="CONFIGURE" />
 </entity_tab>

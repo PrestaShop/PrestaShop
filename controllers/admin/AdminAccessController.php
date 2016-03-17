@@ -57,6 +57,7 @@ class AdminAccessControllerCore extends AdminController
         $current_profile = (int)$this->getCurrentProfileId();
         $profiles = Profile::getProfiles($this->context->language->id);
         $tabs = Tab::getTabs($this->context->language->id);
+
         $accesses = array();
         foreach ($profiles as $profile) {
             $accesses[$profile['id_profile']] = Profile::getProfileAccesses($profile['id_profile']);
@@ -105,7 +106,7 @@ class AdminAccessControllerCore extends AdminController
             'accesses' => $accesses,
             'id_tab_parentmodule' => (int)Tab::getIdFromClassName('AdminParentModules'),
             'id_tab_module' => (int)Tab::getIdFromClassName('AdminModules'),
-            'tabs' => $tabs,
+            'tabs' => $this->displayTabs($tabs),
             'current_profile' => (int)$current_profile,
             'admin_profile' => (int)_PS_ADMIN_PROFILE_,
             'access_edit' => $this->tabAccess['edit'],
@@ -260,5 +261,30 @@ class AdminAccessControllerCore extends AdminController
     private function sortModuleByName($a, $b)
     {
         return strnatcmp($a['name'], $b['name']);
+    }
+
+    /**
+     * return human readable Tabs hierarchy for display
+     *
+     */
+    private function displayTabs(array $tabs)
+    {
+        $tabsTree = $this->getChildrenTab($tabs);
+
+        return $tabsTree;
+    }
+
+    private function getChildrenTab(array &$tabs, $id_parent = 0)
+    {
+        $children = [];
+        foreach($tabs as &$tab) {
+            $id = $tab['id_tab'];
+
+            if ($tab['id_parent'] == $id_parent) {
+                $children[$id] = $tab;
+                $children[$id]['children'] = $this->getChildrenTab($tabs, $id);
+            }
+        }
+        return $children;
     }
 }
