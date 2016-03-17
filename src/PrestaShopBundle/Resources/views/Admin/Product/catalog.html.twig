@@ -10,7 +10,6 @@
 
 {% block content %}
 
-
   <div class="products-catalog">
 
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
@@ -21,27 +20,28 @@
         <div class="row">
           <div class="pull-right">
             <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
-                <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Export", {}, 'AdminTab') }}" data-html="true" data-placement="top">
-                    <i class="material-icons">cloud_upload</i>
-                </span>
+              <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Export", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                <i class="material-icons">cloud_upload</i>
+              </span>
             </a>
             <a id="desc-product-import" class="list-toolbar-btn" href="{{ import_link }}">
-                <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Import", {}, 'AdminTab') }}" data-html="true" data-placement="top">
-                    <i class="material-icons">cloud_download</i>
-                </span>
+              <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Import", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                <i class="material-icons">cloud_download</i>
+              </span>
             </a>
             <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
-                <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Show SQL query", {}, 'AdminTab') }}" data-html="true" data-placement="top">
-                    <i class="material-icons">code</i>
-                </span>
+              <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Show SQL query", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                <i class="material-icons">code</i>
+              </span>
             </a>
             <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
-                <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Export to SQL Manager", {}, 'AdminTab') }}" data-html="true" data-placement="top">
-                    <i class="material-icons">storage</i>
-                </span>
+              <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Export to SQL Manager", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                <i class="material-icons">storage</i>
+              </span>
             </a>
           </div>
-          <h2>{{ trans("Products", {}, 'AdminProducts') }}
+          <h2>
+            {{ trans("Products", {}, 'AdminProducts') }}
             {% if has_category_filter == true and activate_drag_and_drop == true %}
               {{ trans("(ordering)", {}, 'AdminProducts') }}
             {% else %}
@@ -49,7 +49,7 @@
                 {{ trans("(filtered)", {}, 'AdminProducts') }}
               {% endif %}
             {% endif %}
-            {% if has_filter == true %}{{ product_count_filtered }} / {% endif %}{{ product_count }}
+            {% if has_filter == true %}{{ product_count_filtered }} / {{ product_count }}{% endif %}
           </h2>
         </div>
       </div>
@@ -104,133 +104,194 @@
 
         <div class="row">
           <div class="col-md-12">
-            <table class="table table-condensed table-striped product" redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}">
-          <thead>
-            <tr class="column-headers">
-              <th colspan="2">
-                {{ trans("ID", {}, 'AdminProducts') }}
-                <span psorderby="id_product" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'id_product' and sortOrder == 'asc' %}icon-caret-selected{% endif %}">&#9650;</span>
-                <span psorderby="id_product" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'id_product' and sortOrder == 'desc' %}icon-caret-selected{% endif %}">&#9660;</span>
-              </th>
-              <th>
-                {{ trans("Image", {}, 'AdminProducts') }}
-              </th>
-              <th>
-                {{ trans("Name", {}, 'AdminProducts') }}
-                <span psorderby="name" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'name' and sortOrder == 'asc' %}icon-caret-selected{% endif %}">&#9650;</span>
-                <span psorderby="name" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'name' and sortOrder == 'desc' %}icon-caret-selected{% endif %}">&#9660;</span>
-              </th>
-              <th>
-                {{ trans("Reference", {}, 'AdminProducts') }}
-                <span psorderby="reference" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'reference' and sortOrder == 'asc' %}icon-caret-selected{% endif %}">&#9650;</span>
-                <span psorderby="reference" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'reference' and sortOrder == 'desc' %}icon-caret-selected{% endif %}">&#9660;</span>
-              </th>
-              <th>
-                {{ trans("Category", {}, 'AdminProducts') }}
-                <span psorderby="name_category" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'name_category' and sortOrder == 'asc' %}icon-caret-selected{% endif %}">&#9650;</span>
-                <span psorderby="name_category" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'name_category' and sortOrder == 'desc' %}icon-caret-selected{% endif %}">&#9660;</span>
-              </th>
-              <th>
-                {{ trans("Base price", {}, 'AdminProducts') }}
-                <span psorderby="price" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'price' and sortOrder == 'asc' %}icon-caret-selected{% endif %}">&#9650;</span>
-                <span psorderby="price" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'price' and sortOrder == 'desc' %}icon-caret-selected{% endif %}">&#9660;</span>
-              </th>
-              <th>
-                {{ trans("Final price", {}, 'AdminProducts') }}
-              </th>
-              <th>
-                {{ trans("Quantity", {}, 'AdminProducts') }}
-                <span psorderby="sav_quantity" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'sav_quantity' and sortOrder == 'asc' %}icon-caret-selected{% endif %}">&#9650;</span>
-                <span psorderby="sav_quantity" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'sav_quantity' and sortOrder == 'desc' %}icon-caret-selected{% endif %}">&#9660;</span>
-              </th>
-              <th>
-                {{ trans("Status", {}, 'AdminProducts') }}
-                <span psorderby="active" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'active' and sortOrder == 'asc' %}icon-caret-selected{% endif %}">&#9650;</span>
-                <span psorderby="active" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'active' and sortOrder == 'desc' %}icon-caret-selected{% endif %}">&#9660;</span>
-              </th>
-              {% if has_category_filter == true %}
-                <th>
-                  {{ trans("Position", {}, 'AdminProducts') }}
-                  <span psorderby="position" psorderway="asc" class="icon-caret-up icon-caret {% if (orderBy == 'position' or orderBy == 'position_ordering') and sortOrder == 'asc' %}icon-caret-selected{% endif %}">&#9650;</span>
-                  <span psorderby="position" psorderway="desc" class="icon-caret-down icon-caret {% if (orderBy == 'position' or orderBy == 'position_ordering') and sortOrder == 'desc' %}icon-caret-selected{% endif %}">&#9660;</span>
-                </th>
-              {% endif %}
-              <th></th>
-            </tr>
-            <tr class="column-filters">
-              <th colspan="2">
-                {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
-                'input_name': "filter_column_id_product",
-                'min': '0',
-                'max': '1000000',
-                'minLabel': trans("Min", {}, 'AdminProducts'),
-                'maxLabel': trans("Max", {}, 'AdminProducts'),
-                'value': filter_column_id_product,
-                } %}
-              </th>
-              <th>&nbsp;</th>
-              <th>
-                <input type="text" placeholder="{{ trans("Search name", {}, 'AdminProducts') }}" name="filter_column_name" value="{{ filter_column_name }}" />
-              </th>
-              <th>
-                <input type="text" placeholder="{{ trans("Search ref.", {}, 'AdminProducts') }}" name="filter_column_reference" value="{{ filter_column_reference }}" />
-              </th>
-              <th>
-                <input type="text" placeholder="{{ trans("Search category", {}, 'AdminProducts') }}" name="filter_column_name_category" value="{{ filter_column_name_category }}" />
-              </th>
-              <th>
-                {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
-                'input_name': "filter_column_price",
-                'min': '0',
-                'max': '1000000',
-                'minLabel': trans("Min", {}, 'AdminProducts'),
-                'maxLabel': trans("Max", {}, 'AdminProducts'),
-                'value': filter_column_price,
-                } %}
-              </th>
-              <th>&nbsp;</th>
-              <th>
-                {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
-                'input_name': "filter_column_sav_quantity",
-                'min': '-1000000',
-                'max': '1000000',
-                'minLabel': trans("Min", {}, 'AdminProducts'),
-                'maxLabel': trans("Max", {}, 'AdminProducts'),
-                'value': filter_column_sav_quantity,
-                } %}
-              </th>
-              <th>
-                <select name="filter_column_active">
-                  <option value=""></option>
-                  <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
-                  <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
-                </select>
-              </th>
-              {% if has_category_filter == true %}
-                <th>
-                  {% if not(activate_drag_and_drop) %}
-                    <input type="button" class="btn" name="products_filter_position_asc" value="{{ trans("Sort", {}, 'AdminProducts') }}" onclick="productOrderPrioritiesTable();" />
+            <table
+              class="table table-condensed table-striped product m-t-1"
+              redirecturl="{{ path('admin_product_catalog', {
+                'limit': limit,
+                'offset': offset,
+                'orderBy': orderBy,
+                'sortOrder': sortOrder})
+              }}"
+            >
+              <thead>
+                <tr class="column-headers">
+                  <th style="width: 8%">
+                    {{ trans("ID", {}, 'AdminProducts') }}
+                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                      'column': 'id_product'
+                    } %}
+                  </th>
+                  <th>
+                    {{ trans("Image", {}, 'AdminProducts') }}
+                  </th>
+                  <th>
+                    {{ trans("Name", {}, 'AdminProducts') }}
+                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                      'column': 'name'
+                    } %}
+                  </th>
+                  <th style="width: 9%">
+                    {{ trans("Reference", {}, 'AdminProducts') }}
+                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                      'column': 'reference'
+                    } %}
+                  </th>
+                  <th>
+                    {{ trans("Category", {}, 'AdminProducts') }}
+                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                      'column': 'name_category'
+                    } %}
+                  </th>
+                  <th style="width: 9%">
+                    {{ trans("Base price", {}, 'AdminProducts') }}
+                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                      'column': 'price'
+                    } %}
+                  </th>
+                  <th>
+                    {{ trans("Final price", {}, 'AdminProducts') }}
+                  </th>
+                  <th style="width: 9%">
+                    {{ trans("Quantity", {}, 'AdminProducts') }}
+                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                      'column': 'sav_quantity'
+                    } %}
+                  </th>
+                  <th>
+                    {{ trans("Status", {}, 'AdminProducts') }}
+                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                      'column': 'active'
+                    } %}
+                  </th>
+                  {% if has_category_filter == true %}
+                    <th>
+                      {{ trans("Position", {}, 'AdminProducts') }}
+                      {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                        'column': 'position'
+                      } %}
+                    </th>
                   {% endif %}
-                </th>
-              {% endif %}
-              <th>
-                <button type="submit" class="btn btn-primary" name="products_filter_submit" title="{{ trans("Filter", {}, 'AdminProducts') }}"><i class="material-icons">search</i></button>
-                <button type="reset" class="btn btn-warning" name="products_filter_reset" onclick="productColumnFilterReset($(this).closest('tr.column-filters'))"
-                        title="{{ trans("Reset", {}, 'AdminProducts') }}"><i class="material-icons">backspace</i></button>
-              </th>
-            </tr>
-          </thead>
-          {% render controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction',
-          {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder, 'products': products, 'last_sql': last_sql})
-          %}
-        </table>
+                  <th></th>
+                </tr>
+                <tr class="column-filters">
+                  <th>
+                    {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
+                      'input_name': "filter_column_id_product",
+                      'min': '0',
+                      'max': '1000000',
+                      'minLabel': trans("Min", {}, 'AdminProducts'),
+                      'maxLabel': trans("Max", {}, 'AdminProducts'),
+                      'value': filter_column_id_product,
+                    } %}
+                  </th>
+                  <th>&nbsp;</th>
+                  <th>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="{{ trans("Search name", {}, 'AdminProducts') }}"
+                      name="filter_column_name"
+                      value="{{ filter_column_name }}"
+                    />
+                  </th>
+                  <th>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="{{ trans("Search ref.", {}, 'AdminProducts') }}"
+                      name="filter_column_reference"
+                      value="{{ filter_column_reference }}"
+                    />
+                  </th>
+                  <th>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="{{ trans("Search category", {}, 'AdminProducts') }}"
+                      name="filter_column_name_category"
+                      value="{{ filter_column_name_category }}"
+                    />
+                  </th>
+                  <th>
+                    {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
+                      'input_name': "filter_column_price",
+                      'min': '0',
+                      'max': '1000000',
+                      'minLabel': trans("Min", {}, 'AdminProducts'),
+                      'maxLabel': trans("Max", {}, 'AdminProducts'),
+                      'value': filter_column_price,
+                    } %}
+                  </th>
+                  <th>&nbsp;</th>
+                  <th>
+                    {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
+                      'input_name': "filter_column_sav_quantity",
+                      'min': '-1000000',
+                      'max': '1000000',
+                      'minLabel': trans("Min", {}, 'AdminProducts'),
+                      'maxLabel': trans("Max", {}, 'AdminProducts'),
+                      'value': filter_column_sav_quantity,
+                    } %}
+                  </th>
+                  <th>
+                    <select data-toggle="select2" name="filter_column_active">
+                      <option value=""></option>
+                      <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
+                      <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
+                    </select>
+                  </th>
+                  {% if has_category_filter == true %}
+                    <th>
+                      {% if not(activate_drag_and_drop) %}
+                        <input type="button" class="btn" name="products_filter_position_asc" value="{{ trans("Sort", {}, 'AdminProducts') }}" onclick="productOrderPrioritiesTable();" />
+                      {% endif %}
+                    </th>
+                  {% endif %}
+                  <th>
+                    <button
+                      type="submit"
+                      class="btn btn-action"
+                      name="products_filter_submit"
+                      title="{{ trans("Filter", {}, 'AdminProducts') }}"
+                    >
+                      <i class="material-icons">search</i>
+                    </button>
+                    <button
+                      type="reset"
+                      class="btn btn-invisible"
+                      name="products_filter_reset"
+                      onclick="productColumnFilterReset($(this).closest('tr.column-filters'))"
+                      title="{{ trans("Reset", {}, 'AdminProducts') }}"
+                    >
+                      <i class="material-icons">clear</i>
+                    </button>
+                  </th>
+                </tr>
+              </thead>
+              {% render controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction', {
+                'limit': limit,
+                'offset': offset,
+                'orderBy': orderBy,
+                'sortOrder': sortOrder,
+                'products': products,
+                'last_sql': last_sql
+              }) %}
+            </table>
           </div>
         </div>
 
         <div class="row">
           <div class="col-md-12">
-            <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('form').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
-            {{ trans("Select all", {}, 'AdminTab') }}
+            <div class="checkbox">
+              <label>
+                <input
+                  type="checkbox"
+                  id="bulk_action_select_all"
+                  onclick="$(this).closest('form').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
+                />
+                {{ trans("Select all", {}, 'AdminTab') }}
+              </label>
+            </div>
           </div>
         </div>
 
@@ -250,23 +311,23 @@
               'menu_icon': "icon-caret-up",
               'items':[{
                 "onclick": "bulkProductAction(this, 'activate_all');",
-                "icon": "icon-power-off",
+                "icon": "radio_button_checked",
                 "label": trans("Activate selection", {}, 'AdminTab')
               }, {
                 "onclick": "bulkProductAction(this, 'deactivate_all');",
-                "icon": "icon-power-off",
+                "icon": "radio_button_unchecked",
                 "label": trans("Deactivate selection", {}, 'AdminTab')
               }, {
                 "divider": true
               }, {
                 "onclick": "bulkProductAction(this, 'duplicate_all');",
-                "icon": "icon-copy",
+                "icon": "content_copy",
                 "label": trans("Duplicate selection", {}, 'AdminTab')
               }, {
                 "divider": true
               }, {
                 "onclick": "bulkProductAction(this, 'delete_all');",
-                "icon": "icon-trash",
+                "icon": "delete",
                 "label": trans("Delete selection", {}, 'AdminTab')
               }]
             }%}
@@ -282,7 +343,7 @@
           <div class="row">
             <div class="col-md-12">
               {% render controller('PrestaShopBundle:Admin\\Common:pagination',
-                {'limit': limit, 'offset': offset, 'total': product_count_filtered, 'caller_parameters': pagination_parameters, 'limit_choices': pagination_limit_choices})
+              {'limit': limit, 'offset': offset, 'total': product_count_filtered, 'caller_parameters': pagination_parameters, 'limit_choices': pagination_limit_choices})
               %}
             </div>
           </div>
@@ -293,40 +354,14 @@
     </div>
   </div>
 
-
-  {# TODO: TO REPLACE
-      <span class="panel-heading-action">
-        <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
-          <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Export", {}, 'AdminTab') }}" data-html="true" data-placement="top">
-            <i class="process-icon-export"></i>
-          </span>
-        </a>
-        <a id="desc-product-import" class="list-toolbar-btn" href="{{ import_link }}">
-          <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Import", {}, 'AdminTab') }}" data-html="true" data-placement="top">
-            <i class="process-icon-import"></i>
-          </span>
-        </a>
-        <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
-          <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Show SQL query", {}, 'AdminTab') }}" data-html="true" data-placement="top">
-            <i class="process-icon-terminal"></i>
-          </span>
-        </a>
-        <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
-          <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Export to SQL Manager", {}, 'AdminTab') }}" data-html="true" data-placement="top">
-            <i class="process-icon-database"></i>
-          </span>
-        </a>
-      </span>
-    #}
-
   {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
     'id': "catalog_duplication_modal",
     'title': trans("Duplication in progress...", {}, 'AdminProducts'),
     'closable': true,
     'progressbar': {
-      'id': "catalog_duplication_progression",
-      'label': trans("Duplicating...", {}, 'AdminProducts')
-    },
+    'id': "catalog_duplication_progression",
+    'label': trans("Duplicating...", {}, 'AdminProducts')
+  },
     'actions': [],
   }%}
     {% block content %}
@@ -358,17 +393,15 @@
   {% endembed %}
 
   {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
-  'id': "catalog_sql_query_modal",
-  'title': trans("SQL query", {}, 'AdminProducts'),
-  'closable': true,
-  'actions': [
-  {
-  'type': 'button',
-  'label': trans("Export to SQL Manager", {}, 'AdminTab'),
-  'value': 'sql_manager',
-  'class': 'btn',
-  }
-  ],
+    'id': "catalog_sql_query_modal",
+    'title': trans("SQL query", {}, 'AdminProducts'),
+    'closable': true,
+    'actions': [{
+      'type': 'button',
+      'label': trans("Export to SQL Manager", {}, 'AdminTab'),
+      'value': 'sql_manager',
+      'class': 'btn',
+    }],
   } %}
     {% block content %}
       <form method="post" action="{{ sql_manager_add_link }}" id="catalog_sql_query_modal_content">

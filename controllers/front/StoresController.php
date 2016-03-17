@@ -231,6 +231,7 @@ class StoresControllerCore extends FrontController
                     'hours' => $temp[6],
                 ],
             ];
+            $store['image'] = _THEME_STORE_DIR_.(int)$store['id_store'].'-stores_default.jpg';
         }
 
         return $stores;

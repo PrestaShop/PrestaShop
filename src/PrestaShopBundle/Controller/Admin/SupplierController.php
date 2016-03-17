@@ -91,8 +91,8 @@ class SupplierController extends FrameworkBundleAdminController
                 continue;
             }
 
-            $simpleSubForm->add('supplier_combination_'.$idSupplier, FormType\CollectionType::class, array(
-                'entry_type' =>  \PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination::class,
+            $simpleSubForm->add('supplier_combination_'.$idSupplier, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
+                'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination',
                 'entry_options'  => array(
                     'id_supplier' => $idSupplier,
                 ),

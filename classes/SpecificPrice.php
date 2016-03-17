@@ -313,7 +313,8 @@ class SpecificPriceCore extends ObjectModel
         return $query_extra;
     }
 
-    private static function formatIntInQuery($first_value, $second_value) {
+    private static function formatIntInQuery($first_value, $second_value)
+    {
         $first_value = (int)$first_value;
         $second_value = (int)$second_value;
         if ($first_value != $second_value) {
@@ -468,7 +469,7 @@ class SpecificPriceCore extends ObjectModel
 					`reduction` > 0
 		'.$query_extra);
         $ids_product = array();
-        foreach($results as $key => $value) {
+        foreach ($results as $key => $value) {
             $ids_product[] = $with_combination_id ? array('id_product' => (int)$value['id_product'], 'id_product_attribute' => (int)$value['id_product_attribute']) : (int)$value['id_product'];
         }
 

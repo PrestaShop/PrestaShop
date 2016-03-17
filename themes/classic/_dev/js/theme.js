@@ -1,6 +1,3 @@
-/* global document */
-/* expose jQuery for modules */
-
 import $ from 'expose?$!expose?jQuery!jquery';
 import 'expose?Tether!tether';
 import 'bootstrap/dist/js/npm';
@@ -10,7 +7,6 @@ import 'bootstrap-touchspin';
 import '../css/theme';
 import './checkout';
 import './customer';
-import './facets';
 import './product';
 import './cart';
 
@@ -21,10 +17,6 @@ import ProductSelect from './components/product-select';
 
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
-import {
-  psShowHide
-}
-from './common';
 
 import 'bootstrap-validator/dist/validator.min';
 import './lib/bootstrap-filestyle.min';
@@ -47,5 +39,4 @@ $(document).ready(() => {
   topMenu.init();
   productMinitature.init();
   productSelect.init();
-  psShowHide();
 });

@@ -3,10 +3,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
-use PrestaShop\PrestaShop\Adapter\ObjectSerializer;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 use Address;
 use AddressFormat;
 use Carrier;
@@ -20,23 +21,26 @@ use OrderReturn;
 use Product;
 use Tools;
 
-class OrderPresenter
+class OrderPresenter implements PresenterInterface
 {
     /* @var CartPresenter */
     private $cartPresenter;
-    /* @var ObjectSerializer */
-    private $objectSerializer;
-    /* @var PricePresenter */
-    private $pricePresenter;
+
+    /* @var ObjectPresenter */
+    private $objectPresenter;
+
+    /* @var PriceFormatter */
+    private $priceFormatter;
+
     /* @var Translator */
     private $translator;
 
     public function __construct()
     {
-        $this->cartPresenter = new CartPresenter();
-        $this->objectSerializer = new ObjectSerializer();
-        $this->pricePresenter = new PricePresenter();
-        $this->translator = new Translator(new LegacyContext());
+        $this->cartPresenter   = new CartPresenter();
+        $this->objectPresenter = new ObjectPresenter();
+        $this->priceFormatter  = new PriceFormatter();
+        $this->translator      = new Translator(new LegacyContext());
     }
 
     /**
@@ -44,8 +48,12 @@ class OrderPresenter
      *
      * @return array
      */
-    public function present(Order $order)
+    public function present($order)
     {
+        if (!is_a($order, 'Order')) {
+            throw new \Exception("OrderPresenter can only present instance of Order");
+        }
+
         return [
             'products' => $this->getProducts($order),
             'products_count' => count($this->getProducts($order)),
@@ -59,7 +67,8 @@ class OrderPresenter
             'follow_up' => $this->getFollowUp($order),
             'shipping' => $this->getShipping($order),
             'id_address_delivery' => $order->id_address_delivery,
-            'id_address_invoice' => $order->id_address_invoice
+            'id_address_invoice' => $order->id_address_invoice,
+            'tax_label' => $this->getTaxLabel(),
         ];
     }
 
@@ -68,21 +77,21 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getProducts(Order $order)
+    private function getProducts(Order $order)
     {
         $cart = new Cart($order->id_cart);
 
         $orderProducts = $order->getCartProducts();
         $cartProducts = $this->cartPresenter->present($cart);
 
-        foreach($orderProducts as &$orderProduct) {
+        foreach ($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
-            $orderProduct['price'] = $this->pricePresenter->convertAndFormat($orderProduct['product_price']);
+            $orderProduct['price'] = $this->priceFormatter->format($orderProduct['product_price']);
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
-            $orderProduct['total'] = $this->pricePresenter->convertAndFormat($orderProduct['total_price']);
+            $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price']);
 
-            foreach($cartProducts['products'] as $cartProduct) {
-                if($cartProduct['id_product'] === $orderProduct['product_id']) {
+            foreach ($cartProducts['products'] as $cartProduct) {
+                if ($cartProduct['id_product'] === $orderProduct['product_id']) {
                     $orderProduct['attributes'] = $cartProduct['attributes'];
                     $orderProduct['cover'] = $cartProduct['cover'];
                 }
@@ -101,54 +110,62 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getAmounts(Order $order)
+    private function getAmounts(Order $order)
     {
+        $tax_label = $this->getTaxLabel();
         $amounts = [];
-        $ubtotals = [];
+        $subtotals = [];
 
-        if (Configuration::get('PS_TAX_DISPLAY')) {
+        $tax = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
+        if ((float)$tax && Configuration::get('PS_TAX_DISPLAY')) {
             $subtotals['tax'] = [
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', [], 'Cart'),
-                'amount' => $this->pricePresenter->convertAndFormat(
-                    $order->total_paid_tax_incl - $order->total_paid_tax_excl
-                ),
+                'amount' => $tax,
+                'value' => $this->priceFormatter->format($tax),
             ];
         }
 
         $subtotals['products'] = [
             'type' => 'products',
-            'label' => $this->translator->trans('Products', [], 'Cart'),
-            'amount' =>  $this->pricePresenter->convertAndFormat($order->total_products)
+            'label' => $this->translator->trans('Products', [], 'Cart').' '.$tax_label,
+            'amount' => $order->total_products,
+            'value' => $this->priceFormatter->format($order->total_products),
         ];
 
         $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
-
         $subtotals['shipping'] = [
             'type' => 'shipping',
-            'label' => $this->translator->trans('Shipping', [], 'Cart'),
-            'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
+            'label' => $this->translator->trans('Shipping and handling', [], 'Cart').' '.$tax_label,
+            'amount' => $shipping_cost,
+            'value' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
         ];
 
         $discount_amount = ($this->includeTaxes()) ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
-        $subtotals['discounts'] = [
-            'type' => 'discount',
-            'label' => $this->translator->trans('Discount', [], 'Cart'),
-            'amount' => $discount_amount != 0 ? $this->pricePresenter->convertAndFormat($discount_amount) : 0,
-        ];
+        if ((float)$discount_amount) {
+            $subtotals['discounts'] = [
+                'type' => 'discount',
+                'label' => $this->translator->trans('Discount', [], 'Cart').' '.$tax_label,
+                'amount' => $discount_amount,
+                'value' => $this->priceFormatter->format($discount_amount),
+            ];
+        }
+
+        $amounts['subtotals'] = $subtotals;
 
         $amounts['total'] = [
             'type' => 'total',
             'label' => $this->translator->trans('Total', [], 'Order'),
-            'amount' => $this->pricePresenter->convertAndFormat($order->total_paid),
+            'amount' => $order->total_paid,
+            'value' => $this->priceFormatter->format($order->total_paid),
         ];
+
         $amounts['total_paid'] = [
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', [], 'Order'),
-            'amount' => $this->pricePresenter->convertAndFormat($order->total_paid_real),
+            'amount' => $order->total_paid_real,
+            'value' => $this->priceFormatter->format($order->total_paid_real),
         ];
-
-        $amounts['subtotals'] = $subtotals;
 
         return $amounts;
     }
@@ -158,7 +175,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getDetails(Order $order)
+    private function getDetails(Order $order)
     {
         $context = Context::getContext();
 
@@ -182,7 +199,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getHistory(Order $order)
+    private function getHistory(Order $order)
     {
         $orderHistory = [];
         $context = Context::getContext();
@@ -202,7 +219,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getShipping(Order $order)
+    private function getShipping(Order $order)
     {
         $shippingList = $order->getShipping();
         $orderShipping = [];
@@ -236,7 +253,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getMessages(Order $order)
+    private function getMessages(Order $order)
     {
         $messages = [];
         $customerMessages = CustomerMessage::getMessagesByOrderId((int) $order->id, false);
@@ -262,10 +279,10 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getCarrier(Order $order)
+    private function getCarrier(Order $order)
     {
         $carrier = new Carrier((int) $order->id_carrier, (int) $order->id_lang);
-        $orderCarrier = $this->objectSerializer->toArray($carrier);
+        $orderCarrier = $this->objectPresenter->present($carrier);
         $orderCarrier['name'] = ($carrier->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
 
         return $orderCarrier;
@@ -276,7 +293,7 @@ class OrderPresenter
      *
      * @return array
      */
-    public function getAddresses(Order $order)
+    private function getAddresses(Order $order)
     {
         $orderAddresses = [
             'delivery' => [],
@@ -287,11 +304,11 @@ class OrderPresenter
         $addressInvoice = new Address((int) $order->id_address_invoice);
 
         if (!$order->isVirtual()) {
-            $orderAddresses['delivery'] = $this->objectSerializer->toArray($addressDelivery);
+            $orderAddresses['delivery'] = $this->objectPresenter->present($addressDelivery);
             $orderAddresses['delivery']['formatted'] = AddressFormat::generateAddress($addressDelivery, array(), '<br />');
         }
 
-        $orderAddresses['invoice'] = $this->objectSerializer->toArray($addressInvoice);
+        $orderAddresses['invoice'] = $this->objectPresenter->present($addressInvoice);
         $orderAddresses['invoice']['formatted'] = AddressFormat::generateAddress($addressInvoice, array(), '<br />');
 
         return $orderAddresses;
@@ -302,7 +319,7 @@ class OrderPresenter
      *
      * @return string
      */
-    public function getFollowUp(Order $order)
+    private function getFollowUp(Order $order)
     {
         $carrier = $this->getCarrier($order);
         if (!empty($carrier['url']) && !empty($order->shipping_number)) {
@@ -315,5 +332,12 @@ class OrderPresenter
     private function includeTaxes()
     {
         return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
+    }
+
+    private function getTaxLabel()
+    {
+        return ($this->includeTaxes())
+                ? $this->translator->trans('(tax incl.)', [], 'Cart')
+                : $this->translator->trans('(tax excl.)', [], 'Cart');
     }
 }

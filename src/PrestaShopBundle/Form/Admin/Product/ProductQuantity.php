@@ -65,7 +65,7 @@ class ProductQuantity extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('attributes', FormType\TextType::class, array(
+        $builder->add('attributes', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'attr' =>  [
                 'class' => 'tokenfield',
                 'data-limit' => 20,
@@ -76,12 +76,12 @@ class ProductQuantity extends CommonAbstractType
             ],
             'label' =>  $this->translator->trans('Create combinations', [], 'AdminProducts')
             ))
-            ->add('advanced_stock_management', FormType\CheckboxType::class, array(
+            ->add('advanced_stock_management', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
                 'required' => false,
                 'label' => $this->translator->trans('I want to use the advanced stock management system for this product.', [], 'AdminProducts'),
             ))
-            ->add('pack_stock_type', FormType\ChoiceType::class, ['choices_as_values' => true, ]) //see eventListener for details
-            ->add('depends_on_stock', FormType\ChoiceType::class, array(
+            ->add('pack_stock_type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', ['choices_as_values' => true, ]) //see eventListener for details
+            ->add('depends_on_stock', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
                     $this->translator->trans('The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). ', [], 'AdminProducts') => 1,
                     $this->translator->trans('I want to specify available quantities manually.', [], 'AdminProducts') => 0,
@@ -91,7 +91,7 @@ class ProductQuantity extends CommonAbstractType
                 'required' => true,
                 'multiple' => false,
             ))
-            ->add('qty_0', FormType\NumberType::class, array(
+            ->add('qty_0', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => true,
                 'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
                 'constraints' => array(
@@ -99,13 +99,15 @@ class ProductQuantity extends CommonAbstractType
                     new Assert\Type(array('type' => 'numeric')),
                 ),
             ))
-            ->add('combinations', FormType\CollectionType::class, array(
-                'entry_type' => \PrestaShopBundle\Form\Admin\Product\ProductCombination::class,
+            ->add('combinations', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
+                'entry_type' =>'PrestaShopBundle\Form\Admin\Product\ProductCombination',
                 'allow_add' => true,
                 'allow_delete' => true
             ))
-            ->add('out_of_stock', FormType\ChoiceType::class, ['choices_as_values' => true, ]) //see eventListener for details
-            ->add('minimal_quantity', FormType\NumberType::class, array(
+            ->add('out_of_stock', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices_as_values' => true,
+            ))
+            ->add('minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => true,
                 'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
                 'constraints' => array(
@@ -113,26 +115,26 @@ class ProductQuantity extends CommonAbstractType
                     new Assert\Type(array('type' => 'numeric')),
                 ),
             ))
-            ->add('available_now', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
-                'type' => FormType\TextType::class,
+            ->add('available_now', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+                'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
                 'options' => [],
                 'locales' => $this->locales,
                 'hideTabs' => true,
                 'label' =>  $this->translator->trans('Displayed text when in-stock', [], 'AdminProducts')
             ))
-            ->add('available_later', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
-                'type' => FormType\TextType::class,
+            ->add('available_later', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+                'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
                 'options' => [],
                 'locales' => $this->locales,
                 'hideTabs' => true,
                 'label' =>  $this->translator->trans('Displayed text when out of stock', [], 'AdminProducts')
             ))
-            ->add('available_date', PsFormType\DatePickerType::class, array(
+            ->add('available_date', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
                 'required' => false,
                 'label' => $this->translator->trans('Availability date:', [], 'AdminProducts'),
                 'attr' => ['placeholder' => 'YYYY-MM-DD']
             ))
-            ->add('virtual_product', \PrestaShopBundle\Form\Admin\Product\ProductVirtual::class, array(
+            ->add('virtual_product', 'PrestaShopBundle\Form\Admin\Product\ProductVirtual', array(
                 'required' => false,
                 'label' => $this->translator->trans('Does this product have an associated file?', [], 'AdminProducts'),
             ));
@@ -147,7 +149,7 @@ class ProductQuantity extends CommonAbstractType
                 $this->translator->trans('Deny', [], 'AdminProducts');
             $defaultChoiceLabel .= ')';
 
-            $form->add('out_of_stock', FormType\ChoiceType::class, array(
+            $form->add('out_of_stock', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
                     $this->translator->trans('Deny', [], 'AdminProducts') => '0',
                     $this->translator->trans('Allow', [], 'AdminProducts') => '1',
@@ -171,7 +173,7 @@ class ProductQuantity extends CommonAbstractType
                 $defaultChoiceLabel .= $this->translator->trans('Decrement both.', [], 'AdminProducts');
             }
 
-            $form->add('pack_stock_type', FormType\ChoiceType::class, array(
+            $form->add('pack_stock_type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
                     $this->translator->trans('Decrement pack only.', [], 'AdminProducts') => '0',
                     $this->translator->trans('Decrement products in pack only.', [], 'AdminProducts') => '1',

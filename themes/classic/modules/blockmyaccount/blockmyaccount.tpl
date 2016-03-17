@@ -23,8 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div id="block_myaccount_infos" class="col-md-2 _margin-top-medium">
-	<h4 class="myaccount-title"><a class="_gray-darker text-uppercase" href="{$urls.pages.my_account}" title="{l s='Your account' mod='blockmyaccount'}" rel="nofollow">{l s='Your account' mod='blockmyaccount'}</a></h4>
+<div id="block_myaccount_infos" class="col-md-3">
+	<h4 class="myaccount-title"><a class="text-uppercase" href="{$urls.pages.my_account}" title="{l s='Your account' mod='blockmyaccount'}" rel="nofollow">{l s='Your account' mod='blockmyaccount'}</a></h4>
 	<ul class="account-list">
     {foreach from=$my_account_urls item=my_account_url}
         <li><a href="{$my_account_url.url}" title="{$my_account_url.title}" rel="nofollow">{$my_account_url.title}</a></li>

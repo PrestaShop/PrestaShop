@@ -75,11 +75,14 @@
                     value = value+','+suggestion.id_product_attribute;
                 }
 
-                var html = '<li>';
-                html += '<img src="'+ suggestion.image +'" /> ';
-                html += sprintf('{{ template_collection|raw }}', suggestion.{{ mapping_name }});
+                var html = '<li class="col-md-3 m-b-1">';
+                html += '<div>';
+                html += '<img class="img" src="'+ suggestion.image +'" /> ';
+                html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', suggestion.{{ mapping_name }});
                 html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
+                html += '</div>';
                 html += '</li>';
+
                 $('#{{ form.vars.id }}-data').append(html);
 
             }).bind('typeahead:close', function(ev) {
@@ -90,21 +93,22 @@
 {% endblock %}
 
 {% block typeahead_product_pack_collection_widget %}
-    <h4 class="title-products {{ collection is defined and collection|length > 0 ? '' : 'hide' }}">{{ trans('List of products for this pack', {}, 'AdminProducts') }}</h4>
-    <ul id="{{ form.vars.id }}-data" class="typeahead-list pack nostyle">
+    <h2 class="title-products {{ collection is defined and collection|length > 0 ? '' : 'hide' }}">{{ trans('List of products for this pack', {}, 'AdminProducts') }}</h2>
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list pack nostyle row">
         {% if collection is defined and collection|length > 0 %}
             {% for item in collection %}
-                <li data-product="{{ item.id }}-{{ item.id_product_attribute }}">
-                    <img src="{{ item.image }}" /> {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
-                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
-                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
+                <li data-product="{{ item.id }}-{{ item.id_product_attribute }}" class="col-md-3 m-b-1">
+                    <div class="pack-product">
+                        <img class="cover" src="{{ item.image }}" /> {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
+                        <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
+                        <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
+                    </div>
                 </li>
             {% endfor %}
         {% endif %}
     </ul>
-    <div class="clearfix"></div>
-    <h4>{{ form.vars.label }}</h4>
 
+    <h2>{{ form.vars.label }}</h2>
 
     <div class="row m-b-2">
         <div class="col-md-6">
@@ -118,7 +122,10 @@
         </div>
         <div class="col-md-2">
             <div class="input-group">
-                <button id="{{ form.vars.id }}-curPackItemAdd" class="btn btn-primary-outline">{{ trans("Add this product", {}, "AdminProducts") }}</button>
+                <button id="{{ form.vars.id }}-curPackItemAdd" class="btn btn-action btn-block">
+                    <i class="material-icons">add</i>
+                    {{ trans("Add this product", {}, "AdminProducts") }}
+                </button>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -147,11 +154,14 @@
                         var data = $(this).data('currentItem');
                         var value = number + 'x' + data.id + 'x' + (data.id_product_attribute ? data.id_product_attribute : 0);
 
-                        var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '">';
-                        html += '<img src="' + data.image +'" /> ';
-                        html += sprintf('{{ template_collection|raw }}', data.{{ mapping_name }}, data.ref, number);
+                        var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '" class="col-md-3 m-b-1">';
+                        html += '<div class="pack-product">';
+                        html += '<img class="cover" src="' + data.image +'" />';
+                        html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', data.{{ mapping_name }}, data.ref, number);
                         html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
+                        html += '</div>';
                         html += '</li>';
+
                         $('#{{ form.vars.id }}-data').append(html);
                         $('#js_{{ form.vars.id }} h4.title-products').removeClass('hide');
 
@@ -287,7 +297,7 @@
                 }
 
                 var html = '<li>';
-                html += sprintf('{{ template_collection|raw }}', suggestion.{{ mapping_name }});
+                html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', suggestion.{{ mapping_name }});
                 html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                 html += '</li>';
                 $('#{{ form.vars.id }}-data').append(html);

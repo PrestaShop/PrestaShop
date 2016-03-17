@@ -26,7 +26,7 @@
       {elseif $field.type === 'checkbox'}
         <span class="custom-checkbox">
           <input type="checkbox" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
-          <span><i class="material-icons check">&#xE5CA;</i></span>
+          <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
           <label>{$field.label}</label>
         </span>
       {elseif $field.type === 'date'}

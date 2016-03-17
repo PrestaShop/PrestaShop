@@ -91,24 +91,8 @@
         });
     });
 </script>
-<style>
-    <!-- /* To remove once integrated in sass */
-    #{{ input_name }}, #{{ input_name }}_min, #{{ input_name }}_max  {
-        width: 30%;
-        display: inline-block;
-    }
-    #{{ input_name }}_div  {
-        display: block;
-    }
-    span.{{ input_name }}_span  {
-        display: inline;
-    }
-    -->
-</style>
-
 <div id="{{ input_name }}_div">
     <input type="hidden" id="{{ input_name }}" name="{{ input_name }}" value="" sql="{{ value }}" />
-    <input type="text" id="{{ input_name }}_min" value="" placeholder="{{ minLabel|default('Min') }}" />
-    <span class="{{ input_name }}_span">&nbsp;</span>
-    <input type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" />
+    <input class="form-control form-min-max" type="text" id="{{ input_name }}_min" value="" placeholder="{{ minLabel|default('Min') }}" />
+    <input class="form-control form-min-max" type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" />
 </div>

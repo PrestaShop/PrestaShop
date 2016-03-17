@@ -39,9 +39,20 @@ class AddonListFilter
     public $status;
 
     /**
+     * @var $status AddonListFilterOrigin Specify if you want an addon from a specific source
+     */
+    public $origin;
+
+    /**
      * @var array Names of all the addons to exclude from result
      */
     public $exclude = [];
+
+    public function setOrigin($origin)
+    {
+        $this->origin = $origin;
+        return $this;
+    }
 
     public function setType($type)
     {

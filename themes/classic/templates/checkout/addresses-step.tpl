@@ -1,6 +1,7 @@
 {extends file='checkout/checkout-step.tpl'}
 
 {block name='step_content'}
+<form method="POST" action="{$urls.pages.order}">
 
   {if !$use_same_address}
     <h2 class="h4">{l s='Your Delivery Address'}</h2>
@@ -22,7 +23,7 @@
       }
     </div>
   {elseif $customer.addresses|count > 0}
-    <div id="delivery-addresses">
+    <div id="delivery-addresses" class="address-selector js-address-selector">
       {include  file        = 'checkout/_partials/address-selector-block.tpl'
                 addresses   = $customer.addresses
                 name        = "id_address_delivery"
@@ -58,7 +59,7 @@
         }
       </div>
     {else}
-      <div id="invoice-addresses">
+      <div id="invoice-addresses" class="address-selector js-address-selector">
         {include  file        = 'checkout/_partials/address-selector-block.tpl'
                   addresses   = $customer.addresses
                   name        = "id_address_invoice"
@@ -76,11 +77,12 @@
   {/if}
 
   {if !$form_has_continue_button}
-    <form class="clearfix">
+    <div class="clearfix">
       <button type="submit" class="btn btn-primary continue pull-xs-right" name="confirm-addresses" value="1">
           {l s='Continue'}
       </button>
-    </form>
+    </div>
   {/if}
 
+</form>
 {/block}

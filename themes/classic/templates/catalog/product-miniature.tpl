@@ -1,5 +1,5 @@
 <article class="product-miniature js-product-miniature" itemscope itemtype="http://schema.org/Product">
-  <div class="thumbnail-container _relative">
+  <div class="thumbnail-container">
     {block name='product_thumbnail'}
       <a href="{$product.url}" class="thumbnail product-thumbnail">
         <img

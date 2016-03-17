@@ -4567,443 +4567,6 @@ a.bg-danger:focus, a.bg-danger:hover {
   .hidden-print {
     display: none !important; } }
 
-/*!
- * Datepicker for Bootstrap v1.6.0 (https://github.com/eternicode/bootstrap-datepicker)
- *
- * Copyright 2012 Stefan Petre
- * Improvements by Andrew Rowls
- * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
- */
-.datepicker {
-  border-radius: 4px;
-  direction: ltr; }
-
-.datepicker-inline {
-  width: 220px; }
-
-.datepicker.datepicker-rtl {
-  direction: rtl; }
-
-.datepicker.datepicker-rtl table tr td span {
-  float: right; }
-
-.datepicker-dropdown {
-  top: 0;
-  left: 0;
-  padding: 4px; }
-
-.datepicker-dropdown:before {
-  content: '';
-  display: inline-block;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-bottom: 7px solid rgba(0, 0, 0, 0.15);
-  border-top: 0;
-  border-bottom-color: rgba(0, 0, 0, 0.2);
-  position: absolute; }
-
-.datepicker-dropdown:after {
-  content: '';
-  display: inline-block;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid #fff;
-  border-top: 0;
-  position: absolute; }
-
-.datepicker-dropdown.datepicker-orient-left:before {
-  left: 6px; }
-
-.datepicker-dropdown.datepicker-orient-left:after {
-  left: 7px; }
-
-.datepicker-dropdown.datepicker-orient-right:before {
-  right: 6px; }
-
-.datepicker-dropdown.datepicker-orient-right:after {
-  right: 7px; }
-
-.datepicker-dropdown.datepicker-orient-bottom:before {
-  top: -7px; }
-
-.datepicker-dropdown.datepicker-orient-bottom:after {
-  top: -6px; }
-
-.datepicker-dropdown.datepicker-orient-top:before {
-  bottom: -7px;
-  border-bottom: 0;
-  border-top: 7px solid rgba(0, 0, 0, 0.15); }
-
-.datepicker-dropdown.datepicker-orient-top:after {
-  bottom: -6px;
-  border-bottom: 0;
-  border-top: 6px solid #fff; }
-
-.datepicker > div {
-  display: none; }
-
-.datepicker table {
-  margin: 0;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-
-.datepicker table tr td, .datepicker table tr th {
-  text-align: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 4px;
-  border: none; }
-
-.table-striped .datepicker table tr td, .table-striped .datepicker table tr th {
-  background-color: transparent; }
-
-.datepicker table tr td.new, .datepicker table tr td.old {
-  color: #777; }
-
-.datepicker table tr td.day:hover, .datepicker table tr td.focused {
-  background: #eee;
-  cursor: pointer; }
-
-.datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
-  background: 0 0;
-  color: #777;
-  cursor: default; }
-
-.datepicker table tr td.highlighted {
-  color: #000;
-  background-color: #d9edf7;
-  border-color: #85c5e5;
-  border-radius: 0; }
-
-.datepicker table tr td.highlighted.focus, .datepicker table tr td.highlighted:focus {
-  color: #000;
-  background-color: #afd9ee;
-  border-color: #298fc2; }
-
-.datepicker table tr td.highlighted:hover {
-  color: #000;
-  background-color: #afd9ee;
-  border-color: #52addb; }
-
-.datepicker table tr td.highlighted.active, .datepicker table tr td.highlighted:active {
-  color: #000;
-  background-color: #afd9ee;
-  border-color: #52addb; }
-
-.datepicker table tr td.highlighted.active.focus, .datepicker table tr td.highlighted.active:focus, .datepicker table tr td.highlighted.active:hover, .datepicker table tr td.highlighted:active.focus, .datepicker table tr td.highlighted:active:focus, .datepicker table tr td.highlighted:active:hover {
-  color: #000;
-  background-color: #91cbe8;
-  border-color: #298fc2; }
-
-.datepicker table tr td.highlighted.disabled.focus, .datepicker table tr td.highlighted.disabled:focus, .datepicker table tr td.highlighted.disabled:hover, .datepicker table tr td.highlighted[disabled].focus, .datepicker table tr td.highlighted[disabled]:focus, .datepicker table tr td.highlighted[disabled]:hover, fieldset[disabled] .datepicker table tr td.highlighted.focus, fieldset[disabled] .datepicker table tr td.highlighted:focus, fieldset[disabled] .datepicker table tr td.highlighted:hover {
-  background-color: #d9edf7;
-  border-color: #85c5e5; }
-
-.datepicker table tr td.highlighted.focused {
-  background: #afd9ee; }
-
-.datepicker table tr td.highlighted.disabled, .datepicker table tr td.highlighted.disabled:active {
-  background: #d9edf7;
-  color: #777; }
-
-.datepicker table tr td.today {
-  color: #000;
-  background-color: #ffdb99;
-  border-color: #ffb733; }
-
-.datepicker table tr td.today.focus, .datepicker table tr td.today:focus {
-  color: #000;
-  background-color: #ffc966;
-  border-color: #b37400; }
-
-.datepicker table tr td.today:hover {
-  color: #000;
-  background-color: #ffc966;
-  border-color: #f59e00; }
-
-.datepicker table tr td.today.active, .datepicker table tr td.today:active {
-  color: #000;
-  background-color: #ffc966;
-  border-color: #f59e00; }
-
-.datepicker table tr td.today.active.focus, .datepicker table tr td.today.active:focus, .datepicker table tr td.today.active:hover, .datepicker table tr td.today:active.focus, .datepicker table tr td.today:active:focus, .datepicker table tr td.today:active:hover {
-  color: #000;
-  background-color: #ffbc42;
-  border-color: #b37400; }
-
-.datepicker table tr td.today.disabled.focus, .datepicker table tr td.today.disabled:focus, .datepicker table tr td.today.disabled:hover, .datepicker table tr td.today[disabled].focus, .datepicker table tr td.today[disabled]:focus, .datepicker table tr td.today[disabled]:hover, fieldset[disabled] .datepicker table tr td.today.focus, fieldset[disabled] .datepicker table tr td.today:focus, fieldset[disabled] .datepicker table tr td.today:hover {
-  background-color: #ffdb99;
-  border-color: #ffb733; }
-
-.datepicker table tr td.today.focused {
-  background: #ffc966; }
-
-.datepicker table tr td.today.disabled, .datepicker table tr td.today.disabled:active {
-  background: #ffdb99;
-  color: #777; }
-
-.datepicker table tr td.range {
-  color: #000;
-  background-color: #eee;
-  border-color: #bbb;
-  border-radius: 0; }
-
-.datepicker table tr td.range.focus, .datepicker table tr td.range:focus {
-  color: #000;
-  background-color: #d5d5d5;
-  border-color: #7c7c7c; }
-
-.datepicker table tr td.range:hover {
-  color: #000;
-  background-color: #d5d5d5;
-  border-color: #9d9d9d; }
-
-.datepicker table tr td.range.active, .datepicker table tr td.range:active {
-  color: #000;
-  background-color: #d5d5d5;
-  border-color: #9d9d9d; }
-
-.datepicker table tr td.range.active.focus, .datepicker table tr td.range.active:focus, .datepicker table tr td.range.active:hover, .datepicker table tr td.range:active.focus, .datepicker table tr td.range:active:focus, .datepicker table tr td.range:active:hover {
-  color: #000;
-  background-color: #c3c3c3;
-  border-color: #7c7c7c; }
-
-.datepicker table tr td.range.disabled.focus, .datepicker table tr td.range.disabled:focus, .datepicker table tr td.range.disabled:hover, .datepicker table tr td.range[disabled].focus, .datepicker table tr td.range[disabled]:focus, .datepicker table tr td.range[disabled]:hover, fieldset[disabled] .datepicker table tr td.range.focus, fieldset[disabled] .datepicker table tr td.range:focus, fieldset[disabled] .datepicker table tr td.range:hover {
-  background-color: #eee;
-  border-color: #bbb; }
-
-.datepicker table tr td.range.focused {
-  background: #d5d5d5; }
-
-.datepicker table tr td.range.disabled, .datepicker table tr td.range.disabled:active {
-  background: #eee;
-  color: #777; }
-
-.datepicker table tr td.range.highlighted {
-  color: #000;
-  background-color: #e4eef3;
-  border-color: #9dc1d3; }
-
-.datepicker table tr td.range.highlighted.focus, .datepicker table tr td.range.highlighted:focus {
-  color: #000;
-  background-color: #c1d7e3;
-  border-color: #4b88a6; }
-
-.datepicker table tr td.range.highlighted:hover {
-  color: #000;
-  background-color: #c1d7e3;
-  border-color: #73a6c0; }
-
-.datepicker table tr td.range.highlighted.active, .datepicker table tr td.range.highlighted:active {
-  color: #000;
-  background-color: #c1d7e3;
-  border-color: #73a6c0; }
-
-.datepicker table tr td.range.highlighted.active.focus, .datepicker table tr td.range.highlighted.active:focus, .datepicker table tr td.range.highlighted.active:hover, .datepicker table tr td.range.highlighted:active.focus, .datepicker table tr td.range.highlighted:active:focus, .datepicker table tr td.range.highlighted:active:hover {
-  color: #000;
-  background-color: #a8c8d8;
-  border-color: #4b88a6; }
-
-.datepicker table tr td.range.highlighted.disabled.focus, .datepicker table tr td.range.highlighted.disabled:focus, .datepicker table tr td.range.highlighted.disabled:hover, .datepicker table tr td.range.highlighted[disabled].focus, .datepicker table tr td.range.highlighted[disabled]:focus, .datepicker table tr td.range.highlighted[disabled]:hover, fieldset[disabled] .datepicker table tr td.range.highlighted.focus, fieldset[disabled] .datepicker table tr td.range.highlighted:focus, fieldset[disabled] .datepicker table tr td.range.highlighted:hover {
-  background-color: #e4eef3;
-  border-color: #9dc1d3; }
-
-.datepicker table tr td.range.highlighted.focused {
-  background: #c1d7e3; }
-
-.datepicker table tr td.range.highlighted.disabled, .datepicker table tr td.range.highlighted.disabled:active {
-  background: #e4eef3;
-  color: #777; }
-
-.datepicker table tr td.range.today {
-  color: #000;
-  background-color: #f7ca77;
-  border-color: #f1a417; }
-
-.datepicker table tr td.range.today.focus, .datepicker table tr td.range.today:focus {
-  color: #000;
-  background-color: #f4b747;
-  border-color: #815608; }
-
-.datepicker table tr td.range.today:hover {
-  color: #000;
-  background-color: #f4b747;
-  border-color: #bf800c; }
-
-.datepicker table tr td.range.today.active, .datepicker table tr td.range.today:active {
-  color: #000;
-  background-color: #f4b747;
-  border-color: #bf800c; }
-
-.datepicker table tr td.range.today.active.focus, .datepicker table tr td.range.today.active:focus, .datepicker table tr td.range.today.active:hover, .datepicker table tr td.range.today:active.focus, .datepicker table tr td.range.today:active:focus, .datepicker table tr td.range.today:active:hover {
-  color: #000;
-  background-color: #f2aa25;
-  border-color: #815608; }
-
-.datepicker table tr td.range.today.disabled.focus, .datepicker table tr td.range.today.disabled:focus, .datepicker table tr td.range.today.disabled:hover, .datepicker table tr td.range.today[disabled].focus, .datepicker table tr td.range.today[disabled]:focus, .datepicker table tr td.range.today[disabled]:hover, fieldset[disabled] .datepicker table tr td.range.today.focus, fieldset[disabled] .datepicker table tr td.range.today:focus, fieldset[disabled] .datepicker table tr td.range.today:hover {
-  background-color: #f7ca77;
-  border-color: #f1a417; }
-
-.datepicker table tr td.range.today.disabled, .datepicker table tr td.range.today.disabled:active {
-  background: #f7ca77;
-  color: #777; }
-
-.datepicker table tr td.selected, .datepicker table tr td.selected.highlighted {
-  color: #fff;
-  background-color: #777;
-  border-color: #555;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); }
-
-.datepicker table tr td.selected.focus, .datepicker table tr td.selected.highlighted.focus, .datepicker table tr td.selected.highlighted:focus, .datepicker table tr td.selected:focus {
-  color: #fff;
-  background-color: #5e5e5e;
-  border-color: #161616; }
-
-.datepicker table tr td.selected.highlighted:hover, .datepicker table tr td.selected:hover {
-  color: #fff;
-  background-color: #5e5e5e;
-  border-color: #373737; }
-
-.datepicker table tr td.selected.active, .datepicker table tr td.selected.highlighted.active, .datepicker table tr td.selected.highlighted:active, .datepicker table tr td.selected:active {
-  color: #fff;
-  background-color: #5e5e5e;
-  border-color: #373737; }
-
-.datepicker table tr td.selected.active.focus, .datepicker table tr td.selected.active:focus, .datepicker table tr td.selected.active:hover, .datepicker table tr td.selected.highlighted.active.focus, .datepicker table tr td.selected.highlighted.active:focus, .datepicker table tr td.selected.highlighted.active:hover, .datepicker table tr td.selected.highlighted:active.focus, .datepicker table tr td.selected.highlighted:active:focus, .datepicker table tr td.selected.highlighted:active:hover, .datepicker table tr td.selected:active.focus, .datepicker table tr td.selected:active:focus, .datepicker table tr td.selected:active:hover {
-  color: #fff;
-  background-color: #4c4c4c;
-  border-color: #161616; }
-
-.datepicker table tr td.selected.disabled.focus, .datepicker table tr td.selected.disabled:focus, .datepicker table tr td.selected.disabled:hover, .datepicker table tr td.selected.highlighted.disabled.focus, .datepicker table tr td.selected.highlighted.disabled:focus, .datepicker table tr td.selected.highlighted.disabled:hover, .datepicker table tr td.selected.highlighted[disabled].focus, .datepicker table tr td.selected.highlighted[disabled]:focus, .datepicker table tr td.selected.highlighted[disabled]:hover, .datepicker table tr td.selected[disabled].focus, .datepicker table tr td.selected[disabled]:focus, .datepicker table tr td.selected[disabled]:hover, fieldset[disabled] .datepicker table tr td.selected.focus, fieldset[disabled] .datepicker table tr td.selected.highlighted.focus, fieldset[disabled] .datepicker table tr td.selected.highlighted:focus, fieldset[disabled] .datepicker table tr td.selected.highlighted:hover, fieldset[disabled] .datepicker table tr td.selected:focus, fieldset[disabled] .datepicker table tr td.selected:hover {
-  background-color: #777;
-  border-color: #555; }
-
-.datepicker table tr td.active, .datepicker table tr td.active.highlighted {
-  color: #fff;
-  background-color: #337ab7;
-  border-color: #2e6da4;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); }
-
-.datepicker table tr td.active.focus, .datepicker table tr td.active.highlighted.focus, .datepicker table tr td.active.highlighted:focus, .datepicker table tr td.active:focus {
-  color: #fff;
-  background-color: #286090;
-  border-color: #122b40; }
-
-.datepicker table tr td.active.highlighted:hover, .datepicker table tr td.active:hover {
-  color: #fff;
-  background-color: #286090;
-  border-color: #204d74; }
-
-.datepicker table tr td.active.active, .datepicker table tr td.active.highlighted.active, .datepicker table tr td.active.highlighted:active, .datepicker table tr td.active:active {
-  color: #fff;
-  background-color: #286090;
-  border-color: #204d74; }
-
-.datepicker table tr td.active.active.focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active.focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active:active.focus, .datepicker table tr td.active:active:focus, .datepicker table tr td.active:active:hover {
-  color: #fff;
-  background-color: #204d74;
-  border-color: #122b40; }
-
-.datepicker table tr td.active.disabled.focus, .datepicker table tr td.active.disabled:focus, .datepicker table tr td.active.disabled:hover, .datepicker table tr td.active.highlighted.disabled.focus, .datepicker table tr td.active.highlighted.disabled:focus, .datepicker table tr td.active.highlighted.disabled:hover, .datepicker table tr td.active.highlighted[disabled].focus, .datepicker table tr td.active.highlighted[disabled]:focus, .datepicker table tr td.active.highlighted[disabled]:hover, .datepicker table tr td.active[disabled].focus, .datepicker table tr td.active[disabled]:focus, .datepicker table tr td.active[disabled]:hover, fieldset[disabled] .datepicker table tr td.active.focus, fieldset[disabled] .datepicker table tr td.active.highlighted.focus, fieldset[disabled] .datepicker table tr td.active.highlighted:focus, fieldset[disabled] .datepicker table tr td.active.highlighted:hover, fieldset[disabled] .datepicker table tr td.active:focus, fieldset[disabled] .datepicker table tr td.active:hover {
-  background-color: #337ab7;
-  border-color: #2e6da4; }
-
-.datepicker table tr td span {
-  display: block;
-  width: 23%;
-  height: 54px;
-  line-height: 54px;
-  float: left;
-  margin: 1%;
-  cursor: pointer;
-  border-radius: 4px; }
-
-.datepicker table tr td span.focused, .datepicker table tr td span:hover {
-  background: #eee; }
-
-.datepicker table tr td span.disabled, .datepicker table tr td span.disabled:hover {
-  background: 0 0;
-  color: #777;
-  cursor: default; }
-
-.datepicker table tr td span.active, .datepicker table tr td span.active.disabled, .datepicker table tr td span.active.disabled:hover, .datepicker table tr td span.active:hover {
-  color: #fff;
-  background-color: #337ab7;
-  border-color: #2e6da4;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); }
-
-.datepicker table tr td span.active.disabled.focus, .datepicker table tr td span.active.disabled:focus, .datepicker table tr td span.active.disabled:hover.focus, .datepicker table tr td span.active.disabled:hover:focus, .datepicker table tr td span.active.focus, .datepicker table tr td span.active:focus, .datepicker table tr td span.active:hover.focus, .datepicker table tr td span.active:hover:focus {
-  color: #fff;
-  background-color: #286090;
-  border-color: #122b40; }
-
-.datepicker table tr td span.active.disabled:hover, .datepicker table tr td span.active.disabled:hover:hover, .datepicker table tr td span.active:hover, .datepicker table tr td span.active:hover:hover {
-  color: #fff;
-  background-color: #286090;
-  border-color: #204d74; }
-
-.datepicker table tr td span.active.active, .datepicker table tr td span.active.disabled.active, .datepicker table tr td span.active.disabled:active, .datepicker table tr td span.active.disabled:hover.active, .datepicker table tr td span.active.disabled:hover:active, .datepicker table tr td span.active:active, .datepicker table tr td span.active:hover.active, .datepicker table tr td span.active:hover:active {
-  color: #fff;
-  background-color: #286090;
-  border-color: #204d74; }
-
-.datepicker table tr td span.active.active.focus, .datepicker table tr td span.active.active:focus, .datepicker table tr td span.active.active:hover, .datepicker table tr td span.active.disabled.active.focus, .datepicker table tr td span.active.disabled.active:focus, .datepicker table tr td span.active.disabled.active:hover, .datepicker table tr td span.active.disabled:active.focus, .datepicker table tr td span.active.disabled:active:focus, .datepicker table tr td span.active.disabled:active:hover, .datepicker table tr td span.active.disabled:hover.active.focus, .datepicker table tr td span.active.disabled:hover.active:focus, .datepicker table tr td span.active.disabled:hover.active:hover, .datepicker table tr td span.active.disabled:hover:active.focus, .datepicker table tr td span.active.disabled:hover:active:focus, .datepicker table tr td span.active.disabled:hover:active:hover, .datepicker table tr td span.active:active.focus, .datepicker table tr td span.active:active:focus, .datepicker table tr td span.active:active:hover, .datepicker table tr td span.active:hover.active.focus, .datepicker table tr td span.active:hover.active:focus, .datepicker table tr td span.active:hover.active:hover, .datepicker table tr td span.active:hover:active.focus, .datepicker table tr td span.active:hover:active:focus, .datepicker table tr td span.active:hover:active:hover {
-  color: #fff;
-  background-color: #204d74;
-  border-color: #122b40; }
-
-.datepicker table tr td span.active.disabled.disabled.focus, .datepicker table tr td span.active.disabled.disabled:focus, .datepicker table tr td span.active.disabled.disabled:hover, .datepicker table tr td span.active.disabled.focus, .datepicker table tr td span.active.disabled:focus, .datepicker table tr td span.active.disabled:hover, .datepicker table tr td span.active.disabled:hover.disabled.focus, .datepicker table tr td span.active.disabled:hover.disabled:focus, .datepicker table tr td span.active.disabled:hover.disabled:hover, .datepicker table tr td span.active.disabled:hover[disabled].focus, .datepicker table tr td span.active.disabled:hover[disabled]:focus, .datepicker table tr td span.active.disabled:hover[disabled]:hover, .datepicker table tr td span.active.disabled[disabled].focus, .datepicker table tr td span.active.disabled[disabled]:focus, .datepicker table tr td span.active.disabled[disabled]:hover, .datepicker table tr td span.active:hover.disabled.focus, .datepicker table tr td span.active:hover.disabled:focus, .datepicker table tr td span.active:hover.disabled:hover, .datepicker table tr td span.active:hover[disabled].focus, .datepicker table tr td span.active:hover[disabled]:focus, .datepicker table tr td span.active:hover[disabled]:hover, .datepicker table tr td span.active[disabled].focus, .datepicker table tr td span.active[disabled]:focus, .datepicker table tr td span.active[disabled]:hover, fieldset[disabled] .datepicker table tr td span.active.disabled.focus, fieldset[disabled] .datepicker table tr td span.active.disabled:focus, fieldset[disabled] .datepicker table tr td span.active.disabled:hover, fieldset[disabled] .datepicker table tr td span.active.disabled:hover.focus, fieldset[disabled] .datepicker table tr td span.active.disabled:hover:focus, fieldset[disabled] .datepicker table tr td span.active.disabled:hover:hover, fieldset[disabled] .datepicker table tr td span.active.focus, fieldset[disabled] .datepicker table tr td span.active:focus, fieldset[disabled] .datepicker table tr td span.active:hover, fieldset[disabled] .datepicker table tr td span.active:hover.focus, fieldset[disabled] .datepicker table tr td span.active:hover:focus, fieldset[disabled] .datepicker table tr td span.active:hover:hover {
-  background-color: #337ab7;
-  border-color: #2e6da4; }
-
-.datepicker table tr td span.new, .datepicker table tr td span.old {
-  color: #777; }
-
-.datepicker .datepicker-switch {
-  width: 145px; }
-
-.datepicker .datepicker-switch, .datepicker .next, .datepicker .prev, .datepicker tfoot tr th {
-  cursor: pointer; }
-
-.datepicker .datepicker-switch:hover, .datepicker .next:hover, .datepicker .prev:hover, .datepicker tfoot tr th:hover {
-  background: #eee; }
-
-.datepicker .cw {
-  font-size: 10px;
-  width: 12px;
-  padding: 0 2px 0 5px;
-  vertical-align: middle; }
-
-.input-group.date .input-group-addon {
-  cursor: pointer; }
-
-.input-daterange {
-  width: 100%; }
-
-.input-daterange input {
-  text-align: center; }
-
-.input-daterange input:first-child {
-  border-radius: 3px 0 0 3px; }
-
-.input-daterange input:last-child {
-  border-radius: 0 3px 3px 0; }
-
-.input-daterange .input-group-addon {
-  width: auto;
-  min-width: 16px;
-  padding: 4px 5px;
-  line-height: 1.42857143;
-  text-shadow: 0 1px 0 #fff;
-  border-width: 1px 0;
-  margin-left: -5px;
-  margin-right: -5px; }
-
-/*# sourceMappingURL=bootstrap-datepicker3.min.css.map */
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -5035,70 +4598,6 @@ a.bg-danger:focus, a.bg-danger:hover {
   -moz-osx-font-smoothing: grayscale;
   /* Support for IE. */
   font-feature-settings: 'liga'; }
-
-/*** HELPERS ***/
-._relative {
-  position: relative; }
-
-._display-table {
-  display: table; }
-
-._display-table-cell {
-  display: table-cell; }
-
-._margin-right-large {
-  margin-right: 30px; }
-
-._margin-right-small {
-  margin-right: 10px; }
-
-._margin-left-small {
-  margin-left: 10px; }
-
-._margin-left-medium {
-  margin-left: 20px; }
-
-._margin-top-small {
-  margin-top: 10px; }
-
-._margin-bottom-medium {
-  margin-bottom: 20px; }
-
-._margin-bottom-small {
-  margin-bottom: 10px; }
-
-._margin-top-medium {
-  margin-top: 20px; }
-
-._margin-top-large {
-  margin-top: 30px; }
-
-._gray-light {
-  color: #ebebeb; }
-
-._gray-dark {
-  color: #878787; }
-
-._gray-darker {
-  color: #414141; }
-
-._bolder {
-  font-weight: 700; }
-
-._shadow {
-  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
-
-._valign-middle {
-  vertical-align: middle; }
-
-._smaller-text {
-  font-size: 14px; }
-
-._divide-right {
-  border-right: #ebebeb 1px solid; }
-
-._divide-top {
-  border-top: #acaaa6 1px solid; }
 
 html,
 body {
@@ -5143,12 +4642,15 @@ a:hover {
     border: 2px solid #414141; }
 
 .h1 {
-  font-size: 1.5em; }
-
-.h1 {
   font-size: 1.25em; }
 
-.h3,
+.h3 {
+  font-size: 1em; }
+
+.h1, .h2, .h3 {
+  text-transform: uppercase;
+  color: #414141; }
+
 .h4 {
   font-size: 1.125em;
   font-weight: 700;
@@ -5285,12 +4787,12 @@ label {
       vertical-align: middle;
       cursor: pointer;
       border: 2px #414141 solid; }
-      .custom-checkbox input[type="checkbox"] + span .check {
+      .custom-checkbox input[type="checkbox"] + span .checkbox-checked {
         display: none;
         margin: -0.25em -0.125em;
         font-size: 1.1em;
         color: #414141; }
-    .custom-checkbox input[type="checkbox"]:checked + span .check {
+    .custom-checkbox input[type="checkbox"]:checked + span .checkbox-checked {
       display: block; }
 
 .text-muted {
@@ -5620,15 +5122,45 @@ body#checkout {
       display: -ms-flexbox;
       -js-display: flex;
       display: flex;
+      -webkit-box-align: center;
+      -moz-box-align: center;
+      box-align: center;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      -ms-align-items: center;
+      -o-align-items: center;
       align-items: center;
-      justify-content: space-between; }
+      -ms-flex-align: center;
+      -webkit-box-pack: justify;
+      -moz-box-pack: justify;
+      box-pack: justify;
+      -webkit-justify-content: space-between;
+      -moz-justify-content: space-between;
+      -ms-justify-content: space-between;
+      -o-justify-content: space-between;
+      justify-content: space-between;
+      -ms-flex-pack: justify; }
+      body#checkout section.checkout-step .delivery-option-2 div.logo-container {
+        -webkit-box-flex: 0;
+        -moz-box-flex: 0;
+        box-flex: 0;
+        -webkit-flex: 0 0 30%;
+        -moz-flex: 0 0 30%;
+        -ms-flex: 0 0 30%;
+        flex: 0 0 30%; }
+      body#checkout section.checkout-step .delivery-option-2 img {
+        max-width: 6.25em;
+        float: left; }
     body#checkout section.checkout-step .delivery-option {
       background: #f6f6f6;
       padding: 0.9375em;
       margin-bottom: 0.9375em; }
-    body#checkout section.checkout-step .carrier-name {
+    body#checkout section.checkout-step .carrier-name,
+    body#checkout section.checkout-step .carrier-delay {
       display: inline-block;
-      margin: 0 1.25em; }
+      margin: 0 1.25em;
+      word-break: break-word;
+      text-align: left; }
     body#checkout section.checkout-step .carrier-price {
       font-weight: 700; }
     body#checkout section.checkout-step #customer-form,
@@ -5707,6 +5239,8 @@ body#checkout {
     body#checkout #cart-summary-product-list img {
       border: #ebebeb 1px solid;
       width: 3.125em; }
+    body#checkout #cart-summary-product-list .media-body {
+      vertical-align: middle; }
   body#checkout #footer {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     margin-top: 5.625em;
@@ -5746,6 +5280,57 @@ body#checkout {
   width: 50%;
   margin: 0 auto; }
 
+@media (max-width: 991px) {
+  .done {
+    margin: 0;
+    padding: 0; }
+  .cart-grid-body {
+    width: 100%; }
+  .cart-grid-right {
+    width: 100%; }
+  body#checkout section.checkout-step.-reachable.-complete h1 .step-edit {
+    float: none;
+    margin-left: 20px; }
+  body#checkout section.checkout-step .address-item {
+    -webkit-flex-grow: 1;
+    -moz-flex-grow: 1;
+    flex-grow: 1;
+    -ms-flex-positive: 1; }
+  body#checkout section.checkout-step .delivery-option-2 {
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    box-direction: normal;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-direction: column; }
+  .delivery-option {
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    display: flex;
+    margin: auto; }
+    .delivery-option .custom-radio {
+      -webkit-box-flex: 0;
+      -moz-box-flex: 0;
+      box-flex: 0;
+      -webkit-flex: 0 0 auto;
+      -moz-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+      flex: 0 0 auto; }
+  #payment-confirmation button[type="submit"] {
+    font-size: 0.75em;
+    width: 100%; }
+  .condition-label label[for="conditions_to_approve[terms-and-conditions]"] {
+    text-align: left; } }
+
 /*** SOME GENERIC STYLES ***/
 .table-labeled th {
   vertical-align: middle; }
@@ -5771,6 +5356,13 @@ body#checkout {
 
 .page-order table thead th {
   text-align: center; }
+
+#authentication .form-control-comment {
+  display: none; }
+
+#authentication .tooltip.tooltip-bottom {
+  padding: 0;
+  margin: 0; }
 
 /*** Most of the customer accpunt pages ***/
 .page-customer-account #content {
@@ -5881,6 +5473,10 @@ body#checkout {
           .page-order-detail #order-products.return td.qty .select select {
             text-align: center; }
 
+/*** Order return page ***/
+#order-return-infos .thead-default th {
+  color: #414141; }
+
 /*** My account landing page ***/
 .page-my-account .links {
   margin: 0 -0.9375rem; }
@@ -5958,7 +5554,7 @@ body#checkout {
     .carousel .carousel-control.right, .carousel .carousel-control.left {
       background: none; }
 
-#products .products, .featured-products .products {
+#products .products, .featured-products .products, .product-accessories .products {
   display: -webkit-box;
   display: -moz-box;
   display: box;
@@ -5984,37 +5580,38 @@ body#checkout {
   justify-content: flex-start;
   -ms-flex-pack: start; }
 
-#products .product-thumbnail, .featured-products .product-thumbnail {
+#products .product-thumbnail, .featured-products .product-thumbnail, .product-accessories .product-thumbnail {
   display: block; }
 
-#products .product-title a, .featured-products .product-title a {
+#products .product-title a, .featured-products .product-title a, .product-accessories .product-title a {
   color: #acaaa6;
   font-size: 14px;
   text-decoration: none;
   text-align: center;
   font-weight: 400; }
 
-#products .thumbnail-container, .featured-products .thumbnail-container {
+#products .thumbnail-container, .featured-products .thumbnail-container, .product-accessories .thumbnail-container {
+  position: relative;
   margin-bottom: 1.5625em;
   height: 318px;
   width: 257px;
   background: white;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.05); }
-  #products .thumbnail-container:hover, .featured-products .thumbnail-container:hover {
+  #products .thumbnail-container:hover, .featured-products .thumbnail-container:hover, .product-accessories .thumbnail-container:hover {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
-    #products .thumbnail-container:hover .highlighted-informations, .featured-products .thumbnail-container:hover .highlighted-informations {
+    #products .thumbnail-container:hover .highlighted-informations, .featured-products .thumbnail-container:hover .highlighted-informations, .product-accessories .thumbnail-container:hover .highlighted-informations {
       bottom: 5.625em; }
-      #products .thumbnail-container:hover .highlighted-informations::after, .featured-products .thumbnail-container:hover .highlighted-informations::after {
+      #products .thumbnail-container:hover .highlighted-informations::after, .featured-products .thumbnail-container:hover .highlighted-informations::after, .product-accessories .thumbnail-container:hover .highlighted-informations::after {
         opacity: 1; }
 
-#products .products-section-title, .featured-products .products-section-title {
+#products .products-section-title, .featured-products .products-section-title, .product-accessories .products-section-title {
   text-align: center;
   font-size: 1.375em;
   font-weight: 700;
   margin: 3.125em 0 2.5em;
   color: #414141; }
 
-#products .product-title, .featured-products .product-title {
+#products .product-title, .featured-products .product-title, .product-accessories .product-title {
   text-align: center; }
 
 #products .product-description-short,
@@ -6023,15 +5620,18 @@ body#checkout {
 #products .product-availability, .featured-products .product-description-short,
 .featured-products .product-list-actions,
 .featured-products .discount,
-.featured-products .product-availability {
+.featured-products .product-availability, .product-accessories .product-description-short,
+.product-accessories .product-list-actions,
+.product-accessories .discount,
+.product-accessories .product-availability {
   display: none; }
 
-#products .product-price-and-shipping, .featured-products .product-price-and-shipping {
+#products .product-price-and-shipping, .featured-products .product-price-and-shipping, .product-accessories .product-price-and-shipping {
   color: #414141;
   font-weight: 700;
   text-align: center; }
 
-#products .variant-links, .featured-products .variant-links {
+#products .variant-links, .featured-products .variant-links, .product-accessories .variant-links {
   background: #ebebeb;
   position: relative;
   text-align: center;
@@ -6040,7 +5640,7 @@ body#checkout {
   padding-top: 0.3125em;
   min-height: 2.5em; }
 
-#products .highlighted-informations, .featured-products .highlighted-informations {
+#products .highlighted-informations, .featured-products .highlighted-informations, .product-accessories .highlighted-informations {
   position: absolute;
   bottom: 1.25em;
   z-index: 0;
@@ -6053,20 +5653,20 @@ body#checkout {
   -webkit-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   -moz-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1); }
-  #products .highlighted-informations .quick-view, .featured-products .highlighted-informations .quick-view {
+  #products .highlighted-informations .quick-view, .featured-products .highlighted-informations .quick-view, .product-accessories .highlighted-informations .quick-view {
     color: #878787;
     font-size: 1em; }
-    #products .highlighted-informations .quick-view:hover, .featured-products .highlighted-informations .quick-view:hover {
+    #products .highlighted-informations .quick-view:hover, .featured-products .highlighted-informations .quick-view:hover, .product-accessories .highlighted-informations .quick-view:hover {
       color: #2fb5d2; }
 
-#products .highlighted-informations::after, .featured-products .highlighted-informations::after {
+#products .highlighted-informations::after, .featured-products .highlighted-informations::after, .product-accessories .highlighted-informations::after {
   box-shadow: 1px 1px 16px 2px rgba(0, 0, 0, 0.1);
   opacity: 0;
   -webkit-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   -moz-transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1);
   transition: bottom 0.7s cubic-bezier(0.19, 1, 0.22, 1); }
 
-#products .product-description, .featured-products .product-description {
+#products .product-description, .featured-products .product-description, .product-accessories .product-description {
   position: absolute;
   z-index: 1;
   background: white;
@@ -6075,14 +5675,15 @@ body#checkout {
   height: 70px;
   box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2); }
 
-#products img, .featured-products img {
+#products img, .featured-products img, .product-accessories img {
   margin-left: 4px; }
 
-#products .product-miniature, .featured-products .product-miniature {
+#products .product-miniature, .featured-products .product-miniature, .product-accessories .product-miniature {
   margin: 0 0.625em; }
   #products .product-miniature .product-labels .new,
   #products .product-miniature .discount-percentage, .featured-products .product-miniature .product-labels .new,
-  .featured-products .product-miniature .discount-percentage {
+  .featured-products .product-miniature .discount-percentage, .product-accessories .product-miniature .product-labels .new,
+  .product-accessories .product-miniature .discount-percentage {
     display: block;
     position: absolute;
     top: -15.125em;
@@ -6097,27 +5698,28 @@ body#checkout {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
     #products .product-miniature .product-labels .new.discount-percentage,
     #products .product-miniature .discount-percentage.discount-percentage, .featured-products .product-miniature .product-labels .new.discount-percentage,
-    .featured-products .product-miniature .discount-percentage.discount-percentage {
+    .featured-products .product-miniature .discount-percentage.discount-percentage, .product-accessories .product-miniature .product-labels .new.discount-percentage,
+    .product-accessories .product-miniature .discount-percentage.discount-percentage {
       z-index: 2;
       background: #f39d72; }
 
-#products .comments_note, .featured-products .comments_note {
+#products .comments_note, .featured-products .comments_note, .product-accessories .comments_note {
   text-align: center;
   color: #acaaa6; }
 
-#products .regular-price, .featured-products .regular-price {
+#products .regular-price, .featured-products .regular-price, .product-accessories .regular-price {
   color: #acaaa6;
   text-decoration: line-through;
   font-size: 0.875em; }
 
-#products .count, .featured-products .count {
+#products .count, .featured-products .count, .product-accessories .count {
   color: #878787;
   font-weight: 700;
   position: relative;
   bottom: 0.5em;
   font-size: 1.125em; }
 
-#products .all-product-link, .featured-products .all-product-link {
+#products .all-product-link, .featured-products .all-product-link, .product-accessories .all-product-link {
   clear: both;
   color: #878787;
   font-weight: 700;
@@ -6125,35 +5727,61 @@ body#checkout {
   margin-bottom: 3.125em;
   font-size: 1.125em; }
 
-#block-cmsinfo {
+#custom-text {
   background: white;
   border-radius: 2px;
   margin: 4.375em 0;
   padding: 3.125em 18.125em;
-  text-align: center;
-  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
-  #block-cmsinfo h3 {
+  text-align: center; }
+  #custom-text h3 {
     text-transform: uppercase;
     color: #414141;
     font-size: 1.5625em;
     font-weight: 700; }
-  #block-cmsinfo p {
+  #custom-text p {
     color: #414141;
     font-weight: 400;
     font-size: 1.1em; }
-    #block-cmsinfo p .dark {
+    #custom-text p .dark {
       color: #acaaa6;
       font-weight: 400; }
 
+@media (max-width: 991px) {
+  #block-cmsinfo {
+    padding: 20px 30px; } }
+
 #products {
   color: #878787; }
+  #products .products-select {
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    display: flex;
+    -webkit-box-align: baseline;
+    -moz-box-align: baseline;
+    box-align: baseline;
+    -webkit-align-items: baseline;
+    -moz-align-items: baseline;
+    -ms-align-items: baseline;
+    -o-align-items: baseline;
+    align-items: baseline;
+    -ms-flex-align: baseline;
+    -webkit-box-pack: justify;
+    -moz-box-pack: justify;
+    box-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    -o-justify-content: space-between;
+    justify-content: space-between;
+    -ms-flex-pack: justify; }
 
 .block-category {
-  background: white;
-  padding: 2.5em 1.5625em;
-  min-height: 13.75em;
-  position: relative;
-  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
+  min-height: 13.75em; }
   .block-category #category-description {
     font-size: 0.875em;
     color: #878787; }
@@ -6201,6 +5829,7 @@ body#checkout {
 
 #search_filters {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
   background: white;
   padding: 1.25em; }
   #search_filters .facet .facet-title {
@@ -6209,6 +5838,11 @@ body#checkout {
     font-size: 0.875em; }
   #search_filters .facet .facet-label {
     margin-bottom: 0; }
+    #search_filters .facet .facet-label a {
+      margin-top: 0.4375em;
+      color: #414141;
+      display: inline-block;
+      font-size: 0.9375em; }
 
 .pagination {
   width: 100%; }
@@ -6260,17 +5894,23 @@ body#checkout {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
   background: white;
   padding: 10px; }
-  .block-categories .category-sub-menu li[data-depth="0"] > a {
-    font-weight: 600;
-    border-bottom: #ebebeb 2px solid;
-    width: 100%;
-    display: inline-block;
-    margin: 0.3125em 0; }
-  .block-categories .category-sub-menu li:not([data-depth="0"]):not([data-depth="1"]) {
-    padding-left: 0.3125em; }
-    .block-categories .category-sub-menu li:not([data-depth="0"]):not([data-depth="1"])::before {
-      content: "-";
-      margin-right: 0.3125em; }
+  .block-categories .category-sub-menu {
+    margin-top: 10px; }
+    .block-categories .category-sub-menu .category-sub-link {
+      font-size: 0.875em; }
+    .block-categories .category-sub-menu li {
+      position: relative; }
+    .block-categories .category-sub-menu li[data-depth="0"] > a {
+      font-weight: 600;
+      border-bottom: #ebebeb 2px solid;
+      width: 100%;
+      display: inline-block;
+      margin: 0.3125em 0; }
+    .block-categories .category-sub-menu li:not([data-depth="0"]):not([data-depth="1"]) {
+      padding-left: 0.3125em; }
+      .block-categories .category-sub-menu li:not([data-depth="0"]):not([data-depth="1"])::before {
+        content: "-";
+        margin-right: 0.3125em; }
   .block-categories a {
     color: #414141; }
   .block-categories .collapse-icons {
@@ -6327,6 +5967,9 @@ body#checkout {
   .input-color:hover + span,
   .input-color:checked + span {
     border: 2px solid #414141; }
+
+.input-container {
+  position: relative; }
 
 .input-radio {
   position: absolute;
@@ -6404,6 +6047,7 @@ body#checkout {
 
 .tabs {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
   background: white;
   padding: 20px 30px; }
   .tabs .tab-pane {
@@ -6423,7 +6067,8 @@ body#checkout {
       margin-bottom: -2px; }
 
 .product-cover {
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  position: relative; }
   .product-cover img {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     background: white; }
@@ -6442,7 +6087,7 @@ body#checkout {
     height: 452px;
     background: white;
     position: absolute;
-    left: 2px;
+    left: 0;
     top: 0;
     opacity: 0;
     background: rgba(255, 255, 255, 0.7);
@@ -6480,7 +6125,10 @@ body#checkout {
       border-top: #ebebeb 1px solid; }
       #product-modal .modal-content .modal-body .image-caption p {
         margin-bottom: 0; }
+    #product-modal .modal-content .modal-body .thumbnails {
+      position: relative; }
     #product-modal .modal-content .modal-body .mask {
+      position: relative;
       overflow: hidden;
       max-height: 49.375em;
       margin-top: 2.1875em;
@@ -6529,6 +6177,8 @@ body#checkout {
     font-weight: 600;
     color: white;
     font-size: 1.125em; }
+    #blockcart-modal .modal-title i.material-icons {
+      margin-right: 30px; }
   #blockcart-modal .product-name {
     color: #2fb5d2;
     font-size: 1.125em; }
@@ -6536,6 +6186,8 @@ body#checkout {
     font-size: 1.125em; }
   #blockcart-modal .cart-content {
     padding-left: 40px; }
+  #blockcart-modal .divide-right {
+    border-right: #acaaa6 1px solid; }
 
 .product-image img {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
@@ -6553,13 +6205,13 @@ body#checkout {
 
 #product-availability {
   display: inline-block;
-  font-weight: 700; }
-  #product-availability .check {
+  font-weight: 700;
+  margin-left: 10px; }
+  #product-availability .product-available {
     color: #4cbb6c;
     margin-right: 0.3125em; }
 
-.product-reference > .label,
-.product-quantities > .label {
+#product-details .label {
   font-size: 1rem;
   color: #414141;
   font-weight: bold; }
@@ -6602,7 +6254,7 @@ body#checkout {
         background: #f6f6f6; }
 
 .product-variants > .product-variants-item {
-  margin-top: 20px; }
+  margin: 20px 0; }
   .product-variants > .product-variants-item ul li {
     margin-right: 10px; }
 
@@ -6707,8 +6359,31 @@ li.product-label {
       display: flex;
       align-items: center; }
 
+.product-refresh {
+  margin-top: 20px; }
+
 .social-sharing {
-  width: 100%; }
+  width: 100%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  -js-display: flex;
+  display: flex;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  box-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  -o-align-items: center;
+  align-items: center;
+  -ms-flex-align: center;
+  margin-top: 20px; }
+  .social-sharing ul {
+    margin-bottom: 0; }
   .social-sharing li {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     height: 2.5em;
@@ -6733,6 +6408,28 @@ li.product-label {
   margin-bottom: 20px; }
   .products-selection .title {
     color: #878787; }
+
+@media (max-width: 991px) {
+  .product-cover img {
+    width: 100%; }
+  #product-modal .modal-content .modal-body {
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    box-direction: normal;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-direction: column;
+    margin-left: 0; }
+    #product-modal .modal-content .modal-body img.product-cover-modal {
+      width: 100%; }
+    #product-modal .modal-content .modal-body .arrows {
+      display: none; }
+  #product-modal .modal-content .modal-body .image-caption {
+    width: 100%; } }
 
 .cart-summary-line > .label {
   color: #414141;
@@ -6767,7 +6464,8 @@ li.product-label {
 
 /** CART BODY **/
 .cart-grid-body > a.label {
-  color: #414141; }
+  color: #414141;
+  font-size: 1em; }
 
 .cart-grid-body hr {
   margin-top: 0; }
@@ -6902,51 +6600,147 @@ li.product-label {
     #product #block-reassurance span {
       font-weight: 700; }
 
-.block_newsletter form {
-  position: relative; }
-  .block_newsletter form input[type=text] {
-    border: none;
-    padding: 10px;
-    min-width: 255px;
-    background: #ebebeb;
-    color: #acaaa6; }
-    .block_newsletter form input[type=text]:focus {
-      outline: 3px #2fb5d2 solid; }
-      .block_newsletter form input[type=text]:focus + button .search {
+#stores .page-stores {
+  width: 70%;
+  margin: 0 auto; }
+  #stores .page-stores .store-item-container {
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    display: flex;
+    -webkit-box-pack: distribute;
+    -moz-box-pack: distribute;
+    box-pack: distribute;
+    -webkit-justify-content: space-around;
+    -moz-justify-content: space-around;
+    -ms-justify-content: space-around;
+    -o-justify-content: space-around;
+    justify-content: space-around;
+    -ms-flex-pack: distribute;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    box-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    -o-align-items: center;
+    align-items: center;
+    -ms-flex-align: center;
+    padding: 30px 0; }
+    #stores .page-stores .store-item-container ul {
+      margin-bottom: 0;
+      font-size: 0.9375em; }
+    #stores .page-stores .store-item-container .divide-left {
+      border-left: #ebebeb 1px solid; }
+    #stores .page-stores .store-item-container .store-description {
+      -webkit-box-flex: 0;
+      -moz-box-flex: 0;
+      box-flex: 0;
+      -webkit-flex: 0 0 50%;
+      -moz-flex: 0 0 50%;
+      -ms-flex: 0 0 50%;
+      flex: 0 0 50%;
+      font-size: 1em; }
+  #stores .page-stores .store-item-footer {
+    margin-top: 40px;
+    padding-top: 40px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    display: flex;
+    -webkit-box-pack: distribute;
+    -moz-box-pack: distribute;
+    box-pack: distribute;
+    -webkit-justify-content: space-around;
+    -moz-justify-content: space-around;
+    -ms-justify-content: space-around;
+    -o-justify-content: space-around;
+    justify-content: space-around;
+    -ms-flex-pack: distribute; }
+    #stores .page-stores .store-item-footer.divide-top {
+      border-top: #ebebeb 1px solid; }
+    #stores .page-stores .store-item-footer div:first-child {
+      -webkit-box-flex: 0;
+      -moz-box-flex: 0;
+      box-flex: 0;
+      -webkit-flex: 0 0 65%;
+      -moz-flex: 0 0 65%;
+      -ms-flex: 0 0 65%;
+      flex: 0 0 65%; }
+    #stores .page-stores .store-item-footer i.material-icons {
+      margin-right: 10px;
+      color: #acaaa6;
+      font-size: 1em; }
+    #stores .page-stores .store-item-footer li {
+      margin-bottom: 10px; }
+
+.block_newsletter {
+  font-size: 0.875em; }
+  .block_newsletter form {
+    position: relative; }
+    .block_newsletter form input[type=text] {
+      border: none;
+      padding: 10px;
+      min-width: 255px;
+      background: #ebebeb;
+      color: #acaaa6; }
+      .block_newsletter form input[type=text]:focus {
+        outline: 3px #2fb5d2 solid; }
+        .block_newsletter form input[type=text]:focus + button .search {
+          color: #2fb5d2; }
+      .block_newsletter form input[type=text]::-webkit-input-placeholder {
+        color: rgba(172, 170, 166, 0.5);
+        text-indent: 0.625em; }
+      .block_newsletter form input[type=text]::-moz-placeholder {
+        color: rgba(172, 170, 166, 0.5);
+        text-indent: 0.625em; }
+      .block_newsletter form input[type=text]:-moz-placeholder {
+        color: rgba(172, 170, 166, 0.5);
+        text-indent: 0.625em; }
+      .block_newsletter form input[type=text]:-ms-input-placeholder {
+        color: rgba(172, 170, 166, 0.5);
+        text-indent: 0.625em; }
+    .block_newsletter form button[type=submit] {
+      position: absolute;
+      background: none;
+      border: none;
+      bottom: 0.3125em;
+      right: 0.625em;
+      font-size: 25px;
+      color: #878787; }
+      .block_newsletter form button[type=submit] .search:hover {
         color: #2fb5d2; }
-    .block_newsletter form input[type=text]::-webkit-input-placeholder {
-      color: rgba(172, 170, 166, 0.5);
-      text-indent: 0.625em; }
-    .block_newsletter form input[type=text]::-moz-placeholder {
-      color: rgba(172, 170, 166, 0.5);
-      text-indent: 0.625em; }
-    .block_newsletter form input[type=text]:-moz-placeholder {
-      color: rgba(172, 170, 166, 0.5);
-      text-indent: 0.625em; }
-    .block_newsletter form input[type=text]:-ms-input-placeholder {
-      color: rgba(172, 170, 166, 0.5);
-      text-indent: 0.625em; }
-  .block_newsletter form button[type=submit] {
-    position: absolute;
-    background: none;
-    border: none;
-    bottom: 0.3125em;
-    right: 0.625em;
-    font-size: 25px;
-    color: #878787; }
-    .block_newsletter form button[type=submit] .search:hover {
-      color: #2fb5d2; }
+  .block_newsletter p {
+    padding-top: 10px; }
 
 .block-contact {
+  margin-top: 20px;
   border-left: #ebebeb 2px solid;
   padding-left: 4.375em;
   color: #acaaa6; }
+  .block-contact .block-contact-title {
+    color: #414141; }
 
-.block-cms li a,
+.linklist {
+  padding-top: 20px; }
+  .linklist li a {
+    color: #acaaa6;
+    cursor: pointer; }
+    .linklist li a:hover {
+      color: #2fb5d2; }
+  .linklist .blockcms-title a {
+    color: #414141; }
+
 .account-list a {
-  color: #acaaa6;
-  cursor: pointer; }
-  .block-cms li a:hover,
+  color: #acaaa6; }
   .account-list a:hover {
     color: #2fb5d2; }
 
@@ -7000,6 +6794,9 @@ li.product-label {
     background-image: url(../css/7c24d4275efcbe8891f78378b7c808e0.svg); }
     .googleplus.icon-gray:hover {
       background-image: url(../css/c1a65805f759901a39d10eb854c1dcf2.svg); }
+
+#block_myaccount_infos .myaccount-title a {
+  color: #414141; }
 
 .pinterest {
   background-image: url(../css/afb2ed6d67613a724a420a39b4fe5b0d.svg); }
@@ -7125,6 +6922,8 @@ li.product-label {
         #header .header-nav .user-info a:hover {
           text-decoration: none;
           color: #2fb5d2; }
+      #header .header-nav .user-info .account {
+        margin-left: 10px; }
     #header .header-nav .language-selector {
       margin-top: 0.9375em; }
     #header .header-nav .cart-preview.active {
@@ -7159,7 +6958,7 @@ li.product-label {
       #header .header-nav #contact-link a {
         color: #acaaa6; }
   #header .header-top {
-    padding-bottom: 0.625em; }
+    padding-bottom: 10px; }
     #header .header-top .menu > ul {
       display: table; }
       #header .header-top .menu > ul > li {
@@ -7167,6 +6966,8 @@ li.product-label {
     #header .header-top a[data-depth="0"] {
       color: #acaaa6;
       text-transform: uppercase; }
+  #header .top-menu-link {
+    margin-left: 20px; }
 
 /*** WRAPPER ***/
 #wrapper {
@@ -7221,13 +7022,14 @@ li.product-label {
 #footer {
   padding-top: 2.5em; }
 
-@media (max-width: 543px) {
+@media (max-width: 767px) {
   #checkout-cart-summary {
     float: none;
     width: 100%;
     margin-top: 1rem; }
   #header .header-nav {
-    max-height: none; }
+    max-height: none;
+    min-height: 150px; }
     #header .header-nav .right-nav {
       -webkit-box-orient: vertical;
       -moz-box-orient: vertical;
@@ -7241,14 +7043,69 @@ li.product-label {
       -ms-flex-direction: column; }
     #header .header-nav .user-info {
       text-align: left;
-      margin-left: 0; }
+      margin-left: 0;
+      position: absolute;
+      right: 10px;
+      top: -30px; }
     #header .header-nav .blockcart {
-      margin-left: 0; }
+      margin-left: 0;
+      position: absolute;
+      right: 10px;
+      margin-top: -10px; }
   section.checkout-step {
     width: 100%; }
   .default-input {
     min-width: 100%; }
   label {
-    clear: both; } }
+    clear: both; }
+  #products .product-miniature,
+  .featured-products .product-miniature {
+    margin: 0 auto; }
+  .block-contact {
+    padding-left: 0.9375rem;
+    border: none; }
+  .menu,
+  .dropdown-item {
+    padding-left: 0; }
+  input[name="submitNewsletter"] {
+    margin-top: 10px; } }
+
+@media (max-width: 991px) {
+  #products .product-miniature,
+  .featured-products .product-miniature {
+    margin: 0 auto; }
+  .sub-menu {
+    left: 0;
+    min-width: 100%; }
+  .products-select {
+    -webkit-box-lines: multiple;
+    -moz-box-lines: multiple;
+    box-lines: multiple;
+    -webkit-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap; }
+    .products-select .select-title {
+      margin-top: 20px; }
+    .products-select .products-sort-order .dropdown-menu {
+      left: 0; }
+  #blockcart-modal .product-image {
+    width: 100%; }
+  #blockcart-modal .cart-content {
+    padding-left: 0; }
+    #blockcart-modal .cart-content button {
+      margin-bottom: 10px; }
+  #blockcart-modal .product-name,
+  #product-availability {
+    margin-top: 10px; }
+  #search_filters .facet .facet-label {
+    text-align: left; }
+  .block-category .category-cover {
+    position: relative;
+    text-align: center; }
+  .block-category {
+    padding-bottom: 0; }
+  .block_newsletter {
+    width: 100%; } }
 
 /*# sourceMappingURL=theme.css.map*/

@@ -255,16 +255,16 @@ class AdminThemesControllerCore extends AdminController
             Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
 
             try {
-                if (!empty(Tools::getValue('PS_LOGO'))) {
+                if (Tools::getValue('PS_LOGO')) {
                     $this->logo_uploader->updateHeader();
                 }
-                if (!empty(Tools::getValue('PS_LOGO_MAIL'))) {
+                if (Tools::getValue('PS_LOGO_MAIL')) {
                     $this->logo_uploader->updateMail();
                 }
-                if (!empty(Tools::getValue('PS_LOGO_INVOICE'))) {
+                if (Tools::getValue('PS_LOGO_INVOICE')) {
                     $this->logo_uploader->updateInvoice();
                 }
-                if (!empty(Tools::getValue('PS_FAVICON'))) {
+                if (Tools::getValue('PS_FAVICON')) {
                     $this->logo_uploader->updateFavicon();
                     $this->redirect_after = self::$currentIndex.'&token='.$this->token;
                 }

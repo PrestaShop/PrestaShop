@@ -25,7 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
 class OrderControllerCore extends FrontController
 {
@@ -64,8 +64,8 @@ class OrderControllerCore extends FrontController
         $deliveryOptionsFinder = new DeliveryOptionsFinder(
             $this->context,
             $this->getTranslator(),
-            $this->objectSerializer,
-            new PricePresenter
+            $this->objectPresenter,
+            new PriceFormatter
         );
 
         $session = new CheckoutSession(
@@ -101,7 +101,6 @@ class OrderControllerCore extends FrontController
         )->setDisplayTaxesLabel(
             (Configuration::get('PS_TAX')
             && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
-            && $this->context->smarty->tpl_vars['display_tax_label']->value
         )->setGiftCost(
             $this->context->cart->getGiftWrappingPrice(
                 $checkoutDeliveryStep->getIncludeTaxes()
@@ -171,6 +170,12 @@ class OrderControllerCore extends FrontController
 
         parent::initContent();
 
+        $presentedCart = $this->cart_presenter->present($this->context->cart);
+
+        if (count($presentedCart['products']) <= 0) {
+            Tools::redirect('index.php?controller=cart');
+        }
+
         $this->restorePersistedData($this->checkoutProcess);
         $this->checkoutProcess->handleRequest(
             Tools::getAllValues()
@@ -192,9 +197,7 @@ class OrderControllerCore extends FrontController
 
         $this->context->smarty->assign([
             'checkout_process'  => new RenderableProxy($this->checkoutProcess),
-            'cart'              => $this->cart_presenter->present(
-                                        $this->context->cart
-                                    )
+            'cart'              => $presentedCart
         ]);
         $this->setTemplate('checkout/checkout.tpl');
     }

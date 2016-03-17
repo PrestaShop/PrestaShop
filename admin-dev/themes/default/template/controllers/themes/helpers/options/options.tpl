@@ -57,7 +57,7 @@
 											</div>
 										</div>
 									</div>
-									<img class="center-block img-thumbnail" src="{$cur_theme->get('preview')}" alt="{$theme->getName()}" />
+									<img class="center-block img-thumbnail" src="{$theme->get('preview')}" alt="{$theme->getName()}" />
 								</div>
 							</div>
 						</div>

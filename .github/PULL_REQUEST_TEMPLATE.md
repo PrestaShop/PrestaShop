@@ -62,6 +62,7 @@ Describe the exact steps you've done to test that the code works. Remove the une
 If you are fixing a Forge ticket, please give its full URL here. If not, delete this section.
 
 For instance:
+"Fixes ticket http://forge.prestashop.com/browse/PSCSX-XXXX"
  -->
 
-Fixes ticket http://forge.prestashop.com/browse/PSCSX-5555
+

@@ -4,7 +4,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class Pscsx3241 extends Module
+class pscsx3241 extends Module
 {
     public function __construct()
     {

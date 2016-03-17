@@ -68,7 +68,7 @@ class ProductFeature extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('feature', FormType\ChoiceType::class, array(
+        $builder->add('feature', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Feature', [], 'AdminProducts'),
             'choices' =>  $this->features,
             'choices_as_values' => true,
@@ -78,14 +78,14 @@ class ProductFeature extends CommonAbstractType
                 'class' => 'feature-selector',
             )
         ))
-        ->add('value', FormType\ChoiceType::class, array(
+        ->add('value', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
             'required' =>  false,
             'choices_as_values' => true,
             'attr' => array('class' => 'feature-value-selector')
         ))
-        ->add('custom_value', \PrestaShopBundle\Form\Admin\Type\TranslateType::class, array(
-            'type' => FormType\TextType::class,
+        ->add('custom_value', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [],
             'locales' => $this->locales,
             'hideTabs' => true,
@@ -107,7 +107,7 @@ class ProductFeature extends CommonAbstractType
                 'value'
             );
 
-            $form->add('value', FormType\ChoiceType::class, array(
+            $form->add('value', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
                 'choices' => $choices,
                 'choices_as_values' => true,
@@ -131,7 +131,7 @@ class ProductFeature extends CommonAbstractType
                 'value'
             );
 
-            $form->add('value', FormType\ChoiceType::class, array(
+            $form->add('value', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),

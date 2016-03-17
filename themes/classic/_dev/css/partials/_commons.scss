@@ -41,12 +41,17 @@ a:hover {
   }
 }
 .h1 {
-  font-size: em(24px);
-}
-.h1 {
   font-size: em(20px);
 }
-.h3,
+
+.h3{
+  font-size: em(16px);
+}
+.h1,.h2,.h3{
+  text-transform: uppercase;
+  color:$gray-darker;
+}
+
 .h4 {
   font-size: em(18px);
   font-weight: $headings-font-weight;
@@ -209,7 +214,7 @@ label {
       vertical-align: middle;
       cursor: pointer;
       border: 2px $gray-darker solid;
-      .check {
+      .checkbox-checked {
         display: none;
         margin: em(-4px) em(-2px);
         font-size: 1.1em;
@@ -217,7 +222,7 @@ label {
       }
     }
     &:checked + span {
-      .check {
+      .checkbox-checked {
         display: block;
       }
     }

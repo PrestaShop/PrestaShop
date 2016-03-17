@@ -123,7 +123,7 @@ function runScenario (scenario) {
             });
 
             it("should show the delivery address form", function () {
-              return browser.waitForVisible('#delivery-address form');
+              return browser.waitForVisible('form #delivery-address');
             });
 
             it("the delivery address form should have the customer firstname and lastname pre-filled", function () {
@@ -163,7 +163,7 @@ function runScenario (scenario) {
               return browser
                 .click('#checkout-addresses-step')
                 .click('[data-link-action="different-invoice-address"]')
-                .waitForVisible('#invoice-address form')
+                .waitForVisible('form #invoice-address')
               ;
             });
 

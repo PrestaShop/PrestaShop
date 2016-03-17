@@ -94,7 +94,7 @@ class OrderReturnControllerCore extends FrontController
 
     public function getTemplateVarOrderReturn($order_return)
     {
-        $order_return = $this->objectSerializer->toArray($order_return);
+        $order_return = $this->objectPresenter->present($order_return);
 
         $order_return['return_number'] = sprintf('%06d', $order_return['id']);
         $order_return['return_date'] = Tools::displayDate($order_return['date_add'], null, false);

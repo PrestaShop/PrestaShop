@@ -49,7 +49,7 @@ class CategoryController extends FrameworkBundleAdminController
         $currentIdShop = $shopContext->getContextShopID();
 
         $form = $this->createFormBuilder()
-            ->add('category', \PrestaShopBundle\Form\Admin\Category\SimpleCategory::class)
+            ->add('category', 'PrestaShopBundle\Form\Admin\Category\SimpleCategory')
             ->getForm();
 
         $form->handleRequest($request);

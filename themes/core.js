@@ -1709,44 +1709,18 @@
 	    if (event && event.reason) {
 	      requestData = {
 	        id_product_attribute: event.reason.idProductAttribute,
-	        id_product: event.reason.idProduct,
-	        action: event.reason.linkAction
+	        id_product: event.reason.idProduct
 	      };
 	    }
 	
 	    _jquery2['default'].post(refreshURL, requestData).then(function (resp) {
 	      (0, _jquery2['default'])('.cart-overview').replaceWith(resp.cart_detailed);
 	      (0, _jquery2['default'])('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
+	      (0, _jquery2['default'])('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
 	      (0, _jquery2['default'])('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
 	      (0, _jquery2['default'])('.cart-voucher').replaceWith(resp.cart_voucher);
-	    });
-	  });
 	
-	  (0, _jquery2['default'])('body').on('click', '[data-link-action="add-to-cart"], [data-link-action="update-quantity"], [data-link-action="remove-from-cart"], [data-link-action="remove-voucher"]', function (event) {
-	    event.preventDefault();
-	
-	    // First perform the action using AJAX
-	    var actionURL = event.target.href;
-	    _jquery2['default'].post(actionURL, { ajax: '1' }, null, 'json').then(function () {
-	      // If succesful, refresh cart preview
-	      _prestashop2['default'].emit('cart updated', {
-	        reason: event.target.dataset
-	      });
-	    });
-	  });
-	
-	  (0, _jquery2['default'])('body').on('submit', '[data-link-action="add-voucher"]', function (event) {
-	    event.preventDefault();
-	
-	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'ajax').val('1'));
-	
-	    // First perform the action using AJAX
-	    var actionURL = event.target.action;
-	    _jquery2['default'].post(actionURL, (0, _jquery2['default'])(this).serialize(), null, 'json').then(function () {
-	      // If succesful, refresh cart preview
-	      _prestashop2['default'].emit('cart updated', {
-	        reason: event.target.dataset
-	      });
+	      _prestashop2['default'].emit('cart dom updated');
 	    });
 	  });
 	});
@@ -1832,15 +1806,6 @@
 	  }
 	}
 	
-	function selectAddress(event) {
-	  var form = (0, _jquery2['default'])(event.target).closest('form');
-	  _jquery2['default'].post('', form.serialize(), null, 'json').then(function (resp) {
-	    // TODO
-	  }).fail(function (resp) {
-	    // TODO
-	  });
-	}
-	
 	function setupCheckoutScripts() {
 	  (0, _jquery2['default'])('#payment-confirmation button').on('click', confirmPayment);
 	  (0, _jquery2['default'])('#payment-section input[type="checkbox"][disabled]').attr('disabled', false);
@@ -1848,7 +1813,6 @@
 	  (0, _jquery2['default'])('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
 	  (0, _jquery2['default'])('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
 	  (0, _jquery2['default'])('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
-	  (0, _jquery2['default'])('body').on('change', '.js-address-selector input', selectAddress);
 	
 	  (0, _jquery2['default'])('body').on('click', '.checkout-step.-reachable h1', function (event) {
 	    (0, _jquery2['default'])('.-js-current, .-current').removeClass('-js-current -current');
@@ -1872,7 +1836,7 @@
 
 /***/ },
 /* 6 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -1881,9 +1845,15 @@
 	});
 	exports.psShowHide = psShowHide;
 	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(2);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
 	function psShowHide() {
-	  $('.ps-shown-by-js').show();
-	  $('.ps-hidden-by-js').hide();
+	  (0, _jquery2['default'])('.ps-shown-by-js').show();
+	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
 	}
 
 /***/ },
@@ -1945,16 +1915,16 @@
 	}
 	
 	(0, _jquery2['default'])(document).ready(function () {
-	    (0, _jquery2['default'])('body').on('change', '#search_filters input[data-search-url]', function () {
+	    (0, _jquery2['default'])('body').on('change', '#search_filters input[data-search-url]', function (event) {
 	        makeQuery(event.target.dataset.searchUrl);
 	    });
 	
-	    (0, _jquery2['default'])('body').on('click', '.js-search-link', function () {
+	    (0, _jquery2['default'])('body').on('click', '.js-search-link', function (event) {
 	        event.preventDefault();
 	        makeQuery((0, _jquery2['default'])(event.target).closest('a').get(0).href);
 	    });
 	
-	    (0, _jquery2['default'])('body').on('change', '#search_filters select', function () {
+	    (0, _jquery2['default'])('body').on('change', '#search_filters select', function (event) {
 	        var form = (0, _jquery2['default'])(event.target).closest('form');
 	        makeQuery('?' + form.serialize());
 	    });
@@ -1972,9 +1942,24 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
+	var _prestashop = __webpack_require__(4);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
 	(0, _jquery2['default'])(document).ready(function () {
 	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute], #quantity_wanted', function () {
 	    (0, _jquery2['default'])("input[name$='refresh']").click();
+	  });
+	
+	  _prestashop2['default'].on('product updated', function (event) {
+	    _jquery2['default'].post(event.reason.productUrl, { ajax: '1', action: 'refresh' }, null, 'json').then(function (resp) {
+	      (0, _jquery2['default'])('.product-prices').replaceWith(resp.product_prices);
+	      (0, _jquery2['default'])('.product-variants').replaceWith(resp.product_variants);
+	      (0, _jquery2['default'])('.images-container').replaceWith(resp.product_cover_thumbnails);
+	      (0, _jquery2['default'])('#product-details').replaceWith(resp.product_details);
+	
+	      window.history.pushState({ id_product_attribute: resp.id_product_attribute }, undefined, resp.product_url);
+	    });
 	  });
 	});
 

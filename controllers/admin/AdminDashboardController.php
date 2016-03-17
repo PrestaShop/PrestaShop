@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class AdminDashboardControllerCore extends AdminController
 {
     public function __construct()
@@ -260,6 +262,10 @@ class AdminDashboardControllerCore extends AdminController
             'date_to' => $this->context->employee->stats_date_to
         );
 
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
+
         $this->tpl_view_vars = array(
             'date_from' => $this->context->employee->stats_date_from,
             'date_to' => $this->context->employee->stats_date_to,
@@ -268,7 +274,7 @@ class AdminDashboardControllerCore extends AdminController
             //'translations' => $translations,
             'action' => '#',
             'warning' => $this->getWarningDomainName(),
-            'new_version_url' => Tools::getCurrentUrlProtocolPrefix()._PS_API_DOMAIN_.'/version/check_version.php?v='._PS_VERSION_.'&lang='.$this->context->language->iso_code.'&autoupgrade='.(int)(Module::isInstalled('autoupgrade') && Module::isEnabled('autoupgrade')).'&hosted_mode='.(int)defined('_PS_HOST_MODE_'),
+            'new_version_url' => Tools::getCurrentUrlProtocolPrefix()._PS_API_DOMAIN_.'/version/check_version.php?v='._PS_VERSION_.'&lang='.$this->context->language->iso_code.'&autoupgrade='.(int)($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')).'&hosted_mode='.(int)defined('_PS_HOST_MODE_'),
             'dashboard_use_push' => Configuration::get('PS_DASHBOARD_USE_PUSH'),
             'calendar' => $calendar_helper->generate(),
             'PS_DASHBOARD_SIMULATION' => Configuration::get('PS_DASHBOARD_SIMULATION'),

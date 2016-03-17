@@ -5,15 +5,15 @@
           <h1 class="h1 title">{$category.name}</h1>
         </div>
         <div class="col-md-8">
-          <div class="_display-table pull-xs-right">
-            <div class="_display-table-cell">
+          <div class="products-select">
+            <div>
               {if $products|count > 1}
                 <p>{l s='There are %s products.' sprintf=$products|count} |</p>
               {else}
                 <p>{l s='There is %s products.' sprintf=$products|count} |</p>
               {/if}
             </div>
-            <div class="_display-table-cell">
+            <div>
               {block name='sort_by'}
                 {include file='catalog/_partials/sort-orders.tpl' sort_orders=$sort_orders}
               {/block}

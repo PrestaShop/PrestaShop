@@ -4,7 +4,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class Pscsx32412 extends Module
+class pscsx32412 extends Module
 {
     public function __construct()
     {
