@@ -1,101 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
   <tab id="Addresses" name="Adresy"/>
+  <tab id="AdminModulesSf" name="Module Catalog" />
   <tab id="Administration" name="Administrace"/>
   <tab id="Advanced_Parameters" name="Nástroje"/>
   <tab id="Attachments" name="Přílohy"/>
   <tab id="Attributes_and_Values" name="Atributy produktů"/>
-  <tab id="Carriers" name="Dopravci"/>
-  <tab id="CarrierWizard" name="Dopravce"/>
-  <tab id="Cart_Rules" name="Pravidla pro košík"/>
-  <tab id="Catalog_Price_Rules" name="Pravidla pro katalog"/>
-  <tab id="Catalog" name="Katalog"/>
-  <tab id="Categories" name="Kategorie"/>
+  <tab id="Attributes_and_features" name="Attributes &amp; Features" />
   <tab id="CMS_Categories" name="CMS kategorie"/>
   <tab id="CMS_Pages" name="Stránky CMS"/>
-  <tab id="CMS" name="CMS"/>
+  <tab id="CSV_Import" name="Import"/>
+  <tab id="CarrierWizard" name="Dopravce"/>
+  <tab id="Carriers" name="Dopravci"/>
+  <tab id="Cart_Rules" name="Pravidla pro košík"/>
+  <tab id="Catalog" name="Katalog"/>
+  <tab id="Catalog_Price_Rules" name="Pravidla pro katalog"/>
+  <tab id="Categories" name="Kategorie"/>
   <tab id="Combinations_Generator" name="Generátor kombinací"/>
-  <tab id="Configuration_Information" name="Informace o konfiguraci"/>
   <tab id="Configuration" name="Konfigurace"/>
+  <tab id="Contact" name="Contact" />
   <tab id="Contacts" name="Kontakty na zaměstnance"/>
   <tab id="Countries" name="Země"/>
   <tab id="Credit_Slips" name="Dobropisy"/>
-  <tab id="CSV_Import" name="Import"/>
   <tab id="Currencies" name="Měny"/>
   <tab id="Customer_Service" name="Zákaznický servis"/>
+  <tab id="Customer_Service_2" name="Customer Service" />
+  <tab id="Customer_settings" name="Customer Settings" />
+  <tab id="Customers" name="Zákazníci"/>
   <tab id="Customers_1" name="Zákazníci"/>
   <tab id="Customers_2" name="Zákazníci"/>
-  <tab id="Customers" name="Zákazníci"/>
-  <tab id="Dashboard" name="Nástěnka"/>
   <tab id="DB_Backup" name="Záloha DB"/>
+  <tab id="Dashboard" name="Nástěnka"/>
+  <tab id="Database" name="Database" />
   <tab id="Delivery_Slips" name="Dodací listy"/>
   <tab id="E-mail" name="E-maily"/>
   <tab id="Employees" name="Zaměstnanci"/>
+  <tab id="Employees_1" name="Employees" />
   <tab id="Features" name="Vlastnosti produktů"/>
   <tab id="General" name="Hlavní"/>
+  <tab id="General_1" name="General" />
   <tab id="Geolocation" name="Geolokace"/>
   <tab id="Groups" name="Skupiny zákazníků"/>
+  <tab id="Image_Settings" name="Image Settings" />
   <tab id="Images" name="Obrázky"/>
+  <tab id="Information" name="Information" />
   <tab id="Instant_Stock_Status" name="Okamžitý stav zásob"/>
+  <tab id="International" name="International" />
   <tab id="Invoices" name="Faktury"/>
   <tab id="Languages" name="Jazyky"/>
-  <tab id="Localization_1" name="Lokalizace"/>
   <tab id="Localization" name="Lokalizace"/>
+  <tab id="Localization_1" name="Lokalizace"/>
+  <tab id="Locations" name="Locations" />
   <tab id="Login" name="Login"/>
   <tab id="Logs" name="Logy"/>
+  <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Údržba obchodu"/>
   <tab id="Manufacturers" name="Výrobci"/>
+  <tab id="Manufacturers_and_suppliers" name="Manufacturers and Suppliers" />
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menus"/>
   <tab id="Merchandise_Returns" name="Vrácení zboží"/>
-  <tab id="Modules_1" name="Moduly a Služby"/>
-  <tab id="Modules_Themes_Catalog" name="Katalog modulů a šablon"/>
   <tab id="Modules" name="Moduly a Služby"/>
+  <tab id="Modules_1" name="Moduly a Služby"/>
   <tab id="Monitoring" name="Monitorování"/>
   <tab id="Multistore" name="Obchody Multistore"/>
   <tab id="Order_Messages" name="Zprávy k objednávkám"/>
+  <tab id="Order_settings" name="Order Settings" />
+  <tab id="Order_settings_2" name="Order Settings" />
+  <tab id="Orders" name="Objednávky"/>
   <tab id="Orders_1" name="Objednávky"/>
   <tab id="Orders_2" name="Objednávky"/>
-  <tab id="Orders" name="Objednávky"/>
   <tab id="Outstanding" name="Outstanding"/>
+  <tab id="Pages" name="Pages" />
   <tab id="Payment" name="Platba"/>
+  <tab id="Payment_methods" name="Payment Methods" />
+  <tab id="Payment_preferences" name="Preferences" />
   <tab id="Performance" name="Výkon"/>
   <tab id="Permissions" name="Oprávnění přístupu"/>
   <tab id="Positions" name="Pozice modulů"/>
-  <tab id="Preferences_1" name="Konfigurace"/>
   <tab id="Preferences" name="Konfigurace"/>
+  <tab id="Preferences_1" name="Konfigurace"/>
   <tab id="Price_Rules" name="Pravidla cen"/>
-  <tab id="Products_1" name="Produkty"/>
   <tab id="Products" name="Produkty"/>
+  <tab id="Products_1" name="Produkty"/>
   <tab id="Profiles" name="Profily"/>
   <tab id="Quick_Access" name="Rychlý přístup"/>
   <tab id="Referrers" name="Odkud přišli"/>
+  <tab id="SEO_URLs" name="SEO a URLs"/>
+  <tab id="SQL_Manager" name="SQL manažer"/>
+  <tab id="Search" name="Vyhledávání"/>
   <tab id="Search_1" name="Vyhledávání"/>
   <tab id="Search_Engines" name="Vyhledávače"/>
-  <tab id="Search" name="Vyhledávání"/>
-  <tab id="SEO_URLs" name="SEO a URLs"/>
-  <tab id="Shipping_1" name="Konfigurace"/>
   <tab id="Shipping" name="Doručení"/>
+  <tab id="Shipping_1" name="Konfigurace"/>
   <tab id="Shop_URLs" name="Odkazy"/>
+  <tab id="Shop_parameters" name="Shop Parameters" />
   <tab id="Shopping_Carts" name="Nákupní košíky"/>
   <tab id="Shops" name="Obchody"/>
-  <tab id="SQL_Manager" name="SQL manažer"/>
   <tab id="States" name="Státy"/>
-  <tab id="Stats_1" name="Statistiky"/>
   <tab id="Stats" name="Statistiky"/>
+  <tab id="Stats_1" name="Statistiky"/>
   <tab id="Statuses" name="Stavy objednávek"/>
+  <tab id="Stock" name="Zásoby"/>
   <tab id="Stock_Coverage" name="Stav zásob"/>
   <tab id="Stock_Management" name="Řízení zásob"/>
   <tab id="Stock_Movement" name="Skladové pohyby"/>
-  <tab id="Stock" name="Zásoby"/>
   <tab id="Store_Contacts" name="Kontakty na prodejny"/>
   <tab id="Suppliers" name="Dodavatelé"/>
   <tab id="Supply_orders" name="Objednávky dodavatelům"/>
   <tab id="Tags" name="Štítky"/>
+  <tab id="Tax_Management" name="Taxes" />
   <tab id="Tax_Rules" name="Daňová pravidla"/>
   <tab id="Taxes" name="DPH"/>
   <tab id="Themes" name="Šablony"/>
+  <tab id="Themes_Catalog" name="Theme Catalog" />
   <tab id="Titles" name="Oslovení skupiny"/>
+  <tab id="Traffic" name="Traffic" />
   <tab id="Translations" name="Překlady"/>
   <tab id="Warehouses" name="Sklady"/>
   <tab id="Webservice" name="Webservice"/>
