@@ -173,3 +173,7 @@ services:
             - "@prestashop.adapter.data_provider.customer"
         tags:
             - { name: form.type }
+    form.type.extension.textarea:
+            class: PrestaShopBundle\Form\Admin\Type\TextareaEmptyType
+            tags:
+                - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextareaType }
