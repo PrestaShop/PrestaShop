@@ -4958,6 +4958,8 @@ body#checkout {
     margin-top: 25px; }
   body#checkout .container {
     min-height: 100%; }
+  body#checkout .logo-container {
+    min-width: 6.25em; }
   body#checkout section.checkout-step {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     background-color: white;
@@ -5113,44 +5115,9 @@ body#checkout {
         color: #414141; }
         body#checkout section.checkout-step .add-address a i {
           font-size: 0.9375em; }
-    body#checkout section.checkout-step .delivery-option-2 {
-      display: -webkit-box;
-      display: -moz-box;
-      display: box;
-      display: -webkit-flex;
-      display: -moz-flex;
-      display: -ms-flexbox;
-      -js-display: flex;
-      display: flex;
-      -webkit-box-align: center;
-      -moz-box-align: center;
-      box-align: center;
-      -webkit-align-items: center;
-      -moz-align-items: center;
-      -ms-align-items: center;
-      -o-align-items: center;
-      align-items: center;
-      -ms-flex-align: center;
-      -webkit-box-pack: justify;
-      -moz-box-pack: justify;
-      box-pack: justify;
-      -webkit-justify-content: space-between;
-      -moz-justify-content: space-between;
-      -ms-justify-content: space-between;
-      -o-justify-content: space-between;
-      justify-content: space-between;
-      -ms-flex-pack: justify; }
-      body#checkout section.checkout-step .delivery-option-2 div.logo-container {
-        -webkit-box-flex: 0;
-        -moz-box-flex: 0;
-        box-flex: 0;
-        -webkit-flex: 0 0 30%;
-        -moz-flex: 0 0 30%;
-        -ms-flex: 0 0 30%;
-        flex: 0 0 30%; }
-      body#checkout section.checkout-step .delivery-option-2 img {
-        max-width: 6.25em;
-        float: left; }
+    body#checkout section.checkout-step .delivery-option-2 img {
+      width: 6.25em;
+      float: left; }
     body#checkout section.checkout-step .delivery-option {
       background: #f6f6f6;
       padding: 0.9375em;
