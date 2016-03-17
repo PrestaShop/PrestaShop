@@ -16,6 +16,9 @@ body#checkout {
   .container {
     min-height: 100%;
   }
+  .logo-container{
+    min-width: em(100px);
+  }
   section.checkout-step {
     @include box-shadow;
     background-color: white;
@@ -183,14 +186,8 @@ body#checkout {
       }
     }
     .delivery-option-2 {
-      @include display(flex);
-      @include align-items(center);
-      @include justify-content(space-between);
-      div.logo-container {
-        @include flex(0 0 30%);
-      }
       img {
-        max-width: em(100px);
+        width: em(100px);
         float: left;
       }
     }

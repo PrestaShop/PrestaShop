@@ -12,24 +12,38 @@
           {block name='delivery_options'}
             <div class="delivery-options">
               {foreach from=$delivery_options item=carrier key=carrier_id}
-                <div>
-                  <div class="delivery-option">
-                    <span class="custom-radio pull-xs-left">
-                      <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if} />
-                      <span></span>
-                    </span>
-                    <label for="delivery_option_{$carrier.id}" class="delivery-option-2">
-                      {if $carrier.logo}
-                        <div class="logo-container">
-                          <img src="{$carrier.logo}" alt="{$carrier.name}" />
-                        </div>
-                      {/if}
-                      <span class="carrier-name">{$carrier.name}</span>
-                      <span class="carrier-delay">{$carrier.delay}</span>
-                      <span class="carrier-price">{$carrier.price}</span>
-                    </label>
+                  <div class="delivery-option row">
+                    <div class="col-md-1">
+                      <span class="custom-radio pull-xs-left">
+                        <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if} />
+                        <span></span>
+                      </span>
+                    </div>
+                    <div class="col-md-11">
+                      <div class="row">
+                        <label for="delivery_option_{$carrier.id}" class="delivery-option-2">
+                          <div class="col-md-3">
+                            <div class="logo-container">
+                              {if $carrier.logo}
+                                <img src="{$carrier.logo}" alt="{$carrier.name}" />
+                                {else}
+                                &nbsp;
+                              {/if}
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <span class="carrier-name">{$carrier.name}</span>
+                          </div>
+                          <div class="col-md-4">
+                            <span class="carrier-delay">{$carrier.delay}</span>
+                          </div>
+                          <div class="col-md-1">
+                            <span class="carrier-price">{$carrier.price}</span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
                   </div>
-                </div>
               {/foreach}
             </div>
           {/block}
