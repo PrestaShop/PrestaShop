@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
+  <tab id="SELL" name="SELL" />
+  <tab id="IMPROVE" name="IMPROVE" />
+  <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Adresy"/>
   <tab id="Administration" name="Administracja"/>
   <tab id="AdminModulesSf" name="Module Catalog" />

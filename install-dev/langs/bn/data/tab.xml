@@ -1,5 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <entity_tab>
+  <tab id="SELL" name="SELL" />
+  <tab id="IMPROVE" name="IMPROVE" />
+  <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id='Addresses' name='ঠিকানা'/>
   <tab id='Administration' name='প্রশাসন'/>
   <tab id='Advanced_Parameters' name='উচ্চতর মাপকাঠি'/>
@@ -28,7 +31,8 @@
   <tab id='Customers_1' name='গ্রাহকরা'/>
   <tab id='Customers_2' name='গ্রাহকরা'/>
   <tab id='Customers' name='গ্রাহকরা'/>
-  <tab id='Dashboard' name='Dashboard'/><tab id='AdminModulesSf' name='Module Catalog' />
+  <tab id='Dashboard' name='Dashboard'/>
+  <tab id='AdminModulesSf' name='Module Catalog' />
   <tab id='Database' name='Database' />
   <tab id='DB_Backup' name='ডাঁটা বেইজ ব্যাক আপ'/>
   <tab id='Delivery_Slips' name='বিতরন রশিদ'/>
@@ -40,7 +44,6 @@
   <tab id='General' name='সাধারণ'/>
   <tab id='Geolocation' name='অবস্থান'/>
   <tab id='Groups' name='দল'/>
-  <tab id='Home' name='হোম /বাসা'/>
   <tab id='Image_Settings' name='Image Settings' />
   <tab id='Images' name='চিত্র'/>
   <tab id='Information' name='Information' />

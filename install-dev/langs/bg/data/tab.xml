@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
+  <tab id="SELL" name="SELL" />
+  <tab id="IMPROVE" name="IMPROVE" />
+  <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Адреси"/>
   <tab id="Administration" name="Администрация"/>
+  <tab id="AdminModulesSf" name="Module Catalog" />
   <tab id="Advanced_Parameters" name="За напреднали"/>
   <tab id="Attachments" name="Прикачени"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -119,5 +123,5 @@
   <tab id="Translations" name="Преводи"/>
   <tab id="Warehouses" name="Складове"/>
   <tab id="Webservice" name="Уеб-обслужване"/>
-  <tab id="Zones" name="Зони"/><tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Zones" name="Зони"/>
 </entity_tab>
