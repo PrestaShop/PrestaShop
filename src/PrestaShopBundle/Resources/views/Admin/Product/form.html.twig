@@ -638,7 +638,7 @@
                       </div>
                       <div class="col-md-8">
                         <label class="form-control-label">&nbsp;</label>
-                        <a class="form-control-static" href="#">{{ trans('Manage tax rules', {}, 'AdminProducts') }}</a>
+                        <a class="form-control-static" href="{{ getAdminLink("AdminTaxes") }}">{{ trans('Manage tax rules', {}, 'AdminProducts') }}</a>
                       </div>
                       <div class="col-md-12 p-t-1">
                         {{ form_widget(form.step2.on_sale) }}
