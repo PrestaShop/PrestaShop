@@ -1203,6 +1203,9 @@ var form = (function() {
 
 			/** on active field change, send form */
       $('#form_step1_active', elem).on('change', function() {
+        var active = $(this).prop('checked');
+        $('.for-switch.online-title').toggle(active);
+        $('.for-switch.offline-title').toggle(!active);
         send();
       });
 
