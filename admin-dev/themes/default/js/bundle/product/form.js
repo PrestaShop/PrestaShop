@@ -111,7 +111,11 @@ var displayFieldsManager = (function() {
 			/** product type switch */
 
 			if(typeProduct.val() === '1') {
-				$('#pack_stock_type, #js_form_step1_inputPackItems').show();
+				if($('#pack_stock_type').hasClass("hide")) {
+					$('#js_form_step1_inputPackItems').show();
+				}else{
+					$('#pack_stock_type, #js_form_step1_inputPackItems').show();
+				}
 				$('#form-nav a[href="#step4"]').show();
 				showVariationsSelector.hide();
 				showVariationsSelector.find('input[value="0"]').attr('checked', true);
@@ -141,7 +145,9 @@ var displayFieldsManager = (function() {
 			} else {
 				combinations.hide();
 				$('#specific-price-combination-selector').hide();
-				$('#product_qty_0_shortcut_div, #quantities').show();
+				if(!$('#product_qty_0_shortcut_div').hasClass("hide")) {
+					$('#product_qty_0_shortcut_div, #quantities').show();
+				}
 			}
 			if ($('#combinations_thead').next().children().length) {
 				$('#combinations_thead').show();

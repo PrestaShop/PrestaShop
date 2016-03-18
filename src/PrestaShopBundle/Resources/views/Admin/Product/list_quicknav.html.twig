@@ -16,9 +16,11 @@
                     <th class="hidden-xs hidden-sm">
                         {{ trans("Base price", {}, 'AdminProducts') }}
                     </th>
-                    <th class="hidden-xs">
-                        {{ trans("Quantity", {}, 'AdminProducts') }}
-                    </th>
+                    {% if 'PS_STOCK_MANAGEMENT'|configuration == 1 %}
+                        <th class="hidden-xs">
+                            {{ trans("Quantity", {}, 'AdminProducts') }}
+                        </th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -33,15 +35,17 @@
                         <td class="hidden-xs hidden-sm">
                             <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default(trans('N/A', {}, 'AdminTab')) }}</a>
                         </td>
-                        <td class="hidden-xs product-sav-quantity" productquantityvalue="{{ product.sav_quantity|default('') }}">
-                            <a href="{{ product.url|default('') }}#tab-step3">
-                                {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
-                                    {{ product.sav_quantity }}
-                                {% else %}
-                                    <span class="badge badge-danger">{{ product.sav_quantity|default(trans('N/A', {}, 'AdminTab')) }}</span>
-                                {% endif %}
-                            </a>
-                        </td>
+                        {% if 'PS_STOCK_MANAGEMENT'|configuration == 1 %}
+                            <td class="hidden-xs product-sav-quantity" productquantityvalue="{{ product.sav_quantity|default('') }}">
+                                <a href="{{ product.url|default('') }}#tab-step3">
+                                    {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
+                                        {{ product.sav_quantity }}
+                                    {% else %}
+                                        <span class="badge badge-danger">{{ product.sav_quantity|default(trans('N/A', {}, 'AdminTab')) }}</span>
+                                    {% endif %}
+                                </a>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% else %}
                     <tr><td colspan="5">

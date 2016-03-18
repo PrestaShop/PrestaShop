@@ -3,7 +3,7 @@
     <td>{{ form.vars.value.name }}</td>
     <td class="attribute-price-display">{{ form.vars.value.attribute_price_display }}</td>
     <td class="attribute-weight">{{ form.vars.value.attribute_weight }} {{ 'PS_WEIGHT_UNIT'|configuration }}</td>
-    <td class="attribute-quantity"><div class="col-xs-6"><input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control"></div></td>
+    <td class="attribute-quantity"><div class="col-xs-6"><input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control {% if 'PS_STOCK_MANAGEMENT'|configuration == 0 %}hide{% endif %}"></div></td>
     <td class="text-right">
         <div class="btn-group" role="group">
             <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-default btn-sm btn-open"><i class="material-icons">mode_edit</i></a>
@@ -26,7 +26,7 @@
                             {{ form_widget(form.attribute_reference) }}
                         </fieldset>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 {% if 'PS_STOCK_MANAGEMENT'|configuration == 0 %}hide{% endif %}">
                         <fieldset class="form-group">
                             <label>{{ form.attribute_quantity.vars.label }}</label>
                             {{ form_widget(form.attribute_quantity) }}
