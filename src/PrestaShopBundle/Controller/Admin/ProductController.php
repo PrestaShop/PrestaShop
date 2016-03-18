@@ -212,6 +212,8 @@ class ProductController extends FrameworkBundleAdminController
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
                 'import_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminImport', true, ['import_type' => 'products']),
                 'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink('AdminProducts'),
             )
         );
     }
@@ -461,8 +463,7 @@ class ProductController extends FrameworkBundleAdminController
             'showContentHeader' => false,
             'preview_link' => $adminProductWrapper->getPreviewUrl($product),
             'stats_link' => $legacyContextService->getAdminLink('AdminStats', true, ['module' => 'statsproduct', 'id_product' => $id]),
-            'help_link' => 'http://help.prestashop.com/'.$legacyContextService->getEmployeeLanguageIso().'/doc/'
-                .'AdminProducts?version='._PS_VERSION_.'&country='.$legacyContextService->getEmployeeLanguageIso(),
+            'help_link' => $this->generateSidebarLink('AdminProducts'),
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
         );

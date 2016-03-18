@@ -5,17 +5,22 @@
         layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
         layoutDisplayType is defined ? layoutDisplayType : '',
         showContentHeader is defined ? showContentHeader : true,
-        headerTabContent is defined ? headerTabContent : ''
+        headerTabContent is defined ? headerTabContent : '',
+        enableSidebar is defined ? enableSidebar : false,
+        help_link is defined ? help_link : ''
     )
 )) %}
 
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/right-sidebar.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/right-sidebar.js') }}"></script>
 {% endblock %}
 
 {% block translate_javascripts %}
@@ -54,3 +59,17 @@
         </div>
     {% endif %}
 {% endblock %}
+
+{% block sidebar_right %}
+    <nav
+            id="right-sidebar"
+            role="navigation"
+            class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-xs-center"
+    >
+        <img
+                src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"
+                style="margin-top: 10em;" alt="{{ trans('Loading...', [], 'AdminTab') }}"
+        />
+    </nav>
+{% endblock %}
+

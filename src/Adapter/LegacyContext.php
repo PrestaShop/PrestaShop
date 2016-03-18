@@ -126,12 +126,14 @@ class LegacyContext
      * @param array $headerToolbarBtn The header toolbar to override
      * @param string $displayType The legacy display type variable
      * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value.
+     * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
+     * @param string $helpLink If specified, will be used instead of legacy one
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '')
+    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '', $enableSidebar, $helpLink = '')
     {
-        $originCtrl = new \AdminLegacyLayoutControllerCore($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader, $headerTabContent);
+        $originCtrl = new \AdminLegacyLayoutControllerCore($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader, $headerTabContent, $enableSidebar, $helpLink);
         $originCtrl->run();
 
         return $originCtrl->outPutHtml;
