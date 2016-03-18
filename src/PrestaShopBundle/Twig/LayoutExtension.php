@@ -179,7 +179,7 @@ EOF;
      */
     public function getAdminLink($controllerName, $withToken = true, $extraParams = [])
     {
-        return $this->context->getAdminLink($controllerName, $withToken = true, $extraParams = []);
+        return $this->context->getAdminLink($controllerName, $withToken, $extraParams);
     }
 
     /**
