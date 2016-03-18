@@ -389,3 +389,12 @@ body#checkout {
     }
   }
 }
+
+.cart-empty{
+  .cart-summary{
+    opacity: .7;
+  }
+  .cart-empty-container{
+    min-height: em(423px);
+  }
+}
