@@ -29,6 +29,14 @@
  */
 class AdminPerformanceControllerCore extends AdminController
 {
+    const DEBUG_MODE_SUCCEEDED = 0;
+    const DEBUG_MODE_ERROR_NO_READ_ACCESS = 1;
+    const DEBUG_MODE_ERROR_NO_READ_ACCESS_CUSTOM = 2;
+    const DEBUG_MODE_ERROR_NO_WRITE_ACCESS = 3;
+    const DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM = 4;
+    const DEBUG_MODE_ERROR_NO_DEFINITION_FOUND = 5;
+
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -209,6 +217,26 @@ class AdminPerformanceControllerCore extends AdminController
                     ),
                     'hint' => $this->l('Enable or disable all classes and controllers overrides.')
                 ),
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Debug mode'),
+                    'name' => 'debug_mode',
+                    'class' => 't',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'debug_mode_on',
+                            'value' => 1,
+                            'label' => $this->l('Enabled')
+                        ),
+                        array(
+                            'id' => 'debug_mode_off',
+                            'value' => 0,
+                            'label' => $this->l('Disabled')
+                        )
+                    ),
+                    'hint' => $this->l('Enable or disable debug mode.')
+                ),
             ),
             'submit' => array(
                 'title' => $this->l('Save')
@@ -217,6 +245,7 @@ class AdminPerformanceControllerCore extends AdminController
 
         $this->fields_value['native_module'] = Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
         $this->fields_value['overrides'] = Configuration::get('PS_DISABLE_OVERRIDES');
+        $this->fields_value['debug_mode'] = $this->isDebugModeEnabled();
     }
 
     public function initFieldsetFeaturesDetachables()
@@ -1008,6 +1037,33 @@ class AdminPerformanceControllerCore extends AdminController
         if (Tools::isSubmit('submitAddconfiguration')) {
             Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
             Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
+            if (Tools::isSubmit('debug_mode') && (bool)Tools::getValue('debug_mode')) {
+                $debug_mode_status = $this->enableDebugMode();
+            } else {
+                $debug_mode_status = $this->disableDebugMode();
+            }
+
+            if (!empty($debug_mode_status)) {
+                switch ($debug_mode_status) {
+                    case self::DEBUG_MODE_ERROR_COULD_NOT_BACKUP:
+                        $this->errors[] = Tools::displayError(sprintf($this->l('Error: could not write to file: %s. Make sure that the file or directory is writable.'), _PS_ROOT_DIR_.'/config/defines.old.php'));
+                        break;
+                    case self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND:
+                        $this->errors[] = Tools::displayError(sprintf($this->l('Error: could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
+                        break;
+                    case self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS:
+                        $this->errors[] = Tools::displayError(sprintf($this->l('Error: could not write to file. Make sure that the correct permissions are set on the file %s'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
+                        break;
+                    case self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
+                        $this->errors[] = Tools::displayError(sprintf($this->l('Error: could not write to file. Make sure that the correct permissions are set on the file %s'), _PS_ROOT_DIR_.'/config/defines_custom.inc.php'));
+                        break;
+                    case self::DEBUG_MODE_ERROR_NO_READ_ACCESS:
+                        $this->errors[] = Tools::displayError(sprintf($this->l('Error: could not read file. Make sure that the correct permissions are set on the file %s'), _PS_ROOT_DIR_.'/config/defines.inc.php'));
+                        break;
+                    default:
+                        break;
+                }
+            }
             Tools::generateIndex();
         }
 
@@ -1054,5 +1110,139 @@ class AdminPerformanceControllerCore extends AdminController
             }
         }
         die;
+    }
+
+    /**
+     * Is Debug Mode enabled?
+     *
+     * @return bool Whether debug mode is enabled
+     */
+    public function isDebugModeEnabled()
+    {
+        // Always try the custom defines file first
+        $defines_clean = '';
+        if ($this->isDefinesReadable(true)) {
+            $defines_clean = php_strip_whitespace(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
+        }
+
+        $m = array();
+        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $defines_clean, $m)) {
+            $defines_clean = php_strip_whitespace(_PS_ROOT_DIR_.'/config/defines.inc.php');
+            if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $defines_clean, $m)) {
+                return false;
+            }
+        }
+
+        if (Tools::strtolower($m[1]) === 'true') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check read permission on defines.inc.php
+     *
+     * @param bool $custom Whether the custom defines file should be used
+     * @return bool Whether the file can be read
+     */
+    public function isDefinesReadable($custom = false)
+    {
+        if ($custom) {
+            return is_readable(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
+        }
+
+        return is_readable(_PS_ROOT_DIR_.'/config/defines.inc.php');
+    }
+
+    /**
+     * Enable debug mode
+     *
+     * @return int Whether changing debug mode succeeded or error code
+     */
+    public function enableDebugMode()
+    {
+        // Check custom defines file first
+        if ($this->isDefinesReadable(true)) {
+            // Take commented lines into account
+            $defines_custom_clean = php_strip_whitespace(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
+            $defines_custom = Tools::file_get_contents(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
+            if (!empty($defines_custom_clean) && preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $defines_custom_clean)) {
+                $defines_custom = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', true);', $defines_custom);
+                if (!@file_put_contents(_PS_ROOT_DIR_.'/config/defines_custom.inc.php', $defines_custom)) {
+                    return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM;
+                }
+
+                if (function_exists('opcache_invalidate')) {
+                    opcache_invalidate(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
+                }
+
+                return self::DEBUG_MODE_SUCCEEDED;
+            }
+        }
+
+        if (!$this->isDefinesReadable()) {
+            return self::DEBUG_MODE_ERROR_NO_READ_ACCESS;
+        }
+        $defines_clean = php_strip_whitespace(_PS_ROOT_DIR_.'/config/defines.inc.php');
+        $defines = Tools::file_get_contents(_PS_ROOT_DIR_.'/config/defines.inc.php');
+        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $defines_clean)) {
+            return self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND;
+        }
+        $defines = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', true);', $defines);
+        if (!@file_put_contents(_PS_ROOT_DIR_.'/config/defines.inc.php', $defines)) {
+            return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS;
+        }
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate(_PS_ROOT_DIR_.'/config/defines.inc.php');
+        }
+
+        return self::DEBUG_MODE_SUCCEEDED;
+    }
+
+    /**
+     * Disable debug mode
+     *
+     * @return int Whether changing debug mode succeeded or error code
+     */
+    public function disableDebugMode()
+    {
+        // Check custom defines file first
+        if ($this->isDefinesReadable(true)) {
+            $defines_custom_clean = php_strip_whitespace(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
+            $defines_custom = Tools::file_get_contents(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
+            if (!empty($defines_custom_clean) && preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $defines_custom_clean)) {
+                $defines_custom = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', false);', $defines_custom);
+                if (!@file_put_contents(_PS_ROOT_DIR_.'/config/defines_custom.inc.php', $defines_custom)) {
+                    return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM;
+                }
+
+                if (function_exists('opcache_invalidate')) {
+                    opcache_invalidate(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
+                }
+
+                return self::DEBUG_MODE_SUCCEEDED;
+            }
+        }
+
+        if (!$this->isDefinesReadable()) {
+            return self::DEBUG_MODE_ERROR_NO_READ_ACCESS;
+        }
+        $defines_clean = php_strip_whitespace(_PS_ROOT_DIR_.'/config/defines.inc.php');
+        $defines = Tools::file_get_contents(_PS_ROOT_DIR_.'/config/defines.inc.php');
+        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $defines_clean)) {
+            return self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND;
+        }
+        $defines = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', false);', $defines);
+        if (!@file_put_contents(_PS_ROOT_DIR_.'/config/defines.inc.php', $defines)) {
+            return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS;
+        }
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate(_PS_ROOT_DIR_.'/config/defines.inc.php');
+        }
+
+        return self::DEBUG_MODE_SUCCEEDED;
     }
 }
