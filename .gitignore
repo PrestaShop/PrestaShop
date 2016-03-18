@@ -9,9 +9,9 @@ download/*
 /img/*
 /log/*
 /upload/*
-/vendor/*
+vendor/*
 docs/phpdoc-sf/
-/composer.lock
+composer.lock
 tests/selenium/errorShots/
 
 admin-dev/autoupgrade/*
@@ -38,12 +38,13 @@ themes/*/config/settings_*.json
 
 modules/*
 override/*
+/themes/StarterTheme
 
 # Vendors and dependencies
 
 bower_components/
-node_modules
-/composer.phar
+node_modules/
+composer.phar
 php-cs-fixer
 .grunt/*
 
