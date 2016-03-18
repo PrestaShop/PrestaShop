@@ -95,6 +95,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'system' => $this->l('Cannot create new files and folders'),
                         'gd' => $this->l('GD library is not installed'),
                         'mysql_support' => $this->l('MySQL support is not activated'),
+                        'zip' => $this->l('ZIP extension is not enabled'),
                     )
                 ),
                 array(

@@ -89,6 +89,7 @@ class ConfigurationTestCore
                 'config_dir' => 'config',
                 'files' => false,
                 'mails_dir' => 'mails',
+                'zip' => false,
             ));
         }
 
@@ -196,6 +197,11 @@ class ConfigurationTestCore
             return @gzencode('dd') !== false;
         }
         return false;
+    }
+
+    public static function test_zip()
+    {
+        return extension_loaded('zip');
     }
 
     public static function test_dir($relative_dir, $recursive = false, &$full_report = null)
