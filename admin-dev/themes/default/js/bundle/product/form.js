@@ -1100,7 +1100,11 @@ var warehouseCombinations = (function() {
 var form = (function() {
 	var elem = $('#form');
 
-	function send(redirect) {
+	function send(redirect, target) {
+		// target value by default
+		if (typeof(target) == 'undefined') {
+			target = false;
+		}
 		var data = $('input, textarea, select', elem).not(':input[type=button], :input[type=submit], :input[type=reset]').serialize();
 		$.ajax({
 			type: 'POST',
@@ -1112,8 +1116,12 @@ var form = (function() {
 				$('*.has-danger').removeClass('has-danger');
 			},
 			success: function(response){
-				if(redirect){
-					window.location = redirect;
+				if (redirect) {
+					if (target) {
+						window.open(redirect, target);
+					} else {
+						window.location = redirect;
+					}
 				}
 				showSuccessMessage(translate_javascripts['Form update success']);
 			},
@@ -1198,7 +1206,7 @@ var form = (function() {
 
 			/** on save with duplicate|new */
 			$('.btn-submit', elem).click(function(){
-				send($(this).attr('data-redirect'));
+				send($(this).attr('data-redirect'), $(this).attr('target'));
 			});
 
 			/** on active field change, send form */
