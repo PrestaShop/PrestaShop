@@ -69,7 +69,7 @@
         </button>
       </form>
     {else}
-      <p class="warning">{l s='Unfortunately, there are no carriers available for your delivery address.'}</p>
+      <p class="alert alert-danger">{l s='Unfortunately, there are no carriers available for your delivery address.'}</p>
     {/if}
   </div>
 
