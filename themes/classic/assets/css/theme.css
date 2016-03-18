@@ -5350,6 +5350,12 @@ body#checkout {
   .condition-label label[for="conditions_to_approve[terms-and-conditions]"] {
     text-align: left; } }
 
+.cart-empty .cart-summary {
+  opacity: .7; }
+
+.cart-empty .cart-empty-container {
+  min-height: 26.4375em; }
+
 /*** SOME GENERIC STYLES ***/
 .table-labeled th {
   vertical-align: middle; }
