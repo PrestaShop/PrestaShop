@@ -368,7 +368,8 @@ class WebserviceOutputBuilderCore
 
         foreach ($this->wsParamOverrides as $p) {
             $object = $p['object'];
-            $ws_params = $object->{$p['method']}($ws_params);
+            $method = $p['method'];
+            $ws_params = $object->$method($ws_params);
         }
 
         // If a list is asked, need to wrap with a plural node
@@ -462,7 +463,8 @@ class WebserviceOutputBuilderCore
 
         foreach ($this->wsParamOverrides as $p) {
             $o = $p['object'];
-            $ws_params = $o->{$p['method']}($ws_params);
+            $method = $p['method'];
+            $ws_params = $o->$method($ws_params);
         }
         $output .= $this->setIndent($depth).$this->objectRender->renderNodeHeader($ws_params['objectNodeName'], $ws_params);
 
@@ -539,7 +541,8 @@ class WebserviceOutputBuilderCore
                 unset($field['xlink_resource']);
             }
         } elseif (isset($field['getter']) && $object != null && method_exists($object, $field['getter'])) {
-            $field['value'] = $object->$field['getter']();
+            $field_getter = $field['getter'];
+            $field['value'] = $object->$field_getter();
         } elseif (!isset($field['value'])) {
             $field['value'] = $object->$field_name;
         }
@@ -756,19 +759,29 @@ class WebserviceOutputBuilderCore
     {
         return $this->specificFields;
     }
+
     protected function overrideSpecificField($entity_name, $field_name, $field, $entity_object, $ws_params)
     {
-        if (array_key_exists($field_name, $this->specificFields) && $this->specificFields[$field_name]['entity'] == $entity_name) {
-            if ($this->specificFields[$field_name]['type'] == 'string') {
-                $object = new $this->specificFields[$field_name]['object']();
-            } elseif ($this->specificFields[$field_name]['type'] == 'object') {
-                $object = $this->specificFields[$field_name]['object'];
-            }
+        if (array_key_exists($field_name, $this->specificFields)) {
+            $specific_fields_field_name = $this->specificFields[$field_name];
+            if ($specific_fields_field_name['entity'] == $entity_name) {
 
-            $field = $object->{$this->specificFields[$field_name]['method']}($field, $entity_object, $ws_params);
+                if ($specific_fields_field_name['type'] == 'string') {
+                    $object = new $specific_fields_field_name['object']();
+                } elseif ($specific_fields_field_name['type'] == 'object') {
+                    $object = $specific_fields_field_name['object'];
+                }
+
+                if (isset($object)) {
+                    $method = $specific_fields_field_name['method'];
+                    $field = $object->$method($field, $entity_object, $ws_params);
+                }
+            }
         }
+
         return $field;
     }
+
     public function setVirtualField($object, $method, $entity_name, $parameters)
     {
         try {
@@ -797,7 +810,8 @@ class WebserviceOutputBuilderCore
                     $object = $function_infos['object'];
                 }
 
-                $return_fields = $object->{$function_infos['method']}($entity_object, $function_infos['parameters']);
+                $method = $function_infos['method'];
+                $return_fields = $object->$method($entity_object, $function_infos['parameters']);
                 foreach ($return_fields as $field_name => $value) {
                     if (Validate::isConfigName($field_name)) {
                         $arr_return[$field_name] = $value;
