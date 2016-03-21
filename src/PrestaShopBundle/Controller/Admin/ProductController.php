@@ -236,6 +236,8 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $productProvider ProductInterfaceProvider */
         $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
         /* @var $legacyContext LegacyContext */
+        $authorizationChecker = $this->container->get('prestashop.adapter.security.authorization.checker');
+        /* @var $authorizationChecker AuthorizationChecker */
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
         $totalCount = 0;
 
