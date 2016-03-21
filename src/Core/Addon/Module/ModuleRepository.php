@@ -128,55 +128,64 @@ class ModuleRepository implements ModuleRepositoryInterface
         foreach ($modules as $key => &$module) {
 
             // Part One : Removing addons not related to the selected product type
-            if ($module->attributes->get('productType') == 'Module') {
-                $productType = AddonListFilterType::MODULE;
-            }
-            if ($module->attributes->get('productType') == 'Service') {
-                $productType = AddonListFilterType::SERVICE;
-            }
-            if (isset($productType) && $productType & ~ $filter->type) {
-                unset($modules[$key]);
-                continue;
+            if ($filter->type != AddonListFilterType::ALL) {
+                if ($module->attributes->get('productType') == 'module') {
+                    $productType = AddonListFilterType::MODULE;
+                }
+                if ($module->attributes->get('productType') == 'service') {
+                    $productType = AddonListFilterType::SERVICE;
+                }
+                if (!isset($productType) || $productType & ~ $filter->type) {
+                    unset($modules[$key]);
+                    continue;
+                }
             }
 
             // Part Two : Remove module not installed if specified
             if ($filter->status != AddonListFilterStatus::ALL) {
-                if ($module->database->get('installed') == 1 && $filter->status & ~ AddonListFilterStatus::INSTALLED) {
+                if ($module->database->get('installed') == 1
+                    && ($filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
+                    || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
                     continue;
                 }
 
-                if ($module->database->get('installed') == 0 && $filter->status & AddonListFilterStatus::INSTALLED) {
+                if ($module->database->get('installed') == 0
+                    && (!$filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
+                    || $filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
                     continue;
                 }
 
                 if ($module->database->get('installed') == 1
                     && $module->database->get('active') == 1
-                    && $filter->status & ~ AddonListFilterStatus::ENABLED) {
+                    && !$filter->hasStatus(AddonListFilterStatus::DISABLED)) {
                     unset($modules[$key]);
                     continue;
                 }
 
                 if ($module->database->get('installed') == 1
                     && $module->database->get('active') == 0
-                    && $filter->status & AddonListFilterStatus::ENABLED) {
+                    && !$filter->hasStatus(AddonListFilterStatus::ENABLED)) {
                     unset($modules[$key]);
                     continue;
                 }
             }
 
             // Part Three : Remove addons not related to the proper source (ex Addons)
-            if (!$module->attributes->has('origin_filter_value') &&
-                ~ $filter->origin & AddonListFilterOrigin::DISK
-            ) {
-                unset($modules[$key]);
-                continue;
-            }
-            if ($module->attributes->has('origin_filter_value') &&
-                !($module->attributes->get('origin_filter_value') & $filter->origin)) {
-                unset($modules[$key]);
-                continue;
+            if ($filter->origin != AddonListFilterOrigin::ALL) {
+                if (!$module->attributes->has('origin_filter_value') &&
+                    !$filter->hasOrigin(AddonListFilterOrigin::DISK)
+                ) {
+                    unset($modules[$key]);
+                    continue;
+                }
+                if ($module->attributes->has('origin_filter_value') &&
+                    !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
+                ) {
+                    unset($modules[$key]);
+                    continue;
+                }
             }
         }
         return $modules;
@@ -280,7 +289,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         ) ? 1 : 0,
                     'need_instance' => isset($tmp_module->need_instance)?$tmp_module->need_instance
                             :0,
-                    'productType' => 'Module',
+                    'productType' => 'module',
                 ];
 
                 $disk['is_valid'] = 1;
