@@ -683,13 +683,11 @@ abstract class ModuleCore
      * @param array|string $name
      * @return true if succeed
      * @since 1.4.1
-     * @deprecated since version 1.7.
+     * @deprecated since 1.7
      * @see  PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->enable($name)
      */
     public static function enableByName($name)
     {
-        Tools::displayAsDeprecated('Deprecated since 1.7. Use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->enable($name) instead');
-
         // If $name is not an array, we set it as an array
         if (!is_array($name)) {
             $name = array($name);
@@ -783,13 +781,11 @@ abstract class ModuleCore
      * @param array|string $name
      * @return true if succeed
      * @since 1.4.1
-     * @deprecated since version 1.7.
+     * @deprecated since 1.7
      * @see  PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->disable($name)
      */
     public static function disableByName($name)
     {
-        Tools::displayAsDeprecated('Deprecated since 1.7. Use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->enable($name) instead');
-
         // If $name is not an array, we set it as an array
         if (!is_array($name)) {
             $name = array($name);
@@ -2071,13 +2067,11 @@ abstract class ModuleCore
      * @param string $module_name
      * @return bool
      *
-     * @deprecated since version 1.7
+     * @deprecated since 1.7
      * @see  PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->isInstalled($name)
      */
     public static function isInstalled($module_name)
     {
-        Tools::displayAsDeprecated('Deprecated since 1.7. Use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->isInstalled($name) instead');
-
         if (!Cache::isStored('Module::isInstalled'.$module_name)) {
             $id_module = Module::getModuleIdByName($module_name);
             Cache::store('Module::isInstalled'.$module_name, (bool)$id_module);
