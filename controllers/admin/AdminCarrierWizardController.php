@@ -501,10 +501,12 @@ class AdminCarrierWizardControllerCore extends AdminController
         }
 
         if ($shipping_method == Carrier::SHIPPING_METHOD_FREE) {
-            $range_obj = $carrier->getRangeObject($carrier->shipping_method);
+            $tmp_range = array();
             $price_by_range = array();
         } else {
             $range_obj = $carrier->getRangeObject();
+            // Just to be safe check if the object is not empty
+            $tmp_range = $range_obj ? $range_obj->getRanges((int)$carrier->id) : array();
             $price_by_range = Carrier::getDeliveryPriceByRanges($range_table, (int)$carrier->id);
         }
 
@@ -512,13 +514,10 @@ class AdminCarrierWizardControllerCore extends AdminController
             $tpl_vars['price_by_range'][$price['id_'.$range_table]][$price['id_zone']] = $price['price'];
         }
 
-        $tmp_range = $range_obj->getRanges((int)$carrier->id);
         $tpl_vars['ranges'] = array();
-        if ($shipping_method != Carrier::SHIPPING_METHOD_FREE) {
-            foreach ($tmp_range as $id => $range) {
-                $tpl_vars['ranges'][$range['id_'.$range_table]] = $range;
-                $tpl_vars['ranges'][$range['id_'.$range_table]]['id_range'] = $range['id_'.$range_table];
-            }
+        foreach ($tmp_range as $id => $range) {
+            $tpl_vars['ranges'][$range['id_'.$range_table]] = $range;
+            $tpl_vars['ranges'][$range['id_'.$range_table]]['id_range'] = $range['id_'.$range_table];
         }
 
         // init blank range
