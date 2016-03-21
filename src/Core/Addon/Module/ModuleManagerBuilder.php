@@ -29,7 +29,7 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
-
+use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 class ModuleManagerBuilder
 {
     /**
@@ -46,12 +46,19 @@ class ModuleManagerBuilder
     public function build()
     {
         global $kernel;
+        if (!is_null($kernel)) {
+            return $kernel->getContainer()->get('prestashop.module.manager');
+        }else {
+            $langId = \Context::getContext()->employee instanceof \Employee ? \Context::getContext()->employee->id_lang : \Context::getContext()->language->iso_code;
+            $languageISO = \LanguageCore::getIsoById($langId);
 
-        return new ModuleManager(new AdminModuleDataProvider($kernel),
-            new ModuleDataProvider(),
-            new ModuleDataUpdater(),
-            $this->buildRepository(),
-            \Context::getContext()->employee);
+            return new ModuleManager(new AdminModuleDataProvider($languageISO),
+                new ModuleDataProvider(),
+                new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider($languageISO)),
+                $this->buildRepository(),
+                \Context::getContext()->employee);
+        }
+
     }
 
     /**
@@ -63,12 +70,18 @@ class ModuleManagerBuilder
     {
         if (is_null(self::$modulesRepository)) {
             global $kernel;
+            if (!is_null($kernel)) {
+                self::$modulesRepository = $kernel->getContainer()->get('prestashop.core.admin.module.repository');
+            }else {
+                $langId = \Context::getContext()->employee instanceof \Employee ? \Context::getContext()->employee->id_lang : \Context::getContext()->language->iso_code;
+                $languageISO = \LanguageCore::getIsoById($langId);
+                self::$modulesRepository = new ModuleRepository(
+                    new AdminModuleDataProvider($kernel),
+                    new ModuleDataProvider(),
+                    new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider($languageISO))
+                );
+            }
 
-            self::$modulesRepository = new ModuleRepository(
-                new AdminModuleDataProvider($kernel),
-                new ModuleDataProvider(),
-                new ModuleDataUpdater()
-            );
         }
         return self::$modulesRepository;
     }
