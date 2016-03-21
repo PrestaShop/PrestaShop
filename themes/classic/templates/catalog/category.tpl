@@ -16,7 +16,7 @@
     {/block}
 
     {block name='category_products'}
-      {include file='catalog/products.tpl' products=$products}
+      {include file='catalog/_partials/products.tpl' products=$products}
     {/block}
 
   </section>
