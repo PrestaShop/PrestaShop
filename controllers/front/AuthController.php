@@ -361,8 +361,8 @@ class AuthControllerCore extends FrontController
     {
         $blocknewsletter = Module::isInstalled('blocknewsletter') && $module_newsletter = Module::getInstanceByName('blocknewsletter');
         if ($blocknewsletter && $module_newsletter->active && !Tools::getValue('newsletter')) {
-            if (is_callable(array($module_newsletter, 'isNewsletterRegistered')) && $module_newsletter->isNewsletterRegistered(Tools::getValue('email')) == $module_newsletter::GUEST_REGISTERED) {
-
+            require_once _PS_MODULE_DIR_.'blocknewsletter/blocknewsletter.php';
+            if (is_callable(array($module_newsletter, 'isNewsletterRegistered')) && $module_newsletter->isNewsletterRegistered(Tools::getValue('email')) == Blocknewsletter::GUEST_REGISTERED) {
                 /* Force newsletter registration as customer as already registred as guest */
                 $_POST['newsletter'] = true;
             }
