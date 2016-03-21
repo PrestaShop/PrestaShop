@@ -10,7 +10,7 @@
     {block name='supplier-miniature'}
       <ul>
         {foreach from=$suppliers item=supplier}
-          {include file='catalog/supplier-miniature.tpl' brand=$supplier}
+          {include file='catalog/_partials/miniatures/supplier.tpl' brand=$supplier}
         {/foreach}
       </ul>
     {/block}

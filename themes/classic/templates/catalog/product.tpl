@@ -87,7 +87,7 @@
                         <h3 class="h4">{l s='This pack contains'}</h3>
                         {foreach from=$packItems item="product_pack"}
                           {block name='product_miniature'}
-                            {include file='catalog/pack-product-miniature.tpl' product=$product_pack}
+                            {include file='catalog/_partials/miniatures/pack-product.tpl' product=$product_pack}
                           {/block}
                         {/foreach}
                     </section>
@@ -206,7 +206,7 @@
             <h3 class="h5 text-uppercase">{l s='You might also like'}</h3>
             {foreach from=$accessories item="product_accessory"}
               {block name='product_miniature'}
-                {include file='catalog/product-miniature.tpl' product=$product_accessory}
+                {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory}
               {/block}
             {/foreach}
           </section>

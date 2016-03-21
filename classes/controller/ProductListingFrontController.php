@@ -423,7 +423,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     {
         $search = $this->getProductSearchVariables();
 
-        $rendered_products = $this->render('catalog/products.tpl', $search);
+        $rendered_products = $this->render('catalog/_partials/products.tpl', $search);
 
         $data = [
             'products'            => $search['products'],
