@@ -645,7 +645,7 @@ class CustomerCore extends ObjectModel
         $sql = 'SELECT *
                 FROM `'._DB_PREFIX_.'customer`
                 WHERE 1';
-
+        $search_items = explode(' ', $query);
         $research_fields = array('id_customer', 'firstname', 'lastname', 'email');
         $items = array();
         foreach ($research_fields as $field) {
