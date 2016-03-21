@@ -5353,8 +5353,8 @@ body#checkout {
 .cart-empty .cart-summary {
   opacity: .7; }
 
-.cart-empty .cart-empty-container {
-  min-height: 26.4375em; }
+.cart-empty .cart-container {
+  min-height: 23.1875em; }
 
 /*** SOME GENERIC STYLES ***/
 .table-labeled th {
