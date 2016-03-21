@@ -451,6 +451,15 @@ class ProductController extends FrameworkBundleAdminController
         // languages for switch dropdown
         $languages = $legacyContextService->getLanguages();
 
+        // generate url preview
+        if ($product->active) {
+            $preview_url = $adminProductWrapper->getPreviewUrl($product);
+            $preview_url_deactive = $adminProductWrapper->getPreviewUrlDeactivate($preview_url);
+        } else {
+            $preview_url_deactive = $adminProductWrapper->getPreviewUrl($product,false);
+            $preview_url = $adminProductWrapper->getPreviewUrlDeactivate($preview_url_deactive);
+        }
+
         return array(
             'form' => $form->createView(),
             'id_product' => $id,
@@ -459,7 +468,8 @@ class ProductController extends FrameworkBundleAdminController
             'warehouses' => ($stockManager->isAsmGloballyActivated())? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
             'showContentHeader' => false,
-            'preview_link' => $adminProductWrapper->getPreviewUrl($product),
+            'preview_link' => $preview_url,
+            'preview_link_deactivate' => $preview_url_deactive,
             'stats_link' => $legacyContextService->getAdminLink('AdminStats', true, ['module' => 'statsproduct', 'id_product' => $id]),
             'help_link' => 'http://help.prestashop.com/'.$legacyContextService->getEmployeeLanguageIso().'/doc/'
                 .'AdminProducts?version='._PS_VERSION_.'&country='.$legacyContextService->getEmployeeLanguageIso(),
