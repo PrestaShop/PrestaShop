@@ -173,7 +173,7 @@
 						<ul class="dropdown-menu">
 						{foreach $compiled_actions AS $key => $action}
 							{if $key != 0}
-							<li {if $action == 'divider'}class="divider"{/if}>
+							<li{if $action == 'divider' && $compiled_actions|count > 3} class="divider"{/if}>
 								{if $action != 'divider'}{$action}{/if}
 							</li>
 							{/if}

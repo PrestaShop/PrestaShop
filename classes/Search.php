@@ -742,7 +742,7 @@ class SearchCore
     public static function removeProductsSearchIndex($products)
     {
         if (is_array($products) && !empty($products)) {
-            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', array_map('intval', $products)).')');
+            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', array_unique(array_map('intval', $products))).')');
             ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', array_map('intval', $products)).')');
         }
     }

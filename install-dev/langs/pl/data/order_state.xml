@@ -29,7 +29,7 @@
     <template>refund</template>
   </order_state>
   <order_state id="Payment_error">
-    <name>Błąd płatonści</name>
+    <name>Błąd płatności</name>
     <template>payment_error</template>
   </order_state>
   <order_state id="On_backorder_paid">

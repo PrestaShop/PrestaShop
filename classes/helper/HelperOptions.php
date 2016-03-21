@@ -245,7 +245,7 @@ class HelperOptionsCore extends Helper
             echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on"> '.Tools::strtolower($theme['name']).'</label>';
             echo '<br />';
             echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on">';
-            echo '<img src="../themes/'.$theme['name'].'/preview.jpg" alt="'.Tools::strtolower($theme['name']).'">';
+            echo '<img src="'.$theme['preview'].'" alt="'.Tools::strtolower($theme['name']).'">';
             echo '</label>';
             echo '</td>';
             if (isset($field['max']) && ($i + 1) % $field['max'] == 0) {

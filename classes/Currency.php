@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
+use PrestaShop\PrestaShop\Core\Cldr\Repository;
 
 class CurrencyCore extends ObjectModel
 {
@@ -90,7 +90,7 @@ class CurrencyCore extends ObjectModel
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
-        $this->cldr = new Repository(Context::getContext()->language);
+        $this->cldr = Tools::getCldr(Context::getContext());
 
         parent::__construct($id, $id_lang, $id_shop);
 
@@ -252,6 +252,7 @@ class CurrencyCore extends ObjectModel
                     $currencies[$k]['name'] = ucfirst($currency['name']);
                     $currencies[$k]['iso_code_num'] = $currency['iso_code'];
                     $currencies[$k]['sign'] = $currency['symbol'];
+                    $currencies[$k]['format'] = '';
                 }
             }
         } else {
@@ -263,6 +264,7 @@ class CurrencyCore extends ObjectModel
                 $currencies['name'] = ucfirst($currency['name']);
                 $currencies['iso_code_num'] = $currency['iso_code'];
                 $currencies['sign'] = $currency['symbol'];
+                $currencies['format'] = '';
             }
         }
 

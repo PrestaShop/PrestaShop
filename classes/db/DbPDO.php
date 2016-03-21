@@ -107,6 +107,8 @@ class DbPDOCore extends Db
             die(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
         }
 
+        $this->link->exec('SET SESSION sql_mode = \'\'');
+
         return $this->link;
     }
 

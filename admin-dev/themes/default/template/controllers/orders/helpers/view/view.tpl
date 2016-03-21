@@ -328,10 +328,10 @@
 								<table class="table">
 									<thead>
 										<tr>
-											<th><span class="title_box ">Date</span></th>
-											<th><span class="title_box ">Type</span></th>
-											<th><span class="title_box ">Carrier</span></th>
-											<th><span class="title_box ">Tracking number</span></th>
+											<th><span class="title_box ">{l s='Date'}</span></th>
+											<th><span class="title_box ">{l s='Type'}</span></th>
+											<th><span class="title_box ">{l s='Carrier'}</span></th>
+											<th><span class="title_box ">{l s='Tracking number'}</span></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -1084,8 +1084,7 @@
 											<td class="partial_refund_fields current-edit" style="display:none;">
 												<div class="input-group">
 													<div class="input-group-addon">
-														{$currency->prefix}
-														{$currency->suffix}
+														{$currency->sign}
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
@@ -1162,8 +1161,7 @@
 								</label>
 								<div class="input-group col-lg-1 pull-left">
 									<div class="input-group-addon">
-										{$currency->prefix}
-										{$currency->suffix}
+										{$currency->sign}
 									</div>
 									<input type="text" class="input fixed-width-md" name="refund_total_voucher_choose" value="0"/>
 								</div>
@@ -1211,8 +1209,7 @@
 								</label>
 								<div class="input-group col-lg-1 pull-left">
 									<div class="input-group-addon">
-										{$currency->prefix}
-										{$currency->suffix}
+										{$currency->sign}
 									</div>
 									<input type="text" class="input fixed-width-md" name="refund_voucher_choose" value="0"/>
 								</div>

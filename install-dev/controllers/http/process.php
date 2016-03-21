@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
+use PrestaShop\PrestaShop\Core\Cldr\Update;
 
 class InstallControllerHttpProcess extends InstallControllerHttp
 {
@@ -75,6 +75,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
     public function process()
     {
+        /* avoid exceptions on re-installation */
+        $this->clearConfigXML() && $this->clearConfigThemes();
+
         if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE)) {
             require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
         }
@@ -101,8 +104,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
             $this->processInstallAddonsModules();
         } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModulesAddons'])) {
             $this->processInstallTheme();
-        } elseif (Tools::getValue('sendEmail') && !empty($this->session->process_validated['installTheme'])) {
-            $this->processSendEmail();
         } else {
             // With no parameters, we consider that we are doing a new install, so session where the last process step
             // was stored can be cleaned
@@ -159,6 +160,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
     {
         // @todo remove true in populateDatabase for 1.5.0 RC version
         $result = $this->model_install->installDefaultData($this->session->shop_name, $this->session->shop_country, false, true);
+
+        $this->installCldrDatas();
 
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
@@ -264,8 +267,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         $this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
         $this->session->process_validated = array_merge($this->session->process_validated, array('installFixtures' => true));
 
-        $this->installCldrDatas();
-
         $this->ajaxJsonAnswer(true);
     }
 
@@ -275,6 +276,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
     public function installCldrDatas()
     {
         $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+        $cldrUpdate->init();
 
         //get each defined languages and fetch cldr datas
         $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
@@ -292,12 +294,10 @@ class InstallControllerHttpProcess extends InstallControllerHttp
     public function processInstallTheme()
     {
         $this->initializeContext();
-
         $this->model_install->installTheme();
         if ($this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
-
         $this->session->process_validated = array_merge($this->session->process_validated, array('installTheme' => true));
         $this->ajaxJsonAnswer(true);
     }
@@ -370,5 +370,31 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         $this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
 
         $this->displayTemplate('process');
+    }
+
+    private function clearConfigXML()
+    {
+        $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
+        $cacheFiles = scandir($configXMLPath);
+        $excludes = ['.htaccess', 'index.php'];
+
+        foreach($cacheFiles as $file) {
+            $filepath = $configXMLPath.$file;
+            if (is_file($filepath) && !in_array($file, $excludes)) {
+                unlink($filepath);
+            }
+        }
+    }
+
+    private function clearConfigThemes()
+    {
+        $themesPath = _PS_ROOT_DIR_.'/config/themes/';
+        $cacheFiles = scandir($themesPath);
+        foreach($cacheFiles as $file) {
+            $file = $themesPath.$file;
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
     }
 }

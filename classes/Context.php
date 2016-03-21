@@ -70,9 +70,6 @@ class ContextCore
     /** @var Shop */
     public $shop;
 
-    /** @var Theme */
-    public $theme;
-
     /** @var Smarty */
     public $smarty;
 
@@ -287,5 +284,44 @@ class ContextCore
     public function cloneContext()
     {
         return clone($this);
+    }
+
+    /**
+     * Update context after customer login
+     * @param Customer $customer Created customer
+     */
+    public function updateCustomer(Customer $customer)
+    {
+        $this->customer = $customer;
+        $this->cookie->id_customer = (int)$customer->id;
+        $this->cookie->customer_lastname = $customer->lastname;
+        $this->cookie->customer_firstname = $customer->firstname;
+        $this->cookie->passwd = $customer->passwd;
+        $this->cookie->logged = 1;
+        $customer->logged = 1;
+        $this->cookie->email = $customer->email;
+        $this->cookie->is_guest =  $customer->isGuest();
+        $this->cart->secure_key = $customer->secure_key;
+
+        if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts($this->cookie->id_cart) == 0) && $id_cart = (int)Cart::lastNoneOrderedCart($this->customer->id)) {
+            $this->cart = new Cart($id_cart);
+        } else {
+            $id_carrier = (int)$this->cart->id_carrier;
+            $this->cart->id_carrier = 0;
+            $this->cart->setDeliveryOption(null);
+            $this->cart->id_address_delivery = (int)Address::getFirstCustomerAddressId((int)($customer->id));
+            $this->cart->id_address_invoice = (int)Address::getFirstCustomerAddressId((int)($customer->id));
+        }
+        $this->cart->id_customer = (int)$customer->id;
+
+        if (isset($id_carrier) && $id_carrier) {
+            $delivery_option = [$this->cart->id_address_delivery => $id_carrier.','];
+            $this->cart->setDeliveryOption($delivery_option);
+        }
+
+        $this->cart->save();
+        $this->cookie->id_cart = (int)$this->cart->id;
+        $this->cookie->write();
+        $this->cart->autosetProductAddress();
     }
 }

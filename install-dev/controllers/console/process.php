@@ -93,6 +93,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 
     public function process()
     {
+        /* avoid exceptions on re-installation */
+        $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
             $steps = array('database','fixtures','theme','modules','addons_modules');
@@ -157,12 +159,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
                     'source' => 'installer'
                 ));
             Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
-        }
-
-        if ($this->datas->send_email) {
-            if (!$this->processSendEmail()) {
-                $this->printErrors();
-            }
         }
     }
 
@@ -279,17 +275,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     }
 
     /**
-     * PROCESS : installTheme
-     * Install theme
-     */
-    public function processInstallTheme()
-    {
-        $this->initializeContext();
-
-        return $this->model_install->installTheme();
-    }
-
-    /**
      * PROCESS : installModulesAddons
      * Install modules from addons
      */
@@ -298,44 +283,39 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
         return $this->model_install->installModulesAddons();
     }
 
-  /**
-  * PROCESS : sendEmail
-  * Send information e-mail
-  */
-  public function processSendEmail()
-  {
-      require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
-      $mail = new InstallModelMail(
-      false,
-      $this->datas->smtp_server,
-      $this->datas->smtp_login,
-      $this->datas->smtp_password,
-      $this->datas->smtp_port,
-      $this->datas->smtp_encryption,
-      $this->datas->admin_email
-    );
+    /**
+     * PROCESS : installTheme
+     * Install theme
+     */
+    public function processInstallTheme()
+    {
+        $this->initializeContext();
+        return $this->model_install->installTheme();
+    }
 
-      if (file_exists(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt')) {
-          $content = file_get_contents(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt');
-      } else {
-          $content = file_get_contents(_PS_INSTALL_LANGS_PATH_.InstallLanguages::DEFAULT_ISO.'/mail_identifiers.txt');
-      }
+    private function clearConfigXML()
+    {
+        $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
+        $cacheFiles = scandir($configXMLPath);
+        $excludes = ['.htaccess', 'index.php'];
 
-      $vars = array(
-      '{firstname}' => $this->datas->admin_firstname,
-      '{lastname}' => $this->datas->admin_lastname,
-      '{shop_name}' => $this->datas->shop_name,
-      '{passwd}' => $this->datas->admin_password,
-      '{email}' => $this->datas->admin_email,
-      '{shop_url}' => Tools::getHttpHost(true).__PS_BASE_URI__,
-    );
-      $content = str_replace(array_keys($vars), array_values($vars), $content);
+        foreach($cacheFiles as $file) {
+            $filepath = $configXMLPath.$file;
+            if (is_file($filepath) && !in_array($file, $excludes)) {
+                unlink($filepath);
+            }
+        }
+    }
 
-      $mail->send(
-      $this->l('%s Login information', $this->datas->shop_name),
-      $content
-    );
-
-      return true;
-  }
+    private function clearConfigThemes()
+    {
+        $themesPath = _PS_ROOT_DIR_.'/config/themes/';
+        $cacheFiles = scandir($themesPath);
+        foreach($cacheFiles as $file) {
+            $file = $themesPath.$file;
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+    }
 }

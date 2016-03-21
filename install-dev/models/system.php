@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+require_once dirname(__FILE__).'/../../app/SymfonyRequirements.php';
+
 class InstallModelSystem extends InstallAbstractModel
 {
     public function checkRequiredTests()
@@ -34,6 +36,22 @@ class InstallModelSystem extends InstallAbstractModel
     public function checkOptionalTests()
     {
         return self::checkTests(ConfigurationTest::getDefaultTestsOp(), 'optional');
+    }
+
+    //get symfony requirements
+    public function checkSf2Requirements()
+    {
+        $symfonyRequirements = new SymfonyRequirements();
+        $errors = $symfonyRequirements->getFailedRequirements();
+
+        return $errors;
+    }
+
+    //get symfony recommendations
+    public function checkSf2Recommendations()
+    {
+        $symfonyRequirements = new SymfonyRequirements();
+        return $symfonyRequirements->getFailedRecommendations();
     }
 
     public function checkTests($list, $type)

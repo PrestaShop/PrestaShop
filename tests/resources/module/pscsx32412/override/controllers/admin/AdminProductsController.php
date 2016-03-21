@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class AdminProductsController extends AdminProductsControllerCore
 {
     public static function getQuantities($echo, $tr)
@@ -669,7 +671,8 @@ class AdminProductsController extends AdminProductsControllerCore
                                 Tools::getValue('attribute_upc'),
                                 Tools::getValue('attribute_minimal_quantity'),
                                 array(),
-                                Tools::getValue('available_date_attribute')
+                                Tools::getValue('available_date_attribute'),
+                                Tools::getValue('attribute_isbn')
                             );
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
@@ -2203,7 +2206,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=8020_sales_catalog';
         $helper->tooltip = $this->l('X% of your references have been purchased for the past 30 days', null, null, false);
         $helper->refresh = (bool)(ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time);
-        if (Module::isInstalled('statsbestproducts')) {
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
+        if ($moduleManager->isInstalled('statsbestproducts')) {
             $helper->href = Context::getContext()->link->getAdminLink('AdminStats').'&module=statsbestproducts&datepickerFrom='.date('Y-m-d', strtotime('-30 days')).'&datepickerTo='.date('Y-m-d');
         }
         $kpis[] = $helper->generate();
@@ -3586,7 +3592,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
         if (is_array($images)) {
             foreach ($images as $k => $image) {
-                $images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], ImageType::getFormatedName('small'));
+                $images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], ImageType::getFormattedName('small'));
             }
             $data->assign('images', $images);
         }
@@ -3854,7 +3860,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (isset($type['name'])) {
                     $data->assign('imageType', $type['name']);
                 } else {
-                    $data->assign('imageType', ImageType::getFormatedName('small'));
+                    $data->assign('imageType', ImageType::getFormattedName('small'));
                 }
             } else {
                 $this->displayWarning($this->l('You must save the product in this shop before adding images.'));
@@ -3915,7 +3921,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     if (isset($type['name'])) {
                         $data->assign('imageType', $type['name']);
                     } else {
-                        $data->assign('imageType', ImageType::getFormatedName('small'));
+                        $data->assign('imageType', ImageType::getFormattedName('small'));
                     }
                     $data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
                     foreach ($images as $k => $image) {

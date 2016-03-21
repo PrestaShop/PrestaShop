@@ -575,16 +575,17 @@ class ToolsCore
 
     public static function getCountry($address = null)
     {
-        if ($id_country = Tools::getValue('id_country')); elseif (isset($address) && isset($address->id_country) && $address->id_country) {
-     $id_country = $address->id_country;
- } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-     preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
-     if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-         $id_country = (int)Country::getByIso($array[0], true);
-     }
- }
+        $id_country = (int)Tools::getValue('id_country');
+        if (!$id_country && isset($address) && isset($address->id_country) && $address->id_country) {
+            $id_country = (int)$address->id_country;
+        } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
+            if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
+                $id_country = (int)Country::getByIso($array[0], true);
+            }
+        }
         if (!isset($id_country) || !$id_country) {
-            $id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+            $id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
         }
         return (int)$id_country;
     }
@@ -628,11 +629,37 @@ class ToolsCore
     }
 
     /**
+     * Return the CLDR associated with the context or given language_code
+     *
+     * @param Context|null $context
+     * @param null         $language_code
+     * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
+     * @throws PrestaShopException
+     */
+    public static function getCldr(Context $context = null, $language_code = null)
+    {
+        static $cldr_cache;
+        if ($context) {
+            $language_code = $context->language->language_code;
+        }
+
+        if (!empty($cldr_cache[$language_code])) {
+            $cldr = $cldr_cache[$language_code];
+        } else {
+            $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository($language_code);
+            $cldr_cache[$language_code] = $cldr;
+        }
+
+        return $cldr;
+    }
+
+    /**
     * Return price with currency sign for a given product
     *
     * @param float $price Product price
     * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
     * @return string Price correctly formated (sign, decimal separator...)
+    * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
     */
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
@@ -644,23 +671,23 @@ class ToolsCore
         }
         if ($currency === null) {
             $currency = $context->currency;
-        } elseif (is_int($currency)) { // if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
+        } elseif (is_int($currency)) {
             $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
-        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository();
+        $cldr = self::getCldr($context);
 
-        return $cldr->getPrice($price, $currency->iso_code);
+        return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
 
     /*
-	 * Return a number well formatted
-	 * @param float $number A number
-	 * @param nullable $currency / not used anymaore
-	 */
+     * Return a number well formatted
+     * @param float $number A number
+     * @param nullable $currency / not used anymaore
+     */
     public static function displayNumber($number, $currency = null)
     {
-        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository();
+        $cldr = self::getCldr(Context::getContext());
 
         return $cldr->getNumber($number);
     }
@@ -752,7 +779,7 @@ class ToolsCore
      */
     public static function convertPriceFull($amount, Currency $currency_from = null, Currency $currency_to = null)
     {
-        if ($currency_from === $currency_to) {
+        if ($currency_from == $currency_to) {
             return $amount;
         }
 
@@ -770,7 +797,7 @@ class ToolsCore
             $amount *= $currency_to->conversion_rate;
         }
 
-        return Tools::ps_round(self::displayPrice($amount, $currency_to), _PS_PRICE_COMPUTE_PRECISION_) ;
+        return Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_) ;
     }
 
     /**
@@ -917,15 +944,9 @@ class ToolsCore
     */
     public static function clearXMLCache()
     {
-        $themes = array();
-        foreach (Theme::getThemes() as $theme) {
-            /** @var Theme $theme */
-            $themes[] = $theme->directory;
-        }
-
         foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file) {
             $path_info = pathinfo($file, PATHINFO_EXTENSION);
-            if (($path_info == 'xml') && ($file != 'default.xml') && !in_array(basename($file, '.'.$path_info), $themes)) {
+            if (($path_info == 'xml') && ($file != 'default.xml')) {
                 self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
             }
         }
@@ -992,10 +1013,10 @@ class ToolsCore
         }
 
         echo '
-			<script type="text/javascript">
-				console.'.$type.'('.json_encode($object).');
-			</script>
-		';
+            <script type="text/javascript">
+                console.'.$type.'('.json_encode($object).');
+            </script>
+        ';
     }
 
     /**
@@ -1017,8 +1038,8 @@ class ToolsCore
         }
 
         echo '
-		<div style="margin:10px;padding:10px;border:1px solid #666666">
-			<ul>';
+        <div style="margin:10px;padding:10px;border:1px solid #666666">
+            <ul>';
         $i = 0;
         foreach ($backtrace as $id => $trace) {
             if ((int)$limit && (++$i > $limit)) {
@@ -1028,12 +1049,12 @@ class ToolsCore
             $current_line = (isset($trace['line'])) ? ':'.$trace['line'] : '';
 
             echo '<li>
-				<b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>
-				'.$relative_file.$current_line.'
-			</li>';
+                <b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>
+                '.$relative_file.$current_line.'
+            </li>';
         }
         echo '</ul>
-		</div>';
+        </div>';
     }
 
     /**
@@ -1191,109 +1212,6 @@ class ToolsCore
     }
 
     /**
-    * Get the user's journey
-    *
-    * @param int $id_category Category ID
-    * @param string $path Path end
-    * @param bool $linkOntheLastItem Put or not a link on the current category
-    * @param string [optionnal] $categoryType defined what type of categories is used (products or cms)
-    */
-    public static function getPath($id_category, $path = '', $link_on_the_item = false, $category_type = 'products', Context $context = null)
-    {
-        if (!$context) {
-            $context = Context::getContext();
-        }
-
-        $id_category = (int)$id_category;
-        if ($id_category == 1) {
-            return '<span class="navigation_end">'.$path.'</span>';
-        }
-
-        $pipe = Configuration::get('PS_NAVIGATION_PIPE');
-        if (empty($pipe)) {
-            $pipe = '>';
-        }
-
-        $full_path = '';
-        if ($category_type === 'products') {
-            $interval = Category::getInterval($id_category);
-            $id_root_category = $context->shop->getCategory();
-            $interval_root = Category::getInterval($id_root_category);
-            if ($interval) {
-                $sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
-						FROM '._DB_PREFIX_.'category c
-						LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
-						'.Shop::addSqlAssociation('category', 'c').'
-						WHERE c.nleft <= '.$interval['nleft'].'
-							AND c.nright >= '.$interval['nright'].'
-							AND c.nleft >= '.$interval_root['nleft'].'
-							AND c.nright <= '.$interval_root['nright'].'
-							AND cl.id_lang = '.(int)$context->language->id.'
-							AND c.active = 1
-							AND c.level_depth > '.(int)$interval_root['level_depth'].'
-						ORDER BY c.level_depth ASC';
-                $categories = Db::getInstance()->executeS($sql);
-
-                $n = 1;
-                $n_categories = count($categories);
-                foreach ($categories as $category) {
-                    $full_path .=
-                    (($n < $n_categories || $link_on_the_item) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'" data-gg="">' : '').
-                    htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').
-                    (($n < $n_categories || $link_on_the_item) ? '</a>' : '').
-                    (($n++ != $n_categories || !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
-                }
-
-                return $full_path.$path;
-            }
-        } elseif ($category_type === 'CMS') {
-            $category = new CMSCategory($id_category, $context->language->id);
-            if (!Validate::isLoadedObject($category)) {
-                die(Tools::displayError());
-            }
-            $category_link = $context->link->getCMSCategoryLink($category);
-
-            if ($path != $category->name) {
-                $full_path .= '<a href="'.Tools::safeOutput($category_link).'" data-gg="">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
-            } else {
-                $full_path = ($link_on_the_item ? '<a href="'.Tools::safeOutput($category_link).'" data-gg="">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($link_on_the_item ? '</a>' : '');
-            }
-
-            return Tools::getPath($category->id_parent, $full_path, $link_on_the_item, $category_type);
-        }
-    }
-
-    /**
-    * @param string [optionnal] $type_cat defined what type of categories is used (products or cms)
-    */
-    public static function getFullPath($id_category, $end, $type_cat = 'products', Context $context = null)
-    {
-        if (!$context) {
-            $context = Context::getContext();
-        }
-
-        $id_category = (int)$id_category;
-        $pipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
-
-        $default_category = 1;
-        if ($type_cat === 'products') {
-            $default_category = $context->shop->getCategory();
-            $category = new Category($id_category, $context->language->id);
-        } elseif ($type_cat === 'CMS') {
-            $category = new CMSCategory($id_category, $context->language->id);
-        }
-
-        if (!Validate::isLoadedObject($category)) {
-            $id_category = $default_category;
-        }
-        if ($id_category == $default_category) {
-            return htmlentities($end, ENT_NOQUOTES, 'UTF-8');
-        }
-
-        return Tools::getPath($id_category, $category->name, true, $type_cat).'<span class="navigation-pipe">'.$pipe.'</span> <span class="navigation_product">'.htmlentities($end, ENT_NOQUOTES, 'UTF-8').'</span>';
-    }
-
-    /**
      * Return the friendly url from the provided string
      *
      * @param string $str
@@ -1389,7 +1307,7 @@ class ToolsCore
             /* a  */ '/[\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}\x{0101}\x{0103}\x{0105}\x{0430}\x{00C0}-\x{00C3}\x{1EA0}-\x{1EB7}]/u',
             /* b  */ '/[\x{0431}]/u',
             /* c  */ '/[\x{00E7}\x{0107}\x{0109}\x{010D}\x{0446}]/u',
-            /* d  */ '/[\x{010F}\x{0111}\x{0434}\x{0110}]/u',
+            /* d  */ '/[\x{010F}\x{0111}\x{0434}\x{0110}\x{00F0}]/u',
             /* e  */ '/[\x{00E8}\x{00E9}\x{00EA}\x{00EB}\x{0113}\x{0115}\x{0117}\x{0119}\x{011B}\x{0435}\x{044D}\x{00C8}-\x{00CA}\x{1EB8}-\x{1EC7}]/u',
             /* f  */ '/[\x{0444}]/u',
             /* g  */ '/[\x{011F}\x{0121}\x{0123}\x{0433}\x{0491}]/u',
@@ -1428,7 +1346,7 @@ class ToolsCore
             /* A  */ '/[\x{0100}\x{0102}\x{0104}\x{00C0}\x{00C1}\x{00C2}\x{00C3}\x{00C4}\x{00C5}\x{0410}]/u',
             /* B  */ '/[\x{0411}]/u',
             /* C  */ '/[\x{00C7}\x{0106}\x{0108}\x{010A}\x{010C}\x{0426}]/u',
-            /* D  */ '/[\x{010E}\x{0110}\x{0414}]/u',
+            /* D  */ '/[\x{010E}\x{0110}\x{0414}\x{00D0}]/u',
             /* E  */ '/[\x{00C8}\x{00C9}\x{00CA}\x{00CB}\x{0112}\x{0114}\x{0116}\x{0118}\x{011A}\x{0415}\x{042D}]/u',
             /* F  */ '/[\x{0424}]/u',
             /* G  */ '/[\x{011C}\x{011E}\x{0120}\x{0122}\x{0413}\x{0490}]/u',
@@ -2005,6 +1923,34 @@ class ToolsCore
         }
     }
 
+    /**
+     * Create a local file from url
+     * required because ZipArchive is unable to extract from remote files.
+     * @param string $url the remote location
+     * @return bool|string false if failure, else the local filename
+     */
+    public static function createFileFromUrl($url)
+    {
+        $remoteFile = fopen($url, "r");
+        if (!$remoteFile) {
+            return false;
+        }
+        $localFile = fopen(basename(url), "w");
+        if (!$localFile) {
+            return false;
+        }
+
+        while (!feof($remoteFile)) {
+            $data = fread($remoteFile, 1024);
+            fwrite($localFile, $data, 1024);
+        }
+
+        fclose($remoteFile);
+        fclose($localFile);
+
+        return basename($url);
+    }
+
     public static function simplexml_load_file($url, $class_name = null)
     {
         $cache_id = 'Tools::simplexml_load_file'.$url;
@@ -2057,6 +2003,17 @@ class ToolsCore
         // 'CMSCategories' => 'cms_categories'
         // 'RangePrice' => 'range_price'
         return Tools::strtolower(trim(preg_replace('/([A-Z][a-z])/', '_$1', $string), '_'));
+    }
+
+    /**
+     * Converts SomethingLikeThis to something-like-this
+     * The name comes from Perl, we like Perl.
+     */
+    public static function camelCaseToKebabCase($string)
+    {
+        return Tools::strtolower(
+            preg_replace('/([a-z])([A-Z])/', '$1-$2', $string)
+        );
     }
 
     public static function getBrightness($hex)
@@ -2304,8 +2261,7 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
-        if (
-            !$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
+        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_2')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
         ) {
@@ -2439,45 +2395,47 @@ class ToolsCore
         fwrite($write_fd, "AddType application/vnd.ms-fontobject .eot\n");
         fwrite($write_fd, "AddType font/ttf .ttf\n");
         fwrite($write_fd, "AddType font/otf .otf\n");
-        fwrite($write_fd, "AddType application/x-font-woff .woff\n");
+        fwrite($write_fd, "AddType application/font-woff .woff\n");
+        fwrite($write_fd, "AddType application/font-woff2 .woff2\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
-	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|svg)$\">
-		Header add Access-Control-Allow-Origin \"*\"
-	</FilesMatch>
+    <FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
+        Header add Access-Control-Allow-Origin \"*\"
+    </FilesMatch>
 </IfModule>\n\n");
 
         // Cache control
         if ($cache_control) {
             $cache_control = "<IfModule mod_expires.c>
-	ExpiresActive On
-	ExpiresByType image/gif \"access plus 1 month\"
-	ExpiresByType image/jpeg \"access plus 1 month\"
-	ExpiresByType image/png \"access plus 1 month\"
-	ExpiresByType text/css \"access plus 1 week\"
-	ExpiresByType text/javascript \"access plus 1 week\"
-	ExpiresByType application/javascript \"access plus 1 week\"
-	ExpiresByType application/x-javascript \"access plus 1 week\"
-	ExpiresByType image/x-icon \"access plus 1 year\"
-	ExpiresByType image/svg+xml \"access plus 1 year\"
-	ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
-	ExpiresByType application/font-woff \"access plus 1 year\"
-	ExpiresByType application/x-font-woff \"access plus 1 year\"
-	ExpiresByType application/vnd.ms-fontobject \"access plus 1 year\"
-	ExpiresByType font/opentype \"access plus 1 year\"
-	ExpiresByType font/ttf \"access plus 1 year\"
-	ExpiresByType font/otf \"access plus 1 year\"
-	ExpiresByType application/x-font-ttf \"access plus 1 year\"
-	ExpiresByType application/x-font-otf \"access plus 1 year\"
+    ExpiresActive On
+    ExpiresByType image/gif \"access plus 1 month\"
+    ExpiresByType image/jpeg \"access plus 1 month\"
+    ExpiresByType image/png \"access plus 1 month\"
+    ExpiresByType text/css \"access plus 1 week\"
+    ExpiresByType text/javascript \"access plus 1 week\"
+    ExpiresByType application/javascript \"access plus 1 week\"
+    ExpiresByType application/x-javascript \"access plus 1 week\"
+    ExpiresByType image/x-icon \"access plus 1 year\"
+    ExpiresByType image/svg+xml \"access plus 1 year\"
+    ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
+    ExpiresByType application/font-woff \"access plus 1 year\"
+    ExpiresByType application/font-woff2 \"access plus 1 year\"
+    ExpiresByType application/x-font-woff \"access plus 1 year\"
+    ExpiresByType application/vnd.ms-fontobject \"access plus 1 year\"
+    ExpiresByType font/opentype \"access plus 1 year\"
+    ExpiresByType font/ttf \"access plus 1 year\"
+    ExpiresByType font/otf \"access plus 1 year\"
+    ExpiresByType application/x-font-ttf \"access plus 1 year\"
+    ExpiresByType application/x-font-otf \"access plus 1 year\"
 </IfModule>
 
 <IfModule mod_headers.c>
-	Header unset Etag
+    Header unset Etag
 </IfModule>
 FileETag none
 <IfModule mod_deflate.c>
-	<IfModule mod_filter.c>
-		AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype
-	</IfModule>
+    <IfModule mod_filter.c>
+        AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype
+    </IfModule>
 </IfModule>\n\n";
             fwrite($write_fd, $cache_control);
         }
@@ -2806,7 +2764,7 @@ exit;
     public static function getProductsOrder($type, $value = null, $prefix = false)
     {
         switch ($type) {
-            case 'by' :
+            case 'by':
                 $list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
                 $value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
                 $value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position');
@@ -2827,7 +2785,7 @@ exit;
                 return $order_by_prefix.$value;
             break;
 
-            case 'way' :
+            case 'way':
                 $value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = array(0 => 'asc', 1 => 'desc');
                 return ((isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc'));
@@ -2966,8 +2924,7 @@ exit;
         // Change template dir if called from the BackOffice
         $current_template_dir = Context::getContext()->smarty->getTemplateDir();
         Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
-        Tools::clearCache(null, 'product-list-colors.tpl',
-            ($id_product ? 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id : 'productlist_colors'));
+        Tools::clearCache(null, _PS_THEME_DIR_.'product-list-colors.tpl', Product::getColorsListCacheId((int)$id_product, false));
         Context::getContext()->smarty->setTemplateDir($current_template_dir);
     }
 
@@ -3264,7 +3221,8 @@ exit;
             'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
             'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
             'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
-            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL')
+            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'),
+            'format' => isset($params['format']) ? $params['format'] : 'xml',
         );
         if (isset($params['source'])) {
             $post_query_data['source'] = $params['source'];
@@ -3279,6 +3237,14 @@ exit;
             case 'native':
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=native';
+                break;
+            case 'partner':
+                $protocols[] = 'http';
+                $post_data .= '&method=listing&action=partner';
+                break;
+            case 'service':
+                $protocols[] = 'http';
+                $post_data .= '&method=listing&action=service';
                 break;
             case 'native_all':
                 $protocols[] = 'http';
@@ -3548,9 +3514,7 @@ exit;
                         'type' => 'Text',
                     ));
                     if ($allow_style) {
-                        $def->addElement('style', 'Block', 'Flow', 'Common', array(
-                        'type' => 'Text',
-                    ));
+                        $def->addElement('style', 'Block', 'Flow', 'Common', array('type' => 'Text'));
                     }
                 }
 
@@ -3600,7 +3564,7 @@ exit;
      *                       e.g. if $amount is 1, $precision is 0 and $rows = [['a' => 2], ['a' => 1]]
      *                       then the resulting $rows will be [['a' => 3], ['a' => 1]]
      *                       But if $precision were 1, then the resulting $rows would be [['a' => 2.5], ['a' => 1.5]]
-     * @param &$rows array 	 An array, associative or not, containing arrays that have at least $column and $sort_column fields
+     * @param &$rows array   An array, associative or not, containing arrays that have at least $column and $sort_column fields
      * @param $column string The column on which to perform adjustments
      */
     public static function spreadAmount($amount, $precision, &$rows, $column)

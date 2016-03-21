@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class AdminProductsController extends AdminProductsControllerCore
 {
     /** @var int Max image size for upload

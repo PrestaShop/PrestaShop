@@ -1695,7 +1695,7 @@ class AdminOrdersControllerCore extends AdminController
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
             // if the current stock requires a warning
-            if ($product['current_stock'] == 0 && $display_out_of_stock_warning) {
+            if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
                 $this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
             }
             if ($product['id_warehouse'] != 0) {
@@ -2133,6 +2133,8 @@ class AdminOrdersControllerCore extends AdminController
 
         // Save changes of order
         $order->update();
+    
+        StockAvailable::synchronize($product->id);
 
         // Update weight SUM
         $order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
@@ -2843,20 +2845,22 @@ class AdminOrdersControllerCore extends AdminController
     */
     protected function setProductImageInformations(&$pack_item)
     {
-        if (isset($pack_item['id_product_attribute']) && $pack_item['id_product_attribute'])
+        if (isset($pack_item['id_product_attribute']) && $pack_item['id_product_attribute']) {
             $id_image = Db::getInstance()->getValue('
                 SELECT `image_shop`.id_image
                 FROM `'._DB_PREFIX_.'product_attribute_image` pai'.
                 Shop::addSqlAssociation('image', 'pai', true).'
                 WHERE id_product_attribute = '.(int)$pack_item['id_product_attribute']);
+        }
 
-        if (!isset($id_image) || !$id_image)
+        if (!isset($id_image) || !$id_image) {
             $id_image = Db::getInstance()->getValue('
                 SELECT `image_shop`.id_image
                 FROM `'._DB_PREFIX_.'image` i'.
                 Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
                 WHERE i.id_product = '.(int)$pack_item['id_product']
             );
+        }
 
         $pack_item['image'] = null;
         $pack_item['image_size'] = null;

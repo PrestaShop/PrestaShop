@@ -249,8 +249,8 @@ class AdminCustomersControllerCore extends AdminController
                 /** @var Customer $customer */
                 if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer)) {
                     array_pop($this->toolbar_title);
+                    $this->toolbar_title[] = sprintf($this->l('Information about Customer: %s'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
                 }
-                    $this->toolbar_title[] = sprintf('Information about Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
                 break;
             case 'add':
             case 'edit':
@@ -1080,19 +1080,22 @@ class AdminCustomersControllerCore extends AdminController
             if (!empty($search) && $results = Customer::searchByName($search, 50)) {
                 foreach ($results as $result) {
                     if ($result['active']) {
+                        $result['fullname_and_email'] = $result['firstname'].' '.$result['lastname'].' - '.$result['email'];
                         $customers[$result['id_customer']] = $result;
                     }
                 }
             }
         }
 
-        if (count($customers)) {
+        if (count($customers) && Tools::getValue('sf2')) {
+            $to_return = $customers;
+        } elseif (count($customers) && !Tools::getValue('sf2')) {
             $to_return = array(
                 'customers' => $customers,
                 'found' => true
             );
         } else {
-            $to_return = array('found' => false);
+            $to_return = Tools::getValue('sf2') ? array() : array('found' => false);
         }
 
         $this->content = json_encode($to_return);

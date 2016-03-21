@@ -75,7 +75,7 @@ function smartyTranslate($params, &$smarty)
             // If there was a match, construct the class name using the child folder name
             // Eg. xxx/controllers/customers/xxx => AdminCustomers
             if ($key !== false) {
-                 $class = 'Admin'.Tools::toCamelCase($folder_tree[$key + 1], true);
+                $class = 'Admin'.Tools::toCamelCase($folder_tree[$key + 1], true);
             } elseif (isset($folder_tree[0])) {
                 $class = 'Admin'.Tools::toCamelCase($folder_tree[0], true);
             }

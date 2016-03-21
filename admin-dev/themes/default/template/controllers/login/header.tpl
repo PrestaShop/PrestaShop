@@ -47,7 +47,7 @@
 		{foreach from=$js_files item=js_uri}
 			<script type="text/javascript" src="{$js_uri}"></script>
 		{/foreach}
-		<script type="text/javascript" src="../js/admin/login.js?{$smarty.now}"></script>
+		<script type="text/javascript" src="../js/admin/login.js?v={$smarty.const._PS_VERSION_|escape:'html':'UTF-8'}"></script>
 
 		{if (isset($js_def) && count($js_def) || isset($js_files) && count($js_files))}
 			{include file=$smarty.const._PS_ALL_THEMES_DIR_|cat:"javascript.tpl"}

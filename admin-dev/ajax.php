@@ -38,11 +38,11 @@ if (Tools::isSubmit('ajaxReferrers')) {
     require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
 }
 
-if (Tools::getValue('page') == 'prestastore' and @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
+if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
     readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
 }
 
-if (Tools::isSubmit('getAvailableFields') and Tools::isSubmit('entity')) {
+if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $jsonArray = array();
     $import = new AdminImportController();
 
@@ -88,8 +88,7 @@ if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEm
 if (Tools::isSubmit('searchCategory')) {
     $q = Tools::getValue('q');
     $limit = Tools::getValue('limit');
-    $results = Db::getInstance()->executeS(
-        'SELECT c.`id_category`, cl.`name`
+    $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
@@ -124,4 +123,9 @@ if (Tools::isSubmit('getZones')) {
     $html .= '</select>';
     $array = array('hasError' => false, 'errors' => '', 'data' => $html);
     die(json_encode($array));
+}
+
+if (Tools::isSubmit('getEmailHTML') && $email = Tools::getValue('email')) {
+    $email_html = AdminTranslationsController::getEmailHTML($email);
+    die($email_html);
 }

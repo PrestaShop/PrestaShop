@@ -404,7 +404,7 @@ class CartCore extends ObjectModel
      */
     public function getOrderedCartRulesIds($filter = CartRule::FILTER_ACTION_ALL)
     {
-        $cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter.'-ids';
+        $cache_key = 'Cart::getOrderedCartRulesIds_'.$this->id.'-'.$filter.'-ids';
         if (!Cache::isStored($cache_key)) {
             $result = Db::getInstance()->executeS(
                 'SELECT cr.`id_cart_rule`
@@ -559,6 +559,7 @@ class CartCore extends ObjectModel
                 IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
                 (p.`weight`+ pa.`weight`) weight_attribute,
                 IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
+                IF (IFNULL(pa.`isbn`, \'\') = \'\', p.`isbn`, pa.`isbn`) AS isbn,
                 IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
                 IFNULL(product_attribute_shop.`minimal_quantity`, product_shop.`minimal_quantity`) as minimal_quantity,
                 IF(product_attribute_shop.wholesale_price > 0,  product_attribute_shop.wholesale_price, product_shop.`wholesale_price`) wholesale_price
@@ -568,7 +569,7 @@ class CartCore extends ObjectModel
             $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.`id_shop` = cp.`id_shop` AND product_attribute_shop.`id_product_attribute` = pa.`id_product_attribute`)');
         } else {
             $sql->select(
-                'p.`reference` AS reference, p.`ean13`,
+                'p.`reference` AS reference, p.`ean13`, p.`isbn`,
                 p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity, product_shop.`wholesale_price` wholesale_price'
             );
         }
@@ -852,10 +853,10 @@ class CartCore extends ObjectModel
         Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION);
         Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_GIFT);
 
-        Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_ALL). '-ids';
-        Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING). '-ids';
-        Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION). '-ids';
-        Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_GIFT). '-ids';
+        Cache::clean('Cart::getOrderedCartRulesIds_'.$this->id.'-'.CartRule::FILTER_ACTION_ALL). '-ids';
+        Cache::clean('Cart::getOrderedCartRulesIds_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING). '-ids';
+        Cache::clean('Cart::getOrderedCartRulesIds_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION). '-ids';
+        Cache::clean('Cart::getOrderedCartRulesIds_'.$this->id.'-'.CartRule::FILTER_ACTION_GIFT). '-ids';
 
         if ((int)$cartRule->gift_product) {
             $this->updateQty(1, $cartRule->gift_product, $cartRule->gift_product_attribute, false, 'up', 0, null, false);
@@ -1018,7 +1019,7 @@ class CartCore extends ObjectModel
                 } else {
                     Db::getInstance()->execute(
                         'UPDATE `'._DB_PREFIX_.'cart_product`
-                        SET `quantity` = `quantity` '.$qty.', `date_add` = NOW()
+                        SET `quantity` = `quantity` '.$qty.'
                         WHERE `id_product` = '.(int)$id_product.
                         (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
                         AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
@@ -1411,9 +1412,9 @@ class CartCore extends ObjectModel
     public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null, $use_cache = true)
     {
         // Dependencies
-        $address_factory    = Adapter_ServiceLocator::get('Adapter_AddressFactory');
-        $price_calculator    = Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
-        $configuration        = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
+        $address_factory    = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
+        $price_calculator    = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
+        $configuration        = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
 
         $ps_tax_address_type = $configuration->get('PS_TAX_ADDRESS_TYPE');
         $ps_use_ecotax = $configuration->get('PS_USE_ECOTAX');
@@ -3071,7 +3072,7 @@ class CartCore extends ObjectModel
             WHERE (cp.`id_product_attribute` IS NULL OR cp.`id_product_attribute` = 0)
             AND cp.`id_cart` = '.(int)$this->id);
 
-            self::$_totalWeight[$this->id] = round((float)$weight_product_with_attribute + (float)$weight_product_without_attribute, 3);
+            self::$_totalWeight[$this->id] = round((float)$weight_product_with_attribute + (float)$weight_product_without_attribute, 6);
         }
 
         return self::$_totalWeight[$this->id];

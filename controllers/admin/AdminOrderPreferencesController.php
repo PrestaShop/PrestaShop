@@ -46,32 +46,11 @@ class AdminOrderPreferencesControllerCore extends AdminController
             $cms_tab[] = array('id' => $cms_file['id_cms'], 'name' => $cms_file['meta_title']);
         }
 
-        // List of order process types
-        $order_process_type = array(
-            array(
-                'value' => PS_ORDER_PROCESS_STANDARD,
-                'name' => $this->l('Standard (Five steps)')
-            ),
-            array(
-                'value' => PS_ORDER_PROCESS_OPC,
-                'name' => $this->l('One-page checkout')
-            )
-        );
-
         $this->fields_options = array(
             'general' => array(
                 'title' =>    $this->l('General'),
                 'icon' =>    'icon-cogs',
                 'fields' =>    array(
-                    'PS_ORDER_PROCESS_TYPE' => array(
-                        'title' => $this->l('Order process type'),
-                        'hint' => $this->l('Please choose either the five-step or one-page checkout process.'),
-                        'validation' => 'isInt',
-                        'cast' => 'intval',
-                        'type' => 'select',
-                        'list' => $order_process_type,
-                        'identifier' => 'value'
-                    ),
                     'PS_GUEST_CHECKOUT_ENABLED' => array(
                         'title' => $this->l('Enable guest checkout'),
                         'hint' => $this->l('Allow guest visitors to place an order without registering.'),

@@ -506,7 +506,7 @@
 					});
 				}
 				else
-					html = '<div class="alert alert-warning"><i class="icon-warning-sign"></i>&nbsp;{l s='No customers found'}</div>';
+					html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
 				$('#customers').html(html);
 				resetBind();
 			}

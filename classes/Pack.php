@@ -64,8 +64,6 @@ class PackCore extends Product
      */
     public static function isPacked($id_product, $id_product_attribute = false)
     {
-        
-        
         if (!Pack::isFeatureActive()) {
             return false;
         }

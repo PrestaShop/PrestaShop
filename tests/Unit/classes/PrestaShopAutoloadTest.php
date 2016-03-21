@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
+namespace PrestaShop\PrestaShop\tests\Unit\classes;
 
 use PHPUnit_Framework_TestCase;
 use PrestaShopAutoload;
@@ -57,7 +57,7 @@ class    PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
 
     public function testClassLoadedFromCoreDir()
     {
-        PrestaShopAutoload::getInstance()->load('Core_Business_Payment_PaymentOption');
-        $this->assertTrue(class_exists('Core_Business_Payment_PaymentOption', false));
+        PrestaShopAutoload::getInstance()->load('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption');
+        $this->assertTrue(class_exists('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption', false));
     }
 }

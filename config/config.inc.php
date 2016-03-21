@@ -48,7 +48,7 @@ if (!headers_sent()) {
 /* in dev mode - check if composer was executed */
 if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
         !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'))) {
-    die('Error : please install <a href="https://getcomposer.org/">composer</a> or execute "./getcomposer.sh"<br/>Then run "composer install"');
+    die('Error : please install <a href="https://getcomposer.org/">composer</a> or execute "./getcomposer.sh"<br/>Then run "php composer.phar install"');
 }
 
 /* No settings file? goto installer... */
@@ -116,14 +116,10 @@ $context = Context::getContext();
 /* Initialize the current Shop */
 try {
     $context->shop = Shop::initialize();
-    $context->theme = new Theme((int)$context->shop->id_theme);
-    if ((Tools::isEmpty($theme_name = $context->shop->getTheme()) || !Validate::isLoadedObject($context->theme)) && !defined('_PS_ADMIN_DIR_')) {
-        throw new PrestaShopException(Tools::displayError('Current theme unselected. Please check your theme configuration.'));
-    }
 } catch (PrestaShopException $e) {
     $e->displayMessage();
 }
-define('_THEME_NAME_', $theme_name);
+define('_THEME_NAME_', $context->shop->theme->getName());
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */

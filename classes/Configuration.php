@@ -324,7 +324,7 @@ class ConfigurationCore extends ObjectModel
     public static function set($key, $values, $id_shop_group = null, $id_shop = null)
     {
         if (!Validate::isConfigName($key)) {
-            die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), $key));
+            die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), Tools::htmlentitiesUTF8($key)));
         }
 
         if ($id_shop === null) {
@@ -379,7 +379,7 @@ class ConfigurationCore extends ObjectModel
     public static function updateValue($key, $values, $html = false, $id_shop_group = null, $id_shop = null)
     {
         if (!Validate::isConfigName($key)) {
-            die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), $key));
+            die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), Tools::htmlentitiesUTF8($key)));
         }
 
         if ($id_shop === null || !Shop::isFeatureActive()) {
@@ -443,7 +443,7 @@ class ConfigurationCore extends ObjectModel
                         'date_add'      => $now,
                         'date_upd'      => $now,
                     );
-                    $result &= Db::getInstance()->insert('configuration', $data, true);
+                    $result &= Db::getInstance()->insert(self::$definition['table'], $data, true);
                     $configID = Db::getInstance()->Insert_ID();
                 }
 

@@ -1,0 +1,95 @@
+.nav-bar {
+  position: fixed;
+  z-index: 500; // TODO: COPIED FROM THE LEGACY: CHECK IF USEFULL (1 WORKS WELL)
+  background: $gray-dark;
+  width: $size-navbar-width;
+  padding-top: rem(10px) + $size-header-height;
+  height: 100%;
+}
+
+.main-menu {
+  padding: 0;
+  margin: 0;
+}
+
+.link-levelone {
+  $padding-size: rem(20px);
+  > .link {
+    @include single-line-block($size-navbar-link-height);
+    font-size: rem(12px);
+    display:block;
+    color: $gray-dark-text;
+    text-decoration: none;
+    padding-left: $padding-size;
+  }
+  &.-active {
+    border-right: rem(3px) solid $gray-dark-text-hover;
+  }
+  &.-active > .link,
+  &.-hover > .link {
+    background: $gray-dark-hover;
+    color: $gray-dark-text-hover;
+  }
+  > .link > .material-icons {
+    display: none;
+  }
+
+  > .submenu {
+    position: relative;
+    list-style: none;
+    background: $gray-dark-hover;
+    display: none;
+    white-space: nowrap;
+  }
+  &.-hover > .submenu {
+    display: inline-block;
+    position: absolute;
+    left: $size-navbar-width;
+    margin-top: -$size-navbar-link-height;
+    padding: 0;
+  }
+  @media screen and (min-height: 700px) {
+    &.-active > .submenu {
+      margin-top: 0;
+      position: inherit;
+      display: block;
+      padding-left: $padding-size;
+    }
+  }
+}
+
+.link-leveltwo {
+  @extend .link-levelone;
+  &.-active {
+    border: none;
+  }
+  > .link {
+    padding: 0 20px;
+  }
+  > .link:hover {
+    color: $gray-dark-text-hover;
+  }
+}
+
+.category-title {
+  color: $gray-dark-title;
+  font-weight: bold;
+  font-size: rem(12px);
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 10px 0;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid $gray-dark-title;
+    margin-top: -10px;
+    margin-bottom: 19px;
+  }
+
+  > .title {
+    background: $gray-dark;
+    padding-right: 10px;
+  }
+}

@@ -46,6 +46,9 @@ class StockCore extends ObjectModel
     /** @var int Product EAN13 */
     public $ean13;
 
+    /** @var string Product ISBN */
+    public $isbn;
+
     /** @var string UPC */
     public $upc;
 
@@ -70,6 +73,7 @@ class StockCore extends ObjectModel
             'id_product_attribute' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'reference' =>                array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
             'ean13' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
+            'isbn' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isIsbn'),
             'upc' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isUpc'),
             'physical_quantity' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
             'usable_quantity' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
@@ -112,7 +116,7 @@ class StockCore extends ObjectModel
     }
 
     /**
-     * Gets reference, ean13 and upc of the current product
+     * Gets reference, ean13 , isbn and upc of the current product
      * Stores it in stock for stock_mvt integrity and history purposes
      */
     protected function getProductInformations()
@@ -120,7 +124,7 @@ class StockCore extends ObjectModel
         // if combinations
         if ((int)$this->id_product_attribute > 0) {
             $query = new DbQuery();
-            $query->select('reference, ean13, upc');
+            $query->select('reference, ean13, isbn, upc');
             $query->from('product_attribute');
             $query->where('id_product = '.(int)$this->id_product);
             $query->where('id_product_attribute = '.(int)$this->id_product_attribute);
@@ -133,6 +137,7 @@ class StockCore extends ObjectModel
             foreach ($rows as $row) {
                 $this->reference = $row['reference'];
                 $this->ean13 = $row['ean13'];
+                $this->isbn = $row['isbn'];
                 $this->upc = $row['upc'];
             }
         } else {
@@ -142,6 +147,7 @@ class StockCore extends ObjectModel
             if (Validate::isLoadedObject($product)) {
                 $this->reference = $product->reference;
                 $this->ean13 = $product->ean13;
+                $this->isbn = $product->isbn;
                 $this->upc = $product->upc;
             }
         }

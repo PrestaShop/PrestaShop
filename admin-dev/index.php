@@ -23,6 +23,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use Symfony\Component\ClassLoader\ApcClassLoader;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Debug\Debug;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+umask(0000); // This will let the permissions be 0777
 
 $timer_start = microtime(true);
 if (!defined('_PS_ADMIN_DIR_')) {
@@ -54,5 +61,33 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
     $_REQUEST['controller'] = strtolower($_REQUEST['tab']);
 }
 
-// Prepare and trigger admin dispatcher
-Dispatcher::getInstance()->dispatch();
+// Prepare Symfony kernel to resolve route.
+$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
+// Enable APC for autoloading to improve performance.
+// You should change the ApcClassLoader first argument to a unique prefix
+// in order to prevent cache key conflicts with other applications
+// also using APC.
+/*
+$apcLoader = new ApcClassLoader(sha1(__FILE__), $loader);
+$loader->unregister();
+$apcLoader->register(true);
+*/
+if (_PS_MODE_DEV_) {
+    Debug::enable();
+}
+require_once __DIR__.'/../app/AppKernel.php';
+//require_once __DIR__.'/../app/AppCache.php';
+$kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
+$kernel->loadClassCache();
+//$kernel = new AppCache($kernel);
+// When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
+//Request::enableHttpMethodParameterOverride();
+$request = Request::createFromGlobals();
+try {
+    $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
+    $response->send();
+    $kernel->terminate($request, $response);
+} catch (NotFoundHttpException $rnfe) {
+    // Prepare and trigger LEGACY admin dispatcher
+    Dispatcher::getInstance()->dispatch();
+}

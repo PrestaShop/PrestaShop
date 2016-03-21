@@ -19,7 +19,7 @@ Swift_ClassLoader::load("Swift_Authenticator");
  */
 class Swift_Authenticator_CRAMMD5 implements Swift_Authenticator
 {
-  /**
+    /**
    * Try to authenticate using the username and password
    * Returns false on failure
    * @param string The username
@@ -27,18 +27,18 @@ class Swift_Authenticator_CRAMMD5 implements Swift_Authenticator
    * @param Swift The instance of Swift this authenticator is used in
    * @return boolean
    */
-  public function isAuthenticated($user, $pass, Swift $swift)
+  public function isAuthenticated($user, $pass, SwiftPs $swift)
   {
-    try {
-      $encoded_challenge = substr($swift->command("AUTH CRAM-MD5", 334)->getString(), 4);
-      $challenge = base64_decode($encoded_challenge);
-      $response = base64_encode($user . " " . self::generateCRAMMD5Hash($pass, $challenge));
-      $swift->command($response, 235);
-    } catch (Swift_ConnectionException $e) {
-      $swift->reset();
-      return false;
-    }
-    return true;
+      try {
+          $encoded_challenge = substr($swift->command("AUTH CRAM-MD5", 334)->getString(), 4);
+          $challenge = base64_decode($encoded_challenge);
+          $response = base64_encode($user . " " . self::generateCRAMMD5Hash($pass, $challenge));
+          $swift->command($response, 235);
+      } catch (Swift_ConnectionException $e) {
+          $swift->reset();
+          return false;
+      }
+      return true;
   }
   /**
    * Return the name of the AUTH extension this is for
@@ -46,7 +46,7 @@ class Swift_Authenticator_CRAMMD5 implements Swift_Authenticator
    */
   public function getAuthExtensionName()
   {
-    return "CRAM-MD5";
+      return "CRAM-MD5";
   }
   /**
    * Generate a CRAM-MD5 hash from a challenge
@@ -56,18 +56,20 @@ class Swift_Authenticator_CRAMMD5 implements Swift_Authenticator
    */
   public static function generateCRAMMD5Hash($password, $challenge)
   {
-    if (strlen($password) > 64)
-      $password = pack('H32', md5($password));
+      if (strlen($password) > 64) {
+          $password = pack('H32', md5($password));
+      }
 
-    if (strlen($password) < 64)
-      $password = str_pad($password, 64, chr(0));
+      if (strlen($password) < 64) {
+          $password = str_pad($password, 64, chr(0));
+      }
 
-    $k_ipad = substr($password, 0, 64) ^ str_repeat(chr(0x36), 64);
-    $k_opad = substr($password, 0, 64) ^ str_repeat(chr(0x5C), 64);
+      $k_ipad = substr($password, 0, 64) ^ str_repeat(chr(0x36), 64);
+      $k_opad = substr($password, 0, 64) ^ str_repeat(chr(0x5C), 64);
 
-    $inner  = pack('H32', md5($k_ipad.$challenge));
-    $digest = md5($k_opad.$inner);
+      $inner  = pack('H32', md5($k_ipad.$challenge));
+      $digest = md5($k_opad.$inner);
 
-    return $digest;
+      return $digest;
   }
 }

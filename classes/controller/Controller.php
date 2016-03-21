@@ -154,6 +154,13 @@ abstract class ControllerCore
         // Usage of ajax parameter is deprecated
         $this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
 
+        if (isset($_SERVER['HTTP_ACCEPT'])) {
+            $this->ajax = $this->ajax || preg_match(
+                '#\bapplication/json\b#',
+                $_SERVER['HTTP_ACCEPT']
+            );
+        }
+
         if (!headers_sent()
             && isset($_SERVER['HTTP_USER_AGENT'])
             && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false
@@ -372,26 +379,23 @@ abstract class ControllerCore
      */
     public function addJS($js_uri, $check_path = true)
     {
-        if (is_array($js_uri)) {
-            foreach ($js_uri as $js_file) {
-                $js_path = $js_file;
-                if ($check_path) {
-                    $js_path = Media::getJSPath($js_file);
-                }
+        if (!is_array($js_uri)) {
+            $js_uri = [$js_uri];
+        }
 
-                // $key = is_array($js_path) ? key($js_path) : $js_path;
-                if ($js_path && !in_array($js_path, $this->js_files)) {
-                    $this->js_files[] = $js_path;
-                }
+        foreach ($js_uri as $js_file) {
+            $js_file = explode('?', $js_file);
+            $version = '';
+            if (isset($js_file[1]) && $js_file[1]) {
+                $version = $js_file[1];
             }
-        } else {
-            $js_path = $js_uri;
+            $js_path = $js_file = $js_file[0];
             if ($check_path) {
-                $js_path = Media::getJSPath($js_uri);
+                $js_path = Media::getJSPath($js_file);
             }
 
             if ($js_path && !in_array($js_path, $this->js_files)) {
-                $this->js_files[] = $js_path;
+                $this->js_files[] = $js_path.($version ? '?'.$version : '');
             }
         }
     }
@@ -496,6 +500,13 @@ abstract class ControllerCore
         return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
     }
 
+    public function getLayout()
+    {
+        // This is implemented by some children classes (e.g. FrontController)
+        // but not required for all controllers.
+        return null;
+    }
+
     /**
      * Renders controller templates and generates page content
      *
@@ -513,20 +524,22 @@ abstract class ControllerCore
 
         if (is_array($content)) {
             foreach ($content as $tpl) {
-                $html .= $this->context->smarty->fetch($tpl);
+                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
             }
         } else {
-            $html = $this->context->smarty->fetch($content);
+            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+        }
+
+        if ($this->controller_type === 'modulefront') {
+            // Modules do not know about the layout system,
+            // let's inject their output inside the front-end layout.
+            $this->context->smarty->assign('content', $html);
+            $html = $this->context->smarty->fetch('wrapper.tpl');
         }
 
         $html = trim($html);
 
         if (in_array($this->controller_type, array('front', 'modulefront')) && !empty($html) && $this->getLayout()) {
-            $live_edit_content = '';
-            if (!$this->useMobileTheme() && $this->checkLiveEditAccess()) {
-                $live_edit_content = $this->getLiveEditFooter();
-            }
-
             $dom_available = extension_loaded('dom') ? true : false;
             $defer = (bool)Configuration::get('PS_JS_DEFER');
 
@@ -548,7 +561,6 @@ abstract class ControllerCore
             } else {
                 echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html);
             }
-            echo $live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
         } else {
             echo $html;
         }

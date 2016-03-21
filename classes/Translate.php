@@ -29,6 +29,35 @@
  */
 class TranslateCore
 {
+    public static function getFrontTranslation($string, $class, $addslashes = false, $htmlentities = true, $sprintf = null)
+    {
+        global $_LANG;
+
+        $iso = Context::getContext()->language->iso_code;
+        if (empty($iso)) {
+            $iso = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
+        }
+
+        $string = preg_replace("/\\\*'/", "\'", $string);
+        $key = $class.'_'.md5($string);
+
+        if (isset($_LANG[$key])) {
+            $str = $_LANG[$key];
+        } else {
+            $str = $string;
+        }
+
+        if ($htmlentities) {
+            $str = htmlspecialchars($str, ENT_QUOTES, 'utf-8');
+        }
+        $str = str_replace('"', '&quot;', $str);
+
+        if ($sprintf !== null) {
+            $str = Translate::checkAndReplaceArgs($str, $sprintf);
+        }
+
+        return ($addslashes ? addslashes($str) : stripslashes($str));
+    }
     /**
      * Get a translation for an admin controller
      *
@@ -172,9 +201,9 @@ class TranslateCore
             $default_key = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
 
             if ('controller' == substr($source, -10, 10)) {
-                 $file = substr($source, 0, -10);
-                 $current_key_file = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$file).'_'.$key;
-                 $default_key_file = strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
+                $file = substr($source, 0, -10);
+                $current_key_file = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$file).'_'.$key;
+                $default_key_file = strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
             }
 
             if (isset($current_key_file) && !empty($_MODULES[$current_key_file])) {

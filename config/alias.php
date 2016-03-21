@@ -24,46 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-if (method_exists('Tools', 'fd')) {
-    function fd($var)
-    {
-        return (Tools::fd($var));
-    }
+function fd($var)
+{
+    return (Tools::fd($var));
 }
 
-if (method_exists('Tools', 'p')) {
-    function p($var)
-    {
-        return (Tools::p($var));
-    }
+function p($var)
+{
+    return (Tools::p($var));
 }
 
-if (method_exists('Tools', 'd')) {
-    function d($var)
-    {
-        Tools::d($var);
-    }
+function d($var)
+{
+    Tools::d($var);
 }
 
-if (method_exists('Tools', 'p')) {
-    function ppp($var)
-    {
-        return (Tools::p($var));
-    }
+function ppp($var)
+{
+    return (Tools::p($var));
 }
 
-if (method_exists('Tools', 'd')) {
-    function ddd($var)
-    {
-        Tools::d($var);
-    }
+function ddd($var)
+{
+    Tools::d($var);
 }
 
-if (method_exists('Tools', 'error_log')) {
-    function epr($var, $message_type = null, $destination = null, $extra_headers = null)
-    {
-        return Tools::error_log($var, $message_type, $destination, $extra_headers);
-    }
+function epr($var, $message_type = null, $destination = null, $extra_headers = null)
+{
+    return Tools::error_log($var, $message_type, $destination, $extra_headers);
 }
 
 /**

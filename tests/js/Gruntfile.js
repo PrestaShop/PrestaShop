@@ -1,9 +1,10 @@
 /* jshint node: true */
 
 // Put here src files that we want to use for jasmine and jshint.
-var strictSrc = ["../../js/cldr.js"
-                 
-    ];
+var strictSrc = [
+	"../../js/cldr.js",
+	"../../admin-dev/themes/default/js/bundle/**/*.js"
+];
 
 // Put here src files that we want to use with jasmine, but do not want to validate under jshint
 var legacySrc = ["../../js/tools.js"

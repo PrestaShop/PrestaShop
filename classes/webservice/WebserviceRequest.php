@@ -1564,7 +1564,10 @@ class WebserviceRequestCore
             } elseif ($matches[1] == '<') {
                 $ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` < "'.pSQL($matches[2])."\"\n";
             } elseif ($matches[1] == '!') {
-                $ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` != "'.pSQL($matches[2])."\"\n";
+                $multiple_values = explode('|', $matches[2]);
+                foreach ($multiple_values as $value) {
+                    $ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` != "'.pSQL($value)."\"\n";
+                }
             }
         } else {
             $ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` '.(Validate::isFloat(pSQL($filterValue)) ? 'LIKE' : '=').' "'.pSQL($filterValue)."\"\n";
