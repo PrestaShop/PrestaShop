@@ -184,7 +184,7 @@ class ProductCore extends ObjectModel
     public $available_date = '0000-00-00';
 
     /** @var bool Will the condition select should be visible for this product ? */
-    public $show_condition = true;
+    public $show_condition = false;
 
     /** @var string Enumerated (enum) product condition (new, used, refurbished) */
     public $condition;
