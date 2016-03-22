@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
+use Tools;
 
 class ModuleManager implements AddonManagerInterface
 {
@@ -83,12 +84,12 @@ class ModuleManager implements AddonManagerInterface
     public function install($name)
     {
         // in CLI mode, there is no employee set up
-        if (php_sapi_name() !== 'cli') {
+        if (Tools::isPHPCLI()) {
             if (!$this->employee->can('add', 'AdminModules')) {
                 throw new Exception('You are not allowed to install a module');
             }
         }
-        
+
         if ($this->moduleProvider->isInstalled($name)) {
             throw new Exception(sprintf('The module %s is already installed', $name));
         }
