@@ -33,7 +33,13 @@
                                         <br/><br/>
                                         {{ trans("This will disable the module and delete all its files. For good.", {}, 'AdminModules')|raw }}
                                         <br/>
-                                        <span class="italic red">
+                                      <p>
+                                        <label>
+                                          <input type="checkbox" id="force_deletion" name="force_deletion" data-tech-name="{{module.attributes.get('name')}}"> {{ trans("Optional: delete module folder after uninstall.", {}, 'AdminModules')|raw }}
+                                        </label>
+                                        <br>
+                                      </p>
+                                      <span class="italic red">
                                             {{ trans("This action cannot be undone.", {}, 'AdminModules')|raw }}
                                         </span>
                                     {% endif %}

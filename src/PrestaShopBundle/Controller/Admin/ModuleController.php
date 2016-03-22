@@ -164,6 +164,8 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $action = $request->attributes->get('action');
         $module = $request->attributes->get('module_name');
+        $forceDeletion = $request->query->has('deletion');
+
         $moduleManagerFactory = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerFactory->build();
         $moduleRepository = $moduleManagerFactory->buildRepository();
@@ -173,7 +175,12 @@ class ModuleController extends FrameworkBundleAdminController
         if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
             try {
-                $ret[$module]['status'] = $moduleManager->{$action}($module);
+                if($action == "uninstall") {
+                    $ret[$module]['status'] = $moduleManager->{$action}($module, $forceDeletion);
+                }else {
+                    $ret[$module]['status'] = $moduleManager->{$action}($module);
+                }
+
                 if ($ret[$module]['status'] === null) {
                     $ret[$module]['status'] = false;
                     $ret[$module]['msg'] = $module .' did not return a valid response on '.$action .' action';
