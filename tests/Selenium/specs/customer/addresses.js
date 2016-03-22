@@ -1,7 +1,7 @@
 /* global describe, it, browser, before, after */
 
 var fixtures = require('../../fixtures');
-var _        = require('underscore');
+var _ = require('underscore');
 
 describe('Customer account: Addresses', function () {
 
@@ -27,27 +27,7 @@ describe('Customer account: Addresses', function () {
         .then(function (elements) {
           initialAddressesCount = elements.value.length;
           initialAddressesCount.should.be.greaterThan(0);
-        })
-      ;
-    });
-
-    it('should allow customer to edit it', function () {
-      var addressAlias = 'Edit address '+_.now();
-
-      return browser
-        .element('a[data-link-action="edit-address"]')
-        .click()
-        .pause(500)
-        .setValue('.address-form input[name=alias]', addressAlias)
-        .submitForm('.address-form form')
-        .element('a[data-link-action="edit-address"]')
-        .click()
-        .pause(500)
-        .getValue('.address-form input[name=alias]')
-        .then(function (value) {
-          value.should.equals(addressAlias);
-        })
-      ;
+        });
     });
 
     var idAddressCreated = 0;
@@ -61,7 +41,6 @@ describe('Customer account: Addresses', function () {
         })
         .element('a[data-link-action="add-address"]')
         .click()
-        .pause(500)
         .setValue('.address-form input[name=firstname]', 'Yolo')
         .setValue('.address-form input[name=lastname]', 'Really')
         .setValue('.address-form input[name=address1]', '12 rue d\'Amsterdam')
@@ -91,15 +70,30 @@ describe('Customer account: Addresses', function () {
         });
     });
 
+    it('should allow customer to edit it', function () {
+      const addressAlias = 'Edit address '+_.now();
+
+      return browser
+        .element('#address-'+idAddressCreated+' a[data-link-action="edit-address"]')
+        .click()
+        .setValue('.address-form input[name=alias]', addressAlias)
+        .submitForm('.address-form form')
+        .element('#address-'+idAddressCreated+' a[data-link-action="edit-address"]')
+        .click()
+        .getValue('.address-form input[name=alias]')
+        .then(function (value) {
+          value.should.equals(addressAlias);
+        });
+    });
+
     it('should allow customer to delete an address', function () {
       return browser
+        .url(fixtures.urls.myAddresses)
         .click('#address-'+idAddressCreated+' a[data-link-action="delete-address"]')
-        .pause(500)
         .isExisting('article#address-'+idAddressCreated)
         .then(function (isExisting) {
           isExisting.should.be.false;
-        })
-      ;
+        });
     });
 
   });
