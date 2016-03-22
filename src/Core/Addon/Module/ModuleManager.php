@@ -82,11 +82,13 @@ class ModuleManager implements AddonManagerInterface
      */
     public function install($name)
     {
-        // TODO : Fix for CLI install : No employee here
-        // if (!$this->employee->can('add', 'AdminModules')) {
-        //     throw new Exception('You are not allowed to install a module');
-        // }
-
+        // in CLI mode, there is no employee set up
+        if (php_sapi_name() !== 'cli') {
+            if (!$this->employee->can('add', 'AdminModules')) {
+                throw new Exception('You are not allowed to install a module');
+            }
+        }
+        
         if ($this->moduleProvider->isInstalled($name)) {
             throw new Exception(sprintf('The module %s is already installed', $name));
         }
