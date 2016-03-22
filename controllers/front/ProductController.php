@@ -86,17 +86,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
              */
             if (!$this->product->isAssociatedToShop() || !$this->product->active) {
                 if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')) && $this->product->isAssociatedToShop()) {
-                    // If the product is not active, it's the admin preview mode
-                    $this->info[] = $this->l('This product is not visible to your customers.');
-
                     $draftLinks = [
-                        'publishLink' => array(
-                            'url' => Tools::getValue('ad').'/'.$this->context->link->getAdminLink('AdminProducts', false).'&token='.Tools::getValue('adtoken').'&statusproduct&id_product='.$this->product->id,
-                            'title' => $this->l('Publish'),
-                            ),
                         'backLink' => array(
                             'url' => Tools::getValue('ad').'/'.$this->context->link->getAdminLink('AdminProducts', false).'&token='.Tools::getValue('adtoken').'&updateproduct&id_product='.$this->product->id,
                             'title' => $this->l('Back'),
+                            ),
+                        'publishLink' => array(
+                            'url' => Tools::getValue('ad').'/'.$this->context->link->getAdminLink('AdminProducts', false).'&token='.Tools::getValue('adtoken').'&statusproduct&id_product='.$this->product->id,
+                            'title' => $this->l('Publish'),
                             ),
                     ];
 

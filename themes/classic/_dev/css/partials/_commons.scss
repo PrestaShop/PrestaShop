@@ -275,3 +275,48 @@ label {
   color: $brand-danger;
   margin-top: $small-space;
 }
+.btn.disabled {
+  background: $gray;
+}
+.alert-warning {
+  .material-icons {
+    color: $warning;
+    font-size: em(32px);
+    margin-right: $small-space;
+    padding-top: $extra-small-space;
+  }
+  .alert-text {
+    font-size: em(15px);
+    padding-top: $small-space;
+  }
+  .alert-link {
+    border-radius: 2px;
+    border-width: 2px;
+    margin-left: $small-space;
+    padding: $extra-small-space $medium-space;
+    font-weight: 600;
+    font-size: em(13px);
+    color: $btn-tertiary-color;
+  }
+  ul li:last-child .alert-link {
+    color: white;
+  }
+  .warning-buttons {
+    margin-top: $extra-small-space;
+  }
+}
+.btn-warning{
+  @include transition(all .4s ease-in-out);
+}
+.btn-tertiary-outline {
+  color: $btn-tertiary-color;
+  background-image: none;
+  background-color: transparent;
+  border-color: $btn-tertiary-color;
+  border: 0.15em solid $btn-tertiary-color;
+  @include transition(all .4s ease-in-out);
+  &:hover {
+    border-color: $btn-tertiary-hover;
+    color: $btn-tertiary-hover;
+  }
+}

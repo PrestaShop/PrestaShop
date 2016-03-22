@@ -75,23 +75,23 @@
 	
 	__webpack_require__(48);
 	
-	__webpack_require__(50);
-	
 	__webpack_require__(51);
 	
-	var _componentsDropDown = __webpack_require__(52);
+	__webpack_require__(52);
+	
+	var _componentsDropDown = __webpack_require__(53);
 	
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 	
-	var _componentsTopMenu = __webpack_require__(53);
+	var _componentsTopMenu = __webpack_require__(54);
 	
 	var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
 	
-	var _componentsProductMiniature = __webpack_require__(54);
+	var _componentsProductMiniature = __webpack_require__(55);
 	
 	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 	
-	var _componentsProductSelect = __webpack_require__(55);
+	var _componentsProductSelect = __webpack_require__(56);
 	
 	var _componentsProductSelect2 = _interopRequireDefault(_componentsProductSelect);
 	
@@ -16424,7 +16424,7 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	__webpack_require__(56);
+	__webpack_require__(50);
 	
 	(0, _jquery2['default'])(document).ready(function () {
 	  _prestashop2['default'].on('quickview clicked', function (elm) {
@@ -16489,366 +16489,6 @@
 
 /***/ },
 /* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	(0, _jquery2['default'])(document).ready(function () {
-	  (0, _jquery2['default'])('.js-file-input').on('change', function (event) {
-	    (0, _jquery2['default'])('.js-file-name').text((0, _jquery2['default'])(event.currentTarget).val());
-	  });
-	
-	  (0, _jquery2['default'])('#quantity_wanted').TouchSpin({
-	    verticalbuttons: true,
-	    verticalupclass: 'material-icons touchspin-up',
-	    verticaldownclass: 'material-icons touchspin-down',
-	    buttondown_class: 'btn btn-touchspin js-touchspin',
-	    buttonup_class: 'btn btn-touchspin js-touchspin'
-	  });
-	
-	  (0, _jquery2['default'])('body').on('click', 'input.product-refresh', function (event) {
-	    event.preventDefault();
-	
-	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&ajax=1&action=productrefresh';
-	    var actionURL = (0, _jquery2['default'])(event.target.form).attr('action');
-	
-	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
-	      prestashop.emit('product updated', {
-	        reason: {
-	          productUrl: resp.productUrl
-	        }
-	      });
-	    });
-	  });
-	});
-
-/***/ },
-/* 51 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	var _prestashop = __webpack_require__(49);
-	
-	var _prestashop2 = _interopRequireDefault(_prestashop);
-	
-	(0, _jquery2['default'])(document).ready(function () {
-	  _prestashop2['default'].on('cart dom updated', function (event) {
-	    createSpin();
-	  });
-	
-	  (0, _jquery2['default'])('body').on('click', '.js-touchspin, [data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', function (event) {
-	    event.preventDefault();
-	    // First perform the action using AJAX
-	    var actionURL = null;
-	
-	    if ((0, _jquery2['default'])(event.currentTarget).hasClass('bootstrap-touchspin-up')) {
-	      actionURL = (0, _jquery2['default'])(event.currentTarget).parents('.bootstrap-touchspin').find('[data-up-url]').data('up-url');
-	    } else if ((0, _jquery2['default'])(event.currentTarget).hasClass('bootstrap-touchspin-down')) {
-	      actionURL = (0, _jquery2['default'])(event.currentTarget).parents('.bootstrap-touchspin').find('[data-up-url]').data('down-url');
-	    } else {
-	      actionURL = (0, _jquery2['default'])(event.currentTarget).attr('href');
-	    }
-	
-	    _jquery2['default'].post(actionURL, {
-	      ajax: '1',
-	      action: 'update'
-	    }, null, 'json').then(function () {
-	      // If succesful, refresh cart preview
-	      _prestashop2['default'].emit('cart updated', {
-	        reason: event.currentTarget.dataset
-	      });
-	    });
-	  });
-	  (0, _jquery2['default'])('body').on('click', '[data-button-action="add-to-cart"]', function (event) {
-	    event.preventDefault();
-	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
-	    var query = $form.serialize() + '&add=1&action=update';
-	    var actionURL = $form.attr('action');
-	
-	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
-	      _prestashop2['default'].emit('cart updated', {
-	        reason: {
-	          idProduct: resp.id_product,
-	          idProductAttribute: resp.id_product_attribute,
-	          linkAction: 'add-to-cart'
-	        }
-	      });
-	    });
-	  });
-	
-	  (0, _jquery2['default'])('body').on('submit', '[data-link-action="add-voucher"]', function (event) {
-	    event.preventDefault();
-	
-	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'ajax').val('1'));
-	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'action').val('update'));
-	
-	    // First perform the action using AJAX
-	    var actionURL = (0, _jquery2['default'])(this).attr('action');
-	
-	    _jquery2['default'].post(actionURL, (0, _jquery2['default'])(this).serialize(), null, 'json').then(function () {
-	      // If succesful, refresh cart preview
-	      _prestashop2['default'].emit('cart updated', {
-	        reason: event.target.dataset
-	      });
-	    });
-	  });
-	
-	  createSpin();
-	});
-	
-	function createSpin() {
-	  (0, _jquery2['default'])('input[name="product-quantity-spin"]').TouchSpin({
-	    verticalbuttons: true,
-	    verticalupclass: 'material-icons touchspin-up',
-	    verticaldownclass: 'material-icons touchspin-down',
-	    buttondown_class: 'btn btn-touchspin js-touchspin',
-	    buttonup_class: 'btn btn-touchspin js-touchspin'
-	  });
-	}
-
-/***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	var DropDown = (function () {
-	  function DropDown(el) {
-	    _classCallCheck(this, DropDown);
-	
-	    this.el = el;
-	  }
-	
-	  _createClass(DropDown, [{
-	    key: 'init',
-	    value: function init() {
-	      this.el.on('show.bs.dropdown', function (e) {
-	        (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideDown();
-	      });
-	
-	      this.el.on('hide.bs.dropdown', function (e) {
-	        (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideUp();
-	      });
-	    }
-	  }]);
-	
-	  return DropDown;
-	})();
-	
-	exports['default'] = DropDown;
-	module.exports = exports['default'];
-
-/***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var _dropDown = __webpack_require__(52);
-	
-	var _dropDown2 = _interopRequireDefault(_dropDown);
-	
-	var TopMenu = (function (_DropDown) {
-	  _inherits(TopMenu, _DropDown);
-	
-	  function TopMenu() {
-	    _classCallCheck(this, TopMenu);
-	
-	    _get(Object.getPrototypeOf(TopMenu.prototype), 'constructor', this).apply(this, arguments);
-	  }
-	
-	  _createClass(TopMenu, [{
-	    key: 'init',
-	    value: function init() {
-	      _get(Object.getPrototypeOf(TopMenu.prototype), 'init', this).call(this);
-	    }
-	  }]);
-	
-	  return TopMenu;
-	})(_dropDown2['default']);
-	
-	exports['default'] = TopMenu;
-	module.exports = exports['default'];
-
-/***/ },
-/* 54 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	var ProductMinitature = (function () {
-	  function ProductMinitature() {
-	    _classCallCheck(this, ProductMinitature);
-	  }
-	
-	  _createClass(ProductMinitature, [{
-	    key: 'init',
-	    value: function init() {
-	      (0, _jquery2['default'])('.js-product-miniature').each(function (index, element) {
-	        if ((0, _jquery2['default'])(element).find('.discount-percentage').length) {
-	          (0, _jquery2['default'])(element).find('.new').remove();
-	        }
-	        if ((0, _jquery2['default'])(element).find('.color').length > 5) {
-	          (function () {
-	            var count = 0;
-	            (0, _jquery2['default'])(element).find('.color').each(function (index, element) {
-	              if (index > 4) {
-	                (0, _jquery2['default'])(element).hide();
-	                count++;
-	              }
-	            });
-	            (0, _jquery2['default'])(element).find('.js-count').append('+' + count);
-	          })();
-	        }
-	      });
-	    }
-	  }]);
-	
-	  return ProductMinitature;
-	})();
-	
-	exports['default'] = ProductMinitature;
-	module.exports = exports['default'];
-
-/***/ },
-/* 55 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var _jquery = __webpack_require__(4);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	__webpack_require__(56);
-	
-	var ProductSelect = (function () {
-	  function ProductSelect() {
-	    _classCallCheck(this, ProductSelect);
-	  }
-	
-	  _createClass(ProductSelect, [{
-	    key: 'init',
-	    value: function init() {
-	      var _this = this;
-	
-	      var MAX_THUMBS = 5;
-	      var $arrows = (0, _jquery2['default'])('.js-arrows');
-	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
-	      (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
-	        if ((0, _jquery2['default'])('.js-thumb').hasClass('selected')) {
-	          (0, _jquery2['default'])('.js-thumb').removeClass('selected');
-	        }
-	        (0, _jquery2['default'])(event.currentTarget).addClass('selected');
-	        (0, _jquery2['default'])('.js-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
-	      });
-	
-	      if ((0, _jquery2['default'])('.js-product-images li').length <= MAX_THUMBS) {
-	        $arrows.css('opacity', '.2');
-	      } else {
-	        $arrows.on('click', function (event) {
-	          if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && (0, _jquery2['default'])('.js-product-images').position().top < 0) {
-	            _this.move('up');
-	            (0, _jquery2['default'])('.js-arrow-down').css('opacity', '1');
-	          } else if ((0, _jquery2['default'])(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > (0, _jquery2['default'])('.js-mask').height()) {
-	            _this.move('down');
-	            (0, _jquery2['default'])('.js-arrow-up').css('opacity', '1');
-	          }
-	        });
-	      }
-	    }
-	  }, {
-	    key: 'move',
-	    value: function move(direction) {
-	      var THUMB_MARGIN = 10;
-	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
-	      var thumbHeight = (0, _jquery2['default'])('.js-product-images li img').height() + THUMB_MARGIN;
-	      var currentPosition = $thumbnails.position().top;
-	      $thumbnails.velocity({
-	        translateY: direction === 'up' ? currentPosition + thumbHeight : currentPosition - thumbHeight
-	      }, function () {
-	        if ($thumbnails.position().top >= 0) {
-	          (0, _jquery2['default'])('.js-arrow-up').css('opacity', '.2');
-	        } else if ($thumbnails.position().top + $thumbnails.height() <= (0, _jquery2['default'])('.js-mask').height()) {
-	          (0, _jquery2['default'])('.js-arrow-down').css('opacity', '.2');
-	        }
-	      });
-	    }
-	  }]);
-	
-	  return ProductSelect;
-	})();
-	
-	exports['default'] = ProductSelect;
-	module.exports = exports['default'];
-
-/***/ },
-/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! VelocityJS.org (1.2.3). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
@@ -20737,6 +20377,366 @@
 	/* The CSS spec mandates that the translateX/Y/Z transforms are %-relative to the element itself -- not its parent.
 	Velocity, however, doesn't make this distinction. Thus, converting to or from the % unit with these subproperties
 	will produce an inaccurate conversion value. The same issue exists with the cx/cy attributes of SVG circles and ellipses. */
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	(0, _jquery2['default'])(document).ready(function () {
+	  (0, _jquery2['default'])('.js-file-input').on('change', function (event) {
+	    (0, _jquery2['default'])('.js-file-name').text((0, _jquery2['default'])(event.currentTarget).val());
+	  });
+	
+	  (0, _jquery2['default'])('#quantity_wanted').TouchSpin({
+	    verticalbuttons: true,
+	    verticalupclass: 'material-icons touchspin-up',
+	    verticaldownclass: 'material-icons touchspin-down',
+	    buttondown_class: 'btn btn-touchspin js-touchspin',
+	    buttonup_class: 'btn btn-touchspin js-touchspin'
+	  });
+	
+	  (0, _jquery2['default'])('body').on('click', 'input.product-refresh', function (event) {
+	    event.preventDefault();
+	
+	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&ajax=1&action=productrefresh';
+	    var actionURL = (0, _jquery2['default'])(event.target.form).attr('action');
+	
+	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
+	      prestashop.emit('product updated', {
+	        reason: {
+	          productUrl: resp.productUrl
+	        }
+	      });
+	    });
+	  });
+	});
+
+/***/ },
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var _prestashop = __webpack_require__(49);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	(0, _jquery2['default'])(document).ready(function () {
+	  _prestashop2['default'].on('cart dom updated', function (event) {
+	    createSpin();
+	  });
+	
+	  (0, _jquery2['default'])('body').on('click', '.js-touchspin, [data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', function (event) {
+	    event.preventDefault();
+	    // First perform the action using AJAX
+	    var actionURL = null;
+	
+	    if ((0, _jquery2['default'])(event.currentTarget).hasClass('bootstrap-touchspin-up')) {
+	      actionURL = (0, _jquery2['default'])(event.currentTarget).parents('.bootstrap-touchspin').find('[data-up-url]').data('up-url');
+	    } else if ((0, _jquery2['default'])(event.currentTarget).hasClass('bootstrap-touchspin-down')) {
+	      actionURL = (0, _jquery2['default'])(event.currentTarget).parents('.bootstrap-touchspin').find('[data-up-url]').data('down-url');
+	    } else {
+	      actionURL = (0, _jquery2['default'])(event.currentTarget).attr('href');
+	    }
+	
+	    _jquery2['default'].post(actionURL, {
+	      ajax: '1',
+	      action: 'update'
+	    }, null, 'json').then(function () {
+	      // If succesful, refresh cart preview
+	      _prestashop2['default'].emit('cart updated', {
+	        reason: event.currentTarget.dataset
+	      });
+	    });
+	  });
+	  (0, _jquery2['default'])('body').on('click', '[data-button-action="add-to-cart"]', function (event) {
+	    event.preventDefault();
+	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
+	    var query = $form.serialize() + '&add=1&action=update';
+	    var actionURL = $form.attr('action');
+	
+	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
+	      _prestashop2['default'].emit('cart updated', {
+	        reason: {
+	          idProduct: resp.id_product,
+	          idProductAttribute: resp.id_product_attribute,
+	          linkAction: 'add-to-cart'
+	        }
+	      });
+	    });
+	  });
+	
+	  (0, _jquery2['default'])('body').on('submit', '[data-link-action="add-voucher"]', function (event) {
+	    event.preventDefault();
+	
+	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'ajax').val('1'));
+	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'action').val('update'));
+	
+	    // First perform the action using AJAX
+	    var actionURL = (0, _jquery2['default'])(this).attr('action');
+	
+	    _jquery2['default'].post(actionURL, (0, _jquery2['default'])(this).serialize(), null, 'json').then(function () {
+	      // If succesful, refresh cart preview
+	      _prestashop2['default'].emit('cart updated', {
+	        reason: event.target.dataset
+	      });
+	    });
+	  });
+	
+	  createSpin();
+	});
+	
+	function createSpin() {
+	  (0, _jquery2['default'])('input[name="product-quantity-spin"]').TouchSpin({
+	    verticalbuttons: true,
+	    verticalupclass: 'material-icons touchspin-up',
+	    verticaldownclass: 'material-icons touchspin-down',
+	    buttondown_class: 'btn btn-touchspin js-touchspin',
+	    buttonup_class: 'btn btn-touchspin js-touchspin'
+	  });
+	}
+
+/***/ },
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var DropDown = (function () {
+	  function DropDown(el) {
+	    _classCallCheck(this, DropDown);
+	
+	    this.el = el;
+	  }
+	
+	  _createClass(DropDown, [{
+	    key: 'init',
+	    value: function init() {
+	      this.el.on('show.bs.dropdown', function (e) {
+	        (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideDown();
+	      });
+	
+	      this.el.on('hide.bs.dropdown', function (e) {
+	        (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideUp();
+	      });
+	    }
+	  }]);
+	
+	  return DropDown;
+	})();
+	
+	exports['default'] = DropDown;
+	module.exports = exports['default'];
+
+/***/ },
+/* 54 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _dropDown = __webpack_require__(53);
+	
+	var _dropDown2 = _interopRequireDefault(_dropDown);
+	
+	var TopMenu = (function (_DropDown) {
+	  _inherits(TopMenu, _DropDown);
+	
+	  function TopMenu() {
+	    _classCallCheck(this, TopMenu);
+	
+	    _get(Object.getPrototypeOf(TopMenu.prototype), 'constructor', this).apply(this, arguments);
+	  }
+	
+	  _createClass(TopMenu, [{
+	    key: 'init',
+	    value: function init() {
+	      _get(Object.getPrototypeOf(TopMenu.prototype), 'init', this).call(this);
+	    }
+	  }]);
+	
+	  return TopMenu;
+	})(_dropDown2['default']);
+	
+	exports['default'] = TopMenu;
+	module.exports = exports['default'];
+
+/***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var ProductMinitature = (function () {
+	  function ProductMinitature() {
+	    _classCallCheck(this, ProductMinitature);
+	  }
+	
+	  _createClass(ProductMinitature, [{
+	    key: 'init',
+	    value: function init() {
+	      (0, _jquery2['default'])('.js-product-miniature').each(function (index, element) {
+	        if ((0, _jquery2['default'])(element).find('.discount-percentage').length) {
+	          (0, _jquery2['default'])(element).find('.new').remove();
+	        }
+	        if ((0, _jquery2['default'])(element).find('.color').length > 5) {
+	          (function () {
+	            var count = 0;
+	            (0, _jquery2['default'])(element).find('.color').each(function (index, element) {
+	              if (index > 4) {
+	                (0, _jquery2['default'])(element).hide();
+	                count++;
+	              }
+	            });
+	            (0, _jquery2['default'])(element).find('.js-count').append('+' + count);
+	          })();
+	        }
+	      });
+	    }
+	  }]);
+	
+	  return ProductMinitature;
+	})();
+	
+	exports['default'] = ProductMinitature;
+	module.exports = exports['default'];
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	__webpack_require__(50);
+	
+	var ProductSelect = (function () {
+	  function ProductSelect() {
+	    _classCallCheck(this, ProductSelect);
+	  }
+	
+	  _createClass(ProductSelect, [{
+	    key: 'init',
+	    value: function init() {
+	      var _this = this;
+	
+	      var MAX_THUMBS = 5;
+	      var $arrows = (0, _jquery2['default'])('.js-arrows');
+	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
+	      (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
+	        if ((0, _jquery2['default'])('.js-thumb').hasClass('selected')) {
+	          (0, _jquery2['default'])('.js-thumb').removeClass('selected');
+	        }
+	        (0, _jquery2['default'])(event.currentTarget).addClass('selected');
+	        (0, _jquery2['default'])('.js-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
+	      });
+	
+	      if ((0, _jquery2['default'])('.js-product-images li').length <= MAX_THUMBS) {
+	        $arrows.css('opacity', '.2');
+	      } else {
+	        $arrows.on('click', function (event) {
+	          if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && (0, _jquery2['default'])('.js-product-images').position().top < 0) {
+	            _this.move('up');
+	            (0, _jquery2['default'])('.js-arrow-down').css('opacity', '1');
+	          } else if ((0, _jquery2['default'])(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > (0, _jquery2['default'])('.js-mask').height()) {
+	            _this.move('down');
+	            (0, _jquery2['default'])('.js-arrow-up').css('opacity', '1');
+	          }
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'move',
+	    value: function move(direction) {
+	      var THUMB_MARGIN = 10;
+	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
+	      var thumbHeight = (0, _jquery2['default'])('.js-product-images li img').height() + THUMB_MARGIN;
+	      var currentPosition = $thumbnails.position().top;
+	      $thumbnails.velocity({
+	        translateY: direction === 'up' ? currentPosition + thumbHeight : currentPosition - thumbHeight
+	      }, function () {
+	        if ($thumbnails.position().top >= 0) {
+	          (0, _jquery2['default'])('.js-arrow-up').css('opacity', '.2');
+	        } else if ($thumbnails.position().top + $thumbnails.height() <= (0, _jquery2['default'])('.js-mask').height()) {
+	          (0, _jquery2['default'])('.js-arrow-down').css('opacity', '.2');
+	        }
+	      });
+	    }
+	  }]);
+	
+	  return ProductSelect;
+	})();
+	
+	exports['default'] = ProductSelect;
+	module.exports = exports['default'];
 
 /***/ },
 /* 57 */
