@@ -84,7 +84,7 @@ class ModuleManager implements AddonManagerInterface
     public function install($name)
     {
         // in CLI mode, there is no employee set up
-        if (Tools::isPHPCLI()) {
+        if (!Tools::isPHPCLI()) {
             if (!$this->employee->can('add', 'AdminModules')) {
                 throw new Exception('You are not allowed to install a module');
             }
