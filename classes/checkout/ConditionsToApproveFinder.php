@@ -40,7 +40,9 @@ class ConditionsToApproveFinderCore
             $allConditions = [];
         }
 
-        array_unshift($allConditions, $this->getDefaultTermsAndConditions());
+        if (Configuration::get('PS_CONDITIONS')) {
+            array_unshift($allConditions, $this->getDefaultTermsAndConditions());
+        }
 
         /**
          * If two TermsAndConditions objects have the same identifier,
