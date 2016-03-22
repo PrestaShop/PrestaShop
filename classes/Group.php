@@ -200,7 +200,10 @@ class GroupCore extends ObjectModel
 						'.(int)Configuration::get('PS_CUSTOMER_GROUP').')
 				WHERE `id_default_group` = '.(int)$this->id);
 
-            return true;
+            // Remove group restrictions
+            $res = Db::getInstance()->delete('module_group', 'id_group = '.(int)$this->id);
+
+            return $res;
         }
         return false;
     }
