@@ -26,11 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Tests\Core\Addon\Module;
 
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Phake;
 
 /**
  * Description of ModuleRepositoryTest
@@ -40,51 +44,59 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 {
 
-    private $moduleManagerFactory;
+    private $moduleRepositoryStub;
+    private $moduleDataProviderStub;
 
     private $http_host_not_found = false;
 
     public function setUp()
     {
-        parent::setUp();
         if (!defined('__PS_BASE_URI__')) {
             define('__PS_BASE_URI__', "http://www.example.com/shop");
         }
-        if (!defined('_THEME_DIR_')) {
-            define('_THEME_NAME_', 'classic');
-            define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/');
-            define('_THEMES_DIR_', __PS_BASE_URI__.'themes/');
-            define('_THEME_DIR_', _THEMES_DIR_._THEME_NAME_.'/');
-        }
 
-        if (! isset($_SERVER['HTTP_HOST'])) {
-            $this->http_host_not_found = true;
-            $_SERVER['HTTP_HOST'] = 'localhost';
-        }
+        $this->moduleDataProviderStub = $this->getMock(
+            'PrestaShop\\PrestaShop\\Adapter\\Module\\ModuleDataProvider',
+            ['getModulesDir']
+        );
+        $this->moduleDataProviderStub->expects($this->any())
+             ->method('getModulesDir')
+             ->will($this->returnValue(_PS_ROOT_DIR_.'/tests/resources/modules/'));
 
-        $context = \Context::getContext();
-        $context->language = new \stdClass();
-        $context->language->id = 42;
-        $context->language->iso_code = 'fr';
-        $context->shop->id = 1;
+        
 
-        $this->moduleManagerFactory = new ModuleManagerBuilder();
+        $this->moduleRepositoryStub = $this->getMock(
+            'PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository',
+            ['getModulesDir', 'readCacheFile'],
+            [
+                new AdminModuleDataProvider(),
+                $this->moduleDataProviderStub,
+                new ModuleDataUpdater()
+            ]
+        );
+        $this->moduleRepositoryStub->expects($this->any())
+             ->method('getModulesDir')
+             ->will($this->returnValue(_PS_ROOT_DIR_.'/tests/resources/modules/'));
+        $this->moduleRepositoryStub->expects($this->any())
+             ->method('readCacheFile')
+             ->will($this->returnValue([]));
     }
 
     public function test_module_repository_is_built()
     {
-        $this->assertNotNull($this->moduleManagerFactory->buildRepository());
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $this->assertNotNull($moduleManagerBuilder->buildRepository());
     }
 
     public function test_get_at_least_one_module_from_universe()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $this->assertGreaterThan(0, count($moduleRepository->getList()));
     }
 
     public function test_get_only_installed_modules()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $all_modules = $moduleRepository->getList();
 
         $filters = new AddonListFilter();
@@ -99,7 +111,7 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_only_NOT_installed_modules()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $all_modules = $moduleRepository->getList();
 
         $filters = new AddonListFilter();
@@ -114,7 +126,7 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_only_enabled_modules()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $all_modules = $moduleRepository->getList();
 
         $filters = new AddonListFilter();
@@ -130,7 +142,7 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_not_enabled_modules()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $all_modules = $moduleRepository->getList();
 
         $filters = new AddonListFilter();
@@ -144,7 +156,7 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_installed_but_disabled_modules()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $all_modules = $moduleRepository->getList();
 
         $filters = new AddonListFilter();
@@ -159,9 +171,9 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_addons_from_marketplace_only()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
-        $filters->setType(AddonListFilterOrigin::ADDONS_ALL);
+        $filters->setOrigin(AddonListFilterOrigin::ADDONS_ALL);
 
         // Each module must have its origin attribute
         foreach ($moduleRepository->getFilteredList($filters) as $module) {
@@ -171,9 +183,9 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_addons_not_on_marketplace_1()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
-        $filters->setType(AddonListFilterOrigin::DISK);
+        $filters->setOrigin(AddonListFilterOrigin::DISK);
 
         // Each module must have its origin attribute
         foreach ($moduleRepository->getFilteredList($filters) as $module) {
@@ -183,9 +195,9 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_addons_not_on_marketplace_2()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
-        $filters->setType(~AddonListFilterOrigin::ADDONS_ALL);
+        $filters->setOrigin(~AddonListFilterOrigin::ADDONS_ALL);
 
         // Each module must have its origin attribute
         foreach ($moduleRepository->getFilteredList($filters) as $module) {
@@ -195,7 +207,7 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_only_modules()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE);
 
@@ -206,7 +218,7 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_only_services()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::SERVICE);
 
@@ -217,7 +229,7 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_should_not_be_able_to_return_theme()
     {
-        $moduleRepository = $this->moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::THEME);
 
@@ -231,5 +243,9 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
         if ($this->http_host_not_found) {
             unset($_SERVER['HTTP_HOST']);
         }
+
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManagerBuilder->buildRepository();
+        $moduleRepository->clearCache();
     }
 }

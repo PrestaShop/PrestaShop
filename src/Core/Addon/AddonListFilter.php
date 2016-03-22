@@ -31,22 +31,77 @@ class AddonListFilter
     /**
      * @var $type AddonListFilterType Specify the addon type like theme only or module only or all
      */
-    public $type;
+    public $type = AddonListFilterType::ALL;
 
     /**
      * @var $status AddonListFilterStatus Specify if you want enabled only, disabled only or all addons
      */
-    public $status;
+    public $status = AddonListFilterStatus::ALL;
 
     /**
      * @var $status AddonListFilterOrigin Specify if you want an addon from a specific source
      */
-    public $origin;
+    public $origin = AddonListFilterOrigin::ALL;
 
     /**
      * @var array Names of all the addons to exclude from result
      */
     public $exclude = [];
+
+    public function addOrigin($origin)
+    {
+        $this->origin &= $origin;
+        return $this;
+    }
+
+    public function addStatus($status)
+    {
+        $this->status &= $status;
+        return $this;
+    }
+
+    public function addType($type)
+    {
+        $this->type &= $type;
+        return $this;
+    }
+
+
+
+    public function hasOrigin($origin)
+    {
+        return ($this->origin & $origin);
+    }
+
+    public function hasStatus($status)
+    {
+        return ($this->status & $status);
+    }
+
+    public function hasType($type)
+    {
+        return ($this->type & $type);
+    }
+
+
+
+    public function removeOrigin($origin)
+    {
+        return $this->addOrigin(~$origin);
+    }
+
+    public function removeStatus($status)
+    {
+        return $this->addStatus(~$status);
+    }
+
+    public function removeType($type)
+    {
+        return $this->addType(~$type);
+    }
+
+
+
 
     public function setOrigin($origin)
     {

@@ -58,7 +58,6 @@ class ModuleManagerBuilder
                 $this->buildRepository(),
                 \Context::getContext()->employee);
         }
-
     }
 
     /**
@@ -81,7 +80,6 @@ class ModuleManagerBuilder
                     new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider($languageISO))
                 );
             }
-
         }
         return self::$modulesRepository;
     }

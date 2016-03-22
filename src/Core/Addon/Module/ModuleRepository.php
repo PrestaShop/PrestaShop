@@ -89,6 +89,12 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->generateCacheFile($this->cache);
     }
 
+    public function clearCache()
+    {
+        @unlink($this->cacheFilePath);
+        $this->cache = [];
+    }
+
     /**
      * Get the **Legacy** Module object from its name
      *
@@ -107,17 +113,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getFilteredList(AddonListFilter $filter)
     {
-        // Init missing values
-        if (empty($filter->type)) {
-            $filter->setType(AddonListFilterType::MODULE);
-        }
-        if (empty($filter->status)) {
-            $filter->setStatus(AddonListFilterStatus::ALL);
-        }
-        if (empty($filter->origin)) {
-            $filter->setOrigin(AddonListFilterOrigin::ALL);
-        }
-
         if ($filter->status >= AddonListFilterStatus::ON_DISK
             && $filter->status != AddonListFilterStatus::ALL) {
             $modules = $this->getModulesOnDisk();
@@ -212,7 +207,11 @@ class ModuleRepository implements ModuleRepositoryInterface
                     $modules[$name] = $module;
                 }
             } catch (\ParseError $e) {
-                // Bypass this module
+                $logger = new LegacyLogger();
+                $logger->critical(sprintf('Parse error on module %s. %s', $name, $e->getMessage()));
+            } catch (Exception $e) {
+                $logger = new LegacyLogger();
+                $logger->critical(sprintf('Unexpected exception on module %s. %s', $name, $e->getMessage()));
             }
         }
 
@@ -228,7 +227,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getModule($name)
     {
-        $php_file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
+        $php_file_path = $this->getModulesDir().$name.'/'.$name.'.php';
 
         /* Data which design the module class */
         $attributes = ['name' => $name,];
@@ -334,9 +333,9 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         foreach (['logo.png', 'logo.gif'] as $logo) {
-            $logo_path = _PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$logo;
+            $logo_path = $this->getModulesDir().$name.DIRECTORY_SEPARATOR.$logo;
             if (file_exists($logo_path)) {
-                $attributes['media']->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
+                $attributes['media']->img = __PS_BASE_URI__.basename($this->getModulesDir()).'/'.$name.'/'.$logo;
                 break;
             }
         }
@@ -348,6 +347,15 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
+     * Function which returns the modules directory. Used for mock in tests/ folder.
+     * @return string The modules directory
+     */
+    protected function getModulesDir()
+    {
+        return _PS_MODULE_DIR_;
+    }
+
+    /**
      * Instanciate every module present if the modules folder
      *
      * @return \PrestaShop\PrestaShop\Adapter\Module\Module[]
@@ -356,7 +364,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $modules         = [];
         $modulesDirsList = $this->finder->directories()
-                                    ->in(_PS_MODULE_DIR_)
+                                    ->in($this->getModulesDir())
                                     ->depth('== 0')
                                     ->exclude(['__MACOSX'])
                                     ->ignoreVCS(true);

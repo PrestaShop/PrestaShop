@@ -49,6 +49,7 @@ class AdminModuleDataProvider implements ModuleInterface
     const _DAY_IN_SECONDS_ = 86400;
 
     private $languageISO;
+
     /**
      * @var Router
      */
