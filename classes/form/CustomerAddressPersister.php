@@ -41,6 +41,10 @@ class CustomerAddressPersisterCore
 
         $address->id_customer = $this->customer->id;
 
+        if ($address->isUsed()) {
+            $this->id = null;
+        }
+
         return $address->save();
     }
 
