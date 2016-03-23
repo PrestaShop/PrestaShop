@@ -6,6 +6,7 @@ use CheckoutProcess;
 use Context;
 use Customer;
 use Language;
+use Link;
 use Phake;
 use PrestaShop\PrestaShop\tests\TestCase\UnitTestCase;
 
@@ -20,6 +21,8 @@ class CheckoutAddressesStepTest extends UnitTestCase
         $context = new Context;
         $context->language = new Language;
         $context->customer = new Customer;
+        $context->link = Phake::mock('Link');
+        Phake::when($context->link)->getPageLink(Phake::anyParameters())->thenReturn('http://addresses-actions.url');
 
         $smarty = Phake::mock('Smarty');
         $translator = Phake::mock('Symfony\Component\Translation\TranslatorInterface');
@@ -30,12 +33,12 @@ class CheckoutAddressesStepTest extends UnitTestCase
         Phake::when($this->session)->getCustomer()->thenReturn($context->customer);
 
         $process = new CheckoutProcess(
-            $smarty,
+            $context,
             $this->session
         );
 
         $this->step = new CheckoutAddressesStep(
-            $smarty,
+            $context,
             $translator,
             $addressForm
         );

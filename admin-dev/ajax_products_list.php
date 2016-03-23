@@ -31,7 +31,7 @@ include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 require_once(_PS_ADMIN_DIR_.'/init.php');
 
 $query = Tools::getValue('q', false);
-if (!$query or $query == '' or strlen($query) < 1) {
+if (!$query || $query == '' || strlen($query) < 1) {
     die();
 }
 

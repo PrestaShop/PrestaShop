@@ -88,15 +88,15 @@ describe('The product page', function () {
       return browser.element('.product-customization');
     });
 
-    it('should not display the add to cart button, because the product is not customized yet', function () {
-      return browser.isVisible('form .add-to-cart').should.become(false);
+    it('should display the add to cart button disabled, because the product is not customized yet', function () {
+        return !browser.isEnabled('form .add-to-cart');
     });
 
-    it('should display the add to cart button once the product is customized', function () {
+    it('should display the add to cart button enabled once the product is customized', function () {
       return browser
         .setValue('.product-customization textarea', 'a cool text')
         .click('[name="submitCustomizedDatas"]')
-        .element('form .add-to-cart')
+        .isEnabled('form .add-to-cart')
       ;
     });
   });

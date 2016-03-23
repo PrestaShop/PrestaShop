@@ -3,68 +3,46 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Filesystem\Filesystem;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ModuleController extends Controller
+class ModuleController extends FrameworkBundleAdminController
 {
     /**
      * Controller responsible for displaying "Catalog" section of Module management pages
      * @param  Request $request
      * @return Response
      */
-    public function catalogAction(Request $request, $category = null, $keyword = null)
+    public function catalogAction()
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
+        $moduleManager_Factory = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManager_Factory->buildRepository();
 
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['manage_module'] = array(
-            'href' => $this->generateUrl('admin_module_manage'),
-            'desc' => $translator->trans('[TEMP] Manage my modules', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Manage', array(), get_class($this)),
-        );
-        $toolbarButtons['notifications_module'] = array(
-            'href' => $this->generateUrl('admin_module_notification'),
-            'desc' => $translator->trans('[TEMP] Module notifications', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Notifications', array(), get_class($this)),
-        );
-        $toolbarButtons['add_module'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), get_class($this)),
-        );
-        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
+            ->setOrigin(AddonListFilterOrigin::ADDONS_ALL)
+            ->setStatus(~ AddonListFilterStatus::INSTALLED);
 
-        $filter = [];
-        if ($keyword !== null) {
-            $filter['search'] = $keyword;
-        }
-        if ($category !== null) {
-            $filter['category'] = $category;
-        }
+        $products = $moduleRepository->getFilteredList($filters);
 
         try {
-            $products = $modulesProvider->getCatalogModules($filter);
-            shuffle($products);
-            $topMenuData = $this->getTopMenuData();
+            $topMenuData = $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products));
         } catch (Exception $e) {
-            $this->addFlash('error', 'Cannot get catalog data, please try again later.');
-            $products = [];
+            $this->addFlash('error', 'Cannot get catalog data, please try again later. '. $e->getMessage());
             $topMenuData = [];
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
-                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Modules & Services', array(), 'AdminModules'),
-                'modules' => $modulesProvider->generateAddonsUrls($this->createCatalogModuleList($products)),
                 'topMenuData' => $topMenuData,
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
@@ -72,64 +50,72 @@ class ModuleController extends Controller
     }
 
     /**
-     * Controller responsible for displaying "Catalog" section of Module management pages
+     * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax
      * @param  Request $request
      * @return Response
      */
-    public function importAction(Request $request)
+    public function refreshCatalogAction(Request $request)
     {
+        if (!$request->isXmlHttpRequest()) {
+            // Bad request
+            return new Response('', 400);
+        }
+
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['add_module'] = array(
-            'href' => $this->generateUrl('admin_module_import'),
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), get_class($this))
-        );
-        // @TODO Check if connected to addons or not
-        $toolbarButtons['addons_connect'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-            'icon' => 'icon-chain-broken',
-            'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-        );
-        return $this->render('PrestaShopBundle:Admin/Module:import.html.twig', array(
-            'layoutHeaderToolbarBtn' => $toolbarButtons
-        ));
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
+        $responseArray = [];
+
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
+            ->setOrigin(AddonListFilterOrigin::ADDONS_ALL)
+            ->setStatus(~ AddonListFilterStatus::INSTALLED);
+
+        try {
+            $products = $moduleRepository->getFilteredList($filters);
+            shuffle($products);
+            //$topMenuData = $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products));
+            $responseArray['content'] = $this->render(
+                'PrestaShopBundle:Admin/Module/Includes:sorting.html.twig',
+                [
+                    'totalModules' => count($products)
+                ]
+            )->getContent();
+            $responseArray['content'] .= $this->render(
+                'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
+                [
+                    'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products)),
+                    'modules' => $modulesProvider->generateAddonsUrls($products),
+                    'requireAddonsSearch' => true
+                ]
+            )->getContent();
+            $responseArray['status'] = true;
+        } catch (Exception $e) {
+            $responseArray['msg'] = $translator->trans(
+                'Cannot get catalog data, please try again later. Reason: '.
+                print_r($e->getMessage(), true),
+                array(),
+                'AdminModules'
+            );
+            $responseArray['status'] = false;
+        }
+
+        return new JsonResponse($responseArray, 200);
     }
 
     public function manageAction(Request $request, $category = null, $keyword = null)
     {
         $translator = $this->container->get('prestashop.adapter.translator');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['catalog_module'] = array(
-            'href' => $this->generateUrl('admin_module_catalog'),
-            'desc' => $translator->trans('[TEMP] Modules catalog', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Catalog', array(), get_class($this)),
-        );
-        $toolbarButtons['notifications_module'] = array(
-            'href' => $this->generateUrl('admin_module_notification'),
-            'desc' => $translator->trans('[TEMP] Module notifications', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Notifications', array(), get_class($this)),
-        );
-        $toolbarButtons['add_module'] = array(
-            'href' => $this->generateUrl('admin_module_import'),
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), get_class($this))
-        );
-        // @TODO Check if connected to addons or not
-        $toolbarButtons['addons_connect'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-            'icon' => 'icon-chain-broken',
-            'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-        );
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
+
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
+            ->setStatus(AddonListFilterStatus::INSTALLED);
+        $installed_products = $moduleRepository->getFilteredList($filters);
+
         $filter = [];
         if ($keyword !== null) {
             $filter['search'] = $keyword;
@@ -143,8 +129,8 @@ class ModuleController extends Controller
             $products->{$subpart} = [];
         }
 
-        foreach ($modulesProvider->getManageModules($filter) as $installed_product) {
-            if (isset($installed_product->origin) && $installed_product->origin === 'native' && $installed_product->author === 'PrestaShop') {
+        foreach ($installed_products as $installed_product) {
+            if ($installed_product->attributes->has('origin') && $installed_product->attributes->get('origin') === 'native' && $installed_product->attributes->get('author') === 'PrestaShop') {
                 $row = 'native_modules';
             } elseif (0 /* ToDo: insert condition for theme related modules*/) {
                 $row = 'theme_bundle';
@@ -159,10 +145,10 @@ class ModuleController extends Controller
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
-                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Manage my modules', array(), 'AdminModules'),
                 'modules' => $products,
-                'topMenuData' => $this->getTopMenuData('manage'),
+                'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($installed_products)),
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => true,
             ));
@@ -170,14 +156,25 @@ class ModuleController extends Controller
 
     public function moduleAction(Request $request)
     {
-        $action = $request->attributes->get('action'). 'Module';
+        $action = $request->attributes->get('action');
         $module = $request->attributes->get('module_name');
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerFactory->build();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+
         $ret = array();
-        if (method_exists($this, $action)) {
+        if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
             try {
-                $ret[$module] = $this->{$action}($module);
+                $ret[$module]['status'] = $moduleManager->{$action}($module);
+                if ($ret[$module]['status'] === null) {
+                    $ret[$module]['status'] = false;
+                    $ret[$module]['msg'] = $module .' did not return a valid response on '.$action .' action';
+                } else {
+                    $ret[$module]['msg'] = ucfirst($action). ' action on module '. $module;
+                    $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
+                }
             } catch (Exception $e) {
                 $ret[$module]['status'] = false;
                 $ret[$module]['msg'] = sprintf('Exception thrown by addon %s on %s. %s', $module, $request->attributes->get('action'), $e->getMessage());
@@ -190,14 +187,11 @@ class ModuleController extends Controller
             $ret[$module]['msg'] = 'Invalid action';
         }
 
-
-        $modulesProvider->clearManageCache();
-
         if ($request->isXmlHttpRequest()) {
-            if ($ret[$module]['status'] === true && $action != 'uninstallModule') {
-                $moduleInstance = $modulesProvider->getManageModules(['name' => $module]);
-                $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls($moduleInstance);
-                $ret[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/_partials:_modules_action_menu.html.twig', array(
+            if ($ret[$module]['status'] === true && $action != 'uninstall') {
+                $moduleInstance = $moduleRepository->getModule($module);
+                $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls(array($moduleInstance));
+                $ret[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig', array(
                         'module' => array_values($moduleInstanceWithUrl)[0],
                     ))->getContent();
             }
@@ -223,45 +217,26 @@ class ModuleController extends Controller
     {
         $translator = $this->container->get('prestashop.adapter.translator');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
 
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['catalog_module'] = array(
-            'href' => $this->generateUrl('admin_module_catalog'),
-            'desc' => $translator->trans('[TEMP] Modules catalog', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Catalog', array(), get_class($this)),
-        );
-        $toolbarButtons['manage_module'] = array(
-            'href' => $this->generateUrl('admin_module_manage'),
-            'desc' => $translator->trans('[TEMP] Manage my modules', array(), get_class($this)),
-            'icon' => 'icon-share-square',
-            'help' => $translator->trans('Manage', array(), get_class($this)),
-        );
-        $toolbarButtons['add_module'] = array(
-            'href' => $this->generateUrl('admin_module_import'),
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), get_class($this))
-        );
-        // @TODO Check if connected to addons or not
-        $toolbarButtons['addons_connect'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-            'icon' => 'icon-chain-broken',
-            'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-        );
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
+            ->setStatus(AddonListFilterStatus::INSTALLED);
+        $installed_products = $moduleRepository->getFilteredList($filters);
+
         $products = new \stdClass;
         foreach (['to_configure', 'to_update', 'to_install'] as $subpart) {
             $products->{$subpart} = [];
         }
 
         $installed_modules = [];
-        foreach ($modulesProvider->getManageModules() as $installed_product) {
-            $installed_modules[] = $installed_product->name;
-            if (!empty($installed_product->warning)) {
+        foreach ($installed_products as $installed_product) {
+            $installed_modules[] = $installed_product->attributes->get('name');
+            $warnings = $installed_product->attributes->get('warning');
+            if (!empty($warnings)) {
                 $row = 'to_configure';
-            } elseif ($installed_product->installed == 1 && $installed_product->database_version !== 0 && version_compare($installed_product->database_version, $installed_product->version, '<')) {
+            } elseif ($installed_product->database->get('installed') == 1 && $installed_product->database->get('version') !== 0 && version_compare($installed_product->database->get('version'), $installed_product->attributes->get('version'), '<')) {
                 $row = 'to_update';
             } else {
                 $row = false;
@@ -272,28 +247,34 @@ class ModuleController extends Controller
             }
         }
 
-        try {
-            foreach ($modulesProvider->getCatalogModules() as $product) {
-                if (isset($product->origin) && $product->origin === 'customer' && !in_array($product->name, $installed_modules)) {
-                    $products->to_install[] = (object)$product;
-                }
-            }
-        } catch (Exception $e) {
-            // Todo: To be replaced by a warning when implemented
-            $this->addFlash('error', 'Cannot get catalog data from PrestaShop Addons. This page can be incomplete.');
-        }
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE)
+            ->setStatus(~ AddonListFilterStatus::INSTALLED)
+            ->setOrigin(AddonListFilterOrigin::DISK | AddonListFilterOrigin::ADDONS_CUSTOMER);
+        $products->to_install = $moduleRepository->getFilteredList($filters);
 
         foreach ($products as $product_label => $products_part) {
             $products->$product_label = $modulesProvider->generateAddonsUrls($products_part);
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
-                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Module notifications', array(), 'AdminModules'),
                 'modules' => $products,
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => false,
         ));
+    }
+
+    public function getPreferredModulesAction()
+    {
+        $controller = new \AdminModulesControllerCore();
+        ob_start();
+
+        $controller->ajaxProcessGetTabModulesList();
+
+        $content = ob_get_clean();
+        return new Response($content);
     }
 
     /**
@@ -303,19 +284,39 @@ class ModuleController extends Controller
      */
     public function importModuleAction(Request $request)
     {
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerFactory->build();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
+
         try {
             $file_uploaded = $request->files->get('file_uploaded');
             $file_uploaded_name = $file_uploaded->getClientOriginalName();
             $file_uploaded_tmp_path = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload';
             $tmp_filename_uniq = md5(uniqid()).$file_uploaded->guessExtension();
-            $file_uploaded_tmp_fullpath = $file_uploaded_tmp_path.DIRECTORY_SEPARATOR.$tmp_filename_uniq;
+            $file_uploaded_tmp_fullpath = $file_uploaded_tmp_path.'/'.$tmp_filename_uniq;
             // Move file from server tmp DIR to PrestaShop tmp DIR
             $file_uploaded->move($file_uploaded_tmp_path, $tmp_filename_uniq);
             // Try to inflate archive given, and do check to verify we have a valid module architecture
             $module_name = $this->inflateModule($file_uploaded_tmp_fullpath);
             // Install the module
-            $installation_response = $this->installModule($module_name);
-            $installation_response['module_name'] = $module_name;
+            $installation_response = [
+                'status' => $moduleManager->install($module_name),
+                'msg' => '',
+                'module_name' => $module_name,
+            ];
+
+            if ($installation_response['status'] === null) {
+                $installation_response['status'] = false;
+                $installation_response['msg'] = $module_name .' did not return a valid response on install action';
+            } else {
+                $installation_response['msg'] = 'Install action on module '. $module_name;
+                if ($installation_response['status'] === true) {
+                    $installation_response['is_configurable'] = (bool)$moduleRepository->getModule($module_name)->attributes->get('is_configurable');
+                    $installation_response['msg'] .= 'succeeded';
+                } else {
+                    $installation_response['msg'] .= 'failed';
+                }
+            }
 
             return new JsonResponse(
                 $installation_response,
@@ -323,6 +324,10 @@ class ModuleController extends Controller
                 array( 'Content-Type' => 'application/json' )
             );
         } catch (Exception $e) {
+            if (isset($module_name)) {
+                $moduleManager->uninstall($module_name);
+                $moduleManager->removeModuleFromDisk($module_name);
+            }
             return new JsonResponse(array(
                 'status' => false,
                 'msg' => $e->getMessage()),
@@ -332,7 +337,7 @@ class ModuleController extends Controller
         }
     }
 
-    final private function inflateModule($file_to_inflate)
+    private function inflateModule($file_to_inflate)
     {
         if (file_exists($file_to_inflate)) {
             $zip_archive = new \ZipArchive();
@@ -340,7 +345,7 @@ class ModuleController extends Controller
 
             if ($ret === true) {
                 // Get module name depending on first folder found in archive and trim all separator that might be there
-                $module_name = str_replace(DIRECTORY_SEPARATOR, '', $zip_archive->statIndex(0)['name']);
+                $module_name = str_replace('/', '', $zip_archive->statIndex(0)['name']);
                 // Put it in Module directory
                 $zip_archive->extractTo(_PS_MODULE_DIR_);
                 // Close archive
@@ -356,39 +361,25 @@ class ModuleController extends Controller
         }
     }
 
-    final private function createCatalogModuleList(array $moduleFullList)
+    protected function getToolbarButtons()
     {
-        $installed_modules = [];
-        array_map(function ($module) use (&$installed_modules) {
-            $installed_modules[$module['name']] = $module;
-        }, \Module::getModulesInstalled());
+        $translator = $this->container->get('prestashop.adapter.translator');
 
-        foreach ($moduleFullList as $key => $module) {
-            if ((bool)array_key_exists($module->name, $installed_modules) === true) {
-                unset($moduleFullList[$key]);
-            }
+        // toolbarButtons
+        $toolbarButtons = array();
+        $toolbarButtons['add_module'] = array(
+            'href' => '#',
+            'desc' => $translator->trans('Add a module', array(), get_class($this)),
+            'icon' => 'cloud_upload',
+            'help' => $translator->trans('Add a module', array(), get_class($this)),
+        );
+        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
 
-            // @TODO: Check why some of the module dont have any image attached, meanwhile just remove it from the list
-            if (!isset($module->media->img)) {
-                unset($moduleFullList[$key]);
-            }
-        }
-
-        return $moduleFullList;
+        return $toolbarButtons;
     }
 
-    final private function getTopMenuData($source = 'catalog', $activeMenu = null)
+    private function getTopMenuData(array $topMenuData, $activeMenu = null)
     {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        //@TODO: To be made ultra flexible, hardcoded for dev purpose ATM
-        if ($source === 'catalog') {
-            $topMenuData = $modulesProvider->getCatalogCategories();
-        } elseif ($source === 'manage') {
-            $topMenuData = $modulesProvider->getManageCategories();
-        } else {
-            throw new Exception("ModuleController::getTopMenuData() was given a bad source parameter (given: '$source')", 1);
-        }
-
         if (isset($activeMenu)) {
             if (!isset($topMenuData[$activeMenu])) {
                 throw new Exception("Menu '$activeMenu' not found in Top Menu data", 1);
@@ -399,49 +390,8 @@ class ModuleController extends Controller
 
         return (array)$topMenuData;
     }
-
-    protected function installModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        if (! $modulesProvider->isModuleOnDisk($module_name)) {
-            $modulesProvider->setModuleOnDiskFromAddons($module_name);
-        }
-
-        $module = $modulesProvider->getModule($module_name);
-        $status = $module->install();
-        if ($status) {
-            $msg = sprintf('Module %s is now installed', $module_name);
-        } else {
-            $msg = sprintf('Could not install module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
-    protected function uninstallModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-
-        // Module uninstall
-        $module = $modulesProvider->getModule($module_name);
-        $status = $module->uninstall();
-
-        if ($status) {
-            // Module files deletion
-            $fs = new Filesystem();
-            $fs->remove(_PS_MODULE_DIR_.$module_name);
-
-            $msg = sprintf('Module %s is now uninstalled', $module_name);
-        } else {
-            $msg = sprintf('Could not uninstall module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
     public function configureModuleAction($module_name)
     {
-        $modulesProvider    = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
 
         /* @var $legacyUrlGenerator UrlGeneratorInterface */
@@ -452,114 +402,24 @@ class ModuleController extends Controller
         return $this->redirect($legacyUrlGenerator->generate('admin_module_configure_action',
                     $redirectionParams), 302);
     }
-
-    protected function enableModule($module_name)
+    private function getAddonsConnectToolbar()
     {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $module = $modulesProvider->getModule($module_name);
-        $status = $module->enable();
-
-        if ($status) {
-            $msg = sprintf('Module %s is now enabled', $module_name);
-        } else {
-            $msg = sprintf('Could not enable module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
-    protected function disableModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $module = $modulesProvider->getModule($module_name);
-        $status = $module->disable();
-
-        if ($status) {
-            $msg = sprintf('Module %s is now disabled', $module_name);
-        } else {
-            $msg = sprintf('Could not disable module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
-    protected function resetModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $request = Request::createFromGlobals();
-
-        $module = $modulesProvider->getModule($module_name);
-        if ($request->request->has('keep_data') && method_exists($this, 'reset')) {
-            $status = $module->disable();
-        } else {
-            $status = ($module->uninstall() && $module->install());
-        }
-
-        if ($status) {
-            $msg = sprintf('Module %s has been reset', $module_name);
-        } else {
-            $msg = sprintf('Could not reset module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
-    protected function updateModule($module_name)
-    {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $module_to_update = null;
-        $additionnal_upgrade_files = 0;
-        //$module = $modulesProvider->getModule($module_name);
-        foreach ($modulesProvider->getManageModules() as $module) {
-            if ($module->name == $module_name) {
-                $old_version = $module->database_version;
-                $module_to_update = $module;
-                break;
-            }
-        }
-
-        $modulesProvider->setModuleOnDiskFromAddons($module_name);
-        if (\Module::initUpgradeModule($module_to_update)) {
-            $details = $module_to_update->runUpgradeModule();
-            if (isset($details['number_upgrade'])) {
-                $additionnal_upgrade_files = $details['number_upgrade'];
-            }
-        }
-        $new_version = $modulesProvider->getModule($module_name)->version;
-
-        $status = \Module::getUpgradeStatus($module_to_update->name);
-        if ($status) {
-            $msg = sprintf('Module %s has been updated from %s to %s. Applied %d additionnal upgrade files.', $module_name, $old_version, $new_version, $additionnal_upgrade_files);
-        } else {
-            if (!empty($details['version_fail'])) {
-                $msg = sprintf('Could not update module %s, failed while applying upgrade file %s. The module has been disabled.', $module_name, $details['version_fail']);
-            } else {
-                $msg = sprintf('Could not update module %s.', $module_name);
-            }
-        }
-
-        return array('status' => $status, 'msg' => $msg);
-    }
-
-    final private function getAddonsConnectToolbar()
-    {
-        $addonsConnect = [];
         $addonsProvider = $this->container->get('prestashop.core.admin.data_provider.addons_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
 
         if ($addonsProvider->isAddonsAuthenticated()) {
             $addonsEmail = $addonsProvider->getAddonsEmail();
             $addonsConnect = [
-                'href' => '#',
+                'href' => $this->generateUrl('admin_addons_logout'),
                 'desc' => $addonsEmail['username_addons'],
-                'icon' => 'icon-chain-broken',
+                'icon' => 'exit_to_app',
                 'help' => $translator->trans('Synchronized with Addons Marketplace!', array(), get_class($this))
             ];
         } else {
             $addonsConnect = [
                 'href' => '#',
                 'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
-                'icon' => 'icon-chain-broken',
+                'icon' => 'vpn_key',
                 'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this))
             ];
         }

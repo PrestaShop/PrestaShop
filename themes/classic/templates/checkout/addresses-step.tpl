@@ -1,9 +1,10 @@
 {extends file='checkout/checkout-step.tpl'}
 
 {block name='step_content'}
+<form method="POST" action="{$urls.pages.order}">
 
   {if !$use_same_address}
-    <h2 class="h2">{l s='Your Delivery Address'}</h2>
+    <h2 class="h4">{l s='Your Delivery Address'}</h2>
   {/if}
 
   {if $use_same_address}
@@ -22,7 +23,7 @@
       }
     </div>
   {elseif $customer.addresses|count > 0}
-    <div id="delivery-addresses">
+    <div id="delivery-addresses" class="address-selector js-address-selector">
       {include  file        = 'checkout/_partials/address-selector-block.tpl'
                 addresses   = $customer.addresses
                 name        = "id_address_delivery"
@@ -32,11 +33,13 @@
       }
     </div>
 
-    <a href="?newAddress=delivery">{l s='Add another address'}</a>
+    <p class="add-address">
+      <a href="{$new_address_delivery_url}"><i class="material-icons">&#xE145;</i>{l s='add new address'}</a>
+    </p>
 
     {if $use_same_address}
       <p>
-        <a data-link-action="different-invoice-address" href="?use_same_address=0">{l s='Use a different address for invoice?'}</a>
+        <a data-link-action="different-invoice-address" href="{$use_different_address_url}">{l s='Use a different address for invoice?'}</a>
       </p>
     {/if}
 
@@ -44,7 +47,7 @@
 
   {if !$use_same_address}
 
-    <h2 class="h2">{l s='Your Invoice Address'}</h2>
+    <h2 class="h4">{l s='Your Invoice Address'}</h2>
 
     {if $show_invoice_address_form}
       <div id="invoice-address">
@@ -56,7 +59,7 @@
         }
       </div>
     {else}
-      <div id="invoice-addresses">
+      <div id="invoice-addresses" class="address-selector js-address-selector">
         {include  file        = 'checkout/_partials/address-selector-block.tpl'
                   addresses   = $customer.addresses
                   name        = "id_address_invoice"
@@ -66,18 +69,20 @@
         }
       </div>
 
-      <a href="?newAddress=invoice">{l s='Add another address'}</a>
-
+      <p class="add-address">
+        <a href="{$new_address_invoice_url}"><i class="material-icons">&#xE145;</i>{l s='add new address'}</a>
+      </p>
     {/if}
 
   {/if}
 
   {if !$form_has_continue_button}
-    <form>
-      <button type="submit" class="continue form-control-submit center-block" name="confirm-addresses" value="1">
+    <div class="clearfix">
+      <button type="submit" class="btn btn-primary continue pull-xs-right" name="confirm-addresses" value="1">
           {l s='Continue'}
       </button>
-    </form>
+    </div>
   {/if}
 
+</form>
 {/block}

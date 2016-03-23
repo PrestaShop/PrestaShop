@@ -125,7 +125,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true)
+    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '')
     {
         if ($this->environment == 'test') {
             return <<<EOF
@@ -142,7 +142,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
 EOF;
         }
 
-        $layout = $this->context->getLegacyLayout($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader);
+        $layout = $this->context->getLegacyLayout($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader, $headerTabContent);
 
         //test if legacy template from "content.tpl" has '{$content}'
         if (false === strpos($layout, '{$content}')) {
@@ -179,7 +179,7 @@ EOF;
      */
     public function getAdminLink($controllerName, $withToken = true, $extraParams = [])
     {
-        return $this->context->getAdminLink($controllerName, $withToken = true, $extraParams = []);
+        return $this->context->getAdminLink($controllerName, $withToken, $extraParams);
     }
 
     /**

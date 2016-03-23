@@ -28,8 +28,22 @@ INSERT INTO `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_sho
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `firstname` `firstname` varchar(255) NOT NULL;
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `lastname` `lastname` varchar(255) NOT NULL;
 
-ALTER TABLE `PREFIX_product` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '1' AFTER `available_date`;
-ALTER TABLE `PREFIX_product_shop` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '1' AFTER `available_date`;
+/* Changes regarding modules */
+ALTER TABLE `PREFIX_module` ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC);
+
+DROP TABLE `PREFIX_modules_perfs`;
+
+CREATE TABLE `PREFIX_module_history` (
+  `id_employee` int(10) unsigned NOT NULL,
+  `id_module` int(10) unsigned NOT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_employee`,`id_module`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+
+ALTER TABLE `PREFIX_product` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '0' AFTER `available_date`;
+ALTER TABLE `PREFIX_product_shop` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '0' AFTER `available_date`;
 
 /* Add Payment Preferences tab. SuperAdmin profile is the only one to access it. */
 /* PHP:ps_1701_add_payment_preferences_tab(); */;
@@ -48,7 +62,7 @@ ALTER TABLE `PREFIX_cart_product` CHANGE `id_product_attribute` `id_product_attr
 ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_title` VARCHAR( 255 ) NOT NULL;
 ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_description` VARCHAR( 255 ) NOT NULL;
 
-/* PHP:ps1700_stores(); */
+/* PHP:ps1700_stores(); */;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
 
@@ -62,7 +76,7 @@ DELETE FROM `PREFIX_meta` WHERE `page` = 'products-comparison';
 DROP TABLE IF EXISTS PREFIX_compare;
 DROP TABLE IF EXISTS PREFIX_compare_product;
 
-ALTER TABLE `PREFIX_cart` ADD `checkout_session_data` MEDIUMTEXT NULL
+ALTER TABLE `PREFIX_cart` ADD `checkout_session_data` MEDIUMTEXT NULL;
 
 DROP TABLE `PREFIX_theme`;
 DROP TABLE `PREFIX_theme_meta`;

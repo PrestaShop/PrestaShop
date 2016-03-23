@@ -76,13 +76,12 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
 
         $modules = $dataProvider->getCatalogModules();
-        $categories = $dataProvider->getCatalogCategories();
 
         $this->assertGreaterThan(0, count($modules));
-        $this->assertGreaterThan(0, count($categories));
     }
 
-    public function test_modules_in_categories_can_be_found_in_module_list()
+    // To be moved and adapted in the module repository
+    /*public function test_modules_in_categories_can_be_found_in_module_list()
     {
         $dataProvider = new AdminModuleDataProvider($this->sfKernel, $this->sfRouter);
 
@@ -109,7 +108,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
                 $this->fail('Module with the ID "'. $moduleId .'" not found.');
             }
         }
-    }
+    }*/
 
     public function test_no_results()
     {

@@ -100,6 +100,13 @@ $(document).ready(function() {
 
 	updateBulkMenu();
 	updateFilterMenu();
+
+	/** create keyboard event for save & new */
+	jwerty.key('ctrl+P', function(e) {
+		e.preventDefault();
+		var url = $('form#product_catalog_list').attr('newproducturl');
+		window.location.href = url;
+	});
 });
 
 function productOrderTable(orderBy, orderWay) {
@@ -133,11 +140,11 @@ function updateFilterMenu() {
 			count ++;
 		}
 	});
-	$('input[name="products_filter_submit"]').prop('disabled', (count === 0) && productCatalogFilterChanged === false);
+	$('button[name="products_filter_submit"]').prop('disabled', (count === 0) && productCatalogFilterChanged === false);
 	if (count === 0 && productCatalogFilterChanged === false) {
-		$('input[name="products_filter_reset"]').hide();
+		$('button[name="products_filter_reset"]').hide();
 	}else {
-		$('input[name="products_filter_reset"]').show();
+		$('button[name="products_filter_reset"]').show();
 	}
 }
 

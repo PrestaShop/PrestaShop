@@ -1,6 +1,6 @@
 {include file='_partials/form-errors.tpl' errors=$errors['']}
 
-<form action="{$action}" id="customer-form" data-toggle="validator" method="post">
+<form action="{$action}" id="customer-form" class="js-customer-form" data-toggle="validator" method="post">
   <section>
     {block "form_fields"}
       {foreach from=$formFields item="field"}
@@ -11,10 +11,10 @@
     {/block}
   </section>
 
-  <footer class="form-footer text-xs-center">
+  <footer class="form-footer clearfix">
     <input type="hidden" name="submitCreate" value="1">
     {block "form_buttons"}
-      <button type="submit" class="form-control-submit">
+      <button class="btn btn-primary pull-xs-right" type="submit" class="form-control-submit">
         {l s='Save'}
       </button>
     {/block}

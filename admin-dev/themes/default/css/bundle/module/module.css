@@ -1,8 +1,13 @@
 /**
     Class to move in SCSS file !!!!!
 */
+
+#module-modal-bulk-confirm-action-name {
+    font-weight: bold;
+}
+
 .module-item-heading-grid {
-        height:50px;
+    height:50px;
 }
 
 .btn.onclick {
@@ -103,9 +108,8 @@
     width: 100%;
 }
 .module-tags-labels {
+    border: 0;
     height: 50px;
-    min-height: 50px;
-    max-height: 50px;
 }
 .module-tags-clear-btn {
     margin-right: 10px;
@@ -117,9 +121,6 @@
         cursor: pointer;
         top: 0;
         right: 0;
-}
-.module-tag {
-    background: lightblue;
 }
 .module-search-result-wording {
     color: #1E2024 !important;
@@ -417,9 +418,24 @@ img.module-logo-thumb-list {
     font-size: 20px;
 }
 
+.module-short-list {
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
 .module-import-processing {
     display: none;
     text-align: center;
+}
+
+.module-import-processing .btn {
+    margin: 25px;
+}
+
+.module-import-processing-footer-text {
+    font-size: smaller;
+    font-style: italic;
+    color: #CECCCC;
 }
 
 .module-import-success {
@@ -427,7 +443,284 @@ img.module-logo-thumb-list {
     text-align: center;
 }
 
+.module-import-success-icon {
+    color: #1c8ca3;
+    font-size: 70px;
+}
+
 .module-import-failure {
     display: none;
     text-align: center;
+}
+
+.module-import-failure-icon {
+    color: #C45C67;
+    font-size: 70px;
+}
+
+.module-import-failure-msg {
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.module-import-failure-details-action {
+    display: block;
+    cursor: pointer !important;
+}
+
+.module-import-failure-details {
+    word-wrap: break-word;
+    font-size: small;
+    color: #CECCCC;
+    max-height: 120px;
+    overflow: scroll;
+    margin: 35px 5px 20px 5px;
+    text-align: justify;
+    display: none;
+}
+
+.module-import-start-icon {
+    font-size: 70px;
+    color: #CECCCC;
+}
+
+.module-import-start-select-manual {
+    cursor: pointer !important;
+}
+
+.module-import-start-select-manual:hover {
+    text-decoration: none;
+}
+
+.module-import-start-footer-text {
+    font-size: smaller;
+    font-style: italic;
+    color: #CECCCC;
+}
+
+form#importDropzone {
+    border: 2px dashed #6c868e;
+}
+
+.dropzone.dz-clickable {
+    cursor: auto !important;
+}
+
+.module-import-start {
+    text-align: center;
+}
+
+.module-import-failure-retry {
+    margin-top: 15px;
+}
+
+.module-notification-kpis {
+    margin: auto;
+}
+
+.module-kpi {
+    margin-right: 15px;
+    display: initial;
+}
+
+.module-kpi i {
+    font-size: 30px;
+    vertical-align: sub;
+}
+
+.module-kpi-number {
+    margin: auto;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* Facebook like placeholder */
+@-webkit-keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0
+  }
+  100% {
+    background-position: 468px 0
+  }
+}
+
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0
+  }
+  100% {
+    background-position: 468px 0
+  }
+}
+
+.timeline-wrapper {
+  background-color: #e9eaed;
+  color: #141823;
+}
+
+.timeline-item {
+    background: #fff;
+    padding: 12px;
+    max-width: 444px;
+    min-height: 270px;
+    margin: 0px 0.9375rem .75rem .9375rem;
+    border: 1px solid #e5e5e5;
+    border-radius: .25rem;
+}
+
+.animated-background {
+  -webkit-animation-duration: 1.75s;
+  animation-duration: 1.75s;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: placeHolderShimmer;
+  animation-name: placeHolderShimmer;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: #eeeeee;
+  background: -webkit-gradient(linear, left top, right top, color-stop(8%, #eeeeee), color-stop(18%, #dddddd), color-stop(33%, #eeeeee));
+  background: -webkit-linear-gradient(left, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  -webkit-background-size: 800px 104px;
+  background-size: 800px 104px;
+  height: 96px;
+  position: relative;
+}
+
+.background-masker {
+  background: #fff;
+  position: absolute;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.outlined .background-masker {
+  border: 1px solid #ddd;
+}
+
+.outlined:hover .background-masker {
+  border: none;
+}
+
+.outlined:hover .background-masker:hover {
+  border: 1px solid #ccc;
+  z-index: 1;
+}
+
+.background-masker.header-top,
+.background-masker.header-bottom,
+.background-masker.subheader-bottom {
+  top: 0;
+  left: 40px;
+  right: 0;
+  height: 10px;
+}
+
+.background-masker.header-left,
+.background-masker.subheader-left,
+.background-masker.header-right,
+.background-masker.subheader-right {
+  top: 10px;
+  left: 40px;
+  height: 8px;
+  width: 10px;
+}
+
+.background-masker.header-bottom {
+  top: 18px;
+  height: 6px;
+}
+
+.background-masker.subheader-left,
+.background-masker.subheader-right {
+  top: 24px;
+  height: 6px;
+}
+
+.background-masker.header-right,
+.background-masker.subheader-right {
+  width: auto;
+  left: 300px;
+  right: 0;
+}
+
+.background-masker.subheader-right {
+  left: 230px;
+}
+
+.background-masker.subheader-bottom {
+  top: 30px;
+  height: 10px;
+}
+
+.background-masker.content-top,
+.background-masker.content-second-line,
+.background-masker.content-third-line,
+.background-masker.content-second-end,
+.background-masker.content-third-end,
+.background-masker.content-first-end {
+  top: 40px;
+  left: 0;
+  right: 0;
+  height: 6px;
+}
+
+.background-masker.content-top {
+  height: 20px;
+}
+
+.background-masker.content-first-end,
+.background-masker.content-second-end,
+.background-masker.content-third-end {
+  width: auto;
+  left: 380px;
+  right: 0;
+  top: 60px;
+  height: 8px;
+}
+
+.background-masker.content-second-line {
+  top: 68px;
+}
+
+.background-masker.content-second-end {
+  left: 420px;
+  top: 74px;
+}
+
+.background-masker.content-third-line {
+  top: 82px;
+}
+
+.background-masker.content-third-end {
+  left: 300px;
+  top: 88px;
+}
+
+.module-placeholders-wrapper {
+    margin-top: 76px;
+}
+
+.module-placeholders-failure {
+    display: none;
+}
+.module-placeholders-failure-wrapper {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.module-placeholders-failure-msg {
+    color: red;
+}
+
+#module-placeholders-failure-retry {
+    margin-top: 10px;
+}
+
+.module-import-success-configure {
+    display: none;
 }

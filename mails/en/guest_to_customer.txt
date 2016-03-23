@@ -8,9 +8,9 @@ account.
 
 E-MAIL ADDRESS: {email}
 
-PASSWORD: {passwd}
+PASSWORD: {passwd} 		 
 
-Please be careful when sharing these login details with others.
+Please be careful when sharing these login details with others. 
 
 You can access your customer account on our shop: {shop_url} 
 

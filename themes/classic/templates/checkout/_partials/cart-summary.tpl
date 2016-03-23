@@ -1,36 +1,27 @@
-<section id="checkout-cart-summary">
+<section id="checkout-cart-summary" class="card card-block -js-cart" data-refresh-url="{$urls.pages.cart}?ajax=1">
   {block name='cart_summary_header'}
     <header>
-      <h1 class="h3">{l s='Your order'}</h1>
-      <p>{$cart.summary_string}</p>
+      <p>{$cart.summary_string}<span class="pull-xs-right">{$cart.total.amount}</span></p>
     </header>
   {/block}
 
+  <a href="#" data-toggle="collapse" data-target="#cart-summary-product-list">{l s='show details'}</button>
+
   {block name='cart_summary_product_list'}
-    <div id="cart-summary-product-list">
-      <ul>
+    <div id="cart-summary-product-list" class="collapse">
+      <ul class="media-list">
         {foreach from=$cart.products item=product}
-          <li>{include file='checkout/_partials/cart-summary-product-line.tpl' product=$product}</li>
+          <li class="media">{include file='checkout/_partials/cart-summary-product-line.tpl' product=$product}</li>
         {/foreach}
       </ul>
     </div>
   {/block}
 
-  {block name='cart_summary_body'}
-    <div id="cart-summary">
-      {foreach from=$cart.subtotals item="subtotal"}
-        <div class="{$subtotal.type}">
-          <span class="label">{$subtotal.label}</span>
-          <span class="value">{$subtotal.amount}</span>
-        </div>
-      {/foreach}
-    </div>
+  {block name='cart_voucher'}
+    {include file='checkout/_partials/cart-voucher.tpl'}
   {/block}
-
-  {block name='cart_summary_totals'}
-    <div class="cart-summary-totals">
-      <span class="label">{$cart.total.label}</span>
-      <span class="value">{$cart.total.amount}</span>
-    </div>
+  <hr>
+  {block name='cart_totals'}
+    {include file='checkout/_partials/cart-summary-totals.tpl' cart=$cart}
   {/block}
 </section>

@@ -70,7 +70,7 @@ return array(
         'Permissions on files and folders' => 'Permissions d\'accès sur les fichiers et dossiers',
         'Recursive write permissions for %1$s user on %2$s' => 'Droits récursifs en écriture pour l\'utilisateur %1$s sur le dossier %2$s',
         'Recommended PHP parameters' => 'Configuration PHP recommandée',
-        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!' => 'Vous utilisez la version %s de PHP. PrestaShop ne supportera bientôt plus les versions PHP antérieures à 5.5. Pour anticiper ce changement, nous vous recommandons d\'effectuer une mise à jour vers PHP 5.5 dès maintenant !',
+        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'Vous utilisez la version %s de PHP. PrestaShop ne supportera bientôt plus les versions PHP antérieures à 5.4. Pour anticiper ce changement, nous vous recommandons d\'effectuer une mise à jour vers PHP 5.4 dès maintenant !',
         'Cannot open external URLs' => 'Impossible d\'ouvrir des URL externes',
         'GZIP compression is not activated' => 'La compression GZIP n\'est pas activée',
         'Mcrypt extension is not enabled' => 'L\'extension Mcrypt n\'est pas activée',

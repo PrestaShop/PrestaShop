@@ -27,8 +27,11 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
+use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Parser;
@@ -56,7 +59,8 @@ class ThemeManager implements AddonManagerInterface
         Filesystem $filesystem,
         Finder $finder,
         HookConfigurator $hookConfigurator,
-        ThemeRepository $themeRepository)
+        ThemeRepository $themeRepository,
+        ImageTypeRepository $imageTypeRepository)
     {
         $this->shop = $shop;
         $this->appConfiguration = $configuration;
@@ -66,6 +70,7 @@ class ThemeManager implements AddonManagerInterface
         $this->finder = $finder;
         $this->hookConfigurator = $hookConfigurator;
         $this->themeRepository = $themeRepository;
+        $this->imageTypeRepository = $imageTypeRepository;
     }
 
     /**
@@ -79,6 +84,9 @@ class ThemeManager implements AddonManagerInterface
      */
     public function install($source)
     {
+        if ((filter_var($source, FILTER_VALIDATE_URL))) {
+            $source = Tools::createFileFromUrl($source);
+        }
         if (preg_match('/\.zip$/', $source)) {
             $this->installFromZip($source);
         }
@@ -94,7 +102,7 @@ class ThemeManager implements AddonManagerInterface
      */
     public function uninstall($name)
     {
-        if (!$this->employee->canDelete()
+        if (!$this->employee->can('delete', 'AdminThemes')
             && $this->isThemeUsed($name)) {
             return false;
         }
@@ -147,11 +155,11 @@ class ThemeManager implements AddonManagerInterface
         $this->disable($this->shop->theme_name);
 
         $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
-            ->doApplyConfiguration($theme->get('global_settings.configuration', []))
-            ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
-            ->doEnableModules($theme->get('global_settings.modules.to_enable', []))
-            ->doHookModules($theme->get('global_settings.hooks.modules_to_hook', []))
-        ;
+                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
+                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
+                ->doEnableModules($theme->getModulesToEnable())
+                ->doApplyImageTypes($theme->get('global_settings.image_types'))
+                ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
         $theme->onEnable();
 
@@ -207,13 +215,34 @@ class ThemeManager implements AddonManagerInterface
 
     private function doDisableModules(array $modules)
     {
-        // TODO: implements doDisableModules
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
+
+        foreach ($modules as $key => $moduleName) {
+            if ($moduleManager->isInstalled($moduleName) && $moduleManager->isEnabled($moduleName)) {
+                $moduleManager->disable($moduleName);
+            }
+        }
+
         return $this;
     }
 
     private function doEnableModules(array $modules)
     {
-        // TODO: implements doEnableModules
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
+
+        foreach ($modules as $key => $moduleName) {
+            if (!$moduleManager->isInstalled($moduleName)) {
+                $moduleManager->install($moduleName);
+            }
+            if (!$moduleManager->isEnabled($moduleName)) {
+                $moduleManager->enable($moduleName);
+            }
+        }
+
         return $this;
     }
 
@@ -223,18 +252,23 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
+    private function doApplyImageTypes(array $types)
+    {
+        $this->imageTypeRepository->setTypes($types);
+        return $this;
+    }
+
     private function installFromZip($source)
     {
         $sandboxPath = $this->getSandboxPath();
 
         Tools::ZipExtract($source, $sandboxPath);
 
-        $directories = $this->finder
-            ->directories()
-            ->in($sandboxPath)
-            ->depth('== 0')
-            ->exclude(['__MACOSX'])
-        ;
+        $directories = $this->finder->directories()
+                                    ->in($sandboxPath)
+                                    ->depth('== 0')
+                                    ->exclude(['__MACOSX'])
+                                    ->ignoreVCS(true);
 
         if (iterator_count($directories->directories()) > 1) {
             $this->filesystem->remove($sandboxPath);
@@ -244,20 +278,32 @@ class ThemeManager implements AddonManagerInterface
         $directories = iterator_to_array($directories);
         $theme_name = basename(current($directories)->getFileName());
 
-        $theme_data = (new Parser())->parse($sandboxPath.$theme_name.'/config/theme.yml');
+        $theme_data = (new Parser())->parse(file_get_contents($sandboxPath.$theme_name.'/config/theme.yml'));
         $theme_data['directory'] = $sandboxPath.$theme_name;
         if (!$this->themeValidator->isValid(new Theme($theme_data))) {
             $this->filesystem->remove($sandboxPath);
             throw new Exception("This theme is not valid for PrestaShop 1.7");
         }
 
-        $modules_to_copy = $sandboxPath.$theme_name.'/dependencies/modules';
-        if ($this->filesystem->exists($modules_to_copy)) {
-            $this->filesystem->mirror(
-                $modules_to_copy,
-                $this->appConfiguration->get('_PS_MODULE_DIR_')
-            );
-            $this->filesystem->remove($modules_to_copy);
+        $module_root_dir = $this->appConfiguration->get('_PS_MODULE_DIR_');
+        $modules_parent_dir = $sandboxPath.$theme_name.'/dependencies/modules';
+        if ($this->filesystem->exists($modules_parent_dir)) {
+            $module_dirs = $this->finder->directories()
+                                        ->in($modules_parent_dir)
+                                        ->depth('== 0')
+                                        ->exclude($theme_name);
+
+            foreach (iterator_to_array($module_dirs) as $dir) {
+                $destination = $module_root_dir.basename($dir->getFileName());
+                if (!$this->fs->exists($destination)) {
+                    $this->fs->mkdir($destination);
+                    $this->fs->mirror(
+                        $dir->getPathName(),
+                        $destination
+                    );
+                }
+            }
+            $this->fs->remove($modules_parent_dir);
         }
 
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme_name;

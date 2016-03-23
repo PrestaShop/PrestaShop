@@ -7,24 +7,43 @@
 
   <div class="delivery-options-list">
     {if $delivery_options|count}
-      <form id="delivery-method" method="post">
+      <form id="delivery-method" method="post" class="clearfix">
         <div class="form-fields">
           {block name='delivery_options'}
             <div class="delivery-options">
               {foreach from=$delivery_options item=carrier key=carrier_id}
-                <div>
-                  <div class="delivery-option _display-table">
-                    <input type="radio" class="_display-table-cell _margin-right-small" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if} />
-                    <div class="_display-table-cell">
-                      <label for="delivery_option_{$carrier.id}">
-                        <span>{$carrier.label}</span>
-                        {if $carrier.logo}
-                          <img src="{$carrier.logo}" alt="{$carrier.name}" />
-                        {/if}
-                      </label>
+                  <div class="delivery-option row">
+                    <div class="col-md-1">
+                      <span class="custom-radio pull-xs-left">
+                        <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if} />
+                        <span></span>
+                      </span>
+                    </div>
+                    <div class="col-md-11">
+                      <div class="row">
+                        <label for="delivery_option_{$carrier.id}" class="delivery-option-2">
+                          <div class="col-md-3">
+                            <div class="logo-container">
+                              {if $carrier.logo}
+                                <img src="{$carrier.logo}" alt="{$carrier.name}" />
+                                {else}
+                                &nbsp;
+                              {/if}
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <span class="carrier-name">{$carrier.name}</span>
+                          </div>
+                          <div class="col-md-4">
+                            <span class="carrier-delay">{$carrier.delay}</span>
+                          </div>
+                          <div class="col-md-1">
+                            <span class="carrier-price">{$carrier.price}</span>
+                          </div>
+                        </label>
+                      </div>
                     </div>
                   </div>
-                </div>
               {/foreach}
             </div>
           {/block}
@@ -45,12 +64,12 @@
             {/if}
           </div>
         </div>
-        <button type="submit" class="continue form-control-submit center-block" name="confirmDeliveryOption" value="1">
+        <button type="submit" class="continue btn btn-primary pull-xs-right" name="confirmDeliveryOption" value="1">
           {l s='Continue'}
         </button>
       </form>
     {else}
-      <p class="warning">{l s='Unfortunately, there are no carriers available for your delivery address.'}</p>
+      <p class="alert alert-danger">{l s='Unfortunately, there are no carriers available for your delivery address.'}</p>
     {/if}
   </div>
 

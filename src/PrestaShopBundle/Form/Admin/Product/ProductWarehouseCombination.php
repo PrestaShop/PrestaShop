@@ -58,14 +58,14 @@ class ProductWarehouseCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('activated', FormType\CheckboxType::class, array(
+        $builder->add('activated', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
             'label' => $this->translator->trans('Stored', [], 'AdminProducts')
         ))
-        ->add('id_product_attribute', FormType\HiddenType::class)
-        ->add('product_id', FormType\HiddenType::class)
-        ->add('warehouse_id', FormType\HiddenType::class)
-        ->add('location', FormType\TextType::class, array(
+        ->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+        ->add('product_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+        ->add('warehouse_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+        ->add('location', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
             'label' => $this->translator->trans('Location (optional)', [], 'AdminProducts')
         ));

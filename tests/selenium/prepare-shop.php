@@ -70,7 +70,6 @@ function hookModule($moduleName, $hookName)
 }
 
 // disableModule('blocklayered');
-disableModule('cheque'); // not yet working
 
 // We need a customizable product: we add a single required text field to the product with id 1.
 

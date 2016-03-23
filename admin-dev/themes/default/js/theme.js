@@ -1,0 +1,1 @@
+import '../sass/font.scss';

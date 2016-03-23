@@ -1337,7 +1337,7 @@ class CarrierCore extends ObjectModel
             }//no linked carrier are available for this zone
         }
 
-        // The product is not dirrectly linked with a carrier
+        // The product is not directly linked with a carrier
         // Get all the carriers linked to a warehouse
         if ($id_warehouse) {
             $warehouse = new Warehouse($id_warehouse);

@@ -4,7 +4,7 @@
 
 {block name='left_column'}
   <div id="left-column" class="col-xs-12 col-sm-3">
-    {widget name='blockcontact' hook='displayLeftColumn'}
+    {widget name='contactform' hook='displayLeftColumn'}
   </div>
 {/block}
 

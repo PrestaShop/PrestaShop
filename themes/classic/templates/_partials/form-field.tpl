@@ -5,7 +5,7 @@
         {$field.label}
       {/if}
     </label>
-    <div class="col-md-5{if ($field.type === 'radio-buttons')} form-control-valign{/if}">
+    <div class="col-md-6{if ($field.type === 'radio-buttons')} form-control-valign{/if}">
       {if $field.type === 'select'}
         <select {if $field.required} required {/if} name="{$field.name}" class="form-control form-control-select">
           <option value disabled selected>{l s='-- please choose --'}</option>
@@ -16,25 +16,37 @@
       {elseif $field.type === 'radio-buttons'}
         {foreach from=$field.availableValues item="label" key="value"}
           <label class="radio-inline">
-            <input name = "{$field.name}" type = "radio" value = "{$value}" {if $field.required} required {/if} {if $value eq $field.value} checked {/if} />
+            <span class="custom-radio">
+              <input name = "{$field.name}" type = "radio" value = "{$value}" {if $field.required} required {/if} {if $value eq $field.value} checked {/if} />
+              <span></span>
+            </span>
             {$label}
           </label>
         {/foreach}
       {elseif $field.type === 'checkbox'}
-        <input type="checkbox" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
-        <label>{$field.label}</label>
+        <span class="custom-checkbox">
+          <input type="checkbox" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
+          <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+          <label>{$field.label}</label>
+        </span>
       {elseif $field.type === 'date'}
-        <input type="text" class="form-control" data-provide="datepicker" data-date-format="dd/mm/yyyy">
+        <input type="text" class="form-control" placeholder="MM/DD/YYYY">
+        <span class="form-control-comment">
+          {l s='(Ex.:31/05/1970)'}
+        </span>
       {else}
         <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
+        {if $field.required}
+          <div class="help-block with-errors hidden-xs-up">{l s='This field is required'}</div>
+        {/if}
       {/if}
     </div>
     {if $field.type === 'password'}
-      <span class="col-md-4 row form-control-comment">
+      <span class="col-md-3 form-control-comment">
         {l s='Five characters minimum'}
       </span>
     {elseif (!$field.required && $field.type !== 'radio-buttons' && $field.type !== 'checkbox') || $field.name === 'company' }
-      <span class="col-md-4 row form-control-comment">
+      <span class="col-md-3 form-control-comment">
         {l s='optional'}
       </span>
     {/if}

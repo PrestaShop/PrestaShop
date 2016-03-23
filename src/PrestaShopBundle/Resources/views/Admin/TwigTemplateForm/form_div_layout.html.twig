@@ -86,7 +86,8 @@
 {%- endblock choice_widget_options -%}
 
 {%- block checkbox_widget -%}
-    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    {% set switch = switch|default('') -%}
+    <input type="checkbox" {% if switch %}data-toggle="switch"{% endif %} {% if switch %}class="{{ switch }}"{% endif %} {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
 {% endblock checkbox_widget -%}
 
 {%- block radio_widget -%}

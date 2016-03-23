@@ -25,7 +25,7 @@ class HookRepositoryTest extends IntegrationTestCase
     public function test_persist_and_retrieve()
     {
         $modules = [
-            'blocknewsletter',
+            'ps_emailsubscription',
             'blockcart'
         ];
 
@@ -42,14 +42,14 @@ class HookRepositoryTest extends IntegrationTestCase
     public function test_only_display_hooks_are_retrieved()
     {
         $this->hookRepository->persistHooksConfiguration([
-            'displayTestHookName' => ['blocknewsletter', 'blockcart'],
+            'displayTestHookName' => ['ps_emailsubscription', 'blockcart'],
             'notADisplayTestHookName' => ['blocklanguage', 'blockcurrencies']
         ]);
 
         $actual = $this->hookRepository->getDisplayHooksWithModules();
 
         $this->assertEquals(
-            ['blocknewsletter', 'blockcart'],
+            ['ps_emailsubscription', 'blockcart'],
             $actual['displayTestHookName']
         );
 
@@ -62,7 +62,7 @@ class HookRepositoryTest extends IntegrationTestCase
     {
         $this->hookRepository->persistHooksConfiguration([
             'displayTestHookNameWithExceptions' => [
-                'blocknewsletter' => [
+                'ps_emailsubscription' => [
                     'except_pages' => ['category', 'product']
                 ]
             ]
@@ -70,7 +70,7 @@ class HookRepositoryTest extends IntegrationTestCase
 
         $this->assertEquals(
             [
-                'blocknewsletter' => [
+                'ps_emailsubscription' => [
                     'except_pages' => ['category', 'product']
                 ]
             ],

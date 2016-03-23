@@ -66,7 +66,7 @@ describe('Order history page', function () {
           .selectByIndex('.order-message-form select[name=id_product]', 0)
           .setValue('.order-message-form textarea[name=msgText]', 'Message about the first order product')
           .click('.page-content button[name=submitMessage]')
-          .waitForVisible('.notification-success')
+          .waitForVisible('.alert-success')
         ;
     });
 

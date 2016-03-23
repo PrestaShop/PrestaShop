@@ -60,7 +60,13 @@
       {/if}
     </div>
   {/block}
-
+  {if isset($headerTabContent)}
+      <div class="page-head-tabs">
+      {foreach $headerTabContent as $tabContent}
+          {{$tabContent}}
+      {/foreach}
+      </div>
+  {/if}
   {if $current_tab_level == 3}
     <div class="page-head-tabs">
       {foreach $tabs as $level_1}

@@ -1,18 +1,36 @@
 .block_newsletter {
   @include search-box;
-  @include submit-button;
+  font-size: em(14px);
+  p {
+    padding-top: $small-space;
+  }
 }
 .block-contact {
+  margin-top: $medium-space;
   border-left: $gray-light 2px solid;
   padding-left: em(70px);
   color: $gray;
+  .block-contact-title{
+    color:$gray-darker;
+  }
 }
-.block-cms li a,
+.linklist {
+  padding-top: $medium-space;
+  li a{
+    color: $gray;
+    cursor: pointer;
+    &:hover {
+      color: $brand-primary;
+    }
+  }
+  .blockcms-title a{
+    color:$gray-darker;
+  }
+}
 .account-list a {
-  color: $gray;
-  cursor: pointer;
-  &:hover {
-    color: $brand-primary;
+  color:$gray;
+  &:hover{
+  color: $brand-primary;
   }
 }
 .blockcms-title,
@@ -75,6 +93,11 @@
     }
   }
 }
+#block_myaccount_infos{
+  .myaccount-title a{
+    color:$gray-darker;
+  }
+}
 .pinterest {
   background-image: url(../img/pinterest.svg);
   &.icon-gray {
@@ -89,4 +112,8 @@
 }
 .instagram {
   background-image: url(../img/instagram.svg);
+}
+.footer-container {
+  margin-top: $medium-space;
+  @include box-shadow;
 }

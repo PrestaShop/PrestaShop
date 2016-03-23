@@ -218,9 +218,6 @@
   <configuration id="PS_META_KEYWORDS" name="PS_META_KEYWORDS">
     <value>0</value>
   </configuration>
-  <configuration id="PS_DISPLAY_JQZOOM" name="PS_DISPLAY_JQZOOM">
-    <value>0</value>
-  </configuration>
   <configuration id="PS_VOLUME_UNIT" name="PS_VOLUME_UNIT">
     <value>cl</value>
   </configuration>

@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class AdminModulesControllerCore extends AdminController
 {
     private $_modules_ad = array(
@@ -309,7 +312,8 @@ class AdminModulesControllerCore extends AdminController
             'currentIndex' => self::$currentIndex,
             'tab_modules_list' => $modules_list_sort,
             'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
-            'lang_iso' => $this->context->language->iso_code
+            'lang_iso' => $this->context->language->iso_code,
+            'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
         ));
 
         if ($admin_list_from_source = Tools::getValue('admin_list_from_source')) {
@@ -683,7 +687,10 @@ class AdminModulesControllerCore extends AdminController
                     $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
                 } else {
                     // Uninstall the module before deleting the files, but do not block the process if uninstall returns false
-                    if (Module::isInstalled($module->name)) {
+                    $moduleManagerBuilder = new ModuleManagerBuilder();
+                    $moduleManager = $moduleManagerBuilder->build();
+    
+                    if ($moduleManager->isInstalled($module->name)) {
                         $module->uninstall();
                     }
                     $moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
@@ -830,6 +837,10 @@ class AdminModulesControllerCore extends AdminController
                         continue;
                     }
 
+                    $moduleManagerBuilder = new ModuleManagerBuilder();
+                    $moduleManager = $moduleManagerBuilder->build();
+    
+
                     // Check potential error
                     if (!($module = Module::getInstanceByName(urldecode($name)))) {
                         $this->errors[] = $this->l('Module not found');
@@ -841,13 +852,13 @@ class AdminModulesControllerCore extends AdminController
                         $this->errors[] = Tools::displayError('You do not have permission to install this module.');
                     } elseif ($key == 'delete' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure'))) {
                         $this->errors[] = Tools::displayError('You do not have permission to delete this module.');
-                    } elseif ($key == 'configure' && ($this->tabAccess['edit'] !== '1' || !$module->getPermission('configure') || !Module::isInstalled(urldecode($name)))) {
+                    } elseif ($key == 'configure' && ($this->tabAccess['edit'] !== '1' || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
                         $this->errors[] = Tools::displayError('You do not have permission to configure this module.');
-                    } elseif ($key == 'install' && Module::isInstalled($module->name)) {
+                    } elseif ($key == 'install' && $moduleManager->isInstalled($module->name)) {
                         $this->errors[] = sprintf(Tools::displayError('This module is already installed: %s.'), $module->name);
-                    } elseif ($key == 'uninstall' && !Module::isInstalled($module->name)) {
+                    } elseif ($key == 'uninstall' && !$moduleManager->isInstalled($module->name)) {
                         $this->errors[] = sprintf(Tools::displayError('This module has already been uninstalled: %s.'), $module->name);
-                    } elseif ($key == 'update' && !Module::isInstalled($module->name)) {
+                    } elseif ($key == 'update' && !$moduleManager->isInstalled($module->name)) {
                         $this->errors[] = sprintf(Tools::displayError('This module needs to be installed in order to be updated: %s.'), $module->name);
                     } else {
                         // If we install a module, force temporary global context for multishop
@@ -888,7 +899,7 @@ class AdminModulesControllerCore extends AdminController
                         }
 
                         // If the method called is "configure" (getContent method), we show the html code of configure page
-                        if ($key == 'configure' && Module::isInstalled($module->name)) {
+                        if ($key == 'configure' && $moduleManager->isInstalled($module->name)) {
                             $this->bootstrap = (isset($module->bootstrap) && $module->bootstrap);
                             if (isset($module->multishop_context)) {
                                 $this->multishop_context = $module->multishop_context;
@@ -1019,9 +1030,12 @@ class AdminModulesControllerCore extends AdminController
 
         if ($return) {
             $params = (count($installed_modules)) ? '&installed_modules='.implode('|', $installed_modules) : '';
+            $moduleManagerBuilder = new ModuleManagerBuilder();
+            $moduleManager = $moduleManagerBuilder->build();
+    
 
             // If redirect parameter is present and module installed with success, we redirect on configuration module page
-            if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $return == '12' && Module::isInstalled(pSQL(Tools::getValue('module_name')))) {
+            if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $return == '12' && $moduleManager->isInstalled(pSQL(Tools::getValue('module_name')))) {
                 Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('module_name').'&token='.Tools::getValue('token').'&module_name='.Tools::getValue('module_name').$params);
             }
             Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : '').$params);
@@ -1108,8 +1122,12 @@ class AdminModulesControllerCore extends AdminController
             Context::getContext()->smarty->assign('installed_modules', json_encode(explode('|', $list)));
         }
 
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
+
         // If redirect parameter is present and module already installed, we redirect on configuration module page
-        if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && Module::isInstalled(pSQL(Tools::getValue('module_name')))) {
+        if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $moduleManager->isInstalled(pSQL(Tools::getValue('module_name')))) {
             Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('module_name').'&token='.Tools::getValue('token').'&module_name='.Tools::getValue('module_name'));
         }
 
@@ -1504,7 +1522,7 @@ class AdminModulesControllerCore extends AdminController
                     require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
                 }
 
-                if ($object = new $module->name()) {
+                if ($object = ServiceLocator::get($module->name)) {
                     /** @var Module $object */
                     $object->runUpgradeModule();
                     if ((count($errors_module_list = $object->getErrors()))) {
@@ -1522,7 +1540,7 @@ class AdminModulesControllerCore extends AdminController
                 if (!class_exists($module->name)) {
                     if (file_exists(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php')) {
                         require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
-                        $object = new $module->name();
+                        $object = ServiceLocator::get($module->name);
                         $module_success[] = array('name' => $module->name, 'message' => array(
                             0 => sprintf($this->l('Current version: %s'), $object->version),
                             1 => $this->l('No file upgrades applied (none exist).'))
@@ -1637,7 +1655,8 @@ class AdminModulesControllerCore extends AdminController
             'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_),
             'dont_filter' => $dont_filter,
             'is_contributor' => (int)$this->context->cookie->is_contributor,
-            'maintenance_mode' => !(bool)Configuration::Get('PS_SHOP_ENABLE')
+            'maintenance_mode' => !(bool)Configuration::Get('PS_SHOP_ENABLE'),
+            'debug_mode' => (bool)_PS_MODE_DEV_
         );
 
         if ($this->logged_on_addons) {

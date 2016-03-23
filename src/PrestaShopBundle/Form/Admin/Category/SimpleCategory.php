@@ -75,7 +75,7 @@ class SimpleCategory extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', FormType\TextType::class, array(
+        $builder->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'label' => $this->translator->trans('Name', [], 'AdminCategories'),
             'required' => false,
             'attr' => ['placeholder' => $this->translator->trans('Category name', [], 'AdminCategories'), 'class' => 'ajax'],
@@ -84,7 +84,7 @@ class SimpleCategory extends CommonAbstractType
                 new Assert\Length(array('min' => 3))
             )
         ))
-        ->add('id_parent', FormType\ChoiceType::class, array(
+        ->add('id_parent', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->categories,
             'choices_as_values' => true,
             'required' => true,

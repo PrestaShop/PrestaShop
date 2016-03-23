@@ -13,4 +13,33 @@
     margin-bottom: 0;
   }
 
+  .icon-caret {
+    font-size: rem(10px);
+    vertical-align: rem(1px);
+    cursor: pointer;
+    display: inline-block;
+
+    &.-current {
+      color: $primary;
+    }
+  }
+
+  table {
+    .form-control,
+    .select2 {
+      font-weight: normal;
+    }
+    .form-min-max {
+      display: inline-block;
+      width: 48%;
+    }
+  }
+
+}
+
+.emptycatalog-icon {
+  > .material-icons {
+    color: $gray-light;
+    font-size: 12rem;
+  }
 }

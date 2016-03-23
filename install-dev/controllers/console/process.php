@@ -93,9 +93,11 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 
     public function process()
     {
+        /* avoid exceptions on re-installation */
+        $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
-            $steps = array('database','fixtures','theme','modules','addons_modules', 'theme');
+            $steps = array('database','fixtures','theme','modules','addons_modules');
         }
 
         if (in_array('database', $steps)) {
@@ -281,8 +283,39 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
         return $this->model_install->installModulesAddons();
     }
 
+    /**
+     * PROCESS : installTheme
+     * Install theme
+     */
     public function processInstallTheme()
     {
+        $this->initializeContext();
         return $this->model_install->installTheme();
+    }
+
+    private function clearConfigXML()
+    {
+        $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
+        $cacheFiles = scandir($configXMLPath);
+        $excludes = ['.htaccess', 'index.php'];
+
+        foreach($cacheFiles as $file) {
+            $filepath = $configXMLPath.$file;
+            if (is_file($filepath) && !in_array($file, $excludes)) {
+                unlink($filepath);
+            }
+        }
+    }
+
+    private function clearConfigThemes()
+    {
+        $themesPath = _PS_ROOT_DIR_.'/config/themes/';
+        $cacheFiles = scandir($themesPath);
+        foreach($cacheFiles as $file) {
+            $file = $themesPath.$file;
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
     }
 }

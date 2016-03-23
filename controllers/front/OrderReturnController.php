@@ -94,7 +94,7 @@ class OrderReturnControllerCore extends FrontController
 
     public function getTemplateVarOrderReturn($order_return)
     {
-        $order_return = $this->objectSerializer->toArray($order_return);
+        $order_return = $this->objectPresenter->present($order_return);
 
         $order_return['return_number'] = sprintf('%06d', $order_return['id']);
         $order_return['return_date'] = Tools::displayDate($order_return['date_add'], null, false);
@@ -161,14 +161,14 @@ class OrderReturnControllerCore extends FrontController
         return $product_customizations;
     }
 
-    public function getBreadcrumb()
+    public function getBreadcrumbLinks()
     {
-        $breadcrumb = parent::getBreadcrumb();
+        $breadcrumb = parent::getBreadcrumbLinks();
 
-        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+        $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
         if (($id_order_return = (int)Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
-            $breadcrumb[] =[
+            $breadcrumb['links'][] =[
                 'title' => $this->getTranslator()->trans('Merchandise returns', [], 'Breadcrumb'),
                 'url' => $this->context->link->getPageLink('order-follow')
             ];

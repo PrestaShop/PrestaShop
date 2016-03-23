@@ -1,3 +1,4 @@
+{% if previous_url or next_url %}
 <nav>
     <ul class="pagination">
         <li class="page-item {% if first_url %}{% else %}disabled{% endif %}">
@@ -18,3 +19,4 @@
         </li>
     </ul>
 </nav>
+{% endif %}

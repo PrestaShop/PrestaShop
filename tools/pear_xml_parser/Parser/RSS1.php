@@ -23,7 +23,7 @@
 
 /**
  * This class handles RSS1.0 feeds.
- * 
+ *
  * @author    James Stewart <james@jystewart.net>
  * @version    Release: @package_version@
  * @package XML_Feed_Parser
@@ -32,7 +32,7 @@
 class XML_Feed_Parser_RSS1 extends XML_Feed_Parser_Type
 {
     /**
-     * The URI of the RelaxNG schema used to (optionally) validate the feed 
+     * The URI of the RelaxNG schema used to (optionally) validate the feed
      * @var string
      */
     protected $relax = 'rss10.rng';
@@ -44,19 +44,19 @@ class XML_Feed_Parser_RSS1 extends XML_Feed_Parser_Type
     protected $xpath;
 
     /**
-     * The feed type we are parsing 
+     * The feed type we are parsing
      * @var string
      */
     public $version = 'RSS 1.0';
 
     /**
-     * The class used to represent individual items 
+     * The class used to represent individual items
      * @var string
      */
     protected $itemClass = 'XML_Feed_Parser_RSS1Element';
-    
+
     /**
-     * The element containing entries 
+     * The element containing entries
      * @var string
      */
     protected $itemElement = 'item';
@@ -100,8 +100,8 @@ class XML_Feed_Parser_RSS1 extends XML_Feed_Parser_Type
         'updated' => array('date'));
 
     /**
-     * We will be working with multiple namespaces and it is useful to 
-     * keep them together 
+     * We will be working with multiple namespaces and it is useful to
+     * keep them together
      * @var array
      */
     protected $namespaces = array(
@@ -113,7 +113,7 @@ class XML_Feed_Parser_RSS1 extends XML_Feed_Parser_Type
 
     /**
      * Our constructor does nothing more than its parent.
-     * 
+     *
      * @param    DOMDocument    $xml    A DOM object representing the feed
      * @param    bool (optional) $string    Whether or not to validate this feed
      */
@@ -139,8 +139,8 @@ class XML_Feed_Parser_RSS1 extends XML_Feed_Parser_Type
      * This is not really something that will work with RSS1 as it does not have
      * clear restrictions on the global uniqueness of IDs. We will employ the
      * _very_ hit and miss method of selecting entries based on the rdf:about
-     * attribute. If DOMXPath::evaluate is available, we also use that to store 
-     * a reference to the entry in the array used by getEntryByOffset so that 
+     * attribute. If DOMXPath::evaluate is available, we also use that to store
+     * a reference to the entry in the array used by getEntryByOffset so that
      * method does not have to seek out the entry if it's requested that way.
      *
      * @param    string    $id    any valid ID.
@@ -208,20 +208,20 @@ class XML_Feed_Parser_RSS1 extends XML_Feed_Parser_Type
             $input = $inputs->item(0);
             $results = array();
             $results['title'] = isset(
-                $input->getElementsByTagName('title')->item(0)->value) ? 
+                $input->getElementsByTagName('title')->item(0)->value) ?
                 $input->getElementsByTagName('title')->item(0)->value : null;
             $results['description'] = isset(
-                $input->getElementsByTagName('description')->item(0)->value) ? 
+                $input->getElementsByTagName('description')->item(0)->value) ?
                 $input->getElementsByTagName('description')->item(0)->value : null;
             $results['name'] = isset(
-                $input->getElementsByTagName('name')->item(0)->value) ? 
+                $input->getElementsByTagName('name')->item(0)->value) ?
                 $input->getElementsByTagName('name')->item(0)->value : null;
             $results['link'] = isset(
-                   $input->getElementsByTagName('link')->item(0)->value) ? 
+                   $input->getElementsByTagName('link')->item(0)->value) ?
                    $input->getElementsByTagName('link')->item(0)->value : null;
-            if (empty($results['link']) and 
+            if (empty($results['link']) && 
                 $input->attributes->getNamedItem('resource')) {
-                $results['link'] = 
+                $results['link'] =
                     $input->attributes->getNamedItem('resource')->nodeValue;
             }
             if (! empty($results)) {
@@ -252,10 +252,10 @@ class XML_Feed_Parser_RSS1 extends XML_Feed_Parser_Type
         }
         return false;
     }
-    
+
     /**
      * Retrieve a link
-     * 
+     *
      * In RSS1 a link is a text element but in order to ensure that we resolve
      * URLs properly we have a special function for them.
      *

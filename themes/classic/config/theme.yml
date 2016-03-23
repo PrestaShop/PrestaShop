@@ -28,38 +28,74 @@ meta:
 global_settings:
   configuration:
     PS_IMAGE_QUALITY: png
+  modules:
+   to_enable:
+     - ps_linklist
   hooks:
     modules_to_hook:
       displayNav1:
-        - blockcontact
+        - ps_contactinfo
       displayNav2:
         - blocklanguages
         - blockcurrencies
-        - blockuserinfo
+        - ps_customersignin
         - blockcart
       displayTop:
-        - blocktopmenu
-        - blocksearch:
-          - pagenotfound
-
+        - ps_mainmenu
+        - blocksearch
       displayHome:
-        - homeslider
-        - homefeatured
-        - blockbanner
-        - blockcmsinfo
+        - ps_imageslider
+        - ps_featuredproducts
+        - ps_banner
+        - ps_customtext
       displayFooterBefore:
-        - blocknewsletter
-        - blocksocial
+        - ps_emailsubscription
+        - ps_socialfollow
       displayFooter:
-        - blockcms
-        - blockcontact
+        - ps_linklist
+        - blockmyaccount
+        - ps_contactinfo
       displayLeftColumn:
-        - blockcategories
+        - ps_categorytree
         - blocklayered
       displaySearch:
         - blocksearch
       displayProductButtons:
-        - socialsharing
+        - ps_sharebuttons
+      displayReassurance:
+        - blockreassurance
+      displayOrderConfirmation2:
+        - ps_featuredproducts
+
+  image_types:
+    cart_default:
+      width: 125
+      height: 125
+      scope: [products]
+    small_default:
+      width: 98
+      height: 98
+      scope: [products, manufacturers, suppliers]
+    medium_default:
+      width: 452
+      height: 452
+      scope: [products, manufacturers, suppliers]
+    home_default:
+      width: 250
+      height: 250
+      scope: [products]
+    large_default:
+      width: 800
+      height: 800
+      scope: [products, manufacturers, suppliers]
+    category_default:
+      width: 141
+      height: 180
+      scope: [categories]
+    stores_default:
+      width: 170
+      height: 115
+      scope: [stores]
 
 theme_settings:
   default_layout: layout-full-width

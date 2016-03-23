@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 abstract class ModuleCore
@@ -269,14 +270,11 @@ abstract class ModuleCore
                 self::$modules_cache = array();
                 // Join clause is done to check if the module is activated in current shop context
                 $result = Db::getInstance()->executeS('
-                SELECT m.`id_module`, m.`name`, (
-                    SELECT id_module
-                    FROM `'._DB_PREFIX_.'module_shop` ms
-                    WHERE m.`id_module` = ms.`id_module`
-                    AND ms.`id_shop` = '.(int)$id_shop.'
-                    LIMIT 1
-                ) as mshop
-                FROM `'._DB_PREFIX_.'module` m');
+                SELECT m.`id_module`, m.`name`, ms.`id_module`as `mshop`
+                FROM `'._DB_PREFIX_.'module` m
+                LEFT JOIN `'._DB_PREFIX_.'module_shop` ms
+                ON m.`id_module` = ms.`id_module`
+                AND ms.`id_shop` = '.(int)$id_shop);
                 foreach ($result as $row) {
                     self::$modules_cache[$row['name']] = $row;
                     self::$modules_cache[$row['name']]['active'] = ($row['mshop'] > 0) ? 1 : 0;
@@ -335,7 +333,7 @@ abstract class ModuleCore
         }
 
         // Check if module is installed
-        $result = Module::isInstalled($this->name);
+        $result = (new ModuleDataProvider())->isInstalled($this->name);
         if ($result) {
             $this->_errors[] = Tools::displayError('This module has already been installed.');
             return false;
@@ -685,6 +683,8 @@ abstract class ModuleCore
      * @param array|string $name
      * @return true if succeed
      * @since 1.4.1
+     * @deprecated since 1.7
+     * @see  PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->enable($name)
      */
     public static function enableByName($name)
     {
@@ -781,6 +781,8 @@ abstract class ModuleCore
      * @param array|string $name
      * @return true if succeed
      * @since 1.4.1
+     * @deprecated since 1.7
+     * @see  PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->disable($name)
      */
     public static function disableByName($name)
     {
@@ -862,86 +864,7 @@ abstract class ModuleCore
      */
     public function registerHook($hook_name, $shop_list = null)
     {
-        $return = true;
-        if (is_array($hook_name)) {
-            $hook_names = $hook_name;
-        } else {
-            $hook_names = array($hook_name);
-        }
-
-        foreach ($hook_names as $hook_name) {
-            // Check hook name validation and if module is installed
-            if (!Validate::isHookName($hook_name)) {
-                throw new PrestaShopException('Invalid hook name');
-            }
-            if (!isset($this->id) || !is_numeric($this->id)) {
-                return false;
-            }
-
-            // Retrocompatibility
-            $hook_name_bak = $hook_name;
-            if ($alias = Hook::getRetroHookName($hook_name)) {
-                $hook_name = $alias;
-            }
-
-            Hook::exec('actionModuleRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
-            // Get hook id
-            $id_hook = Hook::getIdByName($hook_name);
-
-            // If hook does not exist, we create it
-            if (!$id_hook) {
-                $new_hook = new Hook();
-                $new_hook->name = pSQL($hook_name);
-                $new_hook->title = pSQL($hook_name);
-                $new_hook->add();
-                $id_hook = $new_hook->id;
-                if (!$id_hook) {
-                    return false;
-                }
-            }
-
-            // If shop lists is null, we fill it with all shops
-            if (is_null($shop_list)) {
-                $shop_list = Shop::getCompleteListOfShopsID();
-            }
-
-            $shop_list_employee = Shop::getShops(true, null, true);
-
-            foreach ($shop_list as $shop_id) {
-                // Check if already register
-                $sql = 'SELECT hm.`id_module`
-                    FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
-                    WHERE hm.`id_module` = '.(int)$this->id.' AND h.`id_hook` = '.$id_hook.'
-                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int)$shop_id;
-                if (Db::getInstance()->getRow($sql)) {
-                    continue;
-                }
-
-                // Get module position in hook
-                $sql = 'SELECT MAX(`position`) AS position
-                    FROM `'._DB_PREFIX_.'hook_module`
-                    WHERE `id_hook` = '.(int)$id_hook.' AND `id_shop` = '.(int)$shop_id;
-                if (!$position = Db::getInstance()->getValue($sql)) {
-                    $position = 0;
-                }
-
-                // Register module in hook
-                $return &= Db::getInstance()->insert('hook_module', array(
-                    'id_module' => (int)$this->id,
-                    'id_hook' => (int)$id_hook,
-                    'id_shop' => (int)$shop_id,
-                    'position' => (int)($position + 1),
-                ));
-
-                if (!in_array($shop_id, $shop_list_employee)) {
-                    $where = '`id_module` = '.(int)$this->id.' AND `id_shop` = '.(int)$shop_id;
-                    $return &= Db::getInstance()->delete('module_shop', $where);
-                }
-            }
-
-            Hook::exec('actionModuleRegisterHookAfter', array('object' => $this, 'hook_name' => $hook_name));
-        }
-        return $return;
+        return Hook::registerHook($this, $hook_name, $shop_list);
     }
 
     /**
@@ -953,32 +876,7 @@ abstract class ModuleCore
      */
     public function unregisterHook($hook_id, $shop_list = null)
     {
-        // Get hook id if a name is given as argument
-        if (!is_numeric($hook_id)) {
-            $hook_name = (string)$hook_id;
-            // Retrocompatibility
-            $hook_id = Hook::getIdByName($hook_name);
-            if (!$hook_id) {
-                return false;
-            }
-        } else {
-            $hook_name = Hook::getNameById((int)$hook_id);
-        }
-
-        Hook::exec('actionModuleUnRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
-
-        // Unregister module on hook by id
-        $sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
-            WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
-            .(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
-        $result = Db::getInstance()->execute($sql);
-
-        // Clean modules position
-        $this->cleanPositions($hook_id, $shop_list);
-
-        Hook::exec('actionModuleUnRegisterHookAfter', array('object' => $this, 'hook_name' => $hook_name));
-
-        return $result;
+        return Hook::unregisterHook($this, $hook_id, $shop_list);
     }
 
     /**
@@ -1118,21 +1016,6 @@ abstract class ModuleCore
 
     protected static function coreLoadModule($module_name)
     {
-        // Define if we will log modules performances for this session
-        if (Module::$_log_modules_perfs === null) {
-            $modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_log_modules_perfs_MODULO');
-            Module::$_log_modules_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
-            if (Module::$_log_modules_perfs) {
-                Module::$_log_modules_perfs_session = mt_rand();
-            }
-        }
-
-        // Store time and memory before and after hook call and save the result in the database
-        if (Module::$_log_modules_perfs) {
-            $time_start = microtime(true);
-            $memory_start = memory_get_usage(true);
-        }
-
         include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
 
         $r = false;
@@ -1147,15 +1030,6 @@ abstract class ModuleCore
 
         if (!$r && class_exists($module_name, false)) {
             $r = self::$_INSTANCE[$module_name] = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module_name);
-        }
-
-        if (Module::$_log_modules_perfs) {
-            $time_end = microtime(true);
-            $memory_end = memory_get_usage(true);
-
-            Db::getInstance()->execute('
-            INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
-            VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module_name).'", "__construct", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
         }
 
         return $r;
@@ -1900,44 +1774,6 @@ abstract class ModuleCore
     }
 
     /**
-     * Execute modules for specified hook
-     *
-     * @deprecated 1.5.3.0
-     * @param string $hook_name Hook Name
-     * @param array $hook_args Parameters for the functions
-     * @return string modules output
-     */
-    public static function hookExec($hook_name, $hook_args = array(), $id_module = null)
-    {
-        Tools::displayAsDeprecated();
-        return Hook::exec($hook_name, $hook_args, $id_module);
-    }
-
-    /**
-     * @deprecated 1.5.3.0
-     * @return string
-     * @throws PrestaShopException
-     */
-    public static function hookExecPayment()
-    {
-        Tools::displayAsDeprecated();
-        return Hook::exec('displayPayment');
-    }
-
-    public static function preCall($module_name)
-    {
-        return true;
-    }
-
-    /**
-     * @deprecated since 1.6.0.2
-     */
-    public static function getPaypalIgnore()
-    {
-        Tools::displayAsDeprecated();
-    }
-
-    /**
      * Returns the list of the payment module associated to the current customer
      * @see PaymentModule::getInstalledPaymentModules() if you don't care about the context
      *
@@ -2226,6 +2062,14 @@ abstract class ModuleCore
         return Module::getExceptionsStatic($this->id, $id_hook, $dispatch);
     }
 
+    /**
+     *
+     * @param string $module_name
+     * @return bool
+     *
+     * @deprecated since 1.7
+     * @see  PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager->isInstalled($name)
+     */
     public static function isInstalled($module_name)
     {
         if (!Cache::isStored('Module::isInstalled'.$module_name)) {

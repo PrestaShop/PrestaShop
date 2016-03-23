@@ -7,9 +7,11 @@ addons:
     apt_packages:
         - apache2
         - libapache2-mod-fastcgi
+        - postfix
     sauce_connect: true
     firefox: latest
 php:
+  - 5.4
   - 5.5
   - 5.6
 
@@ -22,6 +24,7 @@ before_install:
   - sudo a2enmod rewrite actions fastcgi alias
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "memory_limit = 512M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
   - sudo cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/default
   - sudo cp -Rf . /var/www/prestashop.unit.test
@@ -32,6 +35,10 @@ before_script:
   - phpenv config-rm xdebug.ini
   - "mkdir -p ~/.composer"
   - cp .travis.composer.config.json ~/.composer/config.json
+  - sudo service postfix stop
+  - smtp-sink -d "%d.%H.%M.%S" localhost:2500 1000 &
+  - echo -e '#!/usr/bin/env bash\nexit 0' | sudo tee /usr/sbin/sendmail
+  - echo 'sendmail_path = "/usr/sbin/sendmail -t -i "' | sudo tee "/home/travis/.phpenv/versions/`php -i | grep "PHP Version" | head -n 1 | grep -o -P '\d+\.\d+\.\d+.*'`/etc/conf.d/sendmail.ini"
 
 notifications:
   slack: prestashop:Eovjydk55zPrwPkoQIOF0cZn

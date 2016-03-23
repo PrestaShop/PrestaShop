@@ -1157,7 +1157,6 @@ class AdminTranslationsControllerCore extends AdminController
                         _PS_CLASS_DIR_ => array('PaymentModule.php'),
                     ),
                     'php-sf2' => array(
-                        _PS_ROOT_DIR_.'/Adapter/' => \Tools::scandir(_PS_ROOT_DIR_.'/Adapter/', 'php', '', true),
                         _PS_ROOT_DIR_.'/src/' => \Tools::scandir(_PS_ROOT_DIR_.'/src/', 'php', '', true),
                     ),
                     'tpl-sf2' => \Tools::scandir(_PS_ROOT_DIR_.'/src/PrestaShopBundle/Resources/views/', 'twig', '', true),
