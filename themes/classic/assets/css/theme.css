@@ -4647,7 +4647,9 @@ a:hover {
 .h3 {
   font-size: 1em; }
 
-.h1, .h2, .h3 {
+.h1,
+.h2,
+.h3 {
   text-transform: uppercase;
   color: #414141; }
 
@@ -4849,6 +4851,10 @@ label {
     .definition-list dl dt:nth-of-type(even),
     .definition-list dl dd:nth-of-type(even) {
       background: #f6f6f6; }
+
+.with-errors {
+  color: #ff4c4c;
+  margin-top: 10px; }
 
 .dropdown {
   color: #acaaa6; }
@@ -5395,7 +5401,8 @@ body#checkout {
         font-size: 1.125em; }
       .page-addresses .addresses-footer a span {
         font-size: 1em;
-        vertical-align: middle; }
+        vertical-align: middle;
+        margin-top: 10px; }
 
 /*** Order details page ***/
 .page-order-detail {
