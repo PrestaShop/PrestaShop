@@ -358,6 +358,8 @@ abstract class ProductPresenterAbstract
         Language $language
     ) {
         $presentedProduct = $product;
+        $presentedProduct['id'] = $presentedProduct['id_product'];
+
         $show_price = $this->shouldShowPrice(
             $settings,
             $product
