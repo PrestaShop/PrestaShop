@@ -36,13 +36,9 @@
         </span>
       {else}
         <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
-        <div class="tooltip bottom tooltip-bottom" role="tooltip">
-          <div class="tooltip-arrow"></div>
-          <div class="tooltip-inner">
-            <i class="material-icons info">&#xE88F;</i>
-            {l s='This field is required'}
-          </div>
-        </div>
+        {if $field.required}
+          <div class="help-block with-errors hidden-xs-up">{l s='This field is required'}</div>
+        {/if}
       {/if}
     </div>
     {if $field.type === 'password'}
