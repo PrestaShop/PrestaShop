@@ -137,12 +137,12 @@ class AdminModuleDataProvider implements ModuleInterface
                     unset(
                         $urls['enable'],
                         $urls['install'],
-                        $urls['update']
+                        $urls['upgrade']
                     );
                 } else {
                     $url_active = 'disable';
                     unset(
-                        $urls['update'],
+                        $urls['upgrade'],
                         $urls['install'],
                         $urls['enable'],
                         $urls['configure']
@@ -161,7 +161,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     $urls['enable'],
                     $urls['disable'],
                     $urls['reset'],
-                    $urls['update'],
+                    $urls['upgrade'],
                     $urls['configure']
                 );
             } else {
