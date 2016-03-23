@@ -16387,6 +16387,15 @@
 	      (0, _jquery2['default'])(checkbox).prop('checked', checked);
 	    });
 	  });
+	
+	  (0, _jquery2['default'])('form[data-toggle="validator"]').validator().on('invalid.bs.validator', function (e) {
+	    setTimeout(function () {
+	      (0, _jquery2['default'])(e.relatedTarget).next('.with-errors').removeClass('hidden-xs-up');
+	    }, 500);
+	  });
+	  (0, _jquery2['default'])('form[data-toggle="validator"]').validator().on('valid.bs.validator', function (e) {
+	    (0, _jquery2['default'])(e.relatedTarget).next('.with-errors').addClass('hidden-xs-up');
+	  });
 	}
 	
 	function setupCustomerScripts() {
