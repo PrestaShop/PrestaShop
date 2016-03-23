@@ -230,6 +230,15 @@ class AddonsDataProvider implements AddonsInterface
         ];
     }
 
+    /**
+     * Check if a request has already failed
+     * @return bool 
+     */
+    public function isAddonsUp()
+    {
+        return self::$is_addons_up;
+    }
+
     protected function unZip($filename)
     {
         $zip = new \ZipArchive();
