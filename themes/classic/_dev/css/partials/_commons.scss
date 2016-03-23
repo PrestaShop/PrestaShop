@@ -43,15 +43,15 @@ a:hover {
 .h1 {
   font-size: em(20px);
 }
-
-.h3{
+.h3 {
   font-size: em(16px);
 }
-.h1,.h2,.h3{
+.h1,
+.h2,
+.h3 {
   text-transform: uppercase;
-  color:$gray-darker;
+  color: $gray-darker;
 }
-
 .h4 {
   font-size: em(18px);
   font-weight: $headings-font-weight;
@@ -270,4 +270,8 @@ label {
       }
     }
   }
+}
+.with-errors {
+  color: $brand-danger;
+  margin-top: $small-space;
 }
