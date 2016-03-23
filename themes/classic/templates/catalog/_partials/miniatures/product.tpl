@@ -80,8 +80,15 @@
 
     </div>
     <div class="highlighted-informations">
-      <a href="{$product.link}" title="{l s='Quick view'}" class="quick-view">
-        <i class="material-icons search">&#xE8B6;</i>{l s='Quick view'}
+      <a
+        href="#"
+        title="{l s='Quick view'}"
+        class="quick-view"
+        data-link-action=="quickview"
+        data-product-id="{$product.id}"
+        data-product-id-attribute="{$product.id_product_attribute}"
+      >
+        <i class="material-icons search">&#xE8B6;</i> {l s='Quick view'}
       </a>
       {block name='product_variants'}
         {include file='catalog/_partials/variant-links.tpl' variants=$product.main_variants}
