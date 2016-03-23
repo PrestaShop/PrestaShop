@@ -997,15 +997,17 @@
     {# FOOTER #}
     <div class="product-footer">
       <div class="col-lg-5">
-        <a
-          href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
-          class="btn btn-invisible btn-lg delete"
-          data-toggle="tooltip"
-          id="product_form_delete_btn"
-          title="{{ trans('Permanently delete this product.', {}, 'AdminProducts') }}"
-        >
-          <i class="material-icons">delete</i>
-        </a>
+        {% if authorizationAction.delete == 1 %}
+          <a
+            href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+            class="btn btn-invisible btn-lg delete"
+            data-toggle="tooltip"
+            id="product_form_delete_btn"
+            title="{{ trans('Permanently delete this product.', {}, 'AdminProducts') }}"
+          >
+            <i class="material-icons">delete</i>
+          </a>
+        {% endif %}
         <a
           data-redirect="{{ preview_link }}"
           target="_blank"
@@ -1030,16 +1032,18 @@
 
       </div>
       <div class="col-lg-7 text-lg-right">
-        <button
-          type="button"
-          class="btn btn-primary-outline btn-submit hidden-xs uppercase duplicate"
-          id="product_form_save_duplicate_btn"
-          data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
-          data-toggle="tooltip"
-          title="{{ trans('Save and duplicate (CTRL+D) the current product, then go to the new product.', {}, 'AdminProducts') }}"
-          >
-          {{ trans('Duplicate', {}, 'AdminProducts')|raw }}
-        </button>
+        {% if authorizationAction.add == 1 %}
+          <button
+            type="button"
+            class="btn btn-primary-outline btn-submit hidden-xs uppercase duplicate"
+            id="product_form_save_duplicate_btn"
+            data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+            data-toggle="tooltip"
+            title="{{ trans('Save and duplicate (CTRL+D) the current product, then go to the new product.', {}, 'AdminProducts') }}"
+            >
+            {{ trans('Duplicate', {}, 'AdminProducts')|raw }}
+          </button>
+        {% endif %}
         <button
           type="button"
           class="btn btn-primary-outline btn-submit hidden-xs uppercase go-catalog"
@@ -1049,16 +1053,18 @@
           >
           {{ trans('Go to catalog', {}, 'AdminProducts')|raw }}
         </button>
-        <button
-          type="button"
-          class="btn btn-primary-outline btn-submit hidden-xs uppercase new-product"
-          id="product_form_save_new_btn"
-          data-redirect="{{ path('admin_product_new') }}"
-          data-toggle="tooltip"
-          title="{{ trans('Save and create (CTRL+P) a new product.', {}, 'AdminProducts') }}"
-          >
-          {{ trans('Add new product', {}, 'AdminProducts')|raw }}
-        </button>
+        {% if authorizationAction.add == 1 %}
+          <button
+            type="button"
+            class="btn btn-primary-outline btn-submit hidden-xs uppercase new-product"
+            id="product_form_save_new_btn"
+            data-redirect="{{ path('admin_product_new') }}"
+            data-toggle="tooltip"
+            title="{{ trans('Save and create (CTRL+P) a new product.', {}, 'AdminProducts') }}"
+            >
+            {{ trans('Add new product', {}, 'AdminProducts')|raw }}
+          </button>
+        {% endif %}
         <input
           id="submit"
           type="submit"

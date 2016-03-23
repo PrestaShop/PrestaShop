@@ -81,6 +81,8 @@ class ProductController extends FrameworkBundleAdminController
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
+        $authorizationChecker = $this->container->get('prestashop.adapter.security.authorization.checker');
+        /* @var $authorizationChecker AuthorizationChecker */
         if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
             $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
             /* @var $legacyUrlGenerator UrlGeneratorInterface */
@@ -190,6 +192,45 @@ class ProductController extends FrameworkBundleAdminController
             }
         }
 
+        // Check Authorization employee (view, add, edit, delete)
+        $arrayAuthorizationAction = $authorizationChecker->getAuthorizations("AdminProducts");
+        $listItemsAction = array();
+        $defaultItemAction = false;
+        foreach ($arrayAuthorizationAction as $action => $authorization) {
+            if ($authorization) {
+                switch ($action){
+                    case "add" :
+                        $listItemsAction[] = array(
+                            "onclick" => "bulkProductAction(this, 'duplicate_all');",
+                            "icon" => "content_copy",
+                            "label" => $translator->trans("Duplicate selection", array(), 'AdminTab')
+                        );
+                        $listItemsAction[] = array("divider" => true);
+                        break;
+                    case "edit" :
+                        $listItemsAction[] = array(
+                            "onclick" => "bulkProductAction(this, 'activate_all');",
+                            "icon" => "radio_button_checked",
+                            "label" => $translator->trans("Activate selection", array(), 'AdminTab')
+                        );
+                        $listItemsAction[] = array(
+                            "onclick" => "bulkProductAction(this, 'deactivate_all');",
+                            "icon" => "radio_button_unchecked",
+                            "label" => $translator->trans("Deactivate selection", array(), 'AdminTab')
+                        );
+                        $listItemsAction[] = array("divider" => true);
+                        break;
+                    case "delete" :
+                        $listItemsAction[] = array(
+                            "onclick" => "bulkProductAction(this, 'delete_all');",
+                            "icon" => "delete",
+                            "label" => $translator->trans("Delete selection", array(), 'AdminTab')
+                        );
+                        break;
+                }
+            }
+        }
+
         // Template vars injection
         return array_merge(
             $persistedFilterParameters,
@@ -203,6 +244,8 @@ class ProductController extends FrameworkBundleAdminController
                 'has_column_filter' => $hasColumnFilter,
                 'products' => $products,
                 'last_sql' => $lastSql,
+                'listItemsAction' => $listItemsAction,
+                'defaultItemAction' => $defaultItemAction,
                 'product_count_filtered' => $totalFilteredProductCount,
                 'product_count' => $totalProductCount,
                 'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
@@ -239,6 +282,8 @@ class ProductController extends FrameworkBundleAdminController
         $authorizationChecker = $this->container->get('prestashop.adapter.security.authorization.checker');
         /* @var $authorizationChecker AuthorizationChecker */
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
+        $translator = $this->container->get('prestashop.adapter.translator');
+        /* @var $translator TranslatorInterface */
         $totalCount = 0;
 
         $products = $request->attributes->get('products', null); // get from action subcall data, if any
@@ -278,12 +323,54 @@ class ProductController extends FrameworkBundleAdminController
             $product['preview_url'] = $adminProductWrapper->getPreviewUrlFromId($product['id_product']);
         }
 
+        // Check Authorization employee (view, add, edit, delete)
+        $arrayAuthorizationAction = $authorizationChecker->getAuthorizations("AdminProducts");
+        $listItemsAction = array();
+        $defaultItemAction = false;
+        foreach ($arrayAuthorizationAction as $action => $authorization) {
+            if ($authorization) {
+                switch ($action){
+                    case "view" :
+                        $listItemsAction[] = array(
+                        "href" => "preview_url",
+                        "target" => "_blank",
+                        "icon" => "remove_red_eye",
+                        "label" => $translator->trans("Preview", array(), 'AdminTab')
+                        );
+                        break;
+                    case "add" :
+                        $listItemsAction[] = array(
+                            "onclick" => "unitProductAction(this, 'duplicate');",
+                            "icon" => "content_copy",
+                            "label" => $translator->trans("Duplicate", array(), 'AdminTab')
+                        );
+                        break;
+                    case "edit" :
+                        $defaultItemAction = array(
+                            "href" => "url",
+                            "icon" => "mode_edit"
+                        );
+                        break;
+                    case "delete" :
+                        $listItemsAction[] = array(
+                            "onclick" => "unitProductAction(this, 'delete');",
+                            "icon" => "delete",
+                            "label" => $translator->trans("Delete", array(), 'AdminTab')
+                        );
+                        break;
+                }
+            }
+        }
+
         // Template vars injection
         $vars = array(
             'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
+            'listItemsAction' => $listItemsAction,
+            'defaultItemAction' => $defaultItemAction,
+            'authorizationAction' => $arrayAuthorizationAction,
         );
         if ($view != 'full') {
             return $this->render('PrestaShopBundle:Admin:Product/list_'.$view.'.html.twig', array_merge($vars, [
@@ -354,6 +441,8 @@ class ProductController extends FrameworkBundleAdminController
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
+        $authorizationChecker = $this->container->get('prestashop.adapter.security.authorization.checker');
+        /* @var $authorizationChecker AuthorizationChecker */
         if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
             $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
             /* @var $legacyUrlGenerator UrlGeneratorInterface */
@@ -453,6 +542,9 @@ class ProductController extends FrameworkBundleAdminController
         // languages for switch dropdown
         $languages = $legacyContextService->getLanguages();
 
+        // Check Authorization employee (view, add, edit, delete)
+        $arrayAuthorizationAction = $authorizationChecker->getAuthorizations("AdminProducts");
+
         return array(
             'form' => $form->createView(),
             'id_product' => $id,
@@ -467,6 +559,7 @@ class ProductController extends FrameworkBundleAdminController
                 .'AdminProducts?version='._PS_VERSION_.'&country='.$legacyContextService->getEmployeeLanguageIso(),
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
+            'authorizationAction' => $arrayAuthorizationAction,
         );
     }
 

@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Security\Admin\Employee;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Admin Middleware security
@@ -36,15 +36,17 @@ use PrestaShopBundle\Security\Admin\Employee;
 class AuthorizationChecker implements AuthorizationCheckerInterface
 {
     private $legacyContext;
+    private $container;
 
     /**
      * Constructor.
      *
      * @param LegacyContext $context
      */
-    public function __construct(LegacyContext $context)
+    public function __construct(LegacyContext $context, KernelInterface $kernel)
     {
         $this->legacyContext = $context->getContext();
+        $this->container = $kernel->getContainer();
     }
 
     /**
@@ -59,5 +61,24 @@ class AuthorizationChecker implements AuthorizationCheckerInterface
     {
         $arrayAttributes = explode(".", $attributes);
         return $this->legacyContext->employee->can($arrayAttributes[0], $arrayAttributes[1]);
+    }
+
+    /**
+     * Calculate all authorization
+     *
+     * @param string $route
+     * @param array $arrayAuthorization
+     *
+     * @return array
+     */
+    public function getAuthorizations($route)
+    {
+        $arrayAuthorization = $this->container->getParameter('authorization_employee');
+        $arrayAuthorizationAction = array();
+        foreach($arrayAuthorization as $action) {
+            $arrayAuthorizationAction[$action] = $this->isGranted($action.".".$route);
+        }
+
+        return $arrayAuthorizationAction;
     }
 }

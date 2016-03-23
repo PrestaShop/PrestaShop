@@ -309,27 +309,7 @@
               'disabled': true,
               'menu_label': trans("Bulk actions", {}, 'AdminTab'),
               'menu_icon': "icon-caret-up",
-              'items':[{
-                "onclick": "bulkProductAction(this, 'activate_all');",
-                "icon": "radio_button_checked",
-                "label": trans("Activate selection", {}, 'AdminTab')
-              }, {
-                "onclick": "bulkProductAction(this, 'deactivate_all');",
-                "icon": "radio_button_unchecked",
-                "label": trans("Deactivate selection", {}, 'AdminTab')
-              }, {
-                "divider": true
-              }, {
-                "onclick": "bulkProductAction(this, 'duplicate_all');",
-                "icon": "content_copy",
-                "label": trans("Duplicate selection", {}, 'AdminTab')
-              }, {
-                "divider": true
-              }, {
-                "onclick": "bulkProductAction(this, 'delete_all');",
-                "icon": "delete",
-                "label": trans("Delete selection", {}, 'AdminTab')
-              }]
+              'items': listItemsAction
             }%}
           </div>
           <div class="col-md-8 text-md-right" id="bulk_edition_toolbar" style="display: none;">

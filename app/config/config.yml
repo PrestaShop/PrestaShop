@@ -8,6 +8,7 @@ imports:
 parameters:
     locale: en
     AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
+    authorization_employee: ['view','add','edit','delete']
 
 framework:
     assets:
