@@ -492,6 +492,9 @@ ul#optional {
 		background: #f8eba8 url(img/pict_error.png) no-repeat 99% 8px;
         padding-right: 20px;
 }
+	ul#optional li.fail {
+		background: #f8eba8 url(img/pict_warning.gif) no-repeat 99% 8px;
+}
 
 /* ETAPE 3 - DB ************************************************************* */
 #sheet_database {

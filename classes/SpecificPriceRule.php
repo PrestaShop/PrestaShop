@@ -280,7 +280,6 @@ class SpecificPriceRuleCore extends ObjectModel
             } else {
                 $result = array(array('id_product' => 0, 'id_product_attribute' => null));
             }
-
         }
 
         return $result;

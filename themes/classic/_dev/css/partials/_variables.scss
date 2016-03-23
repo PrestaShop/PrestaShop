@@ -3,13 +3,11 @@ $gray-dark: #878787;
 $gray: #acaaa6;
 $gray-light: #ebebeb;
 $gray-lighter: #f6f6f6;
-$green: #2d798c;
-
 $brand-primary: #2fb5d2;
 $brand-secondary: #f39d72;
 $brand-success: #4cbb6c;
+$brand-warning: #ff9a52;
 $brand-danger: #ff4c4c;
-
 $btn-primary-color: #fff;
 $btn-primary-bg: $brand-primary;
 $btn-primary-border: transparent;
@@ -17,3 +15,10 @@ $btn-secondary-color: $gray-darker;
 $btn-secondary-bg: $gray-lighter;
 $btn-secondary-border: transparent;
 $btn-border-radius: 0;
+$headings-font-weight: 700;
+$tooltip-bg: $brand-danger;
+$border-radius: 0;
+$small-space: 10px;
+$medium-space: 20px;
+$large-space: 30px;
+$extra-large-space: 40px;

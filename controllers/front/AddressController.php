@@ -108,13 +108,13 @@ class AddressControllerCore extends FrontController
         $this->setTemplate('customer/address.tpl');
     }
 
-    public function getBreadcrumb()
+    public function getBreadcrumbLinks()
     {
-        $breadcrumb = parent::getBreadcrumb();
+        $breadcrumb = parent::getBreadcrumbLinks();
 
-        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+        $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
-        $breadcrumb[] = [
+        $breadcrumb['links'][] = [
             'title' => $this->getTranslator()->trans('Addresses', [], 'Breadcrumb'),
             'url' => $this->context->link->getPageLink('addresses')
         ];

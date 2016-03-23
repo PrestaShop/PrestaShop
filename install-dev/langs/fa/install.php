@@ -70,7 +70,7 @@ return array(
         'Permissions on files and folders' => 'دسترسی به فایل‌ها و پوشه‌ها',
         'Recursive write permissions for %1$s user on %2$s' => 'اجازه های نوشتن بازگشتی برای %1$s تعداد کاربر در %2$s',
         'Recommended PHP parameters' => 'پارامترهای توصیه شده‌ی PHP',
-        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!' => 'شما از ویرایش %s PHP استفاده می‌کنید. به زودی آخرین ویرایش PHP پشتبانی شده توسط پرستاشاپ PHP 5.5 خواهد بود. برای اطمینان از این که برای آینده آماده‌ باشید، پیشنهاد می کنیم همین حالا به PHP 5.5 ارتقا دهید!',
+        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'شما از ویرایش %s PHP استفاده می‌کنید. به زودی آخرین ویرایش PHP پشتبانی شده توسط پرستاشاپ PHP 5.4 خواهد بود. برای اطمینان از این که برای آینده آماده‌ باشید، پیشنهاد می کنیم همین حالا به PHP 5.4 ارتقا دهید!',
         'Cannot open external URLs' => 'نمی‌توان لینک‌های خارجی را باز کرد',
         'GZIP compression is not activated' => 'فشرده سازی GZIP فعال نیست',
         'Mcrypt extension is not enabled' => 'افزونه Mcrypt فعال نیست',

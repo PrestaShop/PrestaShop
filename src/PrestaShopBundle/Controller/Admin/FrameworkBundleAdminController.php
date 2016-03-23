@@ -117,4 +117,20 @@ class FrameworkBundleAdminController extends Controller
     {
         return $this->container->get('prestashop.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
     }
+
+    /**
+     * Generates a documentation link
+     */
+    protected function generateSidebarLink($section, $title = "Documentation")
+    {
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        $translator = $this->get('prestashop.adapter.translator');
+        $docLink = urlencode('http://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
+            .$section.'?version='._PS_VERSION_.'&country='.$legacyContext->getEmployeeLanguageIso());
+
+        return $this->generateUrl('admin_common_sidebar', [
+            'url' => $docLink,
+            'title' => $translator->trans($title, [], 'AdminCommon')
+        ]);
+    }
 }

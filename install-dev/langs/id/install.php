@@ -70,7 +70,7 @@ return array(
         'Permissions on files and folders' => 'Hak akses pada file dan direktori',
         'Recursive write permissions for %1$s user on %2$s' => 'Hak tulis rekursif untuk %1$s user pada %2$s',
         'Recommended PHP parameters' => 'Parameter PHP yang direkomendasikan',
-        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.5. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.5 now!' => 'Anda menggunakan PHP versi %s. Nantinya, versi PHP yang akan digunakan oleh PrestaShop adalah PHP 5.5. Saat itu pastikan server Anda telah siap, kami sarankan untuk segera melakukan upgrade ke PHP 5.5 sekarang juga!',
+        'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'Anda menggunakan PHP versi %s. Nantinya, versi PHP yang akan digunakan oleh PrestaShop adalah PHP 5.4. Saat itu pastikan server Anda telah siap, kami sarankan untuk segera melakukan upgrade ke PHP 5.4 sekarang juga!',
         'Cannot open external URLs' => 'Tidak dapat membuka URL lain, akses diblok.',
         'PHP register_globals option is enabled' => 'Opsi PHP register_globals aktif',
         'GZIP compression is not activated' => 'Kompresi GZIP tidak aktif',

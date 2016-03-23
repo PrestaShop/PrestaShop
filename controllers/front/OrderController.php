@@ -25,7 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
 class OrderControllerCore extends FrontController
 {
@@ -38,6 +38,24 @@ class OrderControllerCore extends FrontController
     public function postProcess()
     {
         parent::postProcess();
+
+        if (Tools::isSubmit('submitReorder') && $id_order = (int)Tools::getValue('id_order')) {
+            $oldCart = new Cart(Order::getCartIdStatic($id_order, $this->context->customer->id));
+            $duplication = $oldCart->duplicate();
+            if (!$duplication || !Validate::isLoadedObject($duplication['cart'])) {
+                $this->errors[] = $this->getTranslator()->trans('Sorry. We cannot renew your order.', [], 'Order');
+            } elseif (!$duplication['success']) {
+                $this->errors[] = $this->getTranslator()->trans('Some items are no longer available, and we are unable to renew your order.', [], 'Order');
+            } else {
+                $this->context->cookie->id_cart = $duplication['cart']->id;
+                $context = $this->context;
+                $context->cart = $duplication['cart'];
+                CartRule::autoAddToCart($context);
+                $this->context->cookie->write();
+                Tools::redirect('index.php?controller=order');
+            }
+        }
+
         $this->bootstrap();
     }
 
@@ -46,8 +64,8 @@ class OrderControllerCore extends FrontController
         $deliveryOptionsFinder = new DeliveryOptionsFinder(
             $this->context,
             $this->getTranslator(),
-            $this->objectSerializer,
-            new PricePresenter
+            $this->objectPresenter,
+            new PriceFormatter
         );
 
         $session = new CheckoutSession(
@@ -65,12 +83,12 @@ class OrderControllerCore extends FrontController
         $session = $this->getCheckoutSession();
 
         $this->checkoutProcess = new CheckoutProcess(
-            $this->context->smarty,
+            $this->context,
             $session
         );
 
         $checkoutDeliveryStep = new CheckoutDeliveryStep(
-            $this->context->smarty,
+            $this->context,
             $translator
         );
 
@@ -83,7 +101,6 @@ class OrderControllerCore extends FrontController
         )->setDisplayTaxesLabel(
             (Configuration::get('PS_TAX')
             && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
-            && $this->context->smarty->tpl_vars['display_tax_label']->value
         )->setGiftCost(
             $this->context->cart->getGiftWrappingPrice(
                 $checkoutDeliveryStep->getIncludeTaxes()
@@ -92,19 +109,19 @@ class OrderControllerCore extends FrontController
 
         $this->checkoutProcess
             ->addStep(new CheckoutPersonalInformationStep(
-                $this->context->smarty,
+                $this->context,
                 $translator,
                 $this->makeLoginForm(),
                 $this->makeCustomerForm()
             ))
             ->addStep(new CheckoutAddressesStep(
-                $this->context->smarty,
+                $this->context,
                 $translator,
                 $this->makeAddressForm()
             ))
             ->addStep($checkoutDeliveryStep)
             ->addStep(new CheckoutPaymentStep(
-                $this->context->smarty,
+                $this->context,
                 $translator,
                 new PaymentOptionsFinder,
                 new ConditionsToApproveFinder(
@@ -133,11 +150,13 @@ class OrderControllerCore extends FrontController
 
     private function jsonRenderCartSummary()
     {
+        parent::initContent();
         $cart = $this->cart_presenter->present(
             $this->context->cart
         );
         $return['preview'] = $this->render('checkout/_partials/cart-summary.tpl', [
             'cart' => $cart,
+            'static_token' => Tools::getToken(false),
         ]);
 
         return json_encode($return);
@@ -150,6 +169,12 @@ class OrderControllerCore extends FrontController
         }
 
         parent::initContent();
+
+        $presentedCart = $this->cart_presenter->present($this->context->cart);
+
+        if (count($presentedCart['products']) <= 0) {
+            Tools::redirect('index.php?controller=cart');
+        }
 
         $this->restorePersistedData($this->checkoutProcess);
         $this->checkoutProcess->handleRequest(
@@ -172,9 +197,7 @@ class OrderControllerCore extends FrontController
 
         $this->context->smarty->assign([
             'checkout_process'  => new RenderableProxy($this->checkoutProcess),
-            'cart'              => $this->cart_presenter->present(
-                                        $this->context->cart
-                                    )
+            'cart'              => $presentedCart
         ]);
         $this->setTemplate('checkout/checkout.tpl');
     }

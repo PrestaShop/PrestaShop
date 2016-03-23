@@ -33,6 +33,8 @@ define('_CUSTOMIZE_FILE_', 0);
  */
 define('_CUSTOMIZE_TEXTFIELD_', 1);
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class ProductCore extends ObjectModel
 {
     /** @var string Tax name */
@@ -182,7 +184,7 @@ class ProductCore extends ObjectModel
     public $available_date = '0000-00-00';
 
     /** @var bool Will the condition select should be visible for this product ? */
-    public $show_condition = true;
+    public $show_condition = false;
 
     /** @var string Enumerated (enum) product condition (new, used, refurbished) */
     public $condition;
@@ -3456,11 +3458,15 @@ class ProductCore extends ObjectModel
 
         $colors = array();
         foreach ($res as $row) {
+            $row['texture'] = '';
+
             if (Tools::isEmpty($row['color']) && !@filemtime(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg')) {
                 continue;
+            } elseif (Tools::isEmpty($row['color']) && @filemtime(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg')) {
+                $row['texture'] = _THEME_COL_DIR_.$row['id_attribute'].'.jpg';
             }
 
-            $colors[(int)$row['id_product']][] = array('id_product_attribute' => (int)$row['id_product_attribute'], 'color' => $row['color'], 'id_product' => $row['id_product'], 'name' => $row['name'], 'id_attribute' => $row['id_attribute']);
+            $colors[(int)$row['id_product']][] = array('id_product_attribute' => (int)$row['id_product_attribute'], 'color' => $row['color'], 'texture' => $row['texture'], 'id_product' => $row['id_product'], 'name' => $row['name'], 'id_attribute' => $row['id_attribute']);
         }
 
         return $colors;
@@ -4293,9 +4299,9 @@ class ProductCore extends ObjectModel
 
         if (isset($row['quantity_wanted'])) {
             // 'quantity_wanted' may very well be zero even if set
-            $quantity = max(1, (int)$row['quantity_wanted']);
+            $quantity = max((int)$row['minimal_quantity'], (int)$row['quantity_wanted']);
         } else {
-            $quantity = 1;
+            $quantity = (int)$row['minimal_quantity'];
         }
 
         $row['price_tax_exc'] = Product::getPriceStatic(
@@ -4423,6 +4429,8 @@ class ProductCore extends ObjectModel
         }
 
         $row = Product::getTaxesInformations($row, $context);
+
+        $row['ecotax_rate'] = (float)Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang'   => $id_lang,
@@ -5553,12 +5561,15 @@ class ProductCore extends ObjectModel
      */
     public static function getAttributesParams($id_product, $id_product_attribute)
     {
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerFactory->build();
+
         $id_lang = (int)Context::getContext()->language->id;
         $id_shop = (int)Context::getContext()->shop->id;
         $cache_id = 'Product::getAttributesParams_'.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_lang.'-'.(int)$id_shop;
 
         // if blocklayered module is installed we check if user has set custom attribute name
-        if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered')) {
+        if ($moduleManager->isInstalled('blocklayered') && $moduleManager->isEnabled('blocklayered')) {
             $nb_custom_values = Db::getInstance()->executeS('
 			SELECT DISTINCT la.`id_attribute`, la.`url_name` as `name`
 			FROM `'._DB_PREFIX_.'attribute` a
@@ -5646,8 +5657,11 @@ class ProductCore extends ObjectModel
      */
     public static function getAttributesInformationsByProduct($id_product)
     {
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
         // if blocklayered module is installed we check if user has set custom attribute name
-        if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered')) {
+        if ($moduleManager->isInstalled('blocklayered') && $moduleManager->isEnabled('blocklayered')) {
             $nb_custom_values = Db::getInstance()->executeS('
 			SELECT DISTINCT la.`id_attribute`, la.`url_name` as `attribute`
 			FROM `'._DB_PREFIX_.'attribute` a

@@ -45,7 +45,7 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity.
-    logLevel: 'silent',
+    logLevel: process.env.TRAVIS ? 'command' : 'silent',
     //
     // Enables colors for log output.
     coloredLogs: true,
@@ -59,6 +59,7 @@ exports.config = {
     //
     // Default timeout for all waitForXXX commands.
     waitforTimeout: 10000,
+    waitforInterval: 3000,
     //
     // Initialize the browser instance with a WebdriverIO plugin. The object should have the
     // plugin name as key and the desired plugin options as property. Make sure you have
@@ -127,7 +128,10 @@ exports.config = {
         chai.should();
         // this hook allows to define custom functions on the global browser object
         require('./commands/init')(browser);
-        return browser.timeoutsImplicitWait(2000);
+        return browser
+            .timeoutsImplicitWait(10000)
+            .windowHandleMaximize()
+            ;
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from

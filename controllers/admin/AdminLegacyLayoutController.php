@@ -30,8 +30,11 @@ class AdminLegacyLayoutControllerCore extends AdminController
     private $headerToolbarBtn = array();
     private $title;
     private $showContentHeader = true;
+    private $headerTabContent = '';
+    private $enableSidebar = false;
+    private $helpLink;
 
-    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true)
+    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
     {
         parent::__construct($controllerName, 'new-theme');
 
@@ -42,6 +45,9 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->id = Tab::getIdFromClassName($this->controller_name);
         $this->headerToolbarBtn = $headerToolbarBtn;
         $this->showContentHeader = $showContentHeader;
+        $this->headerTabContent = $headerTabContent;
+        $this->enableSidebar = $enableSidebar;
+        $this->helpLink = $helpLink;
     }
 
     public function setMedia()
@@ -81,10 +87,18 @@ class AdminLegacyLayoutControllerCore extends AdminController
             $this->context->smarty->assign(array('title' => $this->title));
         }
 
-        $this->context->smarty->assign(array(
+        $vars = array(
             'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
+            'headerTabContent' => $this->headerTabContent,
             'content' => '{$content}', //replace content by original smarty tag var
-        ));
+            'enableSidebar' => $this->enableSidebar,
+        );
+
+        if (!empty($this->helpLink)) {
+            $vars['help_link'] = $this->helpLink;
+        }
+
+        $this->context->smarty->assign($vars);
     }
 
     public function initToolbarTitle()

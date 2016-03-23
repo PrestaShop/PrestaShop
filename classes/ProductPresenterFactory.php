@@ -1,8 +1,9 @@
 <?php
 
 use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
+use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Translator;
@@ -36,10 +37,20 @@ class ProductPresenterFactoryCore
             $this->context->link
         );
 
+        if (is_a($this->context->controller, 'ProductListingFrontControllerCore')) {
+            return new ProductListingPresenter(
+                $imageRetriever,
+                $this->context->link,
+                new PriceFormatter,
+                new ProductColorsRetriever,
+                new Translator(new LegacyContext)
+            );
+        }
+
         return new ProductPresenter(
             $imageRetriever,
             $this->context->link,
-            new PricePresenter,
+            new PriceFormatter,
             new ProductColorsRetriever,
             new Translator(new LegacyContext)
         );

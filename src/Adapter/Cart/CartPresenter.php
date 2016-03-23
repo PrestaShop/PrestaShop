@@ -2,9 +2,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart;
 
-use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
+use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Translator;
@@ -13,19 +14,21 @@ use Context;
 use Cart;
 use Product;
 use Configuration;
+use CartRule;
+use Tools;
 
-class CartPresenter
+class CartPresenter implements PresenterInterface
 {
-    private $pricePresenter;
+    private $priceFormatter;
     private $link;
     private $translator;
     private $imageRetriever;
 
     public function __construct()
     {
-        $this->pricePresenter = new PricePresenter();
-        $this->link = Context::getContext()->link;
-        $this->translator = new Translator(new LegacyContext());
+        $this->priceFormatter = new PriceFormatter();
+        $this->link           = Context::getContext()->link;
+        $this->translator     = new Translator(new LegacyContext());
         $this->imageRetriever = new ImageRetriever($this->link);
     }
 
@@ -34,17 +37,12 @@ class CartPresenter
         return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
     }
 
-    private function shouldShowTaxLine()
+    private function presentProduct(array $rawProduct)
     {
-        return Configuration::get('PS_TAX_DISPLAY');
-    }
-
-    protected function presentProduct(array $rawProduct)
-    {
-        $presenter = new ProductPresenter(
+        $presenter = new ProductListingPresenter(
             $this->imageRetriever,
             $this->link,
-            $this->pricePresenter,
+            $this->priceFormatter,
             new ProductColorsRetriever(),
             $this->translator
         );
@@ -83,19 +81,22 @@ class CartPresenter
             $rawProduct['id_product_attribute']
         );
 
+        $rawProduct['ecotax_rate'] = '';
         $rawProduct['specific_prices'] = '';
         $rawProduct['customizable'] = '';
         $rawProduct['online_only'] = '';
         $rawProduct['reduction'] = '';
         $rawProduct['new'] = '';
+        $rawProduct['condition'] = '';
+        $rawProduct['pack'] = '';
 
-        $rawProduct['price'] = $this->pricePresenter->convertAndFormat(
-            $this->includeTaxes() ?
-            $rawProduct['price_wt'] :
-            $rawProduct['price']
-        );
+        if ($this->includeTaxes()) {
+            $rawProduct['price'] = $this->priceFormatter->format($rawProduct['price_wt']);
+        } else {
+            $rawProduct['price'] = $rawProduct['price_tax_exc'] = $this->priceFormatter->format($rawProduct['price']);
+        }
 
-        $rawProduct['total'] = $this->pricePresenter->convertAndFormat(
+        $rawProduct['total'] = $this->priceFormatter->format(
             $this->includeTaxes() ?
             $rawProduct['total_wt'] :
             $rawProduct['total']
@@ -103,14 +104,14 @@ class CartPresenter
 
         $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
 
-        return $presenter->presentForListing(
+        return $presenter->present(
             $settings,
             $rawProduct,
             Context::getContext()->language
         );
     }
 
-    protected function addCustomizedData(array $products, Cart $cart)
+    public function addCustomizedData(array $products, Cart $cart)
     {
         $data = Product::getAllCustomizedDatas($cart->id);
 
@@ -200,8 +201,12 @@ class CartPresenter
         }, $products);
     }
 
-    public function present(Cart $cart)
+    public function present($cart)
     {
+        if (!is_a($cart, 'Cart')) {
+            throw new \Exception("CartPresenter can only present instance of Cart");
+        }
+
         $rawProducts = $cart->getProducts(true);
 
         $products = array_map([$this, 'presentProduct'], $rawProducts);
@@ -210,12 +215,13 @@ class CartPresenter
 
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
+        $total_discount      = $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
 
-        if ($this->shouldShowTaxLine()) {
+        if (Configuration::get('PS_TAX_DISPLAY')) {
             $subtotals['tax'] = [
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', [], 'Cart'),
-                'amount' => $this->pricePresenter->convertAndFormat(
+                'amount' => $this->priceFormatter->format(
                     $total_including_tax - $total_excluding_tax
                 ),
             ];
@@ -225,7 +231,9 @@ class CartPresenter
             $subtotals['gift_wrapping'] = [
                 'type' => 'gift_wrapping',
                 'label' => $this->translator->trans('Gift wrapping', [], 'Cart'),
-                'amount' => $cart->getGiftWrappingPrice($this->includeTaxes()) != 0 ? $this->pricePresenter->convertAndFormat($cart->getGiftWrappingPrice($this->includeTaxes())) : $this->translator->trans('Free', [], 'Cart'),
+                'amount' => $cart->getGiftWrappingPrice($this->includeTaxes()) != 0
+                                ? $this->priceFormatter->format($cart->getGiftWrappingPrice($this->includeTaxes()))
+                                : $this->translator->trans('Free', [], 'Cart'),
             ];
         }
 
@@ -233,13 +241,22 @@ class CartPresenter
         $subtotals['shipping'] = [
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', [], 'Cart'),
-            'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
+            'amount' => $shipping_cost != 0
+                            ? $this->priceFormatter->format($shipping_cost)
+                            : $this->translator->trans('Free', [], 'Cart'),
+        ];
+
+        $subtotals['discounts'] = [
+            'type' => 'discount',
+            'label' => $this->translator->trans('Discount', [], 'Cart'),
+            'amount' => $total_discount != 0 ? $this->priceFormatter->format($total_discount) : 0,
         ];
 
         $total = [
             'type' => 'total',
             'label' => $this->translator->trans('Total', [], 'Cart'),
-            'amount' => $this->pricePresenter->convertAndFormat($this->includeTaxes() ? $total_including_tax : $total_excluding_tax),
+            'raw_amount' => $this->includeTaxes() ? $total_including_tax : $total_excluding_tax,
+            'amount' => $this->priceFormatter->format($this->includeTaxes() ? $total_including_tax : $total_excluding_tax),
         ];
 
         $totalAmount = $this->includeTaxes() ? $total_including_tax : $total_excluding_tax;
@@ -248,7 +265,7 @@ class CartPresenter
         $subtotals['products'] = [
             'type' => 'products',
             'label' => $this->translator->trans('Products', [], 'Cart'),
-            'amount' =>  $this->pricePresenter->convertAndFormat(($totalAmount - $shippingAmount))
+            'amount' =>  $this->priceFormatter->format(($totalAmount - $shippingAmount))
         ];
 
         $products_count = array_reduce($products, function ($count, $product) {
@@ -268,6 +285,24 @@ class CartPresenter
             'summary_string' => $summary_string,
             'id_address_delivery' => $cart->id_address_delivery,
             'id_address_invoice' => $cart->id_address_invoice,
+            'vouchers' => $this->getTemplateVarVouchers($cart),
+        ];
+    }
+
+    private function getTemplateVarVouchers(Cart $cart)
+    {
+        $cartVouchers = $cart->getCartRules();
+        $vouchers = [];
+
+        foreach ($cartVouchers as $cartVoucher) {
+            $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
+            $vouchers[$cartVoucher['id_cart_rule']]['name'] = $cartVoucher['name'];
+            $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink('cart', true, null, ['deleteDiscount' => $cartVoucher['id_cart_rule'], 'token' => Tools::getToken(false)]);
+        }
+
+        return [
+            'allowed' => (int)CartRule::isFeatureActive(),
+            'added' => $vouchers,
         ];
     }
 }

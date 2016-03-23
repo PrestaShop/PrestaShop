@@ -1,0 +1,22 @@
+{% set column = column|default('') %}
+{% set sortOrder = sortOrder|default('') %}
+{% set orderBy = orderBy|default('') %}
+
+{% if column %}
+  {% spaceless %}
+    <span
+      psorderby="{{ column }}"
+      psorderway="asc"
+      class="icon-caret-up icon-caret {% if orderBy == column and sortOrder == 'asc' %}-current{% endif %}"
+    >
+      &#9650;
+    </span>
+    <span
+      psorderby="{{ column }}"
+      psorderway="desc"
+      class="icon-caret-down icon-caret {% if orderBy == column and sortOrder == 'desc' %}-current{% endif %}"
+    >
+      &#9660;
+    </span>
+  {% endspaceless %}
+{% endif %}

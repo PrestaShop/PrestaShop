@@ -1,4 +1,4 @@
-<div id="search_filters" class="_margin-bottom-medium _margin-top-medium">
+<div id="search_filters">
   <h4 class="h5 facets-title">{l s='Filter By'}</h4>
   {foreach from=$facets item="facet"}
     {if $facet.displayed}
@@ -11,22 +11,30 @@
                 <li>
                   <label class="facet-label">
                     {if $facet.multipleSelectionAllowed}
-                      <input
-                        id="facet-checkbox"
-                        data-search-url="{$filter.nextEncodedFacetsURL}"
-                        type="checkbox"
-                        {if $filter.active } checked {/if}
-                      >
-                      <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons check">&#xE5CA;</i></span>
+                      <span class="custom-checkbox">
+                        <input
+                          data-search-url="{$filter.nextEncodedFacetsURL}"
+                          type="checkbox"
+                          {if $filter.active } checked {/if}
+                        >
+                        {if isset($filter.properties.color)}
+                          <span class="color" style="background-color:{$filter.properties.color}"></span>
+                          {elseif isset($filter.properties.texture)}
+                            <span class="color texture" style="background-image:url({$filter.properties.texture})"></span>
+                          {else}
+                          <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                        {/if}
+                      </span>
                     {else}
-                      <input
-                        id="facet-checkbox"
-                        data-search-url="{$filter.nextEncodedFacetsURL}"
-                        type="radio"
-                        name="filter {$facet.label}"
-                        {if $filter.active } checked {/if}
-                      >
-                      <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons check">&#xE5CA;</i></span>
+                      <span class="custom-checkbox">
+                        <input
+                          data-search-url="{$filter.nextEncodedFacetsURL}"
+                          type="radio"
+                          name="filter {$facet.label}"
+                          {if $filter.active } checked {/if}
+                        >
+                        <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                      </span>
                     {/if}
 
                     <a
@@ -35,7 +43,7 @@
                     >
                       {$filter.label}
                       {if $filter.magnitude}
-                        <span class="magnitude">{$filter.magnitude}</span>
+                        <span class="magnitude">({$filter.magnitude})</span>
                       {/if}
                     </a>
                   </label>

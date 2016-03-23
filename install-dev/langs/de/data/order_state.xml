@@ -33,7 +33,7 @@
     <template>payment_error</template>
   </order_state>
   <order_state id="On_backorder_paid">
-    <name>Artikel nicht auf Lager</name>
+    <name>Artikel nicht auf Lager (bezahlt)</name>
     <template>outofstock</template>
   </order_state>
   <order_state id="On_backorder_unpaid">

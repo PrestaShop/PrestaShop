@@ -4,8 +4,7 @@
   {l s='Your addresses'}
 {/block}
 
-{block name='page_content_container'}
-<section id="content" class="page-content page-addresses">
+{block name='page_content'}
   {foreach $customer.addresses as $address}
     <div class="col-lg-4 col-md-6 col-sm-6">
     {block name='customer_address'}
@@ -17,9 +16,7 @@
   <div class="addresses-footer">
     <a href="{$urls.pages.address}" data-link-action="add-address">
       <i class="material-icons">&#xE145;</i>
-      <span class="_valign-middle">{l s='Create new address'}</span>
+      <span>{l s='Create new address'}</span>
     </a>
   </div>
-</section>
-
 {/block}

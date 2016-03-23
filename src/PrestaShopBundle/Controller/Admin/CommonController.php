@@ -25,15 +25,10 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface;
-use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 
 /**
@@ -168,21 +163,14 @@ class CommonController extends FrameworkBundleAdminController
 
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         /* @var $modulesProvider AdminModuleDataProvider */
+        $modulesRepository = (new ModuleManagerBuilder())->buildRepository();
 
         $modules = array();
         foreach ($moduleIdList as $id) {
             try {
-                $module = array_values($modulesProvider->getCatalogModules(['name' => $id]));
+                $module = $modulesRepository->getModule($id);
             } catch (\Exception $e) {
                 continue;
-            }
-
-            if (count($module) == 1) {
-                $module = $module[0];
-            } elseif (count($module) > 1) {
-                throw new \Exception("Module ID $id matches multiple times on the catalog.");
-            } else {
-                continue; // module not found
             }
             $modules[] = $module;
         }
@@ -198,5 +186,17 @@ class CommonController extends FrameworkBundleAdminController
             'domain' => $domain,
             'modules' => array_slice($modules, 0, $limit, true),
         );
+    }
+
+    /**
+     * Render a right sidebar with content from an URL
+     */
+    public function renderSidebarAction($url, $title = '', $footer = '')
+    {
+        return $this->render('PrestaShopBundle:Admin:Common/_partials/_sidebar.html.twig', [
+            'footer' => $footer,
+            'title' => $title,
+            'url' => urldecode($url),
+        ]);
     }
 }

@@ -91,19 +91,14 @@ class CmsControllerCore extends FrontController
 
         if ($this->assignCase == 1) {
             $this->context->smarty->assign(array(
-                'cms' => $this->objectSerializer->toArray($this->cms),
+                'cms' => $this->objectPresenter->present($this->cms),
             ));
 
             if ($this->cms->indexation == 0) {
                 $this->context->smarty->assign('nobots', true);
             }
-
-            if (Tools::getValue('content_only')) {
-                // This is use to create a "fancybox"
-                // StarterTheme: Create template for cms in a fancybox
-            } else {
-                $this->setTemplate('cms/page.tpl');
-            }
+            
+            $this->setTemplate('cms/page.tpl');
         } elseif ($this->assignCase == 2) {
             $this->context->smarty->assign($this->getTemplateVarCategoryCms());
             $this->setTemplate('cms/category.tpl');
@@ -166,7 +161,7 @@ class CmsControllerCore extends FrontController
     {
         $categoryCms = [];
 
-        $categoryCms['cms_category'] = $this->objectSerializer->toArray($this->cms_category);
+        $categoryCms['cms_category'] = $this->objectPresenter->present($this->cms_category);
         $categoryCms['sub_categories'] = [];
         $categoryCms['cms_pages'] = [];
 

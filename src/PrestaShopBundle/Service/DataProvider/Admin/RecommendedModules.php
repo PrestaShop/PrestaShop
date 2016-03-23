@@ -93,10 +93,10 @@ class RecommendedModules
         }, \Module::getModulesInstalled());
 
         foreach ($moduleFullList as $key => $module) {
-            if ((bool)array_key_exists($module->name, $installed_modules) === true) {
+            if ((bool)array_key_exists($module->attributes->get('name'), $installed_modules) === true) {
                 unset($moduleFullList[$key]);
             }
-            if (!isset($module->media->img)) {
+            if (!isset($module->attributes->get('media')->img)) {
                 unset($moduleFullList[$key]);
             }
         }

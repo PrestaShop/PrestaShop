@@ -38,7 +38,7 @@ class DatePickerType extends AbstractType
      */
     public function getParent()
     {
-        return \Symfony\Component\Form\Extension\Core\Type\TextType::class;
+        return'Symfony\Component\Form\Extension\Core\Type\TextType';
     }
 
     /**

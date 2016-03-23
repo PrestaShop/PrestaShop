@@ -27,14 +27,18 @@
 use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminStatsControllerCore extends AdminStatsTabController
 {
     public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
     {
         $visits = ($granularity == false) ? 0 : array();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
         /** @var Gapi $gapi */
-        $gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
+        $gapi = $moduleManager->isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
         if (Validate::isLoadedObject($gapi) && $gapi->isConfigured()) {
             $metric = $unique ? 'visitors' : 'visits';
             if ($result = $gapi->requestReportData($granularity ? 'ga:date' : '', 'ga:'.$metric, $date_from, $date_to, null, null, 1, 5000)) {
@@ -664,12 +668,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'newsletter_registrations':
+                $moduleManagerBuilder = new ModuleManagerBuilder();
+    $moduleManager = $moduleManagerBuilder->build();
+    
                 $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE newsletter = 1
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
-                if (Module::isInstalled('blocknewsletter')) {
+                if ($moduleManager->isInstalled('ps_emailsubscription')) {
                     $value += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 					SELECT COUNT(*)
 					FROM `'._DB_PREFIX_.'newsletter`

@@ -267,7 +267,7 @@ class AdminStatesControllerCore extends AdminController
 		WHERE s.id_country = '.(int)(Tools::getValue('id_country')).' AND s.active = 1 AND c.`contains_states` = 1
 		ORDER BY s.`name` ASC');
 
-        if (is_array($states) and !empty($states)) {
+        if (is_array($states) && !empty($states)) {
             $list = '';
             if ((bool)Tools::getValue('no_empty') != true) {
                 $empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '-';

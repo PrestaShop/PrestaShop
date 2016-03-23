@@ -35,7 +35,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
 
-        return $presenter->presentForListing(
+        return $presenter->present(
             $settings,
             $product,
             $this->context->language
@@ -110,14 +110,15 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     protected function renderFacets(ProductSearchResult $result)
     {
+        $facetCollection = $result->getFacetCollection();
         // not all search providers generate menus
-        if (empty($result->getFacetCollection())) {
+        if (empty($facetCollection)) {
             return '';
         }
 
         $facetsVar = array_map(
             [$this, 'prepareFacetForTemplate'],
-            $result->getFacetCollection()->getFacets()
+            $facetCollection->getFacets()
         );
 
         $activeFilters = [];
@@ -145,14 +146,15 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     protected function renderActiveFilters(ProductSearchResult $result)
     {
+        $facetCollection = $result->getFacetCollection();
         // not all search providers generate menus
-        if (empty($result->getFacetCollection())) {
+        if (empty($facetCollection)) {
             return '';
         }
 
         $facetsVar = array_map(
             [$this, 'prepareFacetForTemplate'],
-            $result->getFacetCollection()->getFacets()
+            $facetCollection->getFacets()
         );
 
         $activeFilters = [];
@@ -421,7 +423,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     {
         $search = $this->getProductSearchVariables();
 
-        $rendered_products = $this->render('catalog/products.tpl', $search);
+        $rendered_products = $this->render('catalog/_partials/products.tpl', $search);
 
         $data = [
             'products'            => $search['products'],

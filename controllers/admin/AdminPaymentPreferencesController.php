@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class AdminPaymentPreferencesControllerCore extends AdminController
 {
     public $payment_modules = array();
@@ -37,9 +39,12 @@ class AdminPaymentPreferencesControllerCore extends AdminController
 
         /* Get all modules then select only payment ones */
         $modules = Module::getModulesOnDisk(true);
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManagerBuilder->buildRepository();
 
         foreach ($modules as $module) {
-            if ($module->tab == 'payments_gateways') {
+            $addonModule = $moduleRepository->getModule($module->name);
+            if ($addonModule->attributes->get('parent_class') == 'PaymentModule') {
                 if ($module->id) {
                     if (!get_class($module) == 'SimpleXMLElement') {
                         $module->country = array();

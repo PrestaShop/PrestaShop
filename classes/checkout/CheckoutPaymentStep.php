@@ -8,12 +8,12 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
     private $selected_payment_option;
 
     public function __construct(
-        Smarty $smarty,
+        Context $context,
         TranslatorInterface $translator,
         PaymentOptionsFinder $paymentOptionsFinder,
         ConditionsToApproveFinder $conditionsToApproveFinder
     ) {
-        parent::__construct($smarty, $translator);
+        parent::__construct($context, $translator);
         $this->paymentOptionsFinder = $paymentOptionsFinder;
         $this->conditionsToApproveFinder = $conditionsToApproveFinder;
     }

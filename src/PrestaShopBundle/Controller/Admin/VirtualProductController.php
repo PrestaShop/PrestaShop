@@ -57,7 +57,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         }
 
         $form = $this->createForm(
-            \PrestaShopBundle\Form\Admin\Product\ProductVirtual::class,
+           'PrestaShopBundle\Form\Admin\Product\ProductVirtual',
             null,
             array('csrf_protection' => false)
         );

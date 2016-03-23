@@ -1,24 +1,26 @@
 <?php
 
 use Symfony\Component\Translation\TranslatorInterface;
-use PrestaShop\PrestaShop\Adapter\Product\PricePresenter;
-use PrestaShop\PrestaShop\Adapter\ObjectSerializer;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 
 class DeliveryOptionsFinderCore
 {
     private $context;
+    private $objectPresenter;
     private $translator;
+    private $priceFormatter;
 
     public function __construct(
         Context $context,
         TranslatorInterface $translator,
-        ObjectSerializer $objectSerializer,
-        PricePresenter $pricePresenter
+        ObjectPresenter $objectPresenter,
+        PriceFormatter $priceFormatter
     ) {
-        $this->context = $context;
-        $this->objectSerializer = $objectSerializer;
-        $this->translator = $translator;
-        $this->pricePresenter = $pricePresenter;
+        $this->context         = $context;
+        $this->objectPresenter = $objectPresenter;
+        $this->translator      = $translator;
+        $this->priceFormatter  = $priceFormatter;
     }
 
     private function isFreeShipping($cart, array $carrier)
@@ -48,7 +50,7 @@ class DeliveryOptionsFinderCore
     {
         $delivery_option_list = $this->context->cart->getDeliveryOptionList();
         $include_taxes = !Product::getTaxCalculationMethod((int)$this->context->cart->id_customer) && (int)Configuration::get('PS_TAX');
-        $display_taxes_label = ((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')) && $this->context->smarty->tpl_vars['display_tax_label']->value);
+        $display_taxes_label = (Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'));
 
         $carriers_available = array();
 
@@ -57,7 +59,7 @@ class DeliveryOptionsFinderCore
                 foreach ($carriers_list as $carriers) {
                     if (is_array($carriers)) {
                         foreach ($carriers as $carrier) {
-                            $carrier = array_merge($carrier, $this->objectSerializer->toArray($carrier['instance']));
+                            $carrier = array_merge($carrier, $this->objectPresenter->present($carrier['instance']));
                             $delay = $carrier['delay'][$this->context->language->id];
                             unset($carrier['instance'], $carrier['delay']);
                             $carrier['delay'] = $delay;
@@ -67,7 +69,7 @@ class DeliveryOptionsFinderCore
                                 );
                             } else {
                                 if ($include_taxes) {
-                                    $carrier['price'] = $this->pricePresenter->convertAndFormat($carriers_list['total_price_with_tax']);
+                                    $carrier['price'] = $this->priceFormatter->convertAndFormat($carriers_list['total_price_with_tax']);
                                     if ($display_taxes_label) {
                                         $carrier['price'] = sprintf(
                                             $this->translator->trans(
@@ -77,7 +79,7 @@ class DeliveryOptionsFinderCore
                                         );
                                     }
                                 } else {
-                                    $carrier['price'] = $this->pricePresenter->convertAndFormat($carriers_list['total_price_without_tax']);
+                                    $carrier['price'] = $this->priceFormatter->convertAndFormat($carriers_list['total_price_without_tax']);
                                     if ($display_taxes_label) {
                                         $carrier['price'] = sprintf(
                                             $this->translator->trans(

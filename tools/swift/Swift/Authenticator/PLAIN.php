@@ -19,7 +19,7 @@ Swift_ClassLoader::load("Swift_Authenticator");
  */
 class Swift_Authenticator_PLAIN implements Swift_Authenticator
 {
-  /**
+    /**
    * Try to authenticate using the username and password
    * Returns false on failure
    * @param string The username
@@ -27,17 +27,17 @@ class Swift_Authenticator_PLAIN implements Swift_Authenticator
    * @param Swift The instance of Swift this authenticator is used in
    * @return boolean
    */
-  public function isAuthenticated($user, $pass, Swift $swift)
+  public function isAuthenticated($user, $pass, SwiftPs $swift)
   {
-    try {
-      //The authorization string uses ascii null as a separator (See RFC 2554)
+      try {
+          //The authorization string uses ascii null as a separator (See RFC 2554)
       $credentials = base64_encode($user . chr(0) . $user . chr(0) . $pass);
-      $swift->command("AUTH PLAIN " . $credentials, 235);
-    } catch (Swift_ConnectionException $e) {
-      $swift->reset();
-      return false;
-    }
-    return true;
+          $swift->command("AUTH PLAIN " . $credentials, 235);
+      } catch (Swift_ConnectionException $e) {
+          $swift->reset();
+          return false;
+      }
+      return true;
   }
   /**
    * Return the name of the AUTH extension this is for
@@ -45,6 +45,6 @@ class Swift_Authenticator_PLAIN implements Swift_Authenticator
    */
   public function getAuthExtensionName()
   {
-    return "PLAIN";
+      return "PLAIN";
   }
 }

@@ -2018,6 +2018,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign(array(
             'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
+            'debug_mode' => (bool)_PS_MODE_DEV_,
             'content' => $this->content,
             'lite_display' => $this->lite_display,
             'url_post' => self::$currentIndex.'&token='.$this->token,
@@ -2573,7 +2574,7 @@ class AdminControllerCore extends Controller
             //Bootstrap
             $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
             $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
-            $this->addCSS('https://fonts.googleapis.com/icon?family=Material+Icons', 'all', 0);
+            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/public/theme.css', 'all', 0);
 
             $this->addJquery();
             $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
@@ -2584,7 +2585,7 @@ class AdminControllerCore extends Controller
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
-            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/public/bundle.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/public/bundle.js');
 
             $this->addJS(_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
 
@@ -2614,6 +2615,7 @@ class AdminControllerCore extends Controller
             _PS_JS_DIR_.'admin.js?v='._PS_VERSION_, // TODO: SEE IF REMOVABLE
             _PS_JS_DIR_.'cldr.js',
             _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
+            __PS_BASE_URI__.$this->admin_webpath.'/public/bundle.js',
         ));
 
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));

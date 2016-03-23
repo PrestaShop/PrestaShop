@@ -1,5 +1,7 @@
 <?php
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class AdminProductsController extends AdminProductsControllerCore
 {
     /*
@@ -2384,7 +2386,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=8020_sales_catalog';
         $helper->tooltip = $this->l('X% of your references have been purchased for the past 30 days', null, null, false);
         $helper->refresh = (bool)(ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time);
-        if (Module::isInstalled('statsbestproducts')) {
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
+        if ($moduleManager->isInstalled('statsbestproducts')) {
             $helper->href = Context::getContext()->link->getAdminLink('AdminStats').'&module=statsbestproducts&datepickerFrom='.date('Y-m-d', strtotime('-30 days')).'&datepickerTo='.date('Y-m-d');
         }
         $kpis[] = $helper->generate();

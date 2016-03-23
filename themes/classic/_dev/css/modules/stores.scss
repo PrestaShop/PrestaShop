@@ -1,0 +1,43 @@
+#stores {
+  .page-stores {
+    width: 70%;
+    margin: 0 auto;
+    .store-item-container {
+      @include display(flex);
+      @include justify-content(space-around);
+      @include align-items(center);
+      padding: $large-space 0;
+      ul {
+        margin-bottom: 0;
+        font-size: em(15px);
+      }
+      .divide-left {
+        border-left: $gray-light 1px solid;
+      }
+      .store-description{
+        @include flex(0 0 50%);
+        font-size: em(16px);
+      }
+    }
+    .store-item-footer {
+      margin-top: $extra-large-space;
+      padding-top: $extra-large-space;
+      @include display(flex);
+      @include justify-content(space-around);
+      &.divide-top {
+        border-top: $gray-light 1px solid;
+      }
+      div:first-child {
+        @include flex(0 0 65%);
+      }
+      i.material-icons{
+        margin-right: $small-space;
+        color: $gray;
+        font-size: em(16px);
+      }
+      li{
+        margin-bottom: $small-space;
+      }
+    }
+  }
+}

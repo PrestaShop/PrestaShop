@@ -4,8 +4,7 @@
   {l s='Reset your password'}
 {/block}
 
-{block name='page_content_container'}
-  <section id="content" class="password-form">
+{block name='page_content'}
     <form action="{$urls.pages.password}" method="post">
 
       <section class="form-fields">
@@ -36,7 +35,6 @@
       </footer>
 
     </form>
-  </section>
 {/block}
 
 {block name='page_footer'}

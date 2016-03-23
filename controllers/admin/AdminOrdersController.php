@@ -2133,6 +2133,8 @@ class AdminOrdersControllerCore extends AdminController
 
         // Save changes of order
         $order->update();
+    
+        StockAvailable::synchronize($product->id);
 
         // Update weight SUM
         $order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());

@@ -36,6 +36,7 @@ class CheckoutSessionCore
 
     public function setIdAddressDelivery($id_address)
     {
+        $this->context->cart->updateAddressId($this->context->cart->id_address_delivery, $id_address);
         $this->context->cart->id_address_delivery = $id_address;
         $this->context->cart->save();
         return $this;
