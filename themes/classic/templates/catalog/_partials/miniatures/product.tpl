@@ -85,8 +85,6 @@
         title="{l s='Quick view'}"
         class="quick-view"
         data-link-action=="quickview"
-        data-product-id="{$product.id}"
-        data-product-id-attribute="{$product.id_product_attribute}"
       >
         <i class="material-icons search">&#xE8B6;</i> {l s='Quick view'}
       </a>
