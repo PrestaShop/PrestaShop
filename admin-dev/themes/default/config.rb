@@ -19,5 +19,3 @@ color_output = false
 
 preferred_syntax = :sass
 # sass-convert -R --from scss --to sass sass scss && rm -rf sass && mv scss sass
-
-sourcemap = true
