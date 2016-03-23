@@ -283,7 +283,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
         foreach ($langs as $lang) {
             $language_code = explode('-', $lang['language_code']);
-            $cldrUpdate->fetchLocale($language_code['0'].'-'.Tools::strtoupper($language_code[1]));
+            if (count($language_code) == 1) {
+                $cldrUpdate->fetchLocale($language_code['0']);
+            } else {
+                $cldrUpdate->fetchLocale($language_code['0'].'-'.Tools::strtoupper($language_code[1]));
+            }
         }
     }
 
