@@ -1,7 +1,10 @@
-<div class="module-item-{{display_type}} {{col_lg}}" data-id="{{ module.attributes.get('id') }}" data-name="{{ module.attributes.get('displayName') }}"
+
+{% set isModuleActive = module.database.get('active')|default('0') %}
+
+<div class="module-item-{{display_type}} {{col_lg}} {% if origin == 'manage' and isModuleActive == '0' %}module-item-{{display_type}}-isNotActive{% endif %}" data-id="{{ module.attributes.get('id') }}" data-name="{{ module.attributes.get('displayName') }}"
 data-scoring="{{module.attributes.get('scoring')}}" data-logo="{{ module.attributes.get('media').img }}" data-author="{{ module.attributes.get('author') }}"
 data-version="{{ module.attributes.get('version') }}" data-description="{{ module.attributes.get('description') }}" data-tech-name="{{module.attributes.get('name') }}"
-data-categories="{{ module.attributes.get('refs')|join('|') }}" data-type="{{module.attributes.get('productType') }}" data-price="{{module.attributes.get('price').EUR}}">
+data-categories="{{ module.attributes.get('refs')|join('|') }}" data-type="{{module.attributes.get('productType') }}" data-price="{{module.attributes.get('price').EUR}}" data-active="{{isModuleActive}}">
      <div class="module-item-wrapper-{{display_type}}">
         <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.get('name')}}">
             <img class="module-logo-thumb-{{display_type}}" src="{{ module.attributes.get('media').img }}" alt="{{ module.attributes.get('displayName') }}" />

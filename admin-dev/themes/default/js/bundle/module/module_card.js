@@ -20,6 +20,8 @@ var AdminModuleCard = function () {
     this.moduleActionMenuDisableLinkSelector = 'a.module_action_menu_disable';
     this.moduleActionMenuResetLinkSelector = 'a.module_action_menu_reset';
     this.moduleActionMenuUpdateLinkSelector = 'a.module_action_menu_update';
+    this.moduleItemListSelector = '.module-item-list';
+    this.moduleItemGridSelector = '.module-item-grid';
 
     /* Selectors only for modal buttons */
     this.moduleActionModalDisableLinkSelector = 'a.module_action_modal_disable';
@@ -33,6 +35,14 @@ var AdminModuleCard = function () {
      */
     this.init = function () {
         this.initActionButtons();
+    };
+
+    this.getModuleItemSelector = function () {
+        if ($(this.moduleItemListSelector).length) {
+            return this.moduleItemListSelector;
+        } else {
+            return this.moduleItemGridSelector;
+        }
     };
 
     this.confirmAction = function(action, element) {
@@ -54,24 +64,6 @@ var AdminModuleCard = function () {
     };
 
     this.initActionButtons = function () {
-        // action buttons on a module card
-        /*var confirmAction = function (action, element) {
-            var modal = $('#' + $(element).data('confirm_modal'));
-            if (modal.length != 1) {
-                return true;
-            }
-            modal.first().modal('show');
-            return false; // do not allow a.href to reload the page. The confirm modal dialog will do it async if needed.
-        };
-        var dispatchPreEvent = function (action, element) {
-            var event = jQuery.Event('module_card_action_event');
-            $(element).trigger(event, [action]);
-            if (event.isPropagationStopped() !== false || event.isImmediatePropagationStopped() !== false) {
-                return false; // if all handlers have not been called, then stop propagation of the click event.
-            }
-            return (event.result !== false); // explicit false must be set from handlers to stop propagation of the click event.
-        };*/
-
         var _this = this;
 
         $(document).on('click', this.moduleActionMenuInstallLinkSelector, function () {
@@ -105,6 +97,7 @@ var AdminModuleCard = function () {
     };
 
     this.requestToController = function (action, element) {
+        var _this = this;
         var jqElementObj = element.closest(".btn-group");
         var spinnerObj = $("<button class=\"btn btn-primary-reverse btn-lg onclick unbind pull-right\"></button>");
         $.ajax({
@@ -123,14 +116,29 @@ var AdminModuleCard = function () {
                     $.growl.error({message: result[moduleTechName].msg});
                 } else {
                     $.growl.notice({message: result[moduleTechName].msg});
-                    if (action != "uninstall") {
-                        jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
-                    } else {
+                    var alteredSelector = null;
+                    var mainElement = null;
+                    if (action == "uninstall") {
                         jqElementObj.html("");
                         jqElementObj.fadeOut(function() {
                             $(this).remove();
                         });
+                        BOEvent.emitEvent("Module Uninstalled", "CustomEvent");
+                    } else if (action == "disable") {
+                        alteredSelector = _this.getModuleItemSelector().replace('.', '');
+                        mainElement = jqElementObj.parents('.' + alteredSelector).first();
+                        mainElement.addClass(alteredSelector + '-isNotActive');
+                        mainElement.attr('data-active', '0');
+                        BOEvent.emitEvent("Module Disabled", "CustomEvent");
+                    } else if (action == "enable") {
+                        alteredSelector = _this.getModuleItemSelector().replace('.', '');
+                        mainElement = jqElementObj.parents('.' + alteredSelector).first();
+                        mainElement.removeClass(alteredSelector + '-isNotActive');
+                        mainElement.attr('data-active', '1');
+                        BOEvent.emitEvent("Module Enabled", "CustomEvent");
                     }
+
+                    jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
                 }
             }
         }).always(function () {
