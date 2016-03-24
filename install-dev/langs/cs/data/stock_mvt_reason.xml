@@ -7,7 +7,7 @@
     <name>Snížení</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Customer_Order">
-    <name>Customer Order</name>
+    <name>Objednávka zákazníka</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Regulation_following_an_inventory_of_stock">
     <name>Regulation following an inventory of stock</name>
@@ -16,10 +16,10 @@
     <name>Regulation following an inventory of stock</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Transfer_to_another_warehouse">
-    <name>Transfer to another warehouse</name>
+    <name>Přesun do jiného skladue</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Transfer_from_another_warehouse">
-    <name>Transfer from another warehouse</name>
+    <name>Přesun z jiného skladu</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Supply_Order">
     <name>Objednávky dodavatelům</name>

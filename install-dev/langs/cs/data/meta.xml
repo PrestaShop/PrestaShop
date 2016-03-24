@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <entity_meta>
   <meta id="404" id_shop="1">
-    <title>404 error</title>
+    <title>Chyba 404</title>
     <description>This page cannot be found</description>
     <keywords/>
     <url_rewrite>page-not-found</url_rewrite>
@@ -109,7 +109,7 @@
     <url_rewrite>muj-ucet</url_rewrite>
   </meta>
   <meta id="order-follow" id_shop="1">
-    <title>Order follow</title>
+    <title>Sledování objednávky</title>
     <description/>
     <keywords/>
     <url_rewrite>order-follow</url_rewrite>

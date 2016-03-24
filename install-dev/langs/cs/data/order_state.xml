@@ -33,15 +33,15 @@
     <template>payment_error</template>
   </order_state>
   <order_state id="On_backorder_paid">
-    <name>On backorder (paid)</name>
+    <name>U dodavatele (zaplaceno)</name>
     <template>outofstock</template>
   </order_state>
   <order_state id="On_backorder_unpaid">
-    <name>On backorder (not paid)</name>
+    <name>U dodavatele (nezaplaceno)</name>
     <template>outofstock</template>
   </order_state>
   <order_state id="Awaiting_bank_wire_payment">
-    <name>Awaiting bank wire payment</name>
+    <name>Čeká se na přijetí bezhotovostní platby</name>
     <template>bankwire</template>
   </order_state>
   <order_state id="Awaiting_PayPal_payment">
@@ -49,11 +49,11 @@
     <template/>
   </order_state>
   <order_state id="Payment_remotely_accepted">
-    <name>Remote payment accepted</name>
+    <name>Bezhotostní platba přijata</name>
     <template>payment</template>
   </order_state>
   <order_state id="Awaiting_cod_validation">
-    <name>Awaiting Cash On Delivery validation</name>
+    <name>Čeká se na potvrzení dobírky</name>
     <template>cashondelivery</template>
   </order_state>
 </entity_order_state>
