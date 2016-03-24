@@ -68,7 +68,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         parent::init();
 
-        $this->context->smarty->assign('adminActionDisplay', false);
+        $this->setTemplate('catalog/product.tpl');
 
         if ($id_product = (int)Tools::getValue('id_product')) {
             $this->product = new Product($id_product, true, $this->context->language->id, $this->context->shop->id);
@@ -124,6 +124,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('HTTP/1.1 404 Not Found');
                             header('Status: 404 Not Found');
                             $this->errors[] = $this->l('This product is no longer available.');
+                            $this->setTemplate('errors/404.tpl');
                         break;
                     }
                 }
