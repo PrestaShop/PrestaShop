@@ -1,60 +1,11 @@
 <div class="module-top-menu">
     <div class="row">
         <div class="col-md-8 module-menu-item">
-            <div class="dropdown">
-                {% for menu in topMenuData %}
-                    <button class="btn dropdown-toggle module-categories-dropdown" id="{{menu.refMenu}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <div class="module-category-selector-label">
-                            {{menu.name}}
-                        </div>
-                        <span><i class="icon-chevron-sign-down"></i></span>
-                    </button>
-                    <ul class="dropdown-menu module-category-selector" aria-labelledby="{{menu.refMenu}}">
-                        <li class="module-category-reset">
-                            <a href="#">
-                                <span>
-                                    All Categories
-                                </span>
-                            </a>
-                        </li>
-                        {% for subMenu in menu.subMenu|arrayCast %}
-                            <li class="module-category-menu" data-category-ref="{{subMenu.refMenu}}" data-category-display-name="{{subMenu.name}}">
-                                <a href="#">
-                                    {{subMenu.name}}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endfor %}
-            </div>
+            {% if topMenuData is defined %}
+                {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig' with { 'topMenuData': topMenuData } %}
+            {% endif %}
             {% if requireFilterStatus is defined and requireFilterStatus == true %}
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle module-status-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <div class="module-status-selector-label">
-                            Show all modules
-                        </div>
-                        <span><i class="icon-chevron-sign-down"></i></span>
-                    </button>
-                    <ul class="dropdown-menu module-status-selector">
-                        <li class="module-status-reset">
-                            <a href="#">
-                                <span>
-                                    Show all modules
-                                </span>
-                            </a>
-                        </li>
-                        <li class="module-status-menu" data-status-ref="1">
-                            <a href="#">
-                                Enabled Modules
-                            </a>
-                        </li>
-                        <li class="module-status-menu" data-status-ref="0">
-                            <a href="#">
-                                Disabled Modules
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_status.html.twig' %}
             {% endif %}
         </div>
 

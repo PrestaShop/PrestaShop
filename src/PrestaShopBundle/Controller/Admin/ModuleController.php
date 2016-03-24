@@ -21,28 +21,11 @@ class ModuleController extends FrameworkBundleAdminController
      */
     public function catalogAction()
     {
-        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $translator = $this->get('prestashop.adapter.translator');
-        $moduleManager_Factory = new ModuleManagerBuilder();
-        $moduleRepository = $moduleManager_Factory->buildRepository();
-
-        $filters = new AddonListFilter();
-        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setOrigin(AddonListFilterOrigin::ADDONS_ALL)
-            ->setStatus(~ AddonListFilterStatus::INSTALLED);
-
-        try {
-            $products = $moduleRepository->getFilteredList($filters);
-            $topMenuData = $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products));
-        } catch (Exception $e) {
-            $this->addFlash('error', 'Cannot get catalog data, please try again later. '. $e->getMessage());
-            $topMenuData = [];
-        }
+        $translator = $this->container->get('prestashop.adapter.translator');
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Modules & Services', array(), 'AdminModules'),
-                'topMenuData' => $topMenuData,
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
                 'showContentHeader' => true,
@@ -77,23 +60,11 @@ class ModuleController extends FrameworkBundleAdminController
 
         try {
             $products = $modulesProvider->generateAddonsUrls(
-                $moduleRepository->getFilteredList($filters));
+                $moduleRepository->getFilteredList($filters)
+            );
             shuffle($products);
-
-            $responseArray['content'] = $this->render(
-                'PrestaShopBundle:Admin/Module/Includes:sorting.html.twig',
-                [
-                    'totalModules' => count($products)
-                ]
-            )->getContent();
-            $responseArray['content'] .= $this->render(
-                'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
-                [
-                    'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products)),
-                    'modules' => $this->getPresentedProducts($products),
-                    'requireAddonsSearch' => true
-                ]
-            )->getContent();
+            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($modulesProvider, $products);
+            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse($modulesProvider, $products);
             $responseArray['status'] = true;
         } catch (Exception $e) {
             $responseArray['msg'] = $translator->trans(
@@ -108,7 +79,42 @@ class ModuleController extends FrameworkBundleAdminController
         return new JsonResponse($responseArray, 200);
     }
 
-    public function manageAction($category = null, $keyword = null)
+    private function constructJsonCatalogBodyResponse($modulesProvider, $products)
+    {
+        $formattedContent = [];
+        $formattedContent['selector'] = '.module-catalog-page';
+        $formattedContent['content'] = $this->render(
+            'PrestaShopBundle:Admin/Module/Includes:sorting.html.twig',
+            [
+                'totalModules' => count($products)
+            ]
+        )->getContent();
+        $formattedContent['content'] .= $this->render(
+            'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
+            [
+                'modules' => $modulesProvider->generateAddonsUrls($products),
+                'requireAddonsSearch' => true
+            ]
+        )->getContent();
+
+        return $formattedContent;
+    }
+
+    private function constructJsonCatalogCategoriesMenuResponse($modulesProvider, $products)
+    {
+        $formattedContent = [];
+        $formattedContent['selector'] = '.module-menu-item';
+        $formattedContent['content'] = $this->render(
+            'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig',
+            [
+                'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products))
+            ]
+        )->getContent();
+
+        return $formattedContent;
+    }
+
+    public function manageAction(Request $request, $category = null, $keyword = null)
     {
         $translator = $this->get('prestashop.adapter.translator');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');

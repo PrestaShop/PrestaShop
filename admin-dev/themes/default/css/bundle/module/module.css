@@ -724,3 +724,7 @@ form#importDropzone {
 .module-import-success-configure {
     display: none;
 }
+
+.module-top-menu {
+    min-height: 74px;
+}

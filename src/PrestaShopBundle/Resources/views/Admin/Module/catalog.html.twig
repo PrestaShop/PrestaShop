@@ -17,16 +17,16 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-10 col-md-offset-1 module-catalog-page">
             {# Addons connect modal #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' %}
             {# Contains toolbar-nav for module page #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' %}
             {# Contains menu with Selection/Categories/Popular and Tag Search #}
-            {% include 'PrestaShopBundle:Admin/Module/Includes:menu_top.html.twig' with { 'topMenuData': topMenuData } %}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:menu_top.html.twig' %}
             {# Temporary loader until ajax has finisehd and display the full catalog #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:grid_loader.html.twig' %}
-            {# Module Categories Grid #}
+            {# Module Categories Grid @TODO move out from here #}
             {% if topMenuData.categories is defined %}
                 {% include 'PrestaShopBundle:Admin/Module/Includes:categories_grid.html.twig' with { 'categories' : topMenuData.categories }  %}
             {% endif %}
