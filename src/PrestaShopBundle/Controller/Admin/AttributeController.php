@@ -152,7 +152,7 @@ class AttributeController extends FrameworkBundleAdminController
 
         }
         
-        krsort($attributes);
+        ksort($attributes);
 
         $newCombinations = [];
         foreach ($attributes as $attribute){
