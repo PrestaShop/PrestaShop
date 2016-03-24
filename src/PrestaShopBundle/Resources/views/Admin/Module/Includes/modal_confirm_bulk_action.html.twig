@@ -15,6 +15,12 @@
                   <p id="module-modal-bulk-confirm-list">
                       [Module List Up To 10 Max]
                   </p>
+
+                  <div id="module-modal-bulk-checkbox">
+                    <label>
+                      <input type="checkbox" id="force_bulk_deletion" name="force_bulk_deletion"> {{ trans("Optional: delete module folder after uninstall.", {}, 'AdminModules')|raw }}
+                    </label>
+                  </div>
               </div>
           </div>
       </div>

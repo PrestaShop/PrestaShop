@@ -16,13 +16,12 @@ class ModuleController extends FrameworkBundleAdminController
 {
     /**
      * Controller responsible for displaying "Catalog" section of Module management pages
-     * @param  Request $request
      * @return Response
      */
     public function catalogAction()
     {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+        $translator = $this->get('prestashop.adapter.translator');
         $moduleManager_Factory = new ModuleManagerBuilder();
         $moduleRepository = $moduleManager_Factory->buildRepository();
 
@@ -61,8 +60,8 @@ class ModuleController extends FrameworkBundleAdminController
             return new Response('', 400);
         }
 
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+        $translator = $this->get('prestashop.adapter.translator');
         $moduleManagerFactory = new ModuleManagerBuilder();
         $moduleRepository = $moduleManagerFactory->buildRepository();
         $responseArray = [];
@@ -75,7 +74,7 @@ class ModuleController extends FrameworkBundleAdminController
         try {
             $products = $moduleRepository->getFilteredList($filters);
             shuffle($products);
-            //$topMenuData = $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products));
+
             $responseArray['content'] = $this->render(
                 'PrestaShopBundle:Admin/Module/Includes:sorting.html.twig',
                 [
@@ -104,10 +103,10 @@ class ModuleController extends FrameworkBundleAdminController
         return new JsonResponse($responseArray, 200);
     }
 
-    public function manageAction(Request $request, $category = null, $keyword = null)
+    public function manageAction($category = null, $keyword = null)
     {
-        $translator = $this->container->get('prestashop.adapter.translator');
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $translator = $this->get('prestashop.adapter.translator');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $moduleManagerFactory = new ModuleManagerBuilder();
         $moduleRepository = $moduleManagerFactory->buildRepository();
 
@@ -141,7 +140,7 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         foreach ($products as $product_label => $products_part) {
-            $products->$product_label = $modulesProvider->generateAddonsUrls($products_part);
+            $products->{$product_label} = $modulesProvider->generateAddonsUrls($products_part);
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
@@ -159,16 +158,23 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $action = $request->attributes->get('action');
         $module = $request->attributes->get('module_name');
+        $forceDeletion = $request->query->has('deletion');
+
         $moduleManagerFactory = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerFactory->build();
         $moduleRepository = $moduleManagerFactory->buildRepository();
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
 
         $ret = array();
         if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
             try {
-                $ret[$module]['status'] = $moduleManager->{$action}($module);
+                if($action == "uninstall") {
+                    $ret[$module]['status'] = $moduleManager->{$action}($module, $forceDeletion);
+                }else {
+                    $ret[$module]['status'] = $moduleManager->{$action}($module);
+                }
+
                 if ($ret[$module]['status'] === null) {
                     $ret[$module]['status'] = false;
                     $ret[$module]['msg'] = $module .' did not return a valid response on '.$action .' action';
@@ -178,7 +184,7 @@ class ModuleController extends FrameworkBundleAdminController
                 }
             } catch (Exception $e) {
                 $ret[$module]['status'] = false;
-                $ret[$module]['msg'] = sprintf('Exception thrown by addon %s on %s. %s', $module, $request->attributes->get('action'), $e->getMessage());
+                $ret[$module]['msg'] = sprintf('Exception thrown by addon %s on %s. %s', $module, $action, $e->getMessage());
 
                 $logger = $this->get('logger');
                 $logger->error($ret[$module]['msg']);
@@ -214,10 +220,10 @@ class ModuleController extends FrameworkBundleAdminController
         }
     }
 
-    public function notificationAction(Request $request)
+    public function notificationAction()
     {
-        $translator = $this->container->get('prestashop.adapter.translator');
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $translator = $this->get('prestashop.adapter.translator');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $moduleManagerFactory = new ModuleManagerBuilder();
         $moduleRepository = $moduleManagerFactory->buildRepository();
 
@@ -255,7 +261,7 @@ class ModuleController extends FrameworkBundleAdminController
         $products->to_install = $moduleRepository->getFilteredList($filters);
 
         foreach ($products as $product_label => $products_part) {
-            $products->$product_label = $modulesProvider->generateAddonsUrls($products_part);
+            $products->{$product_label} = $modulesProvider->generateAddonsUrls($products_part);
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
@@ -282,7 +288,7 @@ class ModuleController extends FrameworkBundleAdminController
     /**
      * Controller responsible for importing new module from DropFile zone in BO
      * @param  Request $request
-     * @return Response
+     * @return JsonResponse
      */
     public function importModuleAction(Request $request)
     {
@@ -292,7 +298,6 @@ class ModuleController extends FrameworkBundleAdminController
 
         try {
             $file_uploaded = $request->files->get('file_uploaded');
-            $file_uploaded_name = $file_uploaded->getClientOriginalName();
             $file_uploaded_tmp_path = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload';
             $tmp_filename_uniq = md5(uniqid()).$file_uploaded->guessExtension();
             $file_uploaded_tmp_fullpath = $file_uploaded_tmp_path.'/'.$tmp_filename_uniq;
@@ -339,6 +344,36 @@ class ModuleController extends FrameworkBundleAdminController
         }
     }
 
+    public function configureModuleAction($module_name)
+    {
+        /* @var $legacyUrlGenerator UrlGeneratorInterface */
+        $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
+
+        $redirectionParams = array(
+            // do not transmit limit & offset: go to the first page when redirecting
+            'configure' => $module_name,
+        );
+        return $this->redirect($legacyUrlGenerator->generate('admin_module_configure_action',
+            $redirectionParams), 302);
+    }
+
+    protected function getToolbarButtons()
+    {
+        $translator = $this->get('prestashop.adapter.translator');
+
+        // toolbarButtons
+        $toolbarButtons = array();
+        $toolbarButtons['add_module'] = array(
+            'href' => '#',
+            'desc' => $translator->trans('Add a module', array(), get_class($this)),
+            'icon' => 'cloud_upload',
+            'help' => $translator->trans('Add a module', array(), get_class($this)),
+        );
+        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
+
+        return $toolbarButtons;
+    }
+
     private function inflateModule($file_to_inflate)
     {
         if (file_exists($file_to_inflate)) {
@@ -363,23 +398,6 @@ class ModuleController extends FrameworkBundleAdminController
         }
     }
 
-    protected function getToolbarButtons()
-    {
-        $translator = $this->container->get('prestashop.adapter.translator');
-
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['add_module'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
-            'icon' => 'cloud_upload',
-            'help' => $translator->trans('Add a module', array(), get_class($this)),
-        );
-        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
-
-        return $toolbarButtons;
-    }
-
     private function getTopMenuData(array $topMenuData, $activeMenu = null)
     {
         if (isset($activeMenu)) {
@@ -392,22 +410,11 @@ class ModuleController extends FrameworkBundleAdminController
 
         return (array)$topMenuData;
     }
-    public function configureModuleAction($module_name)
-    {
-        $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
 
-        /* @var $legacyUrlGenerator UrlGeneratorInterface */
-        $redirectionParams = array(
-            // do not transmit limit & offset: go to the first page when redirecting
-            'configure' => $module_name,
-        );
-        return $this->redirect($legacyUrlGenerator->generate('admin_module_configure_action',
-                    $redirectionParams), 302);
-    }
     private function getAddonsConnectToolbar()
     {
-        $addonsProvider = $this->container->get('prestashop.core.admin.data_provider.addons_interface');
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
+        $translator = $this->get('prestashop.adapter.translator');
 
         if ($addonsProvider->isAddonsAuthenticated()) {
             $addonsEmail = $addonsProvider->getAddonsEmail();
