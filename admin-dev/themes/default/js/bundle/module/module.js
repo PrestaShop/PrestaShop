@@ -14,7 +14,9 @@ var AdminModuleController = function () {
     this.currentDisplay = '';
     this.isCategoryGridDisplayed = false;
     this.currentTagsList = [];
-    this.currentRefMenu = null;
+    this.currentRefCategory = null;
+    this.currentRefStatus = null;
+    this.currentSorting = null;
     this.tagSearchBlock = null;
     this.areAllModuleDisplayed = true;
     this.baseAddonsUrl = 'https://addons.prestashop.com/';
@@ -60,6 +62,11 @@ var AdminModuleController = function () {
     this.placeholderFailureGlobalSelector = '.module-placeholders-failure';
     this.placeholderFailureMsgSelector = '.module-placeholders-failure-msg';
     this.placeholderFailureRetryBtnSelector = '#module-placeholders-failure-retry';
+    /* Module's statuses selectors */
+    this.statusSelectorLabelSelector = '.module-status-selector-label';
+    this.statusSelector = '.module-status-selector';
+    this.statusItemSelector = '.module-status-menu';
+    this.statusResetBtnSelector = '.module-status-reset';
 
     /* Selectors for Module Import and Addons connect */
     this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
@@ -86,6 +93,7 @@ var AdminModuleController = function () {
      * @memberof AdminModule
      */
     this.init = function () {
+        this.initBOEventRegistering();
         this.loadVariables();
         this.initSortingDisplaySwitch();
         this.initSortingDropdown();
@@ -100,6 +108,280 @@ var AdminModuleController = function () {
         this.initPageChangeProtection();
         this.initBulkActions();
         this.initPlaceholderMechanism();
+        this.initFilterStatusDropdown();
+    };
+
+    this.initFilterStatusDropdown = function() {
+        var _this = this;
+
+        $('body').on('click', this.statusItemSelector, function () {
+            // Get data from li DOM input
+            _this.currentRefStatus = $(this).attr('data-status-ref');
+            var statusSelectedDisplayName = $(this).find('a:first').text();
+            // Change dropdown label to set it to the current status' displayname
+            $(_this.statusSelectorLabelSelector).text(statusSelectedDisplayName);
+            $(_this.statusResetBtnSelector).show();
+            // Do Search on categoryRef
+            _this.doSearch();
+        });
+
+        $('body').on('click', this.statusResetBtnSelector, function () {
+            var text = $(this).find('a > span').text();
+            $(_this.statusSelectorLabelSelector).text(text);
+            $(this).hide();
+            _this.currentRefStatus = null;
+            _this.doSearch();
+        });
+    };
+
+    this.isModuleItemCategoryCompliant = function(moduleItem) {
+        var dataCategories = moduleItem.attr('data-categories').toLowerCase();
+
+        if (dataCategories === this.currentRefCategory.toLowerCase()) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    this.isModuleItemStatusCompliant = function(moduleItem) {
+        var dataStatus = parseInt(moduleItem.attr('data-active'));
+
+        if (dataStatus === parseInt(this.currentRefStatus)) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    this.isModuleItemTagsCompliant = function(moduleItem) {
+        var dataName = moduleItem.attr('data-name').toLowerCase();
+        var dataTechName = moduleItem.attr('data-tech-name').toLowerCase();
+        var dataDescription = moduleItem.attr('data-description').toLowerCase();
+        var dataAuthor = moduleItem.attr('data-author').toLowerCase();
+        var hasMatched = false;
+        var matchedTagsCount = 0;
+
+        $.each(this.currentTagsList, function (index, value) {
+            // If match any on these attrbute  its a match
+            value = value.toLowerCase();
+            if (dataName.indexOf(value) != -1 || dataDescription.indexOf(value) != -1 ||
+                    dataAuthor.indexOf(value) != -1 || dataTechName.indexOf(value) != -1) {
+                matchedTagsCount += 1;
+            }
+        });
+
+        if (matchedTagsCount > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    this.doSearch = function() {
+        // Pick the right selector to process search
+        var moduleItemSelector = this.getModuleItemSelector();
+        var moduleGlobalSelector = this.getModuleGlobalSelector();
+        var _this = this;
+
+        $(moduleGlobalSelector).each(function (index, value) {
+            var _that = _this;
+            var totalFoundModules = 0;
+            var totalAvailableModules = $(this).find(moduleItemSelector).length;
+            // Go through each module items to check if its contains filters tags keywords...
+            $(this).find(moduleItemSelector).each(function (index, value) {
+
+                var isModuleToBeFound = true;
+
+                if (_that.currentRefCategory !== null) {
+                    isModuleToBeFound &= _that.isModuleItemCategoryCompliant($(this));
+                }
+
+                if (_that.currentRefStatus !== null) {
+                    isModuleToBeFound &= _that.isModuleItemStatusCompliant($(this));
+                }
+
+                if (_that.currentTagsList.length) {
+                    isModuleToBeFound &= _that.isModuleItemTagsCompliant($(this));
+                }
+
+                if (isModuleToBeFound) {
+                    // If moduleItem is compliant with all filters, display it
+                    $(this).show();
+                    totalFoundModules += 1;
+                } else {
+                    $(this).hide();
+                }
+            });
+            // Todo redo current sorting if necessary
+            if (_this.currentSorting !== null) {
+                _this.doDropdownSort(_this.currentSorting);
+            }
+
+            _this.updateTotalResults(totalFoundModules, $(this));
+        });
+    };
+
+    this.doDropdownSort = function(typeSort) {
+        var availableSorts = [
+                                'sort-by-price-asc',
+                                'sort-by-price-desc',
+                                'sort-by-name',
+                                'sort-by-scoring'
+                            ];
+
+        if ($.inArray(typeSort, availableSorts) === -1) {
+            console.error('typeSort "' + typeSort + '" is not a valid sort option');
+            return false;
+        }
+
+        var dataAttr = null;
+        var sortOrder = 'asc';
+        var sortKind = 'alpha';
+        var _this = this;
+        var moduleGlobalSelector = this.getModuleGlobalSelector();
+        var moduleItemSelector = this.getModuleItemSelector();
+        var addonsItemSelector = this.getAddonItemSelector();
+        var addonItemHtmlBackup = null;
+
+        if ($(addonsItemSelector).length) {
+            addonItemHtmlBackup = $(addonsItemSelector).get(0).outerHTML;
+        }
+
+        switch (typeSort) {
+            case availableSorts[0]:
+                dataAttr = ['data-price', 'data-tech-name'];
+                sortKind = 'num';
+                break;
+            case availableSorts[1]:
+                dataAttr = ['data-price', 'data-tech-name'];
+                sortOrder = 'desc';
+                sortKind = 'num';
+                break;
+            case availableSorts[2]:
+                dataAttr = ['data-name', 'data-tech-name'];
+                break;
+            case availableSorts[3]:
+                dataAttr = ['data-scoring', 'data-tech-name'];
+                sortKind = 'num';
+                break;
+        }
+
+        $(moduleGlobalSelector).each(function(index, value) {
+
+            var arrayToSort = {};
+            var keysToSort = [];
+
+            $(this).find(moduleItemSelector).each(function(index, value) {
+                var selectorObject = $(this);
+                var uniqueID = '';
+                $.each(dataAttr, function (index, value) {
+                    if (uniqueID !== '') {
+                        uniqueID += '#'; // Explode separator
+                    }
+                    uniqueID += selectorObject.attr(value);
+                });
+                arrayToSort[uniqueID] = $(this);
+                keysToSort.push(uniqueID);
+            });
+
+            var keysArrayLength = keysToSort.length;
+
+            if (sortKind == 'alpha') {
+                keysToSort.sort();
+            } else {
+                keysToSort.sort(function(elem1, elem2) {
+                    var elem1Formatted = parseFloat(elem1.substring(0, elem1.indexOf('#')));
+                    var elem2Formatted = parseFloat(elem2.substring(0, elem2.indexOf('#')));
+                    if (sortOrder == 'asc') {
+                        return elem1Formatted - elem2Formatted;
+                    } else {
+                        return elem2Formatted - elem1Formatted;
+                    }
+                });
+            }
+
+            var currentSelector = $(this);
+            var _arrayToSort = arrayToSort;
+            var _currentSelector = currentSelector;
+
+            currentSelector.empty();
+            currentSelector.append('<div class="row">');
+
+            $.each(keysToSort, function(index, value){
+                _currentSelector.find('.row').first().append(_arrayToSort[value].get(0).outerHTML);
+                delete _arrayToSort[value];
+            });
+
+            currentSelector.find('.row').first().append(addonItemHtmlBackup);
+            // Take care of Addons Search Card
+            if ($(moduleItemSelector + ':visible').length != $(moduleItemSelector).length && addonItemHtmlBackup !== null) {
+                $(addonsItemSelector).css('display', 'table');
+            }
+
+            currentSelector.append('</div>');
+        });
+    };
+
+    this.updateTagList = function(tagList) {
+        this.currentTagsList = tagList;
+        /* When this happen we need to update the interface accordingly */
+        this.doSearch();
+    };
+
+    this.resetSearch = function () {
+        // Pick the right selector to process search
+        var moduleItemSelector = this.getModuleItemSelector();
+        var moduleGlobalSelector = this.getModuleGlobalSelector();
+        var _this = this;
+
+        // Reset currentTagsList
+        this.currentTagsList = [];
+
+        // Avoid trying to redisplay everything if it's already fully displayed
+        if (this.areAllModuleDisplayed === false) {
+
+            $(moduleGlobalSelector).each(function (index, value) {
+                var totalModules = 0;
+                var _that = _this;
+                $(this).find(moduleItemSelector).each(function (index, value) {
+                    if (_that.currentRefCategory !== null) {
+                        var isFromFilterCategory = ($(this).attr('data-categories') == _that.currentRefCategory);
+                        if (isFromFilterCategory === true) {
+                            totalModules += 1;
+                        }
+                        if ($(this).is(':hidden') && isFromFilterCategory === true) {
+                            $(this).show();
+                        }
+                    } else {
+                        totalModules += 1;
+                        if ($(this).is(':hidden')) {
+                            $(this).show();
+                        }
+                    }
+                });
+
+                // Dont forget this vital var once this done
+                _this.areAllModuleDisplayed = true;
+                _this.updateTotalResults(totalModules, $(this));
+            });
+        }
+    };
+
+    this.initBOEventRegistering = function() {
+        BOEvent.on('Module Disabled', this.onModuleDisabled, this);
+    };
+
+    this.onModuleDisabled = function(event) {
+        var globalModuleSelector = this.getModuleGlobalSelector();
+        var moduleItemSelector = this.getModuleItemSelector();
+        var _this = this;
+
+        $(globalModuleSelector).each(function(index, value){
+            var totalForCurrentSelector = $(this).find(moduleItemSelector+':visible').length;
+            _this.updateTotalResults(totalForCurrentSelector, $(this));
+        });
+
     };
 
     //@TODO: JS Doc
@@ -505,6 +787,7 @@ var AdminModuleController = function () {
 
         $('body').on('change', this.moduleSortingDropdownSelector, function(event){
             var selectedSorting = $(this).find(':checked').attr('value');
+            _this.currentSorting = selectedSorting;
             _this.doDropdownSort(selectedSorting);
         });
     };
@@ -577,112 +860,6 @@ var AdminModuleController = function () {
         }
     };
 
-    this.doDropdownSort = function(typeSort) {
-        var availableSorts = [
-                                'sort-by-price-asc',
-                                'sort-by-price-desc',
-                                'sort-by-name',
-                                'sort-by-scoring'
-                            ];
-
-        if ($.inArray(typeSort, availableSorts) === -1) {
-            console.error('typeSort "' + typeSort + '" is not a valid sort option');
-            return false;
-        }
-
-        var dataAttr = null;
-        var sortOrder = 'asc';
-        var sortKind = 'alpha';
-        var _this = this;
-        var moduleGlobalSelector = this.getModuleGlobalSelector();
-        var moduleItemSelector = this.getModuleItemSelector();
-        var addonsItemSelector = this.getAddonItemSelector();
-        var addonItemHtmlBackup = null;
-
-        if ($(addonsItemSelector).length) {
-            addonItemHtmlBackup = $(addonsItemSelector).get(0).outerHTML;
-        }
-
-        switch (typeSort) {
-            case availableSorts[0]:
-                dataAttr = ['data-price', 'data-tech-name'];
-                sortKind = 'num';
-                break;
-            case availableSorts[1]:
-                dataAttr = ['data-price', 'data-tech-name'];
-                sortOrder = 'desc';
-                sortKind = 'num';
-                break;
-            case availableSorts[2]:
-                dataAttr = ['data-name', 'data-tech-name'];
-                break;
-            case availableSorts[3]:
-                dataAttr = ['data-scoring', 'data-tech-name'];
-                sortKind = 'num';
-                break;
-        }
-
-        $(moduleGlobalSelector).each(function(index, value) {
-
-            var arrayToSort = {};
-            var keysToSort = [];
-
-            $(this).find(moduleItemSelector).each(function(index, value) {
-                var selectorObject = $(this);
-                var uniqueID = '';
-                $.each(dataAttr, function (index, value) {
-                    if (uniqueID !== '') {
-                        uniqueID += '#'; // Explode separator
-                    }
-                    uniqueID += selectorObject.attr(value);
-                });
-                arrayToSort[uniqueID] = $(this);
-                keysToSort.push(uniqueID);
-            });
-
-            var keysArrayLength = keysToSort.length;
-
-            if (sortKind == 'alpha') {
-                keysToSort.sort();
-            } else {
-                keysToSort.sort(function(elem1, elem2) {
-                    var elem1Formatted = parseFloat(elem1.substring(0, elem1.indexOf('#')));
-                    var elem2Formatted = parseFloat(elem2.substring(0, elem2.indexOf('#')));
-                    if (sortOrder == 'asc') {
-                        return elem1Formatted - elem2Formatted;
-                    } else {
-                        return elem2Formatted - elem1Formatted;
-                    }
-                });
-            }
-
-            var currentSelector = $(this);
-
-            currentSelector.fadeOut(function() {
-                var _that = _this;
-                var _arrayToSort = arrayToSort;
-                var _currentSelector = currentSelector;
-
-                currentSelector.empty();
-                currentSelector.append('<div class="row">');
-
-                $.each(keysToSort, function(index, value){
-                    _currentSelector.find('.row').first().append(_arrayToSort[value].get(0).outerHTML);
-                    delete _arrayToSort[value];
-                });
-
-                // Take care of Addons Search Card
-                if ($(moduleItemSelector + ':visible').length != $(moduleItemSelector).length && addonItemHtmlBackup !== null) {
-                    currentSelector.find('.row').first().append(addonItemHtmlBackup);
-                    $(addonsItemSelector).css('display', 'table');
-                }
-
-                currentSelector.append('</div>');
-                currentSelector.fadeIn();
-            });
-        });
-    };
-
     this.initActionButtons = function () {
         var _this = this;
 
@@ -705,164 +882,26 @@ var AdminModuleController = function () {
         var _this = this;
         $('body').on('click', this.categoryItemSelector, function () {
             // Get data from li DOM input
-            _this.currentRefMenu = $(this).attr('data-category-ref');
+            _this.currentRefCategory = $(this).attr('data-category-ref');
             var categorySelectedDisplayName = $(this).attr('data-category-display-name');
             // Change dropdown label to set it to the current category's displayname
             $(_this.categorySelectorLabelSelector).text(categorySelectedDisplayName);
             $(_this.categoryResetBtnSelector).show();
             // Do Search on categoryRef
-            _this.doCategorySearch(_this.currentRefMenu);
+            _this.doSearch();
         });
 
         $('body').on('click', this.categoryResetBtnSelector, function () {
+            //@TODO: Some refactoring, could be a lot shorter
             var rawText = $(_this.categorySelector).attr('aria-labelledby');
             var upperFirstLetter = rawText.charAt(0).toUpperCase();
             var removedFirstLetter = rawText.slice(1);
             var originalText = upperFirstLetter + removedFirstLetter;
             $(_this.categorySelectorLabelSelector).text(originalText);
             $(this).hide();
-            _this.currentRefMenu = null;
-            _this.doTagSearch(_this.currentTagsList);
+            _this.currentRefCategory = null;
+            _this.doSearch();
         });
-    };
-
-
-    this.doCategorySearch = function (categoryRef) {
-        // Pick the right selector to process search
-        var moduleItemSelector = this.getModuleItemSelector();
-        var moduleGlobalSelector = this.getModuleGlobalSelector();
-        var _this = this;
-
-        $(moduleGlobalSelector).each(function (index, value) {
-            var _that = _this;
-            var totalModules = 0;
-            // Go through each module items to check if its contains filters tags keywords...
-            $(this).find(moduleItemSelector).each(function (index, value) {
-                // get Module's categories references to match them against categoryRef
-                var dataCategories = $(this).attr('data-categories').toLowerCase();
-                var moduleItem = $(this);
-
-                if (dataCategories === categoryRef.toLowerCase()) {
-                    moduleItem.show();
-                    totalModules += 1;
-                    // Match found, return true to continue to iterate
-                    return true;
-                } else {
-                    // Nothing found so we have to return true to apply 'display: none' on item
-                    moduleItem.hide();
-                }
-            });
-            // If any tags already here redo search, with new categeory
-            if (_this.currentTagsList.length) {
-                _this.doTagSearch(_this.currentTagsList);
-            } else {
-                _this.updateTotalResults(totalModules, $(this));
-            }
-        });
-
-
-    };
-
-    this.resetSearch = function () {
-        // Pick the right selector to process search
-        var moduleItemSelector = this.getModuleItemSelector();
-        var moduleGlobalSelector = this.getModuleGlobalSelector();
-        var _this = this;
-
-        // Reset currentTagsList
-        this.currentTagsList = [];
-
-        // Avoid trying to redisplay everything if it's already fully displayed
-        if (this.areAllModuleDisplayed === false) {
-
-            $(moduleGlobalSelector).each(function (index, value) {
-                var totalModules = 0;
-                var _that = _this;
-                $(this).find(moduleItemSelector).each(function (index, value) {
-                    if (_that.currentRefMenu !== null) {
-                        var isFromFilterCategory = ($(this).attr('data-categories') == _that.currentRefMenu);
-                        if (isFromFilterCategory === true) {
-                            totalModules += 1;
-                        }
-                        if ($(this).is(':hidden') && isFromFilterCategory === true) {
-                            $(this).show();
-                        }
-                    } else {
-                        totalModules += 1;
-                        if ($(this).is(':hidden')) {
-                            $(this).show();
-                        }
-                    }
-                });
-
-                // Dont forget this vital var once this done
-                _this.areAllModuleDisplayed = true;
-                _this.updateTotalResults(totalModules, $(this));
-            });
-        }
-    };
-
-    this.doTagSearch = function (tagsList) {
-        var _this = this;
-        this.currentTagsList = tagsList;
-        // Pick the right selector to process search
-        var moduleItemSelector = this.getModuleItemSelector();
-        var moduleGlobalSelector = this.getModuleGlobalSelector();
-        var totalResultFound = 0;
-        // First reset no result screen if needed
-        if (!$('.module-search-no-result').is(':hidden')) {
-            $('.module-search-no-result').hide();
-        }
-        // Avoid redisplaying modules if there are already all here
-        if (this.areAllModuleDisplayed === false && this.currentTagsList.length === 0) {
-            this.resetSearch();
-        } else {
-            $(moduleGlobalSelector).each(function (index, value) {
-                var _that = _this;
-                var matchCounter = 0;
-                // Go through each module items to check if its contains filters tags keywords...
-                $(this).find(moduleItemSelector).each(function (index, value) {
-                    // #1: Check if any current category filter
-                    if (_that.currentRefMenu !== null) {
-                        if ($(this).attr('data-categories') !== _that.currentRefMenu) {
-                            if (!$(this).is(':hidden')) {
-                                $(this).hide();
-                                _that.areAllModuleDisplayed = false;
-                            }
-                            // Iterate to next item
-                            return true;
-                        }
-                    }
-                    // If no match on data-name, data-description or data-author hide module item
-                    var dataName = $(this).attr('data-name').toLowerCase();
-                    var dataTechName = $(this).attr('data-tech-name').toLowerCase();
-                    var dataDescription = $(this).attr('data-description').toLowerCase();
-                    var dataAuthor = $(this).attr('data-author').toLowerCase();
-                    var moduleItem = $(this);
-                    var hasMatched = false;
-                    var matchedTagsCount = 0;
-
-                    $.each(_that.currentTagsList, function (index, value) {
-                        // If match any on these attrbute  its a match
-                        value = value.toLowerCase();
-                        if (dataName.indexOf(value) != -1 || dataDescription.indexOf(value) != -1 ||
-                                dataAuthor.indexOf(value) != -1 || dataTechName.indexOf(value) != -1) {
-                            matchedTagsCount += 1;
-                        }
-                    });
-
-                    // If module has matched all the tags display it, else hide it
-                    if (matchedTagsCount == _that.currentTagsList.length) {
-                        moduleItem.show();
-                        matchCounter += 1;
-                    } else {
-                        moduleItem.hide();
-                        _that.areAllModuleDisplayed = false;
-                    }
-                });
-                _this.updateTotalResults(matchCounter, $(this));
-            });
-        }
     };
 
     this.updateTotalResults = function (totalResultFound, domObject) {
@@ -909,7 +948,7 @@ var AdminModuleController = function () {
     this.initSearchBlock = function() {
         var _this = this;
        this.pstaggerInput = $(this.searchBarSelector).pstagger({
-                                                                       onTagsChanged: _this.doTagSearch,
+                                                                       onTagsChanged: _this.updateTagList,
                                                                        onResetTags: _this.resetSearch,
                                                                        inputPlaceholder: 'Add tag ...',
                                                                        closingCross: true,
@@ -967,13 +1006,11 @@ var AdminModuleController = function () {
             $(this.moduleItemListSelector).each(function () {
                 $(_this.moduleSortListSelector).removeClass('module-sort-active');
                 $(_this.moduleSortGridSelector).addClass('module-sort-active');
-                $(this).removeClass();
-                $(this).addClass('module-item-grid col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12');
+                $(this).removeClass().addClass('module-item-grid col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12');
                 _this.setNewDisplay($(this), '-list', '-grid');
             });
             // Change module addons item
-            addonItem.removeClass();
-            addonItem.addClass('module-addons-item-grid col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12');
+            addonItem.removeClass().addClass('module-addons-item-grid col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12');
             this.setNewDisplay(addonItem, '-list', '-grid');
 
         } else if (switchTo == 'list') {
@@ -982,13 +1019,11 @@ var AdminModuleController = function () {
             $(this.moduleItemGridSelector).each(function (index) {
                 $(_this.moduleSortGridSelector).removeClass('module-sort-active');
                 $(_this.moduleSortListSelector).addClass('module-sort-active');
-                $(this).removeClass();
-                $(this).addClass('module-item-list col-lg-12');
+                $(this).removeClass().addClass('module-item-list col-lg-12');
                 _this.setNewDisplay($(this), '-grid', '-list');
             });
             // Change module addons item
-            addonItem.removeClass();
-            addonItem.addClass('module-addons-item-list col-lg-12');
+            addonItem.removeClass().addClass('module-addons-item-list col-lg-12');
             this.setNewDisplay(addonItem, '-grid', '-list');
         } else {
             console.error('Can\'t switch to undefined display property "' + switchTo + '"');
