@@ -53,6 +53,7 @@ var AdminModuleController = function () {
     this.checkedBulkActionGridSelector = '.module-checkbox-bulk-grid:checked';
     this.bulkActionCheckboxGridSelector = '.module-checkbox-bulk-grid';
     this.bulkActionCheckboxListSelector = '.module-checkbox-bulk-list';
+    this.bulkActionCheckboxSelector = '#module-modal-bulk-checkbox';
     this.selectAllBulkActionSelector = '.module-checkbox-bulk-select-all';
     this.bulkConfirmModalSelector = '#module-modal-bulk-confirm';
     this.bulkConfirmModalActionNameSelector = '#module-modal-bulk-confirm-action-name';
@@ -384,7 +385,6 @@ var AdminModuleController = function () {
 
     };
 
-    //@TODO: JS Doc
     this.initPlaceholderMechanism = function() {
         var _this = this;
 
@@ -400,7 +400,6 @@ var AdminModuleController = function () {
         });
     };
 
-    //@TODO: JS Doc
     this.ajaxLoadPage = function() {
         var urlToCall = baseAdminDir + 'module/catalog/refresh';
         var _this = this;
@@ -450,7 +449,6 @@ var AdminModuleController = function () {
         });
     };
 
-    //@TODO: JS Doc
     this.initPageChangeProtection = function() {
         var _this = this;
 
@@ -461,20 +459,23 @@ var AdminModuleController = function () {
         });
     };
 
-    //@TODO: JS Doc
     this.initBulkActions = function() {
         var _this = this;
 
-        $('body').on('change', this.bulkActionDropDownSelector, function(event){
+        $('body').on('change', this.bulkActionDropDownSelector, function(){
           _this.lastBulkAction = $(this).find(':checked').attr('value');
           var modulesListString = _this.buildBulkActionModuleList();
           var actionString = $(this).find(':checked').text().toLowerCase();
           $(_this.bulkConfirmModalListSelector).html(modulesListString);
           $(_this.bulkConfirmModalActionNameSelector).text(actionString);
+
+          if (_this.lastBulkAction !== 'bulk-uninstall') {
+            $(_this.bulkActionCheckboxSelector).hide();
+          }
           $(_this.bulkConfirmModalSelector).modal('show');
         });
 
-        $('body').on('change', this.selectAllBulkActionSelector, function(event){
+        $('body').on('change', this.selectAllBulkActionSelector, function(){
           _this.changeBulkCheckboxesState($(this).is(':checked'));
         });
 
@@ -489,11 +490,10 @@ var AdminModuleController = function () {
   this.buildBulkActionModuleList = function() {
       var checkBoxesSelector = this.getBulkCheckboxesSelector();
       var moduleItemSelector = this.getModuleItemSelector();
-      var _this = this;
       var alreadyDoneFlag = 0;
       var htmlGenerated = '';
 
-      $(checkBoxesSelector + ':checked').each(function(index, value){
+      $(checkBoxesSelector + ':checked').each(function(){
           if (alreadyDoneFlag != 10) {
               var currentElement = $(this).parents(moduleItemSelector);
               htmlGenerated += '- ' + currentElement.attr('data-name') + '<br/>';
@@ -508,7 +508,6 @@ var AdminModuleController = function () {
       return htmlGenerated;
   };
 
-    // @TODO: JS Doc
     this.changeBulkCheckboxesState = function (hasToCheck) {
         var checkBoxesSelector = this.getBulkCheckboxesSelector();
 
@@ -517,7 +516,6 @@ var AdminModuleController = function () {
         });
     };
 
-    //@TODO: JS Doc
     this.initAddonsConnect = function () {
         var _this = this;
 
@@ -557,13 +555,11 @@ var AdminModuleController = function () {
         });
     };
 
-    //@TODO: JS Doc
     this.initAddModuleAction = function () {
         $(this.dropModuleBtnSelector).attr('data-toggle', 'modal');
         $(this.dropModuleBtnSelector).attr('data-target', this.dropZoneModalSelector);
     };
 
-  //@TODO: JS Doc
   this.initDropzone = function () {
       var _this = this;
 
@@ -583,7 +579,7 @@ var AdminModuleController = function () {
            });
       });
 
-      // Reinit modal on quit, but check if not already processing something
+      // Reinit modal on exit, but check if not already processing something
       $('body').on('hidden.bs.modal', this.dropZoneModalSelector, function (event) {
           $(_this.moduleImportSuccessSelector + ', ' + _this.moduleImportFailureSelector).hide();
           $(_this.moduleImportStartSelector).show();
@@ -631,7 +627,7 @@ var AdminModuleController = function () {
           $(_this.moduleImportFailureMsgDetailsSelector).slideDown();
       });
 
-
+      // @see: dropzone.js
       Dropzone.options.importDropzone = {
           url: 'import',
           acceptedFiles: '.zip, .tar',
@@ -642,7 +638,8 @@ var AdminModuleController = function () {
           addRemoveLinks: true,
           dictDefaultMessage: '',
           hiddenInputContainer: _this.dropZoneImportZoneSelector,
-          addedfile: function(file) {
+          /* addedfile(file) */
+          addedfile: function() {
               // State that we start module upload
               _this.isUploadStarted = true;
               var _that = _this;
@@ -651,10 +648,12 @@ var AdminModuleController = function () {
                  $(_that.moduleImportProcessingSelector).fadeIn();
              });
           },
-          processing: function (file, response) {
+          /* processing(file, response) */
+          processing: function () {
               // Leave it empty ATM since we don't require anything while processing upload
           },
-          complete: function (file, response) {
+          /* complete(file, response) */
+          complete: function (file) {
 
               if (file.status !== 'error') {
                   var responseObject = jQuery.parseJSON(file.xhr.response);
@@ -684,7 +683,6 @@ var AdminModuleController = function () {
       };
   };
 
-    //@TODO: JS Doc
     this.getBulkCheckboxesSelector = function () {
         return (
                 this.currentDisplay == 'grid' ?
@@ -693,7 +691,6 @@ var AdminModuleController = function () {
                 );
     };
 
-    //@TODO: JS Doc
     this.loadVariables = function () {
         if ($(this.moduleListSelector).length) {
             this.currentDisplay = 'list';
@@ -702,7 +699,6 @@ var AdminModuleController = function () {
         }
     };
 
-    //@TODO: JS Doc
     this.getModuleItemSelector = function () {
         return (
                 this.currentDisplay == 'grid' ?
@@ -711,7 +707,6 @@ var AdminModuleController = function () {
                 );
     };
 
-    //@TODO: JS Doc
     this.getModuleGlobalSelector = function () {
         return (
                 this.currentDisplay == 'grid' ?
@@ -720,7 +715,6 @@ var AdminModuleController = function () {
                 );
     };
 
-    //@TODO: JS Doc
     this.getAddonItemSelector = function () {
         return (
                 this.currentDisplay == 'grid' ?
@@ -729,7 +723,6 @@ var AdminModuleController = function () {
                 );
     };
 
-    //@TODO: JS Doc
     this.getBulkActionSelectedSelector = function () {
         return (
                 this.currentDisplay == 'grid' ?
@@ -738,7 +731,6 @@ var AdminModuleController = function () {
                 );
     };
 
-    //@TODO: JS Doc
     this.initAddonsSearch = function () {
         var _this = this;
         $('body').on('click', this.addonItemGridSelector + ', ' + this.addonItemListSelector, function (event) {
@@ -792,11 +784,12 @@ var AdminModuleController = function () {
         });
     };
 
-    //@TODO: JS Doc
     this.doBulkAction = function (requestedBulkAction) {
         // @NOTE:
-        // This object is used to check if reequested bulkAction is available and give proper
-        // url segement to be called for it
+        // This object is used to check if requested bulkAction is available and give proper
+        // url segment to be called for it
+        var forceDeletion = $('#force_bulk_deletion').prop('checked');
+
         var bulkActionToUrl = {
             'bulk-uninstall': 'uninstall',
             'bulk-disable': 'disable',
@@ -807,13 +800,13 @@ var AdminModuleController = function () {
         };
 
         //@NOTE:
-        // "@" char is used only to be easy to replace by the end of this function ;)
+        // "@" char is used only to be easy to replace by the end of this function
         var baseActionUrl = baseAdminDir + 'module/manage/action/@/';
 
         //@NOTE:
         // Note no grid selector used yet since we do not needed it at dev time
-        // Maybe usefull to implement this kind of things later if intended to
-        // use this functionnality elsewhere but "manage my module" section
+        // Maybe useful to implement this kind of things later if intended to
+        // use this functionality elsewhere but "manage my module" section
 
         if (typeof bulkActionToUrl[requestedBulkAction] == "undefined") {
             console.error('Request bulk action "' + requestedBulkAction + '" does not exist');
@@ -825,7 +818,7 @@ var AdminModuleController = function () {
 
         if ($(bulkActionSelectedSelector).length > 0) {
             var bulkModulesTechNames = [];
-            $(bulkActionSelectedSelector).each(function (index, value) {
+            $(bulkActionSelectedSelector).each(function () {
                 var moduleTechName = $(this).attr('data-tech-name');
                 bulkModulesTechNames.push({
                     techName: moduleTechName,
@@ -837,17 +830,15 @@ var AdminModuleController = function () {
                 var actionMenuObj = data.actionMenuObj;
                 var moduleTechName = data.techName;
 
-                //actionMenuObj.fadeOut();
-
                 var urlActionSegment = bulkActionToUrl[requestedBulkAction];
-                var actionUrlBase = baseActionUrl.replace('@', urlActionSegment);
+                baseActionUrl.replace('@', urlActionSegment);
 
                 if (typeof module_card_controller !== undefined) {
-                    // We use jQuery to get the specific linbk for this action. If found, we send it.
+                    // We use jQuery to get the specific link for this action. If found, we send it.
                     var urlElement = $(module_card_controller.moduleActionMenuLinkSelector + urlActionSegment, actionMenuObj);
 
                     if (urlElement.length > 0) {
-                        module_card_controller.requestToController(urlActionSegment, urlElement);
+                        module_card_controller.requestToController(urlActionSegment, urlElement, forceDeletion);
                     } else {
                         $.growl.error({message: "Action " + urlActionSegment + " not available for module " + moduleTechName + ". Skipped."});
                     }
@@ -858,6 +849,107 @@ var AdminModuleController = function () {
             console.warning('Request bulk action "' + requestedBulkAction + '" can\'t be performed if you don\'t select at least 1 module');
             return false;
         }
+    };
+
+    this.doDropdownSort = function(typeSort) {
+        var availableSorts = [
+                                'sort-by-price-asc',
+                                'sort-by-price-desc',
+                                'sort-by-name',
+                                'sort-by-scoring'
+                            ];
+
+        if ($.inArray(typeSort, availableSorts) === -1) {
+            console.error('typeSort "' + typeSort + '" is not a valid sort option');
+            return false;
+        }
+
+        var dataAttr = null;
+        var sortOrder = 'asc';
+        var sortKind = 'alpha';
+        var _this = this;
+        var moduleGlobalSelector = this.getModuleGlobalSelector();
+        var moduleItemSelector = this.getModuleItemSelector();
+        var addonsItemSelector = this.getAddonItemSelector();
+        var addonItemHtmlBackup = null;
+
+        if ($(addonsItemSelector).length) {
+            addonItemHtmlBackup = $(addonsItemSelector).get(0).outerHTML;
+        }
+
+        switch (typeSort) {
+            case availableSorts[0]:
+                dataAttr = ['data-price', 'data-tech-name'];
+                sortKind = 'num';
+                break;
+            case availableSorts[1]:
+                dataAttr = ['data-price', 'data-tech-name'];
+                sortOrder = 'desc';
+                sortKind = 'num';
+                break;
+            case availableSorts[2]:
+                dataAttr = ['data-name', 'data-tech-name'];
+                break;
+            case availableSorts[3]:
+                dataAttr = ['data-scoring', 'data-tech-name'];
+                sortKind = 'num';
+                break;
+        }
+
+        $(moduleGlobalSelector).each(function(index, value) {
+
+            var arrayToSort = {};
+            var keysToSort = [];
+
+            $(this).find(moduleItemSelector).each(function(index, value) {
+                var selectorObject = $(this);
+                var uniqueID = '';
+                $.each(dataAttr, function (index, value) {
+                    if (uniqueID !== '') {
+                        uniqueID += '#'; // Explode separator
+                    }
+                    uniqueID += selectorObject.attr(value);
+                });
+                arrayToSort[uniqueID] = $(this);
+                keysToSort.push(uniqueID);
+            });
+
+            var keysArrayLength = keysToSort.length;
+
+            if (sortKind == 'alpha') {
+                keysToSort.sort();
+            } else {
+                keysToSort.sort(function(elem1, elem2) {
+                    var elem1Formatted = parseFloat(elem1.substring(0, elem1.indexOf('#')));
+                    var elem2Formatted = parseFloat(elem2.substring(0, elem2.indexOf('#')));
+                    if (sortOrder == 'asc') {
+                        return elem1Formatted - elem2Formatted;
+                    } else {
+                        return elem2Formatted - elem1Formatted;
+                    }
+                });
+            }
+
+            var currentSelector = $(this);
+            var _arrayToSort = arrayToSort;
+            var _currentSelector = currentSelector;
+
+            currentSelector.empty();
+            currentSelector.append('<div class="row">');
+
+            $.each(keysToSort, function(index, value){
+                _currentSelector.find('.row').first().append(_arrayToSort[value].get(0).outerHTML);
+                delete _arrayToSort[value];
+            });
+
+            currentSelector.find('.row').first().append(addonItemHtmlBackup);
+            // Take care of Addons Search Card
+            if ($(moduleItemSelector + ':visible').length != $(moduleItemSelector).length && addonItemHtmlBackup !== null) {
+                $(addonsItemSelector).css('display', 'table');
+            }
+
+            currentSelector.append('</div>');
+        });
     };
 
     this.initActionButtons = function () {
@@ -899,10 +991,89 @@ var AdminModuleController = function () {
             var originalText = upperFirstLetter + removedFirstLetter;
             $(_this.categorySelectorLabelSelector).text(originalText);
             $(this).hide();
-            _this.currentRefCategory = null;
+            _this.currentRefMenu = null;
             _this.doSearch();
         });
     };
+
+    this.resetSearch = function () {
+        // Pick the right selector to process search
+        var moduleItemSelector = this.getModuleItemSelector();
+        var moduleGlobalSelector = this.getModuleGlobalSelector();
+        var _this = this;
+
+        // Reset currentTagsList
+        this.currentTagsList = [];
+
+        // Avoid trying to redisplay everything if it's already fully displayed
+        if (this.areAllModuleDisplayed === false) {
+
+            $(moduleGlobalSelector).each(function () {
+                var totalModules = 0;
+                var _that = _this;
+                $(this).find(moduleItemSelector).each(function () {
+                    if (_that.currentRefMenu !== null) {
+                        var isFromFilterCategory = ($(this).attr('data-categories') == _that.currentRefMenu);
+                        if (isFromFilterCategory === true) {
+                            totalModules += 1;
+                        }
+                        if ($(this).is(':hidden') && isFromFilterCategory === true) {
+                            $(this).show();
+                        }
+                    } else {
+                        totalModules += 1;
+                        if ($(this).is(':hidden')) {
+                            $(this).show();
+                        }
+                    }
+                });
+
+                // Don't forget this vital var once this done
+                _this.areAllModuleDisplayed = true;
+                _this.updateTotalResults(totalModules, $(this));
+            });
+        }
+    };
+
+    this.resetSearch = function () {
+        // Pick the right selector to process search
+        var moduleItemSelector = this.getModuleItemSelector();
+        var moduleGlobalSelector = this.getModuleGlobalSelector();
+        var _this = this;
+
+        // Reset currentTagsList
+        this.currentTagsList = [];
+
+        // Avoid trying to redisplay everything if it's already fully displayed
+        if (this.areAllModuleDisplayed === false) {
+
+            $(moduleGlobalSelector).each(function (index, value) {
+                var totalModules = 0;
+                var _that = _this;
+                $(this).find(moduleItemSelector).each(function (index, value) {
+                    if (_that.currentRefMenu !== null) {
+                        var isFromFilterCategory = ($(this).attr('data-categories') == _that.currentRefMenu);
+                        if (isFromFilterCategory === true) {
+                            totalModules += 1;
+                        }
+                        if ($(this).is(':hidden') && isFromFilterCategory === true) {
+                            $(this).show();
+                        }
+                    } else {
+                        totalModules += 1;
+                        if ($(this).is(':hidden')) {
+                            $(this).show();
+                        }
+                    }
+                });
+
+                // Dont forget this vital var once this done
+                _this.areAllModuleDisplayed = true;
+                _this.updateTotalResults(totalModules, $(this));
+            });
+        }
+    };
+
 
     this.updateTotalResults = function (totalResultFound, domObject) {
         // Pick the right selector to process search
@@ -944,29 +1115,28 @@ var AdminModuleController = function () {
         }
     };
 
-
     this.initSearchBlock = function() {
         var _this = this;
-       this.pstaggerInput = $(this.searchBarSelector).pstagger({
-                                                                       onTagsChanged: _this.updateTagList,
-                                                                       onResetTags: _this.resetSearch,
-                                                                       inputPlaceholder: 'Add tag ...',
-                                                                       closingCross: true,
-                                                                       context: _this,
-                                                                       clearAllBtn: true,
-                                                                       clearAllIconClassAdditional: 'material-icons',
-                                                                       clearAllSpanClassAdditional: 'module-tags-clear-btn ',
-                                                                       tagInputClassAdditional: 'module-tags-input',
-                                                                       tagClassAdditional: 'module-tag ',
-                                                                       tagsWrapperClassAdditional: 'module-tags-labels',
-                                                                   });
+        this.pstaggerInput = $(this.searchBarSelector).pstagger({
+            onTagsChanged: _this.updateTagList,
+            onResetTags: _this.resetSearch,
+            inputPlaceholder: 'Add tag ...',
+            closingCross: true,
+            context: _this,
+            clearAllBtn: true,
+            clearAllIconClassAdditional: 'material-icons',
+            clearAllSpanClassAdditional: 'module-tags-clear-btn ',
+            tagInputClassAdditional: 'module-tags-input',
+            tagClassAdditional: 'module-tag ',
+            tagsWrapperClassAdditional: 'module-tags-labels',
+        });
 
-       $('body').on('click', this.addonsSearchLinkSelector, function(event){
-           event.preventDefault();
-           event.stopPropagation();
-           var href = $(this).attr('href');
-           window.open(href, '_blank');
-       });
+        $('body').on('click', this.addonsSearchLinkSelector, function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            var href = $(this).attr('href');
+            window.open(href, '_blank');
+        });
     };
 
     /**
@@ -1001,7 +1171,7 @@ var AdminModuleController = function () {
         var addonItem = $(addonsItemSelector);
 
         if (switchTo == 'grid') {
-            // Change main wrapper classe to grid
+            // Change main wrapper class to grid
             $(gridListSelector).addClass('modules-grid').removeClass('modules-list');
             $(this.moduleItemListSelector).each(function () {
                 $(_this.moduleSortListSelector).removeClass('module-sort-active');
@@ -1014,7 +1184,7 @@ var AdminModuleController = function () {
             this.setNewDisplay(addonItem, '-list', '-grid');
 
         } else if (switchTo == 'list') {
-            // Change main wrapper classe to list
+            // Change main wrapper class to list
             $(gridListSelector).addClass('modules-list').removeClass('modules-grid');
             $(this.moduleItemGridSelector).each(function (index) {
                 $(_this.moduleSortGridSelector).removeClass('module-sort-active');

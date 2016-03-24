@@ -29,7 +29,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 
 /**
- * Class Employee is used for Symfony security components to authneticate the user.
+ * Class Employee is used for Symfony security components to authenticate the user.
  * @package PrestaShopBundle\Security\Admin
  */
 class Employee implements UserInterface, EquatableInterface
@@ -108,7 +108,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Get the data paremeter of the current employee
+     * Get the data parameter of the current employee
      *
      * @return object
      */

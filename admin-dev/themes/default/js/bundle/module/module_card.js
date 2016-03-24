@@ -27,6 +27,7 @@ var AdminModuleCard = function () {
     this.moduleActionModalDisableLinkSelector = 'a.module_action_modal_disable';
     this.moduleActionModalResetLinkSelector = 'a.module_action_modal_reset';
     this.moduleActionModalUninstallLinkSelector = 'a.module_action_modal_uninstall';
+    this.forceDeletionOption = '#force_deletion';
 
     /**
      * Initialize all listeners and bind everything
@@ -66,6 +67,15 @@ var AdminModuleCard = function () {
     this.initActionButtons = function () {
         var _this = this;
 
+        $(document).on('click', this.forceDeletionOption, function () {
+            var btn = $(_this.moduleActionModalUninstallLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']"));
+            if($(this).prop('checked') === true) {
+              btn.attr('data-deletion', 'true');
+            }else {
+              btn.removeAttr('data-deletion');
+            }
+        });
+
         $(document).on('click', this.moduleActionMenuInstallLinkSelector, function () {
             return _this.dispatchPreEvent('install', this) && _this.confirmAction('install', this) && _this.requestToController('install', $(this));
         });
@@ -92,16 +102,22 @@ var AdminModuleCard = function () {
             return _this.requestToController('reset', $(_this.moduleActionMenuResetLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")));
         });
         $(document).on('click', this.moduleActionModalUninstallLinkSelector, function () {
-            return _this.requestToController('uninstall', $(_this.moduleActionMenuUninstallLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")));
+            return _this.requestToController('uninstall', $(_this.moduleActionMenuUninstallLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")), $(this).attr("data-deletion"));
         });
     };
 
-    this.requestToController = function (action, element) {
+    this.requestToController = function (action, element, forceDeletion) {
         var _this = this;
         var jqElementObj = element.closest(".btn-group");
         var spinnerObj = $("<button class=\"btn btn-primary-reverse btn-lg onclick unbind pull-right\"></button>");
+        var url = "//" + window.location.host + element.attr("href");
+
+        if (forceDeletion === "true" || forceDeletion === true) {
+          url +="?deletion=true";
+        }
+
         $.ajax({
-            url: "//" + window.location.host + element.attr("href"),
+            url: url,
             dataType: 'json',
             beforeSend: function () {
                 jqElementObj.hide();
