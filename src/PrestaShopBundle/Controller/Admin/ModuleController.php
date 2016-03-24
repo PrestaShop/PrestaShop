@@ -45,6 +45,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'topMenuData' => $topMenuData,
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
+                'requireFilterStatus' => false
             ));
     }
 
@@ -150,6 +151,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($installed_products)),
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => true,
+                'requireFilterStatus' => true
             ));
     }
 
@@ -262,6 +264,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'modules' => $products,
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => false,
+                'requireFilterStatus' => false
         ));
     }
 

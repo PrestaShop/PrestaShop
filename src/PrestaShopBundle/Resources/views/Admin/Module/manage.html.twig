@@ -58,21 +58,21 @@
 		<div class="module-short-list">
 			<span class="module-search-result-wording">{{modules.modules|length}} installed modules</span>
 		</div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.modules, 'display_type' : 'list'  } %}
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.modules, 'display_type' : 'list', 'origin' : 'manage'  } %}
 
 		<hr class="top-menu-separator">
 
 		<div class="module-short-list">
 			<span class="module-search-result-wording">{{modules.native_modules|length}} preinstalled modules</span>
 		</div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list' } %}
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list', 'origin' : 'manage'  } %}
 
 		<hr class="top-menu-separator">
 
 		<div class="module-short-list">
 			<span class="module-search-result-wording">{{[]|length}} theme modules</span>
 		</div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : [], 'display_type' : 'list' } %}
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : [], 'display_type' : 'list', 'origin' : 'manage'  } %}
         </div>
     </div>
 {% endblock %}
