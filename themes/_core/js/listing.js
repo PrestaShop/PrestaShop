@@ -6,6 +6,6 @@ $(document).ready(function () {
     prestashop.emit('quickview clicked', {
       dataset: event.target.closest('.js-product-miniature').dataset
     });
-    event.stopPropagation();
+    event.preventDefault();
   })
 });

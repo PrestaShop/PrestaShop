@@ -75,37 +75,39 @@
 	
 	__webpack_require__(48);
 	
-	__webpack_require__(49);
+	__webpack_require__(50);
 	
-	var _componentsDropDown = __webpack_require__(51);
+	__webpack_require__(51);
+	
+	var _componentsDropDown = __webpack_require__(52);
 	
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 	
-	var _componentsTopMenu = __webpack_require__(52);
+	var _componentsTopMenu = __webpack_require__(53);
 	
 	var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
 	
-	var _componentsProductMiniature = __webpack_require__(53);
+	var _componentsProductMiniature = __webpack_require__(54);
 	
 	var _componentsProductMiniature2 = _interopRequireDefault(_componentsProductMiniature);
 	
-	var _componentsProductSelect = __webpack_require__(54);
+	var _componentsProductSelect = __webpack_require__(55);
 	
 	var _componentsProductSelect2 = _interopRequireDefault(_componentsProductSelect);
 	
-	var _prestashop = __webpack_require__(50);
+	var _prestashop = __webpack_require__(49);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _events = __webpack_require__(56);
+	var _events = __webpack_require__(57);
 	
 	var _events2 = _interopRequireDefault(_events);
-	
-	__webpack_require__(57);
 	
 	__webpack_require__(58);
 	
 	__webpack_require__(59);
+	
+	__webpack_require__(60);
 	
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
@@ -16418,6 +16420,85 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
+	var _prestashop = __webpack_require__(49);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	__webpack_require__(56);
+	
+	(0, _jquery2['default'])(document).ready(function () {
+	  _prestashop2['default'].on('quickview clicked', function (elm) {
+	    var data = {
+	      'action': 'quickview',
+	      'id_product': elm.dataset.idProduct,
+	      'id_product_attribute': elm.dataset.idProductAttribute
+	    };
+	    _jquery2['default'].post(_prestashop2['default'].urls.pages.product, data, null, 'json').then(function (resp) {
+	      (0, _jquery2['default'])('body').append(resp.quickview_html);
+	      (0, _jquery2['default'])('#quickview-modal-' + resp.product.id + '-' + resp.product.id_product_attribute).modal('show');
+	      productConfig();
+	    });
+	  });
+	  var productConfig = function productConfig() {
+	    var MAX_THUMBS = 4;
+	    var $arrows = (0, _jquery2['default'])('.js-arrows');
+	    var $thumbnails = (0, _jquery2['default'])('.js-product-images');
+	    (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
+	      if ((0, _jquery2['default'])('.js-thumb').hasClass('selected')) {
+	        (0, _jquery2['default'])('.js-thumb').removeClass('selected');
+	      }
+	      (0, _jquery2['default'])(event.currentTarget).addClass('selected');
+	      (0, _jquery2['default'])('.js-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
+	    });
+	    if ((0, _jquery2['default'])('.js-product-images li').length <= MAX_THUMBS) {
+	      $arrows.css('opacity', '.2');
+	    } else {
+	      $arrows.on('click', function (event) {
+	        if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && (0, _jquery2['default'])('.js-product-images').position().top < 0) {
+	          move('up');
+	          (0, _jquery2['default'])('.arrow-down').css('opacity', '1');
+	        } else if ((0, _jquery2['default'])(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > (0, _jquery2['default'])('.js-mask').height()) {
+	          move('down');
+	          (0, _jquery2['default'])('.arrow-up').css('opacity', '1');
+	        }
+	      });
+	    }
+	  };
+	  var move = function move(direction) {
+	    var THUMB_MARGIN = 10;
+	    var $thumbnails = (0, _jquery2['default'])('.js-product-images');
+	    var thumbHeight = (0, _jquery2['default'])('.js-product-images li img').height() + THUMB_MARGIN;
+	    var currentPosition = $thumbnails.position().top;
+	    $thumbnails.velocity({
+	      translateY: direction === 'up' ? currentPosition + thumbHeight : currentPosition - thumbHeight
+	    }, function () {
+	      if ($thumbnails.position().top >= 0) {
+	        (0, _jquery2['default'])('.arrow-up').css('opacity', '.2');
+	      } else if ($thumbnails.position().top + $thumbnails.height() <= (0, _jquery2['default'])('.js-mask').height()) {
+	        (0, _jquery2['default'])('.arrow-down').css('opacity', '.2');
+	      }
+	    });
+	  };
+	});
+
+/***/ },
+/* 49 */
+/***/ function(module, exports) {
+
+	module.exports = prestashop;
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
 	(0, _jquery2['default'])(document).ready(function () {
 	  (0, _jquery2['default'])('.js-file-input').on('change', function (event) {
 	    (0, _jquery2['default'])('.js-file-name').text((0, _jquery2['default'])(event.currentTarget).val());
@@ -16448,7 +16529,7 @@
 	});
 
 /***/ },
-/* 49 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16459,7 +16540,7 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _prestashop = __webpack_require__(50);
+	var _prestashop = __webpack_require__(49);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
@@ -16539,13 +16620,7 @@
 	}
 
 /***/ },
-/* 50 */
-/***/ function(module, exports) {
-
-	module.exports = prestashop;
-
-/***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16591,7 +16666,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16610,7 +16685,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _dropDown = __webpack_require__(51);
+	var _dropDown = __webpack_require__(52);
 	
 	var _dropDown2 = _interopRequireDefault(_dropDown);
 	
@@ -16637,7 +16712,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16691,7 +16766,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16710,7 +16785,7 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	__webpack_require__(55);
+	__webpack_require__(56);
 	
 	var ProductSelect = (function () {
 	  function ProductSelect() {
@@ -16773,7 +16848,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! VelocityJS.org (1.2.3). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
@@ -20664,7 +20739,7 @@
 	will produce an inaccurate conversion value. The same issue exists with the cx/cy attributes of SVG circles and ellipses. */
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -20968,7 +21043,7 @@
 
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports) {
 
 	/*!
@@ -20982,7 +21057,7 @@
 	+function(a){"use strict";function b(b){return this.each(function(){var d=a(this),e=a.extend({},c.DEFAULTS,d.data(),"object"==typeof b&&b),f=d.data("bs.validator");(f||"destroy"!=b)&&(f||d.data("bs.validator",f=new c(this,e)),"string"==typeof b&&f[b]())})}var c=function(b,d){this.$element=a(b),this.options=d,d.errors=a.extend({},c.DEFAULTS.errors,d.errors);for(var e in d.custom)if(!d.errors[e])throw new Error("Missing default error message for custom validator: "+e);a.extend(c.VALIDATORS,d.custom),this.$element.attr("novalidate",!0),this.toggleSubmit(),this.$element.on("input.bs.validator change.bs.validator focusout.bs.validator",a.proxy(this.validateInput,this)),this.$element.on("submit.bs.validator",a.proxy(this.onSubmit,this)),this.$element.find("[data-match]").each(function(){var b=a(this),c=b.data("match");a(c).on("input.bs.validator",function(){b.val()&&b.trigger("input.bs.validator")})})};c.INPUT_SELECTOR=':input:not([type="submit"], button):enabled:visible',c.DEFAULTS={delay:500,html:!1,disable:!0,custom:{},errors:{match:"Does not match",minlength:"Not long enough"},feedback:{success:"glyphicon-ok",error:"glyphicon-remove"}},c.VALIDATORS={"native":function(a){var b=a[0];return b.checkValidity?b.checkValidity():!0},match:function(b){var c=b.data("match");return!b.val()||b.val()===a(c).val()},minlength:function(a){var b=a.data("minlength");return!a.val()||a.val().length>=b}},c.prototype.validateInput=function(b){var c=a(b.target),d=c.data("bs.validator.errors");if(c.is('[type="radio"]')&&(c=this.$element.find('input[name="'+c.attr("name")+'"]')),this.$element.trigger(b=a.Event("validate.bs.validator",{relatedTarget:c[0]})),!b.isDefaultPrevented()){var e=this;this.runValidators(c).done(function(f){c.data("bs.validator.errors",f),f.length?e.showErrors(c):e.clearErrors(c),d&&f.toString()===d.toString()||(b=f.length?a.Event("invalid.bs.validator",{relatedTarget:c[0],detail:f}):a.Event("valid.bs.validator",{relatedTarget:c[0],detail:d}),e.$element.trigger(b)),e.toggleSubmit(),e.$element.trigger(a.Event("validated.bs.validator",{relatedTarget:c[0]}))})}},c.prototype.runValidators=function(b){function d(a){return b.data(a+"-error")||b.data("error")||"native"==a&&b[0].validationMessage||g.errors[a]}var e=[],f=a.Deferred(),g=this.options;return b.data("bs.validator.deferred")&&b.data("bs.validator.deferred").reject(),b.data("bs.validator.deferred",f),a.each(c.VALIDATORS,a.proxy(function(a,c){if((b.data(a)||"native"==a)&&!c.call(this,b)){var f=d(a);!~e.indexOf(f)&&e.push(f)}},this)),!e.length&&b.val()&&b.data("remote")?this.defer(b,function(){var c={};c[b.attr("name")]=b.val(),a.get(b.data("remote"),c).fail(function(a,b,c){e.push(d("remote")||c)}).always(function(){f.resolve(e)})}):f.resolve(e),f.promise()},c.prototype.validate=function(){var a=this.options.delay;return this.options.delay=0,this.$element.find(c.INPUT_SELECTOR).trigger("input.bs.validator"),this.options.delay=a,this},c.prototype.showErrors=function(b){var c=this.options.html?"html":"text";this.defer(b,function(){var d=b.closest(".form-group"),e=d.find(".help-block.with-errors"),f=d.find(".form-control-feedback"),g=b.data("bs.validator.errors");g.length&&(g=a("<ul/>").addClass("list-unstyled").append(a.map(g,function(b){return a("<li/>")[c](b)})),void 0===e.data("bs.validator.originalContent")&&e.data("bs.validator.originalContent",e.html()),e.empty().append(g),d.addClass("has-error"),f.length&&f.removeClass(this.options.feedback.success)&&f.addClass(this.options.feedback.error)&&d.removeClass("has-success"))})},c.prototype.clearErrors=function(a){var b=a.closest(".form-group"),c=b.find(".help-block.with-errors"),d=b.find(".form-control-feedback");c.html(c.data("bs.validator.originalContent")),b.removeClass("has-error"),d.length&&d.removeClass(this.options.feedback.error)&&d.addClass(this.options.feedback.success)&&b.addClass("has-success")},c.prototype.hasErrors=function(){function b(){return!!(a(this).data("bs.validator.errors")||[]).length}return!!this.$element.find(c.INPUT_SELECTOR).filter(b).length},c.prototype.isIncomplete=function(){function b(){return"checkbox"===this.type?!this.checked:"radio"===this.type?!a('[name="'+this.name+'"]:checked').length:""===a.trim(this.value)}return!!this.$element.find(c.INPUT_SELECTOR).filter("[required]").filter(b).length},c.prototype.onSubmit=function(a){this.validate(),(this.isIncomplete()||this.hasErrors())&&a.preventDefault()},c.prototype.toggleSubmit=function(){if(this.options.disable){var b=a('button[type="submit"], input[type="submit"]').filter('[form="'+this.$element.attr("id")+'"]').add(this.$element.find('input[type="submit"], button[type="submit"]'));b.toggleClass("disabled",this.isIncomplete()||this.hasErrors())}},c.prototype.defer=function(b,c){return c=a.proxy(c,this),this.options.delay?(window.clearTimeout(b.data("bs.validator.timeout")),void b.data("bs.validator.timeout",window.setTimeout(c,this.options.delay))):c()},c.prototype.destroy=function(){return this.$element.removeAttr("novalidate").removeData("bs.validator").off(".bs.validator"),this.$element.find(c.INPUT_SELECTOR).off(".bs.validator").removeData(["bs.validator.errors","bs.validator.deferred"]).each(function(){var b=a(this),c=b.data("bs.validator.timeout");window.clearTimeout(c)&&b.removeData("bs.validator.timeout")}),this.$element.find(".help-block.with-errors").each(function(){var b=a(this),c=b.data("bs.validator.originalContent");b.removeData("bs.validator.originalContent").html(c)}),this.$element.find('input[type="submit"], button[type="submit"]').removeClass("disabled"),this.$element.find(".has-error").removeClass("has-error"),this};var d=a.fn.validator;a.fn.validator=b,a.fn.validator.Constructor=c,a.fn.validator.noConflict=function(){return a.fn.validator=d,this},a(window).on("load",function(){a('form[data-toggle="validator"]').each(function(){var c=a(this);b.call(c,c.data())})})}(jQuery);
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21179,14 +21254,14 @@
 	})(window.jQuery);
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _prestashop = __webpack_require__(50);
+	var _prestashop = __webpack_require__(49);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
