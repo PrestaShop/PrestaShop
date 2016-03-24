@@ -48,6 +48,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'showContentHeader' => true,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminModules'),
+                'requireFilterStatus' => false,
             ));
     }
 
@@ -155,6 +156,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'requireBulkActions' => true,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminModules'),
+                'requireFilterStatus' => true,
             ));
     }
 
@@ -269,6 +271,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'requireBulkActions' => false,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminModules'),
+                'requireFilterStatus' => false,
         ));
     }
 
