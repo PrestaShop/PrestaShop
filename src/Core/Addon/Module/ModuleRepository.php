@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -229,12 +230,16 @@ class ModuleRepository implements ModuleRepositoryInterface
         $current_filemtime = (int)@filemtime($php_file_path);
 
         // We check that we have data from the marketplace
-        $module_catalog_data = $this->adminModuleProvider->getCatalogModules(['name' => $name]);
-        $attributes = array_merge(
-            $attributes,
-            (array)array_shift($module_catalog_data)
-        );
-
+        try {
+            $module_catalog_data = $this->adminModuleProvider->getCatalogModules(['name' => $name]);
+            $attributes = array_merge(
+                $attributes,
+                (array)array_shift($module_catalog_data)
+            );
+        } catch (Exception $e) {
+            $logger = new LegacyLogger();
+            $logger->alert(sprintf('Loading data from Addons failed. %s', $e->getMessage()));
+        }
 
         // Now, we check that cache is up to date
         if (isset($this->cache[$name]['disk']['filemtime']) && $this->cache[$name]['disk']['filemtime']
