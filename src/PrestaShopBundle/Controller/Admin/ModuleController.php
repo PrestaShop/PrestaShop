@@ -31,9 +31,8 @@ class ModuleController extends FrameworkBundleAdminController
             ->setOrigin(AddonListFilterOrigin::ADDONS_ALL)
             ->setStatus(~ AddonListFilterStatus::INSTALLED);
 
-        $products = $moduleRepository->getFilteredList($filters);
-
         try {
+            $products = $moduleRepository->getFilteredList($filters);
             $topMenuData = $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products));
         } catch (Exception $e) {
             $this->addFlash('error', 'Cannot get catalog data, please try again later. '. $e->getMessage());
