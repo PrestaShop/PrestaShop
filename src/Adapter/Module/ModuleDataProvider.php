@@ -110,7 +110,7 @@ class ModuleDataProvider
         // But namespace and use statements need to be removed
         $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
         $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
-        return (eval('if (false){	'.$content.' }') !== null);
+        return (eval('if (false){	'.$content.' }') !== false);
     }
 
     /**
