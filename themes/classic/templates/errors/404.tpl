@@ -6,7 +6,7 @@
 
 {block name='page_content_container'}
   <section id="content" class="page-content page-not-found">
-    <h4>{l s='Sorry for inconvinience.'}</h4>
+    <h4>{l s='Sorry for inconvenience.'}</h4>
     <p>{l s='Search again what you are looking for'}</p>
 
     {block name='search'}
