@@ -318,6 +318,9 @@ class AdminModuleDataProvider implements ModuleInterface
                 $jsons = [];
                 // We execute each addons request
                 foreach ($requests as $action_filter_value => $action) {
+                    if (!$addons_provider->isAddonsUp()) {
+                        continue;
+                    }
                     // We add the request name in each product returned by Addons,
                     // so we know whether is bought
                     $jsons = array_merge_recursive($jsons, array_map(function ($array) use ($action_filter_value, $action) {

@@ -417,7 +417,8 @@ class InstallModelInstall extends InstallAbstractModel
             $params_lang = array(
                 'name' => (string)$xml->name,
                 'iso_code' => substr((string)$xml->language_code, 0, 2),
-                'allow_accented_chars_url' => (string)$xml->allow_accented_chars_url
+                'allow_accented_chars_url' => (string)$xml->allow_accented_chars_url,
+                'language_code' => (string)$xml->language_code,
             );
 
             if (InstallSession::getInstance()->safe_mode) {
