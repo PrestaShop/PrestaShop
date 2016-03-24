@@ -6574,6 +6574,64 @@ li.product-label {
     #product #block-reassurance span {
       font-weight: 700; }
 
+.quickview .modal-dialog {
+  width: 64em; }
+
+.quickview .modal-content {
+  background: #ebebeb; }
+
+.quickview .modal-header {
+  border: none;
+  padding: 10px; }
+
+.quickview .modal-footer {
+  margin-top: 40px; }
+
+.quickview .layer {
+  display: none; }
+
+.quickview .product-cover img {
+  width: 95%; }
+
+.quickview .images-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  -js-display: flex;
+  display: flex;
+  position: absolute;
+  z-index: 1;
+  min-height: 21.875em; }
+  .quickview .images-container .product-images > li.thumb-container > .thumb {
+    width: 79px; }
+
+.quickview .mask {
+  width: 33%;
+  height: 21.875em;
+  overflow: hidden; }
+
+.quickview .arrows {
+  position: absolute;
+  top: 0;
+  height: 21.875em;
+  right: 80px;
+  z-index: 0; }
+  .quickview .arrows .arrow-up {
+    margin-top: -50px;
+    cursor: pointer;
+    opacity: .2; }
+  .quickview .arrows .arrow-down {
+    position: absolute;
+    bottom: -30px;
+    cursor: pointer; }
+
+.quickview .social-sharing {
+  margin-top: 0;
+  margin-left: 40px; }
+
 #stores .page-stores {
   width: 70%;
   margin: 0 auto; }
