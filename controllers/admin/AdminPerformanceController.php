@@ -604,7 +604,7 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'CacheApc',
                             'value' => 'CacheApc',
-                            'label' => $this->l('APC').(extension_loaded('apc') ? '' : $warning_apc)
+                            'label' => $this->l('APC').((extension_loaded('apc') || extension_loaded('apcu'))? '' : $warning_apc)
                         ),
                         array(
                             'id' => 'CacheXcache',
@@ -935,7 +935,7 @@ class AdminPerformanceControllerCore extends AdminController
                     } elseif ($caching_system == 'CacheMemcached' && !extension_loaded('memcached')) {
                         $this->errors[] = Tools::displayError('To use Memcached, you must install the Memcached PECL extension on your server.').'
 							<a href="http://www.php.net/manual/en/memcached.installation.php">http://www.php.net/manual/en/memcached.installation.php</a>';
-                    } elseif ($caching_system == 'CacheApc' && !extension_loaded('apc')) {
+                    } elseif ($caching_system == 'CacheApc'  && !extension_loaded('apc') && !extension_loaded('apcu')) {
                         $this->errors[] = Tools::displayError('To use APC cache, you must install the APC PECL extension on your server.').'
 							<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
                     } elseif ($caching_system == 'CacheXcache' && !extension_loaded('xcache')) {
