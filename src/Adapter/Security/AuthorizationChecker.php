@@ -27,26 +27,24 @@
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Admin Middleware security
  */
 class AuthorizationChecker implements AuthorizationCheckerInterface
 {
-    private $legacyContext;
-    private $container;
+    static private $rights = ['view', 'edit', 'add', 'delete'];
+
+    private $employee;
 
     /**
      * Constructor.
      *
-     * @param LegacyContext $context
+     * @param Employee $employee
      */
-    public function __construct(LegacyContext $context, KernelInterface $kernel)
+    public function __construct(\Employee $employee)
     {
-        $this->legacyContext = $context->getContext();
-        $this->container = $kernel->getContainer();
+        $this->employee = $employee;
     }
 
     /**
@@ -60,7 +58,7 @@ class AuthorizationChecker implements AuthorizationCheckerInterface
     public function isGranted($attributes, $object = null)
     {
         $arrayAttributes = explode(".", $attributes);
-        return $this->legacyContext->employee->can($arrayAttributes[0], $arrayAttributes[1]);
+        return $this->employee->can($arrayAttributes[0], $arrayAttributes[1]);
     }
 
     /**
@@ -73,9 +71,8 @@ class AuthorizationChecker implements AuthorizationCheckerInterface
      */
     public function getAuthorizations($route)
     {
-        $arrayAuthorization = $this->container->getParameter('authorization_employee');
         $arrayAuthorizationAction = array();
-        foreach($arrayAuthorization as $action) {
+        foreach(self::$rights as $action) {
             $arrayAuthorizationAction[$action] = $this->isGranted($action.".".$route);
         }
 

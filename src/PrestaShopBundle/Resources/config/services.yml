@@ -114,7 +114,7 @@ services:
 
     prestashop.adapter.security.authorization.checker:
         class: PrestaShop\PrestaShop\Adapter\Security\AuthorizationChecker
-        arguments: ["@prestashop.adapter.legacy.context", "@kernel"]
+        arguments: ["@=service('prestashop.adapter.legacy.context').getContext().employee"]
 
     # Other adapters
     prestashop.adapter.shop.context:
