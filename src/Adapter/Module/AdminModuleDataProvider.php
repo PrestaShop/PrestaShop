@@ -310,8 +310,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 AddonListFilterOrigin::ADDONS_NATIVE_ALL => 'native_all'
             ];
             if ($addons_provider->isAddonsAuthenticated()) {
-                // customer is more important, so we set it at the beginning of the array
-                array_unshift($requests, [AddonListFilterOrigin::ADDONS_CUSTOMER => 'customer']);
+                $requests[AddonListFilterOrigin::ADDONS_CUSTOMER] = 'customer';
             }
 
             try {
