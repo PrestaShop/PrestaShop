@@ -94,28 +94,23 @@ class ModuleDataProvider
         }
 
 
-        $php_l_result = substr(`php -l $file_path`, 0, 16);
-        if (!empty($php_l_result)) {
-            return ($php_l_result == 'No syntax errors');
-        } else {
-            $file = trim(file_get_contents($file_path));
+        $file = trim(file_get_contents($file_path));
 
-            if (substr($file, 0, 5) == '<?php') {
-                $file = substr($file, 5);
-            }
-
-            if (substr($file, -2) == '?>') {
-                $file = substr($file, 0, -2);
-            }
-
-            // We check any parse error before including the file.
-            // If (false) is a trick to not load the class with "eval".
-            // This way require_once will works correctly
-            // But namespace and use statements need to be removed
-            $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
-            $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
-            return (eval('if (false){	'.$content.' }') !== null);
+        if (substr($file, 0, 5) == '<?php') {
+            $file = substr($file, 5);
         }
+
+        if (substr($file, -2) == '?>') {
+            $file = substr($file, 0, -2);
+        }
+
+        // We check any parse error before including the file.
+        // If (false) is a trick to not load the class with "eval".
+        // This way require_once will works correctly
+        // But namespace and use statements need to be removed
+        $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
+        $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
+        return (eval('if (false){	'.$content.' }') !== null);
     }
 
     /**
