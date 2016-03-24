@@ -3070,7 +3070,6 @@ class AdminControllerCore extends Controller
         }
 
         /* Determine offset from current page */
-        $start = 0;
         if ((int)Tools::getValue('submitFilter'.$this->list_id)) {
             $start = ((int)Tools::getValue('submitFilter'.$this->list_id) - 1) * $limit;
         } elseif (empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}) && Tools::isSubmit('export'.$this->table)) {
