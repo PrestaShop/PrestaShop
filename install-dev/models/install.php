@@ -138,10 +138,19 @@ class InstallModelInstall extends InstallAbstractModel
 
         umask(0000);
 
+        $database_port = '~';
+
+        $host = explode(':', $database_server);
+        $port = array_pop($host);
+        if (is_int($port)) {
+            $database_port = $port;
+            $database_server = implode(':', $host);
+        }
+
         //generate parameters content file
         $content = 'parameters:'."\n";
         $content .= '    database_host: '.$database_server."\n";
-        $content .= '    database_port: ~'."\n";
+        $content .= '    database_port: '.$database_port."\n";
         $content .= '    database_name: '.$database_name."\n";
         $content .= '    database_user: '.$database_login."\n";
         $content .= '    database_password: '.$database_password."\n";
@@ -815,7 +824,7 @@ class InstallModelInstall extends InstallAbstractModel
 
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
         $errors = array();
         foreach ($modules as $module_name) {
             if (!file_exists(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php')) {
