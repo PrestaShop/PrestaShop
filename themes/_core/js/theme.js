@@ -6,6 +6,7 @@ window.jQuery = $;
 import './cart';
 import './checkout';
 import './facets';
+import './listing';
 import './product';
 
 import prestashop from 'prestashop';

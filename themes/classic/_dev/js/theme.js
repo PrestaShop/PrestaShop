@@ -7,6 +7,7 @@ import 'bootstrap-touchspin';
 import '../css/theme';
 import './checkout';
 import './customer';
+import './listing';
 import './product';
 import './cart';
 

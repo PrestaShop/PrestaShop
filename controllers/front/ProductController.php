@@ -161,7 +161,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->category = new Category((int)$id_category, (int)$this->context->cookie->id_lang);
                 $moduleManagerBuilder = new ModuleManagerBuilder();
                 $moduleManager = $moduleManagerBuilder->build();
-    
+
                 if (isset($this->context->cookie) && isset($this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
                     $this->context->cookie->last_visited_category = (int)$this->category->id_category;
                 }
@@ -318,6 +318,18 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         $this->setTemplate('catalog/product.tpl');
+    }
+
+    public function displayAjaxQuickview()
+    {
+        $product_for_template = $this->getTemplateVarProduct();
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxDie(Tools::jsonEncode([
+            'quickview_html' => $this->render('catalog/_partials/quickview.tpl', $product_for_template),
+            'product' => $product_for_template,
+        ]));
     }
 
     public function displayAjaxRefresh()
