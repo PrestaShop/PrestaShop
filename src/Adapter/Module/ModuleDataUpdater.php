@@ -31,17 +31,22 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleDataUpdater
 {
+    private $addonsDataProvider;
+    private $adminModuleDataProvider;
+
+    public function __construct(AddonsDataProvider $addonsDataProvider, AdminModuleDataProvider $adminModuleDataProvider)
+    {
+        $this->addonsDataProvider = $addonsDataProvider;
+        $this->adminModuleDataProvider = $adminModuleDataProvider;
+    }
 
     public function setModuleOnDiskFromAddons($name)
     {
         // Note : Data caching should be handled by the addons data provider
-
-        $addons_provider = new AddonsDataProvider();
-        $admin_module_provider = new AdminModuleDataProvider();
         // Check if the module can be downloaded from addons
-        foreach ($admin_module_provider->getCatalogModules(['name' => $name]) as $catalog_module) {
+        foreach ($this->adminModuleDataProvider->getCatalogModules(['name' => $name]) as $catalog_module) {
             if ($catalog_module->name == $name && in_array($catalog_module->origin, ['native', 'native_all', 'partner', 'customer'])) {
-                return $addons_provider->downloadModule($catalog_module->id);
+                return $this->addonsDataProvider->downloadModule($catalog_module->id);
             }
         }
 
