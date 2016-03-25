@@ -27,13 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
-use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -46,12 +44,12 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 class AdminModuleDataProvider implements ModuleInterface
 {
     const _CACHEFILE_CATEGORIES_ = 'catalog_categories.json';
-    const _CACHEFILE_MODULES_ = 'catalog_modules.json';
+    const _CACHEFILE_MODULES_ = '_catalog_modules.json';
 
     /* Cache for One Day */
     const _DAY_IN_SECONDS_ = 86400;
 
-    private $kernel;
+    private $languageISO;
     /**
      * @var Router
      */
@@ -63,18 +61,18 @@ class AdminModuleDataProvider implements ModuleInterface
     protected $catalog_modules;
     protected $catalog_modules_names;
 
-    public function __construct(\AppKernel $kernel = null, Router $router = null)
+    public function __construct($languageISO, Router $router = null)
     {
         $this->catalog_modules  = [];
         $this->cache_dir        = _PS_CACHE_DIR_;
 
-        $this->kernel = $kernel;
+        $this->languageISO = $languageISO;
         $this->router = $router;
     }
 
     public function clearCatalogCache()
     {
-        $this->clearCache([self::_CACHEFILE_CATEGORIES_, self::_CACHEFILE_MODULES_]);
+        $this->clearCache([self::_CACHEFILE_CATEGORIES_, $this->languageISO.self::_CACHEFILE_MODULES_]);
         $this->catalog_modules         = [];
     }
 
@@ -297,7 +295,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     protected function loadCatalogData()
     {
-        $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_);
+        $this->catalog_modules    = $this->getModuleCache($this->languageISO.self::_CACHEFILE_MODULES_);
 
         if (!$this->catalog_modules) {
             $addons_provider = new AddonsDataProvider();
@@ -332,7 +330,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 }
 
                 $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
-                $this->registerModuleCache(self::_CACHEFILE_MODULES_, $this->catalog_modules);
+                $this->registerModuleCache($this->languageISO.self::_CACHEFILE_MODULES_, $this->catalog_modules);
             } catch (\Exception $e) {
                 if (! $this->fallbackOnCatalogCache()) {
                     $this->catalog_modules = [];

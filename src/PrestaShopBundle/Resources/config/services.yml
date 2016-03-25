@@ -101,6 +101,9 @@ services:
     prestashop.adapter.data_provider.customer:
         class: PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider
 
+    prestashop.adapter.data_provider.addon:
+        class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
+
     prestashop.adapter.stock_manager:
         class: PrestaShop\PrestaShop\Adapter\StockManager
         decorates: prestashop.core.data_provider.stock_interface
@@ -118,11 +121,6 @@ services:
 
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
-
-    prestashop.adapter.image_manager:
-        class: PrestaShop\PrestaShop\Adapter\ImageManager
-        arguments: ["@prestashop.adapter.legacy.context"]
-
 
     #TWIG EXTENSIONS
     prestashop.twig.extension.translation:
@@ -152,3 +150,33 @@ services:
         class: PrestaShopBundle\Twig\DataFormatterExtension
         tags:
             - { name: twig.extension }
+
+    # Updaters
+    prestashop.core.module.updater:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+        arguments:
+            - @prestashop.adapter.data_provider.addon
+            - @prestashop.adapter.admin.data_provider.module
+
+    # Repositories
+    prestashop.core.admin.module.repository:
+        class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
+        arguments:
+            - @prestashop.adapter.admin.data_provider.module
+            - @prestashop.adapter.data_provider.module
+            - @prestashop.core.module.updater
+            - @prestashop.core.module.updater
+
+    # Managers
+    prestashop.adapter.image_manager:
+        class: PrestaShop\PrestaShop\Adapter\ImageManager
+        arguments: ["@prestashop.adapter.legacy.context"]
+
+    prestashop.module.manager:
+        class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+        arguments:
+            - @prestashop.adapter.admin.data_provider.module
+            - @prestashop.adapter.data_provider.module
+            - @prestashop.core.module.updater
+            - @prestashop.core.admin.module.repository
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee"
