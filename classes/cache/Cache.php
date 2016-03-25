@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -243,8 +243,9 @@ abstract class CacheCore
     /**
      * Store a query in cache
      *
-     * @param string $query
-     * @param array $result
+     * @param string $query Query
+     * @param array $result Result
+     * @return bool Whether the query was successfully stored in cache
      */
     public function setQuery($query, $result)
     {
@@ -396,5 +397,41 @@ abstract class CacheCore
         } else {
             unset(Cache::$local[$key]);
         }
+    }
+
+    /**
+     * Can be implemented by caching systems that support pipelining
+     *
+     * Enable pipeline mode
+     *
+     * @return bool Whether pipeline could be started/enabled
+     */
+    public function pipeline()
+    {
+        return false;
+    }
+
+    /**
+     * Can be implemented by caching systems that support pipelining
+     *
+     * Execute the query
+     *
+     * @return bool Whether the query could be executed
+     */
+    public function exec()
+    {
+        return false;
+    }
+
+    /**
+     * Can be implemented by caching systems that support pipelining
+     *
+     * Cancel the current pipelined transaction -- nothing will be sent to redis
+     *
+     * @return bool Whether the transaction could be cancelled
+     */
+    public function discard()
+    {
+        return false;
     }
 }

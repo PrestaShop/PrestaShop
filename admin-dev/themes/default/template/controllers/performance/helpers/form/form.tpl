@@ -88,12 +88,12 @@
 					</div>
 					<div class="form-group">
 						<div class="col-lg-9 col-lg-push-3">
-							<input type="submit" value="{l s='Add Server'}" name="submitAddServer" class="btn btn-default" />
+							<input type="submit" value="{l s='Add Server'}" name="submitAddMemcachedServer" class="btn btn-default" />
 							<input type="button" value="{l s='Test Server'}" id="testMemcachedServer" class="btn btn-default" />
 	                	</div>
 					</div>
 			</div>
-			{if $servers}
+			{if isset($memcached_servers) && $memcached_servers}
 			<div class="form-group">
 				<table class="table">
 					<thead>
@@ -106,7 +106,7 @@
 						</tr>
 					</thead>
 					<tbody>
-				{foreach $servers AS $server}
+				{foreach $memcached_servers AS $server}
 					<tr>
 						<td>{$server.id_memcached_server}</td>
 						<td>{$server.ip}</td>
@@ -123,6 +123,79 @@
 			{/if}
 		</div>
 	{/if}
+	{if $key == 'redisServers'}
+		<div id="redisServers">
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-push-3">
+					<button id="addRedisServer" class="btn btn-default" type="button" >
+						<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Add server'}
+					</button>
+				</div>
+			</div>
+			<div id="formRedisServer" style="display:none;">
+				<div class="form-group">
+					<label class="control-label col-lg-3">{l s='IP Address'} </label>
+					<div class="col-lg-9">
+						<input class="form-control" type="text" name="redisIp" value="127.0.0.1" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">{l s='Port'} </label>
+					<div class="col-lg-9">
+						<input class="form-control" type="text" name="redisPort" value="6379" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">{l s='Auth'} </label>
+					<div class="col-lg-9">
+						<input class="form-control" type="text" name="redisAuth" value="" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3">{l s='Database ID'} </label>
+					<div class="col-lg-9">
+						<input class="form-control" type="text" name="redisDb" value="0" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-9 col-lg-push-3">
+						<input type="submit" value="{l s='Add Server'}" name="submitAddRedisServer" class="btn btn-default" />
+						<input type="button" value="{l s='Test Server'}" id="testRedisServer" class="btn btn-default" />
+					</div>
+				</div>
+			</div>
+			{if isset($redis_servers) && $redis_servers}
+				<div class="form-group">
+					<table class="table">
+						<thead>
+						<tr>
+							<th class="fixed-width-xs"><span class="title_box">{l s='ID'}</span></th>
+							<th><span class="title_box">{l s='IP address'}</span></th>
+							<th class="fixed-width-xs"><span class="title_box">{l s='Port'}</span></th>
+							<th class="fixed-width-xs"><span class="title_box">{l s='Auth'}</span></th>
+							<th class="fixed-width-xs"><span class="title_box">{l s='Db'}</span></th>
+							<th>&nbsp;</th>
+						</tr>
+						</thead>
+						<tbody>
+						{foreach $redis_servers AS $server}
+							<tr>
+								<td>{$server.id_redis_server}</td>
+								<td>{$server.ip}</td>
+								<td>{$server.port}</td>
+								<td>{$server.auth}</td>
+								<td>{$server.db}</td>
+								<td>
+									<a class="btn btn-default" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;deleteRedisServer={$server.id_redis_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
+								</td>
+							</tr>
+						{/foreach}
+						</tbody>
+					</table>
+				</div>
+			{/if}
+		</div>
+	{/if}
 {/block}
 
 {block name="script"}
@@ -131,13 +204,19 @@
 		if ($('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache' || $('input[name="caching_system"]:radio:checked').val() == 'CacheMemcached') {
 			$('#memcachedServers').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
 			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
+			$('#redisServers').hide();
 		}
 		else if ($('input[name="caching_system"]:radio:checked').val() == 'CacheFs') {
 			$('#memcachedServers').hide();
+			$('#redisServers').hide();
 			$('#ps_cache_fs_directory_depth').closest('.form-group').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
-		}
-		else {
+		} else if ($('input[name="caching_system"]:radio:checked').val() == 'CacheRedis') {
+			$('#redisServers').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
+			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
 			$('#memcachedServers').hide();
+		} else {
+			$('#memcachedServers').hide();
+			$('#redisServers').hide();
 			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
 		}
 	}
@@ -185,7 +264,7 @@
 					{
 						controller: 'adminperformance',
 						token: '{$token|escape:'html':'UTF-8'}',
-						action: 'test_server',
+						action: 'test_memcached_server',
 						sHost: host,
 						sPort: port,
 						type: type,
@@ -203,6 +282,52 @@
 							$('#formMemcachedServerStatus').show();
 							$('input:text[name=memcachedIp]').css('background', color);
 							$('input:text[name=memcachedPort]').css('background', color);
+						}
+					}
+				});
+			}
+			return false;
+		});
+
+		$('#addRedisServer').click(function() {
+			$('#formRedisServer').show();
+			return false;
+		});
+
+		$('#testRedisServer').click(function() {
+			var host = $('input:text[name=redisIp]').val();
+			var port = $('input:text[name=redisPort]').val();
+			var auth = $('input:text[name=redisAuth]').val();
+			var db   = $('input:text[name=redisDb]').val();
+			var type = $('input[name="caching_system"]:radio:checked').val() == 'redis';
+			if (host && port)
+			{
+				$.ajax({
+					url: 'index.php',
+					data:
+					{
+						controller: 'adminperformance',
+						token: '{$token|escape:'html':'UTF-8'}',
+						action: 'test_redis_server',
+						sHost: host,
+						sPort: port,
+						type: type,
+						ajax: true
+					},
+					context: document.body,
+					dataType: 'json',
+					context: this,
+					async: false,
+					success: function(data)
+					{
+						if (data && $.isArray(data))
+						{
+							var color = data[0] != 0 ? 'green' : 'red';
+							$('#formRedisServerStatus').show();
+							$('input:text[name=redisIp]').css('background', color);
+							$('input:text[name=redisPort]').css('background', color);
+							$('input:text[name=redisAuth]').css('background', color);
+							$('input:text[name=redisDb]').css('background', color);
 						}
 					}
 				});

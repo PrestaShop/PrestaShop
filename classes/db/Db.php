@@ -77,7 +77,7 @@ abstract class DbCore
      *
      * @var string
      */
-    protected $last_query;
+    public $last_query;
 
     /**
      * Store hash of the last executed query
@@ -459,6 +459,7 @@ abstract class DbCore
         if ($type == Db::ON_DUPLICATE_KEY) {
             $sql .= ' ON DUPLICATE KEY UPDATE '.substr($duplicate_key_stringified, 0, -1);
         }
+        $this->last_query = $sql;
 
         return (bool)$this->q($sql, $use_cache);
     }

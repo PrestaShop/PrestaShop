@@ -1951,6 +1951,14 @@ CREATE TABLE `PREFIX_memcached_servers` (
 `weight` INT(11) UNSIGNED NOT NULL
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
+CREATE TABLE `PREFIX_redis_servers` (
+  `id_redis_server` INT(11) UNSIGNED PRIMARY KEY NOT NULL,
+  `ip` VARCHAR(46) NOT NULL,
+  `port` INT(11) UNSIGNED NOT NULL,
+  `auth` TEXT,
+  `db` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
 CREATE TABLE `PREFIX_product_country_tax` (
   `id_product` int(11) NOT NULL,
   `id_country` int(11) NOT NULL,
@@ -2583,3 +2591,4 @@ CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
   `name` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id_cms_role`,`id_lang`, id_shop)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
