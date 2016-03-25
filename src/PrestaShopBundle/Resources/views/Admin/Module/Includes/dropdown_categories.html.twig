@@ -17,7 +17,7 @@
             {% for subMenu in menu.subMenu|arrayCast %}
                 <li class="module-category-menu" data-category-ref="{{subMenu.refMenu}}" data-category-display-name="{{subMenu.name}}">
                     <a href="#">
-                        {{subMenu.name}}
+                        {{subMenu.name}}<span class="pull-right module-cateogry-count">{{subMenu.modulesRef|length}}</span>
                     </a>
                 </li>
             {% endfor %}
