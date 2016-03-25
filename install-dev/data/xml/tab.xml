@@ -176,7 +176,6 @@
                     <class_name>AdminAddonsCatalog</class_name>
                 </tab>
 
-
             <!--LOOK & FEEL-->
             <tab id="Look_feel" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="desktop_mac">
                 <class_name>AdminParentThemes</class_name>
@@ -186,7 +185,7 @@
                     <class_name>AdminThemes</class_name>
                 </tab>
                 <tab id="Themes_Catalog" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminThemeCatalog</class_name>
+                    <class_name>AdminThemesCatalog</class_name>
                 </tab>
                 <tab id="Pages" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminCmsContent</class_name>
