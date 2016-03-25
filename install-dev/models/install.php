@@ -161,6 +161,10 @@ class InstallModelInstall extends InstallAbstractModel
         $content .= '    mailer_password: ~'."\n";
         $content .= '    secret: '.Tools::passwdGen(56)."\n";
 
+        if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
+            rename(_PS_ROOT_DIR_.'/app/config/parameters.yml', _PS_ROOT_DIR_.'/app/config/parameters.old.yml');
+        }
+
         if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', $content)) {
             $this->setError($this->language->l('Cannot write app/config/parameters.yml file'));
             return false;
