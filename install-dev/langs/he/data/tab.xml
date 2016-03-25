@@ -123,4 +123,5 @@
   <tab id="Warehouses" name="מחסנים"/>
   <tab id="Webservice" name="שירות רשת"/>
   <tab id="Zones" name="איזורים"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

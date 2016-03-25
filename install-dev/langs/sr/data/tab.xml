@@ -120,4 +120,5 @@
   <tab id="Warehouses" name="Magacini"/>
   <tab id="Webservice" name="Veb servis"/>
   <tab id="Zones" name="Zone"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

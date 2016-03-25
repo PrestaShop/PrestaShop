@@ -123,4 +123,5 @@
   <tab id="Warehouses" name="Gudang"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="Zona"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

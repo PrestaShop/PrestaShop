@@ -123,4 +123,5 @@
   <tab id="Warehouses" name="Varulager"/>
   <tab id="Webservice" name="Webbservice"/>
   <tab id="Zones" name="Zoner"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>
