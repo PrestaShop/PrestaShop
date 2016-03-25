@@ -287,7 +287,12 @@ class ToolsCore
      */
     public static function getHttpHost($http = false, $entities = false, $ignore_port = false)
     {
-        $host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
+        if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+            $host = trim(array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_HOST'])));
+        }
+        else {
+            $host = $_SERVER['HTTP_HOST'];
+        }
         if ($ignore_port && $pos = strpos($host, ':')) {
             $host = substr($host, 0, $pos);
         }
