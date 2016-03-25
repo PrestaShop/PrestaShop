@@ -61,3 +61,11 @@ admin_common_recommended_modules:
     requirements:
         limit: \d+
         randomize: 0|1
+
+admin_common_sidebar:
+    path: /common/sidebar/{url}/{title}/{footer}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::renderSidebarAction'
+        title: ''
+        footer: ''

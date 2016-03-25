@@ -53,10 +53,24 @@
         </a>
       {/if}
       {if isset($help_link)}
-        <a class="toolbar-button" href="{$help_link|escape}" title="{l s='Help'}">
-          <i class="material-icons">help</i>
-          <span class="title">{l s='Help'}</span>
-        </a>
+
+        {if $enableSidebar}
+          <a class="toolbar-button btn-help btn-sidebar" href="#"
+             title="{l s='Help'}"
+             data-toggle="sidebar"
+             data-target="#right-sidebar"
+             data-url="{$help_link|escape}"
+             id="product_form_open_help"
+          >
+            <i class="material-icons">help</i>
+            <span class="title">{l s='Help'}</span>
+          </a>
+        {else}
+          <a class="toolbar-button" href="{$help_link|escape}" title="{l s='Help'}">
+            <i class="material-icons">help</i>
+            <span class="title">{l s='Help'}</span>
+          </a>
+        {/if}
       {/if}
     </div>
   {/block}

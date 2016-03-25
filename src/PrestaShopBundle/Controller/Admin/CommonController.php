@@ -27,14 +27,8 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface;
-use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 
 /**
@@ -192,5 +186,17 @@ class CommonController extends FrameworkBundleAdminController
             'domain' => $domain,
             'modules' => array_slice($modules, 0, $limit, true),
         );
+    }
+
+    /**
+     * Render a right sidebar with content from an URL
+     */
+    public function renderSidebarAction($url, $title = '', $footer = '')
+    {
+        return $this->render('PrestaShopBundle:Admin:Common/_partials/_sidebar.html.twig', [
+            'footer' => $footer,
+            'title' => $title,
+            'url' => urldecode($url),
+        ]);
     }
 }

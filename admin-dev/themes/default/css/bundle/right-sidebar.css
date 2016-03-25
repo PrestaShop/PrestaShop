@@ -3,7 +3,7 @@
   float: right;
   position: fixed;
   display: block;
-  top: 36px;
+  top: 136px;
   bottom: 0px;
   z-index: 399;
   min-height: 100%;
@@ -97,6 +97,13 @@
 
 .sidebar.sidebar-right .quicknav-header {
   background: #363A41;
-  color: white;
+  color: #fff;
   padding: 1.2em;
 }
+
+.sidebar.sidebar-right .quicknav-header h2{
+  color: #fff;
+}
+
+
+

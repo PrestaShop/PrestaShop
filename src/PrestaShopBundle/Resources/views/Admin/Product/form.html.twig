@@ -35,17 +35,27 @@
               <i class="material-icons">assessment</i>
               <span class="title">{{ trans('Sales', {}, 'AdminProducts') }}</span>
             </a>
+
             <a
-              class="toolbar-button btn-quicknav"
-              href="#" title="{{ trans('Quick navigation', [], 'AdminTab') }}"
-              data-toggle="sidebar" data-target="#right-sidebar"
+              class="toolbar-button btn-quicknav btn-sidebar"
+              href="#"
+              title="{{ trans('Quick navigation', [], 'AdminTab') }}"
+              data-toggle="sidebar"
+              data-target="#right-sidebar"
+              data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}"
               id="product_form_open_quicknav"
-              >
+            >
               <i class="material-icons">list</i>
               <span class="title">{{ trans('Product list', {}, 'AdminProducts') }}</span>
             </a>
-            <a class="toolbar-button btn-help" href="{{ help_link }}" title="{{ trans('Help', [], 'AdminTab') }}"
-               id="product_form_open_help">
+
+            <a class="toolbar-button btn-help btn-sidebar" href="#"
+               title="{{ trans('Help', [], 'AdminTab') }}"
+               data-toggle="sidebar"
+               data-target="#right-sidebar"
+               data-url="{{ help_link }}"
+               id="product_form_open_help"
+            >
               <i class="material-icons">help</i>
               <span class="title">{{ trans('Help', {}, 'AdminProducts') }}</span>
             </a>
@@ -1072,17 +1082,6 @@
 
   </form>
 
-  <nav
-    id="right-sidebar"
-    role="navigation"
-    class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-xs-center"
-    data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}"
-  >
-    <img
-      src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"
-      style="margin-top: 10em;" alt="{{ trans('Loading...', [], 'AdminTab') }}"
-    />
-  </nav>
 
   {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
     'id': 'confirmation_modal',
@@ -1109,14 +1108,12 @@
 
 {% block stylesheets %}
   {{ parent() }}
-  <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/product/right-sidebar.css') }}" />
   <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/module.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
   <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/product/right-sidebar.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
   <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
