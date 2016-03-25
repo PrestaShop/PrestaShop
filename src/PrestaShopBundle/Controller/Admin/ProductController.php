@@ -455,6 +455,7 @@ class ProductController extends FrameworkBundleAdminController
 
         return array(
             'form' => $form->createView(),
+            'categories' => $this->get('prestashop.adapter.data_provider.category')->getCategoriesWithBreadCrumb(),
             'id_product' => $id,
             'has_combinations' => (isset($form->getData()['step3']['combinations']) && count($form->getData()['step3']['combinations']) > 0),
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
