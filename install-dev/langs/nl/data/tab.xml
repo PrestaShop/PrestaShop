@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="VERANDEREN" />
   <tab id="Addresses" name="Adressen"/>
   <tab id="Administration" name="Administratie"/>
-  <tab id="AdminModulesSf" name="Modulecatalogus" />
+  <tab id="Module_Page" name="Modulecatalogus" />
   <tab id="Advanced_Parameters" name="Geavanceerde Instellingen"/>
   <tab id="Attachments" name="Bijlagen"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />

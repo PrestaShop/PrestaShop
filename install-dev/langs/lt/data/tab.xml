@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Adresai"/>
   <tab id="Administration" name="Administracija"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Advanced_Parameters" name="Išplėstiniai parametrai"/>
   <tab id="Attachments" name="Priedai"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />

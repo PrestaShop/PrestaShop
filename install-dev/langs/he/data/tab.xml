@@ -4,7 +4,7 @@
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="כתובות"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Administration" name="ניהול"/>
   <tab id="Advanced_Parameters" name="פרמטרים מתקדמים"/>
   <tab id="Attachments" name="קבצים מצורפים"/>

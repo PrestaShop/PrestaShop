@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Adresses"/>
   <tab id="Administration" name="Administration"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Advanced_Parameters" name="Paramètres avancés"/>
   <tab id="Attachments" name="Documents joints"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
