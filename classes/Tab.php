@@ -80,21 +80,6 @@ class TabCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
-        // @retrocompatibility with old menu (before 1.5.0.9)
-        $retro = array(
-            'AdminPayment' => 'AdminParentModules',
-            'AdminOrders' => 'AdminParentOrders',
-            'AdminCustomers' => 'AdminParentCustomer',
-            'AdminShipping' => 'AdminParentShipping',
-            'AdminPreferences' => 'AdminParentPreferences',
-            'AdminStats' => 'AdminParentStats',
-            'AdminEmployees' => 'AdminAdmin',
-        );
-
-        $class_name = Tab::getClassNameById($this->id_parent);
-        if (isset($retro[$class_name])) {
-            $this->id_parent = Tab::getIdFromClassName($retro[$class_name]);
-        }
         self::$_cache_tabs = array();
 
         // Set good position for new tab
