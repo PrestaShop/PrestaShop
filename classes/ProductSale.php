@@ -122,7 +122,7 @@ class ProductSaleCore
 
         $sql .= '
 				WHERE product_shop.`active` = 1
-					AND p.`visibility` != \'none\'';
+					AND product_shop.`visibility` != \'none\'';
 
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
