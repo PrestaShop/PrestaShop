@@ -88,6 +88,10 @@ try {
     $response->send();
     $kernel->terminate($request, $response);
 } catch (NotFoundHttpException $rnfe) {
+    // correct Apache charset (except if it's too late)
+    if (!headers_sent()) {
+        header('Content-Type: text/html; charset=utf-8');
+    }
     // Prepare and trigger LEGACY admin dispatcher
     Dispatcher::getInstance()->dispatch();
 }
