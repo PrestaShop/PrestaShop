@@ -3024,6 +3024,9 @@ class ProductCore extends ObjectModel
         } else {
             $price = (float)$specific_price['price'];
         }
+
+        // @TODO FIXME $specific_price['id_currency'] is "0", but we use integer comparisons below: $specific_price['id_currency'] ??
+
         // convert only if the specific price is in the default currency (id_currency = 0)
         if (!$specific_price || !($specific_price['price'] >= 0 && $specific_price['id_currency'])) {
             $price = Tools::convertPrice($price, $id_currency);
@@ -3032,6 +3035,7 @@ class ProductCore extends ObjectModel
             }
         }
 
+     
         // Attribute price
         if (is_array($result)) {
             $attribute_price = Tools::convertPrice($result['attribute_price'] !== null ? (float)$result['attribute_price'] : 0, $id_currency);
