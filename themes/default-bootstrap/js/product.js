@@ -251,9 +251,8 @@ $(window).resize(function(){
 $(window).bind('hashchange', function(){
 	var is_combination = checkUrl();
 	
-	if (is_combination) {
+	if (is_combination)
 		findCombination();
-	}
 });
 
 //hover 'other views' images management
