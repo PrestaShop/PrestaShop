@@ -74,7 +74,7 @@ class ProductShipping extends CommonAbstractType
             'label' => $this->translator->trans('Width', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
+                new Assert\Type(array('type' => 'numeric'))
             )
         ))
         ->add('height', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
@@ -82,7 +82,7 @@ class ProductShipping extends CommonAbstractType
             'label' => $this->translator->trans('Height', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
+                new Assert\Type(array('type' => 'numeric'))
             )
         ))
         ->add('depth', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
@@ -90,7 +90,7 @@ class ProductShipping extends CommonAbstractType
             'label' => $this->translator->trans('Depth', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
+                new Assert\Type(array('type' => 'numeric'))
             )
         ))
         ->add('weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
@@ -98,7 +98,7 @@ class ProductShipping extends CommonAbstractType
             'label' => $this->translator->trans('Weight', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
+                new Assert\Type(array('type' => 'numeric'))
             )
         ))
         ->add('additional_shipping_cost', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(

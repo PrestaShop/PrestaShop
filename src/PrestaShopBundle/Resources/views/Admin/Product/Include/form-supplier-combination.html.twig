@@ -21,12 +21,12 @@
         {{ form_errors(form[collectionName]) }}
         <table class="table table-striped">
           <thead>
-          <tr>
-            <th>{{ trans('Product name', {}, 'AdminProducts') }}</th>
-            <th>{{ trans('Supplier reference', {}, 'AdminProducts') }}</th>
-            <th>{{ trans('Unit price tax excluded', {}, 'AdminProducts') }}</th>
-            <th>{{ trans('Unit price currency', {}, 'AdminProducts') }}</th>
-          </tr>
+            <tr>
+              <th width="40%">{{ trans('Product name', {}, 'AdminProducts') }}</th>
+              <th width="20%">{{ trans('Supplier reference', {}, 'AdminProducts') }}</th>
+              <th width="20%">{{ trans('Unit price tax excluded', {}, 'AdminProducts') }}</th>
+              <th width="20%">{{ trans('Unit price currency', {}, 'AdminProducts') }}</th>
+            </tr>
           </thead>
           <tbody>
           {% for supplier_combination in form[collectionName] %}
