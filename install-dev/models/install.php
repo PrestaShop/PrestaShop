@@ -142,7 +142,7 @@ class InstallModelInstall extends InstallAbstractModel
 
         $host = explode(':', $database_server);
         $port = array_pop($host);
-        if (is_int($port)) {
+        if (is_numeric($port)) {
             $database_port = $port;
             $database_server = implode(':', $host);
         }
