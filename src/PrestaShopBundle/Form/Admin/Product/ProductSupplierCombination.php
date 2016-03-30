@@ -65,7 +65,7 @@ class ProductSupplierCombination extends CommonAbstractType
             'required' => false,
             'label' => null
         ))
-        ->add('product_price', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+        ->add('product_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'constraints' => array(
                 new Assert\NotBlank(),
