@@ -303,7 +303,6 @@ class AdminModuleDataProvider implements ModuleInterface
             $requests = [
                 AddonListFilterOrigin::ADDONS_MUST_HAVE => 'must-have',
                 AddonListFilterOrigin::ADDONS_SERVICE => 'service',
-                AddonListFilterOrigin::ADDONS_PARTNER => 'partner',
                 AddonListFilterOrigin::ADDONS_NATIVE => 'native',
                 AddonListFilterOrigin::ADDONS_NATIVE_ALL => 'native_all'
             ];
