@@ -9,7 +9,7 @@ addons:
         - libapache2-mod-fastcgi
         - postfix
     sauce_connect: true
-    firefox: latest
+
 php:
   - 5.4
   - 5.5
@@ -19,6 +19,7 @@ matrix:
   fast_finish: true
 
 before_install:
+  - phpenv config-rm xdebug.ini
   - mysql -e 'create database prestashop;'
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias
@@ -30,15 +31,13 @@ before_install:
   - sudo cp -Rf . /var/www/prestashop.unit.test
   - sudo chmod 777 -R /var/www/
   - sudo service apache2 restart
+  - cp .composer/* ~/.composer/ & composer global install;
+  - sudo apt-get install -y libappindicator1 fonts-liberation
+  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  - sudo dpkg -i google-chrome*.deb
 
 before_script:
-  - phpenv config-rm xdebug.ini
-  - "mkdir -p ~/.composer"
-  - cp .travis.composer.config.json ~/.composer/config.json
-  - sudo service postfix stop
-  - smtp-sink -d "%d.%H.%M.%S" localhost:2500 1000 &
-  - echo -e '#!/usr/bin/env bash\nexit 0' | sudo tee /usr/sbin/sendmail
-  - echo 'sendmail_path = "/usr/sbin/sendmail -t -i "' | sudo tee "/home/travis/.phpenv/versions/`php -i | grep "PHP Version" | head -n 1 | grep -o -P '\d+\.\d+\.\d+.*'`/etc/conf.d/sendmail.ini"
+  - export CHROME_BIN=/usr/bin/google-chrome
 
 notifications:
   slack: prestashop:Eovjydk55zPrwPkoQIOF0cZn
@@ -46,7 +45,7 @@ notifications:
 
 script:
   - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
-  - composer install --no-interaction --no-progress
+  - composer install --prefer-dist --no-interaction --no-progress
   - tests/check_php_parse_errors.sh
   - bash ./travis-scripts/install-prestashop
   - bash ./travis-scripts/backup-prestashop
@@ -58,4 +57,4 @@ script:
 
 after_script:
   - sudo cat /var/log/apache2/error.log
-  - firefox --version
+  - google-chrome --version
