@@ -18,22 +18,22 @@ $(document).ready(() => {
   var productConfig = () => {
     const MAX_THUMBS = 4;
     var $arrows = $('.js-arrows');
-    var $thumbnails = $('.js-product-images');
+    var $thumbnails = $('.js-qv-product-images');
     $('.js-thumb').on('click', (event) => {
       if ($('.js-thumb').hasClass('selected')) {
         $('.js-thumb').removeClass('selected');
       }
       $(event.currentTarget).addClass('selected');
-      $('.js-product-cover').attr('src', $(event.target).data('image-large-src'));
+      $('.js-qv-product-cover').attr('src', $(event.target).data('image-large-src'));
     });
-    if ($('.js-product-images li').length <= MAX_THUMBS) {
+    if ($('.js-qv-product-images li').length <= MAX_THUMBS) {
       $arrows.css('opacity', '.2');
     } else {
       $arrows.on('click', (event) => {
-        if ($(event.target).hasClass('arrow-up') && $('.js-product-images').position().top < 0) {
+        if ($(event.target).hasClass('arrow-up') && $('.js-qv-product-images').position().top < 0) {
           move('up');
           $('.arrow-down').css('opacity', '1');
-        } else if ($(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > $('.js-mask').height()) {
+        } else if ($(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > $('.js-qv-mask').height()) {
           move('down');
           $('.arrow-up').css('opacity', '1');
         }
@@ -42,15 +42,15 @@ $(document).ready(() => {
   };
   var move = (direction) => {
     const THUMB_MARGIN = 10;
-    var $thumbnails = $('.js-product-images');
-    var thumbHeight = $('.js-product-images li img').height() + THUMB_MARGIN;
+    var $thumbnails = $('.js-qv-product-images');
+    var thumbHeight = $('.js-qv-product-images li img').height() + THUMB_MARGIN;
     var currentPosition = $thumbnails.position().top;
     $thumbnails.velocity({
       translateY: (direction === 'up') ? currentPosition + thumbHeight : currentPosition - thumbHeight
     }, function() {
       if ($thumbnails.position().top >= 0) {
         $('.arrow-up').css('opacity', '.2');
-      } else if ($thumbnails.position().top + $thumbnails.height() <= $('.js-mask').height()) {
+      } else if ($thumbnails.position().top + $thumbnails.height() <= $('.js-qv-mask').height()) {
         $('.arrow-down').css('opacity', '.2');
       }
     });
