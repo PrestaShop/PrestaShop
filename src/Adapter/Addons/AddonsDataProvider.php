@@ -115,10 +115,6 @@ class AddonsDataProvider implements AddonsInterface
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=native';
                 break;
-            case 'partner':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=partner';
-                break;
             case 'service':
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=service';
