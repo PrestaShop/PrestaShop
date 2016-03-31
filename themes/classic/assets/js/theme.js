@@ -16442,22 +16442,22 @@
 	  var productConfig = function productConfig() {
 	    var MAX_THUMBS = 4;
 	    var $arrows = (0, _jquery2['default'])('.js-arrows');
-	    var $thumbnails = (0, _jquery2['default'])('.js-product-images');
+	    var $thumbnails = (0, _jquery2['default'])('.js-qv-product-images');
 	    (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
 	      if ((0, _jquery2['default'])('.js-thumb').hasClass('selected')) {
 	        (0, _jquery2['default'])('.js-thumb').removeClass('selected');
 	      }
 	      (0, _jquery2['default'])(event.currentTarget).addClass('selected');
-	      (0, _jquery2['default'])('.js-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
+	      (0, _jquery2['default'])('.js-qv-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
 	    });
-	    if ((0, _jquery2['default'])('.js-product-images li').length <= MAX_THUMBS) {
+	    if ((0, _jquery2['default'])('.js-qv-product-images li').length <= MAX_THUMBS) {
 	      $arrows.css('opacity', '.2');
 	    } else {
 	      $arrows.on('click', function (event) {
-	        if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && (0, _jquery2['default'])('.js-product-images').position().top < 0) {
+	        if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && (0, _jquery2['default'])('.js-qv-product-images').position().top < 0) {
 	          move('up');
 	          (0, _jquery2['default'])('.arrow-down').css('opacity', '1');
-	        } else if ((0, _jquery2['default'])(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > (0, _jquery2['default'])('.js-mask').height()) {
+	        } else if ((0, _jquery2['default'])(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > (0, _jquery2['default'])('.js-qv-mask').height()) {
 	          move('down');
 	          (0, _jquery2['default'])('.arrow-up').css('opacity', '1');
 	        }
@@ -16466,15 +16466,15 @@
 	  };
 	  var move = function move(direction) {
 	    var THUMB_MARGIN = 10;
-	    var $thumbnails = (0, _jquery2['default'])('.js-product-images');
-	    var thumbHeight = (0, _jquery2['default'])('.js-product-images li img').height() + THUMB_MARGIN;
+	    var $thumbnails = (0, _jquery2['default'])('.js-qv-product-images');
+	    var thumbHeight = (0, _jquery2['default'])('.js-qv-product-images li img').height() + THUMB_MARGIN;
 	    var currentPosition = $thumbnails.position().top;
 	    $thumbnails.velocity({
 	      translateY: direction === 'up' ? currentPosition + thumbHeight : currentPosition - thumbHeight
 	    }, function () {
 	      if ($thumbnails.position().top >= 0) {
 	        (0, _jquery2['default'])('.arrow-up').css('opacity', '.2');
-	      } else if ($thumbnails.position().top + $thumbnails.height() <= (0, _jquery2['default'])('.js-mask').height()) {
+	      } else if ($thumbnails.position().top + $thumbnails.height() <= (0, _jquery2['default'])('.js-qv-mask').height()) {
 	        (0, _jquery2['default'])('.arrow-down').css('opacity', '.2');
 	      }
 	    });
