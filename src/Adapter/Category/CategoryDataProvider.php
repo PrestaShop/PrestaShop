@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
+use ObjectModel;
 /**
  * This class will provide data from DB / ORM about Category
  */
@@ -68,5 +69,75 @@ class CategoryDataProvider
         $categories = \CategoryCore::getAllCategoriesName($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
         array_shift($categories);
         return $categories;
+    }
+
+    /**
+     * Return a simple array id/name of categories for a specified product
+     * @param Product $product
+     *
+     * @return array Categories
+     */
+    public function getCategoriesByProduct(ObjectModel $product)
+    {
+        $allCategories = $this->getAllCategoriesName();
+        $productCategories = $product->getCategories();
+
+        $results = [];
+        foreach ($allCategories as $category) {
+            foreach($productCategories as $productCategory) {
+                if ($productCategory == $category['id_category']) {
+                    $results[] = [
+                        'id' => $category['id_category'],
+                        'name' => $category['name'],
+                        'breadcrumb' => $this->getBreadCrumb($category['id_category'])
+                    ];
+                }
+                $productCategories[$category['name']] = $category['id_category'];
+            }
+
+        }
+
+        return $results;
+    }
+
+    /**
+     * Return a simple array id/name of categories
+     *
+     * @return array Categories
+     */
+    public function getCategoriesWithBreadCrumb()
+    {
+        $allCategories = $this->getAllCategoriesName();
+
+        $results = [];
+        foreach ($allCategories as $category) {
+            $results[] = [
+                'id' => $category['id_category'],
+                'name' => $category['name'],
+                'breadcrumb' => $this->getBreadCrumb($category['id_category'])
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
+     * Returns a simple breacrumb from a categoryId, the delimiter can be choosen
+     * @param $categoryId
+     * @param string $delimiter
+     * @return string
+     */
+    public function getBreadCrumb($categoryId, $delimiter = " > ")
+    {
+        $currentCategory = new \Category($categoryId);
+        $categories = $currentCategory->getParentsCategories();
+        $categories = array_reverse($categories, true);
+        $breadCrumb = '';
+
+        foreach($categories as $category) {
+            $breadCrumb .= ' > '.$category['name'];
+        }
+
+        return substr($breadCrumb, strlen($delimiter));
     }
 }
