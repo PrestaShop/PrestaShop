@@ -43,6 +43,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     protected $category;
 
     private $quantity_discounts;
+    private $adminNotifications = array();
 
     public function canonicalRedirection($canonical_url = '')
     {
@@ -68,7 +69,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         parent::init();
 
-        $this->context->smarty->assign('adminActionDisplay', false);
+        $this->setTemplate('catalog/product.tpl');
 
         if ($id_product = (int)Tools::getValue('id_product')) {
             $this->product = new Product($id_product, true, $this->context->language->id, $this->context->shop->id);
@@ -86,26 +87,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
              */
             if (!$this->product->isAssociatedToShop() || !$this->product->active) {
                 if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')) && $this->product->isAssociatedToShop()) {
-                    // If the product is not active, it's the admin preview mode
-                    $this->info[] = $this->l('This product is not visible to your customers.');
-
-                    $draftLinks = [
-                        'publishLink' => array(
-                            'url' => Tools::getValue('ad').'/'.$this->context->link->getAdminLink('AdminProducts', false).'&token='.Tools::getValue('adtoken').'&statusproduct&id_product='.$this->product->id,
-                            'title' => $this->l('Publish'),
-                            ),
-                        'backLink' => array(
-                            'url' => Tools::getValue('ad').'/'.$this->context->link->getAdminLink('AdminProducts', false).'&token='.Tools::getValue('adtoken').'&updateproduct&id_product='.$this->product->id,
-                            'title' => $this->l('Back'),
-                            ),
+                    $this->adminNotifications['inactive_product'] = [
+                        'type' => 'warning',
+                        'message' => $this->l('This product is not visible to your customers.'),
                     ];
-
-                    $this->context->smarty->assign(array(
-                        'draftLinks' => $draftLinks,
-                        'adminActionDisplay' => true,
-                    ));
                 } else {
-                    $this->context->smarty->assign('adminActionDisplay', false);
                     if (!$this->product->id_product_redirected || $this->product->id_product_redirected == $this->product->id) {
                         $this->product->redirect_type = '404';
                     }
@@ -127,6 +113,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('HTTP/1.1 404 Not Found');
                             header('Status: 404 Not Found');
                             $this->errors[] = $this->l('This product is no longer available.');
+                            $this->setTemplate('errors/404.tpl');
                         break;
                     }
                 }
@@ -316,8 +303,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // Assign attribute groups to the template
             $this->assignAttributesGroups($product_for_template);
         }
-
-        $this->setTemplate('catalog/product.tpl');
     }
 
     public function displayAjaxQuickview()
@@ -926,6 +911,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if ($this->product->customizable) {
             $page['body_classes']['-customizable'] = true;
         }
+
+        $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
 
         return $page;
     }

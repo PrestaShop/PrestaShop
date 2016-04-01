@@ -11,16 +11,17 @@
     {hook h='displayAfterBodyOpeningTag'}
 
     <main>
+      {block name='product_activation'}
+        {include file='catalog/_partials/product-activation.tpl'}
+      {/block}
       <header id="header">
         {block name='header'}
           {include file='_partials/header.tpl'}
         {/block}
       </header>
-
       {block name='notifications'}
         {include file='_partials/notifications.tpl'}
       {/block}
-
       <section id="wrapper">
         <div class="container">
           {block name='breadcrumb'}
