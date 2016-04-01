@@ -4,7 +4,8 @@
 <div class="module-item-{{display_type}} {{col_lg}} {% if origin == 'manage' and isModuleActive == '0' %}module-item-{{display_type}}-isNotActive{% endif %}" data-id="{{ module.attributes.id }}" data-name="{{ module.attributes.displayName }}"
 data-scoring="{{module.attributes.avgRate}}" data-logo="{{ module.attributes.img }}" data-author="{{ module.attributes.author }}"
 data-version="{{ module.attributes.version }}" data-description="{{ module.attributes.description }}" data-tech-name="{{module.attributes.name }}"
-data-categories="{{ module.attributes.refs|join('|') }}" data-type="{{module.attributes.productType }}" data-price="{{module.attributes.price.raw}}" data-active="{{isModuleActive}}">
+data-categories="{{ module.attributes.refs|join('|') }}" data-type="{{module.attributes.productType }}" data-price="{{module.attributes.price.raw}}" data-active="{{isModuleActive}}"
+data-access-date="{{ module.database.last_access_date }}">
      <div class="module-item-wrapper-{{display_type}}">
         <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name}}">
             <img class="module-logo-thumb-{{display_type}}" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}" />

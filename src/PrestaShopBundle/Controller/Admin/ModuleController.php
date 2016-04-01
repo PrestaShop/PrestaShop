@@ -4,9 +4,10 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShopBundle\Entity\ModuleHistory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -358,7 +359,8 @@ class ModuleController extends FrameworkBundleAdminController
                 $moduleManager->uninstall($module_name);
                 $moduleManager->removeModuleFromDisk($module_name);
             }
-            return new JsonResponse(array(
+            return new JsonResponse(
+                array(
                 'status' => false,
                 'msg' => $e->getMessage()),
                 200,
@@ -371,13 +373,46 @@ class ModuleController extends FrameworkBundleAdminController
     {
         /* @var $legacyUrlGenerator UrlGeneratorInterface */
         $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
+        $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
+        $legacyContext = $legacyContextProvider->getContext();
+        $moduleManagerFactory = new ModuleManagerBuilder();
+        $moduleRepository = $moduleManagerFactory->buildRepository();
+        // Get accessed module object
+        $moduleAccessed = $moduleRepository->getModule($module_name);
+
+        // Get current employee ID
+        $currentEmployeeID = $legacyContext->employee->id;
+        // Get accessed module DB ID
+        $moduleAccessedID = (int)$moduleAccessed->database->get('id');
+
+        // Save history for this module
+        $moduleHistory = $this->getDoctrine()
+            ->getRepository('PrestaShopBundle:ModuleHistory')
+            ->findOneBy([
+                'idEmployee' => $currentEmployeeID,
+                'idModule' => $moduleAccessedID
+            ]);
+
+        if (is_null($moduleHistory)) {
+            $moduleHistory = new ModuleHistory();
+        }
+
+        $moduleHistory->setIdEmployee($currentEmployeeID);
+        $moduleHistory->setIdModule($moduleAccessedID);
+        $moduleHistory->setDateUpd(new \DateTime(date('Y-m-d H:i:s')));
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($moduleHistory);
+        $em->flush();
 
         $redirectionParams = array(
             // do not transmit limit & offset: go to the first page when redirecting
             'configure' => $module_name,
         );
-        return $this->redirect($legacyUrlGenerator->generate('admin_module_configure_action',
-            $redirectionParams), 302);
+        return $this->redirect(
+            $legacyUrlGenerator->generate('admin_module_configure_action', $redirectionParams),
+            302
+        );
     }
 
     protected function getToolbarButtons()
