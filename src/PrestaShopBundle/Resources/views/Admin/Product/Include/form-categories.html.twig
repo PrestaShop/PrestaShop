@@ -1,0 +1,35 @@
+<h2>{{ trans("Categories", {}, 'AdminProducts') }}</h2>
+
+{{ form_errors(form.categories) }}
+{{ form_widget(form.categories) }}
+
+<div id="add-categories">
+    <fieldset class="form-group">
+      {{ include('PrestaShopBundle:Admin:Category/tag.html.twig', {'categories': categories }) }}
+      <label class="form-control-label">{{ trans("Default category", {}, 'AdminProducts') }}</label>
+      {{ form_errors(form.id_category_default) }}
+      {{ form_widget(form.id_category_default) }}
+    </fieldset>
+  <div id="add-categories-content" class="hide">
+    <div id="form_step1_new_category" data-action="{{ form.new_category.vars.attr["data-action"] }}">
+      <fieldset class="form-group">
+        <label class="form-control-label">{{ trans("Add a new category", {}, 'AdminProducts') }}</label>
+        {{ form_errors(form.new_category) }}
+        {{ form_widget(form.new_category.name) }}
+      </fieldset>
+
+      <fieldset class="form-group">
+        <label class="form-control-label">{{ form.new_category.id_parent.vars.label }}</label>
+        {{ form_widget(form.new_category.id_parent) }}
+      </fieldset>
+
+      <fieldset class="form-group text-xs-right">
+        <button type="button" id="form_step1_new_category_save" class="btn btn-default btn-sm submit">{{ trans('SAVE', {}, 'AdminProducts') }}</button>
+      </fieldset>
+    </div>
+  </div>
+  <a href="#" class="btn btn-action open">
+    <i class="material-icons">add</i>
+    {{ trans('Add a category', {}, 'AdminProducts') }}
+  </a>
+</div>
