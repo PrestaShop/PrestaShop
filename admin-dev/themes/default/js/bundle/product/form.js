@@ -2022,6 +2022,9 @@ productCategoriesTags = (function () {
       // add tags management
       this.manageTagsOnInput();
       this.manageTagsOnTags();
+
+      // add search box
+      this.initSearchBox();
     },
     'removeTag': function (categoryId) {
       $('span[data-id^="' + categoryId + '"]').parent().remove();
@@ -2059,19 +2062,11 @@ productCategoriesTags = (function () {
         if (input.prop('checked') === false) {
           that.removeTag($(this).val());
         } else {
-          var tree = that.getTree();
-
           var tag = {
             'name': input.parent().text(),
             'id': input.val(),
             'breadcrumb': ''
           };
-
-          tree.forEach(function getCategories(_category) {
-            if (_category.id == tag.id) {
-              tag.breadcrumb = _category.breadcrumb;
-            }
-          });
 
           that.createTag(tag);
         }
@@ -2100,6 +2095,16 @@ productCategoriesTags = (function () {
       return tree;
     },
     'createTag': function (category) {
+
+      if (category.breadcrumb == '') {
+        var tree = this.getTree();
+        tree.forEach(function getCategories(_category) {
+          if (_category.id == category.id) {
+            category.breadcrumb = _category.breadcrumb;
+          }
+        });
+      }
+
       $('#ps_categoryTags').append('<span class="pstaggerTag">' +
         '<span data-id="' + category.id + '" title="' + category.breadcrumb + '">' + category.name + '</span>' +
         '<a class="pstaggerClosingCross" href="#" data-id="' + category.id + '">x</a>' +
@@ -2107,7 +2112,53 @@ productCategoriesTags = (function () {
 
       return true;
     },
+    'getNameFromBreadcrumb': function (name) {
 
+      if (name.indexOf('&gt;') !== -1) {
+        return name.substring(name.lastIndexOf('&gt') + 4); // remove "&gt; "
+      }
+
+      return name;
+    },
+    'initSearchBox': function () {
+      var searchBox = $('#ps-select-product-category');
+      var tree = this.getTree();
+      var tags = [];
+      var that = this;
+      tree.forEach(function buildTags(tagObject){
+        tags.push({
+          label: tagObject.breadcrumb,
+          value: tagObject.id
+        });
+      });
+
+      searchBox.autocomplete({
+        source: tags,
+        minChars: 2,
+        autoFill: true,
+        max:20,
+        matchContains: true,
+        mustMatch:false,
+        scroll:false,
+        select: function(event, ui) {
+          event.preventDefault();
+          var label = ui.item.label;
+          var categoryName = that.getNameFromBreadcrumb(label);
+          var categoryId = ui.item.value;
+          that.createTag({
+            'name': categoryName,
+            'id': categoryId
+          });
+
+          $(this).val('');
+        }
+      }).data('ui-autocomplete')._renderItem = function(ul, item) {
+        return $('<li>')
+          .data('ui-autocomplete-item', item)
+          .append('<a>'+item.label+'</a>')
+          .appendTo(ul);
+      };
+    }
   };
 })();
 
