@@ -328,7 +328,7 @@ class ThemeManager implements AddonManagerInterface
     {
         $jsonConfigFolder = $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$theme->getName();
         if (!file_exists($jsonConfigFolder) && !is_dir($jsonConfigFolder)) {
-            mkdir($jsonConfigFolder);
+            mkdir($jsonConfigFolder, 0777, true);
         }
 
         file_put_contents(
