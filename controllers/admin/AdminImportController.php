@@ -2656,7 +2656,7 @@ class AdminImportControllerCore extends AdminController
                     // after insertion, we clean attribute position and group attribute position
                     if (!$validateOnly) {
                         $obj = new Attribute();
-                        $obj->cleanPositions((int)$id_attribute_group, false);
+                        Attribute::cleanPositions((int)$id_attribute_group, false);
                         AttributeGroup::cleanPositions();
                     }
                 }

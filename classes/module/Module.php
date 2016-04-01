@@ -1902,7 +1902,7 @@ abstract class ModuleCore
      * @param bool $id_hook Hook ID
      * @param array $shop_list List of shop
      */
-    public function cleanPositions($id_hook, $shop_list = null)
+    public static function cleanPositions($id_hook, $shop_list = null)
     {
         $sql = 'SELECT `id_module`, `id_shop`
             FROM `'._DB_PREFIX_.'hook_module`

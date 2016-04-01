@@ -179,7 +179,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
                     $result = true;
                     $result = $cms_category->deleteSelection(Tools::getValue($this->table.'Box'));
                     if ($result) {
-                        $cms_category->cleanPositions((int)Tools::getValue('id_cms_category'));
+                        CMSCategory::cleanPositions((int)Tools::getValue('id_cms_category'));
                         $token = Tools::getAdminTokenLite('AdminCmsContent');
                         Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token.'&id_cms_category='.(int)Tools::getValue('id_cms_category'));
                     }

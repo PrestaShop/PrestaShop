@@ -631,14 +631,14 @@ abstract class AdminTabCore
                             $object->deleteImage();
                             $object->deleted = 1;
                             if (method_exists($object, 'cleanPositions')) {
-                                $object->cleanPositions();
+                                AdminTab::cleanPositions();
                             }
                             if ($object->update()) {
                                 Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
                             }
                         } elseif ($object->delete()) {
                             if (method_exists($object, 'cleanPositions')) {
-                                $object->cleanPositions();
+                                AdminTab::cleanPositions();
                             }
                             Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
                         }

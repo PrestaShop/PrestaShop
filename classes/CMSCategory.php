@@ -105,7 +105,7 @@ class CMSCategoryCore extends ObjectModel
             }
         }
         $ret = parent::add($autodate, $null_values);
-        $this->cleanPositions($this->id_parent);
+        CMSCategory::cleanPositions($this->id_parent);
         return $ret;
     }
 

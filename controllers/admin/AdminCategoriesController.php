@@ -973,7 +973,7 @@ class AdminCategoriesControllerCore extends AdminController
             if (isset($position) && $category->updatePosition($way, $position)) {
                 /* Position '0' was not found in given positions so try to reorder parent category*/
                 if (!$found_first) {
-                    $category->cleanPositions((int)$category->id_parent);
+                    Category::cleanPositions((int)$category->id_parent);
                 }
 
                 die(true);

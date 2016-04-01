@@ -101,7 +101,7 @@ class AttributeCore extends ObjectModel
             CartRule::cleanProductRuleIntegrity('attributes', $this->id);
 
             /* Reinitializing position */
-            $this->cleanPositions((int)$this->id_attribute_group);
+            Attribute::cleanPositions((int)$this->id, (int)$this->id_attribute_group);
         }
         $return = parent::delete();
         if ($return) {
@@ -339,13 +339,13 @@ class AttributeCore extends ObjectModel
      * @param bool $use_last_attribute
      * @return bool $return
      */
-    public function cleanPositions($id_attribute_group, $use_last_attribute = true)
+    public static function cleanPositions($id, $id_attribute_group, $use_last_attribute = true)
     {
         Db::getInstance()->execute('SET @i = -1', false);
         $sql = 'UPDATE `'._DB_PREFIX_.'attribute` SET `position` = @i:=@i+1 WHERE';
 
         if ($use_last_attribute) {
-            $sql .= ' `id_attribute` != '.(int)$this->id.' AND';
+            $sql .= ' `id_attribute` != '.(int)$id.' AND';
         }
 
         $sql .= ' `id_attribute_group` = '.(int)$id_attribute_group.' ORDER BY `position` ASC';

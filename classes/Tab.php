@@ -141,7 +141,7 @@ class TabCore extends ObjectModel
             if (is_array(self::$_getIdFromClassName) && isset(self::$_getIdFromClassName[strtolower($this->class_name)])) {
                 self::$_getIdFromClassName = null;
             }
-            return $this->cleanPositions($this->id_parent);
+            return Tab::cleanPositions($this->id_parent);
         }
         return false;
     }
@@ -413,7 +413,7 @@ class TabCore extends ObjectModel
         return $this->update();
     }
 
-    public function cleanPositions($id_parent)
+    public static function cleanPositions($id_parent)
     {
         $result = Db::getInstance()->executeS('
 			SELECT `id_tab`
