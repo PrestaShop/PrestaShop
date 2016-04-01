@@ -1102,7 +1102,7 @@ class ProductCore extends ObjectModel
         $return = Db::getInstance()->delete('category_product', 'id_product = '.(int)$this->id.' AND id_category = '.(int)$id_category);
         if ($clean_positions === true) {
             foreach ($result as $row) {
-                $this->cleanPositions((int)$row['id_category'], (int)$row['position']);
+                self::cleanPositions((int)$row['id_category'], (int)$row['position']);
             }
         }
         SpecificPriceRule::applyAllRules(array((int)$this->id));
@@ -1128,7 +1128,7 @@ class ProductCore extends ObjectModel
         $return = Db::getInstance()->delete('category_product', 'id_product = '.(int)$this->id);
         if ($clean_positions === true && is_array($result)) {
             foreach ($result as $row) {
-                $return &= $this->cleanPositions((int)$row['id_category'], (int)$row['position']);
+                $return &= self::cleanPositions((int)$row['id_category'], (int)$row['position']);
             }
         }
 
