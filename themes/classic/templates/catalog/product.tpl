@@ -26,9 +26,6 @@
   <section id="main" itemscope itemtype="https://schema.org/Product">
     <meta itemprop="url" content="{$product.url}">
 
-    {block name='product_activation'}
-      {include file='catalog/_partials/product-activation.tpl'}
-    {/block}
     <div class="row">
       <div class="col-md-6">
         {block name='page_content_container'}

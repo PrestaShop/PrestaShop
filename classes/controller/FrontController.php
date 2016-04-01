@@ -1309,7 +1309,7 @@ class FrontControllerCore extends Controller
     {
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
 
         return [
             'is_b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
@@ -1435,6 +1435,7 @@ class FrontControllerCore extends Controller
             'keywords' => $meta_tags['meta_keywords'],
             'page_name' => $page_name,
             'body_classes' => $body_classes,
+            'admin_notifications' => [],
         ];
 
         return $page;
