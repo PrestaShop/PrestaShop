@@ -15,7 +15,7 @@ function checkGroupHasValue (valueId, groupId) {
 }
 
 function checkVariantIsSelected (variant) {
-  return q.all(_.map(variant, checkGroupHasValue));
+  return _.map(variant, checkGroupHasValue);
 }
 
 function chooseValueInGroup (valueId, groupId) {
@@ -23,9 +23,13 @@ function chooseValueInGroup (valueId, groupId) {
   return browser.getTagName(groupSelector)
     .then(function (tagName) {
       if (tagName === 'select') {
-        return browser.selectByValue(groupSelector, valueId);
+        browser.selectByValue(groupSelector, valueId).then(() => {
+          return browser.waitForVisible(groupSelector + ' [value="' + valueId + '"]');
+        });
       } else {
-        return browser.click(groupSelector + ' [value="' + valueId + '"]');
+        browser.click(groupSelector + ' [value="' + valueId + '"]').then(() => {
+          return browser.waitForVisible(groupSelector + ' [value="' + valueId + '"]');
+        });
       }
     })
   ;
@@ -70,8 +74,8 @@ describe('The product page', function () {
 
       return browser
         .productPage(fixtures.aProductWithVariants.id)
-        .then(() => chooseVariant(variant))
-        .then(() => checkVariantIsSelected(variant))
+        .then(chooseVariant.bind(undefined, variant))
+        .then(checkVariantIsSelected.bind(undefined,variant))
       ;
     });
   });

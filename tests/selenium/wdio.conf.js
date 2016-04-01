@@ -33,10 +33,11 @@ exports.config = {
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
     capabilities: [{
-        browserName: 'firefox',
+        browserName: 'chrome',
         tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
         screenResolution: "1600x1200",
-        platform: "Windows 7"
+        platform: "Windows 7",
+        name: process.env.TRAVIS_COMMIT
     }],
     //
     // ===================
@@ -45,7 +46,7 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity.
-    logLevel: process.env.TRAVIS ? 'command' : 'silent',
+    logLevel: 'silent',
     //
     // Enables colors for log output.
     coloredLogs: true,
@@ -58,8 +59,8 @@ exports.config = {
     baseUrl: require('./settings').baseUrl,
     //
     // Default timeout for all waitForXXX commands.
-    waitforTimeout: 10000,
-    waitforInterval: 3000,
+    waitforTimeout: 2500,
+    waitforInterval: 1000,
     //
     // Initialize the browser instance with a WebdriverIO plugin. The object should have the
     // plugin name as key and the desired plugin options as property. Make sure you have
@@ -102,7 +103,7 @@ exports.config = {
         ui: 'bdd',
         compilers: ['js:babel-register'],
         bail: true,
-        timeout: 30000
+        timeout: 8000
     },
 
     //
@@ -129,7 +130,6 @@ exports.config = {
         // this hook allows to define custom functions on the global browser object
         require('./commands/init')(browser);
         return browser
-            .timeoutsImplicitWait(10000)
             .windowHandleMaximize()
             ;
     },
