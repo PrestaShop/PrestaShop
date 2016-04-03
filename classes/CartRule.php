@@ -368,10 +368,14 @@ class CartRuleCore extends ObjectModel
                             WHERE crc.id_cart_rule = '.(int)$cart_rule['id_cart_rule'].'
                             AND crc.id_country = '.(int)$country['id_country']);
                         if ($id_cart_rule) {
-                            $result[$id_cart_rule] = $result_bak[$key];
+                            $result[] = $result_bak[$key];
+                            break;
                         }
                     }
                 }
+            }
+            else {
+                $result[] = $result_bak[$key];
             }
         }
 
