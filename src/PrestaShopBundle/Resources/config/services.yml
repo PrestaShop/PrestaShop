@@ -115,6 +115,10 @@ services:
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
 
+    prestashop.adapter.security.authorization.checker:
+        class: PrestaShop\PrestaShop\Adapter\Security\AuthorizationChecker
+        arguments: ["@=service('prestashop.adapter.legacy.context').getContext().employee"]
+
     # Other adapters
     prestashop.adapter.shop.context:
         class: PrestaShop\PrestaShop\Adapter\Shop\Context

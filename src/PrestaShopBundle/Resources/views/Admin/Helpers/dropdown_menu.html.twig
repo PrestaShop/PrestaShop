@@ -3,9 +3,10 @@
 
 <div class="{{ div_style|default("btn-group dropdown") }}">
 
-  {% if default_item is defined %}
+  {% if default_item is defined and default_item is not empty %}
+    {% set link = default_item.href %}
     <a
-      href="{{ default_item.href|default("#") }}"
+      href="{{ attribute(product,link) |default("#") }}"
       title="{{ default_item.title|default(default_item.label|default("")) }}"
       class="btn btn-{{ buttonType }}"
       {% if disabled is defined and disabled == true %}disabled="disabled"{% endif %}
@@ -32,8 +33,13 @@
       {% if entry.divider is defined and entry.divider==true %}
         <div class="dropdown-divider"></div>
       {% else %}
+        {% if entry.href is defined %}
+          {% set link = attribute(product,entry.href) %}
+        {% else %}
+          {% set link = null %}
+        {% endif %}
         <a
-          class="dropdown-item" href="{{ entry.href|default("#") }}"
+          class="dropdown-item" href="{{ link |default("#") }}"
           {% if entry.onclick is defined %}onclick="{{ entry.onclick }}"{% endif %}
           {% if entry.target is defined %}target="{{ entry.target }}"{% endif %}
         >
