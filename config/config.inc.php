@@ -40,11 +40,6 @@ define('_PS_SSL_PORT_', 443);
 /* Improve PHP configuration to prevent issues */
 ini_set('default_charset', 'utf-8');
 
-/* correct Apache charset (except if it's too late */
-if (!headers_sent()) {
-    header('Content-Type: text/html; charset=utf-8');
-}
-
 /* in dev mode - check if composer was executed */
 if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
         !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'))) {
