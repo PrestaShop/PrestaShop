@@ -8,9 +8,9 @@ data-categories="{{ module.attributes.get('refs')|join('|') }}" data-type="{{mod
      <div class="module-item-wrapper-{{display_type}}">
         <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.get('name')}}">
             <img class="module-logo-thumb-{{display_type}}" src="{{ module.attributes.get('media').img }}" alt="{{ module.attributes.get('displayName') }}" />
-            <h3 class="text-ellipsis module-name-{{display_type}}" data-toggle="tooltip" data-placement="top" title="{{ module.attributes.get('displayName') }}">
+            <h3 class="text-ellipsis module-name-{{display_type}}" data-toggle="tooltip" data-placement="top" title="{{ module.attributes.get('displayName')|raw }}">
               {% if module.attributes.has('displayName') %}
-                {{ module.attributes.get('displayName') }}
+                {{ module.attributes.get('displayName')|raw }}
               {% else %}
                 {{ module.attributes.get('name') }}
               {% endif %}
