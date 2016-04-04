@@ -117,9 +117,18 @@ class ModuleRepositoryTest extends UnitTestCase
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(AddonListFilterStatus::INSTALLED);
 
+        $installed_modules = $this->moduleRepositoryStub->getFilteredList($filters);
+
         // Each module MUST have its database installed attribute as true
-        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
+        foreach ($installed_modules as $module) {
             $this->assertTrue($module->database->get('installed') == 1);
+        }
+
+        foreach ($all_modules as $name => $module) {
+            // Each installed module must be found in the installed modules list
+            if ($module->database->get('installed') == 1) {
+                $this->assertTrue(array_key_exists($name, $installed_modules), sprintf("Module %s not found in the filtered list !", $name));
+            }
         }
     }
 
@@ -131,9 +140,18 @@ class ModuleRepositoryTest extends UnitTestCase
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(~ AddonListFilterStatus::INSTALLED);
 
+        $not_installed_modules = $this->moduleRepositoryStub->getFilteredList($filters);
+
         // Each module MUST have its database installed attribute as true
-        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
+        foreach ($not_installed_modules as $module) {
             $this->assertTrue($module->database->get('installed') == 0);
+        }
+
+        foreach ($all_modules as $name => $module) {
+            // Each installed module must be found in the installed modules list
+            if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 0) {
+                $this->assertTrue(array_key_exists($name, $not_installed_modules), sprintf("Module %s not found in the filtered list !", $name));
+            }
         }
     }
 
@@ -145,10 +163,20 @@ class ModuleRepositoryTest extends UnitTestCase
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(AddonListFilterStatus::ENABLED);
 
+        $installed_and_active_modules = $this->moduleRepositoryStub->getFilteredList($filters);
+
         // Each module MUST have its database installed and enabled attributes as true
-        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
+        foreach ($installed_and_active_modules as $module) {
             $this->assertTrue($module->database->get('installed') == 1);
             $this->assertTrue($module->database->get('active') == 1);
+        }
+
+        foreach ($all_modules as $name => $module) {
+            // Each installed module must be found in the installed modules list
+            if ($module->database->get('installed') == 1
+                && $module->database->get('active') == 1) {
+                $this->assertTrue(array_key_exists($name, $installed_and_active_modules), sprintf("Module %s not found in the filtered list !", $name));
+            }
         }
     }
 
@@ -160,8 +188,17 @@ class ModuleRepositoryTest extends UnitTestCase
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(~ AddonListFilterStatus::ENABLED);
 
-        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
+        $not_active_modules = $this->moduleRepositoryStub->getFilteredList($filters);
+
+        foreach ($not_active_modules as $module) {
             $this->assertTrue($module->database->get('active') == 0);
+        }
+
+        foreach ($all_modules as $name => $module) {
+            // Each installed module must be found in the installed modules list
+            if ($module->attributes->get('productType') == 'module' && $module->database->has('active') && $module->database->get('active') == 0) {
+                $this->assertTrue(array_key_exists($name, $not_active_modules), sprintf("Module %s not found in the filtered list !", $name));
+            }
         }
     }
 
@@ -173,9 +210,18 @@ class ModuleRepositoryTest extends UnitTestCase
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(AddonListFilterStatus::INSTALLED &~ AddonListFilterStatus::ENABLED);
 
-        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
+        $installed_but_not_installed_modules = $this->moduleRepositoryStub->getFilteredList($filters);
+
+        foreach ($installed_but_not_installed_modules as $module) {
             $this->assertTrue($module->database->get('installed') == 1, $module->attributes->get('name') .' marked as not installed ><');
             $this->assertTrue($module->database->get('active') == 0, $module->attributes->get('name') .' marked as enabled ><');
+        }
+
+        foreach ($all_modules as $name => $module) {
+            // Each installed module must be found in the installed modules list
+            if ($module->database->get('installed') == 1 && $module->database->get('active') == 0) {
+                $this->assertTrue(array_key_exists($name, $installed_but_not_installed_modules), sprintf("Module %s not found in the filtered list !", $name));
+            }
         }
     }
 
