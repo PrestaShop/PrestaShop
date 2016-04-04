@@ -41,10 +41,10 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function loadAddressById($id_address)
     {
-        $address = new Address($id_address, $this->language->id);
+        $this->address = new Address($id_address, $this->language->id);
 
-        $params = get_object_vars($address);
-        $params['id_address'] = $address->id;
+        $params = get_object_vars($this->address);
+        $params['id_address'] = $this->address->id;
 
         return $this->fillWith($params);
     }
