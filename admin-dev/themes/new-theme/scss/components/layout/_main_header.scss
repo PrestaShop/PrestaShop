@@ -4,10 +4,9 @@
   background: $white;
   height: $size-header-height;
   width: 100%;
-
   > .logo {
     display: inline-block;
-    background: url('img/logo.png') no-repeat center center;
+    background: url(img/logo.png) no-repeat center center;
     height: 100%;
     width: $size-navbar-width;
   }
@@ -17,12 +16,17 @@
       left: rem(8px);
       right: rem(8px);
     }
+    > .ps-dropdown {
+      top: rem(-10px);
+      > .ps-dropdown-menu {
+        left: rem(17px);
+      }
+    }
   }
   > .component.-norightmargin {
     margin-right: 0;
   }
 }
-
 .notification-center {
   > .notification {
     @include single-line-block($size-header-height);
@@ -50,12 +54,10 @@
     padding: 0 rem(4px);
     border-radius: rem(10px);
   }
-
   .material-icons {
     font-size: rem(24px);
   }
 }
-
 .shop-list {
   > .link {
     display: inline-block;
@@ -63,7 +65,6 @@
     @include single-line-block($size-header-height);
   }
 }
-
 .employee-dropdown {
   > .avatar {
     cursor: pointer;
