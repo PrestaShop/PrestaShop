@@ -219,6 +219,10 @@ var AdminModuleController = function () {
                 _this.doDropdownSort(_this.currentSorting);
             }
 
+            if(totalFoundModules != $(this).find(moduleItemSelector).length) {
+                this.areAllModuleDisplayed = false;
+            }
+
             _this.updateTotalResults(totalFoundModules, $(this));
         });
     };
@@ -338,6 +342,7 @@ var AdminModuleController = function () {
 
         // Reset currentTagsList
         this.currentTagsList = [];
+        _this.doSearch();
 
         // Avoid trying to redisplay everything if it's already fully displayed
         if (this.areAllModuleDisplayed === false) {
@@ -994,84 +999,6 @@ var AdminModuleController = function () {
             _this.currentRefMenu = null;
             _this.doSearch();
         });
-    };
-
-    this.resetSearch = function () {
-        // Pick the right selector to process search
-        var moduleItemSelector = this.getModuleItemSelector();
-        var moduleGlobalSelector = this.getModuleGlobalSelector();
-        var _this = this;
-
-        // Reset currentTagsList
-        this.currentTagsList = [];
-
-        // Avoid trying to redisplay everything if it's already fully displayed
-        if (this.areAllModuleDisplayed === false) {
-
-            $(moduleGlobalSelector).each(function () {
-                var totalModules = 0;
-                var _that = _this;
-                $(this).find(moduleItemSelector).each(function () {
-                    if (_that.currentRefMenu !== null) {
-                        var isFromFilterCategory = ($(this).attr('data-categories') == _that.currentRefMenu);
-                        if (isFromFilterCategory === true) {
-                            totalModules += 1;
-                        }
-                        if ($(this).is(':hidden') && isFromFilterCategory === true) {
-                            $(this).show();
-                        }
-                    } else {
-                        totalModules += 1;
-                        if ($(this).is(':hidden')) {
-                            $(this).show();
-                        }
-                    }
-                });
-
-                // Don't forget this vital var once this done
-                _this.areAllModuleDisplayed = true;
-                _this.updateTotalResults(totalModules, $(this));
-            });
-        }
-    };
-
-    this.resetSearch = function () {
-        // Pick the right selector to process search
-        var moduleItemSelector = this.getModuleItemSelector();
-        var moduleGlobalSelector = this.getModuleGlobalSelector();
-        var _this = this;
-
-        // Reset currentTagsList
-        this.currentTagsList = [];
-
-        // Avoid trying to redisplay everything if it's already fully displayed
-        if (this.areAllModuleDisplayed === false) {
-
-            $(moduleGlobalSelector).each(function (index, value) {
-                var totalModules = 0;
-                var _that = _this;
-                $(this).find(moduleItemSelector).each(function (index, value) {
-                    if (_that.currentRefMenu !== null) {
-                        var isFromFilterCategory = ($(this).attr('data-categories') == _that.currentRefMenu);
-                        if (isFromFilterCategory === true) {
-                            totalModules += 1;
-                        }
-                        if ($(this).is(':hidden') && isFromFilterCategory === true) {
-                            $(this).show();
-                        }
-                    } else {
-                        totalModules += 1;
-                        if ($(this).is(':hidden')) {
-                            $(this).show();
-                        }
-                    }
-                });
-
-                // Dont forget this vital var once this done
-                _this.areAllModuleDisplayed = true;
-                _this.updateTotalResults(totalModules, $(this));
-            });
-        }
     };
 
 
