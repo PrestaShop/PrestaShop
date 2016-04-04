@@ -54,11 +54,10 @@ class bankwire extends PaymentModule
         $this->currencies_mode = 'checkbox';
 
         $this->bootstrap = true;
-        parent::__construct();
 
-        $this->displayName = $this->l('Bank wire');
-        $this->description = $this->l('Accept payments for your products via bank wire transfer.');
-        $this->confirmUninstall = $this->l('Are you sure about removing these details?');
+        $this->displayName = 'Bank wire';
+        $this->description = 'Accept payments for your products via bank wire transfer.';
+        $this->confirmUninstall = 'Are you sure about removing these details?';
     }
 
     public function install()

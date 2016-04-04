@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\LegacyLogger;
+use Psr\Log\LoggerInterface;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -45,6 +45,12 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
      */
     private $adminModuleProvider;
+
+    /**
+     * Logger
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
 
     /**
      * Module Data Provider
@@ -74,9 +80,11 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
-        ModuleDataUpdater $modulesUpdater
+        ModuleDataUpdater $modulesUpdater,
+        LoggerInterface $logger
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
+        $this->logger = $logger;
         $this->moduleProvider      = $modulesProvider;
         $this->moduleUpdater       = $modulesUpdater;
         $this->finder              = new Finder();
@@ -207,11 +215,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                     $modules[$name] = $module;
                 }
             } catch (\ParseError $e) {
-                $logger = new LegacyLogger();
-                $logger->critical(sprintf('Parse error on module %s. %s', $name, $e->getMessage()));
+                $this->logger->critical(sprintf('Parse error on module %s. %s', $name, $e->getMessage()));
             } catch (Exception $e) {
-                $logger = new LegacyLogger();
-                $logger->critical(sprintf('Unexpected exception on module %s. %s', $name, $e->getMessage()));
+                $this->logger->critical(sprintf('Unexpected exception on module %s. %s', $name, $e->getMessage()));
             }
         }
 
@@ -245,8 +251,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 (array)array_shift($module_catalog_data)
             );
         } catch (Exception $e) {
-            $logger = new LegacyLogger();
-            $logger->alert(sprintf('Loading data from Addons failed. %s', $e->getMessage()));
+            $this->logger->alert(sprintf('Loading data from Addons failed. %s', $e->getMessage()));
         }
 
         // Now, we check that cache is up to date

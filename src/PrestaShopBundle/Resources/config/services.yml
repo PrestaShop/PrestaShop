@@ -165,7 +165,7 @@ services:
             - @prestashop.adapter.admin.data_provider.module
             - @prestashop.adapter.data_provider.module
             - @prestashop.core.module.updater
-            - @prestashop.core.module.updater
+            - @prestashop.adapter.legacy.logger
 
     # Managers
     prestashop.adapter.image_manager:

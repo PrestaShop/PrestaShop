@@ -39,11 +39,10 @@ class Ps_Emailsubscription extends Module
         $this->controllers = array('verification');
 
         $this->bootstrap = true;
-        parent::__construct();
 
-        $this->displayName = $this->l('E-mail subscription form');
-        $this->description = $this->l('Adds a form for newsletter subscription.');
-        $this->confirmUninstall = $this->l('Are you sure that you want to delete all of your contacts?');
+        $this->displayName = 'E-mail subscription form';
+        $this->description = 'Adds a form for newsletter subscription.';
+        $this->confirmUninstall = 'Are you sure that you want to delete all of your contacts?';
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
 
         $this->version = '1.0.0';

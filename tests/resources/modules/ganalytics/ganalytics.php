@@ -43,11 +43,9 @@ class ganalytics extends Module
         $this->module_key = 'fd2aaefea84ac1bb512e6f1878d990b8';
         $this->bootstrap = true;
 
-        parent::__construct();
-
-        $this->displayName = $this->l('Google Analytics');
-        $this->description = $this->l('Gain clear insights into important metrics about your customers, using Google Analytics');
-        $this->confirmUninstall = $this->l('Are you sure you want to uninstall Google Analytics? You will lose all the data related to this module.');
+        $this->displayName = 'Google Analytics';
+        $this->description = 'Gain clear insights into important metrics about your customers, using Google Analytics';
+        $this->confirmUninstall = 'Are you sure you want to uninstall Google Analytics? You will lose all the data related to this module.';
     }
 
     public function install()

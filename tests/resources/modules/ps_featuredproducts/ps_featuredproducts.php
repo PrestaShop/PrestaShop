@@ -43,10 +43,9 @@ class Ps_FeaturedProducts extends Module
         ];
 
         $this->bootstrap = true;
-        parent::__construct();
 
-        $this->displayName = $this->l('Featured products');
-        $this->description = $this->l('Displays featured products in the central column of your homepage.');
+        $this->displayName = 'Featured products';
+        $this->description = 'Displays featured products in the central column of your homepage.';
     }
 
     public function install()

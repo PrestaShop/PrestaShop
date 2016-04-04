@@ -26,22 +26,22 @@
 
 namespace PrestaShop\PrestaShop\Tests\Core\Addon\Module;
 
+use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use Phake;
+use PrestaShop\PrestaShop\Tests\Fake\FakeLogger;
+use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 
 /**
- * Description of ModuleRepositoryTest
- *
- * @author thomas
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
-class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
+class ModuleRepositoryTest extends UnitTestCase
 {
 
     private $moduleRepositoryStub;
@@ -51,10 +51,24 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setup();
+
         if (!defined('__PS_BASE_URI__')) {
             define('__PS_BASE_URI__', "http://www.example.com/shop");
         }
+        
+        if (!defined('_PS_THEME_DIR_')) {
+            define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/classic/');
+        }
 
+        if (! isset($_SERVER['HTTP_HOST'])) {
+            $this->http_host_not_found = true;
+            $_SERVER['HTTP_HOST'] = 'localhost';
+        }
+
+        /**
+         * We need a mock in order to change the module folder
+         */
         $this->moduleDataProviderStub = $this->getMock(
             'PrestaShop\\PrestaShop\\Adapter\\Module\\ModuleDataProvider',
             ['getModulesDir']
@@ -62,79 +76,77 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->moduleDataProviderStub->expects($this->any())
              ->method('getModulesDir')
              ->will($this->returnValue(_PS_ROOT_DIR_.'/tests/resources/modules/'));
-
-        
-
         $this->moduleRepositoryStub = $this->getMock(
             'PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository',
             ['getModulesDir', 'readCacheFile'],
             [
-                new AdminModuleDataProvider(),
+                new AdminModuleDataProvider('en'),
                 $this->moduleDataProviderStub,
-                new ModuleDataUpdater()
+                new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider('en')),
+                new FakeLogger()
             ]
         );
+
+        /**
+         * Mock function 'getModulesDir()' in order to return a specific folder in the tests
+         */
         $this->moduleRepositoryStub->expects($this->any())
              ->method('getModulesDir')
              ->will($this->returnValue(_PS_ROOT_DIR_.'/tests/resources/modules/'));
+        /**
+         * Mock function 'readCacheFile()' to disable the cache
+         */
         $this->moduleRepositoryStub->expects($this->any())
              ->method('readCacheFile')
              ->will($this->returnValue([]));
-    }
-
-    public function test_module_repository_is_built()
-    {
-        $moduleManagerBuilder = new ModuleManagerBuilder();
-        $this->assertNotNull($moduleManagerBuilder->buildRepository());
+        /**
+         * End of mocking for modules folder
+         */
     }
 
     public function test_get_at_least_one_module_from_universe()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
-        $this->assertGreaterThan(0, count($moduleRepository->getList()));
+        $this->assertGreaterThan(0, count($this->moduleRepositoryStub->getList()));
     }
 
     public function test_get_only_installed_modules()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
-        $all_modules = $moduleRepository->getList();
+        $all_modules = $this->moduleRepositoryStub->getList();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(AddonListFilterStatus::INSTALLED);
 
         // Each module MUST have its database installed attribute as true
-        foreach ($moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
             $this->assertTrue($module->database->get('installed') == 1);
         }
     }
 
     public function test_get_only_NOT_installed_modules()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
-        $all_modules = $moduleRepository->getList();
+        $all_modules = $this->moduleRepositoryStub->getList();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(~ AddonListFilterStatus::INSTALLED);
 
         // Each module MUST have its database installed attribute as true
-        foreach ($moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
             $this->assertTrue($module->database->get('installed') == 0);
         }
     }
 
     public function test_get_only_enabled_modules()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
-        $all_modules = $moduleRepository->getList();
+        $all_modules = $this->moduleRepositoryStub->getList();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(AddonListFilterStatus::ENABLED);
 
         // Each module MUST have its database installed and enabled attributes as true
-        foreach ($moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
             $this->assertTrue($module->database->get('installed') == 1);
             $this->assertTrue($module->database->get('active') == 1);
         }
@@ -142,28 +154,26 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_not_enabled_modules()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
-        $all_modules = $moduleRepository->getList();
+        $all_modules = $this->moduleRepositoryStub->getList();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(~ AddonListFilterStatus::ENABLED);
 
-        foreach ($moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
             $this->assertTrue($module->database->get('active') == 0);
         }
     }
 
     public function test_get_installed_but_disabled_modules()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
-        $all_modules = $moduleRepository->getList();
+        $all_modules = $this->moduleRepositoryStub->getList();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(AddonListFilterStatus::INSTALLED &~ AddonListFilterStatus::ENABLED);
 
-        foreach ($moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
             $this->assertTrue($module->database->get('installed') == 1, $module->attributes->get('name') .' marked as not installed ><');
             $this->assertTrue($module->database->get('active') == 0, $module->attributes->get('name') .' marked as enabled ><');
         }
@@ -171,69 +181,63 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function test_get_addons_from_marketplace_only()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
         $filters->setOrigin(AddonListFilterOrigin::ADDONS_ALL);
 
         // Each module must have its origin attribute
-        foreach ($moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
             $this->assertTrue($module->attributes->has('origin'), $module->attributes->get('name').' has not an origin attribute');
         }
     }
 
     public function test_get_addons_not_on_marketplace_1()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
         $filters->setOrigin(AddonListFilterOrigin::DISK);
 
         // Each module must have its origin attribute
-        foreach ($moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
             $this->assertFalse($module->attributes->has('origin'), $module->attributes->get('name').' has an origin attribute, but should not');
         }
     }
 
     public function test_get_addons_not_on_marketplace_2()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
         $filters->setOrigin(~AddonListFilterOrigin::ADDONS_ALL);
 
         // Each module must have its origin attribute
-        foreach ($moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
             $this->assertFalse($module->attributes->has('origin'), $module->attributes->get('name').' has an origin attribute, but should not !');
         }
     }
 
     public function test_get_only_modules()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE);
 
-        foreach ($moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
             $this->assertTrue($module->attributes->get('productType') == 'module', $module->attributes->get('name').' has a product type "'. $module->attributes->get('productType') .'"');
         }
     }
 
     public function test_get_only_services()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::SERVICE);
 
-        foreach ($moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
             $this->assertTrue($module->attributes->get('productType') == 'service');
         }
     }
 
     public function test_should_not_be_able_to_return_theme()
     {
-        $moduleRepository = $this->moduleRepositoryStub;
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::THEME);
 
-        $this->assertEquals(0, count($moduleRepository->getFilteredList($filters)));
+        $this->assertEquals(0, count($this->moduleRepositoryStub->getFilteredList($filters)));
     }
 
     public function teardown()
@@ -244,8 +248,6 @@ class ModuleRepositoryTest extends \PHPUnit_Framework_TestCase
             unset($_SERVER['HTTP_HOST']);
         }
 
-        $moduleManagerBuilder = new ModuleManagerBuilder();
-        $moduleRepository = $moduleManagerBuilder->buildRepository();
-        $moduleRepository->clearCache();
+        $this->moduleRepositoryStub->clearCache();
     }
 }
