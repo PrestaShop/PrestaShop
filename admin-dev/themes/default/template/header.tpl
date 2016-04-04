@@ -294,7 +294,7 @@
 									</li>
 								</ul>
 							{else}
-								<a id="header_shopname" href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}">{$shop_name}</a>
+								<a id="header_shopname" href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" class="_blank">{$shop_name}</a>
 							{/if}
 						</li>
 					</ul>
