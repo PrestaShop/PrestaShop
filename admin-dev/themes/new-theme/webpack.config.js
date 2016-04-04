@@ -9,6 +9,7 @@ module.exports = {
     'jquery-ui/jquery-ui.js',
     'bootstrap/dist/js/npm.js',
     'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
+    'fancybox/dist/js/jquery.fancybox.js',
     'moment/moment.js',
     'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
     'jwerty/jwerty.js',
