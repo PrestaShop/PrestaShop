@@ -30,7 +30,7 @@
           <label>{$field.label}</label>
         </span>
       {elseif $field.type === 'date'}
-        <input type="text" class="form-control" placeholder="MM/DD/YYYY">
+        <input type="date" value="{$field.value}" name="{$field.name}" class="form-control" placeholder="MM/DD/YYYY">
         <span class="form-control-comment">
           {l s='(Ex.:31/05/1970)'}
         </span>
