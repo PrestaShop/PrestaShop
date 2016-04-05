@@ -115,6 +115,10 @@ services:
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
 
+    prestashop.adapter.presenter.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
+        arguments: ["@prestashop.adapter.legacy.context"]
+
     # Other adapters
     prestashop.adapter.shop.context:
         class: PrestaShop\PrestaShop\Adapter\Shop\Context

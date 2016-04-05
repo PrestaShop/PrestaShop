@@ -2,7 +2,7 @@
 
     {% if module.attributes.url_active == 'buy' %}
         <a class="btn btn-primary btn-sm light-button module_action_menu_go_to_addons" href="{{module.attributes.url }}" target="_blank">
-            {% if module.attributes.price != '€0.00' %}{{module.attributes.price}}{% else %}Discover{% endif %}
+            {% if module.attributes.price.raw != '0.00' %}{{module.attributes.price.displayPrice}}{% else %}Discover{% endif %}
         </a>
     {% else %}
         <a class="btn btn-primary btn-sm light-button module_action_menu_{{ module.attributes.url_active }}"
