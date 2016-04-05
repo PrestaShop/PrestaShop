@@ -23,7 +23,7 @@
     <a class="logo" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
 
     <div class="component">{include file="components/layout/quick_access.tpl"}</div>
-    {*<div class="component">{include file="components/layout/search_form.tpl"}</div>*}
+    <div class="component">{include file="components/layout/search_form.tpl"}</div>
     <div class="component pull-md-right -norightmargin">{include file="components/layout/employee_dropdown.tpl"}</div>
     <div class="component pull-md-right">{include file="components/layout/notifications_center.tpl"}</div>
     <div class="component pull-md-right">{include file="components/layout/shop_list.tpl"}</div>

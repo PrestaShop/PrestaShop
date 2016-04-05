@@ -16,11 +16,21 @@
       left: rem(8px);
       right: rem(8px);
     }
-    > .ps-dropdown {
+    > .ps-dropdown:not(.search) {
       top: rem(-10px);
       > .ps-dropdown-menu {
         left: rem(17px);
       }
+    }
+    > .search .ps-dropdown-menu{
+      left: rem(-28px);
+      .material-icons{
+        vertical-align: bottom;
+        margin-right: rem(5px);
+      }
+    }
+    > .bo_search_form{
+      margin-top: rem(5px);
     }
   }
   > .component.-norightmargin {
