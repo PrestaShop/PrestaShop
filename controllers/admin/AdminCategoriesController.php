@@ -556,7 +556,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'display_image' => true,
                     'image' => $thumb_url ? $thumb_url : false,
                     'size' => $thumb_size,
-                    'format' => $format['medium']
+                    'format' => isset($format['medium']) ?: $format['category']
                 ),
                 array(
                     'type' => 'file',
