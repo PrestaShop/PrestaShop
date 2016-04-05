@@ -79,7 +79,7 @@ class Module implements AddonInterface
         'parent_class' => 'Module',
         'productType' => 'Module',
         'warning' => '',
-        'img' => __PS_BASE_URI__.'img/questionmark.png',
+        'img' => '',
         'badges' => array(),
         'cover' => array(),
         'screenshotsUrls' => array(),
@@ -139,6 +139,11 @@ class Module implements AddonInterface
         $version = $this->disk->get('is_valid')?
             $this->disk->get('version'):
             $this->attributes->get('version');
+
+        $img = $this->attributes->get('img');
+        if (empty($img)) {
+            $this->attributes->set('img', __PS_BASE_URI__.'img/questionmark.png');
+        }
 
         $this->attributes->set('version', $version);
         // Unfortunately, we can sometime have an array, and sometimes an object.
