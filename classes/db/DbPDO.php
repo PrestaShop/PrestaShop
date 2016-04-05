@@ -37,6 +37,28 @@ class DbPDOCore extends Db
     /* @var PDOStatement */
     protected $result;
 
+    /* @var PDOStatement */
+    protected $statement;
+
+    /**
+     * Current parameter index
+     *
+     * @var int
+     * */
+    protected $index = 0;
+
+    /**
+     * Translate general DB types to PDO types
+     *
+     * @var array
+     */
+    protected $_translate = [
+        Db::TYPE_INTEGER        => PDO::PARAM_INT,
+        Db::TYPE_DOUBLE         => PDO::PARAM_STR,
+        Db::TYPE_BLOB           => PDO::PARAM_LOB,
+        Db::TYPE_STRING         => PDO::PARAM_STR
+    ];
+
     /**
      * Returns a new PDO object (database link)
      *
@@ -61,7 +83,16 @@ class DbPDOCore extends Db
             $dsn .= 'host='.$host;
         }
 
-        return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
+        return new PDO(
+            $dsn,
+            $user,
+            $password,
+            [
+                PDO::ATTR_TIMEOUT => $timeout,
+                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                PDO::ATTR_EMULATE_PREPARES => true
+            ]
+        );
     }
 
     /**
@@ -132,6 +163,43 @@ class DbPDOCore extends Db
     protected function _query($sql)
     {
         return $this->link->query($sql);
+    }
+
+    /**
+     * Prepare a statement
+     *
+     * @param string $sql SQL query with placeholders
+     * @throws PrestaShopDatabaseException
+     */
+    protected function _prepare($sql)
+    {
+        $this->statement = $this->link->prepare($sql);
+        if ($this->statement === false) {
+            throw new PrestaShopDatabaseException($this->link->errorInfo());
+        }
+    }
+
+    /**
+     * Bind a parameter
+     *
+     * @param mixed $value Parameter value
+     * @param int $type Parameter type
+     * @return bool Whether binding succeeded
+     */
+    protected function _bindParam($value, $type)
+    {
+        $this->index++;
+        return $this->statement->bindParam((int)$this->index, $value, $this->_translate[$type]);
+    }
+
+    /**
+     * Execute prepared statement
+     *
+     * @return bool Whether it was executed successfully
+     */
+    protected function _execute()
+    {
+        return $this->statement->execute();
     }
 
     /**
@@ -253,8 +321,8 @@ class DbPDOCore extends Db
      */
     public function _escape($str)
     {
-        $search = array("\\", "\0", "\n", "\r", "\x1a", "'", '"');
-        $replace = array("\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"');
+        $search = ["\\", "\0", "\n", "\r", "\x1a", "'", '"'];
+        $replace = ["\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"'];
         return str_replace($search, $replace, $str);
     }
 
@@ -378,7 +446,7 @@ class DbPDOCore extends Db
         $result = $this->link->query($sql);
         while ($row = $result->fetch()) {
             if ($row['Engine'] == 'InnoDB') {
-                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
+                if (in_array($row['Support'], ['DEFAULT', 'YES'])) {
                     $value = 'InnoDB';
                 }
                 break;

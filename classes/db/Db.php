@@ -66,6 +66,9 @@ abstract class DbCore
     /** @var PDOStatement|mysqli_result|resource|bool SQL cached result */
     protected $result;
 
+    /** @var PDOStatement|mysqli_result|resource|bool SQL cached result */
+    protected $statement;
+
     /** @var array List of DB instances */
     public static $instance = array();
 
@@ -83,6 +86,20 @@ abstract class DbCore
      * @var string
      */
     protected $last_query;
+
+    /**
+     * Store last params of executed query
+     *
+     * @var string
+     */
+    protected $last_params;
+
+    /**
+     * Store last parameter types of executed query
+     *
+     * @var string
+     */
+    protected $last_param_types;
 
     /**
      * Store hash of the last executed query
@@ -117,6 +134,17 @@ abstract class DbCore
      * @return PDOStatement|mysqli_result|resource|bool
      */
     abstract protected function _query($sql);
+
+    abstract protected function _prepare($sql);
+
+    abstract protected function _bindParam($value, $type);
+
+    /**
+     * Execute a prepared statement
+     *
+     * @return bool
+     */
+    abstract protected function _execute();
 
     /**
      * Get number of rows in a result
@@ -200,6 +228,15 @@ abstract class DbCore
      * @return string
      */
     abstract public function getBestEngine();
+
+    /**
+     * Types based on MySQLi
+     * @link http://php.net/manual/en/mysqli.constants.php
+     */
+    const TYPE_INTEGER = 0;
+    const TYPE_DOUBLE = 1;
+    const TYPE_STRING = 2;
+    const TYPE_BLOB = 3;
 
     /**
      * Returns database object instance.
@@ -289,11 +326,9 @@ abstract class DbCore
      */
     public static function getClass()
     {
-        $class = 'MySQL';
-        if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql')) {
+        $class = 'DbMySQLi';
+        if (extension_loaded('pdo_mysql')) {
             $class = 'DbPDO';
-        } elseif (extension_loaded('mysqli')) {
-            $class = 'DbMySQLi';
         }
 
         return $class;
@@ -364,10 +399,30 @@ abstract class DbCore
     public function query($sql)
     {
         if ($sql instanceof DbQuery) {
-            $sql = $sql->build();
-        }
+            $sql_query = $sql->build();
+            $params = $sql->getParameters();
 
-        $this->result = $this->_query($sql);
+            if (!empty($params)) {
+                $this->_prepare($sql_query);
+
+                $param_types = $sql->getParameterTypes();
+                foreach ($params as $key => $value) {
+                    $type = Db::TYPE_STRING;
+                    if (array_key_exists($key, $param_types)) {
+                        $type = $param_types[$key];
+                    }
+                    $this->_bindParam($value, $type);
+                }
+                $this->_execute();
+                $this->result = $this->statement;
+            } else {
+                $sql_query = $sql->build();
+                $this->result = $this->_query($sql_query);
+            }
+        } else {
+            $sql_query = $sql;
+            $this->result = $this->_query($sql_query);
+        }
 
         if (!$this->result && $this->getNumberError() == 2006) {
             if ($this->connect()) {
@@ -376,7 +431,7 @@ abstract class DbCore
         }
 
         if (_PS_DEBUG_SQL_) {
-            $this->displayError($sql);
+            $this->displayError($sql_query);
         }
 
         return $this->result;
@@ -386,7 +441,7 @@ abstract class DbCore
      * Executes an INSERT query
      *
      * @param string $table Table name without prefix
-     * @param array $data Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
+     * @param array $data Data to insert as associative array. If $data is a 2D arrays, multiple inserts will be done
      * @param bool $null_values If we want to use NULL values instead of empty quotes
      * @param bool $use_cache
      * @param int $type Must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE
@@ -426,6 +481,7 @@ abstract class DbCore
         $values_stringified = array();
         $first_loop = true;
         $duplicate_key_stringified = '';
+        $all_values = array();
         foreach ($data as $row_data) {
             $values = array();
             foreach ($row_data as $key => $value) {
@@ -448,7 +504,8 @@ abstract class DbCore
                 if ($value['type'] == 'sql') {
                     $values[] = $string_value = $value['value'];
                 } else {
-                    $values[] = $string_value = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+                    $values[] = $value['value'];
+                    $string_value = '?';
                 }
 
                 if ($type == Db::ON_DUPLICATE_KEY) {
@@ -456,7 +513,14 @@ abstract class DbCore
                 }
             }
             $first_loop = false;
-            $values_stringified[] = '('.implode(', ', $values).')';
+            $value_stringified = '(';
+            for ($i = 0; $i < count($values); $i++) {
+                $value_stringified .= '?, ';
+            }
+            $value_stringified = rtrim($value_stringified, ', ');
+            $value_stringified .= ')';
+            $values_stringified[] = $value_stringified;
+            $all_values = array_merge($all_values, $values);
         }
         $keys_stringified = implode(', ', $keys);
 
@@ -465,14 +529,27 @@ abstract class DbCore
             $sql .= ' ON DUPLICATE KEY UPDATE '.substr($duplicate_key_stringified, 0, -1);
         }
 
-        return (bool)$this->q($sql, $use_cache);
+        $this->_prepare($sql);
+        foreach ($all_values as $value) {
+            if (is_double($value)) {
+                $type = Db::TYPE_DOUBLE;
+            } elseif (is_int($value)) {
+                $type = Db::TYPE_INTEGER;
+            } else {
+                $type = Db::TYPE_STRING;
+            }
+            $this->_bindParam($value, $type);
+        }
+        $this->_execute();
+
+        return (bool)$this->statement;
     }
 
     /**
      * Executes an UPDATE query
      *
      * @param string $table Table name without prefix
-     * @param array $data Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
+     * @param array $data Data to insert as associative array. If $data is 2D array, multiple updates will be done
      * @param string $where WHERE condition
      * @param int $limit
      * @param bool $null_values If we want to use NULL values instead of empty quotes
@@ -491,15 +568,14 @@ abstract class DbCore
         }
 
         $sql = 'UPDATE `'.bqSQL($table).'` SET ';
+        $all_values = [];
         foreach ($data as $key => $value) {
             if (!is_array($value)) {
-                $value = array('type' => 'text', 'value' => $value);
+                $value = ['type' => 'text', 'value' => $value];
             }
-            if ($value['type'] == 'sql') {
-                $sql .= '`'.bqSQL($key)."` = {$value['value']},";
-            } else {
-                $sql .= ($null_values && ($value['value'] === '' || is_null($value['value']))) ? '`'.bqSQL($key).'` = NULL,' : '`'.bqSQL($key)."` = '{$value['value']}',";
-            }
+            $sql .= '`'.bqSQL($key)."` = ?,";
+
+            $all_values[] = $value['value'];
         }
 
         $sql = rtrim($sql, ',');
@@ -510,7 +586,20 @@ abstract class DbCore
             $sql .= ' LIMIT '.(int)$limit;
         }
 
-        return (bool)$this->q($sql, $use_cache);
+        $this->_prepare($sql);
+        foreach ($all_values as $value) {
+            if (is_double($value)) {
+                $type = Db::TYPE_DOUBLE;
+            } elseif (is_int($value)) {
+                $type = Db::TYPE_INTEGER;
+            } else {
+                $type = Db::TYPE_STRING;
+            }
+            $this->_bindParam($value, $type);
+        }
+        $this->_execute();
+
+        return (bool)$this->statement;
     }
 
     /**
@@ -549,12 +638,30 @@ abstract class DbCore
     public function execute($sql, $use_cache = true)
     {
         if ($sql instanceof DbQuery) {
-            $sql = $sql->build();
+            $sql_query = $sql->build();
+            $params = $sql->getParameters();
+            if (!empty($params)) {
+                $this->_prepare($sql_query);
+                $param_types = $sql->getParameterTypes();
+                foreach ($params as $key => $value) {
+                    $type = Db::TYPE_STRING;
+                    if (array_key_exists($key, $param_types)) {
+                        $type = $param_types[$key];
+                    }
+                    $this->_bindParam($value, $type);
+                }
+                $this->result = $this->_execute();
+            } else {
+                $sql_query = $sql->build();
+                $this->result = $this->query($sql_query);
+            }
+        } else {
+            $sql_query = $sql;
+            $this->result = $this->query($sql_query);
         }
 
-        $this->result = $this->query($sql);
         if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->deleteQuery($sql);
+            Cache::getInstance()->deleteQuery($sql_query);
         }
 
         return (bool)$this->result;
@@ -571,27 +678,28 @@ abstract class DbCore
      */
     public function executeS($sql, $array = true, $use_cache = true)
     {
+        $params = '';
         if ($sql instanceof DbQuery) {
-            $sql = $sql->build();
+            $sql_query = $sql->build();
+            $params = $sql->getParameters();
+            // Only convert to a query string if possible, as this will be processed by query() later
+            if (empty($params)) {
+                $sql_query = $sql->build();
+            }
+        } else {
+            $sql_query = $sql;
         }
 
         $this->result = false;
-        $this->last_query = $sql;
+        $this->last_query = $sql_query;
+        $this->last_params = $params;
 
         if ($use_cache && $this->is_cache_enabled && $array) {
-            $this->last_query_hash = Tools::encryptIV($sql);
+            $this->last_query_hash = Tools::encryptIV($sql_query.Tools::jsonEncode($params));
             if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
                 $this->last_cached = true;
                 return $result;
             }
-        }
-
-        // This method must be used only with queries which display results
-        if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc)\s#i', $sql)) {
-            if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-                throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
-            }
-            return $this->execute($sql, $use_cache);
         }
 
         $this->result = $this->query($sql);
@@ -609,7 +717,7 @@ abstract class DbCore
 
         $this->last_cached = false;
         if ($use_cache && $this->is_cache_enabled && $array) {
-            Cache::getInstance()->setQuery($sql, $result);
+            Cache::getInstance()->setQuery($sql_query, $result);
         }
 
         return $result;
@@ -626,10 +734,29 @@ abstract class DbCore
     public function getRow($sql, $use_cache = true)
     {
         if ($sql instanceof DbQuery) {
-            $sql = $sql->build();
+            $sql_query = rtrim($sql->build(), " \t\n\r\0\x0B;").' LIMIT 1';
+            $params = $sql->getParameters();
+            if (!empty($params)) {
+                // We're dealing with a parameterized query
+
+                $this->_prepare($sql_query);
+
+                $this->last_params = $params;
+                $param_types = $sql->getParameterTypes();
+                $this->last_param_types = $param_types;
+                foreach ($params as $key => $value) {
+                    $type = Db::TYPE_STRING;
+                    if (array_key_exists($key, $param_types)) {
+                        $type = $param_types[$key];
+                    }
+                    $this->_bindParam($value, $type);
+                }
+                $this->_execute();
+            }
+        } else {
+            $sql_query = rtrim($sql, " \t\n\r\0\x0B;").' LIMIT 1';;
         }
 
-        $sql = rtrim($sql, " \t\n\r\0\x0B;").' LIMIT 1';
         $this->result = false;
         $this->last_query = $sql;
 
@@ -655,7 +782,7 @@ abstract class DbCore
         }
 
         if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->setQuery($sql, $result);
+            Cache::getInstance()->setQuery($sql_query, $result);
         }
 
         return $result;
@@ -670,10 +797,6 @@ abstract class DbCore
      */
     public function getValue($sql, $use_cache = true)
     {
-        if ($sql instanceof DbQuery) {
-            $sql = $sql->build();
-        }
-
         if (!$result = $this->getRow($sql, $use_cache)) {
             return false;
         }
@@ -710,17 +833,19 @@ abstract class DbCore
     protected function q($sql, $use_cache = true)
     {
         if ($sql instanceof DbQuery) {
-            $sql = $sql->build();
+            $sql_query = $sql->build();
+        } else {
+            $sql_query = $sql;
         }
 
         $this->result = false;
         $result = $this->query($sql);
         if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->deleteQuery($sql);
+            Cache::getInstance()->deleteQuery($sql_query);
         }
 
         if (_PS_DEBUG_SQL_) {
-            $this->displayError($sql);
+            $this->displayError($sql_query);
         }
 
         return $result;
@@ -791,7 +916,7 @@ abstract class DbCore
      */
     public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
     {
-        return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $new_db_link, $engine, $timeout));
+        return call_user_func_array([Db::getClass(), 'tryToConnect'], [$server, $user, $pwd, $db, $new_db_link, $engine, $timeout]);
     }
 
     /**
@@ -804,7 +929,7 @@ abstract class DbCore
      */
     public static function checkEncoding($server, $user, $pwd)
     {
-        return call_user_func_array(array(Db::getClass(), 'tryUTF8'), array($server, $user, $pwd));
+        return call_user_func_array([Db::getClass(), 'tryUTF8'], [$server, $user, $pwd]);
     }
 
     /**
@@ -819,7 +944,7 @@ abstract class DbCore
      */
     public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
     {
-        return call_user_func_array(array(Db::getClass(), 'hasTableWithSamePrefix'), array($server, $user, $pwd, $db, $prefix));
+        return call_user_func_array([Db::getClass(), 'hasTableWithSamePrefix'], [$server, $user, $pwd, $db, $prefix]);
     }
 
     /**
@@ -835,7 +960,7 @@ abstract class DbCore
      */
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
-        return call_user_func_array(array(Db::getClass(), 'checkCreatePrivilege'), array($server, $user, $pwd, $db, $prefix, $engine));
+        return call_user_func_array([Db::getClass(), 'checkCreatePrivilege'], [$server, $user, $pwd, $db, $prefix, $engine]);
     }
 
     /**
@@ -848,7 +973,7 @@ abstract class DbCore
      */
     public static function checkAutoIncrement($server, $user, $pwd)
     {
-        return call_user_func_array(array(Db::getClass(), 'checkAutoIncrement'), array($server, $user, $pwd));
+        return call_user_func_array([Db::getClass(), 'checkAutoIncrement'], [$server, $user, $pwd]);
     }
 
     /**
