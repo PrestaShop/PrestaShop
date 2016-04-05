@@ -411,7 +411,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     private function getPresentedProducts(array &$products)
     {
-        $modulePresenter = new ModulePresenter();
+        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
         $presentedProducts = [];
         foreach ($products as $name => $product) {
             $presentedProducts[$name] = $modulePresenter->present($product);
