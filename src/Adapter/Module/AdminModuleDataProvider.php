@@ -348,25 +348,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     $product->productType = isset($json_key)?rtrim($json_key, 's'):'module';
                 } else {
                     $product->productType = $product->product_type;
-                    //unset($product->product_type);
                 }
-                if (! isset($product->url)) {
-                    $product->url = '';
-                }
-
-                $product->conditions = [];
-                $product->rating     = (object)[
-                        'score' => !empty($product->avg_rate)?$product->avg_rate:0.0,
-                        'countReviews' => !empty($product->nb_rates)?$product->nb_rates:0,
-                ];
-                $product->scoring    = 0;
-                $product->media      = (object)[
-                        'img' => isset($product->img)?$product->img:'../../img/questionmark.png',
-                        'badges' => isset($product->badges)?$product->badges:[],
-                        'cover' => isset($product->cover)?$product->cover:[],
-                        'screenshotsUrls' => [],
-                        'videoUrl' => null,
-                ];
 
                 $remixed_json[] = $product;
             }
