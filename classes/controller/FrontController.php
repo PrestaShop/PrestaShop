@@ -1416,10 +1416,10 @@ class FrontControllerCore extends Controller
         ];
 
         $body_classes = [
-            'lang-'.$this->context->language->iso_code,
-            'lang-'.($this->context->language->is_rtl) ? 'rtl' : 'ltr',
-            'country-'.$this->context->country->iso_code,
-            'currency-'.$this->context->currency->iso_code,
+            'lang-'.$this->context->language->iso_code => true,
+            'lang-rtl' => (bool)$this->context->language->is_rtl,
+            'country-'.$this->context->country->iso_code => true,
+            'currency-'.$this->context->currency->iso_code => true,
             $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
             'page-'.$this->php_self => true,
         ];
