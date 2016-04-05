@@ -163,7 +163,7 @@
 
             <!--MODULES-->
             <tab id="Modules" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="extension">
-                <class_name>AdminParentModules</class_name>
+                <class_name>AdminModulesSf</class_name>
             </tab>
 
                 <tab id="Module_Page" id_parent="Modules" active="1" hide_host_mode="0" icon="">
