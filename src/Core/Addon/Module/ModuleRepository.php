@@ -274,27 +274,19 @@ class ModuleRepository implements ModuleRepositoryInterface
             if ($this->moduleProvider->isModuleMainClassValid($name)) {
                 require_once $php_file_path;
 
+                $main_class_attributes = [];
+
                 // We load the main class of the module, and get its properties
                 $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
-                $main_class_attributes = [
-                    'warning' => $tmp_module->warning,
-                    'name' => $tmp_module->name,
-                    'tab' => $tmp_module->tab,
-                    'displayName' => $tmp_module->displayName,
-                    'description' => stripslashes($tmp_module->description),
-                    'author' => $tmp_module->author,
-                    'author_uri' => (isset($tmp_module->author_uri) && $tmp_module->author_uri)
-                        ?$tmp_module->author_uri:false,
-                    'limited_countries' => $tmp_module->limited_countries,
-                    'parent_class' => get_parent_class($name),
-                    'is_configurable' => $tmp_module->is_configurable = method_exists(
-                        $tmp_module,
-                        'getContent'
-                    ) ? 1 : 0,
-                    'need_instance' => isset($tmp_module->need_instance)?$tmp_module->need_instance
-                        :0,
-                    'productType' => 'module',
-                ];
+                foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_uri',
+                    'limited_countries', 'need_instance') as $data_to_get) {
+                    if (isset($tmp_module->{$data_to_get})) {
+                        $main_class_attributes[$data_to_get] = $tmp_module->{$data_to_get};
+                    }
+                }
+
+                $main_class_attributes['parent_class'] = get_parent_class($name);
+                $main_class_attributes['is_configurable'] = (int)method_exists($tmp_module, 'getContent');
 
                 $disk['is_valid'] = 1;
                 $disk['version'] = $tmp_module->version;
@@ -308,39 +300,10 @@ class ModuleRepository implements ModuleRepositoryInterface
             }
         }
 
-        // ToDo: We need to remove all the parts from this function.
-        // A new class will be created in order to
-        if (!isset($attributes['refs'])) {
-            $attributes['refs'] = ['unknown'];
-        }
-
-        if (!isset($attributes['media'])) {
-            $attributes['media'] = (object)[
-                'img' => '../../img/questionmark.png',
-                'badges' => [],
-                'cover' => [],
-                'screenshotsUrls' => [],
-                'videoUrl' => null,
-            ];
-        } else {
-            $attributes['media'] = (object)$attributes['media'];
-        }
-
-        if (!isset($attributes['price'])) {
-            $attributes['price']      = new \stdClass;
-            $attributes['price']->EUR = 0;
-            $attributes['price']->USD = 0;
-            $attributes['price']->GBP = 0;
-        }
-
-        if (!isset($attributes['version'])) {
-            $attributes['version'] = !empty($disk['version'])?$disk['version']:null;
-        }
-
         foreach (['logo.png', 'logo.gif'] as $logo) {
             $logo_path = _PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$logo;
             if (file_exists($logo_path)) {
-                $attributes['media']->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
+                $attributes['img'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
                 break;
             }
         }

@@ -61,6 +61,65 @@ class Module implements AddonInterface
     public $database;
 
     /**
+     * Default values for ParameterBag attributes
+     * @var array
+     */
+    private $attributes_default = array(
+        'id' => 0,
+        'name' => '',
+        'displayName' => '',
+        'version' => null,
+        'description' => '',
+        'author' => '',
+        'author_uri' => false,
+        'tab' => 'others',
+        'is_configurable' => 0,
+        'need_instance' => 0,
+        'limited_countries' => array(),
+        'parent_class' => 'Module',
+        'productType' => 'Module',
+        'warning' => '',
+        'img' => __PS_BASE_URI__.'img/questionmark.png',
+        'badges' => array(),
+        'cover' => array(),
+        'screenshotsUrls' => array(),
+        'videoUrl' => null,
+        'refs' => array('unknown'),
+        'price' => array(
+            'EUR' => 0,
+            'USD' => 0,
+            'GBP' => 0,
+        ),
+        // From the marketplace
+        'url' => null,
+        'scoring' => 0,
+        'fullDescription' => '',
+    );
+
+    /**
+     * Default values for ParameterBag disk
+     * @var array
+     */
+    private $disk_default = array(
+        'filemtype' => 0,
+        'is_present' => 0,
+        'is_valid' => 0,
+        'version' => null
+    );
+
+    /**
+     * Default values for ParameterBag database
+     * @var array
+     */
+    private $database_default = array(
+        'installed' => 0,
+        'active' => 0,
+        'version' => null,
+        'date_add' => null,
+        'date_upd' => null,
+    );
+
+    /**
      *
      * @param array $attributes
      * @param array $disk
@@ -68,10 +127,23 @@ class Module implements AddonInterface
      */
     public function __construct(array $attributes = [], array $disk = [], array $database = [])
     {
+        $this->attributes = new ParameterBag($this->attributes_default);
+        $this->disk = new ParameterBag($this->disk_default);
+        $this->database = new ParameterBag($this->database_default);
+
         // Set all attributes
-        $this->attributes = new ParameterBag($attributes);
-        $this->disk = new ParameterBag($disk);
-        $this->database = new ParameterBag($database);
+        $this->attributes->add($attributes);
+        $this->disk->add($disk);
+        $this->database->add($database);
+
+        $version = $this->disk->get('is_valid')?
+            $this->disk->get('version'):
+            $this->attributes->get('version');
+
+        $this->attributes->set('version', $version);
+        // Unfortunately, we can sometime have an array, and sometimes an object.
+        // This is the first place where this value *always* exists
+        $this->attributes->set('price', (array)$this->attributes->get('price'));
     }
 
     public function getInstance()
