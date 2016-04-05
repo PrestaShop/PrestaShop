@@ -174,9 +174,9 @@ class ModuleController extends FrameworkBundleAdminController
         if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
             try {
-                if($action == "uninstall") {
+                if ($action == "uninstall") {
                     $ret[$module]['status'] = $moduleManager->{$action}($module, $forceDeletion);
-                }else {
+                } else {
                     $ret[$module]['status'] = $moduleManager->{$action}($module);
                 }
 
