@@ -4572,25 +4572,22 @@ class ProductCore extends ObjectModel
 	* @param $category_ids category ids
 	*/
 	public function setWsCategories($category_ids)
-	{
-		$ids = array();
-		foreach ($category_ids as $value)
-			$ids[] = $value['id'];
-		if ($this->deleteCategories())
-		{
-			if ($ids)
-			{
-				$sql_values = '';
-				$ids = array_map('intval', $ids);
-				foreach ($ids as $position => $id)
-					$sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.(int)$position.')';
-				$result = Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
-					VALUES '.implode(',', $sql_values)
-				);
-				return $result;
-			}
-		}
+	{ 
+		$current_ids = array_map('intval', $this->getCategories());
+
+		$new_ids = array();
+	   	foreach ($category_ids as $value)
+			$new_ids[] = (int)$value['id'];
+	   
+		$ids_to_delete = array_diff($current_ids, $new_ids);
+		$ids_to_add = array_diff($new_ids, $current_ids);
+	   
+		foreach ($ids_to_delete as $id_category)
+			$this->deleteCategory($id_category, true);
+
+		$this->addToCategories($ids_to_add);
+			   
+		Hook::exec('updateProduct', array('id_product' => (int)$this->id));
 		return true;
 	}
 
