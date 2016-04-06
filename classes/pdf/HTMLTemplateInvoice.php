@@ -147,22 +147,13 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $invoice_address = new Address((int)$this->order->id_address_invoice);
         $country = new Country((int)$invoice_address->id_country);
-
-        if ($this->order_invoice->invoice_address) {
-            $formatted_invoice_address = $this->order_invoice->invoice_address;
-        } else {
-            $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
-        }
+        $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
 
         $delivery_address = null;
         $formatted_delivery_address = '';
         if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery) {
-            if ($this->order_invoice->delivery_address) {
-                $formatted_delivery_address = $this->order_invoice->delivery_address;
-            } else {
-                $delivery_address = new Address((int)$this->order->id_address_delivery);
-                $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
-            }
+            $delivery_address = new Address((int)$this->order->id_address_delivery);
+            $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
         }
 
         $customer = new Customer((int)$this->order->id_customer);
