@@ -82,7 +82,9 @@
 
 		</td>
 	</tr>
-
+	
+	{$note_tab}
+	
 	<tr>
 		<td colspan="12" height="10">&nbsp;</td>
 	</tr>
@@ -113,7 +115,6 @@
 
 		</td>
 	</tr>
-	
 	<!-- Hook -->
 	{if isset($HOOK_DISPLAY_PDF)}
 	<tr>

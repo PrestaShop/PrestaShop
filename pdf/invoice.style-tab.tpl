@@ -60,6 +60,13 @@
 		padding: {$table_padding};
 		border: 1pt solid {$color_border};
 	}
+	table#note-tab {
+		padding: {$table_padding};
+		border: 1px solid {$color_border};
+	}
+	table#note-tab td.note{
+		word-wrap: break-word;
+	}
 	table#tax-tab {
 		padding: {$table_padding};
 		border: 1pt solid {$color_border};
