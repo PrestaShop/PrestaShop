@@ -16,21 +16,56 @@
       left: rem(8px);
       right: rem(8px);
     }
-    > .ps-dropdown:not(.search) {
-      top: rem(-10px);
+    > .ps-dropdown:not(.search):not(.stores) {
+      top: rem(-15px);
       > .ps-dropdown-menu {
         left: rem(17px);
       }
     }
-    > .search .ps-dropdown-menu{
-      left: rem(-28px);
-      .material-icons{
-        vertical-align: bottom;
-        margin-right: rem(5px);
+
+    > .stores .ps-dropdown-menu {
+      left: rem(-12px);
+    }
+    > .bo_search_form {
+      top: rem(-8px);
+      position: relative;
+      .search {
+        position: absolute;
+        display: none;
+        top: 0;
+        right: rem(15px);
+        .ps-dropdown-menu {
+          left: rem(-32px);
+          .material-icons {
+            vertical-align: bottom;
+            margin-right: rem(5px);
+          }
+        }
       }
     }
-    > .bo_search_form{
-      margin-top: rem(5px);
+
+    .form-search[type=search].expanded {
+      width: rem(250px);
+      background-position: 90%;
+      text-indent: 0;
+      @include placeholder {
+        color: $gray-light;
+        text-indent: 0;
+      }
+      + .search {
+        display: block;
+        .ps-dropdown-menu{
+          left:rem(-80px);
+        }
+      }
+    }
+  }
+  > .shop-state {
+    margin-top: rem(10px);
+    margin-right: rem(20px);
+    > .material-icons {
+      color: $secondary;
+      vertical-align: middle;
     }
   }
   > .component.-norightmargin {
@@ -67,6 +102,9 @@
   .material-icons {
     font-size: rem(24px);
   }
+  .notifications{
+    padding: rem(10px);
+  }
 }
 .shop-list {
   > .link {
@@ -80,5 +118,10 @@
     cursor: pointer;
     width: $size-header-height;
     height: $size-header-height;
+  }
+  .employee-link {
+    .material-icons {
+      vertical-align: bottom;
+    }
   }
 }

@@ -4,6 +4,8 @@ export default class Header {
   constructor() {
     $(() => {
       this.initQuickAccess();
+      this.initMultiStores();
+      this.initSearch();
     });
   }
   initQuickAccess() {
@@ -25,7 +27,7 @@ export default class Header {
         let rand = $(e.target).data('rand');
         let url = $(e.target).data('url');
         let icon = $(e.target).data('icon');
-        console.log(url)
+
         $.ajax({
           type: 'POST',
           headers: {
@@ -50,17 +52,32 @@ export default class Header {
               $.each(data, (index) => {
                 if (typeof data[index] === 'string')
                   $.growl.error({
-                    title: "",
+                    title: '',
                     message: data[index]
                   });
               });
             else if (quicklink_list) {
-              console.log(quicklink_list)
               $("#header_quick ul.dropdown-menu").html(quicklink_list);
               window.showSuccessMessage(window.update_success_msg);
             }
           }
         });
+      }
+    });
+  }
+  initMultiStores() {
+    $('.js-link').on('click', (e) => {
+      window.open($(e.target).parents('.link').attr('href'), '_blank');
+    });
+  }
+  initSearch() {
+    $('.js-items-list').on('click', (e) => {
+      $('.js-form-search').attr('placeholder', $(e.target).data('placeholder'));
+      $('.js-search-type').val($(e.target).data('value'));
+    });
+    $('.js-form-search').on('focusin', (e) => {
+      if (!$(e.target).hasClass('expanded')) {
+        $(e.target).addClass('expanded');
       }
     });
   }
