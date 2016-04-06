@@ -523,8 +523,8 @@ class DispatcherCore
 
                 $prepend_regexp = $append_regexp = '';
                 if ($prepend || $append) {
-                    $prepend_regexp = '('.preg_quote($prepend);
-                    $append_regexp = preg_quote($append).')?';
+                    $prepend_regexp = '('.$prepend;
+                    $append_regexp = $append.')?';
                 }
 
                 if (isset($keywords[$keyword]['param'])) {
