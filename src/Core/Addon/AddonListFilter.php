@@ -31,35 +31,132 @@ class AddonListFilter
     /**
      * @var $type AddonListFilterType Specify the addon type like theme only or module only or all
      */
-    public $type;
+    public $type = AddonListFilterType::ALL;
 
     /**
      * @var $status AddonListFilterStatus Specify if you want enabled only, disabled only or all addons
      */
-    public $status;
+    public $status = AddonListFilterStatus::ALL;
 
     /**
      * @var $status AddonListFilterOrigin Specify if you want an addon from a specific source
      */
-    public $origin;
+    public $origin = AddonListFilterOrigin::ALL;
 
     /**
      * @var array Names of all the addons to exclude from result
      */
     public $exclude = [];
 
+    /**
+     * @param AddonListFilterOrigin $origin
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
+    public function addOrigin($origin)
+    {
+        $this->origin &= $origin;
+        return $this;
+    }
+
+    /**
+     * @param AddonListFilterStatus $status
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
+    public function addStatus($status)
+    {
+        $this->status &= $status;
+        return $this;
+    }
+
+    /**
+     * @param AddonListFilterType $type
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
+    public function addType($type)
+    {
+        $this->type &= $type;
+        return $this;
+    }
+
+    /**
+     * @param AddonListFilterOrigin $origin
+     * @return bool
+     */
+    public function hasOrigin($origin)
+    {
+        return ($this->origin & $origin);
+    }
+
+    /**
+     * @param AddonListFilterStatus $status
+     * @return bool
+     */
+    public function hasStatus($status)
+    {
+        return ($this->status & $status);
+    }
+
+    /**
+     * @param AddonListFilterType $type
+     * @return bool
+     */
+    public function hasType($type)
+    {
+        return ($this->type & $type);
+    }
+
+    /**
+     * @param AddonListFilterOrigin $origin
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
+    public function removeOrigin($origin)
+    {
+        return $this->addOrigin(~$origin);
+    }
+
+    /**
+     * @param AddonListFilterStatus $status
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
+    public function removeStatus($status)
+    {
+        return $this->addStatus(~$status);
+    }
+
+    /**
+     *
+     * @param AddonListFilterType $type
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
+    public function removeType($type)
+    {
+        return $this->addType(~$type);
+    }
+
+    /**
+     * @param AddonListFilterOrigin $origin
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function setOrigin($origin)
     {
         $this->origin = $origin;
         return $this;
     }
 
+    /**
+     * @param AddonListFilterType $type
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function setType($type)
     {
         $this->type = $type;
         return $this;
     }
 
+    /**
+     * @param AddonListFilterStatus $status
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function setStatus($status)
     {
         $this->status = $status;

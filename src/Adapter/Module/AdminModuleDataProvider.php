@@ -43,13 +43,13 @@ use Symfony\Component\Routing\Router;
  */
 class AdminModuleDataProvider implements ModuleInterface
 {
-    const _CACHEFILE_CATEGORIES_ = 'catalog_categories.json';
     const _CACHEFILE_MODULES_ = '_catalog_modules.json';
 
     /* Cache for One Day */
     const _DAY_IN_SECONDS_ = 86400;
 
     private $languageISO;
+
     /**
      * @var Router
      */
@@ -57,7 +57,6 @@ class AdminModuleDataProvider implements ModuleInterface
 
     private $cache_dir;
 
-    protected $catalog_categories; // deprecated
     protected $catalog_modules;
     protected $catalog_modules_names;
 
@@ -72,7 +71,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     public function clearCatalogCache()
     {
-        $this->clearCache([self::_CACHEFILE_CATEGORIES_, $this->languageISO.self::_CACHEFILE_MODULES_]);
+        $this->clearCache([$this->languageISO.self::_CACHEFILE_MODULES_]);
         $this->catalog_modules         = [];
     }
 
@@ -85,14 +84,14 @@ class AdminModuleDataProvider implements ModuleInterface
                 (int)\Context::getContext()->employee->id);
     }
 
-    public function getCatalogModules(array $filter = [])
+    public function getCatalogModules(array $filters = [])
     {
         if (count($this->catalog_modules) === 0) {
             $this->loadCatalogData();
         }
 
         return $this->applyModuleFilters(
-                $this->catalog_modules, $this->catalog_categories, $filter
+                $this->catalog_modules, $filters
         );
     }
 
@@ -174,15 +173,6 @@ class AdminModuleDataProvider implements ModuleInterface
         return $addons;
     }
 
-    public function getCatalogCategories()
-    {
-        if (count($this->catalog_categories) === 0) {
-            $this->loadCatalogData();
-        }
-
-        return $this->catalog_categories;
-    }
-
     public function getCategoriesFromModules(&$modules)
     {
         $categories = [];
@@ -215,7 +205,7 @@ class AdminModuleDataProvider implements ModuleInterface
         return $categories;
     }
 
-    protected function applyModuleFilters(array $products, $categories, array $filters)
+    protected function applyModuleFilters(array $products, array $filters)
     {
         if (! count($filters)) {
             return $products;
@@ -228,13 +218,6 @@ class AdminModuleDataProvider implements ModuleInterface
             $search_result = [];
 
             switch ($filter_name) {
-                case 'category':
-                    $ref = $this->getRefFromModuleCategoryName($value);
-                    // We get the IDs list from the category
-                    $search_result = isset($categories['categories']->subMenu[$ref]) ?
-                        $categories['categories']->subMenu[$ref]->modulesRef :
-                        [];
-                    break;
                 case 'search':
                     // We build our results array.
                     // We could remove directly the non-matching modules, but we will give that for the final loop of this function
@@ -414,10 +397,9 @@ class AdminModuleDataProvider implements ModuleInterface
     protected function fallbackOnCatalogCache()
     {
         // Fallback on data from cache if exists
-        $this->catalog_categories = $this->getModuleCache(self::_CACHEFILE_CATEGORIES_, false);
         $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_, false);
 
-        return ($this->catalog_categories && $this->catalog_modules);
+        return ($this->catalog_modules);
     }
 
     private function getModuleCache($file, $check_freshness = true)
