@@ -856,7 +856,7 @@ class AdminPerformanceControllerCore extends AdminController
                         $this->errors[] = Tools::displayError('The "Mcrypt" PHP extension is not activated on this server.');
                     } else {
                         if (!strstr($new_settings, '_RIJNDAEL_KEY_')) {
-                            $key_size = mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
+                            $key_size = mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
                             $key = Tools::passwdGen($key_size);
                             $new_settings = preg_replace(
                                 '/define\(\'_COOKIE_KEY_\', \'([a-z0-9=\/+-_]+)\'\);/i',
@@ -865,7 +865,7 @@ class AdminPerformanceControllerCore extends AdminController
                             );
                         }
                         if (!strstr($new_settings, '_RIJNDAEL_IV_')) {
-                            $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
+                            $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
                             $iv = base64_encode(mcrypt_create_iv($iv_size, MCRYPT_RAND));
                             $new_settings = preg_replace(
                                 '/define\(\'_COOKIE_IV_\', \'([a-z0-9=\/+-_]+)\'\);/i',
