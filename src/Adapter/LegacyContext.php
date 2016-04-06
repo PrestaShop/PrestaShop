@@ -47,7 +47,7 @@ class LegacyContext
     {
         $legacyContext = OldContext::getContext();
 
-        if ($legacyContext && !empty($legacyContext->shop) && isset($legacyContext->employee)) {
+        if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
             //init real legacy shop context
             $adminController = new \AdminControllerCore();
             $adminController->initShopContext();
