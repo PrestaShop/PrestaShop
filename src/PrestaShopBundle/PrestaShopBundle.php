@@ -25,8 +25,10 @@
  */
 namespace PrestaShopBundle;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
+use PrestaShopBundle\DependencyInjection\DynamicRolePass;
 
 /**
  * Symfony entry point: adds Extension, that will add other stuff.
@@ -39,5 +41,13 @@ class PrestaShopBundle extends Bundle
     public function getContainerExtension()
     {
         return new PrestaShopExtension();
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new DynamicRolePass());
     }
 }
