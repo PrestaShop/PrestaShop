@@ -216,3 +216,5 @@ define('_PS_SMARTY_CONSOLE_OPEN_', 2);
 if (!defined('_PS_JQUERY_VERSION_')) {
     define('_PS_JQUERY_VERSION_', '1.11.0');
 }
+
+define('_PS_CACHE_CA_CERT_FILE_', _PS_CACHE_DIR_.'cacert.pem');
