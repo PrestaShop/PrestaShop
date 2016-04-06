@@ -3,8 +3,43 @@
 {{ form_errors(form.categories) }}
 {{ form_widget(form.categories) }}
 
+<!-- start of CSS plugin: to be moved in his own file -->
+<style>
+  .ui-autocomplete {
+    position: absolute;
+    z-index: 1000;
+    cursor: default;
+    padding: 0;
+    margin-top: 2px;
+    list-style: none;
+    background-color: #ffffff;
+    border: 1px solid #ccc
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  }
+  .ui-autocomplete > li {
+    padding: 3px 20px;
+  }
+  .ui-autocomplete > li.ui-state-focus {
+    background-color: #DDD;
+  }
+  .ui-helper-hidden-accessible {
+    display: none;
+  }
+</style>
+<!-- end of CSS plugin -->
+
 <div id="add-categories">
     <fieldset class="form-group">
+      <div class="form-group ui-widget">
+        <input type="text" id="ps-select-product-category" class="form-control autocomplete" placeholder="{{ trans('Search categories', {}, 'AdminProducts') }}">
+        <!--<i class="material-icons">search</i>-->
+      </div>
+
       {{ include('PrestaShopBundle:Admin:Category/tag.html.twig', {'categories': categories }) }}
       <label class="form-control-label">{{ trans("Default category", {}, 'AdminProducts') }}</label>
       {{ form_errors(form.id_category_default) }}

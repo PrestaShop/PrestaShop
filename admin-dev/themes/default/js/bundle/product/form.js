@@ -48,9 +48,9 @@ $(document).ready(function() {
 	displayFieldsManager.init();
 	seo.init();
 	tags.init();
-	productCategoriesTags.init();
 	rightSidebar.init();
 	recommendedModules.init();
+	BOEvent.emitEvent("Product Categories Management started", "CustomEvent");
 
 	/** Type product fields display management */
 	$('#form_step1_type_product').change(function(){
@@ -1997,7 +1997,6 @@ var seo = (function() {
 	};
 })();
 
-
 /**
  * Tags management
  */
@@ -2007,108 +2006,6 @@ var tags = (function() {
 			$('#form_step6_tags .tokenfield').tokenfield();
 		}
 	};
-})();
-
-/**
- * Product categories Tags management
- */
-var productCategoriesTags;
-productCategoriesTags = (function () {
-  return {
-    'init': function () {
-      selectedCategories = this.getTags();
-      selectedCategories.forEach(this.createTag);
-
-      // add tags management
-      this.manageTagsOnInput();
-      this.manageTagsOnTags();
-    },
-    'removeTag': function (categoryId) {
-      $('span[data-id^="' + categoryId + '"]').parent().remove();
-
-      return true;
-    },
-    'getTags': function () {
-      var categoriesForm = $('#form_step1_categories');
-      var inputs = categoriesForm.find('label > input:checked').toArray();
-
-      var tags = [];
-      var that = this;
-      inputs.forEach(function getLabels(input) {
-        var tree = that.getTree();
-        var tag = {
-          'name': input.parentNode.innerText,
-          'id': input.value,
-        };
-        tree.forEach(function getCategories(_category) {
-          if (_category.id == tag.id) {
-            tag.breadcrumb = _category.breadcrumb;
-          }
-        });
-
-        tags.push(tag);
-      });
-
-      return tags;
-    },
-    'manageTagsOnInput': function () {
-      var categoriesForm = $('#form_step1_categories');
-      var that = this;
-      categoriesForm.on('click', 'input', function () {
-        var input = $(this);
-        if (input.prop('checked') === false) {
-          that.removeTag($(this).val());
-        } else {
-          var tree = that.getTree();
-
-          var tag = {
-            'name': input.parent().text(),
-            'id': input.val(),
-            'breadcrumb': ''
-          };
-
-          tree.forEach(function getCategories(_category) {
-            if (_category.id == tag.id) {
-              tag.breadcrumb = _category.breadcrumb;
-            }
-          });
-
-          that.createTag(tag);
-        }
-      });
-
-      return true;
-    },
-    'manageTagsOnTags': function () {
-      var categoriesForm = $('#form_step1_categories');
-      var tagsContainer = $('#ps_categoryTags');
-      var that = this;
-
-      tagsContainer.on('click', 'a.pstaggerClosingCross', function (event) {
-        event.preventDefault();
-        var id = $(this).data('id');
-        that.removeTag(id);
-        categoriesForm.find('input[value="' + id + '"]').prop('checked', false);
-        tagsContainer.focus();
-      });
-
-      return true;
-    },
-    'getTree': function () {
-      var tree = JSON.parse($('#ps_categoryTree').html());
-
-      return tree;
-    },
-    'createTag': function (category) {
-      $('#ps_categoryTags').append('<span class="pstaggerTag">' +
-        '<span data-id="' + category.id + '" title="' + category.breadcrumb + '">' + category.name + '</span>' +
-        '<a class="pstaggerClosingCross" href="#" data-id="' + category.id + '">x</a>' +
-        '</span>');
-
-      return true;
-    },
-
-  };
 })();
 
 var recommendedModules = (function() {
