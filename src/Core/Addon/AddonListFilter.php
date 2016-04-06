@@ -48,73 +48,115 @@ class AddonListFilter
      */
     public $exclude = [];
 
+    /**
+     * @param AddonListFilterOrigin $origin
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function addOrigin($origin)
     {
         $this->origin &= $origin;
         return $this;
     }
 
+    /**
+     * @param AddonListFilterStatus $status
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function addStatus($status)
     {
         $this->status &= $status;
         return $this;
     }
 
+    /**
+     * @param AddonListFilterType $type
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function addType($type)
     {
         $this->type &= $type;
         return $this;
     }
 
-
-
+    /**
+     * @param AddonListFilterOrigin $origin
+     * @return bool
+     */
     public function hasOrigin($origin)
     {
         return ($this->origin & $origin);
     }
 
+    /**
+     * @param AddonListFilterStatus $status
+     * @return bool
+     */
     public function hasStatus($status)
     {
         return ($this->status & $status);
     }
 
+    /**
+     * @param AddonListFilterType $type
+     * @return bool
+     */
     public function hasType($type)
     {
         return ($this->type & $type);
     }
 
-
-
+    /**
+     * @param AddonListFilterOrigin $origin
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function removeOrigin($origin)
     {
         return $this->addOrigin(~$origin);
     }
 
+    /**
+     * @param AddonListFilterStatus $status
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function removeStatus($status)
     {
         return $this->addStatus(~$status);
     }
 
+    /**
+     *
+     * @param AddonListFilterType $type
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function removeType($type)
     {
         return $this->addType(~$type);
     }
 
-
-
-
+    /**
+     * @param AddonListFilterOrigin $origin
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function setOrigin($origin)
     {
         $this->origin = $origin;
         return $this;
     }
 
+    /**
+     * @param AddonListFilterType $type
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function setType($type)
     {
         $this->type = $type;
         return $this;
     }
 
+    /**
+     * @param AddonListFilterStatus $status
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
+     */
     public function setStatus($status)
     {
         $this->status = $status;

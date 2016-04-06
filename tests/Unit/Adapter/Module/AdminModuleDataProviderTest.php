@@ -111,7 +111,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         }
     }
 
-    /*public function test_no_results()
+    public function test_no_results()
     {
         $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
 
@@ -119,9 +119,9 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $modules = $dataProvider->getCatalogModules($filters);
 
         $this->assertCount(0, $modules);
-    }*/
+    }
 
-    /*public function test_unknown_filter_criteria()
+    public function test_unknown_filter_criteria()
     {
         $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
 
@@ -132,9 +132,9 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $all_modules = $dataProvider->getCatalogModules();
 
         $this->assertEquals($all_modules, $modules);
-    }*/
+    }
 
-    /*public function test_specific_module_search()
+    public function test_specific_module_search()
     {
         $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
 
@@ -143,9 +143,9 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $modules = $dataProvider->getCatalogModules($filters);
 
         $this->assertCount(1, $modules);
-    }*/
+    }
 
-    /*public function test_specific_module_search_2_results()
+    public function test_specific_module_search_2_results()
     {
         $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
 
@@ -154,7 +154,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $modules = $dataProvider->getCatalogModules($filters);
 
         $this->assertCount(2, $modules);
-    }*/
+    }
 
     public function test_only_one_call_to_addons_and_same_result()
     {

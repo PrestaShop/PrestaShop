@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Tests\Fake\FakeLogger;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 
@@ -43,7 +42,6 @@ use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
  */
 class ModuleRepositoryTest extends UnitTestCase
 {
-
     private $moduleRepositoryStub;
     private $moduleDataProviderStub;
 

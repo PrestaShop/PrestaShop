@@ -218,13 +218,6 @@ class AdminModuleDataProvider implements ModuleInterface
             $search_result = [];
 
             switch ($filter_name) {
-                /*case 'category':
-                    $ref = $this->getRefFromModuleCategoryName($value);
-                    // We get the IDs list from the category
-                    $search_result = isset($categories['categories']->subMenu[$ref]) ?
-                        $categories['categories']->subMenu[$ref]->modulesRef :
-                        [];
-                    break;*/
                 case 'search':
                     // We build our results array.
                     // We could remove directly the non-matching modules, but we will give that for the final loop of this function
