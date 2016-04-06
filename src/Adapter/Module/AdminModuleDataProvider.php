@@ -110,7 +110,7 @@ class AdminModuleDataProvider implements ModuleInterface
     {
         foreach ($addons as &$addon) {
             $urls = [];
-            foreach (['install', 'uninstall', 'enable', 'disable', 'reset', 'upgrade'] as $action) {
+            foreach (['install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade'] as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', [
                     'action' => $action,
                     'module_name' => $addon->attributes->get('name'),
@@ -145,6 +145,11 @@ class AdminModuleDataProvider implements ModuleInterface
                         $urls['configure']
                     );
                 }
+                if ($addon->database->get('active_on_mobile') == 0) {
+                    unset($urls['disable_mobile']);
+                } else {
+                    unset($urls['enable_mobile']);
+                }
                 if ($addon->database->get('installed') == 0 || version_compare($addon->database->get('version'), $addon->disk->get('version'), '<=')
                     && version_compare($addon->attributes->get('version'), $addon->database->get('version'), '<=')) {
                     unset(
@@ -157,6 +162,8 @@ class AdminModuleDataProvider implements ModuleInterface
                     $urls['uninstall'],
                     $urls['enable'],
                     $urls['disable'],
+                    $urls['enable_mobile'],
+                    $urls['disable_mobile'],
                     $urls['reset'],
                     $urls['upgrade'],
                     $urls['configure']

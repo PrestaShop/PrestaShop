@@ -228,6 +228,48 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
+     * Disable a module specifiquely on mobile.
+     *
+     * @param  string $name The module name to disable
+     * @return bool         True for success
+     */
+    public function disable_mobile($name)
+    {
+        if (!$this->employee->can('edit', 'AdminModules')
+            || !$this->moduleProvider->can('configure', $name)) {
+            throw new Exception('You are not allowed to disable this module on mobile');
+        }
+
+        $module = $this->moduleRepository->getModule($name);
+        try {
+            return $module->onMobileDisable();
+        } catch (Exception $e) {
+            throw new Exception(sprintf('Error when disabling module %s on mobile. %s', $name, $e->getMessage()), 0, $e);
+        }
+    }
+
+    /**
+     * Enable a module previously disabled on mobile
+     *
+     * @param  string $name The module name to enable
+     * @return bool         True for success
+     */
+    public function enable_mobile($name)
+    {
+        if (!$this->employee->can('edit', 'AdminModules')
+            || !$this->moduleProvider->can('configure', $name)) {
+            throw new Exception('You are not allowed to enable this module on mobile');
+        }
+
+        $module = $this->moduleRepository->getModule($name);
+        try {
+            return $module->onMobileEnable();
+        } catch (Exception $e) {
+            throw new Exception(sprintf('Error when enabling module %s on mobile. %s', $name, $e->getMessage()), 0, $e);
+        }
+    }
+
+    /**
      * Actions to perform to restaure default settings
      *
      * @param  string $name The theme name to reset

@@ -18,6 +18,8 @@ var AdminModuleCard = function () {
     this.moduleActionMenuEnableLinkSelector = 'a.module_action_menu_enable';
     this.moduleActionMenuUninstallLinkSelector = 'a.module_action_menu_uninstall';
     this.moduleActionMenuDisableLinkSelector = 'a.module_action_menu_disable';
+    this.moduleActionMenuEnableMobileLinkSelector = 'a.module_action_menu_enable_mobile';
+    this.moduleActionMenuDisableMobileLinkSelector = 'a.module_action_menu_disable_mobile';
     this.moduleActionMenuResetLinkSelector = 'a.module_action_menu_reset';
     this.moduleActionMenuUpdateLinkSelector = 'a.module_action_menu_update';
     this.moduleItemListSelector = '.module-item-list';
@@ -87,6 +89,12 @@ var AdminModuleCard = function () {
         });
         $(document).on('click', this.moduleActionMenuDisableLinkSelector, function () {
             return _this.dispatchPreEvent('disable', this) && _this.confirmAction('disable', this) && _this.requestToController('disable', $(this));
+        });
+        $(document).on('click', this.moduleActionMenuEnableMobileLinkSelector, function () {
+            return _this.dispatchPreEvent('enable_mobile', this) && _this.confirmAction('enable_mobile', this) && _this.requestToController('enable_mobile', $(this));
+        });
+        $(document).on('click', this.moduleActionMenuDisableMobileLinkSelector, function () {
+            return _this.dispatchPreEvent('disable_mobile', this) && _this.confirmAction('disable_mobile', this) && _this.requestToController('disable_mobile', $(this));
         });
         $(document).on('click', this.moduleActionMenuResetLinkSelector, function () {
             return _this.dispatchPreEvent('reset', this) && _this.confirmAction('reset', this) && _this.requestToController('reset', $(this));

@@ -37,7 +37,7 @@ admin_module_manage_action:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction
     requirements:
-        action: install|uninstall|enable|disable|reset|upgrade
+        action: install|uninstall|enable|disable|enable_mobile|disable_mobile|reset|upgrade
 
 admin_module_configure_action:
     path:     /manage/action/configure/{module_name}

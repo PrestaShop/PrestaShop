@@ -7,7 +7,7 @@
     {% else %}
         <a class="btn btn-primary btn-sm light-button module_action_menu_{{ module.attributes.url_active }}"
            href="{{module.attributes.urls[module.attributes.url_active]}}"
-           data-confirm_modal="module-modal-confirm-{{module.attributes.name}}-{{ module.attributes.url_active }}">{{module.attributes.url_active|capitalize}}</a>
+           data-confirm_modal="module-modal-confirm-{{module.attributes.name}}-{{ module.attributes.url_active }}">{{module.attributes.url_active|capitalize|replace({'_': " "})}}</a>
            
         {% if module.attributes.urls|length > 1 %}
             <button type="button" class="btn btn-primary  btn-sm dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -19,7 +19,7 @@
                 {% if module_action != module.attributes.url_active %}
                     <li><a class="dropdown-item module_action_menu_{{ module_action }}"
                            href="{{module_url}}"
-                           data-confirm_modal="module-modal-confirm-{{module.attributes.name}}-{{ module_action }}">{{module_action|capitalize}}</a></li>
+                           data-confirm_modal="module-modal-confirm-{{module.attributes.name}}-{{ module_action }}">{{module_action|capitalize|replace({'_': " "})}}</a></li>
                 {% endif %}
             {% endfor %}
             </div>

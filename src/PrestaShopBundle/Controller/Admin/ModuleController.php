@@ -187,7 +187,7 @@ class ModuleController extends FrameworkBundleAdminController
                     $ret[$module]['status'] = false;
                     $ret[$module]['msg'] = $module .' did not return a valid response on '.$action .' action';
                 } else {
-                    $ret[$module]['msg'] = ucfirst($action). ' action on module '. $module;
+                    $ret[$module]['msg'] = ucfirst(str_replace('_', ' ', $action)). ' action on module '. $module;
                     $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
                 }
             } catch (Exception $e) {
