@@ -233,7 +233,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getModule($name)
     {
-        $php_file_path = $this->getModulesDir().$name.'/'.$name.'.php';
+        $php_file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
 
         /* Data which design the module class */
         $attributes = ['name' => $name,];
@@ -338,9 +338,9 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         foreach (['logo.png', 'logo.gif'] as $logo) {
-            $logo_path = $this->getModulesDir().$name.DIRECTORY_SEPARATOR.$logo;
+            $logo_path = _PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$logo;
             if (file_exists($logo_path)) {
-                $attributes['media']->img = __PS_BASE_URI__.basename($this->getModulesDir()).'/'.$name.'/'.$logo;
+                $attributes['media']->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
                 break;
             }
         }
@@ -352,15 +352,6 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Function which returns the modules directory. Used for mock in tests/ folder.
-     * @return string The modules directory
-     */
-    protected function getModulesDir()
-    {
-        return _PS_MODULE_DIR_;
-    }
-
-    /**
      * Instanciate every module present if the modules folder
      *
      * @return \PrestaShop\PrestaShop\Adapter\Module\Module[]
@@ -369,7 +360,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $modules         = [];
         $modulesDirsList = $this->finder->directories()
-            ->in($this->getModulesDir())
+            ->in(_PS_MODULE_DIR_)
             ->depth('== 0')
             ->exclude(['__MACOSX'])
             ->ignoreVCS(true);

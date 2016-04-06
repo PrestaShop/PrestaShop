@@ -37,8 +37,11 @@ use PrestaShop\PrestaShop\Tests\Fake\FakeLogger;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 
 /**
+ * @runInSeparateProcess
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
+ *
+ * Note theses annotations are required because we mock constants.
  */
 class ModuleRepositoryTest extends UnitTestCase
 {
@@ -49,8 +52,6 @@ class ModuleRepositoryTest extends UnitTestCase
 
     public function setUp()
     {
-        parent::setup();
-
         if (!defined('__PS_BASE_URI__')) {
             define('__PS_BASE_URI__', "http://www.example.com/shop");
         }
@@ -58,6 +59,8 @@ class ModuleRepositoryTest extends UnitTestCase
         if (!defined('_PS_THEME_DIR_')) {
             define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/classic/');
         }
+
+        parent::setUp();
 
         if (! isset($_SERVER['HTTP_HOST'])) {
             $this->http_host_not_found = true;
@@ -67,18 +70,27 @@ class ModuleRepositoryTest extends UnitTestCase
         /**
          * We need a mock in order to change the module folder
          */
-        $this->moduleDataProviderStub = $this->getMock(
-            'PrestaShop\\PrestaShop\\Adapter\\Module\\ModuleDataProvider',
-            ['getModulesDir']
+        $this->moduleDataProviderStub = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->moduleDataProviderStub
+            ->method('findByName')
+            ->willReturn([]);
+
+        $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
+            ['getCatalogModulesNames'],
+            ['en']
         );
-        $this->moduleDataProviderStub->expects($this->any())
-            ->method('getModulesDir')
-            ->will($this->returnValue(_PS_ROOT_DIR_.'/tests/resources/modules/'));
+
+        $this->adminModuleDataProviderStub
+            ->method('getCatalogModulesNames')
+            ->willReturn([]);
+
         $this->moduleRepositoryStub = $this->getMock(
             'PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository',
-            ['getModulesDir', 'readCacheFile'],
+            ['readCacheFile'],
             [
-                new AdminModuleDataProvider('en'),
+                $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
                 new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider('en')),
                 new FakeLogger()
@@ -86,17 +98,12 @@ class ModuleRepositoryTest extends UnitTestCase
         );
 
         /**
-         * Mock function 'getModulesDir()' in order to return a specific folder in the tests
-         */
-        $this->moduleRepositoryStub->expects($this->any())
-            ->method('getModulesDir')
-            ->will($this->returnValue(_PS_ROOT_DIR_.'/tests/resources/modules/'));
-        /**
          * Mock function 'readCacheFile()' to disable the cache
          */
-        $this->moduleRepositoryStub->expects($this->any())
+        $this->moduleRepositoryStub
             ->method('readCacheFile')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
+
         /**
          * End of mocking for modules folder
          */
@@ -256,6 +263,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
+    /**
     public function test_get_only_modules()
     {
         $filters = new AddonListFilter();
@@ -276,6 +284,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
+     * **/
     public function test_should_not_be_able_to_return_theme()
     {
         $filters = new AddonListFilter();
