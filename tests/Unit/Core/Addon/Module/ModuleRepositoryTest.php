@@ -206,7 +206,7 @@ class ModuleRepositoryTest extends UnitTestCase
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
-            if ($module->attributes->get('productType') == 'module' && $module->database->has('active') && $module->database->get('active') == 0) {
+            if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 1  && $module->database->get('active') == 0) {
                 $this->assertTrue(array_key_exists($name, $not_active_modules), sprintf("Module %s not found in the filtered list !", $name));
             }
         }
