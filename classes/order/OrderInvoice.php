@@ -78,12 +78,6 @@ class OrderInvoiceCore extends ObjectModel
     /** @var string shop address */
     public $shop_address;
 
-    /** @var string invoice address */
-    public $invoice_address;
-
-    /** @var string delivery address */
-    public $delivery_address;
-
     /** @var string note */
     public $note;
 
@@ -119,8 +113,6 @@ class OrderInvoiceCore extends ObjectModel
             'total_wrapping_tax_excl' =>array('type' => self::TYPE_FLOAT),
             'total_wrapping_tax_incl' =>array('type' => self::TYPE_FLOAT),
             'shop_address' =>        array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
-            'invoice_address' =>        array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
-            'delivery_address' =>        array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
             'note' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
             'date_add' =>                array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
         ),
