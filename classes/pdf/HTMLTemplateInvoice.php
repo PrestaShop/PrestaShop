@@ -142,27 +142,15 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      */
     public function getContent()
     {
-        $invoiceAddressPatternRules = json_decode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
-        $deliveryAddressPatternRules = json_decode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
+        $country = new Country((int)$this->order->id_address_invoice);
+		$invoice_address = new Address((int)$this->order->id_address_invoice);
+		$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+		$formatted_delivery_address = '';
 
-        $invoice_address = new Address((int)$this->order->id_address_invoice);
-        $country = new Country((int)$invoice_address->id_country);
-
-        if ($this->order_invoice->invoice_address) {
-            $formatted_invoice_address = $this->order_invoice->invoice_address;
-        } else {
-            $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
-        }
-
-        $delivery_address = null;
-        $formatted_delivery_address = '';
-        if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery) {
-            if ($this->order_invoice->delivery_address) {
-                $formatted_delivery_address = $this->order_invoice->delivery_address;
-            } else {
-                $delivery_address = new Address((int)$this->order->id_address_delivery);
-                $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
-            }
+		if ($this->order->id_address_delivery != $this->order->id_address_invoice)
+		{
+			$delivery_address = new Address((int)$this->order->id_address_delivery);
+			$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
         }
 
         $customer = new Customer((int)$this->order->id_customer);
