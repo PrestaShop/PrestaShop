@@ -88,7 +88,7 @@ class ModuleDataProvider
      */
     public function isModuleMainClassValid($name)
     {
-        $file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
+        $file_path = $this->getModulesDir().$name.'/'.$name.'.php';
         if (!file_exists($file_path)) {
             return false;
         }
@@ -121,7 +121,16 @@ class ModuleDataProvider
      */
     public function isOnDisk($name)
     {
-        $path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
+        $path = $this->getModulesDir().$name.'/'.$name.'.php';
         return file_exists($path);
+    }
+
+    /**
+     * Function which returns the modules directory. Used for mock in tests/ folder.
+     * @return string The modules directory
+     */
+    protected function getModulesDir()
+    {
+        return _PS_MODULE_DIR_;
     }
 }

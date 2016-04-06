@@ -115,7 +115,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setStatus(AddonListFilterStatus::INSTALLED);
+            ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installed_products = $moduleRepository->getFilteredList($filters);
 
         $filter = [];
@@ -261,7 +261,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
-            ->setStatus(~ AddonListFilterStatus::INSTALLED)
+            ->removeStatus(AddonListFilterStatus::INSTALLED)
             ->setOrigin(AddonListFilterOrigin::DISK | AddonListFilterOrigin::ADDONS_CUSTOMER);
         $products->to_install = $moduleRepository->getFilteredList($filters);
 

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\LegacyLogger;
+use Psr\Log\LoggerInterface;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -45,6 +45,12 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
      */
     private $adminModuleProvider;
+
+    /**
+     * Logger
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
 
     /**
      * Module Data Provider
@@ -74,9 +80,11 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
-        ModuleDataUpdater $modulesUpdater
+        ModuleDataUpdater $modulesUpdater,
+        LoggerInterface $logger
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
+        $this->logger = $logger;
         $this->moduleProvider      = $modulesProvider;
         $this->moduleUpdater       = $modulesUpdater;
         $this->finder              = new Finder();
@@ -87,6 +95,12 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function __destruct()
     {
         $this->generateCacheFile($this->cache);
+    }
+
+    public function clearCache()
+    {
+        @unlink($this->cacheFilePath);
+        $this->cache = [];
     }
 
     /**
@@ -107,17 +121,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getFilteredList(AddonListFilter $filter)
     {
-        // Init missing values
-        if (empty($filter->type)) {
-            $filter->setType(AddonListFilterType::MODULE);
-        }
-        if (empty($filter->status)) {
-            $filter->setStatus(AddonListFilterStatus::ALL);
-        }
-        if (empty($filter->origin)) {
-            $filter->setOrigin(AddonListFilterOrigin::ALL);
-        }
-
         if ($filter->status >= AddonListFilterStatus::ON_DISK
             && $filter->status != AddonListFilterStatus::ALL) {
             $modules = $this->getModulesOnDisk();
@@ -128,55 +131,64 @@ class ModuleRepository implements ModuleRepositoryInterface
         foreach ($modules as $key => &$module) {
 
             // Part One : Removing addons not related to the selected product type
-            if ($module->attributes->get('productType') == 'Module') {
-                $productType = AddonListFilterType::MODULE;
-            }
-            if ($module->attributes->get('productType') == 'Service') {
-                $productType = AddonListFilterType::SERVICE;
-            }
-            if (isset($productType) && $productType & ~ $filter->type) {
-                unset($modules[$key]);
-                continue;
+            if ($filter->type != AddonListFilterType::ALL) {
+                if ($module->attributes->get('productType') == 'module') {
+                    $productType = AddonListFilterType::MODULE;
+                }
+                if ($module->attributes->get('productType') == 'service') {
+                    $productType = AddonListFilterType::SERVICE;
+                }
+                if (!isset($productType) || $productType & ~ $filter->type) {
+                    unset($modules[$key]);
+                    continue;
+                }
             }
 
             // Part Two : Remove module not installed if specified
             if ($filter->status != AddonListFilterStatus::ALL) {
-                if ($module->database->get('installed') == 1 && $filter->status & ~ AddonListFilterStatus::INSTALLED) {
+                if ($module->database->get('installed') == 1
+                    && ($filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
+                    || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
                     continue;
                 }
 
-                if ($module->database->get('installed') == 0 && $filter->status & AddonListFilterStatus::INSTALLED) {
+                if ($module->database->get('installed') == 0
+                    && (!$filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
+                    || $filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
                     continue;
                 }
 
                 if ($module->database->get('installed') == 1
                     && $module->database->get('active') == 1
-                    && $filter->status & ~ AddonListFilterStatus::ENABLED) {
+                    && !$filter->hasStatus(AddonListFilterStatus::DISABLED)) {
                     unset($modules[$key]);
                     continue;
                 }
 
                 if ($module->database->get('installed') == 1
                     && $module->database->get('active') == 0
-                    && $filter->status & AddonListFilterStatus::ENABLED) {
+                    && !$filter->hasStatus(AddonListFilterStatus::ENABLED)) {
                     unset($modules[$key]);
                     continue;
                 }
             }
 
             // Part Three : Remove addons not related to the proper source (ex Addons)
-            if (!$module->attributes->has('origin_filter_value') &&
-                ~ $filter->origin & AddonListFilterOrigin::DISK
-            ) {
-                unset($modules[$key]);
-                continue;
-            }
-            if ($module->attributes->has('origin_filter_value') &&
-                !($module->attributes->get('origin_filter_value') & $filter->origin)) {
-                unset($modules[$key]);
-                continue;
+            if ($filter->origin != AddonListFilterOrigin::ALL) {
+                if (!$module->attributes->has('origin_filter_value') &&
+                    !$filter->hasOrigin(AddonListFilterOrigin::DISK)
+                ) {
+                    unset($modules[$key]);
+                    continue;
+                }
+                if ($module->attributes->has('origin_filter_value') &&
+                    !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
+                ) {
+                    unset($modules[$key]);
+                    continue;
+                }
             }
         }
         return $modules;
@@ -203,7 +215,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                     $modules[$name] = $module;
                 }
             } catch (\ParseError $e) {
-                // Bypass this module
+                $this->logger->critical(sprintf('Parse error on module %s. %s', $name, $e->getMessage()));
+            } catch (Exception $e) {
+                $this->logger->critical(sprintf('Unexpected exception on module %s. %s', $name, $e->getMessage()));
             }
         }
 
@@ -219,7 +233,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getModule($name)
     {
-        $php_file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
+        $php_file_path = $this->getModulesDir().$name.'/'.$name.'.php';
 
         /* Data which design the module class */
         $attributes = ['name' => $name,];
@@ -237,8 +251,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 (array)array_shift($module_catalog_data)
             );
         } catch (Exception $e) {
-            $logger = new LegacyLogger();
-            $logger->alert(sprintf('Loading data from Addons failed. %s', $e->getMessage()));
+            $this->logger->alert(sprintf('Loading data from Addons failed. %s', $e->getMessage()));
         }
 
         // Now, we check that cache is up to date
@@ -280,7 +293,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         ) ? 1 : 0,
                     'need_instance' => isset($tmp_module->need_instance)?$tmp_module->need_instance
                             :0,
-                    'productType' => 'Module',
+                    'productType' => 'module',
                 ];
 
                 $disk['is_valid'] = 1;
@@ -325,9 +338,9 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         foreach (['logo.png', 'logo.gif'] as $logo) {
-            $logo_path = _PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$logo;
+            $logo_path = $this->getModulesDir().$name.DIRECTORY_SEPARATOR.$logo;
             if (file_exists($logo_path)) {
-                $attributes['media']->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
+                $attributes['media']->img = __PS_BASE_URI__.basename($this->getModulesDir()).'/'.$name.'/'.$logo;
                 break;
             }
         }
@@ -339,6 +352,15 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
+     * Function which returns the modules directory. Used for mock in tests/ folder.
+     * @return string The modules directory
+     */
+    protected function getModulesDir()
+    {
+        return _PS_MODULE_DIR_;
+    }
+
+    /**
      * Instanciate every module present if the modules folder
      *
      * @return \PrestaShop\PrestaShop\Adapter\Module\Module[]
@@ -347,7 +369,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $modules         = [];
         $modulesDirsList = $this->finder->directories()
-                                    ->in(_PS_MODULE_DIR_)
+                                    ->in($this->getModulesDir())
                                     ->depth('== 0')
                                     ->exclude(['__MACOSX'])
                                     ->ignoreVCS(true);

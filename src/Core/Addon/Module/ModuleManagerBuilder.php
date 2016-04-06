@@ -25,11 +25,13 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
+use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
+
 class ModuleManagerBuilder
 {
     /**
@@ -48,7 +50,7 @@ class ModuleManagerBuilder
         global $kernel;
         if (!is_null($kernel)) {
             return $kernel->getContainer()->get('prestashop.module.manager');
-        }else {
+        } else {
             $langId = \Context::getContext()->employee instanceof \Employee ? \Context::getContext()->employee->id_lang : \Context::getContext()->language->iso_code;
             $languageISO = \LanguageCore::getIsoById($langId);
 
@@ -58,7 +60,6 @@ class ModuleManagerBuilder
                 $this->buildRepository(),
                 \Context::getContext()->employee);
         }
-
     }
 
     /**
@@ -72,16 +73,16 @@ class ModuleManagerBuilder
             global $kernel;
             if (!is_null($kernel)) {
                 self::$modulesRepository = $kernel->getContainer()->get('prestashop.core.admin.module.repository');
-            }else {
+            } else {
                 $langId = \Context::getContext()->employee instanceof \Employee ? \Context::getContext()->employee->id_lang : \Context::getContext()->language->iso_code;
                 $languageISO = \LanguageCore::getIsoById($langId);
                 self::$modulesRepository = new ModuleRepository(
                     new AdminModuleDataProvider($kernel),
                     new ModuleDataProvider(),
-                    new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider($languageISO))
+                    new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider($languageISO)),
+                    new LegacyLogger()
                 );
             }
-
         }
         return self::$modulesRepository;
     }
