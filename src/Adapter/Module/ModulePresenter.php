@@ -2,24 +2,23 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Currency;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 
 class ModulePresenter implements PresenterInterface
 {
     /**
-     * @var LegacyContext 
+     * @var Currency
      */
-    private $context;
+    private $currency;
 
     /** @var PriceFormatter */
     private $priceFormatter;
 
-    public function __construct(LegacyContext $context)
+    public function __construct(Currency $currency)
     {
-        $this->context = $context;
-        
+        $this->currency = $currency;
         // Not declared as a Symfony service :(
         $this->priceFormatter  = new PriceFormatter();
     }
@@ -47,10 +46,10 @@ class ModulePresenter implements PresenterInterface
 
     private function getModulePrice($prices)
     {
-        $currency = $this->context->getContext()->currency;
-        if (array_key_exists($currency->iso_code, $prices)) {
-            $prices['displayPrice'] = $this->priceFormatter->convertAndFormat($prices[$currency->iso_code]);
-            $prices['raw'] = $prices[$currency->iso_code];
+        $iso_code = $this->currency->iso_code;
+        if (array_key_exists($iso_code, $prices)) {
+            $prices['displayPrice'] = $this->priceFormatter->convertAndFormat($prices[$iso_code]);
+            $prices['raw'] = $prices[$iso_code];
         } else {
             $prices['displayPrice'] = '$'.$prices['USD'];
             $prices['raw'] = $prices['USD'];
