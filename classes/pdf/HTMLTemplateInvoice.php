@@ -166,6 +166,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         }
 
         $customer = new Customer((int)$this->order->id_customer);
+        $carrier = new Carrier((int)$this->order->id_carrier);
 
         $order_details = $this->order_invoice->getProducts();
 
@@ -319,6 +320,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'order' => $this->order,
             'order_invoice' => $this->order_invoice,
             'order_details' => $order_details,
+            'carrier' => $carrier,
             'cart_rules' => $cart_rules,
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,
@@ -349,6 +351,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'payment_tab' => $this->smarty->fetch($this->getTemplate('invoice.payment-tab')),
 			'note_tab' => $this->smarty->fetch($this->getTemplate('invoice.note-tab')),
             'total_tab' => $this->smarty->fetch($this->getTemplate('invoice.total-tab')),
+            'shipping_tab' => $this->smarty->fetch($this->getTemplate('invoice.shipping-tab')),
         );
         $this->smarty->assign($tpls);
 
