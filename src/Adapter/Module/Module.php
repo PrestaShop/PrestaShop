@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
-use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
+use \PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -34,7 +35,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  *
  * It will allow current modules to work even with the new ModuleManager
  */
-class Module implements AddonInterface
+class Module implements ModuleInterface
 {
     /** @var legacyInstance Module The instance of the legacy module */
     public $instance = null;
@@ -114,6 +115,7 @@ class Module implements AddonInterface
     private $database_default = array(
         'installed' => 0,
         'active' => 0,
+        'active_on_mobile' => true,
         'version' => null,
         'date_add' => null,
         'date_upd' => null,
@@ -238,6 +240,22 @@ class Module implements AddonInterface
         }
 
         return $this->instance->disable();
+    }
+
+    public function onMobileEnable()
+    {
+        if (!$this->hasValidInstance()) {
+            return false;
+        }
+        return $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+    }
+
+    public function onMobileDisable()
+    {
+        if (!$this->hasValidInstance()) {
+            return false;
+        }
+        return $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
     }
 
     public function onReset()
