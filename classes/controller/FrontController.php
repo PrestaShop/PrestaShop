@@ -1294,6 +1294,7 @@ class FrontControllerCore extends Controller
         }
         $pages['register'] = $this->context->link->getPageLink('authentication', true, null, ['create_account' => '1']);
         $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
+        $pages['order'] = $this->context->link->getPageLink('order', true, null, ['state' => 'new']);
         $urls['pages'] = $pages;
 
         $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->getName() . '/assets/';

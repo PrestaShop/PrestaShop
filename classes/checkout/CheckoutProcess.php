@@ -165,4 +165,15 @@ class CheckoutProcessCore implements RenderableInterface
             }
         }
     }
+
+    public function getStep($className)
+    {
+        foreach ($this->getSteps() as $step) {
+            if (is_a($step, $className)) {
+                return $step;
+            }
+        }
+
+        return null;
+    }
 }

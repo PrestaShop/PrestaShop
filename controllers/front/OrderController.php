@@ -145,6 +145,7 @@ class OrderControllerCore extends FrontController
         if (!is_array($data)) {
             $data = [];
         }
+
         $process->restorePersistedData($data);
     }
 
@@ -182,6 +183,11 @@ class OrderControllerCore extends FrontController
         );
 
         $this->checkoutProcess->setNextStepReachable();
+        $step = $this->checkoutProcess->getStep('CheckoutAddressesStep');
+
+        if (Tools::getValue('state') && $step) {
+            $step->setCurrent(true);
+        }
 
         $this->checkoutProcess->markCurrentStep();
 
