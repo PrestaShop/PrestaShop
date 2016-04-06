@@ -1386,7 +1386,7 @@ class CarrierCore extends ObjectModel
             if ($cart_product['id_product'] == $product->id) {
                 $cart_quantity += $cart_product['cart_quantity'];
             }
-            if ($cart_product['weight_attribute'] > 0) {
+            if (isset($cart_product['weight_attribute']) && $cart_product['weight_attribute'] > 0) {
                 $cart_weight += ($cart_product['weight_attribute'] * $cart_product['cart_quantity']);
             } else {
                 $cart_weight += ($cart_product['weight'] * $cart_product['cart_quantity']);
