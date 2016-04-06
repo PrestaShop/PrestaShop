@@ -117,7 +117,7 @@ services:
 
     prestashop.adapter.presenter.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
-        arguments: ["@prestashop.adapter.legacy.context"]
+        arguments: ["@=service('prestashop.adapter.legacy.context').getContext().currency"]
 
     # Other adapters
     prestashop.adapter.shop.context:
