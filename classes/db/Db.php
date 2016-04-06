@@ -355,22 +355,6 @@ abstract class DbCore
     }
 
     /**
-     * Filter SQL query within a blacklist
-     *
-     * @param string $table Table where insert/update data
-     * @param array $values Data to insert/update
-     * @param string $type INSERT or UPDATE
-     * @param string $where WHERE clause, only for UPDATE (optional)
-     * @param int $limit LIMIT clause (optional)
-     * @return bool
-     * @throws PrestaShopDatabaseException
-     */
-    public function autoExecuteWithNullValues($table, $values, $type, $where = '', $limit = 0)
-    {
-        return $this->autoExecute($table, $values, $type, $where, $limit, 0, true);
-    }
-
-    /**
      * Execute a query and get result resource
      *
      * @param string|DbQuery $sql
