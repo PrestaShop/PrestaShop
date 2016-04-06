@@ -15,7 +15,7 @@ services:
         arguments: ["@router"]
         
     prestashop.security.role.dynamic_role_hierarchy:
-        class:      PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules
+        class:      PrestaShopBundle\Security\Role\DynamicRoleHierarchy
 
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
