@@ -77,7 +77,7 @@ class Module implements AddonInterface
         'need_instance' => 0,
         'limited_countries' => array(),
         'parent_class' => 'Module',
-        'productType' => 'Module',
+        'productType' => 'module',
         'warning' => '',
         'img' => '',
         'badges' => array(),
