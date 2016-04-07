@@ -707,36 +707,7 @@ class HookCore extends ObjectModel
 
     public static function coreCallHook($module, $method, $params)
     {
-        // Define if we will log modules performances for this session
-        if (Module::$_log_modules_perfs === null) {
-            $modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_log_modules_perfs_MODULO');
-            Module::$_log_modules_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
-            if (Module::$_log_modules_perfs) {
-                Module::$_log_modules_perfs_session = mt_rand();
-            }
-        }
-
-        // Immediately return the result if we do not log performances
-        if (!Module::$_log_modules_perfs) {
-            return $module->{$method}($params);
-        }
-
-        // Store time and memory before and after hook call and save the result in the database
-        $time_start = microtime(true);
-        $memory_start = memory_get_usage(true);
-
-        // Call hook
-        $r = $module->{$method}($params);
-
-        $time_end = microtime(true);
-        $memory_end = memory_get_usage(true);
-
-        Db::getInstance()->execute('
-            INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
-            VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')
-        ');
-
-        return $r;
+        return $module->{$method}($params);
     }
 
     /**
