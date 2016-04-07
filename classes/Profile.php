@@ -110,9 +110,9 @@ class ProfileCore extends ObjectModel
         return (isset($accesses[$id_tab]) ? $accesses[$id_tab] : false);
     }
 
-    public static function getProfileAccesses($id_profile, $type = 'id_tab')
+    public static function getProfileAccesses($id_profile, $type = 'id_authorization_role')
     {
-        if (!in_array($type, array('id_tab', 'class_name'))) {
+        if (!in_array($type, array('id_authorization_role', 'class_name'))) {
             return false;
         }
 
@@ -138,9 +138,9 @@ class ProfileCore extends ObjectModel
             } else {
                 $result = Db::getInstance()->executeS('
 				SELECT *
-				FROM `'._DB_PREFIX_.'access` a
-				LEFT JOIN `'._DB_PREFIX_.'tab` t ON t.id_tab = a.id_tab
-				WHERE `id_profile` = '.(int)$id_profile);
+				FROM `'._DB_PREFIX_.'authorization_role` a
+				LEFT JOIN `'._DB_PREFIX_.'access` j ON j.id_authorization_role = a.id_authorization_role
+				WHERE j.`id_profile` = '.(int)$id_profile);
 
                 foreach ($result as $row) {
                     self::$_cache_accesses[$id_profile][$type][$row[$type]] = $row;
