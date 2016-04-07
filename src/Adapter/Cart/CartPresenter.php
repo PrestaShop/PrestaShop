@@ -113,15 +113,15 @@ class CartPresenter implements PresenterInterface
 
     public function addCustomizedData(array $products, Cart $cart)
     {
-		return array_map(function (array $product) use ($cart) {
+        return array_map(function (array $product) use ($cart) {
 
             $product['customizations'] = [];
 
-			$data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int)$product['id_customization']);
+            $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int)$product['id_customization']);
 
-	        if (!$data) {
-	            $data = [];
-	        }
+            if (!$data) {
+                $data = [];
+            }
             $id_product = (int) $product['id_product'];
             $id_product_attribute = (int) $product['id_product_attribute'];
             if (array_key_exists($id_product, $data)) {
@@ -159,28 +159,28 @@ class CartPresenter implements PresenterInterface
                                 }
 
                                 $product['up_quantity_url'] = $this->link->getUpQuantityCartURL(
-	                                $product['id_product'],
-	                                $product['id_product_attribute'],
-	                                $presentedCustomization['id_customization']
-	                            );
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
                                 $product['down_quantity_url'] = $this->link->getDownQuantityCartURL(
-	                                $product['id_product'],
-	                                $product['id_product_attribute'],
-	                                $presentedCustomization['id_customization']
-	                            );
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
                                 $product['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
-	                                $product['id_product'],
-	                                $product['id_product_attribute'],
-	                                $presentedCustomization['id_customization']
-	                            );
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
 
-	                            $presentedCustomization['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
-	                                $product['id_product'],
-	                                $product['id_product_attribute'],
-	                                $presentedCustomization['id_customization']
-	                            );
+                                $presentedCustomization['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
 
-                               	$product['customizations'][] = $presentedCustomization;
+                                $product['customizations'][] = $presentedCustomization;
                             }
                         }
                     }

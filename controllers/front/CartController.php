@@ -210,7 +210,7 @@ class CartControllerCore extends FrontController
     protected function processDeleteProductInCart()
     {
         $customization_product = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'customization`
-		WHERE `id_cart` = '.(int)$this->context->cart->id.' AND `id_product` = '.(int)$this->id_product.' AND `id_customization` != '.(int)$this->customization_id);
+        WHERE `id_cart` = '.(int)$this->context->cart->id.' AND `id_product` = '.(int)$this->id_product.' AND `id_customization` != '.(int)$this->customization_id);
 
         if (count($customization_product)) {
             $product = new Product((int)$this->id_product);
@@ -283,8 +283,8 @@ class CartControllerCore extends FrontController
         if (is_array($cart_products)) {
             foreach ($cart_products as $cart_product) {
                 if ((!isset($this->id_product_attribute) ||
-                	($cart_product['id_product_attribute'] == $this->id_product_attribute &&
-                	$cart_product['id_customization'] == $this->customization_id)) &&
+                    ($cart_product['id_product_attribute'] == $this->id_product_attribute &&
+                    $cart_product['id_customization'] == $this->customization_id)) &&
                     (isset($this->id_product) && $cart_product['id_product'] == $this->id_product)) {
                     $qty_to_check = $cart_product['cart_quantity'];
 

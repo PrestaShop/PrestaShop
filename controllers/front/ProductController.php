@@ -833,7 +833,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $id_customization = 0;
             foreach ($already_customized as $customization) {
-            	$id_customization = $customization['id_customization'];
+                $id_customization = $customization['id_customization'];
                 $customized_data[$customization['index']] = $customization;
             }
 

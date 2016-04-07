@@ -1067,7 +1067,7 @@ class CartCore extends ObjectModel
                     'id_shop' =>                $shop->id,
                     'quantity' =>                (int)$quantity,
                     'date_add' =>                date('Y-m-d H:i:s'),
-                    'id_customization' => 		(int)$id_customization
+                    'id_customization' =>       (int)$id_customization
                 ));
 
                 if (!$result_add) {
