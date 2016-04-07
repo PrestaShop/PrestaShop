@@ -23,5 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+define('_PS_ROOT_DIR_', __DIR__ . '/..');
+define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests/resources/modules/');
 require_once(dirname(__FILE__).'/../config/defines.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');

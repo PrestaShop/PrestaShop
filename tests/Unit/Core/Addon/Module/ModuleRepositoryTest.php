@@ -60,8 +60,6 @@ class ModuleRepositoryTest extends UnitTestCase
             define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/classic/');
         }
 
-        parent::setUp();
-
         if (! isset($_SERVER['HTTP_HOST'])) {
             $this->http_host_not_found = true;
             $_SERVER['HTTP_HOST'] = 'localhost';
@@ -75,7 +73,14 @@ class ModuleRepositoryTest extends UnitTestCase
             ->getMock();
         $this->moduleDataProviderStub
             ->method('findByName')
-            ->willReturn([]);
+            ->willReturn([
+                'installed' => 0,
+                'active' => true
+            ]);
+        // required to have 'productType' field of module set up
+        $this->moduleDataProviderStub
+            ->method('isModuleMainClassValid')
+            ->willReturn(true);
 
         $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
             ['getCatalogModulesNames'],
@@ -263,6 +268,9 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
+    /**
+     * @todo how to get fake modules returned ?
+     */
     public function test_get_only_modules()
     {
         $filters = new AddonListFilter();
