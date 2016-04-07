@@ -69,7 +69,7 @@ abstract class Db extends DbCore
     public function query($sql)
     {
         $explain = false;
-        if (preg_match('/^\s*explain\s+/i', $sql) || strpos($sql, _DB_PREFIX_.'modules_perfs')) {
+        if (preg_match('/^\s*explain\s+/i', $sql)) {
             $explain = true;
         }
             
