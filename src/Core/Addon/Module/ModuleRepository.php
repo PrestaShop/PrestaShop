@@ -148,14 +148,14 @@ class ModuleRepository implements ModuleRepositoryInterface
             if ($filter->status != AddonListFilterStatus::ALL) {
                 if ($module->database->get('installed') == 1
                     && ($filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
-                    || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
+                        || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
                     continue;
                 }
 
                 if ($module->database->get('installed') == 0
                     && (!$filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
-                    || $filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
+                        || $filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
                     continue;
                 }
@@ -233,7 +233,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getModule($name)
     {
-        $php_file_path = $this->getModulesDir().$name.'/'.$name.'.php';
+        $php_file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
 
         /* Data which design the module class */
         $attributes = ['name' => $name,];
@@ -284,15 +284,15 @@ class ModuleRepository implements ModuleRepositoryInterface
                     'description' => stripslashes($tmp_module->description),
                     'author' => $tmp_module->author,
                     'author_uri' => (isset($tmp_module->author_uri) && $tmp_module->author_uri)
-                            ?$tmp_module->author_uri:false,
+                        ?$tmp_module->author_uri:false,
                     'limited_countries' => $tmp_module->limited_countries,
                     'parent_class' => get_parent_class($name),
                     'is_configurable' => $tmp_module->is_configurable = method_exists(
                         $tmp_module,
                         'getContent'
-                        ) ? 1 : 0,
+                    ) ? 1 : 0,
                     'need_instance' => isset($tmp_module->need_instance)?$tmp_module->need_instance
-                            :0,
+                        :0,
                     'productType' => 'module',
                 ];
 
@@ -316,11 +316,11 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         if (!isset($attributes['media'])) {
             $attributes['media'] = (object)[
-                    'img' => '../../img/questionmark.png',
-                    'badges' => [],
-                    'cover' => [],
-                    'screenshotsUrls' => [],
-                    'videoUrl' => null,
+                'img' => '../../img/questionmark.png',
+                'badges' => [],
+                'cover' => [],
+                'screenshotsUrls' => [],
+                'videoUrl' => null,
             ];
         } else {
             $attributes['media'] = (object)$attributes['media'];
@@ -338,9 +338,9 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         foreach (['logo.png', 'logo.gif'] as $logo) {
-            $logo_path = $this->getModulesDir().$name.DIRECTORY_SEPARATOR.$logo;
+            $logo_path = _PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$logo;
             if (file_exists($logo_path)) {
-                $attributes['media']->img = __PS_BASE_URI__.basename($this->getModulesDir()).'/'.$name.'/'.$logo;
+                $attributes['media']->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
                 break;
             }
         }
@@ -352,15 +352,6 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Function which returns the modules directory. Used for mock in tests/ folder.
-     * @return string The modules directory
-     */
-    protected function getModulesDir()
-    {
-        return _PS_MODULE_DIR_;
-    }
-
-    /**
      * Instanciate every module present if the modules folder
      *
      * @return \PrestaShop\PrestaShop\Adapter\Module\Module[]
@@ -369,10 +360,10 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $modules         = [];
         $modulesDirsList = $this->finder->directories()
-                                    ->in($this->getModulesDir())
-                                    ->depth('== 0')
-                                    ->exclude(['__MACOSX'])
-                                    ->ignoreVCS(true);
+            ->in(_PS_MODULE_DIR_)
+            ->depth('== 0')
+            ->exclude(['__MACOSX'])
+            ->ignoreVCS(true);
 
         $modulesDirsList = iterator_to_array($modulesDirsList);
 
