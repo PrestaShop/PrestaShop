@@ -138,7 +138,8 @@ var productCategoriesTags = (function () {
             'id': categoryId,
             'breadcrumb': label
           });
-
+          var categoriesForm = $('#form_step1_categories');
+          categoriesForm.find('input[value="' + categoryId + '"]').attr('checked', 'checked');
           $(this).val('');
         }
       }).data('ui-autocomplete')._renderItem = function(ul, item) {
