@@ -994,14 +994,16 @@ CREATE TABLE `PREFIX_module` (
   KEY `name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
+CREATE TABLE `PREFIX_authorization_roles` (
+  `id_authorization_roles` int(10) unsigned NOT NULL auto_increment,
+  `slug` VARCHAR(255) unsigned NOT NULL,
+  PRIMARY KEY (`id_authorization_roles`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_module_access` (
   `id_profile` int(10) unsigned NOT NULL,
-  `id_module` int(10) unsigned NOT NULL,
-  `view` tinyint(1) NOT NULL DEFAULT '0',
-  `configure` tinyint(1) NOT NULL DEFAULT '0',
-  `uninstall` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_profile`,`id_module`)
+  `id_authorization_roles` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_profile`,`id_authorization_roles`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_module_country` (
