@@ -78,4 +78,16 @@ class bankwire extends PaymentModule
         }
         return true;
     }
+
+    /**
+     * tests for ModuleGetPossibleHooks
+     */
+    public function hookPaymentReturn(){
+        return;
+    }
+
+    public function hookPaymentOptions(){
+        return;
+    }
+
 }

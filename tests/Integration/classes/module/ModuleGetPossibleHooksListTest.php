@@ -36,6 +36,8 @@ class ModuleGetPossibleHooksListTest extends IntegrationTestCase
     /**
      * Test if a module return the good possible hooks list.
      * This test is done on the bankwire generic module.
+     *
+     * Note: improves module list fixtures in order to get an explicit list of hooks.
      */
     public function testGetRightListForModule()
     {
