@@ -282,7 +282,9 @@ class CartControllerCore extends FrontController
 
         if (is_array($cart_products)) {
             foreach ($cart_products as $cart_product) {
-                if ((!isset($this->id_product_attribute) || $cart_product['id_product_attribute'] == $this->id_product_attribute) &&
+                if ((!isset($this->id_product_attribute) ||
+                	($cart_product['id_product_attribute'] == $this->id_product_attribute &&
+                	$cart_product['id_customization'] == $this->customization_id)) &&
                     (isset($this->id_product) && $cart_product['id_product'] == $this->id_product)) {
                     $qty_to_check = $cart_product['cart_quantity'];
 
