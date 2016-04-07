@@ -996,7 +996,7 @@ CREATE TABLE `PREFIX_module` (
 
 CREATE TABLE `PREFIX_authorization_role` (
   `id_authorization_role` int(10) unsigned NOT NULL auto_increment,
-  `slug` VARCHAR(255) unsigned NOT NULL,
+  `slug` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id_authorization_role`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
