@@ -47,6 +47,13 @@ class UrlGeneratorTest extends UnitTestCase
         $this->setupSfKernel();
     }
 
+    public function teardown()
+    {
+        parent::teardown();
+
+        $this->sfKernel->shutdown();
+    }
+
     public function test_generate_equivalent_route()
     {
         return $this->markTestSkipped(

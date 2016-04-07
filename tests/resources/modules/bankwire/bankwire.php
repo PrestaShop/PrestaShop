@@ -71,9 +71,9 @@ class bankwire extends PaymentModule
     public function uninstall()
     {
         if (!Configuration::deleteByName('BANK_WIRE_DETAILS')
-                || !Configuration::deleteByName('BANK_WIRE_OWNER')
-                || !Configuration::deleteByName('BANK_WIRE_ADDRESS')
-                || !parent::uninstall()) {
+            || !Configuration::deleteByName('BANK_WIRE_OWNER')
+            || !Configuration::deleteByName('BANK_WIRE_ADDRESS')
+            || !parent::uninstall()) {
             return false;
         }
         return true;
