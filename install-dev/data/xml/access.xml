@@ -1,102 +1,365 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_access>
-  <fields primary="id_profile, id_tab" sql="a.id_profile = 1">
+  <fields primary="id_profile, id_authorization_role" sql="a.id_profile = 1">
     <field name="id_profile" relation="profile"/>
-    <field name="id_tab" relation="tab"/>
-    <field name="view"/>
-    <field name="add"/>
-    <field name="edit"/>
-    <field name="delete"/>
+    <field name="id_authorization_role" relation="authorization_role"/>
   </fields>
   <entities>
-    <access id="access_1_0" id_profile="SuperAdmin" id_tab="" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_1" id_profile="SuperAdmin" id_tab="Home" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_2" id_profile="SuperAdmin" id_tab="CMS_pages" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_3" id_profile="SuperAdmin" id_tab="CMS_categories" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_4" id_profile="SuperAdmin" id_tab="Combinations_generator" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_5" id_profile="SuperAdmin" id_tab="Search" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_7" id_profile="SuperAdmin" id_tab="Shops" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_8" id_profile="SuperAdmin" id_tab="Shop_Urls" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_9" id_profile="SuperAdmin" id_tab="Catalog" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_10" id_profile="SuperAdmin" id_tab="Orders" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_11" id_profile="SuperAdmin" id_tab="Customers" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_13" id_profile="SuperAdmin" id_tab="Shipping" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_14" id_profile="SuperAdmin" id_tab="Localization" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_15" id_profile="SuperAdmin" id_tab="Modules" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_16" id_profile="SuperAdmin" id_tab="Preferences" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_19" id_profile="SuperAdmin" id_tab="Stats" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_20" id_profile="SuperAdmin" id_tab="Stock" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_21" id_profile="SuperAdmin" id_tab="Products" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_22" id_profile="SuperAdmin" id_tab="Categories" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_23" id_profile="SuperAdmin" id_tab="Monitoring" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_24" id_profile="SuperAdmin" id_tab="Attributes_and_Values" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_25" id_profile="SuperAdmin" id_tab="Features" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_26" id_profile="SuperAdmin" id_tab="Manufacturers" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_27" id_profile="SuperAdmin" id_tab="Suppliers" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_29" id_profile="SuperAdmin" id_tab="Tags" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_30" id_profile="SuperAdmin" id_tab="Attachments" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_32" id_profile="SuperAdmin" id_tab="Invoices" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_33" id_profile="SuperAdmin" id_tab="Merchandise_Returns" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_34" id_profile="SuperAdmin" id_tab="Delivery_Slips" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_35" id_profile="SuperAdmin" id_tab="Credit_Slips" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_36" id_profile="SuperAdmin" id_tab="Statuses" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_37" id_profile="SuperAdmin" id_tab="Order_Messages" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_39" id_profile="SuperAdmin" id_tab="Addresses" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_40" id_profile="SuperAdmin" id_tab="Groups" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_41" id_profile="SuperAdmin" id_tab="Shopping_Carts" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_42" id_profile="SuperAdmin" id_tab="Customer_Service" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_43" id_profile="SuperAdmin" id_tab="Contacts" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_44" id_profile="SuperAdmin" id_tab="Genders" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_45" id_profile="SuperAdmin" id_tab="Outstanding" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_46" id_profile="SuperAdmin" id_tab="Cart_Rules" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_47" id_profile="SuperAdmin" id_tab="Catalog_price_rules" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_49" id_profile="SuperAdmin" id_tab="CarrierWizard" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_49" id_profile="SuperAdmin" id_tab="Carriers" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_50" id_profile="SuperAdmin" id_tab="Price_Ranges" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_51" id_profile="SuperAdmin" id_tab="Weight_Ranges" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_53" id_profile="SuperAdmin" id_tab="Languages" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_54" id_profile="SuperAdmin" id_tab="Zones" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_55" id_profile="SuperAdmin" id_tab="Countries" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_56" id_profile="SuperAdmin" id_tab="States" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_57" id_profile="SuperAdmin" id_tab="Currencies" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_58" id_profile="SuperAdmin" id_tab="Tax_Rules" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_59" id_profile="SuperAdmin" id_tab="Taxes" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_60" id_profile="SuperAdmin" id_tab="Translations" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_62" id_profile="SuperAdmin" id_tab="Modules_Themes_Catalog" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_63" id_profile="SuperAdmin" id_tab="Positions" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_64" id_profile="SuperAdmin" id_tab="Payment" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_67" id_profile="SuperAdmin" id_tab="Products_1" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_68" id_profile="SuperAdmin" id_tab="Customers_2" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_69" id_profile="SuperAdmin" id_tab="Themes" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_70" id_profile="SuperAdmin" id_tab="SEO_URLs" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_71" id_profile="SuperAdmin" id_tab="CMS" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_72" id_profile="SuperAdmin" id_tab="Images" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_73" id_profile="SuperAdmin" id_tab="Contact_stores" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_74" id_profile="SuperAdmin" id_tab="Search_1" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_75" id_profile="SuperAdmin" id_tab="Maintenance" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_76" id_profile="SuperAdmin" id_tab="Geolocation" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_77" id_profile="SuperAdmin" id_tab="Configuration_Information" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_78" id_profile="SuperAdmin" id_tab="Performance" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_79" id_profile="SuperAdmin" id_tab="E-mail" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_81" id_profile="SuperAdmin" id_tab="CSV_Import" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_82" id_profile="SuperAdmin" id_tab="DB_Backup" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_83" id_profile="SuperAdmin" id_tab="SQL_Manager" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_84" id_profile="SuperAdmin" id_tab="Logs" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_85" id_profile="SuperAdmin" id_tab="Webservice" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_87" id_profile="SuperAdmin" id_tab="Quick_Access" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_88" id_profile="SuperAdmin" id_tab="Employees" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_89" id_profile="SuperAdmin" id_tab="Profiles" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_90" id_profile="SuperAdmin" id_tab="Permissions" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_91" id_profile="SuperAdmin" id_tab="Tabs" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_93" id_profile="SuperAdmin" id_tab="Search_Engines" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_94" id_profile="SuperAdmin" id_tab="Referrers" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_95" id_profile="SuperAdmin" id_tab="Warehouses" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_96" id_profile="SuperAdmin" id_tab="Stock_Management" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_97" id_profile="SuperAdmin" id_tab="Stock_Movement" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_98" id_profile="SuperAdmin" id_tab="Stock_instant_state" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_99" id_profile="SuperAdmin" id_tab="Stock_cover" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_100" id_profile="SuperAdmin" id_tab="Supply_orders" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_101" id_profile="SuperAdmin" id_tab="Configuration" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_102" id_profile="SuperAdmin" id_tab="Dashboard" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_0" id_profile="SuperAdmin"   id_authorization_role="MENU_CREATE" />
+    <access id="access_1_1" id_profile="SuperAdmin"   id_authorization_role="MENU_READ" />
+    <access id="access_1_2" id_profile="SuperAdmin"   id_authorization_role="MENU_UPDATE" />
+    <access id="access_1_3" id_profile="SuperAdmin"   id_authorization_role="MENU_DELETE" />
+    <access id="access_1_4" id_profile="SuperAdmin"   id_authorization_role="MENU_HOME_CREATE" />
+    <access id="access_1_5" id_profile="SuperAdmin"   id_authorization_role="MENU_HOME_READ" />
+    <access id="access_1_7" id_profile="SuperAdmin"   id_authorization_role="MENU_HOME_UPDATE" />
+    <access id="access_1_8" id_profile="SuperAdmin"   id_authorization_role="MENU_HOME_DELETE" />
+    <access id="access_1_9" id_profile="SuperAdmin"   id_authorization_role="MENU_CMS_PAGES_CREATE" />
+    <access id="access_1_10" id_profile="SuperAdmin"  id_authorization_role="MENU_CMS_PAGES_READ" />
+    <access id="access_1_11" id_profile="SuperAdmin"  id_authorization_role="MENU_CMS_PAGES_UPDATE" />
+    <access id="access_1_13" id_profile="SuperAdmin"  id_authorization_role="MENU_CMS_PAGES_DELETE" />
+    <access id="access_1_14" id_profile="SuperAdmin"  id_authorization_role="MENU_CMS_CATEGORIES_CREATE" />
+    <access id="access_1_15" id_profile="SuperAdmin"  id_authorization_role="MENU_CMS_CATEGORIES_READ" />
+    <access id="access_1_16" id_profile="SuperAdmin"  id_authorization_role="MENU_CMS_CATEGORIES_UPDATE" />
+    <access id="access_1_19" id_profile="SuperAdmin"  id_authorization_role="MENU_CMS_CATEGORIES_DELETE" />
+    <access id="access_1_20" id_profile="SuperAdmin"  id_authorization_role="MENU_COMBINATIONS_GENERATOR_CREATE" />
+    <access id="access_1_21" id_profile="SuperAdmin"  id_authorization_role="MENU_COMBINATIONS_GENERATOR_READ" />
+    <access id="access_1_22" id_profile="SuperAdmin"  id_authorization_role="MENU_COMBINATIONS_GENERATOR_UPDATE" />
+    <access id="access_1_23" id_profile="SuperAdmin"  id_authorization_role="MENU_COMBINATIONS_GENERATOR_DELETE" />
+    <access id="access_1_24" id_profile="SuperAdmin"  id_authorization_role="MENU_SEARCH_CREATE" />
+    <access id="access_1_25" id_profile="SuperAdmin"  id_authorization_role="MENU_SEARCH_READ" />
+    <access id="access_1_26" id_profile="SuperAdmin"  id_authorization_role="MENU_SEARCH_UPDATE" />
+    <access id="access_1_27" id_profile="SuperAdmin"  id_authorization_role="MENU_SEARCH_DELETE" />
+    <access id="access_1_29" id_profile="SuperAdmin"  id_authorization_role="MENU_SHOPS_CREATE" />
+    <access id="access_1_30" id_profile="SuperAdmin"  id_authorization_role="MENU_SHOPS_READ" />
+    <access id="access_1_32" id_profile="SuperAdmin"  id_authorization_role="MENU_SHOPS_UPDATE" />
+    <access id="access_1_33" id_profile="SuperAdmin"  id_authorization_role="MENU_SHOPS_DELETE" />
+    <access id="access_1_34" id_profile="SuperAdmin"  id_authorization_role="MENU_SHOP_URLS_CREATE" />
+    <access id="access_1_35" id_profile="SuperAdmin"  id_authorization_role="MENU_SHOP_URLS_READ" />
+    <access id="access_1_36" id_profile="SuperAdmin"  id_authorization_role="MENU_SHOP_URLS_UPDATE" />
+    <access id="access_1_37" id_profile="SuperAdmin"  id_authorization_role="MENU_SHOP_URLS_DELETE" />
+    <access id="access_1_39" id_profile="SuperAdmin"  id_authorization_role="MENU_CATALOG_CREATE" />
+    <access id="access_1_40" id_profile="SuperAdmin"  id_authorization_role="MENU_CATALOG_READ" />
+    <access id="access_1_41" id_profile="SuperAdmin"  id_authorization_role="MENU_CATALOG_UPDATE" />
+    <access id="access_1_42" id_profile="SuperAdmin"  id_authorization_role="MENU_CATALOG_DELETE" />
+    <access id="access_1_43" id_profile="SuperAdmin"  id_authorization_role="MENU_ORDERS_CREATE" />
+    <access id="access_1_44" id_profile="SuperAdmin"  id_authorization_role="MENU_ORDERS_READ" />
+    <access id="access_1_45" id_profile="SuperAdmin"  id_authorization_role="MENU_ORDERS_UPDATE" />
+    <access id="access_1_46" id_profile="SuperAdmin"  id_authorization_role="MENU_ORDERS_DELETE" />
+    <access id="access_1_47" id_profile="SuperAdmin"  id_authorization_role="MENU_CUSTOMERS_CREATE" />
+    <access id="access_1_49" id_profile="SuperAdmin"  id_authorization_role="MENU_CUSTOMERS_READ" />
+    <access id="access_1_49" id_profile="SuperAdmin"  id_authorization_role="MENU_CUSTOMERS_UPDATE" />
+    <access id="access_1_50" id_profile="SuperAdmin"  id_authorization_role="MENU_CUSTOMERS_DELETE" />
+    <access id="access_1_51" id_profile="SuperAdmin"  id_authorization_role="MENU_SHIPPING_CREATE" />
+    <access id="access_1_53" id_profile="SuperAdmin"  id_authorization_role="MENU_SHIPPING_READ" />
+    <access id="access_1_54" id_profile="SuperAdmin"  id_authorization_role="MENU_SHIPPING_UPDATE" />
+    <access id="access_1_55" id_profile="SuperAdmin"  id_authorization_role="MENU_SHIPPING_DELETE" />
+    <access id="access_1_56" id_profile="SuperAdmin"  id_authorization_role="MENU_LOCALIZATION_CREATE" />
+    <access id="access_1_57" id_profile="SuperAdmin"  id_authorization_role="MENU_LOCALIZATION_READ" />
+    <access id="access_1_58" id_profile="SuperAdmin"  id_authorization_role="MENU_LOCALIZATION_UPDATE" />
+    <access id="access_1_59" id_profile="SuperAdmin"  id_authorization_role="MENU_LOCALIZATION_DELETE" />
+    <access id="access_1_60" id_profile="SuperAdmin"  id_authorization_role="MENU_MODULES_CREATE" />
+    <access id="access_1_62" id_profile="SuperAdmin"  id_authorization_role="MENU_MODULES_READ" />
+    <access id="access_1_63" id_profile="SuperAdmin"  id_authorization_role="MENU_MODULES_UPDATE" />
+    <access id="access_1_64" id_profile="SuperAdmin"  id_authorization_role="MENU_MODULES_DELETE" />
+    <access id="access_1_67" id_profile="SuperAdmin"  id_authorization_role="MENU_PREFERENCES_CREATE" />
+    <access id="access_1_68" id_profile="SuperAdmin"  id_authorization_role="MENU_PREFERENCES_READ" />
+    <access id="access_1_69" id_profile="SuperAdmin"  id_authorization_role="MENU_PREFERENCES_UPDATE" />
+    <access id="access_1_70" id_profile="SuperAdmin"  id_authorization_role="MENU_PREFERENCES_DELETE" />
+    <access id="access_1_71" id_profile="SuperAdmin"  id_authorization_role="MENU_STATS_CREATE" />
+    <access id="access_1_72" id_profile="SuperAdmin"  id_authorization_role="MENU_STATS_READ" />
+    <access id="access_1_73" id_profile="SuperAdmin"  id_authorization_role="MENU_STATS_UPDATE" />
+    <access id="access_1_74" id_profile="SuperAdmin"  id_authorization_role="MENU_STATS_DELETE" />
+    <access id="access_1_75" id_profile="SuperAdmin"  id_authorization_role="MENU_STOCK_CREATE" />
+    <access id="access_1_76" id_profile="SuperAdmin"  id_authorization_role="MENU_STOCK_READ" />
+    <access id="access_1_77" id_profile="SuperAdmin"  id_authorization_role="MENU_STOCK_UPDATE" />
+    <access id="access_1_78" id_profile="SuperAdmin"  id_authorization_role="MENU_STOCK_DELETE" />
+    <access id="access_1_79" id_profile="SuperAdmin"  id_authorization_role="MENU_PRODUCTS_CREATE" />
+    <access id="access_1_81" id_profile="SuperAdmin"  id_authorization_role="MENU_PRODUCTS_READ" />
+    <access id="access_1_82" id_profile="SuperAdmin"  id_authorization_role="MENU_PRODUCTS_UPDATE" />
+    <access id="access_1_83" id_profile="SuperAdmin"  id_authorization_role="MENU_PRODUCTS_DELETE" />
+    <access id="access_1_84" id_profile="SuperAdmin"  id_authorization_role="MENU_CATEGORIES_CREATE" />
+    <access id="access_1_85" id_profile="SuperAdmin"  id_authorization_role="MENU_CATEGORIES_READ" />
+    <access id="access_1_87" id_profile="SuperAdmin"  id_authorization_role="MENU_CATEGORIES_UPDATE" />
+    <access id="access_1_88" id_profile="SuperAdmin"  id_authorization_role="MENU_CATEGORIES_DELETE" />
+    <access id="access_1_89" id_profile="SuperAdmin"  id_authorization_role="MENU_MONITORING_CREATE" />
+    <access id="access_1_90" id_profile="SuperAdmin"  id_authorization_role="MENU_MONITORING_READ" />
+    <access id="access_1_91" id_profile="SuperAdmin"  id_authorization_role="MENU_MONITORING_UPDATE" />
+    <access id="access_1_93" id_profile="SuperAdmin"  id_authorization_role="MENU_MONITORING_DELETE" />
+    <access id="access_1_94" id_profile="SuperAdmin"  id_authorization_role="MENU_ATTRIBUTES_AND_VALUES_CREATE" />
+    <access id="access_1_95" id_profile="SuperAdmin"  id_authorization_role="MENU_ATTRIBUTES_AND_VALUES_READ" />
+    <access id="access_1_96" id_profile="SuperAdmin"  id_authorization_role="MENU_ATTRIBUTES_AND_VALUES_UPDATE" />
+    <access id="access_1_97" id_profile="SuperAdmin"  id_authorization_role="MENU_ATTRIBUTES_AND_VALUES_DELETE" />
+    <access id="access_1_98" id_profile="SuperAdmin"  id_authorization_role="MENU_FEATURES_CREATE" />
+    <access id="access_1_99" id_profile="SuperAdmin"  id_authorization_role="MENU_FEATURES_READ" />
+    <access id="access_1_100" id_profile="SuperAdmin" id_authorization_role="MENU_FEATURES_UPDATE" />
+    <access id="access_1_101" id_profile="SuperAdmin" id_authorization_role="MENU_FEATURES_DELETE" />
+    <access id="access_1_102" id_profile="SuperAdmin" id_authorization_role="MENU_MANUFACTURERS_CREATE" />
+    <access id="access_1_103" id_profile="SuperAdmin" id_authorization_role="MENU_MANUFACTURERS_READ" />
+    <access id="access_1_104" id_profile="SuperAdmin" id_authorization_role="MENU_MANUFACTURERS_UPDATE" />
+    <access id="access_1_105" id_profile="SuperAdmin" id_authorization_role="MENU_MANUFACTURERS_DELETE" />
+    <access id="access_1_106" id_profile="SuperAdmin" id_authorization_role="MENU_SUPPLIERS_CREATE" />
+    <access id="access_1_107" id_profile="SuperAdmin" id_authorization_role="MENU_SUPPLIERS_READ" />
+    <access id="access_1_108" id_profile="SuperAdmin" id_authorization_role="MENU_SUPPLIERS_UPDATE" />
+    <access id="access_1_109" id_profile="SuperAdmin" id_authorization_role="MENU_SUPPLIERS_DELETE" />
+    <access id="access_1_110" id_profile="SuperAdmin" id_authorization_role="MENU_TAGS_CREATE" />
+    <access id="access_1_111" id_profile="SuperAdmin" id_authorization_role="MENU_TAGS_READ" />
+    <access id="access_1_112" id_profile="SuperAdmin" id_authorization_role="MENU_TAGS_UPDATE" />
+    <access id="access_1_113" id_profile="SuperAdmin" id_authorization_role="MENU_TAGS_DELETE" />
+    <access id="access_1_114" id_profile="SuperAdmin" id_authorization_role="MENU_ATTACHMENTS_CREATE" />
+    <access id="access_1_115" id_profile="SuperAdmin" id_authorization_role="MENU_ATTACHMENTS_READ" />
+    <access id="access_1_116" id_profile="SuperAdmin" id_authorization_role="MENU_ATTACHMENTS_UPDATE" />
+    <access id="access_1_117" id_profile="SuperAdmin" id_authorization_role="MENU_ATTACHMENTS_DELETE" />
+    <access id="access_1_118" id_profile="SuperAdmin" id_authorization_role="MENU_INVOICES_CREATE" />
+    <access id="access_1_119" id_profile="SuperAdmin" id_authorization_role="MENU_INVOICES_READ" />
+    <access id="access_1_120" id_profile="SuperAdmin" id_authorization_role="MENU_INVOICES_UPDATE" />
+    <access id="access_1_121" id_profile="SuperAdmin" id_authorization_role="MENU_INVOICES_DELETE" />
+    <access id="access_1_122" id_profile="SuperAdmin" id_authorization_role="MENU_MERCHANDISE_RETURNS_CREATE" />
+    <access id="access_1_123" id_profile="SuperAdmin" id_authorization_role="MENU_MERCHANDISE_RETURNS_READ" />
+    <access id="access_1_124" id_profile="SuperAdmin" id_authorization_role="MENU_MERCHANDISE_RETURNS_UPDATE" />
+    <access id="access_1_125" id_profile="SuperAdmin" id_authorization_role="MENU_MERCHANDISE_RETURNS_DELETE" />
+    <access id="access_1_126" id_profile="SuperAdmin" id_authorization_role="MENU_DELIVERY_SLIPS_CREATE" />
+    <access id="access_1_127" id_profile="SuperAdmin" id_authorization_role="MENU_DELIVERY_SLIPS_READ" />
+    <access id="access_1_128" id_profile="SuperAdmin" id_authorization_role="MENU_DELIVERY_SLIPS_UPDATE" />
+    <access id="access_1_129" id_profile="SuperAdmin" id_authorization_role="MENU_DELIVERY_SLIPS_DELETE" />
+    <access id="access_1_130" id_profile="SuperAdmin" id_authorization_role="MENU_CREDIT_SLIPS_CREATE" />
+    <access id="access_1_131" id_profile="SuperAdmin" id_authorization_role="MENU_CREDIT_SLIPS_READ" />
+    <access id="access_1_132" id_profile="SuperAdmin" id_authorization_role="MENU_CREDIT_SLIPS_UPDATE" />
+    <access id="access_1_133" id_profile="SuperAdmin" id_authorization_role="MENU_CREDIT_SLIPS_DELETE" />
+    <access id="access_1_134" id_profile="SuperAdmin" id_authorization_role="MENU_STATUSES_CREATE" />
+    <access id="access_1_135" id_profile="SuperAdmin" id_authorization_role="MENU_STATUSES_READ" />
+    <access id="access_1_136" id_profile="SuperAdmin" id_authorization_role="MENU_STATUSES_UPDATE" />
+    <access id="access_1_137" id_profile="SuperAdmin" id_authorization_role="MENU_STATUSES_DELETE" />
+    <access id="access_1_138" id_profile="SuperAdmin" id_authorization_role="MENU_ORDER_MESSAGES_CREATE" />
+    <access id="access_1_139" id_profile="SuperAdmin" id_authorization_role="MENU_ORDER_MESSAGES_READ" />
+    <access id="access_1_140" id_profile="SuperAdmin" id_authorization_role="MENU_ORDER_MESSAGES_UPDATE" />
+    <access id="access_1_141" id_profile="SuperAdmin" id_authorization_role="MENU_ORDER_MESSAGES_DELETE" />
+    <access id="access_1_142" id_profile="SuperAdmin" id_authorization_role="MENU_ADDRESSES_CREATE" />
+    <access id="access_1_143" id_profile="SuperAdmin" id_authorization_role="MENU_ADDRESSES_READ" />
+    <access id="access_1_144" id_profile="SuperAdmin" id_authorization_role="MENU_ADDRESSES_UPDATE" />
+    <access id="access_1_145" id_profile="SuperAdmin" id_authorization_role="MENU_ADDRESSES_DELETE" />
+    <access id="access_1_146" id_profile="SuperAdmin" id_authorization_role="MENU_GROUPS_CREATE" />
+    <access id="access_1_147" id_profile="SuperAdmin" id_authorization_role="MENU_GROUPS_READ" />
+    <access id="access_1_148" id_profile="SuperAdmin" id_authorization_role="MENU_GROUPS_UPDATE" />
+    <access id="access_1_149" id_profile="SuperAdmin" id_authorization_role="MENU_GROUPS_DELETE" />
+    <access id="access_1_150" id_profile="SuperAdmin" id_authorization_role="MENU_SHOPPING_CARTS_CREATE" />
+    <access id="access_1_151" id_profile="SuperAdmin" id_authorization_role="MENU_SHOPPING_CARTS_READ" />
+    <access id="access_1_152" id_profile="SuperAdmin" id_authorization_role="MENU_SHOPPING_CARTS_UPDATE" />
+    <access id="access_1_153" id_profile="SuperAdmin" id_authorization_role="MENU_SHOPPING_CARTS_DELETE" />
+    <access id="access_1_154" id_profile="SuperAdmin" id_authorization_role="MENU_CUSTOMER_SERVICE_CREATE" />
+    <access id="access_1_155" id_profile="SuperAdmin" id_authorization_role="MENU_CUSTOMER_SERVICE_READ" />
+    <access id="access_1_156" id_profile="SuperAdmin" id_authorization_role="MENU_CUSTOMER_SERVICE_UPDATE" />
+    <access id="access_1_157" id_profile="SuperAdmin" id_authorization_role="MENU_CUSTOMER_SERVICE_DELETE" />
+    <access id="access_1_158" id_profile="SuperAdmin" id_authorization_role="MENU_CONTACTS_CREATE" />
+    <access id="access_1_159" id_profile="SuperAdmin" id_authorization_role="MENU_CONTACTS_READ" />
+    <access id="access_1_160" id_profile="SuperAdmin" id_authorization_role="MENU_CONTACTS_UPDATE" />
+    <access id="access_1_161" id_profile="SuperAdmin" id_authorization_role="MENU_CONTACTS_DELETE" />
+    <access id="access_1_162" id_profile="SuperAdmin" id_authorization_role="MENU_GENDERS_CREATE" />
+    <access id="access_1_163" id_profile="SuperAdmin" id_authorization_role="MENU_GENDERS_READ" />
+    <access id="access_1_164" id_profile="SuperAdmin" id_authorization_role="MENU_GENDERS_UPDATE" />
+    <access id="access_1_165" id_profile="SuperAdmin" id_authorization_role="MENU_GENDERS_DELETE" />
+    <access id="access_1_166" id_profile="SuperAdmin" id_authorization_role="MENU_OUTSTANDING_CREATE" />
+    <access id="access_1_167" id_profile="SuperAdmin" id_authorization_role="MENU_OUTSTANDING_READ" />
+    <access id="access_1_168" id_profile="SuperAdmin" id_authorization_role="MENU_OUTSTANDING_UPDATE" />
+    <access id="access_1_169" id_profile="SuperAdmin" id_authorization_role="MENU_OUTSTANDING_DELETE" />
+    <access id="access_1_170" id_profile="SuperAdmin" id_authorization_role="MENU_CART_RULES_CREATE" />
+    <access id="access_1_171" id_profile="SuperAdmin" id_authorization_role="MENU_CART_RULES_READ" />
+    <access id="access_1_172" id_profile="SuperAdmin" id_authorization_role="MENU_CART_RULES_UPDATE" />
+    <access id="access_1_173" id_profile="SuperAdmin" id_authorization_role="MENU_CART_RULES_DELETE" />
+    <access id="access_1_174" id_profile="SuperAdmin" id_authorization_role="MENU_CATALOG_PRICE_RULES_CREATE" />
+    <access id="access_1_175" id_profile="SuperAdmin" id_authorization_role="MENU_CATALOG_PRICE_RULES_READ" />
+    <access id="access_1_176" id_profile="SuperAdmin" id_authorization_role="MENU_CATALOG_PRICE_RULES_UPDATE" />
+    <access id="access_1_177" id_profile="SuperAdmin" id_authorization_role="MENU_CATALOG_PRICE_RULES_DELETE" />
+    <access id="access_1_178" id_profile="SuperAdmin" id_authorization_role="MENU_CARRIERWIZARD_CREATE" />
+    <access id="access_1_179" id_profile="SuperAdmin" id_authorization_role="MENU_CARRIERWIZARD_READ" />
+    <access id="access_1_180" id_profile="SuperAdmin" id_authorization_role="MENU_CARRIERWIZARD_UPDATE" />
+    <access id="access_1_181" id_profile="SuperAdmin" id_authorization_role="MENU_CARRIERWIZARD_DELETE" />
+    <access id="access_1_182" id_profile="SuperAdmin" id_authorization_role="MENU_CARRIERS_CREATE" />
+    <access id="access_1_183" id_profile="SuperAdmin" id_authorization_role="MENU_CARRIERS_READ" />
+    <access id="access_1_184" id_profile="SuperAdmin" id_authorization_role="MENU_CARRIERS_UPDATE" />
+    <access id="access_1_185" id_profile="SuperAdmin" id_authorization_role="MENU_CARRIERS_DELETE" />
+    <access id="access_1_186" id_profile="SuperAdmin" id_authorization_role="MENU_PRICE_RANGES_CREATE" />
+    <access id="access_1_187" id_profile="SuperAdmin" id_authorization_role="MENU_PRICE_RANGES_READ" />
+    <access id="access_1_188" id_profile="SuperAdmin" id_authorization_role="MENU_PRICE_RANGES_UPDATE" />
+    <access id="access_1_189" id_profile="SuperAdmin" id_authorization_role="MENU_PRICE_RANGES_DELETE" />
+    <access id="access_1_190" id_profile="SuperAdmin" id_authorization_role="MENU_WEIGHT_RANGES_CREATE" />
+    <access id="access_1_191" id_profile="SuperAdmin" id_authorization_role="MENU_WEIGHT_RANGES_READ" />
+    <access id="access_1_192" id_profile="SuperAdmin" id_authorization_role="MENU_WEIGHT_RANGES_UPDATE" />
+    <access id="access_1_193" id_profile="SuperAdmin" id_authorization_role="MENU_WEIGHT_RANGES_DELETE" />
+    <access id="access_1_194" id_profile="SuperAdmin" id_authorization_role="MENU_LANGUAGES_CREATE" />
+    <access id="access_1_195" id_profile="SuperAdmin" id_authorization_role="MENU_LANGUAGES_READ" />
+    <access id="access_1_196" id_profile="SuperAdmin" id_authorization_role="MENU_LANGUAGES_UPDATE" />
+    <access id="access_1_197" id_profile="SuperAdmin" id_authorization_role="MENU_LANGUAGES_DELETE" />
+    <access id="access_1_198" id_profile="SuperAdmin" id_authorization_role="MENU_ZONES_CREATE" />
+    <access id="access_1_199" id_profile="SuperAdmin" id_authorization_role="MENU_ZONES_READ" />
+    <access id="access_1_200" id_profile="SuperAdmin" id_authorization_role="MENU_ZONES_UPDATE" />
+    <access id="access_1_201" id_profile="SuperAdmin" id_authorization_role="MENU_ZONES_DELETE" />
+    <access id="access_1_202" id_profile="SuperAdmin" id_authorization_role="MENU_COUNTRIES_CREATE" />
+    <access id="access_1_203" id_profile="SuperAdmin" id_authorization_role="MENU_COUNTRIES_READ" />
+    <access id="access_1_204" id_profile="SuperAdmin" id_authorization_role="MENU_COUNTRIES_UPDATE" />
+    <access id="access_1_205" id_profile="SuperAdmin" id_authorization_role="MENU_COUNTRIES_DELETE" />
+    <access id="access_1_206" id_profile="SuperAdmin" id_authorization_role="MENU_STATES_CREATE" />
+    <access id="access_1_207" id_profile="SuperAdmin" id_authorization_role="MENU_STATES_READ" />
+    <access id="access_1_208" id_profile="SuperAdmin" id_authorization_role="MENU_STATES_UPDATE" />
+    <access id="access_1_209" id_profile="SuperAdmin" id_authorization_role="MENU_STATES_DELETE" />
+    <access id="access_1_210" id_profile="SuperAdmin" id_authorization_role="MENU_CURRENCIES_CREATE" />
+    <access id="access_1_211" id_profile="SuperAdmin" id_authorization_role="MENU_CURRENCIES_READ" />
+    <access id="access_1_212" id_profile="SuperAdmin" id_authorization_role="MENU_CURRENCIES_UPDATE" />
+    <access id="access_1_213" id_profile="SuperAdmin" id_authorization_role="MENU_CURRENCIES_DELETE" />
+    <access id="access_1_214" id_profile="SuperAdmin" id_authorization_role="MENU_TAX_RULES_CREATE" />
+    <access id="access_1_215" id_profile="SuperAdmin" id_authorization_role="MENU_TAX_RULES_READ" />
+    <access id="access_1_216" id_profile="SuperAdmin" id_authorization_role="MENU_TAX_RULES_UPDATE" />
+    <access id="access_1_217" id_profile="SuperAdmin" id_authorization_role="MENU_TAX_RULES_DELETE" />
+    <access id="access_1_218" id_profile="SuperAdmin" id_authorization_role="MENU_TAXES_CREATE" />
+    <access id="access_1_219" id_profile="SuperAdmin" id_authorization_role="MENU_TAXES_READ" />
+    <access id="access_1_220" id_profile="SuperAdmin" id_authorization_role="MENU_TAXES_UPDATE" />
+    <access id="access_1_221" id_profile="SuperAdmin" id_authorization_role="MENU_TAXES_DELETE" />
+    <access id="access_1_222" id_profile="SuperAdmin" id_authorization_role="MENU_TRANSLATIONS_CREATE" />
+    <access id="access_1_223" id_profile="SuperAdmin" id_authorization_role="MENU_TRANSLATIONS_READ" />
+    <access id="access_1_224" id_profile="SuperAdmin" id_authorization_role="MENU_TRANSLATIONS_UPDATE" />
+    <access id="access_1_225" id_profile="SuperAdmin" id_authorization_role="MENU_TRANSLATIONS_DELETE" />
+    <access id="access_1_226" id_profile="SuperAdmin" id_authorization_role="MENU_MODULES_THEMES_CATALOG_CREATE" />
+    <access id="access_1_227" id_profile="SuperAdmin" id_authorization_role="MENU_MODULES_THEMES_CATALOG_READ" />
+    <access id="access_1_228" id_profile="SuperAdmin" id_authorization_role="MENU_MODULES_THEMES_CATALOG_UPDATE" />
+    <access id="access_1_229" id_profile="SuperAdmin" id_authorization_role="MENU_MODULES_THEMES_CATALOG_DELETE" />
+    <access id="access_1_230" id_profile="SuperAdmin" id_authorization_role="MENU_POSITIONS_CREATE" />
+    <access id="access_1_231" id_profile="SuperAdmin" id_authorization_role="MENU_POSITIONS_READ" />
+    <access id="access_1_232" id_profile="SuperAdmin" id_authorization_role="MENU_POSITIONS_UPDATE" />
+    <access id="access_1_233" id_profile="SuperAdmin" id_authorization_role="MENU_POSITIONS_DELETE" />
+    <access id="access_1_234" id_profile="SuperAdmin" id_authorization_role="MENU_PAYMENT_CREATE" />
+    <access id="access_1_235" id_profile="SuperAdmin" id_authorization_role="MENU_PAYMENT_READ" />
+    <access id="access_1_236" id_profile="SuperAdmin" id_authorization_role="MENU_PAYMENT_UPDATE" />
+    <access id="access_1_237" id_profile="SuperAdmin" id_authorization_role="MENU_PAYMENT_DELETE" />
+    <access id="access_1_238" id_profile="SuperAdmin" id_authorization_role="MENU_PRODUCTS_1_CREATE" />
+    <access id="access_1_239" id_profile="SuperAdmin" id_authorization_role="MENU_PRODUCTS_1_READ" />
+    <access id="access_1_240" id_profile="SuperAdmin" id_authorization_role="MENU_PRODUCTS_1_UPDATE" />
+    <access id="access_1_241" id_profile="SuperAdmin" id_authorization_role="MENU_PRODUCTS_1_DELETE" />
+    <access id="access_1_242" id_profile="SuperAdmin" id_authorization_role="MENU_CUSTOMERS_2_CREATE" />
+    <access id="access_1_243" id_profile="SuperAdmin" id_authorization_role="MENU_CUSTOMERS_2_READ" />
+    <access id="access_1_244" id_profile="SuperAdmin" id_authorization_role="MENU_CUSTOMERS_2_UPDATE" />
+    <access id="access_1_245" id_profile="SuperAdmin" id_authorization_role="MENU_CUSTOMERS_2_DELETE" />
+    <access id="access_1_246" id_profile="SuperAdmin" id_authorization_role="MENU_THEMES_CREATE" />
+    <access id="access_1_247" id_profile="SuperAdmin" id_authorization_role="MENU_THEMES_READ" />
+    <access id="access_1_248" id_profile="SuperAdmin" id_authorization_role="MENU_THEMES_UPDATE" />
+    <access id="access_1_249" id_profile="SuperAdmin" id_authorization_role="MENU_THEMES_DELETE" />
+    <access id="access_1_250" id_profile="SuperAdmin" id_authorization_role="MENU_SEO_URLS_CREATE" />
+    <access id="access_1_251" id_profile="SuperAdmin" id_authorization_role="MENU_SEO_URLS_READ" />
+    <access id="access_1_252" id_profile="SuperAdmin" id_authorization_role="MENU_SEO_URLS_UPDATE" />
+    <access id="access_1_253" id_profile="SuperAdmin" id_authorization_role="MENU_SEO_URLS_DELETE" />
+    <access id="access_1_254" id_profile="SuperAdmin" id_authorization_role="MENU_CMS_CREATE" />
+    <access id="access_1_255" id_profile="SuperAdmin" id_authorization_role="MENU_CMS_READ" />
+    <access id="access_1_256" id_profile="SuperAdmin" id_authorization_role="MENU_CMS_UPDATE" />
+    <access id="access_1_257" id_profile="SuperAdmin" id_authorization_role="MENU_CMS_DELETE" />
+    <access id="access_1_258" id_profile="SuperAdmin" id_authorization_role="MENU_IMAGES_CREATE" />
+    <access id="access_1_259" id_profile="SuperAdmin" id_authorization_role="MENU_IMAGES_READ" />
+    <access id="access_1_260" id_profile="SuperAdmin" id_authorization_role="MENU_IMAGES_UPDATE" />
+    <access id="access_1_261" id_profile="SuperAdmin" id_authorization_role="MENU_IMAGES_DELETE" />
+    <access id="access_1_262" id_profile="SuperAdmin" id_authorization_role="MENU_CONTACT_STORES_CREATE" />
+    <access id="access_1_263" id_profile="SuperAdmin" id_authorization_role="MENU_CONTACT_STORES_READ" />
+    <access id="access_1_264" id_profile="SuperAdmin" id_authorization_role="MENU_CONTACT_STORES_UPDATE" />
+    <access id="access_1_265" id_profile="SuperAdmin" id_authorization_role="MENU_CONTACT_STORES_DELETE" />
+    <access id="access_1_266" id_profile="SuperAdmin" id_authorization_role="MENU_SEARCH_1_CREATE" />
+    <access id="access_1_267" id_profile="SuperAdmin" id_authorization_role="MENU_SEARCH_1_READ" />
+    <access id="access_1_268" id_profile="SuperAdmin" id_authorization_role="MENU_SEARCH_1_UPDATE" />
+    <access id="access_1_269" id_profile="SuperAdmin" id_authorization_role="MENU_SEARCH_1_DELETE" />
+    <access id="access_1_270" id_profile="SuperAdmin" id_authorization_role="MENU_MAINTENANCE_CREATE" />
+    <access id="access_1_271" id_profile="SuperAdmin" id_authorization_role="MENU_MAINTENANCE_READ" />
+    <access id="access_1_272" id_profile="SuperAdmin" id_authorization_role="MENU_MAINTENANCE_UPDATE" />
+    <access id="access_1_273" id_profile="SuperAdmin" id_authorization_role="MENU_MAINTENANCE_DELETE" />
+    <access id="access_1_274" id_profile="SuperAdmin" id_authorization_role="MENU_GEOLOCATION_CREATE" />
+    <access id="access_1_275" id_profile="SuperAdmin" id_authorization_role="MENU_GEOLOCATION_READ" />
+    <access id="access_1_276" id_profile="SuperAdmin" id_authorization_role="MENU_GEOLOCATION_UPDATE" />
+    <access id="access_1_277" id_profile="SuperAdmin" id_authorization_role="MENU_GEOLOCATION_DELETE" />
+    <access id="access_1_278" id_profile="SuperAdmin" id_authorization_role="MENU_CONFIGURATION_INFORMATION_CREATE" />
+    <access id="access_1_279" id_profile="SuperAdmin" id_authorization_role="MENU_CONFIGURATION_INFORMATION_READ" />
+    <access id="access_1_280" id_profile="SuperAdmin" id_authorization_role="MENU_CONFIGURATION_INFORMATION_UPDATE" />
+    <access id="access_1_281" id_profile="SuperAdmin" id_authorization_role="MENU_CONFIGURATION_INFORMATION_DELETE" />
+    <access id="access_1_282" id_profile="SuperAdmin" id_authorization_role="MENU_PERFORMANCE_CREATE" />
+    <access id="access_1_283" id_profile="SuperAdmin" id_authorization_role="MENU_PERFORMANCE_READ" />
+    <access id="access_1_284" id_profile="SuperAdmin" id_authorization_role="MENU_PERFORMANCE_UPDATE" />
+    <access id="access_1_285" id_profile="SuperAdmin" id_authorization_role="MENU_PERFORMANCE_DELETE" />
+    <access id="access_1_286" id_profile="SuperAdmin" id_authorization_role="MENU_E-MAIL_CREATE" />
+    <access id="access_1_287" id_profile="SuperAdmin" id_authorization_role="MENU_E-MAIL_READ" />
+    <access id="access_1_288" id_profile="SuperAdmin" id_authorization_role="MENU_E-MAIL_UPDATE" />
+    <access id="access_1_289" id_profile="SuperAdmin" id_authorization_role="MENU_E-MAIL_DELETE" />
+    <access id="access_1_290" id_profile="SuperAdmin" id_authorization_role="MENU_CSV_IMPORT_CREATE" />
+    <access id="access_1_291" id_profile="SuperAdmin" id_authorization_role="MENU_CSV_IMPORT_READ" />
+    <access id="access_1_292" id_profile="SuperAdmin" id_authorization_role="MENU_CSV_IMPORT_UPDATE" />
+    <access id="access_1_293" id_profile="SuperAdmin" id_authorization_role="MENU_CSV_IMPORT_DELETE" />
+    <access id="access_1_294" id_profile="SuperAdmin" id_authorization_role="MENU_DB_BACKUP_CREATE" />
+    <access id="access_1_295" id_profile="SuperAdmin" id_authorization_role="MENU_DB_BACKUP_READ" />
+    <access id="access_1_296" id_profile="SuperAdmin" id_authorization_role="MENU_DB_BACKUP_UPDATE" />
+    <access id="access_1_297" id_profile="SuperAdmin" id_authorization_role="MENU_DB_BACKUP_DELETE" />
+    <access id="access_1_298" id_profile="SuperAdmin" id_authorization_role="MENU_SQL_MANAGER_CREATE" />
+    <access id="access_1_299" id_profile="SuperAdmin" id_authorization_role="MENU_SQL_MANAGER_READ" />
+    <access id="access_1_300" id_profile="SuperAdmin" id_authorization_role="MENU_SQL_MANAGER_UPDATE" />
+    <access id="access_1_301" id_profile="SuperAdmin" id_authorization_role="MENU_SQL_MANAGER_DELETE" />
+    <access id="access_1_302" id_profile="SuperAdmin" id_authorization_role="MENU_LOGS_CREATE" />
+    <access id="access_1_303" id_profile="SuperAdmin" id_authorization_role="MENU_LOGS_READ" />
+    <access id="access_1_304" id_profile="SuperAdmin" id_authorization_role="MENU_LOGS_UPDATE" />
+    <access id="access_1_305" id_profile="SuperAdmin" id_authorization_role="MENU_LOGS_DELETE" />
+    <access id="access_1_306" id_profile="SuperAdmin" id_authorization_role="MENU_WEBSERVICE_CREATE" />
+    <access id="access_1_307" id_profile="SuperAdmin" id_authorization_role="MENU_WEBSERVICE_READ" />
+    <access id="access_1_308" id_profile="SuperAdmin" id_authorization_role="MENU_WEBSERVICE_UPDATE" />
+    <access id="access_1_309" id_profile="SuperAdmin" id_authorization_role="MENU_WEBSERVICE_DELETE" />
+    <access id="access_1_310" id_profile="SuperAdmin" id_authorization_role="MENU_QUICK_ACCESS_CREATE" />
+    <access id="access_1_311" id_profile="SuperAdmin" id_authorization_role="MENU_QUICK_ACCESS_READ" />
+    <access id="access_1_312" id_profile="SuperAdmin" id_authorization_role="MENU_QUICK_ACCESS_UPDATE" />
+    <access id="access_1_313" id_profile="SuperAdmin" id_authorization_role="MENU_QUICK_ACCESS_DELETE" />
+    <access id="access_1_314" id_profile="SuperAdmin" id_authorization_role="MENU_EMPLOYEES_CREATE" />
+    <access id="access_1_315" id_profile="SuperAdmin" id_authorization_role="MENU_EMPLOYEES_READ" />
+    <access id="access_1_316" id_profile="SuperAdmin" id_authorization_role="MENU_EMPLOYEES_UPDATE" />
+    <access id="access_1_317" id_profile="SuperAdmin" id_authorization_role="MENU_EMPLOYEES_DELETE" />
+    <access id="access_1_318" id_profile="SuperAdmin" id_authorization_role="MENU_PROFILES_CREATE" />
+    <access id="access_1_319" id_profile="SuperAdmin" id_authorization_role="MENU_PROFILES_READ" />
+    <access id="access_1_320" id_profile="SuperAdmin" id_authorization_role="MENU_PROFILES_UPDATE" />
+    <access id="access_1_321" id_profile="SuperAdmin" id_authorization_role="MENU_PROFILES_DELETE" />
+    <access id="access_1_322" id_profile="SuperAdmin" id_authorization_role="MENU_PERMISSIONS_CREATE" />
+    <access id="access_1_323" id_profile="SuperAdmin" id_authorization_role="MENU_PERMISSIONS_READ" />
+    <access id="access_1_324" id_profile="SuperAdmin" id_authorization_role="MENU_PERMISSIONS_UPDATE" />
+    <access id="access_1_325" id_profile="SuperAdmin" id_authorization_role="MENU_PERMISSIONS_DELETE" />
+    <access id="access_1_326" id_profile="SuperAdmin" id_authorization_role="MENU_TABS_CREATE" />
+    <access id="access_1_327" id_profile="SuperAdmin" id_authorization_role="MENU_TABS_READ" />
+    <access id="access_1_328" id_profile="SuperAdmin" id_authorization_role="MENU_TABS_UPDATE" />
+    <access id="access_1_329" id_profile="SuperAdmin" id_authorization_role="MENU_TABS_DELETE" />
+    <access id="access_1_330" id_profile="SuperAdmin" id_authorization_role="MENU_SEARCH_ENGINES_CREATE" />
+    <access id="access_1_331" id_profile="SuperAdmin" id_authorization_role="MENU_SEARCH_ENGINES_READ" />
+    <access id="access_1_332" id_profile="SuperAdmin" id_authorization_role="MENU_SEARCH_ENGINES_UPDATE" />
+    <access id="access_1_333" id_profile="SuperAdmin" id_authorization_role="MENU_SEARCH_ENGINES_DELETE" />
+    <access id="access_1_334" id_profile="SuperAdmin" id_authorization_role="MENU_REFERRERS_CREATE" />
+    <access id="access_1_335" id_profile="SuperAdmin" id_authorization_role="MENU_REFERRERS_READ" />
+    <access id="access_1_336" id_profile="SuperAdmin" id_authorization_role="MENU_REFERRERS_UPDATE" />
+    <access id="access_1_337" id_profile="SuperAdmin" id_authorization_role="MENU_REFERRERS_DELETE" />
+    <access id="access_1_338" id_profile="SuperAdmin" id_authorization_role="MENU_WAREHOUSES_CREATE" />
+    <access id="access_1_339" id_profile="SuperAdmin" id_authorization_role="MENU_WAREHOUSES_READ" />
+    <access id="access_1_340" id_profile="SuperAdmin" id_authorization_role="MENU_WAREHOUSES_UPDATE" />
+    <access id="access_1_341" id_profile="SuperAdmin" id_authorization_role="MENU_WAREHOUSES_DELETE" />
+    <access id="access_1_342" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_MANAGEMENT_CREATE" />
+    <access id="access_1_343" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_MANAGEMENT_READ" />
+    <access id="access_1_344" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_MANAGEMENT_UPDATE" />
+    <access id="access_1_345" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_MANAGEMENT_DELETE" />
+    <access id="access_1_346" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_MOVEMENT_CREATE" />
+    <access id="access_1_347" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_MOVEMENT_READ" />
+    <access id="access_1_348" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_MOVEMENT_UPDATE" />
+    <access id="access_1_349" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_MOVEMENT_DELETE" />
+    <access id="access_1_350" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_INSTANT_STATE_CREATE" />
+    <access id="access_1_351" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_INSTANT_STATE_READ" />
+    <access id="access_1_352" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_INSTANT_STATE_UPDATE" />
+    <access id="access_1_353" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_INSTANT_STATE_DELETE" />
+    <access id="access_1_354" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_COVER_CREATE" />
+    <access id="access_1_355" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_COVER_READ" />
+    <access id="access_1_356" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_COVER_UPDATE" />
+    <access id="access_1_357" id_profile="SuperAdmin" id_authorization_role="MENU_STOCK_COVER_DELETE" />
+    <access id="access_1_358" id_profile="SuperAdmin" id_authorization_role="MENU_SUPPLY_ORDERS_CREATE" />
+    <access id="access_1_359" id_profile="SuperAdmin" id_authorization_role="MENU_SUPPLY_ORDERS_READ" />
+    <access id="access_1_360" id_profile="SuperAdmin" id_authorization_role="MENU_SUPPLY_ORDERS_UPDATE" />
+    <access id="access_1_361" id_profile="SuperAdmin" id_authorization_role="MENU_SUPPLY_ORDERS_DELETE" />
+    <access id="access_1_362" id_profile="SuperAdmin" id_authorization_role="MENU_CONFIGURATION_CREATE" />
+    <access id="access_1_363" id_profile="SuperAdmin" id_authorization_role="MENU_CONFIGURATION_READ" />
+    <access id="access_1_364" id_profile="SuperAdmin" id_authorization_role="MENU_CONFIGURATION_UPDATE" />
+    <access id="access_1_365" id_profile="SuperAdmin" id_authorization_role="MENU_CONFIGURATION_DELETE" />
+    <access id="access_1_366" id_profile="SuperAdmin" id_authorization_role="MENU_DASHBOARD_CREATE" />
+    <access id="access_1_367" id_profile="SuperAdmin" id_authorization_role="MENU_DASHBOARD_READ" />
+    <access id="access_1_368" id_profile="SuperAdmin" id_authorization_role="MENU_DASHBOARD_UPDATE" />
+    <access id="access_1_369" id_profile="SuperAdmin" id_authorization_role="MENU_DASHBOARD_DELETE" />
   </entities>
 </entity_access>
