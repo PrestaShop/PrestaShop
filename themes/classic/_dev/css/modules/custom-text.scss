@@ -20,6 +20,16 @@
     }
   }
 }
+.page-cms{
+  background: white;
+  padding: em(20px);
+  text-align: justify;
+  .cms-box{
+    img{
+      max-width: 100%;
+    }
+  }
+}
 @include media-breakpoint-down(md) {
   #block-cmsinfo {
     padding: $medium-space $large-space;
