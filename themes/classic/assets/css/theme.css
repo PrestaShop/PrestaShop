@@ -5772,6 +5772,13 @@ body#checkout {
       color: #acaaa6;
       font-weight: 400; }
 
+.page-cms {
+  background: white;
+  padding: 1.25em;
+  text-align: justify; }
+  .page-cms .cms-box img {
+    max-width: 100%; }
+
 @media (max-width: 991px) {
   #block-cmsinfo {
     padding: 20px 30px; } }
