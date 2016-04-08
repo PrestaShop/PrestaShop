@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>EN - Ecommerce blog by PrestaShop</title>
+	<atom:link href="http://www.prestashop.com/blog/en/feed/" rel="self" type="application/rss+xml" />
+	<link>https://www.prestashop.com/blog/en</link>
+	<description></description>
+	<lastBuildDate>Wed, 06 Apr 2016 22:42:14 +0000</lastBuildDate>
+	<language>en-US</language>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8.1</generator>
+	<item>
+		<title>One million community members: the strength of Open Source #WeAre1Million</title>
+		<link>https://www.prestashop.com/blog/en/one-million-community-members-strength-open-source/</link>
+		<comments>https://www.prestashop.com/blog/en/one-million-community-members-strength-open-source/#comments</comments>
+		<pubDate>Tue, 05 Apr 2016 13:00:57 +0000</pubDate>
+		<dc:creator><![CDATA[Xavier Borderie]]></dc:creator>
+				<category><![CDATA[PrestaShop News]]></category>
+
+		<guid isPermaLink="false">https://www.prestashop.com/blog/en/?p=21392</guid>
+		<description><![CDATA[<p>The PrestaShop community has reached a huge milestone: we just welcomed our 1,000,000th member! This achievement has been years in the making, as we patiently built a community of contributors and users around the globe&#8211;and around a passion for ecommerce. PrestaShop has been an open source project from the get-go, and the decision to keep [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/one-million-community-members-strength-open-source/">One million community members: the strength of Open Source #WeAre1Million</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>The PrestaShop community has reached a huge milestone: we just welcomed our 1,000,000th member! This achievement has been years in the making, as we patiently built a community of contributors and users around the globe&#8211;and around a passion for ecommerce.</p>
+<p><span id="more-21392"></span></p>
+<p>PrestaShop has been an open source project from the get-go, and the decision to keep it that way gives our community members some incredible advantages, as well as giving them the opportunity to tangibly contribute to PrestaShop’s future success.</p>
+<h2><span style="color: #48b2ca;">Flexibility and adaptability</span></h2>
+<p>There’s a saying in the world of open source: <a href="https://en.wikipedia.org/wiki/Gratis_versus_libre" target="_blank">free as in speech and not as in beer</a>. It means that, more importantly than being <strong>free of charge</strong>, open source software like PrestaShop gives users the <strong>freedom</strong> to analyze its source code and modify it to meet their own needs. Anyone can take the code and make it work for them, often with little or no need for technical knowledge. Open source software also benefits from <strong>open testing</strong>: since the code is <a href="https://github.com/PrestaShop/PrestaShop" target="_blank">developed in the open</a>, anyone with technical knowledge is able to verify how it works, and comment on the path it takes.</p>
+<h2><span style="color: #48b2ca;">Features and support</span></h2>
+<p>Being open source also means being open to requests from our community, which we’ve taken into account over the years to develop <strong>more than 600 features</strong>. PrestaShop is likely one of most feature-packed ecommerce softwares out there, and can adapt to any shopping format. And the community does more than share ideas for improvement: <strong>they help each other out!</strong> We’ve seen first-hand how much our community members love sharing their experience, advice, and suggestions with fellow online merchants.</p>
+<h2><span style="color: #48b2ca;">So many ways to contribute!</span></h2>
+<p>Another great thing about open source is that it lets community members contribute to the software according to their own unique abilities. Are you a diehard developer? Have an eye for design detail? Speak four languages fluently? Whatever your talent is, there’s a place for it in the community. Here are few ways our members get involved:</p>
+<ul style="padding-left: 30px;">
+<li><strong>Test.</strong> Have you spotted a bug in PrestaShop or one of its native modules? Are you able to explain it and <a href="http://doc.prestashop.com/display/PS16/How+to+use+the+Forge+to+contribute+to+PrestaShop" target="_blank">reproduce it every single time</a>? Then you’re ready to <a href="http://forge.prestashop.com/" target="_blank">create a ticket on the Forge</a>, which the Core developer will use to fix the bug so it doesn’t appear in the next version.</li>
+<li><strong>Improve code.</strong> Do you know how to fix an issue that you found yourself or read about in the Forge? Then the next step is for you to submit your fix to the Core developers who will integrate it into the next version. <a href="http://doc.prestashop.com/display/PS16/Contributing+code+to+PrestaShop" target="_blank">Knowledge of Git or GitHub</a> is necessary, but should you succeed, you&#8217;ll gain the admiration of other PS contributors.</li>
+<li><strong>Translate.</strong> We strive to make PrestaShop available in as many languages as possible, but we really only master English and French. So we rely on the community to translate the software, or to fix translation errors. Are you up to the challenge? Then create your account on the <a href="https://crowdin.com/project/prestashop-official" target="_blank">PrestaShop project on Crowdin</a>, and have at it!</li>
+<li><strong>Document.</strong> You might not know it, but <a href="http://doc.prestashop.com/" target="_blank">PrestaShop’s documentation</a> is hosted on a wiki, which means anyone with an account can <a href="http://doc.prestashop.com/display/PS16/Contributing+to+the+documentation" target="_blank">help write or update it</a>. So if the User Guide isn’t available in your language yet, you can help us translate it&#8211;or any of the other guides.</li>
+<li><strong>Contribute modules.</strong> Did you notice something that could be added to PrestaShop? Maybe you have an idea for a great feature or know how to improve an existing feature? If so, you can <a href="http://doc.prestashop.com/display/PS16/Developer+Guide" target="_blank">create a module</a> and <a href="http://addons.prestashop.com/en/content/25-how-to-sell-on-prestashop-addons" target="_blank">sell it on the PrestaShop Addons marketplace</a>.</li>
+<li><strong>Contribute themes.</strong> The default design for PrestaShop goes with anything, but you might have an idea that would work better for a specific market. <a href="http://doc.prestashop.com/display/PS16/Designer+Guide" target="_blank">Create your theme</a> and <a href="http://addons.prestashop.com/en/content/25-how-to-sell-on-prestashop-addons" target="_blank">sell it on the PrestaShop Addons marketplace</a>.</li>
+</ul>
+<h2><span style="color: #48b2ca;">Spread the word</span></h2>
+<p>Our community grew by word-of-mouth: people sharing with others how PrestaShop helped them start their own business, and sometimes even change their lives in very real ways. Promoting PrestaShop is another way to support the community, be it on the PS forums, on your blog, or even out &#8220;in the real world,&#8221; <a href="http://www.meetup.com/topics/prestashop/" target="_blank">at any of the numerous meetups regularly organized by local communities</a>.<br />
+Thank you to everyone who has helped shaped the ongoing success of PrestaShop. We couldn’t have done it without you&#8211;and we wouldn’t want to!</p>
+<p>Onto the next million!</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/one-million-community-members-strength-open-source/">One million community members: the strength of Open Source #WeAre1Million</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>https://www.prestashop.com/blog/en/one-million-community-members-strength-open-source/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Save The Date for PrestaShop Days !</title>
+		<link>https://www.prestashop.com/blog/en/save-date-prestashop-days/</link>
+		<comments>https://www.prestashop.com/blog/en/save-date-prestashop-days/#comments</comments>
+		<pubDate>Tue, 05 Apr 2016 09:37:03 +0000</pubDate>
+		<dc:creator><![CDATA[Sandra Fernandes]]></dc:creator>
+				<category><![CDATA[Events]]></category>
+
+		<guid isPermaLink="false">https://www.prestashop.com/blog/en/?p=21271</guid>
+		<description><![CDATA[<p>Calling all Ecommerce professionals, fans and followers&#8230; Save the date for the 2016 PrestaShop Days! Thanks to all of you, the 2015 edition of PrestaShop Day was a huge success in Paris. More than 2,000 community members joined us in central Paris for this &#8216;WeCommerce&#8217; experience. Our goal is to make this year&#8217;s event truly inspirational [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/save-date-prestashop-days/">Save The Date for PrestaShop Days !</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>Calling all Ecommerce professionals, fans and followers&#8230; Save the date for the 2016 PrestaShop Days! Thanks to all of you, the <a href="https://www.prestashop.com/blog/en/prestashopday-recapping-amazing-event/">2015 edition of PrestaShop Day</a> was a huge success in Paris. More than 2,000 community members joined us in central Paris for this &#8216;WeCommerce&#8217; experience. Our goal is to make this year&#8217;s event truly inspirational and impactful for your company or ecommerce project.</p>
+<p>Did you notice the (s) in PrestaShop Days? That&#8217;s not a typo. Ecommerce has no borders, and neither does PrestaShop. For the first time, we will host events in three European locations. It&#8217;s a wonderful opportunity to meet and exchange in a location near you!</p>
+<p>E-commerce knows no borders, and neither does PrestaShop! As well as giving you the chance to check out the best moments online, this year, PrestaShop Day will be making its way around three European cities.</p>
+<p><strong>2016 Event Schedule </strong></p>
+<ul>
+<li><strong>PrestaShop Day Madrid</strong>: <a href="http://meeu.es/espacios-meeu/plano" target="_blank">Meeu</a>, May 12 from 9.00 a.m. to 5.00 p.m.;</li>
+<li><strong>PrestaShop Day Paris: </strong><a href="http://www.carreaudutemple.eu/" target="_blank">Carreau du Temple</a>, June 2 from 9.00 a.m. to 7.00 p.m.;</li>
+<li><strong>PrestaShop Day Milan</strong>: <a href="http://milano-calabiana.talentgarden.org/#gallery" target="_blank">TAG &#8211; Talent Garden Milano Calabiana</a>, September 29, 2016 from 9.00 a.m. to 6.00 p.m.;</li>
+</ul>
+<p><span id="more-21271"></span></p>
+<p>PrestaShop Day is an exceptional event that brings together visionary leaders in ecommerce, the web and open source. You will have an opportunity to be inspired by success stories, participate in workshops, test your development skills, and win a number of prizes. Whether you&#8217;re new, or a returning attendee, this unique conference will help you to achieve a new level of ecommerce success.</p>
+<p><strong>For Merchants</strong></p>
+<p>Learn from the entrepreneurs who took their ecommerce business from zero to millions. Receive a free store audit. Learn how to improve store performance in the workshops. Discover new ecommerce solutions and services.</p>
+<p><strong>For Web Agencies</strong></p>
+<p>Understand how to build and deliver amazing ecommerce solutions for your customers. Meet expert designers and developers who are creating new templates and modules every day. Network with merchants who have new projects.</p>
+<p><strong>For Developers</strong></p>
+<p>Learn how to build new stores, modules, templates and themes with PrestaShop. Exchange with other web designers and developers. Network with merchants and web agencies.</p>
+<p><strong>For Everyone</strong></p>
+<p>Discover the latest news and innovations n the ecommerce industry. Learn about new product features developed by PrestaShop. Meet and exchnage ideas with the PrestaShop team. Enjoy a day filled with education and events.</p>
+<p><span style="line-height: 1.5">Early bird tickets are currently available on the <a href="http://www.prestashopday.com/">PrestaShop Day</a> Paris website and the next ticket campaign for Madrid will happen pretty soon!</span></p>
+<p><span style="line-height: 1.5">Need information urgently? Interested in being a Speaker or a Sponsor? You&#8217;re welcome to contact us at </span><a style="line-height: 1.5" href="mailto:prestashopday@prestashop.com">prestashopday@prestashop.com</a></p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/save-date-prestashop-days/">Save The Date for PrestaShop Days !</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>https://www.prestashop.com/blog/en/save-date-prestashop-days/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>5 steps to a successful email campaign</title>
+		<link>https://www.prestashop.com/blog/en/5-steps-successful-email-campaign/</link>
+		<comments>https://www.prestashop.com/blog/en/5-steps-successful-email-campaign/#comments</comments>
+		<pubDate>Tue, 05 Apr 2016 08:50:56 +0000</pubDate>
+		<dc:creator><![CDATA[Kate Robinson]]></dc:creator>
+				<category><![CDATA[Ecommerce Tips and Advice]]></category>
+
+		<guid isPermaLink="false">https://www.prestashop.com/blog/en/?p=21402</guid>
+		<description><![CDATA[<p>Did you know that 61% of consumers like to receive weekly promotional emails? If you thought email was old news, think again. 89% of marketers still rely on email to generate business. As a merchant, you can put this simple, inexpensive technique to work for your business to generate leads, drive conversions, and build customer [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/5-steps-successful-email-campaign/">5 steps to a successful email campaign</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>Did you know that 61% of consumers like to receive weekly promotional emails?<br />
+If you thought email was old news, think again. 89% of marketers still rely on email to generate business. As a merchant, you can put this simple, inexpensive technique to work for your business to generate leads, drive conversions, and build customer loyalty. How? In today’s videos, the email marketing experts at SendinBlue, break down a great email campaign into these five key steps:</p>
+<p><span id="more-21402"></span></p>
+<div class="g-ytsubscribe col-centered text-center" data-channelid="UCqDSbqSbkboMBARlYrhNa7g" data-layout="full" data-count="default"></div>
+<ul style="padding-left: 30px">
+<li>Optimize the collection phase to create a quality subscriber database,</li>
+<li>Plan and create relevant content ,</li>
+<li>Develop a dedicated landing page,</li>
+<li>Analyze results,</li>
+<li>Choose the right tool.</li>
+</ul>
+<p><iframe width="700" height="394" src="https://www.youtube.com/embed/EeiQQPqNKYA?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<div class="text-center"><a class="btn" style="background-color: #cd201f;border: 1px solid #b31217;border-bottom: 3px solid #b31217;margin: 20px 0 0;color: #fff" href="https://www.youtube.com/user/prestashop/featured?utm_source=blog&amp;utm_medium=cta&amp;utm_campaign=Youtube-launch&amp;utm_content=sendinblue" target="_blank"><i class="fa fa-youtube-play"></i> Watch more videos</a></div>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/5-steps-successful-email-campaign/">5 steps to a successful email campaign</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>https://www.prestashop.com/blog/en/5-steps-successful-email-campaign/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Galaxy Kayaks: Using PrestaShop to deliver fishing kayaks across Europe</title>
+		<link>https://www.prestashop.com/blog/en/galaxy-kayaks-using-prestashop-deliver-fishing-kayaks-across-europe/</link>
+		<comments>https://www.prestashop.com/blog/en/galaxy-kayaks-using-prestashop-deliver-fishing-kayaks-across-europe/#comments</comments>
+		<pubDate>Wed, 30 Mar 2016 09:30:54 +0000</pubDate>
+		<dc:creator><![CDATA[Julie Liu]]></dc:creator>
+				<category><![CDATA[Success Stories]]></category>
+
+		<guid isPermaLink="false">https://www.prestashop.com/blog/en/?p=21385</guid>
+		<description><![CDATA[<p>Kayak fishing is a rapidly growing subcategory of one of the most popular hobbies in Europe, fishing. This traditional pastime is not only a source of food, but also a very popular sport. In the UK, there are more active fishing licences than participants in Sunday league Soccer! In Spain, over a million people have [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/galaxy-kayaks-using-prestashop-deliver-fishing-kayaks-across-europe/">Galaxy Kayaks: Using PrestaShop to deliver fishing kayaks across Europe</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>Kayak fishing is a rapidly growing subcategory of one of the most popular hobbies in Europe, fishing. This traditional pastime is not only a source of food, but also a very popular sport. In the UK, there are more active fishing licences than participants in Sunday league Soccer! In Spain, over a million people have a licence to fish. Within the sport of fishing, kayak fishing is one of the fastest growing categories in many countries. This is where the story of <a href="http://www.es.galaxykayaks.eu/en/" target="_blank">Galaxy Kayaks</a> begins.<br />
+<span id="more-21385"></span></p>
+<h2 style="color: #2c347f">The beginning of a new online shop</h2>
+<p>In 2012, Stephen Sweeney was searching for a life change. That search led him to a chance encounter with a friend and the owner of <a href="http://www.es.galaxykayaks.eu/en/" target="_blank">Galaxy Kayaks</a> (a UK company started in 2007) that inspired him to launch Galaxy Kayaks in Spain. Together they would eventually join to form Galaxy Kayaks EU.</p>
+<p>Galaxy Kayaks was launched when kayak fishing was just becoming a popular sport. However, it was evident that many of the fishing kayaks on the market either didn&#8217;t offer a good standard of quality or were expensive. Traditionally, kayaks were sold through speciality retail outlets, which meant middlemen and high mark-ups: the average kayak priced over €1000. There was clearly a gap in the market for affordable fishing kayaks that could be sold directly to the consumer.</p>
+<p>Putting the pieces together, Stephen found the perfect solution: create an online business and website sells a specialized brand of quality <a href="http://www.es.galaxykayaks.eu/en/6-fishing-kayaks" target="_blank">fishing kayaks</a> sold at affordable prices through a PrestaShop based website that evolved into <a href="http://www.es.galaxykayaks.eu/en/" target="_blank">www.galaxykayaks.eu</a>.</p>
+<p>Galaxy Kayaks aimed to break this tradition by manufacturing, importing and selling quality kayaks that could be purchased for under €500 and delivered straight to a customer&#8217;s door. With this goal, Stephen had a vision to expand the brand throughout Europe and spearhead it to the top of the EU market. Stephen shares, “The idea came from my passion for the outdoors, for fishing, and my desire to find a business that would fit in with my lifestyle.”</p>
+<h2 style="color: #2c347f">Breaking down cultural barriers in ecommerce</h2>
+<p>Launching a fully international business is no easy feat. The number one priority was to establish a solid website from which to sell the products. We selected a model that designates a subdomain to each country, thus enabling the company to work in small flexible teams controlling their own online shops, whilst gaining the benefits of SEO by sharing a domain.</p>
+<p>“I have been fortunate enough to have always run my own businesses; the most recent being within the restaurant industry where I ran a portfolio of fifteen restaurants. From my experience with franchising, I saw an opportunity in the kayak market to operate a similar style business model internationally (online).” Says Stephen.</p>
+<p>A major step, finding a ecommerce platform that supported the model. The main aim was to appoint a platform that could offer a lot of flexibility and yet at the same time would not incur a huge amount of initial investment. The PrestaShop community was also a big attraction because it showcased the platform’s adaptability. Plus, there were countless modules available, enabling our company to design a platform with capabilities specific to our business. After much analysis and research, PrestaShop was selected for Galaxy Kayaks EU.</p>
+<p>The international model is carried throughout the business, including their diverse marketing strategies. Strategies differ greatly due to cultural differences and society, therefore promotions vary across Europe. In Spain, for example, Galaxy Kayaks EU generates more sales for ´Three Kings´´ holiday (the 6th of January) than for Christmas. Aside from promotions, giving each country each country’s team full control over their own markets makes product and stock management easy. There are also many obvious language and cultural barriers automatically tacked by this model.</p>
+<h2 style="color: #2c347f">Engaging with the community</h2>
+<p>A key reason for the growth seen by Galaxy Kayaks EU in the market is not only the quality of the products but also proximity to the market both on and offline. Working in smaller teams that focuses on each national market allowed them to develop closer client relationships. The rise in social media makes this easier but the biggest drive has been the ability to engage with clients through the use of content.</p>
+<p>Fishermen love to photograph and take videos of their catches. They are also incredibly passionate about what they do and this lends itself to a community that loves to share and discuss content. Each country has their own preference to social media outlets. We found that in France they focus on dedicated forums, and in Spain it’s mainly on Facebook.</p>
+<p>From a business perspective, by using the <a href="http://addons.prestashop.com/en/blog-forum-new/4731-professional-blog.html" target="_blank">Blog available on Prestashop</a>, large amounts of traffic can be driven to the website by writing about specific topics and sharing them through our social media channels. These articles, if well written and related to active promotions, can be an excellent tool for generating sales.</p>
+<p>Not to mention, some clients truly immerse themselves into the business itself. Client feedback from expert kayak fishermen assists our experts in the development of future models of Galaxy Kayaks EU. By being very approachable and directly asking clients for their feedback, we’ve created a passionate and committed client base.</p>
+<p>We’ve also nurtured closer ties to the kayak fishing community by having a physical presence offline by becoming official sponsors of major local and national events, such as the Spanish national kayak fishing championships. This helps to put faces to names and build strong and binding relationships, bridging gaps experienced by companies solely based in the digital world.</p>
+<h2 style="color: #2c347f">Ecommerce Success</h2>
+<p>By using these community-building strategies, the Galaxy Kayaks EU social media following has grown by over 800% in a year. With daily web traffic increasing by 500% and sales are up across the board, a large proportion of this comes down to increased engagement with the community. However, their success doesn’t stop there.</p>
+<p>Since launching, the brand has grown significantly and Galaxy Kayaks EU is now available in Spain, France, Portugal, Italy, and Scandinavia. Galaxy Kayaks EU has seen outstanding growth and now have a annual group turnover of more than €2m. When asked about his success, Stephan says, “If you love what you do the passion will take you that extra step you need to succeed in business.”</p>
+<p><a href="https://www.prestashop.com/download/pdf/14-Galaxy-Kayaks-EU.pdf" target="_blank">Get the downloadable version of this story!</a></p>
+<hr style="width: 20%;text-align: left" />
+<p>Feeling inspired to launch your own online store? Get started with <a href="http://www.prestashop.com/">PrestaShop</a>. Want more stories like this? Check out our previous <a href="https://www.prestashop.com/blog/en/category/ecommerce-success-stories/">success stories</a>.</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/galaxy-kayaks-using-prestashop-deliver-fishing-kayaks-across-europe/">Galaxy Kayaks: Using PrestaShop to deliver fishing kayaks across Europe</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>https://www.prestashop.com/blog/en/galaxy-kayaks-using-prestashop-deliver-fishing-kayaks-across-europe/feed/</wfw:commentRss>
+		<slash:comments>2</slash:comments>
+		</item>
+		<item>
+		<title>PrestaShop is launching a YouTube channel! Tips, tricks, and best practices: we’ve got it all</title>
+		<link>https://www.prestashop.com/blog/en/prestashop-launching-youtube-channel-program-will-e-commerce-tips-good-practices-tutorials/</link>
+		<comments>https://www.prestashop.com/blog/en/prestashop-launching-youtube-channel-program-will-e-commerce-tips-good-practices-tutorials/#comments</comments>
+		<pubDate>Tue, 29 Mar 2016 14:43:37 +0000</pubDate>
+		<dc:creator><![CDATA[Camille Sila]]></dc:creator>
+				<category><![CDATA[PrestaShop News]]></category>
+
+		<guid isPermaLink="false">https://www.prestashop.com/blog/en/?p=21406</guid>
+		<description><![CDATA[<p>Today is a big day for PrestaShop and our community. After several weeks of preparation, dozens of hours of filming, numerous editing sessions and liters of coffee, PrestaShop is proud to announce the official launch of our YouTube channel! We’ve always been committed to helping merchants create and develop their online businesses. We wanted to go [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/prestashop-launching-youtube-channel-program-will-e-commerce-tips-good-practices-tutorials/">PrestaShop is launching a YouTube channel! Tips, tricks, and best practices: we’ve got it all</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p><span style="line-height: 1.5;">Today is a big day for PrestaShop and our community. After several weeks of preparation, dozens of hours of filming, numerous editing sessions and liters of coffee, PrestaShop is proud to announce the official launch of our </span><a style="line-height: 1.5;" href="https://www.youtube.com/user/prestashop?utm_source=blog&amp;amp;utm_medium=article&amp;amp;utm_campaign=Youtube-launch" target="_blank"><b>YouTube channel</b></a><a style="line-height: 1.5;" href="https://www.youtube.com/user/prestashop?utm_source=blog&amp;amp;utm_medium=article&amp;amp;utm_campaign=Youtube-launch">!</a></p>
+<p dir="ltr">We’ve always been committed to helping merchants create and develop their online businesses. We wanted to go even further, which is why we’re launching a YouTube channel entirely about ecommerce.</p>
+<p><span id="more-21406"></span></p>
+<p><script src="https://apis.google.com/js/platform.js"></script></p>
+<div class="g-ytsubscribe" data-channelid="UCqDSbqSbkboMBARlYrhNa7g" data-layout="full" data-count="default"></div>
+<hr />
+<h2>So what exactly can you expect to find?</h2>
+<p><iframe width="700" height="394" src="https://www.youtube.com/embed/1xpOy6lUtFU?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p dir="ltr">Nothing less than original, <strong>exclusive content, including tips, tricks and best practices from ecommerce experts.</strong> For those always on the lookout for inspiration, tune in to hear our <strong>merchants share their experiences</strong>.</p>
+<p><span style="line-height: 1.5;">You’ll also find PrestaShop <strong>tutorials, conference replays and live YouTube sessions</strong> to assist you in creating, managing and optimizing your ecommerce site.</span></p>
+<p dir="ltr">Subscribe to our <a href="https://www.youtube.com/user/prestashop?utm_source=blog&amp;amp;utm_medium=article&amp;amp;utm_campaign=Youtube-launch" target="_blank">channel</a> today so you don’t miss out on anything. Get ready to get the most out of your ecommerce project!</p>
+<p style="text-align: center;"> <a class="btn" style="background-color: #cd201f; border: 1px solid #b31217; border-bottom: 3px solid #b31217; margin: 20px 0 0; color: #fff;" href="https://www.youtube.com/user/prestashop?utm_source=blog&amp;utm_medium=article&amp;utm_campaign=Youtube-launch" target="_blank"><i class="fa fa-youtube-play"></i>   Subscribe</a></p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/prestashop-launching-youtube-channel-program-will-e-commerce-tips-good-practices-tutorials/">PrestaShop is launching a YouTube channel! Tips, tricks, and best practices: we’ve got it all</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>https://www.prestashop.com/blog/en/prestashop-launching-youtube-channel-program-will-e-commerce-tips-good-practices-tutorials/feed/</wfw:commentRss>
+		<slash:comments>5</slash:comments>
+		</item>
+		<item>
+		<title>Meet 40 exceptional PrestaShop contributors</title>
+		<link>https://www.prestashop.com/blog/en/meet-40-exceptional-prestashop-contributors/</link>
+		<comments>https://www.prestashop.com/blog/en/meet-40-exceptional-prestashop-contributors/#comments</comments>
+		<pubDate>Tue, 22 Mar 2016 13:30:20 +0000</pubDate>
+		<dc:creator><![CDATA[Kate Robinson]]></dc:creator>
+				<category><![CDATA[PrestaShop News]]></category>
+
+		<guid isPermaLink="false">https://www.prestashop.com/blog/en/?p=21349</guid>
+		<description><![CDATA[<p>We’re thrilled to have recently welcomed our 1,000,000th Community member! Today, we’d like to introduce you to 40 other members who have made exceptional contributions to our Open-source community throughout the years. You’ve probably seen their avatars around the forum&#8211;here’s your chance to get to know them a little better! HE JOINED US IN 2008: [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/meet-40-exceptional-prestashop-contributors/">Meet 40 exceptional PrestaShop contributors</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>We’re thrilled to have recently welcomed our 1,000,000th Community member! Today, we’d like to introduce you to 40 other members who have made exceptional contributions to our Open-source community throughout the years. You’ve probably seen their avatars around the forum&#8211;here’s your chance to get to know them a little better!<br />
+<span id="more-21349"></span></p>
+<h2 style="color: #fbbb22; font-size: 16px;"><strong>HE JOINED US IN 2008:</strong></h2>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="Rocky" src="https://www.prestashop.com/blog/en/files/2016/03/Rocky-150x150.jpg" width="60" height="60" /> <strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/13933-rocky/" target="_blank">Rocky, i.e Adrian Nethercott, Australia<br />
+“PrestaShop Legend” with 10,000+ forum posts</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I was introduced to PrestaShop while working at a web development company and joined the PrestaShop Community to learn more about it. Eventually, I left the company and became a freelance PrestaShop developer through Nethercott Constructions. In 2016, I plan to continue updating my existing PrestaShop modules and release a gallery module, and hopefully more modules. I enjoy reading about the latest technology and buying anything I think will make my life easier and allow me to do more.<span style="color: #aaaaaa;">”</span></p>
+<h2 style="color: #fbbb22; font-size: 16px;"><strong>THEY JOINED US IN 2009:</strong></h2>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="Tomerg3" src="https://www.prestashop.com/blog/en/files/2016/03/tomerg3-150x150.jpg" width="60" height="60" /> <strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/20153-tomerg3/" target="_blank">Tomerg3 i.e Tomer Grassiany, USA<br />
+“PrestaShop SuperStar” with 8,000+ forum posts</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined the PrestaShop community simply because I needed help using PrestaShop. When I’m not helping the community grow, I like to make chocolates and sell them online as a second business.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="Shacker" src="https://www.prestashop.com/blog/en/files/2016/03/Shacker-150x150.png" width="60" height="60" /> <strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/21720-shacker/" target="_blank">Shacker, i.e Lucas Vitale, Argentina<br />
+“PrestaShop Legend” with 15,000 forum posts</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined the PrestaShop community because it’s a great platform and I wanted to contribute my skills. In 2016, I’ll be working on modules and themes, and playing the guitar when I have time!<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="oron" src="https://www.prestashop.com/blog/en/files/2016/03/oron-150x150.png" width="60" height="60" /> <strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/23611-oron/" target="_blank">Oron, i.e Gilles Walter, France<br />
+“PrestaShop Superstar” with 10,000+ forum posts.</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I discovered PrestaShop in March 2009. I didn’t know much about the web, hosting or domains, so after my own tricky start, it only seemed natural to help others out on the forum. This year, I hope to go further with PrestaShop, share my knowledge, and help users or future users make the most of PrestaShop.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="uHu Page" src="https://www.prestashop.com/blog/en/files/2016/03/uHu-Page-150x150.jpg" width="60" height="60" /> <strong><a style="color: #343943;" href="http://addons.prestashop.com/en/2_community?contributor=484" target="_blank">uHu Page, i.e Zhu Hong, Hong Kong<br />
+55 themes on PrestaShop Addons.</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>We are a network technology company and we believe PrestaShop is a powerful yet easy-to-use business software. We liked it when we starting using it and hope that more people will get onboard. In 2016, we hope to design more and even better templates.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="kpodemski" src="https://www.prestashop.com/blog/en/files/2016/03/kpodemski-150x150.png" width="60" height="60" /> <strong><a style="color: #343943;" href="https://github.com/kpodemski" target="_blank">kpodemski, i.e Krystian Podemski, Poland<br />
+35+ commits on GitHub</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined the PrestaShop community to help PrestaShop grow, improve and become even more popular. This year, I plan on developing more themes, more modules for the community, maybe a few freebies, and attend some meetups to meet other Ambassadors.<span style="color: #aaaaaa;">”</span></p>
+<h2 style="color: #fbbb22; font-size: 16px;"><strong>HE JOINED US IN 2010:</strong></h2>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="vekia" src="https://www.prestashop.com/blog/en/files/2016/03/vekia-150x150.png" width="60" height="60" /> <strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/132608-vekia/" target="_blank">Vekia, i.e Milosz Myszczuk, Poland<br />
+“PrestaShop Legend” with 50,000+ forum posts!</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I’ve been with PrestaShop since the beginning! This year, I’ll keep doing what I’ve always done: develop more exciting modules for the Addons marketplace and features for my own purposes. Other than that, you can find me playing frisbee or ‘Magic the Gathering.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="jonathan-danse" src="https://www.prestashop.com/blog/en/files/2016/03/jonathan-danse-150x150.png" width="60" height="60" /> <strong><a style="color: #343943;" href="https://github.com/PrestaEdit" target="_blank">PrestaEdit, i.e Jonathan Danse, Belgium<br />
+280+ commits on GitHub</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>PrestaShop has and always will play a large part in my daily work. What are my plans for the future? Work, work, and develop more modules! And also, to be a great ambassador. Oh, and my son Aaron is Preston’s biggest Fan!<span style="color: #aaaaaa;">”</span></p>
+<h2 style="color: #fbbb22; font-size: 16px;"><strong>THEY JOINED US IN 2011:</strong></h2>
+<p><strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/195425-bellini13/" target="_blank">Bellini13, i.e Michael Bellini, USA &#8211; “PrestaShop Superstar” with 6,000+ forum posts</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I had a client that was looking to start an ecommerce website. After reviewing the available platforms, we went with PrestaShop, and the community was very good to me (a newbie at the time). I joined the community then and have stayed an active member since. I’m looking forward to migrating some clients to the latest versions of PrestaShop, as well as enhancing my portfolio of Addons.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="http://addons.prestashop.com/en/28_belvg" target="_blank">BelVG &#8211; 90 modules on PrestaShop Addons</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I’m a PHP developer and I love PrestaShop! This year, I plan on developing many new modules and some great stores. When I’m not doing that, I’ll be playing football, skiing or travelling.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="nemo1" src="https://www.prestashop.com/blog/en/files/2016/03/nemo1-150x150.jpg" width="60" height="60" /> <strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/228329-nemo1/" target="_blank">Nemo1<br />
+“PrestaShop Superstar” with 6,000+ forum posts</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined the PrestaShop community because I wanted to get involved in ecommerce development. In 2016, I’m going to write more tutorials on PrestaShop 1.7 and Symfony.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="http://addons.prestashop.com/fr/2_community?contributor=61762" target="_blank">Template Mela, i.e Mahesh Vaghani, India &#8211; 60 themes on PrestaShop Addons</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>PrestaShop Marketplace is great platform to earn money. Since we have a very experienced team working with PrestaShop, we decided to join the community. Right now we have 60 products on PrestaShop Marketplace for selling, and we are planning to upload another 50+ very unique themes to the PrestaShop Marketplace.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/295107-el-patron/" target="_blank">El Patron &#8211; “PrestaShop Legend” with 6,000+ forum posts</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I discovered PrestaShop when looking for an ecommerce solution while living in Medellin, Colombia. The country localization rocked. I am in the process of certifying our company with PrestaShop, and will continue to grow my module offerings and client technical support in 2016.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="prestamodule" src="https://www.prestashop.com/blog/en/files/2016/03/prestamodule-150x150.jpg" width="60" height="60" /> <strong><a style="color: #343943;" href="https://github.com/prestamodule" target="_blank">PrestaModule, i.e Stephan Obadia, France<br />
+50 commits on GitHub</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined the PrestaShop community in order to learn, share, and help others. This year, I’m going to work on new amazing modules to help merchants to be happier with their business!<span style="color: #aaaaaa;">”</span></p>
+<h2 style="color: #fbbb22; font-size: 16px;"><strong>THEY JOINED US IN 2012:</strong></h2>
+<p><strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/324396-enrique-engblom/" target="_blank">Enrique Engblom, Sweden &#8211; “PrestaShop Fanatic” with 4,000+ forum posts</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I decided to use PrestaShop years ago. This year, I’ll continue to expand my knowledge and hope to get even more time to help others.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="http://addons.prestashop.com/en/2_community?contributor=190902" target="_blank">Leo Themes, i.e Tran Dinh Nghia, Vietnam &#8211; 105+ themes on PrestaShop Addons</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined PrestaShop for the speed and strength of the software. My goals this year are to develop a few powerful modules and sell templates on the Addons Marketplace.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="http://addons.prestashop.com/fr/2_community?contributor=205506" target="_blank">Ong Nguyen Van Tuyen, Vietnam &#8211; 75+ themes on PrestaShop Addons</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined the PrestaShop community because I want to provide the best extensions (themes, modules) for the PrestaShop platform.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="http://addons.prestashop.com/en/36_template-monster" target="_blank">The Team at Template Monster, Ukraine &#8211; 530+ themes on PrestaShop Addons + translates the documentation in Russian</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>PrestaShop is the best product we&#8217;ve ever seen. It&#8217;s really flexible, attractive and the engine allows you to make your ideas and technical wishes a reality. We’re planning to be a part of the first PrestaShop 1.7 beta, Default and Starter theme devs. Also, we are planning to deliver first PrestaShop 1.7x based themes and addons. It&#8217;s really cool to work with the dev teams and create high quality templates and addons easily.<span style="color: #aaaaaa;">”</span></p>
+<h2 style="color: #fbbb22; font-size: 16px;"><strong>THEY JOINED US IN 2013:</strong></h2>
+<p><strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/455771-pascalvg/" target="_blank">PascalVG, i.e Pascal Van Geest, Thailand &#8211; “PrestaShop Fanatic” with 3,700+ forum posts</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>Back in 2011, I followed a seminar on ecommerce, where they used PrestaShop. I loved it and used it to build some sites. I joined the community forum, got active there and after some time, PrestaShop asked me to be moderator of the forum (Thanks <img src="https://www.prestashop.com/blog/en/wp-includes/images/smilies/icon_smile.gif" alt=":-)" class="wp-smiley" />  ) This year I’ll be working on my own site, building new websites and doing maintenance for clients, building modules and helping in the forum.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/467854-whiley/" target="_blank">Whiley &#8211; “PrestaShop Fanatic” with 2,000+ forum posts</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>The community is an excellent platform to exchange know-how and experience, especially as a moderator. This year, we’ll build some shop-projects and we’re looking forward to PrestaShop 1.7.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="https://www.prestashop.com/forums/user/487079-endriu107/" target="_blank">Endriu107, i.e Andrzej Wolan, Poland &#8211; “PrestaShop Fanatic” with 3,000 forum posts</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I am young web developer who is still learning about ecommerce, and the PrestaShop forum is a very good place to do it. This year, I plan to keep learning, keep helping, and keep having fun!<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="http://addons.prestashop.com/fr/2_community?contributor=346157" target="_blank">Best Kit, i.e Dzianis Yurevich, Belarus &#8211; 80+ contributions on PrestaShop Addons</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I enjoy developing PrestaShop stores and plan to create a few more modules and a lot of themes for Addons. I love PrestaShop because it allows me to provide the best support for my customers.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="PHPMadman" src="https://www.prestashop.com/blog/en/files/2016/03/PHPMadman-150x150.png" width="60" height="60" /> <strong><a style="color: #343943;" href="https://github.com/PhpMadman" target="_blank">PHPMadman<br />
+80+ commits on GitHub</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I like PrestaShop’s coding norm. If I find the time this year, I’ll update some admin design and introduce some new features. Otherwise, there’s a good chance you’ll find me playing Minecraft.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="gskema" src="https://www.prestashop.com/blog/en/files/2016/03/gskema-150x150.jpg" width="60" height="60" /> <strong><a style="color: #343943;" href="https://github.com/gskema" target="_blank">Gskema, i.e Gytis Škėma, Lithuania<br />
+110+ commits on GitHub</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>In my work, we do a lot of development with PrestaShop: custom modules, themes, integrations, etc. At first I had to learn the insides of PrestaShop, once I did and saw things that could be improved, I looked to GitHub. I submitted some improvements, and once they got accepted, it felt awesome. We just started working on a community theme project. Besides that, this year I&#8217;m going to continue to contribute to PrestaShop codebase, also maybe answer some questions on the forums and StackOverflow, and share some PrestaShop tools/modules on GitHub. Other than that, I like going on bicycle trips, urban exploration. There are so many things to see around the city where I live. We go to places that regular people wouldn&#8217;t go to <img src="https://www.prestashop.com/blog/en/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley" />  And it&#8217;s a good workout too!<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="jesus-ruiz-garcia" src="https://www.prestashop.com/blog/en/files/2016/03/jesus-ruiz-garcia-150x150.jpg" width="60" height="60" /> <strong><a style="color: #343943;" href="http://doc.prestashop.com/pages/viewpage.action?pageId=26148899" target="_blank">Jesús Ruiz García, Spain<br />
+Contributor to the Spanish documentation</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I discovered PrestaShop while looking for the best system to create online stores. I started visiting the forum regularly, and now I collaborate on the Spanish translation of the documentation. I’m working on translating the Upgrade Guide and Developer&#8217;s Guide. If a new version of PrestaShop is launched, I would like to translate the new User Guide.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="gerardtost" src="https://www.prestashop.com/blog/en/files/2016/03/gerardtost.jpg" width="60" height="60" /> <strong><a style="color: #343943;" href="http://addons.prestashop.com/fr/2_community?contributor=346157" target="_blank">Gerardtost, i.e Gerard Tost, Spain<br />
+50,000 words translated in Catalan on Crowdin</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>Since mid-2012, I’ve been translating new PrestaShop software versions from English to Catalan on a volunteer basis. The Catalan community really appreciated the fast, complete, and high-quality translation. In 2016, I’ll be training merchants and installing virtual shops. You can also find me coding and mountain biking.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="prestanesia" src="https://www.prestashop.com/blog/en/files/2016/03/prestanesia-150x150.jpg" width="60" height="60" /> <strong><a style="color: #343943;" href="https://crowdin.com/profile/prestanesia" target="_blank">Prestanesia, i.e Danni Afasyah, Indonesia<br />
+50,000 words translated in Indonesian on Crowdin</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>PrestaShop has a great community and a great product. I’m looking forward to version 1.7!<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="eleazar" src="https://www.prestashop.com/blog/en/files/2016/03/eleazar-150x150.jpg" width="60" height="60" /> <strong><a style="color: #343943;" href="https://crowdin.com/profile/Eleazar" target="_blank">Eleazar, i.e Rainer Schmidt, Germany &#8211; 98,000+ words translated into German + insightful feedback and localization on GitHub</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I decided to join the PrestaShop community by accident. My wife wanted to change her shop system; after some weeks of decision-making, during which I joined the community to find out more, PrestaShop became our shop system of choice. In 2011/2012 the German translations were a mess. The Crowdin platform didn&#8217;t exist then. It was a real challenge, but I learned a lot. I made myriad mistakes, but found a smashing feedback with my first topic in the German forum about the translations &#8211; with more than 35,000 views till today. Many members joined in to discuss and improve the translations. It was a great experience and made me a PrestaShop addict. This year, I’ll be spending some leisure time as moderator of the community, proofreader for translations and fixing some bugs in the PrestaShop core at GitHub.<span style="color: #aaaaaa;">”</span></p>
+<h2 style="color: #fbbb22; font-size: 16px;"><strong>THEY JOINED US IN 2014:</strong></h2>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="jorge-vargas" src="https://www.prestashop.com/blog/en/files/2016/03/jorge-vargas-150x150.png" width="60" height="60" /> <strong><a style="color: #343943;" href="https://crowdin.com/profile/jorgevrgs" target="_blank">Jorgevrgs, i.e Jorge Vargas, Colombia<br />
+56,000+ words translated into Colombian-Spanish on Crowdin</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>PrestaShop has an active community. I joined because I felt that we could give and get feedback from them. We’ll keep using PrestaShop in our own stores this year and share the great added value it gives us.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="https://crowdin.com/profile/extendus" target="_blank">Extendus, i.e Patrik Lindblom, Sweden &#8211; 43,000+ words translated into Swedish on Crowdin</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined the PrestaShop community because I wanted to share my knowledge about the platform. In 2016, I’ll continue helping my clients evolve their businesses using PrestaShop.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="https://crowdin.com/profile/filipfilipovic" target="_blank">Filipfilipovic &#8211; 41,000+ words translated into Croatian on Crowdin</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined the PrestaShop community when I needed to create a web store. This year, I plan to continue to participate in translations and run a private web shop. I also plan on taking the Google Certification exam and getting into graphic design.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="https://crowdin.com/profile/ferribbotte" target="_blank">Ferribbotte, i.e Vincenzo Ferrara, Italy &#8211; 40,000+ words translated into Italian on Crowdin</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined the community to help translation into my mother tongue, and I’ll keep doing that this year!<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="https://crowdin.com/profile/lyoNick" target="_blank">Lyonick &#8211; 75,000+ words translated into Hebrew on Crowdin</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I discovered PrestaShop when I had to fix a bug for a friend. I found out the project is Open-source and the dev community is awesome, so I never left. This year, I plan to develop a custom module or two, upgrade at least one shop to 1.7, and maybe open one more shop. Other than that, you’ll find me surfing, thinking, and spending as much time as possible on the beach.<span style="color: #aaaaaa;">”</span></p>
+<p><strong><a style="color: #343943;" href="https://crowdin.com/profile/farior" target="_blank">Farior, i.e Ognian Koralski, Bulgaria &#8211; 104,000+ words translated into Bulgarian on Crowdin</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>I joined the community because I wanted to improve the Bulgarian translation of PrestaShop’s great CMS. This year I plan to start a small online shop and keep working on web design and 3D graphics on my free time.<span style="color: #aaaaaa;">”</span></p>
+<h2 style="color: #fbbb22; font-size: 16px;"><strong>THEY JOINED US IN 2015:</strong></h2>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="jash-technologie" src="https://www.prestashop.com/blog/en/files/2016/03/jash-technologie-150x150.png" width="60" height="60" /> <strong><a style="color: #343943;" href="http://doc.prestashop.com/pages/viewpage.action?pageId=29656227" target="_blank">The team at Jash Technologie, Poland<br />
+translates the Documentation into Polish</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>It has been 7 years since we started creating stores based on PrestaShop, and three years since we became a PrestaShop partner agency. So far we have created more than 50 stores based on PrestaShop, and we are servicing many more. Since last year, our mission has been to advocate for PrestaShop and connect the PrestaShop community in Poland. We plan to organize a second workshop for the Polish store owners. The previous one, organized in December, was successfully completed and we would like to continue on that path. We would also like to continue giving PrestaShop trainings both for merchants and developers. What is more, we plan to register some PrestaShop tutorials and put them on Youtube.<span style="color: #aaaaaa;">”</span></p>
+<p style="height: 60px;"><img class="alignleft size-thumbnail wp-image-21366" style="margin-right: 10px;" alt="mdekker" src="https://www.prestashop.com/blog/en/files/2016/03/mdekker-150x150.png" width="60" height="60" /> <strong><a style="color: #343943;" href="http://doc.prestashop.com/display/PS16/Nederlandse+documentatie" target="_blank">mdekker, i.e Michael Dekker, Netherlands<br />
+translates the Documentation into Dutch</a></strong></p>
+<p style="margin-bottom: 40px; color: #4c4c53;"><span style="font-size: 20px; color: #aaaaaa;">“</span>Two years ago I decided that it was time to move to a modern ecommerce platform. That&#8217;s where PrestaShop came in. PrestaShop gave me full editing rights to improve their (Dutch) documentation. It was so easy to share my own improvements for PrestaShop that I decided to help out others on the forum. This year I would like to focus on innovation. Now that I am used to PrestaShop, I think it&#8217;s time to raise the bar. I would like to save time by fully automating stores, making it possible for entrepreneurs to completely focus on their plans, turn PrestaShop into a web app or maybe even a native app, add SMS and push notifications to a store to better inform customers.<span style="color: #aaaaaa;">”</span></p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/meet-40-exceptional-prestashop-contributors/">Meet 40 exceptional PrestaShop contributors</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>https://www.prestashop.com/blog/en/meet-40-exceptional-prestashop-contributors/feed/</wfw:commentRss>
+		<slash:comments>3</slash:comments>
+		</item>
+		<item>
+		<title>Celebrating a Major Community Milestone: #WeAre1Million!</title>
+		<link>https://www.prestashop.com/blog/en/celebrating-major-community-milestone-1-million/</link>
+		<comments>https://www.prestashop.com/blog/en/celebrating-major-community-milestone-1-million/#comments</comments>
+		<pubDate>Thu, 17 Mar 2016 15:10:27 +0000</pubDate>
+		<dc:creator><![CDATA[Sabrina Maréchal]]></dc:creator>
+				<category><![CDATA[PrestaShop News]]></category>
+
+		<guid isPermaLink="false">https://www.prestashop.com/blog/en/?p=21293</guid>
+		<description><![CDATA[<p>Yes, you read it right: today the PrestaShop Community passed the one-million-member mark! For the past 9 years, our community has been growing and supporting the PrestaShop adventure. Let’s take a look at how we got this far together! We spent the last several weeks digging through our archives, looking at our top contributors’ stats, [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/celebrating-major-community-milestone-1-million/">Celebrating a Major Community Milestone: #WeAre1Million!</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>Yes, you read it right: today the PrestaShop Community passed the one-million-member mark! For the past 9 years, our community has been growing and supporting the PrestaShop adventure. Let’s take a look at how we got this far together!</p>
+<p><span id="more-21293"></span></p>
+<p>We spent the last several weeks digging through our archives, looking at our top contributors’ stats, and giggling at old photos. Did you know, for example, that Bruno was only 23 when he founded PrestaShop?! In fact, most of the team members were in their early 20’s… <em>(Stay tuned for a Throwback Thursday article!)</em></p>
+<p>It’s no secret that PrestaShop is where it is today because of our incredible Open-source community: together we’ve released a ton of products, held numerous events, and welcomed so many contributions from incredible contributors around the world.</p>
+<p>To really get a sense of what we’ve accomplished together, we created a timeline of our Community’s history going back to 2007 and identified 40 of our most committed contributors who hail from 24 countries. They’re either Forum Superstars, GitHub Legends, Translation Gurus or Addons Masters, and they’ve all had an impact on the Community’s development.</p>
+<p>Take a stroll with Preston as he walks&#8211;or, rather, flies&#8211;down memory lane and meet these exceptional members along the way.</p>
+<div class="text-center"><a class="btn" style="background-color: #fcbb23; border: 1px solid #fcbb23; border-bottom: 3px solid #e9a621; margin: 20px 0 0; color: #fff;" href="http://weare1million.prestashop.com/?utm_source=blog&amp;utm_medium=blog-post&amp;utm_campaign=weare1million&amp;utm_content=blog-post-launch-EN" target="_blank"><i class="fa fa-key"></i>   Discover the PrestaShop Community History</a></div>
+<p>&nbsp;</p>
+<p>Stay tuned for more articles as we:</p>
+<ul style="padding-left: 30px;">
+<li>Introduce you to our 40 historic members (March 22<sup>nd</sup>)</li>
+<li>Present our millionth member (March 29<sup>th</sup>)</li>
+<li>Host a very special Throwback Thursday (March 31<sup>st</sup>)</li>
+<li>Explain why Open-source is so powerful (April 5<sup>th</sup>)</li>
+</ul>
+<p>For a chance to receive a super-exclusive-ultra-limited edition T-shirt (<em>for real &#8211; we’ve only got 10!</em>), download <a href="https://www.prestashop.com/download/pdf/WeAre1Million.pdf" target="_blank">this poster</a>, take an epic snapshot with it and share it on Twitter with #WeAre1Million and tag @PrestaShop. Who knows, you just might be a winner! <img src="https://www.prestashop.com/blog/en/wp-includes/images/smilies/icon_smile.gif" alt=":-)" class="wp-smiley" /> </p>
+<p>We hope you enjoy our little stroll down memory lane. Now let’s get ready to welcome the 2,000,000<sup>th</sup> member!</p>
+<p>We ❤ you!</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/celebrating-major-community-milestone-1-million/">Celebrating a Major Community Milestone: #WeAre1Million!</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>https://www.prestashop.com/blog/en/celebrating-major-community-milestone-1-million/feed/</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+		</item>
+		<item>
+		<title>Increase sales by selling on US-based Jet Marketplace</title>
+		<link>https://www.prestashop.com/blog/en/increase-sales-selling-us-based-jet-marketplace/</link>
+		<comments>https://www.prestashop.com/blog/en/increase-sales-selling-us-based-jet-marketplace/#comments</comments>
+		<pubDate>Thu, 17 Mar 2016 14:55:36 +0000</pubDate>
+		<dc:creator><![CDATA[Margaux Choplin]]></dc:creator>
+				<category><![CDATA[Ecommerce Tips and Advice]]></category>
+
+		<guid isPermaLink="false">https://www.prestashop.com/blog/en/?p=21331</guid>
+		<description><![CDATA[<p>Selling on marketplaces can be a fast, effective way for ecommerce stores to boost sales. Amazon, Alibaba, eBay, and Etsy are a few examples of well-known marketplaces that generate massive online sales around the world. Diversifying the marketplaces where your store is present allows you to target different audiences to gain traffic and visibility. That’s [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/increase-sales-selling-us-based-jet-marketplace/">Increase sales by selling on US-based Jet Marketplace</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>Selling on marketplaces can be a fast, effective way for ecommerce stores to boost sales. Amazon, Alibaba, eBay, and Etsy are a few examples of well-known marketplaces that generate massive online sales around the world. Diversifying the marketplaces where your store is present allows you to target different audiences to gain traffic and visibility. That’s where Jet.com can give you a boost.<br />
+<span id="more-21331"></span><br />
+Each country is dominated by local e-commerce players: in France, this is Cdiscount; in Brazil, it’s MercadoLivre; in India, Flipkart; and in Russia, Ulmart. Now, the United States has Jet.com, a newcomer with a lofty goal that will help small merchants reach their own sales objectives. Launched in July 2015, Jet.com’s goal is to overtake Amazon and reach over $20 billion in Gross Merchandise Volume by 2020. </p>
+<p>According to <em>The Washington Post</em> and <em>TechCrunch</em>, <strong>Jet.com became the fourth most popular marketplace in the United States</strong> in term of Gross Merchandise Value in August 2015, just a month after its launch. Even better, the company announced $33 million in sales and 1 million customers in November, with 23% identified as repeat customers. With millions of loyal customers already convinced, Jet.com is, in their own word, a “fair marketplace that removes inefficiency and cost resulting in the best value for shoppers with improved margins and greater control over order profitability for retailers.”</p>
+<p>So what does this mean for merchants? There’s a new marketplace with an eager audience that is coming back again and again to do its shopping. So it’s a great time to get onboard with Jet.com by integrating the brand new <a href="http://addons.prestashop.com/en/22098-jet-marketplace.html" target="_blank">dedicated module</a> developed with help from our <a href="https://addons.prestashop.com/integration-fund" target="_blank">Integration Fund</a> program. Built by <a href="http://addons.prestashop.com/en/58_common-services" target="_blank">Common Services</a>, one of our contributors specializing in marketplaces, the Jet.com module enables you to easily export your catalog and run your items on Jet.com, as well as to synchronize your orders with your PrestaShop back-office. If you already sell on Amazon or other marketplaces, then you won’t find any surprises. If you’re new to marketplaces, this module is simple to start using. </p>
+<p>Jet.com has many advantages for retailers who choose to sell on its marketplace: free shipping from a certain amount, free returns, as well as a full range of quantity-based discounts. All of which contributes to higher Average Order Volume on the Jet marketplace. Jet.com also offers ways to cut costs thanks to a dynamic pricing engine that works to give the best margin possible. </p>
+<p>Jet.com is on its way up and it’s taking merchants with it. There’s a great opportunity to reach a new audience and be one of the first merchants to establish a presence on the marketplaces; <strong>stores who have joined are already reporting earning up to 5% of sales from the marketplace</strong>. For the moment, PrestaShop is the only ecommerce software provider for SMBs that offers a module for Jet. </p>
+<p>So give it a try and let us know what you think!</p>
+<p><a href="http://addons.prestashop.com/en/22098-jet-marketplace.html" target="_blank">Find out more about the Jet.com module</a> </p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/increase-sales-selling-us-based-jet-marketplace/">Increase sales by selling on US-based Jet Marketplace</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>https://www.prestashop.com/blog/en/increase-sales-selling-us-based-jet-marketplace/feed/</wfw:commentRss>
+		<slash:comments>2</slash:comments>
+		</item>
+		<item>
+		<title>4 simple steps to optimize your online shop’s performance</title>
+		<link>https://www.prestashop.com/blog/en/4-simple-steps-to-optimize-your-online-shops-performance/</link>
+		<comments>https://www.prestashop.com/blog/en/4-simple-steps-to-optimize-your-online-shops-performance/#comments</comments>
+		<pubDate>Thu, 17 Mar 2016 10:30:00 +0000</pubDate>
+		<dc:creator><![CDATA[Preston's Friends]]></dc:creator>
+				<category><![CDATA[Ecommerce Tips and Advice]]></category>
+
+		<guid isPermaLink="false">https://www.prestashop.com/blog/en/?p=21241</guid>
+		<description><![CDATA[<p>Many merchants just starting out know metrics are important, but fewer monitor their performance closely right from the beginning. Unfortunately, this means they are missing out on valuable data that could make an impact on business decisions, and ultimately, success. Today’s video from the experts Business Tech shows you how to optimize performance through metrics [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/4-simple-steps-to-optimize-your-online-shops-performance/">4 simple steps to optimize your online shop’s performance</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>Many merchants just starting out <em>know</em> metrics are important, but fewer monitor their performance closely right from the beginning. Unfortunately, this means they are missing out on valuable data that could make an impact on business decisions, and ultimately, success. Today’s video from the experts <a href="http://www.businesstech.fr/en/content/10-business-tech-4l3p-ecommerce" target="_blank">Business Tech</a> shows you how to optimize performance through metrics in four simple steps:<br />
+<span id="more-21241"></span></p>
+<ul style="padding-left: 30px">
+<li>Setting objectives</li>
+<li>Identifying KPIs</li>
+<li>Using dedicated analytics tools</li>
+<li>Online store optimization</li>
+</ul>
+<p><iframe width="700" height="394" src="https://www.youtube.com/embed/0acJfI8fn-0?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<div class="text-center"><a class="btn" href="https://www.youtube.com/user/prestashop" target="_blank" style="background-color: #E62117;border: 1px solid #E62117;border-bottom: 3px solid #CC181E;margin: 20px 0 0;color: #fff">Subscribe to our Youtube Channel for more videos</a></div>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/4-simple-steps-to-optimize-your-online-shops-performance/">4 simple steps to optimize your online shop’s performance</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>https://www.prestashop.com/blog/en/4-simple-steps-to-optimize-your-online-shops-performance/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>PIM: go further and faster in managing your product data</title>
+		<link>https://www.prestashop.com/blog/en/pim-go-faster-managing-product-data/</link>
+		<comments>https://www.prestashop.com/blog/en/pim-go-faster-managing-product-data/#comments</comments>
+		<pubDate>Wed, 16 Mar 2016 08:20:01 +0000</pubDate>
+		<dc:creator><![CDATA[Preston's Friends]]></dc:creator>
+				<category><![CDATA[Ecommerce Tips and Advice]]></category>
+
+		<guid isPermaLink="false">https://www.prestashop.com/blog/en/?p=21317</guid>
+		<description><![CDATA[<p>In today’s article, our partner agency Synolia explains how open source Product Information Management tools like Akeneo can help retailers streamline product catalogs and communicate more effectively with customers. After a decade spent going toe-to-toe, traditional and digital distribution channels are now coming together to better meet customers’ needs. From a multi-channel strategy&#8230; Today, an [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/pim-go-faster-managing-product-data/">PIM: go further and faster in managing your product data</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p><em>In today’s article, our partner agency Synolia explains how open source Product Information Management tools like Akeneo can help retailers streamline product catalogs and communicate more effectively with customers.</em></p>
+<p><strong>After a decade spent going toe-to-toe, traditional and digital distribution channels are now coming together to better meet customers’ needs.</strong><br />
+<span id="more-21317"></span></p>
+<h2 style="color:#663b8f">From a multi-channel strategy&#8230;</h2>
+<p>Today, an e-commerce website is a real driver of traffic and revenue for traditional networks, at least for those retailers who use it correctly.<br />
+Web-to-store, web-in-store…more and more web retailers are implementing e-commerce features intended to drive part of their clientele, who would otherwise have been lost, to physical networks. </p>
+<p>But having an online catalog is one thing; <em>selling</em> online is altogether another.</p>
+<p>Today, redirecting a customer looking for an out-of-stock product to a point of sale, or letting a customer prepare their product online and then collecting it in-store is much more effective than simply limiting customers to what is available in one channel or another.</p>
+<p>It can be a lever for increasing revenue when tied to a brand image that is uniformly presented across all distribution channels. It also allows for the e-commerce channel to be integrated into the traditional distribution network. </p>
+<h2 style="color:#663b8f">&#8230;to a customer-centric experience!</h2>
+<p>The multiplication of distribution channels brings new constraints to managing and administering a product catalog that demand tailored solutions.<br />
+Until now, most channels have been used in tandem, but with separate catalogs. </p>
+<p>The paper channel &#8211; whose flagship remains the catalog &#8211; was usually handed over to a communications agency, who would spend weeks, or even months, every year manually aggregating various data in InDesign. </p>
+<p>The store network was usually content with data from external software solutions (ERPs) for information about stocks and prices. The e-commerce channel, for its part, juggled with its ERP and rather archaic data enrichment tools (Excel files, for example) to obtain a somewhat-usable feed to build and enrich an online catalog. </p>
+<p>The end result was a clutter of multiple, heterogeneous data sources, and resources that did and redid the same work each year without benefiting from an economy of scale. The result: unstructured data that was impossible to use across channels. </p>
+<p><strong>But that was before!</strong></p>
+<h2 style="color:#663b8f">Long live the PIM!</h2>
+<p>The expansion of omni-channel sales has imposed a radical change in how product catalogs are used and resulted in the develop of PIM: <strong>Product Information Management</strong>. </p>
+<p>PIM offers 3 concrete solutions: </p>
+<ul style="padding-left: 30px">
+<li><strong>Collecting and centralizing data</strong></li>
+<li><strong>Enriching and maintaining this information</strong></li>
+<li><strong>Sharing catalogs, adapted to different distribution channels</strong></li>
+</ul>
+<p>Let’s take a look at a concrete example of what you can do with <strong>Akeneo</strong>, an <strong>Open Source PIM</strong> platform that is quickly becoming a leader in the market, in the context of multiple distribution channels that include an e-commerce channel represented by a PrestaShop retail site.  </p>
+<h4 style="color:#663b8f">Collect product information to create a single foundation</h4>
+<p>The PIM application lets you combine product data feeds, no matter their origin, to create a reliable, up-to-date product referential. Just as an ERP provides a central point for order processing, PIM is fast becoming the point of reference for product databases, and contains all the information needed to inform various distribution channels. </p>
+<p><img src="https://www.prestashop.com/blog/en/files/2016/03/collect.png" alt="collect" width="369" height="337" class="aligncenter size-large wp-image-21320" /></p>
+<ul style="padding-left: 30px">
+<li><strong style="color:#663b8f">Collect Data</strong>
+<ul style="margin: 0 0 16px">
+<li>Collect product data <strong>from existing sources</strong> (ERP, local files, vendors POs)</li>
+</ul>
+</li>
+<li><strong style="color:#663b8f">Automate imports</strong>
+<ul style="margin: 0 0 16px">
+<li><strong>Integrate an open source PIM like Akeneo</strong> to automate data imports</li>
+</ul>
+</li>
+</ul>
+<h4 style="color:#663b8f">Enrich data to improve the customer experience</h4>
+<p>Next comes the enrichment phase. PIM provides a user-friendly interface to manage catalog enrichment by adding cold information, which consists of attributes that are either shared among channels or specific to each one (<em>i.e. data that does not change according to criteria such as discounts, which are usually managed by an ERP</em>). PIM also helps manage all media, such as product images, that present specific constraints depending on the distribution channel. For example, an image used online doesn’t need to be the same resolution as one shown in a print catalog, even if the source is the same: that’s why the PIM automatically manages and converts these media &#8211; resizing, processing, etc.</p>
+<p>To effectively enrich a product, you need to have visibility into your catalog. PIM can offer a lot of flexibility in this area and help save time by allowing you to track your catalog status, channel-by-channel. In real life, this means knowing, for example, that product X can be published on the FR retail site, but that something is still in translation for the UK version, or that an additional attribute needs to be entered for the print catalog for professionals.</p>
+<p>Using profile management combined with approval work flows, PIM allows you dedicate team resources to certain tasks or channels, and direct others to approving the enrichment work you’re doing. This collaborative mode can save you a lot of time when you’re managing your catalog, something you can only dream about if you handle product references using a multitude of files sent to various staff members before approval. </p>
+<p>The bottom line: you’ll end up managing a catalog of a much higher quality faster and more efficiently, thereby improving your brand image.</p>
+<p>In the projects that we have completed over the last few months, we’ve noticed increases of around 50% between the catalog volume that the retailer had hoped to manage, and that they actually handled in the same period of time, with fewer resources! This represents a significant time savings and reduced <strong>time-to-market</strong>. </p>
+<p><img src="https://www.prestashop.com/blog/en/files/2016/03/enrichir.png" alt="enrichir" width="388" height="274" class="aligncenter size-large wp-image-21322" /></p>
+<ul style="padding-left: 30px">
+<li><strong style="color:#663b8f">Enrich data</strong>
+<ul style="margin: 0 0 16px">
+<li>Integrate <strong>marketing</strong></li>
+<li><strong>Adapt data</strong> to the distribution channel</li>
+</ul>
+</li>
+<li><strong style="color:#663b8f">Maintain and translate</strong>
+<ul style="margin: 0 0 16px">
+<li><strong>Keep information up to date</strong> in a single back office</li>
+<li><strong>Translate data</strong> for adaptation</li>
+</ul>
+</li>
+</ul>
+<h4 style="color:#663b8f">Easily share catalogs adapted to your distribution channels</h4>
+<p>Once this enrichment work has been completed, you can communicate your product data across distribution channels automatically. </p>
+<p>Here the PIM really shines, since it not only feeds into digital channels (E-commerce, Mobile), but also automatically fills InDesign templates, accomplishing 90% of the design work required to produce a paper catalog. Figures given to us by the print specialists we work with are enlightening: where a large catalog used to take 6 months, the work can now be completed in a few weeks, with 50% fewer resources and the same quality result. </p>
+<p><img src="https://www.prestashop.com/blog/en/files/2016/03/controler.png" alt="controler" width="407" height="443" class="aligncenter size-large wp-image-21321" /></p>
+<ul style="padding-left: 30px">
+<li><strong style="color:#663b8f">Control distribution</strong>
+<ul style="margin: 0 0 16px">
+<li>All sales channels with a single solution (<em>e-commerce, paper catalogs, mobile applications, social media, marketplaces and more</em>)</li>
+</ul>
+</li>
+<li><strong style="color:#663b8f">Manage export</strong>
+<ul style="margin: 0 0 16px">
+<li>Select <strong>data</strong> to export by channel</li>
+</ul>
+</li>
+</ul>
+<h2 style="color:#663b8f">The advent of Open Source PIM!</h2>
+<p>Until recently, Product Information Management platforms were reserved for large retailers who managed very large volumes and had the financial resources to pay licensing fees amounting to several hundreds of thousands of dollars or euros. </p>
+<p>With the advent of Open Source PIMs like Akeneo, this type of platform has become very affordable, and any business with several broadcasting channels now ought to take a close look at a PIM that will place itself upstream of the information system alongside the ERP. </p>
+<p>It’s a small revolution in the distribution world, where the exactness of the (product) information that is given has become a real issue. Beyond the purely financial gains, PIM also provides a unifying element that can been a boon to businesses confronted with a lack of consistency in product data and dispersed information: it can all be profitably centralized through a PIM. </p>
+<p>Product pages with quality content will generate benefits in SEO, as well as the customer experience: with a properly filled out product page, visitors have all of the information they need to evaluate the product and its characteristics. With information at hand and questions answered, they are also more likely to add items to their cart and complete their order.</p>
+<p>The true impact comes into focus when looked in light of FEVAD figures, which estimate that currently 80% of the world’s e-commerce data is wrong because it is not adapted to the communication channel. <strong>By delivering the right message, you can potentially gain an advantage over 80% of your direct competitors.</strong></p>
+<p>This won&#8217;t be the last you hear of PIM, which is sure to become a vital element of any retail project. The solutions are easy to implement for an almost immediate ROI and vital working comfort for the professional teams involved.</p>
+<p><strong>About Synolia:</strong> Synolia has been a PrestaShop partner for many years. They are also one of the main participants in Open Source PIM, with a privileged partnership with Akeneo, an Open Source PIM publisher who is currently taking a large share of the French and international market (and it’s a French company, too!). Synolia created the PrestaShop-Akeneo connector that is used by many retailers. Based in Lyon (France) and Paris, Synolia is a specialist of ambitious e-commerce, customer relationship management and B.I. projects.</p>
+<p>For more information on Akeneo and PrestaShop, see our dedicated micro-site: <a href="http://akeneo.synolia.com/" target="_blank">http://akeneo.synolia.com/</a> or Synolia’s website: <a href="http://www.synolia.com/" target="_blank">www.synolia.com</a></p>
+<p>The post <a rel="nofollow" href="https://www.prestashop.com/blog/en/pim-go-faster-managing-product-data/">PIM: go further and faster in managing your product data</a> appeared first on <a rel="nofollow" href="https://www.prestashop.com/blog/en">EN - Ecommerce blog by PrestaShop</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>https://www.prestashop.com/blog/en/pim-go-faster-managing-product-data/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+	</channel>
+</rss>

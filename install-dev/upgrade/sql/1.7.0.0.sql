@@ -95,3 +95,7 @@ DROP TABLE `PREFIX_scene_products`;
 DROP TABLE `PREFIX_scene_shop`;
 ALTER TABLE `PREFIX_image_type` DROP `scenes`;
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_SCENE_FEATURE_ACTIVE';
+
+ALTER TABLE `PREFIX_cart_product` ADD `id_customization` INT(10) NOT NULL DEFAULT 0 AFTER `id_product_attribute`;
+ALTER TABLE `PREFIX_cart_product` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_cart`, `id_product`, `id_product_attribute`, `id_customization`, `id_address_delivery`);
+ALTER TABLE `PREFIX_order_detail` ADD `id_customization` INT(10) NULL DEFAULT 0 AFTER `product_attribute_id`;

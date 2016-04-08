@@ -667,7 +667,7 @@ class AdminCartsControllerCore extends AdminController
                 if (!isset($product['attributes_small'])) {
                     $product['attributes_small'] = '';
                 }
-                $product['customized_datas'] = Product::getAllCustomizedDatas((int)$this->context->cart->id, null, true);
+                $product['customized_datas'] = Product::getAllCustomizedDatas((int)$this->context->cart->id, null, true, null, (int)$product['id_customization']);
             }
         }
         if (count($summary['discounts'])) {

@@ -44,9 +44,10 @@ class PriceCalculator
         $with_ecotax = true,
         $use_group_reduction = true,
         \ContextCore $context = null,
-        $use_customer_price = true
+        $use_customer_price = true,
+        $id_customization = null
     ) {
-        return \ProductCore::getPriceStatic(
+        return \Product::getPriceStatic(
             $id_product,
             $usetax,
             $id_product_attribute,
@@ -63,7 +64,8 @@ class PriceCalculator
             $with_ecotax,
             $use_group_reduction,
             $context,
-            $use_customer_price
+            $use_customer_price,
+            $id_customization
         );
     }
 }

@@ -831,7 +831,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 true
             );
 
+            $id_customization = 0;
             foreach ($already_customized as $customization) {
+                $id_customization = $customization['id_customization'];
                 $customized_data[$customization['index']] = $customization;
             }
 
@@ -884,9 +886,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $customizationData['fields'][] = $field;
             }
             $product_full['customizations'] = $customizationData;
+            $product_full['id_customization'] = $id_customization;
             $product_full['is_customizable'] = true;
         } else {
             $product_full['customizations'] = [];
+            $product_full['id_customization'] = 0;
             $product_full['is_customizable'] = false;
         }
 

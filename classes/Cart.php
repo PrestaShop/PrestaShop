@@ -497,13 +497,13 @@ class CartCore extends ObjectModel
         $sql = new DbQuery();
 
         // Build SELECT
-        $sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
+        $sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, cp.`id_customization`, pl.`name`, p.`is_virtual`,
                         pl.`description_short`, pl.`available_now`, pl.`available_later`, product_shop.`id_category_default`, p.`id_supplier`,
                         p.`id_manufacturer`, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`,
                         product_shop.`available_for_order`, product_shop.`price`, product_shop.`active`, product_shop.`unity`, product_shop.`unit_price_ratio`,
                         stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
                         p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
-                        CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0)) AS unique_id, cp.id_address_delivery,
+                        CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0), IFNULL(cp.`id_customization`, 0)) AS unique_id, cp.id_address_delivery,
                         product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
 
         // Build FROM
@@ -542,13 +542,13 @@ class CartCore extends ObjectModel
         $sql->orderBy('cp.`date_add`, cp.`id_product`, cp.`id_product_attribute` ASC');
 
         if (Customization::isFeatureActive()) {
-            $sql->select('cu.`id_customization`, cu.`quantity` AS customization_quantity');
+            $sql->select('cu.`id_customization` AS customization_id, cu.`quantity` AS customization_quantity');
             $sql->leftJoin(
                 'customization',
                 'cu',
-                'p.`id_product` = cu.`id_product` AND cp.`id_product_attribute` = cu.`id_product_attribute` AND cu.`id_cart` = '.(int)$this->id
+                'p.`id_product` = cu.`id_product` AND cp.`id_product_attribute` = cu.`id_product_attribute` AND cp.`id_customization` = cu.`id_customization` AND cu.`id_cart` = '.(int)$this->id
             );
-            $sql->groupBy('cp.`id_product_attribute`, cp.`id_product`, cp.`id_shop`');
+            $sql->groupBy('cp.`id_product_attribute`, cp.`id_product`, cp.`id_shop`, cp.`id_customization`');
         } else {
             $sql->select('NULL AS customization_quantity, NULL AS id_customization');
         }
@@ -656,7 +656,9 @@ class CartCore extends ObjectModel
                 $specific_price_output,
                 true,
                 true,
-                $cart_shop_context
+                $cart_shop_context,
+                true,
+                $row['id_customization']
             );
 
             $row['price_with_reduction'] = Product::getPriceStatic(
@@ -675,7 +677,9 @@ class CartCore extends ObjectModel
                 $specific_price_output,
                 true,
                 true,
-                $cart_shop_context
+                $cart_shop_context,
+                true,
+                $row['id_customization']
             );
 
             $row['price'] = $row['price_with_reduction_without_tax'] = Product::getPriceStatic(
@@ -694,7 +698,9 @@ class CartCore extends ObjectModel
                 $specific_price_output,
                 true,
                 true,
-                $cart_shop_context
+                $cart_shop_context,
+                true,
+                $row['id_customization']
             );
 
             switch (Configuration::get('PS_ROUND_TYPE')) {
@@ -880,6 +886,7 @@ class CartCore extends ObjectModel
         $sql .= '
             WHERE cp.`id_product` = '.(int)$id_product.'
             AND cp.`id_product_attribute` = '.(int)$id_product_attribute.'
+            AND cp.`id_customization` = '.(int)$id_customization.'
             AND cp.`id_cart` = '.(int)$this->id;
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
             $sql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
@@ -1021,6 +1028,7 @@ class CartCore extends ObjectModel
                         'UPDATE `'._DB_PREFIX_.'cart_product`
                         SET `quantity` = `quantity` '.$qty.'
                         WHERE `id_product` = '.(int)$id_product.
+                        ' AND `id_customization` = '.(int)$id_customization.
                         (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
                         AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
                         LIMIT 1'
@@ -1058,7 +1066,8 @@ class CartCore extends ObjectModel
                     'id_address_delivery' =>    (int)$id_address_delivery,
                     'id_shop' =>                $shop->id,
                     'quantity' =>                (int)$quantity,
-                    'date_add' =>                date('Y-m-d H:i:s')
+                    'date_add' =>                date('Y-m-d H:i:s'),
+                    'id_customization' =>       (int)$id_customization
                 ));
 
                 if (!$result_add) {
@@ -1122,6 +1131,7 @@ class CartCore extends ObjectModel
                     UPDATE `'._DB_PREFIX_.'customization`
                     SET
                         `quantity` = `quantity` '.($operator == 'up' ? '+ ' : '- ').(int)$quantity.',
+                        `id_product_attribute` = '.(int)$id_product_attribute.',
                         `id_address_delivery` = '.(int)$id_address_delivery.',
                         `in_cart` = 1
                     WHERE `id_customization` = '.(int)$id_customization);
@@ -1129,6 +1139,7 @@ class CartCore extends ObjectModel
                 Db::getInstance()->execute('
                     UPDATE `'._DB_PREFIX_.'customization`
                     SET `id_address_delivery` = '.(int)$id_address_delivery.',
+                    `id_product_attribute` = '.(int)$id_product_attribute.',
                     `in_cart` = 1
                     WHERE `id_customization` = '.(int)$id_customization);
             }
@@ -1256,6 +1267,7 @@ class CartCore extends ObjectModel
                 'SELECT `quantity`
                 FROM `'._DB_PREFIX_.'cart_product`
                 WHERE `id_product` = '.(int)$id_product.'
+                AND `id_customization` = '.(int)$id_customization.'
                 AND `id_cart` = '.(int)$this->id.'
                 AND `id_product_attribute` = '.(int)$id_product_attribute
             );
@@ -1265,6 +1277,7 @@ class CartCore extends ObjectModel
             FROM `'._DB_PREFIX_.'customization`
             WHERE `id_cart` = '.(int)$this->id.'
             AND `id_product` = '.(int)$id_product.'
+            AND `id_customization` = '.(int)$id_customization.'
             AND `id_product_attribute` = '.(int)$id_product_attribute.'
             '.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
 
@@ -1295,7 +1308,8 @@ class CartCore extends ObjectModel
                 'UPDATE `'._DB_PREFIX_.'cart_product`
                 SET `quantity` = '.(int)$result['quantity'].'
                 WHERE `id_cart` = '.(int)$this->id.'
-                AND `id_product` = '.(int)$id_product.
+                AND `id_product` = '.(int)$id_product.'
+                AND `id_customization` = '.(int)$id_customization.
                 ($id_product_attribute != null ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '')
             );
         }
@@ -1304,7 +1318,8 @@ class CartCore extends ObjectModel
         $result = Db::getInstance()->execute('
         DELETE FROM `'._DB_PREFIX_.'cart_product`
         WHERE `id_product` = '.(int)$id_product.'
-        '.(!is_null($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
+        AND `id_customization` = '.(int)$id_customization.
+        (!is_null($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
         AND `id_cart` = '.(int)$this->id.'
         '.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
 
@@ -1540,7 +1555,9 @@ class CartCore extends ObjectModel
                 $null,
                 $ps_use_ecotax,
                 true,
-                $virtual_context
+                $virtual_context,
+                true,
+                (int)$product['id_customization']
             );
 
             $address = $address_factory->findOrCreate($id_address, true);

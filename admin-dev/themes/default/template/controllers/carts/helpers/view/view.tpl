@@ -94,7 +94,7 @@
 				</thead>
 				<tbody>
 				{foreach from=$products item='product'}
-					{if isset($customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery])}
+					{if isset($customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery][$product.id_customization])}
 						<tr>
 							<td>{$product.image}</td>
 							<td><a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product.id_product, 'updateproduct' => 1])|escape:'html':'UTF-8'}">
@@ -109,6 +109,7 @@
 							<td class="text-right">{displayWtPriceWithCurrency price=$product.total_customization_wt currency=$currency}</td>
 						</tr>
 						{foreach from=$customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery] item='customization'}
+						{if ((int)$customization.id_customization != (int)$product.id_customization)}{continue}{/if}
 						<tr>
 							<td colspan="2">
 							{foreach from=$customization.datas key='type' item='datas'}
