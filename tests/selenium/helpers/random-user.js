@@ -1,36 +1,19 @@
-import request from 'request';
+var faker = require('faker');
 
 export function getRandomUser () {
   const defaultUser = {
     name: {
-      first: "Example",
-      last: "User",
+      first: faker.name.firstName(),
+      last: faker.name.lastName(),
     },
-    email: `user${Date.now()}@example.com`,
+    email: faker.internet.email(),
     location: {
-      street: "777, Main Street",
-      city: "FileSystem"
+      street: faker.address.streetAddress(),
+      city: faker.address.city()
     }
   };
 
   return new Promise((resolve, reject) => {
-
-    setTimeout(() => resolve(defaultUser), 2000);
-
-    request.get({
-      url: 'https://randomuser.me/api/',
-      json: true
-    }, (error, response, body) => {
-      if (error) {
-          resolve(defaultUser);
-      } else if (body.results) {
-        const user = body.results[0].user;
-        // sometimes we get weird e-mails from the API
-        user.email = user.email.replace(/[^a-z@.]/g, '_');
-        resolve(user);
-      } else {
-        resolve(defaultUser);
-      }
-    });
+    resolve(defaultUser);
   });
 }
