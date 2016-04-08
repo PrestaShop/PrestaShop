@@ -80,6 +80,11 @@ class AdminCmsCategoriesControllerCore extends AdminController
         parent::__construct();
     }
 
+    public function getTabSlug()
+    {
+       return 'ROLE_MOD_TAB_ADMINCMSCONTENT_';
+    }
+
     public function renderList()
     {
         $this->initToolbar();
@@ -92,7 +97,6 @@ class AdminCmsCategoriesControllerCore extends AdminController
 
     public function postProcess()
     {
-        $this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
         if (Tools::isSubmit('submitAdd'.$this->table)) {
             $this->action = 'save';
             if ($id_cms_category = (int)Tools::getValue('id_cms_category')) {
@@ -156,7 +160,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
             }
         } elseif (Tools::isSubmit('position')) {
             $object = new CMSCategory((int)Tools::getValue($this->identifier, Tools::getValue('id_cms_category_to_move', 1)));
-            if ($this->access('edit') !== '1') {
+            if (!$this->access('edit')) {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             } elseif (!Validate::isLoadedObject($object)) {
                 $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.')

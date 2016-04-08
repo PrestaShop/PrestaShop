@@ -384,7 +384,7 @@ class AdminControllerCore extends Controller
 
     /** @var bool if logged employee has access to AdminImport */
     protected $can_import = false;
-    
+
     /** @var string */
     protected $tabSlug;
 
@@ -685,9 +685,9 @@ class AdminControllerCore extends Controller
             }
         }
     }
-    
+
     /**
-     * 
+     *
      * @param string $action
      * @param bool $disable
      */
@@ -695,17 +695,17 @@ class AdminControllerCore extends Controller
     {
         if (empty($this->tabAccess[$action])) {
             $slugs = array();
-            
+
             foreach ((array) Access::getAuthorizationFromLegacy($action) as $roleSuffix) {
                 $slugs[] = $this->getTabSlug().$roleSuffix;
             }
-            
+
             $this->tabAccess[$action] = Access::isGranted(
                 $slugs,
                 $this->context->employee->id_profile
             );
         }
-        
+
         return $this->tabAccess[$action];
     }
 
@@ -2952,7 +2952,7 @@ class AdminControllerCore extends Controller
             }
         } elseif (isset($_GET['update'.$this->table]) && isset($_GET[$this->identifier])) {
             $this->display = 'edit';
-            if ($this->access('edit') !== '1') {
+            if (!$this->access('edit')) {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (isset($_GET['view'.$this->table])) {
@@ -4448,9 +4448,9 @@ class AdminControllerCore extends Controller
     {
         $this->id_object = (int)$id_object;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getTabSlug()

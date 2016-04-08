@@ -57,12 +57,16 @@ class AdminCmsContentControllerCore extends AdminController
                 'icon' => 'icon-trash'
             )
         );
-        $this->admin_cms_categories = new AdminCmsCategoriesController();
-        $this->admin_cms_categories->init();
-        $this->admin_cms = new AdminCmsController();
-        $this->admin_cms->init();
 
         parent::__construct();
+
+        $this->admin_cms_categories = new AdminCmsCategoriesController();
+        $this->admin_cms_categories->tabAccess = $this->tabAccess;
+        $this->admin_cms_categories->init();
+        $this->admin_cms = new AdminCmsController();
+        $this->admin_cms->tabAccess = $this->tabAccess;
+        $this->admin_cms->init();
+        $this->context->controller = $this;
     }
 
     /**
@@ -73,14 +77,6 @@ class AdminCmsContentControllerCore extends AdminController
     public static function getCurrentCMSCategory()
     {
         return self::$category;
-    }
-
-    public function viewAccess($disable = false)
-    {
-        $result = parent::viewAccess($disable);
-        $this->admin_cms_categories->tabAccess = $this->tabAccess;
-        $this->admin_cms->tabAccess = $this->tabAccess;
-        return $result;
     }
 
     public function initContent()
