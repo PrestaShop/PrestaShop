@@ -43,6 +43,7 @@ $(document).ready(() => {
       var actionURL = $form.attr('action');
 
       $.post(actionURL, query, null, 'json').then(function(resp) {
+        $('.quickview').modal('hide');
         prestashop.emit('cart updated', {
           reason: {
             idProduct: resp.id_product,

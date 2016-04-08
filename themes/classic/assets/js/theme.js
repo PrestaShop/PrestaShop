@@ -20470,6 +20470,7 @@
 	    var actionURL = $form.attr('action');
 	
 	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
+	      (0, _jquery2['default'])('.quickview').modal('hide');
 	      _prestashop2['default'].emit('cart updated', {
 	        reason: {
 	          idProduct: resp.id_product,
