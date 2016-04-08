@@ -34,7 +34,6 @@ class ConfigurationTestCore
         '/tools/tar/Archive_Tar.php',
         '/tools/pear/PEAR.php',
         '/controllers/admin/AdminLoginController.php',
-        '/css/index.php',
         '/download/index.php',
         '/js/tools.js',
         '/js/jquery/plugins/fancybox/jquery.fancybox.js',
