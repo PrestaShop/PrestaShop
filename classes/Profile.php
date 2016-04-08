@@ -124,18 +124,30 @@ class ProfileCore extends ObjectModel
             self::$_cache_accesses[$id_profile][$type] = array();
             // Super admin profile has full auth
             if ($id_profile == _PS_ADMIN_PROFILE_) {
-                foreach (Tab::getTabs(Context::getContext()->language->id) as $tab) {
-                    self::$_cache_accesses[$id_profile][$type][$tab[$type]] = array(
+                self::fillCacheAccesses(
+                    $id_profile,
+                    $type,
+                    array(
                         'id_profile' => _PS_ADMIN_PROFILE_,
-                        'id_tab' => $tab['id_tab'],
-                        'class_name' => $tab['class_name'],
                         'view' => '1',
                         'add' => '1',
                         'edit' => '1',
-                        'delete' => '1',
-                    );
-                }
+                        'delete' => '1'
+                    )
+                );
             } else {
+                self::fillCacheAccesses(
+                    $id_profile,
+                    $type,
+                    array(
+                        'id_profile' => _PS_ADMIN_PROFILE_,
+                        'view' => '0',
+                        'add' => '0',
+                        'edit' => '0',
+                        'delete' => '0'
+                    )
+                );
+                
                 $result = Db::getInstance()->executeS('
 				SELECT `slug`,
                                     `slug` LIKE "%CREATE" as "add",
@@ -153,6 +165,25 @@ class ProfileCore extends ObjectModel
         }
 
         return self::$_cache_accesses[$id_profile][$type];
+    }
+    
+    /**
+     * 
+     * @param int $id_profile
+     * @param string $type
+     * @param array $cacheData
+     */
+    private static function fillCacheAccesses($id_profile, $type, $cacheData = [])
+    {
+        foreach (Tab::getTabs(Context::getContext()->language->id) as $tab) {
+            self::$_cache_accesses[$id_profile][$type][$tab[$type]] = array_merge(
+                array(
+                    'id_tab' => $tab['id_tab'],
+                    'class_name' => $tab['class_name']
+                ),
+                $cacheData
+            );
+        }
     }
     
     /**
