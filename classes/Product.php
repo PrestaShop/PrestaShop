@@ -4532,7 +4532,13 @@ class ProductCore extends ObjectModel
     public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true, $id_shop = null, $id_customization = null)
     {
 		if ($id_customization === 0) {
-			return false;
+            // Backward compatibility: check if there are no products in cart with specific `id_customization` before returning false
+            $product_customizations = (int)Db::getInstance()->getValue('
+                SELECT COUNT(`id_customization`) FROM `'._DB_PREFIX_.'cart_product`
+                WHERE `id_cart` = '.(int)$id_cart.
+                ' AND `id_customization` != 0');
+            if ($product_customizations)
+			    return false;
     	}
 
         if (!Customization::isFeatureActive()) {
@@ -5669,7 +5675,7 @@ class ProductCore extends ObjectModel
     {
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
         // if blocklayered module is installed we check if user has set custom attribute name
         if ($moduleManager->isInstalled('blocklayered') && $moduleManager->isEnabled('blocklayered')) {
             $nb_custom_values = Db::getInstance()->executeS('

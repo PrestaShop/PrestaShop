@@ -174,6 +174,18 @@ class CartPresenter implements PresenterInterface
                                     $presentedCustomization['id_customization']
                                 );
 
+                                $presentedCustomization['up_quantity_url'] = $this->link->getUpQuantityCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
+
+                                $presentedCustomization['down_quantity_url'] = $this->link->getDownQuantityCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
+
                                 $presentedCustomization['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
                                     $product['id_product'],
                                     $product['id_product_attribute'],

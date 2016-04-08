@@ -65,6 +65,12 @@
           <ul>
             {foreach from=$product.customizations item="customization"}
               <li>
+                {if count($product.customizations) > 1}
+                    {if $customization.down_quantity_url}<a href="{$customization.down_quantity_url}" data-link-action="update-quantity">-</a>{/if}
+                    <span class="product-quantity">{$customization.quantity}</span>
+                    {if $customization.up_quantity_url}<a href="{$customization.up_quantity_url}" data-link-action="update-quantity">+</a>{/if}
+                    <a href="{$customization.remove_from_cart_url}" class="remove-from-cart" rel="nofollow">{l s='Remove'}</a>
+                {/if}
                 <ul>
                   {foreach from=$customization.fields item="field"}
                     <li>
