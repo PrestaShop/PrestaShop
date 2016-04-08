@@ -110,9 +110,9 @@ class ProfileCore extends ObjectModel
         return (isset($accesses[$id_tab]) ? $accesses[$id_tab] : false);
     }
     
-    public static function getProfileAccesses($id_profile, $type = 'id_authorization_role')
+    public static function getProfileAccesses($id_profile, $type = 'id_tab')
     {
-        if (!in_array($type, array('id_authorization_role', 'class_name'))) {
+        if (!in_array($type, array('id_tab', 'class_name'))) {
             return false;
         }
 
