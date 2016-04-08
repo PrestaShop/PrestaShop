@@ -159,7 +159,12 @@ class ProfileCore extends ObjectModel
 				WHERE j.`id_profile` = '.(int)$id_profile);
 
                 foreach ($result as $row) {
-                    self::$_cache_accesses[$id_profile][$type][self::findIdTabByAuthSlug($row['slug'])] = $row;
+                    $id_tab = self::findIdTabByAuthSlug($row['slug']);
+                    
+                    self::$_cache_accesses[$id_profile][$type][$id_tab] = array_merge(
+                        $row,
+                        array('id_tab' => $id_tab)
+                    );
                 }
             }
         }
