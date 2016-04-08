@@ -137,7 +137,8 @@ class ProfileCore extends ObjectModel
                 }
             } else {
                 $result = Db::getInstance()->executeS('
-				SELECT `slug` LIKE "%CREATE" as "add",
+				SELECT `slug`,
+                                    `slug` LIKE "%CREATE" as "add",
                                     `slug` LIKE "%READ" as "view",
                                     `slug` LIKE "%UPDATE" as "edit",
                                     `slug` LIKE "%DELETE" as "delete"
@@ -146,11 +147,33 @@ class ProfileCore extends ObjectModel
 				WHERE j.`id_profile` = '.(int)$id_profile);
 
                 foreach ($result as $row) {
-                    self::$_cache_accesses[$id_profile][$type][$row[$type]] = $row;
+                    self::$_cache_accesses[$id_profile][$type][self::findIdTabByAuthSlug($row['slug'])] = $row;
                 }
             }
         }
 
         return self::$_cache_accesses[$id_profile][$type];
+    }
+    
+    /**
+     * 
+     * @param string $authSlug
+     * @return int
+     */
+    private static function findIdTabByAuthSlug($authSlug)
+    {
+        preg_match(
+            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z]+)_(?P<auth>[A-Z]+)/',
+            $authSlug,
+            $matches
+        );
+
+        $result = Db::getInstance()->getRow('
+            SELECT `id_tab`
+            FROM `'._DB_PREFIX_.'tab` t
+            WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
+        ');
+        
+        return $result['id_tab'];
     }
 }
