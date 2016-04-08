@@ -228,7 +228,9 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * Disable a module specifiquely on mobile.
+     * Disable a module specifically on mobile.
+     * Not written in camel case because the route and the displayed action in the template
+     * are related to this function name.
      *
      * @param  string $name The module name to disable
      * @return bool         True for success
@@ -237,7 +239,7 @@ class ModuleManager implements AddonManagerInterface
     {
         if (!$this->employee->can('edit', 'AdminModules')
             || !$this->moduleProvider->can('configure', $name)) {
-            throw new Exception('You are not allowed to disable this module on mobile');
+            throw new Exception('You are not allowed to disable this module on mobile.');
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -250,6 +252,8 @@ class ModuleManager implements AddonManagerInterface
 
     /**
      * Enable a module previously disabled on mobile
+     * Not written in camel case because the route and the displayed action in the template
+     * are related to this function name.
      *
      * @param  string $name The module name to enable
      * @return bool         True for success
@@ -258,7 +262,7 @@ class ModuleManager implements AddonManagerInterface
     {
         if (!$this->employee->can('edit', 'AdminModules')
             || !$this->moduleProvider->can('configure', $name)) {
-            throw new Exception('You are not allowed to enable this module on mobile');
+            throw new Exception('You are not allowed to enable this module on mobile.');
         }
 
         $module = $this->moduleRepository->getModule($name);

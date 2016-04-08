@@ -36,6 +36,5 @@ interface ModuleInterface extends AddonInterface
     public function onMobileEnable();
     public function onMobileDisable();
     public function onReset();
-
     public function onUpgrade($version);
 }
