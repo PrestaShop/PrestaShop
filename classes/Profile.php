@@ -109,7 +109,7 @@ class ProfileCore extends ObjectModel
         $accesses = Profile::getProfileAccesses($id_profile);
         return (isset($accesses[$id_tab]) ? $accesses[$id_tab] : false);
     }
-
+    
     public static function getProfileAccesses($id_profile, $type = 'id_authorization_role')
     {
         if (!in_array($type, array('id_authorization_role', 'class_name'))) {
@@ -137,7 +137,10 @@ class ProfileCore extends ObjectModel
                 }
             } else {
                 $result = Db::getInstance()->executeS('
-				SELECT *
+				SELECT `slug` LIKE "%CREATE" as "add",
+                                    `slug` LIKE "%READ" as "view",
+                                    `slug` LIKE "%UPDATE" as "edit",
+                                    `slug` LIKE "%DELETE" as "delete"
 				FROM `'._DB_PREFIX_.'authorization_role` a
 				LEFT JOIN `'._DB_PREFIX_.'access` j ON j.id_authorization_role = a.id_authorization_role
 				WHERE j.`id_profile` = '.(int)$id_profile);
