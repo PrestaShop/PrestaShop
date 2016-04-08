@@ -2469,7 +2469,6 @@ class AdminTranslationsControllerCore extends AdminController
 
     protected function cleanMailContent(&$content, $lang, &$title)
     {
-        // Because TinyMCE don't work correctly with <DOCTYPE>, <html> and <body> tags
         if (stripos($content[$lang], '<body')) {
             $array_lang = $lang != 'en' ? array('en', $lang) : array($lang);
             foreach ($array_lang as $language) {
