@@ -30,7 +30,7 @@
           <label>{$field.label}</label>
         </span>
       {elseif $field.type === 'date'}
-        <input type="text" class="form-control" placeholder="MM/DD/YYYY">
+        <input type="text" class="form-control" placeholder="MM/DD/YYYY" {if isset($field.maxlength)} maxlength="{$field.maxlength}" {/if}>
         <span class="form-control-comment">
           {l s='(Ex.:31/05/1970)'}
         </span>
@@ -52,7 +52,7 @@
     {/if}
   </div>
 {else}
-  <input type="hidden" name="{$field.name}" value="{$field.value}">
+  <input type="hidden" name="{$field.name}" value="{$field.value}" {if isset($field.maxlength)} maxlength="{$field.maxlength}" {/if}>
 {/if}
 
 {include file='_partials/form-errors.tpl' errors=$field.errors}
