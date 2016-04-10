@@ -817,6 +817,9 @@ Country</value>
   <configuration id="PS_CUSTOMER_OPTIN" name="PS_CUSTOMER_OPTIN">
     <value>1</value>
   </configuration>
+  <configuration id="PS_CUSTOMER_BIRTHDATE" name="PS_CUSTOMER_BIRTHDATE">
+    <value>1</value>
+  </configuration>
   <configuration id="PS_PACK_STOCK_TYPE" name="PS_PACK_STOCK_TYPE">
     <value>0</value>
   </configuration>
