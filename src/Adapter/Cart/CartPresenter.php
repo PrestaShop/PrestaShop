@@ -119,16 +119,15 @@ class CartPresenter implements PresenterInterface
 
     public function addCustomizedData(array $products, Cart $cart)
     {
-        $data = Product::getAllCustomizedDatas($cart->id);
-
-        if (!$data) {
-            $data = array();
-        }
-
-        return array_map(function (array $product) use ($data) {
+        return array_map(function (array $product) use ($cart) {
 
             $product['customizations'] = array();
 
+            $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int)$product['id_customization']);
+
+            if (!$data) {
+                $data = array();
+            }
             $id_product = (int) $product['id_product'];
             $id_product_attribute = (int) $product['id_product_attribute'];
             if (array_key_exists($id_product, $data)) {
@@ -141,11 +140,10 @@ class CartPresenter implements PresenterInterface
                                     'fields' => array(),
                                     'id_customization' => null,
                                 );
-                                $product['up_quantity_url'] = array();
-                                $product['down_quantity_url'] = array();
+
                                 foreach ($customization['datas'] as $byType) {
-                                    $field = array();
                                     foreach ($byType as $data) {
+                                        $field = array();
                                         switch ($data['type']) {
                                             case Product::CUSTOMIZE_FILE:
                                                 $field['type'] = 'image';
@@ -161,12 +159,23 @@ class CartPresenter implements PresenterInterface
                                                 $field['type'] = null;
                                         }
                                         $field['label'] = $data['name'];
+                                        $field['id_module'] = $data['id_module'];
                                         $presentedCustomization['id_customization'] = $data['id_customization'];
+                                        $presentedCustomization['fields'][] = $field;
                                     }
-                                    $presentedCustomization['fields'][] = $field;
                                 }
 
-                                $presentedCustomization['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
+                                $product['up_quantity_url'] = $this->link->getUpQuantityCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
+                                $product['down_quantity_url'] = $this->link->getDownQuantityCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
+                                $product['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
                                     $product['id_product'],
                                     $product['id_product_attribute'],
                                     $presentedCustomization['id_customization']
@@ -179,6 +188,12 @@ class CartPresenter implements PresenterInterface
                                 );
 
                                 $presentedCustomization['down_quantity_url'] = $this->link->getDownQuantityCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
+
+                                $presentedCustomization['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
                                     $product['id_product'],
                                     $product['id_product_attribute'],
                                     $presentedCustomization['id_customization']

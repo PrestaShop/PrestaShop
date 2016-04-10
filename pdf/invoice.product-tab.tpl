@@ -112,7 +112,7 @@
 										<td style="width: 30%;">
 											{$customization_infos.name|string_format:{l s='%s:' pdf='true'}}
 										</td>
-										<td>{$customization_infos.value}</td>
+										<td>{if (int)$customization_infos.id_module}{$customization_infos.value nofilter}{else}{$customization_infos.value}{/if}</td>
 									</tr>
 								{/foreach}
 							</table>

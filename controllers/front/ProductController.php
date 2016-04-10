@@ -834,62 +834,69 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 true
             );
 
+            $id_customization = 0;
             foreach ($already_customized as $customization) {
+                $id_customization = $customization['id_customization'];
                 $customized_data[$customization['index']] = $customization;
             }
 
-            foreach ($this->product->getCustomizationFields($this->context->language->id) as $customization_field) {
-                // 'id_customization_field' maps to what is called 'index'
-                // in what Product::getProductCustomization() returns
-                $key = $customization_field['id_customization_field'];
+            $customization_fields = $this->product->getCustomizationFields($this->context->language->id);
+            if (is_array($customization_fields)) {
+                foreach ($customization_fields as $customization_field) {
+                    // 'id_customization_field' maps to what is called 'index'
+                    // in what Product::getProductCustomization() returns
+                    $key = $customization_field['id_customization_field'];
 
-                $field['label'] = $customization_field['name'];
-                $field['id_customization_field'] = $customization_field['id_customization_field'];
-                $field['required'] = $customization_field['required'];
+                    $field['label'] = $customization_field['name'];
+                    $field['id_customization_field'] = $customization_field['id_customization_field'];
+                    $field['required'] = $customization_field['required'];
 
-                switch ($customization_field['type']) {
-                    case Product::CUSTOMIZE_FILE:
-                        $field['type'] = 'image';
-                        $field['image'] = null;
-                        $field['input_name'] = 'file' . $customization_field['id_customization_field'];
-                        break;
-                    case Product::CUSTOMIZE_TEXTFIELD:
-                        $field['type'] = 'text';
-                        $field['text'] = '';
-                        $field['input_name'] = 'textField' . $customization_field['id_customization_field'];
-                        break;
-                    default:
-                        $field['type'] = null;
-                }
-
-                if (array_key_exists($key, $customized_data)) {
-                    $data = $customized_data[$key];
-                    $field['is_customized'] = true;
                     switch ($customization_field['type']) {
                         case Product::CUSTOMIZE_FILE:
-                            $imageRetriever = new ImageRetriever($this->context->link);
-                            $field['image'] = $imageRetriever->getCustomizationImage(
-                                $data['value']
-                            );
-                            $field['remove_image_url'] = $this->context->link->getProductDeletePictureLink(
-                                $product_full,
-                                $customization_field['id_customization_field']
-                            );
+                            $field['type'] = 'image';
+                            $field['image'] = null;
+                            $field['input_name'] = 'file' . $customization_field['id_customization_field'];
                             break;
                         case Product::CUSTOMIZE_TEXTFIELD:
-                            $field['text'] = $data['value'];
+                            $field['type'] = 'text';
+                            $field['text'] = '';
+                            $field['input_name'] = 'textField' . $customization_field['id_customization_field'];
                             break;
+                        default:
+                            $field['type'] = null;
                     }
-                } else {
-                    $field['is_customized'] = false;
-                }
 
-                $customizationData['fields'][] = $field;
+                    if (array_key_exists($key, $customized_data)) {
+                        $data = $customized_data[$key];
+                        $field['is_customized'] = true;
+                        switch ($customization_field['type']) {
+                            case Product::CUSTOMIZE_FILE:
+                                $imageRetriever = new ImageRetriever($this->context->link);
+                                $field['image'] = $imageRetriever->getCustomizationImage(
+                                    $data['value']
+                                );
+                                $field['remove_image_url'] = $this->context->link->getProductDeletePictureLink(
+                                    $product_full,
+                                    $customization_field['id_customization_field']
+                                );
+                                break;
+                            case Product::CUSTOMIZE_TEXTFIELD:
+                                $field['text'] = $data['value'];
+                                break;
+                        }
+                    } else {
+                        $field['is_customized'] = false;
+                    }
+
+                    $customizationData['fields'][] = $field;
+                }
             }
             $product_full['customizations'] = $customizationData;
+            $product_full['id_customization'] = $id_customization;
             $product_full['is_customizable'] = true;
         } else {
             $product_full['customizations'] = [];
+            $product_full['id_customization'] = 0;
             $product_full['is_customizable'] = false;
         }
 

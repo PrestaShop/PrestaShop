@@ -37,7 +37,7 @@
                         {if $field.type == 'image'}
                           <li><img src="{$field.image.small.url}" alt=""></li>
                         {elseif $field.type == 'text'}
-                          <li>{$field.label} : {$field.text}</li>
+                          <li>{$field.label} : {if (int)$field.id_module}{$field.text nofilter}{else}{$field.text}{/if}</li>
                         {/if}
                       {/foreach}
                     </ul>

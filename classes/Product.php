@@ -2774,7 +2774,7 @@ class ProductCore extends ObjectModel
     public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = null, $decimals = 6, $divisor = null,
         $only_reduc = false, $usereduc = true, $quantity = 1, $force_associated_tax = false, $id_customer = null, $id_cart = null,
         $id_address = null, &$specific_price_output = null, $with_ecotax = true, $use_group_reduction = true, Context $context = null,
-        $use_customer_price = true)
+        $use_customer_price = true, $id_customization = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -2890,7 +2890,8 @@ class ProductCore extends ObjectModel
             $id_customer,
             $use_customer_price,
             $id_cart,
-            $cart_quantity
+            $cart_quantity,
+            $id_customization
         );
 
         return $return;
@@ -2924,7 +2925,7 @@ class ProductCore extends ObjectModel
      **/
     public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $zipcode, $id_currency,
         $id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_group_reduction,
-        $id_customer = 0, $use_customer_price = true, $id_cart = 0, $real_quantity = 0)
+        $id_customer = 0, $use_customer_price = true, $id_cart = 0, $real_quantity = 0, $id_customization = 0)
     {
         static $address = null;
         static $context = null;
@@ -2950,7 +2951,7 @@ class ProductCore extends ObjectModel
         }
 
         $cache_id = (int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.$id_state.'-'.$zipcode.'-'.(int)$id_group.
-            '-'.(int)$quantity.'-'.(int)$id_product_attribute.
+            '-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_customization.
             '-'.(int)$with_ecotax.'-'.(int)$id_customer.'-'.(int)$use_group_reduction.'-'.(int)$id_cart.'-'.(int)$real_quantity.
             '-'.($only_reduc?'1':'0').'-'.($use_reduc?'1':'0').'-'.($use_tax?'1':'0').'-'.(int)$decimals;
 
@@ -3032,6 +3033,11 @@ class ProductCore extends ObjectModel
             if ($id_product_attribute !== false) {
                 $price += $attribute_price;
             }
+        }
+
+        // Customization price
+        if ((int)$id_customization) {
+            $price += Customization::getCustomizationPrice($id_customization);
         }
 
         // Tax
@@ -4533,10 +4539,21 @@ class ProductCore extends ObjectModel
     ** Customization management
     */
 
-    public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true, $id_shop = null)
+    public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true, $id_shop = null, $id_customization = null)
     {
         if (!Customization::isFeatureActive()) {
             return false;
+        }
+
+        if ($id_customization === 0) {
+            // Backward compatibility: check if there are no products in cart with specific `id_customization` before returning false
+            $product_customizations = (int)Db::getInstance()->getValue('
+                SELECT COUNT(`id_customization`) FROM `'._DB_PREFIX_.'cart_product`
+                WHERE `id_cart` = '.(int)$id_cart.
+                ' AND `id_customization` != 0');
+            if ($product_customizations) {
+                return false;
+            }
         }
 
         // No need to query if there isn't any real cart!
@@ -4553,13 +4570,14 @@ class ProductCore extends ObjectModel
 
         if (!$result = Db::getInstance()->executeS('
 			SELECT cd.`id_customization`, c.`id_address_delivery`, c.`id_product`, cfl.`id_customization_field`, c.`id_product_attribute`,
-				cd.`type`, cd.`index`, cd.`value`, cfl.`name`
+				cd.`type`, cd.`index`, cd.`value`, cd.`id_module`, cfl.`name`
 			FROM `'._DB_PREFIX_.'customized_data` cd
 			NATURAL JOIN `'._DB_PREFIX_.'customization` c
 			LEFT JOIN `'._DB_PREFIX_.'customization_field_lang` cfl ON (cfl.id_customization_field = cd.`index` AND id_lang = '.(int)$id_lang.
                 ($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').')
 			WHERE c.`id_cart` = '.(int)$id_cart.
-            ($only_in_cart ? ' AND c.`in_cart` = 1' : '').'
+            ($only_in_cart ? ' AND c.`in_cart` = 1' : '').
+            ((int)$id_customization ? ' AND cd.`id_customization` = '.(int)$id_customization : '').'
 			ORDER BY `id_product`, `id_product_attribute`, `type`, `index`')) {
             return false;
         }
@@ -4567,14 +4585,20 @@ class ProductCore extends ObjectModel
         $customized_datas = array();
 
         foreach ($result as $row) {
+            if ((int)$row['id_module'] && (int)$row['type'] == Product::CUSTOMIZE_TEXTFIELD) {
+                // Hook displayCustomization: Call only the module in question
+                // When a module saves a customization programmatically, it should add its ID in the `id_module` column
+                $row['value'] = Hook::exec('displayCustomization', array('customization' => $row), (int)$row['id_module']);
+            }
             $customized_datas[(int)$row['id_product']][(int)$row['id_product_attribute']][(int)$row['id_address_delivery']][(int)$row['id_customization']]['datas'][(int)$row['type']][] = $row;
         }
 
         if (!$result = Db::getInstance()->executeS(
             'SELECT `id_product`, `id_product_attribute`, `id_customization`, `id_address_delivery`, `quantity`, `quantity_refunded`, `quantity_returned`
 			FROM `'._DB_PREFIX_.'customization`
-			WHERE `id_cart` = '.(int)$id_cart.($only_in_cart ? '
-			AND `in_cart` = 1' : ''))) {
+			WHERE `id_cart` = '.(int)$id_cart.
+            ((int)$id_customization ? ' AND `id_customization` = '.(int)$id_customization : '').
+            ($only_in_cart ? ' AND `in_cart` = 1' : ''))) {
             return false;
         }
 
@@ -4582,6 +4606,7 @@ class ProductCore extends ObjectModel
             $customized_datas[(int)$row['id_product']][(int)$row['id_product_attribute']][(int)$row['id_address_delivery']][(int)$row['id_customization']]['quantity'] = (int)$row['quantity'];
             $customized_datas[(int)$row['id_product']][(int)$row['id_product_attribute']][(int)$row['id_address_delivery']][(int)$row['id_customization']]['quantity_refunded'] = (int)$row['quantity_refunded'];
             $customized_datas[(int)$row['id_product']][(int)$row['id_product_attribute']][(int)$row['id_address_delivery']][(int)$row['id_customization']]['quantity_returned'] = (int)$row['quantity_returned'];
+            $customized_datas[(int)$row['id_product']][(int)$row['id_product_attribute']][(int)$row['id_address_delivery']][(int)$row['id_customization']]['id_customization'] = (int)$row['id_customization'];
         }
 
         return $customized_datas;
@@ -4620,6 +4645,9 @@ class ProductCore extends ObjectModel
                 }
                 if (isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery])) {
                     foreach ($customized_datas[$product_id][$product_attribute_id][$id_address_delivery] as $customization) {
+                        if ((int)$product_update['id_customization'] && $customization['id_customization'] != $product_update['id_customization']) {
+                            continue;
+                        }
                         $customization_quantity += (int)$customization['quantity'];
                         $customization_quantity_refunded += (int)$customization['quantity_refunded'];
                         $customization_quantity_returned += (int)$customization['quantity_returned'];
@@ -4638,6 +4666,20 @@ class ProductCore extends ObjectModel
                 }
             }
         }
+    }
+
+    /*
+    ** Add customization price for a single product
+    */
+    public static function addProductCustomizationPrice(&$product, &$customized_datas)
+    {
+        if (!$customized_datas) {
+            return;
+        }
+
+        $products = [$product];
+        self::addCustomizationPrice($products, $customized_datas);
+        $product = $products[0];
     }
 
     /*
@@ -4832,12 +4874,18 @@ class ProductCore extends ObjectModel
             $id_shop = (int)Context::getContext()->shop->id;
         }
 
+        // Hide the modules fields in the front-office
+        // When a module adds a customization programmatically, it should set the `is_module` to 1
+        $context = Context::getContext();
+        $front = isset($context->controller->controller_type) && in_array($context->controller->controller_type, array('front'));
+
         if (!$result = Db::getInstance()->executeS('
 			SELECT cf.`id_customization_field`, cf.`type`, cf.`required`, cfl.`name`, cfl.`id_lang`
 			FROM `'._DB_PREFIX_.'customization_field` cf
 			NATURAL JOIN `'._DB_PREFIX_.'customization_field_lang` cfl
 			WHERE cf.`id_product` = '.(int)$this->id.($id_lang ? ' AND cfl.`id_lang` = '.(int)$id_lang : '').
-                ($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').'
+                ($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').
+                ($front ? ' AND !cf.`is_module`' : '').'
 			ORDER BY cf.`id_customization_field`')) {
             return false;
         }

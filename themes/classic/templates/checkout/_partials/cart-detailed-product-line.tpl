@@ -57,6 +57,7 @@
               data-link-action            = "delete-from-cart"
               data-id-product             = "{$product.id_product|escape:'javascript'}"
               data-id-product-attribute   = "{$product.id_product_attribute|escape:'javascript'}"
+              data-id-customization   	  = "{$product.id_customization|escape:'javascript'}"
           >
             <i class="material-icons pull-xs-left">delete</i>
           </a>
@@ -67,16 +68,22 @@
           <ul>
             {foreach from=$product.customizations item="customization"}
               <li>
-                {if $customization.down_quantity_url}<a href="{$customization.down_quantity_url}" data-link-action="update-quantity">-</a>{/if}
-                <span class="product-quantity">{$customization.quantity}</span>
-                {if $customization.up_quantity_url}<a href="{$customization.up_quantity_url}" data-link-action="update-quantity">+</a>{/if}
-                <a href="{$customization.remove_from_cart_url}" class="remove-from-cart" rel="nofollow">{l s='Remove'}</a>
+                {if count($product.customizations) > 1}
+                    {if $customization.down_quantity_url}<a href="{$customization.down_quantity_url}" data-link-action="update-quantity">-</a>{/if}
+                    <span class="product-quantity">{$customization.quantity}</span>
+                    {if $customization.up_quantity_url}<a href="{$customization.up_quantity_url}" data-link-action="update-quantity">+</a>{/if}
+                    <a href="{$customization.remove_from_cart_url}" class="remove-from-cart" rel="nofollow">{l s='Remove'}</a>
+                {/if}
                 <ul>
                   {foreach from=$customization.fields item="field"}
                     <li>
                       <label>{$field.label}</label>
                       {if $field.type == 'text'}
-                        <span>{$field.text}</span>
+                        {if (int)$field.id_module}
+                          <span>{$field.text nofilter}</span>
+                        {else}
+                          <span>{$field.text}</span>
+                        {/if}
                       {else if $field.type == 'image'}
                         <img src="{$field.image.small.url}">
                       {/if}

@@ -601,8 +601,6 @@ class OrderCore extends ObjectModel
             $products = $this->getProductsDetail();
         }
 
-        $customized_datas = Product::getAllCustomizedDatas($this->id_cart);
-
         $result_array = array();
         foreach ($products as $row) {
             // Change qty if selected
@@ -624,6 +622,8 @@ class OrderCore extends ObjectModel
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
 
+			$customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, null, (int)$row['id_customization']);
+
             $this->setProductCustomizedDatas($row, $customized_datas);
 
             // Add information for virtual product
@@ -635,12 +635,12 @@ class OrderCore extends ObjectModel
 
             $row['id_address_delivery'] = $this->id_address_delivery;
 
+            if ($customized_datas) {
+	            Product::addProductCustomizationPrice($row, $customized_datas);
+	        }
+
             /* Stock product */
             $result_array[(int)$row['id_order_detail']] = $row;
-        }
-
-        if ($customized_datas) {
-            Product::addCustomizationPrice($result_array, $customized_datas);
         }
 
         return $result_array;

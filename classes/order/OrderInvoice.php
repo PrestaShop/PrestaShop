@@ -173,7 +173,6 @@ class OrderInvoiceCore extends ObjectModel
         }
 
         $order = new Order($this->id_order);
-        $customized_datas = Product::getAllCustomizedDatas($order->id_cart);
 
         $result_array = array();
         foreach ($products as $row) {
@@ -192,6 +191,8 @@ class OrderInvoiceCore extends ObjectModel
 
             $this->setProductImageInformations($row);
             $this->setProductCurrentStock($row);
+
+            $customized_datas = Product::getAllCustomizedDatas($order->id_cart, null, true, null, (int)$row['id_customization']);
             $this->setProductCustomizedDatas($row, $customized_datas);
 
             // Add information for virtual product
@@ -236,12 +237,11 @@ class OrderInvoiceCore extends ObjectModel
             $row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'];
             $row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'];
 
+            if ($customized_datas) {
+                Product::addProductCustomizationPrice($row, $customized_datas);
+            }
             /* Stock product */
             $result_array[(int)$row['id_order_detail']] = $row;
-        }
-
-        if ($customized_datas) {
-            Product::addCustomizationPrice($result_array, $customized_datas);
         }
 
         return $result_array;
