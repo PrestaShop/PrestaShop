@@ -30,6 +30,8 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `firstname` `firstname` varchar(255) NOT NULL;
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `lastname` `lastname` varchar(255) NOT NULL;
 
+ALTER TABLE `PREFIX_address` CHANGE COLUMN `city` `city` varchar(128) NOT NULL;
+
 /* Changes regarding modules */
 ALTER TABLE `PREFIX_module` ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC);
 

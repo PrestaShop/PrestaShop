@@ -32,7 +32,7 @@ CREATE TABLE `PREFIX_address` (
   `address1` varchar(128) NOT NULL,
   `address2` varchar(128) DEFAULT NULL,
   `postcode` varchar(12) DEFAULT NULL,
-  `city` varchar(64) NOT NULL,
+  `city` varchar(128) NOT NULL,
   `other` text,
   `phone` varchar(32) DEFAULT NULL,
   `phone_mobile` varchar(32) DEFAULT NULL,
