@@ -213,8 +213,6 @@ class AdminCartsControllerCore extends AdminController
         $this->context->customer = $customer;
         $this->toolbar_title = sprintf($this->l('Cart #%06d'), $this->context->cart->id);
         $products = $cart->getProducts();
-        $customized_datas = Product::getAllCustomizedDatas((int)$cart->id);
-        Product::addCustomizationPrice($products, $customized_datas);
         $summary = $cart->getSummaryDetails();
 
         /* Display order information */
@@ -261,6 +259,12 @@ class AdminCartsControllerCore extends AdminController
 
             $image_product = new Image($image['id_image']);
             $product['image'] = (isset($image['id_image']) ? ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$image_product->getExistingImgPath().'.jpg', 'product_mini_'.(int)$product['id_product'].(isset($product['id_product_attribute']) ? '_'.(int)$product['id_product_attribute'] : '').'.jpg', 45, 'jpg') : '--');
+
+            $customized_datas = Product::getAllCustomizedDatas($this->context->cart->id, null, true, null, (int)$product['id_customization']);
+            $this->context->cart->setProductCustomizedDatas($product, $customized_datas);
+            if ($customized_datas) {
+                Product::addProductCustomizationPrice($product, $customized_datas);
+            }
         }
 
         $helper = new HelperKpi();
@@ -286,7 +290,6 @@ class AdminCartsControllerCore extends AdminController
             'total_wrapping' => $total_wrapping,
             'total_price' => $total_price,
             'total_shipping' => $total_shipping,
-            'customized_datas' => $customized_datas,
             'tax_calculation_method' => $tax_calculation_method
         );
 
@@ -667,7 +670,7 @@ class AdminCartsControllerCore extends AdminController
                 if (!isset($product['attributes_small'])) {
                     $product['attributes_small'] = '';
                 }
-                $product['customized_datas'] = Product::getAllCustomizedDatas((int)$this->context->cart->id, null, true);
+                $product['customized_datas'] = Product::getAllCustomizedDatas((int)$this->context->cart->id, null, true, null, (int)$product['id_customization']);
             }
         }
         if (count($summary['discounts'])) {

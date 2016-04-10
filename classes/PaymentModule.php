@@ -464,7 +464,7 @@ abstract class PaymentModuleCore extends Module
                             'customization' => array()
                         );
 
-                        $customized_datas = Product::getAllCustomizedDatas((int)$order->id_cart);
+                        $customized_datas = Product::getAllCustomizedDatas((int)$order->id_cart, null, true, null, (int)$product['id_customization']);
                         if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']])) {
                             $product_var_tpl['customization'] = array();
                             foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']][$order->id_address_delivery] as $customization) {

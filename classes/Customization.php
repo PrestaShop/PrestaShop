@@ -121,6 +121,28 @@ class CustomizationCore extends ObjectModel
         return $customizations;
     }
 
+    public static function getCustomizationPrice($id_customization)
+    {
+        if (!(int)$id_customization) {
+            return 0;
+        }
+        return (float)Db::getInstance()->getValue('
+            SELECT SUM(`price`) FROM `'._DB_PREFIX_.'customized_data`
+            WHERE `id_customization` = '.(int)$id_customization
+        );
+    }
+
+    public static function getCustomizationWeight($id_customization)
+    {
+        if (!(int)$id_customization) {
+            return 0;
+        }
+        return (float)Db::getInstance()->getValue('
+            SELECT SUM(`weight`) FROM `'._DB_PREFIX_.'customized_data`
+            WHERE `id_customization` = '.(int)$id_customization
+        );
+    }
+
     public static function countCustomizationQuantityByProduct($customizations)
     {
         $total = array();
