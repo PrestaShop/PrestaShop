@@ -119,6 +119,9 @@ class FrontControllerCore extends Controller
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
 
+    /** @var string[] Adds excluded $_GET keys for redirection */
+    protected $redirectionExtraExcludedKeys = array();
+
     /**
      * True if controller has already been initialized.
      * Prevents initializing controller more than once.
@@ -771,6 +774,7 @@ class FrontControllerCore extends Controller
                 }
             }
             $excluded_key = array('isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms');
+            $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
             foreach ($_GET as $key => $value) {
                 if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
                     $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
