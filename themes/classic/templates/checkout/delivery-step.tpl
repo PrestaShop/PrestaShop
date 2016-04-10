@@ -73,5 +73,9 @@
     {/if}
   </div>
 
+  <div id="hook-display-after-carrier">
+    {$hookDisplayAfterCarrier nofilter}
+  </div>
+
   <div id="extra_carrier"></div>
 {/block}
