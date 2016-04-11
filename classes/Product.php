@@ -2485,8 +2485,8 @@ class ProductCore extends ObjectModel
         if (!$context) {
             $context = Context::getContext();
         }
-        if ($page_number < 0) {
-            $page_number = 0;
+        if ($page_number < 1) {
+            $page_number = 1;
         }
         if ($nb_products < 1) {
             $nb_products = 10;
@@ -2579,7 +2579,7 @@ class ProductCore extends ObjectModel
 		'.((!$beginning && !$ending) ? ' AND p.`id_product` IN ('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
 		'.$sql_groups.'
 		ORDER BY '.(isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').pSQL($order_by).' '.pSQL($order_way).'
-		LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
+		LIMIT '.(int)(($page_number-1) * $nb_products).', '.(int)$nb_products;
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -5659,7 +5659,7 @@ class ProductCore extends ObjectModel
     {
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
         // if blocklayered module is installed we check if user has set custom attribute name
         if ($moduleManager->isInstalled('blocklayered') && $moduleManager->isEnabled('blocklayered')) {
             $nb_custom_values = Db::getInstance()->executeS('
