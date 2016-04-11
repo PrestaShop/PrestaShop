@@ -161,10 +161,7 @@ class ProfileCore extends ObjectModel
                 foreach ($result as $row) {
                     $id_tab = self::findIdTabByAuthSlug($row['slug']);
                     
-                    self::$_cache_accesses[$id_profile][$type][$id_tab] = array_merge(
-                        $row,
-                        array('id_tab' => $id_tab)
-                    );
+                    self::$_cache_accesses[$id_profile][$type][$id_tab][array_search('1', $row)] = '1';
                 }
             }
         }
