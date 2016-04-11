@@ -165,6 +165,8 @@ class AdminAccessControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitAddAccess')) {
+            $res = array();
+            $access = new Access;
             $perm = Tools::getValue('perm');
             if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all'))) {
                 throw new PrestaShopException('permission does not exist');
@@ -193,22 +195,12 @@ class AdminAccessControllerCore extends AdminController
 					WHERE `id_profile` = '.(int)$id_profile;
                 }
             } else {
-                if ($perm == 'all') {
-                    $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a '.$join.'
-					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE '.$where.' = '.(int)$id_tab.' AND `id_profile` = '.(int)$id_profile;
-                } else {
-                    $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a '.$join.'
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE '.$where.' = '.(int)$id_tab.' AND `id_profile` = '.(int)$id_profile;
+                foreach ((array) Access::getAuthorizationFromLegacy($perm) as $authorization) {
+                    $res[] = $access->addAccess((int)$id_profile, $id_tab, $authorization);
                 }
             }
 
-            $res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
-
-            die($res);
+            die(in_array('error', $res) ? 'error' : 'ok');
         }
     }
 
@@ -231,18 +223,18 @@ class AdminAccessControllerCore extends AdminController
                 throw new PrestaShopException('permission does not exist');
             }
 
-            if ($id_module == -1) {
-                $sql = '
-					UPDATE `'._DB_PREFIX_.'module_access`
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile;
-            } else {
-                $sql = '
-					UPDATE `'._DB_PREFIX_.'module_access`
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE `id_module` = '.(int)$id_module.'
-						AND `id_profile` = '.(int)$id_profile;
-            }
+//            if ($id_module == -1) {
+//                $sql = '
+//					UPDATE `'._DB_PREFIX_.'module_access`
+//					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
+//					WHERE `id_profile` = '.(int)$id_profile;
+//            } else {
+//                $sql = '
+//					UPDATE `'._DB_PREFIX_.'module_access`
+//					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
+//					WHERE `id_module` = '.(int)$id_module.'
+//						AND `id_profile` = '.(int)$id_profile;
+//            }
 
             $res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
 
