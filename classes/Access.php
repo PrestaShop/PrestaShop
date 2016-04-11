@@ -44,6 +44,11 @@ class AccessCore extends ObjectModel
         ),
     );
     
+    /**
+     * 
+     * @param string $authSlug
+     * @return string
+     */
     public static function findIdTabByAuthSlug($authSlug)
     {
         preg_match(
@@ -61,6 +66,11 @@ class AccessCore extends ObjectModel
         return $result['id_tab'];
     }
     
+    /**
+     * 
+     * @param string $idTab
+     * @return string
+     */
     public static function findSlugByIdTab($idTab)
     {
         $result = Db::getInstance()->getRow('
@@ -71,16 +81,33 @@ class AccessCore extends ObjectModel
         return self::sluggifyTab($result);
     }
     
+    /**
+     * 
+     * @param string $tab Tab class name
+     * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
+     * @return string
+     */
     public static function sluggifyTab($tab, $authorization = '')
     {
         return sprintf('ROLE_MOD_TAB_%s_%s', strtoupper($tab['class_name']), $authorization);
     }
     
+    /**
+     * 
+     * @param string $module Module name
+     * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
+     * @return string
+     */
     public static function sluggifyModule($module, $authorization = '')
     {
         return sprintf('ROLE_MOD_MODULE_%s_%s', strtoupper($module['name']), $authorization);
     }
     
+    /**
+     * 
+     * @param string $legacyAuth
+     * @return string|array
+     */
     public static function getAuthorizationFromLegacy($legacyAuth)
     {
         $auth = array(
@@ -94,6 +121,13 @@ class AccessCore extends ObjectModel
         return isset($auth[$legacyAuth]) ? $auth[$legacyAuth] : false;
     }
     
+    /**
+     * 
+     * @param string|int $idProfile
+     * @param string|int $idTab
+     * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
+     * @return string 'ok'|'error'
+     */
     public function addAccess($idProfile, $idTab, $authorization)
     {
         $slug = self::findSlugByIdTab($idTab).$authorization;
@@ -110,6 +144,13 @@ class AccessCore extends ObjectModel
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
     }
     
+    /**
+     * 
+     * @param string|int $idProfile
+     * @param string|int $idTab
+     * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
+     * @return string 'ok'|'error'
+     */
     public function removeAccess($idProfile, $idTab, $authorization)
     {
         $slug = self::findSlugByIdTab($idTab).$authorization;
