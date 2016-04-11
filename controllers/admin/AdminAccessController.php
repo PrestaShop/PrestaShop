@@ -175,42 +175,8 @@ class AdminAccessControllerCore extends AdminController
             $enabled = (int)Tools::getValue('enabled');
             $id_tab = (int)Tools::getValue('id_tab');
             $id_profile = (int)Tools::getValue('id_profile');
-            $where = '`id_tab`';
-            $join = '';
-            if (Tools::isSubmit('addFromParent')) {
-                $where = 't.`id_parent`';
-                $join = 'LEFT JOIN `'._DB_PREFIX_.'tab` t ON (t.`id_tab` = a.`id_tab`)';
-            }
-
-            if ($id_tab == -1) {
-                if ($perm == 'all') {
-                    $roles = Db::getInstance()->executeS('
-                        SELECT `id_authorization_role`
-                        FROM `'._DB_PREFIX_.'authorization_role` t
-                        WHERE `slug` LIKE "ROLE_MOD_TAB_%"
-                    ');
-                    
-                    foreach ($roles as $role) {
-                        $res[] = $access->addAccess((int)$id_profile, $role['id_authorization_role']);
-                    }
-                } else {
-                    $roles = Db::getInstance()->executeS('
-                        SELECT `id_authorization_role`
-                        FROM `'._DB_PREFIX_.'authorization_role` t
-                        WHERE `slug` LIKE "ROLE_MOD_TAB_%_'.$access::getAuthorizationFromLegacy($perm).'"
-                    ');
-                    
-                    foreach ($roles as $role) {
-                        $res[] = $access->addAccess((int)$id_profile, $role['id_authorization_role']);
-                    }
-                }
-            } else {
-                foreach ((array) Access::getAuthorizationFromLegacy($perm) as $authorization) {
-                    $res[] = $access->addLgcAccess((int)$id_profile, $id_tab, $authorization);
-                }
-            }
-
-            die(in_array('error', $res) ? 'error' : 'ok');
+            
+            die($access->updateLgcAccess((int)$id_profile, $id_tab, $perm, $enabled));
         }
     }
 
