@@ -359,23 +359,22 @@ abstract class ModuleCore
         $this->enable();
 
         // Permissions management
-        Db::getInstance()->execute('
-            INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
-                SELECT id_profile, '.(int)$this->id.', 1, 1, 1
-                FROM '._DB_PREFIX_.'access a
-                WHERE id_tab = (
-                    SELECT `id_tab` FROM '._DB_PREFIX_.'tab
-                    WHERE class_name = \'AdminModules\' LIMIT 1)
-                AND a.`view` = 1)');
-
-        Db::getInstance()->execute('
-            INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
-                SELECT id_profile, '.(int)$this->id.', 1, 0, 0
-                FROM '._DB_PREFIX_.'access a
-                WHERE id_tab = (
-                    SELECT `id_tab` FROM '._DB_PREFIX_.'tab
-                    WHERE class_name = \'AdminModules\' LIMIT 1)
-                AND a.`view` = 0)');
+        foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
+            $slug = 'ROLE_MOD_MODULE_'.strtoupper($this->name).'_'.$action;
+            
+            Db::getInstance()->execute(
+                'INSERT INTO `'._DB_PREFIX_.'authorization_role` (`slug`) VALUES ("'.$slug.'")'
+            );
+            
+            Db::getInstance()->execute('
+                INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_authorization_role`) (
+                    SELECT id_profile, "'.Db::getInstance()->Insert_ID().'"
+                    FROM '._DB_PREFIX_.'access a
+                    LEFT JOIN `'._DB_PREFIX_.'authorization_role` r
+                    ON r.id_authorization_role = a.id_authorization_role
+                    WHERE r.slug = "ROLE_MOD_TAB_ADMINMODULES_'.$action.'"
+            )');
+        }
 
         // Adding Restrictions for client groups
         Group::addRestrictionsForModule($this->id, Shop::getShops(true, null, true));
