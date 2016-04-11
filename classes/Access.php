@@ -128,7 +128,7 @@ class AccessCore extends ObjectModel
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
      * @return string 'ok'|'error'
      */
-    public function addAccess($idProfile, $idTab, $authorization)
+    public function addLgcAccess($idProfile, $idTab, $authorization)
     {
         $slug = self::findSlugByIdTab($idTab).$authorization;
         $result = Db::getInstance()->getRow('
@@ -151,7 +151,7 @@ class AccessCore extends ObjectModel
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
      * @return string 'ok'|'error'
      */
-    public function removeAccess($idProfile, $idTab, $authorization)
+    public function removeLgcAccess($idProfile, $idTab, $authorization)
     {
         $slug = self::findSlugByIdTab($idTab).$authorization;
         $result = Db::getInstance()->getRow('
