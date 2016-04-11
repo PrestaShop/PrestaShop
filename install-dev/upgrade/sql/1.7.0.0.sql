@@ -95,3 +95,5 @@ DROP TABLE `PREFIX_scene_products`;
 DROP TABLE `PREFIX_scene_shop`;
 ALTER TABLE `PREFIX_image_type` DROP `scenes`;
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_SCENE_FEATURE_ACTIVE';
+
+UPDATE `PREFIX_configuration` SET `PS_TAX_DISPLAY` = '1';
