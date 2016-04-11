@@ -123,6 +123,39 @@ class AccessCore extends ObjectModel
     
     /**
      * 
+     * @param int $idProfile
+     * @param int $idRole
+     * @return string
+     */
+    public function addAccess($idProfile, $idRole)
+    {
+        $sql = '
+            INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
+            VALUES ('.$idProfile.','.$idRole.')
+        ';
+        
+        return Db::getInstance()->execute($sql) ? 'ok' : 'error';
+    }
+    
+    /**
+     * 
+     * @param int $idProfile
+     * @param string $slug
+     * @return string
+     */
+    public function addAccessBySlug($idProfile, $slug)
+    {
+        $result = Db::getInstance()->getRow('
+            SELECT `id_authorization_role`
+            FROM `'._DB_PREFIX_.'authorization_role` t
+            WHERE `slug` = "'.$slug.'"
+        ');
+        
+        return $this->addAccess($idProfile, $result['id_authorization_role']);
+    }
+    
+    /**
+     * 
      * @param string|int $idProfile
      * @param string|int $idTab
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
@@ -130,18 +163,7 @@ class AccessCore extends ObjectModel
      */
     public function addLgcAccess($idProfile, $idTab, $authorization)
     {
-        $slug = self::findSlugByIdTab($idTab).$authorization;
-        $result = Db::getInstance()->getRow('
-            SELECT `id_authorization_role`
-            FROM `'._DB_PREFIX_.'authorization_role` t
-            WHERE `slug` = "'.$slug.'"
-        ');
-        $sql = '
-            INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
-            VALUES ('.$idProfile.','.$result['id_authorization_role'].')
-        ';
-        
-        return Db::getInstance()->execute($sql) ? 'ok' : 'error';
+        return $this->addAccessBySlug($idProfile, self::findSlugByIdTab($idTab).$authorization);
     }
     
     /**
