@@ -168,6 +168,23 @@ class AccessCore extends ObjectModel
     
     /**
      * 
+     * @param int $idProfile
+     * @param int $idRole
+     * @return string 'ok'|'error'
+     */
+    public function removeAccess($idProfile, $idRole)
+    {
+        $sql = '
+            DELETE FROM `'._DB_PREFIX_.'access`
+            WHERE `id_profile` = "'.$idProfile.'"
+            AND `id_authorization_role` = "'.$idRole.'"
+        ';
+        
+        return Db::getInstance()->execute($sql) ? 'ok' : 'error';
+    }
+    
+    /**
+     * 
      * @param string|int $idProfile
      * @param string|int $idTab
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
@@ -188,5 +205,43 @@ class AccessCore extends ObjectModel
         ';
         
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
+    }
+    
+    /**
+     * 
+     * @param int $idProfile
+     * @param int $idTab
+     * @param string $lgcAuth
+     * @param int $enabled
+     */
+    public function updateLgcAccess($idProfile, $idTab, $lgcAuth, $enabled)
+    {
+        if ($idTab == -1) {
+            $slug = 'ROLE_MOD_TAB_%_';
+        } else {
+            $slug = self::findSlugByIdTab($idTab);
+        }
+        
+        $whereClauses = array();
+
+        foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
+            $whereClauses[] = ' `slug` LIKE "'.$slug.$auth.'"';
+        }
+
+        $roles = Db::getInstance()->executeS('
+            SELECT `id_authorization_role`
+            FROM `'._DB_PREFIX_.'authorization_role` t
+            WHERE '.implode(' OR ', $whereClauses).'
+        ');
+        
+        foreach ($roles as $role) {
+            if ($enabled) {
+                $res[] = $this->addAccess($idProfile, $role['id_authorization_role']);
+            } else {
+                $res[] = $this->removeAccess($idProfile, $role['id_authorization_role']);
+            }
+        }
+        
+        return in_array('error', $res) ? 'error' : 'ok';
     }
 }
