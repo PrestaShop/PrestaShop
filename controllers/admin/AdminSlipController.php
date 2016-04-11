@@ -53,7 +53,9 @@ class AdminSlipControllerCore extends AdminController
             'date_add' => array(
                 'title' => $this->l('Date issued'),
                 'type' => 'date',
-                'align' => 'right'
+                'align' => 'right',
+                'filter_key' => 'a!date_add',
+                'havingFilter' => true
             ),
             'id_pdf' => array(
                 'title' => $this->l('PDF'),
