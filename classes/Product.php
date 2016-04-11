@@ -2252,8 +2252,8 @@ class ProductCore extends ObjectModel
             $front = false;
         }
 
-        if ($page_number < 0) {
-            $page_number = 0;
+        if ($page_number < 1) {
+            $page_number = 1;
         }
         if ($nb_products < 1) {
             $nb_products = 10;
@@ -2328,7 +2328,7 @@ class ProductCore extends ObjectModel
         }
 
         $sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way));
-        $sql->limit($nb_products, $page_number * $nb_products);
+        $sql->limit($nb_products, (int)(($page_number-1) * $nb_products));
 
         if (Combination::isFeatureActive()) {
             $sql->select('product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute');
