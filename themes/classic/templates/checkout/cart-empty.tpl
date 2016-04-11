@@ -1,10 +1,21 @@
-{extends file=$layout}
+{extends file='checkout/cart.tpl'}
 
-{block name='content'}
-
-  <section id="main" class="card text-xs-center">
-    <div class="card-block"><h1 class="display-4 card-title">{l s='Oh no! Your shopping cart is empty'}</h1></div>
-    <a class="btn btn-primary" href="{$allProductsLink}">{l s='Add some products'}</a>
-  </section>
-
+{block name='content' append}
+  {hook h='displayCrossSellingShoppingCart'}
 {/block}
+
+{block name='cart_overview' append}
+  <a href="{$urls.pages.index}">
+    {l s='Continue shopping'}<i class="material-icons">chevron_right</i>
+  </a>
+{/block}
+
+{block name='cart_actions'}
+  <div class="checkout text-xs-center card-block">
+    <a href="{$urls.pages.order}" class="btn btn-primary disabled">{l s='Checkout'}</a>
+  </div>
+{/block}
+
+{block name='continue_shopping'}{/block}
+{block name='cart_voucher'}{/block}
+{block name='display_reassurance'}{/block}

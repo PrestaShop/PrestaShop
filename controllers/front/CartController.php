@@ -351,4 +351,17 @@ class CartControllerCore extends FrontController
         $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
     }
+
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+        $presenter = new CartPresenter;
+        $presented_cart = $presenter->present($this->context->cart);
+
+        if (count($presented_cart['products']) == 0) {
+            $page['body_classes']['cart-empty'] = true;
+        }
+
+        return $page;
+    }
 }
