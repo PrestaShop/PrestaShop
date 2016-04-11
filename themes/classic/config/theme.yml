@@ -66,6 +66,8 @@ global_settings:
         - blockreassurance
       displayOrderConfirmation2:
         - ps_featuredproducts
+      displayCrossSellingShoppingCart:
+        - ps_featuredproducts
 
   image_types:
     cart_default:
