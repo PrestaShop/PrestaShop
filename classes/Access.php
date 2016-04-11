@@ -140,35 +140,6 @@ class AccessCore extends ObjectModel
     /**
      * 
      * @param int $idProfile
-     * @param string $slug
-     * @return string
-     */
-    public function addAccessBySlug($idProfile, $slug)
-    {
-        $result = Db::getInstance()->getRow('
-            SELECT `id_authorization_role`
-            FROM `'._DB_PREFIX_.'authorization_role` t
-            WHERE `slug` = "'.$slug.'"
-        ');
-        
-        return $this->addAccess($idProfile, $result['id_authorization_role']);
-    }
-    
-    /**
-     * 
-     * @param string|int $idProfile
-     * @param string|int $idTab
-     * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
-     * @return string 'ok'|'error'
-     */
-    public function addLgcAccess($idProfile, $idTab, $authorization)
-    {
-        return $this->addAccessBySlug($idProfile, self::findSlugByIdTab($idTab).$authorization);
-    }
-    
-    /**
-     * 
-     * @param int $idProfile
      * @param int $idRole
      * @return string 'ok'|'error'
      */
@@ -178,30 +149,6 @@ class AccessCore extends ObjectModel
             DELETE FROM `'._DB_PREFIX_.'access`
             WHERE `id_profile` = "'.$idProfile.'"
             AND `id_authorization_role` = "'.$idRole.'"
-        ';
-        
-        return Db::getInstance()->execute($sql) ? 'ok' : 'error';
-    }
-    
-    /**
-     * 
-     * @param string|int $idProfile
-     * @param string|int $idTab
-     * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
-     * @return string 'ok'|'error'
-     */
-    public function removeLgcAccess($idProfile, $idTab, $authorization)
-    {
-        $slug = self::findSlugByIdTab($idTab).$authorization;
-        $result = Db::getInstance()->getRow('
-            SELECT `id_authorization_role`
-            FROM `'._DB_PREFIX_.'authorization_role` t
-            WHERE `slug` = "'.$slug.'"
-        ');
-        $sql = '
-            DELETE FROM `'._DB_PREFIX_.'authorization_role` t
-            WHERE `id_profile` = "'.$idProfile.'"
-            AND `id_authorization_role` = "'.$result['id_authorization_role'].'"
         ';
         
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
