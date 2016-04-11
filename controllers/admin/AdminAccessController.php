@@ -196,7 +196,7 @@ class AdminAccessControllerCore extends AdminController
                 }
             } else {
                 foreach ((array) Access::getAuthorizationFromLegacy($perm) as $authorization) {
-                    $res[] = $access->addAccess((int)$id_profile, $id_tab, $authorization);
+                    $res[] = $access->addLgcAccess((int)$id_profile, $id_tab, $authorization);
                 }
             }
 
