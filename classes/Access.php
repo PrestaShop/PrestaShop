@@ -68,18 +68,17 @@ class AccessCore extends ObjectModel
             FROM `'._DB_PREFIX_.'tab` t
             WHERE `id_tab` = "'.$idTab.'"
         ');
-        
-        return self::sluggifyTab($result['class_name']);
+        return self::sluggifyTab($result);
     }
     
     public static function sluggifyTab($tab, $authorization = '')
     {
-        return sprintf('ROLE_MOD_TAB_%s_%s', strtoupper($tab['classname'], $authorization));
+        return sprintf('ROLE_MOD_TAB_%s_%s', strtoupper($tab['class_name']), $authorization);
     }
     
     public static function sluggifyModule($module, $authorization = '')
     {
-        return sprintf('ROLE_MOD_MODULE_%s_%s', strtoupper($module['name'], $authorization));
+        return sprintf('ROLE_MOD_MODULE_%s_%s', strtoupper($module['name']), $authorization);
     }
     
     public function addAccess($idProfile, $idTab, $authorization)
