@@ -80,12 +80,14 @@ class AdminAccessControllerCore extends AdminController
         $modules = array();
         foreach ($profiles as $profile) {
             $modules[$profile['id_profile']] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT ma.`id_module`, m.`name`, ma.`view`, ma.`configure`, ma.`uninstall`
-				FROM '._DB_PREFIX_.'module_access ma
-				LEFT JOIN '._DB_PREFIX_.'module m
-					ON ma.id_module = m.id_module
-				WHERE id_profile = '.(int)$profile['id_profile'].'
-				ORDER BY m.name
+				SELECT `slug` LIKE "%CREATE" as "add",
+                                    `slug` LIKE "%READ" as "view",
+                                    `slug` LIKE "%UPDATE" as "configure",
+                                    `slug` LIKE "%DELETE" as "uninstall"
+				FROM `'._DB_PREFIX_.'authorization_role` a
+				LEFT JOIN `'._DB_PREFIX_.'module_access` ma ON ma.id_authorization_role = a.id_authorization_role
+				WHERE ma.`id_profile` = '.(int)$profile['id_profile'].'
+				ORDER BY a.slug
 			');
             foreach ($modules[$profile['id_profile']] as $k => &$module) {
                 $m = Module::getInstanceById($module['id_module']);
