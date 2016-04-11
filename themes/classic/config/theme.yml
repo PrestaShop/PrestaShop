@@ -103,4 +103,7 @@ theme_settings:
   default_layout: layout-full-width
   layouts:
     category: layout-left-column
+    best-sales: layout-left-column
+    new-products: layout-left-column
+    prices-drop: layout-left-column
     contact: layout-left-column
