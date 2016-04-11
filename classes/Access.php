@@ -26,6 +26,24 @@
 
 class AccessCore extends ObjectModel
 {
+    /** @var int Profile id which address belongs to */
+    public $id_profile = null;
+
+    /** @var int AuthorizationRole id which address belongs to */
+    public $id_authorization_role = null;
+    
+    /**
+     * @see ObjectModel::$definition
+     */
+    public static $definition = array(
+        'table' => 'access',
+        'primary' => 'id_profile',
+        'fields' => array(
+            'id_profile' =>        array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
+            'id_authorization_role' =>    array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
+        ),
+    );
+    
     public static function findIdTabByAuthSlug($authSlug)
     {
         preg_match(
