@@ -184,15 +184,25 @@ class AdminAccessControllerCore extends AdminController
 
             if ($id_tab == -1) {
                 if ($perm == 'all') {
-                    $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a
-					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile;
+                    $roles = Db::getInstance()->executeS('
+                        SELECT `id_authorization_role`
+                        FROM `'._DB_PREFIX_.'authorization_role` t
+                        WHERE `slug` LIKE "ROLE_MOD_TAB_%"
+                    ');
+                    
+                    foreach ($roles as $role) {
+                        $res[] = $access->addAccess((int)$id_profile, $role['id_authorization_role']);
+                    }
                 } else {
-                    $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile;
+                    $roles = Db::getInstance()->executeS('
+                        SELECT `id_authorization_role`
+                        FROM `'._DB_PREFIX_.'authorization_role` t
+                        WHERE `slug` LIKE "ROLE_MOD_TAB_%_'.$access::getAuthorizationFromLegacy($perm).'"
+                    ');
+                    
+                    foreach ($roles as $role) {
+                        $res[] = $access->addAccess((int)$id_profile, $role['id_authorization_role']);
+                    }
                 }
             } else {
                 foreach ((array) Access::getAuthorizationFromLegacy($perm) as $authorization) {
