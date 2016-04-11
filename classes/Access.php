@@ -81,6 +81,19 @@ class AccessCore extends ObjectModel
         return sprintf('ROLE_MOD_MODULE_%s_%s', strtoupper($module['name']), $authorization);
     }
     
+    public static function getAuthorizationFromLegacy($legacyAuth)
+    {
+        $auth = array(
+            'add' => 'CREATE',
+            'view' => 'READ',
+            'edit' => 'UPDATE',
+            'delete' => 'DELETE',
+            'all' => array('CREATE', 'READ', 'UPDATE', 'DELETE'),
+        );
+        
+        return isset($auth[$legacyAuth]) ? $auth[$legacyAuth] : false;
+    }
+    
     public function addAccess($idProfile, $idTab, $authorization)
     {
         $slug = self::findSlugByIdTab($idTab).$authorization;
