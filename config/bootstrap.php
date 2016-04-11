@@ -27,3 +27,23 @@
 $container_builder = new \PrestaShop\PrestaShop\Core\ContainerBuilder;
 $container = $container_builder->build();
 \PrestaShop\PrestaShop\Adapter\ServiceLocator::setServiceContainerInstance($container);
+
+
+$yaml = new \Symfony\Component\Yaml\Yaml;
+$config = $yaml->parse(file_get_contents(__DIR__. '/../app/config/parameters.yml'));
+
+define('_DB_SERVER_', $config['parameters']['database_host']);
+define('_DB_NAME_', $config['parameters']['database_name']);
+define('_DB_USER_', $config['parameters']['database_user']);
+define('_DB_PASSWD_', $config['parameters']['database_password']);
+define('_DB_PREFIX_',  $config['parameters']['database_prefix']);
+define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
+define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
+define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
+define('_COOKIE_KEY_', $config['parameters']['cookie_key']);
+define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
+
+if (isset($config['parameters']['_rijndael_key']) && isset($config['parameters']['_rijndael_iv'])) {
+    define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
+    define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
+}

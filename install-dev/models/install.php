@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use Symfony\Component\Yaml\Yaml;
 
 class InstallModelInstall extends InstallAbstractModel
 {
@@ -73,59 +74,49 @@ class InstallModelInstall extends InstallAbstractModel
             return false;
         }
 
-        // Generate settings content and write file
-        $settings_constants = array(
-            '_DB_SERVER_' =>            $database_server,
-            '_DB_NAME_' =>                $database_name,
-            '_DB_USER_' =>                $database_login,
-            '_DB_PASSWD_' =>            $database_password,
-            '_DB_PREFIX_' =>            $database_prefix,
-            '_MYSQL_ENGINE_' =>        $database_engine,
-            '_PS_CACHING_SYSTEM_' =>    'CacheMemcache',
-            '_PS_CACHE_ENABLED_' =>    '0',
-            '_COOKIE_KEY_' =>            Tools::passwdGen(56),
-            '_COOKIE_IV_' =>            Tools::passwdGen(8),
-            '_PS_CREATION_DATE_' =>    date('Y-m-d'),
-            '_PS_VERSION_' =>            _PS_INSTALL_VERSION_,
+        $parameters  = array(
+            'database_host' => $database_server,
+            'database_login' => $database_login,
+            'database_password' => $database_password,
+            'database_name' => $database_name,
+            'database_prefix' => $database_prefix,
+            'database_engine' =>  $database_engine,
+            'cookie_iv' =>  Tools::passwdGen(56),
+            'cookie_key' => Tools::passwdGen(8)
         );
 
         // If mcrypt is activated, add Rijndael 128 configuration
         if (function_exists('mcrypt_encrypt')) {
-            $settings_constants['_RIJNDAEL_KEY_'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
-            $settings_constants['_RIJNDAEL_IV_'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC), MCRYPT_RAND));
+            $parameters['_rijndael_key'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
+            $parameters['_rijndael_iv'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
         }
 
         $settings_content = "<?php\n";
-
-        foreach ($settings_constants as $constant => $value) {
-            if ($constant == '_PS_VERSION_') {
-                $settings_content .= 'if (!defined(\''.$constant.'\'))'."\n\t";
-            }
-
-            $settings_content .= "define('$constant', '".str_replace('\'', '\\\'', $value)."');\n";
-        }
+        $settings_content .= "//@deprecated 1.7";
 
         if (!file_put_contents(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE, $settings_content)) {
             $this->setError($this->language->l('Cannot write settings file'));
             return false;
         }
 
-        return $this->generateSf2ParametersFile($database_server, $database_login, $database_password, $database_name, $database_prefix);
+
+        return $this->generateSf2ParametersFile($parameters);
     }
 
     /**
      * Customize SF2 parameters file
      *
-     * @param $database_server
-     * @param $database_login
-     * @param $database_password
-     * @param $database_name
-     * @param $database_prefix
+     * @param $parameters
      *
      * @return bool
      */
-    private function generateSf2ParametersFile($database_server, $database_login, $database_password, $database_name, $database_prefix)
+    private function generateSf2ParametersFile($parameters)
     {
+        //If ENV is DEV, by pass this step
+        if (_PS_MODE_DEV_) {
+            return true;
+        }
+
         if (!is_writable(_PS_ROOT_DIR_.'/app/config')) {
             $this->setError($this->language->l('%s folder is not writable (check permissions)', 'app/config'));
             return false;
@@ -133,34 +124,26 @@ class InstallModelInstall extends InstallAbstractModel
 
         umask(0000);
 
-        $database_port = '~';
+        $parameters['database_port'] = '~';
 
-        $host = explode(':', $database_server);
+        $host = explode(':', $parameters['$database_server']);
         $port = array_pop($host);
         if (is_numeric($port)) {
-            $database_port = $port;
-            $database_server = implode(':', $host);
+            $parameters['database_port'] = $port;
+            $parameters['database_server'] = implode(':', $host);
         }
 
-        //generate parameters content file
-        $content = 'parameters:'."\n";
-        $content .= '    database_host: '.$database_server."\n";
-        $content .= '    database_port: '.$database_port."\n";
-        $content .= '    database_name: '.$database_name."\n";
-        $content .= '    database_user: '.$database_login."\n";
-        $content .= '    database_password: '.$database_password."\n";
-        $content .= '    database_prefix: '.$database_prefix."\n";
-        $content .= '    mailer_transport: smtp'."\n";
-        $content .= '    mailer_host: 127.0.0.1'."\n";
-        $content .= '    mailer_user: ~'."\n";
-        $content .= '    mailer_password: ~'."\n";
-        $content .= '    secret: '.Tools::passwdGen(56)."\n";
+        $configs = ['parameters' =>  array_merge(
+            $parameters, [
+                'mailer_transport' => 'smtp',
+                'mailer_host' => '127.0.0.1',
+                'mailer_user' => '~',
+                'mailer_password' => '~',
+                'secret' => Tools::passwdGen(56)
+            ]
+        )];
 
-        if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
-            rename(_PS_ROOT_DIR_.'/app/config/parameters.yml', _PS_ROOT_DIR_.'/app/config/parameters.old.yml');
-        }
-
-        if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', $content)) {
+        if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($configs))) {
             $this->setError($this->language->l('Cannot write app/config/parameters.yml file'));
             return false;
         }

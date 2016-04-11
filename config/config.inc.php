@@ -59,10 +59,9 @@ if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
 }
 
 /* include settings file only if we are not in multi-tenancy mode */
-require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
-
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
+
 
 /* Custom config made by users */
 if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
