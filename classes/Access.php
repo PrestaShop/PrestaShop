@@ -90,7 +90,7 @@ class AccessCore extends ObjectModel
             WHERE `slug` = "'.$slug.'"
         ');
         $sql = '
-            INSERT INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
+            INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
             VALUES ('.$idProfile.','.$result['id_authorization_role'].')
         ';
         
