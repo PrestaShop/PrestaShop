@@ -64,8 +64,8 @@ class ProductSaleCore
     public static function getBestSales($id_lang, $page_number = 0, $nb_products = 10, $order_by = null, $order_way = null)
     {
         $context = Context::getContext();
-        if ($page_number < 0) {
-            $page_number = 0;
+        if ($page_number < 1) {
+            $page_number = 1;
         }
         if ($nb_products < 1) {
             $nb_products = 10;
@@ -134,7 +134,7 @@ class ProductSaleCore
         if ($final_order_by != 'price') {
             $sql .= '
 					ORDER BY '.(!empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
-					LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
+					LIMIT '.(int)(($page_number-1) * $nb_products).', '.(int)$nb_products;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
