@@ -544,7 +544,7 @@ class CartCore extends ObjectModel
         $sql->orderBy('cp.`date_add`, cp.`id_product`, cp.`id_product_attribute` ASC');
 
         if (Customization::isFeatureActive()) {
-            $sql->select('cu.`id_customization` AS customization_id, cu.`quantity` AS customization_quantity');
+            $sql->select('cu.`id_customization`, cu.`quantity` AS customization_quantity');
             $sql->leftJoin(
                 'customization',
                 'cu',
