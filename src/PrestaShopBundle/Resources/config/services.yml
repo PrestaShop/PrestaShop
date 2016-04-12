@@ -115,6 +115,14 @@ services:
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
 
+    # Presenters
+    prestashop.adapter.presenter.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
+        arguments: ["@=service('prestashop.adapter.legacy.context').getContext().currency", "@prestashop.adapter.formatter.price"]
+        
+    prestashop.adapter.formatter.price:
+        class: PrestaShop\PrestaShop\Adapter\Product\PriceFormatter
+
     # Other adapters
     prestashop.adapter.shop.context:
         class: PrestaShop\PrestaShop\Adapter\Shop\Context

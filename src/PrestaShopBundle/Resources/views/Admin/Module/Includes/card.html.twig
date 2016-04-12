@@ -1,47 +1,47 @@
 
-{% set isModuleActive = module.database.get('active')|default('0') %}
+{% set isModuleActive = module.database.active|default('0') %}
 
-<div class="module-item-{{display_type}} {{col_lg}} {% if origin == 'manage' and isModuleActive == '0' %}module-item-{{display_type}}-isNotActive{% endif %}" data-id="{{ module.attributes.get('id') }}" data-name="{{ module.attributes.get('displayName') }}"
-data-scoring="{{module.attributes.get('scoring')}}" data-logo="{{ module.attributes.get('media').img }}" data-author="{{ module.attributes.get('author') }}"
-data-version="{{ module.attributes.get('version') }}" data-description="{{ module.attributes.get('description') }}" data-tech-name="{{module.attributes.get('name') }}"
-data-categories="{{ module.attributes.get('refs')|join('|') }}" data-type="{{module.attributes.get('productType') }}" data-price="{{module.attributes.get('price').EUR}}" data-active="{{isModuleActive}}">
+<div class="module-item-{{display_type}} {{col_lg}} {% if origin == 'manage' and isModuleActive == '0' %}module-item-{{display_type}}-isNotActive{% endif %}" data-id="{{ module.attributes.id }}" data-name="{{ module.attributes.displayName }}"
+data-scoring="{{module.attributes.scoring}}" data-logo="{{ module.attributes.img }}" data-author="{{ module.attributes.author }}"
+data-version="{{ module.attributes.version }}" data-description="{{ module.attributes.description }}" data-tech-name="{{module.attributes.name }}"
+data-categories="{{ module.attributes.refs|join('|') }}" data-type="{{module.attributes.productType }}" data-price="{{module.attributes.price.raw}}" data-active="{{isModuleActive}}">
      <div class="module-item-wrapper-{{display_type}}">
-        <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.get('name')}}">
-            <img class="module-logo-thumb-{{display_type}}" src="{{ module.attributes.get('media').img }}" alt="{{ module.attributes.get('displayName') }}" />
-            <h3 class="text-ellipsis module-name-{{display_type}}" data-toggle="tooltip" data-placement="top" title="{{ module.attributes.get('displayName')|raw }}">
-              {% if module.attributes.has('displayName') %}
-                {{ module.attributes.get('displayName')|raw }}
+        <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name}}">
+            <img class="module-logo-thumb-{{display_type}}" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}" />
+            <h3 class="text-ellipsis module-name-{{display_type}}" data-toggle="tooltip" data-placement="top" title="{{ module.attributes.displayName|raw }}">
+              {% if module.attributes.displayName %}
+                {{ module.attributes.displayName|raw }}
               {% else %}
-                {{ module.attributes.get('name') }}
+                {{ module.attributes.name }}
               {% endif %}
             </h3>
             <div class="text-ellipsis xsmall module-version-author-{{display_type}}">
                 {% block addon_version %}
-                    {% if module.attributes.get('productType') == "service" %}
-                        Service by  <a class="url" href="#">{{ module.attributes.get('author') }}</a>
+                    {% if module.attributes.productType == "service" %}
+                        Service by  <a class="url" href="#">{{ module.attributes.author }}</a>
                     {% else %}
-                        v{{ module.attributes.get('version') }} by  <a class="url" href="#">{{ module.attributes.get('author') }}</a>
+                        v{{ module.attributes.version }} by  <a class="url" href="#">{{ module.attributes.author }}</a>
                     {% endif %}
                 {% endblock %}
             </div>
         </div>
         <div class="module-quick-description-{{display_type}} small no-padding">
             {% block addon_description %}
-                {{ module.attributes.get('description')|raw }}
-                {% if module.attributes.has('fullDescription') and module.attributes.get('description')|length < module.attributes.get('fullDescription')|length %}
+                {{ module.attributes.description|raw }}
+                {% if module.attributes.description|length < module.attributes.fullDescription|length %}
                     ...
                 {% endif %}
             {% endblock %}
         </div>
         <div class="module-read-more-{{display_type}} small">
-            <a class="module-read-more-{{display_type}}-btn url" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.get('name') }}{{ additionalModalSuffix|default('') }}">Read More</a>
+            <a class="module-read-more-{{display_type}}-btn url" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">Read More</a>
         </div>
 
 
         <div class="module-quick-action-{{display_type}} clearfix">
             {% if requireBulkActions is defined and requireBulkActions == true %}
                 <div class="pull-right">
-                    <input type="checkbox" data-name="{{ module.attributes.get('displayName') }}" data-tech-name="{{module.attributes.get('name')}}" class="module-checkbox-bulk-{{display_type}}" />
+                    <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" class="module-checkbox-bulk-{{display_type}}" />
                 </div>
             {% endif %}
             {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}
