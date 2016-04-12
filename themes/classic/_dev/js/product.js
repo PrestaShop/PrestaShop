@@ -5,13 +5,7 @@ $(document).ready(function () {
     $('.js-file-name').text($(event.currentTarget).val());
   });
 
-  $('#quantity_wanted').TouchSpin({
-    verticalbuttons: true,
-    verticalupclass: 'material-icons touchspin-up',
-    verticaldownclass: 'material-icons touchspin-down',
-    buttondown_class: 'btn btn-touchspin js-touchspin',
-    buttonup_class: 'btn btn-touchspin js-touchspin'
-  });
+  createProductSpin();
 
   $('body').on(
     'click',
@@ -31,5 +25,20 @@ $(document).ready(function () {
       });
     }
   );
+
+  prestashop.on('product dom updated', function(event) {
+    createProductSpin();
+  });
+
+  function createProductSpin()
+  {
+    $('#quantity_wanted').TouchSpin({
+      verticalbuttons: true,
+      verticalupclass: 'material-icons touchspin-up',
+      verticaldownclass: 'material-icons touchspin-down',
+      buttondown_class: 'btn btn-touchspin js-touchspin',
+      buttonup_class: 'btn btn-touchspin js-touchspin'
+    });
+  }
 
 });
