@@ -4,14 +4,14 @@
 
 {# Display "Old version -> New version" #}
 {% block addon_version %}
-    v{{module.database.get('version')}} <i class="material-icons" style="font-size: 10px; ">arrow_forward</i> v{{module.attributes.get('version')}}
+    v{{module.database.version}} <i class="material-icons" style="font-size: 10px; ">arrow_forward</i> v{{module.attributes.version}}
 {% endblock %}
 
 {# Display changelog instead of the description #}
 {% block addon_description %}
-    {% if module.attributes.has('changeLog') %}
+    {% if module.attributes.changeLog is defined %}
         <ul>
-            {% for version, lines in module.attributes.get('changeLog') %}
+            {% for version, lines in module.attributes.changeLog %}
                 <li><b>{{version}}:</b>
                 {% for line in lines %}
                     {{line}}<br/>

@@ -94,6 +94,20 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->moduleManager->enable(self::UNINSTALLED_MODULE));
     }
 
+    public function testDisableOnMobileSuccessful()
+    {
+        $this->assertTrue($this->moduleManager->disable_mobile(self::INSTALLED_MODULE));
+        $this->setExpectedException('Exception', 'You are not allowed to disable this module on mobile.');
+        $this->assertFalse($this->moduleManager->disable_mobile(self::UNINSTALLED_MODULE));
+    }
+
+    public function testEnableOnMobileSuccessful()
+    {
+        $this->assertTrue($this->moduleManager->enable_mobile(self::INSTALLED_MODULE));
+        $this->setExpectedException('Exception', 'You are not allowed to enable this module on mobile.');
+        $this->assertFalse($this->moduleManager->enable_mobile(self::UNINSTALLED_MODULE));
+    }
+
     public function testResetSuccessful()
     {
         $this->assertTrue($this->moduleManager->reset(self::INSTALLED_MODULE));
@@ -240,6 +254,12 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true);
         $moduleS
             ->method('onReset')
+            ->willReturn(true);
+        $moduleS
+            ->method('onMobileDisable')
+            ->willReturn(true);
+        $moduleS
+            ->method('onMobileEnable')
             ->willReturn(true);
 
         $this->moduleRepositoryS = $this->getMockBuilder('PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository')

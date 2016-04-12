@@ -110,7 +110,7 @@ class AdminModuleDataProvider implements ModuleInterface
     {
         foreach ($addons as &$addon) {
             $urls = [];
-            foreach (['install', 'uninstall', 'enable', 'disable', 'reset', 'upgrade'] as $action) {
+            foreach (['install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade'] as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', [
                     'action' => $action,
                     'module_name' => $addon->attributes->get('name'),
@@ -145,6 +145,11 @@ class AdminModuleDataProvider implements ModuleInterface
                         $urls['configure']
                     );
                 }
+                if ($addon->database->get('active_on_mobile') == 0) {
+                    unset($urls['disable_mobile']);
+                } else {
+                    unset($urls['enable_mobile']);
+                }
                 if ($addon->database->get('installed') == 0 || version_compare($addon->database->get('version'), $addon->disk->get('version'), '<=')
                     && version_compare($addon->attributes->get('version'), $addon->database->get('version'), '<=')) {
                     unset(
@@ -157,6 +162,8 @@ class AdminModuleDataProvider implements ModuleInterface
                     $urls['uninstall'],
                     $urls['enable'],
                     $urls['disable'],
+                    $urls['enable_mobile'],
+                    $urls['disable_mobile'],
                     $urls['reset'],
                     $urls['upgrade'],
                     $urls['configure']
@@ -348,25 +355,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     $product->productType = isset($json_key)?rtrim($json_key, 's'):'module';
                 } else {
                     $product->productType = $product->product_type;
-                    //unset($product->product_type);
                 }
-                if (! isset($product->url)) {
-                    $product->url = '';
-                }
-
-                $product->conditions = [];
-                $product->rating     = (object)[
-                        'score' => !empty($product->avg_rate)?$product->avg_rate:0.0,
-                        'countReviews' => !empty($product->nb_rates)?$product->nb_rates:0,
-                ];
-                $product->scoring    = 0;
-                $product->media      = (object)[
-                        'img' => isset($product->img)?$product->img:'../../img/questionmark.png',
-                        'badges' => isset($product->badges)?$product->badges:[],
-                        'cover' => isset($product->cover)?$product->cover:[],
-                        'screenshotsUrls' => [],
-                        'videoUrl' => null,
-                ];
 
                 $remixed_json[] = $product;
             }
