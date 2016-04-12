@@ -171,6 +171,7 @@ class AdminAccessControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('changeModuleAccess')) {
+            $access = new Access;
             $perm = Tools::getValue('perm');
             $enabled = (int)Tools::getValue('enabled');
             $id_module = (int)Tools::getValue('id_module');
@@ -180,22 +181,7 @@ class AdminAccessControllerCore extends AdminController
                 throw new PrestaShopException('permission does not exist');
             }
 
-//            if ($id_module == -1) {
-//                $sql = '
-//					UPDATE `'._DB_PREFIX_.'module_access`
-//					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-//					WHERE `id_profile` = '.(int)$id_profile;
-//            } else {
-//                $sql = '
-//					UPDATE `'._DB_PREFIX_.'module_access`
-//					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-//					WHERE `id_module` = '.(int)$id_module.'
-//						AND `id_profile` = '.(int)$id_profile;
-//            }
-
-            $res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
-
-            die($res);
+            die($access->updateLgcModuleAccess((int)$id_profile, $id_module, $perm, $enabled));
         }
     }
 
