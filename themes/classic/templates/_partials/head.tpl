@@ -8,6 +8,11 @@
   {if $page.canonical}
     <link rel="canonical" href="{$page.canonical}">
   {/if}
+
+  {foreach from=$languages item=language_item}
+    <link rel="alternate" href="{$link->getLanguageLink($language_item.id_lang)}" hreflang="{$language_item.iso_code}" />
+  {/foreach}
+  <link rel="alternate" href="{$link->getXDefaultLink()}" hreflang="x-default" />
 {/block}
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
