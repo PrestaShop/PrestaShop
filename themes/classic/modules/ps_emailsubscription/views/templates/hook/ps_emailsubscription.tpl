@@ -28,7 +28,7 @@
     <p class="col-md-5">{l s='Get our latest news and special sales' mod='blocknewsletter'}</p>
 
     <div class="col-md-7">
-      <form action="{$urls.pages.index}" method="post">
+      <form action="{$urls.pages.index}#footer" method="post">
         <div class="row">
           <div class="col-md-8">
             <input type="text" name="email" value="{$value}" placeholder="{l s='Your e-mail address' mod='blocknewsletter'}" />
