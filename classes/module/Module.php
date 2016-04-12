@@ -143,6 +143,9 @@ abstract class ModuleCore
     /** @var array Array filled with cache permissions (modules / employee profiles) */
     protected static $cache_permissions = array();
 
+    /** @var array Array filled with cache permissions (modules / employee profiles) */
+    protected static $cache_lgc_access = array();
+
     /** @var Context */
     protected $context;
 
@@ -2368,6 +2371,82 @@ abstract class ModuleCore
 
         $retro_hook_name = Hook::getRetroHookName($hook_name);
         return (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($retro_hook_name))));
+    }
+    
+    /**
+     * 
+     * @param int $idProfile
+     * @return array
+     */
+    public static function getModulesAccessesByIdProfile($idProfile)
+    {
+        if (empty(self::$cache_modules_roles)) {
+            self::warmupRolesCache();
+        }
+        
+        $roles = self::$cache_lgc_access;
+        
+        $profileRoles = Db::getInstance()->executeS('
+            SELECT `slug`,
+                `slug` LIKE "%CREATE" as "add",
+                `slug` LIKE "%READ" as "view",
+                `slug` LIKE "%UPDATE" as "configure",
+                `slug` LIKE "%DELETE" as "uninstall"
+            FROM `'._DB_PREFIX_.'authorization_role` a
+            LEFT JOIN `'._DB_PREFIX_.'module_access` j ON j.id_authorization_role = a.id_authorization_role
+            WHERE `slug` LIKE "ROLE_MOD_MODULE_%"
+            AND j.id_profile = "'.$idProfile.'"
+            ORDER BY a.slug
+        ');
+        
+        foreach ($profileRoles as $role) {
+            preg_match(
+                '/ROLE_MOD_MODULE_(?P<moduleName>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
+                $role['slug'],
+                $matches
+            );
+                    
+            if (($key = array_search('1', $role))) {
+                $roles[$matches['moduleName']][$key] = '1';
+            }
+        }
+        
+        return $roles;
+    }
+    
+    private static function warmupRolesCache()
+    {
+        $result = Db::getInstance()->executeS('
+            SELECT `slug`,
+                `slug` LIKE "%CREATE" as "add",
+                `slug` LIKE "%READ" as "view",
+                `slug` LIKE "%UPDATE" as "configure",
+                `slug` LIKE "%DELETE" as "uninstall"
+            FROM `'._DB_PREFIX_.'authorization_role` a
+            WHERE `slug` LIKE "ROLE_MOD_MODULE_%"
+            ORDER BY a.slug
+        ');
+        
+        foreach ($result as $row) {
+            preg_match(
+                '/ROLE_MOD_MODULE_(?P<moduleName>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
+                $row['slug'],
+                $matches
+            );
+        
+            $m = Module::getInstanceByName(strtolower($matches['moduleName']));
+            
+            // the following condition handles invalid modules
+            if ($m && !isset(self::$cache_lgc_access[$matches['moduleName']])) {
+                self::$cache_lgc_access[$matches['moduleName']] = array();
+                self::$cache_lgc_access[$matches['moduleName']]['id_module'] = $m->id;
+                self::$cache_lgc_access[$matches['moduleName']]['name'] = $m->displayName;
+                self::$cache_lgc_access[$matches['moduleName']]['add'] = '0';
+                self::$cache_lgc_access[$matches['moduleName']]['view'] = '0';
+                self::$cache_lgc_access[$matches['moduleName']]['configure'] = '0';
+                self::$cache_lgc_access[$matches['moduleName']]['uninstall'] = '0';
+            }
+        }
     }
 
     /**
