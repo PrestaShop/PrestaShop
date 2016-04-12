@@ -117,7 +117,7 @@ class FormFieldCore
         return $this;
     }
 
-    public function setConstraints(array $contraints)
+    public function setConstraints(array $constraints)
     {
         $this->constraints = $constraints;
         return $this;
