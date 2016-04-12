@@ -3,8 +3,8 @@
     {block name='product_discount'}
       {if $product.has_discount}
         <p class="product-discount">
-          <span class="regular-price">{$product.regular_price}</span>
           {hook h='displayProductPriceBlock' product=$product type="old_price"}
+          <span class="regular-price">{$product.regular_price}</span>
         </p>
       {/if}
     {/block}
