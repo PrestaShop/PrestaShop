@@ -174,9 +174,9 @@ class ModuleController extends FrameworkBundleAdminController
         if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
             try {
-                if($action == "uninstall") {
+                if ($action == "uninstall") {
                     $ret[$module]['status'] = $moduleManager->{$action}($module, $forceDeletion);
-                }else {
+                } else {
                     $ret[$module]['status'] = $moduleManager->{$action}($module);
                 }
 
@@ -372,9 +372,9 @@ class ModuleController extends FrameworkBundleAdminController
         $toolbarButtons = array();
         $toolbarButtons['add_module'] = array(
             'href' => '#',
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
+            'desc' => $translator->trans('Upload a module', array(), get_class($this)),
             'icon' => 'cloud_upload',
-            'help' => $translator->trans('Add a module', array(), get_class($this)),
+            'help' => $translator->trans('Upload a module', array(), get_class($this)),
         );
         $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
 
