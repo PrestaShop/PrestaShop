@@ -462,6 +462,7 @@ class FrontControllerCore extends Controller
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
             'language' => $this->objectPresenter->present($this->context->language),
+            'languages' => Language::getLanguages(true, $this->context->shop->id),
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
             'urls' => $this->getTemplateVarUrls(),

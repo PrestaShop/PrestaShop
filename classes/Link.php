@@ -542,7 +542,7 @@ class LinkCore
         $not_default = false;
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
 
         // Check if module is installed, enabled, customer is logged in and watermark logged option is on
         if (Configuration::get('WATERMARK_LOGGED') && ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
@@ -662,33 +662,34 @@ class LinkCore
             unset($params['id_lang']);
         }
 
-        $controller = Dispatcher::getInstance()->getController();
+        return $this->getLink($context, $params, $id_lang);
+    }
 
-        if (!empty($context->controller->php_self)) {
-            $controller = $context->controller->php_self;
+    public function getXDefaultLink(Context $context = null)
+    {
+        if (!$context) {
+            $context = Context::getContext();
         }
 
-        if ($controller == 'product' && isset($params['id_product'])) {
-            return $this->getProductLink((int)$params['id_product'], null, null, null, (int)$id_lang);
-        } elseif ($controller == 'category' && isset($params['id_category'])) {
-            return $this->getCategoryLink((int)$params['id_category'], null, (int)$id_lang);
-        } elseif ($controller == 'supplier' && isset($params['id_supplier'])) {
-            return $this->getSupplierLink((int)$params['id_supplier'], null, (int)$id_lang);
-        } elseif ($controller == 'manufacturer' && isset($params['id_manufacturer'])) {
-            return $this->getManufacturerLink((int)$params['id_manufacturer'], null, (int)$id_lang);
-        } elseif ($controller == 'cms' && isset($params['id_cms'])) {
-            return $this->getCMSLink((int)$params['id_cms'], null, null, (int)$id_lang);
-        } elseif ($controller == 'cms' && isset($params['id_cms_category'])) {
-            return $this->getCMSCategoryLink((int)$params['id_cms_category'], null, (int)$id_lang);
-        } elseif (isset($params['fc']) && $params['fc'] == 'module') {
-            $module = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
-            if (!empty($module)) {
-                unset($params['fc'], $params['module']);
-                return $this->getModuleLink($module, $controller, $params, null, (int)$id_lang);
-            }
+        $default_lang_id = Configuration::get('PS_LANG_DEFAULT');
+
+        $params = $_GET;
+        unset($params['isolang'], $params['controller']);
+
+        if ($this->allow) {
+            $this->allow = false;
+            $url = $this->getLink($context, $params, $default_lang_id);
+            $this->allow = true;
+
+            return $url;
         }
 
-        return $this->getPageLink($controller, null, $id_lang, $params);
+        $url = $this->getLink($context, $params, $default_lang_id);
+        list($baseUrl, $query) = explode('?', $url);
+        parse_str($query, $generatedParams);
+        unset($generatedParams['id_lang']);
+
+        return $baseUrl.'?'.http_build_query($generatedParams);
     }
 
     public function goPage($url, $p)
@@ -795,6 +796,44 @@ class LinkCore
         }
 
         return Language::getIsoById($id_lang).'/';
+    }
+
+    /**
+     * @param Context $context
+     * @param array   $params
+     * @param int     $id_lang
+     *
+     * @return string
+     */
+    protected function getLink(Context $context, $params, $id_lang)
+    {
+        $controller = Dispatcher::getInstance()->getController();
+
+        if (!empty($context->controller->php_self)) {
+            $controller = $context->controller->php_self;
+        }
+
+        if ($controller == 'product' && isset($params['id_product'])) {
+            return $this->getProductLink((int)$params['id_product'], null, null, null, (int)$id_lang);
+        } elseif ($controller == 'category' && isset($params['id_category'])) {
+            return $this->getCategoryLink((int)$params['id_category'], null, (int)$id_lang);
+        } elseif ($controller == 'supplier' && isset($params['id_supplier'])) {
+            return $this->getSupplierLink((int)$params['id_supplier'], null, (int)$id_lang);
+        } elseif ($controller == 'manufacturer' && isset($params['id_manufacturer'])) {
+            return $this->getManufacturerLink((int)$params['id_manufacturer'], null, (int)$id_lang);
+        } elseif ($controller == 'cms' && isset($params['id_cms'])) {
+            return $this->getCMSLink((int)$params['id_cms'], null, null, (int)$id_lang);
+        } elseif ($controller == 'cms' && isset($params['id_cms_category'])) {
+            return $this->getCMSCategoryLink((int)$params['id_cms_category'], null, (int)$id_lang);
+        } elseif (isset($params['fc']) && $params['fc'] == 'module') {
+            $module = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
+            if (!empty($module)) {
+                unset($params['fc'], $params['module']);
+                return $this->getModuleLink($module, $controller, $params, null, (int)$id_lang);
+            }
+        }
+
+        return $this->getPageLink($controller, null, $id_lang, $params);
     }
 
     public function getBaseLink($id_shop = null, $ssl = null, $relative_protocol = false)
