@@ -97,13 +97,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     public function getCatalogModulesNames(array $filter = [])
     {
-        $objects = $this->getCatalogModules($filter);
-        $names = [];
-        foreach ($objects as $object) {
-            $names[] = $object->name;
-        }
-
-        return $names;
+        return array_keys($this->getCatalogModules($filter));
     }
 
     public function generateAddonsUrls(array $addons)
@@ -218,8 +212,6 @@ class AdminModuleDataProvider implements ModuleInterface
             return $products;
         }
 
-        $module_ids = array_keys($products);
-
         // We get our module IDs to keep
         foreach ($filters as $filter_name => $value) {
             $search_result = [];
@@ -236,8 +228,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
                         // Instead of looping on the whole module list, we use $module_ids which can already be reduced
                         // thanks to the previous array_intersect(...)
-                        foreach ($module_ids as $key) {
-                            $module = $products[$key];
+                        foreach ($products as $key => $module) {
                             if (strpos($module->displayName, $keyword) !== false
                                 || strpos($module->name, $keyword) !== false
                                 || strpos($module->description, $keyword) !== false) {
@@ -248,26 +239,14 @@ class AdminModuleDataProvider implements ModuleInterface
                     break;
                 case 'name':
                     // exact given name (should return 0 or 1 result)
-                    foreach ($module_ids as $key) {
-                        $module = $products[$key];
-                        if ($module->name == $value) {
-                            $search_result[] = $key;
-                        }
-                    }
+                    $search_result[] = $value;
                     break;
                 default:
                     // "the switch statement is considered a looping structure for the purposes of continue."
                     continue 2;
             }
 
-            $module_ids = array_intersect($search_result, $module_ids);
-        }
-
-        // We apply the filter results
-        foreach ($products as $key => $module) {
-            if (! in_array($key, $module_ids)) {
-                unset($products[$key]);
-            }
+            $products = array_intersect_key($products, array_flip($search_result));
         }
 
         return $products;
@@ -357,7 +336,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     $product->productType = $product->product_type;
                 }
 
-                $remixed_json[] = $product;
+                $remixed_json[$product->name] = $product;
             }
         }
 
@@ -406,9 +385,16 @@ class AdminModuleDataProvider implements ModuleInterface
             $fh = fopen($cacheFile, 'r');
             $cache = trim(fgets($fh));
 
-            if ($cache) {
-                return json_decode($cache);
+            if (!$cache) {
+                return false;
             }
+
+            $labeled_cache = [];
+            // We need to loop in the array to replace the current key, which is an integer, with the module name
+            foreach (json_decode($cache) as $element) {
+                $labeled_cache[$element->name] = $element;
+            }
+            return $labeled_cache;
         } catch (\Exception $e) {
             throw new \Exception('Cannot read from the cache file '. $file);
         }
