@@ -282,7 +282,7 @@ var AdminModuleController = function () {
                 var uniqueID = '';
                 $.each(dataAttr, function (index, value) {
                     if (uniqueID !== '') {
-                        uniqueID += '#'; // Explode separator
+                        uniqueID += ' #'; // Explode separator
                     }
                     uniqueID += selectorObject.attr(value);
                 });
@@ -911,7 +911,7 @@ var AdminModuleController = function () {
                 var uniqueID = '';
                 $.each(dataAttr, function (index, value) {
                     if (uniqueID !== '') {
-                        uniqueID += '#'; // Explode separator
+                        uniqueID += ' #'; // Explode separator
                     }
                     uniqueID += selectorObject.attr(value);
                 });
