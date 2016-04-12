@@ -92,7 +92,11 @@ class OrderPresenter implements PresenterInterface
 
             foreach ($cartProducts['products'] as $cartProduct) {
                 if ($cartProduct['id_product'] === $orderProduct['product_id']) {
-                    $orderProduct['attributes'] = $cartProduct['attributes'];
+                    if (isset($cartProduct['attributes'])) {
+                        $orderProduct['attributes'] = $cartProduct['attributes'];
+                    } else {
+                        $orderProduct['attributes'] = array();
+                    }
                     $orderProduct['cover'] = $cartProduct['cover'];
                 }
             }
