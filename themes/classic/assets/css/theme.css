@@ -4571,9 +4571,9 @@ a.bg-danger:focus, a.bg-danger:hover {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(../css/178d7a4dacfb885abee8e2d905b08524.eot);
+  src: url(../css/e79bfd88537def476913f3ed52f4f4b3.eot);
   /* For IE6-8 */
-  src: local("Material Icons"), local("MaterialIcons-Regular"), url(../css/81025269949a562d06d5e316f733b140.woff2) format("woff2"), url(../css/e2f35f2d8bb12d4d3407ebe3683adaa1.woff) format("woff"), url(../css/9ac46d2eb22f2f00090a73ed943b9522.ttf) format("truetype"); }
+  src: local("Material Icons"), local("MaterialIcons-Regular"), url(../css/570eb83859dc23dd0eec423a49e147fe.woff2) format("woff2"), url(../css/012cf6a10129e2275d79d6adac7f3b02.woff) format("woff"), url(../css/a37b0c01c0baf1888ca812cc0508f6e2.ttf) format("truetype"); }
 
 .material-icons {
   font-family: 'Material Icons';
@@ -4814,9 +4814,8 @@ label {
   border: #ebebeb 1px solid;
   margin: 10px 0; }
   .thumb-mask > .mask img {
-    position: absolute;
-    left: -34px;
-    top: -26px; }
+    width: 55px;
+    height: 55px; }
 
 .definition-list dl {
   display: -webkit-box;
