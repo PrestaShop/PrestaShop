@@ -83,6 +83,21 @@ class AccessCore extends ObjectModel
     
     /**
      * 
+     * @param string $idModule
+     * @return string
+     */
+    public static function findSlugByIdModule($idModule)
+    {
+        $result = Db::getInstance()->getRow('
+            SELECT `name`
+            FROM `'._DB_PREFIX_.'module` t
+            WHERE `id_module` = "'.$idModule.'"
+        ');
+        return self::sluggifyModule($result);
+    }
+    
+    /**
+     * 
      * @param string $tab Tab class name
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
      * @return string
@@ -157,6 +172,39 @@ class AccessCore extends ObjectModel
     /**
      * 
      * @param int $idProfile
+     * @param int $idRole
+     * @return string
+     */
+    public function addModuleAccess($idProfile, $idRole)
+    {
+        $sql = '
+            INSERT IGNORE INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_authorization_role`)
+            VALUES ('.$idProfile.','.$idRole.')
+        ';
+        
+        return Db::getInstance()->execute($sql) ? 'ok' : 'error';
+    }
+    
+    /**
+     * 
+     * @param int $idProfile
+     * @param int $idRole
+     * @return string 'ok'|'error'
+     */
+    public function removeModuleAccess($idProfile, $idRole)
+    {
+        $sql = '
+            DELETE FROM `'._DB_PREFIX_.'module_access`
+            WHERE `id_profile` = "'.$idProfile.'"
+            AND `id_authorization_role` = "'.$idRole.'"
+        ';
+        
+        return Db::getInstance()->execute($sql) ? 'ok' : 'error';
+    }
+    
+    /**
+     * 
+     * @param int $idProfile
      * @param int $idTab
      * @param string $lgcAuth
      * @param int $enabled
@@ -186,6 +234,40 @@ class AccessCore extends ObjectModel
                 $res[] = $this->addAccess($idProfile, $role['id_authorization_role']);
             } else {
                 $res[] = $this->removeAccess($idProfile, $role['id_authorization_role']);
+            }
+        }
+        
+        return in_array('error', $res) ? 'error' : 'ok';
+    }
+    
+    /**
+     * 
+     * @param int $idProfile
+     * @param int $idModule
+     * @param string $lgcAuth
+     * @param int $enabled
+     */
+    public function updateLgcModuleAccess($idProfile, $idModule, $lgcAuth, $enabled)
+    {
+        $slug = self::findSlugByIdModule($idModule);
+        
+        $whereClauses = array();
+
+        foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
+            $whereClauses[] = ' `slug` LIKE "'.$slug.$auth.'"';
+        }
+
+        $roles = Db::getInstance()->executeS('
+            SELECT `id_authorization_role`
+            FROM `'._DB_PREFIX_.'authorization_role` t
+            WHERE '.implode(' OR ', $whereClauses).'
+        ');
+        
+        foreach ($roles as $role) {
+            if ($enabled) {
+                $res[] = $this->addModuleAccess($idProfile, $role['id_authorization_role']);
+            } else {
+                $res[] = $this->removeModuleAccess($idProfile, $role['id_authorization_role']);
             }
         }
         
