@@ -51,26 +51,34 @@ class AccessCore extends ObjectModel
      */
     public static function isGranted($role, $idProfile)
     {
-        preg_match(
-            '/ROLE_MOD_(?P<type>[A-Z]+)_(?P<name>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
-            $role,
-            $matches
-        );
-        
-        if ($matches['type'] == 'TAB') {
-            $joinTable = _DB_PREFIX_.'access';
-        } elseif ($matches['type'] == 'MODULE') {
-            $joinTable = _DB_PREFIX_.'module_access';
+        foreach ((array) $role as $currentRole) {
+            preg_match(
+                '/ROLE_MOD_(?P<type>[A-Z]+)_(?P<name>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
+                $currentRole,
+                $matches
+            );
+
+            if ($matches['type'] == 'TAB') {
+                $joinTable = _DB_PREFIX_.'access';
+            } elseif ($matches['type'] == 'MODULE') {
+                $joinTable = _DB_PREFIX_.'module_access';
+            }
+
+            $isCurrentGranted = (bool) Db::getInstance()->getRow('
+                SELECT t.`id_authorization_role`
+                FROM `'._DB_PREFIX_.'authorization_role` t
+                LEFT JOIN '.$joinTable.' j
+                ON j.`id_authorization_role` = t.`id_authorization_role`
+                WHERE `slug` = "'.$currentRole.'"
+                AND j.`id_profile` = "'.$idProfile.'"
+            ');
+            
+            if (!$isCurrentGranted) {
+                return false;
+            }
         }
         
-        return (bool) Db::getInstance()->getRow('
-            SELECT t.`id_authorization_role`
-            FROM `'._DB_PREFIX_.'authorization_role` t
-            LEFT JOIN '.$joinTable.' j
-            ON j.`id_authorization_role` = t.`id_authorization_role`
-            WHERE `slug` = "'.$role.'"
-            AND j.`id_profile` = "'.$idProfile.'"
-        ');
+        return true;
     }
     
     /**
