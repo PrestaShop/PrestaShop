@@ -5,10 +5,14 @@ services:
 
 addons:
     apt_packages:
+        - mysql-server
         - apache2
-        - libapache2-mod-fastcgi
         - postfix
     sauce_connect: true
+
+sudo: required
+dist: trusty
+group: edge
 
 php:
   - 5.4
@@ -19,17 +23,23 @@ matrix:
   fast_finish: true
 
 before_install:
+  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty multiverse" && sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse"
+  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty universe" && sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-updates universe"
+  - sudo apt-get update -qq
+  - sudo apt-get install libapache2-mod-fastcgi
   - phpenv config-rm xdebug.ini
-  - mysql -e 'create database prestashop;'
+  - mysql -u root -e 'create database prestashop;'
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "memory_limit = 512M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-  - sudo cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/default
+  - sudo cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/prestashop.conf
   - sudo cp -Rf . /var/www/prestashop.unit.test
   - sudo chmod 777 -R /var/www/
+  - sudo a2dissite 000-default
+  - sudo a2ensite prestashop.conf
   - sudo service apache2 restart
   - cp .composer/* ~/.composer/ & composer global install;
   - sudo apt-get install -y libappindicator1 fonts-liberation
@@ -58,3 +68,9 @@ script:
 after_script:
   - sudo cat /var/log/apache2/error.log
   - google-chrome --version
+
+after_failure:
+  - curl http://localhost/prestashop.unit.test/
+  - cat /etc/apache2/envvars
+  - cat /etc/apache2/sites-available/prestashop.conf
+  - sudo ls -l /var/log/apache2
