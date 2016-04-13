@@ -78,10 +78,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         /* avoid exceptions on re-installation */
         $this->clearConfigXML() && $this->clearConfigThemes();
 
-        if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE)) {
-            require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
-        }
-
         if (!$this->session->process_validated) {
             $this->session->process_validated = array();
         }

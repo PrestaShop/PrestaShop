@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShopBundle\CacheWarmer\LocalizationCacheWarmer;
 use Symfony\Component\Yaml\Yaml;
 
 class InstallModelInstall extends InstallAbstractModel
@@ -478,24 +479,10 @@ class InstallModelInstall extends InstallAbstractModel
     public function getLocalizationPackContent($version, $country)
     {
         if (InstallModelInstall::$_cache_localization_pack_content === null || array_key_exists($country, InstallModelInstall::$_cache_localization_pack_content)) {
-            $path_cache_file = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$version.$country.'.xml';
-            if (is_file($path_cache_file)) {
-                $localization_file_content = file_get_contents($path_cache_file);
-            } else {
-                $localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$country.'.xml');
-                if (!@simplexml_load_string($localization_file_content)) {
-                    $localization_file_content = false;
-                }
-                if (!$localization_file_content) {
-                    $localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
-                    if (file_exists(_PS_ROOT_DIR_.'/localization/'.$country.'.xml')) {
-                        $localization_file = _PS_ROOT_DIR_.'/localization/'.$country.'.xml';
-                    }
 
-                    $localization_file_content = file_get_contents($localization_file);
-                }
-                file_put_contents($path_cache_file, $localization_file_content);
-            }
+            $localizationCacheWarmer = new LocalizationCacheWarmer($version, $country);
+            $localization_file_content  = $localizationCacheWarmer->warmUp(_PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR);
+
             InstallModelInstall::$_cache_localization_pack_content[$country] = $localization_file_content;
         }
 
