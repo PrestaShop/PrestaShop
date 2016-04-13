@@ -38,7 +38,6 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             ->setCallToActionText('Pay by bankwire')
             ->setLogo('http://example.com/logo.png')
             ->setAction('http://example.com/submit')
-            ->setMethod('POST')
             ->setForm(null)
             ->setInputs(array('key' => 42))
         ;
@@ -47,7 +46,6 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             'cta_text'  => 'Pay by bankwire',
             'logo'      => 'http://example.com/logo.png',
             'action'    => 'http://example.com/submit',
-            'method'    => 'POST',
             'form'      => null,
             'inputs'    => array('key' => 42)
         );
@@ -65,7 +63,6 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             ->setCallToActionText('Pay by bankwire')
             ->setLogo('http://example.com/logo.png')
             ->setAction('http://example.com/submit')
-            ->setMethod('POST')
             ->setForm(null)
             ->setInputs(array('key' => 42))
         ;
@@ -74,7 +71,6 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             'cta_text'  => 'Pay by bankwire',
             'logo'      => 'http://example.com/logo.png',
             'action'    => 'http://example.com/submit',
-            'method'    => 'POST',
             'form'      => null,
             'inputs'    => array('key' => 42)
         );

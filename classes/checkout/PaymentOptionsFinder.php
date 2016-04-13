@@ -54,9 +54,6 @@ class PaymentOptionsFinderCore
                     );
                 }
 
-                if (!$formattedOption['method']) {
-                    $formattedOption['method'] = 'GET';
-                }
                 return $formattedOption;
             }, $options);
         }, $this->getPaymentOptions());
