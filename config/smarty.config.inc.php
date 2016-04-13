@@ -68,6 +68,7 @@ smartyRegisterFunction($smarty, 'function', 't', 'smartyTruncate'); // unused
 smartyRegisterFunction($smarty, 'function', 'm', 'smartyMaxWords'); // unused
 smartyRegisterFunction($smarty, 'function', 'p', 'smartyShowObject'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'd', 'smartyDieObject'); // Debug only
+smartyRegisterFunction($smarty, 'function', 'dump', 'smartyDump'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
 smartyRegisterFunction($smarty, 'function', 'toolsConvertPrice', 'toolsConvertPrice');
@@ -109,6 +110,11 @@ function smartyDieObject($params, &$smarty)
 function smartyShowObject($params, &$smarty)
 {
     return Tools::p($params['var']);
+}
+
+function smartyDump($params, &$smarty)
+{
+    return Tools::dump($params['var']);
 }
 
 function smartyMaxWords($params, &$smarty)

@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+
+use Symfony\Component\VarDumper\VarDumper;
+
 function fd($var)
 {
     return (Tools::fd($var));
@@ -42,6 +45,11 @@ function d($var)
 function ppp($var)
 {
     return (Tools::p($var));
+}
+
+function dump($var)
+{
+    return VarDumper::dump($var);
 }
 
 function ddd($var)
