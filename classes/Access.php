@@ -186,6 +186,7 @@ class AccessCore extends ObjectModel
             'configure' => 'UPDATE',
             'delete' => 'DELETE',
             'uninstall' => 'DELETE',
+            'duplicate' => array('CREATE', 'UPDATE'),
             'all' => array('CREATE', 'READ', 'UPDATE', 'DELETE'),
         );
         
