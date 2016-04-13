@@ -308,10 +308,7 @@ class ModuleController extends FrameworkBundleAdminController
      */
     public function importModuleAction(Request $request)
     {
-        $moduleManagerFactory = new ModuleManagerBuilder();
-        $moduleManager = $moduleManagerFactory->build();
-        $moduleRepository = $moduleManagerFactory->buildRepository();
-
+        $moduleManager = $this->get('prestashop.module.manager');
         try {
             $file_uploaded = $request->files->get('file_uploaded');
             $file_uploaded_tmp_path = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload';
@@ -334,7 +331,7 @@ class ModuleController extends FrameworkBundleAdminController
             } else {
                 $installation_response['msg'] = 'Install action on module '. $module_name;
                 if ($installation_response['status'] === true) {
-                    $installation_response['is_configurable'] = (bool)$moduleRepository->getModule($module_name)->attributes->get('is_configurable');
+                    $installation_response['is_configurable'] = (bool)$this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
                     $installation_response['msg'] .= 'succeeded';
                 } else {
                     $installation_response['msg'] .= 'failed';
@@ -390,27 +387,25 @@ class ModuleController extends FrameworkBundleAdminController
         return $toolbarButtons;
     }
 
-    private function inflateModule($file_to_inflate)
+    private function inflateModule($fileToInflate)
     {
-        if (file_exists($file_to_inflate)) {
-            $zip_archive = new \ZipArchive();
-            $ret = $zip_archive->open($file_to_inflate);
+        if (file_exists($fileToInflate)) {
+            $zipArchive = new \ZipArchive();
+            $extractionStatus = $zipArchive->open($fileToInflate);
 
-            if ($ret === true) {
-                // Get module name depending on first folder found in archive and trim all separator that might be there
-                $module_name = str_replace('/', '', $zip_archive->statIndex(0)['name']);
-                // Put it in Module directory
-                $zip_archive->extractTo(_PS_MODULE_DIR_);
-                // Close archive
-                $zip_archive->close();
-                // Delete archive from tmp folder
-                unlink($file_to_inflate);
-                return $module_name;
+            if ($extractionStatus === true) {
+                $filename = $zipArchive->getNameIndex(0);
+                $moduleName = substr($filename, 0, strpos($filename, '/'));
+                $zipArchive->extractTo(_PS_MODULE_DIR_);
+                $zipArchive->close();
+                unlink($fileToInflate);
+
+                return $moduleName;
             } else {
-                throw new Exception('Cannot open the following archive: '.$file_to_inflate.' (error code: '.$ret.')');
+                throw new Exception('Cannot open the following archive: '.$fileToInflate.' (error code: '.$extractionStatus.')');
             }
         } else {
-            throw new Exception('Unable to find uploaded module at the following path: '.$file_to_inflate);
+            throw new Exception('Unable to find uploaded module at the following path: '.$fileToInflate);
         }
     }
 
