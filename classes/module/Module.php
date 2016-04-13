@@ -2481,21 +2481,9 @@ abstract class ModuleCore
             return true;
         }
 
-        if (!isset(self::$cache_permissions[$employee->id_profile])) {
-            self::$cache_permissions[$employee->id_profile] = array();
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_module`, `view`, `configure`, `uninstall` FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$employee->id_profile);
-            foreach ($result as $row) {
-                self::$cache_permissions[$employee->id_profile][$row['id_module']]['view'] = $row['view'];
-                self::$cache_permissions[$employee->id_profile][$row['id_module']]['configure'] = $row['configure'];
-                self::$cache_permissions[$employee->id_profile][$row['id_module']]['uninstall'] = $row['uninstall'];
-            }
-        }
+        $slug = Access::findSlugByIdModule($id_module).Access::getAuthorizationFromLegacy($variable);
 
-        if (!isset(self::$cache_permissions[$employee->id_profile][$id_module])) {
-            throw new PrestaShopException('No access reference in table module_access for id_module '.$id_module.'.');
-        }
-
-        return (bool)self::$cache_permissions[$employee->id_profile][$id_module][$variable];
+        return Access::isGranted($slug , $employee->id_profile);
     }
 
     /**
