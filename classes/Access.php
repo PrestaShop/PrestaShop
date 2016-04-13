@@ -280,7 +280,11 @@ class AccessCore extends ObjectModel
      */
     public function updateLgcModuleAccess($idProfile, $idModule, $lgcAuth, $enabled)
     {
-        $slug = self::findSlugByIdModule($idModule);
+        if ($idModule == -1) {
+            $slug = 'ROLE_MOD_MODULE_%_';
+        } else {
+            $slug = self::findSlugByIdModule($idModule);
+        }
         
         $whereClauses = array();
 
