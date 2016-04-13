@@ -473,7 +473,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         $active_form = $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
         $active_form =  str_replace(array('<fieldset id="fieldset_form">', '</fieldset>'), '', $active_form);
         $template->assign('active_form', $active_form);
-        return $template->fetch('controllers/carrier_wizard/summary.tpl');
+        return $template->fetch();
     }
 
     /**
