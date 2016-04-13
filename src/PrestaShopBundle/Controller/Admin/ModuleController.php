@@ -376,9 +376,9 @@ class ModuleController extends FrameworkBundleAdminController
         $toolbarButtons = array();
         $toolbarButtons['add_module'] = array(
             'href' => '#',
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
+            'desc' => $translator->trans('Upload a module', array(), get_class($this)),
             'icon' => 'cloud_upload',
-            'help' => $translator->trans('Add a module', array(), get_class($this)),
+            'help' => $translator->trans('Upload a module', array(), get_class($this)),
         );
         $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
 
