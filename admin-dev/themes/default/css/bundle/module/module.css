@@ -166,8 +166,9 @@
  */
 .module-item-list {
     background-color: white;
-    max-height: 50px;
-    height: 50px;
+    max-height: 70px;
+    height: 70px;
+    padding-top:10px
  }
  .module-item-list:nth-child(even) {
      background-color: #f5f8f9 !important;
