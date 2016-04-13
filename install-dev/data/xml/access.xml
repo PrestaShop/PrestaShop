@@ -333,18 +333,18 @@
     <access id="access_1_339" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSLIP_READ"/>
     <access id="access_1_340" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSLIP_UPDATE"/>
     <access id="access_1_341" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSLIP_DELETE"/>
-    <access id="access_1_342" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSPECIFICPRICERULE_CREATE"/>
-    <access id="access_1_343" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSPECIFICPRICERULE_READ"/>
-    <access id="access_1_344" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSPECIFICPRICERULE_UPDATE"/>
-    <access id="access_1_345" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSPECIFICPRICERULE_DELETE"/>
-    <access id="access_1_346" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSTATES_CREATE"/>
-    <access id="access_1_347" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSTATES_READ"/>
-    <access id="access_1_348" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSTATES_UPDATE"/>
-    <access id="access_1_349" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSTATES_DELETE"/>
-    <access id="access_1_350" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSTATS_CREATE"/>
-    <access id="access_1_351" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSTATS_READ"/>
-    <access id="access_1_352" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSTATS_UPDATE"/>
-    <access id="access_1_353" id_profile="SuperAdmin" id_authorization_role="TAB_STOCK_ADMINSTATS_DELETE"/>
+    <access id="access_1_342" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSPECIFICPRICERULE_CREATE"/>
+    <access id="access_1_343" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSPECIFICPRICERULE_READ"/>
+    <access id="access_1_344" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSPECIFICPRICERULE_UPDATE"/>
+    <access id="access_1_345" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSPECIFICPRICERULE_DELETE"/>
+    <access id="access_1_346" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATES_CREATE"/>
+    <access id="access_1_347" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATES_READ"/>
+    <access id="access_1_348" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATES_UPDATE"/>
+    <access id="access_1_349" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATES_DELETE"/>
+    <access id="access_1_350" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATS_CREATE"/>
+    <access id="access_1_351" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATS_READ"/>
+    <access id="access_1_352" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATS_UPDATE"/>
+    <access id="access_1_353" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATS_DELETE"/>
     <access id="access_1_354" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATUSES_CREATE"/>
     <access id="access_1_355" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATUSES_READ"/>
     <access id="access_1_356" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTATUSES_UPDATE"/>
@@ -441,5 +441,17 @@
     <access id="access_1_446" id_profile="SuperAdmin" id_authorization_role="TAB_SHOPPARAMETERS_READ"/>
     <access id="access_1_447" id_profile="SuperAdmin" id_authorization_role="TAB_SHOPPARAMETERS_UPDATE"/>
     <access id="access_1_448" id_profile="SuperAdmin" id_authorization_role="TAB_SHOPPARAMETERS_DELETE"/>
+    <access id="access_1_449" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINDASHBOARD_CREATE"/>
+    <access id="access_1_450" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINDASHBOARD_READ"/>
+    <access id="access_1_451" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINDASHBOARD_UPDATE"/>
+    <access id="access_1_452" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINDASHBOARD_DELETE"/>
+    <access id="access_1_453" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINLINKWIDGET_CREATE"/>
+    <access id="access_1_454" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINLINKWIDGET_READ"/>
+    <access id="access_1_455" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINLINKWIDGET_UPDATE"/>
+    <access id="access_1_456" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINLINKWIDGET_DELETE"/>
+    <access id="access_1_457" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINGROUPS_CREATE"/>
+    <access id="access_1_458" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINGROUPS_READ"/>
+    <access id="access_1_459" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINGROUPS_UPDATE"/>
+    <access id="access_1_460" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINGROUPS_DELETE"/>
   </entities>
 </entity_access>
