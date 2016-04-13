@@ -328,8 +328,6 @@ class ModuleRepository implements ModuleRepositoryInterface
             ->exclude(['__MACOSX'])
             ->ignoreVCS(true);
 
-        $modulesDirsList = iterator_to_array($modulesDirsList);
-
         foreach ($modulesDirsList as $moduleDir) {
             $moduleName = $moduleDir->getFilename();
             try {
