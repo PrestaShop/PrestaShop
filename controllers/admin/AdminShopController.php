@@ -85,6 +85,11 @@ class AdminShopControllerCore extends AdminController
         parent::__construct();
     }
 
+    public function getTabSlug()
+    {
+        return 'ROLE_MOD_TAB_ADMINSHOPGROUP_';
+    }
+
     public function viewAccess($disable = false)
     {
         return Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
