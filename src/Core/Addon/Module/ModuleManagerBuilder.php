@@ -29,8 +29,10 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
 
 class ModuleManagerBuilder
 {
@@ -41,7 +43,7 @@ class ModuleManagerBuilder
     public static $modulesRepository = null;
 
     /**
-    * Return an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+    * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
     * @global type $kernel
     * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
     */
@@ -51,19 +53,19 @@ class ModuleManagerBuilder
         if (!is_null($kernel)) {
             return $kernel->getContainer()->get('prestashop.module.manager');
         } else {
-            $langId = \Context::getContext()->employee instanceof \Employee ? \Context::getContext()->employee->id_lang : \Context::getContext()->language->iso_code;
-            $languageISO = \LanguageCore::getIsoById($langId);
+            $addonsDataProvider = new AddonsDataProvider();
+            $adminModuleDataProvider = new AdminModuleDataProvider($this->getLanguageIso(), $this->getSymfonyRouter(), $addonsDataProvider);
 
-            return new ModuleManager(new AdminModuleDataProvider($languageISO),
+            return new ModuleManager($adminModuleDataProvider,
                 new ModuleDataProvider(),
-                new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider($languageISO)),
+                new ModuleDataUpdater($addonsDataProvider, $adminModuleDataProvider),
                 $this->buildRepository(),
                 \Context::getContext()->employee);
         }
     }
 
     /**
-     * Return an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
+     * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
      * @global type $kernel
      * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
      */
@@ -74,16 +76,42 @@ class ModuleManagerBuilder
             if (!is_null($kernel)) {
                 self::$modulesRepository = $kernel->getContainer()->get('prestashop.core.admin.module.repository');
             } else {
-                $langId = \Context::getContext()->employee instanceof \Employee ? \Context::getContext()->employee->id_lang : \Context::getContext()->language->iso_code;
-                $languageISO = \LanguageCore::getIsoById($langId);
+                $addonsDataProvider = new AddonsDataProvider();
+                $adminModuleDataProvider = new AdminModuleDataProvider($this->getLanguageIso(), $this->getSymfonyRouter(), $addonsDataProvider);
+
                 self::$modulesRepository = new ModuleRepository(
-                    new AdminModuleDataProvider($kernel),
+                    $adminModuleDataProvider,
                     new ModuleDataProvider(),
-                    new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider($languageISO)),
+                    new ModuleDataUpdater($addonsDataProvider, $adminModuleDataProvider),
                     new LegacyLogger()
                 );
             }
         }
         return self::$modulesRepository;
+    }
+
+    /**
+     * Returns an instance of \Symfony\Component\Routing\Router from Symfony scope into Legacy
+     *
+     * @return \Symfony\Component\Routing\Router
+     */
+    private function getSymfonyRouter()
+    {
+        // get the environment to load the good routing file
+        $routeFileName = _PS_MODE_DEV_ === true ? 'routing_dev.yml' : 'routing.yml';
+        $routesDirectory = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config';
+        $locator = new FileLocator(array($routesDirectory));
+        $loader = new YamlFileLoader($locator);
+        return new Router($loader, $routeFileName);
+    }
+
+    /**
+     * Returns language iso from context
+     */
+    private function getLanguageIso()
+    {
+        $langId = \Context::getContext()->employee instanceof \Employee ? \Context::getContext()->employee->id_lang : \Context::getContext()->language->iso_code;
+
+        return \LanguageCore::getIsoById($langId);
     }
 }
