@@ -1042,13 +1042,11 @@
 				delivery_address_edit_link = "{$link->getAdminLink('AdminAddresses')}&id_address="+this.id_address+"&updateaddress&realedit=1&liteDisplaying=1&submitFormAjax=1#";
 			}
 			
-			if(address_invoice_detail == '')
-			{
+			if(address_invoice_detail == '') {
 				address_invoice_detail = this.formated_address;
 			}
-			
-			if(address_delivery_detail == '')
-			{
+
+			if(address_delivery_detail == '') {
 				address_delivery_detail = this.formated_address;
 			}
 
