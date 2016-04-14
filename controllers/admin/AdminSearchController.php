@@ -34,7 +34,7 @@ class AdminSearchControllerCore extends AdminController
 
     public function getTabSlug()
     {
-        return 'ROLE_MOD_TAB_ADMINSEARCHCONF';
+        return 'ROLE_MOD_TAB_ADMINSEARCHCONF_';
     }
     
     public function postProcess()
