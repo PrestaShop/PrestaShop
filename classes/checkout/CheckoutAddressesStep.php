@@ -149,6 +149,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $this->show_delivery_address_form = true;
         } elseif ($addresses_count < 2 && !$this->use_same_address) {
             $this->show_invoice_address_form = true;
+            $this->step_is_complete = false;
         }
 
         if ($this->show_invoice_address_form) {
