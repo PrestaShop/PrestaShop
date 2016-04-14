@@ -76,6 +76,7 @@ services:
         arguments:
             - "@prestashop.adapter.legacy.context"
             - "@security.token_storage"
+            - "@prestashop.security.admin.provider"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     prestashop.security.admin.provider:
