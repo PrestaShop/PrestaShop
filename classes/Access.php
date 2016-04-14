@@ -62,6 +62,8 @@ class AccessCore extends ObjectModel
                 $joinTable = _DB_PREFIX_.'access';
             } elseif ($matches['type'] == 'MODULE') {
                 $joinTable = _DB_PREFIX_.'module_access';
+            } else {
+                throw new Exception('The slug '.$currentRole.' is invalid');
             }
 
             $isCurrentGranted = (bool) Db::getInstance()->getRow('
