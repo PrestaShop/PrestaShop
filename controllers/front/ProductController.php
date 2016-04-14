@@ -328,6 +328,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails.tpl'),
             'product_details' => $this->render('catalog/_partials/product-details.tpl'),
             'product_variants' => $this->render('catalog/_partials/product-variants.tpl'),
+            'product_add_to_cart' => $this->render('catalog/_partials/product-add-to-cart.tpl'),
             'product_url' => $this->context->link->getProductLink(
                 $product_for_template['id_product'],
                 null,
