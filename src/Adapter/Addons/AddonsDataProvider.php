@@ -228,7 +228,7 @@ class AddonsDataProvider implements AddonsInterface
 
     /**
      * Check if a request has already failed
-     * @return bool 
+     * @return bool
      */
     public function isAddonsUp()
     {

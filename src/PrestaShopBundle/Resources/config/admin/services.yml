@@ -64,6 +64,7 @@ services:
         arguments:
              - "@=service('prestashop.adapter.legacy.context').getEmployeeLanguageIso()"
              - "@router"
+             - "@prestashop.adapter.data_provider.addon"
         decorates: prestashop.core.admin.data_provider.module_interface
         public: false
     prestashop.adapter.admin.controller.attribute_generator:
