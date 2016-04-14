@@ -61,7 +61,7 @@ class PrestaShopAutoload
     protected function __construct()
     {
         $this->root_dir = _PS_CORE_DIR_.'/';
-        $file = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
+        $file = PrestaShopAutoload::getCacheFileIndex();
         if (@filemtime($file) && is_readable($file)) {
             $this->index = include($file);
         } else {
@@ -81,6 +81,11 @@ class PrestaShopAutoload
         }
 
         return PrestaShopAutoload::$instance;
+    }
+
+    public static function getCacheFileIndex()
+    {
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app/'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/class_index.php';
     }
 
     /**
@@ -152,7 +157,7 @@ class PrestaShopAutoload
         $content = '<?php return '.var_export($classes, true).'; ?>';
 
         // Write classes index on disc to cache it
-        $filename = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
+        $filename = PrestaShopAutoload::getCacheFileIndex();
         $filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
         if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false) {
             if (!@rename($filename_tmp, $filename)) {
