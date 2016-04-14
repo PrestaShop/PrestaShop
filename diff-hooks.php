@@ -17,7 +17,23 @@ $hooks17 = array_merge(getFormattedHookList($hookHIn17, $path_to_17), getFormatt
 ksort($hooks16);
 ksort($hooks17);
 
-generateHTML(array_intersect_key($hooks16, $hooks17), array_diff_key($hooks16, $hooks17), array_diff_key($hooks17, $hooks16), $hooks16, $hooks17);
+generateJSON(array_intersect_key($hooks16, $hooks17), array_diff_key($hooks16, $hooks17), array_diff_key($hooks17, $hooks16), $hooks16, $hooks17);
+
+function generateJSON($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks17)
+{
+    $a = file_put_contents(
+        'hooks.json',
+        json_encode([
+            '1.6' => $hooks16,
+            '1.7' => $hooks17,
+            'common' => $commonHooks,
+            '1.6-only' => $hooksOnly16,
+            '1.7-only' => $hooksOnly17,
+        ], JSON_PRETTY_PRINT)
+    );
+
+    exit($a);
+}
 
 function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks17)
 {
