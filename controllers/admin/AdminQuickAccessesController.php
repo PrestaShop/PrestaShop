@@ -124,6 +124,11 @@ class AdminQuickAccessesControllerCore extends AdminController
         parent::__construct();
     }
 
+    public function getTabSlug()
+    {
+        return 'ROLE_MOD_TAB_ADMINACCESS_';
+    }
+
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
