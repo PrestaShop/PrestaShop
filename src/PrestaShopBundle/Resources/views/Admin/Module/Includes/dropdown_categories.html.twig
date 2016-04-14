@@ -1,0 +1,27 @@
+<div class="dropdown">
+    {% for menu in topMenuData %}
+        {% set refMenu = menu.refMenu %}
+        <button class="btn dropdown-toggle module-categories-dropdown" id="{{refMenu}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <div class="module-category-selector-label">
+                {{menu.name}}
+            </div>
+            <span><i class="icon-chevron-sign-down"></i></span>
+        </button>
+        <ul class="dropdown-menu module-category-selector" aria-labelledby="{{refMenu}}">
+            <li class="module-category-reset">
+                <a href="#">
+                    <span>
+                        All Categories
+                    </span>
+                </a>
+            </li>
+            {% for subMenu in menu.subMenu|arrayCast %}
+                <li class="module-category-menu" data-category-ref="{{subMenu.refMenu}}" data-category-display-name="{{subMenu.name}}">
+                    <a href="#">
+                        {{subMenu.name}}<span class="pull-right module-cateogry-count">{{subMenu.modulesRef|length}}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</div>

@@ -724,3 +724,14 @@ form#importDropzone {
 .module-import-success-configure {
     display: none;
 }
+
+.module-top-menu {
+    min-height: 74px;
+}
+
+.module-cateogry-count {
+    color: #1c8ca3;
+    margin-right: 15px;
+    border: 0.5px solid #1c8ca3;
+    margin-bottom: 3px;
+}
