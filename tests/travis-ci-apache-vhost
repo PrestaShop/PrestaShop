@@ -9,10 +9,12 @@
 
   DocumentRoot /var/www/
   <Directory /var/www/>
-    Options FollowSymLinks MultiViews ExecCGI
     AllowOverride All
-    Order deny,allow
-    Allow from all
+    Require all granted
+  </Directory>
+
+  <Directory /usr/lib/cgi-bin>
+      Require all granted
   </Directory>
 
 </VirtualHost>
