@@ -47,7 +47,7 @@ if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_D
 }
 
 /* No settings file? goto installer... */
-if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
+if (!file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
     if (file_exists($currentDir.'/../install')) {
         header('Location: install/');
     } elseif (file_exists($currentDir.'/../install-dev')) {

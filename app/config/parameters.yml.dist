@@ -19,8 +19,6 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
-
-    ps_version: 1.7.0
     ps_caching: CacheMemcache
     ps_cache_enable: true
     cookie_key: ThisTokenIsNotSoSecretChangeIt

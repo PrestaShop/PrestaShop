@@ -42,10 +42,10 @@ class InstallModelInstall extends InstallAbstractModel
     {
         parent::__construct();
 
+        $cacheDir = _PS_ROOT_DIR_.'/app/logs/';
+        $file = $cacheDir .(_PS_MODE_DEV_ ? 'dev' : 'prod').'_'.@date('Ymd').'_installation.log';
         $this->logger = new FileLogger();
-        if (is_writable(_PS_ROOT_DIR_.'/log/')) {
-            $this->logger->setFilename(_PS_ROOT_DIR_.'/log/'.@date('Ymd').'_installation.log');
-        }
+        $this->logger->setFilename($file);
     }
 
     public function setError($errors)

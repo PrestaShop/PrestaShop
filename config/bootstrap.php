@@ -28,9 +28,13 @@ $container_builder = new \PrestaShop\PrestaShop\Core\ContainerBuilder;
 $container = $container_builder->build();
 \PrestaShop\PrestaShop\Adapter\ServiceLocator::setServiceContainerInstance($container);
 
+if (!file_exists(_PS_CACHE_DIR_. 'appParameters.php')) {
+    $yaml = new \Symfony\Component\Yaml\Yaml;
+    $config = $yaml->parse(file_get_contents(__DIR__. '/../app/config/parameters.yml'));
+    file_put_contents(_PS_CACHE_DIR_ .'appParameters.php', '<?php return ' . var_export($config, true). ';');
+}
 
-$yaml = new \Symfony\Component\Yaml\Yaml;
-$config = $yaml->parse(file_get_contents(__DIR__. '/../app/config/parameters.yml'));
+$config = require_once _PS_CACHE_DIR_ .'appParameters.php';
 
 define('_DB_SERVER_', $config['parameters']['database_host']);
 define('_DB_NAME_', $config['parameters']['database_name']);
