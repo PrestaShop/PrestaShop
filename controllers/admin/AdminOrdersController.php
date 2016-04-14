@@ -338,7 +338,7 @@ class AdminOrdersControllerCore extends AdminController
         $this->addJS(_PS_JS_DIR_.'vendor/d3.v3.min.js');
         $this->addJS('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false');
 
-        if ($this->access('edit') == 1 && $this->display == 'view') {
+        if ($this->access('edit') && $this->display == 'view') {
             $this->addJS(_PS_JS_DIR_.'admin/orders.js');
             $this->addJS(_PS_JS_DIR_.'tools.js');
             $this->addJqueryPlugin('autocomplete');
@@ -647,7 +647,7 @@ class AdminOrdersControllerCore extends AdminController
 
         /* Partial refund from order */
         elseif (Tools::isSubmit('partialRefund') && isset($order)) {
-            if ($this->access('edit') == '1') {
+            if ($this->access('edit')) {
                 if (Tools::isSubmit('partialRefundProduct') && ($refunds = Tools::getValue('partialRefundProduct')) && is_array($refunds)) {
                     $amount = 0;
                     $order_detail_list = array();
@@ -1781,7 +1781,7 @@ class AdminOrdersControllerCore extends AdminController
             'carrierModuleCall' => $carrier_module_call,
             'iso_code_lang' => $this->context->language->iso_code,
             'id_lang' => $this->context->language->id,
-            'can_edit' => ($this->access('edit') == 1),
+            'can_edit' => ($this->access('edit')),
             'current_id_lang' => $this->context->language->id,
             'invoices_collection' => $order->getInvoicesCollection(),
             'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),

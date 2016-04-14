@@ -694,7 +694,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
     public function displayEditLink($token = null, $id, $name = null)
     {
-        if ($this->access('edit') == 1) {
+        if ($this->access('edit')) {
             $tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
             if (!array_key_exists('Edit', self::$cache_lang)) {
                 self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
@@ -714,7 +714,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
     public function displayDeleteLink($token = null, $id, $name = null)
     {
-        if ($this->access('delete') == 1) {
+        if ($this->access('delete')) {
             $tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
 
             if (!array_key_exists('Delete', self::$cache_lang)) {

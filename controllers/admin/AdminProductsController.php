@@ -585,7 +585,7 @@ class AdminProductsControllerCore extends AdminController
 
     public function ajaxProcessAddAttachment()
     {
-        if ($this->access('edit') === '0') {
+        if (!$this->access('edit')) {
             return die(json_encode(array('error' => $this->l('You do not have the right permission'))));
         }
         if (isset($_FILES['attachment_file'])) {
@@ -1672,7 +1672,7 @@ class AdminProductsControllerCore extends AdminController
 
     public function ajaxProcessUpdateImagePosition()
     {
-        if ($this->access('edit') === '0') {
+        if (!$this->access('edit')) {
             return die(json_encode(array('error' => $this->l('You do not have the right permission'))));
         }
         $res = false;
@@ -1695,7 +1695,7 @@ class AdminProductsControllerCore extends AdminController
 
     public function ajaxProcessUpdateCover()
     {
-        if ($this->access('edit') === '0') {
+        if (!$this->access('edit')) {
             return die(json_encode(array('error' => $this->l('You do not have the right permission'))));
         }
         Image::deleteCover((int)Tools::getValue('id_product'));
@@ -4914,7 +4914,7 @@ class AdminProductsControllerCore extends AdminController
 
     public function ajaxProcessProductQuantity()
     {
-        if ($this->access('edit') === '0') {
+        if (!$this->access('edit')) {
             return die(json_encode(array('error' => $this->l('You do not have the right permission'))));
         }
         if (!Tools::getValue('actionQty')) {
