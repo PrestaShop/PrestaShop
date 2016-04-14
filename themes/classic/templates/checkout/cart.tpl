@@ -28,7 +28,7 @@
 
         <!-- shipping informations -->
         <div>
-          {hook h='displayShoppingCart'}
+          {hook h='displayShoppingCartFooter'}
         </div>
       </div>
 
