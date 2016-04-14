@@ -6,9 +6,9 @@
   <tab id="Addresses" name="Adressen"/>
   <tab id="Administration" name="Administratie"/>
   <tab id="AdminModulesSf" name="Modulecatalogus" />
-  <tab id="Advanced_Parameters" name="Geavanceerde Instellingen"/>
+  <tab id="Advanced_Parameters" name="Geavanceerde instellingen"/>
   <tab id="Attachments" name="Bijlagen"/>
-  <tab id="Attributes_and_features" name="Attributes &amp; Features" />
+  <tab id="Attributes_and_features" name="Attributen &amp; kenmerken" />
   <tab id="Attributes_and_Values" name="Productattributen"/>
   <tab id="Carriers" name="Vervoerders"/>
   <tab id="CarrierWizard" name="Vervoerder"/>
@@ -40,13 +40,13 @@
   <tab id="Employees_1" name="Medewerkers" />
   <tab id="Employees" name="Medewerkers"/>
   <tab id="Features" name="Productkenmerken"/>
-  <tab id="General_1" name="General" />
+  <tab id="General_1" name="Algemeen" />
   <tab id="General" name="Algemeen"/>
   <tab id="Geolocation" name="Geolocatie"/>
   <tab id="Groups" name="Groepen"/>
   <tab id="Image_Settings" name="Afbeeldingsinstellingen" />
   <tab id="Images" name="Afbeeldingen"/>
-  <tab id="Information" name="Information" />
+  <tab id="Information" name="Informatie" />
   <tab id="Instant_Stock_Status" name="Huidige voorraadstatus"/>
   <tab id="International" name="Internationaal" />
   <tab id="Invoices" name="Facturen"/>
@@ -58,12 +58,12 @@
   <tab id="Logs" name="Logboeken"/>
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Onderhoud"/>
-  <tab id="Manufacturers_and_suppliers" name="Fabrikanten en leveranciers" />
-  <tab id="Manufacturers" name="Fabrikanten"/>
+  <tab id="Manufacturers_and_suppliers" name="Merken en leveranciers" />
+  <tab id="Manufacturers" name="Merken"/>
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menu's"/>
   <tab id="Merchandise_Returns" name="Retourzendingen"/>
-  <tab id="Modules_1" name="Modules en Services"/>
+  <tab id="Modules_1" name="Modules en services"/>
   <tab id="Modules" name="Modules"/>
   <tab id="Monitoring" name="Monitoring"/>
   <tab id="Multistore" name="Multistore"/>
@@ -96,8 +96,8 @@
   <tab id="SEO_URLs" name="SEO &amp; URL's"/>
   <tab id="Shipping_1" name="Instellingen"/>
   <tab id="Shipping" name="Verzending"/>
-  <tab id="Shop_parameters" name="Shop Parameters" />
-  <tab id="Shop_URLs" name="Winkel-URLs"/>
+  <tab id="Shop_parameters" name="Winkelinstellingen" />
+  <tab id="Shop_URLs" name="Winkel-URL's"/>
   <tab id="Shopping_Carts" name="Winkelwagens"/>
   <tab id="Shops" name="Winkels"/>
   <tab id="SQL_Manager" name="SQL-beheer"/>
@@ -119,7 +119,7 @@
   <tab id="Themes_Catalog" name="Themacatalogus" />
   <tab id="Themes" name="Thema's"/>
   <tab id="Titles" name="Sociale titels"/>
-  <tab id="Traffic" name="Traffic" />
+  <tab id="Traffic" name="Verkeer" />
   <tab id="Translations" name="Vertalingen"/>
   <tab id="Warehouses" name="Magazijnen"/>
   <tab id="Webservice" name="Webservice"/>
