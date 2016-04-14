@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\Classes;
+namespace PrestaShop\PrestaShop\tests\Integration\classes;
 
 use PrestaShop\PrestaShop\Tests\Helper\ReflexionHelper;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
@@ -36,53 +36,32 @@ class ConfigurationCoreTest extends IntegrationTestCase
 
     protected function setUp()
     {
-        $configuration = array();
         $id_shops = array(1, 2);
         $id_shop_groups = array(1, 2);
-        $id_langs = array(0, 1, 2);
-        foreach ($id_langs as $id_lang) {
-            $configuration['configuration'][$id_lang] = array(
-                'global' => array(),
-                'group' => array(),
-                'shop' => array()
-            );
 
-            foreach ($id_shop_groups as $id_group) {
-                $configuration['configuration'][$id_lang]['group'][$id_group] = array();
-            }
-            foreach ($id_shops as $id_shop) {
-                $configuration['configuration'][$id_lang]['shop'][$id_shop] = array();
-            }
-        }
+        Configuration::set('PS_TEST_NOT_OVERRIDDEN', 'RESULT_NOT_OVERRIDDEN', 0, 0);
+        Configuration::set('PS_TEST_GROUP_OVERRIDDEN', 'RESULT_GROUP_OVERRIDDEN', 0, 0);
 
-        $configuration['configuration'][0]['global']['PS_TEST_NOT_OVERRIDDEN'] = 'RESULT_NOT_OVERRIDDEN';
-
-        $configuration['configuration'][0]['global']['PS_TEST_GROUP_OVERRIDDEN'] = 'RESULT_GROUP_OVERRIDDEN';
         foreach ($id_shop_groups as $id_group) {
-            $configuration['configuration'][0]['group'][$id_group]['PS_TEST_GROUP_OVERRIDDEN'] = 'RESULT_GROUP_OVERRIDDEN_'.$id_group;
+            Configuration::set('PS_TEST_GROUP_OVERRIDDEN', 'RESULT_GROUP_OVERRIDDEN_'.$id_group, $id_group, 0);
         }
 
-        $configuration['configuration'][0]['global']['PS_TEST_SHOP_OVERRIDDEN'] = 'RESULT_SHOP_OVERRIDDEN';
+        Configuration::updateGlobalValue('PS_TEST_SHOP_OVERRIDDEN', 'RESULT_SHOP_OVERRIDDEN');
         foreach ($id_shops as $id_shop) {
-            $configuration['configuration'][0]['shop'][$id_shop]['PS_TEST_SHOP_OVERRIDDEN'] = 'RESULT_SHOP_OVERRIDDEN_'.$id_shop;
+            Configuration::set('PS_TEST_SHOP_OVERRIDDEN', 'RESULT_SHOP_OVERRIDDEN_'.$id_shop, 0, $id_shop);
         }
 
-        $configuration['configuration'][0]['global']['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN';
+        Configuration::updateGlobalValue('PS_TEST_GROUP_SHOP_OVERRIDDEN', 'RESULT_GROUP_SHOP_OVERRIDDEN');
         foreach ($id_shop_groups as $id_group) {
-            $configuration['configuration'][0]['group'][$id_group]['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN_GROUP_'.$id_group;
+            Configuration::set('PS_TEST_GROUP_SHOP_OVERRIDDEN', 'RESULT_GROUP_SHOP_OVERRIDDEN_GROUP_'.$id_group, $id_group, 0);
         }
         foreach ($id_shops as $id_shop) {
-            $configuration['configuration'][0]['shop'][$id_shop]['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN_SHOP_'.$id_shop;
+            Configuration::set('PS_TEST_GROUP_SHOP_OVERRIDDEN', 'RESULT_GROUP_SHOP_OVERRIDDEN_SHOP_'.$id_shop, 0, $id_shop);
         }
-
-
-        $this->default = ReflexionHelper::getProperty(new Configuration(), '_cache');
-        ReflexionHelper::setProperty(new Configuration(), '_cache', $configuration);
     }
 
     public function teardown()
     {
-        ReflexionHelper::setProperty(new Configuration(), '_cache', $this->default);
     }
 
     public function testGetGlobalValue()
