@@ -23,19 +23,18 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Feature;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is risponsible to generate the product options form
+ * This form class is responsible to generate the product options form
  */
-class ProductFeature extends AbstractType
+class ProductFeature extends CommonAbstractType
 {
     private $translator;
     private $locales;
@@ -45,35 +44,21 @@ class ProductFeature extends AbstractType
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
+     * @param object $router
+     * @param object $featureDataProvider
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext, $router, $featureDataProvider)
     {
-        $this->container = $container;
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
-        $this->router = $container->get("router");
+        $this->translator = $translator;
+        $this->locales = $legacyContext->getLanguages();
+        $this->router = $router;
+        $this->featureDataProvider = $featureDataProvider;
         $this->features = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.feature')->getFeatures($this->locales[0]['id_lang']),
+            $this->featureDataProvider->getFeatures($this->locales[0]['id_lang']),
             'id_feature'
         );
-    }
-
-    /**
-     * Format legacy data list to mapping SF2 form filed choice
-     *
-     * @param array $list
-     * @param string $mapping_value
-     * @param string $mapping_name
-     * @return array
-     */
-    private function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
-    {
-        $new_list = array();
-        foreach ($list as $item) {
-            $new_list[$item[$mapping_value]] = $item[$mapping_name];
-        }
-        return $new_list;
     }
 
     /**
@@ -83,19 +68,30 @@ class ProductFeature extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('feature', 'choice', array(
+        $builder->add('feature', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            'label' => $this->translator->trans('Feature', [], 'AdminProducts'),
             'choices' =>  $this->features,
+            'choices_as_values' => true,
             'required' =>  false,
             'attr' => array(
                 'data-action' => $this->router->generate('admin_feature_get_feature_values'),
                 'class' => 'feature-selector',
             )
         ))
-        ->add('value', 'choice', array(
+        ->add('value', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
             'required' =>  false,
+            'choices_as_values' => true,
             'attr' => array('class' => 'feature-value-selector')
         ))
-        ->add('custom_value', new TranslateType('text', array(), $this->locales), array('required' =>  false));
+        ->add('custom_value', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
+            'options' => [],
+            'locales' => $this->locales,
+            'hideTabs' => true,
+            'required' =>  false,
+            'label' => $this->translator->trans('OR Customized value', [], 'AdminProducts'),
+        ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
@@ -106,13 +102,15 @@ class ProductFeature extends AbstractType
             }
 
             $choices = $this->formatDataChoicesList(
-                $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
+                $this->featureDataProvider->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
                 'id_feature_value',
                 'value'
             );
 
-            $form->add('value', 'choice', array(
+            $form->add('value', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
                 'choices' => $choices,
+                'choices_as_values' => true,
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),
             ));
@@ -128,25 +126,27 @@ class ProductFeature extends AbstractType
             }
 
             $choices = $this->formatDataChoicesList(
-                $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
+                $this->featureDataProvider->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
                 'id_feature_value',
                 'value'
             );
 
-            $form->add('value', 'choice', array(
+            $form->add('value', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'label' => $this->translator->trans('Pre-defined value', [], 'AdminProducts'),
                 'required' =>  false,
                 'attr' => array('class' => 'feature-value-selector'),
                 'choices' => $choices,
+                'choices_as_values' => true,
             ));
         });
     }
 
     /**
-     * Returns the name of this type.
+     * Returns the block prefix of this type.
      *
-     * @return string The name of this type
+     * @return string The prefix name
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'product_feature';
     }

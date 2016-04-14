@@ -629,6 +629,31 @@ class ToolsCore
     }
 
     /**
+     * Return the CLDR associated with the context or given language_code
+     *
+     * @param Context|null $context
+     * @param null         $language_code
+     * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
+     * @throws PrestaShopException
+     */
+    public static function getCldr(Context $context = null, $language_code = null)
+    {
+        static $cldr_cache;
+        if ($context) {
+            $language_code = $context->language->language_code;
+        }
+
+        if (!empty($cldr_cache[$language_code])) {
+            $cldr = $cldr_cache[$language_code];
+        } else {
+            $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository($language_code);
+            $cldr_cache[$language_code] = $cldr;
+        }
+
+        return $cldr;
+    }
+
+    /**
     * Return price with currency sign for a given product
     *
     * @param float $price Product price
@@ -650,7 +675,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
-        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository();
+        $cldr = self::getCldr($context);
 
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
@@ -662,7 +687,7 @@ class ToolsCore
      */
     public static function displayNumber($number, $currency = null)
     {
-        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository();
+        $cldr = self::getCldr(Context::getContext());
 
         return $cldr->getNumber($number);
     }
@@ -772,7 +797,7 @@ class ToolsCore
             $amount *= $currency_to->conversion_rate;
         }
 
-        return Tools::ps_round(self::displayPrice($amount, $currency_to), _PS_PRICE_COMPUTE_PRECISION_) ;
+        return Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_) ;
     }
 
     /**
@@ -919,15 +944,9 @@ class ToolsCore
     */
     public static function clearXMLCache()
     {
-        $themes = array();
-        foreach (Theme::getThemes() as $theme) {
-            /** @var Theme $theme */
-            $themes[] = $theme->directory;
-        }
-
         foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file) {
             $path_info = pathinfo($file, PATHINFO_EXTENSION);
-            if (($path_info == 'xml') && ($file != 'default.xml') && !in_array(basename($file, '.'.$path_info), $themes)) {
+            if (($path_info == 'xml') && ($file != 'default.xml')) {
                 self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
             }
         }
@@ -1077,33 +1096,6 @@ class ToolsCore
     }
 
     /**
-     * @deprecated 1.5.0
-     */
-    public static function getMetaTags($id_lang, $page_name, $title = '')
-    {
-        Tools::displayAsDeprecated();
-        return Meta::getMetaTags($id_lang, $page_name, $title);
-    }
-
-    /**
-     * @deprecated 1.5.0
-     */
-    public static function getHomeMetaTags($id_lang, $page_name)
-    {
-        Tools::displayAsDeprecated();
-        return Meta::getHomeMetas($id_lang, $page_name);
-    }
-
-    /**
-     * @deprecated 1.5.0
-     */
-    public static function completeMetaTags($meta_tags, $default_value, Context $context = null)
-    {
-        Tools::displayAsDeprecated();
-        return Meta::completeMetaTags($meta_tags, $default_value, $context);
-    }
-
-    /**
     * Encrypt password
     *
     * @param string $passwd String to encrypt
@@ -1190,109 +1182,6 @@ class ToolsCore
     public static function getAdminImageUrl($image = null, $entities = false)
     {
         return Tools::getAdminUrl(basename(_PS_IMG_DIR_).'/'.$image, $entities);
-    }
-
-    /**
-    * Get the user's journey
-    *
-    * @param int $id_category Category ID
-    * @param string $path Path end
-    * @param bool $linkOntheLastItem Put or not a link on the current category
-    * @param string [optionnal] $categoryType defined what type of categories is used (products or cms)
-    */
-    public static function getPath($id_category, $path = '', $link_on_the_item = false, $category_type = 'products', Context $context = null)
-    {
-        if (!$context) {
-            $context = Context::getContext();
-        }
-
-        $id_category = (int)$id_category;
-        if ($id_category == 1) {
-            return '<span class="navigation_end">'.$path.'</span>';
-        }
-
-        $pipe = Configuration::get('PS_NAVIGATION_PIPE');
-        if (empty($pipe)) {
-            $pipe = '>';
-        }
-
-        $full_path = '';
-        if ($category_type === 'products') {
-            $interval = Category::getInterval($id_category);
-            $id_root_category = $context->shop->getCategory();
-            $interval_root = Category::getInterval($id_root_category);
-            if ($interval) {
-                $sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
-                        FROM '._DB_PREFIX_.'category c
-                        LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
-                        '.Shop::addSqlAssociation('category', 'c').'
-                        WHERE c.nleft <= '.$interval['nleft'].'
-                            AND c.nright >= '.$interval['nright'].'
-                            AND c.nleft >= '.$interval_root['nleft'].'
-                            AND c.nright <= '.$interval_root['nright'].'
-                            AND cl.id_lang = '.(int)$context->language->id.'
-                            AND c.active = 1
-                            AND c.level_depth > '.(int)$interval_root['level_depth'].'
-                        ORDER BY c.level_depth ASC';
-                $categories = Db::getInstance()->executeS($sql);
-
-                $n = 1;
-                $n_categories = count($categories);
-                foreach ($categories as $category) {
-                    $full_path .=
-                    (($n < $n_categories || $link_on_the_item) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'" data-gg="">' : '').
-                    htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').
-                    (($n < $n_categories || $link_on_the_item) ? '</a>' : '').
-                    (($n++ != $n_categories || !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
-                }
-
-                return $full_path.$path;
-            }
-        } elseif ($category_type === 'CMS') {
-            $category = new CMSCategory($id_category, $context->language->id);
-            if (!Validate::isLoadedObject($category)) {
-                die(Tools::displayError());
-            }
-            $category_link = $context->link->getCMSCategoryLink($category);
-
-            if ($path != $category->name) {
-                $full_path .= '<a href="'.Tools::safeOutput($category_link).'" data-gg="">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
-            } else {
-                $full_path = ($link_on_the_item ? '<a href="'.Tools::safeOutput($category_link).'" data-gg="">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($link_on_the_item ? '</a>' : '');
-            }
-
-            return Tools::getPath($category->id_parent, $full_path, $link_on_the_item, $category_type);
-        }
-    }
-
-    /**
-    * @param string [optionnal] $type_cat defined what type of categories is used (products or cms)
-    */
-    public static function getFullPath($id_category, $end, $type_cat = 'products', Context $context = null)
-    {
-        if (!$context) {
-            $context = Context::getContext();
-        }
-
-        $id_category = (int)$id_category;
-        $pipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
-
-        $default_category = 1;
-        if ($type_cat === 'products') {
-            $default_category = $context->shop->getCategory();
-            $category = new Category($id_category, $context->language->id);
-        } elseif ($type_cat === 'CMS') {
-            $category = new CMSCategory($id_category, $context->language->id);
-        }
-
-        if (!Validate::isLoadedObject($category)) {
-            $id_category = $default_category;
-        }
-        if ($id_category == $default_category) {
-            return htmlentities($end, ENT_NOQUOTES, 'UTF-8');
-        }
-
-        return Tools::getPath($id_category, $category->name, true, $type_cat).'<span class="navigation-pipe">'.$pipe.'</span> <span class="navigation_product">'.htmlentities($end, ENT_NOQUOTES, 'UTF-8').'</span>';
     }
 
     /**
@@ -2007,6 +1896,34 @@ class ToolsCore
         }
     }
 
+    /**
+     * Create a local file from url
+     * required because ZipArchive is unable to extract from remote files.
+     * @param string $url the remote location
+     * @return bool|string false if failure, else the local filename
+     */
+    public static function createFileFromUrl($url)
+    {
+        $remoteFile = fopen($url, "r");
+        if (!$remoteFile) {
+            return false;
+        }
+        $localFile = fopen(basename(url), "w");
+        if (!$localFile) {
+            return false;
+        }
+
+        while (!feof($remoteFile)) {
+            $data = fread($remoteFile, 1024);
+            fwrite($localFile, $data, 1024);
+        }
+
+        fclose($remoteFile);
+        fclose($localFile);
+
+        return basename($url);
+    }
+
     public static function simplexml_load_file($url, $class_name = null)
     {
         $cache_id = 'Tools::simplexml_load_file'.$url;
@@ -2024,15 +1941,6 @@ class ToolsCore
             return @copy($source, $destination);
         }
         return @file_put_contents($destination, Tools::file_get_contents($source, false, $stream_context));
-    }
-
-    /**
-     * @deprecated as of 1.5 use Media::minifyHTML()
-     */
-    public static function minifyHTML($html_content)
-    {
-        Tools::displayAsDeprecated();
-        return Media::minifyHTML($html_content);
     }
 
     /**
@@ -2061,6 +1969,17 @@ class ToolsCore
         return Tools::strtolower(trim(preg_replace('/([A-Z][a-z])/', '_$1', $string), '_'));
     }
 
+    /**
+     * Converts SomethingLikeThis to something-like-this
+     * The name comes from Perl, we like Perl.
+     */
+    public static function camelCaseToKebabCase($string)
+    {
+        return Tools::strtolower(
+            preg_replace('/([a-z])([A-Z])/', '$1-$2', $string)
+        );
+    }
+
     public static function getBrightness($hex)
     {
         if (Tools::strtolower($hex) == 'transparent') {
@@ -2079,43 +1998,6 @@ class ToolsCore
         return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
     }
 
-    /**
-    * @deprecated as of 1.5 use Media::minifyHTMLpregCallback()
-    */
-    public static function minifyHTMLpregCallback($preg_matches)
-    {
-        Tools::displayAsDeprecated();
-        return Media::minifyHTMLpregCallback($preg_matches);
-    }
-
-    /**
-    * @deprecated as of 1.5 use Media::packJSinHTML()
-    */
-    public static function packJSinHTML($html_content)
-    {
-        Tools::displayAsDeprecated();
-        return Media::packJSinHTML($html_content);
-    }
-
-    /**
-    * @deprecated as of 1.5 use Media::packJSinHTMLpregCallback()
-    */
-    public static function packJSinHTMLpregCallback($preg_matches)
-    {
-        Tools::displayAsDeprecated();
-        return Media::packJSinHTMLpregCallback($preg_matches);
-    }
-
-    /**
-    * @deprecated as of 1.5 use Media::packJS()
-    */
-    public static function packJS($js_content)
-    {
-        Tools::displayAsDeprecated();
-        return Media::packJS($js_content);
-    }
-
-
     public static function parserSQL($sql)
     {
         if (strlen($sql) > 0) {
@@ -2126,62 +2008,10 @@ class ToolsCore
         return false;
     }
 
-    /**
-     * @deprecated as of 1.5 use Media::minifyCSS()
-     */
-    public static function minifyCSS($css_content, $fileuri = false)
-    {
-        Tools::displayAsDeprecated();
-        return Media::minifyCSS($css_content, $fileuri);
-    }
-
     public static function replaceByAbsoluteURL($matches)
     {
         Tools::displayAsDeprecated();
         return Media::replaceByAbsoluteURL($matches);
-    }
-
-    /**
-     * addJS load a javascript file in the header
-     *
-     * @deprecated as of 1.5 use FrontController->addJS()
-     * @param mixed $js_uri
-     * @return void
-     */
-    public static function addJS($js_uri)
-    {
-        Tools::displayAsDeprecated();
-        $context = Context::getContext();
-        $context->controller->addJs($js_uri);
-    }
-
-    /**
-     * @deprecated as of 1.5 use FrontController->addCSS()
-     */
-    public static function addCSS($css_uri, $css_media_type = 'all')
-    {
-        Tools::displayAsDeprecated();
-        $context = Context::getContext();
-        $context->controller->addCSS($css_uri, $css_media_type);
-    }
-
-    /**
-    * @deprecated as of 1.5 use Media::cccCss()
-    */
-    public static function cccCss($css_files)
-    {
-        Tools::displayAsDeprecated();
-        return Media::cccCss($css_files);
-    }
-
-
-    /**
-    * @deprecated as of 1.5 use Media::cccJS()
-    */
-    public static function cccJS($js_files)
-    {
-        Tools::displayAsDeprecated();
-        return Media::cccJS($js_files);
     }
 
     protected static $_cache_nb_media_servers = null;
@@ -2440,9 +2270,10 @@ class ToolsCore
         fwrite($write_fd, "AddType application/vnd.ms-fontobject .eot\n");
         fwrite($write_fd, "AddType font/ttf .ttf\n");
         fwrite($write_fd, "AddType font/otf .otf\n");
-        fwrite($write_fd, "AddType application/x-font-woff .woff\n");
+        fwrite($write_fd, "AddType application/font-woff .woff\n");
+        fwrite($write_fd, "AddType application/font-woff2 .woff2\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
-    <FilesMatch \"\.(ttf|ttc|otf|eot|woff|svg)$\">
+    <FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
         Header add Access-Control-Allow-Origin \"*\"
     </FilesMatch>
 </IfModule>\n\n");
@@ -2462,6 +2293,7 @@ class ToolsCore
     ExpiresByType image/svg+xml \"access plus 1 year\"
     ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
     ExpiresByType application/font-woff \"access plus 1 year\"
+    ExpiresByType application/font-woff2 \"access plus 1 year\"
     ExpiresByType application/x-font-woff \"access plus 1 year\"
     ExpiresByType application/vnd.ms-fontobject \"access plus 1 year\"
     ExpiresByType font/opentype \"access plus 1 year\"
@@ -3264,7 +3096,8 @@ exit;
             'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
             'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
             'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
-            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL')
+            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'),
+            'format' => isset($params['format']) ? $params['format'] : 'xml',
         );
         if (isset($params['source'])) {
             $post_query_data['source'] = $params['source'];
@@ -3279,6 +3112,14 @@ exit;
             case 'native':
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=native';
+                break;
+            case 'partner':
+                $protocols[] = 'http';
+                $post_data .= '&method=listing&action=partner';
+                break;
+            case 'service':
+                $protocols[] = 'http';
+                $post_data .= '&method=listing&action=service';
                 break;
             case 'native_all':
                 $protocols[] = 'http';

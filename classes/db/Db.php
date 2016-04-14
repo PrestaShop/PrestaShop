@@ -243,6 +243,11 @@ abstract class DbCore
         return self::$instance[$id_server];
     }
 
+    public function getPrefix()
+    {
+        return _DB_PREFIX_;
+    }
+
     /**
      * @param $test_db Db
      * Unit testing purpose only
@@ -347,22 +352,6 @@ abstract class DbCore
         if ($this->link) {
             $this->disconnect();
         }
-    }
-
-    /**
-     * Filter SQL query within a blacklist
-     *
-     * @param string $table Table where insert/update data
-     * @param array $values Data to insert/update
-     * @param string $type INSERT or UPDATE
-     * @param string $where WHERE clause, only for UPDATE (optional)
-     * @param int $limit LIMIT clause (optional)
-     * @return bool
-     * @throws PrestaShopDatabaseException
-     */
-    public function autoExecuteWithNullValues($table, $values, $type, $where = '', $limit = 0)
-    {
-        return $this->autoExecute($table, $values, $type, $where, $limit, 0, true);
     }
 
     /**

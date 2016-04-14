@@ -178,16 +178,19 @@ class HelperOptionsCore extends Helper
                 // @todo move this
                 if ($field['type'] == 'maintenance_ip') {
                     $field['script_ip'] = '
-						<script type="text/javascript">
-							function addRemoteAddr()
-							{
-								var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;
-								if (length > 0)
-									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
-								else
-									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
-							}
-						</script>';
+                        <script type="text/javascript">
+                            function addRemoteAddr()
+                            {
+                                var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;
+                                if (length > 0) {
+                                    if ($(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').indexOf(\''.Tools::getRemoteAddr().'\') < 0) {
+                                        $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
+                                    }
+                                } else {
+                                    $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
+                                }
+                            }
+                        </script>';
                     $field['link_remove_ip'] = '<button type="button" class="btn btn-default" onclick="addRemoteAddr();"><i class="icon-plus"></i> '.$this->l('Add my IP', 'Helper').'</button>';
                 }
 
@@ -245,7 +248,7 @@ class HelperOptionsCore extends Helper
             echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on"> '.Tools::strtolower($theme['name']).'</label>';
             echo '<br />';
             echo '<label class="t" for="'.$key.'_'.$theme['name'].'_on">';
-            echo '<img src="../themes/'.$theme['name'].'/preview.jpg" alt="'.Tools::strtolower($theme['name']).'">';
+            echo '<img src="'.$theme['preview'].'" alt="'.Tools::strtolower($theme['name']).'">';
             echo '</label>';
             echo '</td>';
             if (isset($field['max']) && ($i + 1) % $field['max'] == 0) {

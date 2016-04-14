@@ -34,7 +34,7 @@
     <name>Giappone</name>
   </country>
   <country id="LU">
-    <name>Luxemburg</name>
+    <name>Lussemburgo</name>
   </country>
   <country id="NL">
     <name>Paesi Bassi</name>
@@ -61,7 +61,7 @@
     <name>Danimarca</name>
   </country>
   <country id="US">
-    <name>United States</name>
+    <name>Stati Uniti</name>
   </country>
   <country id="HK">
     <name>Hong Kong</name>
@@ -70,7 +70,7 @@
     <name>Norvegia</name>
   </country>
   <country id="AU">
-    <name>l'Australia</name>
+    <name>Australia</name>
   </country>
   <country id="SG">
     <name>Singapore</name>
@@ -79,7 +79,7 @@
     <name>Irlanda</name>
   </country>
   <country id="NZ">
-    <name>nuova Zelanda</name>
+    <name>Nuova Zelanda</name>
   </country>
   <country id="KR">
     <name>Corea del Sud</name>
@@ -88,7 +88,7 @@
     <name>Israele</name>
   </country>
   <country id="ZA">
-    <name>Sud Africa</name>
+    <name>Sudafrica</name>
   </country>
   <country id="NG">
     <name>Nigeria</name>
@@ -145,7 +145,7 @@
     <name>Bahamas</name>
   </country>
   <country id="BH">
-    <name>Bahrain</name>
+    <name>Bahrein</name>
   </country>
   <country id="BD">
     <name>Bangladesh</name>
@@ -181,7 +181,7 @@
     <name>Burkina Faso</name>
   </country>
   <country id="MM">
-    <name>Birmania ( Myanmar )</name>
+    <name>Birmania (Myanmar)</name>
   </country>
   <country id="BI">
     <name>Burundi</name>
@@ -211,10 +211,10 @@
     <name>Comore</name>
   </country>
   <country id="CD">
-    <name>Congo, Dem . Repubblica</name>
+    <name>Congo, Repubblica Democratica del</name>
   </country>
   <country id="CG">
-    <name>Congo, Repubblica</name>
+    <name>Congo, Repubblica del</name>
   </country>
   <country id="CR">
     <name>Costa Rica</name>
@@ -232,7 +232,7 @@
     <name>Gibuti</name>
   </country>
   <country id="DM">
-    <name>dominica</name>
+    <name>Dominica</name>
   </country>
   <country id="DO">
     <name>Repubblica Dominicana</name>
@@ -307,7 +307,7 @@
     <name>Guinea</name>
   </country>
   <country id="GW">
-    <name>Guinea- Bissau</name>
+    <name>Guinea-Bissau</name>
   </country>
   <country id="GY">
     <name>Guyana</name>
@@ -340,7 +340,7 @@
     <name>Iraq</name>
   </country>
   <country id="IM">
-    <name>Man Isola</name>
+    <name>Isola di Man</name>
   </country>
   <country id="JM">
     <name>Giamaica</name>
@@ -352,7 +352,7 @@
     <name>Giordania</name>
   </country>
   <country id="KZ">
-    <name>Kazakhstan</name>
+    <name>Kazakistan</name>
   </country>
   <country id="KE">
     <name>Kenya</name>
@@ -361,7 +361,7 @@
     <name>Kiribati</name>
   </country>
   <country id="KP">
-    <name>Korea , Dem . Repubblica di</name>
+    <name>Corea del Nord</name>
   </country>
   <country id="KW">
     <name>Kuwait</name>
@@ -439,7 +439,7 @@
     <name>Micronesia</name>
   </country>
   <country id="MD">
-    <name>Moldova</name>
+    <name>Moldavia</name>
   </country>
   <country id="MC">
     <name>Monaco</name>
@@ -472,7 +472,7 @@
     <name>Antille Olandesi</name>
   </country>
   <country id="NC">
-    <name>nuova Caledonia</name>
+    <name>Nuova Caledonia</name>
   </country>
   <country id="NI">
     <name>Nicaragua</name>
@@ -484,7 +484,7 @@
     <name>Niue</name>
   </country>
   <country id="NF">
-    <name>Norfolk Island</name>
+    <name>Isola Norfolk</name>
   </country>
   <country id="MP">
     <name>Isole Marianne Settentrionali</name>
@@ -499,7 +499,7 @@
     <name>Palau</name>
   </country>
   <country id="PS">
-    <name>Territori palestinesi</name>
+    <name>Territori Palestinesi</name>
   </country>
   <country id="PA">
     <name>Panama</name>
@@ -520,22 +520,22 @@
     <name>Pitcairn</name>
   </country>
   <country id="PR">
-    <name>Puerto Rico</name>
+    <name>Porto Rico</name>
   </country>
   <country id="QA">
     <name>Qatar</name>
   </country>
   <country id="RE">
-    <name>Isola della Riunione</name>
+    <name>Riunione, La</name>
   </country>
   <country id="RU">
-    <name>Federazione Russa</name>
+    <name>Russia</name>
   </country>
   <country id="RW">
     <name>Ruanda</name>
   </country>
   <country id="BL">
-    <name>saint Barthelemy</name>
+    <name>Saint-Barthélemy</name>
   </country>
   <country id="KN">
     <name>Saint Kitts e Nevis</name>
@@ -544,10 +544,10 @@
     <name>Santa Lucia</name>
   </country>
   <country id="MF">
-    <name>saint Martin</name>
+    <name>Saint Martin</name>
   </country>
   <country id="PM">
-    <name>Saint Pierre e Miquelon</name>
+    <name>Saint-Pierre e Miquelon</name>
   </country>
   <country id="VC">
     <name>Saint Vincent e Grenadine</name>
@@ -586,7 +586,7 @@
     <name>Somalia</name>
   </country>
   <country id="GS">
-    <name>Georgia del Sud e isole Sandwich del Sud</name>
+    <name>Georgia del Sud e Isole Sandwich Meridionali</name>
   </country>
   <country id="LK">
     <name>Sri Lanka</name>
@@ -637,7 +637,7 @@
     <name>Turkmenistan</name>
   </country>
   <country id="TC">
-    <name>Isole Turks e Caicos</name>
+    <name>Turks e Caicos</name>
   </country>
   <country id="TV">
     <name>Tuvalu</name>
@@ -667,16 +667,16 @@
     <name>Vietnam</name>
   </country>
   <country id="VG">
-    <name>Isole Vergini (britanniche )</name>
+    <name>Isole Vergini Britanniche</name>
   </country>
   <country id="VI">
-    <name>Isole Vergini (Stati Uniti )</name>
+    <name>Isole Vergini Statunitensi</name>
   </country>
   <country id="WF">
     <name>Wallis e Futuna</name>
   </country>
   <country id="EH">
-    <name>Sahara occidentale</name>
+    <name>Sahara Occidentale</name>
   </country>
   <country id="YE">
     <name>Yemen</name>
@@ -697,13 +697,13 @@
     <name>Antartide</name>
   </country>
   <country id="BA">
-    <name>Bosnia-Erzegovina</name>
+    <name>Bosnia ed Erzegovina</name>
   </country>
   <country id="BV">
     <name>Isola Bouvet</name>
   </country>
   <country id="IO">
-    <name>Territorio britannico dell'Oceano Indiano</name>
+    <name>Territorio Britannico dell'Oceano Indiano</name>
   </country>
   <country id="BG">
     <name>Bulgaria</name>
@@ -715,19 +715,19 @@
     <name>Isola di Natale</name>
   </country>
   <country id="CC">
-    <name>Cocos ( Keeling)</name>
+    <name>Isole Cocos (Keeling)</name>
   </country>
   <country id="CK">
     <name>Isole Cook</name>
   </country>
   <country id="GF">
-    <name>Guiana francese</name>
+    <name>Guyana Francese</name>
   </country>
   <country id="PF">
     <name>Polinesia Francese</name>
   </country>
   <country id="TF">
-    <name>Territori francesi meridionali</name>
+    <name>Terre australi e antartiche francesi</name>
   </country>
   <country id="AX">
     <name>Isole Åland</name>

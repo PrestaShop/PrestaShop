@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Adapter\CoreException;
+
 class CustomerCore extends ObjectModel
 {
     public $id;
@@ -273,7 +276,6 @@ class CustomerCore extends ObjectModel
         Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)$this->id);
         Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'message WHERE id_customer='.(int)$this->id);
         Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_customer='.(int)$this->id);
-        Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'compare WHERE id_customer='.(int)$this->id);
 
         $carts = Db::getInstance()->executes('SELECT id_cart FROM '._DB_PREFIX_.'cart WHERE id_customer='.(int)$this->id);
         if ($carts) {
@@ -325,19 +327,17 @@ class CustomerCore extends ObjectModel
             die(Tools::displayError());
         }
 
+        $hash = Db::getInstance()->getValue('SELECT `passwd` FROM `'._DB_PREFIX_.'customer` WHERE `email` = \''.pSQL($email).'\'
+            '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' AND `deleted` = 0 AND `is_guest` = 0');
+
         try {
-            $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
-        } catch (Adapter_Exception $e) {
+            $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
+        } catch (CoreException $e) {
             return false;
         }
 
-        if (isset($passwd)) {
-            $hash = Db::getInstance()->getValue('SELECT `passwd` FROM `'._DB_PREFIX_.'customer` WHERE `email` = \''.pSQL($email).'\'
-                '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' AND `deleted` = 0 AND `is_guest` = 0');
-
-            if (!$crypto->checkHash($passwd, $hash, _COOKIE_KEY_)) {
-                return false;
-            }
+        if (isset($passwd) && !$crypto->checkHash($passwd, $hash, _COOKIE_KEY_)) {
+            return false;
         }
 
         $result = Db::getInstance()->getRow('
@@ -488,6 +488,108 @@ class CustomerCore extends ObjectModel
             return $result;
         }
         return Cache::retrieve($cache_id);
+    }
+
+    public function getSimpleAddresses($id_lang = null)
+    {
+        if (!$this->id) {
+            return [];
+        }
+
+        if (is_null($id_lang)) {
+            $id_lang = Context::getContext()->language->id;
+        }
+
+        $share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
+        $sql = $this->getSimpleAddressSql(null, $id_lang);
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        $addresses = [];
+        foreach ($result as $addr) {
+            $addresses[$addr['id']] = $addr;
+        }
+        return $addresses;
+    }
+
+    public function getSimpleAddress($id_address, $id_lang = null)
+    {
+        if (!$this->id ||!intval($id_address) || !$id_address) {
+            return [
+                'id' => '',
+                'alias' => '',
+                'firstname' => '',
+                'lastname' => '',
+                'company' => '',
+                'address1' => '',
+                'address2' => '',
+                'postcode' => '',
+                'city' => '',
+                'id_state' => '',
+                'state' => '',
+                'state_iso' => '',
+                'id_country' => '',
+                'country' => '',
+                'country_iso' => '',
+                'other' => '',
+                'phone' => '',
+                'phone_mobile' => '',
+                'vat_number' => '',
+                'dni' => '',
+            ];
+        }
+
+        $sql = $this->getSimpleAddressSql($id_address, $id_lang);
+        $res = Db::getInstance()->executeS($sql);
+        if (count($res) === 1) {
+            return $res[0];
+        } else {
+            return $res;
+        }
+    }
+
+    public function getSimpleAddressSql($id_address = null, $id_lang = null)
+    {
+        if (is_null($id_lang)) {
+            $id_lang = Context::getContext()->language->id;
+        }
+        $share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
+
+        $sql = 'SELECT DISTINCT
+                      a.`id_address` AS `id`,
+                      a.`alias`,
+                      a.`firstname`,
+                      a.`lastname`,
+                      a.`company`,
+                      a.`address1`,
+                      a.`address2`,
+                      a.`postcode`,
+                      a.`city`,
+                      a.`id_state`,
+                      s.name AS state,
+                      s.`iso_code` AS state_iso,
+                      a.`id_country`,
+                      cl.`name` AS country,
+                      co.`iso_code` AS country_iso,
+                      a.`other`,
+                      a.`phone`,
+                      a.`phone_mobile`,
+                      a.`vat_number`,
+                      a.`dni`
+                    FROM `'._DB_PREFIX_.'address` a
+                    LEFT JOIN `'._DB_PREFIX_.'country` co ON (a.`id_country` = co.`id_country`)
+                    LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (co.`id_country` = cl.`id_country`)
+                    LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
+                    '.($share_order ? '' : Shop::addSqlAssociation('country', 'co')).'
+                    WHERE
+                        `id_lang` = '.(int)$id_lang.'
+                        AND `id_customer` = '.(int)$this->id.'
+                        AND a.`deleted` = 0
+                        AND a.`active` = 1';
+
+        if (!is_null($id_address)) {
+            $sql .= ' AND a.`id_address` = '.(int)$id_address;
+        }
+
+        return $sql;
     }
 
     /**
@@ -800,7 +902,7 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
-        $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
+        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         $this->is_guest = 0;
         $this->passwd = $crypto->encrypt($password, _COOKIE_KEY_);
         $this->cleanGroups();
@@ -834,7 +936,7 @@ class CustomerCore extends ObjectModel
 
     public function setWsPasswd($passwd)
     {
-        $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
+        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
 
         if ($this->id == 0 || $this->passwd != $passwd) {
             $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
@@ -928,7 +1030,7 @@ class CustomerCore extends ObjectModel
     public function validateController($htmlentities = true)
     {
         $errors = parent::validateController($htmlentities);
-        $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
+        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
 
         if ($value = Tools::getValue('passwd')) {
             $this->passwd = $crypto->encrypt($value, _COOKIE_KEY_);

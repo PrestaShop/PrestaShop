@@ -1019,7 +1019,7 @@ class CartCore extends ObjectModel
                 } else {
                     Db::getInstance()->execute(
                         'UPDATE `'._DB_PREFIX_.'cart_product`
-                        SET `quantity` = `quantity` '.$qty.', `date_add` = NOW()
+                        SET `quantity` = `quantity` '.$qty.'
                         WHERE `id_product` = '.(int)$id_product.
                         (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
                         AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
@@ -1412,9 +1412,9 @@ class CartCore extends ObjectModel
     public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null, $use_cache = true)
     {
         // Dependencies
-        $address_factory    = Adapter_ServiceLocator::get('Adapter_AddressFactory');
-        $price_calculator    = Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
-        $configuration        = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
+        $address_factory    = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
+        $price_calculator    = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
+        $configuration        = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
 
         $ps_tax_address_type = $configuration->get('PS_TAX_ADDRESS_TYPE');
         $ps_use_ecotax = $configuration->get('PS_USE_ECOTAX');

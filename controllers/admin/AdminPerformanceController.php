@@ -604,7 +604,7 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'CacheApc',
                             'value' => 'CacheApc',
-                            'label' => $this->l('APC').(extension_loaded('apc') ? '' : $warning_apc)
+                            'label' => $this->l('APC').((extension_loaded('apc') || extension_loaded('apcu'))? '' : $warning_apc)
                         ),
                         array(
                             'id' => 'CacheXcache',
@@ -681,7 +681,7 @@ class AdminPerformanceControllerCore extends AdminController
         parent::initPageHeaderToolbar();
 
         $this->page_header_toolbar_btn['clear_cache'] = array(
-            'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1',
+            'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1&empty_sf2_cache=1',
             'desc' => $this->l('Clear cache'),
             'icon' => 'process-icon-eraser'
         );
@@ -877,7 +877,7 @@ class AdminPerformanceControllerCore extends AdminController
                         $this->errors[] = Tools::displayError('The "Mcrypt" PHP extension is not activated on this server.');
                     } else {
                         if (!strstr($new_settings, '_RIJNDAEL_KEY_')) {
-                            $key_size = mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
+                            $key_size = mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
                             $key = Tools::passwdGen($key_size);
                             $new_settings = preg_replace(
                                 '/define\(\'_COOKIE_KEY_\', \'([a-z0-9=\/+-_]+)\'\);/i',
@@ -886,7 +886,7 @@ class AdminPerformanceControllerCore extends AdminController
                             );
                         }
                         if (!strstr($new_settings, '_RIJNDAEL_IV_')) {
-                            $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
+                            $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
                             $iv = base64_encode(mcrypt_create_iv($iv_size, MCRYPT_RAND));
                             $new_settings = preg_replace(
                                 '/define\(\'_COOKIE_IV_\', \'([a-z0-9=\/+-_]+)\'\);/i',
@@ -935,7 +935,7 @@ class AdminPerformanceControllerCore extends AdminController
                     } elseif ($caching_system == 'CacheMemcached' && !extension_loaded('memcached')) {
                         $this->errors[] = Tools::displayError('To use Memcached, you must install the Memcached PECL extension on your server.').'
 							<a href="http://www.php.net/manual/en/memcached.installation.php">http://www.php.net/manual/en/memcached.installation.php</a>';
-                    } elseif ($caching_system == 'CacheApc' && !extension_loaded('apc')) {
+                    } elseif ($caching_system == 'CacheApc'  && !extension_loaded('apc') && !extension_loaded('apcu')) {
                         $this->errors[] = Tools::displayError('To use APC cache, you must install the APC PECL extension on your server.').'
 							<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
                     } elseif ($caching_system == 'CacheXcache' && !extension_loaded('xcache')) {
@@ -994,6 +994,15 @@ class AdminPerformanceControllerCore extends AdminController
             Tools::clearXMLCache();
             Media::clearCache();
             Tools::generateIndex();
+        }
+
+        if ((bool)Tools::getValue('empty_sf2_cache')) {
+            $redirectAdmin = true;
+
+            $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+            $sf2Refresh->addCacheClear();
+            $sf2Refresh->addAsseticDump();
+            $sf2Refresh->execute();
         }
 
         if (Tools::isSubmit('submitAddconfiguration')) {

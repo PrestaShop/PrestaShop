@@ -108,7 +108,7 @@ class ProductDownloadCore extends ObjectModel
     {
         if (parent::update($null_values)) {
             // Refresh cache of feature detachable because the row can be deactive
-            Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
+            //Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
             return true;
         }
         return false;
@@ -173,9 +173,7 @@ class ProductDownloadCore extends ObjectModel
         if (!ProductDownload::isFeatureActive()) {
             return false;
         }
-        if (array_key_exists((int)$id_product, self::$_productIds)) {
-            return self::$_productIds[$id_product];
-        }
+
         self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
 		FROM `'._DB_PREFIX_.'product_download`

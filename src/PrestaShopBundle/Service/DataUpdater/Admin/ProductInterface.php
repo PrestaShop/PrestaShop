@@ -52,6 +52,15 @@ interface ProductInterface
     public function deleteProductIdList(array $productIdList);
 
     /**
+     * Duplicates the given product IDs
+     *
+     * @param array $productListId The ID list of products to delete
+     * @throws DataUpdateException If duplication failed.
+     * @return boolean True when succeed.
+     */
+    public function duplicateProductIdList(array $productIdList);
+
+    /**
      * Do a safe delete on given product ID
      *
      * @param integer $productId The product ID to delete

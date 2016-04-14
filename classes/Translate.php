@@ -29,6 +29,35 @@
  */
 class TranslateCore
 {
+    public static function getFrontTranslation($string, $class, $addslashes = false, $htmlentities = true, $sprintf = null)
+    {
+        global $_LANG;
+
+        $iso = Context::getContext()->language->iso_code;
+        if (empty($iso)) {
+            $iso = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
+        }
+
+        $string = preg_replace("/\\\*'/", "\'", $string);
+        $key = $class.'_'.md5($string);
+
+        if (isset($_LANG[$key])) {
+            $str = $_LANG[$key];
+        } else {
+            $str = $string;
+        }
+
+        if ($htmlentities) {
+            $str = htmlspecialchars($str, ENT_QUOTES, 'utf-8');
+        }
+        $str = str_replace('"', '&quot;', $str);
+
+        if ($sprintf !== null) {
+            $str = Translate::checkAndReplaceArgs($str, $sprintf);
+        }
+
+        return ($addslashes ? addslashes($str) : stripslashes($str));
+    }
     /**
      * Get a translation for an admin controller
      *

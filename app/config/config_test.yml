@@ -1,3 +1,6 @@
+parameters:
+  AdapterSecurityAdminClass: PrestaShopBundle\Tests\Mock\AdapterSecurityAdminMock
+
 imports:
     - { resource: config_dev.yml }
 

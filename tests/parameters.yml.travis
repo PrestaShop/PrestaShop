@@ -2,7 +2,7 @@
 parameters:
     database_host:     localhost
     database_port:     ~
-    database_name:     prestashop.unit.test
+    database_name:     prestashop
     database_user:     root
     database_password: ~
     database_prefix:   ps_

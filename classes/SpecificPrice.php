@@ -292,6 +292,7 @@ class SpecificPriceCore extends ObjectModel
                 $from_specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_from_count);
 
                 $query_to_count                       = 'SELECT 1 FROM `'._DB_PREFIX_.'specific_price` WHERE `to` BETWEEN \''.$first_date.'\' AND \''.$last_date.'\'';
+
                 $to_specific_count                    = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_to_count);
                 SpecificPrice::$_filterOutCache[$key] = array($from_specific_count, $to_specific_count);
             } else {
@@ -301,22 +302,19 @@ class SpecificPriceCore extends ObjectModel
             $from_specific_count = $to_specific_count = 1;
         }
 
-        if ($from_specific_count) {
-            $query_extra .= ' AND (`from` = \'0000-00-00 00:00:00\' OR \''.$beginning.'\' >= `from`)';
-        } else {
-            $query_extra .= ' AND `from` = \'0000-00-00 00:00:00\'';
+        // if the from and to is not reached during the current day, just change $ending & $beginning to any date of the day to improve the cache
+        if (!$from_specific_count && !$to_specific_count) {
+            $ending = $beginning = $first_date;
         }
 
-        if ($to_specific_count) {
-            $query_extra .= ' AND (`to` = \'0000-00-00 00:00:00\' OR \''.$ending.'\' <= `to`)';
-        } else {
-            $query_extra .= ' AND `to` = \'0000-00-00 00:00:00\'';
-        }
+        $query_extra .= ' AND (`from` = \'0000-00-00 00:00:00\' OR \''.$beginning.'\' >= `from`)'
+                       .' AND (`to` = \'0000-00-00 00:00:00\' OR \''.$ending.'\' <= `to`)';
 
         return $query_extra;
     }
 
-    private static function formatIntInQuery($first_value, $second_value) {
+    private static function formatIntInQuery($first_value, $second_value)
+    {
         $first_value = (int)$first_value;
         $second_value = (int)$second_value;
         if ($first_value != $second_value) {
@@ -471,7 +469,7 @@ class SpecificPriceCore extends ObjectModel
 					`reduction` > 0
 		'.$query_extra);
         $ids_product = array();
-        foreach($results as $key => $value) {
+        foreach ($results as $key => $value) {
             $ids_product[] = $with_combination_id ? array('id_product' => (int)$value['id_product'], 'id_product_attribute' => (int)$value['id_product_attribute']) : (int)$value['id_product'];
         }
 

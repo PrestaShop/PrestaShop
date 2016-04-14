@@ -3,19 +3,24 @@
 /.htaccess
 *.log
 npm-debug.log.*
+.sass-cache/
 /cache/*
 download/*
 /img/*
 /log/*
-upload/*
+/upload/*
 vendor/*
 docs/phpdoc-sf/
-/composer.lock
-tests/StarterTheme/errorShots/
+composer.lock
+tests/selenium/errorShots/
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
 admin-dev/import/*
+
+admin-dev/import/*
+!admin-dev/import/.htaccess
+!admin-dev/import/index.php
 
 themes/*/cache/*
 
@@ -24,20 +29,22 @@ themes/*/cache/*
 config/settings.inc.php
 config/settings.old.php
 config/xml/*
+config/themes/*
 !config/xml/themes/default.xml
-tests/StarterTheme/settings.js
+tests/selenium/settings.js
+themes/*/config/settings_*.json
 
 # Themes, modules and overrides
 
 modules/*
 override/*
+/themes/StarterTheme
 
 # Vendors and dependencies
 
 bower_components/
-vendor/
 node_modules/
-/composer.phar
+composer.phar
 php-cs-fixer
 .grunt/*
 

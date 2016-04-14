@@ -1133,7 +1133,7 @@ class CarrierCore extends ObjectModel
     public function getTaxCalculator(Address $address, $id_order = null, $use_average_tax_of_products = false)
     {
         if ($use_average_tax_of_products) {
-            return Adapter_ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
+            return \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
         } else {
             $tax_manager = TaxManagerFactory::getManager($address, $this->getIdTaxRulesGroup());
             return $tax_manager->getTaxCalculator();
@@ -1337,7 +1337,7 @@ class CarrierCore extends ObjectModel
             }//no linked carrier are available for this zone
         }
 
-        // The product is not dirrectly linked with a carrier
+        // The product is not directly linked with a carrier
         // Get all the carriers linked to a warehouse
         if ($id_warehouse) {
             $warehouse = new Warehouse($id_warehouse);
@@ -1378,7 +1378,7 @@ class CarrierCore extends ObjectModel
             if ($cart_product['id_product'] == $product->id) {
                 $cart_quantity += $cart_product['cart_quantity'];
             }
-            if ($cart_product['weight_attribute'] > 0) {
+            if (isset($cart_product['weight_attribute']) && $cart_product['weight_attribute'] > 0) {
                 $cart_weight += ($cart_product['weight_attribute'] * $cart_product['cart_quantity']);
             } else {
                 $cart_weight += ($cart_product['weight'] * $cart_product['cart_quantity']);

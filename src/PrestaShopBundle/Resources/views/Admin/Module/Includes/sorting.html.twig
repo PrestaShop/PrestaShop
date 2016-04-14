@@ -1,0 +1,34 @@
+<div class="module-sorting-menu">
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div class="module-sorting-search-wording">
+                <span class="module-search-result-wording">{{ totalModules }} modules and services selected for you</span>
+            </div>
+            <p class="module-addons-search">
+                <a class='module-addons-search-link' href="#">
+                    See all results for this search on Addons Marketplace
+                    <span>
+                        <i class="icon-signout"></i>
+                    </span>
+                </a>
+            </p>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="module-sorting module-sorting-display pull-right">
+                <i id="module-sort-grid" data-switch="grid" class="material-icons module-sort-switch module-sort-active">view_module</i>
+                <i id="module-sort-list" data-switch="list" class="material-icons module-sort-switch">view_list</i>
+            </div>
+            <div class="module-sorting module-sorting-author pull-right">
+                <select>
+                  <option value="" disabled selected>- Sort by -</option>
+                  <option value="sort-by-name">Name</option>
+                  <option value="sort-by-price-asc">Increasing Price</option>
+                  <option value="sort-by-price-desc">Decreasing Price</option>
+                  <option value="sort-by-scoring">Score</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>

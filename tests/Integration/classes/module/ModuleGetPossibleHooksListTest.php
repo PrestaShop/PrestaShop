@@ -36,6 +36,8 @@ class ModuleGetPossibleHooksListTest extends IntegrationTestCase
     /**
      * Test if a module return the good possible hooks list.
      * This test is done on the bankwire generic module.
+     *
+     * Note: improves module list fixtures in order to get an explicit list of hooks.
      */
     public function testGetRightListForModule()
     {
@@ -43,10 +45,9 @@ class ModuleGetPossibleHooksListTest extends IntegrationTestCase
         Cache::clean('hook_alias');
         $possible_hooks_list = $module->getPossibleHooksList();
 
-        $this->assertCount(3, $possible_hooks_list);
+        $this->assertCount(2, $possible_hooks_list);
 
-        $this->assertEquals('displayPayment', $possible_hooks_list[0]['name']);
-        $this->assertEquals('displayPaymentEU', $possible_hooks_list[1]['name']);
-        $this->assertEquals('displayPaymentReturn', $possible_hooks_list[2]['name']);
+        $this->assertEquals('displayPaymentReturn', $possible_hooks_list[0]['name']);
+        $this->assertEquals('paymentOptions', $possible_hooks_list[1]['name']);
     }
 }

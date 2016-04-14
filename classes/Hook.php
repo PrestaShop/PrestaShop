@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+
 class HookCore extends ObjectModel
 {
     /**
@@ -47,11 +49,6 @@ class HookCore extends ObjectModel
     public $position = false;
 
     /**
-     * @var bool Is this hook usable with live edit ?
-     */
-    public $live_edit = false;
-
-    /**
      * @var array List of executed hooks on this page
      */
     public static $executed_hooks = array();
@@ -69,7 +66,6 @@ class HookCore extends ObjectModel
             'title' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'description' =>    array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'),
             'position' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'live_edit' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
         ),
     );
 
@@ -89,19 +85,52 @@ class HookCore extends ObjectModel
         return parent::add($autodate, $null_values);
     }
 
+    public static function normalizeHookName($hookName)
+    {
+        if (strtolower($hookName) == 'displayheader') {
+            return 'displayHeader';
+        }
+        $hookAliasList = Hook::getHookAliasList();
+        if (isset($hookAliasList[strtolower($hookName)])) {
+            return $hookAliasList[strtolower($hookName)];
+        }
+        return $hookName;
+    }
+
+    public static function isDisplayHookName($hook_name)
+    {
+        $hook_name = strtolower(self::normalizeHookName($hook_name));
+
+        if ($hook_name === 'header' || $hook_name === 'displayheader') {
+            // this hook is to add resources to the <head> section of the page
+            // so it doesn't display anything by itself
+            return false;
+        }
+
+        return strpos($hook_name, 'display') === 0;
+    }
+
     /**
      * Return Hooks List
      *
      * @param bool $position
      * @return array Hooks List
      */
-    public static function getHooks($position = false)
+    public static function getHooks($position = false, $only_display_hooks = false)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $hooks = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT * FROM `'._DB_PREFIX_.'hook` h
 			'.($position ? 'WHERE h.`position` = 1' : '').'
 			ORDER BY `name`'
         );
+
+        if ($only_display_hooks) {
+            return array_filter($hooks, function ($hook) {
+                return self::isDisplayHookName($hook['name']);
+            });
+        } else {
+            return $hooks;
+        }
     }
 
     /**
@@ -149,23 +178,6 @@ class HookCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue('
 							SELECT `name`
-							FROM `'._DB_PREFIX_.'hook`
-							WHERE `id_hook` = '.(int)$hook_id);
-            Cache::store($cache_id, $result);
-            return $result;
-        }
-        return Cache::retrieve($cache_id);
-    }
-
-    /**
-     * Return hook live edit bool from ID
-     */
-    public static function getLiveEditById($hook_id)
-    {
-        $cache_id = 'hook_live_editbyid_'.$hook_id;
-        if (!Cache::isStored($cache_id)) {
-            $result = Db::getInstance()->getValue('
-							SELECT `live_edit`
 							FROM `'._DB_PREFIX_.'hook`
 							WHERE `id_hook` = '.(int)$hook_id);
             Cache::store($cache_id, $result);
@@ -229,7 +241,7 @@ class HookCore extends ObjectModel
         $cache_id = 'hook_module_list';
         if (!Cache::isStored($cache_id)) {
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT h.id_hook, h.name as h_name, title, description, h.position, live_edit, hm.position as hm_position, m.id_module, m.name, active
+			SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, active
 			FROM `'._DB_PREFIX_.'hook_module` hm
 			STRAIGHT_JOIN `'._DB_PREFIX_.'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
 			STRAIGHT_JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
@@ -245,7 +257,6 @@ class HookCore extends ObjectModel
                     'title' => $result['title'],
                     'description' => $result['description'],
                     'hm.position' => $result['position'],
-                    'live_edit' => $result['live_edit'],
                     'm.position' => $result['hm_position'],
                     'id_module' => $result['id_module'],
                     'name' => $result['name'],
@@ -281,6 +292,133 @@ class HookCore extends ObjectModel
         return $module_list;
     }
 
+    public function isModuleRegisteredOnHook($module_instance, $hook_name, $id_shop)
+    {
+        $prefix = _DB_PREFIX_;
+        $id_hook = (int)Hook::getIdByName($hook_name);
+        $sql = "SELECT * FROM {$prefix}hook_module
+                  WHERE `id_hook` = $id_hook
+                  AND `id_module` = {$module_instance->id}
+                  AND `id_shop` = $id_shop";
+
+        $rows = Db::getInstance()->executeS($sql);
+        return !empty($rows);
+    }
+
+    public static function registerHook($module_instance, $hook_name, $shop_list = null)
+    {
+        $return = true;
+        if (is_array($hook_name)) {
+            $hook_names = $hook_name;
+        } else {
+            $hook_names = array($hook_name);
+        }
+
+        foreach ($hook_names as $hook_name) {
+            // Check hook name validation and if module is installed
+            if (!Validate::isHookName($hook_name)) {
+                throw new PrestaShopException('Invalid hook name');
+            }
+            if (!isset($module_instance->id) || !is_numeric($module_instance->id)) {
+                return false;
+            }
+
+            // Retrocompatibility
+            $hook_name_bak = $hook_name;
+            if ($alias = Hook::getRetroHookName($hook_name)) {
+                $hook_name = $alias;
+            }
+
+            Hook::exec('actionModuleRegisterHookBefore', array('object' => $module_instance, 'hook_name' => $hook_name));
+            // Get hook id
+            $id_hook = Hook::getIdByName($hook_name);
+
+            // If hook does not exist, we create it
+            if (!$id_hook) {
+                $new_hook = new Hook();
+                $new_hook->name = pSQL($hook_name);
+                $new_hook->title = pSQL($hook_name);
+                $new_hook->add();
+                $id_hook = $new_hook->id;
+                if (!$id_hook) {
+                    return false;
+                }
+            }
+
+            // If shop lists is null, we fill it with all shops
+            if (is_null($shop_list)) {
+                $shop_list = Shop::getCompleteListOfShopsID();
+            }
+
+            $shop_list_employee = Shop::getShops(true, null, true);
+
+            foreach ($shop_list as $shop_id) {
+                // Check if already register
+                $sql = 'SELECT hm.`id_module`
+                    FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
+                    WHERE hm.`id_module` = '.(int)$module_instance->id.' AND h.`id_hook` = '.$id_hook.'
+                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int)$shop_id;
+                if (Db::getInstance()->getRow($sql)) {
+                    continue;
+                }
+
+                // Get module position in hook
+                $sql = 'SELECT MAX(`position`) AS position
+                    FROM `'._DB_PREFIX_.'hook_module`
+                    WHERE `id_hook` = '.(int)$id_hook.' AND `id_shop` = '.(int)$shop_id;
+                if (!$position = Db::getInstance()->getValue($sql)) {
+                    $position = 0;
+                }
+
+                // Register module in hook
+                $return &= Db::getInstance()->insert('hook_module', array(
+                    'id_module' => (int)$module_instance->id,
+                    'id_hook' => (int)$id_hook,
+                    'id_shop' => (int)$shop_id,
+                    'position' => (int)($position + 1),
+                ));
+
+                if (!in_array($shop_id, $shop_list_employee)) {
+                    $where = '`id_module` = '.(int)$module_instance->id.' AND `id_shop` = '.(int)$shop_id;
+                    $return &= Db::getInstance()->delete('module_shop', $where);
+                }
+            }
+
+            Hook::exec('actionModuleRegisterHookAfter', array('object' => $module_instance, 'hook_name' => $hook_name));
+        }
+        return $return;
+    }
+
+    public static function unregisterHook($module_instance, $hook_name, $shop_list = null)
+    {
+        if (is_numeric($hook_name)) {
+            // $hook_name passed it the id_hook
+            $hook_id = $hook_name;
+            $hook_name = Hook::getNameById((int)$hook_id);
+        } else {
+            $hook_id = Hook::getIdByName($hook_name);
+        }
+
+        if (!$hook_id) {
+            return false;
+        }
+
+        Hook::exec('actionModuleUnRegisterHookBefore', array('object' => $module_instance, 'hook_name' => $hook_name));
+
+        // Unregister module on hook by id
+        $sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
+            WHERE `id_module` = '.(int)$module_instance->id.' AND `id_hook` = '.(int)$hook_id
+            .(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
+        $result = Db::getInstance()->execute($sql);
+
+        // Clean modules position
+        $module_instance->cleanPositions($hook_id, $shop_list);
+
+        Hook::exec('actionModuleUnRegisterHookAfter', array('object' => $module_instance, 'hook_name' => $hook_name));
+
+        return $result;
+    }
+
     /**
      * Get list of modules we can execute per hook
      *
@@ -313,7 +451,7 @@ class HookCore extends ObjectModel
 
             // SQL Request
             $sql = new DbQuery();
-            $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`');
+            $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module');
             $sql->from('module', 'm');
             if ($hook_name != 'displayBackOfficeHeader') {
                 $sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & '.(int)Context::getContext()->getDevice()));
@@ -321,16 +459,16 @@ class HookCore extends ObjectModel
             }
             $sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
             $sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
-            if ($hook_name != 'displayPayment') {
-                $sql->where('h.name != "displayPayment"');
+            if ($hook_name != 'displayPayment' && $hook_name != 'displayPaymentEU') {
+                $sql->where('h.name != "displayPayment" AND h.name != "displayPaymentEU"');
             }
             // For payment modules, we check that they are available in the contextual country
             elseif ($frontend) {
                 if (Validate::isLoadedObject($context->country)) {
-                    $sql->where('(h.name = "displayPayment" AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' AND id_shop = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
+                    $sql->where('((h.name = "displayPayment" OR h.name = "displayPaymentEU") AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' AND id_shop = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
                 }
                 if (Validate::isLoadedObject($context->currency)) {
-                    $sql->where('(h.name = "displayPayment" AND (SELECT id_currency FROM '._DB_PREFIX_.'module_currency mcr WHERE mcr.id_module = m.id_module AND id_currency IN ('.(int)$context->currency->id.', -1, -2) LIMIT 1) IN ('.(int)$context->currency->id.', -1, -2))');
+                    $sql->where('((h.name = "displayPayment" OR h.name = "displayPaymentEU") AND (SELECT id_currency FROM '._DB_PREFIX_.'module_currency mcr WHERE mcr.id_module = m.id_module AND id_currency IN ('.(int)$context->currency->id.', -1, -2) LIMIT 1) IN ('.(int)$context->currency->id.', -1, -2))');
                 }
             }
             if (Validate::isLoadedObject($context->shop)) {
@@ -363,7 +501,6 @@ class HookCore extends ObjectModel
                         'id_hook' => $row['id_hook'],
                         'module' => $row['module'],
                         'id_module' => $row['id_module'],
-                        'live_edit' => $row['live_edit'],
                     );
                 }
             }
@@ -449,7 +586,6 @@ class HookCore extends ObjectModel
         // Store list of executed hooks on this page
         Hook::$executed_hooks[$id_hook] = $hook_name;
 
-        $live_edit = false;
         $context = Context::getContext();
         if (!isset($hook_args['cookie']) || !$hook_args['cookie']) {
             $hook_args['cookie'] = $context->cookie;
@@ -508,8 +644,7 @@ class HookCore extends ObjectModel
 
                 //Backward compatibility of controller names
                 $matching_name = array(
-                    'authentication' => 'auth',
-                    'productscomparison' => 'compare'
+                    'authentication' => 'auth'
                 );
                 if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions)) {
                     continue;
@@ -530,7 +665,7 @@ class HookCore extends ObjectModel
             $hook_callable = is_callable(array($moduleInstance, 'hook'.$hook_name));
             $hook_retro_callable = is_callable(array($moduleInstance, 'hook'.$retro_hook_name));
 
-            if (($hook_callable || $hook_retro_callable) && Module::preCall($moduleInstance->name)) {
+            if ($hook_callable || $hook_retro_callable) {
                 $hook_args['altern'] = ++$altern;
 
                 if ($use_push && isset($moduleInstance->push_filename) && file_exists($moduleInstance->push_filename)) {
@@ -544,16 +679,20 @@ class HookCore extends ObjectModel
                     $display = Hook::coreCallHook($moduleInstance, 'hook'.$retro_hook_name, $hook_args);
                 }
 
-                // Live edit
-                if (!$array_return && $array['live_edit'] && Tools::isSubmit('live_edit') && Tools::getValue('ad')
-                    && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'
-                        .(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))) {
-                    $live_edit = true;
-                    $output .= self::wrapLiveEdit($display, $moduleInstance, $array['id_hook']);
-                } elseif ($array_return) {
+                if ($array_return) {
                     $output[$moduleInstance->name] = $display;
                 } else {
                     $output .= $display;
+                }
+            } elseif (Hook::isDisplayHookName($hook_name)) {
+                if ($moduleInstance instanceof WidgetInterface) {
+                    $display = $moduleInstance->renderWidget($hook_name, $hook_args);
+
+                    if ($array_return) {
+                        $output[$moduleInstance->name] = $display;
+                    } else {
+                        $output .= $display;
+                    }
                 }
             }
         }
@@ -563,60 +702,12 @@ class HookCore extends ObjectModel
             $context->shop->setContext($old_context, $shop->id);
         }
 
-        if ($array_return) {
-            return $output;
-        } else {
-            return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\');</script>
-				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');
-        }// Return html string
+        return $output;
     }
 
     public static function coreCallHook($module, $method, $params)
     {
-        // Define if we will log modules performances for this session
-        if (Module::$_log_modules_perfs === null) {
-            $modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_log_modules_perfs_MODULO');
-            Module::$_log_modules_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
-            if (Module::$_log_modules_perfs) {
-                Module::$_log_modules_perfs_session = mt_rand();
-            }
-        }
-
-        // Immediately return the result if we do not log performances
-        if (!Module::$_log_modules_perfs) {
-            return $module->{$method}($params);
-        }
-
-        // Store time and memory before and after hook call and save the result in the database
-        $time_start = microtime(true);
-        $memory_start = memory_get_usage(true);
-
-        // Call hook
-        $r = $module->{$method}($params);
-
-        $time_end = microtime(true);
-        $memory_end = memory_get_usage(true);
-
-        Db::getInstance()->execute('
-		INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
-		VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
-
-        return $r;
-    }
-
-    public static function wrapLiveEdit($display, $moduleInstance, $id_hook)
-    {
-        return '<script type="text/javascript"> modules_list.push(\''.Tools::safeOutput($moduleInstance->name).'\');</script>
-				<div id="hook_'.(int)$id_hook.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name)).'"
-				class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
-					<span style="font-family: Georgia;font-size:13px;font-style:italic;">
-						<img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
-                .Tools::safeOutput($moduleInstance->displayName).'<span style="float:right">
-				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
-					<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
-				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
-					<img src="'._PS_ADMIN_IMG_.'delete.gif"></a></span>
-				</span>'.$display.'</div>';
+        return $module->{$method}($params);
     }
 
     /**

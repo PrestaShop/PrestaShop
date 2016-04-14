@@ -23,12 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PrestaShopBundle\Form\Admin\Category\SimpleCategory as SimpleFormCategory;
 
 /**
  * Admin controller for the Category pages
@@ -51,7 +49,7 @@ class CategoryController extends FrameworkBundleAdminController
         $currentIdShop = $shopContext->getContextShopID();
 
         $form = $this->createFormBuilder()
-            ->add('category', new SimpleFormCategory($this->container))
+            ->add('category', 'PrestaShopBundle\Form\Admin\Category\SimpleCategory')
             ->getForm();
 
         $form->handleRequest($request);

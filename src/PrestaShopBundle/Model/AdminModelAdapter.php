@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Model;
 /**
  * This form class is responsible to map the form data to the posted object.
  *
- * For this parent class, onyl hook sub fields are handled.
+ * For this parent class, only hook sub fields are handled.
  */
 class AdminModelAdapter
 {
@@ -38,7 +38,7 @@ class AdminModelAdapter
      *
      * This parent method will return only hook sub array.
      *
-     * @return array Transormed form data to model attempt
+     * @return array Transformed form data to model attempt
      */
     public function getHookData()
     {

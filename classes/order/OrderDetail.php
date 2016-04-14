@@ -807,7 +807,7 @@ class OrderDetailCore extends ObjectModel
                     $order_product['image'] = Context::getContext()->link->getImageLink(
                         $order_product['link_rewrite'],
                         (int)$order_product['product_id'].'-'.(int)$order_product['id_image'],
-                        ImageType::getFormatedName('medium')
+                        ImageType::getFormattedName('medium')
                     );
                     $order_product['link'] = Context::getContext()->link->getProductLink(
                         (int)$order_product['product_id'],

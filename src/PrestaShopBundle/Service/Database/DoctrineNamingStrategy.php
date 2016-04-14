@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Service\Database;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 
 /**
- * TODO
+ * Naming strategy for Doctrine ORM to use prefixed database table names.
  */
 class DoctrineNamingStrategy extends UnderscoreNamingStrategy
 {

@@ -24,13 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 class AdminStatsControllerCore extends AdminStatsTabController
 {
     public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
     {
         $visits = ($granularity == false) ? 0 : array();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
         /** @var Gapi $gapi */
-        $gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
+        $gapi = $moduleManager->isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
         if (Validate::isLoadedObject($gapi) && $gapi->isConfigured()) {
             $metric = $unique ? 'visitors' : 'visits';
             if ($result = $gapi->requestReportData($granularity ? 'ga:date' : '', 'ga:'.$metric, $date_from, $date_to, null, null, 1, 5000)) {
@@ -139,7 +147,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getPercentProductOutOfStock()
     {
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT SUM(IF(IFNULL(stock.quantity, 0) = 0, 1, 0)) as without_stock, COUNT(*) as products
+		SELECT SUM(IF(IFNULL(stock.quantity, 0) <= 0, 1, 0)) as without_stock, COUNT(*) as products
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
@@ -660,12 +668,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'newsletter_registrations':
+                $moduleManagerBuilder = new ModuleManagerBuilder();
+    $moduleManager = $moduleManagerBuilder->build();
+    
                 $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE newsletter = 1
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
-                if (Module::isInstalled('blocknewsletter')) {
+                if ($moduleManager->isInstalled('ps_emailsubscription')) {
                     $value += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 					SELECT COUNT(*)
 					FROM `'._DB_PREFIX_.'newsletter`
@@ -684,13 +695,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'frontoffice_translations':
-                $themes = Theme::getThemes();
+                $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
+                                ->buildRepository()
+                                ->getList();
                 $languages = Language::getLanguages();
                 $total = $translated = 0;
                 foreach ($themes as $theme) {
                     /** @var Theme $theme */
                     foreach ($languages as $language) {
-                        $kpi_key = substr(strtoupper($theme->name.'_'.$language['iso_code']), 0, 16);
+                        $kpi_key = substr(strtoupper($theme->getName().'_'.$language['iso_code']), 0, 16);
                         $total += ConfigurationKPI::get('TRANSLATE_TOTAL_'.$kpi_key);
                         $translated += ConfigurationKPI::get('TRANSLATE_DONE_'.$kpi_key);
                     }

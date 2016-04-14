@@ -58,6 +58,22 @@ class HookDispatcher extends EventDispatcher
     }
 
     /**
+     * Calls multiple hooks with the same parameter set.
+     *
+     * Each event is independent for each hook call. Parameter set is duplicated.
+     *
+     * @param array $eventNames The hooks to dispatch to.
+     * @param array $eventParameters The parameters set to insert in each HookEvent instance.
+     * @throws \Exception If the Event is not HookEvent or a subclass.
+     */
+    public function dispatchMultiple(array $eventNames, array $eventParameters)
+    {
+        foreach ($eventNames as $name) {
+            $this->dispatch($name, (new HookEvent())->setHookParameters($eventParameters));
+        }
+    }
+
+    /**
      * {@inheritdoc}
      * This override will avoid PropagationStopped to break the dispatching process.
      * After dispatch, in case of RenderingHookEvent, the final content array will be set in event.
@@ -100,7 +116,7 @@ class HookDispatcher extends EventDispatcher
     /**
      * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
      *
-     * @param $eventName The hook name.
+     * @param string $eventName The hook name.
      * @param array $parameters Hook parameters
      * @return Event The event that has been passed to each listener. Contains the responses.
      * @throws \Exception

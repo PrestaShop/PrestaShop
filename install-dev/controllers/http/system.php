@@ -76,6 +76,9 @@ class InstallControllerHttpSystem extends InstallControllerHttp
             $this->tests['optional'] = $this->model_system->checkOptionalTests();
         }
 
+        $testsRequiredsf2 = $this->model_system->checkSf2Requirements();
+        $testsOptionalsf2 = $this->model_system->checkSf2Recommendations();
+
         if (!is_callable('getenv') || !($user = @getenv('APACHE_RUN_USER'))) {
             $user = 'Apache';
         }
@@ -87,11 +90,19 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                     'title' => $this->l('Required PHP parameters'),
                     'success' => 1,
                     'checks' => array(
-                        'phpversion' => $this->l('PHP 5.1.2 or later is not enabled'),
+                        'phpversion' => $this->l('PHP 5.4 or later is not enabled'),
                         'upload' => $this->l('Cannot upload files'),
                         'system' => $this->l('Cannot create new files and folders'),
                         'gd' => $this->l('GD library is not installed'),
-                        'mysql_support' => $this->l('MySQL support is not activated')
+                        'mysql_support' => $this->l('MySQL support is not activated'),
+                        'zip' => $this->l('ZIP extension is not enabled'),
+                    )
+                ),
+                array(
+                    'title' => $this->l('Required Apache configuration'),
+                    'success' => 1,
+                    'checks' => array(
+                        'apache_mod_rewrite' => $this->l('Enable the Apache mod_rewrite module'),
                     )
                 ),
                 array(
@@ -111,12 +122,13 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'img_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/img/'),
                         'mails_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/mails/'),
                         'module_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/modules/'),
-                        'theme_lang_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/default-bootstrap/lang/'),
-                        'theme_pdf_lang_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/default-bootstrap/pdf/lang/'),
-                        'theme_cache_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/default-bootstrap/cache/'),
+                        'theme_lang_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/'._THEME_NAME_.'/lang/'),
+                        'theme_pdf_lang_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/'._THEME_NAME_.'/pdf/lang/'),
+                        'theme_cache_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/'._THEME_NAME_.'/cache/'),
                         'translations_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/translations/'),
                         'customizable_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/upload/'),
-                        'virtual_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/download/')
+                        'virtual_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/download/'),
+                        'config_sf2_dir' => $this->l('Write permissions for %1$s user on %2$s', $user, '~/app/config/'),
                     )
                 ),
             ),
@@ -137,12 +149,27 @@ class InstallControllerHttpSystem extends InstallControllerHttp
             ),
         );
 
+        //Inject Sf2 errors to test render required
+        foreach ($testsRequiredsf2 as $error) {
+            $this->tests_render['required'][2]['checks'][] = $this->l($error->getHelpHtml());
+        }
+
+        //Inject Sf2 optionnal config to test render optional
+        foreach ($testsOptionalsf2 as $error) {
+            $this->tests_render['optional'][0]['checks'][] = $this->l($error->getHelpHtml());
+        }
+
         foreach ($this->tests_render['required'] as &$category) {
             foreach ($category['checks'] as $id => $check) {
-                if ($this->tests['required']['checks'][$id] != 'ok') {
+                if (!isset($this->tests['required']['checks'][$id]) || $this->tests['required']['checks'][$id] != 'ok') {
                     $category['success'] = 0;
                 }
             }
+        }
+
+        //if sf2 requirement error found, force the required success to false
+        if (count($testsRequiredsf2) > 0) {
+            $this->tests['required']['success'] = false;
         }
 
         // If required tests failed, disable next button

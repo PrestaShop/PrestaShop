@@ -773,10 +773,6 @@ abstract class AdminTabCore
                                 if ($back = Tools::getValue('back')) {
                                     Tools::redirectAdmin(urldecode($back).'&conf=4');
                                 }
-                                // Specific scene feature
-                                if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1') {
-                                    Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token);
-                                }
                                 // Save and stay on same form
                                 if (Tools::isSubmit('submitAdd'.$this->table.'AndStay')) {
                                     Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token);
@@ -1014,13 +1010,15 @@ abstract class AdminTabCore
                     if (isset($values['type']) && $values['type'] == 'textLang') {
                         foreach ($language_ids as $id_lang) {
                             if (Tools::getValue($field.'_'.$id_lang) && isset($values['validation'])) {
-                                if (!Validate::$values['validation'](Tools::getValue($field.'_'.$id_lang))) {
+                                $values_validation = $values['validation'];
+                                if (!Validate::$values_validation(Tools::getValue($field.'_'.$id_lang))) {
                                     $this->_errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                                 }
                             }
                         }
                     } elseif (Tools::getValue($field) && isset($values['validation'])) {
-                        if (!Validate::$values['validation'](Tools::getValue($field))) {
+                        $values_validation = $values['validation'];
+                        if (!Validate::$values_validation(Tools::getValue($field))) {
                             $this->_errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                         }
                     }
@@ -1093,8 +1091,9 @@ abstract class AdminTabCore
     protected function validateField($value, $field)
     {
         if (isset($field['validation'])) {
+            $field_validation = $field['validation'];
             if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && method_exists('Validate', $field['validation'])) {
-                if (!Validate::$field['validation']($value)) {
+                if (!Validate::$field_validation($value)) {
                     $this->_errors[] = Tools::displayError($field['title'].' : Incorrect value');
                     return false;
                 }

@@ -31,7 +31,7 @@ include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 require_once(_PS_ADMIN_DIR_.'/init.php');
 
 $query = Tools::getValue('q', false);
-if (!$query or $query == '' or strlen($query) < 1) {
+if (!$query || $query == '' || strlen($query) < 1) {
     die();
 }
 
@@ -55,6 +55,7 @@ if ($excludeIds && $excludeIds != 'NaN') {
 
 // Excluding downloadable products from packs because download from pack is not supported
 $forceJson = Tools::getValue('forceJson', false);
+$disableCombination = Tools::getValue('disableCombination', false);
 $excludeVirtuals = (bool)Tools::getValue('excludeVirtuals', true);
 $exclude_packs = (bool)Tools::getValue('exclude_packs', true);
 
@@ -75,10 +76,11 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, imag
 
 $items = Db::getInstance()->executeS($sql);
 
-if ($items && ($excludeIds || (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false))) {
+if ($items && ($disableCombination ||$excludeIds || isset($_SERVER['HTTP_REFERER']))) {
     $results = [];
     foreach ($items as $item) {
         if (!$forceJson) {
+            $item['name'] = str_replace('|', '&#124;', $item['name']);
             $results[] = trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product']);
         } else {
             $results[] = array(

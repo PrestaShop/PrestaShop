@@ -40,6 +40,9 @@ $(document).ready(function() {
 						textarea.parent('div').find('span.counter').html(' ');
 				}
 			});
+			ed.on('blur', function(ed) {
+				tinyMCE.triggerSave();
+			});
 		}
 	});
 });

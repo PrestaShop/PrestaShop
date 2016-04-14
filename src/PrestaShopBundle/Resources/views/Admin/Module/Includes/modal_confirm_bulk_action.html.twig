@@ -1,0 +1,34 @@
+<div id="module-modal-bulk-confirm" class="modal  modal-vcenter fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title module-modal-title">Bulk action confirmation</h4>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-md-12">
+                  <p>
+                     You're about to "bulk <span id="module-modal-bulk-confirm-action-name">[Module Action]</span>" the following modules:
+                  </p>
+                  <p id="module-modal-bulk-confirm-list">
+                      [Module List Up To 10 Max]
+                  </p>
+
+                  <div id="module-modal-bulk-checkbox">
+                    <label>
+                      <input type="checkbox" id="force_bulk_deletion" name="force_bulk_deletion"> {{ trans("Optional: delete module folder after uninstall.", {}, 'AdminModules')|raw }}
+                    </label>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <input type="button" class="btn btn-default uppercase" data-dismiss="modal" value="Annuler">
+          <a class="btn btn-primary uppercase" data-dismiss="modal" id="module-modal-confirm-bulk-ack">Yes, I want to do it</a>
+      </div>
+
+    </div>
+  </div>
+</div>
