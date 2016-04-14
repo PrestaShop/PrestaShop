@@ -1597,6 +1597,7 @@ class FrontControllerCore extends Controller
         $formatter
             ->setAskForNewsletter(Configuration::get('PS_CUSTOMER_NWSL'))
             ->setAskForPartnerOptin(Configuration::get('PS_CUSTOMER_OPTIN'))
+            ->setAskForBirthdate(Configuration::get('PS_CUSTOMER_BIRTHDATE'))
         ;
 
         return $formatter;
