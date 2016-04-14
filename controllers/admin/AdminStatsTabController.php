@@ -227,7 +227,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         $this->processDateRange();
         
         if (Tools::getValue('submitSettings')) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 self::$currentIndex .= '&module='.Tools::getValue('module');
                 Configuration::updateValue('PS_STATS_RENDER', Tools::getValue('PS_STATS_RENDER', Configuration::get('PS_STATS_RENDER')));
                 Configuration::updateValue('PS_STATS_GRID_RENDER', Tools::getValue('PS_STATS_GRID_RENDER', Configuration::get('PS_STATS_GRID_RENDER')));

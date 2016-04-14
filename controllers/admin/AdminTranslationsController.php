@@ -1499,31 +1499,31 @@ class AdminTranslationsControllerCore extends AdminController
 
         try {
             if (Tools::isSubmit('submitCopyLang')) {
-                if ($this->tabAccess['add'] === '1') {
+                if ($this->access('add')) {
                     $this->submitCopyLang();
                 } else {
                     $this->errors[] = Tools::displayError('You do not have permission to add this.');
                 }
             } elseif (Tools::isSubmit('submitExport')) {
-                if ($this->tabAccess['add'] === '1') {
+                if ($this->access('add')) {
                     $this->submitExportLang();
                 } else {
                     $this->errors[] = Tools::displayError('You do not have permission to add this.');
                 }
             } elseif (Tools::isSubmit('submitImport')) {
-                if ($this->tabAccess['add'] === '1') {
+                if ($this->access('add')) {
                     $this->submitImportLang();
                 } else {
                     $this->errors[] = Tools::displayError('You do not have permission to add this.');
                 }
             } elseif (Tools::isSubmit('submitAddLanguage')) {
-                if ($this->tabAccess['add'] === '1') {
+                if ($this->access('add')) {
                     $this->submitAddLang();
                 } else {
                     $this->errors[] = Tools::displayError('You do not have permission to add this.');
                 }
             } elseif (Tools::isSubmit('submitTranslationsPdf')) {
-                if ($this->tabAccess['edit'] === '1') {
+                if ($this->access('edit')) {
                     // Only the PrestaShop team should write the translations into the _PS_TRANSLATIONS_DIR_
                     if (!$this->theme_selected) {
                         $this->writeTranslationFile();
@@ -1534,19 +1534,19 @@ class AdminTranslationsControllerCore extends AdminController
                     $this->errors[] = Tools::displayError('You do not have permission to edit this.');
                 }
             } elseif (Tools::isSubmit('submitTranslationsBack') || Tools::isSubmit('submitTranslationsErrors') || Tools::isSubmit('submitTranslationsFields') || Tools::isSubmit('submitTranslationsFront')) {
-                if ($this->tabAccess['edit'] === '1') {
+                if ($this->access('edit')) {
                     $this->writeTranslationFile();
                 } else {
                     $this->errors[] = Tools::displayError('You do not have permission to edit this.');
                 }
             } elseif (Tools::isSubmit('submitTranslationsMails') || Tools::isSubmit('submitTranslationsMailsAndStay')) {
-                if ($this->tabAccess['edit'] === '1') {
+                if ($this->access('edit')) {
                     $this->submitTranslationsMails();
                 } else {
                     $this->errors[] = Tools::displayError('You do not have permission to edit this.');
                 }
             } elseif (Tools::isSubmit('submitTranslationsModules')) {
-                if ($this->tabAccess['edit'] === '1') {
+                if ($this->access('edit')) {
                     // Get list of modules
                     if ($modules = $this->getListModules()) {
                         // Get files of all modules

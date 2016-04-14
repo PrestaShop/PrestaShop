@@ -136,7 +136,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
             $this->display = 'add';
 
             if (Tools::isSubmit('updatesupply_order')) {
-                if ($this->tabAccess['edit'] === '1') {
+                if ($this->access('edit')) {
                     $this->display = 'edit';
                 } else {
                     $this->errors[] = Tools::displayError('You do not have permission to edit this.');
@@ -403,7 +403,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
             );
 
             unset($this->toolbar_btn['new']);
-            if ($this->tabAccess['add'] === '1') {
+            if ($this->access('add')) {
                 $this->toolbar_btn['new'] = array(
                     'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
                     'desc' => $this->l('Add New')
@@ -1085,10 +1085,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
         $this->is_editing_order = false;
 
         // Checks access
-        if (Tools::isSubmit('submitAddsupply_order') && !($this->tabAccess['add'] === '1')) {
+        if (Tools::isSubmit('submitAddsupply_order') && !($this->access('add'))) {
             $this->errors[] = Tools::displayError('You do not have permission to add a supply order.');
         }
-        if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && !($this->tabAccess['edit'] === '1')) {
+        if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && !($this->access('edit'))) {
             $this->errors[] = Tools::displayError('You do not have permission to edit an order.');
         }
 
@@ -1184,7 +1184,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
         if (Tools::isSubmit('submitChangestate')
             && Tools::isSubmit('id_supply_order')
             && Tools::isSubmit('id_supply_order_state')) {
-            if ($this->tabAccess['edit'] != '1') {
+            if ($this->access('edit') != '1') {
                 $this->errors[] = Tools::displayError('You do not have permission to change the order status.');
             }
 

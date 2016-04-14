@@ -277,7 +277,7 @@ class AdminTabsControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
             }
         } elseif (Tools::getValue('position') && !Tools::isSubmit('submitAdd'.$this->table)) {
-            if ($this->tabAccess['edit'] !== '1') {
+            if ($this->access('edit') !== '1') {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             } elseif (!Validate::isLoadedObject($object = new Tab((int)Tools::getValue($this->identifier)))) {
                 $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
@@ -305,7 +305,7 @@ class AdminTabsControllerCore extends AdminController
             ), $this->bulk_actions);
             foreach ($submit_bulk_actions as $bulk_action => $params) {
                 if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action)) {
-                    if ($this->tabAccess['edit'] === '1') {
+                    if ($this->access('edit')) {
                         $this->action = 'bulk'.$bulk_action;
                         $this->boxes = Tools::getValue($this->list_id.'Box');
                     } else {
@@ -313,7 +313,7 @@ class AdminTabsControllerCore extends AdminController
                     }
                     break;
                 } elseif (Tools::isSubmit('submitBulk')) {
-                    if ($this->tabAccess['edit'] === '1') {
+                    if ($this->access('edit')) {
                         $this->action = 'bulk'.Tools::getValue('select_submitBulk');
                         $this->boxes = Tools::getValue($this->list_id.'Box');
                     } else {

@@ -97,13 +97,13 @@ class AdminCarrierWizardControllerCore extends AdminController
     {
         $this->initWizard();
 
-        if (Tools::getValue('id_carrier') && $this->tabAccess['edit']) {
+        if (Tools::getValue('id_carrier') && $this->access('edit')) {
             $carrier = $this->loadObject();
-        } elseif ($this->tabAccess['add']) {
+        } elseif ($this->access('add')) {
             $carrier = new Carrier();
         }
 
-        if ((!$this->tabAccess['edit'] && Tools::getValue('id_carrier')) ||  (!$this->tabAccess['add'] && !Tools::getValue('id_carrier'))) {
+        if ((!$this->access('edit') && Tools::getValue('id_carrier')) ||  (!$this->access('add') && !Tools::getValue('id_carrier'))) {
             $this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
             return ;
         }
@@ -599,7 +599,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
     public function ajaxProcessChangeRanges()
     {
-        if ((Validate::isLoadedObject($this->object) && !$this->tabAccess['edit']) || !$this->tabAccess['add']) {
+        if ((Validate::isLoadedObject($this->object) && !$this->access('edit')) || !$this->access('add')) {
             $this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
             return;
         }
@@ -633,7 +633,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         $step_number = (int)Tools::getValue('step_number');
         $return = array('has_error' => false);
 
-        if (!$this->tabAccess['edit']) {
+        if (!$this->access('edit')) {
             $this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
         } else {
             if (Shop::isFeatureActive() && $step_number == 2) {
@@ -663,7 +663,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
     public function processRanges($id_carrier)
     {
-        if (!$this->tabAccess['edit'] || !$this->tabAccess['add']) {
+        if (!$this->access('edit') || !$this->access('add')) {
             $this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
             return;
         }
@@ -740,7 +740,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
     public function ajaxProcessUploadLogo()
     {
-        if (!$this->tabAccess['edit']) {
+        if (!$this->access('edit')) {
             die('<return result="error" message="'.Tools::displayError('You do not have permission to use this wizard.').'" />');
         }
 
@@ -769,7 +769,7 @@ class AdminCarrierWizardControllerCore extends AdminController
     public function ajaxProcessFinishStep()
     {
         $return = array('has_error' => false);
-        if (!$this->tabAccess['edit']) {
+        if (!$this->access('edit')) {
             $return = array(
                 'has_error' =>  true,
                 $return['errors'][] = Tools::displayError('You do not have permission to use this wizard.')

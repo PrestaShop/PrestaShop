@@ -457,7 +457,7 @@ class AdminReferrersControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitSettings')) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 if (Configuration::updateValue('TRACKING_DIRECT_TRAFFIC', (int)Tools::getValue('tracking_dt'))) {
                     Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.Tools::getValue('token'));
                 }

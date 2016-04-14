@@ -723,7 +723,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         // If it's an attribute, load object Attribute()
         if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute')) {
-            if ($this->tabAccess['edit'] !== '1') {
+            if ($this->access('edit') !== '1') {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             } elseif (!$object = new Attribute((int)Tools::getValue($this->identifier))) {
                 $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
@@ -766,7 +766,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             }
         } else {
             if (Tools::isSubmit('submitBulkdelete'.$this->table)) {
-                if ($this->tabAccess['delete'] === '1') {
+                if ($this->access('delete')) {
                     if (isset($_POST[$this->list_id.'Box'])) {
                         /** @var AttributeGroup $object */
                         $object = new $this->className();

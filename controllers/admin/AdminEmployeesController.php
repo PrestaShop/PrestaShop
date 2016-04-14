@@ -159,9 +159,9 @@ class AdminEmployeesControllerCore extends AdminController
 
         // An employee can edit its own profile
         if ($this->context->employee->id == Tools::getValue('id_employee')) {
-            $this->tabAccess['view'] = '1';
+            $this->access('view') = '1';
             $this->restrict_edition = true;
-            $this->tabAccess['edit'] = '1';
+            $this->access('edit') = '1';
         }
     }
 
@@ -355,7 +355,7 @@ class AdminEmployeesControllerCore extends AdminController
             )
         ));
 
-        if ((int)$this->tabAccess['edit'] && !$this->restrict_edition) {
+        if ((int)$this->access('edit') && !$this->restrict_edition) {
             $this->fields_form['input'][] = array(
                 'type' => 'switch',
                 'label' => $this->l('Active'),
