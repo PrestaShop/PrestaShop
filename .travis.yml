@@ -41,7 +41,7 @@ before_install:
   - sudo a2dissite 000-default
   - sudo a2ensite prestashop.conf
   - sudo service apache2 restart
-  - cp .composer/* ~/.composer/ & composer global install;
+  - cp -Rf .composer/* ~/.composer/ & composer global install;
   - sudo apt-get install -y libappindicator1 fonts-liberation
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   - sudo dpkg -i google-chrome*.deb
@@ -54,7 +54,8 @@ notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
 script:
-  - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
+  - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml && cp tests/composer.lock.travis ./composer.lock
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.4" ]]; then GITHUB_OAUTH_TOKEN=${GITHUB_OAUTH_TOKEN} ./travis-scripts/check-composer-update; fi
   - composer install --prefer-dist --no-interaction --no-progress
   - tests/check_php_parse_errors.sh
   - bash ./travis-scripts/install-prestashop
