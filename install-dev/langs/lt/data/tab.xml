@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Adresai"/>
   <tab id="Administration" name="Administracija"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Advanced_Parameters" name="Išplėstiniai parametrai"/>
   <tab id="Attachments" name="Priedai"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -58,7 +58,7 @@
   <tab id="Logs" name="Įvykių žurnalas"/>
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Priežiūra"/>
-  <tab id="Manufacturers_and_suppliers" name="Manufacturers and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
   <tab id="Manufacturers" name="Gamintojai"/>
   <tab id="Marketing" name="Marketingas"/>
   <tab id="Menus" name="Meniu"/>
@@ -123,4 +123,5 @@
   <tab id="Warehouses" name="Entrepôts"/>
   <tab id="Webservice" name="Webservice'as"/>
   <tab id="Zones" name="Zonos"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

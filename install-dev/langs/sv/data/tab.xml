@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Adresser"/>
   <tab id="Administration" name="Administration"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Advanced_Parameters" name="Avancerade inställningar"/>
   <tab id="Attachments" name="Bilagor"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -58,7 +58,7 @@
   <tab id="Logs" name="Loggar"/>
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Underhåll"/>
-  <tab id="Manufacturers_and_suppliers" name="Manufacturers and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
   <tab id="Manufacturers" name="Tillverkare"/>
   <tab id="Marketing" name="Marknadsföring"/>
   <tab id="Menus" name="Flikar"/>
@@ -123,4 +123,5 @@
   <tab id="Warehouses" name="Varulager"/>
   <tab id="Webservice" name="Webbservice"/>
   <tab id="Zones" name="Zoner"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

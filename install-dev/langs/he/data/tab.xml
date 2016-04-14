@@ -4,7 +4,7 @@
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="כתובות"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Administration" name="ניהול"/>
   <tab id="Advanced_Parameters" name="פרמטרים מתקדמים"/>
   <tab id="Attachments" name="קבצים מצורפים"/>
@@ -59,7 +59,7 @@
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="תחזוקה"/>
   <tab id="Manufacturers" name="יצרנים"/>
-  <tab id="Manufacturers_and_suppliers" name="Manufacturers and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
   <tab id="Marketing" name="שיווק"/>
   <tab id="Menus" name="תפריטים"/>
   <tab id="Merchandise_Returns" name="החזרת מוצרים"/>
@@ -123,4 +123,5 @@
   <tab id="Warehouses" name="מחסנים"/>
   <tab id="Webservice" name="שירות רשת"/>
   <tab id="Zones" name="איזורים"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

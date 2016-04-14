@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="地址"/>
   <tab id="Administration" name="管理"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Advanced_Parameters" name="進階設定"/>
   <tab id="Attachments" name="附加檔案"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -58,7 +58,7 @@
   <tab id="Logs" name="記錄"/>
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="維護"/>
-  <tab id="Manufacturers_and_suppliers" name="Manufacturers and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
   <tab id="Manufacturers" name="製造商"/>
   <tab id="Marketing" name="行銷"/>
   <tab id="Menus" name="選單"/>
@@ -123,4 +123,5 @@
   <tab id="Warehouses" name="倉庫"/>
   <tab id="Webservice" name="網頁服務"/>
   <tab id="Zones" name="區域"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

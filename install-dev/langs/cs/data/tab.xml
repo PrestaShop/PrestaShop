@@ -4,7 +4,7 @@
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Adresy"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Administration" name="Administrace"/>
   <tab id="Advanced_Parameters" name="Nástroje"/>
   <tab id="Attachments" name="Přílohy"/>
@@ -59,7 +59,7 @@
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Údržba obchodu"/>
   <tab id="Manufacturers" name="Výrobci"/>
-  <tab id="Manufacturers_and_suppliers" name="Manufacturers and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menus"/>
   <tab id="Merchandise_Returns" name="Vrácení zboží"/>
@@ -123,4 +123,5 @@
   <tab id="Warehouses" name="Sklady"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="Zóny"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

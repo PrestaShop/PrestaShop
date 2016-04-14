@@ -43,6 +43,7 @@
   <tab id="Login" name="Accesso"/>
   <tab id="Logs" name="Log"/>
   <tab id="Maintenance" name="Manutenzione"/>
+  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
   <tab id="Manufacturers" name="Produttori"/>
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menù"/>

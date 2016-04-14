@@ -4,7 +4,7 @@
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Alamat"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Administration" name="Administrasi"/>
   <tab id="Advanced_Parameters" name="Parameter lanjutan"/>
   <tab id="Attachments" name="Lampiran"/>
@@ -59,7 +59,7 @@
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Pemeliharaan"/>
   <tab id="Manufacturers" name="Brand"/>
-  <tab id="Manufacturers_and_suppliers" name="Manufacturers and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menu"/>
   <tab id="Merchandise_Returns" name="Retur barang"/>
@@ -123,4 +123,5 @@
   <tab id="Warehouses" name="Gudang"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="Zona"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>
