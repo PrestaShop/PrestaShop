@@ -112,3 +112,31 @@ ALTER TABLE `PREFIX_customization_field` ADD `is_module` TINYINT(1) NOT NULL DEF
 
 INSERT INTO `PREFIX_configuration` (name, value, date_add, date_upd) VALUES ('PS_MAINTENANCE_TEXT', 'We are currently updating our shop and will be back really soon.&lt;br&gt;Thanks for your patience.', NOW(), NOW());
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) SELECT c.`id_configuration`, l.`id_lang`, c.`value`, NOW() FROM `PREFIX_configuration` c, `PREFIX_lang` l WHERE c.`name` = 'PS_MAINTENANCE_TEXT';
+
+/* Right management */
+CREATE TABLE `PREFIX_authorization_role` (
+  `id_authorization_role` int(10) unsigned NOT NULL auto_increment,
+  `slug` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id_authorization_role`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+RENAME TABLE `PREFIX_access` TO `PREFIX_access_old` 
+RENAME TABLE `PREFIX_module_access` TO `PREFIX_module_access_old` 
+
+CREATE TABLE `PREFIX_access` (
+  `id_profile` int(10) unsigned NOT NULL,
+  `id_authorization_role` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_profile`,`id_authorization_role`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+CREATE TABLE `PREFIX_module_access` (
+  `id_profile` int(10) unsigned NOT NULL,
+  `id_authorization_role` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_profile`,`id_authorization_role`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+/* Add Payment Preferences tab. SuperAdmin profile is the only one to access it. */
+/* PHP:ps_1702_right_management(); */;
+
+DROP TABLE `PREFIX_access_old`;
+DROP TABLE `PREFIX_module_access_old`;
