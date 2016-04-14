@@ -1,12 +1,9 @@
 .product-page {
-
   //@TODO remove this tyniMce hack
   .mce-tinymce iframe {
     max-height: 400px !important;
   }
-
   padding-bottom: 80px;
-
   .table-fixed {
     table-layout: fixed;
     border: 0;
@@ -22,10 +19,15 @@
       overflow-y: auto;
       width: 100%;
     }
-    thead, tbody, tr, td, th {
+    thead,
+    tbody,
+    tr,
+    td,
+    th {
       display: block;
     }
-    tbody td, thead > tr > th {
+    tbody td,
+    thead > tr > th {
       float: left;
       border-bottom-width: 0;
     }
@@ -34,15 +36,12 @@
     }
     td {
       padding: 5px;
-
       span {
         word-break: break-all;
         word-wrap: break-word;
       }
     }
-
   }
-
   &::before {
     content: '';
     display: block;
@@ -54,40 +53,37 @@
     z-index: 400;
     height: 1px;
   }
-
   // Resets
   ul.nostyle {
     list-style: none;
     padding-left: 0;
   }
-
   #form-loading {
     display: none;
   }
-
   .tab-content {
     padding: 0;
   }
-
   // Components
-
   .product-header {
     background: $white;
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
     padding: rem(20px) 0;
-
     .select2 {
       margin-top: rem(8px);
     }
+    #form_step1_name_1{
+      &::after{
+        content:"\&#xE254;";
+      }
+    }
   }
-
   .big-input {
     .form-control {
       font-size: rem(24px);
     }
   }
-
   .product-footer {
     box-shadow: $gray-dark 0 0 10px;
     position: fixed;
@@ -100,37 +96,50 @@
     bottom: 0;
     left: $size-navbar-width;
     right: 0;
-
     .for-switch {
       display: inline-block;
       margin-left: rem(20px);
       margin-right: rem(4px);
+      font-size: rem(14px);
+    }
+    .duplicate,
+    .go-catalog,
+    .new-product {
+      margin-right: rem(10px);
+      margin-top: rem(10px);
+    }
+    .preview,
+    .save {
+      padding: rem(10px) $btn-padding-x-lg;
+    }
+    .save {
+      margin-top: rem(8px);
+    }
+    .delete {
+      > .material-icons {
+        font-size: rem(25px);
+        opacity: .8;
+      }
     }
   }
-
   .form-contenttab {
     padding: {
       top: $grid-gutter-width / 2;
       bottom: $grid-gutter-width / 2;
     }
   }
-
   .form-group {
     .title {
       margin-bottom: rem(20px);
     }
   }
-
   .hide {
     display: none;
   }
-
   // Combination generator
-
   .tokenfield {
     height: auto;
     padding-bottom: 0;
-
     input.token-input[type="text"] {
       display: inline-block;
       border: 0;
@@ -142,9 +151,7 @@
       width: auto !important;
     }
   }
-
   // Combination details form
-
   #accordion_combinations td.img img {
     max-width: 50px;
   }
@@ -168,9 +175,7 @@
   .combination-form .title {
     font-size: 20px;
   }
-
   // Dropzone & Image manager
-
   #product-images-dropzone {
     width: 100%;
     height: 340px;
@@ -257,7 +262,7 @@
         }
         &:hover .dz-image img {
           transform: none;
-          filter: none;
+          filter:none;
         }
       }
       &.dz-clickable * {
@@ -270,7 +275,7 @@
         font-size: 60px;
         color: $gray-light;
         opacity: 0.5;
-        filter: alpha(opacity=50);
+        filter:alpha(opacity=50);
       }
       small {
         font-size: 12px;
@@ -318,7 +323,6 @@
       }
     }
   }
-
   .twitter-typeahead {
     .tt-menu {
       width: 100%;
@@ -326,19 +330,16 @@
       background: $white;
     }
     .tt-suggestion {
-      cursor: pointer
+      cursor: pointer;
     }
   }
-
   .pack-product {
     position: relative;
     border: rem(1px) solid $gray-light;
     border-radius: $border-radius;
-
     > .cover {
       width: 100%;
     }
-
     > .btn-danger {
       opacity: 0;
       visibility: hidden;
@@ -346,7 +347,6 @@
       top: rem(1px);
       right: rem(1px);
     }
-
     &:hover {
       > .btn-danger {
         opacity: 1;

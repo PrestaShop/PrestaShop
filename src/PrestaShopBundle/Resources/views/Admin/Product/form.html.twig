@@ -984,7 +984,7 @@
           data-redirect="{{ preview_link }}"
           data-url_deactive="{{ preview_link_deactivate }}"
           target="_blank"
-          class="btn btn-default btn-submit hidden-xs"
+          class="btn btn-tertiary btn-submit hidden-xs preview"
           data-toggle="tooltip"
           id="product_form_preview_btn"
           title="{{ trans('View the product draft on the site.', {}, 'AdminProducts') }}"
@@ -1007,7 +1007,7 @@
       <div class="col-lg-7 text-lg-right">
         <button
           type="button"
-          class="btn btn-primary-outline btn-submit hidden-xs uppercase duplicate"
+          class="btn btn-tertiary-outline btn-submit hidden-xs uppercase duplicate"
           id="product_form_save_duplicate_btn"
           data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
           data-toggle="tooltip"
@@ -1017,7 +1017,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-primary-outline btn-submit hidden-xs uppercase go-catalog"
+          class="btn btn-tertiary-outline btn-submit hidden-xs uppercase go-catalog"
           id="product_form_save_go_to_catalog_btn"
           data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
           data-toggle="tooltip" title="{{ trans('Save and go back to the catalog (CTRL+Q)', {}, 'AdminProducts') }}"
@@ -1026,7 +1026,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-primary-outline btn-submit hidden-xs uppercase new-product"
+          class="btn btn-tertiary-outline btn-submit hidden-xs uppercase new-product"
           id="product_form_save_new_btn"
           data-redirect="{{ path('admin_product_new') }}"
           data-toggle="tooltip"
@@ -1037,7 +1037,7 @@
         <input
           id="submit"
           type="submit"
-          class="btn btn-primary btn-lg uppercase"
+          class="btn btn-primary save uppercase"
           value="{{ trans('Save', {}, 'AdminProducts') }}"
           data-toggle="tooltip"
           title="{{ trans('Save (CTRL+S) the product and stay on the current page.', {}, 'AdminProducts') }}"
