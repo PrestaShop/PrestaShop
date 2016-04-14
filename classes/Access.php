@@ -296,6 +296,10 @@ class AccessCore extends ObjectModel
             WHERE '.implode(' OR ', $whereClauses).'
         ');
         
+        if (empty($roles)) {
+            throw new \Exception('Cannot find role slug');
+        }
+        
         foreach ($roles as $role) {
             if ($enabled) {
                 $res[] = $this->addAccess($idProfile, $role['id_authorization_role']);
