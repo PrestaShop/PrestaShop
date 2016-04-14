@@ -31,128 +31,125 @@ use Phake;
 
 class AdminModuleDataProviderTest extends UnitTestCase
 {
+    const NOTICE = '[AdminModuleDataProvider] ';
+    private $httpHostNotFound = false;
+    private $languageISOCode;
     private $legacyContext;
-    private $http_host_not_found = false;
+    private $addonsDataProviderS;
+    private $adminModuleDataProvider;
 
     public function setUp()
     {
-        parent::setUp();
+        parent::setup();
 
-        $this->context->language = new \stdClass();
-        $this->context->language->id = 42;
-        $this->context->language->iso_code = 'fr';
+        $this->languageISOCode = 'en';
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');
 
-        if (! isset($_SERVER['HTTP_HOST'])) {
-            $this->http_host_not_found = true;
+        if (!isset($_SERVER['HTTP_HOST'])) {
+            $this->httpHostNotFound = true;
             $_SERVER['HTTP_HOST'] = 'localhost';
         }
 
         $this->setupSfKernel();
         $this->sfRouter = $this->sfKernel->getContainer()->get('router');
 
-        // We try to load the Addons catalog. If it fails, we skip the tests of this file.
-        try {
-            $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
-            $dataProvider->getCatalogModules();
-        } catch (\Exception $e) {
-            if ($e->getMessage() == 'Data from PrestaShop Addons is invalid, and cannot fallback on cache') {
-                $this->markTestSkipped('The Addons catalog is not available, test skipped x_x');
-            }
-        }
+        $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
+            ->getMock();
+
+        /* The module catalog will contains only 5 modules for theses tests */
+        $fakeModules =  [
+            $this->fakeModule(1,
+                'pm_advancedpack',
+                'Advanced Pack 5 - Create ​​bundles of products',
+                'Cross-selling & Product Bundles',
+                'Allows the sale batch using any stocks actually available products composing your packs, and offers the opportunity to apply business operations'
+            ),
+            $this->fakeModule(2,
+                'cmcicpaiement',
+                'CM-CIC / Monetico Payment in one instalment',
+                'Payment by Card or Wallet',
+                'Accept bank card payments in your online shop with the CM-CIC / Monetico p@yment&nbsp;module!  This very popular means of secure payment reassures your customers when they make their purchases in your'
+            ),
+            $this->fakeModule(3,
+                'bitcoinpayment',
+                'Coinbase Payment (Bitcoin)',
+                'Other Payment Methods',
+                'Use the Coinbase payment module to give your customers the possibility of paying for their purchases in your store with Bitcoin!  This module uses the API from Coinbase, a globally recognized Bitcoin'
+            ),
+            $this->fakeModule(4,
+                'fake_module',
+                'Fake module 1',
+                'PHPUnit Fakes',
+                ''
+            ),
+            $this->fakeModule(5,
+                'fake_module_2',
+                'Fake module 2',
+                'PHPUnit Fakes',
+                ''
+            ),
+        ];
+
+        /* we need to fake cache wih fake catalog */
+        $this->clearModuleCache();
+        file_put_contents(_PS_CACHE_DIR_.'en_catalog_modules.json', json_encode($fakeModules, true));
+
+        $this->adminModuleDataProvider = new AdminModuleDataProvider($this->languageISOCode, $this->sfRouter, $this->addonsDataProviderS);
     }
 
-    public function test_modules_in_catalog()
+    public function testGetListOfModulesOk()
     {
-        $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
+        $modules = $this->adminModuleDataProvider->getCatalogModules();
 
-        $modules = $dataProvider->getCatalogModules();
-
-        $this->assertGreaterThan(0, count($modules));
+        $this->assertGreaterThan(0, count($modules), sprintf('%s expected a list of modules, received none.', self::NOTICE));
     }
 
-    // To be moved and adapted in the module repository
-    public function test_modules_in_categories_can_be_found_in_module_list()
+    public function testSearchCanResultNoResultsOk()
     {
-        $this->markTestSkipped('Test `test_modules_in_categories_can_be_found_in_module_list` should not be commented.');
-        $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
-
-        $modules = $dataProvider->getCatalogModules();
-        $categories = $dataProvider->getCatalogCategories();
-
-        // For each category ...
-        foreach ((array)$categories->categories->subMenu as $category) {
-            // For each module ID linked to this category
-            foreach ($category->modulesRef as $moduleId) {
-
-                // We look for the module in the modules list
-                foreach ($modules as $module) {
-                    if ($module->id == $moduleId) {
-                        // The IDs given are related to a module in the list
-                        $this->assertContains($moduleId, $moduleIds);
-
-                        // We also check that the module has also a ref to the current category we test
-                        $this->assertTrue(in_array($category->refMenu, $module->refs));
-
-                        continue 2;
-                    }
-                }
-                $this->fail('Module with the ID "'. $moduleId .'" not found.');
-            }
-        }
-    }
-
-    public function test_no_results()
-    {
-        $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
-
         $filters = ['search' => 'doge'];
-        $modules = $dataProvider->getCatalogModules($filters);
+        $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
-        $this->assertCount(0, $modules);
+        $this->assertCount(0, $modules, sprintf('%s expected 0 modules, received %s.', self::NOTICE, count($modules)));
     }
 
-    public function test_unknown_filter_criteria()
+    public function testSearchWithUnknownFilterCriteriaReturnAllOk()
     {
-        $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
-
-        // An unexpected critera should have no effect on the module list
         $filters = ['random_filter' => 'doge'];
-        $modules = $dataProvider->getCatalogModules($filters);
+        $modulesWithFilter = $this->adminModuleDataProvider->getCatalogModules($filters);
 
-        $all_modules = $dataProvider->getCatalogModules();
+        $modules = $this->adminModuleDataProvider->getCatalogModules();
 
-        $this->assertEquals($all_modules, $modules);
+        $this->assertSame($modulesWithFilter, $modules, sprintf('%s expected undefined filter have no effect on search.', self::NOTICE));
     }
 
-    public function test_specific_module_search()
+    public function testSearchForASpecificModuleOk()
     {
-        $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
-
-        // An unexpected critera should have no effect on the module list
-        $filters = ['search' => 'ganalytics'];
-        $modules = $dataProvider->getCatalogModules($filters);
+        $filters = ['search' => 'advancedpack'];
+        $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $this->assertCount(1, $modules);
     }
 
-    public function test_specific_module_search_2_results()
+    public function testSearchForASpecificModuleHaveMultipleResultsOk()
     {
-        $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
+        $filters = ['search' => 'payment advanced'];
+        $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
-        // An unexpected critera should have no effect on the module list
-        $filters = ['search' => 'ganalytics gapi'];
-        $modules = $dataProvider->getCatalogModules($filters);
-
-        $this->assertCount(2, $modules);
+        $this->assertCount(3, $modules);
     }
 
-    public function test_only_one_call_to_addons_and_same_result()
+    public function testCallToAddonsShouldReturnSameResultOk()
     {
-        $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
-        $mock = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider', ['convertJsonForNewCatalog'], ['languageISO' => $this->context->language->iso_code, 'router' => $this->sfRouter]);
-        $mock->expects($this->once())->method('convertJsonForNewCatalog')->will($this->returnValue($dataProvider->getCatalogModules()));
+        $mock = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
+            ['convertJsonForNewCatalog'],
+            [
+                'languageISO' => $this->languageISOCode,
+                'router' => $this->sfRouter,
+                'addonsDataProvider' => $this->addonsDataProviderS
+            ]
+        );
+        $mock->expects($this->once())->method('convertJsonForNewCatalog')->will($this->returnValue($this->adminModuleDataProvider->getCatalogModules()));
 
         $mock->clearCatalogCache();
 
@@ -162,11 +159,10 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->assertEquals($modules2, $modules);
     }
 
-    public function test_product_type_correct()
+    public function testProductTypeShouldBeCorrectOk()
     {
-        $dataProvider = new AdminModuleDataProvider($this->context->language->iso_code, $this->sfRouter);
-
-        $modules = $dataProvider->getCatalogModules();
+        $this->clearModuleCache();
+        $modules = $this->adminModuleDataProvider->getCatalogModules();
         $possible_values = ['module', 'service', 'theme'];
         foreach ($modules as $module) {
             $this->assertTrue(in_array($module->productType, $possible_values));
@@ -177,8 +173,28 @@ class AdminModuleDataProviderTest extends UnitTestCase
     {
         parent::teardown();
 
-        if ($this->http_host_not_found) {
+        if ($this->httpHostNotFound) {
             unset($_SERVER['HTTP_HOST']);
+        }
+
+        $this->clearModuleCache();
+    }
+
+    private function fakeModule($id, $name, $displayName, $categoryName, $description) {
+        $fakeModule = new \stdClass();
+        $fakeModule->id = $id;
+        $fakeModule->name = $name;
+        $fakeModule->displayName = $displayName;
+        $fakeModule->categoryName = $categoryName;
+        $fakeModule->description = $description;
+
+        return $fakeModule;
+    }
+
+    private function clearModuleCache()
+    {
+        if(file_exists(_PS_CACHE_DIR_.'en_catalog_modules.json')) {
+            unlink(_PS_CACHE_DIR_.'en_catalog_modules.json');
         }
     }
 }
