@@ -91,7 +91,7 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if ($this->moduleProvider->isInstalled($name)) {
-            throw new Exception(sprintf('The module %s is already installed', $name));
+            throw new Exception(sprintf('The module %s is already installed.', $name));
         }
 
         if (! $this->moduleProvider->isOnDisk($name)) {
@@ -116,7 +116,7 @@ class ModuleManager implements AddonManagerInterface
         // * Employee can delete this specific module
         if (!$this->employee->can('delete', 'AdminModules')
             || !$this->moduleProvider->can('uninstall', $name)) {
-            throw new Exception('You are not allowed to uninstall this module');
+            throw new Exception('You are not allowed to uninstall this module.');
         }
 
         // Is module installed ?
@@ -153,7 +153,7 @@ class ModuleManager implements AddonManagerInterface
     {
         if (!$this->employee->can('edit', 'AdminModules')
             || !$this->moduleProvider->can('configure', $name)) {
-            throw new Exception('You are not allowed to upgrade this module');
+            throw new Exception('You are not allowed to upgrade this module.');
         }
 
         if (! $this->moduleProvider->isInstalled($name)) {
@@ -165,7 +165,7 @@ class ModuleManager implements AddonManagerInterface
         // Get new module
         // 1- From source
         if ($source != null) {
-            throw new \Symfony\Component\Intl\Exception\NotImplementedException('Upgrading with a specifi zip is not implemented yep');
+            throw new \InvalidArgumentException('Upgrading with a specific zip is not implemented yet.');
         }
         // 2- From Addons
         else {
@@ -177,7 +177,7 @@ class ModuleManager implements AddonManagerInterface
             $result &= $this->moduleUpdater->upgrade($name);
         }
 
-        return $result;
+        return (bool) $result;
     }
 
     /**
@@ -191,7 +191,7 @@ class ModuleManager implements AddonManagerInterface
     {
         if (!$this->employee->can('edit', 'AdminModules')
             || !$this->moduleProvider->can('configure', $name)) {
-            throw new Exception('You are not allowed to disable this module');
+            throw new Exception('You are not allowed to disable this module.');
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -200,6 +200,8 @@ class ModuleManager implements AddonManagerInterface
         } catch (Exception $e) {
             throw new Exception('Error when disabling module. '. $e->getMessage(), 0, $e);
         }
+
+        return true;
     }
 
     /**
@@ -212,7 +214,7 @@ class ModuleManager implements AddonManagerInterface
     {
         if (!$this->employee->can('edit', 'AdminModules')
             || !$this->moduleProvider->can('configure', $name)) {
-            throw new Exception('You are not allowed to enable this module');
+            throw new Exception('You are not allowed to enable this module.');
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -220,6 +222,54 @@ class ModuleManager implements AddonManagerInterface
             return $module->onEnable();
         } catch (Exception $e) {
             throw new Exception('Error when enabling module. '. $e->getMessage(), 0, $e);
+        }
+
+        return true;
+    }
+
+    /**
+     * Disable a module specifically on mobile.
+     * Not written in camel case because the route and the displayed action in the template
+     * are related to this function name.
+     *
+     * @param  string $name The module name to disable
+     * @return bool         True for success
+     */
+    public function disable_mobile($name)
+    {
+        if (!$this->employee->can('edit', 'AdminModules')
+            || !$this->moduleProvider->can('configure', $name)) {
+            throw new Exception('You are not allowed to disable this module on mobile.');
+        }
+
+        $module = $this->moduleRepository->getModule($name);
+        try {
+            return $module->onMobileDisable();
+        } catch (Exception $e) {
+            throw new Exception(sprintf('Error when disabling module %s on mobile. %s', $name, $e->getMessage()), 0, $e);
+        }
+    }
+
+    /**
+     * Enable a module previously disabled on mobile
+     * Not written in camel case because the route and the displayed action in the template
+     * are related to this function name.
+     *
+     * @param  string $name The module name to enable
+     * @return bool         True for success
+     */
+    public function enable_mobile($name)
+    {
+        if (!$this->employee->can('edit', 'AdminModules')
+            || !$this->moduleProvider->can('configure', $name)) {
+            throw new Exception('You are not allowed to enable this module on mobile.');
+        }
+
+        $module = $this->moduleRepository->getModule($name);
+        try {
+            return $module->onMobileEnable();
+        } catch (Exception $e) {
+            throw new Exception(sprintf('Error when enabling module %s on mobile. %s', $name, $e->getMessage()), 0, $e);
         }
     }
 
@@ -234,7 +284,7 @@ class ModuleManager implements AddonManagerInterface
         if (!$this->employee->can('add', 'AdminModules')
             || !$this->employee->can('delete', 'AdminModules')
             || !$this->moduleProvider->can('uninstall', $name)) {
-            throw new Exception('You are not allowed to reset this module');
+            throw new Exception('You are not allowed to reset this module.');
         }
 
         $module = $this->moduleRepository->getModule($name);

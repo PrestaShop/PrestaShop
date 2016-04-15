@@ -83,6 +83,8 @@
 		</td>
 	</tr>
 
+	{$note_tab}
+
 	<tr>
 		<td colspan="12" height="10">&nbsp;</td>
 	</tr>
@@ -91,6 +93,15 @@
 		<td colspan="6" class="left">
 
 			{$payment_tab}
+
+		</td>
+		<td colspan="1">&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td colspan="6" class="left">
+
+			{$shipping_tab}
 
 		</td>
 		<td colspan="1">&nbsp;</td>
@@ -113,7 +124,7 @@
 
 		</td>
 	</tr>
-	
+
 	<!-- Hook -->
 	{if isset($HOOK_DISPLAY_PDF)}
 	<tr>

@@ -468,6 +468,10 @@ class FrontControllerCore extends Controller
             'feature_active' => $this->getTemplateVarFeatureActive(),
             'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
             'breadcrumb' => $this->getBreadcrumb(),
+            'link'                  => $this->context->link,
+            'time'                  => time(),
+            'static_token'          => Tools::getToken(false),
+            'token'                 => Tools::getToken(),
         ];
 
         $this->context->smarty->assign($templateVars);
@@ -837,14 +841,6 @@ class FrontControllerCore extends Controller
         /** @see P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies) */
         header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
         header('Powered-By: PrestaShop');
-
-        // Hooks are voluntary out the initialize array (need those variables already assigned)
-        $this->context->smarty->assign(array(
-            'link'                  => $this->context->link,
-            'time'                  => time(),
-            'static_token'          => Tools::getToken(false),
-            'token'                 => Tools::getToken(),
-        ));
     }
 
     /**
@@ -1416,10 +1412,10 @@ class FrontControllerCore extends Controller
         ];
 
         $body_classes = [
-            'lang-'.$this->context->language->iso_code,
-            'lang-'.($this->context->language->is_rtl) ? 'rtl' : 'ltr',
-            'country-'.$this->context->country->iso_code,
-            'currency-'.$this->context->currency->iso_code,
+            'lang-'.$this->context->language->iso_code => true,
+            'lang-rtl' => (bool)$this->context->language->is_rtl,
+            'country-'.$this->context->country->iso_code => true,
+            'currency-'.$this->context->currency->iso_code => true,
             $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
             'page-'.$this->php_self => true,
         ];

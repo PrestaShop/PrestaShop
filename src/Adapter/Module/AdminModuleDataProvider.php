@@ -43,13 +43,13 @@ use Symfony\Component\Routing\Router;
  */
 class AdminModuleDataProvider implements ModuleInterface
 {
-    const _CACHEFILE_CATEGORIES_ = 'catalog_categories.json';
     const _CACHEFILE_MODULES_ = '_catalog_modules.json';
 
     /* Cache for One Day */
     const _DAY_IN_SECONDS_ = 86400;
 
     private $languageISO;
+
     /**
      * @var Router
      */
@@ -57,7 +57,6 @@ class AdminModuleDataProvider implements ModuleInterface
 
     private $cache_dir;
 
-    protected $catalog_categories; // deprecated
     protected $catalog_modules;
     protected $catalog_modules_names;
 
@@ -72,7 +71,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     public function clearCatalogCache()
     {
-        $this->clearCache([self::_CACHEFILE_CATEGORIES_, $this->languageISO.self::_CACHEFILE_MODULES_]);
+        $this->clearCache([$this->languageISO.self::_CACHEFILE_MODULES_]);
         $this->catalog_modules         = [];
     }
 
@@ -85,33 +84,27 @@ class AdminModuleDataProvider implements ModuleInterface
                 (int)\Context::getContext()->employee->id);
     }
 
-    public function getCatalogModules(array $filter = [])
+    public function getCatalogModules(array $filters = [])
     {
         if (count($this->catalog_modules) === 0) {
             $this->loadCatalogData();
         }
 
         return $this->applyModuleFilters(
-                $this->catalog_modules, $this->catalog_categories, $filter
+                $this->catalog_modules, $filters
         );
     }
 
     public function getCatalogModulesNames(array $filter = [])
     {
-        $objects = $this->getCatalogModules($filter);
-        $names = [];
-        foreach ($objects as $object) {
-            $names[] = $object->name;
-        }
-
-        return $names;
+        return array_keys($this->getCatalogModules($filter));
     }
 
     public function generateAddonsUrls(array $addons)
     {
         foreach ($addons as &$addon) {
             $urls = [];
-            foreach (['install', 'uninstall', 'enable', 'disable', 'reset', 'upgrade'] as $action) {
+            foreach (['install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade'] as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', [
                     'action' => $action,
                     'module_name' => $addon->attributes->get('name'),
@@ -146,6 +139,11 @@ class AdminModuleDataProvider implements ModuleInterface
                         $urls['configure']
                     );
                 }
+                if ($addon->database->get('active_on_mobile') == 0) {
+                    unset($urls['disable_mobile']);
+                } else {
+                    unset($urls['enable_mobile']);
+                }
                 if ($addon->database->get('installed') == 0 || version_compare($addon->database->get('version'), $addon->disk->get('version'), '<=')
                     && version_compare($addon->attributes->get('version'), $addon->database->get('version'), '<=')) {
                     unset(
@@ -158,6 +156,8 @@ class AdminModuleDataProvider implements ModuleInterface
                     $urls['uninstall'],
                     $urls['enable'],
                     $urls['disable'],
+                    $urls['enable_mobile'],
+                    $urls['disable_mobile'],
                     $urls['reset'],
                     $urls['upgrade'],
                     $urls['configure']
@@ -172,15 +172,6 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $addons;
-    }
-
-    public function getCatalogCategories()
-    {
-        if (count($this->catalog_categories) === 0) {
-            $this->loadCatalogData();
-        }
-
-        return $this->catalog_categories;
     }
 
     public function getCategoriesFromModules(&$modules)
@@ -215,26 +206,17 @@ class AdminModuleDataProvider implements ModuleInterface
         return $categories;
     }
 
-    protected function applyModuleFilters(array $products, $categories, array $filters)
+    protected function applyModuleFilters(array $products, array $filters)
     {
         if (! count($filters)) {
             return $products;
         }
-
-        $module_ids = array_keys($products);
 
         // We get our module IDs to keep
         foreach ($filters as $filter_name => $value) {
             $search_result = [];
 
             switch ($filter_name) {
-                case 'category':
-                    $ref = $this->getRefFromModuleCategoryName($value);
-                    // We get the IDs list from the category
-                    $search_result = isset($categories['categories']->subMenu[$ref]) ?
-                        $categories['categories']->subMenu[$ref]->modulesRef :
-                        [];
-                    break;
                 case 'search':
                     // We build our results array.
                     // We could remove directly the non-matching modules, but we will give that for the final loop of this function
@@ -246,8 +228,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
                         // Instead of looping on the whole module list, we use $module_ids which can already be reduced
                         // thanks to the previous array_intersect(...)
-                        foreach ($module_ids as $key) {
-                            $module = $products[$key];
+                        foreach ($products as $key => $module) {
                             if (strpos($module->displayName, $keyword) !== false
                                 || strpos($module->name, $keyword) !== false
                                 || strpos($module->description, $keyword) !== false) {
@@ -258,26 +239,14 @@ class AdminModuleDataProvider implements ModuleInterface
                     break;
                 case 'name':
                     // exact given name (should return 0 or 1 result)
-                    foreach ($module_ids as $key) {
-                        $module = $products[$key];
-                        if ($module->name == $value) {
-                            $search_result[] = $key;
-                        }
-                    }
+                    $search_result[] = $value;
                     break;
                 default:
                     // "the switch statement is considered a looping structure for the purposes of continue."
                     continue 2;
             }
 
-            $module_ids = array_intersect($search_result, $module_ids);
-        }
-
-        // We apply the filter results
-        foreach ($products as $key => $module) {
-            if (! in_array($key, $module_ids)) {
-                unset($products[$key]);
-            }
+            $products = array_intersect_key($products, array_flip($search_result));
         }
 
         return $products;
@@ -365,27 +334,9 @@ class AdminModuleDataProvider implements ModuleInterface
                     $product->productType = isset($json_key)?rtrim($json_key, 's'):'module';
                 } else {
                     $product->productType = $product->product_type;
-                    //unset($product->product_type);
-                }
-                if (! isset($product->url)) {
-                    $product->url = '';
                 }
 
-                $product->conditions = [];
-                $product->rating     = (object)[
-                        'score' => !empty($product->avg_rate)?$product->avg_rate:0.0,
-                        'countReviews' => !empty($product->nb_rates)?$product->nb_rates:0,
-                ];
-                $product->scoring    = 0;
-                $product->media      = (object)[
-                        'img' => isset($product->img)?$product->img:'../../img/questionmark.png',
-                        'badges' => isset($product->badges)?$product->badges:[],
-                        'cover' => isset($product->cover)?$product->cover:[],
-                        'screenshotsUrls' => [],
-                        'videoUrl' => null,
-                ];
-
-                $remixed_json[] = $product;
+                $remixed_json[$product->name] = $product;
             }
         }
 
@@ -414,10 +365,9 @@ class AdminModuleDataProvider implements ModuleInterface
     protected function fallbackOnCatalogCache()
     {
         // Fallback on data from cache if exists
-        $this->catalog_categories = $this->getModuleCache(self::_CACHEFILE_CATEGORIES_, false);
         $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_, false);
 
-        return ($this->catalog_categories && $this->catalog_modules);
+        return ($this->catalog_modules);
     }
 
     private function getModuleCache($file, $check_freshness = true)
@@ -435,9 +385,16 @@ class AdminModuleDataProvider implements ModuleInterface
             $fh = fopen($cacheFile, 'r');
             $cache = trim(fgets($fh));
 
-            if ($cache) {
-                return json_decode($cache);
+            if (!$cache) {
+                return false;
             }
+
+            $labeled_cache = [];
+            // We need to loop in the array to replace the current key, which is an integer, with the module name
+            foreach (json_decode($cache) as $element) {
+                $labeled_cache[$element->name] = $element;
+            }
+            return $labeled_cache;
         } catch (\Exception $e) {
             throw new \Exception('Cannot read from the cache file '. $file);
         }

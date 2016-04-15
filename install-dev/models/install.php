@@ -91,8 +91,8 @@ class InstallModelInstall extends InstallAbstractModel
 
         // If mcrypt is activated, add Rijndael 128 configuration
         if (function_exists('mcrypt_encrypt')) {
-            $settings_constants['_RIJNDAEL_KEY_'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
-            $settings_constants['_RIJNDAEL_IV_'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
+            $settings_constants['_RIJNDAEL_KEY_'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
+            $settings_constants['_RIJNDAEL_IV_'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC), MCRYPT_RAND));
         }
 
         $settings_content = "<?php\n";
@@ -126,11 +126,6 @@ class InstallModelInstall extends InstallAbstractModel
      */
     private function generateSf2ParametersFile($database_server, $database_login, $database_password, $database_name, $database_prefix)
     {
-        //If ENV is DEV, by pass this step
-        if (_PS_MODE_DEV_) {
-            return true;
-        }
-
         if (!is_writable(_PS_ROOT_DIR_.'/app/config')) {
             $this->setError($this->language->l('%s folder is not writable (check permissions)', 'app/config'));
             return false;
@@ -160,6 +155,10 @@ class InstallModelInstall extends InstallAbstractModel
         $content .= '    mailer_user: ~'."\n";
         $content .= '    mailer_password: ~'."\n";
         $content .= '    secret: '.Tools::passwdGen(56)."\n";
+
+        if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
+            rename(_PS_ROOT_DIR_.'/app/config/parameters.yml', _PS_ROOT_DIR_.'/app/config/parameters.old.yml');
+        }
 
         if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', $content)) {
             $this->setError($this->language->l('Cannot write app/config/parameters.yml file'));

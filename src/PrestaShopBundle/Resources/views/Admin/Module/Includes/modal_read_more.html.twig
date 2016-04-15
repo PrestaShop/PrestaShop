@@ -1,15 +1,15 @@
-<div id="module-modal-read-more-{{module.attributes.get('name')}}{{ additionalModalSuffix|default('') }}" class="modal modal-vcenter fade" role="dialog">
+<div id="module-modal-read-more-{{module.attributes.name}}{{ additionalModalSuffix|default('') }}" class="modal modal-vcenter fade" role="dialog">
     <div class="modal-dialog module-modal-dialog">
         <!-- Modal content-->
         <div class="modal-content module-modal-content no-padding">
             <div class="modal-header module-modal-header">
                 <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">X</span></button>
                 <div>
-                    <img class="module-logo-thumb" height="57" width="57" src="{{ module.attributes.get('media').img }}" alt="{{ module.attributes.get('displayName') }}" />
+                    <img class="module-logo-thumb" height="57" width="57" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}" />
                     <div class="modal-title module-modal-title">
-                        <h4>{{ module.attributes.get('displayName') }}</h4>
+                        <h4>{{ module.attributes.displayName }}</h4>
                         <div class="x-small-text">
-                            v{{ module.attributes.get('version') }} by {{ module.attributes.get('author') }}
+                            v{{ module.attributes.version }} by {{ module.attributes.author }}
                         </div>
                     </div>
                 </div>
@@ -17,43 +17,43 @@
 
             <div class="modal-body row module-modal-body">
                 <div class="col-md-12 module-big-cover">
-                    <img src="{% if module.attributes.get('media').cover.big is defined %}{{module.attributes.get('media').cover.big}}{% else %}https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png{% endif %}"/>
+                    <img src="{% if module.attributes.cover.big is defined %}{{module.attributes.cover.big}}{% else %}https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png{% endif %}"/>
                 </div>
                 <div class="col-md-12 module-menu-readmore">
                     <ul class="nav nav-tabs">
-                        <li class="nav-item"><a class="nav-link module-readmore-tab active" data-toggle="tab" href="#overview-{{module.attributes.get('name')}}">Overview</a></li>
-                        <li class="nav-item"><a class="nav-link module-readmore-tab" data-toggle="tab" href="#benefits-{{module.attributes.get('name')}}">Benefits</a></li>
-                        <li class="nav-item"><a class="nav-link module-readmore-tab" data-toggle="tab" href="#features-{{module.attributes.get('name')}}">Features</a></li>
-                        <li class="nav-item"><a class="nav-link module-readmore-tab" data-toggle="tab" href="#changelog-{{module.attributes.get('name')}}">Changelog</a></li>
+                        <li class="nav-item"><a class="nav-link module-readmore-tab active" data-toggle="tab" href="#overview-{{module.attributes.name}}">Overview</a></li>
+                        <li class="nav-item"><a class="nav-link module-readmore-tab" data-toggle="tab" href="#benefits-{{module.attributes.name}}">Benefits</a></li>
+                        <li class="nav-item"><a class="nav-link module-readmore-tab" data-toggle="tab" href="#features-{{module.attributes.name}}">Features</a></li>
+                        <li class="nav-item"><a class="nav-link module-readmore-tab" data-toggle="tab" href="#changelog-{{module.attributes.name}}">Changelog</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div id="overview-{{module.attributes.get('name')}}" class="tab-pane fade in active">
+                        <div id="overview-{{module.attributes.name}}" class="tab-pane fade in active">
                             <p class="module-readmore-tab-content">
-                                {% if module.attributes.has('fullDescription') %}
-                                    {{ module.attributes.get('fullDescription')|raw }}
+                                {% if module.attributes.fullDescription is defined %}
+                                    {{ module.attributes.fullDescription|raw }}
                                 {% else %}
                                     No description found for this module :(
                                 {% endif %}
                             </p>
                         </div>
-                        <div id="benefits-{{module.attributes.get('name')}}" class="tab-pane fade">
+                        <div id="benefits-{{module.attributes.name}}" class="tab-pane fade">
                             <p class="module-readmore-tab-content">
-                                {% if module.attributes.has('additionalDescription') %}
-                                    {{ module.attributes.get('additionalDescription')|raw }}
+                                {% if module.attributes.additionalDescription is defined %}
+                                    {{ module.attributes.additionalDescription|raw }}
                                 {% else %}
                                     No benefits description provided for this module :(
                                 {% endif %}
                             </p>
                         </div>
-                        <div id="features-{{module.attributes.get('name')}}" class="tab-pane fade">
+                        <div id="features-{{module.attributes.name}}" class="tab-pane fade">
                             <p class="module-readmore-tab-content">
                                 No feature list provided for this module :(
                             </p>
                         </div>
-                        <div id="changelog-{{module.attributes.get('name')}}" class="tab-pane fade">
-                            {% if module.attributes.has('changeLog') %}
+                        <div id="changelog-{{module.attributes.name}}" class="tab-pane fade">
+                            {% if module.attributes.changeLog is defined %}
                                 <ul class="module-readmore-tab-content">
-                                    {% for version, lines in module.attributes.get('changeLog')|arrayCast|reverse %}
+                                    {% for version, lines in module.attributes.changeLog|arrayCast|reverse %}
                                         <li><b>{{version}}:</b>
                                             {% for line in lines %}
                                                 {{line}}<br/>
@@ -70,15 +70,15 @@
             </div>
 
             <div class="modal-footer module-modal-footer">
-                {% if module.attributes.get('media').badges is defined %}
+                {% if module.attributes.badges is defined %}
                 <div class="pull-left module-badges-display">
-                    {% for badge in module.attributes.get('media').badges %}
+                    {% for badge in module.attributes.badges %}
                     <img src="{{badge.img}}" alt="{{badge.label}}"/> {{badge.label}}
                     {% endfor %}
                 </div>
                 {% endif %}
-                {% if module.attributes.get('urls').install is defined %}
-                    <a href="{{module.attributes.get('urls').install}}" class="pull-right module-install-button btn btn-primary btn-sm light-button">{{ trans('Install', {}, 'AdminModules') }}</a>
+                {% if module.attributes.urls.install is defined %}
+                    <a href="{{module.attributes.urls.install}}" class="pull-right module-install-button btn btn-primary btn-sm light-button">{{ trans('Install', {}, 'AdminModules') }}</a>
                 {% endif %}
             </div>
         </div>

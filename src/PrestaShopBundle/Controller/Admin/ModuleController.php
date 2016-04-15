@@ -3,6 +3,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Module\ModulePresenter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
@@ -75,7 +76,8 @@ class ModuleController extends FrameworkBundleAdminController
             ->setStatus(~ AddonListFilterStatus::INSTALLED);
 
         try {
-            $products = $moduleRepository->getFilteredList($filters);
+            $products = $modulesProvider->generateAddonsUrls(
+                $moduleRepository->getFilteredList($filters));
             shuffle($products);
 
             $responseArray['content'] = $this->render(
@@ -88,7 +90,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
                 [
                     'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products)),
-                    'modules' => $modulesProvider->generateAddonsUrls($products),
+                    'modules' => $this->getPresentedProducts($products),
                     'requireAddonsSearch' => true
                 ]
             )->getContent();
@@ -115,7 +117,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setStatus(AddonListFilterStatus::INSTALLED);
+            ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installed_products = $moduleRepository->getFilteredList($filters);
 
         $filter = [];
@@ -144,6 +146,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         foreach ($products as $product_label => $products_part) {
             $products->{$product_label} = $modulesProvider->generateAddonsUrls($products_part);
+            $products->{$product_label} = $this->getPresentedProducts($products_part);
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
@@ -174,9 +177,9 @@ class ModuleController extends FrameworkBundleAdminController
         if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
             try {
-                if($action == "uninstall") {
+                if ($action == "uninstall") {
                     $ret[$module]['status'] = $moduleManager->{$action}($module, $forceDeletion);
-                }else {
+                } else {
                     $ret[$module]['status'] = $moduleManager->{$action}($module);
                 }
 
@@ -184,7 +187,7 @@ class ModuleController extends FrameworkBundleAdminController
                     $ret[$module]['status'] = false;
                     $ret[$module]['msg'] = $module .' did not return a valid response on '.$action .' action';
                 } else {
-                    $ret[$module]['msg'] = ucfirst($action). ' action on module '. $module;
+                    $ret[$module]['msg'] = ucfirst(str_replace('_', ' ', $action)). ' action on module '. $module;
                     $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
                 }
             } catch (Exception $e) {
@@ -204,7 +207,7 @@ class ModuleController extends FrameworkBundleAdminController
                 $moduleInstance = $moduleRepository->getModule($module);
                 $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls(array($moduleInstance));
                 $ret[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig', array(
-                        'module' => array_values($moduleInstanceWithUrl)[0],
+                        'module' => $this->getPresentedProducts($moduleInstanceWithUrl)[0],
                     ))->getContent();
             }
 
@@ -261,12 +264,13 @@ class ModuleController extends FrameworkBundleAdminController
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
-            ->setStatus(~ AddonListFilterStatus::INSTALLED)
+            ->removeStatus(AddonListFilterStatus::INSTALLED)
             ->setOrigin(AddonListFilterOrigin::DISK | AddonListFilterOrigin::ADDONS_CUSTOMER);
         $products->to_install = $moduleRepository->getFilteredList($filters);
 
         foreach ($products as $product_label => $products_part) {
             $products->{$product_label} = $modulesProvider->generateAddonsUrls($products_part);
+            $products->{$product_label} = $this->getPresentedProducts($products_part);
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
@@ -372,9 +376,9 @@ class ModuleController extends FrameworkBundleAdminController
         $toolbarButtons = array();
         $toolbarButtons['add_module'] = array(
             'href' => '#',
-            'desc' => $translator->trans('Add a module', array(), get_class($this)),
+            'desc' => $translator->trans('Upload a module', array(), get_class($this)),
             'icon' => 'cloud_upload',
-            'help' => $translator->trans('Add a module', array(), get_class($this)),
+            'help' => $translator->trans('Upload a module', array(), get_class($this)),
         );
         $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
 
@@ -403,6 +407,17 @@ class ModuleController extends FrameworkBundleAdminController
         } else {
             throw new Exception('Unable to find uploaded module at the following path: '.$file_to_inflate);
         }
+    }
+
+    private function getPresentedProducts(array &$products)
+    {
+        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+        $presentedProducts = [];
+        foreach ($products as $name => $product) {
+            $presentedProducts[$name] = $modulePresenter->present($product);
+        }
+
+        return $presentedProducts;
     }
 
     private function getTopMenuData(array $topMenuData, $activeMenu = null)

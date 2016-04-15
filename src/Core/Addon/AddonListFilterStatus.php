@@ -28,11 +28,12 @@ namespace PrestaShop\PrestaShop\Core\Addon;
 
 class AddonListFilterStatus
 {
-    /* Bitwise operators */
-    const NOT_ON_DISK = 1; // = Coming from external source
+    const NOT_ON_DISK = 1;
     const ON_DISK = 2; // = Present on disk but not installed
-    const INSTALLED = 4; // = Installed but disabled
-    const ENABLED = 12; // = Installed AND enabled (= 4 | 8)
+    const UNINSTALLED = 4;
+    const INSTALLED = 8; // = Installed
+    const DISABLED = 16;
+    const ENABLED = 32;
 
-    const ALL = 15;
+    const ALL = 63;
 }

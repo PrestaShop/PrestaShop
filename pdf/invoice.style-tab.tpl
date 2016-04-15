@@ -60,11 +60,19 @@
 		padding: {$table_padding};
 		border: 1pt solid {$color_border};
 	}
+	table#note-tab {
+		padding: {$table_padding};
+		border: 1px solid {$color_border};
+	}
+	table#note-tab td.note{
+		word-wrap: break-word;
+	}
 	table#tax-tab {
 		padding: {$table_padding};
 		border: 1pt solid {$color_border};
 	}
-	table#payment-tab {
+	table#payment-tab,
+	table#shipping-tab {
 		padding: {$table_padding};
 		border: 1px solid {$color_border};
 	}
@@ -115,7 +123,8 @@
 		font-weight: bold;
 	}
 
-	th.payment {
+	th.payment,
+	th.shipping {
 		background-color: {$color_header};
 		vertical-align: middle;
 		font-weight: bold;
@@ -176,7 +185,7 @@
 	tr.big td{
 		font-size: 110%;
 	}
-	
+
 	.small, table.small th, table.small td {
 		font-size:small;
 	}

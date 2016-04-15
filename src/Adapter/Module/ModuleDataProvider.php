@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 
 class ModuleDataProvider
 {
@@ -35,6 +36,7 @@ class ModuleDataProvider
         if ($result) {
             $result['installed'] = 1;
             $result['active'] = $this->isEnabled($name);
+            $result['active_on_mobile'] = (bool)($this->getDeviceStatus($name) & AddonListFilterDeviceStatus::DEVICE_MOBILE);
             return $result;
         }
 
@@ -123,5 +125,26 @@ class ModuleDataProvider
     {
         $path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
         return file_exists($path);
+    }
+
+    /**
+     * Check if the module has been enabled on mobile
+     * @param string $name The technical module name to check
+     * @return int The devices enabled for this module
+     */
+    private function getDeviceStatus($name)
+    {
+        $id_shops = (new Context())->getContextListShopID();
+        // ToDo: Load list of all installed modules ?
+
+        $result = \Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`
+            FROM `'._DB_PREFIX_.'module` m
+            LEFT JOIN `'._DB_PREFIX_.'module_shop` ms ON m.`id_module` = ms.`id_module`
+            WHERE `name` = "'. pSQL($name) .'"
+            AND ms.`id_shop` IN ('.implode(',', array_map('intval', $id_shops)).')');
+        if ($result) {
+            return (int)$result['enable_device'];
+        }
+        return false;
     }
 }

@@ -9,7 +9,7 @@
       <div class="cart-grid-body col-xs-12 col-md-8">
 
         <!-- cart products detailed -->
-        <div class="card">
+        <div class="card cart-container">
           <div class="card-block">
             <h1 class="h1">{l s='Shopping Cart'}</h1>
           </div>
@@ -20,9 +20,11 @@
 
         </div>
 
-        <a class="label" href="{$urls.pages.index}">
-          <i class="material-icons">chevron_left</i>{l s='Continue shopping'}
-        </a>
+        {block name='continue_shopping'}
+          <a class="label" href="{$urls.pages.index}">
+            <i class="material-icons">chevron_left</i>{l s='Continue shopping'}
+          </a>
+        {/block}
 
         <!-- shipping informations -->
         <div>
@@ -33,34 +35,36 @@
       <!-- Right Block: cart subtotal & cart total -->
       <div class="cart-grid-right col-xs-12 col-md-4">
 
-        <div class="card cart-summary">
+        {block name='cart_summary'}
+          <div class="card cart-summary">
 
-          {block name='cart_summary_line'}
-            {include file='checkout/_partials/cart-summary-items-subtotal.tpl' cart=$cart}
-          {/block}
+            {block name='cart_summary_line'}
+              {include file='checkout/_partials/cart-summary-items-subtotal.tpl' cart=$cart}
+            {/block}
 
-          {block name='cart_voucher'}
-            {include file='checkout/_partials/cart-voucher.tpl'}
-          {/block}
+            {block name='cart_voucher'}
+              {include file='checkout/_partials/cart-voucher.tpl'}
+            {/block}
 
-          {hook h='displayShoppingCart'}
+            {hook h='displayShoppingCart'}
 
-          {block name='cart_totals'}
-            {include file='checkout/_partials/cart-detailed-totals.tpl' cart=$cart}
-          {/block}
+            {block name='cart_totals'}
+              {include file='checkout/_partials/cart-detailed-totals.tpl' cart=$cart}
+            {/block}
 
-          <div class="checkout text-xs-center card-block">
-            <ul>
-              <li>
+            {block name='cart_actions'}
+              <div class="checkout text-xs-center card-block">
                 <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Checkout'}</a>
-              </li>
-            </ul>
-            {hook h='displayExpressCheckout'}
+                {hook h='displayExpressCheckout'}
+              </div>
+            {/block}
+
           </div>
+        {/block}
 
-        </div>
-
-        {hook h='displayReassurance'}
+        {block name='display_reassurance'}
+          {hook h='displayReassurance'}
+        {/block}
 
       </div>
 

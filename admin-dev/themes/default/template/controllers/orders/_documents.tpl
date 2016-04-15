@@ -104,7 +104,7 @@
 								{/if}
 							{/if}
 						{elseif get_class($document) eq 'OrderSlip'}
-							{displayPrice price=$document->amount+$document->shipping_cost_amount currency=$currency->id}
+							{displayPrice price=$document->total_products_tax_incl+$document->total_shipping_tax_incl currency=$currency->id}
 						{/if}
 						</td>
 						<td class="text-right document_action">

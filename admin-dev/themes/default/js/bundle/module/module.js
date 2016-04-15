@@ -282,7 +282,7 @@ var AdminModuleController = function () {
                 var uniqueID = '';
                 $.each(dataAttr, function (index, value) {
                     if (uniqueID !== '') {
-                        uniqueID += '#'; // Explode separator
+                        uniqueID += ' #'; // Explode separator
                     }
                     uniqueID += selectorObject.attr(value);
                 });
@@ -911,7 +911,7 @@ var AdminModuleController = function () {
                 var uniqueID = '';
                 $.each(dataAttr, function (index, value) {
                     if (uniqueID !== '') {
-                        uniqueID += '#'; // Explode separator
+                        uniqueID += ' #'; // Explode separator
                     }
                     uniqueID += selectorObject.attr(value);
                 });
@@ -989,14 +989,13 @@ var AdminModuleController = function () {
         });
 
         $('body').on('click', this.categoryResetBtnSelector, function () {
-            //@TODO: Some refactoring, could be a lot shorter
             var rawText = $(_this.categorySelector).attr('aria-labelledby');
             var upperFirstLetter = rawText.charAt(0).toUpperCase();
             var removedFirstLetter = rawText.slice(1);
             var originalText = upperFirstLetter + removedFirstLetter;
             $(_this.categorySelectorLabelSelector).text(originalText);
             $(this).hide();
-            _this.currentRefMenu = null;
+            _this.currentRefCategory = null;
             _this.doSearch();
         });
     };

@@ -86,6 +86,7 @@ class PDFCore
         $render = false;
         $this->pdf_renderer->setFontForLang(Context::getContext()->language->iso_code);
         foreach ($this->objects as $object) {
+            $this->pdf_renderer->startPageGroup();
             $template = $this->getTemplateObject($object);
             if (!$template) {
                 continue;
@@ -102,6 +103,7 @@ class PDFCore
 
             $this->pdf_renderer->createHeader($template->getHeader());
             $this->pdf_renderer->createFooter($template->getFooter());
+            $this->pdf_renderer->createPagination($template->getPagination());
             $this->pdf_renderer->createContent($template->getContent());
             $this->pdf_renderer->writePage();
             $render = true;

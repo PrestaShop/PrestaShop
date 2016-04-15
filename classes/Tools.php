@@ -1096,33 +1096,6 @@ class ToolsCore
     }
 
     /**
-     * @deprecated 1.5.0
-     */
-    public static function getMetaTags($id_lang, $page_name, $title = '')
-    {
-        Tools::displayAsDeprecated();
-        return Meta::getMetaTags($id_lang, $page_name, $title);
-    }
-
-    /**
-     * @deprecated 1.5.0
-     */
-    public static function getHomeMetaTags($id_lang, $page_name)
-    {
-        Tools::displayAsDeprecated();
-        return Meta::getHomeMetas($id_lang, $page_name);
-    }
-
-    /**
-     * @deprecated 1.5.0
-     */
-    public static function completeMetaTags($meta_tags, $default_value, Context $context = null)
-    {
-        Tools::displayAsDeprecated();
-        return Meta::completeMetaTags($meta_tags, $default_value, $context);
-    }
-
-    /**
     * Encrypt password
     *
     * @param string $passwd String to encrypt
@@ -1971,15 +1944,6 @@ class ToolsCore
     }
 
     /**
-     * @deprecated as of 1.5 use Media::minifyHTML()
-     */
-    public static function minifyHTML($html_content)
-    {
-        Tools::displayAsDeprecated();
-        return Media::minifyHTML($html_content);
-    }
-
-    /**
     * Translates a string with underscores into camel case (e.g. first_name -> firstName)
     * @prototype string public static function toCamelCase(string $str[, bool $capitalise_first_char = false])
     */
@@ -2034,43 +1998,6 @@ class ToolsCore
         return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
     }
 
-    /**
-    * @deprecated as of 1.5 use Media::minifyHTMLpregCallback()
-    */
-    public static function minifyHTMLpregCallback($preg_matches)
-    {
-        Tools::displayAsDeprecated();
-        return Media::minifyHTMLpregCallback($preg_matches);
-    }
-
-    /**
-    * @deprecated as of 1.5 use Media::packJSinHTML()
-    */
-    public static function packJSinHTML($html_content)
-    {
-        Tools::displayAsDeprecated();
-        return Media::packJSinHTML($html_content);
-    }
-
-    /**
-    * @deprecated as of 1.5 use Media::packJSinHTMLpregCallback()
-    */
-    public static function packJSinHTMLpregCallback($preg_matches)
-    {
-        Tools::displayAsDeprecated();
-        return Media::packJSinHTMLpregCallback($preg_matches);
-    }
-
-    /**
-    * @deprecated as of 1.5 use Media::packJS()
-    */
-    public static function packJS($js_content)
-    {
-        Tools::displayAsDeprecated();
-        return Media::packJS($js_content);
-    }
-
-
     public static function parserSQL($sql)
     {
         if (strlen($sql) > 0) {
@@ -2081,62 +2008,10 @@ class ToolsCore
         return false;
     }
 
-    /**
-     * @deprecated as of 1.5 use Media::minifyCSS()
-     */
-    public static function minifyCSS($css_content, $fileuri = false)
-    {
-        Tools::displayAsDeprecated();
-        return Media::minifyCSS($css_content, $fileuri);
-    }
-
     public static function replaceByAbsoluteURL($matches)
     {
         Tools::displayAsDeprecated();
         return Media::replaceByAbsoluteURL($matches);
-    }
-
-    /**
-     * addJS load a javascript file in the header
-     *
-     * @deprecated as of 1.5 use FrontController->addJS()
-     * @param mixed $js_uri
-     * @return void
-     */
-    public static function addJS($js_uri)
-    {
-        Tools::displayAsDeprecated();
-        $context = Context::getContext();
-        $context->controller->addJs($js_uri);
-    }
-
-    /**
-     * @deprecated as of 1.5 use FrontController->addCSS()
-     */
-    public static function addCSS($css_uri, $css_media_type = 'all')
-    {
-        Tools::displayAsDeprecated();
-        $context = Context::getContext();
-        $context->controller->addCSS($css_uri, $css_media_type);
-    }
-
-    /**
-    * @deprecated as of 1.5 use Media::cccCss()
-    */
-    public static function cccCss($css_files)
-    {
-        Tools::displayAsDeprecated();
-        return Media::cccCss($css_files);
-    }
-
-
-    /**
-    * @deprecated as of 1.5 use Media::cccJS()
-    */
-    public static function cccJS($js_files)
-    {
-        Tools::displayAsDeprecated();
-        return Media::cccJS($js_files);
     }
 
     protected static $_cache_nb_media_servers = null;

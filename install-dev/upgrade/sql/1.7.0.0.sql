@@ -57,6 +57,8 @@ ALTER TABLE `PREFIX_product_attribute` ADD `isbn` VARCHAR( 13 ) NULL DEFAULT NUL
 ALTER TABLE `PREFIX_stock` ADD `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
 ALTER TABLE `PREFIX_supply_order_detail` ADD `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
 
+ALTER TABLE `PREFIX_order_invoice` DROP COLUMN `invoice_address` DROP COLUMN `delivery_address`;
+
 ALTER TABLE `PREFIX_cart_product` CHANGE `id_product_attribute` `id_product_attribute` int(10) unsigned DEFAULT '0';
 
 ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_title` VARCHAR( 255 ) NOT NULL;
@@ -93,3 +95,5 @@ DROP TABLE `PREFIX_scene_products`;
 DROP TABLE `PREFIX_scene_shop`;
 ALTER TABLE `PREFIX_image_type` DROP `scenes`;
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_SCENE_FEATURE_ACTIVE';
+
+UPDATE `PREFIX_configuration` SET `PS_TAX_DISPLAY` = '1';
