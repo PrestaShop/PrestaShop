@@ -27,9 +27,21 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
+use Psr\Log\LoggerInterface;
 
 class ModuleDataProvider
 {
+    /**
+     * Logger
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function findByName($name)
     {
         $result = \Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
@@ -114,6 +126,7 @@ class ModuleDataProvider
         $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
         $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
         if (eval('if (false){	'.$content.' }') === false) {
+            $this->logger->critical(sprintf('Parse error detected in main class of module %s!', $name));
             return false;
         }
 
@@ -122,6 +135,7 @@ class ModuleDataProvider
         try {
             require_once $file_path;
         } catch (\Exception $e) {
+            $this->logger->error(sprintf('Error while loading file of module %s. %s', $name, $e->getMessage()));
             return false;
         }
 

@@ -55,9 +55,10 @@ class ModuleManagerBuilder
         } else {
             $addonsDataProvider = new AddonsDataProvider();
             $adminModuleDataProvider = new AdminModuleDataProvider($this->getLanguageIso(), $this->getSymfonyRouter(), $addonsDataProvider);
+            $legacyLogger = new LegacyLogger();
 
             return new ModuleManager($adminModuleDataProvider,
-                new ModuleDataProvider(),
+                new ModuleDataProvider($legacyLogger),
                 new ModuleDataUpdater($addonsDataProvider, $adminModuleDataProvider),
                 $this->buildRepository(),
                 \Context::getContext()->employee);
@@ -78,12 +79,13 @@ class ModuleManagerBuilder
             } else {
                 $addonsDataProvider = new AddonsDataProvider();
                 $adminModuleDataProvider = new AdminModuleDataProvider($this->getLanguageIso(), $this->getSymfonyRouter(), $addonsDataProvider);
+                $legacyLogger = new LegacyLogger();
 
                 self::$modulesRepository = new ModuleRepository(
                     $adminModuleDataProvider,
-                    new ModuleDataProvider(),
+                    new ModuleDataProvider($legacyLogger),
                     new ModuleDataUpdater($addonsDataProvider, $adminModuleDataProvider),
-                    new LegacyLogger()
+                    $legacyLogger
                 );
             }
         }
