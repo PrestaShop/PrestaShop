@@ -61,17 +61,21 @@ class IdentityControllerCore extends FrontController
             );
         }
 
+        $dateFormat = $this->context->language->date_format_lite;
+        
         $this->context->smarty->assign([
-            'customer_form' => $customer_form->getProxy()
+            'customer_form' => $customer_form->getProxy(),
+            'dateFormat' => $dateFormat,
+            'dateSample' => (new DateTime)->format($dateFormat),
         ]);
 
         if ($should_redirect) {
             $this->redirectWithNotifications($this->getCurrentURL());
         }
-
+        
         $this->setTemplate('customer/identity.tpl');
     }
-
+    
     public function getBreadcrumbLinks()
     {
         $breadcrumb = parent::getBreadcrumbLinks();
