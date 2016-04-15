@@ -125,6 +125,7 @@ class Core_Business_Stock_StockManager
             // The product is not a pack
             $stockAvailable->quantity = $stockAvailable->quantity + $delta_quantity;
             $stockAvailable->id_product = (int)$product->id;
+            $stockAvailable->id_product_attribute = (int)$id_product_attribute;
             $stockAvailable->update();
 
             // Decrease case only: the stock of linked packs should be decreased too.
