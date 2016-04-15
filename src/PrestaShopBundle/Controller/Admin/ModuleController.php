@@ -81,6 +81,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     private function constructJsonCatalogBodyResponse($modulesProvider, $products)
     {
+        $products = $modulesProvider->generateAddonsUrls($products);
         $formattedContent = [];
         $formattedContent['selector'] = '.module-catalog-page';
         $formattedContent['content'] = $this->render(
@@ -92,7 +93,7 @@ class ModuleController extends FrameworkBundleAdminController
         $formattedContent['content'] .= $this->render(
             'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
             [
-                'modules' => $modulesProvider->generateAddonsUrls($products),
+                'modules' => $this->getPresentedProducts($products),
                 'requireAddonsSearch' => true
             ]
         )->getContent();
