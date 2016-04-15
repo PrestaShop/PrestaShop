@@ -11,6 +11,9 @@ var productCategoriesTags = (function () {
       this.manageTagsOnInput();
       this.manageTagsOnTags();
 
+      // add default category management
+      this.checkDefaultCategory();
+
       // add search box
       this.initSearchBox();
     },
@@ -21,7 +24,7 @@ var productCategoriesTags = (function () {
     },
     'getTags': function () {
       var categoriesForm = $('#form_step1_categories');
-      var inputs = categoriesForm.find('label > input:checked').toArray();
+      var inputs = categoriesForm.find('label > input[type=checkbox]:checked').toArray();
 
       var tags = [];
       var that = this;
@@ -45,7 +48,7 @@ var productCategoriesTags = (function () {
     'manageTagsOnInput': function () {
       var categoriesForm = $('#form_step1_categories');
       var that = this;
-      categoriesForm.on('click', 'input', function () {
+      categoriesForm.on('click', 'input[type=checkbox]', function () {
         var input = $(this);
         if (input.prop('checked') === false) {
           that.removeTag($(this).val());
@@ -71,11 +74,16 @@ var productCategoriesTags = (function () {
         event.preventDefault();
         var id = $(this).data('id');
         that.removeTag(id);
-        categoriesForm.find('input[value="' + id + '"]').prop('checked', false);
+        categoriesForm.find('.category.input[value="' + id + '"]').prop('checked', false);
         tagsContainer.focus();
       });
 
       return true;
+    },
+    'checkDefaultCategory': function (categoryId) {
+      var categoriesForm = $('#form_step1_categories');
+      var selector = 'input[value="'+categoryId+'"].default-category';
+      categoriesForm.find(selector).attr('checked', 'checked');
     },
     'getTree': function () {
       var tree = JSON.parse($('#ps_categoryTree').html());
@@ -83,7 +91,6 @@ var productCategoriesTags = (function () {
       return tree;
     },
     'createTag': function (category) {
-
       if (category.breadcrumb == '') {
         var tree = this.getTree();
         tree.forEach(function getCategories(_category) {
