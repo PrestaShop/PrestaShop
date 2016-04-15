@@ -136,6 +136,7 @@ GitHub contributors:
 - Gabriel Schwardy
 - Gaelle ITZKOVITZ
 - Gamesh
+- Geoffray
 - ggedamed
 - Giant Leap Lab
 - Gordon Coubrough
@@ -156,6 +157,7 @@ GitHub contributors:
 - harelguy
 - hiousi
 - htrex
+- Ian Fung
 - indesign47
 - iNem0o
 - ironwo0d
@@ -164,6 +166,7 @@ GitHub contributors:
 - ivancasasempere
 - J. Danse
 - janisVincent
+- Jaume
 - Javsmile
 - JEAN
 - jeanbe
@@ -257,6 +260,7 @@ GitHub contributors:
 - natrim
 - neemzy
 - nezenmoins
+- Nicolas Martin
 - Nicolas Sorosac
 - Niklas Ekman
 - Niko Wicaksono

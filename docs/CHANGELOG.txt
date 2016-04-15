@@ -24,6 +24,70 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.1.5 - (2016-04-08)
+####################################
+
+	Fixed bugs:
+
+	[-] PDF : (9f7ab92) update constraints on Addresses display
+	[-] PDF : (e7103c4) updated b2b template
+	[-] PDF : (e0bde47) invoices printing now done as page groups to keep the pagination relevant
+	[-] PDF : (3464ca0) fixed pagination block display
+	[-] PDF : (a788652) Moved note block to his own remplate
+	[-] PDF : (b5ef9f2) (re) added shipping box in invoice
+
+	[-] FO : (331527c) Fix incorrect cart rules list in case of country restriction (PSCSX-7873)
+	[-] FO : (a343610) PSCSX-7449, fix parse error in AuthController.php
+	[-] FO : (42d8847) #PSCSX-5582 fix wrong displayed specific price on product detail
+	[-] FO : (755f77b) Fix warning if combinations are disabled
+	[-] FO : (05b701f) Fix combination price calculation with impact and reduction
+	[-] FO : (b1352d7) Fix JavaScript mistake in blocklayered.js
+	[-] FO : (8ee195a) fixed bug on payment module, check if defined $order object
+
+	[-] CORE : (9870d84) use a cached cacert file for curl
+	[-] CORE : (deebce3) Fixed double preg_quote()
+
+	[-] BO : (647eba0) Fix the display of the listing filters on the toolbar
+	[-] BO : (6e69c4a) Change only active state on bulk status change
+	[-] BO : (69b87a8) Fix incorrect shipping taxes in order slips (PSCSX-4881)
+	[-] BO : (44eb96c) Fix filter by category change not working after other actions. …
+	[-] BO : (76d53ac) add error message on upload theme bigger than post_max_size
+
+	[-] LO : (011a2e5) Traditionnal Chinese for HK pack
+
+	[-] TR : (948a3e5) language.xml - fix TW script
+
+	[-] SECURITY : (cc49345) Fixes PSCSX-4841 Usage of ECB mode
+
+	[-] CLASS : (7234efd) Alias / return false if feature is not active in aliasExists()
+
+	[-] MO : (de7e9aa) bankwire / correct module name for translation
+
+
+	Improved/changed features:
+
+	[*] CORE : (85e6025) Update swift mailer
+	[*] CORE : (81465fe) Add a fallback to curl when file_get_content() return an empty response
+
+	[*] TR : (4b3ddf5) Update Polish installer
+	[*] TR : (62bbc16) feature.xml in Vietnamese
+	[*] TR : (1cce929) Update italian installer
+	[*] TR : (5319857) Improve Dutch meta info
+
+	[*] CLASS : (ec03391) Hook / indicate which method to use for deprecated methods
+
+	[*] FO : (999ff45) Removed template logic that is not needed
+
+
+	Added Features:
+
+	[+] TR : (30c4adc) Adding Vietnamese installer
+
+
+	
+
+
+####################################
 #   v1.6.1.4 - (2016-01-06)
 ####################################
 
