@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Validator\Constraints\File;
 
 class ModuleController extends FrameworkBundleAdminController
 {
@@ -311,6 +312,26 @@ class ModuleController extends FrameworkBundleAdminController
         $moduleManager = $this->get('prestashop.module.manager');
         try {
             $file_uploaded = $request->files->get('file_uploaded');
+            $violations = $this->get('validator')->validate($file_uploaded, new File(
+                [
+                    'maxSize' => ini_get('upload_max_filesize'),
+                    'mimeTypes' => [
+                        'application/zip',
+                        'application/x-gzip',
+                        'application/gzip',
+                        'application/x-gtar',
+                        'application/x-tgz'
+                    ],
+                ]
+            ));
+            if (0 !== count($violations)) {
+                $violationsMessages = '';
+                foreach ($violations as $violation) {
+                    $violationsMessages .= $violation->getMessage() . PHP_EOL;
+                }
+                throw new Exception($violationsMessages);
+            }
+
             $file_uploaded_tmp_path = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload';
             $tmp_filename_uniq = md5(uniqid()).$file_uploaded->guessExtension();
             $file_uploaded_tmp_fullpath = $file_uploaded_tmp_path.'/'.$tmp_filename_uniq;

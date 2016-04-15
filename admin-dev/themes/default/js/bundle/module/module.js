@@ -640,7 +640,7 @@ var AdminModuleController = function () {
           acceptedFiles: '.zip, .tar',
            // The name that will be used to transfer the file
           paramName: 'file_uploaded',
-          maxFilesize: 5, // MB
+          maxFilesize: 50, // can't be greater than 50Mb because it's an addons limitation
           uploadMultiple: false,
           addRemoveLinks: true,
           dictDefaultMessage: '',
@@ -659,9 +659,15 @@ var AdminModuleController = function () {
           processing: function () {
               // Leave it empty ATM since we don't require anything while processing upload
           },
+          /* error(file, errorMessage) */
+          error: function (file, message) {
+            $(_this.moduleImportProcessingSelector).fadeOut(function() {
+              $(_this.moduleImportFailureMsgDetailsSelector).html(message);
+              $(_this.moduleImportFailureSelector).fadeIn();
+            });
+          },
           /* complete(file, response) */
-          complete: function (file) {
-
+          complete: function (file, response) {
               if (file.status !== 'error') {
                   var responseObject = jQuery.parseJSON(file.xhr.response);
 
@@ -678,11 +684,6 @@ var AdminModuleController = function () {
                           $(_this.moduleImportFailureSelector).fadeIn();
                       }
                   });
-              } else {
-                  $(_this.moduleImportProcessingSelector).fadeOut(function() {
-                       $(_this.moduleImportFailureMsgDetailsSelector).html(file.xhr.responseText);
-                       $(_this.moduleImportFailureSelector).fadeIn();
-                   });
               }
               // State that we have finish the process to unlock some actions
               _this.isUploadStarted = false;
