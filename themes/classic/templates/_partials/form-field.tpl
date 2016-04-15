@@ -32,7 +32,7 @@
       {elseif $field.type === 'date'}
         <input type="text" value="{$field.value}" name="{$field.name}" class="form-control" placeholder="{$dateFormat}">
         <span class="form-control-comment">
-          {l s='(Ex.:'|cat:$dateSample}
+          {l s='(Ex.:'|cat:$dateSample})
         </span>
       {else}
         <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
