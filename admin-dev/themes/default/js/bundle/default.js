@@ -31,7 +31,7 @@ var rightSidebar = (function() {
                 $('ul.pagination > li > a[href]', this).on('click', function(e) {
                     e.preventDefault();
                     rightSidebar.navigationChange($(e.target).attr('href'), $(target));
-                });;
+                });
                 $('ul.pagination > li > input[name="paginator_jump_page"]', this).on('keyup', function(e) {
                     if (e.which === 13) { // ENTER
                         e.preventDefault();

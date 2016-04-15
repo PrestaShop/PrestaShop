@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\tests\Fake;
+namespace PrestaShop\PrestaShop\tests\TestCase;
 
 use Psr\Log\LoggerInterface;
 

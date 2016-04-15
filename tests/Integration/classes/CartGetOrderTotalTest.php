@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Tests\Integration\Classes;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
-use PrestaShop\PrestaShop\Tests\Helper\DatabaseDump;
+use PrestaShop\PrestaShop\Tests\TestCase\DatabaseDump;
 use Exception;
 use Address;
 use Carrier;

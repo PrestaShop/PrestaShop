@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Helper;
+namespace PrestaShop\PrestaShop\Tests\TestCase;
 
 define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/module/'));
 
-class    Module
+class Module
 {
     /**
      * Copy the directory in resources which get the name $module_dir_name in the module directory
