@@ -1388,17 +1388,6 @@ class CartCore extends ObjectModel
                 WHERE `id_customization` = '.(int)$id_customization
             );
 
-            if ($result) {
-                $result &= Db::getInstance()->execute(
-                    'UPDATE `'._DB_PREFIX_.'cart_product`
-                    SET `quantity` = `quantity` - '.(int)$customization['quantity'].'
-                    WHERE `id_cart` = '.(int)$this->id.'
-                    AND `id_product` = '.(int)$id_product.
-                    ((int)$id_product_attribute ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-                    AND `id_address_delivery` = '.(int)$id_address_delivery
-                );
-            }
-
             if (!$result) {
                 return false;
             }
