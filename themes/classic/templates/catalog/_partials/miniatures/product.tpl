@@ -53,6 +53,7 @@
 
           {hook h='displayProductPriceBlock' product=$product type='price'}
           {hook h='displayProductPriceBlock' product=$product type='unit_price'}
+          {hook h='displayProductPriceBlock' product=$product type='list_taxes'}
           {hook h='displayProductPriceBlock' product=$product type='after_price'}
 
           {if !$product.is_virtual}
