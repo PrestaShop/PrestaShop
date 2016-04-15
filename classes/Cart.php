@@ -1093,7 +1093,7 @@ class CartCore extends ObjectModel
                     'id_shop' =>                $shop->id,
                     'quantity' =>                (int)$quantity,
                     'date_add' =>                date('Y-m-d H:i:s'),
-                    'id_customization' =>       (int)$id_customization
+                    'id_customization' =>       (int)$id_customization,
                 ));
 
                 if (!$result_add) {
@@ -1387,17 +1387,6 @@ class CartCore extends ObjectModel
                 'DELETE FROM `'._DB_PREFIX_.'customized_data`
                 WHERE `id_customization` = '.(int)$id_customization
             );
-
-            if ($result) {
-                $result &= Db::getInstance()->execute(
-                    'UPDATE `'._DB_PREFIX_.'cart_product`
-                    SET `quantity` = `quantity` - '.(int)$customization['quantity'].'
-                    WHERE `id_cart` = '.(int)$this->id.'
-                    AND `id_product` = '.(int)$id_product.
-                    ((int)$id_product_attribute ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-                    AND `id_address_delivery` = '.(int)$id_address_delivery
-                );
-            }
 
             if (!$result) {
                 return false;
@@ -3124,7 +3113,12 @@ class CartCore extends ObjectModel
             LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (c.`id_customization` = cd.`id_customization`)
             WHERE c.`in_cart` = 1 AND c.`id_cart` = '.(int)$this->id);
 
-            self::$_totalWeight[$this->id] = round((float)$weight_product_with_attribute + (float)$weight_product_without_attribute + (float)$weight_cart_customizations, 6);
+            self::$_totalWeight[$this->id] = round(
+                (float)$weight_product_with_attribute +
+                (float)$weight_product_without_attribute +
+                (float)$weight_cart_customizations,
+                6
+            );
         }
 
         return self::$_totalWeight[$this->id];
@@ -3581,9 +3575,10 @@ class CartCore extends ObjectModel
 
         // Backward compatibility: if true set customizations quantity to 0, they will be updated in Cart::_updateCustomizationQuantity
         $new_customization_method = (int)Db::getInstance()->getValue('
-                SELECT COUNT(`id_customization`) FROM `'._DB_PREFIX_.'cart_product`
-                WHERE `id_cart` = '.(int)$this->id.
-                ' AND `id_customization` != 0') > 0;
+            SELECT COUNT(`id_customization`) FROM `'._DB_PREFIX_.'cart_product`
+            WHERE `id_cart` = '.(int)$this->id.
+            ' AND `id_customization` != 0'
+        ) > 0;
 
         // Insert new customizations
         $custom_ids = array();
