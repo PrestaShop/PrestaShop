@@ -49,7 +49,7 @@ class Employee implements UserInterface, EquatableInterface
     /**
      * @var array
      */
-    private $roles;
+    private $roles = array();
 
     private $data;
 
@@ -63,8 +63,12 @@ class Employee implements UserInterface, EquatableInterface
         $this->username = $data->email;
         $this->password = $data->passwd;
         $this->salt = '';
-        $this->roles = ['ROLE_ADMIN'];
         $this->data = $data;
+    }
+    
+    public function __toString()
+    {
+        return $this->username;
     }
 
     /**
@@ -122,6 +126,17 @@ class Employee implements UserInterface, EquatableInterface
      */
     public function eraseCredentials()
     {
+    }
+    
+    /**
+     * 
+     * @param array $roles
+     * @return Employee
+     */
+    function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+        return $this;
     }
 
     /**
