@@ -30,11 +30,6 @@
 class PrestaShopAutoload
 {
     /**
-     * File where classes index is stored
-     */
-    const INDEX_FILE = 'cache/class_index.php';
-
-    /**
      * @var PrestaShopAutoload
      */
     protected static $instance;
@@ -85,7 +80,7 @@ class PrestaShopAutoload
 
     public static function getCacheFileIndex()
     {
-        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app/'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/class_index.php';
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_index.php';
     }
 
     /**
@@ -158,18 +153,12 @@ class PrestaShopAutoload
 
         // Write classes index on disc to cache it
         $filename = PrestaShopAutoload::getCacheFileIndex();
-        $filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
-        if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false) {
-            if (!@rename($filename_tmp, $filename)) {
-                unlink($filename_tmp);
-            } else {
-                @chmod($filename, 0666);
-            }
+        @mkdir(_PS_CACHE_DIR_);
+
+        if (!file_put_contents($filename, $content) !== false) {
+            Tools::error_log('Cannot write temporary file '.$filename);
         }
-        // $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
-        else {
-            Tools::error_log('Cannot write temporary file '.$filename_tmp);
-        }
+
         $this->index = $classes;
     }
 

@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\CacheWarmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Tools;
 
 class LocalizationCacheWarmer implements CacheWarmerInterface
@@ -42,12 +44,17 @@ class LocalizationCacheWarmer implements CacheWarmerInterface
 
     public function warmUp($cacheDir)
     {
+        $fs = new Filesystem();
+
         if (is_dir($cacheDir)) {
-            @mkdir($cacheDir);
+            try {
+                $fs->mkdir($cacheDir);
+            } catch (IOExceptionInterface $e) {
+                //@todo: log
+            }
         }
 
         $path_cache_file = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$this->version.$this->country.'.xml';
-
 
         if (is_file($path_cache_file)) {
             $localization_file_content = file_get_contents($path_cache_file);
@@ -58,13 +65,19 @@ class LocalizationCacheWarmer implements CacheWarmerInterface
             }
             if (!$localization_file_content) {
                 $localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
+
                 if (file_exists(_PS_ROOT_DIR_.'/localization/'.$this->country.'.xml')) {
                     $localization_file = _PS_ROOT_DIR_.'/localization/'.$this->country.'.xml';
                 }
 
                 $localization_file_content = file_get_contents($localization_file);
             }
-            file_put_contents($cacheDir, $localization_file_content);
+
+            try {
+                $fs->dumpFile($cacheDir, $localization_file_content);
+            } catch (IOExceptionInterface $e) {
+                //@todo: log
+            }
         }
 
         return $localization_file_content;
@@ -72,6 +85,6 @@ class LocalizationCacheWarmer implements CacheWarmerInterface
 
     public function isOptional()
     {
-        return true;
+        return false;
     }
 }

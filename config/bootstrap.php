@@ -24,13 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-$container_builder = new \PrestaShop\PrestaShop\Core\ContainerBuilder;
+use Symfony\Component\Yaml\Yaml;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\ContainerBuilder;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
+
+$container_builder = new ContainerBuilder();
 $container = $container_builder->build();
-\PrestaShop\PrestaShop\Adapter\ServiceLocator::setServiceContainerInstance($container);
+ServiceLocator::setServiceContainerInstance($container);
+
+if (!file_exists(_PS_CACHE_DIR_)) {
+    @mkdir(_PS_CACHE_DIR_);
+    $warmer = new CacheWarmerAggregate([
+        new PrestaShopBundle\CacheWarmer\LocalizationCacheWarmer(_PS_VERSION_, 'en') //@replace hardcore Lang
+    ]);
+    $warmer->warmUp(_PS_CACHE_DIR_);
+}
 
 if (!file_exists(_PS_CACHE_DIR_. 'appParameters.php')) {
-    $yaml = new \Symfony\Component\Yaml\Yaml;
-    $config = $yaml->parse(file_get_contents(__DIR__. '/../app/config/parameters.yml'));
+    $config = Yaml::parse(file_get_contents(__DIR__. '/../app/config/parameters.yml'));
     file_put_contents(_PS_CACHE_DIR_ .'appParameters.php', '<?php return ' . var_export($config, true). ';');
 }
 
