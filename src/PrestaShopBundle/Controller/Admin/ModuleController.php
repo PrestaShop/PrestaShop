@@ -252,9 +252,7 @@ class ModuleController extends FrameworkBundleAdminController
             $products->{$subpart} = [];
         }
 
-        $installed_modules = [];
         foreach ($installed_products as $installed_product) {
-            $installed_modules[] = $installed_product->attributes->get('name');
             $warnings = $installed_product->attributes->get('warning');
             if (!empty($warnings)) {
                 $row = 'to_configure';
