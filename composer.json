@@ -36,6 +36,7 @@
     "sensio/distribution-bundle": "4.0.1",
     "sensio/framework-extra-bundle": "3.0.10",
     "sensio/generator-bundle": "~2.3",
+    "tecnickcom/tcpdf": "6.2.12",
     "composer/installers": "1.0.21",
     "icanboogie/cldr": "1.3.9",
     "curl/curl": "1.2.1",
