@@ -82,9 +82,15 @@ class ModuleRepositoryTest extends UnitTestCase
             ->method('isModuleMainClassValid')
             ->willReturn(true);
 
+        $this->setupSfKernel();
+        $this->sfRouter = $this->sfKernel->getContainer()->get('router');
+
+        $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
+            ->getMock();
+
         $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
             ['getCatalogModulesNames'],
-            ['en']
+            ['en', $this->sfRouter, $this->addonsDataProviderS]
         );
 
         $this->adminModuleDataProviderStub
@@ -97,7 +103,11 @@ class ModuleRepositoryTest extends UnitTestCase
             [
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
-                new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider('en')),
+                new ModuleDataUpdater(new AddonsDataProvider(), new AdminModuleDataProvider(
+                    'en',
+                    $this->sfRouter,
+                    $this->addonsDataProviderS
+                )),
                 new FakeLogger()
             ]
         );

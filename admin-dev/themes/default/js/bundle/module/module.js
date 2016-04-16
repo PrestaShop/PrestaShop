@@ -435,7 +435,9 @@ var AdminModuleController = function () {
                 }
 
                 $(_this.placeholderGlobalSelector).fadeOut(800, function(){
-                    $(_that.placeholderGlobalSelector).replaceWith(response.content);
+                    $.each(response.domElements, function(index, element){
+                        $(element.selector).append(element.content);
+                    });
                     $(requiredSelectorCombination).fadeIn(800);
                 });
             } else {

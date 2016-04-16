@@ -68,13 +68,6 @@ class PaymentOption
     private $action;
 
     /**
-     * The HTTP method to use when sending the request to $action,
-     * i.e. "GET" or "POST".
-     * @var string
-     */
-    private $method;
-
-    /**
      * An associative array of additional parameters to use when sending
      * the request to $action,
      * e.g. if  $action is "http://payment-provider.example.com/process",
@@ -195,17 +188,6 @@ class PaymentOption
         return $this;
     }
 
-    public function getMethod()
-    {
-        return $this->method;
-    }
-
-    public function setMethod($method)
-    {
-        $this->method = $method;
-        return $this;
-    }
-
     /**
      * Return inputs contained in this payment option
      * @return mixed
@@ -271,7 +253,6 @@ class PaymentOption
         return [
             'action' => $this->action,
             'form' => $this->form,
-            'method' => $this->method,
             'inputs' => $this->inputs,
             'logo' => $this->logo,
             'additionalInformation' => $this->additionalInformation,
@@ -318,8 +299,7 @@ class PaymentOption
                       ->setAction($option['action'])
                       ->setForm($option['form'])
                       ->setInputs($option['inputs'])
-                      ->setLogo($option['logo'])
-                      ->setMethod($option['method']);
+                      ->setLogo($option['logo']);
 
             $newOptions[] = $newOption;
         }

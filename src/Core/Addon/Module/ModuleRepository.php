@@ -162,14 +162,16 @@ class ModuleRepository implements ModuleRepositoryInterface
 
                 if ($module->database->get('installed') == 1
                     && $module->database->get('active') == 1
-                    && !$filter->hasStatus(AddonListFilterStatus::DISABLED)) {
+                    && !$filter->hasStatus(AddonListFilterStatus::DISABLED)
+                    && $filter->hasStatus(AddonListFilterStatus::ENABLED)) {
                     unset($modules[$key]);
                     continue;
                 }
 
                 if ($module->database->get('installed') == 1
                     && $module->database->get('active') == 0
-                    && !$filter->hasStatus(AddonListFilterStatus::ENABLED)) {
+                    && !$filter->hasStatus(AddonListFilterStatus::ENABLED)
+                    && $filter->hasStatus(AddonListFilterStatus::DISABLED)) {
                     unset($modules[$key]);
                     continue;
                 }

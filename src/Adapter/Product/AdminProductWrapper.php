@@ -680,10 +680,11 @@ class AdminProductWrapper
      * Generate preview URL
      *
      * @param object $product
+     * @param bool $preview
      *
      * @return string preview url
      */
-    public function getPreviewUrl($product)
+    public function getPreviewUrl($product, $preview=true)
     {
         $context = \ContextCore::getContext();
         $id_lang = \ConfigurationCore::get('PS_LANG_DEFAULT', null, null, $context->shop->id);
@@ -691,8 +692,6 @@ class AdminProductWrapper
         if (!\ShopUrlCore::getMainShopDomain()) {
             return false;
         }
-
-        $token = \ToolsCore::getAdminTokenLite('AdminProducts');
 
         $is_rewrite_active = (bool)\ConfigurationCore::get('PS_REWRITING_SETTINGS');
         $preview_url = $context->link->getProductLink(
@@ -706,13 +705,30 @@ class AdminProductWrapper
             $is_rewrite_active
         );
 
-        if (!$product->active) {
-            $admin_dir = dirname($_SERVER['PHP_SELF']);
-            $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-            $preview_url .= ((strpos($preview_url, '?') === false) ? '?' : '&').'adtoken='.$token.'&ad='.$admin_dir.'&id_employee='.(int)$context->employee->id;
+        if (!$product->active && $preview) {
+            $preview_url = $this->getPreviewUrlDeactivate($preview_url);
         }
 
         return $preview_url;
+    }
+
+    /**
+     * Generate preview URL deactivate
+     *
+     * @param string $preview_url
+     *
+     * @return string preview url deactivate
+     */
+    public function getPreviewUrlDeactivate($preview_url)
+    {
+        $context = \ContextCore::getContext();
+        $token = \ToolsCore::getAdminTokenLite('AdminProducts');
+
+        $admin_dir = dirname($_SERVER['PHP_SELF']);
+        $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
+        $preview_url_deactivate = $preview_url . ((strpos($preview_url, '?') === false) ? '?' : '&') . 'adtoken=' . $token . '&ad=' . $admin_dir . '&id_employee=' . (int)$context->employee->id;
+
+        return $preview_url_deactivate;
     }
 
     /**

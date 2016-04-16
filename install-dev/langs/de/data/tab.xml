@@ -4,7 +4,7 @@
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Adressen"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Administration" name="Verwaltung"/>
   <tab id="Advanced_Parameters" name="Erweiterte Einstellungen"/>
   <tab id="Attachments" name="Anhänge"/>
@@ -59,7 +59,7 @@
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Wartung"/>
   <tab id="Manufacturers" name="Hersteller"/>
-  <tab id="Manufacturers_and_suppliers" name="Manufacturers and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menüpunkte"/>
   <tab id="Merchandise_Returns" name="Warenrücksendungen"/>
@@ -123,4 +123,5 @@
   <tab id="Warehouses" name="Lagerort"/>
   <tab id="Webservice" name="Webdienste"/>
   <tab id="Zones" name="Zonen"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

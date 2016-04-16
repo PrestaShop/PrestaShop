@@ -1212,12 +1212,18 @@ var form = (function() {
 			});
 
 			/** on active field change, send form */
-      $('#form_step1_active', elem).on('change', function() {
-        var active = $(this).prop('checked');
-        $('.for-switch.online-title').toggle(active);
-        $('.for-switch.offline-title').toggle(!active);
-        send();
-      });
+			$('#form_step1_active', elem).on('change', function() {
+				var active = $(this).prop('checked');
+				$('.for-switch.online-title').toggle(active);
+				$('.for-switch.offline-title').toggle(!active);
+				// update link preview
+				var urlActive = $('#product_form_preview_btn').attr('data-redirect');
+				var urlDeactive = $('#product_form_preview_btn').attr('data-url_deactive');
+				$('#product_form_preview_btn').attr('data-redirect', urlDeactive);
+				$('#product_form_preview_btn').attr('data-url_deactive', urlActive);
+				// update product
+				send();
+		    });
 
 			/** on delete product */
 			$('.product-footer .delete', elem).click(function(e){

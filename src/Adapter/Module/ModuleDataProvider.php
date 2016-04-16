@@ -27,9 +27,21 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
+use Psr\Log\LoggerInterface;
 
 class ModuleDataProvider
 {
+    /**
+     * Logger
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function findByName($name)
     {
         $result = \Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
@@ -91,7 +103,8 @@ class ModuleDataProvider
     public function isModuleMainClassValid($name)
     {
         $file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
-        if (!file_exists($file_path)) {
+        // Check if file exists (slightly faster than file_exists)
+        if (!(int)@filemtime($file_path)) {
             return false;
         }
 
@@ -112,7 +125,21 @@ class ModuleDataProvider
         // But namespace and use statements need to be removed
         $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
         $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
-        return (eval('if (false){	'.$content.' }') !== false);
+        if (eval('if (false){	'.$content.' }') === false) {
+            $this->logger->critical(sprintf('Parse error detected in main class of module %s!', $name));
+            return false;
+        }
+
+        // Even if we do not detect any parse error in the file, we may have issues
+        // when trying to load the file. (i.e with additionnal require_once)
+        try {
+            require_once $file_path;
+        } catch (\Exception $e) {
+            $this->logger->error(sprintf('Error while loading file of module %s. %s', $name, $e->getMessage()));
+            return false;
+        }
+
+        return true;
     }
 
     /**

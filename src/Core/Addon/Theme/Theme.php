@@ -35,7 +35,7 @@ class Theme implements AddonInterface
     public function __construct(array $attributes)
     {
         $attributes['directory'] = rtrim($attributes['directory'], '/') . '/';
-        $attributes['preview'] = '/themes/'.$attributes['name'].'/preview.png';
+        $attributes['preview'] = $attributes['physical_uri'].'/themes/'.$attributes['name'].'/preview.png';
 
         $this->attributes = new ArrayFinder($attributes);
     }

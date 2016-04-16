@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
@@ -333,7 +334,7 @@ abstract class ModuleCore
         }
 
         // Check if module is installed
-        $result = (new ModuleDataProvider())->isInstalled($this->name);
+        $result = (new ModuleDataProvider(new LegacyLogger()))->isInstalled($this->name);
         if ($result) {
             $this->_errors[] = Tools::displayError('This module has already been installed.');
             return false;

@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Адреси"/>
   <tab id="Administration" name="Администрация"/>
-  <tab id="AdminModulesSf" name="Module Catalog" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Advanced_Parameters" name="За напреднали"/>
   <tab id="Attachments" name="Прикачени"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -59,7 +59,7 @@
   <tab id="Logs" name="Логове"/>
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Поддръжка"/>
-  <tab id="Manufacturers_and_suppliers" name="Manufacturers and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
   <tab id="Manufacturers" name="Производители"/>
   <tab id="Marketing" name="Маркетинг"/>
   <tab id="Menus" name="Менюта"/>
@@ -124,4 +124,5 @@
   <tab id="Warehouses" name="Складове"/>
   <tab id="Webservice" name="Уеб-обслужване"/>
   <tab id="Zones" name="Зони"/>
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

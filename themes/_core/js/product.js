@@ -12,8 +12,11 @@ $(document).ready(function () {
       $('.product-variants').replaceWith(resp.product_variants);
       $('.images-container').replaceWith(resp.product_cover_thumbnails);
       $('#product-details').replaceWith(resp.product_details);
+      $('.product-add-to-cart').replaceWith(resp.product_add_to_cart);
 
       window.history.pushState({id_product_attribute: resp.id_product_attribute}, undefined, resp.product_url);
+
+      prestashop.emit('product dom updated');
     });
   });
 });

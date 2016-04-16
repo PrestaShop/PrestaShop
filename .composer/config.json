@@ -5,6 +5,9 @@
     },
     "github-oauth":{
       "github.com":"0436deaf8a25dbb100780570d4da244d5207bab3"
+    },
+    "prestissimo": {
+      "maxConnections": 12
     }
   }
 }

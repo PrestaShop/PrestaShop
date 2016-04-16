@@ -39,49 +39,38 @@ use Symfony\Component\Routing\Router;
  * This class will provide data from DB / ORM about Modules for the Admin interface.
  * This is an Adapter that works with the Legacy code and persistence behaviors.
  *
- * FIXME: rewrite persistence of filter parameters -> into DB
  */
 class AdminModuleDataProvider implements ModuleInterface
 {
     const _CACHEFILE_MODULES_ = '_catalog_modules.json';
-
-    /* Cache for One Day */
-    const _DAY_IN_SECONDS_ = 86400;
+    const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
     private $languageISO;
-
-    /**
-     * @var Router
-     */
     private $router;
-
-    private $cache_dir;
-
-    protected $catalog_modules;
+    private $addonsDataProvider;
+    private $cache_dir = _PS_CACHE_DIR_;
+    protected $catalog_modules = [];
     protected $catalog_modules_names;
 
-    public function __construct($languageISO, Router $router = null)
+    public function __construct($languageISO, Router $router = null, AddonsDataProvider $addonsDataProvider)
     {
-        $this->catalog_modules  = [];
-        $this->cache_dir        = _PS_CACHE_DIR_;
-
         $this->languageISO = $languageISO;
         $this->router = $router;
+        $this->addonsDataProvider = $addonsDataProvider;
     }
 
     public function clearCatalogCache()
     {
         $this->clearCache([$this->languageISO.self::_CACHEFILE_MODULES_]);
-        $this->catalog_modules         = [];
+        $this->catalog_modules = [];
     }
 
     public function getAllModules()
     {
-        $addons_provider = new AddonsDataProvider();
-
         return \Module::getModulesOnDisk(true,
-                $addons_provider->isAddonsAuthenticated(),
-                (int)\Context::getContext()->employee->id);
+            $this->addonsDataProvider->isAddonsAuthenticated(),
+            (int)\Context::getContext()->employee->id
+        );
     }
 
     public function getCatalogModules(array $filters = [])
@@ -206,10 +195,10 @@ class AdminModuleDataProvider implements ModuleInterface
         return $categories;
     }
 
-    protected function applyModuleFilters(array $products, array $filters)
+    protected function applyModuleFilters(array $modules, array $filters)
     {
         if (! count($filters)) {
-            return $products;
+            return $modules;
         }
 
         // We get our module IDs to keep
@@ -228,7 +217,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
                         // Instead of looping on the whole module list, we use $module_ids which can already be reduced
                         // thanks to the previous array_intersect(...)
-                        foreach ($products as $key => $module) {
+                        foreach ($modules as $key => $module) {
                             if (strpos($module->displayName, $keyword) !== false
                                 || strpos($module->name, $keyword) !== false
                                 || strpos($module->description, $keyword) !== false) {
@@ -246,10 +235,10 @@ class AdminModuleDataProvider implements ModuleInterface
                     continue 2;
             }
 
-            $products = array_intersect_key($products, array_flip($search_result));
+            $modules = array_intersect_key($modules, array_flip($search_result));
         }
 
-        return $products;
+        return $modules;
     }
 
     protected function clearCache(array $files)
@@ -267,7 +256,6 @@ class AdminModuleDataProvider implements ModuleInterface
         $this->catalog_modules    = $this->getModuleCache($this->languageISO.self::_CACHEFILE_MODULES_);
 
         if (!$this->catalog_modules) {
-            $addons_provider = new AddonsDataProvider();
             $params = ['format' => 'json'];
             $requests = [
                 AddonListFilterOrigin::ADDONS_MUST_HAVE => 'must-have',
@@ -275,7 +263,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 AddonListFilterOrigin::ADDONS_NATIVE => 'native',
                 AddonListFilterOrigin::ADDONS_NATIVE_ALL => 'native_all'
             ];
-            if ($addons_provider->isAddonsAuthenticated()) {
+            if ($this->addonsDataProvider->isAddonsAuthenticated()) {
                 $requests[AddonListFilterOrigin::ADDONS_CUSTOMER] = 'customer';
             }
 
@@ -283,7 +271,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 $jsons = [];
                 // We execute each addons request
                 foreach ($requests as $action_filter_value => $action) {
-                    if (!$addons_provider->isAddonsUp()) {
+                    if (!$this->addonsDataProvider->isAddonsUp()) {
                         continue;
                     }
                     // We add the request name in each product returned by Addons,
@@ -294,7 +282,7 @@ class AdminModuleDataProvider implements ModuleInterface
                             $elem->origin_filter_value = $action_filter_value;
                         }
                         return $array;
-                    }, (array) $addons_provider->request($action, $params)));
+                    }, (array) $this->addonsDataProvider->request($action, $params)));
                 }
 
                 $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
@@ -370,7 +358,7 @@ class AdminModuleDataProvider implements ModuleInterface
         return ($this->catalog_modules);
     }
 
-    private function getModuleCache($file, $check_freshness = true)
+    private function getModuleCache($file, $checkFreshness = true)
     {
         $cacheFile = $this->cache_dir.$file;
         if (! file_exists($cacheFile)) {
@@ -378,7 +366,7 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         try {
-            if ($check_freshness && (filemtime($cacheFile) + self::_DAY_IN_SECONDS_) <= time()) {
+            if ($checkFreshness && (filemtime($cacheFile) + self::_DAY_IN_SECONDS_) <= time()) {
                 return false;
             }
 
@@ -389,12 +377,12 @@ class AdminModuleDataProvider implements ModuleInterface
                 return false;
             }
 
-            $labeled_cache = [];
+            $labeledCache = [];
             // We need to loop in the array to replace the current key, which is an integer, with the module name
             foreach (json_decode($cache) as $element) {
-                $labeled_cache[$element->name] = $element;
+                $labeledCache[$element->name] = $element;
             }
-            return $labeled_cache;
+            return $labeledCache;
         } catch (\Exception $e) {
             throw new \Exception('Cannot read from the cache file '. $file);
         }

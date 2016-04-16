@@ -114,6 +114,7 @@ services:
 
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
+        arguments: ["@prestashop.adapter.legacy.logger"]
 
     # Presenters
     prestashop.adapter.presenter.module:
