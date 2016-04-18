@@ -25,7 +25,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Helper;
+namespace PrestaShop\PrestaShop\Tests\TestCase;
 
 use Exception;
 
@@ -39,7 +39,7 @@ class DatabaseDump
     private $dumpFile;
 
     /**
-     * Constructor extracts database connection info from PrestaShop's confifugation,
+     * Constructor extracts database connection info from PrestaShop's configuration,
      * but we use mysqldump and mysql for dump / restore.
      */
     private function __construct()

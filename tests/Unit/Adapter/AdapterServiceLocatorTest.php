@@ -24,35 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Integration\Adapter;
+namespace PrestaShop\PrestaShop\tests\Unit\Adapter;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-use PrestaShop\PrestaShop\Adapter\Database;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PHPUnit_Framework_TestCase;
 
-class Adapter_Database_Test extends IntegrationTestCase
+class AdapterServiceLocatorTest extends PHPUnit_Framework_TestCase
 {
-    public function setup()
+    public function test_get_delegates_to_service_container()
     {
-        $this->db = new Database;
-    }
-
-    public function test_values_are_escaped_dataProvider()
-    {
-        return array(
-            array( 'hello'       , 'hello'    ),
-            array( '\\\'inject'  , '\'inject' ),
-            array( '\\"inject'   , '"inject'  ),
-            array( 42            , 42         ),
-            array( 4.2           , 4.2        ),
-            array( '4\\\'200'    , '4\'200'   ),
+        ServiceLocator::setServiceContainerInstance(
+            new Container()
         );
-    }
 
-    /**
-     * @dataProvider test_values_are_escaped_dataProvider
-     */
-    public function test_values_are_escaped($expectedSanitizedValue, $unsafeInput)
-    {
-        $this->assertEquals($expectedSanitizedValue, $this->db->escape($unsafeInput));
+        $this->assertInstanceOf(
+            '\\PrestaShop\\PrestaShop\\Core\\Foundation\\IoC\\Container',
+            ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\IoC\\Container')
+        );
     }
 }

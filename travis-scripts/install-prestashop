@@ -1,1 +1,3 @@
+#!/bin/bash
+
 php install-dev/index_cli.php --language=en --country=fr --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop --db_create=0 --name=prestashop.unit.test --password=123456789

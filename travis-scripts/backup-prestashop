@@ -1,2 +1,4 @@
+#!/bin/bash
+
 cp -R /var/www/prestashop.unit.test $TRAVIS_BUILD_DIR/fresh_install
 mysqldump -uroot prestashop > $TRAVIS_BUILD_DIR/db.sql

@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\tests\Fake;
+namespace PrestaShop\PrestaShop\Tests\TestCase;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Exception;

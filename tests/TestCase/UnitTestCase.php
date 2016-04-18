@@ -9,10 +9,10 @@ use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
-use PrestaShop\PrestaShop\Tests\Helper\Mocks\FakeEntityMapper;
 use Phake;
 use Symfony\Component\HttpKernel\Kernel;
+use PrestaShop\PrestaShop\Tests\TestCase\FakeEntityMapper;
+use PrestaShop\PrestaShop\Tests\TestCase\FakeConfiguration;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {

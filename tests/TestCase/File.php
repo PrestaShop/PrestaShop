@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Helper;
+namespace PrestaShop\PrestaShop\Tests\TestCase;
 
 class File
 {
