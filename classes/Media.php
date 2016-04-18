@@ -500,7 +500,7 @@ class MediaCore
         $compressed_css_files_infos = array();
         $protocol_link = Tools::getCurrentUrlProtocolPrefix();
         //if cache_path not specified, set curent theme cache folder
-        $cache_path = $cache_path ? $cache_path : _PS_THEME_DIR_.'cache'.DIRECTORY_SEPARATOR;
+        $cache_path = $cache_path ? $cache_path : _PS_THEME_DIR_.'cache/';
         $css_split_need_refresh = false;
 
         // group css files by media
@@ -594,7 +594,7 @@ class MediaCore
         // rebuild the original css_files array
         $css_files = array();
         foreach ($compressed_css_files as $media => $filename) {
-            $url = str_replace(_PS_ROOT_DIR_, '', $filename);
+            $url = str_replace(_PS_THEME_DIR_, _THEMES_DIR_._THEME_NAME_.'/', $filename);
             $css_files[$protocol_link.Tools::getMediaServer($url).$url] = $media;
         }
 
@@ -604,7 +604,7 @@ class MediaCore
         if (!preg_match('/(?i)msie [1-9]/', $_SERVER['HTTP_USER_AGENT'])) {
             return $compiled_css;
         }
-		$splitted_css = self::ieCssSplitter($compiled_css, $cache_path.'ie9', $css_split_need_refresh);
+        $splitted_css = self::ieCssSplitter($compiled_css, $cache_path.'ie9', $css_split_need_refresh);
 
         return array_merge($splitted_css, $compiled_css);
     }
