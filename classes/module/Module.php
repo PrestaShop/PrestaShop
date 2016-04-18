@@ -2172,7 +2172,7 @@ abstract class ModuleCore
     public function display($file, $template, $cache_id = null, $compile_id = null)
     {
         if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null) {
-            return Tools::displayError('No template found for module').' '.basename($file, '.php');
+            return Tools::displayError('No template found for module').' '.basename($file, '.php').(_PS_MODE_DEV_ ? ' ('.$template.')' : '');
         } else {
             $this->smarty->assign(array(
                 'module_dir' =>    __PS_BASE_URI__.'modules/'.basename($file, '.php').'/',
