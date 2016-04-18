@@ -74,7 +74,7 @@ var productCategoriesTags = (function () {
         event.preventDefault();
         var id = $(this).data('id');
         that.removeTag(id);
-        categoriesForm.find('.category.input[value="' + id + '"]').prop('checked', false);
+        categoriesForm.find('input[value="' + id + '"].category').attr('checked', false);
         tagsContainer.focus();
       });
 
