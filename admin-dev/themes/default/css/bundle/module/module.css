@@ -204,12 +204,20 @@ img.module-logo-thumb-list {
 }
 .module-quick-description-list {
     line-height: 50px;
-    max-width: 35%;
+    width: 50%;
     float: left;
     height: 50px;
+}
+.module-quick-description-list > .module-quick-description-text {
+    max-width: 80%;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    float: left;
+}
+.module-quick-description-list > .module-read-more-list {
+    max-width: 29%;
+    float: left;
 }
 .module-version-author-list {
     display: inline-block;
@@ -233,6 +241,19 @@ img.module-logo-thumb-list {
     display: block;
     margin-left: 15px !important;
     margin-top: 7px;
+}
+.module-item-list .module-star-ranking-grid-0,
+.module-item-list .module-star-ranking-grid-05,
+.module-item-list .module-star-ranking-grid-1,
+.module-item-list .module-star-ranking-grid-15,
+.module-item-list .module-star-ranking-grid-2,
+.module-item-list .module-star-ranking-grid-25,
+.module-item-list .module-star-ranking-grid-3,
+.module-item-list .module-star-ranking-grid-35,
+.module-item-list .module-star-ranking-grid-4,
+.module-item-list .module-star-ranking-grid-45,
+.module-item-list .module-star-ranking-grid-5 {
+    display:none;
 }
 
 /**

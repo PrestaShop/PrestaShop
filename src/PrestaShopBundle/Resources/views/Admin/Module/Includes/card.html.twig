@@ -2,7 +2,7 @@
 {% set isModuleActive = module.database.active|default('0') %}
 
 <div class="module-item-{{display_type}} {{col_lg}} {% if origin == 'manage' and isModuleActive == '0' %}module-item-{{display_type}}-isNotActive{% endif %}" data-id="{{ module.attributes.id }}" data-name="{{ module.attributes.displayName }}"
-data-scoring="{{module.attributes.scoring}}" data-logo="{{ module.attributes.img }}" data-author="{{ module.attributes.author }}"
+data-scoring="{{module.attributes.avgRate}}" data-logo="{{ module.attributes.img }}" data-author="{{ module.attributes.author }}"
 data-version="{{ module.attributes.version }}" data-description="{{ module.attributes.description }}" data-tech-name="{{module.attributes.name }}"
 data-categories="{{ module.attributes.refs|join('|') }}" data-type="{{module.attributes.productType }}" data-price="{{module.attributes.price.raw}}" data-active="{{isModuleActive}}">
      <div class="module-item-wrapper-{{display_type}}">
@@ -27,18 +27,24 @@ data-categories="{{ module.attributes.refs|join('|') }}" data-type="{{module.att
         </div>
         <div class="module-quick-description-{{display_type}} small no-padding">
             {% block addon_description %}
-                {{ module.attributes.description|raw }}
-                {% if module.attributes.description|length < module.attributes.fullDescription|length %}
-                    ...
-                {% endif %}
+                <div class="module-quick-description-text">
+                    {{ module.attributes.description|raw }}
+                    {% if module.attributes.description|length < module.attributes.fullDescription|length %}
+                        ...
+                    {% endif %}
+                </div>
+                <div class="module-read-more-{{display_type}} small no-padding">
+                    <a class="module-read-more-{{display_type}}-btn url" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">Read More</a>
+                </div>
             {% endblock %}
         </div>
-        <div class="module-read-more-{{display_type}} small">
-            <a class="module-read-more-{{display_type}}-btn url" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">Read More</a>
-        </div>
 
-
-        <div class="module-quick-action-{{display_type}} clearfix">
+        <div class="module-container module-quick-action-{{display_type}} clearfix">
+            {% if module.attributes.nbRates > 0 %}
+                <div class="module-star-ranking-grid-{{ module.attributes.starsRate}}">
+                ( {{ module.attributes.nbRates }} )
+            </div>
+            {% endif %}
             {% if requireBulkActions is defined and requireBulkActions == true %}
                 <div class="pull-right">
                     <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" class="module-checkbox-bulk-{{display_type}}" />

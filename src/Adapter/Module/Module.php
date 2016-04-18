@@ -93,7 +93,8 @@ class Module implements ModuleInterface
         ),
         // From the marketplace
         'url' => null,
-        'scoring' => 0,
+        'avgRate' => 0,
+        'nbRates' => 0,
         'fullDescription' => '',
     );
 
