@@ -224,7 +224,7 @@ var nestedCategories = (function() {
          * that's why we check category first instead of warn user.
          */
         var category = nestedCategoriesForm.find('input[value="'+categoryId+'"].category');
-        if (!category.is('checked')) {
+        if (category.is(':checked') === false) {
           category.trigger('click');
         }
         defaultCategory.check(categoryId);

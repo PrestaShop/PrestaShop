@@ -48,7 +48,7 @@ var productCategoriesTags = (function () {
     'manageTagsOnInput': function () {
       var categoriesForm = $('#form_step1_categories');
       var that = this;
-      categoriesForm.on('click', 'input[type=checkbox]', function () {
+      categoriesForm.on('click', 'input[type=checkbox]', function (event) {
         var input = $(this);
         if (input.prop('checked') === false) {
           that.removeTag($(this).val());
@@ -146,7 +146,7 @@ var productCategoriesTags = (function () {
             'breadcrumb': label
           });
           var categoriesForm = $('#form_step1_categories');
-          categoriesForm.find('input[value="' + categoryId + '"]').attr('checked', 'checked');
+          categoriesForm.find('input[value="' + categoryId + '"].category').attr('checked', 'checked');
           $(this).val('');
         }
       }).data('ui-autocomplete')._renderItem = function(ul, item) {
