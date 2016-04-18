@@ -78,13 +78,13 @@
 		<hr class="top-menu-separator">
 
 		<div class="module-short-list">
-			<span class="module-search-result-wording">{{[]|length}} theme modules</span>
+			<span class="module-search-result-wording">{{modules.theme_bundle|length}} theme modules</span>
                            <span class="help-box" data-toggle="popover"
                                 data-title="{{ trans("Theme modules", {}, 'AdminModules') }}"
                                 data-content="{{ trans("Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme.", {}, 'AdminModules') }}">
                            </span>
 		</div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : [], 'display_type' : 'list', 'origin' : 'manage'  } %}
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.theme_bundle, 'display_type' : 'list', 'origin' : 'manage'  } %}
         </div>
     </div>
 {% endblock %}
