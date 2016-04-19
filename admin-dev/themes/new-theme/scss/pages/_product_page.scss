@@ -73,10 +73,17 @@
     .select2 {
       margin-top: rem(8px);
     }
-    #form_step1_name_1{
-      &::after{
-        content:"\&#xE254;";
-      }
+    .edit {
+      background-size: 4%;
+    }
+    .help-box {
+      margin-left: rem(10px);
+      margin-top: rem(10px);
+    }
+    .form_step1_type_product,
+    .form_switch_language {
+      @include display(flex);
+      @include align-items(center);
     }
   }
   .big-input {
@@ -118,9 +125,12 @@
     .delete {
       > .material-icons {
         font-size: rem(25px);
-        opacity: .8;
+        opacity: 0.8;
       }
     }
+  }
+  .help-box {
+    cursor: pointer;
   }
   .form-contenttab {
     padding: {
@@ -354,4 +364,7 @@
       }
     }
   }
+}
+.popover-title {
+  display: none;
 }
