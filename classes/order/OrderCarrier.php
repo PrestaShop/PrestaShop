@@ -47,7 +47,7 @@ class OrderCarrierCore extends ObjectModel
     /** @var float */
     public $shipping_cost_tax_incl;
 
-    /** @var int */
+    /** @var string */
     public $tracking_number;
 
     /** @var string Object creation date */
@@ -72,9 +72,84 @@ class OrderCarrierCore extends ObjectModel
     );
 
     protected $webserviceParameters = array(
+        'objectMethods' => array('update' => 'updateWs'),
         'fields' => array(
             'id_order' => array('xlink_resource' => 'orders'),
             'id_carrier' => array('xlink_resource' => 'carriers'),
         ),
     );
+
+    /**
+     * @param Order $order Required
+     * @return bool
+     */
+    public function sendInTransitEmail($order)
+    {
+        $customer = new Customer((int)$order->id_customer);
+        $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
+        if (!Validate::isLoadedObject($customer)) {
+            throw new PrestaShopException('Can\'t load Customer object');
+        }
+        if (!Validate::isLoadedObject($carrier)) {
+            throw new PrestaShopException('Can\'t load Carrier object');
+        }
+        $orderLanguage = new Language((int) $order->id_lang);
+        $templateVars = array(
+            '{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
+            '{firstname}' => $customer->firstname,
+            '{lastname}' => $customer->lastname,
+            '{id_order}' => $order->id,
+            '{shipping_number}' => $this->tracking_number,
+            '{order_name}' => $order->getUniqReference()
+        );
+
+        if (@Mail::Send(
+            (int)$order->id_lang,
+            'in_transit',
+            $this->trans(
+                'Package in transit',
+                array(),
+                'Emails.Subject',
+                $orderLanguage->locale
+            ),
+            $templateVars,
+            $customer->email,
+            $customer->firstname . ' ' . $customer->lastname,
+            null,
+            null,
+            null,
+            null,
+            _PS_MAIL_DIR_,
+            true,
+            (int)$order->id_shop
+        )) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function updateWs()
+    {
+        if (!parent::update()) {
+            return false;
+        }
+
+        $sendemail = (bool)Tools::getValue('sendemail', false);
+
+        if ($sendemail) {
+            $order = new Order((int)$this->id_order);
+            if (!Validate::isLoadedObject($order)) {
+                throw new PrestaShopException('Can\'t load Order object');
+            }
+
+            if (!$this->sendInTransitEmail($order))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }
