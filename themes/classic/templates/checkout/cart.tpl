@@ -38,9 +38,12 @@
         {block name='cart_summary'}
           <div class="card cart-summary">
 
-            {block name='cart_summary_line'}
-              {include file='checkout/_partials/cart-summary-items-subtotal.tpl' cart=$cart}
-            {/block}
+            {block name='cart_summary_title'}
+          <div class="card cart-summary">
+               <div class="cart-summary-title" align="center">
+          <h1 class="h1">{l s='Shopping Summary'}</h1>
+          </div>
+           {/block}
 
             {block name='cart_voucher'}
               {include file='checkout/_partials/cart-voucher.tpl'}
