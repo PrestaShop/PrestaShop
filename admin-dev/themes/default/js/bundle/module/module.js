@@ -1049,7 +1049,7 @@ var AdminModuleController = function () {
         this.pstaggerInput = $(this.searchBarSelector).pstagger({
             onTagsChanged: _this.updateTagList,
             onResetTags: _this.resetSearch,
-            inputPlaceholder: 'Add tag ...',
+            inputPlaceholder: 'Search modules: keyword, name, author...',
             closingCross: true,
             context: _this,
             clearAllBtn: true,
