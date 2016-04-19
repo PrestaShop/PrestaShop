@@ -5208,6 +5208,7 @@ body#checkout {
       margin-left: 14.375em; }
   body#checkout .products,
   body#checkout .shipping,
+  body#checkout .discount,
   body#checkout .cart-summary-totals {
     margin-top: 1.25em; }
   body#checkout .cart-summary-totals .label,
@@ -5221,6 +5222,7 @@ body#checkout {
       font-weight: normal;
       bottom: 0;
       font-size: 0.9375em; }
+  body#checkout .tax .label,	 
   body#checkout .shipping .label,
   body#checkout .discount .label,
   body#checkout .products .label {
@@ -6495,6 +6497,9 @@ li.product-label {
     padding-right: 0.9375rem; }
 
 /** CART BODY **/
+.cart-summary-title{
+  margin-bottom:20px; }
+
 .cart-grid-body > a.label {
   color: #414141;
   font-size: 1em; }
