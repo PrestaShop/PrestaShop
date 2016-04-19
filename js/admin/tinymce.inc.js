@@ -30,7 +30,7 @@ function tinySetup(config)
 
 	default_config = {
 		selector: ".rte" ,
-		plugins : "colorpicker link image paste pagebreak table contextmenu filemanager table media autoresize textcolor anchor",
+		plugins : "colorpicker link image filemanager table media",
 		browser_spellcheck : true,
 		toolbar1 : "colorpicker,bold,italic,underline,strikethrough,blockquote,link,alignleft,aligncenter,alignright,alignfull,bullist,numlist,image",
 		toolbar2: "",
