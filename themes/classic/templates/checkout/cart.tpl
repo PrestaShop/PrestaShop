@@ -37,7 +37,6 @@
 
         {block name='cart_summary'}
           <div class="card cart-summary">
-
             {block name='cart_summary'}
           <div class="card cart-summary">
                <div class="cart-summary-title" align="center">
