@@ -1,0 +1,34 @@
+/* PrestaShop TinyMCE Style Override */
+
+.mce-widget button i {
+    font-size: 20px;
+    color: #95a7ad;
+}
+
+.mce-widget button:hover {
+    background-color: transparent !important;
+}
+
+.mce-widget button i:hover {
+    color: #24abce !important;
+}
+
+.mce-widget {
+    border: none !important;
+}
+
+.mce-panel {
+    border: none !important;
+}
+
+.mce-widget.mce-active button i {
+    color: #24abce !important;
+}
+
+.mce-btn.mce-active, .mce-btn.mce-active:hover, .mce-btn:not(.mce-disabled):active {
+    background-color: #eee !important;
+}
+
+.mce-btn:focus, .mce-btn:hover {
+    background-color: transparent !important;
+}
