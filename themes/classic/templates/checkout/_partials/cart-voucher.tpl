@@ -3,7 +3,13 @@
     <div class="cart-voucher">
       <ul class="promo-name">
         {foreach from=$cart.vouchers.added item=voucher}
-          <li>{$voucher.name} <a class="pull-xs-right" href="{$voucher.delete_url}" data-link-action="remove-voucher">{l s='Cancel'}</a></li>
+          <li>
+            {$voucher.name}
+            <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">{l s='delete'}</i></a>
+            <div class="pull-xs-right">
+              {$voucher.reduction_formated}
+            </div>
+          </li>
         {/foreach}
       </ul>
       <a class="collapse-button" data-toggle="collapse" href="#promo-code" aria-expanded="false" aria-controls="promo-code">
