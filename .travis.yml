@@ -16,6 +16,7 @@ before_install:
   - sudo apt-get update
 
 before_script:
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then sudo cp tests/php7-pool.conf ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/; fi
   - sudo apt-get install apache2 libapache2-mod-fastcgi
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias
