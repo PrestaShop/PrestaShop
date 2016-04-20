@@ -78,3 +78,15 @@ $color-icons: #6c868e;
   width: 100%;
   height: 100%;
 }
+
+.bordered {
+  >.panel {
+    border: 0;
+  }
+
+  >.nav-item > .nav-link {
+    &.active {
+      border-bottom: 1px solid #FFFFFF;
+    }
+  }
+}
