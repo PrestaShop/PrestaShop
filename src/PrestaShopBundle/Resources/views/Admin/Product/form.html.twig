@@ -21,6 +21,7 @@
           </div>
           <div class="col-md-2 form_step1_type_product">
             {{ form_widget(form.step1.type_product) }}
+            <span class="help-box" data-toggle="popover" data-content="{{ trans('Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, mail-sent product?', {}, 'AdminProducts') }}"></span>
           </div>
           <div class="col-md-1 form_switch_language {{ languages|length == 1 ? 'hide' : '' }}">
             <select id="form_switch_language" class="form-control" data-toggle="select2">
@@ -28,6 +29,7 @@
                 <option value="{{ language.iso_code }}" {% if default_language_iso == language.iso_code %}selected="selected"{% endif %}>{{ language.iso_code }}</option>
               {% endfor %}
             </select>
+            <span class="help-box" data-toggle="popover" data-content="{{ trans('Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, mail-sent product?', {}, 'AdminProducts') }}"></span>
           </div>
           <div class="col-lg-2 text-md-right">
             <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ trans('Sales', [], 'AdminTab') }}"
