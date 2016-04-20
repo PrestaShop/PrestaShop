@@ -30,7 +30,6 @@ $(document).ready(function() {
   relatedProduct.init();
   manufacturer.init();
   displayFormCategory.init();
-  defaultCategory.init();
   nestedCategories.init();
   formCategory.init();
   stock.init();
@@ -52,7 +51,6 @@ $(document).ready(function() {
   recommendedModules.init();
   BOEvent.emitEvent("Product Categories Management started", "CustomEvent");
   BOEvent.emitEvent("Product Default category Management started", "CustomEvent");
-
 
   /** Type product fields display management */
   $('#form_step1_type_product').change(function(){
@@ -319,14 +317,20 @@ var formCategory = (function() {
 
   return {
     'init': function() {
+      var that = this;
       /** remove all categories from selector, except pre defined */
       elem.find('button.save').click(function(){
         send();
+        that.hideBlock();
       });
       elem.find('button[type="reset"]').click(function(){
-        $('#add-category-button').css('display', 'block');
-        $('#add-categories-content').addClass('hide');
+        that.hideBlock();
       });
+    },
+    'hideBlock': function() {
+      $('#form_step1_new_category_name').val('');
+      $('#add-category-button').css('display', 'block');
+      $('#add-categories-content').addClass('hide');
     }
   };
 })();

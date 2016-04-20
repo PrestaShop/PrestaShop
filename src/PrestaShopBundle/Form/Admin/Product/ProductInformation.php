@@ -225,7 +225,6 @@ class ProductInformation extends CommonAbstractType
             'mapped' => false,
             'constraints' => [],
             'label' => $this->translator->trans('Add a new category', [], 'AdminProducts'),
-            'attr' => ['data-action' => $this->router->generate('admin_category_simple_add_form')]
         ))
         ->add('ignore', null, [
             'mapped' => false
