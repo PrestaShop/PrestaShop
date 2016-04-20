@@ -307,6 +307,10 @@ abstract class ProductPresenterAbstract
 
         $presentedProduct['show_availability'] = $show_availability;
 
+        if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
+            $product['available_date'] = null;
+        }
+
         if ($show_availability) {
             if ($product['quantity'] > 0) {
                 $presentedProduct['availability_message'] = $product['available_now'];
