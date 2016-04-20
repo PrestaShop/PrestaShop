@@ -30,6 +30,7 @@ $(document).ready(function() {
   relatedProduct.init();
   manufacturer.init();
   displayFormCategory.init();
+  defaultCategory.init();
   nestedCategories.init();
   formCategory.init();
   stock.init();
@@ -51,6 +52,7 @@ $(document).ready(function() {
   recommendedModules.init();
   BOEvent.emitEvent("Product Categories Management started", "CustomEvent");
   BOEvent.emitEvent("Product Default category Management started", "CustomEvent");
+
 
   /** Type product fields display management */
   $('#form_step1_type_product').change(function(){
@@ -274,7 +276,18 @@ var formCategory = (function() {
       },
       success: function(response){
         //inject new category into category tree
-        var html = '<li><div class="checkbox"><label><input type="checkbox" name="form[step1][categories][tree][]" value="'+response.category.id+'">'+response.category.name[1]+'</label></div></li>';
+        var html = '<li>' +
+          '<div class="checkbox">' +
+            '<label>' +
+              '<input type="checkbox" name="form[step1][categories][tree][]" checked value="'+response.category.id+'">' +
+                response.category.name[1] +
+            '</label>' +
+            '<div class="radio pull-right">' +
+              '<input type="radio" value="'+response.category.id+'" name="ignore" class="default-category">' +
+            '</div>' +
+          '</div>' +
+          '</li>';
+
         var parentElement = $('#form_step1_categories input[value='+response.category.id_parent+']').parent().parent();
         if(parentElement.next('ul').length === 0){
           html = '<ul>' + html + '</ul>';
@@ -307,8 +320,12 @@ var formCategory = (function() {
   return {
     'init': function() {
       /** remove all categories from selector, except pre defined */
-      elem.find('button.submit').click(function(){
+      elem.find('button.save').click(function(){
         send();
+      });
+      elem.find('button[type="reset"]').click(function(){
+        $('#add-category-button').css('display', 'block');
+        $('#add-categories-content').addClass('hide');
       });
     }
   };

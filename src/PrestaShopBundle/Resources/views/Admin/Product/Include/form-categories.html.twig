@@ -70,11 +70,12 @@
       </fieldset>
 
       <fieldset class="form-group text-xs-right">
-        <button type="button" id="form_step1_new_category_save" class="btn btn-default btn-sm submit">{{ trans('Save', {}, 'AdminProducts') }}</button>
+        <button type="reset" id="form_step1_new_category_reset" class="btn btn-default btn-sm">{{ trans('Cancel', {}, 'AdminProducts') }}</button>
+        <button type="button" id="form_step1_new_category_save" class="btn btn-primary save">{{ trans('Save', {}, 'AdminProducts') }}</button>
       </fieldset>
     </div>
   </div>
-  <a href="#" class="btn btn-action open">
+  <a href="#" class="btn btn-action open" id="add-category-button">
     <i class="material-icons">add</i>
     {{ trans('Add a category', {}, 'AdminProducts') }}
   </a>
