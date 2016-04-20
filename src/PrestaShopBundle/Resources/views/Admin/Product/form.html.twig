@@ -292,12 +292,12 @@
                             </h2>
                             <div class="row">
                               <div class="col-md-6">
-                                <label class="form-control-label">{{ trans("Tax excl.", {}, 'AdminProducts') }}</label>
+                                <label class="form-control-label">{{ trans("Tax excluded", {}, 'AdminProducts') }}</label>
                                 {{ form_widget(form.step1.price_shortcut) }}
                                 {{ form_errors(form.step1.price_shortcut) }}
                               </div>
                               <div class="col-md-6 col-offset-md-1">
-                                <label class="form-control-label">{{ trans("Tax incl.", {}, 'AdminProducts') }}</label>
+                                <label class="form-control-label">{{ trans("Tax included", {}, 'AdminProducts') }}</label>
                                 {{ form_widget(form.step1.price_ttc_shortcut) }}
                                 {{ form_errors(form.step1.price_ttc_shortcut) }}
                               </div>
@@ -1145,7 +1145,7 @@
 "Cover": trans("Cover", {}, 'AdminProducts'),
 "Are you sure to disable variations ? they will all be deleted": trans("Are you sure to disable variations ? they will all be deleted", {}, 'AdminProducts'),
 "Are you sure to delete this?": trans("Are you sure to delete this?", {}, 'AdminProducts'),
-"Quantity": trans("Quantity", {}, 'AdminProducts'),
+"Quantities": trans("Quantities", {}, 'AdminProducts'),
 "Combinations": trans("Combinations", {}, 'AdminProducts'),
 "Virtual product": trans("Virtual product", {}, 'AdminProducts'),
 "tax incl.": trans("tax incl.", {}, 'AdminProducts'),

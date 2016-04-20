@@ -107,7 +107,7 @@ var displayFieldsManager = (function() {
     'refresh': function() {
       this.checkAccessVariations();
       $('#virtual_product').hide();
-      $('#form-nav a[href="#step3"]').text(translate_javascripts['Quantity']);
+      $('#form-nav a[href="#step3"]').text(translate_javascripts['Quantities']);
 
       /** product type switch */
 
@@ -128,7 +128,7 @@ var displayFieldsManager = (function() {
           $('#form-nav a[href="#step3"]').text(translate_javascripts['Virtual product']);
         }else{
           showVariationsSelector.show();
-          $('#form-nav a[href="#step3"]').text(translate_javascripts['Quantity']);
+          $('#form-nav a[href="#step3"]').text(translate_javascripts['Quantities']);
         }
       }
 
