@@ -390,9 +390,11 @@
 																	{/if}
 																{/foreach}
 															{else}
-																{if $fields_value[$input.name] == $option[$input.options.id]}
-																	selected="selected"
-																{/if}
+																{foreach $fields_value[$input.name] as $field_value}
+																	{if $field_value == $option[$input.options.id]}
+																		selected="selected"
+																	{/if}
+																{/foreach}
 															{/if}
 														>{$option[$input.options.name]}</option>
 
