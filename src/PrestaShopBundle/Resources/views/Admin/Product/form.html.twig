@@ -2,6 +2,8 @@
 
 {% block content %}
 
+  {% set psStockManagement = 'PS_STOCK_MANAGEMENT'|configuration %}
+
   <form name="form" id="form" method="post" class="form-horizontal product-page row" novalidate="novalidate">
 
     {# PRODUCT HEADER #}
@@ -266,7 +268,7 @@
                             </div>
                           </div>
 
-                          <div class="form-group" id="product_qty_0_shortcut_div">
+                          <div class="form-group {% if psStockManagement == 0 %}hide{% endif %}" id="product_qty_0_shortcut_div">
                             <h2>{{ trans("Quantity", {}, 'AdminProducts') }}</h2>
                             {{ form_errors(form.step1.qty_0_shortcut) }}
                             <div class="row">
@@ -343,7 +345,7 @@
                       <h2>{{ trans('Quantities', [], 'AdminProducts') }}</h2>
                       <fieldset class="form-group">
                         <div class="row">
-                          <div class="col-md-4">
+                          <div class="col-md-4 {% if psStockManagement == 0 %}hide{% endif %}">
                             <label class="form-control-label">{{ form.step3.qty_0.vars.label }}</label>
                             {{ form_errors(form.step3.qty_0) }}
                             {{ form_widget(form.step3.qty_0) }}
@@ -438,7 +440,8 @@
                       </div>
                     {% endif %}
 
-                    <div id="pack_stock_type">
+
+                    <div id="pack_stock_type" {% if psStockManagement == 0 %}class="hide"{% endif %}>
                       <h2>{{ form.step3.pack_stock_type.vars.label }}</h2>
                       <div class="row col-md-4">
                         <fieldset class="form-group">
@@ -486,7 +489,9 @@
                             <th>{{ trans('Combination', {}, 'AdminProducts') }}</th>
                             <th>{{ trans('Impact on price', {}, 'AdminProducts') }}</th>
                             <th>{{ trans('Impact on weight', {}, 'AdminProducts') }}</th>
-                            <th>{{ trans('Quantity', {}, 'AdminProducts') }}</th>
+                            {% if psStockManagement == 1 %}
+                              <th>{{ trans('Quantity', {}, 'AdminProducts') }}</th>
+                            {% endif %}
                             <th></th>
                           </tr>
                           </thead>
@@ -507,18 +512,18 @@
                           <h2>{{ trans('Availability preferences', [], 'AdminProducts') }}</h2>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-12 {% if psStockManagement == 0 %}hide{% endif %}">
                           <label class="form-control-label">{{ trans('Behavior when out of stock', [], 'AdminProducts') }}</label>
                           {{ form_errors(form.step3.out_of_stock) }}
                           {{ form_widget(form.step3.out_of_stock) }}
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 {% if psStockManagement == 0 %}hide{% endif %}">
                             <label class="form-control-label">{{ form.step3.available_now.vars.label }}</label>
                             {{ form_errors(form.step3.available_now) }}
                             {{ form_widget(form.step3.available_now) }}
                         </div>
-                        <div class="col-md-4 ">
+                        <div class="col-md-4 {% if psStockManagement == 0 %}hide{% endif %}">
                             <label class="form-control-label">{{ form.step3.available_later.vars.label }}</label>
                             {{ form_errors(form.step3.available_later) }}
                             {{ form_widget(form.step3.available_later) }}
@@ -528,10 +533,15 @@
                           {{ form_errors(form.step3.available_date) }}
                           {{ form_widget(form.step3.available_date) }}
                         </div>
-
                       </div>
                     </div>
-
+                    {% if 'PS_STOCK_MANAGEMENT'|configuration == 0 %}
+                      <div class="col-md-12">
+                        <div class="alert alert-warning" role="alert">
+                          <i class="material-icons">info_outline</i><p class="alert-text">{{ trans('Stock management is disabled', {}, 'AdminProducts') }}</p>
+                        </div>
+                      </div>
+                    {% endif %}
                   </div>
                 </div>
               </div>
