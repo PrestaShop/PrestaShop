@@ -178,10 +178,7 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <a href="#" class="btn btn-action btn-block text-md-left add" id="add_feature_button">
-                            <i class="material-icons">add</i>
-                            {{ trans('Add a feature', {}, 'AdminProducts') }}
-                          </a>
+                          <button type="button" class="btn btn-primary-outline sensitive add" id="add_feature_button"><i class="material-icons">add_circle</i> {{ trans('Add a feature', {}, 'AdminProducts') }}</button>
                         </div>
                       </div>
                     </div>
@@ -200,10 +197,7 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <a href="#" class="btn btn-action btn-block text-md-left open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}" id="add_brand_button">
-                            <i class="material-icons">add</i>
-                            {{ trans('Add a brand', {}, 'AdminProducts') }}
-                          </a>
+                          <button type="button" class="btn btn-primary-outline sensitive open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}"><i class="material-icons">add_circle</i> {{ trans('Add a brand', {}, 'AdminProducts') }}</button>
                         </div>
                       </div>
                     </div>
@@ -222,10 +216,7 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <a href="#" class="btn btn-action btn-block text-md-left open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}">
-                            <i class="material-icons">add</i>
-                            {{ trans('Add a related product', {}, 'AdminProducts') }}
-                          </a>
+                          <button type="button" class="btn btn-primary-outline sensitive open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}"><i class="material-icons">add_circle</i> {{ trans('Add a related product', {}, 'AdminProducts') }}</button>
                         </div>
                       </div>
                     </div>
