@@ -120,7 +120,7 @@ class ProductInformation extends CommonAbstractType
                 'constraints' => array(
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 3, 'max' => 128))
-                ), 'attr' => ['placeholder' => $this->translator->trans('New product', [], 'AdminProducts'), 'class' => 'edit js-edit']
+                ), 'attr' => ['placeholder' => $this->translator->trans('Enter your product name', [], 'AdminProducts'), 'class' => 'edit js-edit']
             ],
             'locales' => $this->locales,
             'hideTabs' => true,
