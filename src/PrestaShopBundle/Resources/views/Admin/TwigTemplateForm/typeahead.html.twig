@@ -1,18 +1,20 @@
 {% block typeahead_product_collection_widget %}
-    {{ form_errors(form) }}
+    <div class="autocomplete-search">
+        {{ form_errors(form) }}
 
-    <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
-    <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12">
-        {% if collection is defined and collection|length > 0 %}
-            {% for item in collection %}
-                <li>
-                    <img src="{{ item.image }}" />
-                    {{ template_collection|format(item.name)|raw }}
-                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.id }}" />
-                </li>
-            {% endfor %}
-        {% endif %}
-    </ul>
+        <input type="text" id="{{ form.vars.id }}" class="form-control search typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off">
+        <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12 product-list">
+            {% if collection is defined and collection|length > 0 %}
+                {% for item in collection %}
+                    <li class="card">
+                        <img class="image" src="{{ item.image }}" />
+                        {{ template_collection|format(item.name)|raw }}
+                        <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.id }}" />
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
     <script>
         $( document ).ready(function() {
 
@@ -75,12 +77,10 @@
                     value = value+','+suggestion.id_product_attribute;
                 }
 
-                var html = '<li class="col-md-3 m-b-1">';
-                html += '<div>';
-                html += '<img class="img" src="'+ suggestion.image +'" /> ';
+                var html = '<li class="card">';
+                html += '<img class="image" src="'+ suggestion.image +'" /> ';
                 html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', suggestion.{{ mapping_name }});
                 html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
-                html += '</div>';
                 html += '</li>';
 
                 $('#{{ form.vars.id }}-data').append(html);
