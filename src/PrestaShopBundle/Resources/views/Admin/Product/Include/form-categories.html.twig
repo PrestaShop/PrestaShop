@@ -1,9 +1,8 @@
 <h2>{{ trans("Categories", {}, 'AdminProducts') }}</h2>
-<label class="form-control-label">{{ trans("Enabled categories", {}, 'AdminProducts') }}</label>
 <div class="categories-tree-actions clearfix">
-  <span class="form-control-label" data-action="expand-all"><i class="material-icons">expand_more</i>{{ trans("Expand all", {}, 'AdminProducts') }}</span>
-  <span class="form-control-label" data-action="reduce-all"><i class="material-icons">expand_less</i>{{ trans("Reduce all", {}, 'AdminProducts') }}</span>
-  <span class="form-control-label pull-right">{{ trans("Category by default", {}, 'AdminProducts') }}</span>
+  <span class="form-control-label" data-action="expand"><i class="material-icons">expand_more</i>{{ trans("Expand", {}, 'AdminProducts') }}</span>
+  <span class="form-control-label" data-action="reduce"><i class="material-icons">expand_less</i>{{ trans("Reduce", {}, 'AdminProducts') }}</span>
+  <span class="form-control-label pull-right">{{ trans("Default category", {}, 'AdminProducts') }}</span>
 </div>
 {{ form_errors(form.categories) }}
 {{ form_widget(form.categories) }} {# see bootstrap_3_layout.html.twig #}
