@@ -1,7 +1,11 @@
 <h2>{{ trans("Categories", {}, 'AdminProducts') }}</h2>
-
+<div class="categories-tree-actions clearfix">
+  <span class="form-control-label" data-action="expand"><i class="material-icons">expand_more</i>{{ trans("Expand", {}, 'AdminProducts') }}</span>
+  <span class="form-control-label" data-action="reduce"><i class="material-icons">expand_less</i>{{ trans("Reduce", {}, 'AdminProducts') }}</span>
+  <span class="form-control-label pull-right">{{ trans("Default category", {}, 'AdminProducts') }}</span>
+</div>
 {{ form_errors(form.categories) }}
-{{ form_widget(form.categories) }}
+{{ form_widget(form.categories) }} {# see bootstrap_3_layout.html.twig #}
 
 <!-- start of CSS plugin: to be moved in his own file -->
 <style>
@@ -39,9 +43,7 @@
         <input type="text" id="ps-select-product-category" class="form-control autocomplete" placeholder="{{ trans('Search categories', {}, 'AdminProducts') }}">
         <!--<i class="material-icons">search</i>-->
       </div>
-
-      {{ include('PrestaShopBundle:Admin:Category/tag.html.twig', {'categories': categories }) }}
-      <label class="form-control-label">{{ trans("Default category", {}, 'AdminProducts') }}</label>
+      {{ include('PrestaShopBundle:Admin:Category/categories.html.twig', {'categories': categories }) }}
       {{ form_errors(form.id_category_default) }}
       {{ form_widget(form.id_category_default) }}
     </fieldset>

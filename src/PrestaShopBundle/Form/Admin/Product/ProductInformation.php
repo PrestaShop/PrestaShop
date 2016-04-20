@@ -214,6 +214,8 @@ class ProductInformation extends CommonAbstractType
         ->add('id_category_default', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->categories,
             'choices_as_values' => true,
+            'expanded' => true,
+            'multiple' => false,
             'required' =>  true,
             'label' => $this->translator->trans('Default category', [], 'AdminProducts')
         ))
@@ -225,6 +227,9 @@ class ProductInformation extends CommonAbstractType
             'label' => $this->translator->trans('Add a new category', [], 'AdminProducts'),
             'attr' => ['data-action' => $this->router->generate('admin_category_simple_add_form')]
         ))
+        ->add('ignore', null, [
+            'mapped' => false
+        ])
         ->add('related_products', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',

@@ -152,11 +152,17 @@
         {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) ? 'checked="checked"' : '' %}
         {% if multiple -%}
             <div class="checkbox">
-                <label><input type="checkbox" name="{{ form.vars.full_name }}[tree][]" value="{{ child.id_category }}" {{ checked }}>{{ child.name }}</label>
+                <label><input type="checkbox" name="{{ form.vars.full_name }}[tree][]" value="{{ child.id_category }}" class="category" {{ checked }}>{{ child.name }}</label>
+                <div class="radio pull-right">
+                  <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
+                </div>
             </div>
         {%- else -%}
             <div class="radio">
-                <label><input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}"  {{ checked }}>{{ child.name }}</label>
+                <label><input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category">{{ child.name }}</label>
+                <div class="radio pull-right">
+                  <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
+                </div>
             </div>
         {%- endif %}
         {% if child.children is defined %}
