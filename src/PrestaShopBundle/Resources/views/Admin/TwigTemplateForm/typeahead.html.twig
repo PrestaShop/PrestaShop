@@ -1,5 +1,13 @@
 {% block typeahead_product_collection_widget %}
-    <div class="autocomplete-search">
+    <div
+      class="autocomplete-search"
+      data-formid="{{ form.vars.id }}"
+      data-fullname="{{ form.vars.full_name }}"
+      data-mappingvalue="{{ mapping_value }}"
+      data-mappingname="{{ mapping_name }}"
+      data-remoteurl="{{ remote_url|raw }}"
+      data-limit="{{ limit }}"
+    >
         {{ form_errors(form) }}
 
         <input type="text" id="{{ form.vars.id }}" class="form-control search typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off">
@@ -14,82 +22,10 @@
                 {% endfor %}
             {% endif %}
         </ul>
+        <div class="invisible" id="tplcollection-{{ form.vars.id }}">
+          {{ template_collection|raw }}
+        </div>
     </div>
-    <script>
-        $( document ).ready(function() {
-
-            //remove collection item
-            $(document).on( 'click', '#{{ form.vars.id }}-data .delete', function(e) {
-                e.preventDefault();
-                var _this = $(this);
-
-                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-                    onContinue: function(){
-                        _this.parent().remove();
-                    }
-                }).show();
-            });
-
-            //define source
-            this['{{ form.vars.id }}_source'] = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.whitespace,
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                identify: function(obj) {
-                    return obj.{{ mapping_value }};
-                },
-                remote: {
-                    url: '{{ remote_url|raw }}',
-                    cache: false,
-                    wildcard: '%QUERY',
-                    transform: function(response){
-                        if(!response){
-                            return [];
-                        }
-                        return response;
-                    }
-                }
-            });
-
-            //define typeahead
-            $('#{{ form.vars.id }}').typeahead({
-                limit: 20,
-                minLength: 2,
-                highlight: true,
-                cache: false,
-                hint: false,
-            }, {
-                display: '{{ mapping_name }}',
-                source: this['{{ form.vars.id }}_source'],
-                limit: 30,
-                templates: {
-                    suggestion: function(item){
-                        return '<div><img src="'+ item.image +'" style="width:50px" /> '+ item.name +'</div>'
-                    }
-                }
-            }).bind('typeahead:select', function(ev, suggestion) {
-                //if collection length is up to limit, return
-                if({{ limit }} != 0 && $('#{{ form.vars.id }}-data li').length >= {{ limit }}){
-                    return;
-                }
-
-                var value = suggestion.{{ mapping_value }};
-                if (suggestion.id_product_attribute) {
-                    value = value+','+suggestion.id_product_attribute;
-                }
-
-                var html = '<li class="card">';
-                html += '<img class="image" src="'+ suggestion.image +'" /> ';
-                html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', suggestion.{{ mapping_name }});
-                html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
-                html += '</li>';
-
-                $('#{{ form.vars.id }}-data').append(html);
-
-            }).bind('typeahead:close', function(ev) {
-                $(ev.target).val('');
-            });
-        });
-    </script>
 {% endblock %}
 
 {% block typeahead_product_pack_collection_widget %}
