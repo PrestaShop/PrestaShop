@@ -5208,6 +5208,7 @@ body#checkout {
       margin-left: 14.375em; }
   body#checkout .products,
   body#checkout .shipping,
+  body#checkout .discount,
   body#checkout .cart-summary-totals {
     margin-top: 1.25em; }
   body#checkout .cart-summary-totals .label,
@@ -5221,12 +5222,13 @@ body#checkout {
       font-weight: normal;
       bottom: 0;
       font-size: 0.9375em; }
+  body#checkout .tax .label,
   body#checkout .shipping .label,
   body#checkout .discount .label,
   body#checkout .products .label {
     color: #414141;
     padding: 0;
-    font-weight: 400;
+    font-weight: 600;
     font-size: 0.9375em; }
   body#checkout .additional-information {
     font-size: 0.875em;

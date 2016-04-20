@@ -7,7 +7,7 @@
       <th>{l s='Product'}</th>
       <th>{l s='Quantity'}</th>
       <th>{l s='Unit price'}</th>
-      <th>{l s='Total price'}</th>
+      <th class="text-xs-right">{l s='Total price'}</th>
     </tr>
   </thead>
 
@@ -15,8 +15,8 @@
     <tr>
       <td>{$product.reference}</td>
       <td>{$product.name}</td>
-      <td class="text-xs-right">{$product.quantity}</td>
-      <td class="text-xs-right">{$product.price}</td>
+      <td>{$product.quantity}</td>
+      <td>{$product.price}</td>
       <td class="text-xs-right">{$product.total}</td>
     </tr>
     {if $product.customizations}
