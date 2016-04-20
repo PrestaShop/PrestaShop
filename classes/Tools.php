@@ -988,45 +988,13 @@ class ToolsCore
      */
     public static function dieObject($object, $kill = true)
     {
-        echo '<xmp style="text-align: left;">';
-        print_r($object);
-        echo '</xmp><br />';
+        dump($object);
 
         if ($kill) {
             die('END');
         }
 
         return $object;
-    }
-
-    /**
-    * Display a var dump in firebug console
-    *
-    * @param object $object Object to display
-    */
-    public static function fd($object, $type = 'log')
-    {
-        $types = array('log', 'debug', 'info', 'warn', 'error', 'assert');
-
-        if (!in_array($type, $types)) {
-            $type = 'log';
-        }
-
-        echo '
-            <script type="text/javascript">
-                console.'.$type.'('.json_encode($object).');
-            </script>
-        ';
-    }
-
-    /**
-    * ALIAS OF dieObject() - Display an error with detailed object
-    *
-    * @param object $object Object to display
-    */
-    public static function d($object, $kill = true)
-    {
-        return (Tools::dieObject($object, $kill));
     }
 
     public static function debug_backtrace($start = 0, $limit = null)
@@ -1055,16 +1023,6 @@ class ToolsCore
         }
         echo '</ul>
         </div>';
-    }
-
-    /**
-    * ALIAS OF dieObject() - Display an error with detailed object but don't stop the execution
-    *
-    * @param object $object Object to display
-    */
-    public static function p($object)
-    {
-        return (Tools::dieObject($object, false));
     }
 
     /**

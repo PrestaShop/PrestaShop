@@ -63,11 +63,6 @@ if (defined('_PS_ADMIN_DIR_')) {
 
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
-
-smartyRegisterFunction($smarty, 'function', 't', 'smartyTruncate'); // unused
-smartyRegisterFunction($smarty, 'function', 'm', 'smartyMaxWords'); // unused
-smartyRegisterFunction($smarty, 'function', 'p', 'smartyShowObject'); // Debug only
-smartyRegisterFunction($smarty, 'function', 'd', 'smartyDieObject'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'dump', 'smartyDump'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
@@ -107,44 +102,12 @@ function smartyDieObject($params, &$smarty)
     return Tools::d($params['var']);
 }
 
-function smartyShowObject($params, &$smarty)
-{
-    return Tools::p($params['var']);
-}
 
 function smartyDump($params, &$smarty)
 {
     return Tools::dump($params['var']);
 }
 
-function smartyMaxWords($params, &$smarty)
-{
-    Tools::displayAsDeprecated();
-    $params['s'] = str_replace('...', ' ...', html_entity_decode($params['s'], ENT_QUOTES, 'UTF-8'));
-    $words = explode(' ', $params['s']);
-
-    foreach ($words as &$word) {
-        if (Tools::strlen($word) > $params['n']) {
-            $word = Tools::substr(trim(chunk_split($word, $params['n']-1, '- ')), 0, -1);
-        }
-    }
-
-    return implode(' ', Tools::htmlentitiesUTF8($words));
-}
-
-function smartyTruncate($params, &$smarty)
-{
-    Tools::displayAsDeprecated();
-    $text = isset($params['strip']) ? strip_tags($params['text']) : $params['text'];
-    $length = $params['length'];
-    $sep = isset($params['sep']) ? $params['sep'] : '...';
-
-    if (Tools::strlen($text) > $length + Tools::strlen($sep)) {
-        $text = Tools::substr($text, 0, $length).$sep;
-    }
-
-    return (isset($params['encode']) ? Tools::htmlentitiesUTF8($text, ENT_NOQUOTES) : $text);
-}
 
 function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_words = false, $middle = false, $charset = 'UTF-8')
 {
