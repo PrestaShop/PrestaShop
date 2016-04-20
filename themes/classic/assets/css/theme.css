@@ -5704,7 +5704,7 @@ body#checkout {
   margin-left: 4px; }
 
 #products .product-miniature, .featured-products .product-miniature, .product-accessories .product-miniature {
-  margin: 0 0.625em; }
+  margin: auto; }
   #products .product-miniature .product-labels .new,
   #products .product-miniature .discount-percentage, .featured-products .product-miniature .product-labels .new,
   .featured-products .product-miniature .discount-percentage, .product-accessories .product-miniature .product-labels .new,
