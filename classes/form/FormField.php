@@ -8,6 +8,7 @@ class FormFieldCore
     private $label              = '';
     private $value              = null;
     private $availableValues    = [];
+    private $maxLength          = null;
     private $errors             = [];
     private $constraints        = [];
 
@@ -20,7 +21,8 @@ class FormFieldCore
             'label' => $this->getLabel(),
             'value' => $this->getValue(),
             'availableValues' => $this->getAvailableValues(),
-            'errors' => $this->getErrors()
+            'maxLength' => $this->getMaxLength(),
+            'errors' => $this->getErrors(),
         ];
     }
 
@@ -98,6 +100,17 @@ class FormFieldCore
 
         $this->availableValues[$availableValue] = $label;
         return $this;
+    }
+
+    public function setMaxLength($max)
+    {
+        $this->maxLength = (int)$max;
+        return $this;
+    }
+
+    public function getMaxLength()
+    {
+        return $this->maxLength;
     }
 
     public function setErrors(array $errors)

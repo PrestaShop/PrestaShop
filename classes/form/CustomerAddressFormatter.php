@@ -32,6 +32,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
     private $country;
     private $translator;
     private $availableCountries;
+    private $definition;
 
     public function __construct(
         Country $country,
@@ -41,6 +42,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         $this->country = $country;
         $this->translator = $translator;
         $this->availableCountries = $availableCountries;
+        $this->definition = Address::$definition['fields'];
     }
 
     public function setCountry(Country $country)
@@ -137,17 +139,32 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             $format[$formField->getName()] = $formField;
         }
 
-        return $this->addConstraints($format);
+        return $this->addConstraints(
+                $this->addMaxLength(
+                    $format
+                )
+        );
     }
 
     private function addConstraints(array $format)
     {
-        $constraints = Address::$definition['fields'];
-
         foreach ($format as $field) {
-            if (!empty($constraints[$field->getName()]['validate'])) {
+            if (!empty($this->definition[$field->getName()]['validate'])) {
                 $field->addConstraint(
-                    $constraints[$field->getName()]['validate']
+                    $this->definition[$field->getName()]['validate']
+                );
+            }
+        }
+
+        return $format;
+    }
+
+    private function addMaxLength(array $format)
+    {
+        foreach ($format as $field) {
+            if (!empty($this->definition[$field->getName()]['size'])) {
+                $field->setMaxLength(
+                    $this->definition[$field->getName()]['size']
                 );
             }
         }
