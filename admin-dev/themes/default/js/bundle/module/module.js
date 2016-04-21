@@ -439,6 +439,7 @@ var AdminModuleController = function () {
                         $(element.selector).append(element.content);
                     });
                     $(requiredSelectorCombination).fadeIn(800);
+                    $('[data-toggle="popover"]').popover();
                 });
             } else {
                 $(_this.placeholderGlobalSelector).fadeOut(800, function(){
