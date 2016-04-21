@@ -30,7 +30,7 @@
       {foreach from=$homeslider.slides item=slide name='homeslider'}
         <li class="carousel-item {if $smarty.foreach.homeslider.first}active{/if}">
           <figure>
-            <img src="{$slide.image_url}" alt="{$slide.legend|escape}" />
+            <img src="{$slide.image_url}" alt="{$slide.legend|escape}">
             {if $slide.title || $slide.description}
               <figcaption class="caption">
                 <h2 class="h1 text-uppercase caption-title">{$slide.title}</h2>

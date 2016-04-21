@@ -19,7 +19,7 @@
       <tr>
         <td>
           {if !$product.customizations}
-            <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}" />
+            <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}">
           {/if}
         </td>
         <td>{$product.reference}</td>
@@ -48,12 +48,12 @@
       {if $product.customizations}
         {foreach $product.customizations  as $customization}
           <tr>
-            <td><input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{$customization.id_customization}" /></td>
+            <td><input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{$customization.id_customization}"></td>
             <td colspan="2">
               <ul>
                 {foreach from=$customization.fields item=field}
                   {if $field.type == 'image'}
-                    <li><img src="{$field.image.small.url}" alt="" /></li>
+                    <li><img src="{$field.image.small.url}" alt=""></li>
                   {elseif $field.type == 'text'}
                     <li>{$field.label} : {$field.text}</li>
                   {/if}
@@ -103,7 +103,7 @@
   </section>
 
   <footer class="form-footer">
-    <input type="hidden" name="id_order" value="{$order.details.id}" />
+    <input type="hidden" name="id_order" value="{$order.details.id}">
     <button type="submit" name="submitReturnMerchandise" class="form-control-submit">
       {l s='Make an RMA slip'}
     </button>

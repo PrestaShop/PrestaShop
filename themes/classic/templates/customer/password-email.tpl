@@ -15,7 +15,7 @@
       <div class="form-group row">
         <label class="col-md-3 form-control-label required">{l s='Email address'}</label>
         <div class="col-md-5">
-          <input type="email" name="email" id="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" class="form-control" required />
+          <input type="email" name="email" id="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" class="form-control" required>
         </div>
       </div>
     </section>

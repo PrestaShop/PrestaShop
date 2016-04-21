@@ -15,20 +15,20 @@
 
         <label>
           <span>{l s='New password'}</span>
-          <input type="password" data-validate="isPasswd" name="passwd" value="" />
+          <input type="password" data-validate="isPasswd" name="passwd" value="">
         </label>
 
         <label>
           <span>{l s='Confirmation'}</span>
-          <input type="password" data-validate="isPasswd" name="confirmation" value="" />
+          <input type="password" data-validate="isPasswd" name="confirmation" value="">
         </label>
 
       </section>
 
       <footer class="form-footer">
-        <input type="hidden" name="token" id="token" value="{$customer_token}" />
-        <input type="hidden" name="id_customer" id="id_customer" value="{$id_customer}" />
-        <input type="hidden" name="reset_token" id="reset_token" value="{$reset_token}" />
+        <input type="hidden" name="token" id="token" value="{$customer_token}">
+        <input type="hidden" name="id_customer" id="id_customer" value="{$id_customer}">
+        <input type="hidden" name="reset_token" id="reset_token" value="{$reset_token}">
         <button type="submit" name="submit">
           {l s='Change Password'}
         </button>

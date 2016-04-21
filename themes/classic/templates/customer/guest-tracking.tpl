@@ -27,7 +27,7 @@
 
         <label>
           <span>{l s='Set your password:'}</span>
-          <input type="password" data-validate="isPasswd" name="password" value="" />
+          <input type="password" data-validate="isPasswd" name="password" value="">
         </label>
 
       </section>
