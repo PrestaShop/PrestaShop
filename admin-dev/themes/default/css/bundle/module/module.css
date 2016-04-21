@@ -252,7 +252,18 @@ img.module-logo-thumb-list {
 .module-item-list .module-star-ranking-grid-35,
 .module-item-list .module-star-ranking-grid-4,
 .module-item-list .module-star-ranking-grid-45,
-.module-item-list .module-star-ranking-grid-5 {
+.module-item-list .module-star-ranking-grid-5,
+.module-item-list .module-star-ranking-list-0,
+.module-item-list .module-star-ranking-list-05,
+.module-item-list .module-star-ranking-list-1,
+.module-item-list .module-star-ranking-list-15,
+.module-item-list .module-star-ranking-list-2,
+.module-item-list .module-star-ranking-list-25,
+.module-item-list .module-star-ranking-list-3,
+.module-item-list .module-star-ranking-list-35,
+.module-item-list .module-star-ranking-list-4,
+.module-item-list .module-star-ranking-list-45,
+.module-item-list .module-star-ranking-list-5 {
     display:none;
 }
 
