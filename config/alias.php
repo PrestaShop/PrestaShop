@@ -24,34 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-function fd($var)
-{
-    return (Tools::fd($var));
-}
 
-function p($var)
-{
-    return (Tools::p($var));
-}
+use Symfony\Component\VarDumper\VarDumper;
 
-function d($var)
+function dump($var)
 {
-    Tools::d($var);
-}
-
-function ppp($var)
-{
-    return (Tools::p($var));
-}
-
-function ddd($var)
-{
-    Tools::d($var);
-}
-
-function epr($var, $message_type = null, $destination = null, $extra_headers = null)
-{
-    return Tools::error_log($var, $message_type, $destination, $extra_headers);
+    return VarDumper::dump($var);
 }
 
 /**
@@ -79,16 +57,5 @@ function displayFatalError()
     }
     if ($error !== null && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR ))) {
         echo '[PrestaShop] Fatal error in module file :'.$error['file'].':<br />'.$error['message'];
-    }
-}
-
-/**
- * @deprecated
- */
-if (method_exists('Tools', 'nl2br')) {
-    function nl2br2($string)
-    {
-        Tools::displayAsDeprecated();
-        return Tools::nl2br($string);
     }
 }
