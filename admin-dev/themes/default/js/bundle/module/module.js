@@ -268,6 +268,7 @@ var AdminModuleController = function () {
                 break;
             case availableSorts[3]:
                 dataAttr = ['data-scoring', 'data-tech-name'];
+                sortOrder = 'desc';
                 sortKind = 'num';
                 break;
         }
