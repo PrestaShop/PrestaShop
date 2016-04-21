@@ -55,7 +55,11 @@
 
 <div class="col-md-6">
   <div class="form-group">
-    <h2>{{ form.additional_shipping_cost.vars.label }}</h2>
+    <h2>
+      {{ form.additional_shipping_cost.vars.label }}
+      <span class="help-box" data-toggle="popover"
+        data-content="{{ trans("If a carrier has a tax, it will be added to the shipping fees.",{}, 'AdminProducts') }}" ></span>
+    </h2>
     <label class="form-control-label">{{ trans('Does this product incur additional shipping cost?', [], 'AdminProducts') }}</label>
     {{ form_widget(form.additional_shipping_cost) }}
   </div>
