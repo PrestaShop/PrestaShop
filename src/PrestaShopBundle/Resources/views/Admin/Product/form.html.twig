@@ -949,9 +949,8 @@
                     </div>
 
                     <div class="col-md-3">
-                      {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
-                      {'limit': 3, 'randomize': 1, 'domain': 'products_others' })
-                      %}
+                      {{ render(controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+                      {'limit': 3, 'randomize': 1, 'domain': 'products_others' })) }}
                     </div>
 
                   </div>
