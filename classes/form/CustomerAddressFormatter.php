@@ -91,7 +91,13 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
 
             $fieldParts = explode(':', $field, 2);
 
-            if (count($fieldParts) === 2) {
+            if (count($fieldParts) === 1) {
+                if ($field === 'postcode') {
+                    if ($this->country->need_zip_code) {
+                        $formField->setRequired(true);
+                    }
+                }
+            } elseif (count($fieldParts) === 2) {
                 list($entity, $entityField) = $fieldParts;
 
                 // Fields specified using the Entity:field
