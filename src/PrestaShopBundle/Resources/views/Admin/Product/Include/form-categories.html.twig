@@ -8,7 +8,7 @@
 </div>
 
 {{ form_errors(form.categories) }}
-{{ form_widget(form.categories) }} {# see bootstrap_3_layout.html.twig #}
+{{ form_widget(form.categories, {'defaultCategory': true}) }} {# see bootstrap_3_layout.html.twig #}
 
 <!-- start of CSS plugin: to be moved in his own file -->
 <style>
@@ -46,7 +46,7 @@
         <input type="text" id="ps-select-product-category" class="form-control autocomplete" placeholder="{{ trans('Search categories', {}, 'AdminProducts') }}">
         <!--<i class="material-icons">search</i>-->
       </div>
-      {{ include('PrestaShopBundle:Admin:Category/categories.html.twig', {'categories': categories }) }}
+      {{ include('PrestaShopBundle:Admin:Category/categories.html.twig', {'categories': categories}) }}
       {{ form_errors(form.id_category_default) }}
       {{ form_widget(form.id_category_default) }}
     </fieldset>
@@ -57,7 +57,7 @@
         data-content="{{ trans("If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).",{}, 'AdminProducts') }}" ></span>
     </h2>
 
-    <div id="form_step1_new_category" data-action="{{ form.new_category.vars.attr["data-action"] }}">
+    <div id="form_step1_new_category" data-action="{{ path('admin_category_simple_add_form', {'id_product': productId }) }}">
       <fieldset class="form-group">
         <label class="form-control-label">{{ trans("Add a new category", {}, 'AdminProducts') }}</label>
         {{ form_errors(form.new_category) }}
@@ -70,11 +70,12 @@
       </fieldset>
 
       <fieldset class="form-group text-xs-right">
-        <button type="button" id="form_step1_new_category_save" class="btn btn-default btn-sm submit">{{ trans('Save', {}, 'AdminProducts') }}</button>
+        <button type="reset" id="form_step1_new_category_reset" class="btn btn-default btn-sm">{{ trans('Cancel', {}, 'AdminProducts') }}</button>
+        <button type="button" id="form_step1_new_category_save" class="btn btn-primary save">{{ trans('Save', {}, 'AdminProducts') }}</button>
       </fieldset>
     </div>
   </div>
-  <a href="#" class="btn btn-action open">
+  <a href="#" class="btn btn-action open" id="add-category-button">
     <i class="material-icons">add</i>
     {{ trans('Add a category', {}, 'AdminProducts') }}
   </a>
