@@ -27,8 +27,6 @@ $(document).ready(function() {
   form.init();
   nav.init();
   featuresCollection.init();
-  relatedProduct.init();
-  manufacturer.init();
   displayFormCategory.init();
   nestedCategories.init();
   formCategory.init();
@@ -51,6 +49,8 @@ $(document).ready(function() {
   recommendedModules.init();
   BOEvent.emitEvent("Product Categories Management started", "CustomEvent");
   BOEvent.emitEvent("Product Default category Management started", "CustomEvent");
+  BOEvent.emitEvent("Product Manufacturer Management started", "CustomEvent");
+  BOEvent.emitEvent("Product Related Management started", "CustomEvent");
 
   /** Type product fields display management */
   $('#form_step1_type_product').change(function(){
@@ -382,42 +382,6 @@ var featuresCollection = (function() {
             });
           }
         });
-      });
-    }
-  };
-})();
-
-/**
- * Related product management
- */
-var relatedProduct = (function() {
-  var parentElem = $('#related-product');
-
-  return {
-    'init': function() {
-      /** Click event on the add button */
-      parentElem.find('.open').on('click', function(e) {
-        e.preventDefault();
-        parentElem.find('#related-content').removeClass('hide');
-        $(this).hide();
-      });
-    }
-  };
-})();
-
-/**
- * Manufacturer management
- */
-var manufacturer = (function() {
-  var parentElem = $('#manufacturer');
-
-  return {
-    'init': function() {
-      /** Click event on the add button */
-      parentElem.find('.open').on('click', function(e) {
-        e.preventDefault();
-        parentElem.find('#manufacturer-content').removeClass('hide');
-        $(this).hide();
       });
     }
   };

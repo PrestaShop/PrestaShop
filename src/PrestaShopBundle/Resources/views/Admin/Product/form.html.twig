@@ -184,41 +184,11 @@
                     </div>
 
                     <div id="manufacturer" class="m-b-1">
-                      <div id="manufacturer-content" class="row {{ form.step1.id_manufacturer.vars.value == '' ? 'hide':'' }}">
-                        <div class="col-md-12">
-                          <h2>{{ trans("Brand", {}, 'AdminProducts') }}</h2>
-                        </div>
-                        <div class="col-md-8">
-                          {{ form_errors(form.step1.id_manufacturer) }}
-                        </div>
-                        <div class="col-md-8">
-                          {{ form_widget(form.step1.id_manufacturer) }}
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <button id="add_manufacturer_button" type="button" class="btn btn-primary-outline sensitive open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}"><i class="material-icons">add_circle</i> {{ trans('Add a brand', {}, 'AdminProducts') }}</button>
-                        </div>
-                      </div>
+                      {{ include('PrestaShopBundle:Admin/Product/Include:form_manufacturer.html.twig', { 'form':form.step1.id_manufacturer }) }}
                     </div>
 
                     <div id="related-product" class="m-b-1">
-                      <div id="related-content" class="row {{ form.step1.related_products.vars.value.data|length == 0 ? 'hide':'' }}">
-                        <div class="col-md-12">
-                          <h2>{{ trans("Related product", {}, 'AdminProducts') }}</h2>
-                        </div>
-                        <div class="col-md-8">
-                          {{ form_errors(form.step1.related_products) }}
-                        </div>
-                        <div class="col-md-8">
-                          {{ form_widget(form.step1.related_products) }}
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <button id="add_related_product_button" type="button" class="btn btn-primary-outline sensitive open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}"><i class="material-icons">add_circle</i> {{ trans('Add a related product', {}, 'AdminProducts') }}</button>
-                        </div>
-                      </div>
+                      {{ include('PrestaShopBundle:Admin/Product/Include:form_related_products.html.twig', { 'form':form.step1.related_products }) }}
                     </div>
 
                   </div>
@@ -1116,6 +1086,8 @@
 {% block javascripts %}
   {{ parent() }}
   <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/product/product-manufacturer.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/product/product-related.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/product/product-category-tags.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/product/default-category.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
