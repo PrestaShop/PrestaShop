@@ -23,7 +23,7 @@
       <div class="form-group row">
         <label class="col-md-3 form-control-label">{l s='Email address'}</label>
         <div class="col-md-4">
-          <input type="email" name="from" value="{$contact.email}" class="form-control" />
+          <input type="email" name="from" value="{$contact.email}" class="form-control">
         </div>
       </div>
 
@@ -43,7 +43,7 @@
       <div class="form-group row">
         <label class="col-md-3 form-control-label">{l s='Attach File'}</label>
         <div class="col-md-6">
-          <input type="file" name="fileUpload" class="filestyle" />
+          <input type="file" name="fileUpload" class="filestyle">
         </div>
         <span class="col-md-3 row form-control-comment">
           {l s='optional'}
@@ -60,7 +60,7 @@
     </section>
 
     <footer class="form-footer text-xs-right">
-      <input class="btn btn-primary" type="submit" name="submitMessage" value="{l s='Send'}" />
+      <input class="btn btn-primary" type="submit" name="submitMessage" value="{l s='Send'}">
     </footer>
 
   </form>

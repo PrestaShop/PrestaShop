@@ -31,14 +31,14 @@
       <form action="{$urls.pages.index}#footer" method="post">
         <div class="row">
           <div class="col-md-8">
-            <input type="text" name="email" value="{$value}" placeholder="{l s='Your e-mail address' mod='blocknewsletter'}" />
+            <input type="text" name="email" value="{$value}" placeholder="{l s='Your e-mail address' mod='blocknewsletter'}">
             {if $msg}
               <p class="text-warning notification {if $nw_error}notification-error{else}notification-success{/if}">{$msg}</p>
             {/if}
           </div>
           <div class="col-md-4">
-            <input class="btn btn-primary" type="submit" value="{l s='Subscribe' mod='blocknewsletter'}" name="submitNewsletter" />
-            <input type="hidden" name="action" value="0" />
+            <input class="btn btn-primary" type="submit" value="{l s='Subscribe' mod='blocknewsletter'}" name="submitNewsletter">
+            <input type="hidden" name="action" value="0">
           </div>
         </div>
       </form>

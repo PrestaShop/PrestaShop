@@ -17,7 +17,7 @@
         {foreach from=$field.availableValues item="label" key="value"}
           <label class="radio-inline">
             <span class="custom-radio">
-              <input name = "{$field.name}" type = "radio" value = "{$value}" {if $field.required} required {/if} {if $value eq $field.value} checked {/if} />
+              <input name = "{$field.name}" type = "radio" value = "{$value}" {if $field.required} required {/if} {if $value eq $field.value} checked {/if}>
               <span></span>
             </span>
             {$label}
@@ -25,7 +25,7 @@
         {/foreach}
       {elseif $field.type === 'checkbox'}
         <span class="custom-checkbox">
-          <input type="checkbox" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
+          <input type="checkbox" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if}>
           <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
           <label>{$field.label}</label>
         </span>
@@ -35,11 +35,11 @@
           {l s='(Ex.:31/05/1970)'}
         </span>
       {elseif $field.type === 'email'}
-        <input type="{$field.type}" data-error="{l s='Invalid email address'}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
+        <input type="{$field.type}" data-error="{l s='Invalid email address'}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if}>
       {elseif $field.type === 'password'}
-        <input type="{$field.type}" data-minlength="5" data-minlength-error="{l s='Five characters minimum'}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
+        <input type="{$field.type}" data-minlength="5" data-minlength-error="{l s='Five characters minimum'}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if}>
       {else}
-        <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} data-error="{l s='This field is required'}" required {/if} />
+        <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} data-error="{l s='This field is required'}" required {/if}>
       {/if}
       <div class="help-block with-errors hidden-xs-up"></div>
     </div>

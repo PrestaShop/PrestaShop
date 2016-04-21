@@ -35,7 +35,7 @@
                     <ul>
                       {foreach from=$customization.fields item=field}
                         {if $field.type == 'image'}
-                          <li><img src="{$field.image.small.url}" alt="" /></li>
+                          <li><img src="{$field.image.small.url}" alt=""></li>
                         {elseif $field.type == 'text'}
                           <li>{$field.label} : {$field.text}</li>
                         {/if}

@@ -18,7 +18,7 @@
             {/if}
             <span class="custom-file">
                             <span class="js-file-name">{l s='No selected file'}</span>
-                            <input class="file-input js-file-input" {if $field.required} required {/if} type="file" name="{$field.input_name}" />
+                            <input class="file-input js-file-input" {if $field.required} required {/if} type="file" name="{$field.input_name}">
                             <button class="btn btn-primary">{l s='Choose file'}</button>
                           </span>
             <small class="pull-xs-right">{l s='.png .jpg .gif'}</small>
