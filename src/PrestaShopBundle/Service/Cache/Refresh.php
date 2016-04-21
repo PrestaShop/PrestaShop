@@ -69,14 +69,6 @@ class Refresh
     }
 
     /**
-     * add assetic dump
-     */
-    public function addAsseticDump()
-    {
-        $this->commands[] = ['command' => 'assetic:dump', '--env' => $this->env, '--no-debug' => true];
-    }
-
-    /**
      * add doctrine schema update
      */
     public function addDoctrineSchemaUpdate()
