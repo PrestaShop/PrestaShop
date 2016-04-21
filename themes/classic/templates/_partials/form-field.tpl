@@ -34,22 +34,16 @@
         <span class="form-control-comment">
           {l s='(Ex.:31/05/1970)'}
         </span>
+      {elseif $field.type === 'email'}
+        <input type="{$field.type}" data-error="{l s='Invalid email address'}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
+      {elseif $field.type === 'password'}
+        <input type="{$field.type}" data-minlength="5" data-minlength-error="{l s='Five characters minimum'}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
       {else}
-        <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if} />
-        {if $field.required}
-          <div class="help-block with-errors hidden-xs-up">{l s='This field is required'}</div>
-        {/if}
+        <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} data-error="{l s='This field is required'}" required {/if} />
       {/if}
+      <div class="help-block with-errors hidden-xs-up"></div>
     </div>
-    {if $field.type === 'password'}
-      <span class="col-md-3 form-control-comment">
-        {l s='Five characters minimum'}
-      </span>
-    {elseif (!$field.required && $field.type !== 'radio-buttons' && $field.type !== 'checkbox') || $field.name === 'company' }
-      <span class="col-md-3 form-control-comment">
-        {l s='optional'}
-      </span>
-    {/if}
+
   </div>
 {else}
   <input type="hidden" name="{$field.name}" value="{$field.value}">
