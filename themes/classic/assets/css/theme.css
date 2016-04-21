@@ -6819,6 +6819,12 @@ li.product-label {
   .block-contact .block-contact-title {
     color: #414141; }
 
+@media (min-width: 768px) {
+	.block-contact {
+		float:right;
+	}
+}
+
 .linklist {
   padding-top: 20px; }
   .linklist li a {
