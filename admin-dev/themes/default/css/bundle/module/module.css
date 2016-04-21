@@ -357,7 +357,8 @@ img.module-logo-thumb-list {
 /* Addons module item list/grid */
 
 .module-addons-item-grid {
-    height: 272px;
+    height: 262px;
+    margin-bottom: 0.75rem;
     display: none;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -374,6 +375,7 @@ img.module-logo-thumb-list {
 
 .module-icon-addons-exit-grid {
     display: block;
+    padding-bottom: 20px;
 }
 
 .module-addons-item-wrapper-grid {
