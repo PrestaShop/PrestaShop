@@ -147,12 +147,12 @@
                       </div>
                     </div>
 
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-tabs bordered">
                       <li id="tab_description_short" class="nav-item"><a href="#description_short" data-toggle="tab" class="nav-link active">{{ trans('Summary', {}, 'AdminProducts') }}</a></li>
                       <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
                     </ul>
 
-                    <div class="tab-content">
+                    <div class="tab-content bordered">
                       <div class="tab-pane panel panel-default active" id="description_short">
                         {{ form_widget(form.step1.description_short) }}
                       </div>
@@ -161,7 +161,7 @@
                       </div>
                     </div>
 
-                    <div id="features" class="m-b-1">
+                    <div id="features" class="m-b-1 m-t-1">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h2>{{ trans('Features', [], 'AdminProducts') }}</h2>
                         {{ form_errors(form.step1.features) }}
@@ -178,10 +178,7 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <a href="#" class="btn btn-action btn-block text-md-left add" id="add_feature_button">
-                            <i class="material-icons">add</i>
-                            {{ trans('Add a feature', {}, 'AdminProducts') }}
-                          </a>
+                          <button type="button" class="btn btn-primary-outline sensitive add" id="add_feature_button"><i class="material-icons">add_circle</i> {{ trans('Add a feature', {}, 'AdminProducts') }}</button>
                         </div>
                       </div>
                     </div>
@@ -200,10 +197,7 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <a href="#" class="btn btn-action btn-block text-md-left open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}" id="add_brand_button">
-                            <i class="material-icons">add</i>
-                            {{ trans('Add a brand', {}, 'AdminProducts') }}
-                          </a>
+                          <button type="button" class="btn btn-primary-outline sensitive open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}"><i class="material-icons">add_circle</i> {{ trans('Add a brand', {}, 'AdminProducts') }}</button>
                         </div>
                       </div>
                     </div>
@@ -222,10 +216,7 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <a href="#" class="btn btn-action btn-block text-md-left open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}">
-                            <i class="material-icons">add</i>
-                            {{ trans('Add a related product', {}, 'AdminProducts') }}
-                          </a>
+                          <button type="button" class="btn btn-primary-outline sensitive open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}"><i class="material-icons">add_circle</i> {{ trans('Add a related product', {}, 'AdminProducts') }}</button>
                         </div>
                       </div>
                     </div>
@@ -255,12 +246,13 @@
                                 <input type="radio" name="show_variations" value="1" {% if has_combinations %}checked="checked"{% endif %}>
                                 {{ trans("Product with combinations", {}, 'AdminProducts') }}
                               </label>
-                              <div>
-                                <span id="product_type_combinations_shortcut" class="small">
-                                  <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');">
-                                    {{ trans("Advanced settings available in Combinations", {}, 'AdminProducts')|raw }}
-                                  </a>
+                              <div id="product_type_combinations_shortcut">
+                                <span class="small font-secondary">
+                                  {{ trans("Advanced settings available in", {}, 'AdminProducts') }}
                                 </span>
+                                <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');" class="btn sensitive p-x-0">
+                                  <i class="material-icons">open_in_new</i> {{ trans("Combinations", {}, 'AdminProducts')|raw }}
+                                </a>
                               </div>
                             </div>
                           </div>
@@ -277,11 +269,12 @@
                                 {{ form_widget(form.step1.qty_0_shortcut) }}
                               </div>
                             </div>
-                            <span class="small">
-                              <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');" class="external-link">
-                                {{ trans("Advanced settings available in Quantities", {}, 'AdminProducts') }}
-                              </a>
+                            <span class="small font-secondary">
+                              {{ trans("Advanced settings available in", {}, 'AdminProducts') }}
                             </span>
+                            <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');" class="btn sensitive p-x-0">
+                              <i class="material-icons">open_in_new</i> {{ trans("Quantities", {}, 'AdminProducts') }}
+                            </a>
                           </div>
 
                           <div class="form-group">
@@ -306,12 +299,12 @@
                                 {{ render(controller('PrestaShopBundle:Admin/Product:renderField', {'productId': id_product, 'step': 'step2', 'fieldName': 'id_tax_rules_group' })) }}
                               </div>
                               <div class="col-md-12">
-                                <span class="small">
+                                <span class="small font-secondary">
                                   {{ trans("Advanced settings available in", {}, 'AdminProducts') }}
-                                  <a href="#tab-step2" onclick="$('a[href=\'#step2\']').tab('show');" class="external-link">
-                                    {{ trans("Pricing", {}, 'AdminProducts') }}
-                                  </a>
                                 </span>
+                                <a href="#tab-step2" onclick="$('a[href=\'#step2\']').tab('show');" class="btn sensitive p-x-0">
+                                  <i class="material-icons">open_in_new</i> {{ trans("Pricing", {}, 'AdminProducts') }}
+                                </a>
                               </div>
                             </div>
                             <div class="row hide">
@@ -1140,7 +1133,7 @@
 "ToLargeFile": trans("The file is too large ({{filesize}}). Allowed maximum size is {{maxFilesize}}.", {}, 'AdminProducts'),
 "Drop images here": trans("Drop images here", {}, 'AdminProducts'),
 "or select files": trans("or select files", {}, 'AdminProducts'),
-"files recommandations": trans("Recommanded size 800 x 800px for default theme.", {}, 'AdminProducts'),
+"files recommandations": trans("Recommended size 800 x 800px for default theme.", {}, 'AdminProducts'),
 "files recommandations2": trans("JPG, GIF or PNG format.", {}, 'AdminProducts'),
 "Cover": trans("Cover", {}, 'AdminProducts'),
 "Are you sure to disable variations ? they will all be deleted": trans("Are you sure to disable variations ? they will all be deleted", {}, 'AdminProducts'),

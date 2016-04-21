@@ -346,12 +346,13 @@ var featuresCollection = (function() {
   function add(){
     var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
     collectionHolder.append(newForm);
+    prestaShopUiKit.initSelects();
   }
 
   return {
     'init': function() {
       /** Click event on the add button */
-      $('#features a.add').on('click', function(e) {
+      $('#features .add').on('click', function(e) {
         e.preventDefault();
         add();
         $('#features-content').removeClass('hide');
@@ -395,7 +396,7 @@ var relatedProduct = (function() {
   return {
     'init': function() {
       /** Click event on the add button */
-      parentElem.find('a.open').on('click', function(e) {
+      parentElem.find('.open').on('click', function(e) {
         e.preventDefault();
         parentElem.find('#related-content').removeClass('hide');
         $(this).hide();
@@ -413,7 +414,7 @@ var manufacturer = (function() {
   return {
     'init': function() {
       /** Click event on the add button */
-      parentElem.find('a.open').on('click', function(e) {
+      parentElem.find('.open').on('click', function(e) {
         e.preventDefault();
         parentElem.find('#manufacturer-content').removeClass('hide');
         $(this).hide();
