@@ -68,9 +68,7 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function validate()
     {
-        if (!parent::validate()) {
-            return false;
-        }
+        $is_valid = parent::validate();
 
         if (($postcode = $this->getField('postcode'))) {
             if ($postcode->isRequired()) {
@@ -84,12 +82,12 @@ class CustomerAddressFormCore extends AbstractForm
                         ),
                         $country->zip_code_format
                     ));
-                    return false;
+                    $is_valid = false;
                 }
             }
         }
 
-        return true;
+        return $is_valid;
     }
 
     public function submit()
