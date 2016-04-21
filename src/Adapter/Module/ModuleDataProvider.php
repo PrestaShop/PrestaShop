@@ -130,16 +130,22 @@ class ModuleDataProvider
             return false;
         }
 
-        // Even if we do not detect any parse error in the file, we may have issues
-        // when trying to load the file. (i.e with additionnal require_once)
-        try {
-            require_once $file_path;
-        } catch (\Exception $e) {
-            $this->logger->error(sprintf('Error while loading file of module %s. %s', $name, $e->getMessage()));
-            return false;
-        }
-
-        return true;
+        $logger = $this->logger;
+        // -> Even if we do not detect any parse error in the file, we may have issues
+        // when trying to load the file. (i.e with additionnal require_once).
+        // -> We use an anonymous function here because if a test is made two times
+        // on the same module, the test on require_once would return immediately
+        // true (Because the file has already been evaluated by PHP).
+        $require_correct = function ($name) use ($file_path, $logger) {
+            try {
+                require_once $file_path;
+            } catch (\Exception $e) {
+                $logger->error(sprintf('Error while loading file of module %s. %s', $name, $e->getMessage()));
+                return false;
+            }
+            return true;
+        };
+        return $require_correct($name);
     }
 
     /**
