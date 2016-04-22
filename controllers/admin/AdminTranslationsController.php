@@ -1162,12 +1162,7 @@ class AdminTranslationsControllerCore extends AdminController
                     'tpl-sf2' => \Tools::scandir(_PS_ROOT_DIR_.'/src/PrestaShopBundle/Resources/views/', 'twig', '', true),
                     'tpl' => $this->listFiles(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes/'),
                     'specific' => array(
-                        _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => array(
-                            'header.inc.php',
-                            'footer.inc.php',
-                            'index.php',
-                            'functions.php'
-                        )
+                        _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => array()
                     )
                 );
 
