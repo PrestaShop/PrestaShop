@@ -229,6 +229,7 @@ body#checkout {
       margin-left: em(230px);
     }
   }
+  .discount,
   .products,
   .shipping,
   .cart-summary-totals {
@@ -246,12 +247,13 @@ body#checkout {
       font-size: em(15px);
     }
   }
+  .tax .label,
   .shipping .label,
   .discount .label,
   .products .label {
     color: $gray-darker;
     padding: 0;
-    font-weight: 400;
+    font-weight: 600;
     font-size: em(15px);
   }
   .additional-information {
