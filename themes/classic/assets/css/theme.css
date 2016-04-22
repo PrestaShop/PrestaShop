@@ -4769,6 +4769,9 @@ label {
 .form-group.has-error select {
   outline: 0.1875rem solid #ff4c4c; }
 
+.form-group.has-error .help-block {
+  color: #ff4c4c; }
+
 .group-span-filestyle label {
   margin: 0; }
 
@@ -4905,8 +4908,7 @@ label {
     .definition-list dl dd:nth-of-type(even) {
       background: #f6f6f6; }
 
-.with-errors {
-  color: #ff4c4c;
+.help-block {
   margin-top: 10px; }
 
 .btn.disabled {
