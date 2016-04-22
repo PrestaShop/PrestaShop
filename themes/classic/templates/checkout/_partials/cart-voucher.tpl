@@ -1,18 +1,20 @@
 {if $cart.vouchers.allowed}
   <div class="block-promo">
     <div class="cart-voucher">
-      <ul class="promo-name">
-        {foreach from=$cart.vouchers.added item=voucher}
-          <li>
-            {$voucher.name}
-            <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">{l s='delete'}</i></a>
-            <div class="pull-xs-right">
-              {$voucher.reduction_formated}
-            </div>
-          </li>
-        {/foreach}
-      </ul>
-      <a class="collapse-button" data-toggle="collapse" href="#promo-code" aria-expanded="false" aria-controls="promo-code">
+      {if $cart.vouchers.added}
+        <ul class="promo-name card-block">
+          {foreach from=$cart.vouchers.added item=voucher}
+            <li class="cart-summary-line">
+              <span class="label">{$voucher.name}</span>
+              <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">{l s='delete'}</i></a>
+              <div class="pull-xs-right">
+                {$voucher.reduction_formated}
+              </div>
+            </li>
+          {/foreach}
+        </ul>
+      {/if}
+      <a class="collapse-button promo-code-button" data-toggle="collapse" href="#promo-code" aria-expanded="false" aria-controls="promo-code">
         {l s='Have a promo code ?'}
       </a>
       <div class="promo-code collapse" id="promo-code">

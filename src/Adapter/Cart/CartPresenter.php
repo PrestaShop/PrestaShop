@@ -300,11 +300,11 @@ class CartPresenter implements PresenterInterface
 
             if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_percent'] == '0.00') {
                 $cartVoucher['reduction_formated'] = $cartVoucher['reduction_percent'] . '%';
-            } else if(isset($cartVoucher['reduction_amount'])) {
+            } elseif (isset($cartVoucher['reduction_amount'])) {
                 $cartVoucher['reduction_formated'] = $this->priceFormatter->format($cartVoucher['reduction_amount']);
             }
 
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formated'] = $cartVoucher['reduction_formated'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formated'] = '-'.$cartVoucher['reduction_formated'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink('cart', true, null, ['deleteDiscount' => $cartVoucher['id_cart_rule'], 'token' => Tools::getToken(false)]);
         }
 
