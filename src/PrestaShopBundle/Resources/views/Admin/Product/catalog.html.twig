@@ -268,14 +268,14 @@
                   </th>
                 </tr>
               </thead>
-              {% render controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction', {
+              {{ render(controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction', {
                 'limit': limit,
                 'offset': offset,
                 'orderBy': orderBy,
                 'sortOrder': sortOrder,
                 'products': products,
                 'last_sql': last_sql
-              }) %}
+              })) }}
             </table>
           </div>
         </div>
@@ -342,9 +342,9 @@
         {% if product_count_filtered > 20 %}
           <div class="row">
             <div class="col-md-12">
-              {% render controller('PrestaShopBundle:Admin\\Common:pagination',
-              {'limit': limit, 'offset': offset, 'total': product_count_filtered, 'caller_parameters': pagination_parameters, 'limit_choices': pagination_limit_choices})
-              %}
+              {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
+              {'limit': limit, 'offset': offset, 'total': product_count_filtered, 'caller_parameters': pagination_parameters, 'limit_choices': pagination_limit_choices}))
+              }}
             </div>
           </div>
         {% endif %}
