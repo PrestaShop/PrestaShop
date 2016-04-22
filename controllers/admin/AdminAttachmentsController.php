@@ -53,7 +53,7 @@ class AdminAttachmentsControllerCore extends AdminController
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
-            'name' => array(v
+            'name' => array(
                 'title' => $this->l('Name')
             ),
             'file' => array(
