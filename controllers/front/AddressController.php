@@ -56,7 +56,7 @@ class AddressControllerCore extends FrontController
         $this->address_form->fillWith(Tools::getAllValues());
         if (Tools::isSubmit('submitAddress')) {
             if (!$this->address_form->submit()) {
-                $this->errors[] = $this->l('Something\'s not right...');
+                $this->errors[] = $this->l('Please fix the error below.');
             } else {
                 if (Tools::getValue('id_address')) {
                     $this->success[] = $this->l('Address successfully updated!');

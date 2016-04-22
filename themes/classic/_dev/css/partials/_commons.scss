@@ -119,6 +119,9 @@ label {
     select {
       outline: rem(3px) solid $brand-danger;
     }
+    .help-block {
+      color: $brand-danger;
+    }
   }
 }
 .group-span-filestyle {
@@ -270,8 +273,7 @@ label {
     }
   }
 }
-.with-errors {
-  color: $brand-danger;
+.help-block {
   margin-top: $small-space;
 }
 

@@ -72,7 +72,7 @@ class CustomerAddressFormCore extends AbstractForm
 
         if (($postcode = $this->getField('postcode'))) {
             if ($postcode->isRequired()) {
-                $country    = $this->formatter->getCountry();
+                $country = $this->formatter->getCountry();
                 if (!$country->checkZipCode($postcode->getValue())) {
                     // FIXME: the translator adapter is crap at the moment,
                     // but once it is not, the sprintf needs to go away.

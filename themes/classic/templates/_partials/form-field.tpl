@@ -4,7 +4,7 @@
 
 {else}
 
-  <div class="form-group row">
+  <div class="form-group row {if !empty($field.errors)}has-error{/if}">
     <label class="col-md-3 form-control-label{if $field.required} required{/if}">
       {if $field.type !== 'checkbox'}
         {$field.label}
