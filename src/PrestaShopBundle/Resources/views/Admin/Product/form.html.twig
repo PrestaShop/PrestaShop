@@ -197,7 +197,7 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <button type="button" class="btn btn-primary-outline sensitive open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}"><i class="material-icons">add_circle</i> {{ trans('Add a brand', {}, 'AdminProducts') }}</button>
+                          <button id="add_manufacturer_button" type="button" class="btn btn-primary-outline sensitive open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}"><i class="material-icons">add_circle</i> {{ trans('Add a brand', {}, 'AdminProducts') }}</button>
                         </div>
                       </div>
                     </div>
@@ -216,7 +216,7 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <button type="button" class="btn btn-primary-outline sensitive open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}"><i class="material-icons">add_circle</i> {{ trans('Add a related product', {}, 'AdminProducts') }}</button>
+                          <button id="add_related_product_button" type="button" class="btn btn-primary-outline sensitive open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}"><i class="material-icons">add_circle</i> {{ trans('Add a related product', {}, 'AdminProducts') }}</button>
                         </div>
                       </div>
                     </div>
