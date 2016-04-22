@@ -21,6 +21,8 @@
           </div>
           <div class="col-md-2 form_step1_type_product">
             {{ form_widget(form.step1.type_product) }}
+            <span class="help-box pull-xs-right" data-toggle="popover"
+              data-content="{{ trans("Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, mail-sent product?", {}, 'AdminProducts') }}"></span>
           </div>
           <div class="col-md-1 form_switch_language {{ languages|length == 1 ? 'hide' : '' }}">
             <select id="form_switch_language" class="form-control" data-toggle="select2">
@@ -145,12 +147,12 @@
                       </div>
                     </div>
 
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-tabs bordered">
                       <li id="tab_description_short" class="nav-item"><a href="#description_short" data-toggle="tab" class="nav-link active">{{ trans('Summary', {}, 'AdminProducts') }}</a></li>
                       <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
                     </ul>
 
-                    <div class="tab-content">
+                    <div class="tab-content bordered">
                       <div class="tab-pane panel panel-default active" id="description_short">
                         {{ form_widget(form.step1.description_short) }}
                       </div>
@@ -159,7 +161,7 @@
                       </div>
                     </div>
 
-                    <div id="features" class="m-b-1">
+                    <div id="features" class="m-b-1 m-t-1">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h2>{{ trans('Features', [], 'AdminProducts') }}</h2>
                         {{ form_errors(form.step1.features) }}
@@ -176,56 +178,17 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <a href="#" class="btn btn-action btn-block text-md-left add" id="add_feature_button">
-                            <i class="material-icons">add</i>
-                            {{ trans('Add a feature', {}, 'AdminProducts') }}
-                          </a>
+                          <button type="button" class="btn btn-primary-outline sensitive add" id="add_feature_button"><i class="material-icons">add_circle</i> {{ trans('Add a feature', {}, 'AdminProducts') }}</button>
                         </div>
                       </div>
                     </div>
 
                     <div id="manufacturer" class="m-b-1">
-                      <div id="manufacturer-content" class="row {{ form.step1.id_manufacturer.vars.value == '' ? 'hide':'' }}">
-                        <div class="col-md-12">
-                          <h2>{{ trans("Brand", {}, 'AdminProducts') }}</h2>
-                        </div>
-                        <div class="col-md-8">
-                          {{ form_errors(form.step1.id_manufacturer) }}
-                        </div>
-                        <div class="col-md-8">
-                          {{ form_widget(form.step1.id_manufacturer) }}
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <a href="#" class="btn btn-action btn-block text-md-left open {{ form.step1.id_manufacturer.vars.value != '' ? 'hide':'' }}" id="add_brand_button">
-                            <i class="material-icons">add</i>
-                            {{ trans('Add a brand', {}, 'AdminProducts') }}
-                          </a>
-                        </div>
-                      </div>
+                      {{ include('PrestaShopBundle:Admin/Product/Include:form_manufacturer.html.twig', { 'form':form.step1.id_manufacturer }) }}
                     </div>
 
                     <div id="related-product" class="m-b-1">
-                      <div id="related-content" class="row {{ form.step1.related_products.vars.value.data|length == 0 ? 'hide':'' }}">
-                        <div class="col-md-12">
-                          <h2>{{ trans("Related product", {}, 'AdminProducts') }}</h2>
-                        </div>
-                        <div class="col-md-8">
-                          {{ form_errors(form.step1.related_products) }}
-                        </div>
-                        <div class="col-md-8">
-                          {{ form_widget(form.step1.related_products) }}
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <a href="#" class="btn btn-action btn-block text-md-left open {{ form.step1.related_products.vars.value.data|length > 0 ? 'hide':'' }}">
-                            <i class="material-icons">add</i>
-                            {{ trans('Add a related product', {}, 'AdminProducts') }}
-                          </a>
-                        </div>
-                      </div>
+                      {{ include('PrestaShopBundle:Admin/Product/Include:form_related_products.html.twig', { 'form':form.step1.related_products }) }}
                     </div>
 
                   </div>
@@ -238,12 +201,9 @@
 
                           <div class="form-group" id="show_variations_selector">
                             <h2>
-                              {{ trans("Product type", {}, 'AdminProducts') }}
-                              <span
-                                class="help-box"
-                                data-toggle="tooltip"
-                                title="{{ trans("Combinations: \n If you're selling a product with attributes that can be combined (color, size, capacity, ...), you will need to create combinations. \n Ex.: Size M in blue and size S in green are 2 different combinations of a t-shirt.",{}, 'AdminProducts')|raw }}"
-                              ></span>
+                              {{ trans("Combinations", {}, 'AdminProducts') }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ trans("Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?",{}, 'AdminProducts') }}" ></span>
                             </h2>
                             <div class="radio">
                               <label>
@@ -256,41 +216,51 @@
                                 <input type="radio" name="show_variations" value="1" {% if has_combinations %}checked="checked"{% endif %}>
                                 {{ trans("Product with combinations", {}, 'AdminProducts') }}
                               </label>
-                              <div>
-                                <span id="product_type_combinations_shortcut" class="small">
-                                  <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');">
-                                    {{ trans("Advanced settings available in Combinations", {}, 'AdminProducts')|raw }}
-                                  </a>
+                              <div id="product_type_combinations_shortcut">
+                                <span class="small font-secondary">
+                                  {{ trans("Advanced settings available in", {}, 'AdminProducts') }}
                                 </span>
+                                <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');" class="btn sensitive p-x-0">
+                                  <i class="material-icons">open_in_new</i> {{ trans("Combinations", {}, 'AdminProducts')|raw }}
+                                </a>
                               </div>
                             </div>
                           </div>
 
                           <div class="form-group" id="product_qty_0_shortcut_div">
-                            <h2>{{ trans("Quantity", {}, 'AdminProducts') }}</h2>
+                            <h2>
+                              {{ trans("Quantity", {}, 'AdminProducts') }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ trans("How many products should be available for sale?",{}, 'AdminProducts') }}" ></span>
+                            </h2>
                             {{ form_errors(form.step1.qty_0_shortcut) }}
                             <div class="row">
                               <div class="col-md-6">
                                 {{ form_widget(form.step1.qty_0_shortcut) }}
                               </div>
                             </div>
-                            <span class="small">
-                              <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');" class="external-link">
-                                {{ trans("Advanced settings available in Quantities", {}, 'AdminProducts') }}
-                              </a>
+                            <span class="small font-secondary">
+                              {{ trans("Advanced settings available in", {}, 'AdminProducts') }}
                             </span>
+                            <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');" class="btn sensitive p-x-0">
+                              <i class="material-icons">open_in_new</i> {{ trans("Quantities", {}, 'AdminProducts') }}
+                            </a>
                           </div>
 
                           <div class="form-group">
-                            <h2>{{ trans("Price", {}, 'AdminProducts') }}</h2>
+                            <h2>
+                              {{ trans("Price", {}, 'AdminProducts') }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ trans("This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.",{}, 'AdminProducts') }}" ></span>
+                            </h2>
                             <div class="row">
                               <div class="col-md-6">
-                                <label class="form-control-label">{{ trans("Tax excl.", {}, 'AdminProducts') }}</label>
+                                <label class="form-control-label">{{ trans("Tax excluded", {}, 'AdminProducts') }}</label>
                                 {{ form_widget(form.step1.price_shortcut) }}
                                 {{ form_errors(form.step1.price_shortcut) }}
                               </div>
                               <div class="col-md-6 col-offset-md-1">
-                                <label class="form-control-label">{{ trans("Tax incl.", {}, 'AdminProducts') }}</label>
+                                <label class="form-control-label">{{ trans("Tax included", {}, 'AdminProducts') }}</label>
                                 {{ form_widget(form.step1.price_ttc_shortcut) }}
                                 {{ form_errors(form.step1.price_ttc_shortcut) }}
                               </div>
@@ -299,12 +269,12 @@
                                 {{ render(controller('PrestaShopBundle:Admin/Product:renderField', {'productId': id_product, 'step': 'step2', 'fieldName': 'id_tax_rules_group' })) }}
                               </div>
                               <div class="col-md-12">
-                                <span class="small">
+                                <span class="small font-secondary">
                                   {{ trans("Advanced settings available in", {}, 'AdminProducts') }}
-                                  <a href="#tab-step2" onclick="$('a[href=\'#step2\']').tab('show');" class="external-link">
-                                    {{ trans("Pricing", {}, 'AdminProducts') }}
-                                  </a>
                                 </span>
+                                <a href="#tab-step2" onclick="$('a[href=\'#step2\']').tab('show');" class="btn sensitive p-x-0">
+                                  <i class="material-icons">open_in_new</i> {{ trans("Pricing", {}, 'AdminProducts') }}
+                                </a>
                               </div>
                             </div>
                             <div class="row hide">
@@ -319,7 +289,7 @@
                           </div>
 
                           <div class="form-group">
-                            {{ include('PrestaShopBundle:Admin/Product/Include:form-categories.html.twig', { 'form': form.step1 }) }}
+                            {{ include('PrestaShopBundle:Admin/Product/Include:form-categories.html.twig', { 'form': form.step1, 'productId': id_product }) }}
                           </div>
                         </div>
                       </div>
@@ -453,8 +423,8 @@
                         {{ trans('Product combinations', [], 'AdminProducts') }}
                         <span
                           class="help-box"
-                          data-toggle="tooltip"
-                          title="{{ trans("Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!", {}, 'AdminProducts')|raw }}"
+                          data-toggle="popover"
+                          data-content="{{ trans("Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!", {}, 'AdminProducts')|raw }}"
                         ></span>
                       </h2>
                       <div id="attributes-generator">
@@ -567,6 +537,8 @@
 
                   <div class="col-md-12">
                     <h2>{{ trans('Retail price', {}, 'AdminProducts') }}</h2>
+                    <span class="help-box" data-toggle="popover"
+                      data-content="{{ trans("This is the price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.",{}, 'AdminProducts') }}" ></span>
                   </div>
 
                   <div class="col-md-12 form-group">
@@ -584,7 +556,11 @@
                       </div>
 
                       <div class="col-md-2 col-md-offset-1">
-                        <label class="form-control-label">{{ form.step2.unit_price.vars.label }}</label>
+                        <label class="form-control-label">
+                          {{ form.step2.unit_price.vars.label }}
+                          <span class="help-box" data-toggle="popover"
+                            data-content="{{ trans("Some products can be purchased by unit (per bottle, per pound, etc.),  and this is the price for one unit. For instance, if you’re selling fabrics, it would be the price per meter.",{}, 'AdminProducts') }}" ></span>
+                        </label>
                         {{ form_errors(form.step2.unit_price) }}
                         {{ form_widget(form.step2.unit_price) }}
                       </div>
@@ -637,7 +613,11 @@
                   <div class="col-md-12">
                     <div class="row">
                       <div class="col-md-12">
-                        <h2>{{ trans('Cost price', {}, 'AdminProducts') }}</h2>
+                        <h2>
+                          {{ trans('Cost price', {}, 'AdminProducts') }}
+                          <span class="help-box" data-toggle="popover"
+                            data-content="{{ trans("The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.",{}, 'AdminProducts') }}" ></span>
+                        </h2>
                       </div>
                       <div class="col-md-2 form-group">
                         <label>{{ form.step2.wholesale_price.vars.label|raw }}</label>
@@ -650,7 +630,11 @@
                   <div class="col-md-12">
                     <div class="row">
                       <div class="col-md-12">
-                        <h2>{{ trans('Specific prices', {}, 'AdminProducts') }}</h2>
+                        <h2>
+                          {{ trans('Specific prices', {}, 'AdminProducts') }}
+                          <span class="help-box" data-toggle="popover"
+                            data-content="{{ trans("You can set specific prices for customers belonging to different groups, different countries, etc.",{}, 'AdminProducts') }}" ></span>
+                        </h2>
                       </div>
                       <div class="col-md-12">
                         <div id="specific-price" class="m-b-2">
@@ -687,7 +671,11 @@
                   <div class="col-md-12">
                     <div class="row">
                       <div class="col-md-12">
-                        <h2>{{ trans('Priority management', {}, 'AdminProducts') }}</h2>
+                        <h2>
+                          {{ trans('Priority management', {}, 'AdminProducts') }}
+                          <span class="help-box" data-toggle="popover"
+                            data-content="{{ trans("Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.",{}, 'AdminProducts') }}" ></span>
+                        </h2>
                       </div>
                       <div class="col-md-12">
                         <div class="alert alert-info" role="alert">
@@ -807,7 +795,11 @@
 
                     <div class="row">
                       <fieldset class="col-md-4 form-group">
-                        <label class="form-control-label">{{ form.step6.condition.vars.label }}</label>
+                        <label class="form-control-label">
+                          {{ form.step6.condition.vars.label }}
+                          <span class="help-box" data-toggle="popover"
+                            data-content="{{ trans("Not all shops sell new products. This option enables you to indicate the condition of the product. This information can be required on some marketplaces.",{}, 'AdminProducts') }}" ></span>
+                        </label>
                         {{ form_errors(form.step6.condition) }}
                         {{ form_widget(form.step6.condition) }}
                       </fieldset>
@@ -818,24 +810,40 @@
                     </div>
                     <div class="row">
                       <fieldset class="col-md-4 form-group">
-                        <label class="form-control-label">{{ form.step6.reference.vars.label }}</label>
+                        <label class="form-control-label">
+                          {{ form.step6.reference.vars.label }}
+                          <span class="help-box" data-toggle="popover"
+                            data-content="{{ trans("Your internal reference code for this product. Allowed special characters: .-_#\.",{}, 'AdminProducts') }}" ></span>
+                        </label>
                         {{ form_errors(form.step6.reference) }}
                         {{ form_widget(form.step6.reference) }}
                       </fieldset>
                       <fieldset class="col-md-4 form-group">
-                        <label class="form-control-label">{{ form.step6.isbn.vars.label }}</label>
+                        <label class="form-control-label">
+                          {{ form.step6.isbn.vars.label }}
+                          <span class="help-box" data-toggle="popover"
+                            data-content="{{ trans("This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.",{}, 'AdminProducts') }}" ></span>
+                        </label>
                         {{ form_errors(form.step6.isbn) }}
                         {{ form_widget(form.step6.isbn) }}
                       </fieldset>
                     </div>
                     <div class="row">
                       <fieldset class="col-md-4 form-group">
-                        <label class="form-control-label">{{ form.step6.upc.vars.label }}</label>
+                        <label class="form-control-label">
+                          {{ form.step6.upc.vars.label }}
+                          <span class="help-box" data-toggle="popover"
+                            data-content="{{ trans("This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.",{}, 'AdminProducts') }}" ></span>
+                        </label>
                         {{ form_errors(form.step6.upc) }}
                         {{ form_widget(form.step6.upc) }}
                       </fieldset>
                       <fieldset class="col-md-4 form-group">
-                        <label class="form-control-label">{{ form.step6.ean13.vars.label }}</label>
+                        <label class="form-control-label">
+                          {{ form.step6.ean13.vars.label }}
+                          <span class="help-box" data-toggle="popover"
+                            data-content="{{ trans("This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.",{}, 'AdminProducts') }}" ></span>
+                        </label>
                         {{ form_errors(form.step6.ean13) }}
                         {{ form_widget(form.step6.ean13) }}
                       </fieldset>
@@ -949,9 +957,8 @@
                     </div>
 
                     <div class="col-md-3">
-                      {% render controller('PrestaShopBundle:Admin\\Common:recommendedModules',
-                      {'limit': 3, 'randomize': 1, 'domain': 'products_others' })
-                      %}
+                      {{ render(controller('PrestaShopBundle:Admin\\Common:recommendedModules',
+                      {'limit': 3, 'randomize': 1, 'domain': 'products_others' })) }}
                     </div>
 
                   </div>
@@ -984,7 +991,7 @@
           data-redirect="{{ preview_link }}"
           data-url_deactive="{{ preview_link_deactivate }}"
           target="_blank"
-          class="btn btn-default btn-submit hidden-xs"
+          class="btn btn-tertiary btn-submit hidden-xs preview"
           data-toggle="tooltip"
           id="product_form_preview_btn"
           title="{{ trans('View the product draft on the site.', {}, 'AdminProducts') }}"
@@ -1007,7 +1014,7 @@
       <div class="col-lg-7 text-lg-right">
         <button
           type="button"
-          class="btn btn-primary-outline btn-submit hidden-xs uppercase duplicate"
+          class="btn btn-tertiary-outline btn-submit hidden-xs uppercase duplicate"
           id="product_form_save_duplicate_btn"
           data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
           data-toggle="tooltip"
@@ -1017,7 +1024,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-primary-outline btn-submit hidden-xs uppercase go-catalog"
+          class="btn btn-tertiary-outline btn-submit hidden-xs uppercase go-catalog"
           id="product_form_save_go_to_catalog_btn"
           data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
           data-toggle="tooltip" title="{{ trans('Save and go back to the catalog (CTRL+Q)', {}, 'AdminProducts') }}"
@@ -1026,7 +1033,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-primary-outline btn-submit hidden-xs uppercase new-product"
+          class="btn btn-tertiary-outline btn-submit hidden-xs uppercase new-product"
           id="product_form_save_new_btn"
           data-redirect="{{ path('admin_product_new') }}"
           data-toggle="tooltip"
@@ -1037,7 +1044,7 @@
         <input
           id="submit"
           type="submit"
-          class="btn btn-primary btn-lg uppercase"
+          class="btn btn-primary save uppercase"
           value="{{ trans('Save', {}, 'AdminProducts') }}"
           data-toggle="tooltip"
           title="{{ trans('Save (CTRL+S) the product and stay on the current page.', {}, 'AdminProducts') }}"
@@ -1079,7 +1086,10 @@
 {% block javascripts %}
   {{ parent() }}
   <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/product/product-manufacturer.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/product/product-related.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/product/product-category-tags.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/product/default-category.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
   <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
@@ -1094,12 +1104,12 @@
 "ToLargeFile": trans("The file is too large ({{filesize}}). Allowed maximum size is {{maxFilesize}}.", {}, 'AdminProducts'),
 "Drop images here": trans("Drop images here", {}, 'AdminProducts'),
 "or select files": trans("or select files", {}, 'AdminProducts'),
-"files recommandations": trans("Recommanded size 800 x 800px for default theme.", {}, 'AdminProducts'),
+"files recommandations": trans("Recommended size 800 x 800px for default theme.", {}, 'AdminProducts'),
 "files recommandations2": trans("JPG, GIF or PNG format.", {}, 'AdminProducts'),
 "Cover": trans("Cover", {}, 'AdminProducts'),
 "Are you sure to disable variations ? they will all be deleted": trans("Are you sure to disable variations ? they will all be deleted", {}, 'AdminProducts'),
 "Are you sure to delete this?": trans("Are you sure to delete this?", {}, 'AdminProducts'),
-"Quantity": trans("Quantity", {}, 'AdminProducts'),
+"Quantities": trans("Quantities", {}, 'AdminProducts'),
 "Combinations": trans("Combinations", {}, 'AdminProducts'),
 "Virtual product": trans("Virtual product", {}, 'AdminProducts'),
 "tax incl.": trans("tax incl.", {}, 'AdminProducts'),

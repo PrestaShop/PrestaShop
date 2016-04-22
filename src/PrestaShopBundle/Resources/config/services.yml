@@ -35,6 +35,10 @@ services:
     # ADAPTERS (prestashop.adapter.*)
 
     # Legacy context service, transitional
+    prestashop.adapter.legacy.configuration:
+        class: PrestaShop\PrestaShop\Adapter\Configuration
+        arguments: ["@=service('prestashop.adapter.legacy.context').getContext().shop"]
+
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
 
@@ -175,6 +179,10 @@ services:
             - @prestashop.adapter.data_provider.module
             - @prestashop.core.module.updater
             - @prestashop.adapter.legacy.logger
+            
+    prestashop.core.admin.theme.repository:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
+        arguments: ["@prestashop.adapter.legacy.configuration", "@=service('prestashop.adapter.legacy.context').getContext().shop"]
 
     # Managers
     prestashop.adapter.image_manager:

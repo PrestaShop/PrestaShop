@@ -259,13 +259,10 @@ class CartPresenter implements PresenterInterface
             'amount' => $this->priceFormatter->format($this->includeTaxes() ? $total_including_tax : $total_excluding_tax),
         ];
 
-        $totalAmount = $this->includeTaxes() ? $total_including_tax : $total_excluding_tax;
-        $shippingAmount = $shipping_cost;
-
         $subtotals['products'] = [
             'type' => 'products',
             'label' => $this->translator->trans('Products', [], 'Cart'),
-            'amount' =>  $this->priceFormatter->format(($totalAmount - $shippingAmount))
+            'amount' =>  $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS)))
         ];
 
         $products_count = array_reduce($products, function ($count, $product) {
@@ -297,6 +294,17 @@ class CartPresenter implements PresenterInterface
         foreach ($cartVouchers as $cartVoucher) {
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
             $vouchers[$cartVoucher['id_cart_rule']]['name'] = $cartVoucher['name'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_percent'] =  $cartVoucher['reduction_percent'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = $cartVoucher['reduction_amount'];
+
+            if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_percent'] == '0.00') {
+                $cartVoucher['reduction_formated'] = $cartVoucher['reduction_percent'] . '%';
+            } else if(isset($cartVoucher['reduction_amount'])) {
+                $cartVoucher['reduction_formated'] = $this->priceFormatter->format($cartVoucher['reduction_amount']);
+            }
+
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formated'] = $cartVoucher['reduction_formated'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink('cart', true, null, ['deleteDiscount' => $cartVoucher['id_cart_rule'], 'token' => Tools::getToken(false)]);
         }
 

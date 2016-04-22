@@ -72,22 +72,22 @@
                 {if isset($order.subtotals.discounts)}
                 <tr>
                     <td>{l s='Promo code'}</td>
-                    <td>- {$order.subtotals.discounts.amount}</td>
+                    <td>- {$order.subtotals.discounts.value}</td>
                 </tr>
                 {/if}
                 <tr>
                     <td>{l s='Shipping cost'}</td>
-                    <td>{$order.subtotals.shipping.amount}</td>
+                    <td>{$order.subtotals.shipping.value}</td>
                 </tr>
                 {if isset($order.subtotals.tax) }
                     <tr>
                         <td>{l s='Taxes'}</td>
-                        <td>{$order.subtotals.tax.amount}</td>
+                        <td>{$order.subtotals.tax.value}</td>
                     </tr>
                 {/if}
                 <tr>
                     <td class="text-uppercase"><strong>{l s='Total'}</strong></td>
-                    <td><strong>{$order.total.amount}</strong></td>
+                    <td><strong>{$order.total.value}</strong></td>
                 </tr>
             </table>
           </div>

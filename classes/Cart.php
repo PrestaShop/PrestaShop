@@ -150,6 +150,8 @@ class CartCore extends ObjectModel
     const BOTH_WITHOUT_SHIPPING = 4;
     const ONLY_SHIPPING = 5;
     const ONLY_WRAPPING = 6;
+
+    /** @deprecated since 1.7 **/
     const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
     const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 

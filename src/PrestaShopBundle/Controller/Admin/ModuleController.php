@@ -3,12 +3,10 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Module\ModulePresenter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,8 +48,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->get('prestashop.adapter.translator');
-        $moduleManagerFactory = new ModuleManagerBuilder();
-        $moduleRepository = $moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $responseArray = [];
 
         $filters = new AddonListFilter();
@@ -116,25 +113,25 @@ class ModuleController extends FrameworkBundleAdminController
         return $formattedContent;
     }
 
-    public function manageAction(Request $request, $category = null, $keyword = null)
+    public function manageAction()
     {
         $translator = $this->get('prestashop.adapter.translator');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $moduleManagerFactory = new ModuleManagerBuilder();
-        $moduleRepository = $moduleManagerFactory->buildRepository();
+        $shopService = $this->get('prestashop.adapter.shop.context');
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $themeRepository = $this->get('prestashop.core.admin.theme.repository');
+
+        // Retrieve current shop
+        $shopID = $shopService->getContextShopID();
+        $shops = $shopService->getShops();
+        $shop = $shops[$shopID];
+        $currentTheme = $themeRepository->getInstanceByName($shop['theme_name']);
+        $modulesTheme = $currentTheme->getModulesToEnable();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installed_products = $moduleRepository->getFilteredList($filters);
-
-        $filter = [];
-        if ($keyword !== null) {
-            $filter['search'] = $keyword;
-        }
-        if ($category !== null) {
-            $filter['category'] = $category;
-        }
 
         $products = new \stdClass;
         foreach (['native_modules', 'theme_bundle', 'modules'] as $subpart) {
@@ -142,10 +139,10 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         foreach ($installed_products as $installed_product) {
-            if ($installed_product->attributes->has('origin') && $installed_product->attributes->get('origin') === 'native' && $installed_product->attributes->get('author') === 'PrestaShop') {
-                $row = 'native_modules';
-            } elseif (0 /* ToDo: insert condition for theme related modules*/) {
+            if (in_array($installed_product->attributes->get('name'), $modulesTheme)) {
                 $row = 'theme_bundle';
+            } elseif ($installed_product->attributes->has('origin') && $installed_product->attributes->get('origin') === 'native' && $installed_product->attributes->get('author') === 'PrestaShop') {
+                $row = 'native_modules';
             } else {
                 $row= 'modules';
             }
@@ -176,9 +173,8 @@ class ModuleController extends FrameworkBundleAdminController
         $module = $request->attributes->get('module_name');
         $forceDeletion = $request->query->has('deletion');
 
-        $moduleManagerFactory = new ModuleManagerBuilder();
-        $moduleManager = $moduleManagerFactory->build();
-        $moduleRepository = $moduleManagerFactory->buildRepository();
+        $moduleManager = $this->get('prestashop.module.manager');
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
 
         $ret = array();
@@ -240,8 +236,8 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $translator = $this->get('prestashop.adapter.translator');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $moduleManagerFactory = new ModuleManagerBuilder();
-        $moduleRepository = $moduleManagerFactory->buildRepository();
+
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)

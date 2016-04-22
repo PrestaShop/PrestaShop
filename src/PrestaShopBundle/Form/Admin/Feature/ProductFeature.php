@@ -75,6 +75,7 @@ class ProductFeature extends CommonAbstractType
             'required' =>  false,
             'attr' => array(
                 'data-action' => $this->router->generate('admin_feature_get_feature_values'),
+                'data-toggle' => 'select2',
                 'class' => 'feature-selector',
             )
         ))

@@ -57,22 +57,34 @@
             {# Actual Page Content #}
 		<div class="module-short-list">
 			<span class="module-search-result-wording">{{modules.modules|length}} installed modules</span>
-		</div>
+                           <span class="help-box" data-toggle="popover"
+                                data-title="{{ trans("Installed modules", {}, 'AdminModules') }}"
+                                data-content="{{ trans("These are all the modules you’ve added to your shop, either by buying it from PrestaShop Addons, or by uploading it directly.", {}, 'AdminModules') }}">
+                           </span>
+                   </div>
 		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.modules, 'display_type' : 'list', 'origin' : 'manage'  } %}
 
 		<hr class="top-menu-separator">
 
 		<div class="module-short-list">
 			<span class="module-search-result-wording">{{modules.native_modules|length}} built-in modules</span>
+                           <span class="help-box" data-toggle="popover"
+                                 data-title="{{ trans("Built-in modules", {}, 'AdminModules') }}"
+                                data-content="{{ trans("These modules from PrestaShop are preinstalled when you set-up your shop. They cover the basics of e-commerce and comes for free.", {}, 'AdminModules') }}">
+                           </span>
 		</div>
 		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list', 'origin' : 'manage'  } %}
 
 		<hr class="top-menu-separator">
 
 		<div class="module-short-list">
-			<span class="module-search-result-wording">{{[]|length}} theme modules</span>
+			<span class="module-search-result-wording">{{modules.theme_bundle|length}} theme modules</span>
+                           <span class="help-box" data-toggle="popover"
+                                data-title="{{ trans("Theme modules", {}, 'AdminModules') }}"
+                                data-content="{{ trans("Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme.", {}, 'AdminModules') }}">
+                           </span>
 		</div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : [], 'display_type' : 'list', 'origin' : 'manage'  } %}
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.theme_bundle, 'display_type' : 'list', 'origin' : 'manage'  } %}
         </div>
     </div>
 {% endblock %}

@@ -17,13 +17,13 @@
 
       <label>
         <span>{l s='Order Reference:'}</span>
-        <input type="text" name="order_reference" value="{if isset($smarty.request.id_order)}{$smarty.request.id_order}{/if}" size="8" />
+        <input type="text" name="order_reference" value="{if isset($smarty.request.id_order)}{$smarty.request.id_order}{/if}" size="8">
         <i>{l s='For example: QIIXJXNUI or QIIXJXNUI#1'}</i>
       </label>
 
       <label>
         <span>{l s='Email:'}</span>
-        <input type="email" name="email" value="{if isset($smarty.request.email)}{$smarty.request.email}{/if}" />
+        <input type="email" name="email" value="{if isset($smarty.request.email)}{$smarty.request.email}{/if}">
       </label>
 
     </section>

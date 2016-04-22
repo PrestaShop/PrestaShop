@@ -1,6 +1,6 @@
 <div class="media-left">
   <a href="{$product.url}" title="{$product.name}">
-    <img class="media-object" src="{$product.cover.small.url}" alt="{$product.name}" />
+    <img class="media-object" src="{$product.cover.small.url}" alt="{$product.name}">
   </a>
 </div>
 <div class="media-body">

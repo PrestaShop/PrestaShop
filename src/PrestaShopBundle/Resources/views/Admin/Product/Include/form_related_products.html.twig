@@ -1,0 +1,22 @@
+<div id="related-content" class="row {{ form.vars.value.data|length == 0 ? 'hide':'' }}">
+  <div class="col-md-12">
+    <h2>{{ trans("Related product", {}, 'AdminProducts') }}</h2>
+  </div>
+  <div class="col-md-8">
+    <fieldset class="form-group">
+        {{ form_widget(form) }}
+    </fieldset>
+  </div>
+  <div class="col-md-1">
+      <fieldset class="form-group">
+        <button type="button" class="btn btn-invisible btn-block delete p-l-0 p-r-0" id="reset_related_product"><i class="material-icons">delete</i></button>
+      </fieldset>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <button type="button" class="btn btn-primary-outline sensitive open {{ form.vars.value.data|length > 0 ? 'hide':'' }}" id="add-related-product-button">
+      <i class="material-icons">add_circle</i> {{ trans('Add a related product', {}, 'AdminProducts') }}
+    </button>
+  </div>
+</div>

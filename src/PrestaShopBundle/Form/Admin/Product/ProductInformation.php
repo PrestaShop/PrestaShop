@@ -120,7 +120,7 @@ class ProductInformation extends CommonAbstractType
                 'constraints' => array(
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 3, 'max' => 128))
-                ), 'attr' => ['placeholder' => $this->translator->trans('Name', [], 'AdminProducts')]
+                ), 'attr' => ['placeholder' => $this->translator->trans('Enter your product name', [], 'AdminProducts'), 'class' => 'edit js-edit']
             ],
             'locales' => $this->locales,
             'hideTabs' => true,
@@ -214,6 +214,8 @@ class ProductInformation extends CommonAbstractType
         ->add('id_category_default', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->categories,
             'choices_as_values' => true,
+            'expanded' => true,
+            'multiple' => false,
             'required' =>  true,
             'label' => $this->translator->trans('Default category', [], 'AdminProducts')
         ))
@@ -223,14 +225,16 @@ class ProductInformation extends CommonAbstractType
             'mapped' => false,
             'constraints' => [],
             'label' => $this->translator->trans('Add a new category', [], 'AdminProducts'),
-            'attr' => ['data-action' => $this->router->generate('admin_category_simple_add_form')]
         ))
+        ->add('ignore', null, [
+            'mapped' => false
+        ])
         ->add('related_products', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => $this->translator->trans('Search and add a related product', [], 'AdminProducts'),
-            'template_collection' => '<div class="title col-xs-10">%s</div><button type="button" class="btn btn-danger btn-sm delete"><i class="material-icons">delete</i></button>',
+            'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
             'required' => false,
             'label' =>  $this->translator->trans('Accessories', [], 'AdminProducts')
         ));

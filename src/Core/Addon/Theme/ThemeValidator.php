@@ -85,7 +85,6 @@ class ThemeValidator
             'assets/css/theme.css',
             'templates/page.tpl',
             'templates/catalog/product.tpl',
-            'templates/catalog/_partials/miniatures/product.tpl',
             'templates/checkout/cart.tpl',
             'templates/checkout/checkout.tpl',
             'templates/_partials/head.tpl',

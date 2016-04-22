@@ -18,7 +18,7 @@
       <div class="header-top row">
         <div class="col-md-2">
           <a href="{$urls.base_url}" title="{l s='Homepage'}" >
-            <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name} {l s='logo'}" />
+            <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name} {l s='logo'}">
           </a>
         </div>
         <div class="col-md-10">

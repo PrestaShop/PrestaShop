@@ -7,10 +7,10 @@
 
     {block name='head_seo'}
       <title>{block name='head_seo_title'}{/block}</title>
-      <meta name="description" content="{block name='head_seo_description'}{/block}" />
-      <meta name="keywords" content="{block name='head_seo_keywords'}{/block}" />
+      <meta name="description" content="{block name='head_seo_description'}{/block}">
+      <meta name="keywords" content="{block name='head_seo_keywords'}{/block}">
     {/block}
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {* StarterTheme: favicon.ico and apple icons *}
   </head>

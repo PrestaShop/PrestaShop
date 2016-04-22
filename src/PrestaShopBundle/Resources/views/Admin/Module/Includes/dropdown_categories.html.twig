@@ -1,27 +1,27 @@
-<div class="dropdown">
+<div class="ps-dropdown dropdown btn-group">
     {% for menu in topMenuData %}
         {% set refMenu = menu.refMenu %}
-        <button class="btn dropdown-toggle module-categories-dropdown" id="{{refMenu}}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <div class="module-category-selector-label">
+        <span type="button"  id="{{refMenu}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="js-selected-item selected-item module-category-selector-label">
                 {{menu.name}}
-            </div>
-            <span><i class="icon-chevron-sign-down"></i></span>
-        </button>
-        <ul class="dropdown-menu module-category-selector" aria-labelledby="{{refMenu}}">
-            <li class="module-category-reset">
-                <a href="#">
-                    <span>
-                        All Categories
-                    </span>
-                </a>
-            </li>
-            {% for subMenu in menu.subMenu|arrayCast %}
-                <li class="module-category-menu" data-category-ref="{{subMenu.refMenu}}" data-category-display-name="{{subMenu.name}}">
-                    <a href="#">
-                        {{subMenu.name}}<span class="pull-right module-cateogry-count">{{subMenu.modulesRef|length}}</span>
+            </span> 
+            <i class="material-icons arrow-down">keyboard_arrow_down</i>
+        </span>
+        <div class="ps-dropdown-menu dropdown-menu module-category-selector" aria-labelledby="{{refMenu}}">
+            <ul class="items-list js-items-list">
+                <li class="module-category-reset">
+                    <a class="dropdown-item" href="#">
+                            All Categories
                     </a>
                 </li>
-            {% endfor %}
-        </ul>
+                {% for subMenu in menu.subMenu|arrayCast %}
+                    <li class="module-category-menu" data-category-ref="{{subMenu.refMenu}}" data-category-display-name="{{subMenu.name}}">
+                        <a  class="dropdown-item" href="#">
+                            {{subMenu.name}}<span class="pull-right">{{subMenu.modulesRef|length}}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endfor %}
 </div>

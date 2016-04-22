@@ -27,15 +27,15 @@
           {/block}
           {block name='product_buy'}
             <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
-              <input type="hidden" name="token" value="{$static_token}" />
-              <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id" />
+              <input type="hidden" name="token" value="{$static_token}">
+              <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id">
             {block name='product_variants'}
               {include file='catalog/_partials/product-variants.tpl'}
             {/block}
             {block name='product_quantity'}
               <p class="product-quantity">
                 <label for="quantity_wanted">{l s='Quantity'}</label>
-                <input type="text" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" class="input-group" />
+                <input type="text" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" class="input-group">
               </p>
             {/block}
 
@@ -44,7 +44,7 @@
               {l s='Add to cart'}
             </button>
             {block name='product_refresh'}
-              <input class="product-refresh hidden-xs-up" name="refresh" type="submit" value="{l s='Refresh'}" />
+              <input class="product-refresh hidden-xs-up" name="refresh" type="submit" value="{l s='Refresh'}">
             {/block}
           </form>
         {/block}

@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="block-contact col-md-5">
+<div class="block-contact col-md-4 pull-md-right">
 	<h4 class="text-uppercase block-contact-title">{l s='Store information' mod='blockcontact'}</h4>
     {$contact_infos.address.formatted nofilter}
     {if $contact_infos.phone}<br>{l s='Tel: %s' sprintf=$contact_infos.phone}{/if}

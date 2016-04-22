@@ -16,7 +16,7 @@
         {if $display_taxes_label}
          <small class="text-capitalize">{if $priceDisplay} {l s='tax excl.'}{else} {l s='Tax incl.'}{/if}</small>
         {/if}
-        <meta itemprop="priceCurrency" content="{$currency.iso_code}" />
+        <meta itemprop="priceCurrency" content="{$currency.iso_code}">
         {hook h='displayProductPriceBlock' product=$product type="price"}
         {if $product.has_discount}
           {if $product.discount_type === 'percentage'}

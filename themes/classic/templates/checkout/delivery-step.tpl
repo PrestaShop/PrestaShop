@@ -15,7 +15,7 @@
                   <div class="delivery-option row">
                     <div class="col-md-1">
                       <span class="custom-radio pull-xs-left">
-                        <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if} />
+                        <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if}>
                         <span></span>
                       </span>
                     </div>
@@ -25,7 +25,7 @@
                           <div class="col-md-3">
                             <div class="logo-container">
                               {if $carrier.logo}
-                                <img src="{$carrier.logo}" alt="{$carrier.name}" />
+                                <img src="{$carrier.logo}" alt="{$carrier.name}">
                                 {else}
                                 &nbsp;
                               {/if}

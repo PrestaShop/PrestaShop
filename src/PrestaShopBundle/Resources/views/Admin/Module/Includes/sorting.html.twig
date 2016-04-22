@@ -4,6 +4,10 @@
         <div class="col-lg-6">
             <div class="module-sorting-search-wording">
                 <span class="module-search-result-wording">{{ totalModules }} modules and services selected for you</span>
+                <span class="help-box" data-toggle="popover"
+                    data-title="{{ trans("Selection", {}, 'AdminModules') }}"
+                    data-content="{{ trans("Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.", {}, 'AdminModules') }}">
+                </span>
             </div>
             <p class="module-addons-search">
                 <a class='module-addons-search-link' href="#">

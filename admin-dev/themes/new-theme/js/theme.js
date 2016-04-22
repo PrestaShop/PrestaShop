@@ -18,5 +18,6 @@ import '../scss/theme.scss';
 // Theme Javascript
 
 import NavBar from './nav_bar.js';
+import './product-page/index';
 
 new NavBar();

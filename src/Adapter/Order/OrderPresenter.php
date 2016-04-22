@@ -130,11 +130,12 @@ class OrderPresenter implements PresenterInterface
             ];
         }
 
+        $total_products = ($this->includeTaxes()) ? $order->total_products_wt : $order->total_products;
         $subtotals['products'] = [
             'type' => 'products',
             'label' => $this->translator->trans('Products', [], 'Cart').' '.$tax_label,
-            'amount' => $order->total_products,
-            'value' => $this->priceFormatter->format($order->total_products),
+            'amount' => $total_products,
+            'value' => $this->priceFormatter->format($total_products),
         ];
 
         $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;

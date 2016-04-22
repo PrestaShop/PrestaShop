@@ -62,13 +62,7 @@ class ModulesGetOverrideTest extends IntegrationTestCase
     public function testDummyGetOverride($moduleName)
     {
         $module = Module::getInstanceByName($moduleName);
-
-        if (version_compare(PHP_VERSION, '7.0.0') < 0) {
-            $this->assertEmpty($module->getOverrides());
-        }else {
-            $this->assertNotEmpty($module->getOverrides());
-        }
-
+        $this->assertEmpty($module->getOverrides());
     }
 
     public function testRealOverrideInModuleDir()

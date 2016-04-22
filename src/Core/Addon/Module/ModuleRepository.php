@@ -272,11 +272,10 @@ class ModuleRepository implements ModuleRepositoryInterface
                 'is_valid' => 0,
                 'version' => null,
             ];
+            $main_class_attributes = [];
 
             if ($this->moduleProvider->isModuleMainClassValid($name)) {
                 require_once $php_file_path;
-
-                $main_class_attributes = [];
 
                 // We load the main class of the module, and get its properties
                 $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
@@ -293,13 +292,13 @@ class ModuleRepository implements ModuleRepositoryInterface
                 $disk['is_valid'] = 1;
                 $disk['version'] = $tmp_module->version;
 
-                $this->cache[$name]['attributes'] = $main_class_attributes;
-                $this->cache[$name]['disk']       = $disk;
-
                 $attributes = array_merge($attributes, $main_class_attributes);
             } else {
-                $attributes['warning'] = 'Invalid module class';
+                $main_class_attributes['warning'] = 'Invalid module class';
             }
+
+            $this->cache[$name]['attributes'] = $main_class_attributes;
+            $this->cache[$name]['disk']       = $disk;
         }
 
         foreach (['logo.png', 'logo.gif'] as $logo) {

@@ -127,7 +127,7 @@ var AdminModuleController = function () {
         });
 
         $('body').on('click', this.statusResetBtnSelector, function () {
-            var text = $(this).find('a > span').text();
+            var text = $(this).find('a').text();
             $(_this.statusSelectorLabelSelector).text(text);
             $(this).hide();
             _this.currentRefStatus = null;
@@ -268,6 +268,7 @@ var AdminModuleController = function () {
                 break;
             case availableSorts[3]:
                 dataAttr = ['data-scoring', 'data-tech-name'];
+                sortOrder = 'desc';
                 sortKind = 'num';
                 break;
         }
@@ -439,6 +440,7 @@ var AdminModuleController = function () {
                         $(element.selector).append(element.content);
                     });
                     $(requiredSelectorCombination).fadeIn(800);
+                    $('[data-toggle="popover"]').popover();
                 });
             } else {
                 $(_this.placeholderGlobalSelector).fadeOut(800, function(){
@@ -1049,7 +1051,7 @@ var AdminModuleController = function () {
         this.pstaggerInput = $(this.searchBarSelector).pstagger({
             onTagsChanged: _this.updateTagList,
             onResetTags: _this.resetSearch,
-            inputPlaceholder: 'Add tag ...',
+            inputPlaceholder: 'Search modules: keyword, name, author...',
             closingCross: true,
             context: _this,
             clearAllBtn: true,

@@ -15,7 +15,9 @@
                     <button type="button" class="btn btn-default btn-sm btn-back"><i class="material-icons">keyboard_arrow_left</i> {{ trans('Back to product', [], 'AdminTabs') }}</button>
                 </div>
                 <div class="pull-left m-l-2">
-                    <div class="title">{{ form.vars.value.name }}</div>
+                    <div class="title">
+                      {{ form.vars.value.name }}
+                    </div>
                     {{ form_widget(form.attribute_default) }}
                 </div>
                 <div class="clearfix"></div>
@@ -28,7 +30,11 @@
                     </div>
                     <div class="col-md-3">
                         <fieldset class="form-group">
-                            <label>{{ form.attribute_quantity.vars.label }}</label>
+                            <label>
+                              {{ form.attribute_quantity.vars.label }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ trans("The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.",{}, 'AdminProducts') }}" ></span>
+                            </label>
                             {{ form_widget(form.attribute_quantity) }}
                         </fieldset>
                     </div>
@@ -49,7 +55,11 @@
                     </div>
                     <div class="col-md-3">
                         <fieldset class="form-group">
-                            <label>{{ form.attribute_price.vars.label }}</label>
+                            <label>
+                              {{ form.attribute_price.vars.label }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ trans("Does this combination have a different price? Is it cheaper or more expensive than the default retail price?",{}, 'AdminProducts') }}" ></span>
+                            </label>
                             {{ form_widget(form.attribute_price) }}
                         </fieldset>
                     </div>
@@ -64,7 +74,11 @@
                 <div>
                     <div class="col-md-3">
                         <fieldset class="form-group">
-                            <label>{{ form.attribute_unity.vars.label }}</label>
+                            <label>
+                              {{ form.attribute_unity.vars.label }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ trans("Does this combination have a different price per unit?",{}, 'AdminProducts') }}" ></span>
+                            </label>
                             {{ form_widget(form.attribute_unity) }}
                         </fieldset>
                     </div>
@@ -102,7 +116,11 @@
                     </div>
                     <div class="col-md-3">
                         <fieldset class="form-group">
-                            <label>{{ form.attribute_ean13.vars.label }}</label>
+                            <label>
+                              {{ form.attribute_ean13.vars.label }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ trans("This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.",{}, 'AdminProducts') }}" ></span>
+                            </label>
                             {{ form_widget(form.attribute_ean13) }}
                         </fieldset>
                     </div>

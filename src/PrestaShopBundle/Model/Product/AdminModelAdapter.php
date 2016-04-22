@@ -573,11 +573,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $finalCustomFields = [];
         $customizationFields = [];
         $productCustomizationFields = $this->product->getCustomizationFields();
-        
+
         if (!$productCustomizationFields) {
             return [];
         }
-        
+
         foreach ($productCustomizationFields as $customizationField) {
             $customizationFields = array_merge($customizationFields, $customizationField);
         }
