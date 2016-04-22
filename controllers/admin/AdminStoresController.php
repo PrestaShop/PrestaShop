@@ -356,7 +356,13 @@ class AdminStoresControllerCore extends AdminController
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
                 if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store'))) {
-                    $_POST[$kp] = trim($vp);
+                    if (is_array($vp)) {
+                        foreach ($vp as $vpi => $vpv) {
+                            $_POST[$kp][$vpi] = trim($vpv);
+                        }
+                    } else {
+                        $_POST[$kp] = trim($vp);
+                    }
                 }
             }
 
