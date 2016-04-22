@@ -543,7 +543,7 @@ class ValidateCore
      */
     public static function isPhoneNumber($number)
     {
-        return preg_match('/^[+0-9. ()-]*$/', $number);
+        return preg_match('/^[+0-9. ()\/-]*$/', $number);
     }
 
     /**
