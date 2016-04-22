@@ -173,17 +173,15 @@ class AdminModuleDataProvider implements ModuleInterface
 
         foreach ($modules as &$module) {
             $refs = [];
-            foreach ($module->attributes->get('refs') as $key => $name) {
-                $ref  = $this->getRefFromModuleCategoryName($name);
-
-                if (!isset($categories['categories']->subMenu[$ref])) {
-                    $categories['categories']->subMenu[$ref] = $this->createMenuObject($ref,
+            foreach ($module->attributes->get('refs') as $name) {
+                if (!isset($categories['categories']->subMenu[$name])) {
+                    $categories['categories']->subMenu[$name] = $this->createMenuObject($name,
                         $name
                     );
                 }
 
-                $categories['categories']->subMenu[$ref]->modulesRef[] = $module->attributes->get('name');
-                $refs[] = $ref;
+                $categories['categories']->subMenu[$name]->modulesRef[] = $module->attributes->get('name');
+                $refs[] = $name;
             }
             $module->attributes->set('refs', $refs);
         }
@@ -343,11 +341,6 @@ class AdminModuleDataProvider implements ModuleInterface
                 'subMenu' => [],
                 'modulesRef' => [],
         ];
-    }
-
-    protected function getRefFromModuleCategoryName($name)
-    {
-        return str_replace([' ', '(', ')'], ['_', '', ''], strtolower(\Tools::replaceAccentedChars($name)));
     }
 
     protected function fallbackOnCatalogCache()
