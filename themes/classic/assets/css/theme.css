@@ -5435,9 +5435,6 @@ body#checkout {
 .page-order table thead th {
   text-align: center; }
 
-#authentication .form-control-comment {
-  display: none; }
-
 #authentication .tooltip.tooltip-bottom {
   padding: 0;
   margin: 0; }
