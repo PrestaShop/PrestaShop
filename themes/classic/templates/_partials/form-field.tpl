@@ -54,7 +54,7 @@
 
       {elseif $field.type === 'password'}
 
-        <input type="password" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required}required{/if}>
+        <input type="password" pattern=".{literal}{{/literal}5,{literal}}{/literal}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required}required{/if}>
 
       {else}
 
