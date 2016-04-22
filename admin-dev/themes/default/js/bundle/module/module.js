@@ -127,7 +127,7 @@ var AdminModuleController = function () {
         });
 
         $('body').on('click', this.statusResetBtnSelector, function () {
-            var text = $(this).find('a > span').text();
+            var text = $(this).find('a').text();
             $(_this.statusSelectorLabelSelector).text(text);
             $(this).hide();
             _this.currentRefStatus = null;
