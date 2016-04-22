@@ -32,6 +32,5 @@ if (!defined('PS_ADMIN_DIR')) {
 }
 
 require_once(dirname(__FILE__).'/../config/config.inc.php');
-require_once('functions.php');
 
 $loader = require_once(dirname(__FILE__).'/../app/bootstrap.php.cache');
