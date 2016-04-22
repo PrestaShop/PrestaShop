@@ -1,6 +1,6 @@
 {include file='_partials/form-errors.tpl' errors=$errors['']}
 
-<form method="POST" action="{$action}" data-toggle="validator">
+<form method="POST" action="{$action}">
   <section class="form-fields">
     {block name='form_fields'}
       {foreach from=$formFields item="field"}

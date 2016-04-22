@@ -5,7 +5,7 @@
 {/block}
 
 {block name='page_content'}
-  <form action="{$urls.pages.password}" method="post" data-toggle="validator">
+  <form action="{$urls.pages.password}" method="post">
 
     <header>
       <p>{l s='Please enter the email address you used to register. You will receive a temporary link to reset your password.'}</p>

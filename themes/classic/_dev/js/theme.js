@@ -19,7 +19,6 @@ import ProductSelect from './components/product-select';
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
 
-import 'bootstrap-validator/dist/validator.min';
 import './lib/bootstrap-filestyle.min';
 
 import './components/block-cart';
