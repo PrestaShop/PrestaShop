@@ -99,3 +99,4 @@ ALTER TABLE `PREFIX_image_type` DROP `scenes`;
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_SCENE_FEATURE_ACTIVE';
 
 UPDATE `PREFIX_configuration` SET value=1 WHERE name='PS_TAX_DISPLAY';
+UPDATE `PREFIX_tab` SET `class_name` = REPLACE (`class_name`, 'AdminParent', 'Admin') WHERE `class_name` LIKE '%AdminParent%';

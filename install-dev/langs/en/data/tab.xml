@@ -5,6 +5,7 @@
     <tab id="CONFIGURE" name="CONFIGURE" />
     <tab id="Addresses" name="Addresses" />
     <tab id="Administration" name="Administration" />
+    <tab id="Administration_1" name="Administration" />
     <tab id="Module_Page" name="Module Catalog" />
     <tab id="Advanced_Parameters" name="Advanced Parameters" />
     <tab id="Attachments" name="Files" />
@@ -111,6 +112,7 @@
     <tab id="Store_Contacts" name="Stores" />
     <tab id="Suppliers" name="Suppliers" />
     <tab id="Supply_orders" name="Supply orders" />
+    <tab id="Tabs" name="Tabs" />
     <tab id="Tags" name="Tags" />
     <tab id="Tax_Management" name="Taxes" />
     <tab id="Tax_Rules" name="Tax Rules" />

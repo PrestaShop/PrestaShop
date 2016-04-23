@@ -19,7 +19,7 @@
 
             <!--ORDERS-->
             <tab id="Orders" id_parent="SELL" active="1" hide_host_mode="0" icon="shopping_basket">
-                <class_name>AdminParentOrders</class_name>
+                <class_name>AdminOrders</class_name>
             </tab>
 
                 <tab id="Orders_1" id_parent="Orders" active="1" hide_host_mode="0" icon="">
@@ -53,7 +53,7 @@
                     <class_name>AdminTracking</class_name>
                 </tab>
                 <tab id="Attributes_and_features" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentAttributesGroups</class_name>
+                    <class_name>AdminAttributesGroups</class_name>
                 </tab>
 
                     <tab id="Attributes_and_Values" id_parent="Attributes_and_features" active="1" hide_host_mode="0" icon="">
@@ -64,7 +64,7 @@
                     </tab>
 
                 <tab id="Manufacturers_and_suppliers" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentManufacturers</class_name>
+                    <class_name>AdminManufacturers</class_name>
                 </tab>
 
                     <tab id="Manufacturers" id_parent="Manufacturers_and_suppliers" active="1" hide_host_mode="0" icon="">
@@ -78,7 +78,7 @@
                     <class_name>AdminAttachments</class_name>
                 </tab>
                 <tab id="Price_Rules" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentCartRules</class_name>
+                    <class_name>AdminCartRules</class_name>
                 </tab>
 
                     <tab id="Cart_Rules" id_parent="Price_Rules" active="1" hide_host_mode="0" icon="">
@@ -90,7 +90,7 @@
 
             <!--CUSTOMERS-->
             <tab id="Customers" id_parent="SELL" active="1" hide_host_mode="0" icon="account_circle">
-                <class_name>AdminParentCustomer</class_name>
+                <class_name>AdminCustomer</class_name>
             </tab>
 
                 <tab id="Customers_2" id_parent="Customers" active="1" hide_host_mode="0" icon="">
@@ -105,7 +105,7 @@
 
             <!--CUSTOMER SERVICE-->
             <tab id="Customer_Service" id_parent="SELL" active="1" hide_host_mode="0" icon="chat">
-                <class_name>AdminParentCustomerThreads</class_name>
+                <class_name>AdminCustomerThreads</class_name>
             </tab>
 
                 <tab id="Customer_Service_2" id_parent="Customer_Service" active="1" hide_host_mode="0" icon="">
@@ -132,7 +132,7 @@
                     <class_name>AdminWarehouses</class_name>
                 </tab>
                 <tab id="Stock_Management" id_parent="Advanced_stock_management" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentStockManagement</class_name>
+                    <class_name>AdminStockManagement</class_name>
                 </tab>
 
                     <tab id="Stock_Management" id_parent="Stock_Management" active="1" hide_host_mode="0" icon="">
@@ -178,7 +178,7 @@
 
             <!--LOOK & FEEL-->
             <tab id="Look_feel" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="desktop_mac">
-                <class_name>AdminParentThemes</class_name>
+                <class_name>AdminThemes</class_name>
             </tab>
 
                 <tab id="Themes" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
@@ -198,7 +198,7 @@
                 </tab>
 
                 <tab id="Shipping" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="local_shipping">
-                    <class_name>AdminParentShipping</class_name>
+                    <class_name>AdminShipping</class_name>
                 </tab>
 
                     <tab id="Carriers" id_parent="Shipping" active="1" hide_host_mode="0" icon="">
@@ -209,7 +209,7 @@
                     </tab>
 
                 <tab id="Payment" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="payment">
-                    <class_name>AdminParentPayment</class_name>
+                    <class_name>AdminPayment</class_name>
                 </tab>
 
                     <tab id="Payment_methods" id_parent="Payment" active="1" hide_host_mode="0" icon="">
@@ -221,11 +221,11 @@
 
             <!--INTERNATIONAL OK-->
             <tab id="International" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="language">
-                <class_name>AdminInternational</class_name>
+                <class_name>AdminLocalization</class_name>
             </tab>
 
                 <tab id="Localization" id_parent="International" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentLocalization</class_name>
+                    <class_name>AdminLocalization</class_name>
                 </tab>
 
                     <tab id="Localization_1" id_parent="Localization" active="1" hide_host_mode="0" icon="">
@@ -242,7 +242,7 @@
                     </tab>
 
                 <tab id="Locations" id_parent="International" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentCountries</class_name>
+                    <class_name>AdminCountries</class_name>
                 </tab>
 
                     <tab id="Countries" id_parent="Locations" active="1" hide_host_mode="0" icon="">
@@ -256,7 +256,7 @@
                     </tab>
 
                 <tab id="Tax_Management" id_parent="International" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentTaxes</class_name>
+                    <class_name>AdminTaxes</class_name>
                 </tab>
 
                     <tab id="Taxes" id_parent="Tax_Management" active="1" hide_host_mode="0" icon="">
@@ -281,7 +281,7 @@
             </tab>
 
                 <tab id="General" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentPreferences</class_name>
+                    <class_name>AdminPreferences</class_name>
                 </tab>
 
                     <tab id="General_1" id_parent="General" active="1" hide_host_mode="0" icon="">
@@ -292,7 +292,7 @@
                     </tab>
 
                 <tab id="Order_settings" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentOrderPreferences</class_name>
+                    <class_name>AdminOrderPreferences</class_name>
                 </tab>
 
                     <tab id="Order_settings_2" id_parent="Order_settings" active="1" hide_host_mode="0" icon="">
@@ -306,7 +306,7 @@
                     <class_name>AdminPPreferences</class_name>
                 </tab>
                 <tab id="Customer_settings" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentCustomerPreferences</class_name>
+                    <class_name>AdminCustomerPreferences</class_name>
                 </tab>
 
                     <tab id="Customers_2" id_parent="Customer_settings" active="1" hide_host_mode="0" icon="">
@@ -320,7 +320,7 @@
                     </tab>
 
                 <tab id="Contact" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentStores</class_name>
+                    <class_name>AdminStores</class_name>
                 </tab>
 
                     <tab id="Contacts" id_parent="Contact" active="1" hide_host_mode="0" icon="">
@@ -331,7 +331,7 @@
                     </tab>
 
                 <tab id="Traffic" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentMeta</class_name>
+                    <class_name>AdminMeta</class_name>
                 </tab>
 
                     <tab id="SEO_URLs" id_parent="Traffic" active="1" hide_host_mode="0" icon="">
@@ -345,7 +345,7 @@
                     </tab>
 
                 <tab id="Search" id_parent="Shop_parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentSearchConf</class_name>
+                    <class_name>AdminSearchConf</class_name>
                 </tab>
 
                     <tab id="Search_1" id_parent="Search" active="1" hide_host_mode="0" icon="">
@@ -369,6 +369,14 @@
                 <tab id="Administration" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminAdminPreferences</class_name>
                 </tab>
+
+                    <tab id="Administration_1" id_parent="Administration" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminAdminPreferences</class_name>
+                    </tab>
+                    <tab id="Tabs" id_parent="Administration" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminTabs</class_name>
+                    </tab>
+
                 <tab id="E-mail" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminEmails</class_name>
                 </tab>
@@ -377,7 +385,7 @@
                 </tab>
 
                 <tab id="Employees" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentEmployees</class_name>
+                    <class_name>AdminEmployees</class_name>
                 </tab>
 
                     <tab id="Employees_1" id_parent="Employees" active="1" hide_host_mode="0" icon="">
@@ -391,7 +399,7 @@
                     </tab>
 
                 <tab id="Database" id_parent="Advanced_Parameters" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminParentRequestSql</class_name>
+                    <class_name>AdminRequestSql</class_name>
                 </tab>
 
                     <tab id="SQL_Manager" id_parent="Database" active="1" hide_host_mode="0" icon="">
