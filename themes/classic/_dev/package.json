@@ -26,7 +26,6 @@
     "postcss-loader": "^0.8.0",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
-    "stylus": "^0.52.4",
     "tether": "^1.1.1",
     "velocity-animate": "^1.2.3",
     "webpack": "^1.12.9",
