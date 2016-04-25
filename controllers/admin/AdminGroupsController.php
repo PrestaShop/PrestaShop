@@ -375,7 +375,7 @@ class AdminGroupsControllerCore extends AdminController
             }
 
             $category_reductions[(int)$category['id_category']] = array(
-                'path' => getPath(Context::getContext()->link->getAdminLink('AdminCategories'), (int)$category['id_category']),
+                'path' => Tools::getPath(Context::getContext()->link->getAdminLink('AdminCategories'), (int)$category['id_category']),
                 'reduction' => (float)$category['reduction'] * 100,
                 'id_category' => (int)$category['id_category']
             );
@@ -385,7 +385,7 @@ class AdminGroupsControllerCore extends AdminController
             foreach ($category_reduction as $key => $val) {
                 if (!array_key_exists($key, $category_reductions)) {
                     $category_reductions[(int)$key] = array(
-                        'path' => getPath(Context::getContext()->link->getAdminLink('AdminCategories'), $key),
+                        'path' => Tools::getPath(Context::getContext()->link->getAdminLink('AdminCategories'), $key),
                         'reduction' => (float)$val * 100,
                         'id_category' => (int)$key
                     );
@@ -482,7 +482,7 @@ class AdminGroupsControllerCore extends AdminController
             $result['hasError'] = true;
         } else {
             $result['id_category'] = (int)$id_category;
-            $result['catPath'] = getPath(self::$currentIndex.'?tab=AdminCategories', (int)$id_category);
+            $result['catPath'] = Tools::getPath(self::$currentIndex.'?tab=AdminCategories', (int)$id_category);
             $result['discount'] = $category_reduction;
             $result['hasError'] = false;
         }

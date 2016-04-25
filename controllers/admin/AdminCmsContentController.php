@@ -114,7 +114,7 @@ class AdminCmsContentControllerCore extends AdminController
                 }
             }
             $this->context->smarty->assign(array(
-                'cms_breadcrumb' => getPath($cat_bar_index, $id_cms_category, '', '', 'cms'),
+                'cms_breadcrumb' => Tools::getPath($cat_bar_index, $id_cms_category, '', '', 'cms'),
                 'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
                 'page_header_toolbar_title' => $this->toolbar_title,
             ));

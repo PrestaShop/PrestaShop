@@ -346,7 +346,7 @@ class AdminSearchControllerCore extends AdminController
             if (isset($this->_list['categories']) && count($this->_list['categories'])) {
                 $categories = array();
                 foreach ($this->_list['categories'] as $category) {
-                    $categories[] = getPath($this->context->link->getAdminLink('AdminCategories', false), $category['id_category']);
+                    $categories[] = Tools::getPath($this->context->link->getAdminLink('AdminCategories', false), $category['id_category']);
                 }
                 $this->tpl_view_vars['categories'] = $categories;
             }

@@ -3466,6 +3466,73 @@ exit;
         }
         return $base;
     }
+
+    /**
+     * Return path to a product category
+     *
+     * @param string $url_base Start URL
+     * @param int $id_category Start category
+     * @param string $path Current path
+     * @param string $highlight String to highlight (in XHTML/CSS)
+     * @param string $type Category type (products/cms)
+     */
+    public static function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
+    {
+        /* As of 1.7 */
+        Tools::displayAsDeprecated();
+        $context = Context::getContext();
+        if ($category_type == 'catalog') {
+            $category = Db::getInstance()->getRow('
+		SELECT id_category, level_depth, nleft, nright
+		FROM '._DB_PREFIX_.'category
+		WHERE id_category = '.(int)$id_category);
+            if (isset($category['id_category'])) {
+                $sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
+					FROM '._DB_PREFIX_.'category c
+					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
+					WHERE c.nleft <= '.(int)$category['nleft'].'
+						AND c.nright >= '.(int)$category['nright'].'
+						AND cl.id_lang = '.(int)$context->language->id.
+                       ($home ? ' AND c.id_category='.(int)$id_category : '').'
+						AND c.id_category != '.(int)Category::getTopCategory()->id.'
+					GROUP BY c.id_category
+					ORDER BY c.level_depth ASC
+					LIMIT '.(!$home ? (int)$category['level_depth'] + 1 : 1);
+                $categories = Db::getInstance()->executeS($sql);
+                $full_path = '';
+                $n = 1;
+                $n_categories = (int)count($categories);
+                foreach ($categories as $category) {
+                    $link = Context::getContext()->link->getAdminLink('AdminCategories');
+                    $edit = '<a href="'.Tools::safeOutput($link.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory')).'" title="'.($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify').'"><i class="icon-'.(($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil').'"></i></a> ';
+                    $full_path .= $edit.
+                                  ($n < $n_categories ? '<a href="'.Tools::safeOutput($url_base.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCategories'.(int)Tab::getIdFromClassName('AdminCategories').(int)$context->employee->id)).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
+                                  (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">'.htmlentities($highlight, ENT_NOQUOTES, 'UTF-8').'</span>', $category['name']) : $category['name']).
+                                  ($n < $n_categories ? '</a>' : '').
+                                  (($n++ != $n_categories || !empty($path)) ? ' > ' : '');
+                }
+                return $full_path.$path;
+            }
+        } elseif ($category_type == 'cms') {
+            $category = new CMSCategory($id_category, $context->language->id);
+            if (!$category->id) {
+                return $path;
+            }
+            $name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
+            $edit = '<a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&addcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
+				<i class="icon-pencil"></i></a> ';
+            if ($category->id == 1) {
+                $edit = '<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
+					<i class="icon-home"></i></a></li> ';
+            }
+            $path = $edit.'<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
+		'.$name.'</a></li> > '.$path;
+            if ($category->id == 1) {
+                return substr($path, 0, strlen($path) - 3);
+            }
+            return Tools::getPath($url_base, $category->id_parent, $path, '', 'cms');
+        }
+    }
 }
 
 /**
