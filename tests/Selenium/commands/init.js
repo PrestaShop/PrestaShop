@@ -34,14 +34,8 @@ module.exports = function initializePrestaShopBrowserCommands (browser) {
 
   browser.addCommand('logout', function logout () {
     return browser
-      .url()
-      .then(function (initialURL) {
-        return browser
-          .url('/')
-          .click('#header a.logout')
-          .url(initialURL)
-        ;
-      })
+      .deleteCookie()
+      .refresh()
     ;
   });
 
