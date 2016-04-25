@@ -3468,7 +3468,8 @@ exit;
     }
 
     /**
-     * Return path to a product category
+     * @deprecated Deprecated since 1.7.0
+     * Return path to a Product or a CMS category
      *
      * @param string $url_base Start URL
      * @param int $id_category Start category
@@ -3478,7 +3479,6 @@ exit;
      */
     public static function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
     {
-        /* As of 1.7 */
         Tools::displayAsDeprecated();
         $context = Context::getContext();
         if ($category_type == 'catalog') {
