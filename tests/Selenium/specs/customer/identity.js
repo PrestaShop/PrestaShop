@@ -40,6 +40,11 @@ describe('Customer Identity', function () {
         .setValue('[name="new_password"]', 'new password')
         .click('#customer-form button')
         .waitForVisible('.alert-success')
+        ;
+    });
+    
+    it('should allow the customer to use the new password', function () {
+      return browser
         // try to login with the new password
         .logout()
         .loginDefaultCustomer({password: 'new password'})
