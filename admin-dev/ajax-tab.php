@@ -31,7 +31,6 @@ if (!defined('_PS_ADMIN_DIR_')) {
 }
 
 require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
-require(_PS_ADMIN_DIR_.'/functions.php');
 
 // For retrocompatibility with "tab" parameter
 if (!isset($_GET['controller']) && isset($_GET['tab'])) {
