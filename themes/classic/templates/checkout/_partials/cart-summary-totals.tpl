@@ -11,7 +11,7 @@
       {/foreach}
     </div>
   {/block}
-
+<hr>
   {block name='cart_summary_totals'}
     <div class="cart-summary-totals">
       <span class="label">{$cart.total.label}</span>
