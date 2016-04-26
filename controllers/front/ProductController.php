@@ -296,9 +296,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'unit_price' => ($this->product->unit_price_ratio > 0) ? ($productPrice / $this->product->unit_price_ratio) : 0,
                 'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
                 'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
-                'display_taxes_label' => (Module::isEnabled('ps_legalcompliance')
-                                          && (bool)Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
-                                         || $this->context->country->display_tax_label,
                 'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')
             ));
 
