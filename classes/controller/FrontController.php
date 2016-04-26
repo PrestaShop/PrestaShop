@@ -1308,6 +1308,7 @@ class FrontControllerCore extends Controller
 
 
         return [
+            'display_taxes_label' => $this->getDisplayTaxesLabel(),
             'is_b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
             'is_catalog' => (bool)Configuration::get('PS_CATALOG_MODE'),
             'show_prices' => (Configuration::get('PS_CATALOG_MODE')
@@ -1319,6 +1320,11 @@ class FrontControllerCore extends Controller
             ],
         ];
     }
+
+    protected function getDisplayTaxesLabel()
+    {
+        return (Module::isEnabled('ps_legalcompliance') && (bool)Configuration::get('AEUC_LABEL_TAX_INC_EXC')) || $this->context->country->display_tax_label;
+    }    
 
     public function getTemplateVarCurrency()
     {
@@ -1418,6 +1424,7 @@ class FrontControllerCore extends Controller
             'currency-'.$this->context->currency->iso_code => true,
             $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
             'page-'.$this->php_self => true,
+            'tax-display-'.($this->getDisplayTaxesLabel() ? 'enabled' : 'disabled') => true,
         ];
 
         if (in_array($this->php_self, $my_account_controllers)) {
