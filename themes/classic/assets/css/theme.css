@@ -1,4 +1,4 @@
-@import url(//fonts.googleapis.com/css?family=Open+Sans:400,600,700);/*
+/*
  *  Bootstrap TouchSpin - v3.1.1
  *  A mobile and touch friendly input spinner component for Bootstrap 3.
  *  http://www.virtuosoft.eu/code/bootstrap-touchspin/
@@ -4567,6 +4567,60 @@ a.bg-danger:focus, a.bg-danger:hover {
   .hidden-print {
     display: none !important; } }
 
+/* BEGIN Regular */
+@font-face {
+  font-family: 'Open Sans';
+  src: url(../css/a35546eef3ea0de0d4735f23b0a0873b.eot);
+  src: url(../css/a35546eef3ea0de0d4735f23b0a0873b.eot?#iefix&v=1.1.0) format("embedded-opentype"), url(../css/ac327c4db6284ef64ebe872b6308f5da.woff) format("woff"), url(../css/cd7296352d159532b66c07d98efb1126.ttf) format("truetype"), url(../css/f641a7d4e80fd6321135b1a2b4ce8bb1.svg#Regular) format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+/* END Regular */
+/* BEGIN Italic */
+@font-face {
+  font-family: 'Open Sans';
+  src: url(../css/e487b7cb072550896dde6821d24de2be.eot);
+  src: url(../css/e487b7cb072550896dde6821d24de2be.eot?#iefix&v=1.1.0) format("embedded-opentype"), url(../css/525074686dfb8aa36b1b92e29de467ac.woff) format("woff"), url(../css/9b30f13428e1b4a659aeeab4ac1fff35.ttf) format("truetype"), url(../css/d6671d41dde41d355619fe05b44f4aac.svg#Italic) format("svg");
+  font-weight: normal;
+  font-style: italic; }
+
+/* END Italic */
+/* BEGIN Semibold */
+@font-face {
+  font-family: 'Open Sans';
+  src: url(../css/0ea04502930623aa3de110aac9f9e4fd.eot);
+  src: url(../css/0ea04502930623aa3de110aac9f9e4fd.eot?#iefix&v=1.1.0) format("embedded-opentype"), url(../css/9f2144213fad53d4e0fdb26ecf93865f.woff) format("woff"), url(../css/33f225b8f5f7d6b34a0926f58f96c1e9.ttf) format("truetype"), url(../css/bb100c995f1d20b8a96462fe5f528bd4.svg#Semibold) format("svg");
+  font-weight: 600;
+  font-style: normal; }
+
+/* END Semibold */
+/* BEGIN Semibold Italic */
+@font-face {
+  font-family: 'Open Sans';
+  src: url(../css/da061416028fc9a66fbc0b80d33d6e6f.eot);
+  src: url(../css/da061416028fc9a66fbc0b80d33d6e6f.eot?#iefix&v=1.1.0) format("embedded-opentype"), url(../css/ec55f263e2b86bc0f28fff46b873d6df.woff) format("woff"), url(../css/1c0b4eb93fcf561eec03297a24922d6c.ttf) format("truetype"), url(../css/ddc348f204283c4f4090a3ed03853054.svg#SemiboldItalic) format("svg");
+  font-weight: 600;
+  font-style: italic; }
+
+/* END Semibold Italic */
+/* BEGIN Bold */
+@font-face {
+  font-family: 'Open Sans';
+  src: url(../css/7ae9b8ba7886341831bf7c85a0da40d0.eot);
+  src: url(../css/7ae9b8ba7886341831bf7c85a0da40d0.eot?#iefix&v=1.1.0) format("embedded-opentype"), url(../css/892667349c5cff6fcf7e40439596b97c.woff) format("woff"), url(../css/5a100916f94b0babde0c92aaa8fb80d6.ttf) format("truetype"), url(../css/d6291f88056601e360ce6cea4bf676f4.svg#Bold) format("svg");
+  font-weight: bold;
+  font-style: normal; }
+
+/* END Bold */
+/* BEGIN Bold Italic */
+@font-face {
+  font-family: 'Open Sans';
+  src: url(../css/ea07932c5245dd421e3d05f579098bc2.eot);
+  src: url(../css/ea07932c5245dd421e3d05f579098bc2.eot?#iefix&v=1.1.0) format("embedded-opentype"), url(../css/7be88e73fea7b64568a450d7c01346b0.woff) format("woff"), url(../css/c36b5ac7c2dddf6f525c8d161412ef41.ttf) format("truetype"), url(../css/a54aba83b3d5d7702890c07c31c48147.svg#BoldItalic) format("svg");
+  font-weight: bold;
+  font-style: italic; }
+
+/* END Bold Italic */
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
