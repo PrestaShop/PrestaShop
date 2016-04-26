@@ -1,3 +1,11 @@
+@import "node_modules/open-sans-fontface/sass/mixins";
+@import "node_modules/open-sans-fontface/sass/Regular";
+@import "node_modules/open-sans-fontface/sass/Italic";
+@import "node_modules/open-sans-fontface/sass/Semibold";
+@import "node_modules/open-sans-fontface/sass/SemiboldItalic";
+@import "node_modules/open-sans-fontface/sass/Bold";
+@import "node_modules/open-sans-fontface/sass/BoldItalic";
+
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -36,3 +44,5 @@
   /* Support for IE. */
   font-feature-settings: 'liga';
 }
+
+
