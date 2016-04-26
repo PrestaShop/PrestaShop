@@ -51,6 +51,7 @@ $(document).ready(function() {
   BOEvent.emitEvent("Product Default category Management started", "CustomEvent");
   BOEvent.emitEvent("Product Manufacturer Management started", "CustomEvent");
   BOEvent.emitEvent("Product Related Management started", "CustomEvent");
+  BOEvent.emitEvent("Modal confirmation started", "CustomEvent");
 
   /** Type product fields display management */
   $('#form_step1_type_product').change(function(){
@@ -1862,56 +1863,6 @@ var priceCalculation = (function() {
       var newPrice = ps_round(removeTaxes(ps_round(price, displayPricePrecision), rates, computation_method), displayPricePrecision);
 
       targetInput.val(newPrice);
-    }
-  };
-})();
-
-
-/**
- * modal confirmation management
- */
-var modalConfirmation = (function() {
-  var modal = $('#confirmation_modal');
-  var actionsCallbacks = {
-    onCancel: function(){
-      return;
-    },
-    onContinue: function(){
-      return;
-    }
-  };
-
-  modal.find('button.cancel').click(function(){
-    if (typeof actionsCallbacks.onCancel === 'function') {
-      actionsCallbacks.onCancel();
-    }
-    modalConfirmation.hide();
-  });
-
-  modal.find('button.continue').click(function(){
-    if (typeof actionsCallbacks.onContinue === 'function') {
-      actionsCallbacks.onContinue();
-    }
-    modalConfirmation.hide();
-  });
-
-  return {
-    'create': function(content, title, callbacks) {
-      if(title != null){
-        modal.find('.modal-title').html(title);
-      }
-      if(content != null){
-        modal.find('.modal-body').html(content);
-      }
-
-      actionsCallbacks = callbacks;
-      return this;
-    },
-    'show': function() {
-      modal.modal('show');
-    },
-    'hide': function() {
-      modal.modal('hide');
     }
   };
 })();

@@ -17,9 +17,13 @@ var manufacturer = (function() {
       });
       resetButton.on('click', function(e) {
         e.preventDefault();
-        manufacturerContent.addClass('hide');
-        selectManufacturer.val('').trigger('change');
-        addButton.show();
+        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+          onContinue: function(){
+            manufacturerContent.addClass('hide');
+            selectManufacturer.val('').trigger('change');
+            addButton.show();
+          }
+        }).show();
       });
     }
   };

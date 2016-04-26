@@ -8,6 +8,8 @@ var relatedProduct = (function() {
       var resetButton = $('#reset_related_product');
       var relatedContent = $('#related-content');
       var productItems = $('#form_step1_related_products-data');
+      var searchProductsBar = $('#form_step1_related_products');
+
       addButton.on('click', function(e) {
         e.preventDefault();
         relatedContent.removeClass('hide');
@@ -15,9 +17,20 @@ var relatedProduct = (function() {
       });
       resetButton.on('click', function(e) {
         e.preventDefault();
-        productItems.remove();
-        relatedContent.addClass('hide');
-        addButton.show();
+        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+          onContinue: function onContinue(){
+            var items = productItems.find('li').toArray();
+
+            items.forEach(function removeItem(item) {
+              console.log(item);
+              item.remove();
+            });
+            searchProductsBar.val('');
+
+            relatedContent.addClass('hide');
+            addButton.show();
+          }
+        }).show();
       });
     }
   };
