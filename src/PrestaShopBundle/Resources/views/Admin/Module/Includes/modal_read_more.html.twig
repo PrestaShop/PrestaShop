@@ -4,14 +4,21 @@
         <div class="modal-content module-modal-content no-padding">
             <div class="modal-header module-modal-header">
                 <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">X</span></button>
-                <div>
+                <div class="module-modal-header-details">
                     <img class="module-logo-thumb" height="57" width="57" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}" />
                     <div class="modal-title module-modal-title">
                         <h4>{{ module.attributes.displayName }}</h4>
-                        <div class="x-small-text">
-                            v{{ module.attributes.version }} by {{ module.attributes.author }}
+                        <div class="module-modal-details">
+                            v{{ module.attributes.version }} by <span class="module-modal-span-author">{{ module.attributes.author }}</span>
                         </div>
                     </div>
+                </div>
+                <div class="module-modal-header-rates pull-right">
+                    {% if module.attributes.nbRates > 0 %}
+                        <div class="module-star-ranking-grid-{{ module.attributes.starsRate}} module-modal-ranking">
+                             ( {{ module.attributes.nbRates }} )
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
