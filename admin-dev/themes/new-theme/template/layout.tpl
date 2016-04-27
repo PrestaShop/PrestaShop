@@ -20,7 +20,7 @@
     *}
 
     {* Logo *}
-    <a class="logo" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
+    <a class="logo pull-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
 
     <div class="component">{include file="components/layout/quick_access.tpl"}</div>
     <div class="component">{include file="components/layout/search_form.tpl"}</div>
@@ -30,18 +30,22 @@
     <div class="component pull-md-right">{include file="components/layout/notifications_center.tpl"}</div>
     <div class="component pull-md-right">{include file="components/layout/shop_list.tpl"}</div>
     {if isset($maintenance_mode) && $maintenance_mode == true}
-      <span class="shop-state pull-right" id="maintenance-mode">
-        <i class="material-icons">build</i>
-        <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
-          title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf='<br />'}</p>">{l s='Maintenance mode'}</span>
-      </span>
+      <div class="component pull-right">
+        <div class="shop-state" id="maintenance-mode">
+          <i class="material-icons">build</i>
+          <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
+            title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf='<br />'}</p>">{l s='Maintenance mode'}</span>
+        </div>
+      </div>
     {/if}
     {if isset($debug_mode) && $debug_mode == true}
-      <span class="shop-state pull-right" id="debug-mode">
-        <i class="material-icons">bug_report</i>
-        <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
-          title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All PHP errors and messages are displayed, when you are done <strong>turn off</strong> this mode.'}</p>">{l s='Debug mode'}</span>
-      </span>
+      <div class="component pull-right">
+        <div class="shop-state" id="debug-mode">
+          <i class="material-icons">bug_report</i>
+          <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
+            title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All PHP errors and messages are displayed, when you are done <strong>turn off</strong> this mode.'}</p>">{l s='Debug mode'}</span>
+        </div>
+      </div>
     {/if}
     {* TODO: REPLACE THE MAINTENANCE MODE INFORMATION
     {if isset($maintenance_mode) && $maintenance_mode == true}

@@ -17,7 +17,6 @@
       right: rem(8px);
     }
     > .ps-dropdown:not(.search):not(.stores) {
-      top: rem(-15px);
       > .ps-dropdown-menu {
         left: rem(17px);
       }
@@ -27,7 +26,6 @@
       left: rem(-12px);
     }
     > .bo_search_form {
-      top: rem(-8px);
       position: relative;
       .search {
         position: absolute;
@@ -54,15 +52,16 @@
       }
       + .search {
         display: block;
+        background: none;
         .ps-dropdown-menu{
           left:rem(-80px);
         }
       }
     }
   }
-  > .shop-state {
-    margin-top: rem(10px);
+  .shop-state {
     margin-right: rem(20px);
+    line-height: $size-header-height;
     > .material-icons {
       color: $secondary;
       vertical-align: middle;
