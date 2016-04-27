@@ -244,7 +244,7 @@ class ModuleController extends FrameworkBundleAdminController
         $installed_products = $moduleRepository->getFilteredList($filters);
 
         $products = new \stdClass;
-        foreach (['to_configure', 'to_update', 'to_install'] as $subpart) {
+        foreach (['to_configure', 'to_update'] as $subpart) {
             $products->{$subpart} = [];
         }
 
@@ -262,12 +262,6 @@ class ModuleController extends FrameworkBundleAdminController
                 $products->{$row}[] = (object)$installed_product;
             }
         }
-
-        $filters = new AddonListFilter();
-        $filters->setType(AddonListFilterType::MODULE)
-            ->removeStatus(AddonListFilterStatus::INSTALLED)
-            ->setOrigin(AddonListFilterOrigin::DISK | AddonListFilterOrigin::ADDONS_CUSTOMER);
-        $products->to_install = $moduleRepository->getFilteredList($filters);
 
         foreach ($products as $product_label => $products_part) {
             $products->{$product_label} = $modulesProvider->generateAddonsUrls($products_part);
