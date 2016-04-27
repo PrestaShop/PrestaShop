@@ -3479,7 +3479,6 @@ exit;
      */
     public static function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
     {
-        Tools::displayAsDeprecated();
         $context = Context::getContext();
         if ($category_type == 'catalog') {
             $category = Db::getInstance()->getRow('
