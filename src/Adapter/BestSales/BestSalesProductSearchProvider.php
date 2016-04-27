@@ -28,13 +28,16 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
         ProductSearchContext $context,
         ProductSearchQuery $query
     ) {
-        $products = ProductSale::getBestSales(
+        if (!$products = ProductSale::getBestSales(
             $context->getIdLang(),
             $query->getPage(),
             $query->getResultsPerPage(),
             $query->getSortOrder()->toLegacyOrderBy(),
             $query->getSortOrder()->toLegacyOrderWay()
-        );
+        )) {
+            $products = [];
+        }
+
         $count = (int)ProductSale::getNbSales();
 
         $result = new ProductSearchResult;
