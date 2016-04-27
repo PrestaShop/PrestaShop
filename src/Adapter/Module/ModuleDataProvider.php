@@ -55,6 +55,11 @@ class ModuleDataProvider
         return ['installed' => 0];
     }
 
+    public function getModuleName($module)
+    {
+        return \Module::getModuleName($module);
+    }
+
     /**
      * Check current employee permission on a given module
      * @param string $action
