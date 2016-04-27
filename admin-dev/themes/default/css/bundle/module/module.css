@@ -265,8 +265,6 @@ img.module-logo-thumb-list {
     color: rgb(37, 185, 215);
 }
 
-
-
 .module-badges-display {
     display: inline-block;
 }
@@ -283,7 +281,7 @@ img.module-logo-thumb-list {
     overflow: hidden;
     text-align: center;
     border-top: 1px solid #bbcdd2;
-    border-bottom: 1px solid #bbcdd2;
+    border-bottom: 3px solid #bbcdd2;
 }
 
 .module-big-cover > img {
@@ -299,7 +297,8 @@ img.module-logo-thumb-list {
 }
 
 .module-menu-readmore > ul {
-    border-bottom: 1px solid #bbcdd2;
+    border-bottom: 3px solid #bbcdd2;
+    height: 51px;
 }
 
 .module-readmore-tab.active {
