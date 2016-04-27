@@ -53,7 +53,6 @@ class ModuleController extends FrameworkBundleAdminController
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setOrigin(AddonListFilterOrigin::ADDONS_ALL)
             ->setStatus(~ AddonListFilterStatus::INSTALLED);
 
         try {
