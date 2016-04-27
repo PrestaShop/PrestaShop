@@ -55,15 +55,15 @@
 					var ui = event.target;
 					$(ui).next('ul').toggle();
 					if ($(ui).next('ul').is(':visible')) {
-						$(ui).parent('li').addClass('less');
+						$(ui).parent('li').removeClass().addClass('less');
 					} else {
-						$(ui).parent('li').addClass('more');
+						$(ui).parent('li').removeClass().addClass('more');
 					}
 				});
 				if ($(item).is(':visible')) {
-					$(item).parent('li').addClass('less');
+					$(item).parent('li').removeClass().addClass('less');
 				} else {
-					$(item).parent('li').addClass('more');
+					$(item).parent('li').removeClass().addClass('more');
 				}
 			});
 		}

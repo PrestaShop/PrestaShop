@@ -54,7 +54,7 @@ $(document).ready(function() {
   BOEvent.emitEvent("Modal confirmation started", "CustomEvent");
 
   /** Type product fields display management */
-  $('#form_step1_type_product').change(function(){
+  $('#form_step1_type_product').change(function() {
     displayFieldsManager.refresh();
   });
 
@@ -77,7 +77,7 @@ var displayFieldsManager = (function() {
   return {
     'init': function() {
       /** Type product fields display management */
-      $('#form_step1_type_product').change(function(){
+      $('#form_step1_type_product').change(function() {
         displayFieldsManager.refresh();
       });
 
@@ -92,10 +92,10 @@ var displayFieldsManager = (function() {
         if (duplicate.length == 0) {
           var origin = $('select#form_step2_id_tax_rules_group');
           duplicate = origin.clone(false).attr('id', 'form_step2_id_tax_rules_group_shortcut');
-          origin.on('change', function () {
+          origin.on('change', function() {
             duplicate.val(origin.val()); // no change() here to avoid infinite loop.
           });
-          duplicate.on('change', function () {
+          duplicate.on('change', function() {
             origin.val(duplicate.val()).change();
           });
           duplicate.appendTo($('#tax_rule_shortcut'));
@@ -112,29 +112,29 @@ var displayFieldsManager = (function() {
 
       /** product type switch */
 
-      if(typeProduct.val() === '1') {
+      if (typeProduct.val() === '1') {
         $('#pack_stock_type, #js_form_step1_inputPackItems').show();
         $('#form-nav a[href="#step4"]').show();
         showVariationsSelector.hide();
         showVariationsSelector.find('input[value="0"]').attr('checked', true);
-      }else{
+      } else {
         $('#virtual_product, #pack_stock_type, #js_form_step1_inputPackItems').hide();
         $('#form-nav a[href="#step4"]').show();
 
-        if(typeProduct.val() === '2') {
+        if (typeProduct.val() === '2') {
           showVariationsSelector.hide();
           $('#virtual_product').show();
           $('#form-nav a[href="#step4"]').hide();
           showVariationsSelector.find('input[value="0"]').attr('checked', true);
           $('#form-nav a[href="#step3"]').text(translate_javascripts['Virtual product']);
-        }else{
+        } else {
           showVariationsSelector.show();
           $('#form-nav a[href="#step3"]').text(translate_javascripts['Quantities']);
         }
       }
 
       /** check quantity / combinations display */
-      if(showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr').length > 0){
+      if (showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr').length > 0) {
         combinations.show();
 
         $('#specific-price-combination-selector').removeClass('hide').show();
@@ -159,8 +159,8 @@ var displayFieldsManager = (function() {
         $('#product_type_combinations_shortcut').hide();
       }
     },
-    'getProductType' : function() {
-      switch(typeProduct.val()) {
+    'getProductType': function() {
+      switch (typeProduct.val()) {
         case '0':
           return 'standard';
           break;
@@ -178,27 +178,26 @@ var displayFieldsManager = (function() {
      * Product pack or virtual can't have variations
      * Warn e-merchant.
      * @param errorMessage
-         */
-    'checkAccessVariations' : function() {
-      if((showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr').length > 0)
-        && (typeProduct.val() === '1' || typeProduct.val() === '2'))
-      {
+     */
+    'checkAccessVariations': function() {
+      if ((showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr').length > 0) && (typeProduct.val() === '1' || typeProduct.val() === '2')) {
         var typeOfProduct = this.getProductType();
-        var errorMessage = "You can't create "+ typeOfProduct + " product with variations. Are you sure to disable variations ? they will all be deleted.";
-        modalConfirmation.create(translate_javascripts[errorMessage], null,{
-          onCancel: function(){
+        var errorMessage = "You can't create " + typeOfProduct + " product with variations. Are you sure to disable variations ? they will all be deleted.";
+        modalConfirmation.create(translate_javascripts[errorMessage], null, {
+          onCancel: function() {
             typeProduct.val(0).change();
             /* else the radio bouton is not display even if checked attribute is true */
             $('#show_variations_selector input[value="1"]').click();
           },
-          onContinue: function(){
+          onContinue: function() {
             $.ajax({
               type: 'GET',
               url: $('#accordion_combinations').attr('data-action-delete-all') + '/' + $('#form_id_product').val(),
-              success: function(){
+              success: function() {
                 $('#accordion_combinations .combination').remove();
                 displayFieldsManager.refresh();
-              }, error: function(response){
+              },
+              error: function(response) {
                 showErrorMessage(jQuery.parseJSON(response.responseText).message);
               },
             });
@@ -224,7 +223,7 @@ var nestedCategories = (function() {
         /* we can't select a default category if category is not selected
          * that's why we check category first instead of warn user.
          */
-        var category = nestedCategoriesForm.find('input[value="'+categoryId+'"].category');
+        var category = nestedCategoriesForm.find('input[value="' + categoryId + '"].category');
         if (category.is(':checked') === false) {
           category.trigger('click');
         }
@@ -258,7 +257,7 @@ var formCategory = (function() {
   var elem = $('#form_step1_new_category');
 
   /** Send category form and it to nested categories */
-  function send(){
+  function send() {
     $.ajax({
       type: 'POST',
       url: elem.attr('data-action'),
@@ -273,10 +272,10 @@ var formCategory = (function() {
         $('*.has-danger', elem).removeClass('has-danger');
         $('*.has-danger').removeClass('has-danger');
       },
-      success: function(response){
+      success: function(response) {
         //inject new category into category tree
         var html = '<li>' +
-          '<div class="checkbox">' +
+          '<div class="checkbox js-checkbox">' +
             '<label>' +
               '<input type="checkbox" name="form[step1][categories][tree][]" checked value="'+response.category.id+'">' +
                 response.category.name[1] +
@@ -291,26 +290,26 @@ var formCategory = (function() {
         if(parentElement.next('ul').length === 0){
           html = '<ul>' + html + '</ul>';
           parentElement.append(html);
-        }else{
+        } else {
           parentElement.next('ul').append(html);
         }
 
         //inject new category in parent category selector
         $('#form_step1_new_category_id_parent').append('<option value="' + response.category.id + '">' + response.category.name[1] + '</option>');
       },
-      error: function(response){
-        $.each(jQuery.parseJSON(response.responseText), function(key, errors){
+      error: function(response) {
+        $.each(jQuery.parseJSON(response.responseText), function(key, errors) {
           var html = '<ul class="list-unstyled text-danger">';
-          $.each(errors, function(key, error){
+          $.each(errors, function(key, error) {
             html += '<li>' + error + '</li>';
           });
           html += '</ul>';
 
-          $('#form_step1_new_'+key).parent().append(html);
-          $('#form_step1_new_'+key).parent().addClass('has-danger');
+          $('#form_step1_new_' + key).parent().append(html);
+          $('#form_step1_new_' + key).parent().addClass('has-danger');
         });
       },
-      complete: function(){
+      complete: function() {
         $('#form_step1_new_category button.submit').removeAttr('disabled');
       }
     });
@@ -320,11 +319,13 @@ var formCategory = (function() {
     'init': function() {
       var that = this;
       /** remove all categories from selector, except pre defined */
-      elem.find('button.save').click(function(){
+      $('#add-categories button.save').click(function(){
         send();
-        that.hideBlock();
+        if($('#form_step1_new_category_name').val().length > 2){
+          that.hideBlock();
+        }
       });
-      elem.find('button[type="reset"]').click(function(){
+      $('#add-categories button[type="reset"]').click(function(){
         that.hideBlock();
       });
     },
@@ -344,7 +345,7 @@ var featuresCollection = (function() {
   var collectionHolder = $('.feature-collection');
 
   /** Add a feature */
-  function add(){
+  function add() {
     var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
     collectionHolder.append(newForm);
     prestaShopUiKit.initSelects();
@@ -365,7 +366,7 @@ var featuresCollection = (function() {
         var _this = $(this);
 
         modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-          onContinue: function(){
+          onContinue: function() {
             _this.parent().parent().parent().remove();
           }
         }).show();
@@ -375,10 +376,10 @@ var featuresCollection = (function() {
       $(document).on('change', '.feature-collection select.feature-selector', function() {
         var selector = $(this).parent().parent().parent().find('.feature-value-selector');
         $.ajax({
-          url: $(this).attr('data-action')+'/'+$(this).val(),
-          success: function(response){
+          url: $(this).attr('data-action') + '/' + $(this).val(),
+          success: function(response) {
             selector.empty();
-            $.each(response, function(key, val){
+            $.each(response, function(key, val) {
               selector.append($('<option></option>').attr('value', key).text(val));
             });
           }
@@ -398,8 +399,8 @@ var supplier = (function() {
     'init': function() {
       /** On supplier select, hide or show the default supplier selector */
       var supplierInput = $('#form_step6_suppliers input');
-      supplierInput.change(function(){
-        if(supplierInput.length >= 1 && $('#form_step6_suppliers input:checked').length >= 1){
+      supplierInput.change(function() {
+        if (supplierInput.length >= 1 && $('#form_step6_suppliers input:checked').length >= 1) {
           defaultSupplierRow.show();
         } else {
           defaultSupplierRow.hide();
@@ -408,7 +409,7 @@ var supplier = (function() {
       });
 
       //default display
-      if(supplierInput.length >= 1 && $('#form_step6_suppliers input:checked').length >= 1){
+      if (supplierInput.length >= 1 && $('#form_step6_suppliers input:checked').length >= 1) {
         defaultSupplierRow.show();
       } else {
         defaultSupplierRow.hide();
@@ -426,12 +427,14 @@ var supplierCombinations = (function() {
 
   return {
     'refresh': function() {
-      var suppliers = $('#form_step6_suppliers input[name="form[step6][suppliers][]"]:checked').map(function(){return $(this).val();}).get();
-      var url = collectionHolder.attr('data-url')+'/'+id_product+(suppliers.length > 0 ? '/'+suppliers.join('-') : '');
+      var suppliers = $('#form_step6_suppliers input[name="form[step6][suppliers][]"]:checked').map(function() {
+        return $(this).val();
+      }).get();
+      var url = collectionHolder.attr('data-url') + '/' + id_product + (suppliers.length > 0 ? '/' + suppliers.join('-') : '');
 
       $.ajax({
         url: url,
-        success: function(response){
+        success: function(response) {
           collectionHolder.empty().append(response);
         }
       });
@@ -446,19 +449,19 @@ var stock = (function() {
   return {
     'init': function() {
       /** Update qty_0 and shortcut qty_0 field on change */
-      $('#form_step1_qty_0_shortcut, #form_step3_qty_0').keyup(function(){
-        if($(this).attr('id') === 'form_step1_qty_0_shortcut'){
+      $('#form_step1_qty_0_shortcut, #form_step3_qty_0').keyup(function() {
+        if ($(this).attr('id') === 'form_step1_qty_0_shortcut') {
           $('#form_step3_qty_0').val($(this).val());
-        }else{
+        } else {
           $('#form_step1_qty_0_shortcut').val($(this).val());
         }
       });
 
       /** if GSA : Show depends_on_stock choice only if advanced_stock_management checked */
       $('#form_step3_advanced_stock_management').on('change', function(e) {
-        if(e.target.checked){
+        if (e.target.checked) {
           $('#depends_on_stock_div').show();
-        }else{
+        } else {
           $('#depends_on_stock_div').hide();
         }
         warehouseCombinations.refresh();
@@ -486,19 +489,19 @@ var nav = (function() {
       var formNav = $("#form-nav");
       var prefix = 'tab-';
       if (hash) {
-        formNav.find("a[href='" + hash.replace(prefix,'') + "']").tab('show');
+        formNav.find("a[href='" + hash.replace(prefix, '') + "']").tab('show');
       }
 
-      formNav.find("a").on('shown.bs.tab', function (e) {
-        if(e.target.hash) {
+      formNav.find("a").on('shown.bs.tab', function(e) {
+        if (e.target.hash) {
           onTabSwitch(e.target.hash);
           window.location.hash = e.target.hash.replace('#', '#' + prefix);
         }
       });
 
       /** on tab switch */
-      function onTabSwitch(currentTab){
-        if (currentTab === '#step2'){
+      function onTabSwitch(currentTab) {
+        if (currentTab === '#step2') {
           /** each switch to price tab, reload combinations into specific price form */
           specificPrices.refreshCombinationsList();
         }
@@ -514,15 +517,15 @@ var combinationGenerator = (function() {
   var id_product = $('#form_id_product').val();
 
   /** Generate combinations */
-  function generate(){
+  function generate() {
     /**
      * Combination row maker
      * @param {object} attribute
      */
-    var combinationRowMaker = function(form){
+    var combinationRowMaker = function(form) {
       var combinationsLength = $('#accordion_combinations').children().length;
-      var newForm = form.replace(/product_combination\[/g, 'form[step3][combinations]['+combinationsLength+'][')
-        .replace(/id="product_combination_/g, 'id="form_step3_combinations_'+combinationsLength+'_')
+      var newForm = form.replace(/product_combination\[/g, 'form[step3][combinations][' + combinationsLength + '][')
+        .replace(/id="product_combination_/g, 'id="form_step3_combinations_' + combinationsLength + '_')
         .replace(/__loop_index__/g, combinationsLength);
 
       $('#accordion_combinations').prepend(newForm);
@@ -537,8 +540,8 @@ var combinationGenerator = (function() {
       beforeSend: function() {
         $('#create-combinations').attr('disabled', 'disabled');
       },
-      success: function(response){
-        $.each(response, function(key, val){
+      success: function(response) {
+        $.each(response, function(key, val) {
           combinationRowMaker(val);
         });
 
@@ -546,7 +549,7 @@ var combinationGenerator = (function() {
         $('input.attribute-generator').remove();
         $('#attributes-generator div.token').remove();
       },
-      complete: function(){
+      complete: function() {
         $('#create-combinations').removeAttr('disabled');
         supplierCombinations.refresh();
         warehouseCombinations.refresh();
@@ -571,7 +574,7 @@ var combinationGenerator = (function() {
       /** Filter suggestion with selected tokens */
       var filter = function(suggestions) {
         var selected = [];
-        $('#attributes-generator input.attribute-generator').each(function(){
+        $('#attributes-generator input.attribute-generator').each(function() {
           selected.push($(this).val());
         });
 
@@ -581,7 +584,8 @@ var combinationGenerator = (function() {
       };
 
       /** init input typeahead */
-      $('#form_step3_attributes').tokenfield({typeahead: [{
+      $('#form_step3_attributes').tokenfield({
+        typeahead: [{
           hint: false,
           cache: false
         }, {
@@ -596,15 +600,15 @@ var combinationGenerator = (function() {
 
       /** On event "tokenfield:createtoken" : stop event if its not a typehead result */
       $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
-        if(!e.attrs.data){
+        if (!e.attrs.data) {
           return false;
         }
       });
 
       /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
       $('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
-        if(e.attrs.data){
-          $('#attributes-generator').append('<input type="hidden" id="attribute-generator-'+e.attrs.value+'" class="attribute-generator" value="'+e.attrs.value+'" name="options['+e.attrs.data.id_group+']['+e.attrs.value+']" />');
+        if (e.attrs.data) {
+          $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + e.attrs.value + '" class="attribute-generator" value="' + e.attrs.value + '" name="options[' + e.attrs.data.id_group + '][' + e.attrs.value + ']" />');
         }
       });
 
@@ -613,7 +617,7 @@ var combinationGenerator = (function() {
         $('#attribute-generator-' + e.attrs.value).remove();
       });
 
-      $('#create-combinations').click(function(){
+      $('#create-combinations').click(function() {
         generate();
       });
     }
@@ -630,11 +634,11 @@ var combinations = (function() {
    * Remove a combination
    * @param {object} elem - The clicked link
    */
-  function remove(elem){
-    var combinationElem = $('#attribute_'+elem.attr('data'));
+  function remove(elem) {
+    var combinationElem = $('#attribute_' + elem.attr('data'));
 
     modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-      onContinue: function(){
+      onContinue: function() {
         $.ajax({
           type: 'GET',
           url: elem.attr('href'),
@@ -646,10 +650,10 @@ var combinations = (function() {
             showSuccessMessage(response.message);
             displayFieldsManager.refresh();
           },
-          error: function(response){
+          error: function(response) {
             showErrorMessage(jQuery.parseJSON(response.responseText).message);
           },
-          complete: function(){
+          complete: function() {
             elem.removeAttr('disabled');
             supplierCombinations.refresh();
             warehouseCombinations.refresh();
@@ -673,25 +677,25 @@ var combinations = (function() {
       /** on change quantity, update field quantity row */
       $(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_quantity"]', function() {
         var id_attribute = $(this).closest('.combination-form').attr('data');
-        $('#accordion_combinations #attribute_'+id_attribute).find('.attribute-quantity input').val($(this).val());
+        $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-quantity input').val($(this).val());
       });
 
       /** on change shortcut quantity, update form field quantity */
       $(document).on('keyup', '.attribute-quantity input', function() {
         var id_attribute = $(this).closest('.combination').attr('data');
-        $('#combination_form_'+id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').val($(this).val());
+        $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').val($(this).val());
       });
 
       /** on change weigth, update weight row */
       $(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_weight"]', function() {
         var id_attribute = $(this).closest('.combination-form').attr('data');
-        $('#accordion_combinations #attribute_'+id_attribute).find('.attribute-weight').html($(this).val() + ' ' + weightUnit);
+        $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-weight').html($(this).val() + ' ' + weightUnit);
       });
 
       /** on change price, update price row */
       $(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_price"]', function() {
         var id_attribute = $(this).closest('.combination-form').attr('data');
-        $('#accordion_combinations #attribute_'+id_attribute).find('.attribute-price-display').html(formatCurrency(parseFloat($(this).val())));
+        $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price-display').html(formatCurrency(parseFloat($(this).val())));
       });
 
       /** on change images selection */
@@ -700,10 +704,10 @@ var combinations = (function() {
         var isChecked = input.prop('checked');
         input.prop('checked', isChecked ? false : true);
 
-        if(isChecked){
+        if (isChecked) {
           $(this).removeClass('img-highlight');
 
-        }else{
+        } else {
           $(this).addClass('img-highlight');
         }
 
@@ -712,25 +716,26 @@ var combinations = (function() {
 
       /** Combinations fields display management */
       $('#combinations').hide();
-      $('#show_variations_selector input').change(function(){
+      $('#show_variations_selector input').change(function() {
         displayFieldsManager.refresh();
 
-        if($(this).val() === '0'){
+        if ($(this).val() === '0') {
           //if combination(s) exists, alert user for deleting it
-          if($('#accordion_combinations .combination').length > 0){
-            modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null,{
-              onCancel: function(){
+          if ($('#accordion_combinations .combination').length > 0) {
+            modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null, {
+              onCancel: function() {
                 $('#show_variations_selector input[value="1"]').attr('checked', true);
                 displayFieldsManager.refresh();
               },
-              onContinue: function(){
+              onContinue: function() {
                 $.ajax({
                   type: 'GET',
                   url: $('#accordion_combinations').attr('data-action-delete-all') + '/' + $('#form_id_product').val(),
-                  success: function(response){
+                  success: function(response) {
                     $('#accordion_combinations .combination').remove();
                     displayFieldsManager.refresh();
-                  }, error: function(response){
+                  },
+                  error: function(response) {
                     showErrorMessage(jQuery.parseJSON(response.responseText).message);
                   },
                 });
@@ -754,10 +759,10 @@ var combinations = (function() {
         var prevCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').prev().attr('data');
         var nextCombinationId = $('#accordion_combinations tr[data="' + id_attribute + '"]').next().attr('data');
         navElem.find('.prev, .next').hide();
-        if(prevCombinationId){
+        if (prevCombinationId) {
           navElem.find('.prev').attr('data', prevCombinationId).show();
         }
-        if(nextCombinationId){
+        if (nextCombinationId) {
           navElem.find('.next').attr('data', nextCombinationId).show();
         }
 
@@ -787,11 +792,11 @@ var combinations = (function() {
       var productCoverImageElem = $('#product-images-dropzone').find('.iscover');
 
       /** get product cover image */
-      if(productCoverImageElem.length === 1){
+      if (productCoverImageElem.length === 1) {
         var imgElem = productCoverImageElem.parent().find('.dz-image');
 
         /** Dropzone.js workaround : If this is a fresh upload image, look up for an img, else find a background url */
-        if(imgElem.find('img').length){
+        if (imgElem.find('img').length) {
           productDefaultImageUrl = imgElem.find('img').attr('src');
         } else {
           productDefaultImageUrl = imgElem.css('background-image')
@@ -800,41 +805,41 @@ var combinations = (function() {
         }
       }
 
-      $.each($('#form .combination-form'), function(key, elem){
+      $.each($('#form .combination-form'), function(key, elem) {
         var defaultImageUrl = productDefaultImageUrl;
 
         /** get first selected image */
         var defaultImageElem = $(elem).find('.product-combination-image input:checked:first');
-        if(defaultImageElem.length === 1){
+        if (defaultImageElem.length === 1) {
           defaultImageUrl = defaultImageElem.parent().find('img').attr('src');
         }
 
-        if(defaultImageUrl){
+        if (defaultImageUrl) {
           var img = '<img src="' + defaultImageUrl + '" class="img-responsive" style="max-width:50px" />';
-          $('#accordion_combinations #attribute_'+$(elem).attr('data')).find('td.img').html(img);
+          $('#accordion_combinations #attribute_' + $(elem).attr('data')).find('td.img').html(img);
         }
       });
     },
     'refreshImagesCombination': function() {
       var _this = this;
       var target = $('#accordion_combinations');
-      if(target.find('.combination').length === 0){
+      if (target.find('.combination').length === 0) {
         return;
       }
 
       $.ajax({
         type: 'GET',
-         url: target.attr('data-action-refresh-images')+'/' + id_product,
-         success: function(response){
-          $.each(response, function(id, combinationImages){
-            var combinationElem = target.find('.combination[data="'+ id +'"]');
+        url: target.attr('data-action-refresh-images') + '/' + id_product,
+        success: function(response) {
+          $.each(response, function(id, combinationImages) {
+            var combinationElem = target.find('.combination[data="' + id + '"]');
             var imagesElem = combinationElem.find('.images');
             var index = combinationElem.attr('data-index');
 
             imagesElem.html('');
-            $.each(combinationImages, function(key, image){
+            $.each(combinationImages, function(key, image) {
               var row = '<div class="product-combination-image ' + (image.id_image_attr ? 'img-highlight' : '') + '">\
-                 <input type="checkbox" name="form[step3][combinations][' + index + '][id_image_attr][]" value="' + image.id + '" '+ (image.id_image_attr ? 'checked="checked"' : '') +'>\
+                 <input type="checkbox" name="form[step3][combinations][' + index + '][id_image_attr][]" value="' + image.id + '" ' + (image.id_image_attr ? 'checked="checked"' : '') + '>\
                  <img src="' + image.base_image_url + '-small_default.' + image.format + '" alt="" />\
                </div>';
 
@@ -843,7 +848,7 @@ var combinations = (function() {
           });
 
           _this.refreshDefaultImage();
-         }
+        }
       });
     }
   };
@@ -860,31 +865,31 @@ var specificPrices = (function() {
   function getAll() {
     $.ajax({
       type: 'GET',
-      url: elem.attr('data')+'/'+id_product,
-      success: function(specific_prices){
+      url: elem.attr('data') + '/' + id_product,
+      success: function(specific_prices) {
         var tbody = elem.find('tbody');
         tbody.find('tr').remove();
 
-        if(specific_prices.length > 0){
+        if (specific_prices.length > 0) {
           elem.removeClass('hide');
         } else {
           elem.addClass('hide');
         }
 
-        $.each(specific_prices, function(key, specific_price){
-          var row = '<tr>'+
-            '<td>'+ specific_price.rule_name +'</td>'+
-            '<td>'+ specific_price.attributes_name +'</td>'+
-            '<td>'+ specific_price.currency +'</td>'+
-            '<td>'+ specific_price.country +'</td>'+
-            '<td>'+ specific_price.group +'</td>'+
-            '<td>'+ specific_price.customer +'</td>'+
-            '<td>'+ specific_price.fixed_price +'</td>'+
-            '<td>'+ specific_price.impact +'</td>'+
-            '<td>'+ specific_price.period +'</td>'+
-            '<td>'+ specific_price.from_quantity +'</td>'+
-            '<td>'+ (specific_price.can_delete ? '<a href="'+ $('#js-specific-price-list').attr('data-action-delete')+'/'+specific_price.id_specific_price +'" class="btn btn-danger js-delete"><i class="material-icons">delete</i></a>' : '') +'</td>'+
-          '</tr>';
+        $.each(specific_prices, function(key, specific_price) {
+          var row = '<tr>' +
+            '<td>' + specific_price.rule_name + '</td>' +
+            '<td>' + specific_price.attributes_name + '</td>' +
+            '<td>' + specific_price.currency + '</td>' +
+            '<td>' + specific_price.country + '</td>' +
+            '<td>' + specific_price.group + '</td>' +
+            '<td>' + specific_price.customer + '</td>' +
+            '<td>' + specific_price.fixed_price + '</td>' +
+            '<td>' + specific_price.impact + '</td>' +
+            '<td>' + specific_price.period + '</td>' +
+            '<td>' + specific_price.from_quantity + '</td>' +
+            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete') + '/' + specific_price.id_specific_price + '" class="btn btn-danger js-delete"><i class="material-icons">delete</i></a>' : '') + '</td>' +
+            '</tr>';
 
           tbody.append(row);
         });
@@ -904,15 +909,15 @@ var specificPrices = (function() {
       beforeSend: function() {
         elem.attr('disabled', 'disabled');
       },
-      success: function(){
+      success: function() {
         showSuccessMessage(translate_javascripts['Form update success']);
         $('#specific_price_form .js-cancel').click();
         getAll();
       },
-      complete: function(){
+      complete: function() {
         elem.removeAttr('disabled');
       },
-      error: function(errors){
+      error: function(errors) {
         showErrorMessage(errors.responseJSON);
       }
     });
@@ -924,21 +929,21 @@ var specificPrices = (function() {
    */
   function remove(elem) {
     modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-      onContinue: function(){
+      onContinue: function() {
         $.ajax({
           type: 'GET',
           url: elem.attr('href'),
           beforeSend: function() {
             elem.attr('disabled', 'disabled');
           },
-          success: function(response){
+          success: function(response) {
             getAll();
             showSuccessMessage(response);
           },
-          error: function(response){
+          error: function(response) {
             showErrorMessage(response.responseJSON);
           },
-          complete: function(){
+          complete: function() {
             elem.removeAttr('disabled');
           }
         });
@@ -949,17 +954,17 @@ var specificPrices = (function() {
   /** refresh combinations list selector for specific price form */
   function refreshCombinationsList() {
     var elem = $('#form_step2_specific_price_sp_id_product_attribute');
-    var url = elem.attr('data-action')+'/'+id_product;
+    var url = elem.attr('data-action') + '/' + id_product;
 
     $.ajax({
       type: 'GET',
       url: url,
-      success: function(combinations){
+      success: function(combinations) {
         /** remove all options except first one */
         elem.find('option:gt(0)').remove();
 
-        $.each(combinations, function(key, combination){
-          elem.append('<option value="'+combination.id+'">'+combination.name+'</option>');
+        $.each(combinations, function(key, combination) {
+          elem.append('<option value="' + combination.id + '">' + combination.name + '</option>');
         });
       }
     });
@@ -971,15 +976,15 @@ var specificPrices = (function() {
       $('#form_step2_specific_price_sp_price').val($('#form_step2_price').val());
       this.getAll();
 
-      $('#specific-price .add').click(function(){
+      $('#specific-price .add').click(function() {
         $(this).hide();
       });
 
-      $('#specific_price_form .js-cancel').click(function(){
+      $('#specific_price_form .js-cancel').click(function() {
         $('#specific-price .add').click().show();
       });
 
-      $('#specific_price_form .js-save').click(function(){
+      $('#specific_price_form .js-save').click(function() {
         add($(this));
       });
 
@@ -988,10 +993,10 @@ var specificPrices = (function() {
         remove($(this));
       });
 
-      $('#form_step2_specific_price_sp_reduction_type').change(function(){
-        if($(this).val() === 'percentage'){
+      $('#form_step2_specific_price_sp_reduction_type').change(function() {
+        if ($(this).val() === 'percentage') {
           $('#form_step2_specific_price_sp_reduction_tax').hide();
-        }else{
+        } else {
           $('#form_step2_specific_price_sp_reduction_tax').show();
         }
       });
@@ -1024,7 +1029,7 @@ var warehouseCombinations = (function() {
         var checked = $(this).prop('checked');
         var location = $(this).closest('div.form-group').find('input[id^="form_step4_warehouse_combination_"][id$="_location"]');
         location.prop('disabled', !checked);
-        if (!checked){
+        if (!checked) {
           location.val('');
         }
       });
@@ -1043,7 +1048,7 @@ var warehouseCombinations = (function() {
         var url = collectionHolder.attr('data-url') + '/' + id_product;
         $.ajax({
           url: url,
-          success: function (response) {
+          success: function(response) {
             collectionHolder.empty().append(response);
             collectionHolder.show();
             warehouseCombinations.locationDisabler();
@@ -1077,7 +1082,7 @@ var form = (function() {
         $('ul.text-danger').remove();
         $('*.has-danger').removeClass('has-danger');
       },
-      success: function(response){
+      success: function(response) {
         if (redirect) {
           if (target) {
             window.open(redirect, target);
@@ -1087,33 +1092,35 @@ var form = (function() {
         }
         showSuccessMessage(translate_javascripts['Form update success']);
       },
-      error: function(response){
+      error: function(response) {
         var tabsWithErrors = [];
         showErrorMessage(translate_javascripts['Form update errors']);
 
-        $.each(jQuery.parseJSON(response.responseText), function(key, errors){
+        $.each(jQuery.parseJSON(response.responseText), function(key, errors) {
           tabsWithErrors.push(key);
 
           var html = '<ul class="list-unstyled text-danger">';
-          $.each(errors, function(key, error){
+          $.each(errors, function(key, error) {
             html += '<li>' + error + '</li>';
           });
           html += '</ul>';
 
-          $('#form_'+key).parent().append(html);
-          $('#form_'+key).parent().addClass('has-danger');
+          $('#form_' + key).parent().append(html);
+          $('#form_' + key).parent().addClass('has-danger');
         });
 
         /** find first tab with error, then switch to it */
         var tabIndexError = tabsWithErrors[0].split('_')[0];
-        $('#form-nav li a[href="#'+tabIndexError+'"]').tab('show');
+        $('#form-nav li a[href="#' + tabIndexError + '"]').tab('show');
 
         /** scroll to 1st error */
-        $('html, body').animate({
-          scrollTop: $('.has-danger').first().offset().top - $('.page-head').height() - $('.navbar-header').height()
-        }, 500);
+        if ($('.has-danger').first().offset()) {
+          $('html, body').animate({
+            scrollTop: $('.has-danger').first().offset().top - $('.page-head').height() - $('.navbar-header').height()
+          }, 500);
+        }
       },
-      complete: function(){
+      complete: function() {
         $('#submit', elem).removeAttr('disabled');
         $('.btn-submit', elem).removeAttr('disabled');
       }
@@ -1121,8 +1128,8 @@ var form = (function() {
   }
 
   function switchLanguage(iso_code) {
-    $('div.translations.tabbable > div > div.tab-pane:not(.translation-label-'+iso_code+')').removeClass('active');
-    $('div.translations.tabbable > div > div.tab-pane.translation-label-'+iso_code).addClass('active');
+    $('div.translations.tabbable > div > div.tab-pane:not(.translation-label-' + iso_code + ')').removeClass('active');
+    $('div.translations.tabbable > div > div.tab-pane.translation-label-' + iso_code).addClass('active');
   }
 
   return {
@@ -1156,18 +1163,18 @@ var form = (function() {
         send($('.product-footer .go-catalog').attr('data-redirect'));
       });
 
-      elem.submit(function( event ) {
+      elem.submit(function(event) {
         event.preventDefault();
         send();
       });
 
-      elem.find('#form_switch_language').change(function( event ) {
+      elem.find('#form_switch_language').change(function(event) {
         event.preventDefault();
         switchLanguage(event.target.value);
       });
 
       /** on save with duplicate|new */
-      $('.btn-submit', elem).click(function(){
+      $('.btn-submit', elem).click(function() {
         send($(this).attr('data-redirect'), $(this).attr('target'));
       });
 
@@ -1183,21 +1190,21 @@ var form = (function() {
         $('#product_form_preview_btn').attr('data-url_deactive', urlActive);
         // update product
         send();
-        });
+      });
 
       /** on delete product */
-      $('.product-footer .delete', elem).click(function(e){
+      $('.product-footer .delete', elem).click(function(e) {
         e.preventDefault();
         var _this = $(this);
         modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-          onContinue: function(){
+          onContinue: function() {
             window.location = _this.attr('href');
           }
         }).show();
       });
 
       /** show rendered form after page load */
-      $(window).load(function(){
+      $(window).load(function() {
         $('#form-loading').fadeIn();
         imagesProduct.expander();
       });
@@ -1220,9 +1227,9 @@ var customFieldCollection = (function() {
   var collectionHolder = $('ul.customFieldCollection');
 
   /** Add a custom field */
-  function add(){
+  function add() {
     var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
-    collectionHolder.append('<li>'+newForm+'</li>');
+    collectionHolder.append('<li>' + newForm + '</li>');
   }
 
   return {
@@ -1239,7 +1246,7 @@ var customFieldCollection = (function() {
         var _this = $(this);
 
         modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-          onContinue: function(){
+          onContinue: function() {
             _this.parent().parent().parent().remove();
           }
         }).show();
@@ -1257,16 +1264,16 @@ var virtualProduct = (function() {
   return {
     'init': function() {
       $(document).on('change', 'input[name="form[step3][virtual_product][is_virtual_file]"]', function() {
-        if($(this).val() === '1'){
+        if ($(this).val() === '1') {
           $('#virtual_product_content').show();
-        }else{
+        } else {
           $('#virtual_product_content').hide();
 
           //delete virtual product
           $.ajax({
             type: 'GET',
-            url: $('#virtual_product').attr('data-action-remove')+'/'+id_product,
-            success: function(){
+            url: $('#virtual_product').attr('data-action-remove') + '/' + id_product,
+            success: function() {
               //empty form
               $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
               $('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
@@ -1279,23 +1286,23 @@ var virtualProduct = (function() {
         }
       });
 
-      if($('input[name="form[step3][virtual_product][is_virtual_file]"]:checked').val() === '1'){
+      if ($('input[name="form[step3][virtual_product][is_virtual_file]"]:checked').val() === '1') {
         $('#virtual_product_content').show();
-      }else{
+      } else {
         $('#virtual_product_content').hide();
       }
 
       /** delete attached file */
-      $('#form_step3_virtual_product_file_details .delete').click(function(e){
+      $('#form_step3_virtual_product_file_details .delete').click(function(e) {
         e.preventDefault();
         var _this = $(this);
 
         modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-          onContinue: function(){
+          onContinue: function() {
             $.ajax({
               type: 'GET',
-              url: _this.attr('href')+'/'+id_product,
-              success: function(){
+              url: _this.attr('href') + '/' + id_product,
+              success: function() {
                 $('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
                 $('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
               }
@@ -1305,11 +1312,11 @@ var virtualProduct = (function() {
       });
 
       /** save virtual product */
-      $('#form_step3_virtual_product_save').click(function(){
+      $('#form_step3_virtual_product_save').click(function() {
         var _this = $(this);
         var data = new FormData();
 
-        if($('#form_step3_virtual_product_file')[0].files[0]) {
+        if ($('#form_step3_virtual_product_file')[0].files[0]) {
           data.append('product_virtual[file]', $('#form_step3_virtual_product_file')[0].files[0]);
         }
         data.append('product_virtual[is_virtual_file]', $('input[name="form[step3][virtual_product][is_virtual_file]"]:checked').val());
@@ -1320,7 +1327,7 @@ var virtualProduct = (function() {
 
         $.ajax({
           type: 'POST',
-          url: $('#virtual_product').attr('data-action')+'/'+id_product,
+          url: $('#virtual_product').attr('data-action') + '/' + id_product,
           data: data,
           contentType: false,
           processData: false,
@@ -1329,27 +1336,27 @@ var virtualProduct = (function() {
             $('ul.text-danger').remove();
             $('*.has-danger').removeClass('has-danger');
           },
-          success: function(response){
+          success: function(response) {
             showSuccessMessage(translate_javascripts['Form update success']);
-            if(response.file_download_link){
+            if (response.file_download_link) {
               $('#form_step3_virtual_product_file_details a.download').attr('href', response.file_download_link);
               $('#form_step3_virtual_product_file_input').removeClass('show').addClass('hide');
               $('#form_step3_virtual_product_file_details').removeClass('hide').addClass('show');
             }
           },
-          error: function(response){
-            $.each(jQuery.parseJSON(response.responseText), function(key, errors){
+          error: function(response) {
+            $.each(jQuery.parseJSON(response.responseText), function(key, errors) {
               var html = '<ul class="list-unstyled text-danger">';
-              $.each(errors, function(key, error){
+              $.each(errors, function(key, error) {
                 html += '<li>' + error + '</li>';
               });
               html += '</ul>';
 
-              $('#form_step3_virtual_product_'+key).parent().append(html);
-              $('#form_step3_virtual_product_'+key).parent().addClass('has-danger');
+              $('#form_step3_virtual_product_' + key).parent().append(html);
+              $('#form_step3_virtual_product_' + key).parent().addClass('has-danger');
             });
           },
-          complete: function(){
+          complete: function() {
             _this.removeAttr('disabled');
           }
         });
@@ -1369,20 +1376,20 @@ var attachmentProduct = (function() {
       var buttonSave = $('#form_step6_attachment_product_add');
 
       /** check all attachments files */
-      $('#product-attachment-files-check').change(function(){
-        if($(this).is(":checked")) {
+      $('#product-attachment-files-check').change(function() {
+        if ($(this).is(":checked")) {
           $('#product-attachment-file input[type="checkbox"]').prop('checked', true);
-        }else{
+        } else {
           $('#product-attachment-file input[type="checkbox"]').prop('checked', false);
         }
       });
 
       /** add attachment */
-      $('#form_step6_attachment_product_add').click(function(){
+      $('#form_step6_attachment_product_add').click(function() {
         var _this = $(this);
         var data = new FormData();
 
-        if($('#form_step6_attachment_product_file')[0].files[0]) {
+        if ($('#form_step6_attachment_product_file')[0].files[0]) {
           data.append('product_attachment[file]', $('#form_step6_attachment_product_file')[0].files[0]);
         }
         data.append('product_attachment[name]', $('#form_step6_attachment_product_name').val());
@@ -1390,7 +1397,7 @@ var attachmentProduct = (function() {
 
         $.ajax({
           type: 'POST',
-          url: $('#form_step6_attachment_product').attr('data-action')+'/'+id_product,
+          url: $('#form_step6_attachment_product').attr('data-action') + '/' + id_product,
           data: data,
           contentType: false,
           processData: false,
@@ -1399,17 +1406,17 @@ var attachmentProduct = (function() {
             $('ul.text-danger').remove();
             $('*.has-danger').removeClass('has-danger');
           },
-          success: function(response){
+          success: function(response) {
             $('#form_step6_attachment_product_file').val('');
             $('#form_step6_attachment_product_name').val('');
             $('#form_step6_attachment_product_description').val('');
 
             //inject new attachment in attachment list
-            if(response.id){
+            if (response.id) {
               var row = '<tr>\
-                <td><input type="checkbox" name="form[step6][attachments][]" value="'+ response.id +'" checked="checked"> '+ response.real_name +'</td>\
-                <td>'+ response.file_name +'</td>\
-                <td>'+ response.mime +'</td>\
+                <td><input type="checkbox" name="form[step6][attachments][]" value="' + response.id + '" checked="checked"> ' + response.real_name + '</td>\
+                <td>' + response.file_name + '</td>\
+                <td>' + response.mime + '</td>\
               </tr>';
 
               $('#product-attachment-file tbody').append(row);
@@ -1417,19 +1424,19 @@ var attachmentProduct = (function() {
               $('.js-options-with-attachments').removeClass('hide');
             }
           },
-          error: function(response){
-            $.each(jQuery.parseJSON(response.responseText), function(key, errors){
+          error: function(response) {
+            $.each(jQuery.parseJSON(response.responseText), function(key, errors) {
               var html = '<ul class="list-unstyled text-danger">';
-              $.each(errors, function(key, error){
+              $.each(errors, function(key, error) {
                 html += '<li>' + error + '</li>';
               });
               html += '</ul>';
 
-              $('#form_step6_attachment_product_'+key).parent().append(html);
-              $('#form_step6_attachment_product_'+key).parent().addClass('has-danger');
+              $('#form_step6_attachment_product_' + key).parent().append(html);
+              $('#form_step6_attachment_product_' + key).parent().addClass('has-danger');
             });
           },
-          complete: function(){
+          complete: function() {
             buttonSave.removeAttr('disabled');
           }
         });
@@ -1449,16 +1456,16 @@ var imagesProduct = (function() {
       var closedHeight = $('#product-images-dropzone').outerHeight();
       var realHeight = $('#product-images-dropzone')[0].scrollHeight;
 
-      if(realHeight > closedHeight){
+      if (realHeight > closedHeight) {
         $('#product-images-container .dropzone-expander').addClass('expand').show();
       }
 
       $(document).on('click', '#product-images-container .dropzone-expander', function() {
-        if($('#product-images-container .dropzone-expander').hasClass('expand')){
+        if ($('#product-images-container .dropzone-expander').hasClass('expand')) {
           $('#product-images-dropzone').css('height', 'auto');
           $('#product-images-container .dropzone-expander').removeClass('expand').addClass('compress');
         } else {
-          $('#product-images-dropzone').css('height', closedHeight+'px');
+          $('#product-images-dropzone').css('height', closedHeight + 'px');
           $('#product-images-container .dropzone-expander').removeClass('compress').addClass('expand');
         }
       });
@@ -1470,14 +1477,14 @@ var imagesProduct = (function() {
 
       //on click image, display custom form
       $(document).on('click', '#product-images-dropzone .dz-preview', function() {
-        if(!$(this).attr('data-id')){
+        if (!$(this).attr('data-id')) {
           return;
         }
         formImagesProduct.form($(this).attr('data-id'));
       });
 
       var dropzoneOptions = {
-        url: dropZoneElem.attr('url-upload')+'/'+id_product,
+        url: dropZoneElem.attr('url-upload') + '/' + id_product,
         paramName: 'form[file]',
         maxFilesize: dropZoneElem.attr('data-max-size'),
         addRemoveLinks: true,
@@ -1485,23 +1492,23 @@ var imagesProduct = (function() {
         thumbnailWidth: 130,
         thumbnailHeight: null,
         acceptedFiles: 'image/*',
-        dictDefaultMessage: '<i class="material-icons">perm_media</i><br/>'+translate_javascripts['Drop images here']+'<br/>'+translate_javascripts['or select files']+'<br/><small>' + translate_javascripts['files recommandations'] + '<br/>' + translate_javascripts['files recommandations2'] + '</small></div>',
+        dictDefaultMessage: '<i class="material-icons">perm_media</i><br/>' + translate_javascripts['Drop images here'] + '<br/>' + translate_javascripts['or select files'] + '<br/><small>' + translate_javascripts['files recommandations'] + '<br/>' + translate_javascripts['files recommandations2'] + '</small></div>',
         dictRemoveFile: translate_javascripts['Delete'],
         dictFileTooBig: translate_javascripts['ToLargeFile'],
         dictCancelUpload: translate_javascripts['Delete'],
-        sending: function (file, response) {
+        sending: function(file, response) {
           $('#product-images-container .dropzone-expander').addClass('expand').click();
           errorElem.html('');
         },
-        queuecomplete: function(){
+        queuecomplete: function() {
           dropZoneElem.sortable('enable');
         },
-        processing: function(){
+        processing: function() {
           dropZoneElem.sortable('disable');
         },
-        success: function (file, response) {
+        success: function(file, response) {
           //manage error on uploaded file
-          if(response.error !== 0){
+          if (response.error !== 0) {
             errorElem.append('<p>' + file.name + ': ' + response.error + '</p>');
             this.removeFile(file);
             return;
@@ -1510,21 +1517,21 @@ var imagesProduct = (function() {
           //define id image to file preview
           $(file.previewElement).attr('data-id', response.id);
           $(file.previewElement).addClass('ui-sortable-handle');
-          if(response.cover === 1){
+          if (response.cover === 1) {
             imagesProduct.updateDisplayCover(response.id);
           }
 
           combinations.refreshImagesCombination();
         },
-        error: function (file, response) {
+        error: function(file, response) {
           var message = '';
-          if($.type(response) === 'string'){
+          if ($.type(response) === 'string') {
             message = response;
-          }else if(response.message){
+          } else if (response.message) {
             message = response.message;
           }
 
-          if(message === ''){
+          if (message === '') {
             return;
           }
 
@@ -1534,13 +1541,13 @@ var imagesProduct = (function() {
           //remove uploaded item
           this.removeFile(file);
         },
-        init: function () {
+        init: function() {
           //if already images uploaded, mask drop file message
-          if(dropZoneElem.find('.dz-preview').length){
+          if (dropZoneElem.find('.dz-preview').length) {
             dropZoneElem.addClass('dz-started');
           }
 
-          dropZoneElem.find('.openfilemanager').click(function(){
+          dropZoneElem.find('.openfilemanager').click(function() {
             dropZoneElem.click();
           });
 
@@ -1551,24 +1558,29 @@ var imagesProduct = (function() {
             containment: 'parent',
             distance: 32,
             tolerance: 'pointer',
-            cursorAt: { left: 64, top: 64 },
+            cursorAt: {
+              left: 64,
+              top: 64
+            },
             cancel: '.disabled',
             stop: function(event, ui) {
               var sort = {};
-              $.each(dropZoneElem.find('.dz-preview:not(.disabled)'), function( index, value ) {
-                if(!$(value).attr('data-id')) {
+              $.each(dropZoneElem.find('.dz-preview:not(.disabled)'), function(index, value) {
+                if (!$(value).attr('data-id')) {
                   sort = false;
                   return;
                 }
-                sort[$(value).attr('data-id')] = index+1;
+                sort[$(value).attr('data-id')] = index + 1;
               });
 
               //if sortable ok, update it
-              if(sort){
+              if (sort) {
                 $.ajax({
                   type: 'POST',
                   url: dropZoneElem.attr('url-position'),
-                  data: {json: JSON.stringify(sort)}
+                  data: {
+                    json: JSON.stringify(sort)
+                  }
                 });
               }
             },
@@ -1598,16 +1610,19 @@ var formImagesProduct = (function() {
   var dropZoneElem = $('#product-images-dropzone');
   var formZoneElem = $('#product-images-form-container');
 
-  formZoneElem.magnificPopup({delegate:'a.open-image', type:'image'});
+  formZoneElem.magnificPopup({
+    delegate: 'a.open-image',
+    type: 'image'
+  });
 
   return {
     'form': function(id) {
       $.ajax({
-        url: dropZoneElem.attr('url-update')+'/'+id,
-        success: function(response){
+        url: dropZoneElem.attr('url-update') + '/' + id,
+        success: function(response) {
           formZoneElem.find('#product-images-form').html(response);
         },
-        complete: function(){
+        complete: function() {
           formZoneElem.show();
         }
       });
@@ -1615,23 +1630,23 @@ var formImagesProduct = (function() {
     'send': function(id) {
       $.ajax({
         type: 'POST',
-        url: dropZoneElem.attr('url-update')+'/'+id,
+        url: dropZoneElem.attr('url-update') + '/' + id,
         data: formZoneElem.find('input').serialize(),
         beforeSend: function() {
           formZoneElem.find('.actions button').prop('disabled', 'disabled');
           formZoneElem.find('ul.text-danger').remove();
           formZoneElem.find('*.has-danger').removeClass('has-danger');
         },
-        success: function(){
-          if(formZoneElem.find('#form_image_cover:checked').length){
+        success: function() {
+          if (formZoneElem.find('#form_image_cover:checked').length) {
             imagesProduct.updateDisplayCover(id);
           }
         },
-        error: function(response){
-          if(response && response.responseText) {
-            $.each(jQuery.parseJSON(response.responseText), function (key, errors) {
+        error: function(response) {
+          if (response && response.responseText) {
+            $.each(jQuery.parseJSON(response.responseText), function(key, errors) {
               var html = '<ul class="list-unstyled text-danger">';
-              $.each(errors, function (key, error) {
+              $.each(errors, function(key, error) {
                 html += '<li>' + error + '</li>';
               });
               html += '</ul>';
@@ -1641,17 +1656,17 @@ var formImagesProduct = (function() {
             });
           }
         },
-        complete: function(){
+        complete: function() {
           formZoneElem.find('.actions button').removeAttr('disabled');
         }
       });
     },
     'delete': function(id) {
       modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-        onContinue: function(){
+        onContinue: function() {
           $.ajax({
-            url: dropZoneElem.attr('url-delete')+'/'+id,
-            complete: function(){
+            url: dropZoneElem.attr('url-delete') + '/' + id,
+            complete: function() {
               formZoneElem.find('.close').click();
               dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
               combinations.refreshImagesCombination();
@@ -1716,8 +1731,7 @@ var priceCalculation = (function() {
    * @param {array} Rates rates to apply
    * @param {int} computation_method The computation calculate method
    */
-  function removeTaxes(price, rates, computation_method)
-  {
+  function removeTaxes(price, rates, computation_method) {
     var i = 0;
     if (computation_method === '0') {
       for (i in rates) {
@@ -1739,22 +1753,20 @@ var priceCalculation = (function() {
     return price;
   }
 
-  function getEcotaxTaxIncluded()
-  {
-    var ecotax_tax_excl =  ecoTaxElem.val() / (1 + ecoTaxRate);
+  function getEcotaxTaxIncluded() {
+    var ecotax_tax_excl = ecoTaxElem.val() / (1 + ecoTaxRate);
     return ps_round(ecotax_tax_excl * (1 + ecoTaxRate), 2);
   }
 
-  function getEcotaxTaxExcluded()
-  {
+  function getEcotaxTaxExcluded() {
     return ecoTaxElem.val() / (1 + ecoTaxRate);
   }
 
   return {
     'init': function() {
       /** on update tax recalculate tax include price */
-      taxElem.change(function(){
-        if(reTaxElem.val() !== taxElem.val()) {
+      taxElem.change(function() {
+        if (reTaxElem.val() !== taxElem.val()) {
           reTaxElem.val(taxElem.val()).trigger('change');
         }
 
@@ -1762,15 +1774,15 @@ var priceCalculation = (function() {
         priceTTCElem.change();
       });
 
-      reTaxElem.change(function(){
+      reTaxElem.change(function() {
         taxElem.val(reTaxElem.val()).trigger('change');
       });
 
       /** update without tax price and shortcut price field on change */
-      $('#form_step1_price_shortcut, #form_step2_price').keyup(function(){
-        if($(this).attr('id') === 'form_step1_price_shortcut'){
+      $('#form_step1_price_shortcut, #form_step2_price').keyup(function() {
+        if ($(this).attr('id') === 'form_step1_price_shortcut') {
           $('#form_step2_price').val($(this).val());
-        }else{
+        } else {
           $('#form_step1_price_shortcut').val($(this).val());
         }
 
@@ -1778,10 +1790,10 @@ var priceCalculation = (function() {
       });
 
       /** update HT price and shortcut price field on change */
-      $('#form_step1_price_ttc_shortcut, #form_step2_price_ttc').keyup(function(){
-        if($(this).attr('id') === 'form_step1_price_ttc_shortcut'){
+      $('#form_step1_price_ttc_shortcut, #form_step2_price_ttc').keyup(function() {
+        if ($(this).attr('id') === 'form_step1_price_ttc_shortcut') {
           $('#form_step2_price_ttc').val($(this).val());
-        }else{
+        } else {
           $('#form_step1_price_ttc_shortcut').val($(this).val());
         }
 
@@ -1789,22 +1801,22 @@ var priceCalculation = (function() {
       });
 
       /** on price change, update final retails prices */
-      $('#form_step2_price, #form_step2_price_ttc').change(function(){
+      $('#form_step2_price, #form_step2_price_ttc').change(function() {
         $('#final_retail_price_te').text(formatCurrency(parseFloat($('#form_step2_price').val())));
         $('#final_retail_price_ti').text(formatCurrency(parseFloat($('#form_step2_price_ttc').val())));
       });
 
       /** update HT price and shortcut price field on change */
-      $('#form_step2_ecotax').keyup(function(){
+      $('#form_step2_ecotax').keyup(function() {
         priceCalculation.taxExclude();
       });
 
       /** combinations : update TTC price field on change */
-      $('.combination-form .attribute_priceTE').keyup(function(){
+      $('.combination-form .attribute_priceTE').keyup(function() {
         priceCalculation.impactTaxInclude($(this));
       });
       /** combinations : update HT price field on change */
-      $('.combination-form .attribute_priceTI').keyup(function(){
+      $('.combination-form .attribute_priceTI').keyup(function() {
         priceCalculation.impactTaxExclude($(this));
       });
 
@@ -1814,7 +1826,7 @@ var priceCalculation = (function() {
     },
     'taxInclude': function() {
       var price = parseFloat(priceHTElem.val().replace(/,/g, '.'));
-      if(isNaN(price)){
+      if (isNaN(price)) {
         price = 0;
       }
 
@@ -1827,7 +1839,7 @@ var priceCalculation = (function() {
     },
     'taxExclude': function() {
       var price = parseFloat(priceTTCElem.val().replace(/,/g, '.'));
-      if(isNaN(price)){
+      if (isNaN(price)) {
         price = 0;
       }
 
@@ -1841,7 +1853,7 @@ var priceCalculation = (function() {
     'impactTaxInclude': function(obj) {
       var price = parseFloat(obj.val().replace(/,/g, '.'));
       var targetInput = obj.parent().parent().parent().find('input.attribute_priceTI');
-      if(isNaN(price)){
+      if (isNaN(price)) {
         targetInput.val(0);
         return;
       }
@@ -1854,7 +1866,7 @@ var priceCalculation = (function() {
     'impactTaxExclude': function(obj) {
       var price = parseFloat(obj.val().replace(/,/g, '.'));
       var targetInput = obj.parent().parent().parent().find('input.attribute_priceTE');
-      if(isNaN(price)){
+      if (isNaN(price)) {
         targetInput.val(0);
         return;
       }
@@ -1874,10 +1886,10 @@ var seo = (function() {
   var redirectTypeElem = $('#form_step5_redirect_type');
 
   /** Hide or show the input product selector */
-  function hideShowRedirectToProduct(){
-    if(redirectTypeElem.val() === '404'){
+  function hideShowRedirectToProduct() {
+    if (redirectTypeElem.val() === '404') {
       $('#id-product-redirected').hide();
-    }else{
+    } else {
       $('#id-product-redirected').show();
     }
   }
@@ -1888,24 +1900,24 @@ var seo = (function() {
       hideShowRedirectToProduct();
 
       /** On redirect type select change */
-      redirectTypeElem.change(function(){
+      redirectTypeElem.change(function() {
         hideShowRedirectToProduct();
       });
 
       /** Update friendly URL */
-      var updateFriendlyUrl = function(elem){
+      var updateFriendlyUrl = function(elem) {
         var id_lang = elem.attr('name').match(/\d+/)[0];
         $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
       };
 
       /** On product title change, update friendly URL*/
-      $('.form-input-title input').keydown(function(){
+      $('.form-input-title input').keydown(function() {
         updateFriendlyUrl($(this));
       });
 
       /** Reset all languages title to friendly url*/
-      $('#seo-url-regenerate').click(function(){
-        $.each($('.form-input-title input'), function(){
+      $('#seo-url-regenerate').click(function() {
+        $.each($('.form-input-title input'), function() {
           updateFriendlyUrl($(this));
         });
       });

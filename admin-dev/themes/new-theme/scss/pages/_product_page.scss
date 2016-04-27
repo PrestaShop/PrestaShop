@@ -85,7 +85,6 @@
       @include display(flex);
       @include align-items(center);
     }
-
   }
   .big-input {
     .form-control {
@@ -366,7 +365,119 @@
       }
     }
   }
+  #add-categories {
+    margin-top: rem(40px);
+  }
+  #form_step1_categories {
+    clear: both;
+  }
+  .ui-widget {
+    > .form-control-label {
+      font-size: rem(10px);
+      font-weight: 600;
+    }
+    > .ui-autocomplete-input {
+      @include placeholder {
+        font-size: rem(12px);
+      }
+    }
+    > .pstaggerTagsWrapper {
+      border: none;
+      padding: 0;
+      > .pstaggerTag {
+        font-size: rem(12px);
+        font-weight: 400;
+        padding-top: rem(2px);
+        margin-bottom: rem(5px);
+        > .pstaggerClosingCross {
+          font-size: 0;
+          &::after {
+            font-size: rem(16px);
+            font-family: 'Material Icons';
+            content: "\E5CD";
+            text-decoration: none;
+            vertical-align: middle;
+            position: relative;
+            bottom: rem(4px);
+          }
+        }
+      }
+    }
+  }
+  .category-tree {
+    ul {
+      padding-left: rem(20px);
+    }
+    .more,
+    .less {
+      background: none;
+      position: relative;
+      > .checkbox {
+        cursor: pointer;
+      }
+      &::before {
+        position: absolute;
+        font-family: 'Material Icons';
+        cursor: pointer;
+        font-size: rem(20px);
+        color: $gray-medium;
+        top: rem(-4px);
+      }
+    }
+    .less {
+      &::before {
+        content: "\E313";
+      }
+    }
+    .more {
+      &::before {
+        content: "\E5CC";
+      }
+    }
+  }
+  .categories-tree {
+    padding: rem(10px);
+    border: $gray-light 1px solid;
+    border-radius: rem(3px);
+    .categories-tree-actions {
+      text-transform: uppercase;
+      font-size: rem(10px);
+      font-weight: 600;
+      clear: both;
+      [data-action="expand"],
+      [data-action="reduce"] {
+        cursor: pointer;
+      }
+      > hr {
+        margin-top: rem(10px);
+      }
+      .form-control-label {
+        padding-top: rem(5px);
+      }
+      .material-icons {
+        font-size: rem(20px);
+        vertical-align: bottom;
+      }
+    }
+  }
 }
 .popover-title {
   display: none;
+}
+.ui-autocomplete {
+  max-width: rem(290px);
+  @media screen and (max-width: 1450px) {
+    max-width: rem(197px);
+  }
+  li:hover {
+    background: $primary-hover;
+    cursor: pointer;
+    a {
+      color: $white;
+      text-decoration: none;
+    }
+  }
+  a {
+    color: $gray-medium;
+  }
 }
