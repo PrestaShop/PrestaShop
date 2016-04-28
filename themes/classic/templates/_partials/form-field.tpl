@@ -30,9 +30,9 @@
           <label>{$field.label}</label>
         </span>
       {elseif $field.type === 'date'}
-        <input type="text" class="form-control" placeholder="MM/DD/YYYY">
+        <input type="text" value="{$field.value}" name="{$field.name}" class="form-control" placeholder="{$dateFormat}">
         <span class="form-control-comment">
-          {l s='(Ex.:31/05/1970)'}
+          {l s='(Ex.:'|cat:$dateSample})
         </span>
       {elseif $field.type === 'email'}
         <input type="{$field.type}" data-error="{l s='Invalid email address'}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required} required {/if}>
