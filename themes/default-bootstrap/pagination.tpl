@@ -72,7 +72,7 @@
 							{/if}
 						{/foreach}
 					{/if}
-	                <input name="n" id="nb_item" class="hidden" value="{$nb_products}" />
+	                <input name="n" id="nb_item{if isset($paginationId)}_{$paginationId}{/if}" class="hidden" value="{$nb_products}" />
 				</div>
 			</form>
 		{/if}
