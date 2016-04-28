@@ -10,33 +10,40 @@
     success: function(json) {
       if (json) {
 
-        let orders = '';
-        let customers = '';
-        let customerMessages = '';
+        let orderTpl = jQuery("#order-notification-template").html();
+        let customerTpl = jQuery("#customer-notification-template").html();
+        let messageTpl = jQuery("#message-notification-template").html();
 
         jQuery.each(json.order.results, function(property, value) {
-          orders += `  <a href='#'>
-                           #${parseInt(value.id_order)} - de ${value.customer_name} (${value.iso_code}) - ${value.carrier} ${value.total_paid}
-                         </a>`;
+          jQuery("#orders-notifications").append(
+            orderTpl.replace("id_order", parseInt(value.id_order))
+              .replace("customer_name", value.customer_name)
+              .replace("iso_code", value.iso_code)
+              .replace("carrier", value.carrier)
+              .replace("total_paid", value.total_paid)
+          );
         });
 
         jQuery.each(json.customer.results, function(property, value) {
-          customers += `  <a href='#'>
-                              #${parseInt(value.id_customer)} - ${value.customer_name} (${value.company}) - register ${value.date_add}
-                            </a>`;
+          jQuery("#customers-notifications").append(
+            customerTpl.replace("id_customer", parseInt(value.id_customer))
+              .replace("customer_name", value.customer_name)
+              .replace("company", value.company)
+              .replace("date_add", value.date_add)
+          );
         });
 
         jQuery.each(json.customer_message.results, function(property, value) {
-          customerMessages += `  <a href='#'>
-                                      ${value.status} - ${value.customer_name} (${value.company}) - ${value.date_add}
-                                   </a>`;
+          jQuery("#messages-notifications").append(
+            messageTpl.replace("status", value.status)
+              .replace("customer_name", value.customer_name)
+              .replace("company", value.company)
+              .replace("date_add", value.date_add)
+          );
         });
 
         let notifications_total = parseInt(json.order.total) + parseInt(json.customer.total) + parseInt(json.customer_message.total);
         jQuery('#orders_notif_value').html(notifications_total);
-        jQuery('#orders').html(orders);
-        jQuery('#customers').html(customers);
-        jQuery('#messages').html(customerMessages);
       }
     }
   });

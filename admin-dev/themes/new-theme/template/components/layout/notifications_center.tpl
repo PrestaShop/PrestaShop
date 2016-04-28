@@ -27,3 +27,15 @@
     </div>
   </div>
 </div>
+
+<script type="text/html" id="order-notification-template">
+  <a href='order_url'>#id_order - {l s="from"} customer_name (iso_code) - carrier total_paid</a>
+</script>
+
+<script type="text/html" id="customer-notification-template">
+  <a href='customer_url'>#id_customer - customer_name (company) - {l s="register"} date_add</a>
+</script>
+
+<script type="text/html" id="message-notification-template">
+  <a href='message_url'>status - customer_name (company) - date_add</a>
+</script>
