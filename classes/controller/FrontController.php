@@ -1158,7 +1158,7 @@ class FrontControllerCore extends Controller
 
     public function getTemplateFile($template_file, $id = null)
     {
-        if ($overriden_template = Hook::exec('DisplayOverrideTemplate', array('controller' => $this))) {
+        if ($overriden_template = Hook::exec('DisplayOverrideTemplate', array('controller' => $this, 'template_file' => $template_file, 'id' => $id))) {
             return $overriden_template;
         }
 
@@ -1324,7 +1324,7 @@ class FrontControllerCore extends Controller
     protected function getDisplayTaxesLabel()
     {
         return (Module::isEnabled('ps_legalcompliance') && (bool)Configuration::get('AEUC_LABEL_TAX_INC_EXC')) || $this->context->country->display_tax_label;
-    }    
+    }
 
     public function getTemplateVarCurrency()
     {
