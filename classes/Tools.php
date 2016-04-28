@@ -3468,7 +3468,6 @@ exit;
     }
 
     /**
-     * @deprecated Deprecated since 1.7.0
      * Return path to a Product or a CMS category
      *
      * @param string $url_base Start URL
