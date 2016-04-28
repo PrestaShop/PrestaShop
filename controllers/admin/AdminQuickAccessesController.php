@@ -212,7 +212,7 @@ class AdminQuickAccessesControllerCore extends AdminController
         if (Tools::strtolower(Tools::getValue('method')) === 'add') {
             $params['new_window'] = 0;
             $params['name_'.(int)Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('name');
-            $params['link'] = Tools::getValue('url');
+            $params['link'] = 'index.php?'.Tools::getValue('url');
             $params['submitAddquick_access'] = 1;
             unset($_POST['name']);
             $_POST = array_merge($_POST, $params);
