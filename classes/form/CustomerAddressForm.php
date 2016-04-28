@@ -68,13 +68,11 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function validate()
     {
-        if (!parent::validate()) {
-            return false;
-        }
+        $is_valid = parent::validate();
 
         if (($postcode = $this->getField('postcode'))) {
             if ($postcode->isRequired()) {
-                $country    = $this->formatter->getCountry();
+                $country = $this->formatter->getCountry();
                 if (!$country->checkZipCode($postcode->getValue())) {
                     // FIXME: the translator adapter is crap at the moment,
                     // but once it is not, the sprintf needs to go away.
@@ -84,12 +82,12 @@ class CustomerAddressFormCore extends AbstractForm
                         ),
                         $country->zip_code_format
                     ));
-                    return false;
+                    $is_valid = false;
                 }
             }
         }
 
-        return true;
+        return $is_valid;
     }
 
     public function submit()

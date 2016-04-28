@@ -15,17 +15,12 @@ function setupMyCheckoutScripts() {
   $('.js-terms a').on('click', (event) => {
     event.preventDefault();
     $('#modal').modal('show');
-
   });
 
   let url = `${$('.js-terms a').attr('href')}?content_only=1`;
 
   $.get(url, (content) => {
     $('#modal').find('.modal-content').html($(content).find('.page-cms').contents());
-  });
-
-  $('.js-customer-form').on('invalid.bs.validator', (event) => {
-    $(event.relatedTarget).next('.tooltip').css('opacity', 1).show();
   });
 }
 

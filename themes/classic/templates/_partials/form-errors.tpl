@@ -1,5 +1,9 @@
 {if $errors|count}
-    {foreach $errors as $error}
-    <div class="alert alert-danger" role="alert">{$error}</div>
-    {/foreach}
+  <div class="help-block">
+    <ul>
+      {foreach $errors as $error}
+        <li>{$error}</li>
+      {/foreach}
+    </ul>
+  </div>
 {/if}
