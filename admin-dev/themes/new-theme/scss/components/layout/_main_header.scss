@@ -4,10 +4,9 @@
   background: $white;
   height: $size-header-height;
   width: 100%;
-
   > .logo {
     display: inline-block;
-    background: url('img/logo.png') no-repeat center center;
+    background: url(img/logo.png) no-repeat center center;
     height: 100%;
     width: $size-navbar-width;
   }
@@ -17,12 +16,61 @@
       left: rem(8px);
       right: rem(8px);
     }
+    > .ps-dropdown:not(.search):not(.stores) {
+      > .ps-dropdown-menu {
+        left: rem(17px);
+      }
+    }
+
+    > .stores .ps-dropdown-menu {
+      left: rem(-12px);
+    }
+    > .bo_search_form {
+      position: relative;
+      .search {
+        position: absolute;
+        display: none;
+        top: 0;
+        right: rem(15px);
+        .ps-dropdown-menu {
+          left: rem(-32px);
+          .material-icons {
+            vertical-align: bottom;
+            margin-right: rem(5px);
+          }
+        }
+      }
+    }
+
+    .form-search[type=search].expanded {
+      width: rem(250px);
+      background-position: 90%;
+      text-indent: 0;
+      @include placeholder {
+        color: $gray-light;
+        text-indent: 0;
+      }
+      + .search {
+        display: block;
+        background: none;
+        .ps-dropdown-menu{
+          left:rem(-80px);
+        }
+      }
+    }
+  }
+  .shop-state {
+    margin-right: rem(20px);
+    line-height: $size-header-height;
+    > .material-icons {
+      color: $secondary;
+      vertical-align: middle;
+    }
   }
   > .component.-norightmargin {
     margin-right: 0;
   }
 }
-
 .notification-center {
   > .notification {
     @include single-line-block($size-header-height);
@@ -50,12 +98,13 @@
     padding: 0 rem(4px);
     border-radius: rem(10px);
   }
-
   .material-icons {
     font-size: rem(24px);
   }
+  .notifications{
+    padding: rem(10px);
+  }
 }
-
 .shop-list {
   > .link {
     display: inline-block;
@@ -63,11 +112,15 @@
     @include single-line-block($size-header-height);
   }
 }
-
 .employee-dropdown {
   > .avatar {
     cursor: pointer;
     width: $size-header-height;
     height: $size-header-height;
+  }
+  .employee-link {
+    .material-icons {
+      vertical-align: bottom;
+    }
   }
 }
