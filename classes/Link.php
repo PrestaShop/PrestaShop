@@ -25,7 +25,6 @@
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use Symfony\Component\HttpFoundation\Request;
 
 class LinkCore
 {
@@ -543,7 +542,7 @@ class LinkCore
         $not_default = false;
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-
+    
 
         // Check if module is installed, enabled, customer is logged in and watermark logged option is on
         if (Configuration::get('WATERMARK_LOGGED') && ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
@@ -826,18 +825,13 @@ class LinkCore
 
     public static function getQuickLink($url)
     {
-        // We need to know if we are in Legacy or SF environment
-        if (Tools::getIsset('token')) {
-            $parsedUrl = parse_url($url);
-            $output = array();
-            if (is_array($parsedUrl) && isset($parsedUrl['query'])) {
-                parse_str($parsedUrl['query'], $output);
-                unset($output['token'], $output['conf'], $output['id_quick_access']);
-            }
-            return 'index.php?'.http_build_query($output);
+        $parsedUrl = parse_url($url);
+        $output = array();
+        if (is_array($parsedUrl) && isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $output);
+            unset($output['token'], $output['conf'], $output['id_quick_access']);
         }
-
-        return str_replace('/'.basename(_PS_ADMIN_DIR_).'/', '', $url);
+        return http_build_query($output);
     }
 
     public function matchQuickLink($url)
