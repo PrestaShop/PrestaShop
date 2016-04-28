@@ -509,7 +509,7 @@ class MailCore extends ObjectModel
             'utctime' => gmstrftime('%Y%m%d%H%M%S'),
             'randint' => mt_rand(),
             'customstr' => (preg_match("/^(?<!\\.)[a-z0-9\\.]+(?!\\.)\$/iD", $idstring) ? $idstring : "swift") ,
-            'hostname' => (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : php_uname('n')),
+            'hostname' => ((isset($_SERVER['SERVER_NAME']) && !empty($_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : php_uname('n')),
         );
         return vsprintf("%s.%d.%s@%s", $midparams);
     }
