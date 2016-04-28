@@ -34,6 +34,12 @@ class PaymentOptionsFinderCore
 
         $paymentOptions = array_merge($displayPaymentEUOptions, $advancedPaymentOptions, $newOption);
 
+        foreach ($paymentOptions as $paymentOptionKey => $paymentOption) {
+            if (!is_array($paymentOption)) {
+                unset($paymentOptions[$paymentOptionKey]);
+            }
+        }  
+
         return $paymentOptions;
     }
 
