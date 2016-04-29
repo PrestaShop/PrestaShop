@@ -5,6 +5,7 @@ export default class Header {
     $(() => {
       this.initQuickAccess();
       this.initMultiStores();
+      this.initNotificationsToggle();
       this.initSearch();
     });
   }
@@ -68,6 +69,20 @@ export default class Header {
   initMultiStores() {
     $('.js-link').on('click', (e) => {
       window.open($(e.target).parents('.link').attr('href'), '_blank');
+    });
+  }
+  initNotificationsToggle() {
+    $('.notification.dropdown-toggle').on('click', function (event) {
+      $(this).parent().toggleClass('open');
+    });
+
+    $('body').on('click', function (e) {
+      if (!$('div.notification-center.dropdown').is(e.target)
+        && $('div.notification-center.dropdown').has(e.target).length === 0
+        && $('.open').has(e.target).length === 0
+      ) {
+        $('div.notification-center.dropdown').removeClass('open');
+      }
     });
   }
   initSearch() {

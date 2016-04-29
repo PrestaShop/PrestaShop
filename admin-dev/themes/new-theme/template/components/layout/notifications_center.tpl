@@ -1,5 +1,5 @@
 <div class="notification-center dropdown">
-  <div class="notification dropdown-toggle" data-toggle="dropdown">
+  <div class="notification dropdown-toggle">
     <i class="material-icons">notifications</i>
     {* TODO: REFACTORING THIS IDENTIFIER *}
     <span id="orders_notif_value" class="count">0</span>
