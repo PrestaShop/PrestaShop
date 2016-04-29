@@ -1,6 +1,6 @@
 <div class="notification-center dropdown">
   <div class="notification dropdown-toggle">
-    <i class="material-icons">notifications</i>
+    <i class="material-icons">notifications_none</i>
     {* TODO: REFACTORING THIS IDENTIFIER *}
     <span id="orders_notif_value" class="count">0</span>
   </div>
@@ -29,13 +29,13 @@
 </div>
 
 <script type="text/html" id="order-notification-template">
-  <a class="notif" href='order_url'>#_id_order_ - {l s="from"} <strong>_customer_name_</strong> (_iso_code_)_carrier_ <strong class="pull-xs-right">_total_paid_</strong></a>
+  <a class="notif" href='order_url'>#_id_order_ - {l s="from"} <strong>_customer_name_</strong> (_iso_code_) - _carrier_ <strong class="pull-xs-right">_total_paid_</strong></a>
 </script>
 
 <script type="text/html" id="customer-notification-template">
-  <a class="notif" href='customer_url'>#_id_customer_ - <strong>_customer_name_</strong> _company_- {l s="register"} <strong>_date_add_</strong></a>
+  <a class="notif" href='customer_url'>#_id_customer_ - <strong>_customer_name_</strong> (_company_) - {l s="register"} <strong>_date_add_</strong></a>
 </script>
 
 <script type="text/html" id="message-notification-template">
-  <a class="notif" href='message_url'>_status_ - <strong>_customer_name_</strong> _company_- _date_add_</a>
+  <a class="notif" href='message_url'><span class="message-notification-status _status_"><i class="material-icons">fiber_manual_record</i> _status_</span> - <strong>_customer_name_</strong> (_company_) - <i class="material-icons">access_time</i> _date_add_</a>
 </script>
