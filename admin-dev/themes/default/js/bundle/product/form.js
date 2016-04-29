@@ -1911,7 +1911,7 @@ var seo = (function() {
       };
 
       /** On product title change, update friendly URL*/
-      $('.form-input-title input').keydown(function() {
+      $('#form_step1_name input').keydown(function() {
         updateFriendlyUrl($(this));
       });
 
