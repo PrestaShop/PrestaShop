@@ -720,6 +720,10 @@ var form = (function() {
         $('*.has-danger').removeClass('has-danger');
       },
       success: function(response) {
+        var id_product = $('#form_id_product').val();
+        if (!id_product) {
+            $('#form_id_product').val(response.product.id);
+        }
         if (redirect) {
           if (target) {
             window.open(redirect, target);
