@@ -715,7 +715,6 @@ class MediaCore
                 }
             }
         }
-
         $version = (int)Configuration::get('PS_CCCJS_VERSION');
         Configuration::updateValue('PS_CCCJS_VERSION', ++$version);
         $version = (int)Configuration::get('PS_CCCCSS_VERSION');
