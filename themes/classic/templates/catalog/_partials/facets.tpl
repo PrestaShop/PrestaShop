@@ -9,7 +9,7 @@
             {foreach from=$facet.filters item="filter"}
               {if $filter.displayed}
                 <li>
-                  <label class="facet-label">
+                  <label class="facet-label{if $filter.active} active {/if}">
                     {if $facet.multipleSelectionAllowed}
                       <span class="custom-checkbox">
                         <input
@@ -39,7 +39,7 @@
 
                     <a
                       href="{$filter.nextEncodedFacetsURL}"
-                      class="_gray-darker search-link js-search-link {if $filter.active} active {/if}"
+                      class="_gray-darker search-link js-search-link"
                     >
                       {$filter.label}
                       {if $filter.magnitude}

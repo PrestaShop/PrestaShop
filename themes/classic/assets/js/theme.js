@@ -9998,7 +9998,7 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.3.0 */
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.3.1 */
 	
 	(function(root, factory) {
 	  if (true) {
@@ -10110,8 +10110,10 @@
 	};
 	
 	function removeUtilElements() {
-	  document.body.removeChild(zeroElement);
-	  zeroElement = undefined;
+	  if (zeroElement) {
+	    document.body.removeChild(zeroElement);
+	  }
+	  zeroElement = null;
 	};
 	
 	function getBounds(el) {
@@ -10472,7 +10474,7 @@
 	      return;
 	    }
 	
-	    if (typeof pendingTimeout !== 'undefined') {
+	    if (pendingTimeout != null) {
 	      clearTimeout(pendingTimeout);
 	      pendingTimeout = null;
 	    }
