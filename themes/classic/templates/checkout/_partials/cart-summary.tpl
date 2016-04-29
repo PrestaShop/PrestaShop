@@ -5,7 +5,7 @@
     </header>
   {/block}
 
-  <a href="#" data-toggle="collapse" data-target="#cart-summary-product-list">{l s='show details'}</button>
+  <a href="#" data-toggle="collapse" data-target="#cart-summary-product-list">{l s='show details'}</a>
 
   {block name='cart_summary_product_list'}
     <div id="cart-summary-product-list" class="collapse">
