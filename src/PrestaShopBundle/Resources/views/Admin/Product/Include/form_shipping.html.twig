@@ -2,58 +2,51 @@
 
 <div class="col-md-12 p-b-1">
   <h2>{{ trans('Package dimension', [], 'AdminProducts') }}</h2>
-  {{ trans('Adjust your shipping costs by filling in the product dimensions.', [], 'AdminProducts') }}
+  <p class="subtitle">{{ trans('Adjust your shipping costs by filling in the product dimensions.', [], 'AdminProducts') }}</p>
 </div>
 
-<div class="col-md-3">
+<div class="col-md-2">
   <div class="form-group">
     <label class="form-control-label">{{ form.width.vars.label }}</label>
     {{ form_errors(form.width) }}
     <div class="input-group">
-      <span class="input-group-addon">{{ dimension_unit }}</span>
       {{ form_widget(form.width) }}
+      <span class="input-group-addon">{{ dimension_unit }}</span>
     </div>
   </div>
 </div>
-<div class="col-md-3">
+<div class="col-md-2">
   <div class="form-group">
     <label class="form-control-label">{{ form.height.vars.label }}</label>
     {{ form_errors(form.height) }}
     <div class="input-group">
-      <span class="input-group-addon">{{ dimension_unit }}</span>
       {{ form_widget(form.height) }}
+      <span class="input-group-addon">{{ dimension_unit }}</span>
     </div>
   </div>
 </div>
-<div class="col-md-3">
+<div class="col-md-2">
   <div class="form-group">
     <label class="form-control-label">{{ form.depth.vars.label }}</label>
     {{ form_errors(form.depth) }}
     <div class="input-group">
-      <span class="input-group-addon">{{ dimension_unit }}</span>
       {{ form_widget(form.depth) }}
+      <span class="input-group-addon">{{ dimension_unit }}</span>
     </div>
   </div>
 </div>
-<div class="col-md-3">
+<div class="col-md-2">
   <div class="form-group">
     <label class="form-control-label">{{ form.weight.vars.label }}</label>
     {{ form_errors(form.weight) }}
     <div class="input-group">
-      <span class="input-group-addon">{{ weight_unit }}</span>
       {{ form_widget(form.weight) }}
+      <span class="input-group-addon">{{ weight_unit }}</span>
     </div>
   </div>
 </div>
 
-<div class="col-md-6">
-  <div class="form-group">
-    <h2>{{ form.selectedCarriers.vars.label }}</h2>
-    {{ form_widget(form.selectedCarriers) }}
-  </div>
-</div>
-
-<div class="col-md-6">
+<div class="col-md-12">
   <div class="form-group">
     <h2>
       {{ form.additional_shipping_cost.vars.label }}
@@ -61,7 +54,18 @@
         data-content="{{ trans("If a carrier has a tax, it will be added to the shipping fees.",{}, 'AdminProducts') }}" ></span>
     </h2>
     <label class="form-control-label">{{ trans('Does this product incur additional shipping cost?', [], 'AdminProducts') }}</label>
-    {{ form_widget(form.additional_shipping_cost) }}
+    <div class="row">
+      <div class="col-md-2">
+        {{ form_widget(form.additional_shipping_cost) }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12">
+  <div class="form-group">
+    <h2>{{ form.selectedCarriers.vars.label }}</h2>
+    {{ form_widget(form.selectedCarriers) }}
   </div>
 </div>
 
@@ -79,5 +83,3 @@
     {% endif %}
   </div>
 </div>
-
-

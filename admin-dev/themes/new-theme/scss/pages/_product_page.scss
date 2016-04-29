@@ -173,18 +173,35 @@
   }
   .product-combination-image {
     display: inline-block;
-    border: 1px solid $primary;
+    border: 1px solid $gray-light;
     outline: solid 4px $white;
-    margin: 5px;
+    margin: 0 rem(10px) 0 0;
+    border-radius: rem(3px);
   }
   .product-combination-image.img-highlight {
-    outline: solid 4px $primary;
+    border: solid 2px $primary;
   }
   .product-combination-image input {
     display: none;
   }
-  .combination-form .title {
-    font-size: 20px;
+  .combination-form {
+    .combination-label {
+      color: $gray-medium;
+      &.vcenter {
+        line-height: rem(90px);
+      }
+    }
+    .title {
+      font-size: rem(15px);
+      clear: both;
+      margin-bottom: rem(10px);
+    }
+    .next,
+    .prev {
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: rem(10px);
+    }
   }
   // Dropzone & Image manager
   #product-images-dropzone {
@@ -459,6 +476,9 @@
         vertical-align: bottom;
       }
     }
+  }
+  .subtitle {
+    color: $gray-medium;
   }
 }
 .popover-title {
