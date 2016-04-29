@@ -54,8 +54,17 @@
 
       {elseif $field.type === 'password'}
 
-        <input type="password" pattern=".{literal}{{/literal}5,{literal}}{/literal}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required}required{/if}>
-
+        <div class="input-group js-parent-focus">
+          <input type="password" pattern=".{literal}{{/literal}5,{literal}}{/literal}" class="form-control js-child-focus js-visible-password" value="{$field.value}" name="{$field.name}" {if $field.required}required{/if}>
+          <span class="input-group-btn">
+            <button type="button" class="btn"
+                    data-action="show-password"
+                    data-text-show="{l s='Show'}"
+                    data-text-hide="{l s='Hide'}">
+              {l s='Show'}
+            </button>
+          </span>
+        </div>
       {else}
 
         <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.maxLength}maxlength="{$field.maxLength}"{/if}

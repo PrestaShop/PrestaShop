@@ -88,14 +88,30 @@ label {
 .form-control {
   background: $gray-light;
   color: $gray;
-  border-color: $gray-light;
-  border-radius: 0;
+  border: none;
   font-size: rem(14px);
   padding: rem(8px) rem(16px);
   &:focus {
     background-color: white;
-    border-color: white;
     outline: rem(3px) solid $brand-primary;
+  }
+}
+.input-group {
+  &.focus {
+    outline: rem(3px) solid $brand-primary;
+  }
+  .form-control:focus {
+    outline: none;
+  }
+  .input-group-btn > .btn {
+    border: 0;
+    box-shadow: none;
+    color: #ffffff;
+    font-size: rem(11px);
+    font-weight: normal;
+    margin-left: 0;
+    padding: rem(10.5px) rem(16px);
+    text-transform: uppercase;
   }
 }
 .form-control-select {

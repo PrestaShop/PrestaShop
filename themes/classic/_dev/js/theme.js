@@ -12,9 +12,10 @@ import './product';
 import './cart';
 
 import DropDown from './components/drop-down';
-import TopMenu from './components/top-menu';
+import Form from './components/form';
 import ProductMinitature from './components/product-miniature';
 import ProductSelect from './components/product-select';
+import TopMenu from './components/top-menu';
 
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
@@ -30,12 +31,14 @@ for (var i in EventEmitter.prototype) {
 
 $(document).ready(() => {
   let dropDownEl = $('.js-dropdown');
+  const form = new Form();
   let topMenuEl = $('.js-top-menu ul');
   let dropDown = new DropDown(dropDownEl);
   let topMenu = new TopMenu(topMenuEl);
   let productMinitature = new ProductMinitature();
   let productSelect  = new ProductSelect();
   dropDown.init();
+  form.init();
   topMenu.init();
   productMinitature.init();
   productSelect.init();
