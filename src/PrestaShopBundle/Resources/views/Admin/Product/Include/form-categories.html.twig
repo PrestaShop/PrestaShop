@@ -9,6 +9,7 @@
       <label class="form-control-label text-uppercase">{{ trans('Categories associated to this product', {}, 'AdminProducts') }}</label>
       {{ include('PrestaShopBundle:Admin:Category/categories.html.twig', {'categories': categories }) }}
       {{ form_errors(form.id_category_default) }}
+      {{ form_widget(form.id_category_default) }}
       <div class="categories-tree-actions js-categories-tree-actions">
         <span class="form-control-label" data-action="expand"><i class="material-icons">expand_more</i>{{ trans("Expand All", {}, 'AdminProducts') }}</span>
         <span class="form-control-label" data-action="reduce"><i class="material-icons">expand_less</i>{{ trans("Reduce All", {}, 'AdminProducts') }}</span>
