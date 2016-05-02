@@ -799,6 +799,24 @@ class CartCore extends ObjectModel
         }
     }
 
+    public function checkAndUpdateAddresses()
+    {
+        $needUpdate = false;
+        foreach (['invoice', 'delivery'] as $type) {
+            $addr = 'id_address_'.$type;
+            if ($this->{$addr} != 0
+                && !Address::isValid($this->{$addr})) {
+                $this->{$addr} = 0;
+                $needUpdate = true;
+            }
+        }
+
+        if ($needUpdate && $this->id) {
+            return $this->update();
+        }
+        return true;
+    }
+
     /**
      * Return cart products quantity
      *

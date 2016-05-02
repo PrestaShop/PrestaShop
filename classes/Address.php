@@ -347,6 +347,17 @@ class AddressCore extends ObjectModel
         return Cache::retrieve($key);
     }
 
+    public static function isValid($id_address)
+    {
+        $id_address = (int)$id_address;
+        $isValid = Db::getInstance()->getValue('
+            SELECT `id_address` FROM '._DB_PREFIX_.'address a
+            WHERE a.`id_address` = '.$id_address.' AND a.`deleted` = 0 AND a.`active` = 1
+        ');
+
+        return (bool)$isValid;
+    }
+
     public static function getFirstCustomerAddressId($id_customer, $active = true)
     {
         if (!$id_customer) {
