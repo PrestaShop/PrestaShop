@@ -14,6 +14,11 @@
         let customerTpl = jQuery("#customer-notification-template").html();
         let messageTpl = jQuery("#message-notification-template").html();
 
+        let nbOrders = parseInt(json.order.total);
+        let nbCustomers = parseInt(json.customer.total);
+        let nbCustomerMessages = parseInt(json.customer_message.total);
+        let notifications_total = nbOrders + nbCustomers + nbCustomerMessages;
+
         jQuery.each(json.order.results, function(property, value) {
           jQuery("#orders-notifications").append(
             orderTpl.replace("_id_order_", parseInt(value.id_order))
@@ -42,9 +47,20 @@
           );
         });
 
-        let notifications_total = parseInt(json.order.total) + parseInt(json.customer.total) + parseInt(json.customer_message.total);
+        setNotificationsNumber(jQuery('.notifications #orders-tab'), "_nb_new_orders_", nbOrders);
+        setNotificationsNumber(jQuery('.notifications #customers-tab'), "_nb_new_customers_", nbCustomers);
+        setNotificationsNumber(jQuery('.notifications #messages-tab'), "_nb_new_messages_", nbCustomerMessages);
         jQuery('#orders_notif_value').html(notifications_total);
       }
     }
   });
+
+  let setNotificationsNumber = function (elt, id, number) {
+    if (number > 0) {
+      elt.html((elt.html().replace(id, " (" + number + ")")));
+    } else {
+      elt.html((elt.html().replace(id, "")));
+    }
+  }
+
 }(window, $));

@@ -8,13 +8,13 @@
     <div class="notifications">
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#orders-notifications" role="tab">{l s='Orders'}</a>
+          <a class="nav-link active" data-toggle="tab" href="#orders-notifications" role="tab" id="orders-tab">{l s='Orders%s' sprintf='_nb_new_orders_'}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#customers-notifications" role="tab">{l s='Customers'}</a>
+          <a class="nav-link" data-toggle="tab" href="#customers-notifications" role="tab" id="customers-tab">{l s='Customers%s' sprintf='_nb_new_customers_'}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#messages-notifications" role="tab">{l s='Messages'}</a>
+          <a class="nav-link" data-toggle="tab" href="#messages-notifications" role="tab" id="messages-tab">{l s='Messages%s' sprintf='_nb_new_messages_'}</a>
         </li>
       </ul>
 
