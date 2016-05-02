@@ -64,7 +64,7 @@
 
      protected function getProductSearchQuery()
      {
-         $query = new ProductSearchQuery;
+         $query = new ProductSearchQuery();
          $query
            ->setSortOrder(new SortOrder('product', 'position', 'asc'))
            ->setSearchString($this->search_string)

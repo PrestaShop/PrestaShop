@@ -71,7 +71,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
             );
         }
 
-        $result = new ProductSearchResult;
+        $result = new ProductSearchResult();
         $result
             ->setProducts($products)
             ->setTotalProductsCount($count)

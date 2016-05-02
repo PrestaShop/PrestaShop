@@ -53,7 +53,7 @@ class PaymentOptionsFinderCore
                 $formattedOption['id'] = 'payment-option-' . $id;
 
                 if ($formattedOption['form']) {
-                    $decorator = new PaymentOptionFormDecorator;
+                    $decorator = new PaymentOptionFormDecorator();
                     $formattedOption['form'] = $decorator->addHiddenSubmitButton(
                         $formattedOption['form'],
                         $formattedOption['id']

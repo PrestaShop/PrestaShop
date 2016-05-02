@@ -20,7 +20,7 @@ class ProductPresenterFactoryCore
 
     public function getPresentationSettings()
     {
-        $settings = new ProductPresentationSettings;
+        $settings = new ProductPresentationSettings();
 
         $settings->catalog_mode = Configuration::get('PS_CATALOG_MODE');
         // TODO StarterTheme : $settings->restricted_country_mode = "???";

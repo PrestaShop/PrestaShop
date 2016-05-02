@@ -126,7 +126,7 @@ class PasswordControllerCore extends FrontController
                         $this->errors[] = $this->l('The password change request expired. You should ask for a new one.');
                     } else {
                         try {
-                            $crypto = new Hashing;
+                            $crypto = new Hashing();
                         } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
                             $this->errors[] = $this->l('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.');
                             return false;

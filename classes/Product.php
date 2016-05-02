@@ -5891,7 +5891,7 @@ class ProductCore extends ObjectModel
      */
     public static function usesAdvancedStockManagement($id_product)
     {
-        $query = new DbQuery;
+        $query = new DbQuery();
         $query->select('product_shop.advanced_stock_management');
         $query->from('product', 'p');
         $query->join(Shop::addSqlAssociation('product', 'p'));

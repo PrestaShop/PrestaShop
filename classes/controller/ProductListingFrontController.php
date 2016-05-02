@@ -362,7 +362,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         ProductSearchQuery $query,
         ProductSearchResult $result
     ) {
-        $pagination = new Pagination;
+        $pagination = new Pagination();
         $pagination
             ->setPage($query->getPage())
             ->setPagesCount(
