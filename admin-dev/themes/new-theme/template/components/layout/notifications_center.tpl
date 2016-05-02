@@ -29,13 +29,13 @@
 </div>
 
 <script type="text/html" id="order-notification-template">
-  <a href='order_url'>#id_order - {l s="from"} customer_name (iso_code) - carrier total_paid</a>
+  <a class="notif" href='order_url'>#_id_order_ - {l s="from"} <strong>_customer_name_</strong> (_iso_code_) - _carrier_ <strong class="pull-xs-right">_total_paid_</strong></a>
 </script>
 
 <script type="text/html" id="customer-notification-template">
-  <a href='customer_url'>#id_customer - customer_name (company) - {l s="register"} date_add</a>
+  <a class="notif" href='customer_url'>#_id_customer_ - <strong>_customer_name_</strong> (_company_) - {l s="register"} <strong>_date_add_</strong></a>
 </script>
 
 <script type="text/html" id="message-notification-template">
-  <a href='message_url'>status - customer_name (company) - date_add</a>
+  <a class="notif" href='message_url'>_status_ - <strong>_customer_name_</strong> (_company_) - _date_add_</a>
 </script>

@@ -16,29 +16,29 @@
 
         jQuery.each(json.order.results, function(property, value) {
           jQuery("#orders-notifications").append(
-            orderTpl.replace("id_order", parseInt(value.id_order))
-              .replace("customer_name", value.customer_name)
-              .replace("iso_code", value.iso_code)
-              .replace("carrier", value.carrier)
-              .replace("total_paid", value.total_paid)
+            orderTpl.replace("_id_order_", parseInt(value.id_order))
+              .replace("_customer_name_", value.customer_name)
+              .replace("_iso_code_", value.iso_code)
+              .replace("_carrier_", value.carrier)
+              .replace("_total_paid_", value.total_paid)
           );
         });
 
         jQuery.each(json.customer.results, function(property, value) {
           jQuery("#customers-notifications").append(
-            customerTpl.replace("id_customer", parseInt(value.id_customer))
-              .replace("customer_name", value.customer_name)
-              .replace("company", value.company)
-              .replace("date_add", value.date_add)
+            customerTpl.replace("_id_customer_", parseInt(value.id_customer))
+              .replace("_customer_name_", value.customer_name)
+              .replace("_company_", value.company)
+              .replace("_date_add_", value.date_add)
           );
         });
 
         jQuery.each(json.customer_message.results, function(property, value) {
           jQuery("#messages-notifications").append(
-            messageTpl.replace("status", value.status)
-              .replace("customer_name", value.customer_name)
-              .replace("company", value.company)
-              .replace("date_add", value.date_add)
+            messageTpl.replace("_status_", value.status)
+              .replace("_customer_name_", value.customer_name)
+              .replace("_company_", value.company)
+              .replace("_date_add_", value.date_add)
           );
         });
 
