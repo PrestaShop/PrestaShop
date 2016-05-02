@@ -14,6 +14,7 @@
 
     <div class="product-line-info">
       <span class="value">{$product.price}</span>
+      {hook h='displayProductPriceBlock' product=$product type="unit_price"}
     </div>
 
     <br/>

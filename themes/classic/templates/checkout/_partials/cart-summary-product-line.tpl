@@ -7,4 +7,5 @@
   <span class="product-name">{$product.name}</span>
   <span class="product-quantity">x{$product.quantity}</span>
   <span class="product-price pull-xs-right">{$product.price}</span>
+  {hook h='displayProductPriceBlock' product=$product type="unit_price"}
 </div>
