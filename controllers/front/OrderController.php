@@ -45,7 +45,9 @@ class OrderControllerCore extends FrontController
             if (!$duplication || !Validate::isLoadedObject($duplication['cart'])) {
                 $this->errors[] = $this->getTranslator()->trans('Sorry. We cannot renew your order.', [], 'Order');
             } elseif (!$duplication['success']) {
-                $this->errors[] = $this->getTranslator()->trans('Some items are no longer available, and we are unable to renew your order.', [], 'Order');
+                $this->errors[] = $this->getTranslator()->trans(
+                    'Some items are no longer available, and we are unable to renew your order.', [], 'Order'
+                );
             } else {
                 $this->context->cookie->id_cart = $duplication['cart']->id;
                 $context = $this->context;
@@ -97,7 +99,8 @@ class OrderControllerCore extends FrontController
         )->setGiftAllowed(
             (bool)Configuration::get('PS_GIFT_WRAPPING')
         )->setIncludeTaxes(
-            !Product::getTaxCalculationMethod((int)$this->context->cart->id_customer) && (int)Configuration::get('PS_TAX')
+            !Product::getTaxCalculationMethod((int)$this->context->cart->id_customer)
+            && (int)Configuration::get('PS_TAX')
         )->setDisplayTaxesLabel(
             (Configuration::get('PS_TAX')
             && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
@@ -135,17 +138,30 @@ class OrderControllerCore extends FrontController
     private function saveDataToPersist(CheckoutProcess $process)
     {
         $data = $process->getDataToPersist();
-        Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'" WHERE id_cart = '.(int)$this->context->cart->id);
+        $cartChecksum = new CartChecksum();
+        $data['checksum'] = $cartChecksum->generateChecksum($this->context->cart);
+
+        Db::getInstance()->execute(
+            'UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'"
+                WHERE id_cart = '.(int)$this->context->cart->id
+        );
     }
 
     private function restorePersistedData(CheckoutProcess $process)
     {
-        $rawData = Db::getInstance()->getValue('SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int)$this->context->cart->id);
+        $rawData = Db::getInstance()->getValue(
+            'SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int)$this->context->cart->id
+        );
         $data = json_decode($rawData, true);
         if (!is_array($data)) {
             $data = [];
         }
-        $process->restorePersistedData($data);
+
+        $cartChecksum = new CartChecksum();
+        $checksum = $cartChecksum->generateChecksum($this->context->cart);
+        if (isset($data['checksum']) && $data['checksum'] === $checksum) {
+            $process->restorePersistedData($data);
+        }
     }
 
     private function jsonRenderCartSummary()
