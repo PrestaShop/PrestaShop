@@ -24,7 +24,7 @@
             orderTpl.replace("_id_order_", parseInt(value.id_order))
               .replace("_customer_name_", value.customer_name)
               .replace("_iso_code_", value.iso_code)
-              .replace("_carrier_", value.carrier)
+              .replace("_carrier_", (value.carrier !== "" ? " - " + value.carrier : ""))
               .replace("_total_paid_", value.total_paid)
           );
         });
@@ -33,7 +33,7 @@
           jQuery("#customers-notifications").append(
             customerTpl.replace("_id_customer_", parseInt(value.id_customer))
               .replace("_customer_name_", value.customer_name)
-              .replace("_company_", value.company)
+              .replace("_company_", (value.company !== "" ? " (" + value.company + ") " : ""))
               .replace("_date_add_", value.date_add)
           );
         });
@@ -42,7 +42,7 @@
           jQuery("#messages-notifications").append(
             messageTpl.replace("_status_", value.status)
               .replace("_customer_name_", value.customer_name)
-              .replace("_company_", value.company)
+              .replace("_company_", (value.company !== "" ? " (" + value.company + ") " : ""))
               .replace("_date_add_", value.date_add)
           );
         });

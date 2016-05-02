@@ -66,6 +66,8 @@ class NotificationCore
      */
     public static function getLastElementsIdsByType($type, $id_last_element)
     {
+        global $cookie;
+
         switch ($type) {
             case 'order':
                 $sql = '
@@ -126,7 +128,7 @@ class NotificationCore
                 'company' => ((!empty($value['company'])) ? Tools::safeOutput($value['company']) : ''),
                 'status' => ((!empty($value['status'])) ? Tools::safeOutput($value['status']) : ''),
                 'customer_name' => $customer_name,
-                'date_add' => isset($value['date_add']) ? $value['date_add'] : 0,
+                'date_add' => isset($value['date_add']) ? Tools::displayDate($value['date_add']) : 0,
             );
         }
 
