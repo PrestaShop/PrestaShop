@@ -1361,7 +1361,7 @@ class FrontControllerCore extends Controller
 
         $addresses = $this->context->customer->getSimpleAddresses();
         foreach ($addresses as &$a) {
-            $a['formatted'] = AddressFormat::generateAddress(new Address($a['id']), array(), '<br />');
+            $a['formatted'] = AddressFormat::generateAddress(new Address($a['id']), array(), '<br>');
         }
         $cust['addresses'] = $addresses;
 
@@ -1386,7 +1386,7 @@ class FrontControllerCore extends Controller
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 
             'address' => [
-                'formatted' => AddressFormat::generateAddress($address, array(), '<br />'),
+                'formatted' => AddressFormat::generateAddress($address, array(), '<br>'),
                 'address1' => $address->address1,
                 'address2' => $address->address2,
                 'postcode' => $address->postcode,
