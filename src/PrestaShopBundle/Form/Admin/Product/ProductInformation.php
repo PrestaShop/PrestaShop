@@ -140,7 +140,10 @@ class ProductInformation extends CommonAbstractType
         ->add('description_short', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType', // https://github.com/symfony/symfony/issues/5906
             'options' => [
-                'attr' => array('class' => 'autoload_rte'),
+                'attr' => array(
+                    'class' => 'autoload_rte',
+                    'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br />It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the « Description » tab.', [], 'AdminProducts')
+                ),
                 'constraints' => array(
                     new Assert\Callback(function ($str, ExecutionContextInterface $context) {
                         $str = strip_tags($str);
