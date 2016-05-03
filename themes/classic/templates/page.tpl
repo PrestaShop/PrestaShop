@@ -5,11 +5,11 @@
   <section id="main">
 
     {block name='page_header_container'}
-      <header class="page-header">
-        {block name='page_header'}
-          <h1>{block name='page_title'}{/block}</h1>
-        {/block}
-      </header>
+      {block name='page_title' hide}
+        <header class="page-header">
+          <h1>{$smarty.block.child}</h1>
+        </header>
+      {/block}
     {/block}
 
     {block name='page_content_container'}
