@@ -52,7 +52,9 @@ class ConditionsToApproveFinderCore
          */
         $reducedConditions = [];
         foreach ($allConditions as $condition) {
-            $reducedConditions[$condition->getIdentifier()] = $condition;
+            if ($condition instanceof TermsAndConditions) {            
+                $reducedConditions[$condition->getIdentifier()] = $condition;
+            }
         }
 
         return $reducedConditions;
