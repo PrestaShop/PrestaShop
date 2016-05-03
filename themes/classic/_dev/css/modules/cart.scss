@@ -19,6 +19,9 @@
   > .cart-grid-right {
     @include make-col();
   }
+  .card {
+    padding: 0;
+  }
 }
 /** CART BODY **/
 .cart-grid-body {
@@ -58,21 +61,22 @@
           text-transform: capitalize;
         }
       }
-      .promo-name {
-        padding: 0 1.60rem;
-        color: $gray-darker;
-        margin-top: em(10px);
-        li{
-          color: $brand-warning;
-          font-weight: 600;
-          a{
-            font-weight: normal;
-          }
+      .cart-summary-line .label, .promo-name {
+        color: $brand-warning;
+        font-weight: 600;
+        a {
+          font-weight: normal;
+          color: $gray-darker;
+          display: inline-block;
+          opacity: 0.7;
         }
       }
-    }
-    .collapse-button {
-      padding-left: 1.60rem;
+      .promo-code-button {
+        padding-left: rem(25px);
+        margin-bottom: rem(20px);
+        display: inline-block;
+        font-size: rem(14px);
+      }
     }
   }
 }
