@@ -1,4 +1,4 @@
-{extends file='checkout/checkout-step.tpl'}
+{extends file='checkout/_partials/steps/checkout-step.tpl'}
 
 {block name='step_content'}
   {if $logged_in}

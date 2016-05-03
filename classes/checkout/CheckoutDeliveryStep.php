@@ -4,7 +4,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
 class CheckoutDeliveryStepCore extends AbstractCheckoutStep
 {
-    protected $template = 'checkout/delivery-step.tpl';
+    protected $template = 'checkout/_partials/steps/shipping.tpl';
 
     private $recyclablePackAllowed = false;
     private $giftAllowed = false;

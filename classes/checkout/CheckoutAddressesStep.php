@@ -4,7 +4,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutAddressesStepCore extends AbstractCheckoutStep
 {
-    protected $template = 'checkout/addresses-step.tpl';
+    protected $template = 'checkout/_partials/steps/addresses.tpl';
 
     private $addressForm;
     private $use_same_address = true;

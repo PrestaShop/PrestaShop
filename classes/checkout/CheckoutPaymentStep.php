@@ -4,7 +4,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutPaymentStepCore extends AbstractCheckoutStep
 {
-    protected $template = 'checkout/payment-step.tpl';
+    protected $template = 'checkout/_partials/steps/payment.tpl';
     private $selected_payment_option;
 
     public function __construct(

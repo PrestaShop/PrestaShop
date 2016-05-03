@@ -4,7 +4,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
 {
-    protected $template = 'checkout/personal-information-step.tpl';
+    protected $template = 'checkout/_partials/steps/personal-information.tpl';
     private $loginForm;
     private $registerForm;
 
