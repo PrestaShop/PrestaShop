@@ -27,7 +27,6 @@
     youEditFieldFor = '{l s='This field will be modified for this shop:' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
     {/if}
     {/if}
-    var autorefresh_notifications = '{$autorefresh_notifications|@addcslashes:'\''}';
     var new_order_msg = '{l s='A new order has been placed on your shop.' js=1}';
     var order_number_msg = '{l s='Order number:' js=1} ';
     var total_msg = '{l s='Total:' js=1} ';

@@ -3,11 +3,11 @@ $(document).ready(function() {
 	if (youEditFieldFor)
 		hints.html(hints.html() + '<br /><span class="red">' + youEditFieldFor + '</span>');
 
-	var html = "";		
+	var html = "";
 	var nb_notifs = 0;
 	var wrapper_id = "";
 	var type = new Array();
-	
+
 	$(".notifs").click(function(){
 		var wrapper_id = $(this).parent().attr("id");
 
@@ -21,16 +21,16 @@ $(document).ready(function() {
 				if (data) {
 					$("#" + wrapper_id + "_value").html(0);
 					$("#" + wrapper_id + "_number_wrapper").hide();
-				}				
+				}
 			}
 		);
 	});
-	// call it once immediately, then use setTimeout if refresh is activated
-	getPush(autorefresh_notifications);
+	// call it once immediately, then use setTimeout
+	getPush();
 
 });
 
-function getPush(refresh)
+function getPush()
 {
 	$.ajax({
 		type: 'POST',
@@ -45,7 +45,7 @@ function getPush(refresh)
 			{
 				// Set moment language
 				moment.lang(full_language_code);
-				
+
 				// Add orders notifications to the list
 				html = "";
 				$.each(json.order.results, function(property, value) {
@@ -97,8 +97,7 @@ function getPush(refresh)
 				else
 					$("#customer_messages_notif_number_wrapper").addClass('hide');
 			}
-			if (refresh)
-				setTimeout("getPush(1)", 120000);
+      setTimeout("getPush()", 120000);
 		}
 	});
 }
