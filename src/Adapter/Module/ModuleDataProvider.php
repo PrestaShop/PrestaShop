@@ -42,6 +42,11 @@ class ModuleDataProvider
         $this->logger = $logger;
     }
 
+    /**
+     * Return all module information from database
+     * @param string $name The technical module name to search
+     * @return array
+     */
     public function findByName($name)
     {
         $result = \Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
@@ -55,6 +60,11 @@ class ModuleDataProvider
         return ['installed' => 0];
     }
 
+    /**
+     * Return translated module *Display Name*
+     * @param string $module The technical module name
+     * @return string The translated Module displayName
+     */
     public function getModuleName($module)
     {
         return \Module::getModuleName($module);
@@ -74,6 +84,11 @@ class ModuleDataProvider
         );
     }
 
+    /**
+     * Check if a module is enabled in the current shop context
+     * @param boolean $name The technical module name
+     * @return boolean True if enable
+     */
     public function isEnabled($name)
     {
         $id_shops = (new Context())->getContextListShopID();

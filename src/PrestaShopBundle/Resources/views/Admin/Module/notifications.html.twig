@@ -44,12 +44,6 @@
                 </span>
             </div>
             {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules' : modules.to_update, 'display_type' : 'list' } %}
-
-            <hr class="top-menu-separator">
-            <div class="module-short-list">
-                <span class="module-search-result-wording">{{modules.to_install|length}} modules to install</span>
-            </div>
-            {% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.to_install, 'display_type' : 'list' } %}
         </div>
     </div>
 {% endblock %}
