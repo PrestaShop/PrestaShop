@@ -17,6 +17,7 @@
               <div class="col-md-6">
                 <h6 class="h6 product-name">{$product.name}</h6>
                 <p>{$product.price}</p>
+                {hook h='displayProductPriceBlock' product=$product type="unit_price"}
                 {foreach from=$product.attributes item="property_value" key="property"}
                   <span><strong>{$property}</strong>: {$property_value}</span><br>
                 {/foreach}
