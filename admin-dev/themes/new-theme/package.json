@@ -33,7 +33,7 @@
     "jwerty": "^0.3.2",
     "magnific-popup": "^1.0.1",
     "moment": "^2.11.2",
-    "node-sass": "^3.4.2",
+    "node-sass": "^3.7",
     "path": "^0.12.7",
     "postcss-loader": "^0.8.0",
     "sass-loader": "^3.1.2",
