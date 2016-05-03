@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ff6eb21051f437d76a28f96644ff9a90",
-    "content-hash": "1fa325aa31cbc993c5680cf6ada1ec69",
+    "hash": "7eb24d565875531c55b5788effd23b8d",
+    "content-hash": "4acad12a5de4be13ab96a3507f405a82",
     "packages": [
         {
             "name": "composer/installers",
@@ -1585,12 +1585,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blocklayered.git",
-                "reference": "6d8cebcdac9bd55f97833ca077aae998e2019efa"
+                "reference": "2624301e61aa7b45ef7a20566aec820aba5bcf5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blocklayered/zipball/6d8cebcdac9bd55f97833ca077aae998e2019efa",
-                "reference": "6d8cebcdac9bd55f97833ca077aae998e2019efa",
+                "url": "https://api.github.com/repos/PrestaShop/blocklayered/zipball/2624301e61aa7b45ef7a20566aec820aba5bcf5c",
+                "reference": "2624301e61aa7b45ef7a20566aec820aba5bcf5c",
                 "shasum": ""
             },
             "require": {
@@ -1614,7 +1614,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/blocklayered/tree/feat/starter-theme"
             },
-            "time": "2016-03-03 16:18:19"
+            "time": "2016-04-28 15:19:09"
         },
         {
             "name": "prestashop/blocklink",
@@ -1790,12 +1790,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockreassurance.git",
-                "reference": "c53a9fe2be2c425c5271b681e37ae68c3a83906c"
+                "reference": "0bbc6861b6e3859e626491f2f2867a698c795cdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/c53a9fe2be2c425c5271b681e37ae68c3a83906c",
-                "reference": "c53a9fe2be2c425c5271b681e37ae68c3a83906c",
+                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/0bbc6861b6e3859e626491f2f2867a698c795cdb",
+                "reference": "0bbc6861b6e3859e626491f2f2867a698c795cdb",
                 "shasum": ""
             },
             "require": {
@@ -1816,7 +1816,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/blockreassurance/tree/master"
             },
-            "time": "2016-03-18 10:44:31"
+            "time": "2016-05-03 09:18:54"
         },
         {
             "name": "prestashop/blockrss",
@@ -2212,6 +2212,38 @@
             "description": "PrestaShop module dashproducts",
             "homepage": "https://github.com/PrestaShop/dashproducts",
             "time": "2015-08-28 15:07:20"
+        },
+        {
+            "name": "prestashop/dashtrends",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/dashtrends.git",
+                "reference": "17dce9081a7ee0b6a743820e33d98331cec2e54f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/dashtrends/zipball/17dce9081a7ee0b6a743820e33d98331cec2e54f",
+                "reference": "17dce9081a7ee0b6a743820e33d98331cec2e54f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module dashtrends",
+            "homepage": "https://github.com/PrestaShop/dashtrends",
+            "time": "2015-09-03 08:29:52"
         },
         {
             "name": "prestashop/graphnvd3",
@@ -2638,12 +2670,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_imageslider.git",
-                "reference": "6d5eaf78438c8a2cded896e460575a1b6c2337f3"
+                "reference": "ae6fc07362a1fa9fab03b86298cc0c65ed7b39b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/6d5eaf78438c8a2cded896e460575a1b6c2337f3",
-                "reference": "6d5eaf78438c8a2cded896e460575a1b6c2337f3",
+                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/ae6fc07362a1fa9fab03b86298cc0c65ed7b39b4",
+                "reference": "ae6fc07362a1fa9fab03b86298cc0c65ed7b39b4",
                 "shasum": ""
             },
             "require": {
@@ -2662,7 +2694,7 @@
             ],
             "description": "PrestaShop - Image slider",
             "homepage": "https://github.com/PrestaShop/ps_imageslider",
-            "time": "2016-03-14 13:21:33"
+            "time": "2016-04-19 08:21:43"
         },
         {
             "name": "prestashop/ps_linklist",
@@ -3649,12 +3681,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "cbb4ee1b149fcdc42a1df62e3ba2dee10974a157"
+                "reference": "f2f46db798c172157a682391daba6d9e9925ab0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/cbb4ee1b149fcdc42a1df62e3ba2dee10974a157",
-                "reference": "cbb4ee1b149fcdc42a1df62e3ba2dee10974a157",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/f2f46db798c172157a682391daba6d9e9925ab0a",
+                "reference": "f2f46db798c172157a682391daba6d9e9925ab0a",
                 "shasum": ""
             },
             "require": {
@@ -3679,7 +3711,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2016-03-14 10:22:28"
+            "time": "2016-04-13 16:48:07"
         },
         {
             "name": "psr/log",
@@ -4649,16 +4681,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.8.4",
+            "version": "v2.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "9e14f9f4869c19188a376eab61d9a1c1f1fee347"
+                "reference": "39ddd2383f4113cf67f8b28cde2c9d3fa340c3c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/9e14f9f4869c19188a376eab61d9a1c1f1fee347",
-                "reference": "9e14f9f4869c19188a376eab61d9a1c1f1fee347",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/39ddd2383f4113cf67f8b28cde2c9d3fa340c3c2",
+                "reference": "39ddd2383f4113cf67f8b28cde2c9d3fa340c3c2",
                 "shasum": ""
             },
             "require": {
@@ -4673,7 +4705,7 @@
                 "symfony/polyfill-php56": "~1.0",
                 "symfony/polyfill-php70": "~1.0",
                 "symfony/polyfill-util": "~1.0",
-                "symfony/security-acl": "~2.7",
+                "symfony/security-acl": "~2.7|~3.0.0",
                 "twig/twig": "~1.23|~2.0"
             },
             "conflict": {
@@ -4745,7 +4777,11 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Symfony\\Bridge\\": "src/Symfony/Bridge/",
+                    "Symfony\\Bridge\\Doctrine\\": "src/Symfony/Bridge/Doctrine/",
+                    "Symfony\\Bridge\\Monolog\\": "src/Symfony/Bridge/Monolog/",
+                    "Symfony\\Bridge\\ProxyManager\\": "src/Symfony/Bridge/ProxyManager/",
+                    "Symfony\\Bridge\\Swiftmailer\\": "src/Symfony/Bridge/Swiftmailer/",
+                    "Symfony\\Bridge\\Twig\\": "src/Symfony/Bridge/Twig/",
                     "Symfony\\Bundle\\": "src/Symfony/Bundle/",
                     "Symfony\\Component\\": "src/Symfony/Component/"
                 },
@@ -4775,7 +4811,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-03-27 12:57:53"
+            "time": "2016-04-29 15:34:08"
         },
         {
             "name": "twig/twig",
@@ -7592,6 +7628,7 @@
         "prestashop/trackingfront": 20,
         "prestashop/vatnumber": 20,
         "prestashop/welcome": 20,
+        "prestashop/dashtrends": 20,
         "phake/phake": 0
     },
     "prefer-stable": false,
