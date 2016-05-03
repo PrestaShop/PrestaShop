@@ -218,13 +218,6 @@ class InstallModelInstall extends InstallAbstractModel
     private function generateSf2ProductionEnv()
     {
         $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-
-        //If ENV is PROD, execute SF2 production env commands
-        if (!_PS_MODE_DEV_) {
-            $sf2Refresh->addCacheClear();
-            $sf2Refresh->addAsseticDump();
-        }
-
         $sf2Refresh->addDoctrineSchemaUpdate();
         $output = $sf2Refresh->execute();
 

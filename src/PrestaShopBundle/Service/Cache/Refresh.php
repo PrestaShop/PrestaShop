@@ -55,7 +55,7 @@ class Refresh
         $this->commands = [];
 
         require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
-        $kernel = new \AppKernel($this->env, true);
+        $kernel = new \AppKernel($this->env, false);
         $this->application = new Application($kernel);
         $this->application->setAutoExit(false);
     }
@@ -66,14 +66,6 @@ class Refresh
     public function addCacheClear()
     {
         $this->commands[] = ['command' => 'cache:clear', '--env' => $this->env, '--no-debug' => true];
-    }
-
-    /**
-     * add assetic dump
-     */
-    public function addAsseticDump()
-    {
-        $this->commands[] = ['command' => 'assetic:dump', '--env' => $this->env, '--no-debug' => true];
     }
 
     /**
