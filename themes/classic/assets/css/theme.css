@@ -4682,7 +4682,6 @@ a:hover {
 
 .color,
 .custom-checkbox input[type="checkbox"] + span.color {
-  display: block;
   width: 20px;
   height: 20px;
   display: inline-block;
@@ -4691,9 +4690,13 @@ a:hover {
   border: 1px solid rgba(0, 0, 0, 0.05);
   cursor: pointer;
   background-size: contain; }
-  .color:hover,
-  .custom-checkbox input[type="checkbox"] + span.color:hover {
+  .color:hover, .color.active,
+  .custom-checkbox input[type="checkbox"] + span.color:hover,
+  .custom-checkbox input[type="checkbox"] + span.color.active {
     border: 2px solid #414141; }
+
+.facet-label:hover .custom-checkbox span.color, .facet-label.active .custom-checkbox span.color {
+  border: 2px solid #414141; }
 
 .h1 {
   font-size: 1.25em; }

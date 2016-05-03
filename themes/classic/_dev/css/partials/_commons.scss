@@ -27,7 +27,6 @@ a:hover {
 }
 .color,
 .custom-checkbox input[type="checkbox"] + span.color {
-  display: block;
   width: 20px;
   height: 20px;
   display: inline-block;
@@ -36,8 +35,15 @@ a:hover {
   border: 1px solid rgba(0,0,0,0.05);
   cursor: pointer;
   background-size: contain;
-  &:hover {
+  &:hover, &.active {
     border: 2px solid $gray-darker;
+  }
+}
+.facet-label {
+  &:hover, &.active {
+    .custom-checkbox span.color {
+      border: 2px solid $gray-darker;
+    }
   }
 }
 .h1 {

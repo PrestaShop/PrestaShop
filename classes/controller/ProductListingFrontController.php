@@ -330,6 +330,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         );
 
         $searchVariables = [
+            'label'             => $this->getTranslator()->trans('Search results', [], 'Search'),
             'products'          => $products,
             'sort_orders'       => $sort_orders,
             'pagination'        => $pagination,
