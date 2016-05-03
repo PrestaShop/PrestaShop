@@ -21,29 +21,29 @@
 
         jQuery.each(json.order.results, function(property, value) {
           jQuery("#orders-notifications").append(
-            orderTpl.replace("_id_order_", parseInt(value.id_order))
-              .replace("_customer_name_", value.customer_name)
-              .replace("_iso_code_", value.iso_code)
-              .replace("_carrier_", (value.carrier !== "" ? " - " + value.carrier : ""))
-              .replace("_total_paid_", value.total_paid)
+            orderTpl.replace(/_id_order_/g, parseInt(value.id_order))
+              .replace(/_customer_name_/g, value.customer_name)
+              .replace(/_iso_code_/g, value.iso_code)
+              .replace(/_carrier_/g, (value.carrier !== "" ? " - " + value.carrier : ""))
+              .replace(/_total_paid_/g, value.total_paid)
           );
         });
 
         jQuery.each(json.customer.results, function(property, value) {
           jQuery("#customers-notifications").append(
-            customerTpl.replace("_id_customer_", parseInt(value.id_customer))
-              .replace("_customer_name_", value.customer_name)
-              .replace("_company_", (value.company !== "" ? " (" + value.company + ") " : ""))
-              .replace("_date_add_", value.date_add)
+            customerTpl.replace(/_id_customer_/g, parseInt(value.id_customer))
+              .replace(/_customer_name_/g, value.customer_name)
+              .replace(/_company_/g, (value.company !== "" ? " (" + value.company + ") " : ""))
+              .replace(/_date_add_/g, value.date_add)
           );
         });
 
         jQuery.each(json.customer_message.results, function(property, value) {
           jQuery("#messages-notifications").append(
-            messageTpl.replace("_status_", value.status)
-              .replace("_customer_name_", value.customer_name)
-              .replace("_company_", (value.company !== "" ? " (" + value.company + ") " : ""))
-              .replace("_date_add_", value.date_add)
+            messageTpl.replace(/_status_/g, value.status)
+              .replace(/_customer_name_/g, value.customer_name)
+              .replace(/_company_/g, (value.company !== "" ? " (" + value.company + ") " : ""))
+              .replace(/_date_add_/g, value.date_add)
           );
         });
 
