@@ -489,23 +489,22 @@
   .btn-action {
     text-transform: none;
   }
-  .table thead th {
+  .seo-table thead th {
     text-transform: uppercase;
   }
-  .table-striped tbody tr:nth-of-type(odd) {
+  .seo-table tbody tr:nth-of-type(odd) {
     background: $gray-light;
   }
-  .table-striped tbody tr td:last-child {
+  .seo-table tbody tr td:last-child {
     box-shadow: -3px 0 10px -3px rgba(0,0,0,0.4);
   }
-
-  .delete {
+  .seo-table .delete {
     color: $gray-medium;
     .material-icons {
       font-size: rem(20px);
     }
   }
-  #form_step5_meta_description_1{
+  #form_step5_meta_description_1 {
     resize: none;
     height: rem(140px);
   }
