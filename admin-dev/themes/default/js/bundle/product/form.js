@@ -658,7 +658,7 @@ var specificPrices = (function() {
             '<td>' + specific_price.impact + '</td>' +
             '<td>' + specific_price.period + '</td>' +
             '<td>' + specific_price.from_quantity + '</td>' +
-            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete') + '/' + specific_price.id_specific_price + '" class="btn btn-danger js-delete"><i class="material-icons">delete</i></a>' : '') + '</td>' +
+            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete') + '/' + specific_price.id_specific_price + '" class="js-delete delete"><i class="material-icons">delete</i></a>' : '') + '</td>' +
             '</tr>';
 
           tbody.append(row);

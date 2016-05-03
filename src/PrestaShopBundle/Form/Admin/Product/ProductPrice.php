@@ -82,7 +82,7 @@ class ProductPrice extends CommonAbstractType
     {
         $builder->add('price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price - Tax excluded', [], 'AdminProducts'),
             'attr' => ['data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')],
             'currency' => $this->currency->iso_code,
             'constraints' => array(
@@ -93,7 +93,7 @@ class ProductPrice extends CommonAbstractType
         ->add('price_ttc', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'mapped' => false,
-            'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price - Tax included', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('ecotax', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
@@ -129,7 +129,7 @@ class ProductPrice extends CommonAbstractType
         ))
         ->add('unit_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Unit price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price per unit - Tax excluded', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('unity', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
