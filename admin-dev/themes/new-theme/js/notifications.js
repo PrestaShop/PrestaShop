@@ -1,33 +1,40 @@
 (function headerNotifications(global, jQuery) {
-  jQuery.ajax({
-    type: 'POST',
-    headers: {"cache-control": "no-cache"},
-    url: baseAdminDir+'ajax.php?rand=' + new Date().getTime(),
-    async: true,
-    cache: false,
-    dataType : 'json',
-    data: {"getNotifications" : "1"},
-    success: function(json) {
-      if (json) {
+  let refreshNotifications = function () {
+    let timer = null;
 
-        let nbOrders = parseInt(json.order.total);
-        let nbCustomers = parseInt(json.customer.total);
-        let nbCustomerMessages = parseInt(json.customer_message.total);
-        let notifications_total = nbOrders + nbCustomers + nbCustomerMessages;
+    jQuery.ajax({
+      type: 'POST',
+      headers: {"cache-control": "no-cache"},
+      url: baseAdminDir + 'ajax.php?rand=' + new Date().getTime(),
+      async: true,
+      cache: false,
+      dataType: 'json',
+      data: {"getNotifications": "1"},
+      success: function (json) {
+        if (json) {
+          let nbOrders = parseInt(json.order.total);
+          let nbCustomers = parseInt(json.customer.total);
+          let nbCustomerMessages = parseInt(json.customer_message.total);
+          let notifications_total = nbOrders + nbCustomers + nbCustomerMessages;
 
-        fillTpl(json.order.results, jQuery("#orders-notifications"), jQuery("#order-notification-template").html());
-        fillTpl(json.customer.results, jQuery("#customers-notifications"), jQuery("#customer-notification-template").html());
-        fillTpl(json.customer_message.results, jQuery("#messages-notifications"), jQuery("#message-notification-template").html());
+          fillTpl(json.order.results, jQuery("#orders-notifications"), jQuery("#order-notification-template").html());
+          fillTpl(json.customer.results, jQuery("#customers-notifications"), jQuery("#customer-notification-template").html());
+          fillTpl(json.customer_message.results, jQuery("#messages-notifications"), jQuery("#message-notification-template").html());
 
-        setNotificationsNumber(jQuery('.notifications #orders-tab'), "_nb_new_orders_", nbOrders);
-        setNotificationsNumber(jQuery('.notifications #customers-tab'), "_nb_new_customers_", nbCustomers);
-        setNotificationsNumber(jQuery('.notifications #messages-tab'), "_nb_new_messages_", nbCustomerMessages);
-        jQuery('#orders_notif_value').html(notifications_total);
+          setNotificationsNumber(jQuery('.notifications #orders-tab'), "_nb_new_orders_", nbOrders);
+          setNotificationsNumber(jQuery('.notifications #customers-tab'), "_nb_new_customers_", nbCustomers);
+          setNotificationsNumber(jQuery('.notifications #messages-tab'), "_nb_new_messages_", nbCustomerMessages);
+          jQuery('#orders_notif_value').html(notifications_total);
+        }
+        //timer = setTimeout(refreshNotifications, 5000);
       }
-    }
-  });
+    });
+
+    clearTimeout(timer);
+  }
 
   let fillTpl = function (results, eltAppendTo, tpl) {
+    eltAppendTo.empty();
     jQuery.each(results, function(property, value) {
       eltAppendTo.append(
         tpl.replace(/_id_order_/g, parseInt(value.id_order))
@@ -51,4 +58,5 @@
     }
   }
 
+  refreshNotifications();
 }(window, $));
