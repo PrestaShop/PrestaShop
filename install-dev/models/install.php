@@ -113,11 +113,6 @@ class InstallModelInstall extends InstallAbstractModel
      */
     private function generateSf2ParametersFile($parameters)
     {
-        //If ENV is DEV, by pass this step
-        if (_PS_MODE_DEV_) {
-            return true;
-        }
-
         if (!is_writable(_PS_ROOT_DIR_.'/app/config')) {
             $this->setError($this->language->l('%s folder is not writable (check permissions)', 'app/config'));
             return false;
