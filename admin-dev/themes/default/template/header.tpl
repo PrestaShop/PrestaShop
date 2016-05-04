@@ -64,7 +64,7 @@
 		var from_msg = '{l s='From:' js=1} ';
 		var see_order_msg = '{l s='View this order' js=1}';
 		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1}';
-		var customer_name_msg = '{l s='Customer name:' js=1} ';
+		var customer_name_msg = '{l s='register' js=1} ';
 		var new_msg = '{l s='A new message was posted on your shop.' js=1}';
 		var see_msg = '{l s='Read this message' js=1}';
 		var token = '{$token|addslashes}';
@@ -244,26 +244,33 @@
 				{* Notifications *}
 				<ul class="header-list navbar-right">
 					<li id="notification" class="dropdown" data-type="order">
-						<a href="javascript:void(0);" class="dropdown-toggle notifs" data-toggle="dropdown">
-							<i class="material-icons">notifications</i>
-							<span id="orders_notif_number_wrapper" class="notifs_badge hide">
-								<span id="orders_notif_value">0</span>
+						<a href="javascript:void(0);" class="dropdown-toggle notifs">
+							<i class="material-icons">notifications_none</i>
+							<span id="total_notif_number_wrapper" class="notifs_badge hide">
+								<span id="total_notif_value">0</span>
 							</span>
 						</a>
 						<div class="dropdown-menu notifs_dropdown">
-							<section id="orders_notif_wrapper" class="notifs_panel">
-								<div class="notifs_panel_header">
-									<h3>{l s='Latest Orders'}</h3>
-								</div>
-								<div id="list_orders_notif" class="list_notif">
-									<span class="no_notifs">
-										{l s='No new orders have been placed on your shop.'}
-									</span>
-								</div>
-								<div class="notifs_panel_footer">
-									<a href="{$baseAdminUrl}index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a>
-								</div>
-							</section>
+              <div class="notifications">
+                <ul class="nav nav-tabs" role="tablist">
+                  <li class="nav-item active">
+                    <a class="nav-link" data-toggle="tab" href="#orders-notifications" role="tab" id="orders-tab">{l s='Orders'}<span id="orders_notif_value"></span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#customers-notifications" role="tab" id="customers-tab">{l s='Customers'}<span id="customers_notif_value"></span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#messages-notifications" role="tab" id="messages-tab">{l s='Messages'}<span id="customer_messages_notif_value"></span></a>
+                  </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                  <div class="tab-pane active" id="orders-notifications" role="tabpanel"></div>
+                  <div class="tab-pane" id="customers-notifications" role="tabpanel"></div>
+                  <div class="tab-pane" id="messages-notifications" role="tabpanel"></div>
+                </div>
+              </div>
 						</div>
 					</li>
 				</ul>
