@@ -46,6 +46,9 @@
           .replace(/_company_/g, (value.company !== "" ? " (" + value.company + ") " : ""))
           .replace(/_date_add_/g, value.date_add)
           .replace(/_status_/g, value.status)
+          .replace(/order_url/g, `${baseAdminDir}index.php?tab=AdminOrders&token=${token_admin_orders}&vieworder&id_order=${value.id_order}`)
+          .replace(/customer_url/g, `${baseAdminDir}index.php?tab=AdminCustomers&token=${token_admin_customers}&viewcustomer&id_customer=${value.id_customer}`)
+          .replace(/message_url/g, `${baseAdminDir}index.php?tab=AdminCustomerThreads&token=${token_admin_customer_threads}&viewcustomer_thread&id_customer_thread=${value.id_customer_thread}`)
       );
     });
   }
