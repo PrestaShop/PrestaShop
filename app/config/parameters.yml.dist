@@ -20,6 +20,6 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
     ps_caching: CacheMemcache
-    ps_cache_enable: true
+    ps_cache_enable: false
     cookie_key: ThisTokenIsNotSoSecretChangeIt
     cookie_iv: ThisTokenIsNotSoSecretChangeIt
