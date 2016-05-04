@@ -44,15 +44,6 @@ define('_PS_MODE_DEMO_', false);
 
 $currentDir = dirname(__FILE__);
 
-if (!defined('PHP_VERSION_ID')) {
-    $version = explode('.', PHP_VERSION);
-    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
-}
-
-if (!defined('_PS_VERSION_') && (getenv('_PS_VERSION_') || getenv('REDIRECT__PS_VERSION_'))) {
-    define('_PS_VERSION_', getenv('_PS_VERSION_') ? getenv('_PS_VERSION_') : getenv('REDIRECT__PS_VERSION_'));
-}
-
 if (!defined('_PS_HOST_MODE_') && (getenv('_PS_HOST_MODE_') || getenv('REDIRECT__PS_HOST_MODE_'))) {
     define('_PS_HOST_MODE_', getenv('_PS_HOST_MODE_') ? getenv('_PS_HOST_MODE_') : getenv('REDIRECT__PS_HOST_MODE_'));
 }
@@ -76,7 +67,8 @@ if (defined('_PS_ADMIN_DIR_')) {
     define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 }
 if (!defined('_PS_CACHE_DIR_')) {
-    define('_PS_CACHE_DIR_', _PS_ROOT_DIR_.'/cache/');
+    $prestashopCacheDir =  _PS_ROOT_DIR_.'/app/cache/'.(_PS_MODE_DEV_ ? 'dev': 'prod'). DIRECTORY_SEPARATOR;
+    define('_PS_CACHE_DIR_',$prestashopCacheDir);
 }
 define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');
 define('_PS_CUSTOM_CONFIG_FILE_', _PS_CONFIG_DIR_.'settings_custom.inc.php');

@@ -29,14 +29,14 @@ namespace PrestaShop\PrestaShop\tests\Unit\classes;
 use PHPUnit_Framework_TestCase;
 use PrestaShopAutoload;
 
-class    PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
+class PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
 {
     private $file_index_content = null;
+    private $file_index = null;
 
     protected function setUp()
     {
-        $this->file_index = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.PrestaShopAutoload::INDEX_FILE;
-        unlink($this->file_index);
+        $this->file_index = PrestaShopAutoload::getCacheFileIndex();
         PrestaShopAutoload::getInstance()->generateIndex();
         $this->file_index_content = md5(file_get_contents($this->file_index));
     }

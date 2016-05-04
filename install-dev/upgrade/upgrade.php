@@ -85,8 +85,9 @@ eval('abstract class AbstractLogger extends AbstractLoggerCore{}');
 require_once(_PS_INSTALL_PATH_.'upgrade/classes/FileLogger.php');
 eval('class FileLogger extends FileLoggerCore{}');
 
+$cacheDir = _PS_ROOT_DIR_.'/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/log/'.@date('Ymd').'_upgrade.log';
 $logger = new FileLogger();
-$logger->setFilename(_PS_ROOT_DIR_.'/log/'.@date('Ymd').'_upgrade.log');
+$logger->setFilename($cacheDir);
 
 if (function_exists('date_default_timezone_set')) {
     date_default_timezone_set('Europe/Paris');

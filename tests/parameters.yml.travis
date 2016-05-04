@@ -6,6 +6,9 @@ parameters:
     database_user:     root
     database_password: ~
     database_prefix:   ps_
+    database_engine: InnoDB
+    # You should uncomment this if you want use pdo_sqlite
+    # database_path: "%kernel.root_dir%/data.db3"
 
     mailer_transport:  smtp
     mailer_host:       localhost
@@ -13,4 +16,8 @@ parameters:
     mailer_password:   ~
 
     # A secret key that's used to generate certain security-related tokens
-    secret:            TravisTokenIsSoSecretDoNotChangeIt
+    secret:            ThisTokenIsNotSoSecretChangeIt
+    ps_caching: CacheMemcache
+    ps_cache_enable: true
+    cookie_key: ThisTokenIsNotSoSecretChangeIt
+    cookie_iv: ThisTokenIsNotSoSecretChangeIt
