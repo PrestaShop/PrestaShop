@@ -52,7 +52,7 @@ class BestSalesControllerCore extends ProductListingFrontController
 
     protected function getProductSearchQuery()
     {
-        $query = new ProductSearchQuery;
+        $query = new ProductSearchQuery();
         $query
             ->setQueryType('best-sales')
             ->setSortOrder(new SortOrder('product', 'name', 'asc'))

@@ -1068,7 +1068,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             $id_contact = $contacts[0]['id_contact'];
                         }
 
-                        $customer = new Customer;
+                        $customer = new Customer();
                         $client = $customer->getByEmail($from); //check if we already have a customer with this email
                         $ct = new CustomerThread();
                         if (isset($client->id)) { //if mail is owned by a customer assign to him

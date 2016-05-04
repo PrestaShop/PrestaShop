@@ -40,7 +40,7 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
 
         $count = (int)ProductSale::getNbSales();
 
-        $result = new ProductSearchResult;
+        $result = new ProductSearchResult();
         $result
             ->setProducts($products)
             ->setTotalProductsCount($count)

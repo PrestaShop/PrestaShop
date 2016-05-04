@@ -48,7 +48,7 @@ class PricesDropControllerCore extends ProductListingFrontController
 
     protected function getProductSearchQuery()
     {
-        $query = new ProductSearchQuery;
+        $query = new ProductSearchQuery();
         $query
             ->setQueryType('prices-drop')
             ->setSortOrder(new SortOrder('product', 'name', 'asc'))

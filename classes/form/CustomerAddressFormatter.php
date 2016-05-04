@@ -86,7 +86,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         ];
 
         foreach ($fields as $field) {
-            $formField = new FormField;
+            $formField = new FormField();
             $formField->setName($field);
 
             $fieldParts = explode(':', $field, 2);

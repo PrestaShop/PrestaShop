@@ -132,7 +132,7 @@ class ModuleController extends FrameworkBundleAdminController
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installed_products = $moduleRepository->getFilteredList($filters);
 
-        $products = new \stdClass;
+        $products = new \stdClass();
         foreach (['native_modules', 'theme_bundle', 'modules'] as $subpart) {
             $products->{$subpart} = [];
         }
@@ -243,7 +243,7 @@ class ModuleController extends FrameworkBundleAdminController
             ->setStatus(AddonListFilterStatus::INSTALLED);
         $installed_products = $moduleRepository->getFilteredList($filters);
 
-        $products = new \stdClass;
+        $products = new \stdClass();
         foreach (['to_configure', 'to_update'] as $subpart) {
             $products->{$subpart} = [];
         }

@@ -84,7 +84,7 @@ class EntityManager
     public function getEntityMetaData($className)
     {
         if (!array_key_exists($className, $this->entityMetaData)) {
-            $metaDataRetriever = new \PrestaShop\PrestaShop\Adapter\EntityMetaDataRetriever;
+            $metaDataRetriever = new \PrestaShop\PrestaShop\Adapter\EntityMetaDataRetriever();
             $this->entityMetaData[$className] = $metaDataRetriever->getEntityMetaData($className);
         }
 

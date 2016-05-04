@@ -87,7 +87,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
     protected function getProductSearchQuery()
     {
-        $query = new ProductSearchQuery;
+        $query = new ProductSearchQuery();
         $query
             ->setIdManufacturer($this->manufacturer->id)
             ->setSortOrder(new SortOrder('product', 'position', 'asc'))

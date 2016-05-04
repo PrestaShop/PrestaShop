@@ -89,7 +89,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
     protected function getProductSearchQuery()
     {
-        $query = new ProductSearchQuery;
+        $query = new ProductSearchQuery();
         $query
             ->setIdCategory($this->category->id)
             ->setSortOrder(new SortOrder('product', 'position', 'asc'))

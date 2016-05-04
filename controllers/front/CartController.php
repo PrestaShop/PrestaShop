@@ -72,7 +72,7 @@ class CartControllerCore extends FrontController
     {
         parent::initContent();
 
-        $presenter = new CartPresenter;
+        $presenter = new CartPresenter();
         $presented_cart = $presenter->present($this->context->cart);
 
         $this->context->smarty->assign([
@@ -355,7 +355,7 @@ class CartControllerCore extends FrontController
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();
-        $presenter = new CartPresenter;
+        $presenter = new CartPresenter();
         $presented_cart = $presenter->present($this->context->cart);
 
         if (count($presented_cart['products']) == 0) {

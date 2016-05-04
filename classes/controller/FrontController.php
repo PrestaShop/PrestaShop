@@ -173,7 +173,7 @@ class FrontControllerCore extends Controller
         }
 
         $this->objectPresenter = new ObjectPresenter();
-        $this->cart_presenter  = new CartPresenter;
+        $this->cart_presenter  = new CartPresenter();
     }
 
     /**

@@ -88,7 +88,7 @@
 
      protected function getProductSearchQuery()
      {
-         $query = new ProductSearchQuery;
+         $query = new ProductSearchQuery();
          $query
             ->setIdSupplier($this->supplier->id)
             ->setSortOrder(new SortOrder('product', 'position', 'asc'))
