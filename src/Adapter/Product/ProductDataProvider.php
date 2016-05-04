@@ -58,7 +58,7 @@ class ProductDataProvider
     public function getProduct($id_product, $full = false, $id_lang = null, $id_shop = null, $context = null)
     {
         if (!$id_product) {
-            throw new LogicException('You need to provide a product id', null, 5002);
+            throw new LogicException('You need to provide a product id', 5002);
         }
 
         $product = new \ProductCore($id_product, $full, $id_lang, $id_shop, $context);
