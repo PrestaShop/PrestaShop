@@ -685,11 +685,20 @@ var combinations = (function() {
         var id_attribute = $(this).closest('.combination').attr('data');
         $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').val($(this).val());
       });
+      
+      /** on change default attribute, update which combination is the new default */
+      $(document).on('click', 'input.attribute-default', function() {
+        var id_attribute = $(this).closest('.combination').attr('data');
+        // reset all radio buttons
+        $('.attribute_default_checkbox').removeAttr('checked');
+        $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_default"]').prop("checked", true);
+      });
 
-      /** on change weigth, update weight row */
-      $(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_weight"]', function() {
-        var id_attribute = $(this).closest('.combination-form').attr('data');
-        $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-weight').html($(this).val() + ' ' + weightUnit);
+      
+      /** on change price on impact, update price on impact form field */
+      $(document).on('change', '.attribute-price input', function() {
+        var id_attribute = $(this).closest('.combination').attr('data');
+        $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').val($(this).val());
       });
 
       /** on change price, update price row */

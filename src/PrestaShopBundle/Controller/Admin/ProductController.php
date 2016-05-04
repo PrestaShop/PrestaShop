@@ -801,7 +801,10 @@ class ProductController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_product_catalog');
     }
-
+    
+    /**
+     * @todo make a twig extension and depends only on the required form to avoid generate all the data
+     */
     public function renderFieldAction($productId, $step, $fieldName)
     {
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');

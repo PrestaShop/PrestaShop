@@ -1,13 +1,24 @@
 <tr class="combination" id="attribute_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" data-index="{{ loop_index is defined ? loop_index : '__loop_index__' }}">
     <td class="img"><div class="fake-img"></div></td>
     <td>{{ form.vars.value.name }}</td>
-    <td class="attribute-price-display">{{ form.vars.value.attribute_price_display }}</td>
-    <td class="attribute-weight">{{ form.vars.value.attribute_weight }} {{ 'PS_WEIGHT_UNIT'|configuration }}</td>
-    <td class="attribute-quantity"><div class="col-xs-6"><input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control"></div></td>
+    <td class="attribute-price col-xs-3">
+        <div class="input-group">
+            <span class="input-group-addon">€ </span>
+            <input type="number" class="attribute_priceTE form-control" value="{{ form.vars.value.attribute_price }}">
+        </div>
+    </td>
+    <td>{{ form.vars.value.final_price }}</td>
+    <td class="attribute-quantity">
+        <div>
+            <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control">
+        </div>
+    </td>
     <td class="text-right">
         <div class="btn-group" role="group">
             <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-default btn-sm btn-open"><i class="material-icons">mode_edit</i></a>
             <a href="{{ path('admin_delete_attribute', {'idAttribute': form.vars.value.id_product_attribute, 'idProduct': id_product}) }}" class="btn btn-default btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
+            {% set checked = form.vars.value.attribute_default == 1 ? 'checked' : '' %}
+            <input class="attribute-default" type="radio" {{ checked }}>
         </div>
         <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide">
             <div class="panel col-md-12 p-t-2 p-b-2">
