@@ -37,6 +37,23 @@ var combinations = (function() {
     }).show();
   }
 
+  /**
+   * Update final price, regarding the impact on price
+   * @param {object} elem - The tableau row parent
+   */
+  function updateFinalPrice(tableRow) {
+      if (!tableRow.is('tr')) {
+          throw new Error('Structure of table has changed, this function need to be updated.');
+      }
+      var priceImpactInput = tableRow.find('.attribute_priceTE');
+      var impactOnPrice = priceImpactInput.val() - priceImpactInput.attr('value');
+      var actualFinalPriceInput = tableRow.find('.attribute-finalprice');
+      var actualFinalPrice = actualFinalPriceInput.data('price');
+
+      var finalPrice = actualFinalPrice + impactOnPrice;
+      actualFinalPriceInput.html(finalPrice.toFixed(2));
+  }
+
   return {
     'init': function() {
       var _this = this;
@@ -58,19 +75,31 @@ var combinations = (function() {
         var id_attribute = $(this).closest('.combination').attr('data');
         $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').val($(this).val());
       });
-      
+
       /** on change default attribute, update which combination is the new default */
       $(document).on('click', 'input.attribute-default', function() {
+        var selectedCombination = $(this);
+        var combinationRadioButtons = $('input.attribute-default');
         var id_attribute = $(this).closest('.combination').attr('data');
+
+        combinationRadioButtons.each(function unselect(index) {
+          var combination = $(this);
+          if(combination.data('id') !== selectedCombination.data('id')) {
+            combination.prop("checked", false);
+          }
+        });
+
+
         $('.attribute_default_checkbox').removeAttr('checked');
         $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_default"]').prop("checked", true);
       });
 
-      
+
       /** on change price on impact, update price on impact form field */
       $(document).on('change', '.attribute-price input', function() {
         var id_attribute = $(this).closest('.combination').attr('data');
         $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').val($(this).val());
+        updateFinalPrice($(this).parent().parent().parent());
       });
 
       /** on change price, update price row */
@@ -236,5 +265,4 @@ var combinations = (function() {
 
 BOEvent.on("Product Combinations Management started", function initCombinationsManagement() {
   combinations.init();
-  console.log("combinations started");
 }, "Back office");

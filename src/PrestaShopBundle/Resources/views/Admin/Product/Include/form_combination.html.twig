@@ -7,7 +7,7 @@
             <input type="number" class="attribute_priceTE form-control" value="{{ form.vars.value.attribute_price }}">
         </div>
     </td>
-    <td>{{ form.vars.value.final_price }}</td>
+    <td class="attribute-finalprice" data-price="{{ form.vars.value.final_price }}">{{ form.vars.value.final_price }}</td>
     <td class="attribute-quantity">
         <div>
             <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control">
@@ -18,7 +18,7 @@
             <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-default btn-sm btn-open"><i class="material-icons">mode_edit</i></a>
             <a href="{{ path('admin_delete_attribute', {'idAttribute': form.vars.value.id_product_attribute, 'idProduct': id_product}) }}" class="btn btn-default btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
             {% set checked = form.vars.value.attribute_default == 1 ? 'checked' : '' %}
-            <input class="attribute-default" type="radio" {{ checked }}>
+            <input class="attribute-default" type="radio" {{ checked }} data-id="{{ form.vars.value.id_product_attribute }}">
         </div>
         <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide">
             <div class="panel col-md-12 p-t-2 p-b-2">
