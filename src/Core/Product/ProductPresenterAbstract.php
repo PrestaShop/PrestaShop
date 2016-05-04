@@ -65,7 +65,6 @@ abstract class ProductPresenterAbstract
             }
         }
 
-
         if (!isset($presentedProduct['cover'])) {
             if (isset($presentedProduct['images'][0])) {
                 $presentedProduct['cover'] = $presentedProduct['images'][0];
@@ -363,6 +362,10 @@ abstract class ProductPresenterAbstract
     ) {
         $presentedProduct = $product;
         $presentedProduct['id'] = $presentedProduct['id_product'];
+
+        if (!isset($presentedProduct['attributes'])) {
+            $presentedProduct['attributes'] = array();
+        }
 
         $show_price = $this->shouldShowPrice(
             $settings,
