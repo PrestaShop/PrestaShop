@@ -820,18 +820,32 @@ class ProductController extends FrameworkBundleAdminController
             $this->container->get('prestashop.adapter.shop.context')
         );
 
-        $form = $this->createFormBuilder($modelMapper->getFormData())
-            ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
-            ->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation')
-            ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
-            ->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity')
-            ->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping')
-            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo')
-            ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions')
-            ->getForm();
+        $form = $this->createFormBuilder($modelMapper->getFormData());
+        
+        switch($step) {
+            case 'step1':
+                $form->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation');
+                break;
+            case 'step2':
+                $form->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice');
+                break;
+            case 'step3':
+                $form->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity');
+                break;
+            case 'step4':
+                $form->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping');
+                break;
+            case 'step5':
+                $form->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo');
+                break;
+            case 'step6':
+                $form->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
+                break;
+            case 'default':
+        }
 
         return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
-            'form' => $form->get($step)->get($fieldName)->createView(),
+            'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
             'formId' => $step.'_'.$fieldName.'_rendered'
         ]);
     }
