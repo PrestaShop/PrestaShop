@@ -3,7 +3,11 @@
 {block "form_field"}
   <div>
     {if $field.name === 'password' and $guest_allowed}
-        <p class="create-account">{l s='Create an account and save time on your next order (optional)'}</p>
+        <p>
+          <span class="font-weight-bold">{l s='Create an account'}</span> <span class="font-italic">{l s='(optional)'}</span>
+          <br>
+          <span class="text-light">{l s='And save time on your next order!'}</span>
+        </p>
         {$smarty.block.parent}
     {else}
       {$smarty.block.parent}

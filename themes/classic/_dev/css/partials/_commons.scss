@@ -344,6 +344,17 @@ label {
     color: $btn-tertiary-hover;
   }
 }
+
 .alert {
   font-size: em(13px);
+}
+
+.nav-item {
+  .nav-link, .nav-separtor {
+    color: $gray;
+    font-weight: bold;
+    &.active {
+      color: $gray-darker;
+    }
+  }
 }
