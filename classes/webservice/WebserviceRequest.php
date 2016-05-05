@@ -322,6 +322,14 @@ class WebserviceRequestCore
             'product_customization_fields' => array('description' => 'Customization Field', 'class' => 'CustomizationField'),
             'customizations' => array('description' => 'Customization values', 'class' => 'Customization'),
         );
+        $extra_resources = Hook::exec('addWebserviceResources', array('resources' => $resources), null, true, false);
+        if (is_array($extra_resources) && count($extra_resources)) {
+            foreach ($extra_resources as $new_resources) {
+                if (is_array($new_resources) && count($new_resources)) {
+                    $resources = array_merge($resources, $new_resources);
+                }
+            }
+        }
         ksort($resources);
         return $resources;
     }
