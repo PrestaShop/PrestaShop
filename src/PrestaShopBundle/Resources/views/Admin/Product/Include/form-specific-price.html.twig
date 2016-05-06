@@ -17,35 +17,37 @@
   {% endif %}
 
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <fieldset class="form-group">
         <label>{{ trans('For', {}, 'AdminProducts') }}</label>
         {{ form_errors(form.sp_id_currency) }}
         {{ form_widget(form.sp_id_currency) }}
       </fieldset>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <fieldset class="form-group">
         <label>&nbsp;</label>
         {{ form_errors(form.sp_id_country) }}
         {{ form_widget(form.sp_id_country) }}
       </fieldset>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <fieldset class="form-group">
         <label>&nbsp;</label>
         {{ form_errors(form.sp_id_group) }}
         {{ form_widget(form.sp_id_group) }}
       </fieldset>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-6">
       <fieldset class="form-group">
         <label>{{ trans('Customer', {}, 'AdminProduct') }}</label>
         {{ form_errors(form.sp_id_customer) }}
         {{ form_widget(form.sp_id_customer) }}
       </fieldset>
     </div>
-    <div id="specific-price-combination-selector" class="col-md-8 {{ has_combinations ? '' : 'hide' }}">
+  </div>
+  <div class="row">
+    <div id="specific-price-combination-selector" class="col-md-6 {{ has_combinations ? '' : 'hide' }}">
       <fieldset class="form-group">
         <label>{{ form.sp_id_product_attribute.vars.label }}</label>
         {{ form_errors(form.sp_id_product_attribute) }}
@@ -53,21 +55,21 @@
       </fieldset>
     </div>
     <div class="clearfix"></div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <fieldset class="form-group">
         <label>{{ form.sp_from.vars.label }}</label>
         {{ form_errors(form.sp_from) }}
         {{ form_widget(form.sp_from) }}
       </fieldset>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <fieldset class="form-group">
         <label>{{ trans('to', {}, 'AdminProducts')|raw }}</label>
         {{ form_errors(form.sp_to) }}
         {{ form_widget(form.sp_to) }}
       </fieldset>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-2">
       <fieldset class="form-group">
         <label>{{ form.sp_from_quantity.vars.label }}</label>
         {{ form_errors(form.sp_from_quantity) }}
@@ -95,22 +97,23 @@
         {{ form_widget(form.leave_bprice) }}
       </fieldset>
     </div>
-    <div class="clearfix"></div>
-    <div class="col-md-4">
+  </div>
+  <div class="row">
+    <div class="col-md-2">
       <fieldset class="form-group">
-        <label>{{ trans('Apply a discount of', {}, 'Adminproducts') }}</label>
+        <label>{{ trans('Product price (tax excl.)', {}, 'Adminproducts') }}</label>
         {{ form_errors(form.sp_reduction) }}
         {{ form_widget(form.sp_reduction) }}
       </fieldset>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-2">
       <fieldset class="form-group">
-        <label>&nbsp;</label>
+        <label>{{ trans('OR Apply a discount of', {}, 'Adminproducts') }}</label>
         {{ form_errors(form.sp_reduction_type) }}
         {{ form_widget(form.sp_reduction_type) }}
       </fieldset>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-2">
       <fieldset class="form-group">
         <label>&nbsp;</label>
         {{ form_errors(form.sp_reduction_tax) }}

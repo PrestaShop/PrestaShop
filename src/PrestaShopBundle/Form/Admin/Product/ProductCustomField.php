@@ -73,6 +73,9 @@ class ProductCustomField extends CommonAbstractType
                 $this->translator->trans('Text', [], 'AdminProducts') => 1,
                 $this->translator->trans('File', [], 'AdminProducts') => 0,
             ),
+            'attr' => array(
+                'class' => 'c-select',
+            ),
             'choices_as_values' => true,
             'required' =>  true
         ))->add('require', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(

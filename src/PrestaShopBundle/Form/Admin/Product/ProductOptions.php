@@ -100,7 +100,7 @@ class ProductOptions extends CommonAbstractType
             'options' => [
                 'attr' => [
                     'class' => 'tokenfield',
-                    'placeholder' => $this->translator->trans('Tags', [], 'AdminProducts')
+                    'placeholder' => $this->translator->trans('Use a comma to create seperate tags. E.g.: dress, cotton, party dress.', [], 'AdminProducts')
                 ]
             ],
             'locales' => $this->locales,

@@ -19,23 +19,14 @@
       overflow-y: auto;
       width: 100%;
     }
-    thead,
-    tbody,
-    tr,
-    td,
-    th {
-      display: block;
-    }
     tbody td,
     thead > tr > th {
-      float: left;
       border-bottom-width: 0;
     }
     tr {
       clear: both;
     }
     td {
-      padding: 5px;
       span {
         word-break: break-all;
         word-wrap: break-word;
@@ -498,7 +489,8 @@
   .seo-table tbody tr td:last-child {
     box-shadow: -3px 0 10px -3px rgba(0,0,0,0.4);
   }
-  .seo-table .delete {
+  .seo-table .delete,
+  .customFieldCollection .delete {
     color: $gray-medium;
     .material-icons {
       font-size: rem(20px);
@@ -507,6 +499,19 @@
   #form_step5_meta_description_1 {
     resize: none;
     height: rem(140px);
+  }
+  .tokenfield input.token-input[type=text] {
+    width: 100% !important;
+  }
+  #product-attachment-file {
+    border: $gray-light 2px solid;
+    thead {
+      text-transform: uppercase;
+    }
+    tbody {
+      border: none;
+      border-top: $gray-light 2px solid;
+    }
   }
 }
 .popover-title {

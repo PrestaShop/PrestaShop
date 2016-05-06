@@ -71,7 +71,7 @@ class ProductSeo extends CommonAbstractType
         ->add('meta_description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('To have a different description than your product summary, enter it here.', [], 'AdminProducts')],
+                'attr' => ['placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'AdminProducts')],
                 'required' => false
             ],
             'locales' => $this->locales,

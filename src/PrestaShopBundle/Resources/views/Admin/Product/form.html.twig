@@ -674,6 +674,7 @@
                     <div class="row">
                       <div class="col-md-12">
                         <h2>{{ trans('Visibility', {}, 'AdminProducts') }}</h2>
+                        <p class="subtitle">{{ trans('Where do you want your product to appear?', {}, 'AdminProducts') }}</p>
                       </div>
                     </div>
 
@@ -685,25 +686,38 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-md-12 form-group">
+                      <div class="col-md-7 form-group">
                           {{ form_errors(form.step6.display_options) }}
-                          {{ form_widget(form.step6.display_options.available_for_order) }}
-                          {{ form_widget(form.step6.display_options.show_price) }}
-                          {{ form_widget(form.step6.display_options.online_only) }}
+                          <div class="row">
+                            <div class="col-md-4">
+                              {{ form_widget(form.step6.display_options.available_for_order) }}
+                            </div>
+                            <div class="col-md-3">
+                              {{ form_widget(form.step6.display_options.show_price) }}
+                            </div>
+                            <div class="col-md-5">
+                              {{ form_widget(form.step6.display_options.online_only) }}
+                            </div>
+                          </div>
                       </div>
                     </div>
-
                     <div class="row form-group">
                       <div class="col-md-8">
+                        <label class="form-control-label">{{ trans('Tags', {}, 'AdminProducts') }}</label>
                         {{ form_errors(form.step6.tags) }}
                         {{ form_widget(form.step6.tags) }}
-                        <div class="alert alert-info m-t-1" role="alert">
+                        <div class="alert alert-info alert-drop m-t-1" role="alert">
                           <i class="material-icons">help</i>
-                          <p class="alert-text">
-                            {{ trans('Separate each tag by pressing Enter.', {}, 'AdminProducts')|raw }}<br/>
-                            {{ trans('Tags are meant to help your customers find your productvia the search bar.', {}, 'AdminProducts')|raw }}<br/>
-                            {{ trans('Use terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.', {}, 'AdminProducts')|raw }}<br/>
-                            {{ trans('You can manage tag aliases in the %link% section.', {'%link%': '<a href="'~ getAdminLink("AdminSearchConf") ~'">'~trans('Alias', {}, 'AdminProducts')~'</a>'}, 'AdminProducts')|raw }}
+                          <p class="alert-text" data-title="{{ trans('Read more', {}, 'AdminProducts')|raw }}">
+                            {{ trans('Tags are meant to help your customers find your products via the search bar.', {}, 'AdminProducts')|raw }}
+                            <strong>{{ trans('Read more', {}, 'AdminProducts')|raw }}</strong>
+                          </p>
+                        </div>
+                        <div class="alert alert-info alert-down" role="alert">
+                          <p class="alert-down-text">
+                            {{ trans('Use terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.', {}, 'AdminProducts')|raw }}<br>
+                            {{ trans('You can manage tag aliases in the Alias section.', {}, 'AdminProducts')|raw }}
+                            <!--TODO:: re-add the link:: '%link%': '<a href="'~ getAdminLink("AdminSearchConf") ~'">'~trans('Alias', {}, 'AdminProducts')~'</a>' -->
                           </p>
                         </div>
                       </div>
@@ -775,6 +789,7 @@
                       <div class="col-md-12">
                         <div id="custom_fields" class="m-b-2">
                           <h2>{{ form.step6.custom_fields.vars.label }}</h2>
+                          <p class="subtitle">{{ trans('Customers can personalized the product by entering some text or by providing custom files (image, video, etc.).', {}, 'AdminProducts') }}</p>
                           {{ form_errors(form.step6.custom_fields) }}
                           <ul class="customFieldCollection nostyle" data-prototype="
                                       {% filter escape %}
@@ -787,7 +802,7 @@
                             {% endfor %}
                           </ul>
                           <a href="#" class="btn btn-action add">
-                            <i class="material-icons">add</i>
+                            <i class="material-icons">add_circle</i>
                             {{ trans('Add a customization field', {}, 'AdminProducts') }}
                           </a>
                         </div>
@@ -795,11 +810,13 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-md-6">
-                        <h2>{{ trans('Attachments', {}, 'AdminProducts') }}</h2>
+                      <div class="col-md-8">
+                        <h2>{{ trans('Attached files', {}, 'AdminProducts') }}</h2>
                         {{ form_widget(form.step6.attachments) }}
                       </div>
-                      <div class="col-md-6">
+                    </div>
+                    <div class="row">
+                      <div class="col-md-8">
                         <h2>{{ trans('Create a new attachment', {}, 'AdminProducts') }}</h2>
                         <fieldset class="form-group">
                           {{ form_errors(form.step6.attachment_product) }}
@@ -812,18 +829,23 @@
                         </fieldset>
                       </div>
                     </div>
-
                     <div class="row">
-                      <div class="col-md-12">
+                      <div class="col-md-8">
                         <div id="custom_fields">
                           <h2>{{ form.step6.suppliers.vars.label }}</h2>
                           <div class="row">
                             <div class="col-md-12">
-                              <div class="alert alert-info" role="alert">
+                              <div class="alert alert-info alert-drop" role="alert">
                                 <i class="material-icons">help</i>
-                                <p>
-                                  {{ trans('This interface allows you to specify the suppliers of the current product and eventually its combinations.', {}, 'AdminProducts')|raw }}<br/>
+                                <p class="alert-text">
+                                  {{ trans('This interface allows you to specify the suppliers of the current product and eventually its combinations.', {}, 'AdminProducts')|raw }}<br>
                                   {{ trans('It is also possible to specify supplier references according to previously associated suppliers.', {}, 'AdminProducts')|raw }}
+                                  <strong>{{ trans('Read more', {}, 'AdminProducts')|raw }}</strong>
+                                </p>
+                              </div>
+                              <div class="alert alert-info alert-down" role="alert">
+                                <p class="alert-down-text">
+                                  {{ trans('When using the advanced stock managment tool (see Shop Parameters > Products settings), the values you define (price, references) will be used in supply orders.', {}, 'AdminProducts')|raw }}
                                 </p>
                               </div>
                             </div>
@@ -845,7 +867,7 @@
                       </div>
                     </div>
 
-                    <div id="supplier_combination_collection" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
+                    <div id="supplier_combination_collection" class="col-md-8" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
                       {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
                     </div>
                   </div>
