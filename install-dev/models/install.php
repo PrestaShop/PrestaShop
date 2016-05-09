@@ -64,7 +64,7 @@ class InstallModelInstall extends InstallAbstractModel
     /**
      * Generate settings file
      */
-    public function generateSettingsFile($database_server, $database_login, $database_password, $database_name, $database_prefix, $database_engine)
+    public function generateSettingsFile($database_host, $database_user, $database_password, $database_name, $database_prefix, $database_engine)
     {
         // Check permissions for settings file
         if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE)) {
@@ -76,20 +76,29 @@ class InstallModelInstall extends InstallAbstractModel
         }
 
         $parameters  = array(
-            'database_host' => $database_server,
-            'database_login' => $database_login,
-            'database_password' => $database_password,
-            'database_name' => $database_name,
-            'database_prefix' => $database_prefix,
-            'database_engine' =>  $database_engine,
-            'cookie_iv' =>  Tools::passwdGen(56),
-            'cookie_key' => Tools::passwdGen(8)
-        );
+            'parameters' => array(
+                'database_host' => $database_host,
+                'database_port' => '~',
+                'database_user' => $database_user,
+                'database_password' => $database_password,
+                'database_name' => $database_name,
+                'database_prefix' => $database_prefix,
+                'database_engine' =>  $database_engine,
+                'cookie_iv' =>  Tools::passwdGen(56),
+                'ps_caching' => 'CacheMemcache',
+                'ps_cache_enable' => false,
+                'cookie_key' => Tools::passwdGen(8),
+                'secret' => Tools::passwdGen(8),
+                'mailer_transport' => 'smtp',
+                'mailer_host' => '127.0.0.1',
+                'mailer_user' => '~',
+                'mailer_password' => '~'
+        ));
 
         // If mcrypt is activated, add Rijndael 128 configuration
         if (function_exists('mcrypt_encrypt')) {
-            $parameters['_rijndael_key'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
-            $parameters['_rijndael_iv'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
+            $parameters['parameters']['_rijndael_key'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
+            $parameters['parameters']['_rijndael_iv'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
         }
 
         $settings_content = "<?php\n";
@@ -101,48 +110,11 @@ class InstallModelInstall extends InstallAbstractModel
         }
 
 
-        return $this->generateSf2ParametersFile($parameters);
-    }
-
-    /**
-     * Customize SF2 parameters file
-     *
-     * @param $parameters
-     *
-     * @return bool
-     */
-    private function generateSf2ParametersFile($parameters)
-    {
-        if (!is_writable(_PS_ROOT_DIR_.'/app/config')) {
-            $this->setError($this->language->l('%s folder is not writable (check permissions)', 'app/config'));
-            return false;
-        }
-
-        umask(0000);
-
-        $parameters['database_port'] = '~';
-
-        $host = explode(':', $parameters['$database_server']);
-        $port = array_pop($host);
-        if (is_numeric($port)) {
-            $parameters['database_port'] = $port;
-            $parameters['database_server'] = implode(':', $host);
-        }
-
-        $configs = ['parameters' =>  array_merge(
-            $parameters, [
-                'mailer_transport' => 'smtp',
-                'mailer_host' => '127.0.0.1',
-                'mailer_user' => '~',
-                'mailer_password' => '~',
-                'secret' => Tools::passwdGen(56)
-            ]
-        )];
-
-        if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($configs))) {
+        if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($parameters))) {
             $this->setError($this->language->l('Cannot write app/config/parameters.yml file'));
             return false;
         }
+
 
         return true;
     }
