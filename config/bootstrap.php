@@ -41,7 +41,7 @@ if (!file_exists(_PS_CACHE_DIR_)) {
     $warmer->warmUp(_PS_CACHE_DIR_);
 }
 
-if (!file_exists(_PS_CACHE_DIR_. 'appParameters.php')) {
+if (_PS_MODE_DEV_ || !file_exists(_PS_CACHE_DIR_. 'appParameters.php')) {
     $config = Yaml::parse(file_get_contents(__DIR__. '/../app/config/parameters.yml'));
     file_put_contents(_PS_CACHE_DIR_ .'appParameters.php', '<?php return ' . var_export($config, true). ';');
 }

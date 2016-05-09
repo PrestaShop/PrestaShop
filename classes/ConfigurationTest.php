@@ -27,7 +27,6 @@
 class ConfigurationTestCore
 {
     public static $test_files = array(
-        '/cache/smarty/compile/index.php',
         '/classes/log/index.php',
         '/classes/cache/index.php',
         '/config/index.php',
@@ -59,8 +58,8 @@ class ConfigurationTestCore
     {
         $tests = array(
             'upload' => false,
-            'cache_dir' => 'cache',
-            'log_dir' => 'log',
+            'cache_dir' => 'app/cache',
+            'log_dir' => 'app/logs',
             'img_dir' => 'img',
             'module_dir' => 'modules',
             'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
@@ -69,8 +68,6 @@ class ConfigurationTestCore
             'translations_dir' => 'translations',
             'customizable_products_dir' => 'upload',
             'virtual_products_dir' => 'download',
-            'app_cache_dir' => 'app/cache',
-            'app_logs_dir' => 'app/logs',
             'config_sf2_dir' => 'app/config',
         );
 
@@ -303,16 +300,6 @@ class ConfigurationTestCore
     }
 
     public static function test_translations_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir, true);
-    }
-
-    public static function test_app_cache_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir, true);
-    }
-
-    public static function test_app_logs_dir($dir)
     {
         return ConfigurationTest::test_dir($dir, true);
     }
