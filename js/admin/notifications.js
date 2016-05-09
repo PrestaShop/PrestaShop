@@ -79,6 +79,7 @@ function getPush()
 				});
 				if (parseInt(json.order.total) > 0)
 				{
+          $("#orders-notifications").removeClass('empty');
 					$("#orders-notifications").empty().append(html);
 					$("#orders_notif_value").text(' (' + nbOrders + ')');
 				}
@@ -96,6 +97,7 @@ function getPush()
 				});
 				if (parseInt(json.customer.total) > 0)
 				{
+          $("#customers-notifications").removeClass('empty');
 					$("#customers-notifications").empty().append(html);
 					$("#customers_notif_value").text(' (' + nbCustomers + ')');
 				}
@@ -114,6 +116,7 @@ function getPush()
 				});
 				if (parseInt(json.customer_message.total) > 0)
 				{
+          $("#messages-notifications").removeClass('empty');
 					$("#messages-notifications").empty().append(html);
 					$("#customer_messages_notif_value").text(' (' + nbCustomerMessages + ')');
 				}

@@ -76,6 +76,25 @@
       > .tab-pane {
         height: rem(190px);
         overflow-y: auto;
+
+        &.empty {
+          color: $gray-medium;
+          text-align: center;
+
+          &::after {
+            content: "\E7F5";
+            font-family: "Material Icons";
+            opacity: 0.7;
+            font-size: rem(90px);
+            color: $gray-light;
+          }
+
+          > .no-notification {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+          }
+        }
       }
 
       .notif {

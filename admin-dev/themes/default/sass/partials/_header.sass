@@ -326,6 +326,19 @@ $header-height: 36px
 				.tab-pane
 					height: 11.875rem
 					overflow-y: auto
+					&.empty
+						color: #6c868e
+						text-align: center
+						&::after
+							content: "\E7F5"
+							font-family: "Material Icons"
+							opacity: 0.7
+							font-size: 5.625rem
+							color: #bbcdd2
+						> .no-notification
+							position: absolute
+							bottom: 0
+							width: 100%
 				.notif
 					display: block
 					padding: .625rem .9375rem

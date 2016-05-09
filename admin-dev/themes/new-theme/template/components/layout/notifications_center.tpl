@@ -20,9 +20,25 @@
 
       <!-- Tab panes -->
       <div class="tab-content">
-        <div class="tab-pane active" id="orders-notifications" role="tabpanel"></div>
-        <div class="tab-pane" id="customers-notifications" role="tabpanel"></div>
-        <div class="tab-pane" id="messages-notifications" role="tabpanel"></div>
+        <div class="tab-pane active empty" id="orders-notifications" role="tabpanel">
+          <p class="no-notification">
+            {l s='No new order for now :('}<br>
+            {l s='Have you checked your [1][2]abandonned carts[/2][/1]?' tags=['<strong>', '<a href="'|cat:$abandoned_cart_url|cat:'">']}<br>
+            {$no_order_tip}
+          </p>
+        </div>
+        <div class="tab-pane empty" id="customers-notifications" role="tabpanel">
+          <p class="no-notification">
+            {l s='No new customer for now :('}<br>
+            {$no_customer_tip}
+          </p>
+        </div>
+        <div class="tab-pane empty" id="messages-notifications" role="tabpanel">
+          <p class="no-notification">
+            {l s='No new message for now.'}<br>
+            {$no_customer_message_tip}
+          </p>
+        </div>
       </div>
     </div>
   </div>

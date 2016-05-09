@@ -1880,6 +1880,33 @@ class AdminControllerCore extends Controller
         ));
     }
 
+    private function getNotificationTip($type)
+    {
+        $tips = array(
+            'order' => array(
+                $this->l('Your next order could be hidding there!'),
+                $this->l('Did you check your conversation rate lately?'),
+                $this->l('How about some seasonal discounts?'),
+            ),
+            'customer' => array(
+                $this->l('Have you sent any acquisition email lately?'),
+                $this->l('Are you active on social media these days?'),
+                $this->l('Have you considered selling on marketplaces?'),
+            ),
+            'customer_message' => array(
+                $this->l('That\'s more time for something else!'),
+                $this->l('No news is good news, isn\'t it?'),
+                $this->l('Seems like all your customers are happy :)'),
+            ),
+        );
+
+        if (!isset($tips[$type])) {
+            return '';
+        }
+
+        return $tips[$type][array_rand($tips[$type])];
+    }
+
     private function getTabs($parentId = 0, $level = 0)
     {
         $tabs = Tab::getTabs($this->context->language->id, $parentId);
@@ -2721,7 +2748,11 @@ class AdminControllerCore extends Controller
             'current' => self::$currentIndex,
             'token' => $this->token,
             'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
-            'stock_management' => (int)Configuration::get('PS_STOCK_MANAGEMENT')
+            'stock_management' => (int)Configuration::get('PS_STOCK_MANAGEMENT'),
+            'abandoned_cart_url' => $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts',
+            'no_order_tip' => $this->getNotificationTip('order'),
+            'no_customer_tip' => $this->getNotificationTip('customer'),
+            'no_customer_message_tip' => $this->getNotificationTip('customer_message')
         ));
 
         if ($this->display_header) {
