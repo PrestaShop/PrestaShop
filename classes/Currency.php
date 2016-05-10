@@ -243,7 +243,7 @@ class CurrencyCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'currency` c
 		LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
-		WHERE c.`delete`=0'.
+		WHERE c.`deleted`=0'.
 		($active ? ' AND c.`active` = 1' : '').
 		($id_shop ? ' AND cs.`id_shop` = '.(int)$id_shop : '').'
 		ORDER BY `name` ASC');
