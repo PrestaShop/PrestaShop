@@ -54,15 +54,6 @@
           {l s='(Ex.:31/05/1970)'}
         </span>
 
-      {elseif $field.type === 'email'}
-
-        <input
-          class="form-control"
-          name="{$field.name}"
-          type="email"
-          value="{$field.value}"
-          {if $field.required}required{/if}>
-
       {elseif $field.type === 'password'}
 
         <div class="input-group js-parent-focus">
