@@ -23,6 +23,10 @@
       font-size: rem(9px);
       padding: 0 rem(4px);
       border-radius: rem(10px);
+
+      &.hide {
+        display: none;
+      }
     }
   }
 
