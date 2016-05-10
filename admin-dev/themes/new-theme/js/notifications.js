@@ -20,9 +20,9 @@ const refreshNotifications = function () {
         fillTpl(json.customer.results, $("#customers-notifications"), $("#customer-notification-template").html());
         fillTpl(json.customer_message.results, $("#messages-notifications"), $("#message-notification-template").html());
 
-        setNotificationsNumber($('.notifications #orders-tab'), "_nb_new_orders_", nbOrders);
-        setNotificationsNumber($('.notifications #customers-tab'), "_nb_new_customers_", nbCustomers);
-        setNotificationsNumber($('.notifications #messages-tab'), "_nb_new_messages_", nbCustomerMessages);
+        setNotificationsNumber("_nb_new_orders_", nbOrders);
+        setNotificationsNumber("_nb_new_customers_", nbCustomers);
+        setNotificationsNumber("_nb_new_messages_", nbCustomerMessages);
         $('#orders_notif_value').html(notifications_total);
       }
       timer = setTimeout(refreshNotifications, 120000);
@@ -33,11 +33,11 @@ const refreshNotifications = function () {
 }
 
 let fillTpl = function (results, eltAppendTo, tpl) {
+  eltAppendTo.children('.notification-elements').empty();
   if (results.length > 0) {
     eltAppendTo.removeClass('empty');
-    eltAppendTo.empty();
     $.each(results, function (property, value) {
-      eltAppendTo.append(
+      eltAppendTo.children('.notification-elements').append(
         tpl.replace(/_id_order_/g, parseInt(value.id_order))
           .replace(/_customer_name_/g, value.customer_name)
           .replace(/_iso_code_/g, value.iso_code)
@@ -52,14 +52,16 @@ let fillTpl = function (results, eltAppendTo, tpl) {
           .replace(/message_url/g, `${baseAdminDir}index.php?tab=AdminCustomerThreads&token=${token_admin_customer_threads}&viewcustomer_thread&id_customer_thread=${value.id_customer_thread}`)
       );
     });
+  } else {
+    eltAppendTo.addClass('empty');
   }
 }
 
-let setNotificationsNumber = function (elt, id, number) {
+let setNotificationsNumber = function (id, number) {
   if (number > 0) {
-    elt.html((elt.html().replace(id, " (" + number + ")")));
+    $("#" + id).text(" (" + number + ")");
   } else {
-    elt.html((elt.html().replace(id, "")));
+    $("#" + id).text("");
   }
 }
 

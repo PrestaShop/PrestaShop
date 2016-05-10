@@ -10,6 +10,7 @@ $(document).ready(function() {
 
   $('.notification.dropdown-toggle').on('click', function (event) {
     $(this).parent().toggleClass('open');
+    updateEmployeeNotifications();
   });
 
   $('body').on('click', function (e) {
@@ -18,30 +19,28 @@ $(document).ready(function() {
       && $('.open').has(e.target).length === 0
     ) {
       $('#notification.dropdown').removeClass('open');
+      getPush();
     }
   });
 
-	$(".notifs").click(function(){
-		var wrapper_id = $(this).parent().attr("id");
+  $('.notifications .nav-link').on('shown.bs.tab', function () {
+    updateEmployeeNotifications();
+  });
 
-		$.post(
-			baseAdminDir+"ajax.php",
-			{
-				"updateElementEmployee" : "1",
-				"updateElementEmployeeType" : $(this).parent().attr('data-type')
-			},
-			function(data) {
-				if (data) {
-					$("#" + wrapper_id + "_value").html(0);
-					$("#" + wrapper_id + "_number_wrapper").hide();
-				}
-			}
-		);
-	});
 	// call it once immediately, then use setTimeout
 	getPush();
 
 });
+
+function updateEmployeeNotifications() {
+  $.post(
+    baseAdminDir + "ajax.php",
+    {
+      "updateElementEmployee": "1",
+      "updateElementEmployeeType": $('.notifications .nav-item.active a').attr('data-type')
+    }
+  );
+}
 
 function getPush()
 {
@@ -77,12 +76,16 @@ function getPush()
           }
 					html += "</a>";
 				});
+        $("#orders-notifications").children('.notification-elements').empty();
 				if (parseInt(json.order.total) > 0)
 				{
           $("#orders-notifications").removeClass('empty');
-					$("#orders-notifications").empty().append(html);
+					$("#orders-notifications").children('.notification-elements').append(html);
 					$("#orders_notif_value").text(' (' + nbOrders + ')');
-				}
+				} else {
+          $("#orders-notifications").addClass('empty');
+          $("#orders_notif_value").text('');
+        }
 
 				// Add customers notifications to the list
 				html = "";
@@ -95,12 +98,16 @@ function getPush()
           html += " - " + customer_name_msg + " " + value.date_add;
 					html += "</a>";
 				});
+        $("#customers-notifications").children('.notification-elements').empty();
 				if (parseInt(json.customer.total) > 0)
 				{
           $("#customers-notifications").removeClass('empty');
-					$("#customers-notifications").empty().append(html);
+          $("#customers-notifications").children('.notification-elements').append(html);
 					$("#customers_notif_value").text(' (' + nbCustomers + ')');
-				}
+				} else {
+          $("#customers-notifications").addClass('empty');
+          $("#customers_notif_value").text('');
+        }
 
 				// Add messages notifications to the list
 				html = "";
@@ -114,12 +121,16 @@ function getPush()
           html += " - <i class='material-icons'>access_time</i> " + value.date_add;
 					html += "</a>";
 				});
+        $("#messages-notifications").children('.notification-elements').empty();
 				if (parseInt(json.customer_message.total) > 0)
 				{
           $("#messages-notifications").removeClass('empty');
-					$("#messages-notifications").empty().append(html);
+          $("#messages-notifications").children('.notification-elements').append(html);
 					$("#customer_messages_notif_value").text(' (' + nbCustomerMessages + ')');
-				}
+				} else {
+          $("#messages-notifications").addClass('empty');
+          $("#customer_messages_notif_value").text('');
+        }
 
 
         if (notifications_total > 0) {

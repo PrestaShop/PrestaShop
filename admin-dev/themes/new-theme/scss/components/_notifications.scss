@@ -77,6 +77,10 @@
         height: rem(190px);
         overflow-y: auto;
 
+        .no-notification {
+          display: none;
+        }
+
         &.empty {
           color: $gray-medium;
           text-align: center;
@@ -93,6 +97,7 @@
             position: absolute;
             bottom: 0;
             width: 100%;
+            display: block;
           }
         }
       }

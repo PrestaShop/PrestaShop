@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import refreshNotifications from './notifications.js';
 
 export default class Header {
   constructor() {
@@ -72,8 +73,9 @@ export default class Header {
     });
   }
   initNotificationsToggle() {
-    $('.notification.dropdown-toggle').on('click', function (event) {
-      $(this).parent().toggleClass('open');
+    $('.notification.dropdown-toggle').on('click', () => {
+      $('.notification-center.dropdown').addClass('open');
+      this.updateEmployeeNotifications();
     });
 
     $('body').on('click', function (e) {
@@ -82,7 +84,12 @@ export default class Header {
         && $('.open').has(e.target).length === 0
       ) {
         $('div.notification-center.dropdown').removeClass('open');
+        refreshNotifications();
       }
+    });
+
+    $('.notification-center .nav-link').on('shown.bs.tab', () => {
+      this.updateEmployeeNotifications();
     });
   }
   initSearch() {
@@ -95,5 +102,14 @@ export default class Header {
         $(e.target).addClass('expanded');
       }
     });
+  }
+  updateEmployeeNotifications() {
+    $.post(
+      baseAdminDir + "ajax.php",
+      {
+        "updateElementEmployee": "1",
+        "updateElementEmployeeType": $('.notification-center .nav-link.active').attr('data-type')
+      }
+    );
   }
 }
