@@ -385,6 +385,11 @@ class ProductController extends FrameworkBundleAdminController
             ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions')
             ->getForm();
 
+        $formBulkCombinations = $this->createForm('PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk', null, [
+            'iso_code' => $this->get('prestashop.adapter.legacy.context')->getContext()->currency->iso_code,
+            'price_display_precision' =>  $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_'),
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -461,7 +466,7 @@ class ProductController extends FrameworkBundleAdminController
             $preview_url_deactive = $adminProductWrapper->getPreviewUrl($product, false);
             $preview_url = $adminProductWrapper->getPreviewUrlDeactivate($preview_url_deactive);
         }
-        
+
         $attributeGroups = $this
             ->getDoctrine()
             ->getManager()
@@ -471,6 +476,7 @@ class ProductController extends FrameworkBundleAdminController
 
         return array(
             'form' => $form->createView(),
+            'formCombinations' => $formBulkCombinations->createView(),
             'categories' => $this->get('prestashop.adapter.data_provider.category')->getCategoriesWithBreadCrumb(),
             'id_product' => $id,
             'has_combinations' => (isset($form->getData()['step3']['combinations']) && count($form->getData()['step3']['combinations']) > 0),
@@ -833,7 +839,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $form = $this->createFormBuilder($modelMapper->getFormData());
 
-        switch ($step) {
+        switch($step) {
             case 'step1':
                 $form->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation');
                 break;

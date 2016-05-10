@@ -33,20 +33,30 @@
       </div>
     </div>
 
-    <div>
-      {{ form_errors(form.combinations) }}
-      <table class="table table-striped">
-        <thead id="combinations_thead" {% if form.combinations|length == 0 %}style="display: none;"{% endif %}>
-        <tr class="uppercase">
-          <th></th>
-          <th>{{ 'Combination'|trans({}, 'AdminProducts') }}</th>
-          <th>{{ 'Impact on price'|trans({}, 'AdminProducts') }}</th>
-          <th>{{ 'Final price'|trans({}, 'AdminProducts') }}</th>
-          <th>{{ 'Quantity'|trans({}, 'AdminProducts') }}</th>
-          <th></th>
-        </tr>
-        </thead>
+  <div id="combinations-bulk-form">
+    <div class="row">
+      <div class="col-md-12" style="border:2px solid #bbcdd2;">
+        {{ include('PrestaShopBundle:Admin/Product:form_combinations_bulk.html.twig', { 'form': form_combination_bulk }) }}
+      </div>
+    </div>
+  </div>
 
+  <div>
+    {{ form_errors(form.combinations) }}
+    <table class="table table-striped">
+      <thead id="combinations_thead" {% if form.combinations|length == 0 %}style="display: none;"{% endif %}>
+      <tr class="uppercase">
+        <th>
+          <span>{{ trans('Select', [], 'AdminProducts') }}</span>
+          <input type="checkbox" id="toggle-all-combinations" >
+        </th>
+        <th>{{ 'Combination'|trans({}, 'AdminProducts') }}</th>
+        <th>{{ 'Impact on price'|trans({}, 'AdminProducts') }}</th>
+        <th>{{ 'Final price'|trans({}, 'AdminProducts') }}</th>
+        <th>{{ 'Quantity'|trans({}, 'AdminProducts') }}</th>
+        <th></th>
+      </tr>
+      </thead>
         <tbody class="panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
         {% for combination in form.combinations %}
           {{ include('PrestaShopBundle:Admin/Product/Include:form_combination.html.twig', { 'form': combination, 'loop_index': loop.index0, 'id_product': id_product }) }}

@@ -1,0 +1,70 @@
+{{ form_start(form, {'action': '#', 'method': 'GET'}) }}
+<div class="col-md-12">
+  <div class="col-md-2">
+    <label class="form-control-label">{{ form.quantity.vars.label }}</label>
+    {{ form_errors(form.quantity) }}
+    {{ form_widget(form.quantity) }}
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-control-label">{{ form.cost_price.vars.label }}</label>
+    {{ form_errors(form.cost_price) }}
+    {{ form_widget(form.cost_price) }}
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-control-label">{{ form.impact_on_weight.vars.label }}</label>
+    {{ form_errors(form.impact_on_weight) }}
+    {{ form_widget(form.impact_on_weight) }}
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-control-label">{{ form.impact_on_price_te.vars.label }}</label>
+    {{ form_errors(form.impact_on_price_te) }}
+    {{ form_widget(form.impact_on_price_te) }}
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-control-label">{{ form.impact_on_price_ti.vars.label }}</label>
+    {{ form_errors(form.impact_on_price_ti) }}
+    {{ form_widget(form.impact_on_price_ti) }}
+  </div>
+</div>
+
+<div class="col-md-12">
+  <div class="col-md-4">
+    <label class="form-control-label">{{ form.date_availability.vars.label }}</label>
+    {{ form_errors(form.date_availability) }}
+    {{ form_widget(form.date_availability) }}
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-control-label">{{ form.reference.vars.label }}</label>
+    {{ form_errors(form.reference) }}
+    {{ form_widget(form.reference) }}
+  </div>
+</div>
+<div class="col-md-12">
+  <div class="col-md-2">
+    <label class="form-control-label">{{ form.ecotax.vars.label }}</label>
+    {{ form_errors(form.ecotax) }}
+    {{ form_widget(form.ecotax) }}
+  </div>
+  <div class="col-md-3">
+    <label class="form-control-label">&nbsp;</label>
+    <button id="delete-combinations" class="btn btn-tertiary-outline btn-block">
+      <i class="material-icons">delete</i>
+      {{ trans('Delete combinations', {}, 'AdminProducts') }}
+    </button>
+  </div>
+  <div class="col-md-2">
+    <label class="form-control-label">&nbsp;</label>
+    <button id="apply-on-combinations" class="btn btn-primary-outline btn-block">
+      {{ trans('Apply', {}, 'AdminProducts') }}
+    </button>
+  </div>
+
+  {{ form_widget(form) }}
+  {{ form_end(form) }}
+</div>
+
