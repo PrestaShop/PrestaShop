@@ -237,13 +237,15 @@ class CurrencyCore extends ObjectModel
         return $tab;
     }
 
-    public static function getCurrenciesByIdShop($id_shop = 0)
+    public static function getCurrenciesByIdShop($id_shop = 0, $active = true)
     {
         return Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'currency` c
 		LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
-		'.($id_shop ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
+		WHERE c.`delete`=0'.
+		($active ? ' AND c.`active` = 1' : '').
+		($id_shop ? ' AND cs.`id_shop` = '.(int)$id_shop : '').'
 		ORDER BY `name` ASC');
     }
 
