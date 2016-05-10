@@ -385,10 +385,10 @@ class ProductController extends FrameworkBundleAdminController
             ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions')
             ->getForm();
 
-        $formBulkCombinations = $this->createForm('PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk', null, [
+        $formBulkCombinations = $this->createForm('PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk', null, array(
             'iso_code' => $this->get('prestashop.adapter.legacy.context')->getContext()->currency->iso_code,
             'price_display_precision' =>  $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_'),
-        ]);
+        ));
 
         $form->handleRequest($request);
 

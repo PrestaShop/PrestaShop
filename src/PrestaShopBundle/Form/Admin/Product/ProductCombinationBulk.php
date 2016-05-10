@@ -62,7 +62,7 @@ class ProductCombinationBulk extends CommonAbstractType
         ))
         ->add('impact_on_weight', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts')
+            'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts'),
         ))
         ->add('impact_on_price_te', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
@@ -78,16 +78,15 @@ class ProductCombinationBulk extends CommonAbstractType
         ->add('date_availability', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
             'label' => $this->translator->trans('Availability date', [], 'AdminProducts'),
-            'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD']
+            'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD'],
         ))
         ->add('reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('Reference', [], 'AdminProducts')
+            'label' => $this->translator->trans('Reference', [], 'AdminProducts'),
         ))
-        ->add('ecotax', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
+        ->add('minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Ecotax', [], 'AdminProducts'),
-            'currency' => $this->isoCode,
+            'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
         ));
     }
 
@@ -96,7 +95,7 @@ class ProductCombinationBulk extends CommonAbstractType
         $resolver->setDefaults(array(
             'validation_groups' => false,
             'iso_code' => '',
-            'price_display_precision' => ''
+            'price_display_precision' => '',
         ));
     }
 

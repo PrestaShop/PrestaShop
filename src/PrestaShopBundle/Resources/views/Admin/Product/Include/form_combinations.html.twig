@@ -35,12 +35,17 @@
 
   <div id="combinations-bulk-form">
     <div class="row">
-      <div class="col-md-12" style="border:2px solid #bbcdd2;">
+      <p data-toggle="collapse" href="#bulk-combinations-container" aria-expanded="false" aria-controls="bulk-combinations-container">
+        <b>{{ trans('Bulk actions', {}, 'AdminProducts') }}</b>
+        <i class="material-icons pull-right">keyboard_arrow_down</i>
+      </p>
+      <div class="col-md-12 collapse" style="border:2px solid #bbcdd2;" id="bulk-combinations-container">
         {{ include('PrestaShopBundle:Admin/Product:form_combinations_bulk.html.twig', { 'form': form_combination_bulk }) }}
       </div>
     </div>
   </div>
 
+  <br>
   <div>
     {{ form_errors(form.combinations) }}
     <table class="table table-striped">

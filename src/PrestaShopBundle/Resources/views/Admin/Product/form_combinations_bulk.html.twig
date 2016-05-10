@@ -1,5 +1,5 @@
 {{ form_start(form, {'action': '#', 'method': 'GET'}) }}
-<div class="col-md-12">
+<div class="row">
   <div class="col-md-2">
     <label class="form-control-label">{{ form.quantity.vars.label }}</label>
     {{ form_errors(form.quantity) }}
@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<div class="col-md-12">
+<div class="row">
   <div class="col-md-4">
     <label class="form-control-label">{{ form.date_availability.vars.label }}</label>
     {{ form_errors(form.date_availability) }}
@@ -44,11 +44,11 @@
     {{ form_widget(form.reference) }}
   </div>
 </div>
-<div class="col-md-12">
+<div class="row">
   <div class="col-md-2">
-    <label class="form-control-label">{{ form.ecotax.vars.label }}</label>
-    {{ form_errors(form.ecotax) }}
-    {{ form_widget(form.ecotax) }}
+    <label class="form-control-label">{{ form.minimal_quantity.vars.label }}</label>
+    {{ form_errors(form.minimal_quantity) }}
+    {{ form_widget(form.minimal_quantity) }}
   </div>
   <div class="col-md-3">
     <label class="form-control-label">&nbsp;</label>
