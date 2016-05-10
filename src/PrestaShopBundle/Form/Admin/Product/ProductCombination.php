@@ -141,6 +141,7 @@ class ProductCombination extends CommonAbstractType
         ->add('attribute_default', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'label'    => $this->translator->trans('Set as default combination', [], 'AdminProducts'),
             'required' => false,
+            'attr' => array('class' => 'attribute_default_checkbox'),
         ))
         ->add('attribute_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => true,
@@ -158,6 +159,11 @@ class ProductCombination extends CommonAbstractType
             'multiple' => true,
             'label' => $this->translator->trans('Select images of this combination:', [], 'AdminProducts'),
             'attr' => array('class' => 'images'),
+        ))
+        ->add('final_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
+            'required' => false,
+            'label' => $this->translator->trans('Final price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
