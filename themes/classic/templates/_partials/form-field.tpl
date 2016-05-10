@@ -70,7 +70,7 @@
             class="form-control js-child-focus js-visible-password"
             name="{$field.name}"
             type="password"
-            value="{$field.value}"
+            value=""
             pattern=".{literal}{{/literal}5,{literal}}{/literal}"
             {if $field.required}required{/if}
           >
