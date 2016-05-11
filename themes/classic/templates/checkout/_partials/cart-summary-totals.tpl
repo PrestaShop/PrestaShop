@@ -5,7 +5,7 @@
         {if $subtotal.amount}
           <div class="{$subtotal.type}">
             <span class="label">{$subtotal.label}</span>
-            <span class="value pull-xs-right">{$subtotal.amount}</span>
+            <span class="value pull-xs-right">{$subtotal.value}</span>
           </div>
         {/if}
       {/foreach}
@@ -15,7 +15,7 @@
   {block name='cart_summary_totals'}
     <div class="cart-summary-totals">
       <span class="label">{$cart.total.label}</span>
-      <span class="value pull-xs-right">{$cart.total.amount}</span>
+      <span class="value pull-xs-right">{$cart.total.value}</span>
     </div>
   {/block}
 </div>
