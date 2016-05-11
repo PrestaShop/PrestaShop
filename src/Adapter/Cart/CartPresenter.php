@@ -290,12 +290,22 @@ class CartPresenter implements PresenterInterface
 
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
 
+        $labels = [
+            'tax_short' => ($this->includeTaxes())
+                ? $this->translator->trans('(tax incl.)', [], 'Cart')
+                : $this->translator->trans('(tax excl.)', [], 'Cart'),
+            'tax_long' => ($this->includeTaxes())
+                ? $this->translator->trans('(tax included)', [], 'Cart')
+                : $this->translator->trans('(tax excluded)', [], 'Cart'),
+        ];
+
         return array(
             'products' => $products,
             'total' => $total,
             'subtotals' => $subtotals,
             'products_count' => $products_count,
             'summary_string' => $summary_string,
+            'labels' => $labels,
             'id_address_delivery' => $cart->id_address_delivery,
             'id_address_invoice' => $cart->id_address_invoice,
             'vouchers' => $this->getTemplateVarVouchers($cart),
