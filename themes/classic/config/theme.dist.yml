@@ -1,5 +1,5 @@
-name: StarterTheme # The name must match the directory name
-display_name: Starter Theme
+name: Classic # The name must match the directory name
+display_name: Classic
 version: 1.0.0
 author:
   name: "John Doe"
