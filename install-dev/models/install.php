@@ -67,12 +67,23 @@ class InstallModelInstall extends InstallAbstractModel
     public function generateSettingsFile($database_host, $database_user, $database_password, $database_name, $database_prefix, $database_engine)
     {
         // Check permissions for settings file
-        if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE)) {
+        if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)) {
             $this->setError($this->language->l('%s file is not writable (check permissions)', self::SETTINGS_FILE));
             return false;
-        } elseif (!file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.'/'.dirname(self::SETTINGS_FILE))) {
+        } elseif (!file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname(self::SETTINGS_FILE))) {
             $this->setError($this->language->l('%s folder is not writable (check permissions)', dirname(self::SETTINGS_FILE)));
             return false;
+        }
+
+        $secret = Tools::passwdGen(56);
+        $cookie_key = Tools::passwdGen(8);
+        $cookie_iv = Tools::passwdGen(56);
+
+        if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
+            $config = Yaml::parse(file_get_contents(_PS_ROOT_DIR_. '/app/config/parameters.yml'));
+            $secret = $config['parameters']['secret'];
+            $cookie_key = $config['parameters']['cookie_key'];
+            $cookie_iv = $config['parameters']['cookie_iv'];
         }
 
         $parameters  = array(
@@ -84,21 +95,23 @@ class InstallModelInstall extends InstallAbstractModel
                 'database_name' => $database_name,
                 'database_prefix' => $database_prefix,
                 'database_engine' =>  $database_engine,
-                'cookie_iv' =>  Tools::passwdGen(56),
+                'cookie_key' => $cookie_key,
+                'cookie_iv' =>  $cookie_iv,
                 'ps_caching' => 'CacheMemcache',
                 'ps_cache_enable' => false,
-                'cookie_key' => Tools::passwdGen(8),
-                'secret' => Tools::passwdGen(8),
+                'secret' => $secret,
                 'mailer_transport' => 'smtp',
                 'mailer_host' => '127.0.0.1',
                 'mailer_user' => '~',
-                'mailer_password' => '~'
-        ));
+                'mailer_password' => '~',
+            ));
 
         // If mcrypt is activated, add Rijndael 128 configuration
         if (function_exists('mcrypt_encrypt')) {
-            $parameters['parameters']['_rijndael_key'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
-            $parameters['parameters']['_rijndael_iv'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
+            if (!isset($config) && !isset($config['parameters']['_rijndael_key'])) {
+                $parameters['parameters']['_rijndael_key'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
+                $parameters['parameters']['_rijndael_iv'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
+            }
         }
 
         $settings_content = "<?php\n";
@@ -763,7 +776,7 @@ class InstallModelInstall extends InstallAbstractModel
             if (!$moduleManager->install($module_name)) {
                 /*$module_errors = $module->getErrors();
                 if (empty($module_errors)) {*/
-                    $module_errors = [$this->language->l('Cannot install module "%s"', $module_name)];
+                $module_errors = [$this->language->l('Cannot install module "%s"', $module_name)];
                 /*}*/
                 $errors[$module_name] = $module_errors;
             }
@@ -874,8 +887,6 @@ class InstallModelInstall extends InstallAbstractModel
 
         $theme_manager = $builder->build();
 
-        return $theme_manager->install(_THEME_NAME_) &&
-               $theme_manager->enable(_THEME_NAME_)
-        ;
+        return $theme_manager->install(_THEME_NAME_) && $theme_manager->enable(_THEME_NAME_);
     }
 }
