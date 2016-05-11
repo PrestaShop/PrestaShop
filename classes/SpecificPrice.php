@@ -337,9 +337,7 @@ class SpecificPriceCore extends ObjectModel
             $query_extra .= self::filterOutField('id_product_attribute', $id_product_attribute);
         }
 
-        if ($id_cart !== null) {
-            $query_extra .= self::filterOutField('id_cart', $id_cart);
-        }
+        $query_extra .= self::filterOutField('id_cart', $id_cart);
 
         if ($ending == $now && $beginning == $now) {
             $key = __FUNCTION__.'-'.$first_date.'-'.$last_date;
