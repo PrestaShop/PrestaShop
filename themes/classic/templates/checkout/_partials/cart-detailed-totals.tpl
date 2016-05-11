@@ -2,7 +2,13 @@
   {foreach from=$cart.subtotals item="subtotal"}
     {if $subtotal.amount}
       <div class="card-block cart-summary-line" id="cart-subtotal-{$subtotal.type}">
-        <span class="label">{$subtotal.label}</span>
+        <span class="label">
+          {if 'products' == $subtotal.type}
+            {$cart.summary_string}
+          {else}
+            {$subtotal.label}
+          {/if}
+        </span>
         <span class="value">{$subtotal.value}</span>
       </div>
     {/if}
@@ -11,7 +17,7 @@
   <hr/>
 
   <div class="card-block cart-total cart-summary-line">
-    <span class="label">{$cart.total.label}: </span>
+    <span class="label">{$cart.total.label} {$cart.labels.tax_short}</span>
     <span class="value">{$cart.total.value}</span>
   </div>
 
