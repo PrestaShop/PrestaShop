@@ -122,7 +122,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
 
         $this->setTitle(
             $this->getTranslator()->trans(
-                'Delivery Method',
+                'Shipping Method',
                 [],
                 'Checkout'
             )
