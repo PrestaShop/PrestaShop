@@ -97,7 +97,7 @@ class Combination {
     this.inputBulkPattern = "product_combination_bulk_";
     this.inputPattern = "form_step3_combinations_"+index+"_";
     this.domId = domId;
-    this.appId = 'attribute_'+index;
+    this.appId = 'attribute_'+this.domId;
     this.element = document.querySelector('#'+this.appId);
     this.form = document.querySelector('#combination_form_'+this.domId);
   }

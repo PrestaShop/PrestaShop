@@ -1,4 +1,3 @@
-{{ form_start(form, {'action': '#', 'method': 'GET'}) }}
 <div class="row">
   <div class="col-md-2">
     <label class="form-control-label">{{ form.quantity.vars.label }}</label>
@@ -63,8 +62,6 @@
       {{ trans('Apply', {}, 'AdminProducts') }}
     </button>
   </div>
-
   {{ form_widget(form) }}
-  {{ form_end(form) }}
 </div>
 
