@@ -57,7 +57,7 @@ class OrderPresenter implements PresenterInterface
         return [
             'products' => $this->getProducts($order),
             'products_count' => count($this->getProducts($order)),
-            'total' => $this->getAmounts($order)['total'],
+            'totals' => $this->getAmounts($order)['totals'],
             'subtotals' =>$this->getAmounts($order)['subtotals'],
             'details' => $this->getDetails($order),
             'history' => $this->getHistory($order),
@@ -158,14 +158,15 @@ class OrderPresenter implements PresenterInterface
 
         $amounts['subtotals'] = $subtotals;
 
-        $amounts['total'] = [
+        $amounts['totals'] = array();
+        $amounts['totals']['total'] = [
             'type' => 'total',
-            'label' => $this->translator->trans('Total', [], 'Order'),
+            'label' => $this->translator->trans('Total', [], 'Cart'),
             'amount' => $order->total_paid,
             'value' => $this->priceFormatter->format($order->total_paid),
         ];
 
-        $amounts['total_paid'] = [
+        $amounts['totals']['total_paid'] = [
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', [], 'Order'),
             'amount' => $order->total_paid_real,
