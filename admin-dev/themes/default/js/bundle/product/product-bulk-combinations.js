@@ -7,19 +7,28 @@ var bulkCombinations = (function () {
   var combinationsTable = document.querySelector('#accordion_combinations');
   var deleteCombinationsBtn = document.querySelector('#delete-combinations');
   var applyChangesBtn = document.querySelector('#apply-on-combinations');
+  var selectAllCheckbox = document.querySelector('#toggle-all-combinations');
 
   return {
     'init': function init() {
       var that = this;
       // stop propagation on buttons
-      deleteCombinationsBtn.addEventListener('click', function () {
+      deleteCombinationsBtn.addEventListener('click', (event) => {
         event.preventDefault();
         that.deleteCombinations();
       });
 
-      applyChangesBtn.addEventListener('click', function () {
+      applyChangesBtn.addEventListener('click', (event) => {
         event.preventDefault();
         that.applyChangesOnCombinations();
+      });
+
+      // bulk select animation
+      selectAllCheckbox.addEventListener('change', (event) => {
+        var checkboxes = Array.from(document.querySelectorAll('#accordion_combinations td:first-child input[type="checkbox"]'));
+        checkboxes.forEach((checkbox) => {
+          checkbox.checked = selectAllCheckbox.checked;
+        });
       });
     },
     'getSelectedCombinations': function getSelectedCombinations() {
@@ -27,7 +36,8 @@ var bulkCombinations = (function () {
       var selectedCombinations = Array.from(document.querySelectorAll('#accordion_combinations td:first-child input[type="checkbox"]:checked'));
       selectedCombinations.forEach((combination) => {
         var combinationId = combination.getAttribute('data-id');
-        combinations.push(new Combination(combinationId));
+        var combinationIndex = combination.getAttribute('data-index');
+        combinations.push(new Combination(combinationId, combinationIndex));
       });
 
       return combinations;
@@ -83,11 +93,11 @@ var bulkCombinations = (function () {
 })();
 
 class Combination {
-  constructor(domId) {
+  constructor(domId, index) {
     this.inputBulkPattern = "product_combination_bulk_";
-    this.inputPattern = "form_step3_combinations_"+(domId -1)+"_";
+    this.inputPattern = "form_step3_combinations_"+index+"_";
     this.domId = domId;
-    this.appId = 'attribute_'+domId;
+    this.appId = 'attribute_'+index;
     this.element = document.querySelector('#'+this.appId);
     this.form = document.querySelector('#combination_form_'+this.domId);
   }

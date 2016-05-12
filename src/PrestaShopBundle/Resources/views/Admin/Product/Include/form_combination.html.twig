@@ -1,5 +1,5 @@
 <tr class="combination" id="attribute_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" data-index="{{ loop_index is defined ? loop_index : '__loop_index__' }}">
-  <td><input type="checkbox" data-id="{{ form.vars.value.id_product_attribute }}"></td>
+  <td><input type="checkbox" data-id="{{ form.vars.value.id_product_attribute }}" data-index="{{ loop_index is defined ? loop_index : '__loop_index__' }}"></td>
   <td class="img"><div class="fake-img"></div></td>
     <td>{{ form.vars.value.name }}</td>
     <td class="attribute-price">
