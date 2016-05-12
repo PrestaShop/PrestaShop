@@ -9,6 +9,10 @@ addons:
         - apache2
         - postfix
     sauce_connect: true
+    
+cache:
+  directories:
+    - $HOME/.composer/cache
 
 sudo: required
 dist: trusty
