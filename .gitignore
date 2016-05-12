@@ -33,6 +33,7 @@ config/themes/*
 !config/xml/themes/default.xml
 tests/Selenium/settings.js
 themes/*/config/settings_*.json
+app/config/parameters.old.yml
 
 # Themes, modules and overrides
 
