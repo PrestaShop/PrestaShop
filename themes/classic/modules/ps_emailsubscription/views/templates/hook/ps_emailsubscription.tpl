@@ -31,7 +31,7 @@
       <form action="{$urls.pages.index}#footer" method="post">
         <div class="row">
           <div class="col-md-8">
-            <input type="text" name="email" value="{$value}" placeholder="{l s='Your e-mail address' mod='blocknewsletter'}">
+            <input type="text" name="email" value="{$value}" placeholder="{l s='Your email address' mod='blocknewsletter'}">
             {if $msg}
               <p class="text-warning notification {if $nw_error}notification-error{else}notification-success{/if}">{$msg}</p>
             {/if}
