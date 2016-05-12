@@ -37,7 +37,7 @@ class ConditionsToApproveFinderCore
     {
         $allConditions = [];
         $hookedConditions = Hook::exec('termsAndConditions', [], null, true);
-        if (!is_array($allConditions)) {
+        if (!is_array($hookedConditions)) {
             $hookedConditions = [];
         }
         foreach ($hookedConditions as $hookedCondition) {
