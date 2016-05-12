@@ -24,7 +24,7 @@
   ],
   "require": {
     "php": ">=5.4",
-    "symfony/symfony": "~2.8.0",
+    "symfony/symfony": "~2.8.6",
     "doctrine/dbal": "~2.5.3",
     "doctrine/common": "~2.5.3",
     "doctrine/orm": "~2.5.3",
