@@ -1,6 +1,6 @@
 .nav-bar {
   position: fixed;
-  z-index: 500; // TODO: COPIED FROM THE LEGACY: CHECK IF USEFULL (1 WORKS WELL)
+  z-index: 502;
   background: $gray-dark;
   width: $size-navbar-width;
   padding-top: rem(10px) + $size-header-height;
