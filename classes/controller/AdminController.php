@@ -2752,7 +2752,7 @@ class AdminControllerCore extends Controller
             'abandoned_cart_url' => $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts',
             'no_order_tip' => $this->getNotificationTip('order'),
             'no_customer_tip' => $this->getNotificationTip('customer'),
-            'no_customer_message_tip' => $this->getNotificationTip('customer_message')
+            'no_customer_message_tip' => $this->getNotificationTip('customer_message'),
         ));
 
         if ($this->display_header) {
