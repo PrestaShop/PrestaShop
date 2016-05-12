@@ -5,7 +5,7 @@ use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
 
 class ConditionsToApproveFinderCore
 {
-    private $transator;
+    private $translator;
     private $context;
 
     public function __construct(
@@ -47,7 +47,7 @@ class ConditionsToApproveFinderCore
                 foreach ($hookedCondition as $hookedConditionObject) {
                     if ($hookedConditionObject instanceof TermsAndConditions) {
                         $allConditions[] = $hookedConditionObject;
-                    }                    
+                    }
                 }
             }
         }
