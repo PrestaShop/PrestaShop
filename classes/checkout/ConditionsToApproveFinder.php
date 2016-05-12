@@ -35,9 +35,21 @@ class ConditionsToApproveFinderCore
 
     private function getConditionsToApprove()
     {
-        $allConditions = Hook::exec('termsAndConditions', [], null, true);
+        $allConditions = [];
+        $hookedConditions = Hook::exec('termsAndConditions', [], null, true);
         if (!is_array($allConditions)) {
-            $allConditions = [];
+            $hookedConditions = [];
+        }
+        foreach ($hookedConditions as $hookedCondition) {
+            if ($hookedCondition instanceof TermsAndConditions) {
+                $allConditions[] = $hookedCondition;
+            } elseif (is_array($hookedCondition)) {
+                foreach ($hookedCondition as $hookedConditionObject) {
+                    if ($hookedConditionObject instanceof TermsAndConditions) {
+                        $allConditions[] = $hookedConditionObject;
+                    }                    
+                }
+            }
         }
 
         if (Configuration::get('PS_CONDITIONS')) {
@@ -52,7 +64,7 @@ class ConditionsToApproveFinderCore
          */
         $reducedConditions = [];
         foreach ($allConditions as $condition) {
-            if ($condition instanceof TermsAndConditions) {            
+            if ($condition instanceof TermsAndConditions) {
                 $reducedConditions[$condition->getIdentifier()] = $condition;
             }
         }
