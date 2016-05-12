@@ -4,7 +4,7 @@ const refreshNotifications = function () {
   $.ajax({
     type: 'POST',
     headers: {"cache-control": "no-cache"},
-    url: baseAdminDir + 'ajax.php?rand=' + new Date().getTime(),
+    url: `${baseAdminDir}ajax.php?rand=${new Date().getTime()}`,
     async: true,
     cache: false,
     dataType: 'json',
@@ -47,10 +47,10 @@ let fillTpl = function (results, eltAppendTo, tpl) {
         tpl.replace(/_id_order_/g, parseInt(value.id_order))
           .replace(/_customer_name_/g, value.customer_name)
           .replace(/_iso_code_/g, value.iso_code)
-          .replace(/_carrier_/g, (value.carrier !== "" ? " - " + value.carrier : ""))
+          .replace(/_carrier_/g, (value.carrier !== "" ? ` - ${value.carrier}` : ""))
           .replace(/_total_paid_/g, value.total_paid)
           .replace(/_id_customer_/g, parseInt(value.id_customer))
-          .replace(/_company_/g, (value.company !== "" ? " (" + value.company + ") " : ""))
+          .replace(/_company_/g, (value.company !== "" ? ` (${value.company}) ` : ""))
           .replace(/_date_add_/g, value.date_add)
           .replace(/_status_/g, value.status)
           .replace(/order_url/g, `${baseAdminDir}index.php?tab=AdminOrders&token=${token_admin_orders}&vieworder&id_order=${value.id_order}`)
@@ -65,9 +65,9 @@ let fillTpl = function (results, eltAppendTo, tpl) {
 
 let setNotificationsNumber = function (id, number) {
   if (number > 0) {
-    $("#" + id).text(" (" + number + ")");
+    $(`#${id}`).text(` (${number})`);
   } else {
-    $("#" + id).text("");
+    $(`#${id}`).text("");
   }
 }
 
