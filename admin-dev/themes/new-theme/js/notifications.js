@@ -23,12 +23,12 @@ const refreshNotifications = function () {
         setNotificationsNumber("_nb_new_orders_", nbOrders);
         setNotificationsNumber("_nb_new_customers_", nbCustomers);
         setNotificationsNumber("_nb_new_messages_", nbCustomerMessages);
-        $('#orders_notif_value').html(notifications_total);
+        $('#notifications-total').html(notifications_total);
 
         if (notifications_total > 0 ) {
-          $('#orders_notif_value').removeClass('hide');
+          $('#notifications-total').removeClass('hide');
         } else {
-          $('#orders_notif_value').addClass('hide');
+          $('#notifications-total').addClass('hide');
         }
       }
       timer = setTimeout(refreshNotifications, 120000);
