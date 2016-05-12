@@ -8,13 +8,40 @@
     <div class="notifications">
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Orders[1][/1]' tags=['<span id="_nb_new_orders_">']}</a>
+          <a
+            class="nav-link active"
+            id="orders-tab"
+            data-toggle="tab"
+            data-type="order"
+            href="#orders-notifications"
+            role="tab"
+          >
+            {l s='Orders[1][/1]' tags=['<span id="_nb_new_orders_">']}
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='Customers[1][/1]' tags=['<span id="_nb_new_customers_">']}</a>
+          <a
+            class="nav-link"
+            id="customers-tab"
+            data-toggle="tab"
+            data-type="customer"
+            href="#customers-notifications"
+            role="tab"
+          >
+            {l s='Customers[1][/1]' tags=['<span id="_nb_new_customers_">']}
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" data-type="customer_message" href="#messages-notifications" role="tab" id="messages-tab">{l s='Messages[1][/1]' tags=['<span id="_nb_new_messages_">']}</a>
+          <a
+            class="nav-link"
+            id="messages-tab"
+            data-toggle="tab"
+            data-type="customer_message"
+            href="#messages-notifications"
+            role="tab"
+          >
+            {l s='Messages[1][/1]' tags=['<span id="_nb_new_messages_">']}
+          </a>
         </li>
       </ul>
 
@@ -23,7 +50,10 @@
         <div class="tab-pane active empty" id="orders-notifications" role="tabpanel">
           <p class="no-notification">
             {l s='No new order for now :('}<br>
-            {l s='Have you checked your [1][2]abandonned carts[/2][/1]?' tags=['<strong>', '<a href="'|cat:$abandoned_cart_url|cat:'">']}<br>
+            {l
+              s='Have you checked your [1][2]abandonned carts[/2][/1]?'
+              tags=['<strong>', '<a href="'|cat:$abandoned_cart_url|cat:'">']
+            }<br>
             {$no_order_tip}
           </p>
           <div class="notification-elements"></div>
@@ -48,13 +78,24 @@
 </div>
 
 <script type="text/html" id="order-notification-template">
-  <a class="notif" href='order_url'>#_id_order_ - {l s="from"} <strong>_customer_name_</strong> (_iso_code_)_carrier_ <strong class="pull-xs-right">_total_paid_</strong></a>
+  <a class="notif" href='order_url'>
+    #_id_order_ -
+    {l s="from"} <strong>_customer_name_</strong> (_iso_code_)_carrier_
+    <strong class="pull-xs-right">_total_paid_</strong>
+  </a>
 </script>
 
 <script type="text/html" id="customer-notification-template">
-  <a class="notif" href='customer_url'>#_id_customer_ - <strong>_customer_name_</strong>_company_ - {l s="register"} <strong>_date_add_</strong></a>
+  <a class="notif" href='customer_url'>
+    #_id_customer_ - <strong>_customer_name_</strong>_company_ - {l s="register"} <strong>_date_add_</strong>
+  </a>
 </script>
 
 <script type="text/html" id="message-notification-template">
-  <a class="notif" href='message_url'><span class="message-notification-status _status_"><i class="material-icons">fiber_manual_record</i> _status_</span> - <strong>_customer_name_</strong> (_company_) - <i class="material-icons">access_time</i> _date_add_</a>
+  <a class="notif" href='message_url'>
+    <span class="message-notification-status _status_">
+      <i class="material-icons">fiber_manual_record</i> _status_
+    </span>
+     - <strong>_customer_name_</strong> (_company_) - <i class="material-icons">access_time</i> _date_add_
+  </a>
 </script>
