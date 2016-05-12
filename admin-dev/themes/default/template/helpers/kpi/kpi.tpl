@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 <{if isset($href) && $href}a style="display:block" href="{$href|escape:'html':'UTF-8'}"{else}div{/if} id="{$id|escape:'html':'UTF-8'}" data-toggle="tooltip" class="box-stats label-tooltip {$color|escape}" data-original-title="{$tooltip|escape}">
@@ -38,13 +38,18 @@
 		<span cLass="subtitle">{$subtitle|escape}</span>
 		<span class="value">{$value|escape|replace:'&amp;':'&'}</span>
 	</div>
-	
+
 </{if isset($href) && $href}a{else}div{/if}>
 
-{if isset($source) && $source != ''}
 <script>
 	function refresh_{$id|replace:'-':'_'|addslashes}()
 	{
+		{if !isset($source) || $source == '' || !isset($refresh) || $refresh == ''}
+			if (arguments.length < 1 || arguments[0] != true) {
+				// refresh kpis only if force mode is true (pass true as first argument of this function).
+				return;
+			}
+		{/if}
 		$.ajax({
 			url: '{$source|addslashes}' + '&rand=' + new Date().getTime(),
 			dataType: 'json',
@@ -55,7 +60,10 @@
 				if (!jsonData.has_errors)
 				{
 					if (jsonData.value != undefined)
+					{
 						$('#{$id|addslashes} .value').html(jsonData.value);
+						$('#{$id|addslashes}').attr('data-original-title', jsonData.tooltip);
+					}
 					if (jsonData.data != undefined)
 					{
 						$("#{$id|addslashes} .boxchart svg").remove();
@@ -65,11 +73,7 @@
 			}
 		});
 	}
-	{if isset($refresh) && $refresh != ''}
-		refresh_{$id|replace:'-':'_'|addslashes}();
-	{/if}
 </script>
-{/if}
 
 {if $chart}
 <script>
@@ -98,7 +102,7 @@
 			.attr("width", 4)
 			.attr("height", y);
 	}
-	
+
 	{if $data}
 		set_d3_{$id|replace:'-':'_'|addslashes}($.parseJSON("{$data|addslashes}"));
 	{/if}

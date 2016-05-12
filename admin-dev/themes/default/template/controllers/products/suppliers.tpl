@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 <input type="hidden" name="supplier_loaded" value="1">
@@ -63,7 +63,7 @@
 	</div>
 </div>
 <div class="panel">
-	<h3>{l s='Product reference(s)'}</h3>
+	<h3>{l s='Supplier reference(s)'}</h3>
 	<div class="alert alert-info">
 		{if $associated_suppliers|@count == 0}
 			{l s='You must specify the suppliers associated with this product. You must also select the default product supplier before setting references.'}

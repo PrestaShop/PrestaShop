@@ -46,7 +46,7 @@ abstract class AbstractProcessor {
      * This function implements the main functionality of a processor class.
      * Always use default valuses for additional parameters within overridden functions.
      */
-    public abstract function process($tokens);
+    abstract public function process($tokens);
 
     /**
      * this function splits up a SQL statement into easy to "parse"

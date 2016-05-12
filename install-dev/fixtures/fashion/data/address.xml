@@ -43,7 +43,7 @@
       <address2/>
       <city>New York</city>
       <other/>
-    </address>	
+    </address>
     <address id="My_address" id_country="US" id_state="FL" id_customer="John" id_manufacturer="" id_supplier="" id_warehouse="0" alias="My address" lastname="DOE" firstname="John" postcode="33133" phone="0102030405" phone_mobile="" vat_number="" dni="" active="1">
       <company>My Company</company>
       <address1>16, Main street</address1>

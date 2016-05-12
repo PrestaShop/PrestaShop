@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {* retro compatibility *}
@@ -32,7 +32,7 @@
 {/if}
 
 <div class="bootstrap">
-	<div class="page-head">
+	<div class="page-head {if $current_tab_level == 3}with-tabs{/if}">
 		{block name=pageTitle}
 		<h2 class="page-title">
 			{*if isset($toolbar_btn['back'])}
@@ -81,7 +81,7 @@
 					{foreach from=$toolbar_btn item=btn key=k}
 					{if $k != 'back' && $k != 'modules-list'}
 					<li>
-						<a id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}" class="toolbar_btn {if isset($btn.target) && $btn.target} _blank{/if}"{if isset($btn.href)} href="{$btn.href|escape}"{/if} title="{$btn.desc|escape}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}{if isset($btn.modal_target) && $btn.modal_target} data-target="{$btn.modal_target}" data-toggle="modal"{/if}>
+						<a id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}" class="toolbar_btn {if isset($btn.target) && $btn.target} _blank{/if} pointer"{if isset($btn.href)} href="{$btn.href|escape}"{/if} title="{if isset($btn.help)}{$btn.help}{else}{$btn.desc|escape}{/if}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}{if isset($btn.modal_target) && $btn.modal_target} data-target="{$btn.modal_target}" data-toggle="modal"{/if}{if isset($btn.help)} data-toggle="tooltip" data-placement="bottom"{/if}>
 							<i class="{if isset($btn.icon)}{$btn.icon|escape}{else}process-icon-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}{/if}{if isset($btn.class)} {$btn.class|escape}{/if}"></i>
 							<div{if isset($btn.force_desc) && $btn.force_desc == true } class="locked"{/if}>{$btn.desc|escape}</div>
 						</a>
@@ -128,5 +128,20 @@
 			</div>
 		</div>
 		{/block}
+		{if $current_tab_level == 3}
+			<div class="page-head-tabs">
+				{foreach $tabs as $level_1}
+					{foreach $level_1.sub_tabs as $level_2}
+						{foreach $level_2.sub_tabs as $level_3}
+							{if $level_3.current}
+								{foreach $level_3.sub_tabs as $level_4}
+									<a href="{$level_4.href}" {if $level_4.current}class="current"{/if}>{$level_4.name}</a>
+								{/foreach}
+							{/if}
+						{/foreach}
+					{/foreach}
+				{/foreach}
+			</div>
+		{/if}
 	</div>
 </div>

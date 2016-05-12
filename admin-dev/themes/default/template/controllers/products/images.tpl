@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {if isset($id_product) && isset($product)}
@@ -45,20 +45,20 @@
 		<div class="form-group">
 			<label class="control-label col-lg-3">
 				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='Invalid characters:'} <>;=#{}">
+					title="{l s='Update all captions at once, or select the position of the image whose caption you wish to edit. Invalid characters: %s' sprintf=['<>;=#{}']}">
 					{l s='Caption'}
 				</span>
 			</label>
-			<div class="col-lg-5">
+			<div class="col-lg-4">
 			{foreach from=$languages item=language}
 				{if $languages|count > 1}
 				<div class="translatable-field row lang-{$language.id_lang}">
-					<div class="col-lg-11">
+					<div class="col-lg-8">
 				{/if}
 						<input type="text" id="legend_{$language.id_lang}"{if isset($input_class)} class="{$input_class}"{/if} name="legend_{$language.id_lang}" value="{if $images|count}{$images[0]->legend[$language.id_lang]|escape:'html':'UTF-8'}{else}{$product->name[$language.id_lang]|escape:'html':'UTF-8'}{/if}"{if !$product->id} disabled="disabled"{/if}/>
 				{if $languages|count > 1}
 					</div>
-					<div class="col-lg-1">
+					<div class="col-lg-2">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
 							{$language.iso_code}
 							<span class="caret"></span>
@@ -75,7 +75,19 @@
 				{/if}
 			{/foreach}
 			</div>
-			<div class="col-lg-2"><button type="submit" class="btn btn-default" name="submitAddproductAndStay" value="update_legends"><i class="icon-random"></i> {l s='Update each captions'}</button></div>
+			<div class="col-lg-2{if $images|count <= 1} hidden{/if}" id="caption_selection">
+				<select name="id_caption">
+					<option value="0">{l s='All captions'}</option>
+					{foreach from=$images item=image}
+					<option value="{$image->id_image|intval}">
+						{l s='Position %d' sprintf=$image->position|intval}
+					</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="col-lg-2">
+				<button type="submit" class="btn btn-default" name="submitAddproductAndStay" value="update_legends"><i class="icon-random"></i> {l s='Update'}</button>
+			</div>
 		</div>
 	</div>
 	<table class="table tableDnD" id="imageTable">
@@ -161,6 +173,7 @@
 				return $1 ? $1 + path : $0;
 			});
 			line = line.replace(/image_path/g, path);
+			line = line.replace(/\.jpg"\s/g, '.jpg?time=' + new Date().getTime() + '" ');
 			line = line.replace(/image_position/g, position);
 			line = line.replace(/legend/g, legend);
 			line = line.replace(/icon-check-empty/g, cover);
@@ -193,7 +206,7 @@
 				}
 				else
 					assoc = false;
-				imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc, "{$image->legend[$default_language]|@addcslashes:'\"'}");
+				imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc, "{$image->legend[$default_language]|escape:'htmlall'}");
 			{/foreach}
 			{literal}
 			var originalOrder = false;
@@ -245,6 +258,9 @@
 					$("#countImage").html(parseInt($("#countImage").html()) - 1);
 					refreshImagePositions($("#imageTable"));
 					showSuccessMessage(data.confirmations);
+
+					if (parseInt($("#countImage").html()) <= 1)
+						$('#caption_selection').addClass('hidden');
 				}
 			}
 

@@ -17,18 +17,18 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
-<table>
+<table style="width: 100%;">
 	<tr>
-		<td style="text-align: center; font-size: 6pt; color: #444">
-            {if $available_in_your_account}
-                {l s='An electronic version of this invoice is available in your account. To access it, log in to our website using your e-mail address and password (which you created when placing your first order).' pdf='true'}             
-    			<br />
-            {/if}
+		<td style="text-align: center; font-size: 6pt; color: #444;  width:100%;">
+			{if $available_in_your_account}
+				{l s='An electronic version of this invoice is available in your account. To access it, log in to our website using your e-mail address and password (which you created when placing your first order).' pdf='true'}
+				<br />
+			{/if}
 			{$shop_address|escape:'html':'UTF-8'}<br />
 
 			{if !empty($shop_phone) OR !empty($shop_fax)}
@@ -39,17 +39,17 @@
 
 				{if !empty($shop_fax)}
 					{l s='Fax: %s' sprintf=[$shop_fax|escape:'html':'UTF-8'] pdf='true'}
-				<br />
 				{/if}
+				<br />
 			{/if}
-            
-            {if isset($shop_details)}
-                {$shop_details|escape:'html':'UTF-8'}<br />
-            {/if}
+			
+			{if isset($shop_details)}
+				{$shop_details|escape:'html':'UTF-8'}<br />
+			{/if}
 
-            {if isset($free_text)}
-    			{$free_text|escape:'html':'UTF-8'}<br />
-            {/if}
+			{if isset($free_text)}
+				{$free_text|escape:'html':'UTF-8'}<br />
+			{/if}
 		</td>
 	</tr>
 </table>

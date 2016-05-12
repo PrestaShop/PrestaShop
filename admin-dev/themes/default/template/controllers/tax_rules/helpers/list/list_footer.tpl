@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 	</table>
 </div>
@@ -99,7 +99,7 @@
 						<a href="javascript:void(0);">&hellip;</a>
 					</li>
 					{assign p $page-3}
-				{else if $p > $page+2}
+				{elseif $p > $page+2}
 					<li class="disabled">
 						<a href="javascript:void(0);">&hellip;</a>
 					</li>

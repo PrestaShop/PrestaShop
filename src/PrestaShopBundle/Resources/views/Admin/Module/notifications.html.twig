@@ -1,0 +1,49 @@
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/module.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/loader.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    {# Addons connect modal #}
+    {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' %}
+    {# Contains toolbar-nav for module page #}
+    {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' %}
+    {# Module notification KPI's #}
+    {% include 'PrestaShopBundle:Admin/Module/Includes:notification_kpis.html.twig' %}
+    {# Actual Page Content #}
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+
+            <div class="module-short-list">
+                <span class="module-search-result-wording">{{modules.to_configure|length}} modules to configure</span> 
+                <span class="help-box" data-toggle="popover"
+                      data-title="{{ trans("Modules to configure", {}, 'AdminModules') }}"
+                      data-content="{{ trans("These modules require your attention: you need to take some action to ensure they are fully operational.", {}, 'AdminModules') }}">
+                </span>
+            </div>
+            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_configure.html.twig' with { 'modules' : modules.to_configure, 'display_type' : 'list'  } %}
+
+            <hr class="top-menu-separator">
+            <div class="module-short-list">
+                <span class="module-search-result-wording">{{modules.to_update|length}} modules to update</span>
+                <span class="help-box" data-toggle="popover"
+                      data-title="{{ trans("Modules to update", {}, 'AdminModules') }}"
+                      data-content="{{ trans("Update these modules to enjoy their latest versions.", {}, 'AdminModules') }}">
+                </span>
+            </div>
+            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules' : modules.to_update, 'display_type' : 'list' } %}
+        </div>
+    </div>
+{% endblock %}

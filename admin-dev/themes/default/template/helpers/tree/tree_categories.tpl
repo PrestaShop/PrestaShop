@@ -17,22 +17,21 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="panel">
 	{if isset($header)}{$header}{/if}
 	{if isset($nodes)}
-	<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
+	<ul id="{$id|escape:'html':'UTF-8'}" class="cattree tree">
 		{$nodes}
 	</ul>
 	{/if}
 </div>
 <script type="text/javascript">
 	var currentToken="{$token|@addslashes}";
-	var idTree="{$id|escape:'html':'UTF-8'}";
 	{if isset($use_checkbox) && $use_checkbox == true}
 		function checkAllAssociatedCategories($tree)
 		{

@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/view/view.tpl"}
@@ -83,7 +83,7 @@
 				<h3>
 					<i class="icon-info"></i>
 					{l s='Server information'}
-				</h3>	
+				</h3>
 				{if count($uname)}
 				<p>
 					<strong>{l s='Server information:'}</strong> {$uname|escape:'html':'UTF-8'}
@@ -100,6 +100,9 @@
 				</p>
 				<p>
 					<strong>{l s='Max execution time:'}</strong> {$version.max_execution_time|escape:'html':'UTF-8'}
+				</p>
+				<p>
+					<strong>{l s='Upload Max File size:'}</strong> {$version.upload_max_filesize|escape:'html':'UTF-8'}
 				</p>
 				{if $apache_instaweb}
 					<p>{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
@@ -128,6 +131,9 @@
 				<p>
 					<strong>{l s='MySQL engine:'}</strong> {$database.engine|escape:'html':'UTF-8'}
 				</p>
+				<p>
+					<strong>{l s='MySQL driver:'}</strong> {$database.driver|escape:'html':'UTF-8'}
+				</p>
 			</div>
 		</div>
 		{/if}
@@ -154,7 +160,7 @@
 				</h3>
 				<p>
 					<strong>{l s='Mail method:'}</strong>
-			
+
 			{if $mail}
 				{l s='You are using the PHP mail() function.'}</p>
 			{else}
@@ -224,12 +230,12 @@
 						<span class="text-success">{l s='OK'}</span>
 					</p>
 					{else}
-						<span class="text-success">{l s='Please fix the following error(s)'}</span>
+						<span class="text-danger">{l s='Please fix the following error(s)'}</span>
 					</p>
 					<ul>
 						{foreach from=$testsOptional item='value' key='key'}
-							{if $value eq 'fail'}
-								<li>{$key}</li>
+							{if $value eq 'fail' && isset($testsErrors[$key])}
+								<li>{$testsErrors[$key]}</li>
 							{/if}
 						{/foreach}
 					</ul>
@@ -241,7 +247,7 @@
 	{if !$host_mode}
 	<div class="panel">
 		<h3>
-			<i class="icon-info"></i> 
+			<i class="icon-info"></i>
 			{l s='List of changed files'}
 		</h3>
 		<div id="changedFiles"><i class="icon-spin icon-refresh"></i> {l s='Checking files...'}</div>

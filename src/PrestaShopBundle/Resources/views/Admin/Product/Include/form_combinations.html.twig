@@ -1,0 +1,82 @@
+<div id="combinations">
+  <h2>
+    {{ trans('Product combinations', [], 'AdminProducts') }}
+    <span
+      class="help-box"
+      data-toggle="popover"
+      data-content="{{ trans("Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!", {}, 'AdminProducts')|raw }}"
+    ></span>
+  </h2>
+  <div id="attributes-generator">
+    <p>
+      {{ trans('Create a series of combinations by entering the related attributes below.', [], 'AdminProducts') }}
+    </p>
+    <div class="row">
+      <div class="col-md-10">
+        <fieldset class="form-group">
+          {{ form_errors(form.attributes) }}
+          {{ form_widget(form.attributes) }}
+        </fieldset>
+      </div>
+      <div class="col-md-2">
+        <button id="create-combinations" class="btn btn-action btn-block">
+          <i class="material-icons">add</i>
+          Create
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    {{ form_errors(form.combinations) }}
+    <table class="table table-striped">
+      <thead id="combinations_thead" {% if form.combinations|length == 0 %}style="display: none;"{% endif %}>
+      <tr class="uppercase">
+        <th></th>
+        <th>{{ trans('Combination', {}, 'AdminProducts') }}</th>
+        <th>{{ trans('Impact on price', {}, 'AdminProducts') }}</th>
+        <th>{{ trans('Final price', {}, 'AdminProducts') }}</th>
+        <th>{{ trans('Quantity', {}, 'AdminProducts') }}</th>
+        <th></th>
+      </tr>
+      </thead>
+
+      <tbody class="panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
+      {% for combination in form.combinations %}
+        {{ include('PrestaShopBundle:Admin/Product/Include:form_combination.html.twig', { 'form': combination, 'loop_index': loop.index0, 'id_product': id_product }) }}
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="row">
+
+    <div class="col-md-12">
+      <h2>{{ trans('Availability preferences', [], 'AdminProducts') }}</h2>
+    </div>
+
+    <div class="col-md-12">
+      <label class="form-control-label">{{ trans('Behavior when out of stock', [], 'AdminProducts') }}</label>
+      {{ form_errors(form.out_of_stock) }}
+      {{ form_widget(form.out_of_stock) }}
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-control-label">{{ form.available_now.vars.label }}</label>
+        {{ form_errors(form.available_now) }}
+        {{ form_widget(form.available_now) }}
+    </div>
+    <div class="col-md-4 ">
+        <label class="form-control-label">{{ form.available_later.vars.label }}</label>
+        {{ form_errors(form.available_later) }}
+        {{ form_widget(form.available_later) }}
+    </div>
+    <div class="col-md-4 ">
+      <label class="form-control-label">{{ form.available_date.vars.label }}</label>
+      {{ form_errors(form.available_date) }}
+      {{ form_widget(form.available_date) }}
+    </div>
+  </div>
+</div>

@@ -63,3 +63,4 @@ class HTMLPurifier_Filter_YouTube extends HTMLPurifier_Filter
 }
 
 // vim: et sw=4 sts=4
+

@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/view/view.tpl"}
@@ -45,7 +45,7 @@
 		{foreach $products AS $product}
 			{if !$product->hasAttributes()}
 				<tr>
-					<td><a class="btn btn-link" href="?tab=AdminProducts&amp;id_product={$product->id}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">{$product->name}</a></td>
+					<td><a class="btn btn-link" href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">{$product->name}</a></td>
 					<td>{l s='N/A'}</td>
 					<td>{if empty($product->product_supplier_reference)}{l s='N/A'}{else}{$product->product_supplier_reference}{/if}</td>
 					<td>{if empty($product->product_supplier_price_te)}0{else}{$product->product_supplier_price_te}{/if}</td>
@@ -57,7 +57,7 @@
 			{else}
 				{foreach $product->combination AS $id_product_attribute => $product_attribute}
 					<tr {if $id_product_attribute %2}class="alt_row"{/if} >
-						<td><a class="btn btn-link" href="?tab=AdminProducts&amp;id_product={$product->id}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">{$product->name}</a></td>
+						<td><a class="btn btn-link" href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">{$product->name}</a></td>
 						<td>{if empty($product_attribute.attributes)}{l s='N/A'}{else}{$product_attribute.attributes}{/if}</td>
 						<td>{if empty($product_attribute.product_supplier_reference)}{l s='N/A'}{else}{$product_attribute.product_supplier_reference}{/if}</td>
 						<td>{if empty($product_attribute.product_supplier_price_te)}0{else}{$product_attribute.product_supplier_price_te}{/if}</td>

@@ -3,7 +3,7 @@
 <script type="text/javascript">
 <!--
 var install_is_done = '<?php echo addslashes($this->l('Done!')) ?>';
-var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
+var process_steps = <?php echo json_encode($this->process_steps) ?>;
 var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin') ?>';
 -->
 </script>
@@ -21,7 +21,6 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 			<?php foreach ($this->process_steps as $item): ?>
 				<li id="process_step_<?php echo $item['key'] ?>" class="process_step">
 					<?php echo $item['lang'] ?>
-					<div class="error_log"></div>
 				</li>
 			<?php endforeach; ?>
 		</ol>
@@ -67,13 +66,17 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 			<img src="theme/img/visu_boBlock.png" alt="" />
 			<h3><?php echo $this->l('Back Office'); ?></h3>
 			<p class="description"><?php echo $this->l('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.') ?></p>
-			<a class="BO" target="_blank"><span><?php echo $this->l('Manage your store') ?></span></a>
+			<p>
+				<a class="BO" target="_blank"><span><?php echo $this->l('Manage your store') ?></span></a>
+			</p>
 		</div>
 		<div id="foBlock" class="blockInfoEnd last clearfix" onclick="window.open('../')" />
 			<img src="theme/img/visu_foBlock.png" alt="" />
 			<h3><?php echo $this->l('Front Office'); ?></h3>
 			<p class="description"><?php echo $this->l('Discover your store as your future customers will see it!') ?></p>
-			<a class="FO" target="_blank"><span><?php echo $this->l('Discover your store') ?></span></a>
+			<p>
+				<a class="FO" target="_blank"><span><?php echo $this->l('Discover your store') ?></span></a>
+			</p>
 		</div>
 	</div>
 
@@ -98,7 +101,7 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 </div>
 
 <?php if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>
-	<iframe src="https://addons.prestashop.com/psinstall1541.php?version=2&lang=<?php echo $this->language->getLanguageIso() ?>&email=<?php echo $this->session->admin_email ?>&activity=<?php echo $this->session->shop_activity ?>&country=<?php echo $this->session->shop_country ?>" scrolling="no" id="prestastore">
+	<iframe src="https://addons.prestashop.com/psinstall1541.php?version=2&lang=<?php echo $this->language->getLanguageIso() ?>&activity=<?php echo $this->session->shop_activity ?>&country=<?php echo $this->session->shop_country ?>" scrolling="no" id="prestastore">
 		<p><a href="http://addons.prestashop.com/" target="_blank"><?php echo $this->l('Check out PrestaShop Addons to add that little something extra to your store!'); ?></a></p>
 	</iframe>
 <?php endif; ?>

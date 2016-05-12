@@ -1,0 +1,90 @@
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/module.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
+    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/loader.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            {# Bulk Action confirm modal #}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_bulk_action.html.twig' %}
+            {# Addons connect modal #}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' %}
+            {# Contains toolbar-nav for module page #}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' %}
+            {# Contains menu with Selection/Categories/Popular and Tag Search #}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:menu_top.html.twig' with { 'topMenuData': topMenuData } %}
+            <div class="module-sorting-menu">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="module-sorting module-bulk-actions pull-right">
+                            <select class="c-select c-select-sm">
+                              <option value="" disabled selected>Bulk Actions</option>
+                              <option value="bulk-uninstall">Uninstall</option>
+                              <option value="bulk-disable">Disable</option>
+                              <option value="bulk-enable">Enable</option>
+                              <option value="bulk-reset">Reset</option>
+                              <option value="bulk-enable-mobile">Enable Mobile</option>
+                              <option value="bulk-disable-mobile">Disable Mobile</option>
+                            </select>
+                            <input type="checkbox" class="module-checkbox-bulk-select-all" />
+                        </div>
+                        <div class="module-sorting module-sorting-author pull-right">
+                            <select class="c-select c-select-sm">
+                              <option value="" disabled selected>- Sort by -</option>
+                              <option value="sort-by-name">Name</option>
+                              <option value="sort-by-price-asc">Increasing Price</option>
+                              <option value="sort-by-price-desc">Decreasing Price</option>
+                              <option value="sort-by-scoring">Score</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Actual Page Content #}
+		<div class="module-short-list">
+			<span class="module-search-result-wording">{{modules.modules|length}} installed modules</span>
+                           <span class="help-box" data-toggle="popover"
+                                data-title="{{ trans("Installed modules", {}, 'AdminModules') }}"
+                                data-content="{{ trans("These are all the modules you’ve added to your shop, either by buying it from PrestaShop Addons, or by uploading it directly.", {}, 'AdminModules') }}">
+                           </span>
+                   </div>
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.modules, 'display_type' : 'list', 'origin' : 'manage'  } %}
+
+		<hr class="top-menu-separator">
+
+		<div class="module-short-list">
+			<span class="module-search-result-wording">{{modules.native_modules|length}} built-in modules</span>
+                           <span class="help-box" data-toggle="popover"
+                                 data-title="{{ trans("Built-in modules", {}, 'AdminModules') }}"
+                                data-content="{{ trans("These modules from PrestaShop are preinstalled when you set-up your shop. They cover the basics of e-commerce and comes for free.", {}, 'AdminModules') }}">
+                           </span>
+		</div>
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list', 'origin' : 'manage'  } %}
+
+		<hr class="top-menu-separator">
+
+		<div class="module-short-list">
+			<span class="module-search-result-wording">{{modules.theme_bundle|length}} theme modules</span>
+                           <span class="help-box" data-toggle="popover"
+                                data-title="{{ trans("Theme modules", {}, 'AdminModules') }}"
+                                data-content="{{ trans("Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme.", {}, 'AdminModules') }}">
+                           </span>
+		</div>
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.theme_bundle, 'display_type' : 'list', 'origin' : 'manage'  } %}
+        </div>
+    </div>
+{% endblock %}

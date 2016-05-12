@@ -197,7 +197,6 @@ input.text {
 	padding:0 6px;
 	height:22px;
 	width:218px;/* 230 */
-	background:#fff url(img/bg_input_button.png) repeat-x 0 0;
 	border:1px solid #ccc;
 }
 select {
@@ -244,7 +243,7 @@ div.field {
 
 .okBlock {
 	padding:20px 20px 20px 38px;
-	background:#b7e2a7 url(img/pict_ok.png) no-repeat 15px 21px;
+	background:#b7e2a7 url(img/bg-li-tabs-finished.png) no-repeat 15px 21px;
 	border:1px solid #85c10c;
 }
 
@@ -368,13 +367,11 @@ ol#tabs{
 		}
 		ol#tabs li.finished{
 			color:#666;
-            text-decoration: line-through;
 			background : url(img/bg-li-tabs-finished.png) no-repeat 0 12px;
 		}
-			ol#tabs li.finished a{
-				color:#666;
-				text-decoration: line-through;
-			}
+		ol#tabs li.finished a{
+			color:#666;
+		}
 		ol#tabs li.configuring{
 			color:#25B9D7;
 		}
@@ -480,7 +477,6 @@ ul#optional {
 		margin-top: 20px;
 		padding:4px 8px;
 		font-size:13px;
-		background:#f8f8f8 url(img/bg_li_title.png) repeat-x 0 0;
 }
 	ul#required li.required ,
 	ul#optional li {
@@ -490,12 +486,14 @@ ul#optional {
 	ul#required li.ok,
 	ul#optional li.ok{
 		display:none
-		/*background:#f8f8f8 url(img/pict_ok.png) no-repeat 99% 10px*/
 }
 	ul#required li.fail,
 	ul#optional li.fail {
 		background: #f8eba8 url(img/pict_error.png) no-repeat 99% 8px;
         padding-right: 20px;
+}
+	ul#optional li.fail {
+		background: #f8eba8 url(img/pict_warning.gif) no-repeat 99% 8px;
 }
 
 /* ETAPE 3 - DB ************************************************************* */
@@ -519,7 +517,7 @@ ul#optional {
 }
 #formCheckSQL p#dbResultCheck.okBlock {
 	padding:20px 20px 20px 38px;
-	background:#b7e2a7 url(img/pict_ok.png) no-repeat 15px 21px;
+	background:#b7e2a7 url(img/bg-li-tabs-finished.png) no-repeat 15px 21px;
 	border:1px solid #85c10c;
 }
 #formCheckSQL p label {
@@ -532,7 +530,6 @@ ul#optional {
 	margin-bottom:15px;
 	padding:14px;
 	width:650px;
-	background:#f8f8f8;
 }
 
 #formCheckSQL .userInfos {
@@ -561,7 +558,6 @@ ul#optional {
 	margin-bottom:15px;
 	padding:14px;
 	width:650px;
-	background:#f8f8f8;
 }
 
 #inputFileLogo {margin-left:190px;}
@@ -595,7 +591,9 @@ color: #385E0B;
 	.blockInfoEnd p {
 		font:italic 11px/14px Georgia, Arial, Sans-serif;
 		color:#666;
-		min-height:58px;
+}
+	.blockInfoEnd p.description {
+		min-height:93px;
 }
 	.blockInfoEnd img {
 	float:left;
@@ -688,7 +686,7 @@ ul#optional_update li.fail {
 }
 ul#required_update li.ok,
 ul#optional_update li.ok {
-	background:#f8f8f8 url(img/pict_ok.png) no-repeat 100% 10px;
+	background:#f8f8f8 url(img/bg-li-tabs-finished.png) no-repeat 100% 10px;
 }
 #sheet_require_update #req_bt_refresh_update {float:right;}
 
@@ -720,7 +718,7 @@ ul#optional_update li.ok {
 
 /* STEP 5 ******************************************/
 #install_process_form{
-    min-height: 300px;
+    min-height: 340px;
 }
 #progress_bar {
 	display: none;
@@ -759,44 +757,25 @@ ul#optional_update li.ok {
 
 #progress_bar ol {
 	list-style-type: none;
-	margin-left: 20px;
+	margin-left: 4px;
 	margin-top: 10px;
 }
 #progress_bar ol li {
-	margin-bottom: 5px;
+    line-height: 24px;
 }
 #progress_bar ol.process_list li.success {
-	background: url("img/bg-li-tabs-finished.png") no-repeat scroll 0 3px transparent;
-	color: #666;
+	color: green;
     text-decoration: line-through;
-	padding-left: 18px;
 }
 #progress_bar ol.process_list li.fail {
-	background: url("img/pict_error.png") no-repeat scroll 0 1px transparent;
 	color: red;
-	padding-left: 18px;
-}
-#progress_bar ol.process_list li .error_log {
-	background-color: #FBE8D6;
-	border: 1px solid #666666;
-	color: #000000;
-	max-height: 300px;
-	overflow: auto;
-	padding: 7px;
-}
-#progress_bar ol.process_list li .error_log ol {
-	list-style-type: decimal;
-}
-#progress_bar ol.process_list li .error_log li {
-	padding: 3px;
 }
 
 #error_process{
     padding: 5px;
     background-color: #FBE8D6;
     border: 1px solid #666666;
-    margin-left: 37px;
-    margin-bottom: 20px;
+    margin: 20px 4px;
     display: none;
 }
     #error_process h3{
@@ -866,7 +845,7 @@ ul#optional_update li.ok {
   padding: 0 0 0 8px;
   height: 23px;
   border: 1px solid #aaa;
-  border-radius: 5px;
+  border-radius: 3px;
   background-color: #fff;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #ffffff), color-stop(50%, #f6f6f6), color-stop(52%, #eeeeee), color-stop(100%, #f4f4f4));
   background: -webkit-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);

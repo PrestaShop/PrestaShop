@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/view/view.tpl"}
@@ -97,14 +97,14 @@
 					{if isset($customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery])}
 						<tr>
 							<td>{$product.image}</td>
-							<td><a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&amp;id_product={$product.id_product}&amp;updateproduct">
+							<td><a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product.id_product, 'updateproduct' => 1])|escape:'html':'UTF-8'}">
 										<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
 									{if $product.reference}{l s='Ref:'} {$product.reference}{/if}
 									{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}
 								</a>
 							</td>
 							<td class="text-right">{displayWtPriceWithCurrency price=$product.price_wt currency=$currency}</td>
-							<td class="text-center">{$product.customization_quantity}</td>
+							<td class="text-center">{$product.customizationQuantityTotal}</td>
 							<td class="text-center">{$product.qty_in_stock}</td>
 							<td class="text-right">{displayWtPriceWithCurrency price=$product.total_customization_wt currency=$currency}</td>
 						</tr>
@@ -143,18 +143,18 @@
 						{/foreach}
 					{/if}
 
-					{if $product.cart_quantity > $product.customization_quantity}
+					{if !isset($product.customizationQuantityTotal) || $product.cart_quantity > $product.customizationQuantityTotal}
 						<tr>
 							<td>{$product.image}</td>
 							<td>
-								<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&amp;id_product={$product.id_product}&amp;updateproduct">
-								<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
-								{if $product.reference}{l s='Ref:'} {$product.reference}{/if}
-								{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}
+								<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product.id_product, 'updateproduct' => 1])|escape:'html':'UTF-8'}">
+									<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
+									{if $product.reference}{l s='Ref:'} {$product.reference}{/if}
+									{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}
 								</a>
 							</td>
 							<td class="text-right">{displayWtPriceWithCurrency price=$product.product_price currency=$currency}</td>
-							<td class="text-center">{math equation='x - y' x=$product.cart_quantity y=$product.customization_quantity|intval}</td>
+							<td class="text-center">{if isset($product.customizationQuantityTotal)}{math equation='x - y' x=$product.cart_quantity y=$product.customizationQuantityTotal|intval}{else}{math equation='x - y' x=$product.cart_quantity y=$product.customization_quantity|intval}{/if}</td>
 							<td class="text-center">{$product.qty_in_stock}</td>
 							<td class="text-right">{displayWtPriceWithCurrency price=$product.product_total currency=$currency}</td>
 						</tr>

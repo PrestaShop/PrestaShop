@@ -17,26 +17,25 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!--  TAX DETAILS -->
 {if $tax_exempt}
 
-    {l s='Exempt of VAT according section 259B of the General Tax Code.' pdf='true'}
+	{l s='Exempt of VAT according to section 259B of the General Tax Code.' pdf='true'}
 
 {elseif (isset($tax_breakdowns) && $tax_breakdowns)}
-
-    <table id="tax-tab" width="100%">
+	<table id="tax-tab" width="100%">
 		<thead>
 			<tr>
 				<th class="header small">{l s='Tax Detail' pdf='true'}</th>
 				<th class="header small">{l s='Tax Rate' pdf='true'}</th>
 				{if $display_tax_bases_in_breakdowns}
-					<th class="header small">{l s='Total' pdf='true'}<br/>{l s='(Before tax)' pdf='true'}</th>
+					<th class="header small">{l s='Base price' pdf='true'}</th>
 				{/if}
 				<th class="header-right small">{l s='Total Tax' pdf='true'}</th>
 			</tr>
@@ -96,7 +95,7 @@
 		{/if}
 
 		</tbody>
-    </table>
+	</table>
 
 {/if}
 <!--  / TAX DETAILS -->

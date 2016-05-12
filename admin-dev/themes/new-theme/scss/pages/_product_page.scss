@@ -1,0 +1,483 @@
+.product-page {
+  //@TODO remove this tyniMce hack
+  .mce-tinymce iframe {
+    max-height: 400px !important;
+  }
+  padding-bottom: 80px;
+  .table-fixed {
+    table-layout: fixed;
+    border: 0;
+    thead {
+      width: 90%;
+      border: 0;
+    }
+    thead th {
+      border: 0;
+    }
+    tbody {
+      height: 130px;
+      overflow-y: auto;
+      width: 100%;
+    }
+    thead,
+    tbody,
+    tr,
+    td,
+    th {
+      display: block;
+    }
+    tbody td,
+    thead > tr > th {
+      float: left;
+      border-bottom-width: 0;
+    }
+    tr {
+      clear: both;
+    }
+    td {
+      padding: 5px;
+      span {
+        word-break: break-all;
+        word-wrap: break-word;
+      }
+    }
+  }
+  &::before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: $size-header-height - rem(1px);
+    left: $size-navbar-width;
+    right: 0;
+    box-shadow: $gray-dark 0 0 10px;
+    z-index: 400;
+    height: 1px;
+  }
+  // Resets
+  ul.nostyle {
+    list-style: none;
+    padding-left: 0;
+  }
+  #form-loading {
+    display: none;
+  }
+  .tab-content {
+    padding: 0;
+  }
+  // Components
+  .product-header {
+    background: $white;
+    margin-top: -$grid-gutter-width / 2;
+    margin-bottom: $grid-gutter-width / 2;
+    padding: rem(20px) 0;
+    .select2 {
+      margin-top: rem(8px);
+    }
+    .edit {
+      background-size: 4%;
+    }
+    .help-box {
+      margin-left: rem(10px);
+      margin-top: rem(10px);
+    }
+    .form_step1_type_product,
+    .form_switch_language {
+      @include display(flex);
+      @include align-items(center);
+    }
+  }
+  .big-input {
+    .form-control {
+      font-size: rem(24px);
+    }
+  }
+  .product-footer {
+    box-shadow: $gray-dark 0 0 10px;
+    position: fixed;
+    padding: {
+      top: $grid-gutter-width / 2;
+      bottom: $grid-gutter-width / 2;
+    }
+    z-index: 10;
+    background: $white;
+    bottom: 0;
+    left: $size-navbar-width;
+    right: 0;
+    .for-switch {
+      display: inline-block;
+      margin-left: rem(20px);
+      margin-right: rem(4px);
+      font-size: rem(14px);
+    }
+    .duplicate,
+    .go-catalog,
+    .new-product {
+      margin-right: rem(10px);
+      margin-top: rem(10px);
+    }
+    .preview,
+    .save {
+      padding: rem(10px) $btn-padding-x-lg;
+    }
+    .save {
+      margin-top: rem(8px);
+    }
+    .delete {
+      > .material-icons {
+        font-size: rem(25px);
+        opacity: 0.8;
+      }
+    }
+  }
+  .help-box {
+    cursor: pointer;
+    min-width: rem(16px);
+  }
+  .form-contenttab {
+    padding: {
+      top: $grid-gutter-width / 2;
+      bottom: $grid-gutter-width / 2;
+    }
+  }
+  .form-group {
+    .title {
+      margin-bottom: rem(20px);
+    }
+  }
+  .hide {
+    display: none;
+  }
+  // Combination generator
+  .tokenfield {
+    height: auto;
+    padding-bottom: 0;
+    input.token-input[type="text"] {
+      display: inline-block;
+      border: 0;
+      padding: 0;
+      margin-top: -6px;
+      margin-bottom: 0;
+      background-color: transparent;
+      max-width: 100%;
+      width: auto !important;
+    }
+  }
+  // Combination details form
+  #accordion_combinations td.img img {
+    max-width: 50px;
+  }
+  #accordion_combinations .combination td.img .fake-img {
+    background: $gray-medium;
+    width: 50px;
+    height: 50px;
+  }
+  .product-combination-image {
+    display: inline-block;
+    border: 1px solid $primary;
+    outline: solid 4px $white;
+    margin: 5px;
+  }
+  .product-combination-image.img-highlight {
+    outline: solid 4px $primary;
+  }
+  .product-combination-image input {
+    display: none;
+  }
+  .combination-form .title {
+    font-size: 20px;
+  }
+  // Dropzone & Image manager
+  #product-images-dropzone {
+    width: 100%;
+    height: 340px;
+    border: dashed 1px $gray-light;
+    padding: 10px;
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    overflow-y: hidden;
+    &.dropzone {
+      .dz-preview {
+        width: 130px;
+        height: 130px;
+        border: 1px solid $gray-light;
+        &.openfilemanager {
+          text-align: center;
+          color: $gray-light;
+          div {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+            border: 5px solid $gray-light;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            span {
+              text-align: center;
+              display: inline-block;
+              line-height: 40px;
+              height: 50px;
+              font-size: 30px;
+              font-weight: bold;
+            }
+          }
+        }
+        .dz-image {
+          border-radius: 0;
+          width: 100%;
+          height: 100%;
+          line-height: 130px;
+          &.bg {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+          }
+          img {
+            vertical-align: middle;
+            display: inline-block;
+          }
+        }
+        .iscover {
+          background: $gray-medium;
+          font-size: 12px;
+          color: $white;
+          text-align: center;
+          padding: 5px;
+          position: absolute;
+          z-index: 10;
+          bottom: 0;
+          width: 100%;
+        }
+        &.dz-image-preview {
+          .dz-remove {
+            display: none;
+          }
+          .dz-error-mark {
+            display: none;
+          }
+          .dz-error-message {
+            display: none;
+          }
+          .dz-success-mark {
+            display: none;
+          }
+          .dz-details {
+            .dz-size {
+              display: none;
+            }
+            .dz-filename {
+              display: none;
+            }
+          }
+        }
+        &:hover .dz-image img {
+          transform: none;
+          filter:none;
+        }
+      }
+      &.dz-clickable * {
+        cursor: pointer;
+      }
+    }
+    .dz-default.dz-message {
+      //margin-top : ;
+      i {
+        font-size: 60px;
+        color: $gray-light;
+        opacity: 0.5;
+        filter:alpha(opacity=50);
+      }
+      small {
+        font-size: 12px;
+        font-style: italic;
+      }
+    }
+  }
+  #product-images-form-container {
+    position: absolute !important;
+    z-index: 1000;
+    min-height: 200px;
+    right: 5px;
+    top: 0;
+    cursor: default !important;
+    display: none;
+    padding: 10px !important;
+    .close {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    .actions {
+      padding-top: 15px;
+    }
+  }
+  #product-images-container {
+    .dropzone-expander {
+      border-bottom: dashed 1px $gray-light;
+      border-left: dashed 1px $gray-light;
+      border-right: dashed 1px $gray-light;
+      font-weight: bold;
+      font-size: 12px;
+      color: $gray-medium;
+      padding: 5px 0;
+      cursor: pointer;
+      display: none;
+      span {
+        display: none;
+      }
+      &.expand span.expand {
+        display: block;
+      }
+      &.compress span.compress {
+        display: block;
+      }
+    }
+  }
+  .twitter-typeahead {
+    .tt-menu {
+      width: 100%;
+      border: 1px solid $gray-medium;
+      background: $white;
+    }
+    .tt-suggestion {
+      cursor: pointer;
+    }
+  }
+  .pack-product {
+    position: relative;
+    border: rem(1px) solid $gray-light;
+    border-radius: $border-radius;
+    > .cover {
+      width: 100%;
+    }
+    > .btn-danger {
+      opacity: 0;
+      visibility: hidden;
+      position: absolute;
+      top: rem(1px);
+      right: rem(1px);
+    }
+    &:hover {
+      > .btn-danger {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+  #add-categories {
+    margin-top: rem(40px);
+  }
+  #form_step1_categories {
+    clear: both;
+  }
+  .ui-widget {
+    > .form-control-label {
+      font-size: rem(10px);
+      font-weight: 600;
+    }
+    > .ui-autocomplete-input {
+      @include placeholder {
+        font-size: rem(12px);
+      }
+    }
+    > .pstaggerTagsWrapper {
+      border: none;
+      padding: 0;
+      > .pstaggerTag {
+        font-size: rem(12px);
+        font-weight: 400;
+        padding-top: rem(2px);
+        margin-bottom: rem(5px);
+        > .pstaggerClosingCross {
+          font-size: 0;
+          &::after {
+            font-size: rem(16px);
+            font-family: 'Material Icons';
+            content: "\E5CD";
+            text-decoration: none;
+            vertical-align: middle;
+            position: relative;
+            bottom: rem(4px);
+          }
+        }
+      }
+    }
+  }
+  .category-tree {
+    ul {
+      padding-left: rem(20px);
+    }
+    .more,
+    .less {
+      background: none;
+      position: relative;
+      > .checkbox {
+        cursor: pointer;
+      }
+      &::before {
+        position: absolute;
+        font-family: 'Material Icons';
+        cursor: pointer;
+        font-size: rem(20px);
+        color: $gray-medium;
+        top: rem(-4px);
+      }
+    }
+    .less {
+      &::before {
+        content: "\E313";
+      }
+    }
+    .more {
+      &::before {
+        content: "\E5CC";
+      }
+    }
+  }
+  .categories-tree {
+    padding: rem(10px);
+    border: $gray-light 1px solid;
+    border-radius: rem(3px);
+    .categories-tree-actions {
+      text-transform: uppercase;
+      font-size: rem(10px);
+      font-weight: 600;
+      clear: both;
+      [data-action="expand"],
+      [data-action="reduce"] {
+        cursor: pointer;
+      }
+      > hr {
+        margin-top: rem(10px);
+      }
+      .form-control-label {
+        padding-top: rem(5px);
+      }
+      .material-icons {
+        font-size: rem(20px);
+        vertical-align: bottom;
+      }
+    }
+  }
+}
+.popover-title {
+  display: none;
+}
+.ui-autocomplete {
+  max-width: rem(290px);
+  @media screen and (max-width: 1450px) {
+    max-width: rem(197px);
+  }
+  li:hover {
+    background: $primary-hover;
+    cursor: pointer;
+    a {
+      color: $white;
+      text-decoration: none;
+    }
+  }
+  a {
+    color: $gray-medium;
+  }
+}

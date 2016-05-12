@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {if !$email}
@@ -82,7 +82,7 @@
 			{if !empty($message.id_product) && empty($message.id_employee)}
 				<dl class="dl-horizontal">
 					<dt>{l s='Product #'}</dt> 
-					<dd><a href="index.php?tab=AdminProducts&amp;id_product={$message.id_product}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" title="{l s='View order'}">{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a></dd>
+					<dd><a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $message.id_product, 'updateproduct' => '1'])|escape:'html':'UTF-8'}" title="{l s='View order'}">{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='View'}" /></a></dd>
 				</dl>
 			{/if}
 			

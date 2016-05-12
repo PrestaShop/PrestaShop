@@ -1,39 +1,36 @@
 <?php
 
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 namespace PrestaShop\PrestaShop\Tests\Integration\Classes;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
-
-use PrestaShop\PrestaShop\Tests\Helper\DatabaseDump;
-
+use PrestaShop\PrestaShop\Tests\TestCase\DatabaseDump;
 use Exception;
-
 use Address;
 use Carrier;
 use Cart;
@@ -61,7 +58,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         // Save the database to restore it later: we're not the only test running so let's leave things
         // the way we found them.
         self::$dump = DatabaseDump::create();
-
         // Some tests might have cleared the configuration
         Configuration::loadConfiguration();
 
@@ -125,8 +121,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         $mode = null;
 
-        switch ($modeStr)
-        {
+        switch ($modeStr) {
             case 'up':
                 $mode = PS_ROUND_UP;
                 break;
@@ -158,8 +153,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         $type = null;
 
-        switch ($typeStr)
-        {
+        switch ($typeStr) {
             case 'item':
                 $type = Order::ROUND_ITEM;
                 break;
@@ -195,8 +189,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $name = $rate.'% TAX';
 
-        if (!array_key_exists($name, $taxes))
-        {
+        if (!array_key_exists($name, $taxes)) {
             $tax = new Tax(null, self::getDefaultLanguageId());
             $tax->name = $name;
             $tax->rate = $rate;
@@ -217,8 +210,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $name = $rate.'% TRG';
 
-        if (!array_key_exists($name, $groups))
-        {
+        if (!array_key_exists($name, $groups)) {
             $taxRulesGroup = new TaxRulesGroup(null, self::getDefaultLanguageId());
             $taxRulesGroup->name = $name;
             $taxRulesGroup->active = true;
@@ -242,7 +234,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     private static function makeProduct($name, $price, $id_tax_rules_group)
     {
-
         $product = new Product(null, false, self::getDefaultLanguageId());
         $product->id_tax_rules_group = $id_tax_rules_group;
         $product->name = $name;
@@ -283,19 +274,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         static $carriers = array();
 
-        if (!array_key_exists($name, $carriers))
-        {
+        if (!array_key_exists($name, $carriers)) {
             $carrier = new Carrier(null, self::getDefaultLanguageId());
 
             $carrier->name = $name;
             $carrier->delay = '28 days later';
 
-            if (null === $shippingCost)
-            {
+            if (null === $shippingCost) {
                 $carrier->is_free = true;
-            }
-            else
-            {
+            } else {
                 $carrier->range_behavior = false; // take highest range
                 $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
             }
@@ -304,13 +291,11 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
             Assert::assertTrue($carrier->save());
 
-            if (null !== $id_tax_rules_group)
-            {
+            if (null !== $id_tax_rules_group) {
                 $carrier->setTaxRulesGroup($id_tax_rules_group);
             }
 
-            if (null !== $shippingCost)
-            {
+            if (null !== $shippingCost) {
                 // Populate one range
                 Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'range_price (id_carrier, delimiter1, delimiter2) VALUES (
                     '.(int)$carrier->id.',
@@ -358,22 +343,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cartRule->quantity = 1;
         $cartRule->quantity_per_user;
 
-        if ($type === 'before tax')
-        {
+        if ($type === 'before tax') {
             $cartRule->reduction_amount = $amount;
             $cartRule->reduction_tax = false;
-        }
-        else if ($type === 'after tax')
-        {
+        } elseif ($type === 'after tax') {
             $cartRule->reduction_amount = $amount;
             $cartRule->reduction_tax = true;
-        }
-        else if ($type === '%')
-        {
+        } elseif ($type === '%') {
             $cartRule->reduction_percent = $amount;
-        }
-        else
-        {
+        } else {
             throw new Exception(sprintf("Invalid CartRule type `%s`.", $type));
         }
 
@@ -398,6 +376,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         self::deactivateCurrentCartRules();
         // Something might have disabled CartRules :)
         Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
+        Configuration::set('PS_ATCP_SHIPWRAP', false);
     }
 
     public function testBasicOnlyProducts()
@@ -485,5 +464,30 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         // Check that the CartRule is applied
         $this->assertEquals(5, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
         $this->assertEquals(6, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
+    }
+
+    /**
+     * This test checks that if PS_ATCP_SHIPWRAP is set to true then:
+     * - the shipping cost of the carrier is understood as tax included instead of tax excluded
+     * - the tax excluded shipping cost is deduced from the tax included shipping cost
+     * 	 by removing the average tax rate of the cart
+     */
+    public function testAverageTaxOfCartProducts_ShippingTax()
+    {
+        Configuration::set('PS_ATCP_SHIPWRAP', true);
+
+        $highProduct = self::makeProduct('High Product', 10, self::getIdTaxRulesGroup(20));
+        $lowProduct = self::makeProduct('Low Product', 10, self::getIdTaxRulesGroup(10));
+        $cart = self::makeCart();
+
+        $id_carrier = self::getIdCarrier('costs 5 with tax', 5, null);
+
+        $cart->updateQty(1, $highProduct->id);
+        $cart->updateQty(3, $lowProduct->id);
+
+        $preTax = round(5 / (1 + (3 * 10 + 1 * 20) / (4 * 100)), 2);
+
+        $this->assertEquals($preTax, $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, null, $id_carrier));
+        $this->assertEquals(5, $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, null, $id_carrier));
     }
 }

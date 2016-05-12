@@ -17,18 +17,19 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="page_header_toolbar.tpl"}
 
 
 {block name=pageTitle}
 <h2 class="page-title">
-	{l s='Configure "%s" module' sprintf=$module_display_name}
+	{l s='Configure'}
 </h2>
+<h4 class="page-subtitle">{$module_display_name}</h4>
 {/block}
 {block name=pageBreadcrumb}
 <ul class="breadcrumb page-breadcrumb">
@@ -57,7 +58,7 @@
 	<div class="btn-toolbar">
 		<ul class="nav nav-pills pull-right">
 			<li>
-				<a id="desc-module-back" class="toolbar_btn" href="{$back_link}" title="{l s='Back'}">
+				<a id="desc-module-back" class="toolbar_btn" href="javascript: window.history.back();" title="{l s='Back'}">
 					<i class="process-icon-back"></i>
 					<div>{l s='Back'}</div>
 				</a>

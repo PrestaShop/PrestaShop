@@ -1,0 +1,25 @@
+<div id="recommended_module_{{ domain }}">
+    {% for module in modules %}
+        {% include 'PrestaShopBundle:Admin/Module/Includes:card.html.twig'
+            with {
+                'module': module,
+                'display_type': 'grid',
+                'col_lg': 'col-lg-12',
+                'additionalModalSuffix': 'tab_product_' ~ domain
+            }
+        %}
+    {% else %}
+        <a href="http://addons.prestashop.com/" target="_blank" class="col-lg-12">
+            <img class="img-responsive center-block" src="{{ asset('themes/default/img/bundle/pub_conversion_EN.gif') }}" />
+        </a>
+        <div class="clearfix">&nbsp;</div>
+        <a href="http://addons.prestashop.com/" target="_blank" class="col-lg-12">
+            <img class="img-responsive center-block" src="{{ asset('themes/default/img/bundle/pub_loyalty_EN.gif') }}" />
+        </a>
+        <div class="clearfix">&nbsp;</div>
+        <a href="http://addons.prestashop.com/" target="_blank" class="col-lg-12">
+            <img class="img-responsive center-block" src="{{ asset('themes/default/img/bundle/pub_trafic_EN.gif') }}" />
+        </a>
+        <div class="clearfix">&nbsp;</div>
+    {% endfor %}
+</div>

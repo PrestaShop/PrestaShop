@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {if isset($product->id)}
@@ -60,7 +60,7 @@
 						</p>
 							{if $stock_management_active == 0 && !$product->cache_is_pack}
 								<p class="help-block"><i class="icon-warning-sign"></i>&nbsp;{l s='This requires you to enable advanced stock management.'}</p>
-							{else if $product->cache_is_pack}
+							{elseif $product->cache_is_pack}
 								<p class="help-block">{l s='When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.'}</p>
 							{/if}
 					</div>
@@ -158,7 +158,7 @@
 								</tr>
 							</thead>
 							{foreach from=$attributes item=attribute}
-								<tr>
+								<tr{if isset($attribute['default_on']) && $attribute['default_on']} class="highlighted"{/if}>
 									<td class="available_quantity" id="qty_{$attribute['id_product_attribute']}">
 										<span>{$available_quantity[$attribute['id_product_attribute']]}</span>
 										<input type="text" name="qty_{$attribute['id_product_attribute']}" class="fixed-width-sm" value="{$available_quantity[$attribute['id_product_attribute']]|htmlentities}"/>

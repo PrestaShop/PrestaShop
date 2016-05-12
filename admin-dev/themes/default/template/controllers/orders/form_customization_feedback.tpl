@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <html>
 <head>
@@ -32,19 +32,19 @@
 </head>
 <body>
 	<script type="text/javascript">
-	{if $customization_errors}
-		parent.customization_errors = true;
-	{else}
-		parent.customization_errors = false;
-		parent.$('#products_err', window.parent.document).hide();
-	{/if}
-	var id_selected_product = parent.$('#id_product option:selected').val();
-	if (parent.searchProducts())
-	{
+		var id_selected_product = parent.$('#id_product option:selected').val();
+
 		parent.$('#products_err', window.parent.document).html('{$customization_errors}');
 		parent.$('#id_product option[value="'+id_selected_product+'"]').attr('selected', true);
 		parent.$('#id_product').change();
-	}
+
+		{if $customization_errors}
+			parent.customization_errors = true;
+		{else}
+			parent.customization_errors = false;
+		{/if}
+
+		parent.customizationProductListener();
 	</script>
 	</body>
 </html>

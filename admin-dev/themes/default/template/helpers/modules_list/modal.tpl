@@ -3,7 +3,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h3 class="modal-title">{l s='Recommended Modules'}</h3>
+				<h3 class="modal-title">{l s='Recommended Modules and Services'}</h3>
 			</div>
 			<div class="modal-body">
 				<div id="modules_list_container_tab_modal" style="display:none;"></div>
@@ -12,3 +12,19 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.fancybox-quick-view').fancybox({
+			type: 'ajax',
+			autoDimensions: false,
+			autoSize: false,
+			width: 600,
+			height: 'auto',
+			helpers: {
+				overlay: {
+					locked: false
+				}
+			}
+		});
+	});
+</script>

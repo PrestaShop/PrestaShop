@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 <table id="module-list" class="table">
@@ -42,7 +42,7 @@
 						{/if}
 					</td>
 					<td class="fixed-width-xs">
-						<img width="32" alt="{$module->displayName|escape:'html':'UTF-8'}" title="{$module->displayName|escape:'html':'UTF-8'}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
+						<img width="57" alt="{$module->displayName|escape:'html':'UTF-8'}" title="{$module->displayName|escape:'html':'UTF-8'}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
 					</td>
 					<td>
 						<div id="anchor{$module->name|ucfirst}" title="{$module->displayName|escape:'html':'UTF-8'}">
@@ -81,7 +81,7 @@
 							<div class="btn-group pull-right">
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
 									<a class="btn btn-default _blank" href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}">
-										<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
+										<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->price)}{if $module->price|floatval == 0}{l s='Free'}{elseif isset($module->id_currency)}{displayPrice price=$module->price currency=$module->id_currency}{/if}{/if}
 									</a>
 								{else}
 									{if isset($module->id) && $module->id gt 0}
@@ -133,7 +133,7 @@
 												{/if}
 											{/foreach}
 										</ul>
-									{else if !isset($module->not_on_disk) && !isset($module->id)}
+									{elseif !isset($module->not_on_disk) && !isset($module->id)}
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 											<span class="caret">&nbsp;</span>
 										</button>
@@ -148,7 +148,7 @@
 												{/if}
 											{/foreach}
 										</ul>
-									{else if isset($module->not_on_disk)}
+									{elseif isset($module->not_on_disk)}
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 											<span class="caret">&nbsp;</span>
 										</button>
@@ -217,18 +217,21 @@
 	</table>
 	{/if}
 <script type="text/javascript">
-	$(document).ready(function(){
-		$('.fancybox-quick-view').fancybox({
-			type: 'ajax',
-			autoDimensions: false,
-			autoSize: false,
-			width: 600,
-			height: 'auto',
-			helpers: {
-				overlay: {
-					locked: false
-				}
-			}
-		});
+    $(document).ready(function(){
+        $('.fancybox-quick-view').each(function() {
+            $(this).fancybox({
+                type: 'ajax',
+                autoDimensions: false,
+                autoSize: false,
+                width: 600,
+                height: 'auto',
+                helpers: {
+                    overlay: {
+                        locked: false
+                    }
+                },
+                href: $(this).attr('href')+'&admin_list_from_source='+getControllerActionMap('read-more')
+            });
+        });
 	});
 </script>

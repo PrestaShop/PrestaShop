@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <script>
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
@@ -127,22 +127,6 @@
 						<dd></dd>
 					</dl>
 			</section>
-			<section class="dash_simulation panel">
-				<h3><i class="icon-link"></i> {l s="Demo Mode"}</h3>
-				<span class="switch prestashop-switch">
-					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 1}checked="checked"{/if} value="1" name="PS_DASHBOARD_SIMULATION">
-					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_on">
-						{l s='On'}
-					</label>
-					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 0}checked="checked"{/if} value="0" name="PS_DASHBOARD_SIMULATION">
-					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_off">
-						{l s='Off'}
-					</label>
-					<a class="slide-button btn"></a>
-				</span>
-				{l s='This mode displays sample data so you can try your dashboard without real numbers.'}
-			</section>
-
 		</div>
 	</div>
 </div>

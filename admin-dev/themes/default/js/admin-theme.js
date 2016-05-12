@@ -1,26 +1,27 @@
-/*
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 //build confirmation modal
 function confirm_modal(heading, question, left_button_txt, right_button_txt, left_button_callback, right_button_callback) {
@@ -129,10 +130,18 @@ $(document).ready(function() {
 		sidebar.find('.menu-collapse').on('click',function(){
 			$(this).toggleClass('icon-rotate-90');
 
-			if ($(this).hasClass('icon-rotate-90'))
+			if ($(this).hasClass('icon-rotate-90')) {
 				$(this).css('margin-left', '5px');
-			else
+				$('.page-head .page-title').css('padding-left', '70px');
+				$('.page-head .breadcrumb').css('left', '70px');
+				$('.page-head .page-subtitle').css('left', '70px');
+
+			} else {
 				$(this).css('margin-left', '');
+				$('.page-head .page-title').css('padding-left', '230px');
+				$('.page-head .breadcrumb').css('left', '230px');
+				$('.page-head .page-subtitle').css('left', '230px');
+			}
 
 			$('body').toggleClass('page-sidebar-closed');
 			$('.expanded').removeClass('expanded');
@@ -142,6 +151,17 @@ $(document).ready(function() {
 				data: "token="+employee_token+'&ajax=1&action=toggleMenu&tab=AdminEmployees&collapse='+Number($('body').hasClass('page-sidebar-closed'))
 			});
 		});
+
+		var menuCollapse = sidebar.find('.menu-collapse');
+
+		if ($('body').hasClass('page-sidebar-closed')) {
+			menuCollapse.addClass('icon-rotate-90');
+			menuCollapse.css('margin-left', '5px');
+			$('.page-head .page-title').css('padding-left', '70px');
+			$('.page-head .breadcrumb').css('left', '70px');
+			$('.page-head .page-subtitle').css('left', '70px');
+
+		}
 	}
 
 	function navTopbarReset() {
@@ -455,4 +475,43 @@ $(document).ready(function() {
 
 	//scroll_if_anchor(window.location.hash);
 	$("body").on("click", "a.anchor", scroll_if_anchor);
+
+	//manage curency status switcher
+	$('#currencyStatus input').change(function(){
+		var parentZone = $(this).parent().parent().parent().parent();
+		parentZone.find('.status').addClass('hide');
+
+		if($(this).attr('checked') == 'checked'){
+			parentZone.find('.enabled').removeClass('hide');
+			$('#currency_form #active').val(1);
+		}else{
+			parentZone.find('.disabled').removeClass('hide');
+			$('#currency_form #active').val(0);
+		}
+	});
+
+
+	$('#currencyCronjobLiveExchangeRate input').change(function(){
+		var enable = 0;
+		var parentZone = $(this).parent().parent().parent().parent();
+		parentZone.find('.status').addClass('hide');
+
+		if($(this).attr('checked') == 'checked'){
+			enable = 1;
+			parentZone.find('.enabled').removeClass('hide');
+		}else{
+			enable = 0;
+			parentZone.find('.disabled').removeClass('hide');
+		}
+
+		$.ajax({
+			url: "index.php?controller=AdminCurrencies&token="+token,
+			cache: false,
+			data: "ajax=1&action=cronjobLiveExchangeRate&tab=AdminCurrencies&enable="+enable
+		});
+	});
+
+
+
+
 }); //end dom ready

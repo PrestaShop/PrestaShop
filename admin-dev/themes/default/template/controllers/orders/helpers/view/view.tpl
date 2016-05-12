@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/view/view.tpl"}
@@ -204,6 +204,14 @@
 												<td style="background-color:{$row['color']};color:{$row['text-color']}">{$row['ostate_name']|stripslashes}</td>
 												<td style="background-color:{$row['color']};color:{$row['text-color']}">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</td>
 												<td style="background-color:{$row['color']};color:{$row['text-color']}">{dateFormat date=$row['date_add'] full=true}</td>
+												<td style="background-color:{$row['color']};color:{$row['text-color']}" class="text-right">
+													{if $row['send_email']|intval}
+														<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}&amp;sendStateEmail={$row['id_order_state']|intval}&amp;id_order_history={$row['id_order_history']|intval}" title="{l s='Resend this email to the customer'}">
+															<i class="icon-mail-reply"></i>
+															{l s='Resend email'}
+														</a>
+													{/if}
+												</td>
 											</tr>
 										{else}
 											<tr>
@@ -211,6 +219,14 @@
 												<td>{$row['ostate_name']|stripslashes}</td>
 												<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{else}&nbsp;{/if}</td>
 												<td>{dateFormat date=$row['date_add'] full=true}</td>
+												<td class="text-right">
+													{if $row['send_email']|intval}
+														<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}&amp;sendStateEmail={$row['id_order_state']|intval}&amp;id_order_history={$row['id_order_history']|intval}" title="{l s='Resend this email to the customer'}">
+															<i class="icon-mail-reply"></i>
+															{l s='Resend email'}
+														</a>
+													{/if}
+												</td>
 											</tr>
 										{/if}
 									{/foreach}
@@ -312,10 +328,10 @@
 								<table class="table">
 									<thead>
 										<tr>
-											<th><span class="title_box ">Date</span></th>
-											<th><span class="title_box ">Type</span></th>
-											<th><span class="title_box ">Carrier</span></th>
-											<th><span class="title_box ">Tracking number</span></th>
+											<th><span class="title_box ">{l s='Date'}</span></th>
+											<th><span class="title_box ">{l s='Type'}</span></th>
+											<th><span class="title_box ">{l s='Carrier'}</span></th>
+											<th><span class="title_box ">{l s='Tracking number'}</span></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -516,7 +532,7 @@
 										{/if}
 									</td>
 									<td class="actions">
-										<button class="btn btn-primary btn-block" type="submit" name="submitAddPayment">
+										<button class="btn btn-primary" type="submit" name="submitAddPayment">
 											{l s='Add'}
 										</button>
 									</td>
@@ -572,7 +588,7 @@
 							{if ($customer->isGuest())}
 								{l s='This order has been placed by a guest.'}
 								{if (!Customer::customerExists($customer->email))}
-									<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;token={getAdminToken tab='AdminCustomers'}">
+									<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;id_order={$order->id|intval}&amp;token={getAdminToken tab='AdminCustomers'}">
 										<input type="hidden" name="id_lang" value="{$order->id_lang}" />
 										<input class="btn btn-default" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" />
 										<p class="help-block">{l s='This feature will generate a random password and send an email to the customer.'}</p>
@@ -1068,8 +1084,7 @@
 											<td class="partial_refund_fields current-edit" style="display:none;">
 												<div class="input-group">
 													<div class="input-group-addon">
-														{$currency->prefix}
-														{$currency->suffix}
+														{$currency->sign}
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
@@ -1146,8 +1161,7 @@
 								</label>
 								<div class="input-group col-lg-1 pull-left">
 									<div class="input-group-addon">
-										{$currency->prefix}
-										{$currency->suffix}
+										{$currency->sign}
 									</div>
 									<input type="text" class="input fixed-width-md" name="refund_total_voucher_choose" value="0"/>
 								</div>
@@ -1195,8 +1209,7 @@
 								</label>
 								<div class="input-group col-lg-1 pull-left">
 									<div class="input-group-addon">
-										{$currency->prefix}
-										{$currency->suffix}
+										{$currency->sign}
 									</div>
 									<input type="text" class="input fixed-width-md" name="refund_voucher_choose" value="0"/>
 								</div>
@@ -1335,21 +1348,22 @@
 				}
 			});
 
-			var date = new Date();
-			var hours = date.getHours();
-			if (hours < 10)
-				hours = "0" + hours;
-			var mins = date.getMinutes();
-			if (mins < 10)
-				mins = "0" + mins;
-			var secs = date.getSeconds();
-			if (secs < 10)
-				secs = "0" + secs;
-
 			$('.datepicker').datetimepicker({
 				prevText: '',
 				nextText: '',
-				dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
+				dateFormat: 'yy-mm-dd',
+				// Define a custom regional settings in order to use PrestaShop translation tools
+				currentText: '{l s='Now' js=1}',
+				closeText: '{l s='Done' js=1}',
+				ampm: false,
+				amNames: ['AM', 'A'],
+				pmNames: ['PM', 'P'],
+				timeFormat: 'hh:mm:ss tt',
+				timeSuffix: '',
+				timeOnlyTitle: '{l s='Choose Time' js=1}',
+				timeText: '{l s='Time' js=1}',
+				hourText: '{l s='Hour' js=1}',
+				minuteText: '{l s='Minute' js=1}'
 			});
 		});
 

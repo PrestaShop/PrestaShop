@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/view/view.tpl"}
@@ -41,7 +41,7 @@
 						{$customer->email}
 					</a>
 					<div class="panel-heading-action">
-						<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
+						<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 							<i class="icon-edit"></i>
 							{l s='Edit'}
 						</a>
@@ -416,10 +416,12 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box ">{l s='ID'}</span></th>
-								<th><span class="title_box ">{l s='Code'}</span></th>
-								<th><span class="title_box ">{l s='Name'}</span></th>
-								<th><span class="title_box ">{l s='Status'}</span></th>
+								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='Code'}</span></th>
+								<th><span class="title_box">{l s='Name'}</span></th>
+								<th><span class="title_box">{l s='Status'}</span></th>
+								<th><span class="title_box">{l s='Qty available'}</span></th>
+								<th><span class="title_box">{l s='Actions'}</span></th>
 							<tr/>
 						</thead>
 						<tbody>
@@ -430,16 +432,17 @@
 								<td>{$discount['name']}</td>
 								<td>
 									{if $discount['active']}
-										<i class="icon-ok"></i>
+										<i class="icon-check"></i>
 									{else}
 										<i class="icon-remove"></i>
 									{/if}
 								</td>
+								<td>{if $discount['quantity'] > 0}{$discount['quantity_for_user']|intval}{else}0{/if}</td>
 								<td>
-									<a href="?tab=AdminCartRules&amp;id_cart_rule={$discount['id_cart_rule']}&amp;addcart_rule&amp;token={getAdminToken tab='AdminCartRules'}">
+									<a href="?tab=AdminCartRules&amp;id_cart_rule={$discount['id_cart_rule']|intval}&amp;addcart_rule&amp;token={getAdminToken tab='AdminCartRules'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 										<i class="icon-pencil"></i>
 									</a>
-									<a href="?tab=AdminCartRules&amp;id_cart_rule={$discount['id_cart_rule']}&amp;deletecart_rule&amp;token={getAdminToken tab='AdminCartRules'}">
+									<a href="?tab=AdminCartRules&amp;id_cart_rule={$discount['id_cart_rule']|intval}&amp;deletecart_rule&amp;token={getAdminToken tab='AdminCartRules'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 										<i class="icon-remove"></i>
 									</a>
 								</td>
@@ -490,6 +493,7 @@
 				<table class="table">
 					<thead>
 					<tr>
+						<th><span class="title_box">{l s='ID'}</span></th>
 						<th><span class="title_box">{l s='Date'}</span></th>
 						<th><span class="title_box">{l s='Pages viewed'}</span></th>
 						<th><span class="title_box">{l s='Total time'}</span></th>
@@ -500,6 +504,7 @@
 					<tbody>
 					{foreach $connections as $connection}
 						<tr>
+							<td>{$connection['id_connections']}</td>
 							<td>{dateFormat date=$connection['date_add'] full=0}</td>
 							<td>{$connection['pages']}</td>
 							<td>{$connection['time']}</td>
@@ -617,7 +622,7 @@
 								</td>
 								<td class="text-right">
 									<div class="btn-group">
-										<a class="btn btn-default" href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;addaddress=1&amp;token={getAdminToken tab='AdminAddresses'}">
+										<a class="btn btn-default" href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;addaddress=1&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 											<i class="icon-edit"></i> {l s='Edit'}
 										</a>
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -625,7 +630,7 @@
 										</button>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;deleteaddress&amp;token={getAdminToken tab='AdminAddresses'}">
+												<a href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;deleteaddress&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 													<i class="icon-trash"></i>
 													{l s='Delete'}
 												</a>

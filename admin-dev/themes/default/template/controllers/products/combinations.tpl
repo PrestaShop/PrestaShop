@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($product->id) && !$product->is_virtual}
 <div id="product-combinations" class="panel product-tab">
@@ -120,6 +120,14 @@
 			</label>
 			<div class="col-lg-3">
 				<input maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-lg-3" for="attribute_isbn">
+				{l s='ISBN'}
+			</label>
+			<div class="col-lg-3">
+				<input maxlength="13" type="text" id="attribute_isbn" name="attribute_isbn" value="" />
 			</div>
 		</div>
 		<div class="form-group">

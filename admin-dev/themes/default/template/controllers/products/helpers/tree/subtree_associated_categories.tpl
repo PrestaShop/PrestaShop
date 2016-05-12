@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($nodes)}
 	{$nodes}
@@ -31,8 +31,8 @@
 	{assign var=imploded_selected_categories value='","'|implode:$selected_categories}
 	var selected_categories = new Array("{$imploded_selected_categories}");
 
-	$('#'+idTree).tree('collapseAll');
-	$('#'+idTree).find(":input").each(
+	$('#{$id_tree}').tree('collapseAll');
+	$('#{$id_tree}').find(":input").each(
 		function()
 		{
 			if ($.inArray($(this).val(), selected_categories) != -1)

@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
 	var id_cart = {$cart->id|intval};
@@ -506,7 +506,7 @@
 					});
 				}
 				else
-					html = '<div class="alert alert-warning"><i class="icon-warning-sign"></i>&nbsp;{l s='No customers found'}</div>';
+					html = '<div class="alert alert-warning">{l s='No customers found'}</div>';
 				$('#customers').html(html);
 				resetBind();
 			}
@@ -748,11 +748,11 @@
 							id_customization = this.id_customization;
 						});
 					}
-			cart_content += '<tr><td></td><td>'+customized_desc+'</td><td></td><td></td><td>';
-			cart_content += '<div class="input-group fixed-width-md"><a href="#" class="btn btn-default increaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><i class="icon-caret-up"></i></a><br /><a href="#" class="btn btn-default decreaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'"><i class="icon-caret-down"></i></a></div>';
-			cart_content += '<input type="text" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization +'" class="cart_quantity" value="'+this.quantity+'" />';
-			cart_content += '<div class="input-group-btn"><a href="#" class="delete_product btn btn-default" rel="delete_'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><i class="icon-remove"></i></a>';
-			cart_content += '</div></div></td><td></td></tr>';
+					cart_content += '<tr><td></td><td>'+customized_desc+'</td><td></td><td></td><td>';
+					cart_content += '<div class="input-group fixed-width-md"><div class="input-group-btn"><a href="#" class="btn btn-default increaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><i class="icon-caret-up"></i></a><a href="#" class="btn btn-default decreaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'"><i class="icon-caret-down"></i></a></div>';
+					cart_content += '<input type="text" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization +'" class="cart_quantity" value="'+this.quantity+'" />';
+					cart_content += '<div class="input-group-btn"><a href="#" class="delete_product btn btn-default" rel="delete_'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><i class="icon-remove"></i></a></div></div>';
+					cart_content += '</td><td></td></tr>';
 				});
 			}
 		});
@@ -899,12 +899,26 @@
 	{
 		var id_product = $('#id_product option:selected').val();
 		$('#products_found #customization_list').contents().find('#customization_'+id_product).submit();
-		if (customization_errors)
+
+		addProductProcess();
+	}
+
+	//Called from form_customization_feedback.tpl
+	function customizationProductListener()
+	{
+		//refresh form customization
+		searchProducts();
+
+		addProductProcess();
+	}
+
+	function addProductProcess()
+	{
+		if (customization_errors) {
 			$('#products_err').removeClass('hide');
-		else
-		{
+		} else {
 			$('#products_err').addClass('hide');
-			updateQty(id_product, $('#ipa_'+id_product+' option:selected').val(), 0, $('#qty').val());
+			updateQty($('#id_product').val(), $('#ipa_'+$('#id_product').val()+' option:selected').val(), 0, $('#qty').val());
 		}
 	}
 
