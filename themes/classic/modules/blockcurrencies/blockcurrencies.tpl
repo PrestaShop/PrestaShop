@@ -24,7 +24,7 @@
 *}
 
 <div class="currency-selector dropdown js-dropdown">
-  <span>{l s='Currency' mod='blockcurrencies'} :</span>
+  <span>{l s='Currency' mod='blockcurrencies'}:</span>
   <span class="expand-more _gray-darker" data-toggle="dropdown">{$current_currency.iso_code} {$current_currency.sign}</span>
   <a title="{l s='Expand'}" data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <i class="material-icons expand-more">&#xE5C5;</i>

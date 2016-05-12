@@ -54,7 +54,7 @@
     <div class="block">
       <div class="icon"><i class="material-icons">&#xE158;</i></div>
       <div class="data">
-        {l s='Email:'}<br/>
+        {l s='Email us:'}<br/>
         <a href="mailto:{$contact_infos.email}">{$contact_infos.email}</a>
        </div>
     </div>

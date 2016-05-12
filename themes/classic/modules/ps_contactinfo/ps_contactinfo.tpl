@@ -26,7 +26,7 @@
 <div class="block-contact col-md-4 pull-md-right">
 	<h4 class="text-uppercase block-contact-title">{l s='Store information' mod='blockcontact'}</h4>
     {$contact_infos.address.formatted nofilter}
-    {if $contact_infos.phone}<br>{l s='Tel: %s' sprintf=$contact_infos.phone}{/if}
+    {if $contact_infos.phone}<br>{l s='Call us now: %s' sprintf=$contact_infos.phone}{/if}
     {if $contact_infos.fax}<br>{l s='Fax: %s' sprintf=$contact_infos.fax}{/if}
-    {if $contact_infos.email}<br>{l s='Email: %s' sprintf=$contact_infos.email}{/if}
+    {if $contact_infos.email}<br>{l s='Email us: %s' sprintf=$contact_infos.email}{/if}
 </div>
