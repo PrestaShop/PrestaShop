@@ -52,7 +52,7 @@
   </div>
   <div class="col-md-3">
     <label class="form-control-label">&nbsp;</label>
-    <button id="delete-combinations" class="btn btn-tertiary-outline btn-block">
+    <button id="delete-combinations" class="btn btn-tertiary-outline btn-block" data="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}">
       <i class="material-icons">delete</i>
       {{ trans('Delete combinations', {}, 'AdminProducts') }}
     </button>

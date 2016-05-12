@@ -40,10 +40,33 @@ var bulkCombinations = (function () {
       });
     },
     'deleteCombinations': function deleteCombinations() {
-      combinations = this.getSelectedCombinations();
+      var combinations = this.getSelectedCombinations();
+      var combinationsIds = [];
       combinations.forEach((combination) => {
-        combination.sendDeletion();
+        combinationsIds.push(combination.domId);
       });
+
+      modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+        onContinue: function() {
+          var deletionURL = deleteCombinationsBtn.getAttribute('data');
+          $.ajax({
+            type: 'DELETE',
+            data: {'attribute-ids': combinationsIds},
+            url: deletionURL,
+            success: function(response) {
+              showSuccessMessage(response.message);
+              combinationsIds.forEach((combinationId) => {
+                combination = new Combination(combinationId);
+                combination.removeFromDOM();
+              });
+              displayFieldsManager.refresh();
+            },
+            error: function(response) {
+              showErrorMessage(jQuery.parseJSON(response.responseText).message);
+            },
+          });
+        }
+      }).show();
     },
     'getFormValues': function getFormValues() {
       var inputs = Array.from(bulkForm.getElementsByTagName('input'));
@@ -73,6 +96,10 @@ class Combination {
     return this.element.checked;
   }
 
+  removeFromDOM() {
+    this.element.parentNode.removeChild(this.element);
+  }
+
   updateForm(values) {
 
     values.forEach((valueObject) => {
@@ -84,13 +111,6 @@ class Combination {
       formInput.value = value;
     });
     return this.form;
-  }
-
-  sendDeletion() {
-    // confirmation popin
-    // call ajax with a collection of ids
-    // update related Symfony to accept array of ids
-    throw new Error('Not implemented');
   }
 
   /**

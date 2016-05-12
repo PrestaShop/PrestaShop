@@ -13,8 +13,11 @@ var combinations = (function() {
 
     modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
       onContinue: function() {
+
+        var attributeId = elem.attr('data');
         $.ajax({
-          type: 'GET',
+          type: 'DELETE',
+          data: {'attribute-ids': [attributeId]},
           url: elem.attr('href'),
           beforeSend: function() {
             elem.attr('disabled', 'disabled');

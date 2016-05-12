@@ -173,14 +173,14 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete a product attribute
      *
-     * @param int $idAttribute The attribute ID
      * @param int $idProduct The product ID
      * @param Request $request The request
      *
      * @return string
      */
-    public function deleteAttributeAction($idAttribute, $idProduct, Request $request)
+    public function deleteAttributeAction($idProduct, Request $request)
     {
+
         $translator = $this->container->get('prestashop.adapter.translator');
         $response = new JsonResponse();
 
@@ -188,14 +188,21 @@ class AttributeController extends FrameworkBundleAdminController
             return $response;
         }
 
-        $res = $this->container->get('prestashop.adapter.admin.controller.attribute_generator')
-            ->ajaxProcessDeleteProductAttribute($idAttribute, $idProduct);
+        if($request->request->has('attribute-ids')) {
+            $attributeIds = $request->request->get('attribute-ids');
+            foreach($attributeIds as $attributeId) {
+                $legacyResponse = $this->container->get('prestashop.adapter.admin.controller.attribute_generator')
+                    ->ajaxProcessDeleteProductAttribute($attributeId, $idProduct);
+            }
 
-        if ($res['status'] == 'error') {
-            $response->setStatusCode(400);
+            if ($legacyResponse['status'] == 'error') {
+                $response->setStatusCode(400);
+            }
+
+            $response->setData(['message' => $translator->trans($legacyResponse['message'], [], 'AdminProducts')]);
         }
 
-        $response->setData(['message' => $translator->trans($res['message'], [], 'AdminProducts')]);
+
         return $response;
     }
 
