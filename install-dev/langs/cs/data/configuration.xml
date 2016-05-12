@@ -16,9 +16,9 @@
     <value>0</value>
   </configuration>
   <configuration id="PS_CUSTOMER_SERVICE_SIGNATURE">
-    <value>Dear Customer,&#xD;
+    <value>Vážený Zákazníku,&#xD;
 &#xD;
-Regards,&#xD;
-Customer service</value>
+S pozdravem,&#xD;
+Zákaznický servis</value>
   </configuration>
 </entity_configuration>
