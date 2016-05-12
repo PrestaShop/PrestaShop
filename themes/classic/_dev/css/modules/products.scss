@@ -14,10 +14,6 @@
   left: em(8px);
   opacity: 0;
   cursor: pointer;
-  &:hover + span,
-  &:checked + span {
-    border: 2px solid $gray-darker;
-  }
 }
 .input-container{
   position: relative;
@@ -30,12 +26,19 @@
   width: 100%;
   height: 100%;
 }
+.input-radio, .input-color {
+  &:hover + span,
+  &:checked + span {
+    border: 2px solid $gray-darker;
+  }
+}
 .radio-label {
   @include box-shadow;
   background: white;
   display: inline-block;
   padding: em(2px) $small-space;
   font-weight: 600;
+  border: 2px solid white;
 }
 .product-quantity {
   display: inline-block;
