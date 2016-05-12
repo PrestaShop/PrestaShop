@@ -1,7 +1,7 @@
 <section id="checkout-cart-summary" class="card card-block -js-cart" data-refresh-url="{$urls.pages.cart}?ajax=1">
   {block name='cart_summary_header'}
     <header>
-      <p>{$cart.summary_string}<span class="pull-xs-right">{$cart.total.value}</span></p>
+      <p>{$cart.summary_string}</p>
     </header>
   {/block}
 
