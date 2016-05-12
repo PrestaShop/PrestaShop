@@ -69,7 +69,7 @@
 
     <div class="col-md-3 form-control-comment">
       {if (!$field.required && !in_array($field.type, ['radio-buttons', 'checkbox']))}
-       {l s='optional'}
+       {l s='Optional'}
       {/if}
     </div>
   </div>
