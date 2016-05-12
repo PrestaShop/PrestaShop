@@ -82,28 +82,27 @@ class Refresh
     public function execute()
     {
         $output = null;
+        $commandOutput = [];
 
         if (empty($this->commands)) {
             throw new \Exception('Error, you need to define at least on command');
         }
 
         foreach ($this->commands as $command) {
-            if (_PS_MODE_DEV_ && $command['--no-debug']) {
+            if (_PS_MODE_DEV_ && isset($command['--no-debug'])) {
                 $command['--no-debug'] = false;
             }
 
-            if (_PS_MODE_DEV_) {
+            if (false === _PS_MODE_DEV_) {
                 $output = new NullOutput();
             }
 
             $exitCode = $this->application->run(new ArrayInput($command), $output);
 
-            $output = [];
-            if ($command['command'] == 'doctrine:schema:update' && $exitCode > 0) {
-                $output['sf2_schema_update'] = true;
-            }
+            $commandOutput[$command['command']] = $exitCode;
+
         }
 
-        return $output;
+        return $commandOutput;
     }
 }
