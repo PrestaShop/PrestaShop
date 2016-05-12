@@ -116,7 +116,6 @@ class OrderPresenter implements PresenterInterface
      */
     private function getAmounts(Order $order)
     {
-        $tax_label = $this->getLabels()['tax_short'];
         $amounts = [];
         $subtotals = [];
 
@@ -133,7 +132,7 @@ class OrderPresenter implements PresenterInterface
         $total_products = ($this->includeTaxes()) ? $order->total_products_wt : $order->total_products;
         $subtotals['products'] = [
             'type' => 'products',
-            'label' => $this->translator->trans('Products', [], 'Cart').' '.$tax_label,
+            'label' => $this->translator->trans('Products', [], 'Cart').' ',
             'amount' => $total_products,
             'value' => $this->priceFormatter->format($total_products),
         ];
@@ -141,7 +140,7 @@ class OrderPresenter implements PresenterInterface
         $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
         $subtotals['shipping'] = [
             'type' => 'shipping',
-            'label' => $this->translator->trans('Shipping and handling', [], 'Cart').' '.$tax_label,
+            'label' => $this->translator->trans('Shipping and handling', [], 'Cart').' ',
             'amount' => $shipping_cost,
             'value' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
         ];
@@ -150,7 +149,7 @@ class OrderPresenter implements PresenterInterface
         if ((float)$discount_amount) {
             $subtotals['discounts'] = [
                 'type' => 'discount',
-                'label' => $this->translator->trans('Discount', [], 'Cart').' '.$tax_label,
+                'label' => $this->translator->trans('Discount', [], 'Cart').' ',
                 'amount' => $discount_amount,
                 'value' => $this->priceFormatter->format($discount_amount),
             ];
