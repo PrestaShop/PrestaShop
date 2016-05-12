@@ -68,7 +68,7 @@ class OrderPresenter implements PresenterInterface
             'shipping' => $this->getShipping($order),
             'id_address_delivery' => $order->id_address_delivery,
             'id_address_invoice' => $order->id_address_invoice,
-            'tax_label' => $this->getTaxLabel(),
+            'labels' => $this->getLabels(),
         ];
     }
 
@@ -116,7 +116,7 @@ class OrderPresenter implements PresenterInterface
      */
     private function getAmounts(Order $order)
     {
-        $tax_label = $this->getTaxLabel();
+        $tax_label = $this->getLabels()['tax_short'];
         $amounts = [];
         $subtotals = [];
 
@@ -340,10 +340,15 @@ class OrderPresenter implements PresenterInterface
         return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
     }
 
-    private function getTaxLabel()
+    private function getLabels()
     {
-        return ($this->includeTaxes())
-                ? $this->translator->trans('(tax incl.)', [], 'Cart')
-                : $this->translator->trans('(tax excl.)', [], 'Cart');
+        return array(
+            'tax_short' => ($this->includeTaxes())
+                ? $this->translator->trans('(tax incl.)', [], 'Tax')
+                : $this->translator->trans('(tax excl.)', [], 'Tax'),
+            'tax_long' => ($this->includeTaxes())
+                ? $this->translator->trans('(tax included)', [], 'Tax')
+                : $this->translator->trans('(tax excluded)', [], 'Tax'),
+        );
     }
 }

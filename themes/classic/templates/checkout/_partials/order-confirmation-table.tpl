@@ -59,7 +59,7 @@
     {/foreach}
 
     <tr class="font-weight-bold">
-      <td><span class="text-uppercase">{$order.totals.total.label}</span> {$order.tax_label}</td>
+      <td><span class="text-uppercase">{$order.totals.total.label}</span> {$order.labels.tax_short}</td>
       <td>{$order.totals.total.value}</td>
     </tr>
   </table>
