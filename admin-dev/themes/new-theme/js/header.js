@@ -10,6 +10,7 @@ export default class Header {
       this.initSearch();
     });
   }
+
   initQuickAccess() {
     $('.js-quick-link').on('click', (e) => {
       e.preventDefault();
@@ -67,11 +68,13 @@ export default class Header {
       }
     });
   }
+
   initMultiStores() {
     $('.js-link').on('click', (e) => {
       window.open($(e.target).parents('.link').attr('href'), '_blank');
     });
   }
+
   initNotificationsToggle() {
     $('.notification.dropdown-toggle').on('click', () => {
       $('.notification-center.dropdown').addClass('open');
@@ -92,6 +95,7 @@ export default class Header {
       this.updateEmployeeNotifications();
     });
   }
+
   initSearch() {
     $('.js-items-list').on('click', (e) => {
       $('.js-form-search').attr('placeholder', $(e.target).data('placeholder'));
@@ -103,6 +107,7 @@ export default class Header {
       }
     });
   }
+
   updateEmployeeNotifications() {
     $.post(
       baseAdminDir + "ajax.php",
