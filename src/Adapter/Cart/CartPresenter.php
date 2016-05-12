@@ -223,12 +223,12 @@ class CartPresenter implements PresenterInterface
         $total_including_tax = $cart->getOrderTotal(true);
         $total_discount = $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
 
-        $subtotals['products'] = [
+        $subtotals['products'] = array(
             'type' => 'products',
             'label' => $this->translator->trans('Products', array(), 'Cart'),
             'amount' => $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS),
-            'value' =>  $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS)))
-        ];
+            'value' =>  $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS))),
+        );
 
         if ($cart->gift) {
             $giftWrappingPrice = ($cart->getGiftWrappingPrice($this->includeTaxes()) != 0)
@@ -242,15 +242,15 @@ class CartPresenter implements PresenterInterface
                 'value' => ($giftWrappingPrice > 0)
                     ? $this->priceFormatter->format($giftWrappingPrice)
                     : $this->translator->trans('Free', array(), 'Cart'),
-            ];
+            );
         }
 
-        $subtotals['discounts'] = [
+        $subtotals['discounts'] = array(
             'type' => 'discount',
             'label' => $this->translator->trans('Discount', [], 'Cart'),
             'amount' => $total_discount,
             'value' => $this->priceFormatter->format($total_discount),
-        ];
+        );
 
         $shipping_cost = $cart->getTotalShippingCost(null, $this->includeTaxes());
         $subtotals['shipping'] = array(
@@ -264,19 +264,21 @@ class CartPresenter implements PresenterInterface
 
         if (Configuration::get('PS_TAX_DISPLAY')) {
             $taxAmount = $total_including_tax - $total_excluding_tax;
-            $subtotals['tax'] = [
+            $subtotals['tax'] = array(
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', [], 'Cart'),
                 'amount' => $taxAmount,
                 'value' => $this->priceFormatter->format($taxAmount),
-            ];
+            );
         }
 
         $total = array(
             'type' => 'total',
             'label' => $this->translator->trans('Total', array(), 'Cart'),
             'amount' => $this->includeTaxes() ? $total_including_tax : $total_excluding_tax,
-            'value' => $this->priceFormatter->format($this->includeTaxes() ? $total_including_tax : $total_excluding_tax),
+            'value' => $this->priceFormatter->format(
+                $this->includeTaxes() ? $total_including_tax : $total_excluding_tax
+            ),
         );
 
         $products_count = array_reduce($products, function ($count, $product) {
