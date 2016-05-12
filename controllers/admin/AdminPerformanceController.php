@@ -816,7 +816,6 @@ class AdminPerformanceControllerCore extends AdminController
                     }
                 }
 
-
                 if ($tmp = (int)Tools::getValue('PS_JS_THEME_CACHE')) {
                     $version = (int)Configuration::get('PS_CCCJS_VERSION');
                     if (Configuration::get('PS_JS_THEME_CACHE') != $tmp) {
@@ -1030,7 +1029,6 @@ class AdminPerformanceControllerCore extends AdminController
 
             $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
             $sf2Refresh->addCacheClear();
-            $sf2Refresh->addAsseticDump();
             $sf2Refresh->execute();
         }
 
