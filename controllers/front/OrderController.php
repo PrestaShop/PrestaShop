@@ -172,7 +172,7 @@ class OrderControllerCore extends FrontController
 
         $presentedCart = $this->cart_presenter->present($this->context->cart);
 
-        if (count($presentedCart['products']) <= 0) {
+        if (count($presentedCart['products']) <= 0 || $presentedCart['minimalPurchaseRequired']) {
             Tools::redirect('index.php?controller=cart');
         }
 
