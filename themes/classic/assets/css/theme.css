@@ -4914,7 +4914,7 @@ label {
 .help-block {
   margin-top: 10px; }
 
-.btn.disabled {
+.btn.disabled, .btn.disabled:hover {
   background: #acaaa6; }
 
 .alert-warning .material-icons {
@@ -5812,7 +5812,7 @@ body#checkout {
   background: white;
   border-radius: 2px;
   margin: 4.375em 0;
-  padding: 3.125em 18.125em;
+  padding: 3.125em 3.125em;
   text-align: center; }
   #custom-text h3 {
     text-transform: uppercase;
