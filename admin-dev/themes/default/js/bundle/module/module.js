@@ -23,6 +23,7 @@ var AdminModuleController = function () {
     this.pstaggerInput = null;
     this.lastBulkAction = null;
     this.isUploadStarted = false;
+    this.baseAdminDir = '';
 
     /* Selectors into vars to make it easier to change them while keeping same code logic */
     this.searchBarSelector = '#module-search-bar';
@@ -407,7 +408,7 @@ var AdminModuleController = function () {
     };
 
     this.ajaxLoadPage = function() {
-        var urlToCall = baseAdminDir + 'module/catalog/refresh';
+        var urlToCall = this.baseAdminDir + 'module/catalog/refresh';
         var _this = this;
 
         $.ajax({
@@ -676,7 +677,7 @@ var AdminModuleController = function () {
                  $(_this.moduleImportProcessingSelector).fadeOut(function() {
                       if (responseObject.status === true) {
                           if (responseObject.is_configurable === true) {
-                              var configureLink = baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
+                              var configureLink = this.baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
                               $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
                               $(_this.moduleImportSuccessConfigureBtnSelector).show();
                           }
@@ -706,6 +707,11 @@ var AdminModuleController = function () {
             this.currentDisplay = 'list';
         } else {
             this.currentDisplay = 'grid';
+        }
+        // If index.php found in the current URL, we need it also in the baseAdminDir
+        this.baseAdminDir = baseAdminDir;
+        if (window.location.href.indexOf('index.php') != -1) {
+            this.baseAdminDir += 'index.php/';
         }
     };
 
@@ -811,7 +817,7 @@ var AdminModuleController = function () {
 
         //@NOTE:
         // "@" char is used only to be easy to replace by the end of this function
-        var baseActionUrl = baseAdminDir + 'module/manage/action/@/';
+        var baseActionUrl = this.baseAdminDir + 'module/manage/action/@/';
 
         //@NOTE:
         // Note no grid selector used yet since we do not needed it at dev time

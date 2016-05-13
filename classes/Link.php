@@ -494,6 +494,10 @@ class LinkCore
 
         $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
 
+        // Even if URL rewriting is not enabled, the page handled by Symfony must work !
+        // For that, we add an 'index.php' in the URL before the route
+        $index = filter_input(INPUT_SERVER, 'HTTP_MOD_REWRITE') ? '' : '/index.php';
+
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
@@ -503,25 +507,25 @@ class LinkCore
                 if (!$redirectLegacy) {
                     if (array_key_exists('id_product', $sfRouteParams)) {
                         if (array_key_exists('deleteproduct', $sfRouteParams)) {
-                            return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/unit/delete/' . $sfRouteParams['id_product'];
+                            return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$index.'/product/unit/delete/'.$sfRouteParams['id_product'];
                         }
                         //default: if (array_key_exists('updateproduct', $sfRouteParams))
-                        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/form/' . $sfRouteParams['id_product'];
+                        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$index.'/product/form/'.$sfRouteParams['id_product'];
                     }
                     if (array_key_exists('submitFilterproduct', $sfRouteParams)) {
-                        return rtrim($this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog_filters/'
+                        return rtrim($this->getBaseLink().basename(_PS_ADMIN_DIR_).$index.'/product/catalog_filters/'
                             .(array_key_exists('filter_column_sav_quantity', $sfRouteParams)?urlencode($sfRouteParams['filter_column_sav_quantity']):'none').'/'
                             .(array_key_exists('filter_column_active', $sfRouteParams)?$sfRouteParams['filter_column_active']:'none').'/',
                         '/');
                     }
-                    return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog';
+                    return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$index.'/product/catalog';
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }
                 break;
             case 'AdminModulesSf':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/module/catalog';
+                return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$index.'/module/catalog';
                 break;
         }
 
