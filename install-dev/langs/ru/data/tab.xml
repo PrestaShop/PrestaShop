@@ -83,7 +83,7 @@
   <tab id="Positions" name="Расположение"/>
   <tab id="Preferences_1" name="Настройки"/>
   <tab id="Preferences" name="Настройки"/>
-  <tab id="Price_Rules" name="Ценовые правила"/>
+  <tab id="Price_Rules" name="Discounts"/>
   <tab id="Products_1" name="товары"/>
   <tab id="Products" name="товары"/>
   <tab id="Profiles" name="Профили"/>

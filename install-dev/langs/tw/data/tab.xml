@@ -83,7 +83,7 @@
   <tab id="Positions" name="位置"/>
   <tab id="Preferences_1" name="偏好設定"/>
   <tab id="Preferences" name="設定"/>
-  <tab id="Price_Rules" name="價格規則"/>
+  <tab id="Price_Rules" name="Discounts"/>
   <tab id="Products_1" name="產品"/>
   <tab id="Products" name="產品"/>
   <tab id="Profiles" name="角色"/>
