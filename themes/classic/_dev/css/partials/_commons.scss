@@ -283,7 +283,7 @@ label {
   margin-top: $small-space;
 }
 
-.btn.disabled {
+.btn.disabled, .btn.disabled:hover {
   background: $gray;
 }
 .alert-warning {
