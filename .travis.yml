@@ -9,6 +9,10 @@ addons:
         - apache2
         - postfix
     sauce_connect: true
+    
+cache:
+  directories:
+    - $HOME/.composer/cache
 
 sudo: required
 dist: trusty
@@ -56,8 +60,7 @@ notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
 script:
-  - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml && cp tests/composer.lock.travis ./composer.lock
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.4" ]]; then GITHUB_OAUTH_TOKEN=${GITHUB_OAUTH_TOKEN} ./travis-scripts/check-composer-update; fi
+  - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
   - composer install --prefer-dist --no-interaction --no-progress
   - tests/check_php_parse_errors.sh
   - bash ./travis-scripts/install-prestashop
