@@ -51,14 +51,14 @@ class OrderPresenter implements PresenterInterface
     public function present($order)
     {
         if (!is_a($order, 'Order')) {
-            throw new \Exception("OrderPresenter can only present instance of Order");
+            throw new \Exception('OrderPresenter can only present instance of Order');
         }
 
         return array(
             'products' => $this->getProducts($order),
             'products_count' => count($this->getProducts($order)),
             'totals' => $this->getAmounts($order)['totals'],
-            'subtotals' =>$this->getAmounts($order)['subtotals'],
+            'subtotals' => $this->getAmounts($order)['subtotals'],
             'details' => $this->getDetails($order),
             'history' => $this->getHistory($order),
             'messages' => $this->getMessages($order),
@@ -119,23 +119,25 @@ class OrderPresenter implements PresenterInterface
         $amounts = array();
         $subtotals = array();
 
-        $tax = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
-        if ((float)$tax && Configuration::get('PS_TAX_DISPLAY')) {
-            $subtotals['tax'] = array(
-                'type' => 'tax',
-                'label' => $this->translator->trans('Tax', array(), 'Cart'),
-                'amount' => $tax,
-                'value' => $this->priceFormatter->format($tax),
-            );
-        }
-
         $total_products = ($this->includeTaxes()) ? $order->total_products_wt : $order->total_products;
         $subtotals['products'] = array(
             'type' => 'products',
-            'label' => $this->translator->trans('Products', array(), 'Cart'),
+            'label' => $this->translator->trans('Subtotal', array(), 'Cart'),
             'amount' => $total_products,
             'value' => $this->priceFormatter->format($total_products),
         );
+
+        $discount_amount = ($this->includeTaxes())
+            ? $order->total_discounts_tax_incl
+            : $order->total_discounts_tax_excl;
+        if ((float) $discount_amount) {
+            $subtotals['discounts'] = array(
+                'type' => 'discount',
+                'label' => $this->translator->trans('Discount', array(), 'Cart'),
+                'amount' => $discount_amount,
+                'value' => $this->priceFormatter->format($discount_amount),
+            );
+        }
 
         $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
         $subtotals['shipping'] = array(
@@ -145,13 +147,13 @@ class OrderPresenter implements PresenterInterface
             'value' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', array(), 'Cart'),
         );
 
-        $discount_amount = ($this->includeTaxes()) ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
-        if ((float)$discount_amount) {
-            $subtotals['discounts'] = array(
-                'type' => 'discount',
-                'label' => $this->translator->trans('Discount', array(), 'Cart'),
-                'amount' => $discount_amount,
-                'value' => $this->priceFormatter->format($discount_amount),
+        $tax = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
+        if ((float) $tax && Configuration::get('PS_TAX_DISPLAY')) {
+            $subtotals['tax'] = array(
+                'type' => 'tax',
+                'label' => $this->translator->trans('Tax', array(), 'Cart'),
+                'amount' => $tax,
+                'value' => $this->priceFormatter->format($tax),
             );
         }
 
@@ -195,7 +197,7 @@ class OrderPresenter implements PresenterInterface
             'payment' => $order->payment,
             'recyclable' => (bool) $order->recyclable,
             'shipping' => $this->getShipping($order),
-            'is_valid' => $order->valid
+            'is_valid' => $order->valid,
         );
     }
 

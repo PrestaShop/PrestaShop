@@ -227,7 +227,14 @@ class CartPresenter implements PresenterInterface
             'type' => 'products',
             'label' => $this->translator->trans('Products', array(), 'Cart'),
             'amount' => $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS),
-            'value' =>  $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS))),
+            'value' => $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS))),
+        );
+
+        $subtotals['discounts'] = array(
+            'type' => 'discount',
+            'label' => $this->translator->trans('Discount', [], 'Cart'),
+            'amount' => $total_discount,
+            'value' => $this->priceFormatter->format($total_discount),
         );
 
         if ($cart->gift) {
@@ -244,13 +251,6 @@ class CartPresenter implements PresenterInterface
                     : $this->translator->trans('Free', array(), 'Cart'),
             );
         }
-
-        $subtotals['discounts'] = array(
-            'type' => 'discount',
-            'label' => $this->translator->trans('Discount', [], 'Cart'),
-            'amount' => $total_discount,
-            'value' => $this->priceFormatter->format($total_discount),
-        );
 
         $shipping_cost = $cart->getTotalShippingCost(null, $this->includeTaxes());
         $subtotals['shipping'] = array(
