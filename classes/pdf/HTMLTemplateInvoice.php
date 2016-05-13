@@ -503,14 +503,4 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             date('Y', strtotime($this->order_invoice->date_add))
         ).'.pdf';
     }
-
-    /**
-     * Returns the template's HTML pagination block
-     *
-     * @return string HTML pagination block
-     */
-    public function getPagination()
-    {
-        return $this->smarty->fetch($this->getTemplate('pagination'));
-    }
 }
