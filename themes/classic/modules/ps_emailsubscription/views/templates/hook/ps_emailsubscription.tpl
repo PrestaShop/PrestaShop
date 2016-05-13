@@ -25,20 +25,29 @@
 
 <div class="block_newsletter col-md-7">
   <div class="row">
-    <p class="col-md-5">{l s='Get our latest news and special sales' mod='blocknewsletter'}</p>
+    <p class="col-md-5">{l s='Get our latest news and special sales' mod='ps_emailsubscription'}</p>
 
     <div class="col-md-7">
       <form action="{$urls.pages.index}#footer" method="post">
         <div class="row">
           <div class="col-md-8">
-            <input type="text" name="email" value="{$value}" placeholder="{l s='Your email address' mod='blocknewsletter'}">
-            {if $msg}
-              <p class="text-warning notification {if $nw_error}notification-error{else}notification-success{/if}">{$msg}</p>
-            {/if}
+            <input type="text" name="email" value="{$value}" placeholder="{l s='Your email address' mod='ps_emailsubscription'}">
           </div>
           <div class="col-md-4">
-            <input class="btn btn-primary" type="submit" value="{l s='Subscribe' mod='blocknewsletter'}" name="submitNewsletter">
+            <input class="btn btn-primary" type="submit" value="{l s='Subscribe' mod='ps_emailsubscription'}" name="submitNewsletter">
             <input type="hidden" name="action" value="0">
+          </div>
+          <div class="col-md-12">
+              {if $need_confirmation}
+               <span class="custom-checkbox">
+                  <input type="checkbox" name="confirm-optin" value="1" required>
+                  <span><i class="material-icons checkbox-checked"></i></span>
+                  <label>{l s='I agree to receive newsletter emails and I am aware of [1]the privacy policy[/1]' tags=['<a href="%s">'|sprintf:$link->getCMSLink($cms_page)] mod='ps_emailsubscription'}</label>
+                </span>
+              {/if}
+              {if $msg}
+                <p class="text-warning notification {if $nw_error}notification-error{else}notification-success{/if}">{$msg}</p>
+              {/if}
           </div>
         </div>
       </form>
