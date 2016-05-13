@@ -33,9 +33,7 @@ var modalConfirmation = (function() {
     modalConfirmation.hide();
   });
   return {
-    'init': function init() {
-      console.log('modal initialised');
-    },
+    'init': function init() {},
     'create': function create(content, title, callbacks) {
       if(title != null){
         modal.find('.modal-title').html(title);
