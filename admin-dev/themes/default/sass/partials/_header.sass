@@ -5,16 +5,6 @@ $header-height: 36px
 
 #header
 	z-index: 20
-	#orders_notif_number_wrapper
-		color: #fff
-		background: #fbb000
-		position: absolute
-		top: 2px
-		right: 2px
-		line-height: 10px
-		font-size: 9px
-		padding: 4px
-		@include border-radius(10px)
 #header_infos
 	@extend .navbar
 	@extend .navbar-inverse
@@ -278,3 +268,101 @@ $header-height: 36px
 		font-size: 20px
 		color: rgba(white,.6)
 		line-height: 35px
+
+#notification
+	&.open
+		background: none
+	.notifs .material-icons
+		color: #6c868e
+	>.material-icons
+		font-size: 1.5rem
+		line-height: 1.375rem
+		vertical-align: middle
+	#total_notif_number_wrapper
+		display: inline-block
+		line-height: .875rem
+		height: .875rem
+		vertical-align: middle
+		position: absolute
+		top: .125rem
+		right: .125rem
+		color: #fff
+		background: #fb0
+		font-size: .5625rem
+		padding: 0 .25rem
+		border-radius: .625rem
+	.dropdown-menu
+		margin: 0
+		padding: 0
+		border-radius: 0
+		min-width: 25rem
+		box-shadow: none
+		.notifications
+			.nav-tabs
+				border-bottom: 1px solid #fff
+				.nav-item
+					margin-left: 0
+					width: 33%
+					text-align: center
+					margin-bottom: -1px
+					&.active a
+						border-top: 0
+						border-bottom: 2px solid #25b9d7
+						color: #363a41
+					&:hover a
+						color: #25b9d7
+					.nav-link
+						color: #6c868e
+						font-weight: 400
+						padding: .9375rem .9375rem .625rem
+						font-family: Open Sans,sans-serif
+						font-size: 0.75rem
+						text-transform: none
+						border: 0
+			.tab-content
+				border-top: .125rem solid #bbcdd2
+				padding: 0
+				margin-top: -.0625rem
+				.tab-pane
+					height: 11.875rem
+					overflow-y: auto
+					.no-notification
+						display: none
+					&.empty
+						color: #6c868e
+						text-align: center
+						&::after
+							content: "\E7F5"
+							font-family: "Material Icons"
+							opacity: 0.7
+							font-size: 5.625rem
+							color: #bbcdd2
+						> .no-notification
+							position: absolute
+							bottom: 0
+							width: 100%
+							display: block
+				.notif
+					display: block
+					padding: .625rem .9375rem
+					color: #6c868e
+					.material-icons
+						vertical-align: top
+						font-size: 16px
+						line-height: 16px
+					.message-notification-status
+						&.open
+							color: #5cb85c
+						&.closed
+							color: #d9534f
+						&.pending1, &.pending2
+							color: #FFBB00
+					strong
+						color: #363a41
+					&:hover
+						background-color: #3ed2f0
+						color: #fff
+						text-decoration: none
+						strong
+							color: #fff
+

@@ -1,0 +1,148 @@
+.notification-center {
+  > .notification {
+    @include single-line-block($size-header-height);
+    position: relative;
+    cursor: pointer;
+    color: $tertiary;
+    width: rem(30px);
+
+    > .material-icons {
+      font-size: rem(24px);
+      line-height: rem(22px);
+      vertical-align: middle;
+    }
+
+    > .count {
+      display: inline-block;
+      @include single-line-block(rem(14px));
+      position: absolute;
+      top: rem(2px);
+      right: rem(2px);
+      color: $white;
+      background: $secondary;
+      font-size: rem(9px);
+      padding: 0 rem(4px);
+      border-radius: rem(10px);
+
+      &.hide {
+        display: none;
+      }
+    }
+  }
+
+  > .notification::after {
+    display: none;
+  }
+
+  .dropdown-menu {
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    min-width: rem(400px);
+  }
+
+  .notifications {
+    font-size: $font-size-sm;
+
+    .nav {
+      .nav-item {
+        margin-left: 0;
+        width: 33%;
+        text-align: center;
+
+        &:last-child {
+          float: right;
+        }
+      }
+
+      .nav-link {
+        color: $font-color-secondary;
+        font-weight: $font-weight-normal;
+        padding: rem(15px) rem(15px) rem(10px) rem(15px);
+
+        &.active {
+          border-top: 0;
+          border-bottom: 2px solid $nav-tabs-active-link-hover-border-color;
+          color: $font-color-primary;
+        }
+
+        &:hover {
+          color: $link-color;
+        }
+      }
+    }
+
+    .tab-content {
+      border-top: rem(2px) solid $navbar-bottom-separtor-color;
+      padding: 0;
+      margin-top: rem(-1px);
+
+      > .tab-pane {
+        height: rem(190px);
+        overflow-y: auto;
+
+        .no-notification {
+          display: none;
+        }
+
+        &.empty {
+          color: $gray-medium;
+          text-align: center;
+
+          &::after {
+            content: "\E7F5";
+            font-family: "Material Icons";
+            opacity: 0.7;
+            font-size: rem(90px);
+            color: $gray-light;
+          }
+
+          > .no-notification {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            display: block;
+          }
+        }
+      }
+
+      .notif {
+        display: block;
+        padding: rem(10px) rem(15px);
+        color: $font-color-secondary;
+
+        .material-icons {
+          vertical-align: top;
+        }
+
+        .message-notification-status {
+          &.open {
+            color: $brand-success;
+          }
+
+          &.closed {
+            color: $brand-danger;
+          }
+
+          &.pending1, &.pending2 {
+            color: $brand-secondary;
+          }
+        }
+
+        strong {
+          color: $font-color-primary;
+        }
+
+        &:hover {
+          background-color: $dropdown-link-hover-bg;
+          color: $dropdown-link-hover-color;
+          text-decoration: none;
+
+          strong {
+            color: $dropdown-link-hover-color;
+          }
+        }
+      }
+    }
+  }
+}

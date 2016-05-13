@@ -66,12 +66,17 @@ class NotificationCore
      */
     public static function getLastElementsIdsByType($type, $id_last_element)
     {
+        global $cookie;
+
         switch ($type) {
             case 'order':
                 $sql = '
-					SELECT SQL_CALC_FOUND_ROWS o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, o.`date_upd`, c.`firstname`, c.`lastname`
+					SELECT SQL_CALC_FOUND_ROWS o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, o.`date_upd`, c.`firstname`, c.`lastname`, ca.`name`, co.`iso_code`
 					FROM `'._DB_PREFIX_.'orders` as o
 					LEFT JOIN `'._DB_PREFIX_.'customer` as c ON (c.`id_customer` = o.`id_customer`)
+					LEFT JOIN `'._DB_PREFIX_.'carrier` as ca ON (ca.`id_carrier` = o.`id_carrier`)
+					LEFT JOIN `'._DB_PREFIX_.'address` as a ON (a.`id_address` = o.`id_address_delivery`)
+					LEFT JOIN `'._DB_PREFIX_.'country` as co ON (co.`id_country` = a.`id_country`)
 					WHERE `id_order` > '.(int)$id_last_element.
                     Shop::addSqlRestriction(false, 'o').'
 					ORDER BY `id_order` DESC
@@ -80,9 +85,10 @@ class NotificationCore
 
             case 'customer_message':
                 $sql = '
-					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`, c.`date_add` as date_upd
+					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`, ct.`status`, c.`date_add`, cu.`firstname`, cu.`lastname`
 					FROM `'._DB_PREFIX_.'customer_message` as c
 					LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
+					LEFT JOIN `'._DB_PREFIX_.'customer` as cu ON (cu.`id_customer` = ct.`id_customer`)
 					WHERE c.`id_customer_message` > '.(int)$id_last_element.'
 						AND c.`id_employee` = 0
 						AND ct.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
@@ -117,9 +123,12 @@ class NotificationCore
                 'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int)$value['id_customer_message'] : 0),
                 'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),
                 'total_paid' => ((!empty($value['total_paid'])) ? Tools::displayPrice((float)$value['total_paid'], (int)$value['id_currency'], false) : 0),
+                'carrier' => ((!empty($value['name'])) ? Tools::safeOutput($value['name']) : ''),
+                'iso_code' => ((!empty($value['iso_code'])) ? Tools::safeOutput($value['iso_code']) : ''),
+                'company' => ((!empty($value['company'])) ? Tools::safeOutput($value['company']) : ''),
+                'status' => ((!empty($value['status'])) ? Tools::safeOutput($value['status']) : ''),
                 'customer_name' => $customer_name,
-                // x1000 because of moment.js (see: http://momentjs.com/docs/#/parsing/unix-timestamp/)
-                'update_date' => isset($value['date_upd']) ? (int)strtotime($value['date_upd']) * 1000 : 0,
+                'date_add' => isset($value['date_add']) ? Tools::displayDate($value['date_add']) : 0,
             );
         }
 

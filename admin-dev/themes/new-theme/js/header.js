@@ -1,13 +1,16 @@
 import $ from 'jquery';
+import refreshNotifications from './notifications.js';
 
 export default class Header {
   constructor() {
     $(() => {
       this.initQuickAccess();
       this.initMultiStores();
+      this.initNotificationsToggle();
       this.initSearch();
     });
   }
+
   initQuickAccess() {
     $('.js-quick-link').on('click', (e) => {
       e.preventDefault();
@@ -65,11 +68,34 @@ export default class Header {
       }
     });
   }
+
   initMultiStores() {
     $('.js-link').on('click', (e) => {
       window.open($(e.target).parents('.link').attr('href'), '_blank');
     });
   }
+
+  initNotificationsToggle() {
+    $('.notification.dropdown-toggle').on('click', () => {
+      $('.notification-center.dropdown').addClass('open');
+      this.updateEmployeeNotifications();
+    });
+
+    $('body').on('click', function (e) {
+      if (!$('div.notification-center.dropdown').is(e.target)
+        && $('div.notification-center.dropdown').has(e.target).length === 0
+        && $('.open').has(e.target).length === 0
+      ) {
+        $('div.notification-center.dropdown').removeClass('open');
+        refreshNotifications();
+      }
+    });
+
+    $('.notification-center .nav-link').on('shown.bs.tab', () => {
+      this.updateEmployeeNotifications();
+    });
+  }
+
   initSearch() {
     $('.js-items-list').on('click', (e) => {
       $('.js-form-search').attr('placeholder', $(e.target).data('placeholder'));
@@ -80,5 +106,15 @@ export default class Header {
         $(e.target).addClass('expanded');
       }
     });
+  }
+
+  updateEmployeeNotifications() {
+    $.post(
+      baseAdminDir + "ajax.php",
+      {
+        "updateElementEmployee": "1",
+        "updateElementEmployeeType": $('.notification-center .nav-link.active').attr('data-type')
+      }
+    );
   }
 }

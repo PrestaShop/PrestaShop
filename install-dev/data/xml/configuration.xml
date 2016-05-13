@@ -467,9 +467,6 @@
   <configuration id="PS_ADVANCED_STOCK_MANAGEMENT" name="PS_ADVANCED_STOCK_MANAGEMENT">
     <value>0</value>
   </configuration>
-  <configuration id="PS_ADMINREFRESH_NOTIFICATION" name="PS_ADMINREFRESH_NOTIFICATION">
-    <value>1</value>
-  </configuration>
   <configuration id="PS_STOCK_MVT_TRANSFER_TO" name="PS_STOCK_MVT_TRANSFER_TO">
     <value>7</value>
   </configuration>
