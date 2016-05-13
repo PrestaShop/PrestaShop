@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class WebserviceOutputJSON implements WebserviceOutputInterface
+class WebserviceOutputJSONCore implements WebserviceOutputInterface
 {
     public $docUrl = '';
     public $languages = array();
