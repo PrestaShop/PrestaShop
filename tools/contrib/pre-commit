@@ -29,7 +29,7 @@ done
 echo "Running Code Sniffer..."
 for FILE in $SFILES
 do
-	php bin/php-cs-fixer fix $PROJECT_PATH/$FILE --diff --level=psr2
+	php bin/php-cs-fixer fix $PROJECT_PATH/$FILE --diff --level=symfony
 	if [ $? != 0 ]
 	then
 		echo "PSR2 errors found, please fix it before commit."
