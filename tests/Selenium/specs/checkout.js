@@ -91,7 +91,7 @@ function runScenario (scenario) {
                     return browser.setValue('#customer-form [name=password]', '123456789');
                   }
                 })
-                .click('#customer-form button')
+                .click('#customer-form button[data-link-action="register-new-customer"]')
                 .waitForVisible(
                     '#checkout-personal-information-step.-reachable.-complete'
                 )
@@ -104,7 +104,7 @@ function runScenario (scenario) {
                 .waitForVisible('#login-form')
                 .setValue('#login-form [name=email]', fixtures.customer.email)
                 .setValue('#login-form [name=password]', fixtures.customer.password)
-                .click('#login-form button')
+                .click('#login-form button[data-link-action="sign-in"]')
               ;
             });
           }
@@ -202,7 +202,7 @@ function runScenario (scenario) {
         describe('the delivery step', function () {
           it("should show delivery options", function () {
             return browser
-              .waitForVisible('.delivery-options .delivery-option')
+              .waitForVisible('.delivery-options-list')
             ;
           });
           it("the delivery options have an impact on cart summary display", function () {
