@@ -98,4 +98,14 @@ DROP TABLE `PREFIX_scene_shop`;
 ALTER TABLE `PREFIX_image_type` DROP `scenes`;
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_SCENE_FEATURE_ACTIVE';
 
+
 UPDATE `PREFIX_configuration` SET value=1 WHERE name='PS_TAX_DISPLAY';
+
+/* Add redis cache */
+CREATE TABLE `PREFIX_redis_servers` (
+  `id_redis_server` INT(11) UNSIGNED PRIMARY KEY NOT NULL,
+  `ip` VARCHAR(46) NOT NULL,
+  `port` INT(11) UNSIGNED NOT NULL,
+  `auth` TEXT,
+  `db` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;

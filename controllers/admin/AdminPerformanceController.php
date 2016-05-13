@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -579,6 +579,10 @@ class AdminPerformanceControllerCore extends AdminController
         $warning_xcache = str_replace('[a]', '<a href="http://xcache.lighttpd.net" target="_blank">', $warning_xcache);
         $warning_xcache = str_replace('[/a]', '</a>', $warning_xcache);
 
+        $warning_redis = ' '.$this->l('(you must install the [a]Redis extension[/a])');
+        $warning_redis = str_replace('[a]', '<a href="https://pecl.php.net/package/redis" target="_blank">', $warning_redis);
+        $warning_redis = str_replace('[/a]', '</a>', $warning_redis);
+
         $warning_fs = ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHEFS_DIRECTORY_));
 
         $this->fields_form[6]['form'] = array(
@@ -640,7 +644,11 @@ class AdminPerformanceControllerCore extends AdminController
                             'value' => 'CacheXcache',
                             'label' => $this->l('Xcache').(extension_loaded('xcache') ? '' : $warning_xcache)
                         ),
-
+                        array(
+                            'id' => 'CacheRedis',
+                            'value' => 'CacheRedis',
+                            'label' => $this->l('Redis Cache').(extension_loaded('redis') ? '' : $warning_redis)
+                        ),
                     )
                 ),
                 array(
@@ -652,7 +660,8 @@ class AdminPerformanceControllerCore extends AdminController
             'submit' => array(
                 'title' => $this->l('Save')
             ),
-            'memcachedServers' => true
+            'memcachedServers' => true,
+            'redisServers' => true
         );
 
         $depth = Configuration::get('PS_CACHEFS_DIRECTORY_DEPTH');
@@ -660,7 +669,8 @@ class AdminPerformanceControllerCore extends AdminController
         $this->fields_value['caching_system'] = _PS_CACHING_SYSTEM_;
         $this->fields_value['ps_cache_fs_directory_depth'] = $depth ? $depth : 1;
 
-        $this->tpl_form_vars['servers'] = CacheMemcache::getMemcachedServers();
+        $this->tpl_form_vars['memcached_servers'] = CacheMemcache::getMemcachedServers();
+        $this->tpl_form_vars['redis_servers'] = CacheRedis::getRedisServers();
         $this->tpl_form_vars['_PS_CACHE_ENABLED_'] = _PS_CACHE_ENABLED_;
     }
 
@@ -725,7 +735,7 @@ class AdminPerformanceControllerCore extends AdminController
         }
 
         Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
-        if (Tools::isSubmit('submitAddServer')) {
+        if (Tools::isSubmit('submitAddMemcachedServer')) {
             if ($this->tabAccess['add'] === '1') {
                 if (!Tools::getValue('memcachedIp')) {
                     $this->errors[] = Tools::displayError('The Memcached IP is missing.');
@@ -756,6 +766,48 @@ class AdminPerformanceControllerCore extends AdminController
                     Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
                 } else {
                     $this->errors[] = Tools::displayError('There was an error when attempting to delete the Memcached server.');
+                }
+            } else {
+                $this->errors[] = Tools::displayError('You do not have permission to delete this.');
+            }
+        }
+
+        if (Tools::isSubmit('submitAddRedisServer')) {
+            if ($this->tabAccess['add'] === '1') {
+                if (!Tools::getValue('redisIp')) {
+                    $this->errors[] = Tools::displayError('The Redis IP is missing.');
+                }
+                if (!Tools::getValue('redisPort')) {
+                    $this->errors[] = Tools::displayError('The Redis port is missing.');
+                }
+                if (!Tools::isSubmit('redisAuth')) {
+                    $this->errors[] = Tools::displayError('The Redis auth is missing.');
+                }
+                if (!Tools::isSubmit('redisDb')) {
+                    $this->errors[] = Tools::displayError('The Redis database is missing.');
+                }
+                if (!count($this->errors)) {
+                    if (CacheRedis::addServer(
+                        pSQL(Tools::getValue('redisIp')),
+                        (int)Tools::getValue('redisPort'),
+                        pSQL(Tools::getValue('redisAuth')),
+                        (int)Tools::getValue('redisDb'))) {
+                        Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+                    } else {
+                        $this->errors[] = Tools::displayError('The Redis server cannot be added.');
+                    }
+                }
+            } else {
+                $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            }
+        }
+
+        if (Tools::getValue('deleteRedisServer')) {
+            if ($this->tabAccess['add'] === '1') {
+                if (CacheRedis::deleteServer((int)Tools::getValue('deleteRedisServer'))) {
+                    Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+                } else {
+                    $this->errors[] = Tools::displayError('There was an error when attempting to delete the Redis server.');
                 }
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
@@ -970,6 +1022,9 @@ class AdminPerformanceControllerCore extends AdminController
                     } elseif ($caching_system == 'CacheXcache' && !extension_loaded('xcache')) {
                         $this->errors[] = Tools::displayError('To use Xcache, you must install the Xcache extension on your server.').'
 							<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
+                    } elseif ($caching_system == 'CacheRedis' && !extension_loaded('redis')) {
+                        $this->errors[] = Tools::displayError('To use Redis, you must install the Redis extension on your server.').'
+							<a href="https://pecl.php.net/package/redis">https://pecl.php.net/package/redis</a>';
                     } elseif ($caching_system == 'CacheXcache' && !ini_get('xcache.var_size')) {
                         $this->errors[] = Tools::displayError('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).').'
 							<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';
@@ -993,6 +1048,8 @@ class AdminPerformanceControllerCore extends AdminController
                     } elseif ($caching_system == 'CacheMemcache' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache') {
                         Cache::getInstance()->flush();
                     } elseif ($caching_system == 'CacheMemcached' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcached') {
+                        Cache::getInstance()->flush();
+                    } elseif ($caching_system == 'CacheRedis' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheRedis') {
                         Cache::getInstance()->flush();
                     }
                 }
@@ -1073,14 +1130,14 @@ class AdminPerformanceControllerCore extends AdminController
         }
     }
 
-    public function displayAjaxTestServer()
+    public function displayAjaxTestMemcachedServer()
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
             die(Tools::displayError('This functionality has been disabled.'));
         }
         /* PrestaShop demo mode*/
-        if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_server') {
+        if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_memcached_server') {
             $host = pSQL(Tools::getValue('sHost', ''));
             $port = (int)Tools::getValue('sPort', 0);
             $type = Tools::getValue('type', '');
@@ -1212,8 +1269,11 @@ class AdminPerformanceControllerCore extends AdminController
         if ($this->isDefinesReadable(true)) {
             $defines_custom_clean = php_strip_whitespace(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
             $defines_custom = Tools::file_get_contents(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
-            if (!empty($defines_custom_clean) && preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $defines_custom_clean)) {
-                $defines_custom = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', false);', $defines_custom);
+            if (!empty($defines_custom_clean) && preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui',
+                    $defines_custom_clean)
+            ) {
+                $defines_custom = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui',
+                    'define(\'_PS_MODE_DEV_\', false);', $defines_custom);
                 if (!@file_put_contents(_PS_ROOT_DIR_.'/config/defines_custom.inc.php', $defines_custom)) {
                     return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM;
                 }
@@ -1234,7 +1294,8 @@ class AdminPerformanceControllerCore extends AdminController
         if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $defines_clean)) {
             return self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND;
         }
-        $defines = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', false);', $defines);
+        $defines = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', false);',
+            $defines);
         if (!@file_put_contents(_PS_ROOT_DIR_.'/config/defines.inc.php', $defines)) {
             return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS;
         }
@@ -1244,5 +1305,45 @@ class AdminPerformanceControllerCore extends AdminController
         }
 
         return self::DEBUG_MODE_SUCCEEDED;
+    }
+
+    /**
+     * Perform a short test to see if Redis is enabled
+     * and return the result through ajax
+     */
+    public function displayAjaxTestRedisServer()
+    {
+        /* PrestaShop demo mode */
+        if (_PS_MODE_DEMO_) {
+            die(Tools::displayError('This functionality has been disabled.'));
+        }
+
+        /* PrestaShop demo mode*/
+        if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_redis_server') {
+            $host = pSQL(Tools::getValue('sHost', ''));
+            $port = (int)Tools::getValue('sPort', 0);
+            $auth = (int)Tools::getValue('sAuth', 0);
+            $db = (int)Tools::getValue('sDb', 0);
+
+            if ($host != '' && $port != 0) {
+                $res = 0;
+
+                if (extension_loaded('redis')) {
+                    $redis = new Redis();
+                    if ($redis->connect($host, $port)) {
+                        $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
+                        if (!empty($auth)) {
+                            if (!($redis->auth($auth))) {
+                                die(json_encode(array(0)));
+                            }
+                        }
+                        $redis->select($db);
+                        $res = (Tools::strtolower($redis->ping() === '+PONG') ? 1 : 0);
+                    }
+                }
+                die(json_encode(array($res)));
+            }
+        }
+        die;
     }
 }
