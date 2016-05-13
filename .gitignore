@@ -13,6 +13,7 @@ vendor/*
 docs/phpdoc-sf/
 composer.lock
 tests/Selenium/errorShots/
+tests/Selenium/errorDumps/
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*

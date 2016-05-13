@@ -129,9 +129,7 @@ exports.config = {
         chai.should();
         // this hook allows to define custom functions on the global browser object
         require('./commands/init')(browser);
-        return browser
-            .windowHandleMaximize()
-            ;
+        return browser.windowHandleMaximize();
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from
