@@ -20,7 +20,10 @@
     display:block;
     color: $gray-dark-text;
     text-decoration: none;
-    padding-left: $padding-size;
+    padding: 0 rem(5px) 0 $padding-size;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   &.-active {
     border-right: rem(3px) solid $gray-dark-text-hover;
