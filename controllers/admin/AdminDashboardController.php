@@ -70,7 +70,7 @@ class AdminDashboardControllerCore extends AdminController
     {
         $forms = array();
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-        $carriers = Carrier::getCarriers($this->context->language->id, true);
+        $carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, 'ALL_CARRIERS');
         $modules = Module::getModulesOnDisk(true);
 
         $forms = array(
