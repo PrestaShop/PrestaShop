@@ -658,6 +658,14 @@ class AdminControllerCore extends Controller
                         $filter_value = '';
                         if (isset($t['type']) && $t['type'] == 'bool') {
                             $filter_value = ((bool)$val) ? $this->l('yes') : $this->l('no');
+                        } elseif (isset($t['type']) && $t['type'] == 'date' || isset($t['type']) && $t['type'] == 'datetime') {
+                            $date = Tools::unSerialize($val);
+                            if (isset($date[0])) {
+                                $filter_value = $date[0];
+                                if (isset($date[1]) && !empty($date[1])) {
+                                    $filter_value .= ' - '.$date[1];
+                                }
+                            }
                         } elseif (is_string($val)) {
                             $filter_value = htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
                         }
