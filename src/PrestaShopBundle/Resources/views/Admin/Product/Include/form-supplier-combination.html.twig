@@ -21,7 +21,7 @@
         {{ form_errors(form[collectionName]) }}
         <table class="table table-striped">
           <thead>
-            <tr>
+            <tr class="text-uppercase">
               <th width="40%">{{ trans('Product name', {}, 'AdminProducts') }}</th>
               <th width="20%">{{ trans('Supplier reference', {}, 'AdminProducts') }}</th>
               <th width="20%">{{ trans('Unit price tax excluded', {}, 'AdminProducts') }}</th>
@@ -47,4 +47,3 @@
     </div>
   </div>
 {% endfor %}
-

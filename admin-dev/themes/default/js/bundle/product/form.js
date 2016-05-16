@@ -658,7 +658,7 @@ var specificPrices = (function() {
             '<td>' + specific_price.impact + '</td>' +
             '<td>' + specific_price.period + '</td>' +
             '<td>' + specific_price.from_quantity + '</td>' +
-            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete') + '/' + specific_price.id_specific_price + '" class="btn btn-danger js-delete"><i class="material-icons">delete</i></a>' : '') + '</td>' +
+            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete') + '/' + specific_price.id_specific_price + '" class="js-delete delete"><i class="material-icons">delete</i></a>' : '') + '</td>' +
             '</tr>';
 
           tbody.append(row);
@@ -1184,9 +1184,9 @@ var attachmentProduct = (function() {
             //inject new attachment in attachment list
             if (response.id) {
               var row = '<tr>\
-                <td><input type="checkbox" name="form[step6][attachments][]" value="' + response.id + '" checked="checked"> ' + response.real_name + '</td>\
-                <td>' + response.file_name + '</td>\
-                <td>' + response.mime + '</td>\
+                <td class="col-md-3"><input type="checkbox" name="form[step6][attachments][]" value="' + response.id + '" checked="checked"> ' + response.real_name + '</td>\
+                <td class="col-md-6">' + response.file_name + '</td>\
+                <td class="col-md-2">' + response.mime + '</td>\
               </tr>';
 
               $('#product-attachment-file tbody').append(row);

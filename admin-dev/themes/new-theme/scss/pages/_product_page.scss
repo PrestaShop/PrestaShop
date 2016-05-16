@@ -19,23 +19,14 @@
       overflow-y: auto;
       width: 100%;
     }
-    thead,
-    tbody,
-    tr,
-    td,
-    th {
-      display: block;
-    }
     tbody td,
     thead > tr > th {
-      float: left;
       border-bottom-width: 0;
     }
     tr {
       clear: both;
     }
     td {
-      padding: 5px;
       span {
         word-break: break-all;
         word-wrap: break-word;
@@ -173,18 +164,35 @@
   }
   .product-combination-image {
     display: inline-block;
-    border: 1px solid $primary;
+    border: 1px solid $gray-light;
     outline: solid 4px $white;
-    margin: 5px;
+    margin: 0 rem(10px) 0 0;
+    border-radius: rem(3px);
   }
   .product-combination-image.img-highlight {
-    outline: solid 4px $primary;
+    border: solid 2px $primary;
   }
   .product-combination-image input {
     display: none;
   }
-  .combination-form .title {
-    font-size: 20px;
+  .combination-form {
+    .combination-label {
+      color: $gray-medium;
+      &.vcenter {
+        line-height: rem(90px);
+      }
+    }
+    .title {
+      font-size: rem(15px);
+      clear: both;
+      margin-bottom: rem(10px);
+    }
+    .next,
+    .prev {
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: rem(10px);
+    }
   }
   // Dropzone & Image manager
   #product-images-dropzone {
@@ -458,6 +466,51 @@
         font-size: rem(20px);
         vertical-align: bottom;
       }
+    }
+  }
+  .subtitle {
+    color: $gray-medium;
+  }
+  .external-link {
+    font-weight: 600;
+    .material-icons {
+      vertical-align: middle;
+    }
+  }
+  .btn-action {
+    text-transform: none;
+  }
+  .seo-table thead th {
+    text-transform: uppercase;
+  }
+  .seo-table tbody tr:nth-of-type(odd) {
+    background: $gray-light;
+  }
+  .seo-table tbody tr td:last-child {
+    box-shadow: -3px 0 10px -3px rgba(0,0,0,0.4);
+  }
+  .seo-table .delete,
+  .customFieldCollection .delete {
+    color: $gray-medium;
+    .material-icons {
+      font-size: rem(20px);
+    }
+  }
+  #form_step5_meta_description_1 {
+    resize: none;
+    height: rem(140px);
+  }
+  .tokenfield input.token-input[type=text] {
+    width: 100% !important;
+  }
+  #product-attachment-file {
+    border: $gray-light 2px solid;
+    thead {
+      text-transform: uppercase;
+    }
+    tbody {
+      border: none;
+      border-top: $gray-light 2px solid;
     }
   }
 }

@@ -186,7 +186,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'required' => true,
         ))
         ->add('save', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
-            'label' => $this->translator->trans('Done', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Apply', [], 'AdminProducts'),
             'attr' => array('class' => 'btn-primary-outline js-save'),
         ))
         ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(

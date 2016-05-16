@@ -122,12 +122,12 @@ class ProductCombination extends CommonAbstractType
         ))
         ->add('attribute_unity', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Impact on unit price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on price per unit (tax excl.)', [], 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('attribute_minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Min. quantity for sale', [], 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric')),

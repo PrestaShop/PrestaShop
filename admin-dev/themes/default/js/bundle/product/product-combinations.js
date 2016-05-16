@@ -190,7 +190,7 @@ var combinations = (function() {
       });
 
       /** switch combination form */
-      $(document).on('click', '#form .combination-form .nav button', function(e) {
+      $(document).on('click', '#form .combination-form .nav a', function(e) {
         e.preventDefault();
         $('.combination-form').hide();
         $('#accordion_combinations .combination[data="' + $(this).attr('data') + '"] .btn-open').click();
