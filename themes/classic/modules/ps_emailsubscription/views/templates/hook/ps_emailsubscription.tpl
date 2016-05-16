@@ -38,11 +38,11 @@
             <input type="hidden" name="action" value="0">
           </div>
           <div class="col-md-12">
-              {if $need_confirmation}
+              {if isset($need_confirmation) && $need_confirmation}
                <span class="custom-checkbox">
                   <input type="checkbox" name="confirm-optin" value="1" required>
                   <span><i class="material-icons checkbox-checked"></i></span>
-                  <label>{l s='I agree to receive newsletter emails and I am aware of [1]the privacy policy[/1]' tags=['<a href="%s">'|sprintf:$link->getCMSLink($cms_page)] mod='ps_emailsubscription'}</label>
+                  <label>{l s='I agree to receive newsletter emails and I am aware of [1]the privacy policy[/1]' tags=['<a href="%s">'|sprintf:$cms_privacy_link] mod='ps_emailsubscription'}</label>
                 </span>
               {/if}
               {if $msg}
