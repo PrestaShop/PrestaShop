@@ -150,7 +150,6 @@
       margin-bottom: 0;
       background-color: transparent;
       max-width: 100%;
-      width: auto !important;
     }
   }
   // Combination details form
@@ -499,9 +498,6 @@
   #form_step5_meta_description_1 {
     resize: none;
     height: rem(140px);
-  }
-  .tokenfield input.token-input[type=text] {
-    width: 100% !important;
   }
   #product-attachment-file {
     border: $gray-light 2px solid;
