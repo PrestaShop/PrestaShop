@@ -1,11 +1,15 @@
-<div class="checkout cart-detailed-actions text-xs-center card-block">
+<div class="checkout cart-detailed-actions card-block">
   {if $cart.minimalPurchaseRequired}
     <div class="alert alert-warning" role="alert">
       {$cart.minimalPurchaseRequired}
     </div>
-    <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout'}</button>
+    <div class="text-xs-center">
+      <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout'}</button>
+    </div>
   {else}
-    <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Checkout'}</a>
-    {hook h='displayExpressCheckout'}
+    <div class="text-xs-center">
+      <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Checkout'}</a>
+      {hook h='displayExpressCheckout'}
+    </div>
   {/if}
 </div>
