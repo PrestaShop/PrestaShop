@@ -998,33 +998,33 @@ class LanguageCore extends ObjectModel
         foreach ($languages as $lang) {
             $gz = false;
             $files_listing = array();
-            foreach ($modules_list as $module_name) {
-                $filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
+            $filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
 
-                clearstatcache();
-                if (@filemtime($filegz) < (time() - (24 * 3600))) {
-                    if (Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false) !== true) {
-                        break;
-                    }
+            clearstatcache();
+            if (@filemtime($filegz) < (time() - (24 * 3600))) {
+                if (Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false) !== true) {
+                    break;
                 }
+            }
 
-                $gz = new Archive_Tar($filegz, true);
-                $files_list = Language::getLanguagePackListContent($lang['iso_code'], $gz);
+            $gz = new Archive_Tar($filegz, true);
+            if (!$gz) {
+                continue;
+            }
+            $files_list = Language::getLanguagePackListContent($lang['iso_code'], $gz);
+            foreach ($modules_list as $module_name) {
                 foreach ($files_list as $i => $file) {
                     if (strpos($file['filename'], 'modules/'.$module_name.'/') !== 0) {
                         unset($files_list[$i]);
                     }
                 }
-
-                foreach ($files_list as $file) {
-                    if (isset($file['filename']) && is_string($file['filename'])) {
-                        $files_listing[] = $file['filename'];
-                    }
+            }
+            foreach ($files_list as $file) {
+                if (isset($file['filename']) && is_string($file['filename'])) {
+                    $files_listing[] = $file['filename'];
                 }
             }
-            if ($gz) {
-                $gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
-            }
+            $gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
         }
     }
 }
