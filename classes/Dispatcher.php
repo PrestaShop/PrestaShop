@@ -337,14 +337,6 @@ class DispatcherCore
                         $retrocompatibility_admin_tab = _PS_ADMIN_DIR_.'/tabs/'.$controller_class.'.php';
                     }
                 }
-
-                // @retrocompatibility with admin/tabs/ old system
-                if ($retrocompatibility_admin_tab) {
-                    include_once($retrocompatibility_admin_tab);
-                    include_once(_PS_ADMIN_DIR_.'/functions.php');
-                    runAdminTab($this->controller, !empty($_REQUEST['ajaxMode']));
-                    return;
-                }
             break;
 
             default :
