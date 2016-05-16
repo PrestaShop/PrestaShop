@@ -1,6 +1,6 @@
 <div id="combinations">
   <h2>
-    {{ 'Product combinations'|trans({}, 'AdminProducts') }}
+    {{ 'Manage your product combinations'|trans({}, 'AdminProducts') }}
     <span
       class="help-box"
       data-toggle="popover"
@@ -11,6 +11,20 @@
     <p>
       {{ 'Create a series of combinations by entering the related attributes below.'|trans({}, 'AdminProducts') }}
     </p>
+    <div class="alert alert-info" role="alert">
+      <i class="material-icons">help</i>
+      <p class="alert-text">
+        {{ trans('
+        To add combinations, enter the wanted attributes (like « size » or « color ») and their respective values
+        (« XS », « red », etc.) in the field below, or select it in the right column. Then click on « Generate »:
+        it will automatically create all the combinations for you!<br>
+        If you haven’t got any attributes yet, you should first create some in
+        <a class="alert-link" href=$adminTaxesUrl target="_blank">Attributes & Features</a>.
+        ', {'$adminTaxesUrl': getAdminLink("AdminTaxes")}, 'AdminProducts')
+          |raw
+        }}
+      </p>
+    </div>
     <div class="row">
       <div class="col-md-10">
         <fieldset class="form-group">
@@ -19,9 +33,8 @@
         </fieldset>
       </div>
       <div class="col-md-2">
-        <button id="create-combinations" class="btn btn-action btn-block">
-          <i class="material-icons">add</i>
-          Create
+        <button class="btn btn-primary-outline" id="create-combinations">
+          Generate
         </button>
       </div>
     </div>
