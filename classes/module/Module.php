@@ -1996,7 +1996,7 @@ abstract class ModuleCore
                     WHERE hm.`id_hook` = '.(int)$id_hook.' AND hm.`id_shop` = '.$shop_id.'
                     ORDER BY hm.`position` '.($way ? 'ASC' : 'DESC');
             if (!$res = Db::getInstance()->executeS($sql)) {
-                    continue;
+                continue;
             }
 
             foreach ($res as $key => $values) {
@@ -2006,7 +2006,7 @@ abstract class ModuleCore
                 }
             }
             if (!isset($k)) {
-                    return false;
+                return false;
             }
 
             $from = $res[$k];
