@@ -948,19 +948,6 @@ CREATE TABLE `PREFIX_image_type` (
   KEY `image_type_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_lang` (
-  `id_lang` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(32) NOT NULL,
-  `active` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `iso_code` char(2) NOT NULL,
-  `language_code` char(5) NOT NULL,
-  `date_format_lite` char(32) NOT NULL DEFAULT 'Y-m-d',
-  `date_format_full` char(32) NOT NULL DEFAULT 'Y-m-d H:i:s',
-  `is_rtl` TINYINT(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_lang`),
-  KEY `lang_iso_code` (`iso_code`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_manufacturer` (
   `id_manufacturer` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(64) NOT NULL,
