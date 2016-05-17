@@ -35,6 +35,12 @@ class OrderControllerCore extends FrontController
 
     private $checkoutProcess;
 
+    public function init()
+    {
+        parent::init();
+        $this->cartChecksum = new CartChecksum(new AddressChecksum());
+    }
+
     public function postProcess()
     {
         parent::postProcess();
@@ -138,8 +144,7 @@ class OrderControllerCore extends FrontController
     private function saveDataToPersist(CheckoutProcess $process)
     {
         $data = $process->getDataToPersist();
-        $cartChecksum = new CartChecksum();
-        $data['checksum'] = $cartChecksum->generateChecksum($this->context->cart);
+        $data['checksum'] = $this->cartChecksum->generateChecksum($this->context->cart);
 
         Db::getInstance()->execute(
             'UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'"
@@ -157,8 +162,7 @@ class OrderControllerCore extends FrontController
             $data = [];
         }
 
-        $cartChecksum = new CartChecksum();
-        $checksum = $cartChecksum->generateChecksum($this->context->cart);
+        $checksum = $this->cartChecksum->generateChecksum($this->context->cart);
         if (isset($data['checksum']) && $data['checksum'] === $checksum) {
             $process->restorePersistedData($data);
         }

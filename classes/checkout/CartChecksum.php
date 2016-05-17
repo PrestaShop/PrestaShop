@@ -24,10 +24,16 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class CartChecksum implements ChecksumInterface
+class CartChecksumCore implements ChecksumInterface
 {
+    public $addressChecksum = null;
     private $separator = '_';
     private $subseparator = '-';
+
+    public function __construct(AddressChecksum $addressChecksum)
+    {
+        $this->addressChecksum = $addressChecksum;
+    }
 
     public function generateChecksum($cart)
     {
@@ -43,9 +49,9 @@ class CartChecksum implements ChecksumInterface
         $uniq_id .= $cart->id_lang;
         $uniq_id .= $this->separator;
 
-        $uniq_id .= $cart->id_address_delivery;
+        $uniq_id .= $this->addressChecksum->generateChecksum(new Address($cart->id_address_delivery));
         $uniq_id .= $this->separator;
-        $uniq_id .= $cart->id_address_invoice;
+        $uniq_id .= $this->addressChecksum->generateChecksum(new Address($cart->id_address_invoice));
         $uniq_id .= $this->separator;
 
         $products = $cart->getProducts($refresh = true);
