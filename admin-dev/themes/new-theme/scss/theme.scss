@@ -33,6 +33,12 @@ body {
 
 $color-icons: #6c868e;
 
+.alert {
+  a {
+    cursor: pointer;
+  }
+}
+
 .breadcrumb {
   padding: rem(5px);
   background: none;

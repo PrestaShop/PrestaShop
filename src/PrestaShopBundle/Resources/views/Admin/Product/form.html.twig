@@ -710,7 +710,9 @@
                           <i class="material-icons">help</i>
                           <p class="alert-text" data-title="{{ 'Read more'|trans({}, 'AdminProducts')|raw }}">
                             {{ 'Tags are meant to help your customers find your products via the search bar.'|trans({}, 'AdminProducts')|raw }}
-                            <strong>{{ 'Read more'|trans({}, 'AdminProducts')|raw }}</strong>
+                            <a title="{{ 'Read more'|trans({}, 'AdminProducts')|raw }}">
+                              {{ 'Read more'|trans({}, 'AdminProducts')|raw }}
+                            </a>
                           </p>
                         </div>
                         <div class="alert alert-info alert-down" role="alert">
@@ -840,7 +842,7 @@
                                 <p class="alert-text">
                                   {{ 'This interface allows you to specify the suppliers of the current product and eventually its combinations.'|trans({}, 'AdminProducts')|raw }}<br>
                                   {{ 'It is also possible to specify supplier references according to previously associated suppliers.'|trans({}, 'AdminProducts')|raw }}
-                                  <strong>{{ 'Read more'|trans({}, 'AdminProducts')|raw }}</strong>
+                                  <a title="{{ 'Read more'|trans({}, 'AdminProducts')|raw }}">{{ 'Read more'|trans({}, 'AdminProducts')|raw }}</a>
                                 </p>
                               </div>
                               <div class="alert alert-info alert-down" role="alert">
