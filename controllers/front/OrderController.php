@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
@@ -45,7 +44,7 @@ class OrderControllerCore extends FrontController
     {
         parent::postProcess();
 
-        if (Tools::isSubmit('submitReorder') && $id_order = (int)Tools::getValue('id_order')) {
+        if (Tools::isSubmit('submitReorder') && $id_order = (int) Tools::getValue('id_order')) {
             $oldCart = new Cart(Order::getCartIdStatic($id_order, $this->context->customer->id));
             $duplication = $oldCart->duplicate();
             if (!$duplication || !Validate::isLoadedObject($duplication['cart'])) {
@@ -73,7 +72,7 @@ class OrderControllerCore extends FrontController
             $this->context,
             $this->getTranslator(),
             $this->objectPresenter,
-            new PriceFormatter
+            new PriceFormatter()
         );
 
         $session = new CheckoutSession(
@@ -101,12 +100,12 @@ class OrderControllerCore extends FrontController
         );
 
         $checkoutDeliveryStep->setRecyclablePackAllowed(
-            (bool)Configuration::get('PS_RECYCLABLE_PACK')
+            (bool) Configuration::get('PS_RECYCLABLE_PACK')
         )->setGiftAllowed(
-            (bool)Configuration::get('PS_GIFT_WRAPPING')
+            (bool) Configuration::get('PS_GIFT_WRAPPING')
         )->setIncludeTaxes(
-            !Product::getTaxCalculationMethod((int)$this->context->cart->id_customer)
-            && (int)Configuration::get('PS_TAX')
+            !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer)
+            && (int) Configuration::get('PS_TAX')
         )->setDisplayTaxesLabel(
             (Configuration::get('PS_TAX')
             && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
@@ -132,7 +131,7 @@ class OrderControllerCore extends FrontController
             ->addStep(new CheckoutPaymentStep(
                 $this->context,
                 $translator,
-                new PaymentOptionsFinder,
+                new PaymentOptionsFinder(),
                 new ConditionsToApproveFinder(
                     $this->context,
                     $translator
@@ -148,14 +147,14 @@ class OrderControllerCore extends FrontController
 
         Db::getInstance()->execute(
             'UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'"
-                WHERE id_cart = '.(int)$this->context->cart->id
+                WHERE id_cart = '.(int) $this->context->cart->id
         );
     }
 
     private function restorePersistedData(CheckoutProcess $process)
     {
         $rawData = Db::getInstance()->getValue(
-            'SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int)$this->context->cart->id
+            'SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int) $this->context->cart->id
         );
         $data = json_decode($rawData, true);
         if (!is_array($data)) {
@@ -216,8 +215,8 @@ class OrderControllerCore extends FrontController
         }
 
         $this->context->smarty->assign([
-            'checkout_process'  => new RenderableProxy($this->checkoutProcess),
-            'cart'              => $presentedCart
+            'checkout_process' => new RenderableProxy($this->checkoutProcess),
+            'cart' => $presentedCart,
         ]);
         $this->setTemplate('checkout/checkout.tpl');
     }
