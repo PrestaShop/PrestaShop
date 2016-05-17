@@ -1,95 +1,96 @@
-<div id="combinations">
-  <h2>
-    {{ 'Manage your product combinations'|trans({}, 'AdminProducts') }}
-    <span
-      class="help-box"
-      data-toggle="popover"
-      data-content="{{ "Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!"|trans({}, 'AdminProducts')|raw }}"
-    ></span>
-  </h2>
-  <div id="attributes-generator">
-    <p>
-      {{ 'Create a series of combinations by entering the related attributes below.'|trans({}, 'AdminProducts') }}
-    </p>
-    <div class="alert alert-info" role="alert">
-      <i class="material-icons">help</i>
-      <p class="alert-text">
-        {{ trans('
-        To add combinations, enter the wanted attributes (like « size » or « color ») and their respective values
-        (« XS », « red », etc.) in the field below, or select it in the right column. Then click on « Generate »:
-        it will automatically create all the combinations for you!<br>
-        If you haven’t got any attributes yet, you should first create some in
-        <a class="alert-link" href=$adminTaxesUrl target="_blank">Attributes & Features</a>.
-        ', {'$adminTaxesUrl': getAdminLink("AdminTaxes")}, 'AdminProducts')
-          |raw
-        }}
+<div class="row" id="combinations">
+  <div class="col-md-9">
+    <h2>
+      {{ 'Manage your product combinations'|trans({}, 'AdminProducts') }}
+      <span
+        class="help-box"
+        data-toggle="popover"
+        data-content="{{ "Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!"|trans({}, 'AdminProducts')|raw }}"
+      ></span>
+    </h2>
+    <div id="attributes-generator">
+      <p>
+        {{ 'Create a series of combinations by entering the related attributes below.'|trans({}, 'AdminProducts') }}
       </p>
-    </div>
-    <div class="row">
-      <div class="col-md-10">
-        <fieldset class="form-group">
-          {{ form_errors(form.attributes) }}
-          {{ form_widget(form.attributes) }}
-        </fieldset>
+      <div class="alert alert-info" role="alert">
+        <i class="material-icons">help</i>
+        <p class="alert-text">
+          {{ 'To add combinations, enter the wanted attributes (like « size » or « color ») and their respective values (« XS », « red », etc.) in the field below, or select it in the right column. Then click on « Generate »: it will automatically create all the combinations for you! <br> If you haven’t got any attributes yet, you should first create some in <a class="alert-link" href=$adminTaxesUrl target="_blank">Attributes & Features</a>.'|trans({'$adminTaxesUrl': getAdminLink("AdminTaxes")}, 'AdminProducts')|raw }}
+        </p>
       </div>
-      <div class="col-md-2">
-        <button class="btn btn-primary-outline" id="create-combinations">
-          Generate
-        </button>
+      <div class="row">
+        <div class="col-md-10">
+          <fieldset class="form-group">
+            {{ form_errors(form.attributes) }}
+            {{ form_widget(form.attributes) }}
+          </fieldset>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary-outline" id="create-combinations">
+            Generate
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      {{ form_errors(form.combinations) }}
+      <table class="table table-striped">
+        <thead id="combinations_thead" {% if form.combinations|length == 0 %}style="display: none;"{% endif %}>
+        <tr class="uppercase">
+          <th></th>
+          <th>{{ 'Combination'|trans({}, 'AdminProducts') }}</th>
+          <th>{{ 'Impact on price'|trans({}, 'AdminProducts') }}</th>
+          <th>{{ 'Final price'|trans({}, 'AdminProducts') }}</th>
+          <th>{{ 'Quantity'|trans({}, 'AdminProducts') }}</th>
+          <th></th>
+        </tr>
+        </thead>
+
+        <tbody class="panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
+        {% for combination in form.combinations %}
+          {{ include('PrestaShopBundle:Admin/Product/Include:form_combination.html.twig', { 'form': combination, 'loop_index': loop.index0, 'id_product': id_product }) }}
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="form-group">
+      <div class="row">
+
+        <div class="col-md-12">
+          <h2>{{ 'Availability preferences'|trans({}, 'AdminProducts') }}</h2>
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-control-label">{{ 'Behavior when out of stock'|trans({}, 'AdminProducts') }}</label>
+          {{ form_errors(form.out_of_stock) }}
+          {{ form_widget(form.out_of_stock) }}
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-control-label">{{ form.available_now.vars.label }}</label>
+            {{ form_errors(form.available_now) }}
+            {{ form_widget(form.available_now) }}
+        </div>
+
+        <div class="col-md-4 ">
+            <label class="form-control-label">{{ form.available_later.vars.label }}</label>
+            {{ form_errors(form.available_later) }}
+            {{ form_widget(form.available_later) }}
+        </div>
+
+        <div class="col-md-4 ">
+          <label class="form-control-label">{{ form.available_date.vars.label }}</label>
+          {{ form_errors(form.available_date) }}
+          {{ form_widget(form.available_date) }}
+        </div>
+
       </div>
     </div>
   </div>
 
-  <div>
-    {{ form_errors(form.combinations) }}
-    <table class="table table-striped">
-      <thead id="combinations_thead" {% if form.combinations|length == 0 %}style="display: none;"{% endif %}>
-      <tr class="uppercase">
-        <th></th>
-        <th>{{ 'Combination'|trans({}, 'AdminProducts') }}</th>
-        <th>{{ 'Impact on price'|trans({}, 'AdminProducts') }}</th>
-        <th>{{ 'Final price'|trans({}, 'AdminProducts') }}</th>
-        <th>{{ 'Quantity'|trans({}, 'AdminProducts') }}</th>
-        <th></th>
-      </tr>
-      </thead>
+  <div class="col-md-3">
 
-      <tbody class="panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
-      {% for combination in form.combinations %}
-        {{ include('PrestaShopBundle:Admin/Product/Include:form_combination.html.twig', { 'form': combination, 'loop_index': loop.index0, 'id_product': id_product }) }}
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="form-group">
-  <div class="row">
-
-    <div class="col-md-12">
-      <h2>{{ 'Availability preferences'|trans({}, 'AdminProducts') }}</h2>
-    </div>
-
-    <div class="col-md-12">
-      <label class="form-control-label">{{ 'Behavior when out of stock'|trans({}, 'AdminProducts') }}</label>
-      {{ form_errors(form.out_of_stock) }}
-      {{ form_widget(form.out_of_stock) }}
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-control-label">{{ form.available_now.vars.label }}</label>
-        {{ form_errors(form.available_now) }}
-        {{ form_widget(form.available_now) }}
-    </div>
-    <div class="col-md-4 ">
-        <label class="form-control-label">{{ form.available_later.vars.label }}</label>
-        {{ form_errors(form.available_later) }}
-        {{ form_widget(form.available_later) }}
-    </div>
-    <div class="col-md-4 ">
-      <label class="form-control-label">{{ form.available_date.vars.label }}</label>
-      {{ form_errors(form.available_date) }}
-      {{ form_widget(form.available_date) }}
-    </div>
   </div>
 </div>
