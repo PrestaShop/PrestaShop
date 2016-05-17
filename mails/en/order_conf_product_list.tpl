@@ -20,6 +20,7 @@
 				<td>
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
 						<strong>{$product['name']}</strong>
+						{hook h='displayProductPriceBlock' product=$product type="unit_price"}
 					</font>
 				</td>
 				<td width="10">&nbsp;</td>
