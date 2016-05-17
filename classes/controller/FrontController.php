@@ -649,6 +649,7 @@ class FrontControllerCore extends Controller
                 $this->context->smarty->assign(array(
                     'shop' => $this->getTemplateVarShop(),
                     'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
+                    'maintenance_text' => Configuration::get('PS_MAINTENANCE_TEXT', (int)$this->context->language->id),
                 ));
 
                 $this->smartyOutputContent('errors/maintenance.tpl');

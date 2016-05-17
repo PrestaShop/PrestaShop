@@ -18,4 +18,7 @@
   <configuration id='PS_CUSTOMER_SERVICE_SIGNATURE'>
     <value>প্রিয় গ্রাহক,                                        শুভেচ্ছা, গ্রাহক সেবা বিভাগ</value>
   </configuration>
+  <configuration id="PS_MAINTENANCE_TEXT">
+    <value>We are currently updating our shop and will be back really soon.&lt;br&gt;Thanks for your patience.</value>
+  </configuration>
 </entity_configuration>

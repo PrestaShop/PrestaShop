@@ -24,4 +24,7 @@
   <configuration id="PS_ALLOW_ACCENTED_CHARS_URL" name="PS_ALLOW_ACCENTED_CHARS_URL">
     <value>1</value>
   </configuration>
+  <configuration id="PS_MAINTENANCE_TEXT">
+    <value>We are currently updating our shop and will be back really soon.&lt;br&gt;Thanks for your patience.</value>
+  </configuration>
 </entity_configuration>

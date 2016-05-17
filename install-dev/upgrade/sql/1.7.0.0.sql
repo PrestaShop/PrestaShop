@@ -109,3 +109,6 @@ ALTER TABLE `PREFIX_cart_product` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_cart`, 
 ALTER TABLE `PREFIX_order_detail` ADD `id_customization` INT(10) NULL DEFAULT '0' AFTER `product_attribute_id`;
 ALTER TABLE `PREFIX_customized_data` ADD `id_module` INT(10) NOT NULL DEFAULT '0', ADD `price` DECIMAL(20,6) NOT NULL DEFAULT '0', ADD `weight` DECIMAL(20,6) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_customization_field` ADD `is_module` TINYINT(1) NOT NULL DEFAULT '0' ;
+
+INSERT INTO `PREFIX_configuration` (name, value, date_add, date_upd) VALUES ('PS_MAINTENANCE_TEXT', 'We are currently updating our shop and will be back really soon.&lt;br&gt;Thanks for your patience.', NOW(), NOW());
+INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) SELECT c.`id_configuration`, l.`id_lang`, c.`value`, NOW() FROM `PREFIX_configuration` c, `PREFIX_lang` l WHERE c.`name` = 'PS_MAINTENANCE_TEXT';
