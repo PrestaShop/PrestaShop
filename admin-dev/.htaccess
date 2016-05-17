@@ -34,33 +34,33 @@ DirectoryIndex index.php
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-	# Keep legacy entry points
-	RewriteRule ^(ajax|ajax_products_list|ajax-tab|backup|cron_currency_rates)\.php - [P]
-	RewriteRule ^(displayImage|drawer|footer\.inc|functions|get-file-admin)\.php - [P]
-	RewriteRule ^(grider|header\.inc|init|login|password|pdf|searchcron)\.php - [P]
+    # Keep legacy entry points
+    RewriteRule ^(ajax|ajax_products_list|ajax-tab|backup|cron_currency_rates)\.php - [P]
+    RewriteRule ^(displayImage|drawer|footer\.inc|functions|get-file-admin)\.php - [P]
+    RewriteRule ^(grider|header\.inc|init|login|password|pdf|searchcron)\.php - [P]
 
     # If the URL is a legacy on index.php?controller=..., do not rewrite (let the legacy take it)
     RewriteCond  %{QUERY_STRING} (^|&)controller=|(^|&)tab=
     RewriteRule .* - [P]
 
+    # Redirect to URI without front controller to prevent duplicate content
+    # (with and without `/app.php`). Only do this redirect on the initial
+    # rewrite by Apache and not on subsequent cycles. Otherwise we would get an
+    # endless redirect loop (request -> rewrite to front controller ->
+    # redirect -> request -> ...).
+    # So in case you get a "too many redirects" error or you always get redirected
+    # to the start page because your Apache does not expose the REDIRECT_STATUS
+    # environment variable, you have 2 choices:
+    # - disable this feature by commenting the following 2 lines or
+    # - use Apache >= 2.3.9 and replace all L flags by END flags and remove the
+    #   following RewriteCond (best solution)
+    RewriteCond %{ENV:REDIRECT_STATUS} ^$
+    RewriteRule ^index\.php(/(.*)|$) %{ENV:BASE}/$2 [R=301,L]
+
     # If the requested filename exists, simply serve it.
     # We only want to let Apache serve files and not directories.
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule .? - [L]
-
-	# Redirect to URI without front controller to prevent duplicate content
-	# (with and without `/app.php`). Only do this redirect on the initial
-	# rewrite by Apache and not on subsequent cycles. Otherwise we would get an
-	# endless redirect loop (request -> rewrite to front controller ->
-	# redirect -> request -> ...).
-	# So in case you get a "too many redirects" error or you always get redirected
-	# to the start page because your Apache does not expose the REDIRECT_STATUS
-	# environment variable, you have 2 choices:
-	# - disable this feature by commenting the following 2 lines or
-	# - use Apache >= 2.3.9 and replace all L flags by END flags and remove the
-	#   following RewriteCond (best solution)
-	RewriteCond %{ENV:REDIRECT_STATUS} ^$
-	RewriteRule ^index\.php(/(.*)|$) %{ENV:BASE}/$2 [R=301,L]
 
     # Rewrite all other queries to the front controller.
     RewriteRule .? %{ENV:BASE}/index.php [L]
