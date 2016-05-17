@@ -1999,19 +1999,6 @@ CREATE TABLE `PREFIX_import_match` (
   PRIMARY KEY (`id_import_match`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
-  `id_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_shop_group` int(11) unsigned NOT NULL,
-  `name` varchar(64) CHARACTER SET utf8 NOT NULL,
-  `id_category` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `theme_name` varchar(255) NOT NULL DEFAULT '',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_shop`),
-  KEY `id_shop_group` (`id_shop_group`, `deleted`),
-  KEY `id_category` (`id_category`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
   `id_shop_url` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `id_shop` int(11) unsigned NOT NULL,
