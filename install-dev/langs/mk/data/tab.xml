@@ -58,7 +58,7 @@
   <tab id="Logs" name="Дневници"/>
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Одржување"/>
-  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands &amp; Suppliers" />
   <tab id="Manufacturers" name="Издавачи"/>
   <tab id="Marketing" name="Маркетинг"/>
   <tab id="Menus" name="Мени"/>
@@ -83,7 +83,7 @@
   <tab id="Positions" name="Позиции"/>
   <tab id="Preferences_1" name="Нагодувања"/>
   <tab id="Preferences" name="Нагодувања"/>
-  <tab id="Price_Rules" name="Ценовни правила"/>
+  <tab id="Price_Rules" name="Discounts"/>
   <tab id="Products_1" name="наслови"/>
   <tab id="Products" name="наслови"/>
   <tab id="Profiles" name="Профили"/>

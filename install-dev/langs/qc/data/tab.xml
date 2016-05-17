@@ -59,7 +59,7 @@
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Maintenance"/>
   <tab id="Manufacturers" name="Marques"/>
-  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands &amp; Suppliers" />
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menus"/>
   <tab id="Merchandise_Returns" name="Retours produits"/>
@@ -83,7 +83,7 @@
   <tab id="Positions" name="Positions"/>
   <tab id="Preferences" name="Préférences"/>
   <tab id="Preferences_1" name="Préférences"/>
-  <tab id="Price_Rules" name="Promotions"/>
+  <tab id="Price_Rules" name="Discounts"/>
   <tab id="Products" name="Produits"/>
   <tab id="Products_1" name="Produits"/>
   <tab id="Profiles" name="Profils"/>

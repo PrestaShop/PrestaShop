@@ -59,7 +59,7 @@
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Vzdrževanje"/>
   <tab id="Manufacturers" name="Proizvajalci"/>
-  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands &amp; Suppliers" />
   <tab id="Marketing" name="Oglaševanje"/>
   <tab id="Menus" name="Meniji"/>
   <tab id="Merchandise_Returns" name="Vračila izdelkov"/>
@@ -83,7 +83,7 @@
   <tab id="Positions" name="Pozicije"/>
   <tab id="Preferences" name="Nastavitve"/>
   <tab id="Preferences_1" name="Nastavitve"/>
-  <tab id="Price_Rules" name="Pravila za cene"/>
+  <tab id="Price_Rules" name="Discounts"/>
   <tab id="Products" name="Izdelki"/>
   <tab id="Products_1" name="Izdelki"/>
   <tab id="Profiles" name="Profili"/>

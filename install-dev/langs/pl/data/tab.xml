@@ -58,7 +58,7 @@
   <tab id="Logs" name="Logi"/>
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Obsługa"/>
-  <tab id="Manufacturers_and_suppliers" name="Brands and Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands &amp; Suppliers" />
   <tab id="Manufacturers" name="Producenci"/>
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Zakładki"/>
@@ -83,7 +83,7 @@
   <tab id="Positions" name="Pozycje"/>
   <tab id="Preferences_1" name="Preferencje"/>
   <tab id="Preferences" name="Preferencje"/>
-  <tab id="Price_Rules" name="Reguły ustalania cen"/>
+  <tab id="Price_Rules" name="Discounts"/>
   <tab id="Products_1" name="Produkty"/>
   <tab id="Products" name="Produkty"/>
   <tab id="Profiles" name="Profile"/>

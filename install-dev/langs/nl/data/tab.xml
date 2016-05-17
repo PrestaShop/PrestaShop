@@ -58,7 +58,7 @@
   <tab id="Logs" name="Logboeken"/>
   <tab id="Look_feel" name="Design" />
   <tab id="Maintenance" name="Onderhoud"/>
-  <tab id="Manufacturers_and_suppliers" name="Merken en leveranciers" />
+  <tab id="Manufacturers_and_suppliers" name="Brands &amp; Suppliers" />
   <tab id="Manufacturers" name="Merken"/>
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menu's"/>
@@ -84,7 +84,7 @@
   <tab id="Preferences_1" name="Instellingen"/>
   <tab id="Preferences" name="Instellingen"/>
   <tab id="Price_Ranges" name="Prijsklasse"/>
-  <tab id="Price_Rules" name="Prijsregels"/>
+  <tab id="Price_Rules" name="Discounts"/>
   <tab id="Products_1" name="Producten"/>
   <tab id="Products" name="Producten"/>
   <tab id="Profiles" name="Profielen"/>
