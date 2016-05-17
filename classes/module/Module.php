@@ -2015,28 +2015,28 @@ abstract class ModuleCore
             }
 	    else {
 		$to = (int)$from['position'] + 1;
-	    }	
-	    if (!empty($position)) {
+	     }	
+	     if (!empty($position)) {
 		$to = (int)$position;
-	    }
-            $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
+	     }
+             $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
 		SET `position`= position '.($way ? '-1' : '+1').'
 		WHERE position between '.(int)(min(array($from['position'], $to))).' 
 		AND '.max(array($from['position'], $to)).'
 		AND `id_module` != '.(int)$from['id_module'].'
 		AND `id_hook` = '.(int)$from['id_hook'].' 
 		AND `id_shop` = '.$shop_id;
-	     if (!Db::getInstance()->execute($sql)) {
+	      if (!Db::getInstance()->execute($sql)) {
 		return false;
-	     }
-            $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
+	      }
+             $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
 		SET `position`='.(int)$to.'
 		WHERE `id_module` = '.(int)$from['id_module'].'
 		AND `id_hook` = '.(int)$from['id_hook'].' 
 		AND `id_shop` = '.$shop_id;
-            if (!Db::getInstance()->execute($sql)) {
+             if (!Db::getInstance()->execute($sql)) {
                 return false;
-            }
+             }
         }
         return true;
     }
