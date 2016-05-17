@@ -2644,27 +2644,32 @@ class CartCore extends ObjectModel
     */
     public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
-        if (isset(Context::getContext()->cookie->id_country)) {
-            $default_country = new Country(Context::getContext()->cookie->id_country);
-        }
-        if (is_null($delivery_option)) {
-            $delivery_option = $this->getDeliveryOption($default_country, false, false);
+
+        if (defined(self::$_total_shipping)) {
+            static $_total_shipping;
+
+            if (isset(Context::getContext()->cookie->id_country)) {
+                $default_country = new Country(Context::getContext()->cookie->id_country);
+            }
+            if (is_null($delivery_option)) {
+                $delivery_option = $this->getDeliveryOption($default_country, false, false);
+            }
+
+            self::$_total_shipping = 0;
+            $delivery_option_list = $this->getDeliveryOptionList($default_country);
+            foreach ($delivery_option as $id_address => $key) {
+                if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
+                    continue;
+                }
+                if ($use_tax) {
+                    self::$_total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
+                } else {
+                    self::$_total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
+                }
+            }
         }
 
-        $total_shipping = 0;
-        $delivery_option_list = $this->getDeliveryOptionList($default_country);
-        foreach ($delivery_option as $id_address => $key) {
-            if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
-                continue;
-            }
-            if ($use_tax) {
-                $total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
-            } else {
-                $total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
-            }
-        }
-
-        return $total_shipping;
+        return self::$_total_shipping;
     }
 
     /**
@@ -2679,28 +2684,31 @@ class CartCore extends ObjectModel
      */
     public function getCarrierCost($id_carrier, $useTax = true, Country $default_country = null, $delivery_option = null)
     {
-        if (is_null($delivery_option)) {
-            $delivery_option = $this->getDeliveryOption($default_country);
-        }
-
-        $total_shipping = 0;
-        $delivery_option_list = $this->getDeliveryOptionList();
-
-
-        foreach ($delivery_option as $id_address => $key) {
-            if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
-                continue;
+        if (empty(self::$_total_shipping)) {
+            if (is_null($delivery_option)) {
+                $delivery_option = $this->getDeliveryOption($default_country);
             }
-            if (isset($delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier])) {
-                if ($useTax) {
-                    $total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['price_with_tax'];
-                } else {
-                    $total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['price_without_tax'];
+
+            $total_shipping = 0;
+            $delivery_option_list = $this->getDeliveryOptionList();
+
+
+            foreach ($delivery_option as $id_address => $key) {
+                if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
+                    continue;
+                }
+                if (isset($delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier])) {
+                    if ($useTax) {
+                        $total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['price_with_tax'];
+                    } else {
+                        $total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['price_without_tax'];
+                    }
                 }
             }
-        }
 
-        return $total_shipping;
+            self::$_total_shipping = $total_shipping;
+        }
+        return self::$_total_shipping;
     }
 
     /**
