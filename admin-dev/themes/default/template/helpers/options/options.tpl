@@ -204,7 +204,7 @@
 										</div>
 									{elseif $field['type'] == 'textarea'}
 										<div class="col-lg-9">
-											<textarea class="textarea-autosize" name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'html':'UTF-8'}</textarea>
+											<textarea class="textarea-autosize" name={$key}{if isset({$field['cols']})} cols="{$field['cols']}"{/if}{if isset({$field['rows']})} rows="{$field['rows']}"{/if}">{$field['value']|escape:'html':'UTF-8'}</textarea>
 										</div>
 									{elseif $field['type'] == 'file'}
 										<div class="col-lg-9">{$field['file']}</div>
