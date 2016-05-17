@@ -2,6 +2,6 @@
 
 {% block content %}
     <div class="panel">
-        <div class="alert alert-danger" role="alert">{{ trans('Sorry, you can not edit/add a product when shop context is defined to a group of shop', {}, 'AdminProducts') }}</div>
+        <div class="alert alert-danger" role="alert">{{ 'Sorry, you can not edit/add a product when shop context is defined to a group of shop'|trans({}, 'AdminProducts') }}</div>
     </div>
 {% endblock %}

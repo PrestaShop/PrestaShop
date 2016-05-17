@@ -10,13 +10,13 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title module-modal-title">
                                 {% if module_action == 'disable' %}
-                                    {{ trans("Disable module?", {}, 'AdminModules') }}
+                                    {{ "Disable module?"|trans({}, 'AdminModules') }}
                                 {% endif %}
                                 {% if module_action == 'uninstall' %}
-                                    {{ trans("Uninstall module?", {}, 'AdminModules') }}
+                                    {{ "Uninstall module?"|trans({}, 'AdminModules') }}
                                 {% endif %}
                                 {% if module_action == 'reset' %}
-                                    {{ trans("Reset module?", {}, 'AdminModules') }}
+                                    {{ "Reset module?"|trans({}, 'AdminModules') }}
                                 {% endif %}
                             </h4>
                         </div>
@@ -24,53 +24,53 @@
                             <div class="col-md-12">
                                 <p>
                                     {% if module_action == 'disable' %}
-                                        {{ trans("You're about to disable %moduleName% module.", {'%moduleName%': module.attributes.displayName}, 'AdminModules')|raw }}
+                                        {{ "You're about to disable %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'AdminModules')|raw }}
                                         <br/><br/>
-                                        {{ trans("Your current settings will be saved, but the module will no longer be active.", {}, 'AdminModules')|raw }}
+                                        {{ "Your current settings will be saved, but the module will no longer be active."|trans({}, 'AdminModules')|raw }}
                                     {% endif %}
                                     {% if module_action == 'uninstall' %}
-                                        {{ trans("You're about to uninstall %moduleName% module.", {'%moduleName%': module.attributes.displayName}, 'AdminModules')|raw }}
+                                        {{ "You're about to uninstall %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'AdminModules')|raw }}
                                         <br/><br/>
-                                        {{ trans("This will disable the module and delete all its files. For good.", {}, 'AdminModules')|raw }}
+                                        {{ "This will disable the module and delete all its files. For good."|trans({}, 'AdminModules')|raw }}
                                         <br/>
                                       <p>
                                         <label>
-                                          <input type="checkbox" id="force_deletion" name="force_deletion" data-tech-name="{{module.attributes.name}}"> {{ trans("Optional: delete module folder after uninstall.", {}, 'AdminModules')|raw }}
+                                          <input type="checkbox" id="force_deletion" name="force_deletion" data-tech-name="{{module.attributes.name}}"> {{ "Optional: delete module folder after uninstall."|trans({}, 'AdminModules')|raw }}
                                         </label>
                                         <br>
                                       </p>
                                       <span class="italic red">
-                                            {{ trans("This action cannot be undone.", {}, 'AdminModules')|raw }}
+                                            {{ "This action cannot be undone."|trans({}, 'AdminModules')|raw }}
                                         </span>
                                     {% endif %}
                                     {% if module_action == 'reset' %}
-                                        {{ trans("You're about to reset %moduleName% module.", {'%moduleName%': module.attributes.displayName}, 'AdminModules')|raw }}
+                                        {{ "You're about to reset %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'AdminModules')|raw }}
                                         <br/><br/>
-                                        {{ trans("This will restore the defaults settings.", {}, 'AdminModules')|raw }}
+                                        {{ "This will restore the defaults settings."|trans({}, 'AdminModules')|raw }}
                                         <br/>
                                         <span class="italic red">
-                                            {{ trans("This action cannot be undone.", {}, 'AdminModules')|raw }}
+                                            {{ "This action cannot be undone."|trans({}, 'AdminModules')|raw }}
                                         </span>
                                     {% endif %}
                                 </p>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <input type="button" class="btn btn-default uppercase" data-dismiss="modal" value="{{ trans("Cancel", {}, 'AdminTabs')|raw }}" />
+                            <input type="button" class="btn btn-default uppercase" data-dismiss="modal" value="{{ "Cancel"|trans({}, 'AdminTabs')|raw }}" />
                             {% if module_action == 'disable' %}
                                 <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
                                     data-tech-name="{{module.attributes.name}}"
-                                    href="{{ module_url }}">{{ trans("Yes, I want to disable", {}, 'AdminModules')|raw }}</a>
+                                    href="{{ module_url }}">{{ "Yes, I want to disable"|trans({}, 'AdminModules')|raw }}</a>
                             {% endif %}
                             {% if module_action == 'uninstall' %}
                                 <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
                                     data-tech-name="{{module.attributes.name}}"
-                                    href="{{ module_url }}">{{ trans("Yes, I want to uninstall", {}, 'AdminModules')|raw }}</a>
+                                    href="{{ module_url }}">{{ "Yes, I want to uninstall"|trans({}, 'AdminModules')|raw }}</a>
                             {% endif %}
                             {% if module_action == 'reset' %}
                                 <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
                                     data-tech-name="{{module.attributes.name}}"
-                                    href="{{ module_url }}">{{ trans("Yes, I want to reset", {}, 'AdminModules')|raw }}</a>
+                                    href="{{ module_url }}">{{ "Yes, I want to reset"|trans({}, 'AdminModules')|raw }}</a>
                             {% endif %}
                         </div>
                     </div>

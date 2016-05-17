@@ -25,22 +25,22 @@
 	                var slider = $('#{{ input_name }}');
 	                if (values[0] == {{ min|default('0') }} && values[1] == {{ max|default('10') }}) {
 	                    slider.attr('sql', '');
-	                    return "{{ trans('Not filtered', {}, 'AdminTab') }}";
+	                    return "{{ 'Not filtered'|trans({}, 'AdminTab') }}";
 	                }
 	                if (values[0] == values[1]) {
 	                    slider.attr('sql', ''); //'='+values[0]);
-	                    return "{{ trans('Equals', {}, 'AdminTab') }} " + values[0];
+	                    return "{{ 'Equals'|trans({}, 'AdminTab') }} " + values[0];
 	                }
 	                if (values[0] == {{ min|default('0') }}) {
 	                    slider.attr('sql', '<'+values[1]);
-	                    return "{{ trans('Below', {}, 'AdminTab') }} " + values[1];
+	                    return "{{ 'Below'|trans({}, 'AdminTab') }} " + values[1];
 	                }
 	                if (values[1] == {{ max|default('10') }}) {
 	                    slider.attr('sql', '>'+values[0]);
-	                    return "{{ trans('Above', {}, 'AdminTab') }} " + values[0];
+	                    return "{{ 'Above'|trans({}, 'AdminTab') }} " + values[0];
 	                }
 	                slider.attr('sql', 'BETWEEN '+values[0]+' AND '+values[1]);
-	                return "{{ trans('Inside range', {}, 'AdminTab') }} [" + values[0] + "~" + values[1] + "]";
+	                return "{{ 'Inside range'|trans({}, 'AdminTab') }} [" + values[0] + "~" + values[1] + "]";
 	            }
             },
             min: {{ min|default('0') }},

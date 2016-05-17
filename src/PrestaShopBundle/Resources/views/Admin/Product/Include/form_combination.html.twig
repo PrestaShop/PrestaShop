@@ -22,15 +22,15 @@
         </div>
         <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide row">
             <div class="col-xs-12 text-xs-right nav">
-                <a class="btn-sensitive prev pull-left"><i class="material-icons">keyboard_arrow_left</i> {{ trans('Prev. combination', [], 'AdminTabs') }}</a>
-                <a class="next btn-sensitive">{{ trans('Next combination', [], 'AdminTabs') }} <i class="material-icons">keyboard_arrow_right</i></a>
+                <a class="btn-sensitive prev pull-left"><i class="material-icons">keyboard_arrow_left</i> {{ 'Prev. combination'|trans([], 'AdminTabs') }}</a>
+                <a class="next btn-sensitive">{{ 'Next combination'|trans([], 'AdminTabs') }} <i class="material-icons">keyboard_arrow_right</i></a>
             </div>
             <div class="panel col-md-12 p-t-2 p-b-2">
                 <div class="pull-left">
-                    <button type="button" class="btn btn-tertiary-outline btn-back"><i class="material-icons">arrow_back</i> {{ trans('Back to product', [], 'AdminTabs') }}</button>
+                    <button type="button" class="btn btn-tertiary-outline btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans([], 'AdminTabs') }}</button>
                 </div>
                 <h2 class="title p-t-2">
-                  {{ trans("Combination details",{}, 'AdminProducts') }} -
+                  {{ "Combination details"|trans({}, 'AdminProducts') }} -
                   {{ form.vars.value.name }}
                 </h2>
                 {{ form_widget(form.attribute_default) }}
@@ -54,7 +54,7 @@
                           <label class="combination-label">
                             {{ form.attribute_minimal_quantity.vars.label }}
                             <span class="help-box" data-toggle="popover"
-                              data-content="{{ trans("The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.",{}, 'AdminProducts') }}" ></span>
+                              data-content="{{ "The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity."|trans({}, 'AdminProducts') }}" ></span>
                           </label>
                           {{ form_widget(form.attribute_minimal_quantity) }}
                       </fieldset>
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <h2 class="title">
-                  {{ trans("Price and impact",{}, 'AdminProducts') }}
+                  {{ "Price and impact"|trans({}, 'AdminProducts') }}
                 </h2>
                 <div class="row">
                     <div class="col-md-3">
@@ -81,7 +81,7 @@
                             <label class="combination-label">
                               {{ form.attribute_price.vars.label }}
                               <span class="help-box" data-toggle="popover"
-                                data-content="{{ trans("Does this combination have a different price? Is it cheaper or more expensive than the default retail price?",{}, 'AdminProducts') }}" ></span>
+                                data-content="{{ "Does this combination have a different price? Is it cheaper or more expensive than the default retail price?"|trans({}, 'AdminProducts') }}" ></span>
                             </label>
                             {{ form_widget(form.attribute_price) }}
                         </fieldset>
@@ -93,7 +93,7 @@
                         </fieldset>
                     </div>
                     <div class="col-md-3">
-                      <small class="combination-label vcenter">{{ trans("Final retail price (tax excl.) will be €00.00",{}, 'AdminProducts') }}</small>
+                      <small class="combination-label vcenter">{{ "Final retail price (tax excl.) will be €00.00"|trans({}, 'AdminProducts') }}</small>
                     </div>
                 </div>
                 <div class="row">
@@ -108,7 +108,7 @@
                             <label class="combination-label">
                               {{ form.attribute_unity.vars.label }}
                               <span class="help-box" data-toggle="popover"
-                                data-content="{{ trans("Does this combination have a different price per unit?",{}, 'AdminProducts') }}" ></span>
+                                data-content="{{ "Does this combination have a different price per unit?"|trans({}, 'AdminProducts') }}" ></span>
                             </label>
                             {{ form_widget(form.attribute_unity) }}
                         </fieldset>
@@ -124,7 +124,7 @@
                     </div>
                 </div>
                 <h2 class="title">
-                  {{ trans("Specific references",{}, 'AdminProducts') }}
+                  {{ "Specific references"|trans({}, 'AdminProducts') }}
                 </h2>
                 <div class="row">
                     <div class="col-md-4">
@@ -138,7 +138,7 @@
                             <label class="combination-label">
                               {{ form.attribute_ean13.vars.label }}
                               <span class="help-box" data-toggle="popover"
-                                data-content="{{ trans("This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.",{}, 'AdminProducts') }}" ></span>
+                                data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'AdminProducts') }}" ></span>
                             </label>
                             {{ form_widget(form.attribute_ean13) }}
                         </fieldset>
@@ -151,7 +151,7 @@
                     </div>
                 </div>
                 <h2 class="title">
-                  {{ trans("Images",{}, 'AdminProducts') }}
+                  {{ "Images"|trans({}, 'AdminProducts') }}
                 </h2>
                 <div class="row">
                   <div class="col-md-12">
