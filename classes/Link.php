@@ -496,37 +496,46 @@ class LinkCore
 
         // Even if URL rewriting is not enabled, the page handled by Symfony must work !
         // For that, we add an 'index.php' in the URL before the route
-        $index = filter_input(INPUT_SERVER, 'HTTP_MOD_REWRITE') ? '' : '/index.php';
+        global $kernel; // sf kernel
+        if ($kernel instanceof Symfony\Component\HttpKernel\HttpKernelInterface) {
+            $sfRouter = $kernel->getContainer()->get('router');
+        }
 
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                global $kernel; // sf kernel
                 $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy) {
                     if (array_key_exists('id_product', $sfRouteParams)) {
                         if (array_key_exists('deleteproduct', $sfRouteParams)) {
-                            return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$index.'/product/unit/delete/'.$sfRouteParams['id_product'];
+                            return $sfRouter->generate('admin_product_unit_action',
+                                array('action' => 'delete', 'id' => $sfRouteParams['id_product'])
+                            );
                         }
                         //default: if (array_key_exists('updateproduct', $sfRouteParams))
-                        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$index.'/product/form/'.$sfRouteParams['id_product'];
+                        return $sfRouter->generate('admin_product_form',
+                            array('id' => $sfRouteParams['id_product'])
+                        );
                     }
                     if (array_key_exists('submitFilterproduct', $sfRouteParams)) {
-                        return rtrim($this->getBaseLink().basename(_PS_ADMIN_DIR_).$index.'/product/catalog_filters/'
-                            .(array_key_exists('filter_column_sav_quantity', $sfRouteParams)?urlencode($sfRouteParams['filter_column_sav_quantity']):'none').'/'
-                            .(array_key_exists('filter_column_active', $sfRouteParams)?$sfRouteParams['filter_column_active']:'none').'/',
-                        '/');
+                        $routeParams = array();
+                        if (array_key_exists('filter_column_sav_quantity', $sfRouteParams)) {
+                            $routeParams['quantity'] = $sfRouteParams['filter_column_sav_quantity'];
+                        }
+                        if (array_key_exists('filter_column_active', $sfRouteParams)) {
+                            $routeParams['active'] = $sfRouteParams['filter_column_active'];
+                        }
+                        return $sfRouter->generate('admin_product_catalog_filters', $routeParams);
                     }
-                    return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$index.'/product/catalog';
+                    return $sfRouter->generate('admin_product_catalog');
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }
                 break;
             case 'AdminModulesSf':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$index.'/module/catalog';
-                break;
+                return $sfRouter->generate('admin_module_catalog', array());
         }
 
         $id_lang = Context::getContext()->language->id;
