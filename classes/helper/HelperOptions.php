@@ -103,7 +103,19 @@ class HelperOptionsCore extends Helper
                 }
 
                 if ($field['type'] == 'texarea' || $field['type'] == 'textareaLang') {
-                    $this->context->controller->addJqueryPlugin('autosize');
+
+                    if (isset($field['autoload_rte']) && $field['autoload_rte'] == true) {
+                        $iso = $this->context->language->iso_code;
+                        $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
+                        $this->tpl_vars['path_css'] = _THEME_CSS_DIR_;
+                        $this->tpl_vars['ad'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
+                        $this->tpl_vars['tinymce'] = true;
+
+                        $this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
+                        $this->context->controller->addJS(_PS_JS_DIR_.'admin/tinymce.inc.js');
+                    } else {
+                        $this->context->controller->addJqueryPlugin('autosize');
+                    }
                 }
 
                 if ($field['type'] == 'file') {
