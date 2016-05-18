@@ -262,7 +262,7 @@
             {assign var='odd' value=($odd+1)%2}
             {assign var='ignoreProductLast' value=isset($customizedDatas.$productId.$productAttributeId) || count($gift_products)}
             {* Display the product line *}
-            {include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first noDeleteButton=1 cannotModify=1}
+            {include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first noDeleteButton=0 cannotModify=0}
             {* Then the customized datas ones*}
             {if isset($customizedDatas.$productId.$productAttributeId)}
                 {foreach $customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] as $id_customization=>$customization}
@@ -307,7 +307,7 @@
                 {/foreach}
 
                 {* If it exists also some uncustomized products *}
-                {if $product.quantity-$quantityDisplayed > 0}{include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first noDeleteButton=1 cannotModify=1}{/if}
+                {if $product.quantity-$quantityDisplayed > 0}{include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first noDeleteButton=0 cannotModify=0}{/if}
             {/if}
         {/foreach}
         {assign var='last_was_odd' value=$product@iteration%2}
@@ -319,7 +319,7 @@
             {assign var='ignoreProductLast' value=isset($customizedDatas.$productId.$productAttributeId)}
             {assign var='cannotModify' value=1}
             {* Display the gift product line *}
-            {include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first noDeleteButton=1 cannotModify=1}
+            {include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first noDeleteButton=0 cannotModify=0}
         {/foreach}
         </tbody>
         {if sizeof($discounts)}
