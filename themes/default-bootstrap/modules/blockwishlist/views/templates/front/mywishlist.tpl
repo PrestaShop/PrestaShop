@@ -77,7 +77,7 @@
 							<tr id="wishlist_{$wishlists[i].id_wishlist|intval}">
 								<td style="width:200px;">
 									<a href="#" onclick="javascript:event.preventDefault();WishlistManage('block-order-detail', '{$wishlists[i].id_wishlist|intval}');">
-										{$wishlists[i].name|truncate:30:'...'|escape:'html':'UTF-8'}
+										{$wishlists[i].name|truncate:30:'...'|escape:'htmlall':'UTF-8'}
 									</a>
 								</td>
 								<td class="bold align_center">
