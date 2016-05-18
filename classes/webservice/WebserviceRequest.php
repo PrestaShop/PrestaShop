@@ -498,7 +498,8 @@ class WebserviceRequestCore
                     // load resource configuration
                     if ($this->urlSegment[0] != '') {
                         /** @var ObjectModel $object */
-                        $object = new $this->resourceList[$this->urlSegment[0]]['class']();
+                        $url_resource = $this->resourceList[$this->urlSegment[0]];
+                        $object = new $url_resource['class']();
                         if (isset($this->resourceList[$this->urlSegment[0]]['parameters_attribute'])) {
                             $this->resourceConfiguration = $object->getWebserviceParameters($this->resourceList[$this->urlSegment[0]]['parameters_attribute']);
                         } else {
@@ -885,7 +886,8 @@ class WebserviceRequestCore
         }
         if (!empty($ids)) {
             foreach ($ids as $id) {
-                $object = new $this->resourceConfiguration['retrieveData']['className']((int)$id);
+                $retrieve_data = $this->resourceConfiguration['retrieveData'];
+                $object = new $retrieve_data['className']((int)$id);
                 if (!$object->id) {
                     $arr_avoid_id[] = $id;
                 } else {
@@ -1143,7 +1145,8 @@ class WebserviceRequestCore
                     $sql_sort .= 'main_i18n.`'.pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']).'` '.$direction.', ';// ORDER BY main_i18n.`field` ASC|DESC
                 } else {
                     /** @var ObjectModel $object */
-                    $object = new $this->resourceConfiguration['retrieveData']['className']();
+                    $retrieve_data = $this->resourceConfiguration['retrieveData'];
+                    $object = new $retrieve_data['className']();
                     $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
                     if ($assoc !== false && $assoc['type'] == 'shop' && ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']) || $fieldName == 'id')) {
                         $table_alias = 'multi_shop_'.$this->resourceConfiguration['retrieveData']['table'];
@@ -1191,16 +1194,17 @@ class WebserviceRequestCore
         $this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_limit'];
         //list entities
 
-        $tmp = new $this->resourceConfiguration['retrieveData']['className']();
+        $retrieve_data = $this->resourceConfiguration['retrieveData'];
+        $tmp = new $retrieve_data['className']();
         $sqlObjects = call_user_func_array(array($tmp, $this->resourceConfiguration['retrieveData']['retrieveMethod']), $this->resourceConfiguration['retrieveData']['params']);
         if ($sqlObjects) {
             foreach ($sqlObjects as $sqlObject) {
                 if ($this->fieldsToDisplay == 'minimum') {
-                    $obj = new $this->resourceConfiguration['retrieveData']['className']();
+                    $obj = new $retrieve_data['className']();
                     $obj->id = (int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']];
                     $objects[] = $obj;
                 } else {
-                    $objects[] = new $this->resourceConfiguration['retrieveData']['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
+                    $objects[] = new $retrieve_data['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
                 }
             }
             return $objects;
@@ -1215,7 +1219,8 @@ class WebserviceRequestCore
         }
 
         //get entity details
-        $object = new $this->resourceConfiguration['retrieveData']['className']((int)$this->urlSegment[1]);
+        $retrieve_data = $this->resourceConfiguration['retrieveData'];
+        $object = new $retrieve_data['className']((int)$this->urlSegment[1]);
         if ($object->id) {
             $objects[] = $object;
             // Check if Object is accessible for this/those id_shop
@@ -1224,7 +1229,7 @@ class WebserviceRequestCore
                 $check_shop_group = false;
 
                 $sql = 'SELECT 1
-	 						FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
+	 						FROM `'.bqSQL(_DB_PREFIX_.$retrieve_data['table']);
                 if ($assoc['type'] != 'fk_shop') {
                     $sql .= '_'.$assoc['type'];
                 } else {
@@ -1321,7 +1326,8 @@ class WebserviceRequestCore
         }
         if (!empty($ids)) {
             foreach ($ids as $id) {
-                $object = new $this->resourceConfiguration['retrieveData']['className']((int)$id);
+                $retrieve_data = $this->resourceConfiguration['retrieveData'];
+                $object = new $retrieve_data['className']((int)$id);
                 if (!$object->id) {
                     $arr_avoid_id[] = $id;
                 } else {
@@ -1337,7 +1343,8 @@ class WebserviceRequestCore
             foreach ($objects as $object) {
                 /** @var ObjectModel $object */
                 if (isset($this->resourceConfiguration['objectMethods']) && isset($this->resourceConfiguration['objectMethods']['delete'])) {
-                    $result = $object->{$this->resourceConfiguration['objectMethods']['delete']}();
+                    $resource_config = $this->resourceConfiguration['objectMethods']['delete'];
+                    $result = $object->$resource_config();
                 } else {
                     $result = $object->delete();
                 }
@@ -1402,10 +1409,11 @@ class WebserviceRequestCore
             $attributes = $xmlEntity->children();
 
             /** @var ObjectModel $object */
+            $retrieve_data = $this->resourceConfiguration['retrieveData'];
             if ($this->method == 'POST') {
-                $object = new $this->resourceConfiguration['retrieveData']['className']();
+                $object = new $retrieve_data['className']();
             } elseif ($this->method == 'PUT') {
-                $object = new $this->resourceConfiguration['retrieveData']['className']((int)$attributes->id);
+                $object = new $retrieve_data['className']((int)$attributes->id);
                 if (!$object->id) {
                     $this->setError(404, 'Invalid ID', 92);
                     return false;
@@ -1428,7 +1436,8 @@ class WebserviceRequestCore
                             $this->setError(400, 'parameter "'.$fieldName.'" not writable. Please remove this attribute of this XML', 93);
                             return false;
                         } else {
-                            $object->$fieldProperties['setter']((string)$attributes->$fieldName);
+                            $setter = $fieldProperties['setter'];
+                            $object->$setter((string)$attributes->$fieldName);
                         }
                     } elseif (property_exists($object, $sqlId)) {
                         $object->$sqlId = (string)$attributes->$fieldName;
