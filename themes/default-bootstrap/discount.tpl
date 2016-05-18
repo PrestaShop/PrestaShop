@@ -48,21 +48,27 @@
 					<td class="discount_description">{$discountDetail.name}</td>
 					<td data-value="{$discountDetail.quantity_for_user}" class="discount_quantity">{$discountDetail.quantity_for_user}</td>
 					<td class="discount_value">
-						{if $discountDetail.id_discount_type == 1}
-							{$discountDetail.value|escape:'html':'UTF-8'}%
-						{elseif $discountDetail.id_discount_type == 2}
-							{convertPrice price=$discountDetail.value} ({if $discountDetail.reduction_tax == 1}{l s='Tax included'}{else}{l s='Tax excluded'}{/if})
-						{elseif $discountDetail.id_discount_type == 3}
+						{if $discountDetail.reduction_percent > 0}
+							{$discountDetail.reduction_percent|escape:'html':'UTF-8'}%
+						{/if}
+						{if $discountDetail.reduction_amount > 0}
+							{if $discountDetail.reduction_percent > 0} + {/if}
+							{convertPrice price=$discountDetail.reduction_amount} ({if $discountDetail.reduction_tax == 1}{l s='Tax included'}{else}{l s='Tax excluded'}{/if})
+						{/if}
+						{if $discountDetail.free_shipping}
+							{if $discountDetail.reduction_percent > 0 || $discountDetail.reduction_amount > 0} + {/if}
 							{l s='Free shipping'}
-						{else}
-							-
+						{/if}
+						{if $discountDetail.gift_product > 0}
+							{if $discountDetail.reduction_percent > 0 || $discountDetail.reduction_amount > 0 || $discountDetail.gift_product} + {/if}
+							{$discountDetail.gift_product_name} {l s='Free %s!' sprintf=$discountDetail.gift_product_name}!
 						{/if}
 					</td>
 					<td class="discount_minimum" data-value="{if $discountDetail.minimal == 0}0{else}{$discountDetail.minimal}{/if}">
 						{if $discountDetail.minimal == 0}
 							{l s='None'}
 						{else}
-							{convertPrice price=$discountDetail.minimal}
+							{convertPrice price=$discountDetail.minimal} ({if $discountDetail.minimum_amount_tax == 1}{l s='Tax included'}{else}{l s='Tax excluded'}{/if})
 						{/if}
 					</td>
 					<td class="discount_cumulative">
