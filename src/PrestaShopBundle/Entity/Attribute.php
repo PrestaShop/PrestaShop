@@ -3,6 +3,7 @@
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use \Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Attribute
@@ -51,11 +52,17 @@ class Attribute
     private $shops;
 
     /**
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\AttributeLang", mappedBy="attribute")
+     */
+    private $attributeLangs;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->shops = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->shops = new ArrayCollection();
+        $this->attributeLangs = new ArrayCollection();
     }
 
     /**
@@ -172,5 +179,24 @@ class Attribute
     public function getShops()
     {
         return $this->shops;
+    }
+
+    public function addAttributeLang(AttributeLang $attributeLang)
+    {
+        $this->attributeLangs[] = $attributeLang;
+
+        $attributeLang->setAttribute($this);
+
+        return $this;
+    }
+
+    public function removeAttributeLang(AttributeLang $attributeLang)
+    {
+        $this->attributeLangs->removeElement($attributeLang);
+    }
+
+    public function getAttributeLangs()
+    {
+        return $this->attributeLangs;
     }
 }

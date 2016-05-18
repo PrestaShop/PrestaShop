@@ -14,7 +14,7 @@ class AttributeLang
 {
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Attribute")
+     * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Attribute", inversedBy="attributeLangs")
      * @ORM\JoinColumn(name="id_attribute", referencedColumnName="id_attribute", nullable=false)
      */
     private $attribute;
