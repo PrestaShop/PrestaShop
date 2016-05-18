@@ -7,10 +7,13 @@
         {foreach from=$nodes item=node}
           {if $node.children|count}
             <li class="{$node.type}{if $node.current} current {/if}">
-              <a class="{if $depth >= 0}dropdown-item{/if}{if $depth === 1} dropdown-submenu{/if}"
-                 {if $depth === 0} data-toggle="dropdown" {/if}
-                   href="{$node.url nofilter}" data-depth="{$depth}"
-                 {if $node.open_in_new_window} target="_blank" {/if}
+              <a
+                class="{if $depth >= 0}dropdown-item{/if}{if $depth === 1} dropdown-submenu{/if}"
+                {if $depth === 0}
+                  data-toggle="dropdown" 
+                {/if}
+                href="{$node.url nofilter}" data-depth="{$depth}"
+                {if $node.open_in_new_window} target="_blank" {/if}
               >
                 {$node.label}
               </a>
@@ -20,8 +23,12 @@
             </li>
           {else}
             <li>
-              <a href="{$node.url nofilter}" data-depth="{$depth}"
-                 {if $node.open_in_new_window} target="_blank" {/if}
+              <a
+                href="{$node.url nofilter}"
+                data-depth="{$depth}"
+                {if $node.open_in_new_window}
+                  target="_blank"
+                {/if}
               >
                 {$node.label}
               </a>
