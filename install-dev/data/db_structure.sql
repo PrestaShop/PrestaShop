@@ -83,15 +83,6 @@ CREATE TABLE `PREFIX_product_attachment` (
   PRIMARY KEY (`id_product`,`id_attachment`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_attribute` (
-  `id_attribute` int(10) unsigned NOT NULL auto_increment,
-  `id_attribute_group` int(10) unsigned NOT NULL,
-  `color` varchar(32) DEFAULT NULL,
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_attribute`),
-  KEY `attribute_group` (`id_attribute_group`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_attribute_impact` (
   `id_attribute_impact` int(10) unsigned NOT NULL auto_increment,
   `id_product` int(11) unsigned NOT NULL,
@@ -2046,13 +2037,6 @@ CREATE TABLE `PREFIX_image_shop` (
 	`cover` tinyint(1) UNSIGNED NULL DEFAULT NULL,
 	PRIMARY KEY (`id_image`, `id_shop`),
 	UNIQUE KEY `id_product` (`id_product`, `id_shop`, `cover`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_attribute_shop` (
-`id_attribute` INT(11) UNSIGNED NOT NULL,
-`id_shop` INT(11) UNSIGNED NOT NULL,
-	PRIMARY KEY (`id_attribute`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
