@@ -92,14 +92,6 @@ CREATE TABLE `PREFIX_attribute` (
   KEY `attribute_group` (`id_attribute_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_attribute_group_lang` (
-  `id_attribute_group` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `public_name` varchar(64) NOT NULL,
-  PRIMARY KEY (`id_attribute_group`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_attribute_impact` (
   `id_attribute_impact` int(10) unsigned NOT NULL auto_increment,
   `id_product` int(11) unsigned NOT NULL,
@@ -108,14 +100,6 @@ CREATE TABLE `PREFIX_attribute_impact` (
   `price` decimal(17,2) NOT NULL,
   PRIMARY KEY (`id_attribute_impact`),
   UNIQUE KEY `id_product` (`id_product`,`id_attribute`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_attribute_lang` (
-  `id_attribute` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(128) NOT NULL,
-  PRIMARY KEY (`id_attribute`,`id_lang`),
-  KEY `id_lang` (`id_lang`,`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_carrier` (
