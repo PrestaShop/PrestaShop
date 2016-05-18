@@ -527,19 +527,20 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('customerFilter')) {
+            $query_multishop = Shop::isFeatureActive() ? 's.`name` AS `from_shop_name`,' : '';
             $search_query = trim(Tools::getValue('q'));
-            $customers = Db::getInstance()->executeS('
-			SELECT `id_customer`, `email`, CONCAT(`firstname`, \' \', `lastname`) as cname
-			FROM `'._DB_PREFIX_.'customer`
-			WHERE `deleted` = 0 AND is_guest = 0 AND active = 1
-			AND (
-				`id_customer` = '.(int)$search_query.'
-				OR `email` LIKE "%'.pSQL($search_query).'%"
-				OR `firstname` LIKE "%'.pSQL($search_query).'%"
-				OR `lastname` LIKE "%'.pSQL($search_query).'%"
-			)
-			ORDER BY `firstname`, `lastname` ASC
-			LIMIT 50');
+            $customers = Db::getInstance()->executeS('SELECT c.`id_customer`, c.`email`, '.$query_multishop.' CONCAT(c.`firstname`, \' \', c.`lastname`) as cname
+                FROM `'._DB_PREFIX_.'customer` c
+                LEFT JOIN `'._DB_PREFIX_.'shop` s ON (c.`id_shop` = s.`id_shop`)
+                WHERE c.`deleted` = 0 AND c.`is_guest` = 0 AND c.`active` = 1
+                AND (
+                    c.`id_customer` = '.(int)$search_query.'
+                    OR c.`email` LIKE "%'.pSQL($search_query).'%"
+                    OR c.`firstname` LIKE "%'.pSQL($search_query).'%"
+                    OR c.`lastname` LIKE "%'.pSQL($search_query).'%"
+                )
+                ORDER BY c.`firstname`, c.`lastname` ASC
+                LIMIT 50');
             die(Tools::jsonEncode($customers));
         }
         // Both product filter (free product and product discount) search for products

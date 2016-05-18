@@ -331,7 +331,7 @@ $('#customerFilter')
 			parse: function(data) {
 				var mytab = new Array();
 				for (var i = 0; i < data.length; i++)
-					mytab[mytab.length] = { data: data[i], value: data[i].cname + ' (' + data[i].email + ')' };
+					mytab[mytab.length] = { data: data[i], value: data[i].cname + ' (' + data[i].email + ')' + (data[i].from_shop_name ? ' - ' + data[i].from_shop_name : '' ) };
 				return mytab;
 			},
 			extraParams: {
