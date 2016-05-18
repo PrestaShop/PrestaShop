@@ -1,12 +1,19 @@
 .cart-summary-line {
+  font-weight: 700;
   > .label {
     font-size: em(14px);
     @include pull-left;
   }
   > .value {
     color: $gray-darker;
-    font-weight: 700;
     @include pull-right;
+  }
+}
+.cart-tax-line {
+  > .label,
+  > .value {
+    font-weight: 400;
+    color: $gray-dark;
   }
 }
 /*** CART ***/

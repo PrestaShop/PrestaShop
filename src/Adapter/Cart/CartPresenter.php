@@ -266,7 +266,9 @@ class CartPresenter implements PresenterInterface
             $taxAmount = $total_including_tax - $total_excluding_tax;
             $subtotals['tax'] = array(
                 'type' => 'tax',
-                'label' => $this->translator->trans('Tax', [], 'Cart'),
+                'label' => ($this->includeTaxes())
+                    ? $this->translator->trans('Included taxes', [], 'Cart')
+                    : $this->translator->trans('Taxes', [], 'Cart'),
                 'amount' => $taxAmount,
                 'value' => $this->priceFormatter->format($taxAmount),
             );
