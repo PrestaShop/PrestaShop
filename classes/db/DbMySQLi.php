@@ -37,6 +37,42 @@ class DbMySQLiCore extends Db
     /* @var mysqli_result */
     protected $result;
 
+    /* @var mysqli_stmt */
+    protected $statement;
+
+    /**
+     * Current index of params array
+     *
+     * @var int
+     */
+    protected $index = 0;
+
+    /**
+     * Bound parameters for query
+     *
+     * @var array
+     */
+    protected $params = [];
+
+    /**
+     * Parameter types
+     *
+     * @var array
+     */
+    protected $param_types = [];
+
+    /**
+     * Translate general DB types to PDO types
+     *
+     * @var array
+     */
+    protected $_translate = [
+        Db::TYPE_INTEGER   => 'i',
+        Db::TYPE_DOUBLE    => 'd',
+        Db::TYPE_STRING    => 's',
+        Db::TYPE_BLOB      => 'b'
+    ];
+
     /**
      * Tries to connect to the database
      *
@@ -127,6 +163,59 @@ class DbMySQLiCore extends Db
     }
 
     /**
+     * Prepare a statement
+     *
+     * @param string $sql SQL query with placeholders
+     * @throws PrestaShopDatabaseException
+     */
+    protected function _prepare($sql)
+    {
+        $this->statement = $this->link->prepare($sql);
+        if ($this->statement === false) {
+            throw new PrestaShopDatabaseException(mysqli_error($this->link));
+        }
+    }
+
+    /**
+     * Bind a parameter
+     *
+     * @param mixed $value Parameter value
+     * @param int $type Parameter type
+     * @return bool Whether binding succeeded
+     */
+    protected function _bindParam($value, $type)
+    {
+        // Do not actually bind the params, save them for later
+        $this->index++;
+        $this->params[$this->index] = $value;
+        $this->param_types[$this->index] = $type;
+
+        return true;
+    }
+
+    /**
+     * Execute prepared statement
+     *
+     * @return bool Whether it was executed successfully
+     */
+    protected function _execute()
+    {
+        // Process all params at once before executing
+        $params = [];
+        $param_types = '';
+        for ($i = 1; $i < $this->index + 1; $i++) {
+            $param_types .= $this->_translate[$this->param_types[$i]];
+            $params[] = &$this->params[$i];
+        }
+
+        $statement = $this->statement;
+        $params = array_merge([$param_types], $params);
+        call_user_func_array([$statement, 'bind_param'], $params);
+
+        return $this->statement->execute();
+    }
+
+    /**
      * Returns the next row from the result set.
      *
      * @see DbCore::nextRow()
@@ -140,6 +229,14 @@ class DbMySQLiCore extends Db
         }
 
         if (!is_object($result)) {
+            return false;
+        }
+
+        if ($result instanceof mysqli_stmt) {
+            $result = $result->get_result();
+        }
+
+        if (!$result) {
             return false;
         }
 
@@ -163,10 +260,14 @@ class DbMySQLiCore extends Db
             return false;
         }
 
+        if ($result instanceof mysqli_stmt) {
+            $result = $result->get_result();
+        }
+
         if (method_exists($result, 'fetch_all')) {
             return $result->fetch_all(MYSQLI_ASSOC);
         } else {
-            $ret = array();
+            $ret = [];
 
             while ($row = $this->nextRow($result)) {
                 $ret[] = $row;
@@ -299,7 +400,7 @@ class DbMySQLiCore extends Db
      * @param string $user Login for database connection
      * @param string $pwd Password for database connection
      * @param string $db Database name
-     * @param bool $newDbLink
+     * @param bool $new_db_link
      * @param string|bool $engine
      * @param int $timeout
      * @return int Error code or 0 if connection was successful
@@ -315,7 +416,7 @@ class DbMySQLiCore extends Db
             return 1;
         }
 
-        // There is an @ because mysqli throw a warning when the database does not exists
+        // There is an @ because mysqli throws a warning when the database does not exists
         if (!@$link->real_connect($server, $user, $pwd, $db)) {
             return (mysqli_connect_errno() == 1049) ? 2 : 1;
         }
@@ -348,7 +449,7 @@ class DbMySQLiCore extends Db
         $result = $this->link->query($sql);
         while ($row = $result->fetch_assoc()) {
             if ($row['Engine'] == 'InnoDB') {
-                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
+                if (in_array($row['Support'], ['DEFAULT', 'YES'])) {
                     $value = 'InnoDB';
                 }
                 break;
