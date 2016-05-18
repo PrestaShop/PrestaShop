@@ -1378,17 +1378,21 @@
 
 		// Fix wrong maps center when map is hidden
 		$('#tabAddresses').click(function(){
+		if (delivery_map) {
 			x = delivery_map.getZoom();
 			c = delivery_map.getCenter();
 			google.maps.event.trigger(delivery_map, 'resize');
 			delivery_map.setZoom(x);
 			delivery_map.setCenter(c);
-
+		}
+      
+		if (invoice_map) {
 			x = invoice_map.getZoom();
 			c = invoice_map.getCenter();
 			google.maps.event.trigger(invoice_map, 'resize');
 			invoice_map.setZoom(x);
 			invoice_map.setCenter(c);
+		  }
 		});
 	</script>
 
