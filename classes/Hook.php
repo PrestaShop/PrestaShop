@@ -430,7 +430,8 @@ class HookCore extends ObjectModel
     {
         $context = Context::getContext();
         $cache_id = 'hook_module_exec_list_'.(isset($context->shop->id) ? '_'.$context->shop->id : '').((isset($context->customer)) ? '_'.$context->customer->id : '');
-        if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment' || $hook_name == 'displayBackOfficeHeader') {
+        if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment' || $hook_name == 'displayPaymentEU'
+            || $hook_name == 'paymentOptions' || $hook_name == 'displayBackOfficeHeader') {
             $frontend = true;
             $groups = array();
             $use_groups = Group::isFeatureActive();
@@ -465,28 +466,28 @@ class HookCore extends ObjectModel
             // For payment modules, we check that they are available in the contextual country
             elseif ($frontend) {
                 if (Validate::isLoadedObject($context->country)) {
-                    $sql->where('((h.name = "displayPayment" OR h.name = "displayPaymentEU") AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' AND id_shop = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
+                    $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions") AND (SELECT `id_country` FROM `'._DB_PREFIX_.'module_country` mc WHERE mc.`id_module` = m.`id_module` AND `id_country` = '.(int)$context->country->id.' AND `id_shop` = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
                 }
                 if (Validate::isLoadedObject($context->currency)) {
-                    $sql->where('((h.name = "displayPayment" OR h.name = "displayPaymentEU") AND (SELECT id_currency FROM '._DB_PREFIX_.'module_currency mcr WHERE mcr.id_module = m.id_module AND id_currency IN ('.(int)$context->currency->id.', -1, -2) LIMIT 1) IN ('.(int)$context->currency->id.', -1, -2))');
+                    $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions") AND (SELECT `id_currency` FROM `'._DB_PREFIX_.'module_currency` mcr WHERE mcr.`id_module` = m.`id_module` AND `id_currency` IN ('.(int)$context->currency->id.', -1, -2) LIMIT 1) IN ('.(int)$context->currency->id.', -1, -2))');
                 }
             }
             if (Validate::isLoadedObject($context->shop)) {
-                $sql->where('hm.id_shop = '.(int)$context->shop->id);
+                $sql->where('hm.`id_shop` = '.(int)$context->shop->id);
             }
 
             if ($frontend) {
                 if ($use_groups) {
                     $sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
                     if (Validate::isLoadedObject($context->shop)) {
-                        $sql->where('mg.id_shop = '.((int)$context->shop->id).(count($groups) ? ' AND  mg.`id_group` IN ('.implode(', ', $groups).')' : ''));
+                        $sql->where('mg.`id_shop` = '.((int)$context->shop->id).(count($groups) ? ' AND  mg.`id_group` IN ('.implode(', ', $groups).')' : ''));
                     } elseif (count($groups)) {
                         $sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
                     }
                 }
             }
 
-            $sql->groupBy('hm.id_hook, hm.id_module');
+            $sql->groupBy('hm.`id_hook`, hm.`id_module`');
             $sql->orderBy('hm.`position`');
 
             $list = array();
@@ -504,7 +505,8 @@ class HookCore extends ObjectModel
                     );
                 }
             }
-            if ($hook_name != 'displayPayment' && $hook_name != 'displayBackOfficeHeader') {
+            if ($hook_name != 'displayPayment' && $hook_name != 'displayPaymentEU' &&
+                $hook_name != 'paymentOptions' && $hook_name != 'displayBackOfficeHeader') {
                 Cache::store($cache_id, $list);
                 // @todo remove this in 1.6, we keep it in 1.5 for backward compatibility
                 self::$_hook_modules_cache_exec = $list;
