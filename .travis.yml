@@ -49,14 +49,11 @@ script:
   - composer install --prefer-dist --no-interaction --no-progress
   - tests/check_php_parse_errors.sh
   - bash ./travis-scripts/install-prestashop
-  - bash ./travis-scripts/backup-prestashop
   - php bin/phpunit -c tests/
   - composer phpunit-sf
-  - bash ./travis-scripts/restore-backup
   - bash ./travis-scripts/run-selenium-tests
 
 after_script:
-  - cat /var/log/apache2/error.log
   - google-chrome --version
 
 after_failure:

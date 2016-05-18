@@ -1,7 +1,7 @@
 #!/bin/bash
 
 /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
-cd /var/www/prestashop.unit.test/tests/Selenium
+cd tests/Selenium
 mv settings.travis.js settings.js
 npm install
 DISPLAY=:10 npm run selenium &> /dev/null &
