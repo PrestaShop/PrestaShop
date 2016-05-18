@@ -14,7 +14,7 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-sudo: required
+sudo: false
 dist: trusty
 group: edge
 
@@ -28,29 +28,22 @@ matrix:
   fast_finish: true
 
 before_install:
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then sudo cp tests/php7-pool.conf ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/; fi
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty multiverse" && sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse"
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty universe" && sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-updates universe"
-  - sudo apt-get update -qq
-  - sudo apt-get install libapache2-mod-fastcgi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then cp tests/php7-pool.conf ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/; fi
+
   - phpenv config-rm xdebug.ini
   - mysql -u root -e 'create database prestashop;'
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-  - sudo a2enmod rewrite actions fastcgi alias
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "memory_limit = 512M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-  - sudo cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/prestashop.conf
-  - sudo cp -Rf . /var/www/prestashop.unit.test
-  - sudo chmod 777 -R /var/www/
-  - sudo a2dissite 000-default
-  - sudo a2ensite prestashop.conf
-  - sudo service apache2 restart
+  - cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/prestashop.conf
+  - cp -Rf . /var/www/prestashop.unit.test
+  - chmod 777 -R /var/www/
+  - a2dissite 000-default
+  - a2ensite prestashop.conf
+  - service apache2 restart
   - cp -Rf .composer/* ~/.composer/ & composer global install;
-  - sudo apt-get install -y libappindicator1 fonts-liberation
-  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  - sudo dpkg -i google-chrome*.deb
 
 before_script:
   - export CHROME_BIN=/usr/bin/google-chrome
@@ -72,11 +65,11 @@ script:
   - bash ./travis-scripts/run-selenium-tests
 
 after_script:
-  - sudo cat /var/log/apache2/error.log
+  - cat /var/log/apache2/error.log
   - google-chrome --version
 
 after_failure:
   - curl http://localhost/prestashop.unit.test/
   - cat /etc/apache2/envvars
   - cat /etc/apache2/sites-available/prestashop.conf
-  - sudo ls -l /var/log/apache2
+  - ls -l /var/log/apache2
