@@ -1,21 +1,19 @@
-<div class="cart-summary-totals">
+<div class="card-block cart-summary-totals">
   {block name='cart_summary_body'}
-    <div id="cart-summary">
-      {foreach from=$cart.subtotals item="subtotal"}
-        {if $subtotal.amount && $subtotal.type !== 'tax'}
-          <div class="{$subtotal.type}">
-            <span class="label">{$subtotal.label}</span>
-            <span class="value pull-xs-right">{$subtotal.value}</span>
-          </div>
-        {/if}
-      {/foreach}
-    </div>
+    {foreach from=$cart.subtotals item="subtotal"}
+      {if $subtotal.amount && $subtotal.type !== 'tax'}
+        <div class="cart-summary-line" id="cart-subtotal-{$subtotal.type}">
+          <span class="label">{$subtotal.label}</span>
+          <span class="value">{$subtotal.value}</span>
+        </div>
+      {/if}
+    {/foreach}
   {/block}
 
-  {block name='cart_summary_totals'}
-    <div class="cart-summary-totals">
+  {block name='cart_summary_total'}
+    <div class="cart-summary-line cart-total">
       <span class="label">{$cart.total.label}</span>
-      <span class="value pull-xs-right">{$cart.total.value}</span>
+      <span class="value">{$cart.total.value}</span>
     </div>
   {/block}
 

@@ -75,7 +75,6 @@ a:hover {
 }
 .card {
   @include box-shadow;
-  padding: $medium-space;
 }
 label {
   color: $gray-darker;

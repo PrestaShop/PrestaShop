@@ -1,19 +1,20 @@
 .cart-summary-line {
+  @include clearfix;
+  clear: both;
   font-weight: 700;
-  > .label {
+  .label {
     font-size: em(14px);
     @include pull-left;
   }
-  > .value {
+  .value {
     color: $gray-darker;
     @include pull-right;
   }
-}
-.cart-tax-line {
-  > .label,
-  > .value {
-    font-weight: 400;
-    color: $gray-dark;
+  .sub,
+  &.sub {
+    font-weight: normal;
+    bottom: 0;
+    font-size: em(13px);
   }
 }
 /*** CART ***/
@@ -35,7 +36,7 @@
     font-size: em(16px);
   }
   hr {
-    margin-top: 0;
+    margin: 0;
   }
 }
 /** CART RIGHT **/
