@@ -6,7 +6,6 @@ services:
 addons:
     apt_packages:
         - mysql-server
-        - apache2
         - postfix
     sauce_connect: true
     
@@ -29,7 +28,6 @@ matrix:
 
 before_install:
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then cp tests/php7-pool.conf ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/; fi
-
   - phpenv config-rm xdebug.ini
   - mysql -u root -e 'create database prestashop;'
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
@@ -37,12 +35,6 @@ before_install:
   - echo "memory_limit = 512M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-  - cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/prestashop.conf
-  - cp -Rf . /var/www/prestashop.unit.test
-  - chmod 777 -R /var/www/
-  - a2dissite 000-default
-  - a2ensite prestashop.conf
-  - service apache2 restart
   - cp -Rf .composer/* ~/.composer/ & composer global install;
 
 before_script:
@@ -53,14 +45,13 @@ notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
 script:
-  - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
+  - cp tests/parameters.yml.travis app/config/parameters.yml
   - composer install --prefer-dist --no-interaction --no-progress
   - tests/check_php_parse_errors.sh
   - bash ./travis-scripts/install-prestashop
   - bash ./travis-scripts/backup-prestashop
   - php bin/phpunit -c tests/
   - composer phpunit-sf
-  - cd $TRAVIS_BUILD_DIR # because /var/www/prestashop.unit.test (cwd) is about to be deleted
   - bash ./travis-scripts/restore-backup
   - bash ./travis-scripts/run-selenium-tests
 
@@ -69,7 +60,4 @@ after_script:
   - google-chrome --version
 
 after_failure:
-  - curl http://localhost/prestashop.unit.test/
-  - cat /etc/apache2/envvars
-  - cat /etc/apache2/sites-available/prestashop.conf
-  - ls -l /var/log/apache2
+  - curl http://localhost/
