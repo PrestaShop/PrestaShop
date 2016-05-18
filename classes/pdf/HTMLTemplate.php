@@ -232,4 +232,14 @@ abstract class HTMLTemplateCore
             Shop::setContext(Shop::CONTEXT_SHOP, (int)$this->shop->id);
         }
     }
+    
+    /**
+     * Returns the template's HTML pagination block
+     *
+     * @return string HTML pagination block
+     */
+    public function getPagination()
+    {
+        return $this->smarty->fetch($this->getTemplate('pagination'));
+    }
 }
