@@ -1,6 +1,6 @@
 <div id="combinations">
   <h2>
-    {{ 'Product combinations'|trans([], 'AdminProducts') }}
+    {{ 'Product combinations'|trans({}, 'AdminProducts') }}
     <span
       class="help-box"
       data-toggle="popover"
@@ -9,7 +9,7 @@
   </h2>
   <div id="attributes-generator">
     <p>
-      {{ 'Create a series of combinations by entering the related attributes below.'|trans([], 'AdminProducts') }}
+      {{ 'Create a series of combinations by entering the related attributes below.'|trans({}, 'AdminProducts') }}
     </p>
     <div class="row">
       <div class="col-md-10">
@@ -54,11 +54,11 @@
   <div class="row">
 
     <div class="col-md-12">
-      <h2>{{ 'Availability preferences'|trans([], 'AdminProducts') }}</h2>
+      <h2>{{ 'Availability preferences'|trans({}, 'AdminProducts') }}</h2>
     </div>
 
     <div class="col-md-12">
-      <label class="form-control-label">{{ 'Behavior when out of stock'|trans([], 'AdminProducts') }}</label>
+      <label class="form-control-label">{{ 'Behavior when out of stock'|trans({}, 'AdminProducts') }}</label>
       {{ form_errors(form.out_of_stock) }}
       {{ form_widget(form.out_of_stock) }}
     </div>

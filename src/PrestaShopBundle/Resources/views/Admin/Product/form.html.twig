@@ -32,7 +32,7 @@
             </select>
           </div>
           <div class="col-lg-2 text-md-right">
-            <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ 'Sales'|trans([], 'AdminTab') }}"
+            <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ 'Sales'|trans({}, 'AdminTab') }}"
                id="product_form_go_to_sales">
               <i class="material-icons">assessment</i>
               <span class="title">{{ 'Sales'|trans({}, 'AdminProducts') }}</span>
@@ -41,7 +41,7 @@
             <a
               class="toolbar-button btn-quicknav btn-sidebar"
               href="#"
-              title="{{ 'Quick navigation'|trans([], 'AdminTab') }}"
+              title="{{ 'Quick navigation'|trans({}, 'AdminTab') }}"
               data-toggle="sidebar"
               data-target="#right-sidebar"
               data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}"
@@ -52,7 +52,7 @@
             </a>
 
             <a class="toolbar-button btn-help btn-sidebar" href="#"
-               title="{{ 'Help'|trans([], 'AdminTab') }}"
+               title="{{ 'Help'|trans({}, 'AdminTab') }}"
                data-toggle="sidebar"
                data-target="#right-sidebar"
                data-url="{{ help_link }}"
@@ -163,7 +163,7 @@
 
                     <div id="features" class="m-b-1 m-t-1">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
-                        <h2>{{ 'Features'|trans([], 'AdminProducts') }}</h2>
+                        <h2>{{ 'Features'|trans({}, 'AdminProducts') }}</h2>
                         {{ form_errors(form.step1.features) }}
                         <div
                           class="feature-collection nostyle"
@@ -310,7 +310,7 @@
                   <div class="col-md-12">
 
                     <div id="quantities" style="{% if has_combinations or form.step3.depends_on_stock.vars.value != "0" %}display: none;{% endif %}">
-                      <h2>{{ 'Quantities'|trans([], 'AdminProducts') }}</h2>
+                      <h2>{{ 'Quantities'|trans({}, 'AdminProducts') }}</h2>
                       <fieldset class="form-group">
                         <div class="row">
                           <div class="col-md-4">
@@ -522,8 +522,8 @@
                               <i class="material-icons">help</i>
                               <p class="alert-text">
                                 {{ 'Final retail price : '|trans({}, 'AdminProducts') }}
-                                <strong><span id="final_retail_price_ti"></span> {{ 'tax incl.'|trans([], 'AdminProducts') }}</strong> /
-                                <span id="final_retail_price_te"></span> {{ 'tax excl.'|trans([], 'AdminProducts') }}
+                                <strong><span id="final_retail_price_ti"></span> {{ 'tax incl.'|trans({}, 'AdminProducts') }}</strong> /
+                                <span id="final_retail_price_te"></span> {{ 'tax excl.'|trans({}, 'AdminProducts') }}
                               </p>
                             </div>
                           </div>

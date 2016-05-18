@@ -1,8 +1,8 @@
 {% set dimension_unit, weight_unit = 'PS_DIMENSION_UNIT'|configuration, 'PS_WEIGHT_UNIT'|configuration %}
 
 <div class="col-md-12 p-b-1">
-  <h2>{{ 'Package dimension'|trans([], 'AdminProducts') }}</h2>
-  <p class="subtitle">{{ 'Adjust your shipping costs by filling in the product dimensions.'|trans([], 'AdminProducts') }}</p>
+  <h2>{{ 'Package dimension'|trans({}, 'AdminProducts') }}</h2>
+  <p class="subtitle">{{ 'Adjust your shipping costs by filling in the product dimensions.'|trans({}, 'AdminProducts') }}</p>
 </div>
 
 <div class="col-md-2">
@@ -53,7 +53,7 @@
       <span class="help-box" data-toggle="popover"
         data-content="{{ "If a carrier has a tax, it will be added to the shipping fees."|trans({}, 'AdminProducts') }}" ></span>
     </h2>
-    <label class="form-control-label">{{ 'Does this product incur additional shipping cost?'|trans([], 'AdminProducts') }}</label>
+    <label class="form-control-label">{{ 'Does this product incur additional shipping cost?'|trans({}, 'AdminProducts') }}</label>
     <div class="row">
       <div class="col-md-2">
         {{ form_widget(form.additional_shipping_cost) }}
