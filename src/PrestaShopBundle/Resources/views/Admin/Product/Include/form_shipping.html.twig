@@ -1,8 +1,8 @@
 {% set dimension_unit, weight_unit = 'PS_DIMENSION_UNIT'|configuration, 'PS_WEIGHT_UNIT'|configuration %}
 
 <div class="col-md-12 p-b-1">
-  <h2>{{ trans('Package dimension', [], 'AdminProducts') }}</h2>
-  <p class="subtitle">{{ trans('Adjust your shipping costs by filling in the product dimensions.', [], 'AdminProducts') }}</p>
+  <h2>{{ 'Package dimension'|trans({}, 'AdminProducts') }}</h2>
+  <p class="subtitle">{{ 'Adjust your shipping costs by filling in the product dimensions.'|trans({}, 'AdminProducts') }}</p>
 </div>
 
 <div class="col-md-2">
@@ -51,9 +51,9 @@
     <h2>
       {{ form.additional_shipping_cost.vars.label }}
       <span class="help-box" data-toggle="popover"
-        data-content="{{ trans("If a carrier has a tax, it will be added to the shipping fees.",{}, 'AdminProducts') }}" ></span>
+        data-content="{{ "If a carrier has a tax, it will be added to the shipping fees."|trans({}, 'AdminProducts') }}" ></span>
     </h2>
-    <label class="form-control-label">{{ trans('Does this product incur additional shipping cost?', [], 'AdminProducts') }}</label>
+    <label class="form-control-label">{{ 'Does this product incur additional shipping cost?'|trans({}, 'AdminProducts') }}</label>
     <div class="row">
       <div class="col-md-2">
         {{ form_widget(form.additional_shipping_cost) }}
@@ -72,7 +72,7 @@
 <div class="col-md-12">
   <div class="alert alert-warning" role="alert">
     <i class="material-icons">info_outline</i>
-    <p>{{ trans('If no carrier is selected then all the carriers will be available for customers orders.', {}, 'AdminProducts')|raw }}</p>
+    <p>{{ 'If no carrier is selected then all the carriers will be available for customers orders.'|trans({}, 'AdminProducts')|raw }}</p>
   </div>
 </div>
 

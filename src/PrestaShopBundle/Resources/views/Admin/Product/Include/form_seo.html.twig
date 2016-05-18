@@ -1,7 +1,7 @@
 <div class="col-md-12">
 
-  <h2>{{ trans('Search Engine Optimization', {}, 'AdminProducts') }}</h2>
-  <p class="subtitle">{{ trans('Improve your ranking and how your product page will appear in search engines results.', {}, 'AdminProducts') }}</p>
+  <h2>{{ 'Search Engine Optimization'|trans({}, 'AdminProducts') }}</h2>
+  <p class="subtitle">{{ 'Improve your ranking and how your product page will appear in search engines results.'|trans({}, 'AdminProducts') }}</p>
 
   <div class="row">
     <div class="col-md-9">
@@ -9,7 +9,7 @@
         <label class="form-control-label">
           {{ form.meta_title.vars.label }}
           <span class="help-box" data-toggle="popover"
-            data-content="{{ trans("Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.",{}, 'AdminProducts') }}" ></span>
+            data-content="{{ "Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field."|trans({}, 'AdminProducts') }}" ></span>
         </label>
         {{ form_errors(form.meta_title) }}
         {{ form_widget(form.meta_title) }}
@@ -23,7 +23,7 @@
         <label class="form-control-label">
           {{ form.meta_description.vars.label }}
           <span class="help-box" data-toggle="popover"
-            data-content="{{ trans("This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces).",{}, 'AdminProducts') }}" ></span>
+            data-content="{{ "This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)."|trans({}, 'AdminProducts') }}" ></span>
         </label>
         {{ form_errors(form.meta_description) }}
         {{ form_widget(form.meta_description) }}
@@ -34,7 +34,7 @@
     <label class="form-control-label">
       {{ form.link_rewrite.vars.label }}
       <span class="help-box" data-toggle="popover"
-        data-content="{{ trans("This is the human-readable URL, as generated from the product's name. You can change it if you want.",{}, 'AdminProducts') }}" ></span>
+        data-content="{{ "This is the human-readable URL, as generated from the product's name. You can change it if you want."|trans({}, 'AdminProducts') }}" ></span>
     </label>
     {{ form_errors(form.link_rewrite) }}
     <div class="row">
@@ -42,7 +42,7 @@
         {{ form_widget(form.link_rewrite) }}
       </div>
       <div class="col-md-2">
-        <button type="button" class="btn-action btn btn-action btn-block text-uppercase" id="seo-url-regenerate">{{ trans('Reset URL', {}, 'AdminProducts') }}</button>
+        <button type="button" class="btn-action btn btn-action btn-block text-uppercase" id="seo-url-regenerate">{{ 'Reset URL'|trans({}, 'AdminProducts') }}</button>
       </div>
     </div>
   </fieldset>
@@ -53,13 +53,13 @@
         <i class="material-icons">help</i>
         <p class="alert-text">
           {% if 'PS_REWRITING_SETTINGS'|configuration == 0 %}
-            <strong>{{ trans('Friendly URLs are currently disabled.', {}, 'AdminProducts') }}</strong>
-            {{ trans('To enable it, got to', {}, 'AdminProducts') }}
-            <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
+            <strong>{{ 'Friendly URLs are currently disabled.'|trans({}, 'AdminProducts') }}</strong>
+            {{ 'To enable it, got to'|trans({}, 'AdminProducts') }}
+            <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ 'SEO and URLS'|trans({}, 'AdminProducts') }}</a>
           {% else %}
-            <strong>{{ trans('Friendly URLs are currently enabled.', {}, 'AdminProducts') }}</strong>
-            {{ trans('To disable it, got to', {}, 'AdminProducts') }}
-            <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ trans('SEO and URLS', [], 'AdminProducts') }}</a>
+            <strong>{{ 'Friendly URLs are currently enabled.'|trans({}, 'AdminProducts') }}</strong>
+            {{ 'To disable it, got to'|trans({}, 'AdminProducts') }}
+            <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ 'SEO and URLS'|trans({}, 'AdminProducts') }}</a>
           {% endif %}
         </p>
       </div>
@@ -67,9 +67,9 @@
   </div>
 
   <h2>
-    {{ trans('Redirection page', {}, 'AdminProducts') }}
+    {{ 'Redirection page'|trans({}, 'AdminProducts') }}
     <span class="help-box" data-toggle="popover"
-      data-content="{{ trans("When your product is disabled, choose to which page you’d like to redirect the customers visiting its page.",{}, 'AdminProducts') }}" ></span>
+      data-content="{{ "When your product is disabled, choose to which page you’d like to redirect the customers visiting its page."|trans({}, 'AdminProducts') }}" ></span>
   </h2>
 
   <div class="row">
@@ -96,9 +96,9 @@
       <div class="alert alert-info" role="alert">
         <i class="material-icons">help</i>
         <p class="alert-text">
-          {{ trans('No redirection (404) = Do not redirect anywhere and display a 404 « Not Found » page.', {}, 'AdminProducts') }}<br>
-          {{ trans('Permanent redirection (301) = Permanently display another product instead.', {}, 'AdminProducts') }}<br>
-          {{ trans('Temporary redirection (302) = Temporarily display another product instead.', {}, 'AdminProducts') }}
+          {{ 'No redirection (404) = Do not redirect anywhere and display a 404 « Not Found » page.'|trans({}, 'AdminProducts') }}<br>
+          {{ 'Permanent redirection (301) = Permanently display another product instead.'|trans({}, 'AdminProducts') }}<br>
+          {{ 'Temporary redirection (302) = Temporarily display another product instead.'|trans({}, 'AdminProducts') }}
         </p>
       </div>
     </div>

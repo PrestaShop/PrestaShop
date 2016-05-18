@@ -1,15 +1,15 @@
 <div id="combinations">
   <h2>
-    {{ trans('Product combinations', [], 'AdminProducts') }}
+    {{ 'Product combinations'|trans({}, 'AdminProducts') }}
     <span
       class="help-box"
       data-toggle="popover"
-      data-content="{{ trans("Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!", {}, 'AdminProducts')|raw }}"
+      data-content="{{ "Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!"|trans({}, 'AdminProducts')|raw }}"
     ></span>
   </h2>
   <div id="attributes-generator">
     <p>
-      {{ trans('Create a series of combinations by entering the related attributes below.', [], 'AdminProducts') }}
+      {{ 'Create a series of combinations by entering the related attributes below.'|trans({}, 'AdminProducts') }}
     </p>
     <div class="row">
       <div class="col-md-10">
@@ -33,10 +33,10 @@
       <thead id="combinations_thead" {% if form.combinations|length == 0 %}style="display: none;"{% endif %}>
       <tr class="uppercase">
         <th></th>
-        <th>{{ trans('Combination', {}, 'AdminProducts') }}</th>
-        <th>{{ trans('Impact on price', {}, 'AdminProducts') }}</th>
-        <th>{{ trans('Final price', {}, 'AdminProducts') }}</th>
-        <th>{{ trans('Quantity', {}, 'AdminProducts') }}</th>
+        <th>{{ 'Combination'|trans({}, 'AdminProducts') }}</th>
+        <th>{{ 'Impact on price'|trans({}, 'AdminProducts') }}</th>
+        <th>{{ 'Final price'|trans({}, 'AdminProducts') }}</th>
+        <th>{{ 'Quantity'|trans({}, 'AdminProducts') }}</th>
         <th></th>
       </tr>
       </thead>
@@ -54,11 +54,11 @@
   <div class="row">
 
     <div class="col-md-12">
-      <h2>{{ trans('Availability preferences', [], 'AdminProducts') }}</h2>
+      <h2>{{ 'Availability preferences'|trans({}, 'AdminProducts') }}</h2>
     </div>
 
     <div class="col-md-12">
-      <label class="form-control-label">{{ trans('Behavior when out of stock', [], 'AdminProducts') }}</label>
+      <label class="form-control-label">{{ 'Behavior when out of stock'|trans({}, 'AdminProducts') }}</label>
       {{ form_errors(form.out_of_stock) }}
       {{ form_widget(form.out_of_stock) }}
     </div>

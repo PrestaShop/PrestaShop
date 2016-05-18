@@ -1,6 +1,6 @@
 <div id="related-content" class="row {{ form.vars.value.data|length == 0 ? 'hide':'' }}">
   <div class="col-md-12">
-    <h2>{{ trans("Related product", {}, 'AdminProducts') }}</h2>
+    <h2>{{ "Related product"|trans({}, 'AdminProducts') }}</h2>
   </div>
   <div class="col-md-8">
     <fieldset class="form-group">
@@ -16,7 +16,7 @@
 <div class="row">
   <div class="col-md-4">
     <button type="button" class="btn btn-primary-outline sensitive open {{ form.vars.value.data|length > 0 ? 'hide':'' }}" id="add-related-product-button">
-      <i class="material-icons">add_circle</i> {{ trans('Add a related product', {}, 'AdminProducts') }}
+      <i class="material-icons">add_circle</i> {{ 'Add a related product'|trans({}, 'AdminProducts') }}
     </button>
   </div>
 </div>

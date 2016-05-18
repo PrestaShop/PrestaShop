@@ -1,5 +1,5 @@
 <div id="manufacturer-content" class="{{ form.vars.value == '' ? 'hide':'' }}">
-  <h2>{{ trans("Brand", {}, 'AdminProducts') }}</h2>
+  <h2>{{ "Brand"|trans({}, 'AdminProducts') }}</h2>
   <div class="row">
     <div class="col-md-8">
       <fieldset class="form-group">
@@ -19,7 +19,7 @@
 <div class="row">
   <div class="col-md-4">
     <button type="button" class="btn btn-primary-outline sensitive open {{ form.vars.value != '' ? 'hide':'' }}" id="add_brand_button">
-      <i class="material-icons">add_circle</i> {{ trans('Add a brand', {}, 'AdminProducts') }}
+      <i class="material-icons">add_circle</i> {{ 'Add a brand'|trans({}, 'AdminProducts') }}
     </button>
   </div>
 </div>
