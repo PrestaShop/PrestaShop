@@ -110,7 +110,6 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     public function isComplete()
     {
         return $this->step_is_complete;
-        ;
     }
 
     public function setCurrent($step_is_current)
