@@ -1,6 +1,5 @@
 .cart-summary-line {
   > .label {
-    color: $gray-darker;
     font-size: em(14px);
     @include pull-left;
   }
@@ -26,7 +25,6 @@
 /** CART BODY **/
 .cart-grid-body {
   > a.label {
-    color: $gray-darker;
     font-size: em(16px);
   }
   hr {
@@ -35,13 +33,9 @@
 }
 /** CART RIGHT **/
 .cart-grid-right {
-  > a.label {
-    color: $gray-darker;
-  }
   > .cart-summary {
     .cart-total {
       > .label {
-        color: $gray-darker;
         font-size: 100%;
       }
     }
@@ -99,7 +93,6 @@
 .product-line-grid-body {
   > .product-line-info {
     > .label {
-      color: $gray-darker;
       font-size: em(15px);
       font-weight: 800;
     }
