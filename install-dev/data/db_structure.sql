@@ -92,14 +92,6 @@ CREATE TABLE `PREFIX_attribute` (
   KEY `attribute_group` (`id_attribute_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_attribute_group` (
-  `id_attribute_group` int(10) unsigned NOT NULL auto_increment,
-  `is_color_group` tinyint(1) NOT NULL DEFAULT '0',
-  `group_type` ENUM('select', 'radio', 'color') NOT NULL DEFAULT  'select',
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_attribute_group`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_attribute_group_lang` (
   `id_attribute_group` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
@@ -2091,13 +2083,6 @@ CREATE TABLE `PREFIX_group_shop` (
 `id_group` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 	PRIMARY KEY (`id_group`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_attribute_group_shop` (
-`id_attribute_group` INT( 11 ) UNSIGNED NOT NULL ,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
-	PRIMARY KEY (`id_attribute_group`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
