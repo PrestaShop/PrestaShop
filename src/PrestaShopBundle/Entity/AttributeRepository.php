@@ -10,4 +10,59 @@ namespace PrestaShopBundle\Entity;
  */
 class AttributeRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findByLangAndShop($idLang, $idShop)
+    {
+        $attributeGroups = array();
+
+        $qb = $this->createQueryBuilder('a')
+            ->addSelect('ag.id AS attributeGroupId')
+            ->addSelect('ag.position AS attributeGroupPosition')
+            ->addSelect('agl.name AS attributeGroupName')
+            ->addSelect('a.id')
+            ->addSelect('a.color')
+            ->addSelect('a.position as attributePosition')
+            ->addSelect('al.name AS attributeName')
+            ->join('a.attributeGroup', 'ag')
+            ->join('a.shops', 's')
+            ->join('a.attributeLangs', 'al')
+            ->join('ag.attributeGroupLangs', 'agl')
+            ->where('al.lang = :idLang')
+            ->andWhere('s.id = :idShop')
+            ->orderBy('attributePosition')
+            ->addOrderBy('attributeGroupPosition')
+            ->setParameters(array(
+                'idShop' => $idShop,
+                'idLang'=> $idLang
+            ))
+        ;
+
+        $result = $qb->getQuery()->getArrayResult();
+
+        foreach ($result as $attribute) {
+            if (isset($attributeGroups[$attribute['attributeGroupPosition']])) {
+                $attributeGroups[$attribute['attributeGroupPosition']]['attributes'][$attribute['attributePosition']] = $this->getAttributeRow($attribute);
+            } else {
+                $attributeGroups[$attribute['attributeGroupPosition']] = array(
+                    'id' => $attribute['attributeGroupId'],
+                    'name' => $attribute['attributeGroupName'],
+                    'position' => $attribute['attributeGroupPosition'],
+                    'attributes' => array(
+                        $attribute['attributePosition'] => $this->getAttributeRow($attribute),
+                    ),
+                );
+            }
+        }
+
+        return $attributeGroups;
+    }
+
+    private function getAttributeRow($attribute)
+    {
+        return array(
+            'id' => $attribute['id'],
+            'color' => $attribute['color'],
+            'position' => $attribute['attributePosition'],
+            'name' => $attribute['attributeName'],
+        );
+    }
 }
