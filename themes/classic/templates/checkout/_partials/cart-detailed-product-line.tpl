@@ -2,7 +2,7 @@
   <!--  product left content: image-->
   <div class="product-line-grid-left col-md-3">
     <span class="product-image media-middle">
-      <img class="" src="{$product.cover.bySize.cart_default.url}">
+      <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}">
     </span>
   </div>
 
@@ -41,7 +41,7 @@
       <div class="col-md-3">
         {*if $product.down_quantity_url}<a href="{$product.down_quantity_url}" data-link-action="update-quantity">-</a>{/if*}
         {*if $product.up_quantity_url}<a href="{$product.up_quantity_url}" data-link-action="update-quantity">+</a>{/if*}
-        <input class="cart-line-product-quantity" data-down-url="{$product.down_quantity_url}" data-up-url="{$product.up_quantity_url}" productid="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
+        <input class="cart-line-product-quantity" data-down-url="{$product.down_quantity_url}" data-up-url="{$product.up_quantity_url}" data-product-id="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
       </div>
       <div class="col-md-7">
         <span class="product-price pull-xs-left"><strong>{$product.total}</strong></span>
