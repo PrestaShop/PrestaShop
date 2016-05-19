@@ -1436,7 +1436,7 @@ class AdminControllerCore extends Controller
                                 if (Validate::isCleanHtml($val)) {
                                     $list[$language['id_lang']] = $val;
                                 } else {
-                                    $this->errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
+                                    $this->errors[] = Tools::displayError('Cannot add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
                                 }
                             }
                         }
@@ -1447,7 +1447,7 @@ class AdminControllerCore extends Controller
                             if (Validate::isCleanHtml($val)) {
                                 Configuration::updateValue($key, $val);
                             } else {
-                                $this->errors[] = Tools::displayError('Can not add configuration '.$key);
+                                $this->errors[] = Tools::displayError('Cannot add configuration '.$key);
                             }
                         }
                     }
