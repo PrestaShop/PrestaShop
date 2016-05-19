@@ -105,6 +105,15 @@ class MailCore extends ObjectModel
             return true;
         }
 
+        // Hook to alter template vars
+        Hook::exec(
+            'sendMailAlterTemplateVars',
+            array(
+                'template' => $template,
+                'template_vars' => &$template_vars,
+            )
+        );
+
         $theme_path = _PS_THEME_DIR_;
 
         // Get the path of theme by id_shop if exist
