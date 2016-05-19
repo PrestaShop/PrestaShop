@@ -22,7 +22,7 @@
     {* Logo *}
     <a class="logo pull-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
 
-    <div class="component">{include file="components/layout/quick_access.tpl"}</div>
+    <div class="component pull-left">{include file="components/layout/quick_access.tpl"}</div>
     <div class="component">{include file="components/layout/search_form.tpl"}</div>
 
 
