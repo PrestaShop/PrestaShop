@@ -14,7 +14,9 @@
 
     <div class="product-line-info">
       <span class="value">{$product.price}</span>
-      {hook h='displayProductPriceBlock' product=$product type="unit_price"}
+      {if $product.unit_price_full}
+        <small class="sub">{$product.unit_price_full}</small>
+      {/if}
     </div>
 
     <br/>

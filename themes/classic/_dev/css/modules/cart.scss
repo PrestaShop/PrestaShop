@@ -115,6 +115,10 @@
     > .available {
       color: $brand-success;
     }
+    .sub {
+      color: $gray-dark;
+      font-size: em(13px);
+    }
   }
 }
 /** CONTENT LEFT **/
