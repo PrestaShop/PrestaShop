@@ -1,14 +1,14 @@
 <div class="product-variants">
   {foreach from=$groups key=id_attribute_group item=group}
     <div class="clearfix product-variants-item">
-      <label for="group_{$id_attribute_group}">{$group.name}</label>
+      <span>{$group.name}</span>
       {if $group.group_type == 'select'}
         <select data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" id="group_{$id_attribute_group}">
           {foreach from=$group.attributes key=id_attribute item=group_attribute}
             <option value="{$id_attribute}" title="{$group_attribute.name}"{if $group_attribute.selected} selected="selected"{/if}>{$group_attribute.name}</option>
           {/foreach}
         </select>
-      {else if $group.group_type == 'color'}
+      {elseif $group.group_type == 'color'}
         <ul id="group_{$id_attribute_group}">
           {foreach from=$group.attributes key=id_attribute item=group_attribute}
             <li class="pull-xs-left input-container">
@@ -20,7 +20,7 @@
             </li>
           {/foreach}
         </ul>
-      {else if $group.group_type == 'radio'}
+      {elseif $group.group_type == 'radio'}
         <ul id="group_{$id_attribute_group}">
           {foreach from=$group.attributes key=id_attribute item=group_attribute}
             <li class="input-container pull-xs-left">
