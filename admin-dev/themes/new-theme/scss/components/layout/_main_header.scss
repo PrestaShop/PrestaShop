@@ -19,14 +19,25 @@
     > .ps-dropdown:not(.search):not(.stores) {
       > .ps-dropdown-menu {
         left: rem(17px);
+        .dropdown-item {
+          @include justify-content(flex-start);
+          margin: 0;
+          padding-top: rem(10px);
+          padding-bottom: rem(10px);
+        }
+        .material-icons {
+          margin-top: rem(2px);
+          margin-right: rem(10px);
+          font-size: rem(20px);
+        }
       }
     }
-
     > .stores .ps-dropdown-menu {
       left: rem(-12px);
     }
     > .bo_search_form {
       position: relative;
+      margin-top: rem(2px);
       .search {
         position: absolute;
         display: none;
@@ -36,12 +47,11 @@
           left: rem(-32px);
           .material-icons {
             vertical-align: bottom;
-            margin-right: rem(5px);
+            margin: rem(5px) rem(10px);
           }
         }
       }
     }
-
     .form-search[type=search].expanded {
       width: rem(250px);
       background-position: 90%;
@@ -53,8 +63,8 @@
       + .search {
         display: block;
         background: none;
-        .ps-dropdown-menu{
-          left:rem(-80px);
+        .ps-dropdown-menu {
+          left: rem(-80px);
         }
       }
     }
