@@ -14,7 +14,7 @@ class AttributeGroupLang
 {
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\AttributeGroup")
+     * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\AttributeGroup", inversedBy="attributeGroupLangs")
      * @ORM\JoinColumn(name="id_attribute_group", referencedColumnName="id_attribute_group", nullable=false)
      */
     private $attributeGroup;

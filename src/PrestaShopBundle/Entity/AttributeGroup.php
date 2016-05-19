@@ -52,6 +52,11 @@ class AttributeGroup
      */
     private $shops;
 
+    /**
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\AttributeGroupLang", mappedBy="attributeGroup")
+     */
+    private $attributeGroupLangs;
+
     private $groupTypeAvailable = array(
         'select',
         'radio',
@@ -183,5 +188,24 @@ class AttributeGroup
     public function getShops()
     {
         return $this->shops;
+    }
+
+    public function addAttributeGroupLang(AttributeGroupLang $attributeGroupLang)
+    {
+        $this->attributeGroupLangs[] = $attributeGroupLang;
+
+        $attributeGroupLang->setAttributeGroup($this);
+
+        return $this;
+    }
+
+    public function removeAttributeGroupLang(AttributeGroupLang $attributeGroupLang)
+    {
+        $this->attributeGroupLangs->removeElement($attributeGroupLang);
+    }
+
+    public function getAttributeGroupLangs()
+    {
+        return $this->attributeGroupLangs;
     }
 }
