@@ -201,12 +201,15 @@ class InstallModelInstall extends InstallAbstractModel
      */
     public function clearDatabase($truncate = false)
     {
-        foreach (Db::getInstance()->executeS('SHOW TABLES') as $row) {
+        $instance = Db::getInstance();
+        $sqlRequest = (($truncate) ? 'TRUNCATE' : 'DROP TABLE');
+        foreach ($instance->executeS('SHOW TABLES') as $row) {
             $table = current($row);
             if (!_DB_PREFIX_ || preg_match('#^'._DB_PREFIX_.'#i', $table)) {
-                Db::getInstance()->execute((($truncate) ? 'TRUNCATE' : 'DROP TABLE').' `'.$table.'`');
+                $sqlRequest .= ' `'.$table.'`,';
             }
         }
+        $instance->execute(rtrim($sqlRequest, ','));
     }
 
     /**
@@ -459,7 +462,6 @@ class InstallModelInstall extends InstallAbstractModel
     public function getLocalizationPackContent($version, $country)
     {
         if (InstallModelInstall::$_cache_localization_pack_content === null || array_key_exists($country, InstallModelInstall::$_cache_localization_pack_content)) {
-
             $localizationCacheWarmer = new LocalizationCacheWarmer($version, $country);
             $localization_file_content  = $localizationCacheWarmer->warmUp(_PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR);
 

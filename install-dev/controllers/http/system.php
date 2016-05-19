@@ -94,7 +94,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'upload' => $this->l('Cannot upload files'),
                         'system' => $this->l('Cannot create new files and folders'),
                         'gd' => $this->l('GD library is not installed'),
-                        'mysql_support' => $this->l('MySQL support is not activated'),
+                        'pdo_mysql' => $this->l('PDO MySQL extension is not loaded'),
                         'zip' => $this->l('ZIP extension is not enabled'),
                     )
                 ),
@@ -143,7 +143,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'mcrypt' => $this->l('Mcrypt extension is not enabled'),
                         'mbstring' => $this->l('Mbstring extension is not enabled'),
                         'dom' => $this->l('Dom extension is not loaded'),
-                        'pdo_mysql' => $this->l('PDO MySQL extension is not loaded')
                     )
                 ),
             ),
