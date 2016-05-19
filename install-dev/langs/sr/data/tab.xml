@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
+  <tab id="DEFAULT" name="DEFAULT" />
   <tab id="Addresses" name="Adrese"/>
   <tab id="Administration" name="Administracija"/>
   <tab id="Module_Page" name="Module Catalog" />

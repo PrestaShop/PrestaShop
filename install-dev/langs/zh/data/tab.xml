@@ -3,6 +3,7 @@
   <tab id="SELL" name="SELL" />
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
+  <tab id="DEFAULT" name="DEFAULT" />
   <tab id="Addresses" name="Addresses"/>
   <tab id="Administration" name="Administration"/>
   <tab id="Module_Page" name="Module Catalog" />

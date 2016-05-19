@@ -3,6 +3,7 @@
   <tab id="SELL" name="VERKOPEN" />
   <tab id="IMPROVE" name="VERBETEREN" />
   <tab id="CONFIGURE" name="VERANDEREN" />
+  <tab id="DEFAULT" name="DEFAULT" />
   <tab id="Addresses" name="Adressen"/>
   <tab id="Administration" name="Administratie"/>
   <tab id="AdminModulesSf" name="Modulecatalogus" />

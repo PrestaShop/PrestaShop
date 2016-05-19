@@ -3,6 +3,7 @@
   <tab id="SELL" name="OBCHOD" />
   <tab id="IMPROVE" name="ROZŠÍŘENÍ" />
   <tab id="CONFIGURE" name="KONFIGURACE" />
+  <tab id="DEFAULT" name="DEFAULT" />
   <tab id="Addresses" name="Adresy"/>
   <tab id="Module_Page" name="Module Catalog" />
   <tab id="Administration" name="Administrace"/>
