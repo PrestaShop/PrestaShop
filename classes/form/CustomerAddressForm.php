@@ -11,7 +11,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  * I *think* this is not necessary now because the invoicing thing
  * does its own historization. But this should be checked more thoroughly.
  */
-
 class CustomerAddressFormCore extends AbstractForm
 {
     private $language;
@@ -135,15 +134,16 @@ class CustomerAddressFormCore extends AbstractForm
 
         $this->setValue('token', $this->persister->getToken());
 
-        return [
-            'action'    => $this->action,
-            'errors'    => $this->getErrors(),
+        return array(
+            'id_address' => (isset($this->address->id)) ? $this->address->id : 0,
+            'action' => $this->action,
+            'errors' => $this->getErrors(),
             'formFields' => array_map(
                 function (FormField $item) {
                     return $item->toArray();
                 },
                 $this->formFields
-            )
-        ];
+            ),
+        );
     }
 }
