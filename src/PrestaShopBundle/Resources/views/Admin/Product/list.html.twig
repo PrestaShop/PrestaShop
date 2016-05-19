@@ -3,7 +3,7 @@
   last_sql="{{ last_sql_query|escape('html_attr') }}"
 >
   {% for product in products %}
-        <tr uniturl="{{ product.unit_action_url|default('#') }}" productid="{{ product.id_product }}">
+        <tr data-uniturl="{{ product.unit_action_url|default('#') }}" data-product-id="{{ product.id_product }}">
             <td class="checkbox-column">
               <div class="checkbox">
                 <label>
@@ -30,7 +30,7 @@
             <td>
               <a href="{{ product.url|default('') }}#tab-step2">{{ product.price_final|default('N/A'|trans({}, 'AdminTab')) }}</a>
             </td>
-            <td class="product-sav-quantity" productquantityvalue="{{ product.sav_quantity|default('') }}">
+            <td class="product-sav-quantity" data-product-quantity-value="{{ product.sav_quantity|default('') }}">
               <a href="{{ product.url|default('') }}#tab-step3">
                 {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
                   {{ product.sav_quantity }}
