@@ -3,12 +3,19 @@
   clear: both;
   font-weight: 700;
   .label {
+    padding-left: 0;
     font-size: em(14px);
     @include pull-left;
   }
   .value {
     color: $gray-darker;
     @include pull-right;
+  }
+  &.cart-summary-subtotals {
+    .label,
+    .value {
+      font-weight: normal;
+    }
   }
   .sub,
   &.sub {
