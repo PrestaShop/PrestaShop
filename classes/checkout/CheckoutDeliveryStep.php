@@ -15,6 +15,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     public function setRecyclablePackAllowed($recyclablePackAllowed)
     {
         $this->recyclablePackAllowed = $recyclablePackAllowed;
+
         return $this;
     }
 
@@ -26,6 +27,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     public function setGiftAllowed($giftAllowed)
     {
         $this->giftAllowed = $giftAllowed;
+
         return $this;
     }
 
@@ -37,6 +39,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     public function setGiftCost($giftCost)
     {
         $this->giftCost = $giftCost;
+
         return $this;
     }
 
@@ -48,6 +51,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     public function setIncludeTaxes($includeTaxes)
     {
         $this->includeTaxes = $includeTaxes;
+
         return $this;
     }
 
@@ -59,6 +63,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     public function setDisplayTaxesLabel($displayTaxesLabel)
     {
         $this->displayTaxesLabel = $displayTaxesLabel;
+
         return $this;
     }
 
@@ -82,7 +87,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             return sprintf(
                 $this->getTranslator()->trans(
                     ' (additional cost of %s%s)',
-                    [],
+                    array(),
                     'Checkout'
                 ),
                 $priceFormatter->convertAndFormat($this->getGiftCost()),
@@ -93,7 +98,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
         return '';
     }
 
-    public function handleRequest(array $requestParams = [])
+    public function handleRequest(array $requestParams = array())
     {
         if (isset($requestParams['delivery_option'])) {
             $this->getCheckoutSession()->setDeliveryOption(
@@ -123,7 +128,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Shipping Method',
-                [],
+                array(),
                 'Checkout'
             )
         );
@@ -131,30 +136,30 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
         Hook::exec('actionCarrierProcess', array('cart' => $this->getCheckoutSession()->getCart()));
     }
 
-    public function render(array $extraParams = [])
+    public function render(array $extraParams = array())
     {
         return $this->renderTemplate(
             $this->getTemplate(),
             $extraParams,
-            [
-                'hookDisplayBeforeCarrier'  => Hook::exec('displayBeforeCarrier', array('cart' => $this->getCheckoutSession()->getCart())),
-                'hookDisplayAfterCarrier'  => Hook::exec('displayAfterCarrier', array('cart' => $this->getCheckoutSession()->getCart())),
-                'id_address'            => $this->getCheckoutSession()->getIdAddressDelivery(),
-                'delivery_options'      => $this->getCheckoutSession()->getDeliveryOptions(),
-                'delivery_option'       => $this->getCheckoutSession()->getSelectedDeliveryOption(),
-                'recyclable'            => $this->getCheckoutSession()->isRecyclable(),
+            array(
+                'hookDisplayBeforeCarrier' => Hook::exec('displayBeforeCarrier', array('cart' => $this->getCheckoutSession()->getCart())),
+                'hookDisplayAfterCarrier' => Hook::exec('displayAfterCarrier', array('cart' => $this->getCheckoutSession()->getCart())),
+                'id_address' => $this->getCheckoutSession()->getIdAddressDelivery(),
+                'delivery_options' => $this->getCheckoutSession()->getDeliveryOptions(),
+                'delivery_option' => $this->getCheckoutSession()->getSelectedDeliveryOption(),
+                'recyclable' => $this->getCheckoutSession()->isRecyclable(),
                 'recyclablePackAllowed' => $this->isRecyclablePackAllowed(),
-                'gift'                  => [
-                    'allowed'   => $this->isGiftAllowed(),
-                    'isGift'    => $this->getCheckoutSession()->getGift()['isGift'],
-                    'label'     => $this->getTranslator()->trans(
+                'gift' => array(
+                    'allowed' => $this->isGiftAllowed(),
+                    'isGift' => $this->getCheckoutSession()->getGift()['isGift'],
+                    'label' => $this->getTranslator()->trans(
                         'I would like my order to be gift wrapped'.$this->getGiftCostForLabel(),
-                        [],
+                        array(),
                         'Checkout'
                     ),
-                    'message'   => $this->getCheckoutSession()->getGift()['message']
-                ]
-            ]
+                    'message' => $this->getCheckoutSession()->getGift()['message'],
+                ),
+            )
         );
     }
 }

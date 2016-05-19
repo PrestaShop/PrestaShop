@@ -5,7 +5,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
 interface CheckoutStepInterface extends RenderableInterface
 {
     public function getTitle();
-    public function handleRequest(array $requestParameters = []);
+    public function handleRequest(array $requestParameters = array());
     public function setCheckoutProcess(CheckoutProcess $checkoutProcess);
     public function isReachable();
     public function isComplete();

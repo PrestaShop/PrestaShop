@@ -200,9 +200,9 @@ class OrderControllerCore extends FrontController
             Tools::getAllValues()
         );
 
-        $this->checkoutProcess->setNextStepReachable();
-
-        $this->checkoutProcess->markCurrentStep();
+        $this->checkoutProcess
+            ->setNextStepReachable()
+            ->markCurrentStep();
 
         $this->saveDataToPersist($this->checkoutProcess);
 

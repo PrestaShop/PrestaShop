@@ -46,14 +46,14 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
         return $this->translator;
     }
 
-    protected function renderTemplate($template, array $extraParams = [], array $params = [])
+    protected function renderTemplate($template, array $extraParams = array(), array $params = array())
     {
-        $defaultParams = [
+        $defaultParams = array(
             'title' => $this->getTitle(),
-            'step_is_complete' => (int)$this->isComplete(),
-            'step_is_reachable' => (int)$this->isReachable(),
-            'step_is_current' => (int)$this->isCurrent(),
-        ];
+            'step_is_complete' => (int) $this->isComplete(),
+            'step_is_reachable' => (int) $this->isReachable(),
+            'step_is_current' => (int) $this->isCurrent(),
+        );
 
         $scope = $this->smarty->createData(
             $this->smarty
@@ -72,6 +72,7 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -83,6 +84,7 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     public function setCheckoutProcess(CheckoutProcess $checkoutProcess)
     {
         $this->checkoutProcess = $checkoutProcess;
+
         return $this;
     }
 
@@ -99,6 +101,7 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     public function setReachable($step_is_reachable)
     {
         $this->step_is_reachable = $step_is_reachable;
+
         return $this;
     }
 
@@ -110,18 +113,19 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     public function setComplete($step_is_complete)
     {
         $this->step_is_complete = $step_is_complete;
+
         return $this;
     }
 
     public function isComplete()
     {
         return $this->step_is_complete;
-        ;
     }
 
     public function setCurrent($step_is_current)
     {
         $this->step_is_current = $step_is_current;
+
         return $this;
     }
 
@@ -138,7 +142,7 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
 
     public function getDataToPersist()
     {
-        return [];
+        return array();
     }
 
     public function restorePersistedData(array $data)

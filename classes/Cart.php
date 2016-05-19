@@ -802,7 +802,7 @@ class CartCore extends ObjectModel
     public function checkAndUpdateAddresses()
     {
         $needUpdate = false;
-        foreach (['invoice', 'delivery'] as $type) {
+        foreach (array('invoice', 'delivery') as $type) {
             $addr = 'id_address_'.$type;
             if ($this->{$addr} != 0
                 && !Address::isValid($this->{$addr})) {
