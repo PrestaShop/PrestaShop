@@ -134,7 +134,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            $this->template,
+            $this->getTemplate(),
             $extraParams,
             [
                 'hookDisplayBeforeCarrier'  => Hook::exec('displayBeforeCarrier', array('cart' => $this->getCheckoutSession()->getCart())),

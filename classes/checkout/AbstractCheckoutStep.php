@@ -11,11 +11,12 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     private $title;
 
     protected $step_is_reachable = false;
-    protected $step_is_complete  = false;
-    protected $step_is_current   = false;
+    protected $step_is_complete = false;
+    protected $step_is_current = false;
     protected $context;
 
     protected $template;
+    protected $unreachableStepTemplate = 'checkout/_partials/steps/unreachable.tpl';
 
     public function __construct(Context $context, TranslatorInterface $translator)
     {
@@ -27,12 +28,17 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     public function setTemplate($templatePath)
     {
         $this->template = $templatePath;
+
         return $this;
     }
 
     public function getTemplate()
     {
-        return $this->template;
+        if ($this->isReachable()) {
+            return $this->template;
+        } else {
+            return $this->unreachableStepTemplate;
+        }
     }
 
     protected function getTranslator()

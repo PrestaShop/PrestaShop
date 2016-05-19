@@ -198,7 +198,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            $this->template, $extraParams, $this->getTemplateParameters()
+            $this->getTemplate(), $extraParams, $this->getTemplateParameters()
         );
     }
 }

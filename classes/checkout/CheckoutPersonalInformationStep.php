@@ -77,7 +77,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
     public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            $this->template, $extraParams, [
+            $this->getTemplate(), $extraParams, [
                 'show_login_form'  => $this->show_login_form,
                 'login_form'       => $this->loginForm->getProxy(),
                 'register_form'    => $this->registerForm->getProxy(),

@@ -36,7 +36,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
     public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            $this->template, $extraParams, [
+            $this->getTemplate(), $extraParams, [
                 'payment_options' => $this
                     ->paymentOptionsFinder
                     ->getPaymentOptionsForTemplate(),
