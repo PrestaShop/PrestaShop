@@ -115,8 +115,6 @@ class ManufacturerControllerCore extends FrontController
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
             $data = Manufacturer::getManufacturers(false, $this->context->language->id, true, false, false, false);
             $nbProducts = count($data);
-            $this->n = abs((int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE')));
-            $this->p = abs((int)Tools::getValue('p', 1));
             $data = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
             $this->pagination($nbProducts);
 
