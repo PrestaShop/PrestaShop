@@ -78,14 +78,12 @@ class InstallModelInstall extends InstallAbstractModel
         $secret = Tools::passwdGen(56);
         $cookie_key = Tools::passwdGen(8);
         $cookie_iv = Tools::passwdGen(56);
-        $creation_date = date('Y-m-d');
 
         if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
             $config = Yaml::parse(file_get_contents(_PS_ROOT_DIR_. '/app/config/parameters.yml'));
             $secret = $config['parameters']['secret'];
             $cookie_key = $config['parameters']['cookie_key'];
             $cookie_iv = $config['parameters']['cookie_iv'];
-            $creation_date = $config['parameters']['ps_creation_date'];
         }
 
         $parameters  = array(
@@ -101,7 +99,7 @@ class InstallModelInstall extends InstallAbstractModel
                 'cookie_iv' =>  $cookie_iv,
                 'ps_caching' => 'CacheMemcache',
                 'ps_cache_enable' => false,
-                'ps_creation_date' => $creation_date,
+                'ps_creation_date' => date('Y-m-d'),
                 'secret' => $secret,
                 'mailer_transport' => 'smtp',
                 'mailer_host' => '127.0.0.1',
