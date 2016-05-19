@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,10 +28,9 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is responsible to generate the product price form
+ * This form class is responsible to generate the product price form.
  */
 class ProductPrice extends CommonAbstractType
 {
@@ -43,7 +42,7 @@ class ProductPrice extends CommonAbstractType
     private $customerDataprovider;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $taxDataProvider
@@ -82,79 +81,79 @@ class ProductPrice extends CommonAbstractType
     {
         $builder->add('price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Price - Tax excluded', [], 'AdminProducts'),
-            'attr' => ['data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')],
+            'label' => $this->translator->trans('Price - Tax excluded', array(), 'AdminProducts'),
+            'attr' => array('data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')),
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
-            )
+                new Assert\Type(array('type' => 'float')),
+            ),
         ))
         ->add('price_ttc', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'mapped' => false,
-            'label' => $this->translator->trans('Price - Tax included', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price - Tax included', array(), 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('ecotax', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Ecotax (tax incl.)', array(), 'AdminProducts'),
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
+                new Assert\Type(array('type' => 'float')),
             ),
-            'attr' => ['data-eco-tax-rate' => $this->eco_tax_rate],
+            'attr' => array('data-eco-tax-rate' => $this->eco_tax_rate),
         ))
         ->add('id_tax_rules_group', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' =>  $this->tax_rules,
+            'choices' => $this->tax_rules,
             'required' => true,
             'choices_as_values' => true,
             'choice_attr' => function ($val) {
-                return [
+                return array(
                     'data-rates' => implode(',', $this->tax_rules_rates[$val]['rates']),
                     'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
-                ];
+                );
             },
-            'label' => $this->translator->trans('Tax rule', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Tax rule', array(), 'AdminProducts'),
         ))
         ->add('on_sale', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
-            'label' => $this->translator->trans('Display the "sale!" flag on the product page, and in the text found within the product listing.', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Display the "sale!" flag on the product page, and in the text found within the product listing.', array(), 'AdminProducts'),
         ))
         ->add('wholesale_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Price - Tax excluded', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price - Tax excluded', array(), 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('unit_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Price per unit - Tax excluded', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price per unit - Tax excluded', array(), 'AdminProducts'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('unity', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'AdminProducts')]
+            'attr' => array('placeholder' => $this->translator->trans('Per kilo, per litre', array(), 'AdminProducts')),
         ))
         ->add('specific_price', 'PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice')
         ->add('specificPricePriorityToAll', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
-            'label' => $this->translator->trans('Apply to all products', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Apply to all products', array(), 'AdminProducts'),
         ));
 
         //generates fields for price priority
-        $specificPricePriorityChoices = [
-             $this->translator->trans('Shop', [], 'AdminProducts') => 'id_shop',
-             $this->translator->trans('Currency', [], 'AdminProducts') => 'id_currency',
-             $this->translator->trans('Country', [], 'AdminProducts') => 'id_country',
-             $this->translator->trans('Group', [], 'AdminProducts') => 'id_group',
-        ];
+        $specificPricePriorityChoices = array(
+             $this->translator->trans('Shop', array(), 'AdminProducts') => 'id_shop',
+             $this->translator->trans('Currency', array(), 'AdminProducts') => 'id_currency',
+             $this->translator->trans('Country', array(), 'AdminProducts') => 'id_country',
+             $this->translator->trans('Group', array(), 'AdminProducts') => 'id_group',
+        );
 
-        for ($i=0; $i < count($specificPricePriorityChoices); $i++) {
+        for ($i = 0; $i < count($specificPricePriorityChoices); ++$i) {
             $builder->add('specificPricePriority_'.$i, 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices' => $specificPricePriorityChoices,
                 'choices_as_values' => true,
-                'required' => true
+                'required' => true,
             ));
         }
     }

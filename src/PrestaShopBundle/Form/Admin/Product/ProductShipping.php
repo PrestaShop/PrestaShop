@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,10 +28,9 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is responsible to generate the product shipping form
+ * This form class is responsible to generate the product shipping form.
  */
 class ProductShipping extends CommonAbstractType
 {
@@ -40,7 +39,7 @@ class ProductShipping extends CommonAbstractType
     private $warehouses;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -56,7 +55,7 @@ class ProductShipping extends CommonAbstractType
         $this->warehouses = $warehouseDataProvider->getWarehouses();
 
         $carriers = $carrierDataProvider->getCarriers($this->locales[0]['id_lang'], false, false, false, null, $carrierDataProvider->getAllCarriersConstant());
-        $this->carriersChoices = [];
+        $this->carriersChoices = array();
         foreach ($carriers as $carrier) {
             $this->carriersChoices[$carrier['name'].' ('.$carrier['delay'].')'] = $carrier['id_reference'];
         }
@@ -71,57 +70,57 @@ class ProductShipping extends CommonAbstractType
     {
         $builder->add('width', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Width', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Width', array(), 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'numeric'))
-            )
+                new Assert\Type(array('type' => 'numeric')),
+            ),
         ))
         ->add('height', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Height', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Height', array(), 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'numeric'))
-            )
+                new Assert\Type(array('type' => 'numeric')),
+            ),
         ))
         ->add('depth', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Depth', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Depth', array(), 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'numeric'))
-            )
+                new Assert\Type(array('type' => 'numeric')),
+            ),
         ))
         ->add('weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Weight', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Weight', array(), 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'numeric'))
-            )
+                new Assert\Type(array('type' => 'numeric')),
+            ),
         ))
         ->add('additional_shipping_cost', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Shipping fees', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Shipping fees', array(), 'AdminProducts'),
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
-            )
+                new Assert\Type(array('type' => 'float')),
+            ),
         ))
         ->add('selectedCarriers', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' =>  $this->carriersChoices,
+            'choices' => $this->carriersChoices,
             'choices_as_values' => true,
-            'expanded' =>  true,
-            'multiple' =>  true,
-            'required' =>  false,
-            'label' => $this->translator->trans('Available carriers', [], 'AdminProducts')
+            'expanded' => true,
+            'multiple' => true,
+            'required' => false,
+            'label' => $this->translator->trans('Available carriers', array(), 'AdminProducts'),
         ));
 
         foreach ($this->warehouses as $warehouse) {
             $builder->add('warehouse_combination_'.$warehouse['id_warehouse'], 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-                'entry_type' =>'PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination',
+                'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination',
                 'entry_options' => array(
                     'id_warehouse' => $warehouse['id_warehouse'],
                 ),

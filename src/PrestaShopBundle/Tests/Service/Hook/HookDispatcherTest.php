@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -84,8 +84,8 @@ class HookDispatcherTest extends KernelTestCase
         $hookDisptacher->addListener('test_test_2', array($this, 'listenerCallback2b'));
         $event = $hookDisptacher->dispatch('test_test_2', new RenderingHookEvent());
         $this->assertArraySubset(array(
-            'listenerCallback2' => "result_test_2",
-            'overriden_listener_name' => "result_test_2b"
+            'listenerCallback2' => 'result_test_2',
+            'overriden_listener_name' => 'result_test_2b',
         ), $event->getContent());
     }
     public function listenerCallback2(Event $event, $eventName)

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -35,9 +34,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class VirtualProductController extends FrameworkBundleAdminController
 {
     /**
-     * Process Ajax Form to create/update virtual product
+     * Process Ajax Form to create/update virtual product.
      *
-     * @param int $idProduct
+     * @param int     $idProduct
      * @param Request $request
      *
      * @return string
@@ -50,7 +49,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct, true);
+        $product = $productAdapter->getProduct((int) $idProduct, true);
 
         if (!$product || !$request->isXmlHttpRequest()) {
             return $response;
@@ -81,9 +80,9 @@ class VirtualProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process Ajax Form to remove attached file
+     * Process Ajax Form to remove attached file.
      *
-     * @param int $idProduct
+     * @param int     $idProduct
      * @param Request $request
      *
      * @return string
@@ -95,7 +94,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct);
+        $product = $productAdapter->getProduct((int) $idProduct);
 
         if (!$product || !$request->isXmlHttpRequest()) {
             return $response;
@@ -107,9 +106,9 @@ class VirtualProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process Ajax remove action
+     * Process Ajax remove action.
      *
-     * @param int $idProduct
+     * @param int     $idProduct
      * @param Request $request
      *
      * @return string
@@ -121,7 +120,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct);
+        $product = $productAdapter->getProduct((int) $idProduct);
 
         if (!$product || !$request->isXmlHttpRequest()) {
             return $response;

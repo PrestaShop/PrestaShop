@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -31,10 +30,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is responsible to generate the product options form
+ * This form class is responsible to generate the product options form.
  */
 class ProductOptions extends CommonAbstractType
 {
@@ -46,7 +44,7 @@ class ProductOptions extends CommonAbstractType
     private $locales;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -85,98 +83,98 @@ class ProductOptions extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('visibility', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices'  => array(
-                $this->translator->trans('Everywhere', [], 'AdminProducts') => 'both',
-                $this->translator->trans('Catalog only', [], 'AdminProducts') => 'catalog',
-                $this->translator->trans('Search only', [], 'AdminProducts') => 'search',
-                $this->translator->trans('Nowhere', [], 'AdminProducts') => 'none',
+            'choices' => array(
+                $this->translator->trans('Everywhere', array(), 'AdminProducts') => 'both',
+                $this->translator->trans('Catalog only', array(), 'AdminProducts') => 'catalog',
+                $this->translator->trans('Search only', array(), 'AdminProducts') => 'search',
+                $this->translator->trans('Nowhere', array(), 'AdminProducts') => 'none',
             ),
             'choices_as_values' => true,
             'required' => true,
-            'label' => $this->translator->trans('Visibility', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Visibility', array(), 'AdminProducts'),
         ))
         ->add('tags', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
-            'options' => [
-                'attr' => [
+            'options' => array(
+                'attr' => array(
                     'class' => 'tokenfield',
-                    'placeholder' => $this->translator->trans('Use a comma to create seperate tags. E.g.: dress, cotton, party dress.', [], 'AdminProducts')
-                ]
-            ],
+                    'placeholder' => $this->translator->trans('Use a comma to create seperate tags. E.g.: dress, cotton, party dress.', array(), 'AdminProducts'),
+                ),
+            ),
             'locales' => $this->locales,
-            'label' => $this->translator->trans('Tags...', [], 'AdminProducts')
+            'label' => $this->translator->trans('Tags...', array(), 'AdminProducts'),
         ))
         ->add(
-            $builder->create('display_options', 'Symfony\Component\Form\Extension\Core\Type\FormType', array('required' => false, 'label' => $this->translator->trans('Display options', [], 'AdminProducts')))
+            $builder->create('display_options', 'Symfony\Component\Form\Extension\Core\Type\FormType', array('required' => false, 'label' => $this->translator->trans('Display options', array(), 'AdminProducts')))
                 ->add('available_for_order', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-                    'label'    => $this->translator->trans('Available for order', [], 'AdminProducts'),
+                    'label' => $this->translator->trans('Available for order', array(), 'AdminProducts'),
                     'required' => false,
                 ))
                 ->add('show_price', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-                    'label'    => $this->translator->trans('Show price', [], 'AdminProducts'),
+                    'label' => $this->translator->trans('Show price', array(), 'AdminProducts'),
                     'required' => false,
                 ))
                 ->add('online_only', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-                    'label'    => $this->translator->trans('Online only (not sold in your retail store)', [], 'AdminProducts'),
+                    'label' => $this->translator->trans('Online only (not sold in your retail store)', array(), 'AdminProducts'),
                     'required' => false,
                 ))
         )
         ->add('upc', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
+            'label' => $this->translator->trans('UPC barcode', array(), 'AdminProducts'),
             'constraints' => array(
-                new Assert\Regex("/^[0-9]{0,12}$/"),
-            )
+                new Assert\Regex('/^[0-9]{0,12}$/'),
+            ),
         ))
         ->add('ean13', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
             'error_bubbling' => true,
-            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
+            'label' => $this->translator->trans('EAN-13 or JAN barcode', array(), 'AdminProducts'),
             'constraints' => array(
-                new Assert\Regex("/^[0-9]{0,13}$/"),
-            )
+                new Assert\Regex('/^[0-9]{0,13}$/'),
+            ),
         ))
         ->add('isbn', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
+            'label' => $this->translator->trans('ISBN code', array(), 'AdminProducts'),
         ))
         ->add('reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('Reference', [], 'AdminProducts')
+            'label' => $this->translator->trans('Reference', array(), 'AdminProducts'),
         ))
         ->add('show_condition', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
-            'label' => $this->translator->trans('Display condition on product page', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Display condition on product page', array(), 'AdminProducts'),
         ))
         ->add('condition', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices'  => array(
-                 $this->translator->trans('New', [], 'AdminProducts') => 'new',
-                 $this->translator->trans('Used', [], 'AdminProducts') => 'used',
-                 $this->translator->trans('Refurbished', [], 'AdminProducts') => 'refurbished'
+            'choices' => array(
+                 $this->translator->trans('New', array(), 'AdminProducts') => 'new',
+                 $this->translator->trans('Used', array(), 'AdminProducts') => 'used',
+                 $this->translator->trans('Refurbished', array(), 'AdminProducts') => 'refurbished',
             ),
             'choices_as_values' => true,
             'required' => true,
-            'label' => $this->translator->trans('Condition', [], 'AdminProducts')
+            'label' => $this->translator->trans('Condition', array(), 'AdminProducts'),
         ))
         ->add('suppliers', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' =>  $this->suppliers,
+            'choices' => $this->suppliers,
             'choices_as_values' => true,
-            'expanded' =>  true,
-            'multiple' =>  true,
-            'required' =>  false,
-            'label' => $this->translator->trans('Suppliers', [], 'AdminProducts')
+            'expanded' => true,
+            'multiple' => true,
+            'required' => false,
+            'label' => $this->translator->trans('Suppliers', array(), 'AdminProducts'),
         ))
         ->add('default_supplier', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' =>  $this->suppliers,
+            'choices' => $this->suppliers,
             'choices_as_values' => true,
-            'required' =>  true,
-            'label' => $this->translator->trans('Default suppliers', [], 'AdminProducts')
+            'required' => true,
+            'label' => $this->translator->trans('Default suppliers', array(), 'AdminProducts'),
         ));
 
         foreach ($this->suppliers as $supplier => $id) {
             $builder->add('supplier_combination_'.$id, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-                'entry_type' =>'PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination',
-                'entry_options'  => array(
+                'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination',
+                'entry_options' => array(
                     'id_supplier' => $id,
                 ),
                 'prototype' => true,
@@ -187,29 +185,29 @@ class ProductOptions extends CommonAbstractType
         }
 
         $builder->add('custom_fields', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-            'entry_type' =>'PrestaShopBundle\Form\Admin\Product\ProductCustomField',
-            'label' => $this->translator->trans('Customization', [], 'AdminProducts'),
+            'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductCustomField',
+            'label' => $this->translator->trans('Customization', array(), 'AdminProducts'),
             'prototype' => true,
             'allow_add' => true,
-            'allow_delete' => true
+            'allow_delete' => true,
         ));
 
         //Add product attachment form
         $builder->add('attachment_product', 'PrestaShopBundle\Form\Admin\Product\ProductAttachement', array(
             'required' => false,
-            'label' => $this->translator->trans('Attachment', [], 'AdminProducts'),
-            'attr' => ['data-action' => $this->router->generate('admin_product_attachement_add_action')]
+            'label' => $this->translator->trans('Attachment', array(), 'AdminProducts'),
+            'attr' => array('data-action' => $this->router->generate('admin_product_attachement_add_action')),
         ));
 
         //Add attachment selectors
         $builder->add('attachments', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'expanded'  => true,
-            'multiple'  => true,
-            'choices'  => $this->attachmentList,
+            'expanded' => true,
+            'multiple' => true,
+            'choices' => $this->attachmentList,
             'choices_as_values' => true,
             'required' => false,
-            'attr' => ['data' => $this->fullAttachmentList],
-            'label' => $this->translator->trans('Attachments for this product:', [], 'AdminProducts')
+            'attr' => array('data' => $this->fullAttachmentList),
+            'label' => $this->translator->trans('Attachments for this product:', array(), 'AdminProducts'),
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

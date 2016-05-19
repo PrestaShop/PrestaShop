@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,10 +33,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormError;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is responsible to generate the basic product information form
+ * This form class is responsible to generate the basic product information form.
  */
 class ProductInformation extends CommonAbstractType
 {
@@ -50,7 +49,7 @@ class ProductInformation extends CommonAbstractType
     private $configuration;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -86,25 +85,24 @@ class ProductInformation extends CommonAbstractType
      * {@inheritdoc}
      *
      * Builds form
-     *
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('type_product', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices'  => array(
-                $this->translator->trans('Standard product', [], 'AdminProducts') => 0,
-                $this->translator->trans('Pack of existing products', [], 'AdminProducts') => 1,
-                $this->translator->trans('Virtual product (services, booking, downloadable products, etc.)', [], 'AdminProducts') => 2,
+            'choices' => array(
+                $this->translator->trans('Standard product', array(), 'AdminProducts') => 0,
+                $this->translator->trans('Pack of existing products', array(), 'AdminProducts') => 1,
+                $this->translator->trans('Virtual product (services, booking, downloadable products, etc.)', array(), 'AdminProducts') => 2,
             ),
             'choices_as_values' => true,
-            'label' =>  $this->translator->trans('Type', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Type', array(), 'AdminProducts'),
             'required' => true,
         ))
         ->add('inputPackItems', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType', array(
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&excludeVirtuals=1&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
-            'placeholder' => $this->translator->trans('Search for a product', [], 'AdminProducts'),
+            'placeholder' => $this->translator->trans('Search for a product', array(), 'AdminProducts'),
             'template_collection' => '
               <h4>%s</h4>
               <div class="ref">REF: %s</div>
@@ -112,134 +110,134 @@ class ProductInformation extends CommonAbstractType
               <button type="button" class="btn btn-danger btn-sm delete"><i class="material-icons">delete</i></button>
             ',
             'required' => false,
-            'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Add product in your pack', array(), 'AdminProducts'),
         ))
         ->add('name', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
-            'options' => [
+            'options' => array(
                 'constraints' => array(
                     new Assert\NotBlank(),
-                    new Assert\Length(array('min' => 3, 'max' => 128))
-                ), 'attr' => ['placeholder' => $this->translator->trans('Enter your product name', [], 'AdminProducts'), 'class' => 'edit js-edit']
-            ],
+                    new Assert\Length(array('min' => 3, 'max' => 128)),
+                ), 'attr' => array('placeholder' => $this->translator->trans('Enter your product name', array(), 'AdminProducts'), 'class' => 'edit js-edit'),
+            ),
             'locales' => $this->locales,
             'hideTabs' => true,
-            'label' => $this->translator->trans('Name', [], 'AdminProducts')
+            'label' => $this->translator->trans('Name', array(), 'AdminProducts'),
         ))
         ->add('description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
-            'options' => [
+            'options' => array(
                 'attr' => array('class' => 'autoload_rte'),
-                'required' => false
-            ],
+                'required' => false,
+            ),
             'locales' => $this->locales,
             'hideTabs' => true,
-            'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
-            'required' => false
+            'label' => $this->translator->trans('Description', array(), 'AdminProducts'),
+            'required' => false,
         ))
         ->add('description_short', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType', // https://github.com/symfony/symfony/issues/5906
-            'options' => [
+            'options' => array(
                 'attr' => array(
                     'class' => 'autoload_rte',
-                    'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br />It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the « Description » tab.', [], 'AdminProducts')
+                    'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br />It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the « Description » tab.', array(), 'AdminProducts'),
                 ),
                 'constraints' => array(
                     new Assert\Callback(function ($str, ExecutionContextInterface $context) {
                         $str = strip_tags($str);
-                        $limit = (int)$this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <=0 ? 800 : $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
+                        $limit = (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <= 0 ? 800 : $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
 
                         if (strlen($str) > $limit) {
                             $context->addViolation(
-                                $this->translator->trans('This value is too long. It should have {{ limit }} characters or less.', [], 'AdminProducts'),
+                                $this->translator->trans('This value is too long. It should have {{ limit }} characters or less.', array(), 'AdminProducts'),
                                 array('{{ limit }}' => $limit)
                             );
                         }
                     }),
                 ),
-                'required' => false
-            ],
+                'required' => false,
+            ),
             'locales' => $this->locales,
             'hideTabs' => true,
-            'label' =>  $this->translator->trans('Short description', [], 'AdminProducts'),
-            'required' => false
+            'label' => $this->translator->trans('Short description', array(), 'AdminProducts'),
+            'required' => false,
         ))
 
         //FEATURES & ATTRIBUTES
         ->add('features', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-            'entry_type' =>'PrestaShopBundle\Form\Admin\Feature\ProductFeature',
+            'entry_type' => 'PrestaShopBundle\Form\Admin\Feature\ProductFeature',
             'prototype' => true,
             'allow_add' => true,
-            'allow_delete' => true
+            'allow_delete' => true,
         ))
         ->add('id_manufacturer', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->manufacturers,
             'choices_as_values' => true,
             'required' => false,
-            'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
+            'label' => $this->translator->trans('Manufacturer', array(), 'AdminProducts'),
         ))
 
         //RIGHT COL
         ->add('active', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-            'label' => $this->translator->trans('Enabled', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Enabled', array(), 'AdminProducts'),
             'required' => false,
         ))
         ->add('price_shortcut', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Pre-tax retail price', array(), 'AdminProducts'),
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
+                new Assert\Type(array('type' => 'float')),
             ),
-            'attr' => []
+            'attr' => array(),
         ))
         ->add('price_ttc_shortcut', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Retail price with tax', array(), 'AdminProducts'),
             'mapped' => false,
             'currency' => $this->currency->iso_code,
         ))
         ->add('qty_0_shortcut', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Quantity', array(), 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'numeric'))
-            )
+                new Assert\Type(array('type' => 'numeric')),
+            ),
         ))
         ->add('categories', 'PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType', array(
-            'label' => $this->translator->trans('Associated categories', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Associated categories', array(), 'AdminProducts'),
             'list' => $this->nested_categories,
             'valid_list' => $this->categories,
             'multiple' => true,
         ))
         ->add('id_category_default', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' =>  $this->categories,
+            'choices' => $this->categories,
             'choices_as_values' => true,
             'expanded' => true,
             'multiple' => false,
-            'required' =>  true,
-            'label' => $this->translator->trans('Default category', [], 'AdminProducts')
+            'required' => true,
+            'label' => $this->translator->trans('Default category', array(), 'AdminProducts'),
         ))
         ->add('new_category', 'PrestaShopBundle\Form\Admin\Category\SimpleCategory', array(
             'ajax' => true,
             'required' => false,
             'mapped' => false,
-            'constraints' => [],
-            'label' => $this->translator->trans('Add a new category', [], 'AdminProducts'),
+            'constraints' => array(),
+            'label' => $this->translator->trans('Add a new category', array(), 'AdminProducts'),
         ))
-        ->add('ignore', null, [
-            'mapped' => false
-        ])
+        ->add('ignore', null, array(
+            'mapped' => false,
+        ))
         ->add('related_products', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
-            'placeholder' => $this->translator->trans('Search and add a related product', [], 'AdminProducts'),
+            'placeholder' => $this->translator->trans('Search and add a related product', array(), 'AdminProducts'),
             'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
             'required' => false,
-            'label' =>  $this->translator->trans('Accessories', [], 'AdminProducts')
+            'label' => $this->translator->trans('Accessories', array(), 'AdminProducts'),
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -249,7 +247,7 @@ class ProductInformation extends CommonAbstractType
             //if product type is pack, check if inputPackItems is not empty
             if ($data['type_product'] == 1) {
                 if (!isset($data['inputPackItems']) || empty($data['inputPackItems']['data'])) {
-                    $error = $this->translator->trans('This pack is empty. You must add at least one product item.', [], 'AdminProducts');
+                    $error = $this->translator->trans('This pack is empty. You must add at least one product item.', array(), 'AdminProducts');
                     $form->get('inputPackItems')->addError(new FormError($error));
                 }
             }

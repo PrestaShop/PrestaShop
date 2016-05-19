@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -41,112 +41,112 @@ class AdminModelAdapterTest extends KernelTestCase
 
     private function fakeFormData()
     {
-        return [
-            "id_product" => '',
-            "step1" => [
-                "type_product" => '',
-                "inputPackItems" => [],
-                "name" => [],
-                "name_1" => "Amazing product",
-                "name_2" => "Amazing product",
-                "description" => [],
-                "description_short" => [],
-                "active" => '',
-                "price_shortcut" => '',
-                "qty_0_shortcut" => '',
-                "categories" => ['tree' => []],
-                "id_category_default" => '',
-                "related_products" => [],
-                "id_manufacturer" => '',
-                "features" => [],
-                "images" => [],
-            ],
-            "step2" => [
-                "price" => '',
-                "ecotax" => '',
-                "id_tax_rules_group" => '',
-                "on_sale" => '',
-                "wholesale_price" => '',
-                "unit_price" => '',
-                "unity" => '',
-                "specific_price" => [],
-                "specificPricePriority_0" => '',
-                "specificPricePriority_1" => '',
-                "specificPricePriority_2" => '',
-                "specificPricePriority_3" => ''
-            ],
-            "step3" => [
-                "advanced_stock_management" => '',
-                "depends_on_stock" => '',
-                "qty_0" => '',
-                "combinations" => [],
-                "out_of_stock" => '',
-                "minimal_quantity" => '',
-                "available_now" => [],
-                "available_later" => [],
-                "available_date" => '',
-                "pack_stock_type" => '',
-                "virtual_product" => [],
-            ],
-            "step4" => [
-                "width" => '',
-                "height" => '',
-                "depth" => '',
-                "weight" => '',
-                "additional_shipping_cost" => '',
-                "selectedCarriers" => []
-            ],
-            "step5" => [
-                "link_rewrite" => [],
-                "meta_title" => [],
-                "meta_description" => [],
-            ],
-            "step6" => [
-                "redirect_type" => '',
-                "id_product_redirected" => [],
-                "visibility" => '',
-                "tags" => [],
-                "display_options" => [],
-                "upc" => '',
-                "ean13" => '',
-                "isbn" => '',
-                "reference" => '',
-                "condition" => '',
-                "suppliers" => [],
-                "default_supplier" => '',
-                "custom_fields" => [],
-                "attachments" => [],
-                "supplier_combination_1" => []
-            ]
-        ];
+        return array(
+            'id_product' => '',
+            'step1' => array(
+                'type_product' => '',
+                'inputPackItems' => array(),
+                'name' => array(),
+                'name_1' => 'Amazing product',
+                'name_2' => 'Amazing product',
+                'description' => array(),
+                'description_short' => array(),
+                'active' => '',
+                'price_shortcut' => '',
+                'qty_0_shortcut' => '',
+                'categories' => array('tree' => array()),
+                'id_category_default' => '',
+                'related_products' => array(),
+                'id_manufacturer' => '',
+                'features' => array(),
+                'images' => array(),
+            ),
+            'step2' => array(
+                'price' => '',
+                'ecotax' => '',
+                'id_tax_rules_group' => '',
+                'on_sale' => '',
+                'wholesale_price' => '',
+                'unit_price' => '',
+                'unity' => '',
+                'specific_price' => array(),
+                'specificPricePriority_0' => '',
+                'specificPricePriority_1' => '',
+                'specificPricePriority_2' => '',
+                'specificPricePriority_3' => '',
+            ),
+            'step3' => array(
+                'advanced_stock_management' => '',
+                'depends_on_stock' => '',
+                'qty_0' => '',
+                'combinations' => array(),
+                'out_of_stock' => '',
+                'minimal_quantity' => '',
+                'available_now' => array(),
+                'available_later' => array(),
+                'available_date' => '',
+                'pack_stock_type' => '',
+                'virtual_product' => array(),
+            ),
+            'step4' => array(
+                'width' => '',
+                'height' => '',
+                'depth' => '',
+                'weight' => '',
+                'additional_shipping_cost' => '',
+                'selectedCarriers' => array(),
+            ),
+            'step5' => array(
+                'link_rewrite' => array(),
+                'meta_title' => array(),
+                'meta_description' => array(),
+            ),
+            'step6' => array(
+                'redirect_type' => '',
+                'id_product_redirected' => array(),
+                'visibility' => '',
+                'tags' => array(),
+                'display_options' => array(),
+                'upc' => '',
+                'ean13' => '',
+                'isbn' => '',
+                'reference' => '',
+                'condition' => '',
+                'suppliers' => array(),
+                'default_supplier' => '',
+                'custom_fields' => array(),
+                'attachments' => array(),
+                'supplier_combination_1' => array(),
+            ),
+        );
     }
     private function fakeCombination()
     {
-        return [
-            "id_product_attribute" => "6",
-            "id_product" => "1",
-            "reference" => "",
-            "supplier_reference" => "",
-            "location" => "",
-            "ean13" => "",
-            "isbn" => "",
-            "upc" => "",
-            "wholesale_price" => "0.000000",
-            "price" => "0.000000",
-            "ecotax" => "0.000000",
-            "quantity" => 300,
-            "weight" => "0.000000",
-            "unit_price_impact" => "0.000000",
-            "default_on" => null,
-            "minimal_quantity" => "1",
-            "available_date" => "0000-00-00",
-            "id_shop" => "1",
-            "id_attribute_group" => "1",
-            "is_color_group" => "0",
-            "group_name" => "Taille",
-            "attribute_name" => "L",
-            "id_attribute" => "3"
-        ];
+        return array(
+            'id_product_attribute' => '6',
+            'id_product' => '1',
+            'reference' => '',
+            'supplier_reference' => '',
+            'location' => '',
+            'ean13' => '',
+            'isbn' => '',
+            'upc' => '',
+            'wholesale_price' => '0.000000',
+            'price' => '0.000000',
+            'ecotax' => '0.000000',
+            'quantity' => 300,
+            'weight' => '0.000000',
+            'unit_price_impact' => '0.000000',
+            'default_on' => null,
+            'minimal_quantity' => '1',
+            'available_date' => '0000-00-00',
+            'id_shop' => '1',
+            'id_attribute_group' => '1',
+            'is_color_group' => '0',
+            'group_name' => 'Taille',
+            'attribute_name' => 'L',
+            'id_attribute' => '3',
+        );
     }
 
     private function fakeProduct()
@@ -186,7 +186,7 @@ class AdminModelAdapterTest extends KernelTestCase
     }
 
     /**
-     * Checks that the construction of object still works as expected
+     * Checks that the construction of object still works as expected.
      */
     public function testConstruct()
     {
@@ -213,30 +213,30 @@ class AdminModelAdapterTest extends KernelTestCase
      */
     public function testGetFormCombination()
     {
-        $expectedStructureReturn = [
-            "id_product_attribute" => "6",
-            "attributes" => [
-                0 => "Taille",
-                1 => "L",
-                2 => "3"
-            ],
-            "attribute_reference" => "",
-            "attribute_ean13" => "",
-            "attribute_isbn" => "",
-            "attribute_upc" => "",
-            "attribute_wholesale_price" => "0.000000",
-            "attribute_price_impact" => 0,
-            "attribute_price" => "0.000000",
-            "attribute_priceTI" => "",
-            "attribute_ecotax" => "0.000000",
-            "attribute_weight_impact" => 0,
-            "attribute_weight" => "0.000000",
-            "attribute_unit_impact" => 0,
-            "attribute_unity" => "0.000000",
-            "attribute_minimal_quantity" => "1",
-            "available_date_attribute" => "0000-00-00",
-            "attribute_default" => false,
-        ];
+        $expectedStructureReturn = array(
+            'id_product_attribute' => '6',
+            'attributes' => array(
+                0 => 'Taille',
+                1 => 'L',
+                2 => '3',
+            ),
+            'attribute_reference' => '',
+            'attribute_ean13' => '',
+            'attribute_isbn' => '',
+            'attribute_upc' => '',
+            'attribute_wholesale_price' => '0.000000',
+            'attribute_price_impact' => 0,
+            'attribute_price' => '0.000000',
+            'attribute_priceTI' => '',
+            'attribute_ecotax' => '0.000000',
+            'attribute_weight_impact' => 0,
+            'attribute_weight' => '0.000000',
+            'attribute_unit_impact' => 0,
+            'attribute_unity' => '0.000000',
+            'attribute_minimal_quantity' => '1',
+            'available_date_attribute' => '0000-00-00',
+            'attribute_default' => false,
+        );
         $actualReturn = $this->adminModelAdapter->getFormCombination($this->fakeCombination());
 
         foreach ($expectedStructureReturn as $property => $value) {

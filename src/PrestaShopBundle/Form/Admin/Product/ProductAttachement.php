@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,10 +30,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is responsible to generate the product attachments
+ * This form class is responsible to generate the product attachments.
  */
 class ProductAttachement extends CommonAbstractType
 {
@@ -42,7 +41,7 @@ class ProductAttachement extends CommonAbstractType
     private $configuration;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -63,27 +62,27 @@ class ProductAttachement extends CommonAbstractType
     {
         $builder->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
             'required' => false,
-            'label' => $this->translator->trans('File', [], 'AdminProducts'),
+            'label' => $this->translator->trans('File', array(), 'AdminProducts'),
             'constraints' => array(
-                new Assert\NotNull(array('message' => $this->translator->trans('Please select a file', [], 'AdminProducts'))),
+                new Assert\NotNull(array('message' => $this->translator->trans('Please select a file', array(), 'AdminProducts'))),
                 new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
-            )
+            ),
         ))
         ->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'label' =>  $this->translator->trans('Filename', [], 'AdminProducts'),
-            'attr' =>  ['placeholder' => $this->translator->trans('Title', [], 'AdminProducts')],
+            'label' => $this->translator->trans('Filename', array(), 'AdminProducts'),
+            'attr' => array('placeholder' => $this->translator->trans('Title', array(), 'AdminProducts')),
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Length(array('min' => 2))
-            )
+                new Assert\Length(array('min' => 2)),
+            ),
         ))
         ->add('description', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
-            'attr' =>  ['placeholder' => $this->translator->trans('Description', [], 'AdminProducts')],
+            'label' => $this->translator->trans('Description', array(), 'AdminProducts'),
+            'attr' => array('placeholder' => $this->translator->trans('Description', array(), 'AdminProducts')),
         ))
         ->add('add', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
-            'label' =>  $this->translator->trans('Add', [], 'AdminProducts'),
-            'attr' =>  ['class' => 'btn-primary-outline pull-right']
+            'label' => $this->translator->trans('Add', array(), 'AdminProducts'),
+            'attr' => array('class' => 'btn-primary-outline pull-right'),
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -91,7 +90,7 @@ class ProductAttachement extends CommonAbstractType
 
             //if this partial form is submit from a parent form, disable it
             if ($form->getParent()) {
-                $event->setData([]);
+                $event->setData(array());
                 $form->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array('mapped' => false));
                 $form->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array('mapped' => false));
             }

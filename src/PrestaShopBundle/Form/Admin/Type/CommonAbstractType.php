@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 abstract class CommonAbstractType extends AbstractType
 {
     /**
-     * Get the configuration adapter
+     * Get the configuration adapter.
      *
      * @return object Configuration adapter
      */
@@ -44,11 +44,12 @@ abstract class CommonAbstractType extends AbstractType
     }
 
     /**
-     * Format legacy data list to mapping SF2 form field choice
+     * Format legacy data list to mapping SF2 form field choice.
      *
-     * @param array $list
+     * @param array  $list
      * @param string $mapping_value
      * @param string $mapping_name
+     *
      * @return array
      */
     protected function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
@@ -57,6 +58,7 @@ abstract class CommonAbstractType extends AbstractType
         foreach ($list as $item) {
             $new_list[$item[$mapping_name]] = $item[$mapping_value];
         }
+
         return $new_list;
     }
 }

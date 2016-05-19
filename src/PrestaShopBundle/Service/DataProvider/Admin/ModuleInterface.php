@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,8 +25,6 @@
  */
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
-
 /**
  * Data provider for new Architecture, about Module object model.
  *
@@ -35,8 +33,9 @@ use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 interface ModuleInterface
 {
     /**
-     * Return all module entities coming from DB
-     * @return Array|Bool
+     * Return all module entities coming from DB.
+     *
+     * @return array|bool
      */
     public function getAllModules();
 }

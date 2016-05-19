@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,8 +32,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 /**
- * Class EmployeeProvider To retrieve Employee entities for the Symfony security components
- * @package PrestaShopBundle\Security\Admin
+ * Class EmployeeProvider To retrieve Employee entities for the Symfony security components.
  */
 class EmployeeProvider implements UserProviderInterface
 {
@@ -53,6 +52,7 @@ class EmployeeProvider implements UserProviderInterface
      * Fetch the Employee entity that matches the given username.
      *
      * @param string $username
+     *
      * @return Employee
      */
     public function loadUserByUsername($username)
@@ -70,6 +70,7 @@ class EmployeeProvider implements UserProviderInterface
      * Reload an Employee and returns a fresh instance.
      *
      * @param UserInterface $employee
+     *
      * @return Employee
      */
     public function refreshUser(UserInterface $employee)
@@ -87,6 +88,7 @@ class EmployeeProvider implements UserProviderInterface
      * Tests if the given class supports the security layer. Here, only Employee class is allowed to be used to authenticate.
      *
      * @param string $class
+     *
      * @return bool
      */
     public function supportsClass($class)

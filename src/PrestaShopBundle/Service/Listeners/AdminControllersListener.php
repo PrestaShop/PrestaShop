@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -64,7 +64,7 @@ class AdminControllersListener
 
         if (isset($tabConfiguration[$controllerName])) {
             // Construct tabs and inject into twig tpl
-            $tabDataContent = [];
+            $tabDataContent = array();
             // Get current route name to know when to put "current" class on HTML dom
             $currentRouteName = $this->request->get('_route');
 
@@ -73,11 +73,11 @@ class AdminControllersListener
                 if ($currentRouteName === $tabData['route']) {
                     $tabData['isCurrent'] = true;
                 }
-                $tabData['title'] = $this->translator->trans($tabData['title'], [], 'AdminControllersListener');
+                $tabData['title'] = $this->translator->trans($tabData['title'], array(), 'AdminControllersListener');
                 $tabData['route'] = $this->router->generate($tabData['route']);
                 $tabDataContent[] = $this->renderer->render(
                     'PrestaShopBundle:Admin/Common/_partials:_header_tab.html.twig',
-                    ['tabData' => $tabData]
+                    array('tabData' => $tabData)
                 );
             }
             // Inject them to templating system as global to be able to pass it to the legacy afterwards and once

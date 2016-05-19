@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,6 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 
 /**
  * Class Employee is used for Symfony security components to authenticate the user.
- * @package PrestaShopBundle\Security\Admin
  */
 class Employee implements UserInterface, EquatableInterface
 {
@@ -63,12 +62,12 @@ class Employee implements UserInterface, EquatableInterface
         $this->username = $data->email;
         $this->password = $data->passwd;
         $this->salt = '';
-        $this->roles = ['ROLE_ADMIN'];
+        $this->roles = array('ROLE_ADMIN');
         $this->data = $data;
     }
 
     /**
-     * Returns roles for the current employee
+     * Returns roles for the current employee.
      *
      * @return array
      */
@@ -78,7 +77,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Get typed password
+     * Get typed password.
      *
      * @return string
      */
@@ -88,7 +87,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * The salt used to hash the password
+     * The salt used to hash the password.
      *
      * @return string
      */
@@ -98,7 +97,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Get the login of the current employee
+     * Get the login of the current employee.
      *
      * @return string
      */
@@ -108,7 +107,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Get the data parameter of the current employee
+     * Get the data parameter of the current employee.
      *
      * @return object
      */
@@ -126,14 +125,15 @@ class Employee implements UserInterface, EquatableInterface
 
     /**
      * Test equality between two Employee entities
-     * (instance of class, password, salt and username)
+     * (instance of class, password, salt and username).
      *
      * @param UserInterface $user
+     *
      * @return bool
      */
     public function isEqualTo(UserInterface $user)
     {
-        if (!$user instanceof Employee) {
+        if (!$user instanceof self) {
             return false;
         }
 

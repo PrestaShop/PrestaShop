@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,12 +28,11 @@ namespace PrestaShopBundle\Form\Admin\Category;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the basic category form
- * Name (not translated), and parent category selector
+ * Name (not translated), and parent category selector.
  */
 class SimpleCategory extends CommonAbstractType
 {
@@ -41,7 +40,7 @@ class SimpleCategory extends CommonAbstractType
     private $categories;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $categoryDataProvider
@@ -53,7 +52,7 @@ class SimpleCategory extends CommonAbstractType
     }
 
     /**
-     * Create and format a valid array keys categories that can be validate by the choice SF2 cform component
+     * Create and format a valid array keys categories that can be validate by the choice SF2 cform component.
      *
      * @param array $list The nested array categories
      */
@@ -76,19 +75,19 @@ class SimpleCategory extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'label' => $this->translator->trans('Name', [], 'AdminCategories'),
+            'label' => $this->translator->trans('Name', array(), 'AdminCategories'),
             'required' => false,
-            'attr' => ['placeholder' => $this->translator->trans('Category name', [], 'AdminCategories'), 'class' => 'ajax'],
-            'constraints' => $options['ajax'] ? [] : array(
+            'attr' => array('placeholder' => $this->translator->trans('Category name', array(), 'AdminCategories'), 'class' => 'ajax'),
+            'constraints' => $options['ajax'] ? array() : array(
                 new Assert\NotBlank(),
-                new Assert\Length(array('min' => 3))
-            )
+                new Assert\Length(array('min' => 3)),
+            ),
         ))
         ->add('id_parent', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->categories,
             'choices_as_values' => true,
             'required' => true,
-            'label' => $this->translator->trans('Choose a parent for this new category', [], 'AdminProducts')
+            'label' => $this->translator->trans('Choose a parent for this new category', array(), 'AdminProducts'),
         ));
     }
 

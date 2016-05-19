@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,11 +30,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
-use PrestaShopBundle\Form\Admin\Type as PsFormType;
 
 /**
- * This form class is responsible to generate the virtual product
+ * This form class is responsible to generate the virtual product.
  */
 class ProductVirtual extends CommonAbstractType
 {
@@ -43,7 +41,7 @@ class ProductVirtual extends CommonAbstractType
     private $configuration;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -63,9 +61,9 @@ class ProductVirtual extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('is_virtual_file', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices'  => array(
-                $this->translator->trans('Yes', [], 'AdminProducts') => 1,
-                $this->translator->trans('No', [], 'AdminProducts') => 0,
+            'choices' => array(
+                $this->translator->trans('Yes', array(), 'AdminProducts') => 1,
+                $this->translator->trans('No', array(), 'AdminProducts') => 0,
             ),
             'choices_as_values' => true,
             'expanded' => true,
@@ -74,39 +72,39 @@ class ProductVirtual extends CommonAbstractType
         ))
         ->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
             'required' => false,
-            'label' => $this->translator->trans('File', [], 'AdminProducts'),
+            'label' => $this->translator->trans('File', array(), 'AdminProducts'),
             'constraints' => array(
                 new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
-            )
+            ),
         ))
         ->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'label'    => $this->translator->trans('Filename', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Filename', array(), 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
             ),
         ))
         ->add('nb_downloadable', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
-            'label'    => $this->translator->trans('Number of allowed downloads', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Number of allowed downloads', array(), 'AdminProducts'),
             'required' => false,
             'constraints' => array(
                 new Assert\Type(array('type' => 'numeric')),
             ),
         ))
         ->add('expiration_date', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
-            'label'    => $this->translator->trans('Expiration date', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Expiration date', array(), 'AdminProducts'),
             'required' => false,
-            'attr' => ['placeholder' => 'YYYY-MM-DD']
+            'attr' => array('placeholder' => 'YYYY-MM-DD'),
         ))
         ->add('nb_days', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
-            'label'    => $this->translator->trans('Number of days', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Number of days', array(), 'AdminProducts'),
             'required' => false,
             'constraints' => array(
                 new Assert\Type(array('type' => 'numeric')),
-            )
+            ),
         ))
         ->add('save', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
-            'label' => $this->translator->trans('Save', [], 'AdminProducts'),
-            'attr' => ['class' => 'btn-primary pull-right']
+            'label' => $this->translator->trans('Save', array(), 'AdminProducts'),
+            'attr' => array('class' => 'btn-primary pull-right'),
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -115,7 +113,7 @@ class ProductVirtual extends CommonAbstractType
 
             //if this partial form is submit from a parent form, disable it
             if ($form->getParent()) {
-                $event->setData([]);
+                $event->setData(array());
                 $form->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array('mapped' => false));
             } elseif ($data['is_virtual_file'] == 0) {
                 //disable name mapping when is virtual not defined to yes

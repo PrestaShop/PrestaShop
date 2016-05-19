@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 
 /**
- * Refresh Sf2 cache
+ * Refresh Sf2 cache.
  */
 class Refresh
 {
@@ -52,7 +52,7 @@ class Refresh
         set_time_limit(0);
         $this->env = $env;
         $this->output = new NullOutput();
-        $this->commands = [];
+        $this->commands = array();
 
         require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
         $kernel = new \AppKernel($this->env, false);
@@ -61,29 +61,29 @@ class Refresh
     }
 
     /**
-     * add cache clear
+     * add cache clear.
      */
     public function addCacheClear()
     {
-        $this->commands[] = ['command' => 'cache:clear', '--env' => $this->env, '--no-debug' => true];
+        $this->commands[] = array('command' => 'cache:clear', '--env' => $this->env, '--no-debug' => true);
     }
 
     /**
-     * add doctrine schema update
+     * add doctrine schema update.
      */
     public function addDoctrineSchemaUpdate()
     {
-        $this->commands[] = ['command' => 'doctrine:schema:update', '--env' => $this->env, '--no-debug' => false, '--force' => true];
+        $this->commands[] = array('command' => 'doctrine:schema:update', '--env' => $this->env, '--no-debug' => false, '--force' => true);
     }
 
     /**
-     * Execute all defined commands
+     * Execute all defined commands.
      *
      * @throws \Exception if no command defined
      */
     public function execute()
     {
-        $output = [];
+        $output = array();
         if (empty($this->commands)) {
             throw new \Exception('Error, you need to define at least on command');
         }

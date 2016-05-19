@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Admin controller for the attribute / attribute group
+ * Admin controller for the attribute / attribute group.
  */
 class SpecificPriceController extends FrameworkBundleAdminController
 {
     /**
-     * get specific price list for a product
+     * get specific price list for a product.
      *
      * @param $idProduct The product ID
      *
@@ -55,9 +55,10 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $groups = $this->container->get('prestashop.adapter.data_provider.group')->getGroups($locales[0]['id_lang']);
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct);
+        $product = $productAdapter->getProduct((int) $idProduct);
         if (!is_object($product) || empty($product->id)) {
             $response->setStatusCode(400);
+
             return $response;
         }
 
@@ -74,7 +75,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Add specific price Form process
+     * Add specific price Form process.
      *
      * @param Request $request The request
      *
@@ -90,9 +91,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $errors = $adminProductWrapper->processProductSpecificPrice($idProduct, $request->get('form')['step2']['specific_price']);
 
         if (!empty($errors)) {
-            $translateErrors = [];
+            $translateErrors = array();
             foreach ($errors as $error) {
-                $translateErrors[] = $translator->trans($error, [], 'AdminProducts');
+                $translateErrors[] = $translator->trans($error, array(), 'AdminProducts');
             }
 
             $response->setData(implode(', ', $translateErrors));
@@ -103,10 +104,10 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete a specific price
+     * Delete a specific price.
      *
-     * @param int $idSpecificPrice The specific price ID
-     * @param Request $request The request
+     * @param int     $idSpecificPrice The specific price ID
+     * @param Request $request         The request
      *
      * @return string
      */
@@ -122,7 +123,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
             $response->setStatusCode(400);
         }
 
-        $response->setData($translator->trans($res['message'], [], 'AdminProducts'));
+        $response->setData($translator->trans($res['message'], array(), 'AdminProducts'));
+
         return $response;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to create a product, with or without attribute field
+ * This form class is responsible to create a product, with or without attribute field.
  */
 class TypeaheadProductCollectionType extends CommonAbstractType
 {
@@ -77,7 +77,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                     'name' => $product->name[1].' (ref:'.$product->reference.')',
                     'image' => $product->image,
                 );
-                $i++;
+                ++$i;
 
                 //if collection length is up to limit, break
                 if ($options['limit'] != 0 && $i >= $options['limit']) {
@@ -96,7 +96,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-            'entry_type' =>'Symfony\Component\Form\Extension\Core\Type\HiddenType',
+            'entry_type' => 'Symfony\Component\Form\Extension\Core\Type\HiddenType',
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,

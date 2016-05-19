@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -56,6 +56,7 @@ class AdminUrlGeneratorFactory
      * Gets the UrlGeneratorInterface subclass for Legacy Admin controllers.
      *
      * @param LegacyContext $legacyContext The legacy context needed by Legacy UrlGenerator
+     *
      * @return UrlGeneratorInterface The UrlGenerator instance for Admin legacy controllers.
      */
     public function forLegacy(LegacyContext $legacyContext)
