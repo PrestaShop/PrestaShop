@@ -4653,6 +4653,10 @@ a.bg-danger:focus, a.bg-danger:hover {
   /* Support for IE. */
   font-feature-settings: 'liga'; }
 
+.text-light {
+  color: #acaaa6;
+  font-size: 0.875rem; }
+
 html,
 body {
   height: 100%; }
@@ -4740,14 +4744,28 @@ label {
 .form-control {
   background: #ebebeb;
   color: #acaaa6;
-  border-color: #ebebeb;
-  border-radius: 0;
+  border: none;
   font-size: 0.875rem;
   padding: 0.5rem 1rem; }
   .form-control:focus {
     background-color: white;
-    border-color: white;
     outline: 0.1875rem solid #2fb5d2; }
+
+.input-group.focus {
+  outline: 0.1875rem solid #2fb5d2; }
+
+.input-group .form-control:focus {
+  outline: none; }
+
+.input-group .input-group-btn > .btn {
+  border: 0;
+  box-shadow: none;
+  color: #ffffff;
+  font-size: 0.6875rem;
+  font-weight: normal;
+  margin-left: 0;
+  padding: 0.65625rem 1rem;
+  text-transform: uppercase; }
 
 .form-control-select {
   height: 2.625rem;
@@ -4962,6 +4980,12 @@ label {
 
 .alert {
   font-size: 0.8125em; }
+
+.nav-item .nav-link, .nav-item .nav-separtor {
+  color: #acaaa6;
+  font-weight: bold; }
+  .nav-item .nav-link.active, .nav-item .nav-separtor.active {
+    color: #414141; }
 
 .dropdown {
   color: #acaaa6; }
