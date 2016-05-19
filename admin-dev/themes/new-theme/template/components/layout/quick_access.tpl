@@ -20,11 +20,13 @@
       {/if}
       <li {if isset($matchQuickLink)}class="hide"{/if}>
         <a class="dropdown-item js-quick-link" data-rand="{1|rand:200}" data-icon="{$quick_access_current_link_icon}" data-method="add" data-url="{$link->getQuickLink($smarty.server['REQUEST_URI'])}" data-post-link="{$link->getAdminLink('AdminQuickAccesses')}" data-prompt-text="{l s='Please name this shortcut:' js=1}" data-link="{$quick_access_current_link_name|truncate:32}">
+          <i class="material-icons">add_circle_outline</i>
           {l s='Add current page to QuickAccess'}
         </a>
       </li>
       <li>
         <a class="dropdown-item" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+          <i class="material-icons">settings</i>
           {l s='Manage quick accesses'}
         </a>
       </li>
