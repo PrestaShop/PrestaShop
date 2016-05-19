@@ -33,9 +33,6 @@
               {if $level2.active}
 
                 {$level2Href = $level2.href|escape:'html':'UTF-8'}
-                {if $level2.sub_tabs|@count && isset($level2.sub_tabs[0].href)}
-                  {$level2Href = $level2.sub_tabs[0].href|escape:'html':'UTF-8'}
-                {/if}
 
                 {$level2Name = $level2.name|escape:'html':'UTF-8'}
                 {if $level2.name eq ''}
@@ -52,9 +49,6 @@
                           {if $level3.active}
 
                             {$level3Href = $level3.href|escape:'html':'UTF-8'}
-                            {if $level3.sub_tabs|@count && isset($level3.sub_tabs[0].href)}
-                              {$level3Href = $level3.sub_tabs[0].href|escape:'html':'UTF-8'}
-                            {/if}
 
                             {$level3Name = $level3.name|escape:'html':'UTF-8'}
                             {if $level3.name eq ''}

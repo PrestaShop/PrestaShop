@@ -1957,6 +1957,9 @@ class AdminControllerCore extends Controller
             $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
 
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
+            if (isset($tabs[$index]['sub_tabs'][0])) {
+                $tabs[$index]['href'] = $tabs[$index]['sub_tabs'][0]['href'];
+            }
 
             foreach ($tabs[$index]['sub_tabs'] as $sub_tab) {
                 if ((int)$sub_tab['current'] == true) {
