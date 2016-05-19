@@ -902,7 +902,7 @@ var form = (function() {
 
           /** On event "tokenfield:createtoken" : stop event if its not a typehead result */
           $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
-            if (!e.attrs.data) {
+            if (!e.attrs.data && e.handleObj.origType !== 'tokenfield:createtoken') {
               return false;
             }
           });
