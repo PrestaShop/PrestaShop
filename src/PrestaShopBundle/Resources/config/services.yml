@@ -152,6 +152,13 @@ services:
         tags:
             - { name: twig.extension }
 
+    prestashop.twig.extension.admin:
+       class: PrestaShopBundle\Twig\AdminExtension
+       arguments:
+            - "@request_stack"
+       tags:
+            - { name: twig.extension }
+
     # Updaters
     prestashop.core.module.updater:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -23,41 +24,53 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Service\Listeners;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+namespace PrestaShopBundle\Twig;
+
 use Symfony\Component\Yaml\Parser;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
-class AdminControllersListener
+/**
+ * Twig extension for the Symfony Asset component.
+ *
+ * @author Mlanawo Mbechezi <mlanawo.mbechezi@ikimea.com>
+ */
+class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface, \Twig_Extension_InitRuntimeInterface
 {
-    protected $request;
-    protected $router;
-    protected $renderer;
-    protected $translator;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
-    public function __construct(Router $router, \Twig_Environment $twig, $translator)
+    /**
+     * @var \Twig_Environment
+     */
+    private $environment;
+
+    /**
+     * @param RequestStack $requestStack
+     */
+    public function __construct(RequestStack $requestStack = null)
     {
-        $this->translator = $translator;
-        $this->router = $router;
-        $this->renderer = $twig;
+        $this->requestStack = $requestStack;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    /**
+     * {@inheritdoc}
+     */
+    public function initRuntime(\Twig_Environment $environment)
     {
-        $this->request = $event->getRequest();
-        // @TODO: Check if we have to do any check by:
-        //  - Check whether it's an Action Controller method
-        //  - Check that we are not on an XMLHttpRequest, but a classic one
-        $this->buildTopNavMenu();
+        $this->environment = $environment;
     }
 
-    final private function buildTopNavMenu()
+
+    final private function buildTopNavMenu(ParameterBag $parameterBag)
     {
         $yamlParser = new Parser();
-        $yamlNavigationPath = __DIR__.'/../../Resources/config/admin/navigation.yml';
+        $yamlNavigationPath = __DIR__.'/../Resources/config/admin/navigation.yml';
         $tabConfiguration = $yamlParser->parse(file_get_contents($yamlNavigationPath));
-        $explodedControllerInfo = explode('::', $this->request->attributes->get('_controller'));
+        $explodedControllerInfo = explode('::', $parameterBag->get('_controller'));
         $explodedControllerName = explode('\\', $explodedControllerInfo[0]);
         $controllerNameIndex = count($explodedControllerName) - 1;
         $controllerName = $explodedControllerName[$controllerNameIndex];
@@ -66,23 +79,44 @@ class AdminControllersListener
             // Construct tabs and inject into twig tpl
             $tabDataContent = [];
             // Get current route name to know when to put "current" class on HTML dom
-            $currentRouteName = $this->request->get('_route');
+            $currentRouteName = $parameterBag->get('_route');
 
             foreach ($tabConfiguration[$controllerName] as $tabName => $tabData) {
                 $tabData['isCurrent'] = false;
                 if ($currentRouteName === $tabData['route']) {
                     $tabData['isCurrent'] = true;
                 }
-                $tabData['title'] = $this->translator->trans($tabData['title'], [], 'AdminControllersListener');
-                $tabData['route'] = $this->router->generate($tabData['route']);
-                $tabDataContent[] = $this->renderer->render(
+
+                $tabDataContent[] = $this->environment->render(
                     'PrestaShopBundle:Admin/Common/_partials:_header_tab.html.twig',
                     ['tabData' => $tabData]
                 );
             }
             // Inject them to templating system as global to be able to pass it to the legacy afterwards and once
             // controller has given a response
-            $this->renderer->addGlobal('headerTabContent', $tabDataContent);
+            return $tabDataContent;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getGlobals()
+    {
+        $globals = array();
+
+        if (null !== $this->requestStack->getCurrentRequest()) {
+            $globals['headerTabContent'] = $this->buildTopNavMenu($this->requestStack->getCurrentRequest()->attributes);
+        }
+
+        return $globals;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'twig_admin_extension';
     }
 }

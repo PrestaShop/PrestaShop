@@ -1,1 +1,1 @@
-<a class="tab{% if tabData.isCurrent == true %} current{% endif %}" href="{{tabData.route}}">{{tabData.title}}</a>
+<a class="tab{% if tabData.isCurrent %} current{% endif %}" href="{{ path(tabData.route)}}">{{tabData.title|trans(tabData.title, {}, 'AdminControllersListener')}}</a>
