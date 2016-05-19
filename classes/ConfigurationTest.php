@@ -108,6 +108,7 @@ class ConfigurationTestCore
             'mbstring' => false,
             'dom' => false,
             'pdo_mysql' => false,
+            'php_memory_limit' => false,
         );
     }
 
@@ -364,9 +365,19 @@ class ConfigurationTestCore
 
         return is_writable($path);
     }
+
     public static function test_dom()
     {
         return extension_loaded('Dom');
+    }
+
+    public static function test_php_memory_limit()
+    {
+        // Minimum memory limit for Windows : 1024, else 512
+        $recommended_memory_limit = strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN' ? 1024 : 512;
+        $memory_limit = preg_replace('/[^0-9]/', '', ini_get('memory_limit'));
+
+        return $memory_limit>=$recommended_memory_limit;
     }
 
     public static function test_files($full = false)
