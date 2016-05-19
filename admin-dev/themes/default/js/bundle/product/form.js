@@ -1622,7 +1622,7 @@ var priceCalculation = (function() {
     },
     'impactTaxInclude': function(obj) {
       var price = parseFloat(obj.val().replace(/,/g, '.'));
-      var targetInput = obj.parent().parent().parent().find('input.attribute_priceTI');
+      var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTI');
       if (isNaN(price)) {
         targetInput.val(0);
         return;
@@ -1635,7 +1635,7 @@ var priceCalculation = (function() {
     },
     'impactTaxExclude': function(obj) {
       var price = parseFloat(obj.val().replace(/,/g, '.'));
-      var targetInput = obj.parent().parent().parent().find('input.attribute_priceTE');
+      var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
       if (isNaN(price)) {
         targetInput.val(0);
         return;
