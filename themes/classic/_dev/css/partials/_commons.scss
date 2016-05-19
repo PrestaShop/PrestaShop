@@ -283,7 +283,7 @@ label {
   margin-top: $small-space;
 }
 
-.btn.disabled {
+.btn.disabled, .btn.disabled:hover {
   background: $gray;
 }
 .alert-warning {
@@ -327,4 +327,7 @@ label {
     border-color: $btn-tertiary-hover;
     color: $btn-tertiary-hover;
   }
+}
+.alert {
+  font-size: em(13px);
 }

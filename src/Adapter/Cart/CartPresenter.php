@@ -213,6 +213,7 @@ class CartPresenter implements PresenterInterface
         $products = $this->addCustomizedData($products, $cart);
         $subtotals = [];
 
+        $productsTotalExcludingTax = $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
         $total_discount      = $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
@@ -274,7 +275,9 @@ class CartPresenter implements PresenterInterface
                           sprintf($this->translator->trans('%d products', [], 'Cart'), $products_count)
         ;
 
-        return [
+        $minimalPurchase = $this->priceFormatter->convertAmount((float)Configuration::get('PS_PURCHASE_MINIMUM'));
+
+        return array(
             'products' => $products,
             'total' => $total,
             'subtotals' => $subtotals,
@@ -283,7 +286,20 @@ class CartPresenter implements PresenterInterface
             'id_address_delivery' => $cart->id_address_delivery,
             'id_address_invoice' => $cart->id_address_invoice,
             'vouchers' => $this->getTemplateVarVouchers($cart),
-        ];
+            'minimalPurchaseRequired' =>
+                ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
+                sprintf(
+                    $this->translator->trans(
+                        'A minimum shopping cart total of %s (tax excl.) is required to validate your order.
+                        Current cart total is %s (tax excl.).',
+                        array(),
+                        'Cart'
+                    ),
+                    $this->priceFormatter->convertAndFormat($minimalPurchase),
+                    $this->priceFormatter->convertAndFormat($productsTotalExcludingTax)
+                ) :
+                '',
+        );
     }
 
     private function getTemplateVarVouchers(Cart $cart)

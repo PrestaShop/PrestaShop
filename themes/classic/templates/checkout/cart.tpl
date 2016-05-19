@@ -53,10 +53,7 @@
             {/block}
 
             {block name='cart_actions'}
-              <div class="checkout text-xs-center card-block">
-                <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Checkout'}</a>
-                {hook h='displayExpressCheckout'}
-              </div>
+              {include file='checkout/_partials/cart-detailed-actions.tpl' cart=$cart}
             {/block}
 
           </div>

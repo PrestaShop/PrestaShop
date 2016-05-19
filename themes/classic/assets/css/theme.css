@@ -1825,35 +1825,35 @@ fieldset[disabled] a.btn {
 
 .btn-warning {
   color: white;
-  background-color: #CD9321;
-  border-color: #CD9321; }
+  background-color: #FF9A52;
+  border-color: #FF9A52; }
   .btn-warning:hover {
     color: white;
-    background-color: #a1741a;
-    border-color: #986d19; }
+    background-color: #ff7c1f;
+    border-color: #ff7615; }
   .btn-warning:focus, .btn-warning.focus {
     color: white;
-    background-color: #a1741a;
-    border-color: #986d19; }
+    background-color: #ff7c1f;
+    border-color: #ff7615; }
   .btn-warning:active, .btn-warning.active,
   .open > .btn-warning.dropdown-toggle {
     color: white;
-    background-color: #a1741a;
-    border-color: #986d19;
+    background-color: #ff7c1f;
+    border-color: #ff7615;
     background-image: none; }
     .btn-warning:active:hover, .btn-warning:active:focus, .btn-warning:active.focus, .btn-warning.active:hover, .btn-warning.active:focus, .btn-warning.active.focus,
     .open > .btn-warning.dropdown-toggle:hover,
     .open > .btn-warning.dropdown-toggle:focus,
     .open > .btn-warning.dropdown-toggle.focus {
       color: white;
-      background-color: #825d15;
-      border-color: #5f440f; }
+      background-color: #fa6800;
+      border-color: #d25700; }
   .btn-warning.disabled:focus, .btn-warning.disabled.focus, .btn-warning:disabled:focus, .btn-warning:disabled.focus {
-    background-color: #CD9321;
-    border-color: #CD9321; }
+    background-color: #FF9A52;
+    border-color: #FF9A52; }
   .btn-warning.disabled:hover, .btn-warning:disabled:hover {
-    background-color: #CD9321;
-    border-color: #CD9321; }
+    background-color: #FF9A52;
+    border-color: #FF9A52; }
 
 .btn-danger {
   color: #fff;
@@ -1964,23 +1964,23 @@ fieldset[disabled] a.btn {
     border-color: #96d7a9; }
 
 .btn-warning-outline {
-  color: #CD9321;
+  color: #FF9A52;
   background-image: none;
   background-color: transparent;
-  border-color: #CD9321; }
+  border-color: #FF9A52; }
   .btn-warning-outline:focus, .btn-warning-outline.focus, .btn-warning-outline:active, .btn-warning-outline.active,
   .open > .btn-warning-outline.dropdown-toggle {
     color: #fff;
-    background-color: #CD9321;
-    border-color: #CD9321; }
+    background-color: #FF9A52;
+    border-color: #FF9A52; }
   .btn-warning-outline:hover {
     color: #fff;
-    background-color: #CD9321;
-    border-color: #CD9321; }
+    background-color: #FF9A52;
+    border-color: #FF9A52; }
   .btn-warning-outline.disabled:focus, .btn-warning-outline.disabled.focus, .btn-warning-outline:disabled:focus, .btn-warning-outline:disabled.focus {
-    border-color: #e7be6d; }
+    border-color: #ffd6b8; }
   .btn-warning-outline.disabled:hover, .btn-warning-outline:disabled:hover {
-    border-color: #e7be6d; }
+    border-color: #ffd6b8; }
 
 .btn-danger-outline {
   color: #ff4c4c;
@@ -2899,7 +2899,7 @@ input[type="button"].btn-block {
 
 .card-warning-outline {
   background-color: transparent;
-  border-color: #CD9321; }
+  border-color: #FF9A52; }
 
 .card-danger-outline {
   background-color: transparent;
@@ -3244,11 +3244,11 @@ a.label:focus, a.label:hover {
     color: #245269; }
 
 .alert-warning {
-  background-color: #FDE7BB;
-  border-color: #CD9321;
+  background-color: rgba(255, 154, 82, 0.3);
+  border-color: #FF9A52;
   color: #414141; }
   .alert-warning hr {
-    border-top-color: #b7831d; }
+    border-top-color: #ff8b39; }
   .alert-warning .alert-link {
     color: #282828; }
 
@@ -4914,11 +4914,11 @@ label {
 .help-block {
   margin-top: 10px; }
 
-.btn.disabled {
+.btn.disabled, .btn.disabled:hover {
   background: #acaaa6; }
 
 .alert-warning .material-icons {
-  color: #CD9321;
+  color: #FF9A52;
   font-size: 2em;
   margin-right: 10px;
   padding-top: 5px; }
@@ -4959,6 +4959,9 @@ label {
   .btn-tertiary-outline:hover {
     border-color: #BBCDD2;
     color: #BBCDD2; }
+
+.alert {
+  font-size: 0.8125em; }
 
 .dropdown {
   color: #acaaa6; }
@@ -5812,7 +5815,7 @@ body#checkout {
   background: white;
   border-radius: 2px;
   margin: 4.375em 0;
-  padding: 3.125em 18.125em;
+  padding: 3.125em 3.125em;
   text-align: center; }
   #custom-text h3 {
     text-transform: uppercase;

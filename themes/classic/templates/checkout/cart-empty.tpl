@@ -12,7 +12,7 @@
 
 {block name='cart_actions'}
   <div class="checkout text-xs-center card-block">
-    <a href="{$urls.pages.order}" class="btn btn-primary disabled">{l s='Checkout'}</a>
+    <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout'}</button>
   </div>
 {/block}
 
