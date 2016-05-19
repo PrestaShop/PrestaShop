@@ -458,9 +458,16 @@ class ProductController extends FrameworkBundleAdminController
             $preview_url = $adminProductWrapper->getPreviewUrl($product);
             $preview_url_deactive = $adminProductWrapper->getPreviewUrlDeactivate($preview_url);
         } else {
-            $preview_url_deactive = $adminProductWrapper->getPreviewUrl($product,false);
+            $preview_url_deactive = $adminProductWrapper->getPreviewUrl($product, false);
             $preview_url = $adminProductWrapper->getPreviewUrlDeactivate($preview_url_deactive);
         }
+        
+        $attributeGroups = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('PrestaShopBundle:Attribute')
+            ->findByLangAndShop(1, 1)
+        ;
 
         return array(
             'form' => $form->createView(),
@@ -477,6 +484,7 @@ class ProductController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminProducts'),
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
+            'attribute_groups' => $attributeGroups,
         );
     }
 
@@ -801,7 +809,7 @@ class ProductController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_product_catalog');
     }
-    
+
     /**
      * @todo make a twig extension and depends only on the required form to avoid generate all the data
      */
@@ -824,8 +832,8 @@ class ProductController extends FrameworkBundleAdminController
         );
 
         $form = $this->createFormBuilder($modelMapper->getFormData());
-        
-        switch($step) {
+
+        switch ($step) {
             case 'step1':
                 $form->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation');
                 break;

@@ -91,6 +91,27 @@
   </div>
 
   <div class="col-md-3">
-
+    {% for attribute_group in attribute_groups %}
+      <div class="attribute-group">
+        <a data-toggle="collapse" href="#attribute-group-{{ attribute_group.id }}" aria-expanded="false">
+          {{ attribute_group.name }}
+        </a>
+        <div class="collapse in" id="attribute-group-{{ attribute_group.id }}">
+          {% for attribute in attribute_group.attributes %}
+            <div class="checkbox">
+              <label>
+                <input
+                  class="js-attribute-checkbox"
+                  data-label="{{ attribute_group.name }} : {{ attribute.name }}"
+                  data-value="{{ attribute.id }}"
+                  type="checkbox"
+                >
+                 {{ attribute.name }}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
   </div>
 </div>
