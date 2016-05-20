@@ -226,7 +226,6 @@ abstract class PaymentModuleCore extends Module
 
             $this->currentOrderReference = $reference;
 
-            $order_creation_failed = false;
             $cart_total_paid = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH), 2);
 
             foreach ($cart_delivery_option as $id_address => $key_carriers) {
@@ -420,7 +419,7 @@ abstract class PaymentModuleCore extends Module
                 /** @var OrderDetail $order_detail */
 
                 $order = $order_list[$key];
-                if (!$order_creation_failed && isset($order->id)) {
+                if (isset($order->id)) {
                     if (!$secure_key) {
                         $message .= '<br />'.Tools::displayError('Warning: the secure key is empty, check your payment account before validation');
                     }
