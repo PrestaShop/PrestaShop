@@ -1,6 +1,7 @@
 <entity_tab encoding="UTF-8">
   <tab id="Addresses" name="&#x110;&#x1ECB;a ch&#x1EC9;"/>
   <tab id="Administration" name="Administration"/>
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Advanced_Parameters" name="Th&#xF4;ng s&#x1ED1; chi ti&#x1EBF;t"/>
   <tab id="Attachments" name="&#x110;&#xED;nh k&#xE8;m"/>
   <tab id="Attributes_and_Values" name="Thu&#x1ED9;c t&#xED;nh s&#x1EA3;n ph&#x1EA9;m"/>

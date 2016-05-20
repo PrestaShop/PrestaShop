@@ -2,7 +2,7 @@
 <entity_tab>
   <tab id="Addresses" name="Adrese"/>
   <tab id="Administration" name="Administracija"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Advanced_Parameters" name="Napredne postavke"/>
   <tab id="Attachments" name="Prilozi"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />

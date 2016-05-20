@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="地址"/>
   <tab id="Administration" name="管理"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Advanced_Parameters" name="進階設定"/>
   <tab id="Attachments" name="附加檔案"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />

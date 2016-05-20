@@ -5,6 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id='Addresses' name='ঠিকানা'/>
   <tab id='Administration' name='প্রশাসন'/>
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id='Advanced_Parameters' name='উচ্চতর মাপকাঠি'/>
   <tab id='Attachments' name='সংযুক্তিসমূহ'/>
   <tab id='Attributes_and_features' name='Attributes &amp; Features' />

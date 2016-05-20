@@ -2,6 +2,7 @@
 <entity_tab>
   <tab id="Addresses" name="Indirizzi"/>
   <tab id="Administration" name="Amministrazione"/>
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Advanced_Parameters" name="Parametri avanzati"/>
   <tab id="Attachments" name="Allegati"/>
   <tab id="Attributes_and_Values" name="Attributi"/>
