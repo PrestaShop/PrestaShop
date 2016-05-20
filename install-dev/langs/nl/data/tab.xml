@@ -126,5 +126,5 @@
   <tab id="Webservice" name="Webservice"/>
   <tab id="Weight_Ranges" name="Gewichtsklasse"/>
   <tab id="Zones" name="Zones"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

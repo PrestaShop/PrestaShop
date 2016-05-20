@@ -123,5 +123,5 @@
   <tab id="Warehouses" name="Skladišča"/>
   <tab id="Webservice" name="Spletna storitev"/>
   <tab id="Zones" name="Cone"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

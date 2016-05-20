@@ -100,4 +100,5 @@
   <tab id="Warehouses" name="Nh&#xE0; kho"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="C&#xE1;c khu v&#x1EF1;c"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

@@ -102,4 +102,5 @@
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="Zone"/>
   <tab id="CarrierWizard" name="Corriere"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

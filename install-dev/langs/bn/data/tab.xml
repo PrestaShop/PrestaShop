@@ -124,5 +124,5 @@
   <tab id='Warehouses' name='গুদাম ঘর'/>
   <tab id='Webservice' name='ওয়েব সেবা'/>
   <tab id='Zones' name='এলাকা'/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

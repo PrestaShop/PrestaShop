@@ -123,5 +123,5 @@
   <tab id="Warehouses" name="倉庫"/>
   <tab id="Webservice" name="網頁服務"/>
   <tab id="Zones" name="區域"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>
