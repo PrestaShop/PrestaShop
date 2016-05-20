@@ -19,12 +19,12 @@ class ConditionsToApproveFinderCore
     private function getDefaultTermsAndConditions()
     {
         $cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
-        $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool)Configuration::get('PS_SSL_ENABLED'));
+        $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
 
         $termsAndConditions = new TermsAndConditions();
         $termsAndConditions
             ->setText(
-                $this->translator->trans('I agree to the [terms of service] and will adhere to them unconditionally.', [], 'Checkout'),
+                $this->translator->trans('I agree to the [terms of service] and will adhere to them unconditionally.', array(), 'Checkout'),
                 $link
             )
             ->setIdentifier('terms-and-conditions')
@@ -35,10 +35,10 @@ class ConditionsToApproveFinderCore
 
     private function getConditionsToApprove()
     {
-        $allConditions = [];
-        $hookedConditions = Hook::exec('termsAndConditions', [], null, true);
+        $allConditions = array();
+        $hookedConditions = Hook::exec('termsAndConditions', array(), null, true);
         if (!is_array($hookedConditions)) {
-            $hookedConditions = [];
+            $hookedConditions = array();
         }
         foreach ($hookedConditions as $hookedCondition) {
             if ($hookedCondition instanceof TermsAndConditions) {
@@ -56,13 +56,13 @@ class ConditionsToApproveFinderCore
             array_unshift($allConditions, $this->getDefaultTermsAndConditions());
         }
 
-        /**
+        /*
          * If two TermsAndConditions objects have the same identifier,
          * the one at the end of the list overrides the first one.
          * This allows a module to override the default checkbox
          * in a consistent manner.
          */
-        $reducedConditions = [];
+        $reducedConditions = array();
         foreach ($allConditions as $condition) {
             if ($condition instanceof TermsAndConditions) {
                 $reducedConditions[$condition->getIdentifier()] = $condition;

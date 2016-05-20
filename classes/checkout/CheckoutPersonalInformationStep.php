@@ -4,7 +4,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
 {
-    protected $template = 'checkout/personal-information-step.tpl';
+    protected $template = 'checkout/_partials/steps/personal-information.tpl';
     private $loginForm;
     private $registerForm;
 
@@ -21,7 +21,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->registerForm = $registerForm;
     }
 
-    public function handleRequest(array $requestParameters = [])
+    public function handleRequest(array $requestParameters = array())
     {
         // personal info step is always reachable
         $this->step_is_reachable = true;
@@ -68,22 +68,21 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Personal Information',
-                [],
+                array(),
                 'Checkout'
             )
         );
     }
 
-    public function render(array $extraParams = [])
+    public function render(array $extraParams = array())
     {
         return $this->renderTemplate(
-            $this->template, $extraParams, [
-                'logged_in'        => $this->logged_in,
-                'show_login_form'  => $this->show_login_form,
-                'login_form'       => $this->loginForm->getProxy(),
-                'register_form'    => $this->registerForm->getProxy(),
-                'guest_allowed'    => $this->getCheckoutSession()->isGuestAllowed()
-            ]
+            $this->getTemplate(), $extraParams, array(
+                'show_login_form' => $this->show_login_form,
+                'login_form' => $this->loginForm->getProxy(),
+                'register_form' => $this->registerForm->getProxy(),
+                'guest_allowed' => $this->getCheckoutSession()->isGuestAllowed(),
+            )
         );
     }
 }

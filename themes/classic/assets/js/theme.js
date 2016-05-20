@@ -83,9 +83,9 @@
 	
 	var _componentsDropDown2 = _interopRequireDefault(_componentsDropDown);
 	
-	var _componentsTopMenu = __webpack_require__(84);
+	var _componentsForm = __webpack_require__(84);
 	
-	var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
+	var _componentsForm2 = _interopRequireDefault(_componentsForm);
 	
 	var _componentsProductMiniature = __webpack_require__(85);
 	
@@ -95,17 +95,21 @@
 	
 	var _componentsProductSelect2 = _interopRequireDefault(_componentsProductSelect);
 	
+	var _componentsTopMenu = __webpack_require__(87);
+	
+	var _componentsTopMenu2 = _interopRequireDefault(_componentsTopMenu);
+	
 	var _prestashop = __webpack_require__(79);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _events = __webpack_require__(87);
+	var _events = __webpack_require__(88);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	__webpack_require__(88);
-	
 	__webpack_require__(89);
+	
+	__webpack_require__(90);
 	
 	// "inherit" EventEmitter
 	for (var i in _events2['default'].prototype) {
@@ -114,12 +118,14 @@
 	
 	(0, _expose$ExposeJQueryJquery2['default'])(document).ready(function () {
 	  var dropDownEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-dropdown');
+	  var form = new _componentsForm2['default']();
 	  var topMenuEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-top-menu ul');
 	  var dropDown = new _componentsDropDown2['default'](dropDownEl);
 	  var topMenu = new _componentsTopMenu2['default'](topMenuEl);
 	  var productMinitature = new _componentsProductMiniature2['default']();
 	  var productSelect = new _componentsProductSelect2['default']();
 	  dropDown.init();
+	  form.init();
 	  topMenu.init();
 	  productMinitature.init();
 	  productSelect.init();
@@ -20644,38 +20650,55 @@
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	var _jquery = __webpack_require__(4);
 	
-	var _dropDown = __webpack_require__(83);
+	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _dropDown2 = _interopRequireDefault(_dropDown);
-	
-	var TopMenu = (function (_DropDown) {
-	  _inherits(TopMenu, _DropDown);
-	
-	  function TopMenu() {
-	    _classCallCheck(this, TopMenu);
-	
-	    _get(Object.getPrototypeOf(TopMenu.prototype), 'constructor', this).apply(this, arguments);
+	var Form = (function () {
+	  function Form() {
+	    _classCallCheck(this, Form);
 	  }
 	
-	  _createClass(TopMenu, [{
+	  _createClass(Form, [{
 	    key: 'init',
 	    value: function init() {
-	      _get(Object.getPrototypeOf(TopMenu.prototype), 'init', this).call(this);
+	      this.parentFocus();
+	      this.togglePasswordVisibility();
+	    }
+	  }, {
+	    key: 'parentFocus',
+	    value: function parentFocus() {
+	      (0, _jquery2['default'])('.js-child-focus').focus(function () {
+	        (0, _jquery2['default'])(this).closest('.js-parent-focus').addClass('focus');
+	      });
+	      (0, _jquery2['default'])('.js-child-focus').focusout(function () {
+	        (0, _jquery2['default'])(this).closest('.js-parent-focus').removeClass('focus');
+	      });
+	    }
+	  }, {
+	    key: 'togglePasswordVisibility',
+	    value: function togglePasswordVisibility() {
+	      (0, _jquery2['default'])('button[data-action="show-password"]').on('click', function () {
+	        var elm = (0, _jquery2['default'])(this).closest('.input-group').children('input.js-visible-password');
+	        if (elm.attr('type') === 'password') {
+	          elm.attr('type', 'text');
+	          (0, _jquery2['default'])(this).text((0, _jquery2['default'])(this).data('textHide'));
+	        } else {
+	          elm.attr('type', 'password');
+	          (0, _jquery2['default'])(this).text((0, _jquery2['default'])(this).data('textShow'));
+	        }
+	      });
 	    }
 	  }]);
 	
-	  return TopMenu;
-	})(_dropDown2['default']);
+	  return Form;
+	})();
 	
-	exports['default'] = TopMenu;
+	exports['default'] = Form;
 	module.exports = exports['default'];
 
 /***/ },
@@ -20816,6 +20839,52 @@
 
 /***/ },
 /* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _dropDown = __webpack_require__(83);
+	
+	var _dropDown2 = _interopRequireDefault(_dropDown);
+	
+	var TopMenu = (function (_DropDown) {
+	  _inherits(TopMenu, _DropDown);
+	
+	  function TopMenu() {
+	    _classCallCheck(this, TopMenu);
+	
+	    _get(Object.getPrototypeOf(TopMenu.prototype), 'constructor', this).apply(this, arguments);
+	  }
+	
+	  _createClass(TopMenu, [{
+	    key: 'init',
+	    value: function init() {
+	      _get(Object.getPrototypeOf(TopMenu.prototype), 'init', this).call(this);
+	    }
+	  }]);
+	
+	  return TopMenu;
+	})(_dropDown2['default']);
+	
+	exports['default'] = TopMenu;
+	module.exports = exports['default'];
+
+/***/ },
+/* 88 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -21119,7 +21188,7 @@
 
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21316,7 +21385,7 @@
 	})(window.jQuery);
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

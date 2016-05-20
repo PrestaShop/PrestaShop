@@ -1,10 +1,10 @@
-{extends file='checkout/checkout-step.tpl'}
+{extends file='checkout/_partials/steps/checkout-step.tpl'}
 
 {block name='step_content'}
 <form method="POST" action="{$urls.pages.order}">
 
   {if !$use_same_address}
-    <h2 class="h4">{l s='Your Delivery Address'}</h2>
+    <h2 class="h4">{l s='Shipping Address'}</h2>
   {/if}
 
   {if $use_same_address}
@@ -39,7 +39,9 @@
 
     {if $use_same_address}
       <p>
-        <a data-link-action="different-invoice-address" href="{$use_different_address_url}">{l s='Use a different address for invoice?'}</a>
+        <a data-link-action="different-invoice-address" href="{$use_different_address_url}">
+          {l s='Billing address differs from shipping address'}
+        </a>
       </p>
     {/if}
 

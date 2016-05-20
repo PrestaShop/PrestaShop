@@ -4,12 +4,12 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutAddressesStepCore extends AbstractCheckoutStep
 {
-    protected $template = 'checkout/addresses-step.tpl';
+    protected $template = 'checkout/_partials/steps/addresses.tpl';
 
     private $addressForm;
     private $use_same_address = true;
     private $show_delivery_address_form = false;
-    private $show_invoice_address_form  = false;
+    private $show_invoice_address_form = false;
     private $form_has_continue_button = false;
 
     public function __construct(
@@ -23,9 +23,9 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
     public function getDataToPersist()
     {
-        return [
-            'use_same_address' => $this->use_same_address
-        ];
+        return array(
+            'use_same_address' => $this->use_same_address,
+        );
     }
 
     public function restorePersistedData(array $data)
@@ -33,15 +33,16 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         if (array_key_exists('use_same_address', $data)) {
             $this->use_same_address = $data['use_same_address'];
         }
+
         return $this;
     }
 
-    public function handleRequest(array $requestParams = [])
+    public function handleRequest(array $requestParams = array())
     {
         $this->addressForm->setAction($this->getCheckoutSession()->getCheckoutURL());
 
         if (array_key_exists('use_same_address', $requestParams)) {
-            $this->use_same_address = (bool)$requestParams['use_same_address'];
+            $this->use_same_address = (bool) $requestParams['use_same_address'];
             if (!$this->use_same_address) {
                 $this->step_is_current = true;
             }
@@ -70,10 +71,10 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         }
 
         // Can't really hurt to set the firstname and lastname.
-        $this->addressForm->fillWith([
+        $this->addressForm->fillWith(array(
             'firstname' => $this->getCheckoutSession()->getCustomer()->firstname,
-            'lastname'  => $this->getCheckoutSession()->getCustomer()->lastname
-        ]);
+            'lastname' => $this->getCheckoutSession()->getCustomer()->lastname,
+        ));
 
         if (isset($requestParams['saveAddress'])) {
             $saved = $this->addressForm->fillWith($requestParams)->submit();
@@ -125,14 +126,14 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 Tools::getToken(true, $this->context)
             );
 
-            if ($addressPersister->delete(new Address((int)Tools::getValue('id_address'), $this->context->language->id), Tools::getValue('token'))) {
-                $this->context->controller->success[] = $this->getTranslator()->trans('Address successfully deleted!', [], 'Checkout');
+            if ($addressPersister->delete(new Address((int) Tools::getValue('id_address'), $this->context->language->id), Tools::getValue('token'))) {
+                $this->context->controller->success[] = $this->getTranslator()->trans('Address successfully deleted!', array(), 'Checkout');
                 $this->context->controller->redirectWithNotifications(
                     $this->getCheckoutSession()->getCheckoutURL()
                 );
             } else {
                 $this->getCheckoutProcess()->setHasErrors(true);
-                $this->context->controller->errors[] = $this->getTranslator()->trans('Could not delete address.', [], 'Checkout');
+                $this->context->controller->errors[] = $this->getTranslator()->trans('Could not delete address.', array(), 'Checkout');
             }
         }
 
@@ -166,7 +167,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Addresses',
-                [],
+                array(),
                 'Checkout'
             )
         );
@@ -176,29 +177,29 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
     public function getTemplateParameters()
     {
-        return [
-            'address_form'          => $this->addressForm->getProxy(),
-            'use_same_address'      => $this->use_same_address,
-            'use_same_address'      => $this->use_same_address,
-            'use_different_address_url' => $this->context->link->getPageLink('order', true, null, ['use_same_address' => 0]),
-            'new_address_delivery_url' => $this->context->link->getPageLink('order', true, null, ['newAddress' => 'delivery']),
-            'new_address_invoice_url' => $this->context->link->getPageLink('order', true, null, ['newAddress' => 'invoice']),
-            'id_address_delivery'   => $this
+        return array(
+            'address_form' => $this->addressForm->getProxy(),
+            'use_same_address' => $this->use_same_address,
+            'use_same_address' => $this->use_same_address,
+            'use_different_address_url' => $this->context->link->getPageLink('order', true, null, array('use_same_address' => 0)),
+            'new_address_delivery_url' => $this->context->link->getPageLink('order', true, null, array('newAddress' => 'delivery')),
+            'new_address_invoice_url' => $this->context->link->getPageLink('order', true, null, array('newAddress' => 'invoice')),
+            'id_address_delivery' => $this
                                         ->getCheckoutSession()
                                         ->getIdAddressDelivery(),
-            'id_address_invoice'    => $this
+            'id_address_invoice' => $this
                                         ->getCheckoutSession()
                                         ->getIdAddressInvoice(),
             'show_delivery_address_form' => $this->show_delivery_address_form,
-            'show_invoice_address_form'  => $this->show_invoice_address_form,
-            'form_has_continue_button'   => $this->form_has_continue_button
-        ];
+            'show_invoice_address_form' => $this->show_invoice_address_form,
+            'form_has_continue_button' => $this->form_has_continue_button,
+        );
     }
 
-    public function render(array $extraParams = [])
+    public function render(array $extraParams = array())
     {
         return $this->renderTemplate(
-            $this->template, $extraParams, $this->getTemplateParameters()
+            $this->getTemplate(), $extraParams, $this->getTemplateParameters()
         );
     }
 }

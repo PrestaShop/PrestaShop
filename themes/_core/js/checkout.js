@@ -72,6 +72,9 @@ function setupCheckoutScripts () {
     $('.-js-current, .-current').removeClass('-js-current -current');
     $(event.target).closest('.checkout-step').toggleClass('-js-current');
   });
+  $('body').on('click', '.checkout-step.-unreachable h1', function (event) {
+    $('button.continue').last().click();
+  });
 
   collapsePaymentOptions();
 

@@ -17,10 +17,10 @@ class DeliveryOptionsFinderCore
         ObjectPresenter $objectPresenter,
         PriceFormatter $priceFormatter
     ) {
-        $this->context         = $context;
+        $this->context = $context;
         $this->objectPresenter = $objectPresenter;
-        $this->translator      = $translator;
-        $this->priceFormatter  = $priceFormatter;
+        $this->translator = $translator;
+        $this->priceFormatter = $priceFormatter;
     }
 
     private function isFreeShipping($cart, array $carrier)
@@ -49,7 +49,7 @@ class DeliveryOptionsFinderCore
     public function getDeliveryOptions()
     {
         $delivery_option_list = $this->context->cart->getDeliveryOptionList();
-        $include_taxes = !Product::getTaxCalculationMethod((int)$this->context->cart->id_customer) && (int)Configuration::get('PS_TAX');
+        $include_taxes = !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer) && (int) Configuration::get('PS_TAX');
         $display_taxes_label = (Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'));
 
         $carriers_available = array();
@@ -65,7 +65,7 @@ class DeliveryOptionsFinderCore
                             $carrier['delay'] = $delay;
                             if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
                                 $carrier['price'] = $this->translator->trans(
-                                    'Free', [], 'Carrier'
+                                    'Free', array(), 'Carrier'
                                 );
                             } else {
                                 if ($include_taxes) {
@@ -73,7 +73,7 @@ class DeliveryOptionsFinderCore
                                     if ($display_taxes_label) {
                                         $carrier['price'] = sprintf(
                                             $this->translator->trans(
-                                                '%s tax incl.', [], 'Carrier'
+                                                '%s tax incl.', array(), 'Carrier'
                                             ),
                                             $carrier['price']
                                         );
@@ -83,7 +83,7 @@ class DeliveryOptionsFinderCore
                                     if ($display_taxes_label) {
                                         $carrier['price'] = sprintf(
                                             $this->translator->trans(
-                                                '%s tax excl.', [], 'Carrier'
+                                                '%s tax excl.', array(), 'Carrier'
                                             ),
                                             $carrier['price']
                                         );
@@ -103,6 +103,7 @@ class DeliveryOptionsFinderCore
                 }
             }
         }
+
         return $carriers_available;
     }
 }

@@ -7,7 +7,7 @@ class CheckoutProcessCore implements RenderableInterface
 {
     private $smarty;
     private $checkoutSession;
-    private $steps = [];
+    private $steps = array();
     private $has_errors;
 
     private $template = 'checkout/checkout-process.tpl';
@@ -26,7 +26,7 @@ class CheckoutProcessCore implements RenderableInterface
         return $this->template;
     }
 
-    public function handleRequest(array $requestParameters = [])
+    public function handleRequest(array $requestParameters = array())
     {
         foreach ($this->getSteps() as $step) {
             $step->handleRequest($requestParameters);
@@ -56,23 +56,24 @@ class CheckoutProcessCore implements RenderableInterface
     public function setTemplate($templatePath)
     {
         $this->template = $templatePath;
+
         return $this;
     }
 
-    public function render(array $extraParams = [])
+    public function render(array $extraParams = array())
     {
         $scope = $this->smarty->createData(
             $this->smarty
         );
 
-        $params = [
+        $params = array(
             'steps' => array_map(function (CheckoutStepInterface $step) {
-                return [
+                return array(
                     'identifier' => $step->getIdentifier(),
-                    'ui'         => new RenderableProxy($step)
-                ];
-            }, $this->getSteps())
-        ];
+                    'ui' => new RenderableProxy($step),
+                );
+            }, $this->getSteps()),
+        );
 
         $scope->assign(array_merge($extraParams, $params));
 
@@ -87,6 +88,7 @@ class CheckoutProcessCore implements RenderableInterface
     public function setHasErrors($has_errors = true)
     {
         $this->has_errors = $has_errors;
+
         return $this;
     }
 
@@ -97,17 +99,18 @@ class CheckoutProcessCore implements RenderableInterface
 
     public function getDataToPersist()
     {
-        $data = [];
+        $data = array();
         foreach ($this->getSteps() as $step) {
-            $defaultStepData = [
+            $defaultStepData = array(
                 'step_is_reachable' => $step->isReachable(),
-                'step_is_complete'  => $step->isComplete()
-            ];
+                'step_is_complete' => $step->isComplete(),
+            );
 
             $stepData = array_merge($defaultStepData, $step->getDataToPersist());
 
             $data[$step->getIdentifier()] = $stepData;
         }
+
         return $data;
     }
 
@@ -124,6 +127,8 @@ class CheckoutProcessCore implements RenderableInterface
                 ;
             }
         }
+
+        return $this;
     }
 
     public function setNextStepReachable()
@@ -137,6 +142,7 @@ class CheckoutProcessCore implements RenderableInterface
                 break;
             }
         }
+
         return $this;
     }
 
@@ -154,15 +160,15 @@ class CheckoutProcessCore implements RenderableInterface
         }
 
         foreach ($steps as $position => $step) {
-            $nextStep = $position < count($steps) - 1 ?
-                $steps[$position + 1] :
-                null
-            ;
+            $nextStep = ($position < count($steps) - 1) ? $steps[$position + 1] : null;
 
             if ($step->isReachable() && (!$step->isComplete() || ($nextStep && !$nextStep->isReachable()))) {
                 $step->setCurrent(true);
+
                 return $this;
             }
         }
+
+        return $this;
     }
 }

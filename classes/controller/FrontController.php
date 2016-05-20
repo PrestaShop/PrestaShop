@@ -398,6 +398,8 @@ class FrontControllerCore extends Controller
             $this->context->cart = $cart;
         }
 
+        $this->context->cart->checkAndUpdateAddresses();
+
         $this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
         // Automatically redirect to the canonical URL if needed

@@ -1823,6 +1823,9 @@
 	    (0, _jquery2['default'])('.-js-current, .-current').removeClass('-js-current -current');
 	    (0, _jquery2['default'])(event.target).closest('.checkout-step').toggleClass('-js-current');
 	  });
+	  (0, _jquery2['default'])('body').on('click', '.checkout-step.-unreachable h1', function (event) {
+	    (0, _jquery2['default'])('button.continue').last().click();
+	  });
 	
 	  collapsePaymentOptions();
 	

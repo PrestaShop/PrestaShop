@@ -39,6 +39,7 @@ class CheckoutSessionCore
         $this->context->cart->updateAddressId($this->context->cart->id_address_delivery, $id_address);
         $this->context->cart->id_address_delivery = $id_address;
         $this->context->cart->save();
+
         return $this;
     }
 
@@ -46,6 +47,7 @@ class CheckoutSessionCore
     {
         $this->context->cart->id_address_invoice = $id_address;
         $this->context->cart->save();
+
         return $this;
     }
 
@@ -62,6 +64,7 @@ class CheckoutSessionCore
     public function setDeliveryOption($option)
     {
         $this->context->cart->setDeliveryOption($option);
+
         return $this->context->cart->update();
     }
 
@@ -77,7 +80,8 @@ class CheckoutSessionCore
 
     public function setRecyclable($option)
     {
-        $this->context->cart->recyclable = (int)$option;
+        $this->context->cart->recyclable = (int) $option;
+
         return $this->context->cart->update();
     }
 
@@ -88,7 +92,7 @@ class CheckoutSessionCore
 
     public function setGift($gift, $gift_message)
     {
-        $this->context->cart->gift = (int)$gift;
+        $this->context->cart->gift = (int) $gift;
         $this->context->cart->gift_message = $gift_message;
 
         return $this->context->cart->update();
@@ -96,10 +100,10 @@ class CheckoutSessionCore
 
     public function getGift()
     {
-        return [
-            'isGift'    => $this->context->cart->gift,
-            'message'   => $this->context->cart->gift_message
-        ];
+        return array(
+            'isGift' => $this->context->cart->gift,
+            'message' => $this->context->cart->gift_message,
+        );
     }
 
     public function isGuestAllowed()

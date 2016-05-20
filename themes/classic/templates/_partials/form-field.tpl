@@ -14,7 +14,7 @@
 
       {if $field.type === 'select'}
 
-        <select {if $field.required}required{/if} name="{$field.name}" class="form-control form-control-select">
+        <select class="form-control form-control-select" name="{$field.name}" {if $field.required}required{/if}>
           <option value disabled selected>{l s='-- please choose --'}</option>
           {foreach from=$field.availableValues item="label" key="value"}
             <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
@@ -26,7 +26,13 @@
         {foreach from=$field.availableValues item="label" key="value"}
           <label class="radio-inline">
             <span class="custom-radio">
-              <input name="{$field.name}" type="radio" value="{$value}" {if $field.required}required{/if} {if $value eq $field.value} checked {/if}>
+              <input
+                name="{$field.name}"
+                type="radio"
+                value="{$value}"
+                {if $field.required}required{/if}
+                {if $value eq $field.value} checked {/if}
+              >
               <span></span>
             </span>
             {$label}
@@ -36,30 +42,51 @@
       {elseif $field.type === 'checkbox'}
 
         <span class="custom-checkbox">
-          <input type="checkbox" value="{$field.value}" name="{$field.name}" {if $field.required}required{/if}>
+          <input name="{$field.name}" type="checkbox" value="{$field.value}" {if $field.required}required{/if}>
           <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
           <label>{$field.label}</label>
         </span>
 
       {elseif $field.type === 'date'}
 
-        <input type="text" class="form-control" placeholder="MM/DD/YYYY">
+        <input class="form-control" type="text" placeholder="MM/DD/YYYY">
         <span class="form-control-comment">
           {l s='(Ex.:31/05/1970)'}
         </span>
 
-      {elseif $field.type === 'email'}
-
-        <input type="email" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required}required{/if}>
-
       {elseif $field.type === 'password'}
 
-        <input type="password" pattern=".{literal}{{/literal}5,{literal}}{/literal}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.required}required{/if}>
-
+        <div class="input-group js-parent-focus">
+          <input
+            class="form-control js-child-focus js-visible-password"
+            name="{$field.name}"
+            type="password"
+            value=""
+            pattern=".{literal}{{/literal}5,{literal}}{/literal}"
+            {if $field.required}required{/if}
+          >
+          <span class="input-group-btn">
+            <button
+              class="btn"
+              type="button"
+              data-action="show-password"
+              data-text-show="{l s='Show'}"
+              data-text-hide="{l s='Hide'}"
+            >
+              {l s='Show'}
+            </button>
+          </span>
+        </div>
       {else}
 
-        <input type="{$field.type}" class="form-control" value="{$field.value}" name="{$field.name}" {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
-          {if $field.required}required{/if}>
+        <input
+          class="form-control"
+          name="{$field.name}"
+          type="{$field.type}"
+          value="{$field.value}"
+          {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
+          {if $field.required}required{/if}
+        >
 
       {/if}
 
