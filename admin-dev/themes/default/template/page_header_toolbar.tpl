@@ -32,7 +32,7 @@
 {/if}
 
 <div class="bootstrap">
-	<div class="page-head {if $current_tab_level == 3}with-tabs{/if}">
+	<div class="page-head {if isset($current_tab_level) && $current_tab_level == 3}with-tabs{/if}">
 		{block name=pageTitle}
 		<h2 class="page-title">
 			{*if isset($toolbar_btn['back'])}
@@ -128,7 +128,7 @@
 			</div>
 		</div>
 		{/block}
-		{if $current_tab_level == 3}
+		{if isset($current_tab_level) && $current_tab_level == 3}
 			<div class="page-head-tabs">
 				{foreach $tabs as $level_1}
 					{foreach $level_1.sub_tabs as $level_2}
