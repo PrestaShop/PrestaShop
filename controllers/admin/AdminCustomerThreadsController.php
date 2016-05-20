@@ -192,6 +192,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         'hint' => $this->l('Create new threads for unrecognized emails.'),
                         'type' => 'bool',
                     ),
+                    'PS_SAV_IMAP_OPT_POP3' => array(
+                        'title' => $this->l('IMAP options').' (/pop3)',
+                        'hint' => $this->l('Use POP3 instead of IMAP.'),
+                        'type' => 'bool'
+                    ),
                     'PS_SAV_IMAP_OPT_NORSH' => array(
                         'title' => $this->l('IMAP options').' (/norsh)',
                         'type' => 'bool',
@@ -942,11 +947,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         $conf = Configuration::getMultiple(array(
-            'PS_SAV_IMAP_OPT_NORSH', 'PS_SAV_IMAP_OPT_SSL',
+            'PS_SAV_IMAP_OPT_POP3', 'PS_SAV_IMAP_OPT_NORSH', 'PS_SAV_IMAP_OPT_SSL',
             'PS_SAV_IMAP_OPT_VALIDATE-CERT', 'PS_SAV_IMAP_OPT_NOVALIDATE-CERT',
             'PS_SAV_IMAP_OPT_TLS', 'PS_SAV_IMAP_OPT_NOTLS'));
 
         $conf_str = '';
+        if ($conf['PS_SAV_IMAP_OPT_POP3']) {
+            $conf_str .= '/pop3';
+        }
         if ($conf['PS_SAV_IMAP_OPT_NORSH']) {
             $conf_str .= '/norsh';
         }
@@ -1086,10 +1094,25 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     } //check if order exist in database
 
                     if (Validate::isLoadedObject($ct) && ((isset($matches2[1]) && $ct->token == $matches2[1]) || $new_ct)) {
-                        $message = imap_fetchbody($mbox, $overview->msgno, 1);
-                        $message = quoted_printable_decode($message);
-                        $message = utf8_encode($message);
-                        $message = quoted_printable_decode($message);
+                        $structure = imap_bodystruct($mbox, $overview->msgno, '1');
+                        if ($structure->type == 0) {
+                            $message = imap_fetchbody($mbox, $overview->msgno, '1');
+                        } elseif ($structure->type == 1) {
+                            $structure = imap_bodystruct($mbox, $overview->msgno, '1.1');
+                            $message = imap_fetchbody($mbox, $overview->msgno, '1.1');
+                        } else {
+                            continue;
+                        }
+
+                        switch ($structure->encoding) {
+                            case 3:
+                                $message = imap_base64($message);
+                                break;
+                            case 4:
+                                $message = imap_qprint($message);
+                                break;
+                        }
+                        $message = iconv($this->getEncoding($structure), 'utf-8', $message);
                         $message = nl2br($message);
                         if (!$message || strlen($message)==0) {
                             $message_errors[] = Tools::displayError('The message body is empty, cannot import it.');
@@ -1131,4 +1154,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
             return array('hasError' => false, 'errors' => '');
         }
     }
+
+	protected function getEncoding($structure)
+	{
+		foreach ($structure->parameters as $parameter) {
+			if ($parameter->attribute == 'CHARSET') {
+				return $parameter->value;
+			}
+		}
+		return 'utf-8';
+	}
 }
