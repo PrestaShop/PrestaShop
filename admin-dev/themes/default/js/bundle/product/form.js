@@ -1676,18 +1676,20 @@ var seo = (function() {
 
       /** Update friendly URL */
       var updateFriendlyUrl = function(elem) {
-        var id_lang = elem.attr('name').match(/\d+/)[0];
+        /** Attr name equals "form[step1][name][1]".
+         * We need in this string the second integer */
+        var id_lang = elem.attr('name').match(/\d+/g)[1];
         $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
       };
 
       /** On product title change, update friendly URL*/
-      $('.form-input-title input').keydown(function() {
+      $('#form_step1_names.friendly-url-force-update input').keyup(function() {
         updateFriendlyUrl($(this));
       });
 
       /** Reset all languages title to friendly url*/
       $('#seo-url-regenerate').click(function() {
-        $.each($('.form-input-title input'), function() {
+        $.each($('#form_step1_names input'), function() {
           updateFriendlyUrl($(this));
         });
       });
