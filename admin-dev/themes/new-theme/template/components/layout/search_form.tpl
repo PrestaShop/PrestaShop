@@ -37,7 +37,7 @@
     <input id="bo_query" name="bo_query" type="search" class="form-control dropdown-form-search js-form-search" value="{$bo_query}" placeholder="{l s='Search (e.g.: product reference, customer name…)'}" />
     <div class="input-group-addon">
       <div class="dropdown">
-        <span class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="dropdown-toggle js-dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
           {l s='Everywhere'}
         </span>
         <div class="dropdown-menu" aria-labelledby="dropdownMenu">
@@ -59,7 +59,7 @@
             </li>
             <li class="search-customers-addresses search-option">
               <a class="dropdown-item" data-item="{l s='Customers'} {l s='by ip address'}" href="#" data-value="6" data-placeholder="{l s='123.45.67.89'}" data-icon="icon-desktop">
-                <i class="material-icons">desktop_windows</i>{l s='Customers'} {l s='by ip address'}</a>
+                <i class="material-icons">desktop_windows</i>{l s='Customers'} {l s='by IP address'}</a>
             </li>
             <li class="search-orders search-option">
               <a class="dropdown-item" data-item="{l s='Orders'}" href="#" data-value="3" data-placeholder="{l s='Order ID'}" data-icon="icon-credit-card">

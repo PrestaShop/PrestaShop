@@ -102,11 +102,7 @@ export default class Header {
     $('.js-items-list').on('click', (e) => {
       $('.js-form-search').attr('placeholder', $(e.target).data('placeholder'));
       $('.js-search-type').val($(e.target).data('value'));
-    });
-    $('.js-form-search').on('focusin', (e) => {
-      if (!$(e.target).hasClass('expanded')) {
-        $(e.target).addClass('expanded');
-      }
+      $('.js-dropdown-toggle').text($(e.target).data('item'));
     });
   }
 
