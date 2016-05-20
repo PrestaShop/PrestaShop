@@ -90,23 +90,34 @@
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div id="attributes-list" class="col-md-3">
     {% for attribute_group in attribute_groups %}
       <div class="attribute-group">
-        <a data-toggle="collapse" href="#attribute-group-{{ attribute_group.id }}" aria-expanded="false">
+        <a
+          class="attribute-group-name"
+          data-toggle="collapse"
+          href="#attribute-group-{{ attribute_group.id }}"
+          aria-expanded="false"
+        >
           {{ attribute_group.name }}
         </a>
-        <div class="collapse in" id="attribute-group-{{ attribute_group.id }}">
+        <div class="collapse {% if loop.index <= 3 %} in {% endif %} attributes {% if attribute_group.attributes|length > 7 %} two-columns {% endif %}" id="attribute-group-{{ attribute_group.id }}">
           {% for attribute in attribute_group.attributes %}
-            <div class="checkbox">
-              <label>
-                <input
-                  class="js-attribute-checkbox"
-                  data-label="{{ attribute_group.name }} : {{ attribute.name }}"
-                  data-value="{{ attribute.id }}"
-                  type="checkbox"
+            <div class="attribute">
+              <input
+                class="js-attribute-checkbox"
+                id="attribute-{{ attribute.id }}"
+                data-label="{{ attribute_group.name }} : {{ attribute.name }}"
+                data-value="{{ attribute.id }}"
+                type="checkbox"
+              >
+              <label class="attribute-label" for="attribute-{{ attribute.id }}">
+                <span
+                  class="pretty-checkbox {% if attribute.color is empty %} not-color {% endif %}"
+                  {% if attribute.color is not empty %} style="background-color: {{ attribute.color }}" {% endif %}
                 >
-                 {{ attribute.name }}
+                </span>
+                {{ attribute.name }}
               </label>
             </div>
           {% endfor %}
