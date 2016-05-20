@@ -63,8 +63,8 @@
   <tab id="Marketing" name="行銷"/>
   <tab id="Menus" name="選單"/>
   <tab id="Merchandise_Returns" name="退貨"/>
-  <tab id="Modules_1" name="模組"/>
-  <tab id="Modules" name="模組"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="追蹤"/>
   <tab id="Multistore" name="多商店"/>
   <tab id="Order_Messages" name="訂單訊息"/>

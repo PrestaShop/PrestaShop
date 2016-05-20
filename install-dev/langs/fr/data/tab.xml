@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menus"/>
   <tab id="Merchandise_Returns" name="Retours produits"/>
-  <tab id="Modules_1" name="Modules et Services"/>
-  <tab id="Modules" name="Modules et Services"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Suivi"/>
   <tab id="Multistore" name="Multiboutique"/>
   <tab id="Order_Messages" name="Messages prédéfinis"/>

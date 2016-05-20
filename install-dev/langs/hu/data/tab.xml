@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menük"/>
   <tab id="Merchandise_Returns" name="Áru visszatérítések"/>
-  <tab id="Modules_1" name="Modules and Services"/>
-  <tab id="Modules" name="Modules and Services"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Monitoring"/>
   <tab id="Multistore" name="Multi"/>
   <tab id="Order_Messages" name="Order Messages"/>

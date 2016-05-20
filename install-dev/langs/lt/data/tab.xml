@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Marketingas"/>
   <tab id="Menus" name="Meniu"/>
   <tab id="Merchandise_Returns" name="Prekių grąžinimai"/>
-  <tab id="Modules_1" name="Moduliai ir paslaugos"/>
-  <tab id="Modules" name="Moduliai"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Kontrolė"/>
   <tab id="Multistore" name="MultiParduotuvė"/>
   <tab id="Order_Messages" name="Užsakymo pranešimai"/>

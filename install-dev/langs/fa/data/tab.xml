@@ -63,8 +63,8 @@
   <tab id="Marketing" name="بازاریابی"/>
   <tab id="Menus" name="منوها"/>
   <tab id="Merchandise_Returns" name="بازگشت‌های کالا"/>
-  <tab id="Modules" name="ماژول‌ها"/>
-  <tab id="Modules_1" name="ماژول ها و سرویس ها"/>
+  <tab id="Modules" name="Modules" />
+  <tab id="Modules_1" name="Modules" />
   <tab id="Monitoring" name="بازرسی"/>
   <tab id="Multistore" name="چند فروشگاهی"/>
   <tab id="Order_Messages" name="پیام‌های سفارش"/>

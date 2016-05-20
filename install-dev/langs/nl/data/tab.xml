@@ -64,8 +64,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menu's"/>
   <tab id="Merchandise_Returns" name="Retourzendingen"/>
-  <tab id="Modules_1" name="Modules en services"/>
-  <tab id="Modules" name="Modules"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Monitoring"/>
   <tab id="Multistore" name="Multistore"/>
   <tab id="Order_Messages" name="Bestellingsberichten"/>

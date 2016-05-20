@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Nabídky (menu)"/>
   <tab id="Merchandise_Returns" name="Vrácení zboží"/>
-  <tab id="Modules" name="Moduly a Služby"/>
-  <tab id="Modules_1" name="Moduly a Služby"/>
+  <tab id="Modules" name="Modules" />
+  <tab id="Modules_1" name="Modules" />
   <tab id="Monitoring" name="Monitorování"/>
   <tab id="Multistore" name="Obchody Multistore"/>
   <tab id="Order_Messages" name="Zprávy k objednávkám"/>

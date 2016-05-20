@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Meniuri"/>
   <tab id="Merchandise_Returns" name="Returnări de marfă"/>
-  <tab id="Modules" name="Module"/>
-  <tab id="Modules_1" name="Module și servicii"/>
+  <tab id="Modules" name="Modules" />
+  <tab id="Modules_1" name="Modules" />
   <tab id="Monitoring" name="Monitorizare"/>
   <tab id="Multistore" name="Magazine multiple"/>
   <tab id="Order_Messages" name="Mesaje la comenzi"/>

@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Маркетинг"/>
   <tab id="Menus" name="Мени"/>
   <tab id="Merchandise_Returns" name="Враќање на производи"/>
-  <tab id="Modules_1" name="Модули"/>
-  <tab id="Modules" name="Модули"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Надзор"/>
   <tab id="Multistore" name="Синџир на продавници"/>
   <tab id="Order_Messages" name="Пораки за нарачки"/>

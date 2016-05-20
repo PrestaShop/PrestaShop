@@ -64,8 +64,8 @@
   <tab id='Marketing' name='বাযারজাতকরন'/>
   <tab id='Menus' name='মেনু'/>
   <tab id='Merchandise_Returns' name='পণ্যদ্রব্য ফেরত'/>
-  <tab id='Modules_1' name='মডিউল'/>
-  <tab id='Modules' name='মডিউল'/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id='Monitoring' name='নিয়ন্ত্রণ'/>
   <tab id='Multistore' name='মাল্টি স্টোর'/>
   <tab id='Order_Messages' name='অর্ডার এর মাসাআজ'/>

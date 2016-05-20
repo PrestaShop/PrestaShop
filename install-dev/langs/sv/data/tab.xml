@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Marknadsföring"/>
   <tab id="Menus" name="Flikar"/>
   <tab id="Merchandise_Returns" name="Varureturer"/>
-  <tab id="Modules_1" name="Moduler och Tjänster"/>
-  <tab id="Modules" name="Moduler"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Övervakning"/>
   <tab id="Multistore" name="Multibutiker"/>
   <tab id="Order_Messages" name="Ordermeddelanden"/>

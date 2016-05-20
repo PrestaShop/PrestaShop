@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Маркетинг"/>
   <tab id="Menus" name="Закладки"/>
   <tab id="Merchandise_Returns" name="Возвраты товаров"/>
-  <tab id="Modules_1" name="Модули и Сервисы"/>
-  <tab id="Modules" name="Модули"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Мониторинг"/>
   <tab id="Multistore" name="Мульти-магазин"/>
   <tab id="Order_Messages" name="Сообщения"/>

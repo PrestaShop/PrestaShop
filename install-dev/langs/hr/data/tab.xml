@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Kartice"/>
   <tab id="Merchandise_Returns" name="Povrat robe"/>
-  <tab id="Modules" name="Moduli"/>
-  <tab id="Modules_1" name="Moduli i servisi"/>
+  <tab id="Modules" name="Modules" />
+  <tab id="Modules_1" name="Modules" />
   <tab id="Monitoring" name="Nadzor"/>
   <tab id="Multistore" name="Više trgovina"/>
   <tab id="Order_Messages" name="Poruke narudžbe"/>

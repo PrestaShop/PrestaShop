@@ -49,8 +49,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menù"/>
   <tab id="Merchandise_Returns" name="Resi"/>
-  <tab id="Modules_1" name="Moduli e servizi"/>
-  <tab id="Modules" name="Moduli"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Modules_Themes_Catalog" name="Catalogo moduli e temi"/>
   <tab id="Monitoring" name="Monitoraggio"/>
   <tab id="Multistore" name="Multi-negozio"/>
