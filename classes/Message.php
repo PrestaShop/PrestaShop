@@ -66,6 +66,23 @@ class MessageCore extends ObjectModel
         ),
     );
 
+    protected $webserviceParameters = array(
+        'fields' => array(
+            'id_cart' => array(
+                'xlink_resource' => 'carts'
+            ),
+            'id_order' => array(
+                'xlink_resource' => 'orders'
+            ),
+            'id_customer' => array(
+                'xlink_resource' => 'customers'
+            ),
+            'id_employee' => array(
+                'xlink_resource' => 'employees'
+            ),
+        ),
+    );
+
     /**
      * Return the last message from cart
      *
