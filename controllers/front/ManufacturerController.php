@@ -40,6 +40,8 @@ class ManufacturerControllerCore extends ProductListingFrontController
     {
         if (Validate::isLoadedObject($this->manufacturer)) {
             parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));
+        } elseif ($canonicalURL) {
+            parent::canonicalRedirection($canonicalURL);
         }
     }
 
@@ -49,8 +51,6 @@ class ManufacturerControllerCore extends ProductListingFrontController
      */
     public function init()
     {
-        parent::init();
-
         if ($id_manufacturer = Tools::getValue('id_manufacturer')) {
             $this->manufacturer = new Manufacturer((int)$id_manufacturer, $this->context->language->id);
 
@@ -61,6 +61,8 @@ class ManufacturerControllerCore extends ProductListingFrontController
                 $this->canonicalRedirection();
             }
         }
+
+        parent::init();
     }
 
     /**
