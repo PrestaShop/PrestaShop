@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,15 +25,13 @@
  */
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to create a category selector using Nested sets
+ * This form class is responsible to create a category selector using Nested sets.
  */
 class ChoiceCategoriesTreeType extends CommonAbstractType
 {
@@ -65,9 +63,9 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
             'choices' => $options['valid_list'],
             'choices_as_values' => true,
             'required' => false,
-            'multiple'  => true,
-            'expanded'  => true,
-            'error_bubbling'  => true
+            'multiple' => true,
+            'expanded' => true,
+            'error_bubbling' => true,
         ));
     }
 
@@ -78,8 +76,8 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
     {
         $resolver->setDefaults(array(
             'label' => '',
-            'list' => [],
-            'valid_list' => [],
+            'list' => array(),
+            'valid_list' => array(),
             'multiple' => true,
         ));
     }

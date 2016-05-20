@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,10 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to generate the basic product Warehouse combinations form
+ * This form class is responsible to generate the basic product Warehouse combinations form.
  */
 class ProductWarehouseCombination extends CommonAbstractType
 {
@@ -40,7 +38,7 @@ class ProductWarehouseCombination extends CommonAbstractType
     private $contextLegacy;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -60,21 +58,21 @@ class ProductWarehouseCombination extends CommonAbstractType
     {
         $builder->add('activated', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
-            'label' => $this->translator->trans('Stored', [], 'AdminProducts')
+            'label' => $this->translator->trans('Stored', array(), 'AdminProducts'),
         ))
         ->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
         ->add('product_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
         ->add('warehouse_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
         ->add('location', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('Location (optional)', [], 'AdminProducts')
+            'label' => $this->translator->trans('Location (optional)', array(), 'AdminProducts'),
         ));
 
         //set default minimal values for collection prototype
-        $builder->setData([
+        $builder->setData(array(
             'warehouse_id' => $options['id_warehouse'],
             'warehouse_activated' => false,
-        ]);
+        ));
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to create a customer
+ * This form class is responsible to create a customer.
  */
 class TypeaheadCustomerCollectionType extends CommonAbstractType
 {
@@ -76,7 +76,7 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
                     'id' => $id,
                     'name' => $customer->firstname.' '.$customer->lastname.' - '.$customer->email,
                 );
-                $i++;
+                ++$i;
 
                 //if collection length is up to limit, break
                 if ($options['limit'] != 0 && $i >= $options['limit']) {
@@ -95,7 +95,7 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-            'entry_type' =>'Symfony\Component\Form\Extension\Core\Type\HiddenType',
+            'entry_type' => 'Symfony\Component\Form\Extension\Core\Type\HiddenType',
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,

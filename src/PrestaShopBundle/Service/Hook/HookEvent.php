@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -40,11 +40,13 @@ class HookEvent extends Event
      * Sets the Hook parameters.
      *
      * @param array Hook parameters.
+     *
      * @return $this, for fluent use of object.
      */
     public function setHookParameters($parameters)
     {
         $this->hookParameters = $parameters;
+
         return $this;
     }
 
@@ -60,7 +62,7 @@ class HookEvent extends Event
     public function getHookParameters()
     {
         return array_merge(array(
-            '_ps_version' => _PS_VERSION_
+            '_ps_version' => _PS_VERSION_,
         ), $this->hookParameters);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,8 +26,7 @@
 namespace PrestaShopBundle\Entity;
 
 /**
- * Class AdminFilter
- * @package PrestaShopBundle\Entity
+ * Class AdminFilter.
  */
 class AdminFilter
 {
@@ -39,9 +38,9 @@ class AdminFilter
     protected $filter;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -49,9 +48,9 @@ class AdminFilter
     }
 
     /**
-     * Set employee
+     * Set employee.
      *
-     * @param integer $employee
+     * @param int $employee
      *
      * @return AdminFilter
      */
@@ -63,9 +62,9 @@ class AdminFilter
     }
 
     /**
-     * Get employee
+     * Get employee.
      *
-     * @return integer
+     * @return int
      */
     public function getEmployee()
     {
@@ -73,9 +72,9 @@ class AdminFilter
     }
 
     /**
-     * Set shop
+     * Set shop.
      *
-     * @param integer $shop
+     * @param int $shop
      *
      * @return AdminFilter
      */
@@ -87,9 +86,9 @@ class AdminFilter
     }
 
     /**
-     * Get shop
+     * Get shop.
      *
-     * @return integer
+     * @return int
      */
     public function getShop()
     {
@@ -97,7 +96,7 @@ class AdminFilter
     }
 
     /**
-     * Set controller
+     * Set controller.
      *
      * @param string $controller
      *
@@ -111,7 +110,7 @@ class AdminFilter
     }
 
     /**
-     * Get controller
+     * Get controller.
      *
      * @return string
      */
@@ -121,7 +120,7 @@ class AdminFilter
     }
 
     /**
-     * Set action
+     * Set action.
      *
      * @param string $action
      *
@@ -135,7 +134,7 @@ class AdminFilter
     }
 
     /**
-     * Get action
+     * Get action.
      *
      * @return string
      */
@@ -145,7 +144,7 @@ class AdminFilter
     }
 
     /**
-     * Set filter
+     * Set filter.
      *
      * @param string $filter
      *
@@ -159,7 +158,7 @@ class AdminFilter
     }
 
     /**
-     * Get filter
+     * Get filter.
      *
      * @return string
      */
@@ -189,7 +188,7 @@ class AdminFilter
             'last_offset' => 0,
             'last_limit' => 20,
             'last_orderBy' => 'id_product',
-            'last_sortOrder' => 'asc'
+            'last_sortOrder' => 'asc',
         );
     }
 
@@ -198,11 +197,13 @@ class AdminFilter
      *
      * The data is decoded and filled with empty strings if there is no value on each entry
      * .
+     *
      * @return array
      */
     public function getProductCatalogFilter()
     {
         $decoded = json_decode($this->getFilter(), true);
+
         return array_merge(
             $this->getProductCatalogEmptyFilter(),
             $decoded
@@ -215,6 +216,7 @@ class AdminFilter
      * Filters input data to keep only Product catalog filters, and encode it.
      *
      * @param $filter
+     *
      * @return AdminFilter tis object for fluent chaining.
      */
     public function setProductCatalogFilter($filter)
@@ -223,6 +225,7 @@ class AdminFilter
             $filter,
             $this->getProductCatalogEmptyFilter()
         );
+
         return $this->setFilter(json_encode($filter));
     }
 }

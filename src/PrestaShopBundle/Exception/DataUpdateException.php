@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -40,13 +40,13 @@ class DataUpdateException extends \Exception
     public $failedIds;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param string $datatype
-     * @param integer[] $failedIds
-     * @param string $message optional
-     * @param integer $code optional
-     * @param Exception $previous optional
+     * @param string    $datatype
+     * @param int[]     $failedIds
+     * @param string    $message   optional
+     * @param int       $code      optional
+     * @param Exception $previous  optional
      */
     public function __construct($dataType, $failedIds = null, $message = null, $code = null, \Exception $previous = null)
     {

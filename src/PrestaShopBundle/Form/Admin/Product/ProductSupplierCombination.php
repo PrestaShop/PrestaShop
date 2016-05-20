@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,11 +28,10 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to generate the basic product suppliers form
+ * This form class is responsible to generate the basic product suppliers form.
  */
 class ProductSupplierCombination extends CommonAbstractType
 {
@@ -41,7 +40,7 @@ class ProductSupplierCombination extends CommonAbstractType
     private $currencyAdapter;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $contextLegacy
@@ -63,17 +62,17 @@ class ProductSupplierCombination extends CommonAbstractType
     {
         $builder->add('supplier_reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => null
+            'label' => null,
         ))
         ->add('product_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
-            )
+                new Assert\Type(array('type' => 'float')),
+            ),
         ))
         ->add('product_price_currency', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices'  => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
+            'choices' => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
             'choices_as_values' => true,
             'required' => true,
         ))
@@ -82,11 +81,11 @@ class ProductSupplierCombination extends CommonAbstractType
         ->add('supplier_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType');
 
         //set default minimal values for collection prototype
-        $builder->setData([
+        $builder->setData(array(
             'product_price' => 0,
             'supplier_id' => $options['id_supplier'],
             'product_price_currency' => $this->contextLegacy->currency->id,
-        ]);
+        ));
     }
     /**
      * {@inheritdoc}

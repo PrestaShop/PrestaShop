@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Twig;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * This class is used by Twig_Environment and provide some methods callable from a twig template
+ * This class is used by Twig_Environment and provide some methods callable from a twig template.
  *
  * WARNING : TO ENSURE TRANS PARSER WILL FIND YOUR MESSAGE, you cannot use variables for $id and $domain.
  */
@@ -38,10 +38,10 @@ class TranslationExtension extends \Twig_Extension
     private $prestashopTranslator;
 
     /**
-     * Constructor : Inject Symfony\Component\Translation Translator
+     * Constructor : Inject Symfony\Component\Translation Translator.
      *
      * @param TranslatorInterface $translator
-     * @param object $prestashopTranslator
+     * @param object              $prestashopTranslator
      */
     public function __construct(TranslatorInterface $translator, $prestashopTranslator)
     {
@@ -56,16 +56,16 @@ class TranslationExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('trans', array($this, 'trans')),
-            new \Twig_SimpleFunction('transchoice', array($this, 'transchoice'))
+            new \Twig_SimpleFunction('transchoice', array($this, 'transchoice')),
         );
     }
 
     /**
-     * This method wrap the Tools::displayError legacy method
+     * This method wrap the Tools::displayError legacy method.
      *
-     * @param string $message The string to translate
-     * @param array $arguments An array of parameters for the message
-     * @param string|null $domain The domain for the message or null to use the default. This value can not be passed with a variable
+     * @param string      $message   The string to translate
+     * @param array       $arguments An array of parameters for the message
+     * @param string|null $domain    The domain for the message or null to use the default. This value can not be passed with a variable
      *
      * @return string The translated string
      */
@@ -75,12 +75,12 @@ class TranslationExtension extends \Twig_Extension
     }
 
     /**
-     * Translates the given message
+     * Translates the given message.
      *
-     * @param string $message The string to translate. This value can not be passed with a variable
-     * @param array $arguments An array of parameters for the message
-     * @param string|null $domain The domain for the message or null to use the default. This value can not be passed with a variable
-     * @param string|null $locale The locale or null to use the default
+     * @param string      $message   The string to translate. This value can not be passed with a variable
+     * @param array       $arguments An array of parameters for the message
+     * @param string|null $domain    The domain for the message or null to use the default. This value can not be passed with a variable
+     * @param string|null $locale    The locale or null to use the default
      *
      * @return string The translated string
      */
@@ -95,13 +95,13 @@ class TranslationExtension extends \Twig_Extension
     }
 
     /**
-     * Translates the given message by choosing a translation according to a number
+     * Translates the given message by choosing a translation according to a number.
      *
-     * @param string $message The string to translate. This value can not be passed with a variable
-     * @param int $count The number to use to find the indice of the message
-     * @param array $arguments An array of parameters for the message
-     * @param string|null $domain The domain for the message or null to use the default. This value can not be passed with a variable
-     * @param string|null $locale The locale or null to use the default
+     * @param string      $message   The string to translate. This value can not be passed with a variable
+     * @param int         $count     The number to use to find the indice of the message
+     * @param array       $arguments An array of parameters for the message
+     * @param string|null $domain    The domain for the message or null to use the default. This value can not be passed with a variable
+     * @param string|null $locale    The locale or null to use the default
      *
      * @return string The translated string
      */

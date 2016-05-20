@@ -141,7 +141,8 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
+      "composer git-hook-install"
     ],
     "post-update-cmd": [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
@@ -156,7 +157,8 @@
     "git-hook-uninstall": "php tools/contrib/uninstall.php",
     "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
     "phpunit-sf": "php bin/phpunit -c admin-dev/",
-    "phpdoc-sf": "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d src -t docs/phpdoc-sf --template=\"responsive-twig\""
+    "phpdoc-sf": "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d src -t docs/phpdoc-sf --template=\"responsive-twig\"",
+    "fix-standards": "php bin/php-cs-fixer fix --level=symfony --fixers=long_array_syntax"
   },
   "config": {
     "bin-dir": "bin"

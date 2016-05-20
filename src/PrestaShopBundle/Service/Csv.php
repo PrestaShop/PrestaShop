@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,7 @@
 namespace PrestaShopBundle\Service;
 
 /**
- * CSV tools and common features on CSV format import/export
+ * CSV tools and common features on CSV format import/export.
  */
 class Csv
 {
@@ -57,12 +57,12 @@ class Csv
      * may have its own limitation in time (or in file size).
      * So the maximum amount of data the user will be able to export will be limited by the connection speed and the host limitations.
      *
-     * @param callable $dataCallback The callable will take 2 parameters: {offset, limit} and must return 2D indexed array containing data to export in the CSV. The columns will be fetched with the $headers keys.
-     * @param array[string:string] $headers An indexed array of column. Keys are used to fetch data in the $dataCallback results, and values are used to fill the first CSV row (CSV headers)
-     * @param int $limitPerPage This is the size of a page that will be fetch through the callback call. Reduce this value if there is memory problems
-     * @param string $fileName The name of the file that will be downloaded by the browser
-     * @param int $timeLimit The time limit to execute the export, in seconds.
-     * @param boolean $windowsCRLF True to use windows \ r \ n line break instead of classical \ n.
+     * @param callable             $dataCallback The callable will take 2 parameters: {offset, limit} and must return 2D indexed array containing data to export in the CSV. The columns will be fetched with the $headers keys.
+     * @param array[string:string] $headers      An indexed array of column. Keys are used to fetch data in the $dataCallback results, and values are used to fill the first CSV row (CSV headers)
+     * @param int                  $limitPerPage This is the size of a page that will be fetch through the callback call. Reduce this value if there is memory problems
+     * @param string               $fileName     The name of the file that will be downloaded by the browser
+     * @param int                  $timeLimit    The time limit to execute the export, in seconds.
+     * @param bool                 $windowsCRLF  True to use windows \ r \ n line break instead of classical \ n.
      */
     public function exportData($dataCallback, $headers, $limitPerPage, $fileName, $timeLimit = 0, $windowsCRLF = false)
     {
@@ -95,12 +95,12 @@ class Csv
             }
 
             // Write csv file into memory and send it to buffer.
-            $fd = fopen('php://temp/maxmemory:'.(1024*1024), 'wb'); // stays in memory, but if exceeds 1MB, then use temporary file on the filesystem.
+            $fd = fopen('php://temp/maxmemory:'.(1024 * 1024), 'wb'); // stays in memory, but if exceeds 1MB, then use temporary file on the filesystem.
 
             foreach ($data as $item) {
-                $line = [];
+                $line = array();
                 foreach (array_keys($headers) as $column) {
-                    $line[] = array_key_exists($column, $item)? $item[$column] : '';
+                    $line[] = array_key_exists($column, $item) ? $item[$column] : '';
                 }
                 fputcsv($fd, $line, ';', '"');
                 if ($windowsCRLF) {

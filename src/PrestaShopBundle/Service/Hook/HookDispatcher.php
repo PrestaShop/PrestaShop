@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -44,6 +44,7 @@ class HookDispatcher extends EventDispatcher
     /**
      * {@inheritdoc}
      * This override will check if $event is an instance of HookEvent.
+     *
      * @throws \Exception If the Event is not HookEvent or a subclass.
      */
     public function dispatch($eventName, Event $event = null)
@@ -54,6 +55,7 @@ class HookDispatcher extends EventDispatcher
         if (!$event instanceof HookEvent) {
             throw new \Exception('HookDispatcher must dispatch a HookEvent subclass only. '.get_class($event).' given.');
         }
+
         return parent::dispatch($eventName, $event);
     }
 
@@ -62,8 +64,9 @@ class HookDispatcher extends EventDispatcher
      *
      * Each event is independent for each hook call. Parameter set is duplicated.
      *
-     * @param array $eventNames The hooks to dispatch to.
+     * @param array $eventNames      The hooks to dispatch to.
      * @param array $eventParameters The parameters set to insert in each HookEvent instance.
+     *
      * @throws \Exception If the Event is not HookEvent or a subclass.
      */
     public function dispatchMultiple(array $eventNames, array $eventParameters)
@@ -103,28 +106,34 @@ class HookDispatcher extends EventDispatcher
      *
      * @param $eventName The hook name.
      * @param array $parameters Hook parameters
+     *
      * @return Event The event that has been passed to each listener.
+     *
      * @throws \Exception
      */
     public function dispatchForParameters($eventName, array $parameters = array())
     {
         $event = new HookEvent();
         $event->setHookParameters($parameters);
+
         return $this->dispatch($eventName, $event);
     }
 
     /**
      * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
      *
-     * @param string $eventName The hook name.
-     * @param array $parameters Hook parameters
+     * @param string $eventName  The hook name.
+     * @param array  $parameters Hook parameters
+     *
      * @return Event The event that has been passed to each listener. Contains the responses.
+     *
      * @throws \Exception
      */
     public function renderForParameters($eventName, array $parameters = array())
     {
         $event = new RenderingHookEvent();
         $event->setHookParameters($parameters);
+
         return $this->dispatch($eventName, $event);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@ class FrameworkBundleAdminController extends Controller
     protected $configuration;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -50,11 +50,12 @@ class FrameworkBundleAdminController extends Controller
      * Parse all errors mapped by id html field
      *
      * @param Form $form The form
+     *
      * @return array[array[string]] Errors
      */
     public function getFormErrorsForJS(Form $form)
     {
-        $errors = [];
+        $errors = array();
 
         if (empty($form)) {
             return $errors;
@@ -67,8 +68,8 @@ class FrameworkBundleAdminController extends Controller
                 $form_id = 'bubbling_errors';
             } else {
                 $form_id = str_replace(
-                    ['.', 'children[', ']', '_data'],
-                    ['_', '', '', ''],
+                    array('.', 'children[', ']', '_data'),
+                    array('_', '', '', ''),
                     $error->getCause()->getPropertyPath()
                 );
             }
@@ -88,6 +89,7 @@ class FrameworkBundleAdminController extends Controller
                 );
             }
         }
+
         return $errors;
     }
 
@@ -111,6 +113,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * @param $hookName The hook name
      * @param $parameters The hook parameters
+     *
      * @return array The responses of hooks
      */
     protected function renderHook($hookName, array $parameters)
@@ -119,18 +122,18 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Generates a documentation link
+     * Generates a documentation link.
      */
-    protected function generateSidebarLink($section, $title = "Documentation")
+    protected function generateSidebarLink($section, $title = 'Documentation')
     {
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
         $translator = $this->get('prestashop.adapter.translator');
         $docLink = urlencode('http://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
             .$section.'?version='._PS_VERSION_.'&country='.$legacyContext->getEmployeeLanguageIso());
 
-        return $this->generateUrl('admin_common_sidebar', [
+        return $this->generateUrl('admin_common_sidebar', array(
             'url' => $docLink,
-            'title' => $translator->trans($title, [], 'AdminCommon')
-        ]);
+            'title' => $translator->trans($title, array(), 'AdminCommon'),
+        ));
     }
 }

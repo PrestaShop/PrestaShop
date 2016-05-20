@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,10 +28,9 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is responsible to generate the product custom fields configuration form
+ * This form class is responsible to generate the product custom fields configuration form.
  */
 class ProductCustomField extends CommonAbstractType
 {
@@ -39,7 +38,7 @@ class ProductCustomField extends CommonAbstractType
     private $locales;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -59,27 +58,27 @@ class ProductCustomField extends CommonAbstractType
     {
         $builder->add('label', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
-            'options' => [ 'constraints' => array(
+            'options' => array('constraints' => array(
                 new Assert\NotBlank(),
-                new Assert\Length(array('min' => 2))
-            )],
+                new Assert\Length(array('min' => 2)),
+            )),
             'locales' => $this->locales,
             'hideTabs' => true,
-            'label' => $this->translator->trans('Label', [], 'AdminProducts')
+            'label' => $this->translator->trans('Label', array(), 'AdminProducts'),
         ))
         ->add('type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'label' => $this->translator->trans('Type', [], 'AdminProducts'),
-            'choices'  => array(
-                $this->translator->trans('Text', [], 'AdminProducts') => 1,
-                $this->translator->trans('File', [], 'AdminProducts') => 0,
+            'label' => $this->translator->trans('Type', array(), 'AdminProducts'),
+            'choices' => array(
+                $this->translator->trans('Text', array(), 'AdminProducts') => 1,
+                $this->translator->trans('File', array(), 'AdminProducts') => 0,
             ),
             'attr' => array(
                 'class' => 'c-select',
             ),
             'choices_as_values' => true,
-            'required' =>  true
+            'required' => true,
         ))->add('require', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-            'label'    => $this->translator->trans('Required', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Required', array(), 'AdminProducts'),
             'required' => false,
         ));
     }

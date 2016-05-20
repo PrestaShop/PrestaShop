@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ interface AddonsInterface
      * Send a request to addons.prestashop.com to retrieve Modules/Addons data.
      *
      * @param string $action The query type.
-     * @param array $params The request parameters.
+     * @param array  $params The request parameters.
      */
     public function request($action, $params);
 }

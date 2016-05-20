@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Admin controller for the Category pages
+ * Admin controller for the Category pages.
  */
 class CategoryController extends FrameworkBundleAdminController
 {
     /**
-     * Process Ajax Form to add a simple category (name and parent category)
+     * Process Ajax Form to add a simple category (name and parent category).
      *
      * @param Request $request
      *
@@ -57,21 +57,21 @@ class CategoryController extends FrameworkBundleAdminController
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $_POST = [
+            $_POST = array(
                 'submitAddcategory' => 1,
                 'name_1' => $data['category']['name'],
                 'id_parent' => $data['category']['id_parent'],
                 'link_rewrite_1' => $tools->link_rewrite($data['category']['name']),
                 'active' => 1,
-                'checkBoxShopAsso_category' => $currentIdShop ? [$currentIdShop => $currentIdShop] : $shopList,
-            ];
+                'checkBoxShopAsso_category' => $currentIdShop ? array($currentIdShop => $currentIdShop) : $shopList,
+            );
 
             $adminCategoryController = $this->container->get('prestashop.adapter.admin.controller.category')->getInstance();
             if ($category = $adminCategoryController->processAdd()) {
-                $response->setData(['category' => $category]);
+                $response->setData(array('category' => $category));
             }
 
-            if($request->query->has('id_product')) {
+            if ($request->query->has('id_product')) {
                 $productAdapter = $this->get('prestashop.adapter.data_provider.product');
                 $product = $productAdapter->getProduct($request->query->get('id_product'));
                 $product->addToCategories($category->id);

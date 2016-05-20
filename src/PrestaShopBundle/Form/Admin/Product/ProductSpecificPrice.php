@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -31,11 +30,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use PrestaShopBundle\Form\Admin\Type as PsFormType;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is responsible to generate the basic product specific prices form
+ * This form class is responsible to generate the basic product specific prices form.
  */
 class ProductSpecificPrice extends CommonAbstractType
 {
@@ -48,7 +45,7 @@ class ProductSpecificPrice extends CommonAbstractType
     private $customerDataprovider;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $router
      * @param object $translator
@@ -83,114 +80,114 @@ class ProductSpecificPrice extends CommonAbstractType
         //Else show selector
         if (count($this->shops) == 1) {
             $builder->add('sp_id_shop', 'Symfony\Component\Form\Extension\Core\Type\HiddenType', array(
-                'required' =>  false,
+                'required' => false,
             ));
         } else {
             $builder->add('sp_id_shop', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices' =>  $this->shops,
+                'choices' => $this->shops,
                 'choices_as_values' => true,
-                'required' =>  false,
-                'label' =>  false,
-                'placeholder' => $this->translator->trans('All shops', [], 'AdminProducts'),
+                'required' => false,
+                'label' => false,
+                'placeholder' => $this->translator->trans('All shops', array(), 'AdminProducts'),
             ));
         }
 
         $builder->add('sp_id_currency', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' =>  $this->currencies,
+            'choices' => $this->currencies,
             'choices_as_values' => true,
-            'required' =>  false,
-            'label' =>  false,
-            'placeholder' =>  $this->translator->trans('All currencies', [], 'AdminProducts'),
+            'required' => false,
+            'label' => false,
+            'placeholder' => $this->translator->trans('All currencies', array(), 'AdminProducts'),
         ))
         ->add('sp_id_country', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' =>  $this->countries,
+            'choices' => $this->countries,
             'choices_as_values' => true,
-            'required' =>  false,
-            'label' =>  false,
-            'placeholder' => $this->translator->trans('All countries', [], 'AdminProducts'),
+            'required' => false,
+            'label' => false,
+            'placeholder' => $this->translator->trans('All countries', array(), 'AdminProducts'),
         ))
         ->add('sp_id_group', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' =>  $this->groups,
+            'choices' => $this->groups,
             'choices_as_values' => true,
-            'required' =>  false,
-            'label' =>  false,
-            'placeholder' => $this->translator->trans('All groups', [], 'AdminProducts'),
+            'required' => false,
+            'label' => false,
+            'placeholder' => $this->translator->trans('All groups', array(), 'AdminProducts'),
         ))
         ->add('sp_id_customer', 'PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType', array(
             'remote_url' => $this->context->getAdminLink('AdminCustomers', true).'&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
             'mapping_value' => 'id_customer',
             'mapping_name' => 'fullname_and_email',
-            'placeholder' => $this->translator->trans('All customers', [], 'AdminProducts'),
+            'placeholder' => $this->translator->trans('All customers', array(), 'AdminProducts'),
             'template_collection' => '<div class="title col-md-10">%s</div><button type="button" class="btn btn-danger delete"><i class="material-icons">delete</i></button>',
             'limit' => 1,
             'required' => false,
-            'label' => $this->translator->trans('Add customer', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Add customer', array(), 'AdminProducts'),
         ))
         ->add('sp_id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' =>  [],
+            'choices' => array(),
             'choices_as_values' => true,
-            'required' =>  false,
-            'placeholder' => $this->translator->trans('Apply to all combinations', [], 'AdminProducts'),
-            'label' => $this->translator->trans('Combination', [], 'AdminProducts'),
-            'attr' => ['data-action' =>  $this->router->generate('admin_get_product_combinations')],
+            'required' => false,
+            'placeholder' => $this->translator->trans('Apply to all combinations', array(), 'AdminProducts'),
+            'label' => $this->translator->trans('Combination', array(), 'AdminProducts'),
+            'attr' => array('data-action' => $this->router->generate('admin_get_product_combinations')),
         ))
         ->add('sp_from', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
-            'label' => $this->translator->trans('Available from', [], 'AdminProducts'),
-            'attr' => ['placeholder' => 'YYYY-MM-DD HH:II']
+            'label' => $this->translator->trans('Available from', array(), 'AdminProducts'),
+            'attr' => array('placeholder' => 'YYYY-MM-DD HH:II'),
         ))
         ->add('sp_to', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
-            'label' => $this->translator->trans('to', [], 'AdminProducts'),
-            'attr' => ['placeholder' => 'YYYY-MM-DD HH:II']
+            'label' => $this->translator->trans('to', array(), 'AdminProducts'),
+            'attr' => array('placeholder' => 'YYYY-MM-DD HH:II'),
         ))
         ->add('sp_from_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Starting at', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Starting at', array(), 'AdminProducts'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric')),
-            )
+            ),
         ))
         ->add('sp_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Product price (tax excl.)', [], 'AdminProducts'),
-            'attr' => ['class' => 'price'],
+            'label' => $this->translator->trans('Product price (tax excl.)', array(), 'AdminProducts'),
+            'attr' => array('class' => 'price'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('leave_bprice', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-            'label'    => $this->translator->trans('Leave base price:', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Leave base price:', array(), 'AdminProducts'),
             'required' => false,
         ))
         ->add('sp_reduction', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'label' => $this->translator->trans('Reduction', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Reduction', array(), 'AdminProducts'),
             'required' => false,
             'currency' => $this->currency->iso_code,
         ))
         ->add('sp_reduction_type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'label' => $this->translator->trans('Reduction type', [], 'AdminProducts'),
-            'choices'  => array(
+            'label' => $this->translator->trans('Reduction type', array(), 'AdminProducts'),
+            'choices' => array(
                 '€' => 'amount',
-                 $this->translator->trans('%', [], 'AdminProducts') => 'percentage',
+                 $this->translator->trans('%', array(), 'AdminProducts') => 'percentage',
             ),
             'choices_as_values' => true,
             'required' => true,
         ))
         ->add('sp_reduction_tax', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'label' => $this->translator->trans('Reduction tax', [], 'AdminProducts'),
-            'choices'  => array(
-                $this->translator->trans('Tax excluded', [], 'AdminProducts') => '0',
-                $this->translator->trans('Tax included', [], 'AdminProducts') => '1',
+            'label' => $this->translator->trans('Reduction tax', array(), 'AdminProducts'),
+            'choices' => array(
+                $this->translator->trans('Tax excluded', array(), 'AdminProducts') => '0',
+                $this->translator->trans('Tax included', array(), 'AdminProducts') => '1',
             ),
             'choices_as_values' => true,
             'required' => true,
         ))
         ->add('save', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
-            'label' => $this->translator->trans('Apply', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Apply', array(), 'AdminProducts'),
             'attr' => array('class' => 'btn-primary-outline js-save'),
         ))
         ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
-            'label' => $this->translator->trans('Cancel', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Cancel', array(), 'AdminProducts'),
             'attr' => array('class' => 'btn-default-outline js-cancel'),
         ));
 
@@ -204,9 +201,9 @@ class ProductSpecificPrice extends CommonAbstractType
 
             //bypass SF validation, define submitted value in choice list
             $form->add('sp_id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices' =>  [$data['sp_id_product_attribute'] => ''],
+                'choices' => array($data['sp_id_product_attribute'] => ''),
                 'choices_as_values' => true,
-                'required' =>  false,
+                'required' => false,
             ));
         });
     }

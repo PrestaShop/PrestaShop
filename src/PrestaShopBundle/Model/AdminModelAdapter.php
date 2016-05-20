@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ class AdminModelAdapter
 {
     /**
      * modelMapper
-     * Map form data to object model
+     * Map form data to object model.
      *
      * This parent method will return only hook sub array.
      *
@@ -45,8 +45,10 @@ class AdminModelAdapter
         // Hook fields are kept.
         if (array_key_exists('hook', $_POST)) {
             $hookFields = $_POST['hook'];
+
             return array('hook' => $hookFields);
         }
-        return [];
+
+        return array();
     }
 }

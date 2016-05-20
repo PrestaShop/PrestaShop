@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,17 +27,16 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * Admin controller for suppliers page
+ * Admin controller for suppliers page.
  */
 class SupplierController extends FrameworkBundleAdminController
 {
     /**
-     * refreshProductSupplierCombinationFormAction
+     * refreshProductSupplierCombinationFormAction.
      *
-     * @param int $idProduct
+     * @param int        $idProduct
      * @param int|string $supplierIds The suppliers ids separate by "-"
      *
      * @return string|Response
@@ -49,7 +48,7 @@ class SupplierController extends FrameworkBundleAdminController
         $response = new Response();
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct);
+        $product = $productAdapter->getProduct((int) $idProduct);
 
         $suppliers = explode('-', $supplierIds);
         if ($supplierIds == 0 || count($suppliers) == 0) {
@@ -58,6 +57,7 @@ class SupplierController extends FrameworkBundleAdminController
 
         if (!is_object($product) || empty($product->id)) {
             $response->setStatusCode(400);
+
             return $response;
         }
 
@@ -93,7 +93,7 @@ class SupplierController extends FrameworkBundleAdminController
 
             $simpleSubForm->add('supplier_combination_'.$idSupplier, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
                 'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination',
-                'entry_options'  => array(
+                'entry_options' => array(
                     'id_supplier' => $idSupplier,
                 ),
                 'prototype' => true,
@@ -107,7 +107,7 @@ class SupplierController extends FrameworkBundleAdminController
 
         return $this->render('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', array(
             'suppliers' => $suppliers,
-            'form' => $form->getForm()['step6']->createView()
+            'form' => $form->getForm()['step6']->createView(),
         ));
     }
 }

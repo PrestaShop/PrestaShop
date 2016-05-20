@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,17 +30,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * Admin controller for product images
+ * Admin controller for product images.
  */
 class ProductImageController extends FrameworkBundleAdminController
 {
     /**
-     * Manage upload for product image
+     * Manage upload for product image.
      *
-     * @param int $idProduct
+     * @param int     $idProduct
      * @param Request $request
      *
      * @return string
@@ -50,7 +49,7 @@ class ProductImageController extends FrameworkBundleAdminController
         $response = new JsonResponse();
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
         $translator = $this->container->get('prestashop.adapter.translator');
-        $return_data = [];
+        $return_data = array();
 
         if ($idProduct == 0 || !$request->isXmlHttpRequest()) {
             return $response;
@@ -59,10 +58,10 @@ class ProductImageController extends FrameworkBundleAdminController
         $form = $this->createFormBuilder(null, array('csrf_protection' => false))
             ->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
                 'error_bubbling' => true,
-                'constraints' => [
-                    new Assert\NotNull(array('message' => $translator->trans('Please select a file', [], 'AdminProducts'))),
+                'constraints' => array(
+                    new Assert\NotNull(array('message' => $translator->trans('Please select a file', array(), 'AdminProducts'))),
                     new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
-                ]
+                ),
             ))
             ->getForm();
 
@@ -76,7 +75,7 @@ class ProductImageController extends FrameworkBundleAdminController
                 foreach ($form->getErrors() as $key => $error) {
                     $error_msg[] = $error->getMessage();
                 }
-                $return_data = array('message' => implode(" ", $error_msg));
+                $return_data = array('message' => implode(' ', $error_msg));
                 $response->setStatusCode(400);
             }
         }
@@ -85,7 +84,7 @@ class ProductImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Update images positions
+     * Update images positions.
      *
      * @param Request $request
      *
@@ -105,10 +104,11 @@ class ProductImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Manage form image
+     * Manage form image.
      *
      * @Template
-     * @param int $idImage
+     *
+     * @param int     $idImage
      * @param Request $request
      *
      * @return array
@@ -124,19 +124,19 @@ class ProductImageController extends FrameworkBundleAdminController
             return new Response();
         }
 
-        $image = $productAdapter->getImage((int)$idImage);
+        $image = $productAdapter->getImage((int) $idImage);
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form_image', 'form', $image, array('csrf_protection' => false))
             ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
                 'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
-                'options' => [],
+                'options' => array(),
                 'locales' => $locales,
                 'hideTabs' => true,
-                'label' => $translator->trans('Legend', [], 'AdminProducts'),
+                'label' => $translator->trans('Legend', array(), 'AdminProducts'),
                 'required' => false,
             ))
             ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-                'label'    => $translator->trans('Choose as cover image', [], 'AdminProducts'),
+                'label' => $translator->trans('Choose as cover image', array(), 'AdminProducts'),
                 'required' => false,
             ))
             ->getForm();
@@ -154,7 +154,7 @@ class ProductImageController extends FrameworkBundleAdminController
                     $error_msg[] = $error->getMessage();
                 }
 
-                $jsonResponse->setData(array('message' => implode(" ", $error_msg)));
+                $jsonResponse->setData(array('message' => implode(' ', $error_msg)));
                 $jsonResponse->setStatusCode(400);
             }
 
@@ -168,9 +168,9 @@ class ProductImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete an image from its ID
+     * Delete an image from its ID.
      *
-     * @param int $idImage
+     * @param int     $idImage
      * @param Request $request
      *
      * @return Reponse

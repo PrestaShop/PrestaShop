@@ -13,8 +13,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class AddonsController extends Controller
 {
     /**
-     * Controller responsible of the authentication on PrestaShop Addons
-     * @param  Request $request
+     * Controller responsible of the authentication on PrestaShop Addons.
+     *
+     * @param Request $request
+     *
      * @return Response
      */
     public function loginAction(Request $request)
@@ -24,11 +26,11 @@ class AddonsController extends Controller
         $response = new JsonResponse();
 
         // Parameters needed in order to authenticate the merchant : login and password
-        $params = [
+        $params = array(
             'format' => 'json',
             'username_addons' => $request->request->get('username_addons', null),
             'password_addons' => $request->request->get('password_addons', null),
-        ];
+        );
 
         try {
             $json = $addonsProvider->request('check_customer', $params);
@@ -37,23 +39,25 @@ class AddonsController extends Controller
 
             $response->headers->setCookie(new Cookie('username_addons', $params['username_addons']));
             $response->headers->setCookie(new Cookie('password_addons', $params['password_addons']));
-            $response->headers->setCookie(new Cookie('is_contributor', (int)$json->is_contributor));
+            $response->headers->setCookie(new Cookie('is_contributor', (int) $json->is_contributor));
 
-            $response->setData(['success' => 1, 'message' => '']);
+            $response->setData(array('success' => 1, 'message' => ''));
             $modulesProvider->clearCatalogCache();
         } catch (Exception $e) {
-            $response->setData([
+            $response->setData(array(
                 'success' => 0,
                 'message' => $e->getMessage(),
-            ]);
+            ));
         }
 
         return $response;
     }
 
     /**
-     * Controller responsible of the authentication on PrestaShop Addons
-     * @param  Request $request
+     * Controller responsible of the authentication on PrestaShop Addons.
+     *
+     * @param Request $request
+     *
      * @return Response
      */
     public function logoutAction(Request $request)
@@ -63,10 +67,10 @@ class AddonsController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             $response = new JsonResponse();
-            $response->setData([
+            $response->setData(array(
                 'success' => 1,
-                'message' => ''
-            ]);
+                'message' => '',
+            ));
         } else {
             if ($request->server->get('HTTP_REFERER')) {
                 $url = $request->server->get('HTTP_REFERER');

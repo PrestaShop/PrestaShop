@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,9 +33,9 @@ namespace PrestaShopBundle\Service\DataProvider;
 interface StockInterface
 {
     /**
-     * Returns True if Stocks are managed by a module (or by legacy ASM)
+     * Returns True if Stocks are managed by a module (or by legacy ASM).
      *
-     * @return boolean True if Stocks are managed by a module (or by legacy ASM)
+     * @return bool True if Stocks are managed by a module (or by legacy ASM)
      */
     public function isAsmGloballyActivated();
 }
