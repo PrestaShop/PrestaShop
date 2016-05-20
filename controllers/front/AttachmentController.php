@@ -26,6 +26,7 @@
 
 class AttachmentControllerCore extends FrontController
 {
+
     public function postProcess()
     {
         $a = new Attachment(Tools::getValue('id_attachment'), $this->context->language->id);
@@ -44,7 +45,43 @@ class AttachmentControllerCore extends FrontController
         header('Content-Length: '.filesize(_PS_DOWNLOAD_DIR_.$a->file));
         header('Content-Disposition: attachment; filename="'.utf8_decode($a->file_name).'"');
         @set_time_limit(0);
-        readfile(_PS_DOWNLOAD_DIR_.$a->file);
+        self::readfileChunked(_PS_DOWNLOAD_DIR_.$a->file);        
         exit;
     }
+
+    /**
+     * @see   http://ca2.php.net/manual/en/function.readfile.php#54295
+     */
+    function readfileChunked($filename,$retbytes=true)
+    {
+        // how many bytes per chunk
+        $chunksize = 1*(1024*1024);
+        $buffer = '';
+        $totalBytes = 0;
+
+        $handle = fopen($filename, 'rb');
+        if ($handle === false)
+        {
+            return false;
+        }
+        while (!feof($handle))
+        {
+            $buffer = fread($handle, $chunksize);
+            echo $buffer;
+            ob_flush();
+            flush();
+            if ($retbytes)
+            {
+                $totalBytes += strlen($buffer);
+            }
+        }
+        $status = fclose($handle);
+        if ($retbytes && $status)
+        {
+            // return num. bytes delivered like readfile() does.
+            return $totalBytes;
+        }
+        return $status;
+    }
+    
 }
