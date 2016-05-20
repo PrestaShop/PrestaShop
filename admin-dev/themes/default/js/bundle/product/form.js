@@ -51,7 +51,6 @@ $(document).ready(function() {
   BOEvent.emitEvent("Product Related Management started", "CustomEvent");
   BOEvent.emitEvent("Modal confirmation started", "CustomEvent");
   BOEvent.emitEvent("Product Combinations Management started", "CustomEvent");
-  BOEvent.emitEvent("Product Bulk Combinations Management started", "CustomEvent");
 
   /** Type product fields display management */
   $('#form_step1_type_product').change(function() {

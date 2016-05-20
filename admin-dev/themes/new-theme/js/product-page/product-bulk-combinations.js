@@ -1,7 +1,7 @@
 /**
  * Combination bulk actions management
  */
-var bulkCombinations = (function () {
+export default function() {
 
   var bulkForm = document.querySelector('#bulk-combinations-container');
   var combinationsTable = document.querySelector('#accordion_combinations');
@@ -43,10 +43,11 @@ var bulkCombinations = (function () {
       return combinations;
     },
     'applyChangesOnCombinations': function applyChangesOnCombinations() {
-      values = this.getFormValues();
-      combinations = this.getSelectedCombinations();
+      var values = this.getFormValues();
+      var combinations = this.getSelectedCombinations();
       combinations.forEach((combination) => {
         combination.updateForm(values);
+        combination.syncValues(values);
       });
     },
     'deleteCombinations': function deleteCombinations() {
@@ -90,7 +91,7 @@ var bulkCombinations = (function () {
       return values;
     }
   };
-})();
+}
 
 class Combination {
   constructor(domId, index) {
@@ -111,7 +112,6 @@ class Combination {
   }
 
   updateForm(values) {
-
     values.forEach((valueObject) => {
       var valueId = valueObject.id.substr(this.inputBulkPattern.length);
       var value = valueObject.value;
@@ -159,8 +159,30 @@ class Combination {
 
     return convertedInput;
   }
-}
 
-BOEvent.on("Product Bulk Combinations Management started", function initBulkCombinationsManagement() {
-  bulkCombinations.init();
-}, "Back office");
+  /**
+   * Sync values with fast bulk edit form of each combination
+   *
+   * @param values
+   * @returns {bool}
+   */
+  syncValues(values) {
+
+    values.forEach((valueObject) => {
+      var valueId = valueObject.id.substr(this.inputBulkPattern.length);
+      var value = valueObject.value;
+
+      var syncedProperties = [
+        'quantity',
+        'impact_on_price_te'
+      ];
+
+      if (syncedProperties.indexOf(valueId) !== -1){
+        valueId = valueId === 'quantity' ? 'quantity' : 'price';
+        var input = `#attribute_${this.domId} .attribute-${valueId} input`;
+        var formInput = document.querySelector(input);
+        formInput.value = value;
+      }
+    });
+  }
+}
