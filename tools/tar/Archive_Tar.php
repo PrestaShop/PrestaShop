@@ -42,7 +42,7 @@
 // If the PEAR class cannot be loaded via the autoloader,
 // then try to require_once it from the PHP include path.
 if (!class_exists('PEAR')) {
-    require_once 'PEAR.php';
+    require_once(__DIR__.'/../pear/PEAR.php');
 }
 
 define('ARCHIVE_TAR_ATT_SEPARATOR', 90001);
