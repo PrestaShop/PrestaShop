@@ -614,7 +614,7 @@ class ProductCore extends ObjectModel
      * Returns price display method for a customer (i.e. price should be including tax or not)
      * @see initPricesComputation()
      * @param int|null $id_customer
-     * @return int Returns 0 if tax should be included, otherwise 0 - tax should be excluded
+     * @return int Returns 0 (PS_TAX_INC) if tax should be included, otherwise 1 (PS_TAX_EXC) - tax should be excluded
      */
     public static function getTaxCalculationMethod($id_customer = null)
     {
