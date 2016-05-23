@@ -11,7 +11,7 @@
 
     {block name='product_price'}
       <p
-        class="product-price h5 text-uppercase {if $product.has_discount}has-discount{/if}"
+        class="product-price h5 {if $product.has_discount}has-discount{/if}"
         itemprop="offers"
         itemscope
         itemtype="https://schema.org/Offer"
@@ -27,9 +27,9 @@
 
         {if $product.has_discount}
           {if $product.discount_type === 'percentage'}
-            <span class="discount-percentage">{l s='SAVE %s' sprintf=$product.discount_percentage}</span>
+            <span class="discount discount-percentage">{l s='Save %s' sprintf=$product.discount_percentage}</span>
           {else}
-            <span class="discount-amount">{l s='SAVE %s' sprintf=$product.discount_amount}</span>
+            <span class="discount discount-amount">{l s='Save %s' sprintf=$product.discount_amount}</span>
           {/if}
         {/if}
       </p>
