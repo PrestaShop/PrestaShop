@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Endereços"/>
   <tab id="Administration" name="Administração"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Advanced_Parameters" name="Parâmetros Avançados"/>
   <tab id="Attachments" name="Anexos"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Abas"/>
   <tab id="Merchandise_Returns" name="Devolução de mercadoria"/>
-  <tab id="Modules_1" name="Módulos e Serviços"/>
-  <tab id="Modules" name="Módulos"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Monitoramento"/>
   <tab id="Multistore" name="Multiloja"/>
   <tab id="Order_Messages" name="Mensagens de compras"/>
@@ -123,5 +123,5 @@
   <tab id="Warehouses" name="Armazéns"/>
   <tab id="Webservice" name="Serviço Web"/>
   <tab id="Zones" name="Regiões"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

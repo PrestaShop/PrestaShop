@@ -4,7 +4,7 @@
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Direcciones"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Administration" name="Administración"/>
   <tab id="Advanced_Parameters" name="Parámetros Avanzados"/>
   <tab id="Attachments" name="Adjuntos"/>
@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Márketing"/>
   <tab id="Menus" name="Menús"/>
   <tab id="Merchandise_Returns" name="Devoluciones de mercancía"/>
-  <tab id="Modules" name="Módulos y Servicios"/>
-  <tab id="Modules_1" name="Módulos y Servicios"/>
+  <tab id="Modules" name="Modules" />
+  <tab id="Modules_1" name="Modules" />
   <tab id="Monitoring" name="Monitoring"/>
   <tab id="Multistore" name="Multitienda"/>
   <tab id="Order_Messages" name="Mensajes predefinidos"/>
@@ -123,5 +123,5 @@
   <tab id="Warehouses" name="Almacenes"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="Zona"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

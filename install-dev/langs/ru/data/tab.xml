@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Адреса"/>
   <tab id="Administration" name="Администрация"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Advanced_Parameters" name="Конфигурация"/>
   <tab id="Attachments" name="Загрузить"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Маркетинг"/>
   <tab id="Menus" name="Закладки"/>
   <tab id="Merchandise_Returns" name="Возвраты товаров"/>
-  <tab id="Modules_1" name="Модули и Сервисы"/>
-  <tab id="Modules" name="Модули"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Мониторинг"/>
   <tab id="Multistore" name="Мульти-магазин"/>
   <tab id="Order_Messages" name="Сообщения"/>
@@ -123,5 +123,5 @@
   <tab id="Warehouses" name="Склады"/>
   <tab id="Webservice" name="WEB службы"/>
   <tab id="Zones" name="Зоны"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

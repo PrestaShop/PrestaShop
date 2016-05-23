@@ -4,7 +4,7 @@
   <tab id="IMPROVE" name="ROZŠÍŘENÍ" />
   <tab id="CONFIGURE" name="KONFIGURACE" />
   <tab id="Addresses" name="Adresy"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Administration" name="Administrace"/>
   <tab id="Advanced_Parameters" name="Nástroje"/>
   <tab id="Attachments" name="Přílohy"/>
@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Nabídky (menu)"/>
   <tab id="Merchandise_Returns" name="Vrácení zboží"/>
-  <tab id="Modules" name="Moduly a Služby"/>
-  <tab id="Modules_1" name="Moduly a Služby"/>
+  <tab id="Modules" name="Modules" />
+  <tab id="Modules_1" name="Modules" />
   <tab id="Monitoring" name="Monitorování"/>
   <tab id="Multistore" name="Obchody Multistore"/>
   <tab id="Order_Messages" name="Zprávy k objednávkám"/>
@@ -123,5 +123,5 @@
   <tab id="Warehouses" name="Sklady"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="Zóny"/>
-  <tab id="Marketing_tools" name="Marketingové nástroje"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

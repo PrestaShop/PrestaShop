@@ -2,7 +2,7 @@
 <entity_tab>
   <tab id="Addresses" name="Adrese"/>
   <tab id="Administration" name="Administracija"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Advanced_Parameters" name="Napredne postavke"/>
   <tab id="Attachments" name="Prilozi"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -60,8 +60,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Meniji"/>
   <tab id="Merchandise_Returns" name="Povraćaj robe"/>
-  <tab id="Modules_1" name="Modules and Services"/>
-  <tab id="Modules" name="Modules and Services"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Praćenje"/>
   <tab id="Multistore" name="Lanac prodavnica"/>
   <tab id="Order_Messages" name="Poruke porudžbina"/>
@@ -120,5 +120,5 @@
   <tab id="Warehouses" name="Magacini"/>
   <tab id="Webservice" name="Veb servis"/>
   <tab id="Zones" name="Zone"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

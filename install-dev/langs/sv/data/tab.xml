@@ -5,7 +5,7 @@
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Adresser"/>
   <tab id="Administration" name="Administration"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Advanced_Parameters" name="Avancerade inställningar"/>
   <tab id="Attachments" name="Bilagor"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Marknadsföring"/>
   <tab id="Menus" name="Flikar"/>
   <tab id="Merchandise_Returns" name="Varureturer"/>
-  <tab id="Modules_1" name="Moduler och Tjänster"/>
-  <tab id="Modules" name="Moduler"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Övervakning"/>
   <tab id="Multistore" name="Multibutiker"/>
   <tab id="Order_Messages" name="Ordermeddelanden"/>
@@ -123,5 +123,5 @@
   <tab id="Warehouses" name="Varulager"/>
   <tab id="Webservice" name="Webbservice"/>
   <tab id="Zones" name="Zoner"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

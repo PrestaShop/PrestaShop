@@ -2,6 +2,7 @@
 <entity_tab>
   <tab id="Addresses" name="Indirizzi"/>
   <tab id="Administration" name="Amministrazione"/>
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Advanced_Parameters" name="Parametri avanzati"/>
   <tab id="Attachments" name="Allegati"/>
   <tab id="Attributes_and_Values" name="Attributi"/>
@@ -48,8 +49,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menù"/>
   <tab id="Merchandise_Returns" name="Resi"/>
-  <tab id="Modules_1" name="Moduli e servizi"/>
-  <tab id="Modules" name="Moduli"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Modules_Themes_Catalog" name="Catalogo moduli e temi"/>
   <tab id="Monitoring" name="Monitoraggio"/>
   <tab id="Multistore" name="Multi-negozio"/>
@@ -101,4 +102,5 @@
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="Zone"/>
   <tab id="CarrierWizard" name="Corriere"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

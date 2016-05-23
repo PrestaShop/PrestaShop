@@ -5,6 +5,7 @@
   <tab id="CONFIGURE" name="VERANDEREN" />
   <tab id="Addresses" name="Adressen"/>
   <tab id="Administration" name="Administratie"/>
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="AdminModulesSf" name="Modulecatalogus" />
   <tab id="Advanced_Parameters" name="Geavanceerde instellingen"/>
   <tab id="Attachments" name="Bijlagen"/>
@@ -63,8 +64,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menu's"/>
   <tab id="Merchandise_Returns" name="Retourzendingen"/>
-  <tab id="Modules_1" name="Modules en services"/>
-  <tab id="Modules" name="Modules"/>
+  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modules" />
   <tab id="Monitoring" name="Monitoring"/>
   <tab id="Multistore" name="Multistore"/>
   <tab id="Order_Messages" name="Bestellingsberichten"/>
@@ -125,5 +126,5 @@
   <tab id="Webservice" name="Webservice"/>
   <tab id="Weight_Ranges" name="Gewichtsklasse"/>
   <tab id="Zones" name="Zones"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

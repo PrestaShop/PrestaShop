@@ -4,7 +4,7 @@
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="Naslovi"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Administration" name="Administracija"/>
   <tab id="Advanced_Parameters" name="Napredne nastavitve"/>
   <tab id="Attachments" name="Priloge"/>
@@ -63,8 +63,8 @@
   <tab id="Marketing" name="Oglaševanje"/>
   <tab id="Menus" name="Meniji"/>
   <tab id="Merchandise_Returns" name="Vračila izdelkov"/>
-  <tab id="Modules" name="Moduli"/>
-  <tab id="Modules_1" name="Moduli in storitve"/>
+  <tab id="Modules" name="Modules" />
+  <tab id="Modules_1" name="Modules" />
   <tab id="Monitoring" name="Spremljanje"/>
   <tab id="Multistore" name="Multi-trgovina"/>
   <tab id="Order_Messages" name="Sporočila ob naročilu"/>
@@ -123,5 +123,5 @@
   <tab id="Warehouses" name="Skladišča"/>
   <tab id="Webservice" name="Spletna storitev"/>
   <tab id="Zones" name="Cone"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>

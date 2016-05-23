@@ -4,7 +4,7 @@
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
   <tab id="Addresses" name="آدرس‌ها"/>
-  <tab id="Module_Page" name="Module Catalog" />
+  <tab id="Module_Page" name="Modules &amp; Services" />
   <tab id="Administration" name="مدیریت"/>
   <tab id="Advanced_Parameters" name="پارامترهای پیشرفته"/>
   <tab id="Attachments" name="پیوست‌ها"/>
@@ -63,8 +63,8 @@
   <tab id="Marketing" name="بازاریابی"/>
   <tab id="Menus" name="منوها"/>
   <tab id="Merchandise_Returns" name="بازگشت‌های کالا"/>
-  <tab id="Modules" name="ماژول‌ها"/>
-  <tab id="Modules_1" name="ماژول ها و سرویس ها"/>
+  <tab id="Modules" name="Modules" />
+  <tab id="Modules_1" name="Modules" />
   <tab id="Monitoring" name="بازرسی"/>
   <tab id="Multistore" name="چند فروشگاهی"/>
   <tab id="Order_Messages" name="پیام‌های سفارش"/>
@@ -123,5 +123,5 @@
   <tab id="Warehouses" name="انبارها"/>
   <tab id="Webservice" name="وب سرویس"/>
   <tab id="Zones" name="منطقه‌ها"/>
-  <tab id="Marketing_tools" name="Marketing tools"/>
+  <tab id="Marketing_tools" name="Modules Catalog" />
 </entity_tab>
