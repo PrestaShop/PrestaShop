@@ -38,6 +38,7 @@
     "sensio/generator-bundle": "~2.3",
     "composer/installers": "1.0.21",
     "icanboogie/cldr": "1.3.9",
+    "incenteev/composer-parameter-handler": "~2.0",
     "curl/curl": "1.2.1",
     "ircmaxell/password-compat": "1.0.4",
     "shudrum/array-finder": "1.1.0",
@@ -119,8 +120,7 @@
     "phpunit/phpunit": "~4.5",
     "phake/phake": "@stable",
     "fabpot/php-cs-fixer": "^1.10",
-    "phpdocumentor/phpdocumentor": "2.*",
-    "incenteev/composer-parameter-handler": "~2.0"
+    "phpdocumentor/phpdocumentor": "2.*"
   },
   "autoload-dev": {
     "psr-4": {
