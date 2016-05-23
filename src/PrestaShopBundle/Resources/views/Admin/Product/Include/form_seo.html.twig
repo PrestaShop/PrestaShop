@@ -65,8 +65,8 @@
         <p class="alert-text">
             {% if 'PS_FORCE_FRIENDLY_PRODUCT'|configuration == 1 %}
               <strong>{{ 'The "Force update of friendly URL" option is currently enabled.'|trans({}, 'AdminProducts') }}</strong>
-            {{ trans('To disable it, go to', {}, 'AdminProducts') }}
-            <a href="{{ getAdminLink("AdminPPreferences") }}#configuration_fieldset_products">{{ trans('Product Settings', [], 'AdminProducts') }}</a>
+            {{ 'To disable it, go to'|trans({}, 'AdminProducts') }}
+            <a href="{{ getAdminLink("AdminPPreferences") }}#configuration_fieldset_products">{{ 'Product Settings'|trans({}, 'AdminProducts') }}</a>
           {% endif %}
         </p>
       </div>
