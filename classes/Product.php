@@ -526,14 +526,15 @@ class ProductCore extends ObjectModel
             'available_now' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'available_later' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255],
         ],
-        'associations' => [
+        'associations' => array(
             'manufacturer' => ['type' => self::HAS_ONE],
             'supplier' => ['type' => self::HAS_ONE],
             'default_category' => ['type' => self::HAS_ONE, 'field' => 'id_category_default', 'object' => 'Category'],
             'tax_rules_group' => ['type' => self::HAS_ONE],
             'categories' => ['type' => self::HAS_MANY, 'field' => 'id_category', 'object' => 'Category', 'association' => 'category_product'],
             'stock_availables' => ['type' => self::HAS_MANY, 'field' => 'id_stock_available', 'object' => 'StockAvailable', 'association' => 'stock_availables'],
-        ],
+            'attachments' => array('type' => self::HAS_MANY, 'field' => 'id_attachment', 'object' => 'Attachment', 'association' => 'product_attachment'),
+        ),
     ];
 
     /** @var array */
@@ -636,6 +637,13 @@ class ProductCore extends ObjectModel
                 ],
                 'setter' => false,
             ],
+            'attachments' => array(
+                'resource' => 'attachment',
+                'api' => 'attachments',
+                'fields' => array(
+                    'id' => array('required' => true),
+                ),
+            ),
             'accessories' => [
                 'resource' => 'product',
                 'api' => 'products',
@@ -7129,10 +7137,38 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Webservice getter : Get Tag identifiers
+     * Webservice getter : Get product attachments ids of current product for association
      *
      * @return array
      */
+    public function getWsAttachments()
+    {
+        $result = Db::getInstance()->executeS('SELECT a.`id_attachment` AS id
+			FROM `' . _DB_PREFIX_ . 'product_attachment` pa
+			LEFT JOIN `' . _DB_PREFIX_ . 'attachment` a ON (pa.id_attachment = a.id_attachment)
+			' . Shop::addSqlAssociation('attachment', 'a') . '
+			WHERE pa.`id_product` = ' . (int) $this->id);
+
+        return $result;
+    }
+
+    /**
+     * Webservice setter : set product attachments ids of current product for association
+     *
+     * @param $attachments ids
+     */
+    public function setWsAttachments($attachments)
+    {
+        $this->deleteAttachments(true);
+        foreach ($attachments as $attachment) {
+            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment`
+    				(`id_product`, `id_attachment`) VALUES (' . (int) $this->id . ', ' . (int) $attachment['id'] . ')');
+        }
+        Product::updateCacheAttachment((int) $this->id);
+
+        return true;
+    }
+
     public function getWsTags()
     {
         return Db::getInstance()->executeS('
