@@ -509,6 +509,50 @@
       border-top: $gray-light 2px solid;
     }
   }
+
+  .combinations-list {
+    th, td {
+      color: $gray-medium;
+      vertical-align: middle;
+    }
+
+    .uppercase th {
+      text-transform: uppercase;
+      font-weight: $font-weight-normal;
+      font-size: $font-size-xs;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: $notice;
+    }
+
+    .combination {
+      .img {
+        width: 8%;
+      }
+
+      .attribute-price, .attribute-quantity {
+        width: 15%;
+      }
+
+      .attribute-finalprice {
+        width: 10%;
+      }
+
+      .attribute-actions {
+        width: 10%;
+        line-height: $font-size-base;
+
+        .btn-sm {
+          padding: 0;
+
+          &:hover {
+            background-color: transparent;
+            border-color: transparent;
+          }
+        }
+      }
+    }
+  }
 }
 .popover-title {
   display: none;
@@ -610,6 +654,14 @@
       &.two-columns {
         columns: 2;
       }
+    }
+  }
+}
+
+.table{
+  &.table-no-bordered {
+    thead, tbody, th {
+      border: 0;
     }
   }
 }
