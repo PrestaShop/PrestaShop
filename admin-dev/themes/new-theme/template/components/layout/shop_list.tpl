@@ -15,6 +15,6 @@
   </div>
 {else}
   <div class="shop-list">
-    <a class="link" href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}">{$shop_name}</a>
+    <a class="link" target="_blank" href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}">{$shop_name}</a>
   </div>
 {/if}
