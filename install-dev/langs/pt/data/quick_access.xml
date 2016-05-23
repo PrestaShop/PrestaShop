@@ -5,4 +5,5 @@
   <quick_access id="New_category" name="Nova Categoria"/>
   <quick_access id="New_product" name="Novo Produto"/>
   <quick_access id="New_voucher" name="Novo Voucher"/>
+  <quick_access id="Orders" name="Orders"/>
 </entity_quick_access>

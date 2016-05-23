@@ -5,4 +5,5 @@
   <quick_access id="New_category" name="קטגורייה חדשה"/>
   <quick_access id="New_product" name="מוצר חדש"/>
   <quick_access id="New_voucher" name="שובר חדש"/>
+  <quick_access id="Orders" name="Orders"/>
 </entity_quick_access>
