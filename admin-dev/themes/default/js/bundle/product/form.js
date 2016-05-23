@@ -959,6 +959,9 @@ var form = (function() {
               /** initialize form */
               $('input.attribute-generator').remove();
               $('#attributes-generator div.token').remove();
+              $('.js-attribute-checkbox:checked').each(function() {
+                $(this).prop('checked', false);
+              });
             },
             complete: function() {
               $('#create-combinations').removeAttr('disabled');
