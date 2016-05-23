@@ -62,6 +62,7 @@ define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
 define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
 define('_COOKIE_KEY_', $config['parameters']['cookie_key']);
 define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
+define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);
 
 if (isset($config['parameters']['_rijndael_key']) && isset($config['parameters']['_rijndael_iv'])) {
     define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);

@@ -99,6 +99,7 @@ class InstallModelInstall extends InstallAbstractModel
                 'cookie_iv' =>  $cookie_iv,
                 'ps_caching' => 'CacheMemcache',
                 'ps_cache_enable' => false,
+                'ps_creation_date' => date('Y-m-d'),
                 'secret' => $secret,
                 'mailer_transport' => 'smtp',
                 'mailer_host' => '127.0.0.1',
