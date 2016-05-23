@@ -10,7 +10,7 @@ use Configuration;
 use Language;
 use Link;
 
-abstract class ProductPresenterAbstract
+abstract class AbstractProductPresenter
 {
     private $imageRetriever;
     private $link;
