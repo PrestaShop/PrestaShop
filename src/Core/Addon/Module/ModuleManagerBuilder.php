@@ -41,6 +41,25 @@ class ModuleManagerBuilder
      * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
      */
     public static $modulesRepository = null;
+    public static $adminModuleDataProvider = null;
+    public static $legacyLogger = null;
+    public static $moduleDataProvider = null;
+    public static $moduleDataUpdater = null;
+
+    public function __construct()
+    {
+        if (is_null(self::$adminModuleDataProvider)) {
+            $addonsDataProvider = new AddonsDataProvider();
+            self::$adminModuleDataProvider = new AdminModuleDataProvider(
+                $this->getLanguageIso(),
+                $this->getSymfonyRouter(),
+                $addonsDataProvider
+            );
+            self::$moduleDataUpdater       = new ModuleDataUpdater($addonsDataProvider, self::$adminModuleDataProvider);
+            self::$legacyLogger            = new LegacyLogger();
+            self::$moduleDataProvider      = new ModuleDataProvider(self::$legacyLogger);
+        }
+    }
 
     /**
     * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
@@ -53,15 +72,13 @@ class ModuleManagerBuilder
         if (!is_null($kernel)) {
             return $kernel->getContainer()->get('prestashop.module.manager');
         } else {
-            $addonsDataProvider = new AddonsDataProvider();
-            $adminModuleDataProvider = new AdminModuleDataProvider($this->getLanguageIso(), $this->getSymfonyRouter(), $addonsDataProvider);
-            $legacyLogger = new LegacyLogger();
-
-            return new ModuleManager($adminModuleDataProvider,
-                new ModuleDataProvider($legacyLogger),
-                new ModuleDataUpdater($addonsDataProvider, $adminModuleDataProvider),
+            return new ModuleManager(
+                self::$adminModuleDataProvider,
+                self::$moduleDataProvider,
+                self::$moduleDataUpdater,
                 $this->buildRepository(),
-                \Context::getContext()->employee);
+                \Context::getContext()->employee
+            );
         }
     }
 
@@ -77,15 +94,11 @@ class ModuleManagerBuilder
             if (!is_null($kernel)) {
                 self::$modulesRepository = $kernel->getContainer()->get('prestashop.core.admin.module.repository');
             } else {
-                $addonsDataProvider = new AddonsDataProvider();
-                $adminModuleDataProvider = new AdminModuleDataProvider($this->getLanguageIso(), $this->getSymfonyRouter(), $addonsDataProvider);
-                $legacyLogger = new LegacyLogger();
-
                 self::$modulesRepository = new ModuleRepository(
-                    $adminModuleDataProvider,
-                    new ModuleDataProvider($legacyLogger),
-                    new ModuleDataUpdater($addonsDataProvider, $adminModuleDataProvider),
-                    $legacyLogger
+                    self::$adminModuleDataProvider,
+                    self::$moduleDataProvider,
+                    self::$moduleDataUpdater,
+                    self::$legacyLogger
                 );
             }
         }
