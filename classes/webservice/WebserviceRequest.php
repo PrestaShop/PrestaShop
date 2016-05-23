@@ -45,9 +45,9 @@ class WebserviceRequestCore
     protected $_outputEnabled = true;
 
     /**
-     * Set if the management is specific or if it is classic (entity management).
+     * Set if the management is specific or if it is classic (entity management)
      *
-     * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|false
+     * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|WebserviceSpecificManagementAttachments|false
      */
     protected $objectSpecificManagement = false;
 
@@ -286,6 +286,7 @@ class WebserviceRequestCore
     {
         $resources = array(
             'addresses' => array('description' => 'The Customer, Brand and Customer addresses', 'class' => 'Address'),
+            'attachments' => array('description' => 'The product Attachments', 'class' => 'Attachment', 'specific_management' => true),
             'carriers' => array('description' => 'The Carriers', 'class' => 'Carrier'),
             'carts' => array('description' => 'Customer\'s carts', 'class' => 'Cart'),
             'cart_rules' => array('description' => 'Cart rules management', 'class' => 'CartRule'),
@@ -1797,7 +1798,7 @@ class WebserviceRequestCore
      *
      * @return array with displaying informations (used in the dispatcher)
      */
-    protected function returnOutput()
+    public function returnOutput()
     {
         $return = array();
 

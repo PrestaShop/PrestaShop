@@ -56,6 +56,29 @@ class AttachmentCore extends ObjectModel
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
             'description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
         ),
+        'associations' => array(
+            'products' => array('type' => self::HAS_MANY, 'field' => 'id_product', 'object' => 'Product', 'association' => 'product_attachment'),
+        ),
+    );
+
+    protected $webserviceParameters = array(
+        'objectNodeNames' => 'attachments',
+        'hidden_fields' => array(),
+        'fields' => array(
+            'file' => array(),
+            'file_name' => array(),
+            'file_size' => array(),
+            'mime' => array(),
+        ),
+        'associations' => array(
+            'products' => array(
+                'resource' => 'product',
+                'api' => 'products',
+                'fields' => array(
+                    'id' => array('required' => true),
+                ),
+            ),
+        ),
     );
 
     /**
@@ -148,6 +171,32 @@ class AttachmentCore extends ObjectModel
     }
 
     /**
+     * Unassociate all products from the current object
+     *
+     * @param bool $update_cache
+     *                           If set to true attachment cache will be updated
+     *
+     * @return bool Deletion result
+     */
+    public function deleteAttachments($update_attachment_cache = true)
+    {
+        $product_ids = Db::getInstance()->executeS('
+			SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product_attachment`
+			WHERE `id_attachment` = ' . (int) $this->id);
+        $res = Db::getInstance()->execute('
+			DELETE FROM `' . _DB_PREFIX_ . 'product_attachment`
+			WHERE `id_attachment` = ' . (int) $this->id);
+
+        if (isset($update_attachment_cache) && (bool) $update_attachment_cache === true) {
+            foreach ($product_ids as $product_id) {
+                Product::updateCacheAttachment((int) $product_id);
+            }
+        }
+
+        return $res;
+    }
+
+    /**
      * Delete Product attachments for the given Product ID.
      *
      * @param int $idProduct Product ID
@@ -237,7 +286,7 @@ class AttachmentCore extends ObjectModel
             $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'product_attachment` pa
 					LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (pa.`id_product` = pl.`id_product`' . Shop::addSqlRestrictionOnLang('pl') . ')
 					WHERE `id_attachment` IN (' . implode(',', array_map('intval', $idsAttachments)) . ')
-						AND pl.`id_lang` = ' . (int) $idLang;
+					AND pl.`id_lang` = ' . (int) $idLang;
             $tmp = Db::getInstance()->executeS($sql);
             $productAttachments = array();
             foreach ($tmp as $t) {
@@ -248,5 +297,37 @@ class AttachmentCore extends ObjectModel
         } else {
             return false;
         }
+    }
+
+    /**
+     * Get attachment products ids of current attachment for association.
+     *
+     * @return array
+     */
+    public function getWsProducts()
+    {
+        $result = Db::getInstance()->executeS('SELECT p.`id_product` AS id
+			FROM `' . _DB_PREFIX_ . 'product_attachment` pa
+			LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = pa.id_product)
+			' . Shop::addSqlAssociation('product', 'p') . '
+			WHERE pa.`id_attachment` = ' . (int) $this->id);
+
+        return $result;
+    }
+
+    /**
+     * Set products ids of current attachment for association.
+     *
+     * @param $products ids
+     */
+    public function setWsProducts($products)
+    {
+        $this->deleteAttachments(true);
+        foreach ($products as $product) {
+            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment` (`id_product`, `id_attachment`) VALUES (' . (int) $product['id'] . ', ' . (int) $this->id . ')');
+            Product::updateCacheAttachment((int) $product['id']);
+        }
+
+        return true;
     }
 }
