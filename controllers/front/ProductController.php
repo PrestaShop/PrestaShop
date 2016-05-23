@@ -780,6 +780,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->l('Items') : $this->l('Item');
         $product_full['quantity_discounts'] = $this->quantity_discounts;
 
+        if ($product_full['price'] && $product_full['unit_price_ratio'] > 0) {
+            $product_full['unit_price'] = $product_full['price'] / $product_full['unit_price_ratio'];
+        }
 
         $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int)Group::getCurrent()->id);
         if ($group_reduction === false) {
