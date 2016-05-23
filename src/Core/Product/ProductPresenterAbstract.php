@@ -4,6 +4,7 @@ namespace PrestaShop\PrestaShop\Core\Product;
 
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use Symfony\Component\Translation\TranslatorInterface;
 use Configuration;
@@ -25,11 +26,11 @@ abstract class ProductPresenterAbstract
         ProductColorsRetriever $productColorsRetriever,
         TranslatorInterface $translator
     ) {
-        $this->imageRetriever = $imageRetriever;
-        $this->link = $link;
-        $this->priceFormatter = $priceFormatter;
+        $this->imageRetriever         = $imageRetriever;
+        $this->link                   = $link;
+        $this->priceFormatter         = $priceFormatter;
         $this->productColorsRetriever = $productColorsRetriever;
-        $this->translator = $translator;
+        $this->translator             = $translator;
     }
 
     private function shouldShowPrice(
@@ -56,7 +57,7 @@ abstract class ProductPresenterAbstract
         if (isset($product['id_product_attribute'])) {
             foreach ($presentedProduct['images'] as $image) {
                 foreach ($image['associatedVariants'] as $id) {
-                    if ((int) $id === (int) $product['id_product_attribute']) {
+                    if ((int)$id === (int)$product['id_product_attribute']) {
                         $presentedProduct['cover'] = $image;
                         break 2;
                     }
@@ -95,21 +96,13 @@ abstract class ProductPresenterAbstract
             $presentedProduct['has_discount'] = true;
             $presentedProduct['discount_type'] = $product['specific_prices']['reduction_type'];
             // TODO: format according to locale preferences
-            $presentedProduct['discount_percentage'] = -round(100 * $product['specific_prices']['reduction']).'%';
+            $presentedProduct['discount_percentage'] = -round(100 * $product['specific_prices']['reduction'])."%";
             $regular_price = $product['price_without_reduction'];
         }
 
         $presentedProduct['price_amount'] = $this->priceFormatter->format($price);
         $presentedProduct['price'] = $this->priceFormatter->format($price);
         $presentedProduct['regular_price'] = $this->priceFormatter->format($regular_price);
-
-        if (isset($product['unit_price']) && $product['unit_price']) {
-            $presentedProduct['unit_price'] = $this->priceFormatter->format($product['unit_price']);
-            $presentedProduct['unit_price_full'] = $this->priceFormatter->format($product['unit_price'])
-                .' '.$product['unity'];
-        } else {
-            $presentedProduct['unit_price'] = $presentedProduct['unit_price_full'] = '';
-        }
 
         return $presentedProduct;
     }
@@ -118,11 +111,11 @@ abstract class ProductPresenterAbstract
         array $presentedProduct,
         array $product
     ) {
-        $presentedProduct['ecotax'] = array(
+        $presentedProduct['ecotax'] = [
             'value' => $this->priceFormatter->format($product['ecotax']),
             'amount' => $product['ecotax'],
             'rate' => $product['ecotax_rate'],
-        );
+        ];
 
         return $presentedProduct;
     }
@@ -132,7 +125,7 @@ abstract class ProductPresenterAbstract
         array $product
     ) {
         $presentedProduct['quantity_discounts'] =
-            (isset($product['quantity_discounts'])) ? $product['quantity_discounts'] : array();
+            (isset($product['quantity_discounts'])) ? $product['quantity_discounts'] : [];
 
         return $presentedProduct;
     }
@@ -198,16 +191,15 @@ abstract class ProductPresenterAbstract
         $colors = $this->productColorsRetriever->getColoredVariants($product['id_product']);
 
         if (!is_array($colors)) {
-            $presentedProduct['main_variants'] = array();
-
+            $presentedProduct['main_variants'] = [];
             return $presentedProduct;
         }
 
         $presentedProduct['main_variants'] = array_map(function (array $color) use ($language) {
-            $color['add_to_cart_url'] = $this->getAddToCartURL($color);
-            $color['url'] = $this->getProductURL($color, $language);
-            $color['type'] = 'color';
-            $color['html_color_code'] = $color['color'];
+            $color['add_to_cart_url']   = $this->getAddToCartURL($color);
+            $color['url']               = $this->getProductURL($color, $language);
+            $color['type']              = 'color';
+            $color['html_color_code']   = $color['color'];
             unset($color['color']);
             unset($color['id_attribute']); // because what is a template supposed to do with it?
 
@@ -222,43 +214,43 @@ abstract class ProductPresenterAbstract
         ProductPresentationSettings $settings,
         array $product
     ) {
-        $labels = array();
+        $labels = [];
 
         $show_price = $this->shouldShowPrice($settings, $product);
 
         if ($show_price && $product['online_only']) {
-            $labels['online-only'] = array(
+            $labels['online-only'] = [
                 'type' => 'online-only',
-                'label' => $this->translator->trans('Online only', array(), 'Product'),
-            );
+                'label' => $this->translator->trans('Online only', [], 'Product')
+            ];
         }
 
         if ($show_price && $product['on_sale'] && !$settings->catalog_mode) {
-            $labels['on-sale'] = array(
+            $labels['on-sale'] = [
                 'type' => 'on-sale',
-                'label' => $this->translator->trans('On sale!', array(), 'Product'),
-            );
+                'label' => $this->translator->trans('On sale!', [], 'Product')
+            ];
         }
 
         if ($show_price && $product['reduction'] && !$settings->catalog_mode && !$product['on_sale']) {
-            $labels['discount'] = array(
+            $labels['discount'] = [
                 'type' => 'discount',
-                'label' => $this->translator->trans('Reduced price', array(), 'Product'),
-            );
+                'label' => $this->translator->trans('Reduced price', [], 'Product')
+            ];
         }
 
         if ($product['new']) {
-            $labels['new'] = array(
+            $labels['new'] = [
                 'type' => 'new',
-                'label' => $this->translator->trans('New', array(), 'Product'),
-            );
+                'label' => $this->translator->trans('New', [], 'Product')
+            ];
         }
 
         if ($product['pack']) {
-            $labels['pack'] = array(
+            $labels['pack'] = [
                 'type' => 'pack',
-                'label' => $this->translator->trans('Pack', array(), 'Product'),
-            );
+                'label' => $this->translator->trans('Pack', [], 'Product')
+            ];
         }
 
         $presentedProduct['labels'] = $labels;
@@ -273,25 +265,25 @@ abstract class ProductPresenterAbstract
     ) {
         switch ($product['condition']) {
             case 'new':
-                $presentedProduct['condition'] = array(
+                $presentedProduct['condition'] = [
                     'type' => 'new',
-                    'label' => $this->translator->trans('New product', array(), 'Product'),
+                    'label' => $this->translator->trans('New product', [], 'Product'),
                     'schema_url' => 'https://schema.org/NewCondition',
-                );
+                ];
                 break;
             case 'used':
-                $presentedProduct['condition'] = array(
+                $presentedProduct['condition'] = [
                     'type' => 'used',
-                    'label' => $this->translator->trans('Used', array(), 'Product'),
+                    'label' => $this->translator->trans('Used', [], 'Product'),
                     'schema_url' => 'https://schema.org/UsedCondition',
-                );
+                ];
                 break;
             case 'refurbished':
-                $presentedProduct['condition'] = array(
+                $presentedProduct['condition'] = [
                     'type' => 'refurbished',
-                    'label' => $this->translator->trans('Refurbished', array(), 'Product'),
+                    'label' => $this->translator->trans('Refurbished', [], 'Product'),
                     'schema_url' => 'https://schema.org/RefurbishedCondition',
-                );
+                ];
                 break;
             default:
                 $presentedProduct['condition'] = false;
@@ -331,7 +323,7 @@ abstract class ProductPresenterAbstract
                 } else {
                     $presentedProduct['availability_message'] = $this->translator->trans(
                         'Out Of Stock',
-                        array(),
+                        [],
                         'Product'
                     );
                     $presentedProduct['availability_date'] = $product['available_date'];
@@ -340,7 +332,7 @@ abstract class ProductPresenterAbstract
             } elseif ($product['quantity_all_versions']) {
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'Product available with different options',
-                    array(),
+                    [],
                     'Product'
                 );
                 $presentedProduct['availability_date'] = $product['available_date'];
@@ -348,7 +340,7 @@ abstract class ProductPresenterAbstract
             } else {
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'Out Of Stock',
-                    array(),
+                    [],
                     'Product'
                 );
                 $presentedProduct['availability_date'] = $product['available_date'];

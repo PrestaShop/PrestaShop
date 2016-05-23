@@ -46,7 +46,11 @@
                                                         <li>
                                                             <label>{$field.label}</label>
                                                             {if $field.type == 'text'}
-                                                                <span>{$field.text}</span>
+                                                                {if (int)$field.id_module}
+                                                                    <span>{$field.text nofilter}</span>
+                                                                {else}
+                                                                    <span>{$field.text}</span>
+                                                                {/if}
                                                             {else if $field.type == 'image'}
                                                                 <img src="{$field.image.small.url}">
                                                             {/if}

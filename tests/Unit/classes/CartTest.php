@@ -61,6 +61,7 @@ class FakeProductPriceCalculator
             'id_shop' => null,
             'id_product' => $id,
             'id_product_attribute' => $id,
+            'id_customization' => 0,
             'cart_quantity' => $product->quantity,
             'price' => $product->price
         );

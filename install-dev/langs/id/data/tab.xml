@@ -3,9 +3,8 @@
   <tab id="SELL" name="SELL" />
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
-  <tab id="DEFAULT" name="DEFAULT" />
   <tab id="Addresses" name="Alamat"/>
-  <tab id="Module_Page" name="Modules &amp; Services" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Administration" name="Administrasi"/>
   <tab id="Advanced_Parameters" name="Parameter lanjutan"/>
   <tab id="Attachments" name="Lampiran"/>
@@ -64,8 +63,8 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menu"/>
   <tab id="Merchandise_Returns" name="Retur barang"/>
-  <tab id="Modules" name="Modules" />
-  <tab id="Modules_1" name="Modules" />
+  <tab id="Modules" name="Modul dan layanan"/>
+  <tab id="Modules_1" name="Modul dan layanan"/>
   <tab id="Monitoring" name="Monitoring"/>
   <tab id="Multistore" name="Multistore"/>
   <tab id="Order_Messages" name="Pesan"/>
@@ -124,5 +123,5 @@
   <tab id="Warehouses" name="Gudang"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Zones" name="Zona"/>
-  <tab id="Marketing_tools" name="Modules Catalog" />
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>

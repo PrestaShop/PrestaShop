@@ -3,10 +3,9 @@
   <tab id="SELL" name="SELL" />
   <tab id="IMPROVE" name="IMPROVE" />
   <tab id="CONFIGURE" name="CONFIGURE" />
-  <tab id="DEFAULT" name="DEFAULT" />
   <tab id="Addresses" name="Адреси"/>
   <tab id="Administration" name="администрација"/>
-  <tab id="Module_Page" name="Modules &amp; Services" />
+  <tab id="Module_Page" name="Module Catalog" />
   <tab id="Advanced_Parameters" name="Напредни поставки"/>
   <tab id="Attachments" name="прилози"/>
   <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -64,8 +63,8 @@
   <tab id="Marketing" name="Маркетинг"/>
   <tab id="Menus" name="Мени"/>
   <tab id="Merchandise_Returns" name="Враќање на производи"/>
-  <tab id="Modules_1" name="Modules" />
-  <tab id="Modules" name="Modules" />
+  <tab id="Modules_1" name="Модули"/>
+  <tab id="Modules" name="Модули"/>
   <tab id="Monitoring" name="Надзор"/>
   <tab id="Multistore" name="Синџир на продавници"/>
   <tab id="Order_Messages" name="Пораки за нарачки"/>
@@ -124,5 +123,5 @@
   <tab id="Warehouses" name="Магацини"/>
   <tab id="Webservice" name="Web сервис"/>
   <tab id="Zones" name="Зони"/>
-  <tab id="Marketing_tools" name="Modules Catalog" />
+  <tab id="Marketing_tools" name="Marketing tools"/>
 </entity_tab>
