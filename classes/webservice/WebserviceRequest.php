@@ -45,9 +45,9 @@ class WebserviceRequestCore
 
     /**
      * Set if the management is specific or if it is classic (entity management)
-     * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|false
+     * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|WebserviceSpeficitManagementAttachments|false
      */
-    protected $objectSpecificManagement = false;
+    public $objectSpecificManagement = false;
 
     /**
      * Base PrestaShop webservice URL
@@ -256,6 +256,7 @@ class WebserviceRequestCore
     {
         $resources = array(
             'addresses' => array('description' => 'The Customer, Brand and Customer addresses','class' => 'Address'),
+            'attachments' => array( 'description' => 'The product Attachments', 'class' => 'Attachment', 'specific_management' => true),
             'carriers' => array('description' => 'The Carriers','class' => 'Carrier'),
             'carts' => array('description' => 'Customer\'s carts', 'class' => 'Cart'),
             'cart_rules' => array('description' => 'Cart rules management', 'class' => 'CartRule'),
@@ -1294,7 +1295,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    protected function executeEntityPost()
+    public function executeEntityPost()
     {
         return $this->saveEntityFromXml(201);
     }
@@ -1304,7 +1305,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    protected function executeEntityPut()
+    public function executeEntityPut()
     {
         return $this->saveEntityFromXml(200);
     }
@@ -1314,7 +1315,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    protected function executeEntityDelete()
+    public function executeEntityDelete()
     {
         $objects = array();
         $arr_avoid_id = array();
@@ -1644,7 +1645,7 @@ class WebserviceRequestCore
      *
      * @return array with displaying informations (used in the dispatcher).
      */
-    protected function returnOutput()
+    public function returnOutput()
     {
         $return = array();
 
