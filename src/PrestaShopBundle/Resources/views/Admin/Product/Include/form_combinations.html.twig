@@ -45,9 +45,9 @@
       </div>
     </div>
 
-    <div>
+    <div class="combinations-list">
       {{ form_errors(form.combinations) }}
-      <table class="table table-striped">
+      <table class="table table-striped table-no-bordered">
         <thead id="combinations_thead" {% if form.combinations|length == 0 %}style="display: none;"{% endif %}>
         <tr class="uppercase">
           <th>

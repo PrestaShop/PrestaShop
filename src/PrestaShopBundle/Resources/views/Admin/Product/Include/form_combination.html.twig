@@ -5,19 +5,20 @@
     <td class="attribute-price">
         <div class="input-group">
             <span class="input-group-addon">€ </span>
-            <input type="number" class="attribute_priceTE form-control" value="{{ form.vars.value.attribute_price }}">
+            <input type="number" class="attribute_priceTE form-control text-xs-right" value="{{ form.vars.value.attribute_price }}">
         </div>
     </td>
-    <td class="attribute-finalprice" data-price="{{ form.vars.value.final_price }}">{{ form.vars.value.final_price }}</td>
+    <td class="attribute-finalprice text-xs-right" data-price="{{ form.vars.value.final_price }}">{{ form.vars.value.final_price }}</td>
     <td class="attribute-quantity">
         <div>
-            <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control">
+            <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control text-xs-right">
         </div>
     </td>
-    <td class="text-right">
-        <div class="btn-group" role="group">
-            <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-default btn-sm btn-open"><i class="material-icons">mode_edit</i></a>
-            <a href="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}" class="btn btn-default btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
+
+    <td class="attribute-actions">
+        <div class="btn-group btn-group-sm" role="group">
+            <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-open btn-invisible btn-sm"><i class="material-icons">mode_edit</i></a>
+            <a href="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}" class="btn btn-open btn-invisible btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
             {% set checked = form.vars.value.attribute_default == 1 ? 'checked' : '' %}
             <input class="attribute-default" type="radio" {{ checked }} data-id="{{ form.vars.value.id_product_attribute }}">
         </div>
