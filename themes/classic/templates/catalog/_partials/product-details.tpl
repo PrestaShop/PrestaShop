@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="product-details">
+<div class="tab-pane fade" id="product-details">
   {block name='product_reference'}
     {if $product.reference}
       <div class="product-reference">
