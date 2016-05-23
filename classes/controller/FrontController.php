@@ -281,7 +281,7 @@ class FrontControllerCore extends Controller
             $this->context->cookie->id_cart = (int)$id_cart;
         }
 
-        if ($this->auth && !$this->context->customer->isLogged($this->guestAllowed)) {
+        if ($this->auth && !$this->context->customer->isLogged()) {
             Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
         }
 
