@@ -1,5 +1,5 @@
 <?php
-@ini_set('display_errors', 'on');
+define('_PS_MODE_DEV_', false);
 require '../../config/config.inc.php';
 
 // useful variables

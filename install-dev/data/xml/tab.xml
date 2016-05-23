@@ -410,6 +410,9 @@
                 <tab id="Multistore" id_parent="Advanced_Parameters" active="0" hide_host_mode="0" icon="">
                     <class_name>AdminShopGroup</class_name>
                 </tab>
-
+      <!--DEFAULT-->
+      <tab id="DEFAULT" id_parent="" active="1" hide_host_mode="0" icon="">
+        <class_name>DEFAULT</class_name>
+      </tab>
     </entities>
 </entity_tab>
