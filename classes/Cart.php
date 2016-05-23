@@ -2662,10 +2662,9 @@ class CartCore extends ObjectModel
     */
     public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
+        static $_total_shipping;
 
-        if (defined(self::$_total_shipping)) {
-            static $_total_shipping;
-
+        if (null === $_total_shipping) {
             if (isset(Context::getContext()->cookie->id_country)) {
                 $default_country = new Country(Context::getContext()->cookie->id_country);
             }
@@ -2673,21 +2672,21 @@ class CartCore extends ObjectModel
                 $delivery_option = $this->getDeliveryOption($default_country, false, false);
             }
 
-            self::$_total_shipping = 0;
+            $_total_shipping = 0;
             $delivery_option_list = $this->getDeliveryOptionList($default_country);
             foreach ($delivery_option as $id_address => $key) {
                 if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
                     continue;
                 }
                 if ($use_tax) {
-                    self::$_total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
+                    $_total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
                 } else {
-                    self::$_total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
+                    $_total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
                 }
             }
         }
 
-        return self::$_total_shipping;
+        return $_total_shipping;
     }
 
     /**
