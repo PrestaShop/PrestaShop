@@ -33,7 +33,7 @@
     "symfony/swiftmailer-bundle": "2.3.11",
     "swiftmailer/swiftmailer": "5.4.1",
     "symfony/monolog-bundle": "2.8.2",
-    "sensio/distribution-bundle": "4.0.1",
+    "sensio/distribution-bundle": "4.0.6",
     "sensio/framework-extra-bundle": "3.0.10",
     "sensio/generator-bundle": "~2.3",
     "composer/installers": "1.0.21",
