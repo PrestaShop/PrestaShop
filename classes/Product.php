@@ -586,7 +586,7 @@ class ProductCore extends ObjectModel
      */
     public static function initPricesComputation($id_customer = null)
     {
-        if ($id_customer !== null) {
+        if ($id_customer > 0) {
             $customer = new Customer((int)$id_customer);
             if (!Validate::isLoadedObject($customer)) {
                 die(Tools::displayError());
