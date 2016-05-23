@@ -10,17 +10,26 @@
     {/block}
 
     {block name='product_price'}
-      <p class="product-price h5 text-uppercase {if $product.has_discount}has-discount{/if}" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+      <p
+        class="product-price h5 text-uppercase {if $product.has_discount}has-discount{/if}"
+        itemprop="offers"
+        itemscope
+        itemtype="https://schema.org/Offer"
+      >
         <link itemprop="availability" href="https://schema.org/InStock"/>
+        <meta itemprop="priceCurrency" content="{$currency.iso_code}">
         <span itemprop="price" content="{$productPrice}">{$product.price}</span>
         {if $feature_active.display_taxes_label}
           <small class="text-capitalize">{if $priceDisplay} {l s='tax excl.'}{else} {l s='Tax incl.'}{/if}</small>
         {/if}
-        <meta itemprop="priceCurrency" content="{$currency.iso_code}">
+
         {hook h='displayProductPriceBlock' product=$product type="price"}
+
         {if $product.has_discount}
           {if $product.discount_type === 'percentage'}
             <span class="discount-percentage">{l s='SAVE %s' sprintf=$product.discount_percentage}</span>
+          {else}
+            <span class="discount-amount">{l s='SAVE %s' sprintf=$product.discount_amount}</span>
           {/if}
         {/if}
       </p>
