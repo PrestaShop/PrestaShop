@@ -408,6 +408,7 @@ class ProductCore extends ObjectModel
             'tax_rules_group' =>     array('type' => self::HAS_ONE),
             'categories' =>          array('type' => self::HAS_MANY, 'field' => 'id_category', 'object' => 'Category', 'association' => 'category_product'),
             'stock_availables' =>    array('type' => self::HAS_MANY, 'field' => 'id_stock_available', 'object' => 'StockAvailable', 'association' => 'stock_availables'),
+            'attachments' =>                array('type' => self::HAS_MANY, 'field' => 'id_attachment', 'object' => 'Attachment','association' => 'product_attachment'),
         ),
     );
 
@@ -509,6 +510,13 @@ class ProductCore extends ObjectModel
                     'id_product_attribute' => array('required' => true),
                 ),
                 'setter' => false
+            ),
+            'attachments' => array(
+                'resource' => 'attachment',
+                'api' => 'attachments',
+                'fields' => array(
+                    'id' => array('required' => true),
+                ),
             ),
             'accessories' => array(
                 'resource' => 'product',
@@ -5889,6 +5897,37 @@ class ProductCore extends ObjectModel
         return Db::getInstance()->executeS('SELECT `id_stock_available` id, `id_product_attribute`
 			FROM `'._DB_PREFIX_.'stock_available`
 			WHERE `id_product`='.(int)$this->id.StockAvailable::addSqlShopRestriction());
+    }
+    
+    /**
+     * Webservice getter : get product attachments ids of current product for association
+     *
+     * @return array
+     */
+    public function getWsAttachments()
+    {
+    	$result = Db::getInstance()->executeS('SELECT a.`id_attachment` AS id
+			FROM `' . _DB_PREFIX_ . 'product_attachment` pa
+			LEFT JOIN `' . _DB_PREFIX_ . 'attachment` a ON (pa.id_attachment = a.id_attachment)
+			' . Shop::addSqlAssociation('attachment', 'a') . '
+			WHERE pa.`id_product` = ' . (int) $this->id);
+    	return $result;
+    }
+    
+    /**
+     * Webservice setter : set product attachments ids of current product for association
+     *
+     * @param $attachments ids
+     */
+    public function setWsAttachments($attachments)
+    {
+    	$this->deleteAttachments(true);
+    	foreach ($attachments as $attachment) {
+    		Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attachment` 
+    				(`id_product`, `id_attachment`) VALUES (' . (int) $this->id . ', ' . (int) $attachment['id'] . ')');
+    	}
+    	Product::updateCacheAttachment((int) $this->id);
+    	return true;
     }
 
     public function getWsTags()
