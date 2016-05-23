@@ -102,7 +102,7 @@ class HelperOptionsCore extends Helper
                     $this->context->controller->addJqueryPlugin('colorpicker');
                 }
 
-                if ($field['type'] == 'texarea' || $field['type'] == 'textareaLang') {
+                if ($field['type'] == 'textarea' || $field['type'] == 'textareaLang') {
 
                     if (isset($field['autoload_rte']) && $field['autoload_rte'] == true) {
                         $iso = $this->context->language->iso_code;
