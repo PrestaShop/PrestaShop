@@ -150,7 +150,6 @@
       margin-bottom: 0;
       background-color: transparent;
       max-width: 100%;
-      width: auto !important;
     }
   }
   // Combination details form
@@ -500,9 +499,6 @@
     resize: none;
     height: rem(140px);
   }
-  .tokenfield input.token-input[type=text] {
-    width: 100% !important;
-  }
   #product-attachment-file {
     border: $gray-light 2px solid;
     thead {
@@ -532,5 +528,88 @@
   }
   a {
     color: $gray-medium;
+  }
+}
+
+#attributes-list {
+  .attribute-group {
+    border: rem(1px) solid $gray-light;
+    border-bottom-width: 0;
+
+    &:last-child {
+      border-bottom-width: rem(1px);
+    }
+
+    .attribute-group-name {
+      display: block;
+      font-weight: $font-weight-semibold;
+      color: $gray-dark;
+      padding: rem(7px);
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &:after {
+        content: "\E316";
+        font-family: "Material Icons";
+        float: right;
+      }
+
+      &.collapsed:after {
+        content: "\E313";
+      }
+    }
+
+    .attributes {
+      border-top: 2px solid $gray-light;
+      padding: em(7px);
+      height: rem(158px);
+      overflow: auto;
+
+      .attribute {
+        .js-attribute-checkbox {
+          display: none;
+
+          +.attribute-label {
+            display: inline-block;
+            font-size: $font-size-sm;
+            color: $gray-light;
+            margin: 0;
+
+            .pretty-checkbox {
+              content: "";
+              float: left;
+              height: rem(16px);
+              width: rem(16px);
+              margin-right: rem(7px);
+              border: rem(1px) solid $gray-light;
+            }
+          }
+
+          &:checked {
+            +.attribute-label {
+              font-weight: $font-weight-semibold;
+              color: $gray-medium;
+
+              .pretty-checkbox {
+                border-color: $gray-medium;
+                border-width: rem(2px);
+
+                &.not-color:before {
+                  content: "\E5CA";
+                  font-family: "Material Icons";
+                  line-height: rem(12px);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &.two-columns {
+        columns: 2;
+      }
+    }
   }
 }

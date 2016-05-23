@@ -1,42 +1,62 @@
 <?php
-/**
- * 2007-2015 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
- */
+
 namespace PrestaShopBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * Class AdminFilter
- * @package PrestaShopBundle\Entity
+ * AdminFilter
+ *
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="admin_filter_search_idx", columns={"employee", "shop", "controller", "action"})})
+ * @ORM\Entity
  */
 class AdminFilter
 {
-    protected $id;
-    protected $employee;
-    protected $shop;
-    protected $controller;
-    protected $action;
-    protected $filter;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="employee", type="integer")
+     */
+    private $employee;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="shop", type="integer")
+     */
+    private $shop;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="controller", type="string", length=60)
+     */
+    private $controller;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="action", type="string", length=100)
+     */
+    private $action;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="filter", type="text")
+     */
+    private $filter;
+
+
 
     /**
      * Get id
@@ -189,7 +209,7 @@ class AdminFilter
             'last_offset' => 0,
             'last_limit' => 20,
             'last_orderBy' => 'id_product',
-            'last_sortOrder' => 'asc'
+            'last_sortOrder' => 'asc',
         );
     }
 

@@ -68,9 +68,8 @@ class ProductQuantity extends CommonAbstractType
         $builder->add('attributes', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'attr' =>  [
                 'class' => 'tokenfield',
-                'data-limit' => 20,
                 'data-minLength' => 1,
-                'placeholder' => $this->translator->trans('Search for attributes', [], 'AdminProducts'),
+                'placeholder' => $this->translator->trans('Enter the desired combinations. E.g.: « Size: all », « Color: red ».', [], 'AdminProducts'),
                 'data-prefetch' => $this->router->generate('admin_attribute_get_all'),
                 'data-action' => $this->router->generate('admin_attribute_generator'),
             ],

@@ -32,7 +32,6 @@ $(document).ready(function() {
   formCategory.init();
   stock.init();
   supplier.init();
-  combinationGenerator.init();
   specificPrices.init();
   warehouseCombinations.init();
   customFieldCollection.init();
@@ -511,120 +510,6 @@ var nav = (function() {
 })();
 
 /**
- * Combinations creator management
- */
-var combinationGenerator = (function() {
-  var id_product = $('#form_id_product').val();
-
-  /** Generate combinations */
-  function generate() {
-    /**
-     * Combination row maker
-     * @param {object} attribute
-     */
-    var combinationRowMaker = function(form) {
-      var combinationsLength = $('#accordion_combinations').children().length;
-      var newForm = form.replace(/product_combination\[/g, 'form[step3][combinations][' + combinationsLength + '][')
-        .replace(/id="product_combination_/g, 'id="form_step3_combinations_' + combinationsLength + '_')
-        .replace(/__loop_index__/g, combinationsLength);
-
-      $('#accordion_combinations').prepend(newForm);
-      displayFieldsManager.refresh();
-      combinations.refreshImagesCombination();
-    };
-
-    $.ajax({
-      type: 'POST',
-      url: $('#form_step3_attributes').attr('data-action'),
-      data: $('#attributes-generator input.attribute-generator, #form_id_product').serialize(),
-      beforeSend: function() {
-        $('#create-combinations').attr('disabled', 'disabled');
-      },
-      success: function(response) {
-        $.each(response, function(key, val) {
-          combinationRowMaker(val);
-        });
-
-        /** initialize form */
-        $('input.attribute-generator').remove();
-        $('#attributes-generator div.token').remove();
-      },
-      complete: function() {
-        $('#create-combinations').removeAttr('disabled');
-        supplierCombinations.refresh();
-        warehouseCombinations.refresh();
-      }
-    });
-  }
-
-  return {
-    'init': function() {
-      /** Create Bloodhound engine */
-      var engine = new Bloodhound({
-        datumTokenizer: function(d) {
-          return Bloodhound.tokenizers.whitespace(d.label);
-        },
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {
-          url: $('#form_step3_attributes').attr('data-prefetch'),
-          cache: false
-        }
-      });
-
-      /** Filter suggestion with selected tokens */
-      var filter = function(suggestions) {
-        var selected = [];
-        $('#attributes-generator input.attribute-generator').each(function() {
-          selected.push($(this).val());
-        });
-
-        return $.grep(suggestions, function(suggestion) {
-          return $.inArray(suggestion.value, selected) === -1 && $.inArray('group-' + suggestion.data.id_group, selected) === -1;
-        });
-      };
-
-      /** init input typeahead */
-      $('#form_step3_attributes').tokenfield({
-        typeahead: [{
-          hint: false,
-          cache: false
-        }, {
-          source: function(query, syncResults) {
-            engine.search(query, function(suggestions) {
-              syncResults(filter(suggestions));
-            });
-          },
-          display: 'label'
-        }]
-      });
-
-      /** On event "tokenfield:createtoken" : stop event if its not a typehead result */
-      $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
-        if (!e.attrs.data) {
-          return false;
-        }
-      });
-
-      /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
-      $('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
-        if (e.attrs.data) {
-          $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + e.attrs.value + '" class="attribute-generator" value="' + e.attrs.value + '" name="options[' + e.attrs.data.id_group + '][' + e.attrs.value + ']" />');
-        }
-      });
-
-      /** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
-      $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
-        $('#attribute-generator-' + e.attrs.value).remove();
-      });
-
-      $('#create-combinations').click(function() {
-        generate();
-      });
-    }
-  };
-})();
-
-/**
  * Specific prices management
  */
 var specificPrices = (function() {
@@ -975,8 +860,111 @@ var form = (function() {
 
       /** show rendered form after page load */
       $(window).load(function() {
-        $('#form-loading').fadeIn();
+        $('#form-loading').fadeIn(function() {
+          /** Create Bloodhound engine */
+          var engine = new Bloodhound({
+            datumTokenizer: function(d) {
+              return Bloodhound.tokenizers.whitespace(d.label);
+            },
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {
+              url: $('#form_step3_attributes').attr('data-prefetch'),
+              cache: false
+            }
+          });
+
+          /** init input typeahead */
+          $('#form_step3_attributes').tokenfield({
+            typeahead: [{
+              hint: false,
+              cache: false
+            }, {
+              source: function(query, syncResults) {
+                engine.search(query, function(suggestions) {
+                  syncResults(filter(suggestions));
+                });
+              },
+              display: 'label'
+            }]
+          });
+
+          /** Filter suggestion with selected tokens */
+          var filter = function(suggestions) {
+            var selected = [];
+            $('#attributes-generator input.attribute-generator').each(function() {
+              selected.push($(this).val());
+            });
+
+            return $.grep(suggestions, function(suggestion) {
+              return $.inArray(suggestion.value, selected) === -1 && $.inArray('group-' + suggestion.data.id_group, selected) === -1;
+            });
+          };
+
+          /** On event "tokenfield:createtoken" : stop event if its not a typehead result */
+          $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
+            if (!e.attrs.data && e.handleObj.origType !== 'tokenfield:createtoken') {
+              return false;
+            }
+          });
+
+          /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
+          $('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
+            if (e.attrs.data) {
+              $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + e.attrs.value + '" class="attribute-generator" value="' + e.attrs.value + '" name="options[' + e.attrs.data.id_group + '][' + e.attrs.value + ']" />');
+            }
+          });
+
+          /** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
+          $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
+            $('#attribute-generator-' + e.attrs.value).remove();
+          });
+
+          $('#create-combinations').click(function() {
+            generate();
+          });
+        });
         imagesProduct.expander();
+
+        /** Generate combinations */
+        function generate() {
+          /**
+           * Combination row maker
+           * @param {object} attribute
+           */
+          var combinationRowMaker = function(form) {
+            var combinationsLength = $('#accordion_combinations').children().length;
+            var newForm = form.replace(/product_combination\[/g, 'form[step3][combinations][' + combinationsLength + '][')
+              .replace(/id="product_combination_/g, 'id="form_step3_combinations_' + combinationsLength + '_')
+              .replace(/__loop_index__/g, combinationsLength);
+
+            $('#accordion_combinations').prepend(newForm);
+            displayFieldsManager.refresh();
+            combinations.refreshImagesCombination();
+          };
+
+          $.ajax({
+            type: 'POST',
+            url: $('#form_step3_attributes').attr('data-action'),
+            data: $('#attributes-generator input.attribute-generator, #form_id_product').serialize(),
+            beforeSend: function() {
+              $('#create-combinations').attr('disabled', 'disabled');
+            },
+            success: function(response) {
+              $.each(response, function(key, val) {
+                combinationRowMaker(val);
+              });
+
+              /** initialize form */
+              $('input.attribute-generator').remove();
+              $('#attributes-generator div.token').remove();
+            },
+            complete: function() {
+              $('#create-combinations').removeAttr('disabled');
+              supplierCombinations.refresh();
+              warehouseCombinations.refresh();
+            }
+          });
+        }
       });
     },
     'send': function() {

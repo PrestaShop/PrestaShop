@@ -83,31 +83,6 @@ CREATE TABLE `PREFIX_product_attachment` (
   PRIMARY KEY (`id_product`,`id_attachment`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_attribute` (
-  `id_attribute` int(10) unsigned NOT NULL auto_increment,
-  `id_attribute_group` int(10) unsigned NOT NULL,
-  `color` varchar(32) DEFAULT NULL,
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_attribute`),
-  KEY `attribute_group` (`id_attribute_group`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_attribute_group` (
-  `id_attribute_group` int(10) unsigned NOT NULL auto_increment,
-  `is_color_group` tinyint(1) NOT NULL DEFAULT '0',
-  `group_type` ENUM('select', 'radio', 'color') NOT NULL DEFAULT  'select',
-  `position` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_attribute_group`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_attribute_group_lang` (
-  `id_attribute_group` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `public_name` varchar(64) NOT NULL,
-  PRIMARY KEY (`id_attribute_group`,`id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_attribute_impact` (
   `id_attribute_impact` int(10) unsigned NOT NULL auto_increment,
   `id_product` int(11) unsigned NOT NULL,
@@ -116,14 +91,6 @@ CREATE TABLE `PREFIX_attribute_impact` (
   `price` decimal(17,2) NOT NULL,
   PRIMARY KEY (`id_attribute_impact`),
   UNIQUE KEY `id_product` (`id_product`,`id_attribute`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_attribute_lang` (
-  `id_attribute` int(10) unsigned NOT NULL,
-  `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(128) NOT NULL,
-  PRIMARY KEY (`id_attribute`,`id_lang`),
-  KEY `id_lang` (`id_lang`,`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_carrier` (
@@ -946,19 +913,6 @@ CREATE TABLE `PREFIX_image_type` (
   `stores` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_image_type`),
   KEY `image_type_name` (`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_lang` (
-  `id_lang` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(32) NOT NULL,
-  `active` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `iso_code` char(2) NOT NULL,
-  `language_code` char(5) NOT NULL,
-  `date_format_lite` char(32) NOT NULL DEFAULT 'Y-m-d',
-  `date_format_full` char(32) NOT NULL DEFAULT 'Y-m-d H:i:s',
-  `is_rtl` TINYINT(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_lang`),
-  KEY `lang_iso_code` (`iso_code`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_manufacturer` (
@@ -2012,31 +1966,6 @@ CREATE TABLE `PREFIX_import_match` (
   PRIMARY KEY (`id_import_match`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE IF NOT EXISTS `PREFIX_shop_group` (
-  `id_shop_group` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) CHARACTER SET utf8 NOT NULL,
-  `share_customer` TINYINT(1) NOT NULL,
-  `share_order` TINYINT(1) NOT NULL,
-  `share_stock` TINYINT(1) NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_shop_group`),
-  KEY `deleted` (`deleted`, `name`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
-  `id_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_shop_group` int(11) unsigned NOT NULL,
-  `name` varchar(64) CHARACTER SET utf8 NOT NULL,
-  `id_category` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `theme_name` varchar(255) NOT NULL DEFAULT '',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_shop`),
-  KEY `id_shop_group` (`id_shop_group`, `deleted`),
-  KEY `id_category` (`id_category`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
   `id_shop_url` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `id_shop` int(11) unsigned NOT NULL,
@@ -2111,13 +2040,6 @@ CREATE TABLE `PREFIX_image_shop` (
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_attribute_shop` (
-`id_attribute` INT(11) UNSIGNED NOT NULL,
-`id_shop` INT(11) UNSIGNED NOT NULL,
-	PRIMARY KEY (`id_attribute`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_feature_shop` (
 `id_feature` INT(11) UNSIGNED NOT NULL,
 `id_shop` INT(11) UNSIGNED NOT NULL ,
@@ -2129,13 +2051,6 @@ CREATE TABLE `PREFIX_group_shop` (
 `id_group` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 	PRIMARY KEY (`id_group`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_attribute_group_shop` (
-`id_attribute_group` INT( 11 ) UNSIGNED NOT NULL ,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
-	PRIMARY KEY (`id_attribute_group`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
