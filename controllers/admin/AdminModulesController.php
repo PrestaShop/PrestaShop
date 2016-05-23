@@ -689,7 +689,7 @@ class AdminModulesControllerCore extends AdminController
                     // Uninstall the module before deleting the files, but do not block the process if uninstall returns false
                     $moduleManagerBuilder = new ModuleManagerBuilder();
                     $moduleManager = $moduleManagerBuilder->build();
-    
+
                     if ($moduleManager->isInstalled($module->name)) {
                         $module->uninstall();
                     }
@@ -839,7 +839,7 @@ class AdminModulesControllerCore extends AdminController
 
                     $moduleManagerBuilder = new ModuleManagerBuilder();
                     $moduleManager = $moduleManagerBuilder->build();
-    
+
 
                     // Check potential error
                     if (!($module = Module::getInstanceByName(urldecode($name)))) {
@@ -1032,7 +1032,7 @@ class AdminModulesControllerCore extends AdminController
             $params = (count($installed_modules)) ? '&installed_modules='.implode('|', $installed_modules) : '';
             $moduleManagerBuilder = new ModuleManagerBuilder();
             $moduleManager = $moduleManagerBuilder->build();
-    
+
 
             // If redirect parameter is present and module installed with success, we redirect on configuration module page
             if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $return == '12' && $moduleManager->isInstalled(pSQL(Tools::getValue('module_name')))) {
@@ -1114,6 +1114,9 @@ class AdminModulesControllerCore extends AdminController
 
     public function postProcess()
     {
+        if (!Tools::getIsset('configure') && !Tools::getIsset('module_name')) {
+            Tools::redirectAdmin($this->context->link->getAdminLink('AdminModulesSf'));
+        }
         // Parent Post Process
         parent::postProcess();
 
@@ -1124,7 +1127,7 @@ class AdminModulesControllerCore extends AdminController
 
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
 
         // If redirect parameter is present and module already installed, we redirect on configuration module page
         if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $moduleManager->isInstalled(pSQL(Tools::getValue('module_name')))) {
