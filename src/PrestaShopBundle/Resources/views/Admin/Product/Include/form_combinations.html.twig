@@ -15,7 +15,7 @@
       <div class="alert alert-info" role="alert">
         <i class="material-icons">help</i>
         <p class="alert-text">
-          {{ 'To add combinations, enter the wanted attributes (like « size » or « color ») and their respective values (« XS », « red », etc.) in the field below, or select it in the right column. Then click on « Generate »: it will automatically create all the combinations for you! <br> If you haven’t got any attributes yet, you should first create some in <a class="alert-link" href=$adminTaxesUrl target="_blank">Attributes & Features</a>.'|trans({'$adminTaxesUrl': getAdminLink("AdminTaxes")}, 'AdminProducts')|raw }}
+          {{ 'To add combinations, enter the wanted attributes (like « size » or « color ») and their respective values (« XS », « red », etc.) in the field below, or select it in the right column. Then click on « Generate »: it will automatically create all the combinations for you! <br> If you haven’t got any attributes yet, you should first create some in <a class="alert-link" href=$adminTaxesUrl target="_blank">Attributes & Features</a>.'|trans({'$adminTaxesUrl': getAdminLink("AdminAttributesGroups")}, 'AdminProducts')|raw }}
         </p>
       </div>
       <div class="row">
@@ -125,6 +125,7 @@
                 id="attribute-{{ attribute.id }}"
                 data-label="{{ attribute_group.name }} : {{ attribute.name }}"
                 data-value="{{ attribute.id }}"
+                data-group-id="{{ attribute_group.id }}"
                 type="checkbox"
               >
               <label class="attribute-label" for="attribute-{{ attribute.id }}">

@@ -911,6 +911,8 @@ var form = (function() {
           $('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
             if (e.attrs.data) {
               $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + e.attrs.value + '" class="attribute-generator" value="' + e.attrs.value + '" name="options[' + e.attrs.data.id_group + '][' + e.attrs.value + ']" />');
+            } else if (e.handleObj.origType == 'tokenfield:createdtoken') {
+              $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" class="attribute-generator" value="' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" name="options[' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('group-id') + '][' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + ']" />');
             }
           });
 
@@ -957,6 +959,9 @@ var form = (function() {
               /** initialize form */
               $('input.attribute-generator').remove();
               $('#attributes-generator div.token').remove();
+              $('.js-attribute-checkbox:checked').each(function() {
+                $(this).prop('checked', false);
+              });
             },
             complete: function() {
               $('#create-combinations').removeAttr('disabled');
