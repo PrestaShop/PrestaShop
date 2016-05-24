@@ -180,9 +180,12 @@ class TranslateCore
                 if (file_exists($file)) {
                     include_once($file);
                     $_MODULES = !empty($_MODULES) ? $_MODULES + $_MODULE : $_MODULE; //we use "+" instead of array_merge() because array merge erase existing values.
-                    $translations_merged[$name] = true;
+                } else {
+                    // create an empty file
+                    @touch($file);
                 }
             }
+            $translations_merged[$name] = true;
         }
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);

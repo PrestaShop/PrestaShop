@@ -805,6 +805,7 @@ class AdminPerformanceControllerCore extends AdminController
         if ((bool)Tools::getValue('ccc_up')) {
             if ($this->tabAccess['edit'] === '1') {
                 $theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';
+                @mkdir($theme_cache_directory, 0777, true);
                 if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory)) {
                     $this->errors[] = sprintf(Tools::displayError('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory));
                 }

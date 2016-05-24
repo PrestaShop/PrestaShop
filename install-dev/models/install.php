@@ -109,7 +109,7 @@ class InstallModelInstall extends InstallAbstractModel
 
         // If mcrypt is activated, add Rijndael 128 configuration
         if (function_exists('mcrypt_encrypt')) {
-            if (!isset($config) && !isset($config['parameters']['_rijndael_key'])) {
+            if (!isset($config['parameters']['_rijndael_key'])) {
                 $parameters['parameters']['_rijndael_key'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
                 $parameters['parameters']['_rijndael_iv'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
             }
