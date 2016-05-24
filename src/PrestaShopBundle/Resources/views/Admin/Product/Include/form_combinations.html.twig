@@ -69,40 +69,6 @@
         </tbody>
       </table>
     </div>
-
-    <div class="form-group">
-      <div class="row">
-
-        <div class="col-md-12">
-          <h2>{{ 'Availability preferences'|trans({}, 'AdminProducts') }}</h2>
-        </div>
-
-        <div class="col-md-12">
-          <label class="form-control-label">{{ 'Behavior when out of stock'|trans({}, 'AdminProducts') }}</label>
-          {{ form_errors(form.out_of_stock) }}
-          {{ form_widget(form.out_of_stock) }}
-        </div>
-
-        <div class="col-md-4">
-            <label class="form-control-label">{{ form.available_now.vars.label }}</label>
-            {{ form_errors(form.available_now) }}
-            {{ form_widget(form.available_now) }}
-        </div>
-
-        <div class="col-md-4 ">
-            <label class="form-control-label">{{ form.available_later.vars.label }}</label>
-            {{ form_errors(form.available_later) }}
-            {{ form_widget(form.available_later) }}
-        </div>
-
-        <div class="col-md-4 ">
-          <label class="form-control-label">{{ form.available_date.vars.label }}</label>
-          {{ form_errors(form.available_date) }}
-          {{ form_widget(form.available_date) }}
-        </div>
-
-      </div>
-    </div>
   </div>
 
   <div id="attributes-list" class="col-md-3">
@@ -139,5 +105,39 @@
         </div>
       </div>
     {% endfor %}
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="row">
+
+    <div class="col-md-12">
+      <h2>{{ 'Availability preferences'|trans({}, 'AdminProducts') }}</h2>
+    </div>
+
+    <div class="col-md-12">
+      <label class="form-control-label">{{ 'Behavior when out of stock'|trans({}, 'AdminProducts') }}</label>
+      {{ form_errors(form.out_of_stock) }}
+      {{ form_widget(form.out_of_stock) }}
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-control-label">{{ form.available_now.vars.label }}</label>
+      {{ form_errors(form.available_now) }}
+      {{ form_widget(form.available_now) }}
+    </div>
+
+    <div class="col-md-4 ">
+      <label class="form-control-label">{{ form.available_later.vars.label }}</label>
+      {{ form_errors(form.available_later) }}
+      {{ form_widget(form.available_later) }}
+    </div>
+
+    <div class="col-md-4 ">
+      <label class="form-control-label">{{ form.available_date.vars.label }}</label>
+      {{ form_errors(form.available_date) }}
+      {{ form_widget(form.available_date) }}
+    </div>
+
   </div>
 </div>
