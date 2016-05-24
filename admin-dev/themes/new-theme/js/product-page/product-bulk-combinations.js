@@ -1,39 +1,39 @@
+import $ from 'jquery';
+
 /**
  * Combination bulk actions management
  */
 export default function() {
 
-  var bulkForm = document.querySelector('#bulk-combinations-container');
-  var combinationsTable = document.querySelector('#accordion_combinations');
-  var deleteCombinationsBtn = document.querySelector('#delete-combinations');
-  var applyChangesBtn = document.querySelector('#apply-on-combinations');
-  var selectAllCheckbox = document.querySelector('#toggle-all-combinations');
+  var bulkForm = $('#bulk-combinations-container');
+  var combinationsTable = $('#accordion_combinations');
+  var deleteCombinationsBtn = $('#delete-combinations');
+  var applyChangesBtn = $('#apply-on-combinations');
 
   return {
     'init': function init() {
       var that = this;
       // stop propagation on buttons
-      deleteCombinationsBtn.addEventListener('click', (event) => {
+      deleteCombinationsBtn.on('click', (event) => {
         event.preventDefault();
         that.deleteCombinations();
       });
 
-      applyChangesBtn.addEventListener('click', (event) => {
+      applyChangesBtn.on('click', (event) => {
         event.preventDefault();
         that.applyChangesOnCombinations();
       });
 
       // bulk select animation
-      selectAllCheckbox.addEventListener('change', (event) => {
-        var checkboxes = Array.from(document.querySelectorAll('#accordion_combinations td:first-child input[type="checkbox"]'));
-        checkboxes.forEach((checkbox) => {
-          checkbox.checked = selectAllCheckbox.checked;
+      $('#toggle-all-combinations').on('change', (event) => {
+        $('#accordion_combinations td:first-child input[type="checkbox"]').each(function () {
+          $(this).prop('checked', $(event.currentTarget).prop('checked'));
         });
       });
     },
     'getSelectedCombinations': function getSelectedCombinations() {
       var combinations = [];
-      var selectedCombinations = Array.from(document.querySelectorAll('#accordion_combinations td:first-child input[type="checkbox"]:checked'));
+      var selectedCombinations = Array.from($('#accordion_combinations td:first-child input[type="checkbox"]:checked'));
       selectedCombinations.forEach((combination) => {
         var combinationId = combination.getAttribute('data-id');
         var combinationIndex = combination.getAttribute('data-index');
@@ -59,7 +59,7 @@ export default function() {
 
       modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
         onContinue: function() {
-          var deletionURL = deleteCombinationsBtn.getAttribute('data');
+          var deletionURL = $(deleteCombinationsBtn).attr('data');
           $.ajax({
             type: 'DELETE',
             data: {'attribute-ids': combinationsIds},
@@ -67,7 +67,7 @@ export default function() {
             success: function(response) {
               showSuccessMessage(response.message);
               combinationsIds.forEach((combinationId) => {
-                combination = new Combination(combinationId);
+                var combination = new Combination(combinationId);
                 combination.removeFromDOM();
               });
               displayFieldsManager.refresh();
@@ -80,14 +80,12 @@ export default function() {
       }).show();
     },
     'getFormValues': function getFormValues() {
-      var inputs = Array.from(bulkForm.getElementsByTagName('input'));
       var values = [];
-      inputs.forEach((input) => {
-        if(input.value !== '' && input.id !== 'product_combination_bulk__token') {
-          values.push({'id' : input.id, 'value': input.value});
+      $(bulkForm).find('input').each(function() {
+        if($(this).val() !== '' && $(this).attr('id') !== 'product_combination_bulk__token') {
+          values.push({'id' : $(this).attr('id'), 'value': $(this).val()});
         }
       });
-
       return values;
     }
   };
@@ -99,8 +97,8 @@ class Combination {
     this.inputPattern = "form_step3_combinations_"+index+"_";
     this.domId = domId;
     this.appId = 'attribute_'+this.domId;
-    this.element = document.querySelector('#'+this.appId);
-    this.form = document.querySelector('#combination_form_'+this.domId);
+    this.element = $('#'+this.appId);
+    this.form = $('#combination_form_'+this.domId);
   }
 
   isSelected() {
@@ -108,17 +106,13 @@ class Combination {
   }
 
   removeFromDOM() {
-    this.element.parentNode.removeChild(this.element);
+    $(this.element).remove();
   }
 
   updateForm(values) {
     values.forEach((valueObject) => {
-      var valueId = valueObject.id.substr(this.inputBulkPattern.length);
-      var value = valueObject.value;
-
-      var inputId = '#'+this.convertInput(valueId);
-      var formInput = this.form.querySelector(inputId);
-      formInput.value = value;
+      var valueId = valueObject.id.substr(this.inputBulkPattern.length);console.log('#'+this.convertInput(valueId));
+      $('#'+this.convertInput(valueId)).val(valueObject.value);
     });
     return this.form;
   }
@@ -179,9 +173,7 @@ class Combination {
 
       if (syncedProperties.indexOf(valueId) !== -1){
         valueId = valueId === 'quantity' ? 'quantity' : 'price';
-        var input = `#attribute_${this.domId} .attribute-${valueId} input`;
-        var formInput = document.querySelector(input);
-        formInput.value = value;
+        $(`#attribute_${this.domId} .attribute-${valueId} input`).val(value);
       }
     });
   }
