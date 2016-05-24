@@ -2226,9 +2226,9 @@ class AdminTranslationsControllerCore extends AdminController
         //adding sf2 form translations
         $sf2_loader = new Symfony\Component\Translation\Loader\XliffFileLoader();
         try {
-            $sf2_trans = $sf2_loader->load(VENDOR_DIR.'/symfony/symfony/src/Symfony/Component/Validator/Resources/translations/validators.'.$this->lang_selected->iso_code.'.xlf', $this->lang_selected->iso_code);
+            $sf2_trans = $sf2_loader->load(_PS_VENDOR_DIR_.'/symfony/symfony/src/Symfony/Component/Validator/Resources/translations/validators.'.$this->lang_selected->iso_code.'.xlf', $this->lang_selected->iso_code);
         } catch (\Exception $e) {
-            $sf2_trans = $sf2_loader->load(VENDOR_DIR.'/symfony/symfony/src/Symfony/Component/Validator/Resources/translations/validators.en.xlf', $this->lang_selected->iso_code);
+            $sf2_trans = $sf2_loader->load(_PS_VENDOR_DIR_.'/symfony/symfony/src/Symfony/Component/Validator/Resources/translations/validators.en.xlf', $this->lang_selected->iso_code);
         }
 
         foreach ($sf2_trans->all()['messages'] as $k => $v) {
