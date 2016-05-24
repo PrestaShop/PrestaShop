@@ -170,6 +170,7 @@
 							{l s='Partial refund'}
 						</a>
 					{/if}
+					{hook h='displayBackOfficeOrderActions' id_order=$order->id|intval}
 				</div>
 				<!-- Tab nav -->
 				<ul class="nav nav-tabs" id="tabOrder">
