@@ -1,27 +1,26 @@
 <?php
 /**
  * Smarty Internal Plugin Smarty Template Compiler Base
+ * This file contains the basic classes and methods for compiling Smarty templates with lexer/parser
  *
- * This file contains the basic classes and methodes for compiling Smarty templates with lexer/parser
- *
- * @package Smarty
+ * @package    Smarty
  * @subpackage Compiler
- * @author Uwe Tews
+ * @author     Uwe Tews
  */
 
 /**
  * @ignore
  */
-include ("smarty_internal_parsetree.php");
+include 'smarty_internal_parsetree.php';
 
 /**
  * Class SmartyTemplateCompiler
  *
- * @package Smarty
+ * @package    Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCompilerBase {
-
+class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCompilerBase
+{
     /**
      * Lexer class name
      *
@@ -81,10 +80,11 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
     }
 
     /**
-     * Methode to compile a Smarty template
+     * method to compile a Smarty template
      *
      * @param  mixed $_content template source
-     * @return bool true if compiling succeeded, false if it failed
+     *
+     * @return bool  true if compiling succeeded, false if it failed
      */
     protected function doCompile($_content)
     {
@@ -94,8 +94,21 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
         // init the lexer/parser to compile the template
         $this->lex = new $this->lexer_class($_content, $this);
         $this->parser = new $this->parser_class($this->lex, $this);
-        if ($this->smarty->_parserdebug)
+        if ($this->inheritance_child) {
+            // start state on child templates
+            $this->lex->yypushstate(Smarty_Internal_Templatelexer::CHILDBODY);
+        }
+        if (function_exists('mb_internal_encoding') && ((int) ini_get('mbstring.func_overload')) & 2) {
+            $mbEncoding = mb_internal_encoding();
+            mb_internal_encoding('ASCII');
+        } else {
+            $mbEncoding = null;
+        }
+
+        if ($this->smarty->_parserdebug) {
             $this->parser->PrintTrace();
+            $this->lex->PrintTrace();
+        }
         // get tokens from lexer and parse them
         while ($this->lex->yylex() && !$this->abort_and_recompile) {
             if ($this->smarty->_parserdebug) {
@@ -111,17 +124,17 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
         }
         // finish parsing process
         $this->parser->doParse(0, 0);
+        if ($mbEncoding) {
+            mb_internal_encoding($mbEncoding);
+        }
         // check for unclosed tags
         if (count($this->_tag_stack) > 0) {
             // get stacked info
             list($openTag, $_data) = array_pop($this->_tag_stack);
-            $this->trigger_template_error("unclosed {" . $openTag . "} tag");
+            $this->trigger_template_error("unclosed {$this->smarty->left_delimiter}" . $openTag . "{$this->smarty->right_delimiter} tag");
         }
         // return compiled code
         // return str_replace(array("? >\n<?php","? ><?php"), array('',''), $this->parser->retvalue);
         return $this->parser->retvalue;
     }
-
 }
-
-?>

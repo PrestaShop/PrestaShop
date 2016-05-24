@@ -1,11 +1,16 @@
-Dear merchant,
 
-You have received a message from a customer via your shop: {shop_name}
+[{shop_url}] 
 
-Customer e-mail address: {email}
+Message from a {shop_name} customer 
 
-Customer message:
+CUSTOMER E-MAIL ADDRESS: {email}
 
-{message}
+CUSTOMER MESSAGE: {message}
 
-{shop_url} powered by PrestaShop™
+ORDER ID: {order_name}
+
+ATTACHED FILE: {attached_file} 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

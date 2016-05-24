@@ -154,7 +154,7 @@
       }).css({
         'color': $.fn.mColorPicker.textColor($('#' + id).css('background-color'))
       }).after(
-        '<span style="cursor:pointer;" id="icp_' + id + '" class="mColorPickerTrigger"><img src="' + $o.imageFolder + 'color.png" style="border:0;margin:0 0 0 3px" align="absmiddle"></span>'
+        '<span style="cursor:pointer;" id="icp_' + id + '" class="mColorPickerTrigger input-group-addon"><img src="' + $o.imageFolder + 'color.png" style="border:0;margin:0 0 0 3px" align="absmiddle"></span>'
       ).addClass('mColorPickerInput');
     }
 

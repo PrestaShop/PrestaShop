@@ -2,22 +2,23 @@
 /**
  * Smarty plugin
  *
- * @package Smarty
+ * @package    Smarty
  * @subpackage PluginsModifierCompiler
  */
 
 /**
  * Smarty from_charset modifier plugin
- *
  * Type:     modifier<br>
  * Name:     from_charset<br>
  * Purpose:  convert character encoding from $charset to internal encoding
  *
  * @author Rodney Rehm
+ *
  * @param array $params parameters
+ *
  * @return string with compiled code
  */
-function smarty_modifiercompiler_from_charset($params, $compiler)
+function smarty_modifiercompiler_from_charset($params)
 {
     if (!Smarty::$_MBSTRING) {
         // FIXME: (rodneyrehm) shouldn't this throw an error?
@@ -30,5 +31,3 @@ function smarty_modifiercompiler_from_charset($params, $compiler)
 
     return 'mb_convert_encoding(' . $params[0] . ', "' . addslashes(Smarty::$_CHARSET) . '", ' . $params[1] . ')';
 }
-
-?>

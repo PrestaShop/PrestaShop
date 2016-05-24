@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+main_test_path=../../../tests
+${main_test_path}/vendor/bin/phpunit -c .

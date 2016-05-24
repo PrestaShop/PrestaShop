@@ -40,7 +40,7 @@ class Swift_Plugin_MailSend implements Swift_Events_SendListener, Swift_Events_B
    * @var string
    */
   protected $additionalParams;
-  
+
   /**
    * Constructor.
    * @param string 5th mail() function parameter as a sprintf() formatted string where %s is the sender.
@@ -112,7 +112,7 @@ class Swift_Plugin_MailSend implements Swift_Events_SendListener, Swift_Events_B
   {
     $message = $e->getMessage();
     $recipients = $e->getRecipients();
-    
+
     $to = array();
     foreach ($recipients->getTo() as $addr)
     {
@@ -120,46 +120,46 @@ class Swift_Plugin_MailSend implements Swift_Events_SendListener, Swift_Events_B
       else $to[] = $addr->build();
     }
     $to = implode(", ", $to);
-    
+
     $bcc_orig = $message->headers->has("Bcc") ? $message->headers->get("Bcc") : null;
     $subject_orig = $message->headers->has("Subject") ? $message->headers->get("Subject") : null;
     $to_orig = $message->headers->has("To") ? $message->headers->get("To") : null;
-    
+
     $bcc = array();
     foreach ($recipients->getBcc() as $addr) $bcc[] = $addr->build();
     if (!empty($bcc)) $message->headers->set("Bcc", $bcc);
     $bcc = null;
-    
+
     $body_data = $message->buildData();
     $message_body = $body_data->readFull();
-    
+
     $subject_enc = $message->headers->has("Subject") ? $message->headers->getEncoded("Subject") : "";
-    
+
     $message->headers->set("To", null);
     $message->headers->set("Subject", null);
-    
+
     $sender = $e->getSender();
     $this->returnPath = $sender->build();
     if ($message->headers->has("Return-Path")) $this->returnPath = $message->headers->get("Return-Path");
     if (preg_match("~<([^>]+)>[^>]*\$~", $this->returnPath, $matches)) $this->returnPath = $matches[1];
-    
+
     $this->doMail($to, $subject_enc, $message_body, $message->headers, sprintf($this->getAdditionalParams(), $this->returnPath));
     $message->setLE($this->oldLE);
     $message->headers->set("To", $to_orig);
     $message->headers->set("Subject", $subject_orig);
     $message->headers->set("Bcc", $bcc_orig);
   }
-  
+
   public function doMail($to, $subject, $message, $headers, $params)
   {
     $original_from = @ini_get("sendmail_from");
     @ini_set("sendmail_from", $this->returnPath);
-    
+
     $headers = $headers->build();
-    
-    if (!ini_get("safe_mode")) $success = mail($to, $subject, $message, $headers, $params);
-    else $success = mail($to, $subject, $message, $headers);
-    
+
+    if (!ini_get("safe_mode")) $success = @mail($to, $subject, $message, $headers, $params);
+    else $success = @mail($to, $subject, $message, $headers);
+
     if (!$success)
     {
       @ini_set("sendmail_from", $original_from);

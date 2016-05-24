@@ -2,22 +2,23 @@
 /**
  * Smarty plugin
  *
- * @package Smarty
+ * @package    Smarty
  * @subpackage PluginsModifierCompiler
  */
 
 /**
  * Smarty unescape modifier plugin
- *
  * Type:     modifier<br>
  * Name:     unescape<br>
  * Purpose:  unescape html entities
  *
  * @author Rodney Rehm
+ *
  * @param array $params parameters
+ *
  * @return string with compiled code
  */
-function smarty_modifiercompiler_unescape($params, $compiler)
+function smarty_modifiercompiler_unescape($params)
 {
     if (!isset($params[1])) {
         $params[1] = 'html';
@@ -47,5 +48,3 @@ function smarty_modifiercompiler_unescape($params, $compiler)
             return $params[0];
     }
 }
-
-?>

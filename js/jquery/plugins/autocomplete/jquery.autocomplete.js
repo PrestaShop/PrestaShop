@@ -699,7 +699,7 @@ $.Autocompleter.Select = function (options, input, select, config) {
 		show: function() {
 			var offset = $(input).offset();
 			element.css({
-				width: typeof options.width == "string" || options.width > 0 ? options.width : $(input).width(),
+				width: typeof options.width == "string" || options.width > 0 ? options.width : ($(input).width() + parseInt($(input).css('padding-left')) + parseInt($(input).css('padding-right')) + parseInt($(input).css('margin-left')) + parseInt($(input).css('margin-right'))),
 				top: offset.top + input.offsetHeight,
 				left: offset.left
 			}).show();

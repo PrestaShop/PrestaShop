@@ -129,7 +129,7 @@ class XML_Feed_Parser_RSS11Element extends XML_Feed_Parser_RSS11
                     }
                 }
                 return $value;
-            } else if ($test->length > 0) {
+            } elseif ($test->length > 0) {
                 return $test->item(0)->nodeValue;
             }
         }

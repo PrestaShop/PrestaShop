@@ -1,0 +1,10 @@
+Hej {firstname} {lastname},
+
+Här är dina personliga inloggningsuppgifter för {shop_name}:
+
+Password: {passwd}
+E-postadress: {email}
+
+{shop_name} - {shop_url}
+
+{shop_url} powered by PrestaShop™

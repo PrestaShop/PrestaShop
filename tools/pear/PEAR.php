@@ -177,7 +177,7 @@ if (!class_exists('PEAR', false))
 			 * @access public
 			 * @return void
 			 */
-			function PEAR($error_class = null)
+			function __construct($error_class = null)
 			{
 					$classname = strtolower(get_class($this));
 					if ($this->_debug) {
@@ -216,6 +216,11 @@ if (!class_exists('PEAR', false))
 			 * @access public
 			 * @return void
 			 */
+			function __destruct()
+			{
+				$this->_PEAR();
+			}
+
 			function _PEAR() {
 					if ($this->_debug) {
 							printf("PEAR destructor called, class=%s\n", strtolower(get_class($this)));
@@ -430,7 +435,7 @@ if (!class_exists('PEAR', false))
 			{
 					$deleted = false;
 
-					foreach ($this->_expected_errors AS $key => $error_array) {
+					foreach ($this->_expected_errors as $key => $error_array) {
 							if (in_array($error_code, $error_array)) {
 									unset($this->_expected_errors[$key][array_search($error_code, $error_array)]);
 									$deleted = true;
@@ -798,7 +803,7 @@ if (!class_exists('PEAR', false))
 			}
 
 			// Now call the shutdown functions
-			if (is_array($GLOBALS['_PEAR_shutdown_funcs']) AND !empty($GLOBALS['_PEAR_shutdown_funcs'])) {
+			if (is_array($GLOBALS['_PEAR_shutdown_funcs']) and !empty($GLOBALS['_PEAR_shutdown_funcs'])) {
 					foreach ($GLOBALS['_PEAR_shutdown_funcs'] as $value) {
 							call_user_func_array($value[0], $value[1]);
 					}
@@ -861,7 +866,7 @@ if (!class_exists('PEAR_Error', false))
 			 * @access public
 			 *
 			 */
-			function PEAR_Error($message = 'unknown error', $code = null,
+			function __construct($message = 'unknown error', $code = null,
 													$mode = null, $options = null, $userinfo = null)
 			{
 					if ($mode === null) {
@@ -1301,7 +1306,7 @@ if (!class_exists('PEAR_Exception', false))
 			}
 
 			public function getTraceSafe()
-			{   
+			{
 					if (!isset($this->_trace)) {
 							$this->_trace = $this->getTrace();
 							if (empty($this->_trace)) {

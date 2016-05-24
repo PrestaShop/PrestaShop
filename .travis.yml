@@ -1,0 +1,35 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: 7.0
+
+before_install:
+  - sudo apt-get update
+
+before_script:
+  - sudo apt-get install apache2 libapache2-mod-fastcgi
+  - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - sudo a2enmod rewrite actions fastcgi alias
+  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+  - sudo cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/default
+  - sudo cp -Rf . /var/www/prestashop.unit.test
+  - sudo chmod 777 -R /var/www/
+  - sudo service apache2 restart
+
+notifications:
+  slack: prestashop:Eovjydk55zPrwPkoQIOF0cZn
+  hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
+script:
+  - /var/www/prestashop.unit.test/tests/check_php_parse_errors.sh
+  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test --db_create=1 --name=prestashop.unit.test --password=123456789
+  - cd /var/www/prestashop.unit.test/tests && bash getcomposer.sh && php composer.phar install && php vendor/bin/phpunit -c .

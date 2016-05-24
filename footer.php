@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,21 +19,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/**
- * This file will be removed in 1.6
- */
-
-if (isset(Context::getContext()->controller))
-	$controller = Context::getContext()->controller;
-else
-{
-	$controller = new FrontController();
-	$controller->init();
+if (isset(Context::getContext()->controller)) {
+    $controller = Context::getContext()->controller;
+} else {
+    $controller = new FrontController();
+    $controller->init();
 }
 Tools::displayFileAsDeprecated();
 $controller->displayFooter();

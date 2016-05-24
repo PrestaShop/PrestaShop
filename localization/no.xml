@@ -8,14 +8,14 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="MVA NO 25%" rate="25" />
-		<tax id="2" name="MVA NO 14%" rate="14" />
+		<tax id="2" name="MVA NO 15%" rate="15" />
 		<tax id="3" name="MVA NO 8%" rate="8" />
 		
 		<taxRulesGroup name="NO Standard Rate (25%)">
 			<taxRule iso_code_country="no" id_tax="1" />
 		</taxRulesGroup>
 		
-		<taxRulesGroup name="NO Reduced Rate (14%)">
+		<taxRulesGroup name="NO Reduced Rate (15%)">
 			<taxRule iso_code_country="no" id_tax="2" />
 		</taxRulesGroup>
 		

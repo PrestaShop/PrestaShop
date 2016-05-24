@@ -31,6 +31,9 @@
     <web_browser id="IE_10">
       <name>IE 10</name>
     </web_browser>
+    <web_browser id="IE_11">
+      <name>IE 11</name>
+    </web_browser>
     <web_browser id="Chrome">
       <name>Chrome</name>
     </web_browser>

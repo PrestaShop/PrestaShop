@@ -1,3 +1,27 @@
+/*
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2015 PrestaShop SA
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
 var is_installing = false;
 $(document).ready(function()
 {
@@ -20,8 +44,8 @@ function start_install()
 	$('.stepList li:last-child').removeClass('ok').removeClass('ko');
 	process_pixel = parseInt($('#progress_bar .total').css('width')) / process_steps.length;
 	$('#tabs li a').each(function() {
-		 this.rel=$(this).attr('href');
-		 this.href='#';
+		 this.rel = $(this).attr('href');
+		 this.href = '#';
 	});
 	process_install();
 }
@@ -31,11 +55,11 @@ function process_install(step)
 	if (!step)
 		step = process_steps[0];
 
-	$('.installing').hide().html(step.lang+' ...').fadeIn('slow');
+	$('.installing').hide().html(step.lang + '...').fadeIn('slow');
 
 	$.ajax({
 		url: 'index.php',
-		data: step.key+'=true',
+		data: step.key + '=true',
 		dataType: 'json',
 		cache: false,
 		success: function(json)
@@ -51,10 +75,7 @@ function process_install(step)
 					$('#progress_bar .total span').html('100%');
 
 					// Installation finished
-					setTimeout(function()
-					{
-						install_success();
-					}, 700)
+					setTimeout(function(){install_success();}, 700);
 				}
 				else
 				{
@@ -75,8 +96,7 @@ function process_install(step)
 			}
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
-		error: function()
-		{
+		error: function() {
 			install_error(step);
 		}
 	});
@@ -84,7 +104,7 @@ function process_install(step)
 
 function process_install_subtasks(step)
 {
-	$('.installing').hide().html(step.lang+' ...').fadeIn('slow');
+	$('.installing').hide().html(step.lang+'...').fadeIn('slow');
 	process_install_subtask(step, 0);
 }
 
@@ -125,15 +145,11 @@ function process_install_subtask(step, current_subtask)
 				else
 					process_install_subtask(step, current_subtask);
 			}
-			// An error occured during this step
-			else
-			{
+			else 
 				install_error(step, (json) ? json.message : '');
-			}
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
-		error: function()
-		{
+		error: function() {
 			install_error(step);
 		}
 	});
@@ -154,14 +170,20 @@ function install_error(step, errors)
 	{
 		var list_errors = errors;
 		if ($.type(list_errors) == 'string')
-			list_errors = [list_errors];
+		{
+			list_errors = [];
+			list_errors[0] = errors;
+		}
+		else if ($.type(list_errors) == 'array')
+			list_errors = list_errors[0];
 
 		var display = '<ol>';
+
 		$.each(list_errors, function(k, v)
 		{
 			if (typeof psuser_assistance != 'undefined')
 				psuser_assistance.setStep('install_process_error', {'error':v});
-			display += '<li>'+v+'</li>';
+			display += '<li>' + v + '</li>';
 		});
 		display += '</ol>';
 		$('#process_step_'+step.key+' .error_log').html(display).show();

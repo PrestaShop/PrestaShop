@@ -1,29 +1,28 @@
 <?php
 /**
  * Smarty Internal Plugin Compile Nocache
- *
  * Compiles the {nocache} {/nocache} tags.
  *
- * @package Smarty
+ * @package    Smarty
  * @subpackage Compiler
- * @author Uwe Tews
+ * @author     Uwe Tews
  */
 
 /**
- * Smarty Internal Plugin Compile Nocache Classv
+ * Smarty Internal Plugin Compile Nocache Class
  *
- * @package Smarty
+ * @package    Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_Compile_Nocache extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Nocache extends Smarty_Internal_CompileBase
+{
     /**
      * Compiles code for the {nocache} tag
-     *
      * This tag does not generate compiled output. It only sets a compiler flag.
      *
-     * @param array  $args     array with attributes from parser
-     * @param object $compiler compiler object
+     * @param  array  $args     array with attributes from parser
+     * @param  object $compiler compiler object
+     *
      * @return bool
      */
     public function compile($args, $compiler)
@@ -36,26 +35,26 @@ class Smarty_Internal_Compile_Nocache extends Smarty_Internal_CompileBase {
         $compiler->nocache = true;
         // this tag does not return compiled code
         $compiler->has_code = false;
+
         return true;
     }
-
 }
 
 /**
  * Smarty Internal Plugin Compile Nocacheclose Class
  *
- * @package Smarty
+ * @package    Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_Compile_Nocacheclose extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Nocacheclose extends Smarty_Internal_CompileBase
+{
     /**
      * Compiles code for the {/nocache} tag
-     *
      * This tag does not generate compiled output. It only sets a compiler flag.
      *
-     * @param array  $args     array with attributes from parser
-     * @param object $compiler compiler object
+     * @param  array  $args     array with attributes from parser
+     * @param  object $compiler compiler object
+     *
      * @return bool
      */
     public function compile($args, $compiler)
@@ -65,9 +64,7 @@ class Smarty_Internal_Compile_Nocacheclose extends Smarty_Internal_CompileBase {
         $compiler->nocache = false;
         // this tag does not return compiled code
         $compiler->has_code = false;
+
         return true;
     }
-
 }
-
-?>
