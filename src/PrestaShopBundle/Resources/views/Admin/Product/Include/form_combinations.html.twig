@@ -36,7 +36,7 @@
     <div id="combinations-bulk-form">
       <div class="row">
         <p data-toggle="collapse" href="#bulk-combinations-container" aria-expanded="false" aria-controls="bulk-combinations-container">
-          <b>{{ trans('Bulk actions', {}, 'AdminProducts') }}</b>
+          <b>{{ 'Bulk actions'|trans({}, 'AdminProducts') }}</b>
           <i class="material-icons pull-right">keyboard_arrow_down</i>
         </p>
         <div class="col-md-12 collapse" style="border:2px solid #bbcdd2;" id="bulk-combinations-container">
@@ -51,7 +51,7 @@
         <thead id="combinations_thead" {% if form.combinations|length == 0 %}style="display: none;"{% endif %}>
         <tr class="uppercase">
           <th>
-            <span>{{ trans('Select', [], 'AdminProducts') }}</span>
+            <span>{{ 'Select'|trans([], 'AdminProducts') }}</span>
             <input type="checkbox" id="toggle-all-combinations" >
           </th>
           <th></th>
