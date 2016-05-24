@@ -9,18 +9,19 @@
     color:$gray-darker;
     font-size: em(15px);
   }
+  li{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    &:last-child {
+      border: 0;
+    }
+  }
+  li .block-reassurance-item{
+    padding: em(15px);
+  }
   #product &{
     @include box-shadow;
     background: white;
-    li{
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-    li .block-reassurance-item{
-      padding: em(15px);
-    }
-    hr{
-      margin: 0;
-    }
     span{
       font-weight: 700;
     }

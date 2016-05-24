@@ -3131,7 +3131,7 @@ input[type="button"].btn-block {
   font-size: 75%;
   font-weight: bold;
   line-height: 1;
-  color: #fff;
+  color: #414141;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
@@ -4730,8 +4730,7 @@ a:hover {
     margin-right: 10px; }
 
 .card {
-  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-  padding: 20px; }
+  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
 
 label {
   color: #414141;
@@ -5089,8 +5088,6 @@ body#checkout {
     padding: 5em 0 0.9375em;
     border: none;
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
-  body#checkout #checkout-cart-summary {
-    box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
   body#checkout section#content {
     margin-top: 25px; }
   body#checkout .container {
@@ -5292,28 +5289,6 @@ body#checkout {
       font-size: 0.875em; }
     body#checkout section.checkout-step .forgot-password {
       margin-left: 14.375em; }
-  body#checkout .products,
-  body#checkout .shipping,
-  body#checkout .cart-summary-totals {
-    margin-top: 1.25em; }
-  body#checkout .cart-summary-totals .label,
-  body#checkout .cart-summary-totals .value {
-    font-weight: 700;
-    color: #414141;
-    padding: 0;
-    font-size: 1.125em; }
-    body#checkout .cart-summary-totals .label .sub,
-    body#checkout .cart-summary-totals .value .sub {
-      font-weight: normal;
-      bottom: 0;
-      font-size: 0.9375em; }
-  body#checkout .shipping .label,
-  body#checkout .discount .label,
-  body#checkout .products .label {
-    color: #414141;
-    padding: 0;
-    font-weight: 400;
-    font-size: 0.9375em; }
   body#checkout .additional-information {
     font-size: 0.875em;
     margin-left: 2.875em;
@@ -6155,13 +6130,18 @@ body#checkout {
 .has-discount.product-price {
   color: #f39d72; }
 
-.has-discount .discount-percentage {
+.has-discount .discount {
   background: #f39d72;
   color: white;
   font-weight: 600;
   padding: 0.3125em 10px;
   font-size: 1rem;
-  margin-left: 10px; }
+  margin-left: 10px;
+  text-transform: uppercase; }
+
+.product-unit-price {
+  color: #acaaa6;
+  font-size: 0.8125em; }
 
 .tabs {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
@@ -6549,15 +6529,27 @@ li.product-label {
   #product-modal .modal-content .modal-body .image-caption {
     width: 100%; } }
 
-.cart-summary-line > .label {
-  color: #414141;
-  font-size: 0.875em;
-  float: left !important; }
-
-.cart-summary-line > .value {
-  color: #414141;
-  font-weight: 700;
-  float: right !important; }
+.cart-summary-line {
+  clear: both;
+  font-weight: 700; }
+  .cart-summary-line::after {
+    clear: both;
+    content: "";
+    display: table; }
+  .cart-summary-line .label {
+    padding-left: 0;
+    font-size: 0.875em;
+    float: left !important; }
+  .cart-summary-line .value {
+    color: #414141;
+    float: right !important; }
+  .cart-summary-line.cart-summary-subtotals .label,
+  .cart-summary-line.cart-summary-subtotals .value {
+    font-weight: normal; }
+  .cart-summary-line .sub, .cart-summary-line.sub {
+    font-weight: normal;
+    bottom: 0;
+    font-size: 0.8125em; }
 
 /*** CART ***/
 .cart-grid {
@@ -6584,18 +6576,13 @@ li.product-label {
 
 /** CART BODY **/
 .cart-grid-body > a.label {
-  color: #414141;
   font-size: 1em; }
 
 .cart-grid-body hr {
-  margin-top: 0; }
+  margin: 0; }
 
 /** CART RIGHT **/
-.cart-grid-right > a.label {
-  color: #414141; }
-
 .cart-grid-right > .cart-summary .cart-total > .label {
-  color: #414141;
   font-size: 100%; }
 
 .cart-grid-right > .cart-summary > .block-promo .promo-code {
@@ -6657,7 +6644,6 @@ li.product-label {
 /** CONTENT LEFT **/
 /** CONTENT BODY **/
 .product-line-grid-body > .product-line-info > .label {
-  color: #414141;
   font-size: 0.9375em;
   font-weight: 800; }
 
@@ -6672,6 +6658,10 @@ li.product-label {
 
 .product-line-grid-body > .product-line-info > .available {
   color: #4cbb6c; }
+
+.product-line-grid-body > .product-line-info .sub {
+  color: #878787;
+  font-size: 0.8125em; }
 
 /** CONTENT LEFT **/
 .product-line-grid-right .bootstrap-touchspin {
@@ -6712,13 +6702,15 @@ li.product-label {
   #block-reassurance span {
     color: #414141;
     font-size: 0.9375em; }
+  #block-reassurance li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+    #block-reassurance li:last-child {
+      border: 0; }
+  #block-reassurance li .block-reassurance-item {
+    padding: 0.9375em; }
   #product #block-reassurance {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     background: white; }
-    #product #block-reassurance li {
-      padding: 0.9375em; }
-    #product #block-reassurance hr {
-      margin: 0; }
     #product #block-reassurance span {
       font-weight: 700; }
 
