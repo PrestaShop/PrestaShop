@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -30,13 +30,12 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 
 /**
- * Refresh Sf2 cache
+ * Refresh Sf2 cache.
  */
 class Refresh
 {
     private $env;
     private $application;
-    private $output;
     private $commands;
 
     /**
@@ -50,8 +49,7 @@ class Refresh
     {
         umask(0000);
         set_time_limit(0);
-        $this->env = $env;
-        $this->output = new NullOutput();
+        $this->env = _PS_MODE_DEV_ ? 'dev' : 'prod';
         $this->commands = [];
 
         require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
@@ -61,7 +59,7 @@ class Refresh
     }
 
     /**
-     * add cache clear
+     * Add cache clear.
      */
     public function addCacheClear()
     {
@@ -69,7 +67,7 @@ class Refresh
     }
 
     /**
-     * add doctrine schema update
+     * Add doctrine schema update.
      */
     public function addDoctrineSchemaUpdate()
     {
@@ -77,24 +75,34 @@ class Refresh
     }
 
     /**
-     * Execute all defined commands
+     * Execute all defined commands.
      *
      * @throws \Exception if no command defined
      */
     public function execute()
     {
-        $output = [];
+        $output = null;
+        $commandOutput = array();
+
         if (empty($this->commands)) {
             throw new \Exception('Error, you need to define at least on command');
         }
 
         foreach ($this->commands as $command) {
-            $exitCode = $this->application->run(new ArrayInput($command), $this->output);
-            if ($command['command'] == 'doctrine:schema:update' && $exitCode > 0) {
-                $output['sf2_schema_update'] = true;
+            if (_PS_MODE_DEV_ && isset($command['--no-debug'])) {
+                $command['--no-debug'] = false;
             }
+
+            if (false === _PS_MODE_DEV_) {
+                $output = new NullOutput();
+            }
+
+            $exitCode = $this->application->run(new ArrayInput($command), $output);
+
+            $commandOutput[$command['command']] = $exitCode;
+
         }
 
-        return $output;
+        return $commandOutput;
     }
 }
