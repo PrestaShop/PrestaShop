@@ -82,7 +82,7 @@ class Refresh
     public function execute()
     {
         $output = null;
-        $commandOutput = [];
+        $commandOutput = array();
 
         if (empty($this->commands)) {
             throw new \Exception('Error, you need to define at least on command');
