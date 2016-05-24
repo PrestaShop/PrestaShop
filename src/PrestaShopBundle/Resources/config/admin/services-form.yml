@@ -173,6 +173,13 @@ services:
             - "@prestashop.adapter.data_provider.customer"
         tags:
             - { name: form.type }
+    form.type.product.combination_bulk:
+        class: PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk
+        arguments:
+            - "@translator"
+        tags:
+            - { name: form.type }
+
     form.type.extension.textarea:
             class: PrestaShopBundle\Form\Admin\Type\TextareaEmptyType
             tags:

@@ -14,15 +14,10 @@ admin_attribute_generator:
         _controller: PrestaShopBundle\Controller\Admin\AttributeController::attributesGeneratorAction
 
 admin_delete_attribute:
-    path:     /delete/{idAttribute}/{idProduct}
-    methods:  [GET]
+    path:     /{idProduct}
+    methods:  [DELETE]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\AttributeController::deleteAttributeAction
-        idAttribute: 0
-        idProduct: 0
-    requirements:
-        idAttribute: \d+
-        idProduct: \d+
 
 admin_delete_all_attributes:
     path:     /delete-all/{idProduct}
