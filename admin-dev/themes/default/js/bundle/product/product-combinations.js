@@ -227,7 +227,7 @@ var combinations = (function() {
         }
 
         if (defaultImageUrl) {
-          var img = '<img src="' + defaultImageUrl + '" class="img-responsive" style="max-width:50px" />';
+          var img = '<img src="' + defaultImageUrl + '" class="img-responsive" />';
           $('#accordion_combinations #attribute_' + $(elem).attr('data')).find('td.img').html(img);
         }
       });
