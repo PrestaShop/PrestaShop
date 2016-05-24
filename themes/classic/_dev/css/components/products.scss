@@ -102,18 +102,24 @@
   }
 }
 
-.has-discount{
-  &.product-price{
+.has-discount {
+  &.product-price {
     color: $brand-secondary;
   }
-  .discount-percentage {
+  .discount {
     background: $brand-secondary;
     color: white;
     font-weight: 600;
     padding: em(5px) $small-space;
     font-size: $font-size-base;
     margin-left: $small-space;
+    text-transform: uppercase;
   }
+}
+
+.product-unit-price {
+  color: $gray;
+  font-size: em(13px);
 }
 
 .tabs {

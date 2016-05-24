@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
-class ProductListingPresenter extends ProductPresenterAbstract
+class ProductListingPresenter extends AbstractProductPresenter
 {
     public function present(
         ProductPresentationSettings $settings,

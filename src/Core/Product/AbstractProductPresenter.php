@@ -10,7 +10,7 @@ use Configuration;
 use Language;
 use Link;
 
-abstract class ProductPresenterAbstract
+abstract class AbstractProductPresenter
 {
     private $imageRetriever;
     private $link;
@@ -84,6 +84,7 @@ abstract class ProductPresenterAbstract
         $presentedProduct['has_discount'] = false;
         $presentedProduct['discount_type'] = null;
         $presentedProduct['discount_percentage'] = null;
+        $presentedProduct['discount_amount'] = null;
 
         if ($settings->include_taxes) {
             $price = $regular_price = $product['price'];
@@ -96,6 +97,10 @@ abstract class ProductPresenterAbstract
             $presentedProduct['discount_type'] = $product['specific_prices']['reduction_type'];
             // TODO: format according to locale preferences
             $presentedProduct['discount_percentage'] = -round(100 * $product['specific_prices']['reduction']).'%';
+            // TODO: Fix issue with tax calculation
+            $presentedProduct['discount_amount'] = $this->priceFormatter->format(
+                $product['specific_prices']['reduction']
+            );
             $regular_price = $product['price_without_reduction'];
         }
 

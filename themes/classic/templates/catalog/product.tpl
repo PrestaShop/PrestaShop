@@ -29,7 +29,7 @@
     <div class="row">
       <div class="col-md-6">
         {block name='page_content_container'}
-          <section id="content" class="page-content">
+          <section class="page-content" id="content">
             {block name='page_content'}
               {block name='product_labels'}
                 <ul class="product-labels">
@@ -135,15 +135,15 @@
             <div class="tabs">
               <ul class="nav nav-tabs">
                 <li class="nav-item">
-                  <a href="#description" class="nav-link active" data-toggle = "tab">{l s='Description'}</a>
+                  <a class="nav-link active" data-toggle="tab" href="#description">{l s='Description'}</a>
                 </li>
                 <li class="nav-item">
-                  <a href="#product-details" class="nav-link" data-toggle = "tab">{l s='Product Details'}</a>
+                  <a class="nav-link" data-toggle="tab" href="#product-details">{l s='Product Details'}</a>
                 </li>
               </ul>
 
-              <div id = "tab-content" class = "tab-content">
-               <div class = "tab-pane fade in active" id = "description">
+              <div class="tab-content" id="tab-content">
+               <div class="tab-pane fade in active" id="description">
                  {block name='product_description'}
                    <div class="product-description">{$product.description nofilter}</div>
                  {/block}
