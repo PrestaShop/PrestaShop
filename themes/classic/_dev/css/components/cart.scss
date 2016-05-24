@@ -54,41 +54,43 @@
         font-size: 100%;
       }
     }
-    > .block-promo {
-      .promo-code {
-        padding: 1.60rem;
-        background: $gray-light;
-      }
-      .promo-input {
-        color: $gray-darker;
-        border: $gray 1px solid;
-        height: em(40px);
-        text-indent: em(10px);
-        width: 60%;
-        + button {
-          margin-top: -4px;
-          text-transform: capitalize;
-        }
-      }
-      .cart-summary-line .label, .promo-name {
-        color: $brand-warning;
-        font-weight: 600;
-        a {
-          font-weight: normal;
-          color: $gray-darker;
-          display: inline-block;
-          opacity: 0.7;
-        }
-      }
-      .promo-code-button {
-        padding-left: rem(25px);
-        margin-bottom: rem(20px);
-        display: inline-block;
-        font-size: rem(14px);
-      }
-    }
   }
 }
+
+.block-promo {
+  .promo-code {
+    padding: 1.60rem;
+    background: $gray-light;
+  }
+  .promo-input {
+    color: $gray-darker;
+    border: $gray 1px solid;
+    height: em(40px);
+    text-indent: em(10px);
+    width: 60%;
+    + button {
+      margin-top: -4px;
+      text-transform: capitalize;
+    }
+  }
+  .cart-summary-line .label, .promo-name {
+    color: $brand-warning;
+    font-weight: 600;
+    a {
+      font-weight: normal;
+      color: $gray-darker;
+      display: inline-block;
+      opacity: 0.7;
+    }
+  }
+  .promo-code-button {
+    padding-left: rem(25px);
+    margin-bottom: rem(20px);
+    display: inline-block;
+    font-size: rem(14px);
+  }
+}
+
 /*** PRODUCT LINE ***/
 .product-line-grid {
   @include make-row();

@@ -1,5 +1,5 @@
 {if $cart.vouchers.allowed}
-  <div class="card-block block-promo">
+  <div class="block-promo">
     <div class="cart-voucher">
       {if $cart.vouchers.added}
         <ul class="promo-name card-block">
