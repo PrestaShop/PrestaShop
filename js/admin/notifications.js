@@ -18,8 +18,10 @@ $(document).ready(function() {
       && $('#notification.dropdown').has(e.target).length === 0
       && $('.open').has(e.target).length === 0
     ) {
+      if ($('#notification.dropdown').hasClass('open')) {
+        getPush();
+      }
       $('#notification.dropdown').removeClass('open');
-      getPush();
     }
   });
 

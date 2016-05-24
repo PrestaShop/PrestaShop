@@ -86,8 +86,10 @@ export default class Header {
         && $('div.notification-center.dropdown').has(e.target).length === 0
         && $('.open').has(e.target).length === 0
       ) {
+        if ($('div.notification-center.dropdown').hasClass('open')) {
+          refreshNotifications();
+        }
         $('div.notification-center.dropdown').removeClass('open');
-        refreshNotifications();
       }
     });
 
