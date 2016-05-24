@@ -5,7 +5,7 @@
 
     {block name='category_header'}
       {if $category.description}
-        <div class="block-category card">
+        <div class="block-category card card-block">
           <h1 class="h1">{$category.name}</h1>
           <div id="category-description" class="text-muted">{$category.description nofilter}</div>
           <div class="category-cover">

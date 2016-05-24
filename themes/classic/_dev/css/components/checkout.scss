@@ -7,9 +7,6 @@ body#checkout {
     border: none;
     @include box-shadow;
   }
-  #checkout-cart-summary {
-    @include box-shadow;
-  }
   section#content {
     margin-top: 25px;
   }
@@ -228,31 +225,6 @@ body#checkout {
     .forgot-password {
       margin-left: em(230px);
     }
-  }
-  .products,
-  .shipping,
-  .cart-summary-totals {
-    margin-top: em(20px);
-  }
-  .cart-summary-totals .label,
-  .cart-summary-totals .value {
-    font-weight: 700;
-    color: $gray-darker;
-    padding: 0;
-    font-size: em(18px);
-    .sub {
-      font-weight: normal;
-      bottom: 0;
-      font-size: em(15px);
-    }
-  }
-  .shipping .label,
-  .discount .label,
-  .products .label {
-    color: $gray-darker;
-    padding: 0;
-    font-weight: 400;
-    font-size: em(15px);
   }
   .additional-information {
     font-size: em(14px);

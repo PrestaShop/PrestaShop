@@ -249,7 +249,7 @@
     <value>id_shop;id_currency;id_country;id_group</value>
   </configuration>
   <configuration id="PS_TAX_DISPLAY" name="PS_TAX_DISPLAY">
-    <value>1</value>
+    <value>0</value>
   </configuration>
   <configuration id="PS_SMARTY_FORCE_COMPILE" name="PS_SMARTY_FORCE_COMPILE">
     <value>1</value>

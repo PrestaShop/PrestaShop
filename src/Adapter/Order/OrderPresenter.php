@@ -37,10 +37,10 @@ class OrderPresenter implements PresenterInterface
 
     public function __construct()
     {
-        $this->cartPresenter   = new CartPresenter();
+        $this->cartPresenter = new CartPresenter();
         $this->objectPresenter = new ObjectPresenter();
-        $this->priceFormatter  = new PriceFormatter();
-        $this->translator      = new Translator(new LegacyContext());
+        $this->priceFormatter = new PriceFormatter();
+        $this->translator = new Translator(new LegacyContext());
     }
 
     /**
@@ -51,14 +51,14 @@ class OrderPresenter implements PresenterInterface
     public function present($order)
     {
         if (!is_a($order, 'Order')) {
-            throw new \Exception("OrderPresenter can only present instance of Order");
+            throw new \Exception('OrderPresenter can only present instance of Order');
         }
 
-        return [
+        return array(
             'products' => $this->getProducts($order),
             'products_count' => count($this->getProducts($order)),
-            'total' => $this->getAmounts($order)['total'],
-            'subtotals' =>$this->getAmounts($order)['subtotals'],
+            'totals' => $this->getAmounts($order)['totals'],
+            'subtotals' => $this->getAmounts($order)['subtotals'],
             'details' => $this->getDetails($order),
             'history' => $this->getHistory($order),
             'messages' => $this->getMessages($order),
@@ -68,8 +68,8 @@ class OrderPresenter implements PresenterInterface
             'shipping' => $this->getShipping($order),
             'id_address_delivery' => $order->id_address_delivery,
             'id_address_invoice' => $order->id_address_invoice,
-            'tax_label' => $this->getTaxLabel(),
-        ];
+            'labels' => $this->getLabels(),
+        );
     }
 
     /**
@@ -116,61 +116,63 @@ class OrderPresenter implements PresenterInterface
      */
     private function getAmounts(Order $order)
     {
-        $tax_label = $this->getTaxLabel();
-        $amounts = [];
-        $subtotals = [];
-
-        $tax = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
-        if ((float)$tax && Configuration::get('PS_TAX_DISPLAY')) {
-            $subtotals['tax'] = [
-                'type' => 'tax',
-                'label' => $this->translator->trans('Tax', [], 'Cart'),
-                'amount' => $tax,
-                'value' => $this->priceFormatter->format($tax),
-            ];
-        }
+        $amounts = array();
+        $subtotals = array();
 
         $total_products = ($this->includeTaxes()) ? $order->total_products_wt : $order->total_products;
-        $subtotals['products'] = [
+        $subtotals['products'] = array(
             'type' => 'products',
-            'label' => $this->translator->trans('Products', [], 'Cart').' '.$tax_label,
+            'label' => $this->translator->trans('Subtotal', array(), 'Cart'),
             'amount' => $total_products,
             'value' => $this->priceFormatter->format($total_products),
-        ];
+        );
 
-        $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
-        $subtotals['shipping'] = [
-            'type' => 'shipping',
-            'label' => $this->translator->trans('Shipping and handling', [], 'Cart').' '.$tax_label,
-            'amount' => $shipping_cost,
-            'value' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', [], 'Cart'),
-        ];
-
-        $discount_amount = ($this->includeTaxes()) ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
-        if ((float)$discount_amount) {
-            $subtotals['discounts'] = [
+        $discount_amount = ($this->includeTaxes())
+            ? $order->total_discounts_tax_incl
+            : $order->total_discounts_tax_excl;
+        if ((float) $discount_amount) {
+            $subtotals['discounts'] = array(
                 'type' => 'discount',
-                'label' => $this->translator->trans('Discount', [], 'Cart').' '.$tax_label,
+                'label' => $this->translator->trans('Discount', array(), 'Cart'),
                 'amount' => $discount_amount,
                 'value' => $this->priceFormatter->format($discount_amount),
-            ];
+            );
+        }
+
+        $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
+        $subtotals['shipping'] = array(
+            'type' => 'shipping',
+            'label' => $this->translator->trans('Shipping and handling', array(), 'Cart'),
+            'amount' => $shipping_cost,
+            'value' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', array(), 'Cart'),
+        );
+
+        $tax = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
+        if ((float) $tax && Configuration::get('PS_TAX_DISPLAY')) {
+            $subtotals['tax'] = array(
+                'type' => 'tax',
+                'label' => $this->translator->trans('Tax', array(), 'Cart'),
+                'amount' => $tax,
+                'value' => $this->priceFormatter->format($tax),
+            );
         }
 
         $amounts['subtotals'] = $subtotals;
 
-        $amounts['total'] = [
+        $amounts['totals'] = array();
+        $amounts['totals']['total'] = array(
             'type' => 'total',
-            'label' => $this->translator->trans('Total', [], 'Order'),
+            'label' => $this->translator->trans('Total', array(), 'Cart'),
             'amount' => $order->total_paid,
             'value' => $this->priceFormatter->format($order->total_paid),
-        ];
+        );
 
-        $amounts['total_paid'] = [
+        $amounts['totals']['total_paid'] = array(
             'type' => 'total_paid',
-            'label' => $this->translator->trans('Total paid', [], 'Order'),
+            'label' => $this->translator->trans('Total paid', array(), 'Order'),
             'amount' => $order->total_paid_real,
             'value' => $this->priceFormatter->format($order->total_paid_real),
-        ];
+        );
 
         return $amounts;
     }
@@ -184,7 +186,7 @@ class OrderPresenter implements PresenterInterface
     {
         $context = Context::getContext();
 
-        return [
+        return array(
             'id' => $order->id,
             'reference' => $order->reference,
             'order_date' => Tools::displayDate($order->date_add, null, false),
@@ -195,8 +197,8 @@ class OrderPresenter implements PresenterInterface
             'payment' => $order->payment,
             'recyclable' => (bool) $order->recyclable,
             'shipping' => $this->getShipping($order),
-            'is_valid' => $order->valid
-        ];
+            'is_valid' => $order->valid,
+        );
     }
 
     /**
@@ -206,7 +208,7 @@ class OrderPresenter implements PresenterInterface
      */
     private function getHistory(Order $order)
     {
-        $orderHistory = [];
+        $orderHistory = array();
         $context = Context::getContext();
         $historyList = $order->getHistory($context->language->id, false, true);
 
@@ -227,7 +229,7 @@ class OrderPresenter implements PresenterInterface
     private function getShipping(Order $order)
     {
         $shippingList = $order->getShipping();
-        $orderShipping = [];
+        $orderShipping = array();
 
         foreach ($shippingList as $shippingId => $shipping) {
             if (isset($shipping['carrier_name']) && $shipping['carrier_name']) {
@@ -235,7 +237,7 @@ class OrderPresenter implements PresenterInterface
                 $orderShipping[$shippingId]['shipping_date'] = Tools::displayDate($shipping['date_add'], null, false);
                 $orderShipping[$shippingId]['shipping_weight'] = ($shipping['weight'] > 0) ? sprintf('%.3f', $shipping['weight']).' '.Configuration::get('PS_WEIGHT_UNIT') : '-';
                 $shippingCost = (!$order->getTaxCalculationMethod()) ? $shipping['shipping_cost_tax_excl'] : $shipping['shipping_cost_tax_incl'];
-                $orderShipping[$shippingId]['shipping_cost'] = ($shippingCost > 0) ? Tools::displayPrice($shippingCost, (int) $order->id_currency) : $this->translator->trans('Free', [], 'Cart');
+                $orderShipping[$shippingId]['shipping_cost'] = ($shippingCost > 0) ? Tools::displayPrice($shippingCost, (int) $order->id_currency) : $this->translator->trans('Free', array(), 'Cart');
 
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {
@@ -260,7 +262,7 @@ class OrderPresenter implements PresenterInterface
      */
     private function getMessages(Order $order)
     {
-        $messages = [];
+        $messages = array();
         $customerMessages = CustomerMessage::getMessagesByOrderId((int) $order->id, false);
 
         foreach ($customerMessages as $cmId => $customerMessage) {
@@ -301,8 +303,8 @@ class OrderPresenter implements PresenterInterface
     private function getAddresses(Order $order)
     {
         $orderAddresses = [
-            'delivery' => [],
-            'invoice' => [],
+            'delivery' => array(),
+            'invoice' => array(),
         ];
 
         $addressDelivery = new Address((int) $order->id_address_delivery);
@@ -339,10 +341,15 @@ class OrderPresenter implements PresenterInterface
         return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
     }
 
-    private function getTaxLabel()
+    private function getLabels()
     {
-        return ($this->includeTaxes())
-                ? $this->translator->trans('(tax incl.)', [], 'Cart')
-                : $this->translator->trans('(tax excl.)', [], 'Cart');
+        return array(
+            'tax_short' => ($this->includeTaxes())
+                ? $this->translator->trans('(tax incl.)', array(), 'Tax')
+                : $this->translator->trans('(tax excl.)', array(), 'Tax'),
+            'tax_long' => ($this->includeTaxes())
+                ? $this->translator->trans('(tax included)', array(), 'Tax')
+                : $this->translator->trans('(tax excluded)', array(), 'Tax'),
+        );
     }
 }
