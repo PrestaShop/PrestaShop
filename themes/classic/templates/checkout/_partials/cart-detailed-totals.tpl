@@ -17,6 +17,10 @@
     {/foreach}
   </div>
 
+  {block name='cart_voucher'}
+    {include file='checkout/_partials/cart-voucher.tpl'}
+  {/block}
+
   <hr>
 
   <div class="card-block">

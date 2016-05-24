@@ -24,11 +24,6 @@
       </div>
     {/block}
 
-
-    {block name='cart_voucher'}
-      {include file='checkout/_partials/cart-voucher.tpl'}
-    {/block}
-
     {block name='cart_summary_subtotals'}
       {foreach from=$cart.subtotals item="subtotal"}
         {if $subtotal.amount && $subtotal.type !== 'tax'}
@@ -41,6 +36,10 @@
     {/block}
 
   </div>
+
+  {block name='cart_voucher'}
+    {include file='checkout/_partials/cart-voucher.tpl'}
+  {/block}
 
   <hr>
 

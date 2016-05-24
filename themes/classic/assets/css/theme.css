@@ -6585,30 +6585,30 @@ li.product-label {
 .cart-grid-right > .cart-summary .cart-total > .label {
   font-size: 100%; }
 
-.cart-grid-right > .cart-summary > .block-promo .promo-code {
+.block-promo .promo-code {
   padding: 1.60rem;
   background: #ebebeb; }
 
-.cart-grid-right > .cart-summary > .block-promo .promo-input {
+.block-promo .promo-input {
   color: #414141;
   border: #acaaa6 1px solid;
   height: 2.5em;
   text-indent: 0.625em;
   width: 60%; }
-  .cart-grid-right > .cart-summary > .block-promo .promo-input + button {
+  .block-promo .promo-input + button {
     margin-top: -4px;
     text-transform: capitalize; }
 
-.cart-grid-right > .cart-summary > .block-promo .cart-summary-line .label, .cart-grid-right > .cart-summary > .block-promo .promo-name {
+.block-promo .cart-summary-line .label, .block-promo .promo-name {
   color: #ff9a52;
   font-weight: 600; }
-  .cart-grid-right > .cart-summary > .block-promo .cart-summary-line .label a, .cart-grid-right > .cart-summary > .block-promo .promo-name a {
+  .block-promo .cart-summary-line .label a, .block-promo .promo-name a {
     font-weight: normal;
     color: #414141;
     display: inline-block;
     opacity: 0.7; }
 
-.cart-grid-right > .cart-summary > .block-promo .promo-code-button {
+.block-promo .promo-code-button {
   padding-left: 1.5625rem;
   margin-bottom: 1.25rem;
   display: inline-block;
