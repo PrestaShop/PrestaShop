@@ -51,14 +51,7 @@
 
           <span itemprop="price" class="price">{$product.price}</span>
 
-          {hook h='displayProductPriceBlock' product=$product type='price'}
           {hook h='displayProductPriceBlock' product=$product type='unit_price'}
-          {hook h='displayProductPriceBlock' product=$product type='list_taxes'}
-          {hook h='displayProductPriceBlock' product=$product type='after_price'}
-
-          {if !$product.is_virtual}
-            {hook h='displayProductDeliveryTime' product=$product}
-          {/if}
 
           {hook h='displayProductPriceBlock' product=$product type='weight'}
         </div>
