@@ -16307,6 +16307,84 @@ ul.category-tree {
   color: #BBCDD2;
   font-size: 12rem; }
 
+/**
+ * Module Modal CSS
+ */
+.module-modal-title {
+  display: inline-block;
+  padding-left: 1em;
+  display: table-cell;
+  vertical-align: top; }
+
+.module-modal-title > h4 {
+  color: #1E2024 !important;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
+  font-weight: bold !important;
+  font-size: 14px; }
+
+.module-badges-display {
+  display: inline-block; }
+
+.module-modal-header button.close {
+  width: auto;
+  margin-top: -8px; }
+
+.module-modal-header button.close .material-icons {
+  font-size: 30px; }
+
+.module-modal-header > div {
+  display: table-row; }
+
+.module-big-cover {
+  height: 240px;
+  overflow: hidden;
+  margin-top: -15px;
+  text-align: center; }
+
+.module-big-cover > img {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  padding: 4px; }
+
+.module-menu-readmore {
+  margin-top: 2px; }
+
+.module-readmore-tab-content {
+  text-align: justify;
+  padding: 5px 15px;
+  line-height: 20px;
+  margin-bottom: 61px !important; }
+
+.module-menu-readmore > .tab-content {
+  margin-top: 5px;
+  color: black;
+  text-align: justify; }
+
+.module-modal-badges {
+  margin-top: 1em; }
+
+.module-modal-badges > img {
+  margin-right: 1em; }
+
+.module-modal-dialog {
+  height: 85%;
+  width: 50%; }
+
+.module-modal-content {
+  border: none;
+  box-shadow: none; }
+
+.module-modal-close {
+  width: auto !important;
+  margin-right: 5px; }
+
+.nav-tabs {
+  border-bottom: 1px solid #bbcdd2; }
+
+.nav-link.active {
+  border-bottom: 3px solid #25B9D7; }
+
 .mce-container {
   margin: 0;
   padding: 0;
