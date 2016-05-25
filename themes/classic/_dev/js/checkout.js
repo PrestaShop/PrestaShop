@@ -17,11 +17,14 @@ function setupMyCheckoutScripts() {
     $('#modal').modal('show');
   });
 
-  let url = `${$('.js-terms a').attr('href')}?content_only=1`;
-
-  $.get(url, (content) => {
-    $('#modal').find('.modal-content').html($(content).find('.page-cms').contents());
-  });
+  var url = $('.js-terms a').attr('href');
+  if (url) {
+    // TODO: Handle request if no pretty URL
+    url += `?content_only=1`;
+    $.get(url, (content) => {
+      $('#modal').find('.modal-content').html($(content).find('.page-cms').contents());
+    });
+  }
 }
 
 $(document).ready(() => {
