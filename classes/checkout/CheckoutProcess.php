@@ -171,4 +171,20 @@ class CheckoutProcessCore implements RenderableInterface
 
         return $this;
     }
+
+    public function invalidateAllStepsAfterCurrent()
+    {
+        $markAsUnreachable = false;
+        foreach ($this->getSteps() as $step) {
+            if ($markAsUnreachable) {
+                $step->setComplete(false)->setReachable(false);
+            }
+
+            if ($step->isCurrent()) {
+                $markAsUnreachable = true;
+            }
+        }
+
+        return $this;
+    }
 }

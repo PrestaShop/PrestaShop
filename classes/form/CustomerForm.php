@@ -3,9 +3,8 @@
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * StarterTheme TODO: B2B fields, Genders, CSRF
+ * StarterTheme TODO: B2B fields, Genders, CSRF.
  */
-
 class CustomerFormCore extends AbstractForm
 {
     protected $template = 'customer/_partials/customer-form.tpl';
@@ -39,6 +38,7 @@ class CustomerFormCore extends AbstractForm
     {
         $this->formatter->setPasswordRequired(!$guest_allowed);
         $this->guest_allowed = $guest_allowed;
+
         return $this;
     }
 
@@ -74,6 +74,22 @@ class CustomerFormCore extends AbstractForm
         return $customer;
     }
 
+    public function validate()
+    {
+        $emailField = $this->getField('email');
+        $id_customer = Customer::customerExists($emailField->getValue(), true, true);
+        if ($id_customer && $id_customer != $this->getCustomer()->id) {
+            $emailField->addError(sprintf(
+                $this->translator->trans(
+                    'The email "%s" is already used, please choose another one or sign in', array(), 'Customer'
+                ),
+                $emailField->getValue()
+            ));
+        }
+
+        return parent::validate();
+    }
+
     public function submit()
     {
         if ($this->validate()) {
@@ -101,16 +117,16 @@ class CustomerFormCore extends AbstractForm
     public function getTemplateVariables()
     {
         return [
-            'action'        => $this->action,
-            'urls'          => $this->urls,
-            'errors'        => $this->getErrors(),
-            'hook_create_account_form'  => Hook::exec('displayCustomerAccountForm'),
+            'action' => $this->action,
+            'urls' => $this->urls,
+            'errors' => $this->getErrors(),
+            'hook_create_account_form' => Hook::exec('displayCustomerAccountForm'),
             'formFields' => array_map(
                 function (FormField $field) {
                     return $field->toArray();
                 },
                 $this->formFields
-            )
+            ),
         ];
     }
 }
