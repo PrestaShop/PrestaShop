@@ -129,6 +129,11 @@ class InstallModelInstall extends InstallAbstractModel
             return false;
         }
 
+        // Clear the cache
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+        $sf2Refresh->addCacheClear('dev');
+        $sf2Refresh->addCacheClear('prod');
+        $output = $sf2Refresh->execute();
 
         return true;
     }
