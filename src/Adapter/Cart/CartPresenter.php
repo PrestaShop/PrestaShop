@@ -262,6 +262,7 @@ class CartPresenter implements PresenterInterface
                 : $this->translator->trans('Free', array(), 'Cart'),
         );
 
+        $subtotals['tax'] = null;
         if (Configuration::get('PS_TAX_DISPLAY')) {
             $taxAmount = $total_including_tax - $total_excluding_tax;
             $subtotals['tax'] = array(
