@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Doctrine\ORM\EntityManager;
 
 class ModuleDataProvider
 {
@@ -37,9 +39,16 @@ class ModuleDataProvider
      */
     private $logger;
 
-    public function __construct(LoggerInterface $logger)
+    /**
+     * EntityManager for module history
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    public function __construct(LoggerInterface $logger, EntityManager $entityManager = null)
     {
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -54,11 +63,34 @@ class ModuleDataProvider
             $result['installed'] = 1;
             $result['active'] = $this->isEnabled($name);
             $result['active_on_mobile'] = (bool)($this->getDeviceStatus($name) & AddonListFilterDeviceStatus::DEVICE_MOBILE);
+
+            if (!is_null($this->entityManager)) {
+                $moduleID = (int)$result['id'];
+                $legacyContext = new LegacyContext();
+                $legacyContext = $legacyContext->getContext();
+                $employeeID = (int)$legacyContext->employee->id;
+                $moduleHistory = $this->entityManager->getRepository('PrestaShopBundle:ModuleHistory')
+                    ->findOneBy([
+                        'idEmployee' => $employeeID,
+                        'idModule'   => $moduleID
+                    ]);
+
+                if (is_null($moduleHistory)) {
+                    $lastAccessDate = '0000-00-00 00:00:00';
+                } else {
+                    $lastAccessDate = $moduleHistory->getDateUpd()->format('Y-m-d H:i:s');
+                }
+            } else {
+                $lastAccessDate = '0000-00-00 00:00:00';
+            }
+            $result['last_access_date'] = $lastAccessDate;
+
             return $result;
         }
 
         return ['installed' => 0];
     }
+
 
     /**
      * Return translated module *Display Name*

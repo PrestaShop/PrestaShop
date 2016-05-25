@@ -872,7 +872,8 @@ var AdminModuleController = function () {
                                 'sort-by-price-asc',
                                 'sort-by-price-desc',
                                 'sort-by-name',
-                                'sort-by-scoring'
+                                'sort-by-scoring',
+                                'sort-by-access-date'
                             ];
 
         if ($.inArray(typeSort, availableSorts) === -1) {
@@ -910,6 +911,11 @@ var AdminModuleController = function () {
                 dataAttr = ['data-scoring', 'data-tech-name'];
                 sortKind = 'num';
                 break;
+            case availableSorts[4]:
+                dataAttr = ['data-access-date', 'data-tech-name'];
+                sortKind = 'date';
+                sortOrder = 'desc';
+                break;
         }
 
         $(moduleGlobalSelector).each(function(index, value) {
@@ -934,7 +940,7 @@ var AdminModuleController = function () {
 
             if (sortKind == 'alpha') {
                 keysToSort.sort();
-            } else {
+            } else if (sortKind == 'num') {
                 keysToSort.sort(function(elem1, elem2) {
                     var elem1Formatted = parseFloat(elem1.substring(0, elem1.indexOf('#')));
                     var elem2Formatted = parseFloat(elem2.substring(0, elem2.indexOf('#')));
@@ -942,6 +948,26 @@ var AdminModuleController = function () {
                         return elem1Formatted - elem2Formatted;
                     } else {
                         return elem2Formatted - elem1Formatted;
+                    }
+                });
+            } else if (sortKind == 'date') {
+                keysToSort.sort(function(elem1, elem2) {
+                    var elem1Formatted = elem1.substring(0, elem1.indexOf('#'));
+                    var elem2Formatted = elem2.substring(0, elem2.indexOf('#'));
+                    if (sortOrder == 'asc') {
+                        if (elem1Formatted > elem2Formatted) {
+                            return 1;
+                        }
+                        if (elem1Formatted < elem2Formatted) {
+                            return -1;
+                        }
+                    } else {
+                        if (elem1Formatted > elem2Formatted) {
+                            return -1;
+                        }
+                        if (elem1Formatted < elem2Formatted) {
+                            return 1;
+                        }
                     }
                 });
             }

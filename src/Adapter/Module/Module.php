@@ -118,6 +118,7 @@ class Module implements ModuleInterface
         'active' => 0,
         'active_on_mobile' => true,
         'version' => null,
+        'last_access_date' => '0000-00-00 00:00:00',
         'date_add' => null,
         'date_upd' => null,
     );
