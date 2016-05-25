@@ -64,6 +64,11 @@ class UploaderCore
         if (!isset($file_name)) {
             return tempnam($this->getSavePath(), $this->getUniqueFileName());
         }
+        
+        $path_info = pathinfo($file_name);
+        if (isset($path_info['extension'])) {
+            $file_name = $path_info['filename'].'.'.Tools::strtolower($path_info['extension']);
+        }
 
         return $this->getSavePath().$file_name;
     }
@@ -250,7 +255,7 @@ class UploaderCore
         $types = $this->getAcceptTypes();
 
         //TODO check mime type.
-        if (isset($types) && !in_array(pathinfo($file['name'], PATHINFO_EXTENSION), $types)) {
+        if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
             $file['error'] = Tools::displayError('Filetype not allowed');
             return false;
         }
