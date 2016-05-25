@@ -14865,6 +14865,9 @@ xs, .xs, .xsmall, xsmall {
   background-color: #fff;
   width: 100%; }
 
+.navbar.navbar-light, .subheader {
+  padding-bottom: 0; }
+
 .navbar-nav, .subheader .subheader-quicknav, .subheader .subheader-navbar {
   background-color: #fff;
   margin-left: 10px; }
@@ -14924,10 +14927,10 @@ xs, .xs, .xsmall, xsmall {
 .navbar-nav.navbar-separator:after, .subheader .navbar-separator.subheader-quicknav:after, .subheader .navbar-separator.subheader-navbar:after {
   content: " ";
   left: 0;
+  bottom: 0;
   display: table-cell;
   border-bottom: 1px solid #BBCDD2;
   position: absolute;
-  height: 3.44em;
   width: 100%; }
 
 .subheader {
