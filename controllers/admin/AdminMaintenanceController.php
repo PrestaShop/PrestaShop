@@ -60,6 +60,7 @@ class AdminMaintenanceControllerCore extends AdminController
                         'hint' => $this->l('Custom text displayed on maintenance page while shop is deactivated.'),
                         'validation' => 'isCleanHtml',
                         'type' => 'textareaLang',
+                        'autoload_rte' => true,
                         'default' => ''
                     ),
                 ),
