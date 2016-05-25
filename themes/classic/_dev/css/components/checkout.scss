@@ -277,14 +277,6 @@ body#checkout {
   }
 }
 /**** ORDER CONFIRMATION *****/
-#content-hook_order_confirmation {
-  .card-title {
-    margin: 0;
-  }
-  .card-block {
-    padding: $small-space;
-  }
-}
 #order-details {
   padding-left: $large-space;
   > .card-title {
@@ -299,7 +291,6 @@ body#checkout {
 }
 #order-items {
   border-right: $gray-light 1px solid;
-  padding: 0 $extra-large-space 0 $large-space;
   hr {
     border-top-color: $gray-darker;
   }

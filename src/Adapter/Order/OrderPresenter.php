@@ -148,6 +148,7 @@ class OrderPresenter implements PresenterInterface
         );
 
         $tax = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
+        $subtotals['tax'] = null;
         if ((float) $tax && Configuration::get('PS_TAX_DISPLAY')) {
             $subtotals['tax'] = array(
                 'type' => 'tax',
