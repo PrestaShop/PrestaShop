@@ -5328,12 +5328,6 @@ body#checkout {
     color: #acaaa6; }
 
 /**** ORDER CONFIRMATION *****/
-#content-hook_order_confirmation .card-title {
-  margin: 0; }
-
-#content-hook_order_confirmation .card-block {
-  padding: 10px; }
-
 #order-details {
   padding-left: 30px; }
   #order-details > .card-title {
@@ -5344,8 +5338,7 @@ body#checkout {
       margin-bottom: 10px; }
 
 #order-items {
-  border-right: #ebebeb 1px solid;
-  padding: 0 40px 0 30px; }
+  border-right: #ebebeb 1px solid; }
   #order-items hr {
     border-top-color: #414141; }
   #order-items table {
