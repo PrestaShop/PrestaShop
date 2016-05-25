@@ -97,12 +97,12 @@ describe('Customer Identity', function () {
       it('should let another guest use the same e-mail address', fillGuestInfo);
     });
 
-    describe.skip("updating the guest account during checkout", function () {
+    describe("updating the guest account during checkout", function () {
       it('should let the guest update their lastname', function () {
         return browser
           .click("#checkout-personal-information-step h1")
           .setValue("#customer-form [name=lastname]", "a Ghost")
-          .click("#checkout-personal-information-step button")
+          .click("#checkout-personal-information-step button[name='continue']")
           .waitForVisible("#checkout-personal-information-step.-complete")
         ;
       });
@@ -111,16 +111,16 @@ describe('Customer Identity', function () {
         return browser
           .click("#checkout-personal-information-step h1")
           .setValue("#customer-form [name=email]", "pub@prestashop.com")
-          .click("#checkout-personal-information-step button")
-          .isVisible("#checkout-personal-information-step.-complete")
-          .should.become(false);
+          .click('#checkout-personal-information-step button[name="continue"]')
+          .isExisting("#checkout-personal-information-step.-complete")
+          .should.become(false)
         ;
       });
 
       it('should let the guest change their email address if not used by a customer', function () {
         return browser
           .setValue("#customer-form [name=email]", "guest.guest@example.com")
-          .click("#checkout-personal-information-step button")
+          .click("#checkout-personal-information-step button[name='continue']")
           .waitForVisible("#checkout-personal-information-step.-complete")
         ;
       });
@@ -131,7 +131,7 @@ describe('Customer Identity', function () {
             .click("#checkout-personal-information-step h1")
             .setValue("#customer-form [name=email]", user.email)
             .setValue("#customer-form [name=password]", "123456789")
-            .click("#checkout-personal-information-step button")
+            .click("#checkout-personal-information-step button[name='continue']")
             .waitForVisible("#checkout-personal-information-step.-complete")
             .click("#checkout-personal-information-step h1")
             .isVisible("#checkout-personal-information-step .identity")

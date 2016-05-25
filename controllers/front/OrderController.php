@@ -99,19 +99,17 @@ class OrderControllerCore extends FrontController
             $translator
         );
 
-        $checkoutDeliveryStep->setRecyclablePackAllowed(
-            (bool) Configuration::get('PS_RECYCLABLE_PACK')
-        )->setGiftAllowed(
-            (bool) Configuration::get('PS_GIFT_WRAPPING')
-        )->setIncludeTaxes(
-            !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer)
-            && (int) Configuration::get('PS_TAX')
-        )->setDisplayTaxesLabel(
-            (Configuration::get('PS_TAX')
-            && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
-        )->setGiftCost(
-            $this->context->cart->getGiftWrappingPrice(
-                $checkoutDeliveryStep->getIncludeTaxes()
+        $checkoutDeliveryStep
+            ->setRecyclablePackAllowed((bool) Configuration::get('PS_RECYCLABLE_PACK'))
+            ->setGiftAllowed((bool) Configuration::get('PS_GIFT_WRAPPING'))
+            ->setIncludeTaxes(
+                !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer)
+                && (int) Configuration::get('PS_TAX')
+            )
+            ->setDisplayTaxesLabel((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')))
+            ->setGiftCost(
+                $this->context->cart->getGiftWrappingPrice(
+                    $checkoutDeliveryStep->getIncludeTaxes()
             )
         );
 
@@ -202,7 +200,8 @@ class OrderControllerCore extends FrontController
 
         $this->checkoutProcess
             ->setNextStepReachable()
-            ->markCurrentStep();
+            ->markCurrentStep()
+            ->invalidateAllStepsAfterCurrent();
 
         $this->saveDataToPersist($this->checkoutProcess);
 
