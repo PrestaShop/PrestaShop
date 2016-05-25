@@ -8,6 +8,7 @@
 
 .module-item-heading-grid {
     height:50px;
+    cursor: pointer;
 }
 
 .btn.onclick {
@@ -249,27 +250,38 @@ img.module-logo-thumb-list {
     vertical-align: top;
 }
 .module-modal-title > h4 {
-    color: #1E2024 !important;
-    font-family: "Open Sans", Helvetica, Arial,sans-serif !important;
-    font-weight: bold !important;
-    font-size: 14px;
+    font-family: "Open Sans Semibold", Helvetica, Arial,sans-serif !important;
+    font-size: 16px;
+    color: #363a41 !important;
+    margin-bottom: 5px;
+}
+.module-modal-details {
+    font-family: "Open Sans Semibold", Helvetica, Arial,sans-serif;
+    font-size: 11px;
+    color: #83969d;
+}
+
+.module-modal-span-author {
+    color: rgb(37, 185, 215);
 }
 
 .module-badges-display {
     display: inline-block;
 }
 .module-modal-header button.close {
-    width: auto;
+    margin-top: -5px;
+    font-size: 20px;
+    font-family: "Open Sans";
 }
 .module-modal-header > div {
     display: table-row;
 }
 .module-big-cover {
-    height: 240px;
+    height: 200px;
     overflow: hidden;
-    margin-top: -15px;
     text-align: center;
-    box-shadow: -1px 0px 6px 1px rgba(0, 0, 0, 0.3) inset;
+    border-top: 1px solid #bbcdd2;
+    border-bottom: 3px solid #bbcdd2;
 }
 
 .module-big-cover > img {
@@ -281,6 +293,18 @@ img.module-logo-thumb-list {
 
 .module-menu-readmore {
     margin-top: 2px;
+    padding: 0;
+}
+
+.module-menu-readmore > ul {
+    border-bottom: 3px solid #bbcdd2;
+    height: 51px;
+}
+
+.module-readmore-tab.active {
+    border-top: 0 !important;
+    border-bottom: 3px solid rgb(37, 185, 215) !important;
+    margin-top: 2px;
 }
 
 .module-readmore-tab-content {
@@ -290,14 +314,13 @@ img.module-logo-thumb-list {
     margin-bottom: 61px !important;
 }
 
-.module-readmore-tab {
-    border: none !important;
-}
-
 .module-menu-readmore > .tab-content {
     margin-top: 5px;
     color: black;
     text-align: justify;
+    height: 200px;
+    overflow: scroll;
+    border-bottom: 1px solid #bbcdd2;
 }
 
 .module-modal-badges {
@@ -321,6 +344,15 @@ img.module-logo-thumb-list {
 .module-modal-close {
     width: auto !important;
     margin-right: 5px;
+}
+
+.module-modal-body {
+    padding: 5px !important;
+}
+
+.module-modal-ranking {
+    left: 87% !important;
+    bottom: 87% !important;
 }
 
 /*
