@@ -333,7 +333,7 @@ function unitProductAction(element, action) {
 
 	// save action URL for redirection and update to post to bulk action instead
 	// using form action URL allow to get route attributes and stay on the same page & ordering.
-	var urlHandler = $(element).closest('[uniturl]');
+	var urlHandler = $(element).closest('[data-uniturl]');
 	var redirectUrlHandler = $(element).closest('[redirecturl]');
 	var redirectionInput = $('<input>')
 		.attr('type', 'hidden')
@@ -345,9 +345,8 @@ function unitProductAction(element, action) {
 			$('#catalog_deletion_modal').modal('show');
 			$('#catalog_deletion_modal button[value="confirm"]').off('click');
 			$('#catalog_deletion_modal button[value="confirm"]').on('click', function() {
-
 				form.append($(redirectionInput));
-				var url = urlHandler.attr('uniturl').replace(/duplicate/, action);
+				var url = urlHandler.attr('data-uniturl').replace(/duplicate/, action);
 				form.attr('action', url);
 				form.submit();
 
@@ -359,7 +358,7 @@ function unitProductAction(element, action) {
 	}
 
 	form.append($(redirectionInput));
-	var url = urlHandler.attr('uniturl').replace(/duplicate/, action);
+	var url = urlHandler.attr('data-uniturl').replace(/duplicate/, action);
 	form.attr('action', url);
 	form.submit();
 }
