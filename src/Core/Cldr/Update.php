@@ -110,8 +110,6 @@ class Update extends Repository
         } else {
             throw new \Exception("Failed to unzip '".$file."'.");
         }
-
-        $this->generateSupplementalDatas();
     }
 
 
@@ -132,71 +130,24 @@ class Update extends Repository
         $file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip';
 
         $archive = new \ZipArchive();
-        $archive->open($file);
+        if ($archive->open($file) === true) {
+        		for ($i = 0; $i < $archive->numFiles; $i++) {
+        				$filename = $archive->getNameIndex($i);
 
-        for ($i = 0; $i < $archive->numFiles; $i++) {
-            $filename = $archive->getNameIndex($i);
+        				if (preg_match('%^main\/'.$locale.'\/(.*).json$%', $filename)) {
+        						if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename))) {
+        								mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
+        						}
 
-            if (preg_match('%^main\/'.$locale.'\/(.*).json$%', $filename)) {
-                if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename))) {
-                    mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
-                }
-
-                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename)) {
-                    copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename);
-                    $this->newDatasFile[] = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename;
-                }
-            }
-        }
-        $archive->close();
-
-        $this->generateMainDatas($locale);
-    }
-
-    /**
-     * Generate CLDR supplemental data
-     */
-    private function generateSupplementalDatas()
-    {
-        $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath.'supplemental');
-
-        foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
-                $newFileName = 'supplemental--'.pathinfo($file)['filename'];
-                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName)) {
-                    copy(
-                        $rootPath . 'supplemental' . DIRECTORY_SEPARATOR . $file,
-                        $this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName
-                    );
-                }
-            }
-        }
-    }
-
-    /**
-     * Generate CLDR translations main data
-     *
-     * @param string $locale
-     */
-    private function generateMainDatas($locale)
-    {
-        $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath.'main'.DIRECTORY_SEPARATOR.$locale);
-
-        if (!$files) {
-            return;
-        }
-        foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
-                $newFileName = 'main--'.$locale.'--'.pathinfo($file)['filename'];
-                if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName)) {
-                    copy(
-                        $rootPath . 'main' . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $file,
-                        $this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName
-                    );
-                }
-            }
+        						if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename)) {
+        								copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename);
+        								$this->newDatasFile[] = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename;
+        						}
+        				}
+        		}
+        		$archive->close();
+        } else {
+            throw new \Exception("Failed to unzip '".$file."'.");
         }
     }
 }
