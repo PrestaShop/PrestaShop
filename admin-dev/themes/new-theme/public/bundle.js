@@ -85091,11 +85091,7 @@
 	  value: true
 	});
 
-	exports.default = function () {
-	  if (!window.location.hash.length) {
-	    (0, _jquery2.default)('.js-edit').val('');
-	  }
-	};
+	exports.default = function () {};
 
 	var _jquery = __webpack_require__(3);
 
