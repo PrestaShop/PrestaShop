@@ -375,8 +375,7 @@ class ModuleController extends FrameworkBundleAdminController
         $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
         $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
         $legacyContext = $legacyContextProvider->getContext();
-        $moduleManagerFactory = new ModuleManagerBuilder();
-        $moduleRepository = $moduleManagerFactory->buildRepository();
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         // Get accessed module object
         $moduleAccessed = $moduleRepository->getModule($module_name);
 
