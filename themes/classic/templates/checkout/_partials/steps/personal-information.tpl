@@ -1,7 +1,7 @@
 {extends file='checkout/_partials/steps/checkout-step.tpl'}
 
 {block name='step_content'}
-  {if $customer.is_logged}
+  {if $customer.is_logged && !$customer.is_guest}
 
     <p class="identity">
       {l s='Connected as [1]%1$s %2$s[/1].'
