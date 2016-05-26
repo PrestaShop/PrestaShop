@@ -168,17 +168,17 @@ services:
     prestashop.core.module.updater:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
         arguments:
-            - @prestashop.adapter.data_provider.addon
-            - @prestashop.adapter.admin.data_provider.module
+            - "@prestashop.adapter.data_provider.addon"
+            - "@prestashop.adapter.admin.data_provider.module"
 
     # Repositories
     prestashop.core.admin.module.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
         arguments:
-            - @prestashop.adapter.admin.data_provider.module
-            - @prestashop.adapter.data_provider.module
-            - @prestashop.core.module.updater
-            - @prestashop.adapter.legacy.logger
+            - "@prestashop.adapter.admin.data_provider.module"
+            - "@prestashop.adapter.data_provider.module"
+            - "@prestashop.core.module.updater"
+            - "@prestashop.adapter.legacy.logger"
             
     prestashop.core.admin.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
@@ -192,8 +192,8 @@ services:
     prestashop.module.manager:
         class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
         arguments:
-            - @prestashop.adapter.admin.data_provider.module
-            - @prestashop.adapter.data_provider.module
-            - @prestashop.core.module.updater
-            - @prestashop.core.admin.module.repository
+            - "@prestashop.adapter.admin.data_provider.module"
+            - "@prestashop.adapter.data_provider.module"
+            - "@prestashop.core.module.updater"
+            - "@prestashop.core.admin.module.repository"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
