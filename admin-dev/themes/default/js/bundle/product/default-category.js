@@ -18,16 +18,7 @@ var defaultCategory = (function() {
      * Check the radio bouton with the selected value
      */
     'check': function(value) {
-      var defaultCategory = defaultCategoryForm.find('input[value="'+value+'"]');
-      if (defaultCategory.is(':checked')) {
-        console.log('already checked');
-        return;
-      }
-      else {
-        var previousDefault = defaultCategoryForm.find('input:checked');
-        previousDefault.attr('checked', false);
-        defaultCategory.attr('checked', 'checked');
-      }
+      defaultCategoryForm.find('input[value="'+value+'"]').prop('checked', true);
     }
   };
 })();
