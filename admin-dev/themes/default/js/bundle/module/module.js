@@ -676,7 +676,7 @@ var AdminModuleController = function () {
                  $(_this.moduleImportProcessingSelector).finish().fadeOut(function() {
                       if (responseObject.status === true) {
                           if (responseObject.is_configurable === true) {
-                              var configureLink = this.baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
+                              var configureLink = _this.baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
                               $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
                               $(_this.moduleImportSuccessConfigureBtnSelector).show();
                           }
