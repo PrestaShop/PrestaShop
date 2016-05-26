@@ -24,7 +24,7 @@
 *}
 
 
-<form id="{$id|escape:'html':'UTF-8'}"
+<form id="header_search"
       class="bo_search_form dropdown-form js-dropdown-form"
       method="post"
       action="{$baseAdminUrl}index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}"
