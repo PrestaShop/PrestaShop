@@ -21,6 +21,7 @@ GitHub contributors:
 - Alfonso Jimenez
 - Alphacom IT Solutions - Macedonia
 - amatosg
+- Amazzing
 - anat
 - Anatole
 - Andrew
@@ -37,6 +38,8 @@ GitHub contributors:
 - Bersam Karbasion
 - BigZ
 - BluTiGeS
+- BMS-fenaille
+- brouillon
 - Bruno Desprez
 - Bruno Leveque
 - bumbu
@@ -48,9 +51,12 @@ GitHub contributors:
 - ccauw
 - cedricfontaine
 - cedricgeffroy
+- cgordenne
+- cgordenne_wepika
 - Chen.Zhidong
 - Chris
 - Chris Gurk
+- christianverardi
 - ChristopheBoucaut
 - CINS
 - cippest
@@ -73,6 +79,7 @@ GitHub contributors:
 - Daniele Giachino
 - danoosh
 - Danoosh Mir
+- David Eschmeyer
 - David Gasperoni
 - David Sivocha
 - David-Julian BUCH
@@ -88,6 +95,7 @@ GitHub contributors:
 - dlage
 - doekia
 - DOEO
+- DogSports
 - Dragan Skrbic
 - Dream me up
 - dreammeup
@@ -116,6 +124,7 @@ GitHub contributors:
 - Felipe Uribe
 - fetis
 - fird
+- firstred
 - flashmaestro
 - Florian Kwakkenbos
 - fram
@@ -162,6 +171,7 @@ GitHub contributors:
 - Jerome Nadaud
 - jeromenadaud
 - jessylenne
+- Jérôme Nadaud
 - Joan
 - Joan Juvanteny
 - joce
@@ -204,6 +214,7 @@ GitHub contributors:
 - LyoNick
 - Leo
 - M-Mommsen
+- MacRoy
 - Madef
 - Madman
 - Mainmich
@@ -212,6 +223,7 @@ GitHub contributors:
 - marcinsz101
 - Marco Cervellin
 - Marcos
+- Marius
 - matiasiglesias
 - Mats Rynge
 - Matteo
@@ -288,6 +300,7 @@ GitHub contributors:
 - Quetzacoalt91
 - Racochejl
 - Rafael Cunha
+- Raphael Droz
 - Raphael Malie
 - raulgundin
 - rGaillard

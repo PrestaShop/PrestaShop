@@ -1306,7 +1306,7 @@ if (!class_exists('PEAR_Exception', false))
 			}
 
 			public function getTraceSafe()
-			{   
+			{
 					if (!isset($this->_trace)) {
 							$this->_trace = $this->getTrace();
 							if (empty($this->_trace)) {
