@@ -88,9 +88,9 @@ class ProductSeo extends CommonAbstractType
         ))
         ->add('redirect_type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => array(
-                $this->translator->trans('No redirect (404)', [], 'AdminProducts') => '404',
-                $this->translator->trans('Catalog Redirected permanently (301)', [], 'AdminProducts') => '301',
-                $this->translator->trans('Redirected temporarily (302)', [], 'AdminProducts') => '302',
+                $this->translator->trans('No redirection (404)', [], 'AdminProducts') => '404',
+                $this->translator->trans('Permanent redirection (301)', [], 'AdminProducts') => '301',
+                $this->translator->trans('Temporary redirection (302)', [], 'AdminProducts') => '302',
             ),
             'choices_as_values' => true,
             'required' => true,

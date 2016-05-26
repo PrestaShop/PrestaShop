@@ -131,18 +131,18 @@ class ProductSpecificPrice extends CommonAbstractType
             'choices_as_values' => true,
             'required' =>  false,
             'placeholder' => $this->translator->trans('Apply to all combinations', [], 'AdminProducts'),
-            'label' => $this->translator->trans('Combination', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Combinations', [], 'AdminProducts'),
             'attr' => ['data-action' =>  $this->router->generate('admin_get_product_combinations')],
         ))
         ->add('sp_from', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
             'label' => $this->translator->trans('Available from', [], 'AdminProducts'),
-            'attr' => ['placeholder' => 'YYYY-MM-DD HH:II']
+            'attr' => ['placeholder' => 'YYYY-MM-DD']
         ))
         ->add('sp_to', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
             'label' => $this->translator->trans('to', [], 'AdminProducts'),
-            'attr' => ['placeholder' => 'YYYY-MM-DD HH:II']
+            'attr' => ['placeholder' => 'YYYY-MM-DD']
         ))
         ->add('sp_from_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
@@ -159,7 +159,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'currency' => $this->currency->iso_code,
         ))
         ->add('leave_bprice', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-            'label'    => $this->translator->trans('Leave base price:', [], 'AdminProducts'),
+            'label'    => $this->translator->trans('Leave initial price', [], 'AdminProducts'),
             'required' => false,
         ))
         ->add('sp_reduction', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(

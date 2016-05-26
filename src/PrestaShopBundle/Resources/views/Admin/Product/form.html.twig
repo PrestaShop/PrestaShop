@@ -218,7 +218,7 @@
                               </label>
                               <div id="product_type_combinations_shortcut">
                                 <span class="small font-secondary">
-                                  {{ "Advanced settings available in"|trans({}, 'AdminProducts') }}
+                                  {{ "Advanced settings in"|trans({}, 'AdminProducts') }}
                                 </span>
                                 <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');" class="btn sensitive p-x-0">
                                   <i class="material-icons">open_in_new</i> {{ "Combinations"|trans({}, 'AdminProducts')|raw }}
@@ -240,7 +240,7 @@
                               </div>
                             </div>
                             <span class="small font-secondary">
-                              {{ "Advanced settings available in"|trans({}, 'AdminProducts') }}
+                              {{ "Advanced settings in"|trans({}, 'AdminProducts') }}
                             </span>
                             <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');" class="btn sensitive p-x-0">
                               <i class="material-icons">open_in_new</i> {{ "Quantities"|trans({}, 'AdminProducts') }}
@@ -270,7 +270,7 @@
                               </div>
                               <div class="col-md-12">
                                 <span class="small font-secondary">
-                                  {{ "Advanced settings available in"|trans({}, 'AdminProducts') }}
+                                  {{ "Advanced settings in"|trans({}, 'AdminProducts') }}
                                 </span>
                                 <a href="#tab-step2" onclick="$('a[href=\'#step2\']').tab('show');" class="btn sensitive p-x-0">
                                   <i class="material-icons">open_in_new</i> {{ "Pricing"|trans({}, 'AdminProducts') }}
@@ -599,14 +599,6 @@
                             data-content="{{ "Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first."|trans({}, 'AdminProducts') }}" ></span>
                         </h2>
                       </div>
-                      <div class="col-md-12">
-                        <div class="alert alert-info" role="alert">
-                          <i class="material-icons">help</i>
-                          <p class="alert-text">
-                            {{ 'Sometimes one customer can fit into multiple price rules. Priorities allow you to define wich rule applies to the customer.'|trans({}, 'AdminProducts') }}
-                          </p>
-                        </div>
-                      </div>
                       <div class="col-md-3">
                         <fieldset class="form-group">
                           <label>{{ 'Priorities'|trans({}, 'AdminProducts') }}</label>
@@ -715,7 +707,7 @@
                         </div>
                         <div class="alert alert-info alert-down" role="alert">
                           <p class="alert-down-text">
-                            {{ 'Use terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.'|trans({}, 'AdminProducts')|raw }}<br>
+                            {{ 'Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.'|trans({}, 'AdminProducts')|raw }}<br>
                             {{ 'You can manage tag aliases in the Alias section.'|trans({}, 'AdminProducts')|raw }}
                             <!--TODO:: re-add the link:: '%link%': '<a href="'~ getAdminLink("AdminSearchConf") ~'">'~'Alias'|trans({}, 'AdminProducts')~'</a>' -->
                           </p>
@@ -734,7 +726,7 @@
                         <label class="form-control-label">
                           {{ form.step6.condition.vars.label }}
                           <span class="help-box" data-toggle="popover"
-                            data-content="{{ "Not all shops sell new products. This option enables you to indicate the condition of the product. This information can be required on some marketplaces."|trans({}, 'AdminProducts') }}" ></span>
+                            data-content="{{ "Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces."|trans({}, 'AdminProducts') }}" ></span>
                         </label>
                         {{ form_errors(form.step6.condition) }}
                         {{ form_widget(form.step6.condition) }}
@@ -758,7 +750,7 @@
                         <label class="form-control-label">
                           {{ form.step6.isbn.vars.label }}
                           <span class="help-box" data-toggle="popover"
-                            data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'AdminProducts') }}" ></span>
+                            data-content="{{ "ISBN is used internationally to identify books and their various editions."|trans({}, 'AdminProducts') }}" ></span>
                         </label>
                         {{ form_errors(form.step6.isbn) }}
                         {{ form_widget(form.step6.isbn) }}
@@ -789,7 +781,7 @@
                       <div class="col-md-12">
                         <div id="custom_fields" class="m-b-2">
                           <h2>{{ form.step6.custom_fields.vars.label }}</h2>
-                          <p class="subtitle">{{ 'Customers can personalized the product by entering some text or by providing custom files (image, video, etc.).'|trans({}, 'AdminProducts') }}</p>
+                          <p class="subtitle">{{ 'Customers can personalize the product by entering some text or by providing custom files (image, video, etc.).'|trans({}, 'AdminProducts') }}</p>
                           {{ form_errors(form.step6.custom_fields) }}
                           <ul class="customFieldCollection nostyle" data-prototype="
                                       {% filter escape %}
@@ -817,7 +809,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-8">
-                        <h2>{{ 'Create a new attachment'|trans({}, 'AdminProducts') }}</h2>
+                        <h2>{{ 'Attach a new file'|trans({}, 'AdminProducts') }}</h2>
                         <fieldset class="form-group">
                           {{ form_errors(form.step6.attachment_product) }}
                           <div id="form_step6_attachment_product" data-action="{{ form.step6.attachment_product.vars.attr['data-action'] }}">
@@ -838,8 +830,8 @@
                               <div class="alert alert-info alert-drop" role="alert">
                                 <i class="material-icons">help</i>
                                 <p class="alert-text">
-                                  {{ 'This interface allows you to specify the suppliers of the current product and eventually its combinations.'|trans({}, 'AdminProducts')|raw }}<br>
-                                  {{ 'It is also possible to specify supplier references according to previously associated suppliers.'|trans({}, 'AdminProducts')|raw }}
+                                  {{ 'This interface allows you to specify the suppliers of the current product and its combinations, if any.'|trans({}, 'AdminProducts')|raw }}<br>
+                                  {{ 'You can specify supplier references according to previously associated suppliers.'|trans({}, 'AdminProducts')|raw }}
                                   <strong>{{ 'Read more'|trans({}, 'AdminProducts')|raw }}</strong>
                                 </p>
                               </div>

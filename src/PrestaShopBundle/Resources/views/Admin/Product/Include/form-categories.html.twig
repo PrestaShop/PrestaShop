@@ -1,19 +1,19 @@
 <h2>{{ "Categories"|trans({}, 'AdminProducts') }}
   <span class="help-box" data-toggle="popover"
-    data-content="{{ "Where should the product be available on your site? The default category is the main category for your product."|trans({}, 'AdminProducts') }}" ></span>
+    data-content="{{ "Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL."|trans({}, 'AdminProducts') }}" ></span>
 </h2>
 <div class="categories-tree js-categories-tree">
   <fieldset class="form-group">
     <div class="ui-widget">
       <input type="text" id="ps-select-product-category" class="form-control autocomplete search m-b-1" placeholder="{{ 'Search categories'|trans({}, 'AdminProducts') }}">
-      <label class="form-control-label text-uppercase">{{ 'Categories associated to this product'|trans({}, 'AdminProducts') }}</label>
+      <label class="form-control-label text-uppercase">{{ 'Associated categories'|trans({}, 'AdminProducts') }}</label>
       {{ include('PrestaShopBundle:Admin:Category/categories.html.twig', {'categories': categories }) }}
       {{ form_errors(form.id_category_default) }}
       {{ form_widget(form.id_category_default) }}
       <div class="categories-tree-actions js-categories-tree-actions">
-        <span class="form-control-label" data-action="expand"><i class="material-icons">expand_more</i>{{ "Expand All"|trans({}, 'AdminProducts') }}</span>
-        <span class="form-control-label" data-action="reduce"><i class="material-icons">expand_less</i>{{ "Reduce All"|trans({}, 'AdminProducts') }}</span>
-        <span class="form-control-label pull-right">{{ "Category by default"|trans({}, 'AdminProducts') }}</span>
+        <span class="form-control-label" data-action="expand"><i class="material-icons">expand_more</i>{{ "Expand"|trans({}, 'AdminProducts') }}</span>
+        <span class="form-control-label" data-action="reduce"><i class="material-icons">expand_less</i>{{ "Collapse"|trans({}, 'AdminProducts') }}</span>
+        <span class="form-control-label pull-right">{{ "Main category"|trans({}, 'AdminProducts') }}</span>
         <hr>
       </div>
       {{ form_widget(form.categories, {'defaultCategory': true}) }} {# see bootstrap_3_layout.html.twig #}
@@ -24,14 +24,14 @@
 </div>
 <div id="add-categories">
   <h2>
-    {{ "Add a new category"|trans({}, 'AdminProducts') }}
+    {{ "Create a new category"|trans({}, 'AdminProducts') }}
     <span class="help-box" data-toggle="popover"
       data-content="{{ "If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.)."|trans({}, 'AdminProducts') }}" ></span>
   </h2>
   <div id="add-categories-content" class="hide">
     <div id="form_step1_new_category" data-action="{{ path('admin_category_simple_add_form', {'id_product': productId }) }}">
       <fieldset class="form-group">
-        <label class="form-control-label">{{ "Add a new category"|trans({}, 'AdminProducts') }}</label>
+        <label class="form-control-label">{{ "New category name"|trans({}, 'AdminProducts') }}</label>
         {{ form_errors(form.new_category) }}
         {{ form_widget(form.new_category.name) }}
       </fieldset>
@@ -51,7 +51,7 @@
 
   <a href="#" class="btn btn-action open" id="add-category-button">
     <i class="material-icons">add</i>
-    {{ 'Add a category'|trans({}, 'AdminProducts') }}
+    {{ 'Create a category'|trans({}, 'AdminProducts') }}
   </a>
 </div>
 <!-- start of CSS plugin: to be moved in his own file -->
