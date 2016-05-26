@@ -128,14 +128,14 @@ class ImageManagerCore
      * @param string $dst_file   Destination filename
      * @param int    $dst_width  Desired width (optional)
      * @param int    $dst_height Desired height (optional)
-     * @param string $file_type
-     * @param bool   $force_type
-     * @param int    $error
-     * @param int    $tgt_width
-     * @param int    $tgt_height
-     * @param int    $quality
-     * @param int    $src_width
-     * @param int    $src_height
+     * @param string $file_type  Desired file_type (may be override by PS_IMAGE_QUALITY)
+     * @param bool   $force_type Don't override $file_type
+     * @param int    $error      Out error code
+     * @param int    $tgt_width  Needed by AdminImportController to speed up the import process
+     * @param int    $tgt_height Needed by AdminImportController to speed up the import process
+     * @param int    $quality    Needed by AdminImportController to speed up the import process
+     * @param int    $src_width  Needed by AdminImportController to speed up the import process
+     * @param int    $src_height Needed by AdminImportController to speed up the import process
      * @return bool Operation result
      */
     public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg',
