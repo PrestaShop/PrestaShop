@@ -28,6 +28,7 @@ $(document).ready(function () {
 
   prestashop.on('product dom updated', function(event) {
     createProductSpin();
+    $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
   });
 
   function createProductSpin()
