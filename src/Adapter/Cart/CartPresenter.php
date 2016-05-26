@@ -230,12 +230,16 @@ class CartPresenter implements PresenterInterface
             'value' => $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS))),
         );
 
-        $subtotals['discounts'] = array(
-            'type' => 'discount',
-            'label' => $this->translator->trans('Discount', [], 'Cart'),
-            'amount' => $total_discount,
-            'value' => $this->priceFormatter->format($total_discount),
-        );
+        if ($total_discount) {
+            $subtotals['discounts'] = array(
+                'type' => 'discount',
+                'label' => $this->translator->trans('Discount', array(), 'Cart'),
+                'amount' => $total_discount,
+                'value' => $this->priceFormatter->format($total_discount),
+            );
+        } else {
+            $subtotals['discounts'] = null;
+        }
 
         if ($cart->gift) {
             $giftWrappingPrice = ($cart->getGiftWrappingPrice($this->includeTaxes()) != 0)
@@ -268,8 +272,8 @@ class CartPresenter implements PresenterInterface
             $subtotals['tax'] = array(
                 'type' => 'tax',
                 'label' => ($this->includeTaxes())
-                    ? $this->translator->trans('Included taxes', [], 'Cart')
-                    : $this->translator->trans('Taxes', [], 'Cart'),
+                    ? $this->translator->trans('Included taxes', array(), 'Cart')
+                    : $this->translator->trans('Taxes', array(), 'Cart'),
                 'amount' => $taxAmount,
                 'value' => $this->priceFormatter->format($taxAmount),
             );

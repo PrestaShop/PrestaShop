@@ -25,15 +25,12 @@
         <section id="content">
           <div class="row">
             <div class="col-md-8">
-              {render   file = 'checkout/checkout-process.tpl'
-              ui   = $checkout_process
-              }
+              {render file='checkout/checkout-process.tpl' ui=$checkout_process}
             </div>
             <div class="col-md-4">
-              {include  file = 'checkout/_partials/cart-summary.tpl'
-              cart = $cart
-              }
-              
+
+              {include file='checkout/_partials/cart-summary.tpl' cart = $cart}
+
               {hook h='displayReassurance'}
             </div>
           </div>

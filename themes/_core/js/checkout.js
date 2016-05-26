@@ -41,10 +41,8 @@ function confirmPayment () {
 function refreshDeliveryOptions (event) {
   let params = $('#delivery-method').serialize() + '&action=selectDeliveryOption';
   $.post('', params).then(resp => {
-    $('#delivery-options').replaceWith(resp);
-    psShowHide();
-    prestashop.emit('cart updated', {
-      reason: event.target.dataset
+    $.post(location.href, null, null, 'json').then(function (resp) {
+      $('#checkout-cart-summary').replaceWith(resp.preview);
     });
   });
 }
@@ -78,11 +76,6 @@ function setupCheckoutScripts () {
 
   collapsePaymentOptions();
 
-  prestashop.on('cart updated', function () {
-    $.post(location.href, null, null, 'json').then(function (resp) {
-      $('#checkout-cart-summary').replaceWith(resp.preview);
-    });
-  });
 }
 
 $(document).ready(() => {
