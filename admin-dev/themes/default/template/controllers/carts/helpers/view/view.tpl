@@ -94,7 +94,7 @@
 				</thead>
 				<tbody>
 				{foreach from=$products item='product'}
-					{if isset($customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery])}
+					{if $product['customizedDatas']}
 						<tr>
 							<td>{$product.image}</td>
 							<td><a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product.id_product, 'updateproduct' => 1])|escape:'html':'UTF-8'}">
@@ -108,38 +108,42 @@
 							<td class="text-center">{$product.qty_in_stock}</td>
 							<td class="text-right">{displayWtPriceWithCurrency price=$product.total_customization_wt currency=$currency}</td>
 						</tr>
-						{foreach from=$customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery] item='customization'}
-						<tr>
-							<td colspan="2">
-							{foreach from=$customization.datas key='type' item='datas'}
-								{if $type == constant('Product::CUSTOMIZE_FILE')}
-									<ul style="margin: 0; padding: 0; list-style-type: none;">
-									{foreach from=$datas key='index' item='data'}
-											<li style="display: inline; margin: 2px;">
-												<a href="displayImage.php?img={$data.value}&name={$order->id|intval}-file{$index}" class="_blank">
-												<img src="{$pic_dir}{$data.value}_small" alt="" /></a>
-											</li>
-									{/foreach}
-									</ul>
-								{elseif $type == constant('Product::CUSTOMIZE_TEXTFIELD')}
-									<div class="form-horizontal">
-										{foreach from=$datas key='index' item='data'}
-											<div class="form-group">
-												<span class="control-label col-lg-3"><strong>{if $data.name}{$data.name}{else}{l s='Text #'}{$index}{/if}</strong></span>
-												<div class="col-lg-9">
-													<p class="form-control-static">{$data.value}</p>
-												</div>
-											</div>
-										{/foreach}
-									</div>
-								{/if}
-							{/foreach}
-							</td>
-							<td></td>
-							<td class="text-center">{$customization.quantity}</td>
-							<td></td>
-							<td></td>
-						</tr>
+
+            {foreach $product['customizedDatas'] as $customizationPerAddress}
+              {foreach $customizationPerAddress as $customization}
+						    {if count($customizationPerAddress) == 1 && ((int)$customization.id_customization != (int)$product.id_customization)}{continue}{/if}
+						    <tr>
+							    <td colspan="2">
+							    {foreach from=$customization.datas key='type' item='datas'}
+								    {if $type == constant('Product::CUSTOMIZE_FILE')}
+									    <ul style="margin: 0; padding: 0; list-style-type: none;">
+									    {foreach from=$datas key='index' item='data'}
+											    <li style="display: inline; margin: 2px;">
+												    <a href="displayImage.php?img={$data.value}&name={$order->id|intval}-file{$index}" class="_blank">
+												    <img src="{$pic_dir}{$data.value}_small" alt="" /></a>
+											    </li>
+									    {/foreach}
+									    </ul>
+								    {elseif $type == constant('Product::CUSTOMIZE_TEXTFIELD')}
+									    <div class="form-horizontal">
+										    {foreach from=$datas key='index' item='data'}
+											    <div class="form-group">
+												    <span class="control-label col-lg-3"><strong>{if $data.name}{$data.name}{else}{l s='Text #'}{$index}{/if}</strong></span>
+												    <div class="col-lg-9">
+													    <p class="form-control-static">{$data.value}</p>
+												    </div>
+											    </div>
+										    {/foreach}
+									    </div>
+								    {/if}
+							    {/foreach}
+							    </td>
+							    <td></td>
+							    <td class="text-center">{$customization.quantity}</td>
+							    <td></td>
+							    <td></td>
+						    </tr>
+              {/foreach}
 						{/foreach}
 					{/if}
 

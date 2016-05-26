@@ -44,6 +44,9 @@ class OrderDetailCore extends ObjectModel
     /** @var int */
     public $product_attribute_id;
 
+    /** @var int */
+    public $id_customization;
+
     /** @var string */
     public $product_name;
 
@@ -174,6 +177,7 @@ class OrderDetailCore extends ObjectModel
             'id_shop' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'product_id' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'product_attribute_id' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_customization' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'product_name' =>                array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
             'product_quantity' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
             'product_quantity_in_stock' =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
@@ -650,6 +654,7 @@ class OrderDetailCore extends ObjectModel
 
         $this->product_id = (int)$product['id_product'];
         $this->product_attribute_id = $product['id_product_attribute'] ? (int)$product['id_product_attribute'] : 0;
+        $this->id_customization = $product['id_customization'] ? (int)$product['id_customization'] : 0;
         $this->product_name = $product['name'].
             ((isset($product['attributes']) && $product['attributes'] != null) ?
                 ' - '.$product['attributes'] : '');
