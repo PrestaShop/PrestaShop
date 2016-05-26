@@ -633,8 +633,12 @@
     .attributes {
       border-top: 2px solid $gray-light;
       padding: em(7px);
-      height: rem(158px);
-      overflow: auto;
+      height: rem(162px);
+      overflow-x: hidden;
+
+      .two-columns {
+        columns: 2;
+      }
 
       .attribute {
         .js-attribute-checkbox {
@@ -674,10 +678,6 @@
             }
           }
         }
-      }
-
-      &.two-columns {
-        columns: 2;
       }
     }
   }
