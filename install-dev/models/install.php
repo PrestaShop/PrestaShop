@@ -135,6 +135,11 @@ class InstallModelInstall extends InstallAbstractModel
         $sf2Refresh->addCacheClear('prod');
         $output = $sf2Refresh->execute();
 
+        if (0 !== $output['cache:clear']['exitCode']) {
+            $this->setError(explode("\n", $output['cache:clear']['output']));
+            return false;
+        }
+
         return true;
     }
 
