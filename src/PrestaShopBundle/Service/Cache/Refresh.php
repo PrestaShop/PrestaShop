@@ -26,7 +26,7 @@
 namespace PrestaShopBundle\Service\Cache;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 
 /**
@@ -83,7 +83,7 @@ class Refresh
      */
     public function execute()
     {
-        $output = null;
+        $bufferedOutput = new BufferedOutput();
         $commandOutput = array();
 
         if (empty($this->commands)) {
@@ -91,18 +91,12 @@ class Refresh
         }
 
         foreach ($this->commands as $command) {
-            if (_PS_MODE_DEV_ && isset($command['--no-debug'])) {
-                $command['--no-debug'] = false;
-            }
+            $exitCode = $this->application->run(new ArrayInput($command), $bufferedOutput);
 
-            if (false === _PS_MODE_DEV_) {
-                $output = new NullOutput();
-            }
-
-            $exitCode = $this->application->run(new ArrayInput($command), $output);
-
-            $commandOutput[$command['command']] = $exitCode;
-
+            $commandOutput[$command['command']] = array(
+                'exitCode' => $exitCode,
+                'output' => $bufferedOutput->fetch(),
+            );
         }
 
         return $commandOutput;
