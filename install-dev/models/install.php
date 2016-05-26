@@ -196,8 +196,8 @@ class InstallModelInstall extends InstallAbstractModel
         $sf2Refresh->addDoctrineSchemaUpdate();
         $output = $sf2Refresh->execute();
 
-        if (!empty($output['sf2_schema_update'])) {
-            $this->setError($this->language->l('SQL error command <i>doctrine:schema:update</i>, please check your app/config/parameters.yml file'));
+        if (0 !== $output['doctrine:schema:update']['exitCode']) {
+            $this->setError(explode("\n", $output['doctrine:schema:update']['output']));
             return false;
         }
 
