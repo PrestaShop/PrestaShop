@@ -92,7 +92,7 @@ class Refresh
         $commandOutput = array();
 
         if (empty($this->commands)) {
-            throw new \Exception('Error, you need to define at least on command');
+            throw new \Exception('Error, you need to define at least one command');
         }
 
         foreach ($this->commands as $command) {
