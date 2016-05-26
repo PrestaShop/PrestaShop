@@ -193,6 +193,17 @@ class ThemeManager implements AddonManagerInterface
         return $this->disable($theme_name) && $this->enable($theme_name);
     }
 
+    /**
+     * Returns the last error, if found
+     *
+     * @param string $name The technical theme name
+     * @return string|null The last error if found
+     */
+    public function getError($theme_name)
+    {
+        return null;
+    }
+
     private function doCreateCustomHooks(array $hooks)
     {
         foreach ($hooks as $hook) {

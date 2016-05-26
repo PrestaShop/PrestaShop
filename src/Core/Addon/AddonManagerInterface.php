@@ -33,4 +33,5 @@ interface AddonManagerInterface
     public function enable($name);
     public function disable($name);
     public function reset($name);
+    public function getError($name);
 }

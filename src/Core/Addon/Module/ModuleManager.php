@@ -126,12 +126,7 @@ class ModuleManager implements AddonManagerInterface
 
         // Get module instance and uninstall it
         $module = $this->moduleRepository->getModule($name);
-        try {
-            $result = $module->onUninstall();
-        } catch (Exception $e) {
-            $this->msgs_error[$name][] = 'Error on module uninstallation. '. $e->getMessage();
-            $result = false;
-        }
+        $result = $module->onUninstall();
 
         if ($result && (bool)$file_deletion) {
             $result &= $this->removeModuleFromDisk($name);
@@ -331,5 +326,22 @@ class ModuleManager implements AddonManagerInterface
     public function removeModuleFromDisk($name)
     {
         return $this->moduleUpdater->removeModuleFromDisk($name);
+    }
+
+    /**
+     * Returns the last error, if found
+     *
+     * @param string $name The technical module name
+     * @return string|null The last error added to the module if found
+     */
+    public function getError($name)
+    {
+        $module = $this->moduleRepository->getModule($name);
+        if ($module->hasValidInstance()) {
+            $errors = $module->getInstance()->getErrors();
+            return array_pop($errors);
+        }
+
+        return null;
     }
 }

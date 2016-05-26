@@ -190,9 +190,11 @@ class ModuleController extends FrameworkBundleAdminController
                 if ($ret[$module]['status'] === null) {
                     $ret[$module]['status'] = false;
                     $ret[$module]['msg'] = $module .' did not return a valid response on '.$action .' action';
+                } elseif ($ret[$module]['status'] === false) {
+                    $error = $moduleManager->getError($module);
+                    $ret[$module]['msg'] = sprintf('Cannot %s module %s. %s', str_replace('_', ' ', $action), $module, $error);
                 } else {
-                    $ret[$module]['msg'] = ucfirst(str_replace('_', ' ', $action)). ' action on module '. $module;
-                    $ret[$module]['msg'] .= $ret[$module]['status']?' succeeded':' failed';
+                    $ret[$module]['msg'] = sprintf('%s action on module %s succeeded.', ucfirst(str_replace('_', ' ', $action)), $module);
                 }
             } catch (Exception $e) {
                 $ret[$module]['status'] = false;
@@ -343,9 +345,9 @@ class ModuleController extends FrameworkBundleAdminController
                 $installation_response['msg'] = 'Install action on module '. $module_name;
                 if ($installation_response['status'] === true) {
                     $installation_response['is_configurable'] = (bool)$this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
-                    $installation_response['msg'] .= 'succeeded';
+                    $installation_response['msg'] .= ' succeeded.';
                 } else {
-                    $installation_response['msg'] .= 'failed';
+                    $installation_response['msg'] .= ' failed. '. $moduleManager->getError($module_name);
                 }
             }
 
