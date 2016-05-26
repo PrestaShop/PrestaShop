@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_supplier_order_state>
 	<supplier_order_state id="creation_in_progress">
-		<name><![CDATA[creation in progress]]></name>
+		<name><![CDATA[Bezig met aanmaken]]></name>
 	</supplier_order_state>
 	<supplier_order_state id="Order_validated">
-		<name><![CDATA[Order validated]]></name>
+		<name><![CDATA[Bestelling bevestigd]]></name>
 	</supplier_order_state>
 	<supplier_order_state id="Pending_receipt">
-		<name><![CDATA[Pending receipt]]></name>
+		<name><![CDATA[Wachten op ontvangst]]></name>
 	</supplier_order_state>
 	<supplier_order_state id="Order_received_in_part">
-		<name><![CDATA[Order received in part]]></name>
+		<name><![CDATA[Bestelling gedeeltelijk ontvangen]]></name>
 	</supplier_order_state>
 	<supplier_order_state id="Order_received_completely">
-		<name><![CDATA[Order received completely]]></name>
+		<name><![CDATA[Bestelling geheel ontvangen]]></name>
 	</supplier_order_state>
 	<supplier_order_state id="order_fenced">
-		<name><![CDATA[order fenced]]></name>
+		<name><![CDATA[Bestelling afgerond]]></name>
 	</supplier_order_state>
 </entity_supplier_order_state>

@@ -1,31 +1,31 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
- * Step 3 : configure database and email connection
+ * Step 3 : configure database
  */
 class InstallControllerHttpDatabase extends InstallControllerHttp
 {
@@ -33,11 +33,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
      * @var InstallModelDatabase
      */
     public $model_database;
-
-    /**
-     * @var InstallModelMail
-     */
-    public $model_mail;
 
     public function init()
     {
@@ -57,7 +52,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
         $this->session->database_password = trim(Tools::getValue('dbPassword'));
         $this->session->database_prefix = trim(Tools::getValue('db_prefix'));
         $this->session->database_clear = Tools::getValue('database_clear');
-        
+
         $this->session->rewrite_engine = Tools::getValue('rewrite_engine');
     }
 
@@ -80,7 +75,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
         if (count($this->errors)) {
             return false;
         }
-        
+
         if (!isset($this->session->database_engine)) {
             $this->session->database_engine = $this->model_database->getBestEngine($this->session->database_server, $this->session->database_name, $this->session->database_login, $this->session->database_password);
         }

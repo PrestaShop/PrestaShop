@@ -1,0 +1,8 @@
+{% extends "PrestaShopBundle:Admin/Module/Includes:card.html.twig" %}
+
+{# Twig extension for "Addons to configure" part in notification page #}
+
+{# Display the warning message instead of the addon description #}
+{% block addon_description %}
+    {{module.attributes.warning}}
+{% endblock %}

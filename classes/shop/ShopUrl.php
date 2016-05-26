@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class ShopUrlCore extends ObjectModel
 {
@@ -122,12 +122,12 @@ class ShopUrlCore extends ObjectModel
 
         // Reset main URL for all shops to prevent problems
         $sql = 'SELECT s1.id_shop_url FROM '._DB_PREFIX_.'shop_url s1
-				WHERE (
-					SELECT COUNT(*) FROM '._DB_PREFIX_.'shop_url s2
-					WHERE s2.main = 1
-					AND s2.id_shop = s1.id_shop
-				) = 0
-				GROUP BY s1.id_shop';
+                WHERE (
+                    SELECT COUNT(*) FROM '._DB_PREFIX_.'shop_url s2
+                    WHERE s2.main = 1
+                    AND s2.id_shop = s1.id_shop
+                ) = 0
+                GROUP BY s1.id_shop';
         foreach (Db::getInstance()->executeS($sql) as $row) {
             Db::getInstance()->update('shop_url', array('main' => 1), 'id_shop_url = '.$row['id_shop_url']);
         }
@@ -151,10 +151,10 @@ class ShopUrlCore extends ObjectModel
         }
 
         $sql = 'SELECT id_shop_url
-				FROM '._DB_PREFIX_.'shop_url
-				WHERE physical_uri = \''.pSQL($physical_uri).'\'
-					AND virtual_uri = \''.pSQL($virtual_uri).'\'
-					AND (domain = \''.pSQL($domain).'\' '.(($domain_ssl) ? ' OR domain_ssl = \''.pSQL($domain_ssl).'\'' : '').')'
+                FROM '._DB_PREFIX_.'shop_url
+                WHERE physical_uri = \''.pSQL($physical_uri).'\'
+                    AND virtual_uri = \''.pSQL($virtual_uri).'\'
+                    AND (domain = \''.pSQL($domain).'\' '.(($domain_ssl) ? ' OR domain_ssl = \''.pSQL($domain_ssl).'\'' : '').')'
                     .($this->id ? ' AND id_shop_url != '.(int)$this->id : '');
         return Db::getInstance()->getValue($sql);
     }
@@ -163,10 +163,10 @@ class ShopUrlCore extends ObjectModel
     {
         if (!isset(self::$main_domain_ssl[(int)$id_shop]) || !isset(self::$main_domain[(int)$id_shop])) {
             $row = Db::getInstance()->getRow('
-			SELECT domain, domain_ssl
-			FROM '._DB_PREFIX_.'shop_url
-			WHERE main = 1
-			AND id_shop = '.($id_shop !== null ? (int)$id_shop : (int)Context::getContext()->shop->id));
+            SELECT domain, domain_ssl
+            FROM '._DB_PREFIX_.'shop_url
+            WHERE main = 1
+            AND id_shop = '.($id_shop !== null ? (int)$id_shop : (int)Context::getContext()->shop->id));
             self::$main_domain[(int)$id_shop] = $row['domain'];
             self::$main_domain_ssl[(int)$id_shop] = $row['domain_ssl'];
         }

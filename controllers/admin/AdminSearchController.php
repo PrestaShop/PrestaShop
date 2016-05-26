@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class AdminSearchControllerCore extends AdminController
 {
@@ -133,7 +133,7 @@ class AdminSearchControllerCore extends AdminController
             /* Module search */
             if (!$searchType || $searchType == 7) {
                 /* Handle module name */
-                if ($searchType == 7 && Validate::isModuleName($this->query) and ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module)) {
+                if ($searchType == 7 && Validate::isModuleName($this->query) && ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module)) {
                     Tools::redirectAdmin('index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules'));
                 }
 
@@ -191,7 +191,7 @@ class AdminSearchControllerCore extends AdminController
             $iso_lang = Tools::strtolower(Context::getContext()->language->iso_code);
             $iso_country = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
             if (($json_content = Tools::file_get_contents('https://api-addons.prestashop.com/'._PS_VERSION_.'/search/'.urlencode($this->query).'/'.$iso_country.'/'.$iso_lang.'/')) != false) {
-                $results = Tools::jsonDecode($json_content, true);
+                $results = json_decode($json_content, true);
                 if (isset($results['id'])) {
                     $this->_list['addons']  = array($results);
                 } else {
@@ -346,7 +346,7 @@ class AdminSearchControllerCore extends AdminController
             if (isset($this->_list['categories']) && count($this->_list['categories'])) {
                 $categories = array();
                 foreach ($this->_list['categories'] as $category) {
-                    $categories[] = getPath($this->context->link->getAdminLink('AdminCategories', false), $category['id_category']);
+                    $categories[] = Tools::getPath($this->context->link->getAdminLink('AdminCategories', false), $category['id_category']);
                 }
                 $this->tpl_view_vars['categories'] = $categories;
             }
@@ -399,6 +399,7 @@ class AdminSearchControllerCore extends AdminController
                     $view = $helper->generateList($this->_list['customers'], $this->fields_list['customers']);
                 }
                 $this->tpl_view_vars['customers'] = $view;
+                $this->tpl_view_vars['customerCount'] = count($this->_list['customers']);
             }
             if (isset($this->_list['orders']) && count($this->_list['orders'])) {
                 $view = '';

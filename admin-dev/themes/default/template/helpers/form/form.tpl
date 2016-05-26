@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 
@@ -573,16 +573,6 @@
 															<i class="icon-random"></i>
 															{l s='Generate password'}
 														</button>
-													</div>
-												</div>
-												<div class="form-group">
-													<div class="col-lg-10 col-lg-offset-2">
-														<p class="checkbox">
-															<label for="{$input.name}-checkbox-mail">
-																<input name="passwd_send_email" id="{$input.name}-checkbox-mail" type="checkbox" checked="checked">
-																{l s='Send me this new password by Email'}
-															</label>
-														</p>
 													</div>
 												</div>
 												<div class="row">

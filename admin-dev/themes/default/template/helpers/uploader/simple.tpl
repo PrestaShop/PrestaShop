@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($files) && $files|count > 0}
 	{assign var='show_thumbnail' value=false}
@@ -61,7 +61,7 @@
 		<input id="{$id|escape:'html':'UTF-8'}" type="file" name="{$name|escape:'html':'UTF-8'}{if isset ($multiple) && $multiple}[]{/if}"{if isset($multiple) && $multiple} multiple="multiple"{/if} class="hide" />
 		<div class="dummyfile input-group">
 			<span class="input-group-addon"><i class="icon-file"></i></span>
-			<input id="{$id|escape:'html':'UTF-8'}-name" type="text" name="filename" readonly />
+			<input id="{$id|escape:'html':'UTF-8'}-name" type="text" name="{$name|escape:'html':'UTF-8'}" readonly />
 			<span class="input-group-btn">
 				<button id="{$id|escape:'html':'UTF-8'}-selectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
 					<i class="icon-folder-open"></i> {if isset($multiple) && $multiple}{l s='Add files'}{else}{l s='Add file'}{/if}

@@ -1,28 +1,33 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShopBundle\CacheWarmer\LocalizationCacheWarmer;
+use Symfony\Component\Yaml\Yaml;
 
 class InstallModelInstall extends InstallAbstractModel
 {
@@ -37,10 +42,10 @@ class InstallModelInstall extends InstallAbstractModel
     {
         parent::__construct();
 
+        $cacheDir = _PS_ROOT_DIR_.'/app/logs/';
+        $file = $cacheDir .(_PS_MODE_DEV_ ? 'dev' : 'prod').'_'.@date('Ymd').'_installation.log';
         $this->logger = new FileLogger();
-        if (is_writable(_PS_ROOT_DIR_.'/log/')) {
-            $this->logger->setFilename(_PS_ROOT_DIR_.'/log/'.@date('Ymd').'_installation.log');
-        }
+        $this->logger->setFilename($file);
     }
 
     public function setError($errors)
@@ -59,53 +64,77 @@ class InstallModelInstall extends InstallAbstractModel
     /**
      * Generate settings file
      */
-    public function generateSettingsFile($database_server, $database_login, $database_password, $database_name, $database_prefix, $database_engine)
+    public function generateSettingsFile($database_host, $database_user, $database_password, $database_name, $database_prefix, $database_engine)
     {
         // Check permissions for settings file
-        if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE)) {
+        if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)) {
             $this->setError($this->language->l('%s file is not writable (check permissions)', self::SETTINGS_FILE));
             return false;
-        } elseif (!file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.'/'.dirname(self::SETTINGS_FILE))) {
+        } elseif (!file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname(self::SETTINGS_FILE))) {
             $this->setError($this->language->l('%s folder is not writable (check permissions)', dirname(self::SETTINGS_FILE)));
             return false;
         }
 
-        // Generate settings content and write file
-        $settings_constants = array(
-            '_DB_SERVER_' =>            $database_server,
-            '_DB_NAME_' =>                $database_name,
-            '_DB_USER_' =>                $database_login,
-            '_DB_PASSWD_' =>            $database_password,
-            '_DB_PREFIX_' =>            $database_prefix,
-            '_MYSQL_ENGINE_' =>        $database_engine,
-            '_PS_CACHING_SYSTEM_' =>    'CacheMemcache',
-            '_PS_CACHE_ENABLED_' =>    '0',
-            '_COOKIE_KEY_' =>            Tools::passwdGen(56),
-            '_COOKIE_IV_' =>            Tools::passwdGen(8),
-            '_PS_CREATION_DATE_' =>    date('Y-m-d'),
-            '_PS_VERSION_' =>            _PS_INSTALL_VERSION_,
-        );
+        $secret = Tools::passwdGen(56);
+        $cookie_key = Tools::passwdGen(8);
+        $cookie_iv = Tools::passwdGen(56);
+
+        if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
+            $config = Yaml::parse(file_get_contents(_PS_ROOT_DIR_. '/app/config/parameters.yml'));
+            $secret = $config['parameters']['secret'];
+            $cookie_key = $config['parameters']['cookie_key'];
+            $cookie_iv = $config['parameters']['cookie_iv'];
+        }
+
+        $parameters  = array(
+            'parameters' => array(
+                'database_host' => $database_host,
+                'database_port' => '~',
+                'database_user' => $database_user,
+                'database_password' => $database_password,
+                'database_name' => $database_name,
+                'database_prefix' => $database_prefix,
+                'database_engine' =>  $database_engine,
+                'cookie_key' => $cookie_key,
+                'cookie_iv' =>  $cookie_iv,
+                'ps_caching' => 'CacheMemcache',
+                'ps_cache_enable' => false,
+                'ps_creation_date' => date('Y-m-d'),
+                'secret' => $secret,
+                'mailer_transport' => 'smtp',
+                'mailer_host' => '127.0.0.1',
+                'mailer_user' => '~',
+                'mailer_password' => '~',
+            ));
 
         // If mcrypt is activated, add Rijndael 128 configuration
         if (function_exists('mcrypt_encrypt')) {
-            $settings_constants['_RIJNDAEL_KEY_'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
-            $settings_constants['_RIJNDAEL_IV_'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
+            if (!isset($config['parameters']['_rijndael_key'])) {
+                $parameters['parameters']['_rijndael_key'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
+                $parameters['parameters']['_rijndael_iv'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
+            }
         }
 
         $settings_content = "<?php\n";
-
-        foreach ($settings_constants as $constant => $value) {
-            if ($constant == '_PS_VERSION_') {
-                $settings_content .= 'if (!defined(\''.$constant.'\'))'."\n\t";
-            }
-
-            $settings_content .= "define('$constant', '".str_replace('\'', '\\\'', $value)."');\n";
-        }
+        $settings_content .= "//@deprecated 1.7";
 
         if (!file_put_contents(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE, $settings_content)) {
             $this->setError($this->language->l('Cannot write settings file'));
             return false;
         }
+
+
+        if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($parameters))) {
+            $this->setError($this->language->l('Cannot write app/config/parameters.yml file'));
+            return false;
+        }
+
+        // Clear the cache
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+        $sf2Refresh->addCacheClear('dev');
+        $sf2Refresh->addCacheClear('prod');
+        $output = $sf2Refresh->execute();
+
         return true;
     }
 
@@ -145,8 +174,31 @@ class InstallModelInstall extends InstallAbstractModel
             return false;
         }
 
+        return $this->generateSf2ProductionEnv();
+    }
+
+    /**
+     * Pass SF2 to production
+     * cache:clear
+     * assetic:dump
+     * doctrine:schema:update
+     *
+     * @return bool
+     */
+    private function generateSf2ProductionEnv()
+    {
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+        $sf2Refresh->addDoctrineSchemaUpdate();
+        $output = $sf2Refresh->execute();
+
+        if (!empty($output['sf2_schema_update'])) {
+            $this->setError($this->language->l('SQL error command <i>doctrine:schema:update</i>, please check your app/config/parameters.yml file'));
+            return false;
+        }
+
         return true;
     }
+
 
     /**
      * Clear database (only tables with same prefix)
@@ -155,12 +207,15 @@ class InstallModelInstall extends InstallAbstractModel
      */
     public function clearDatabase($truncate = false)
     {
-        foreach (Db::getInstance()->executeS('SHOW TABLES') as $row) {
+        $instance = Db::getInstance();
+        $sqlRequest = (($truncate) ? 'TRUNCATE' : 'DROP TABLE');
+        foreach ($instance->executeS('SHOW TABLES') as $row) {
             $table = current($row);
             if (!_DB_PREFIX_ || preg_match('#^'._DB_PREFIX_.'#i', $table)) {
-                Db::getInstance()->execute((($truncate) ? 'TRUNCATE' : 'DROP TABLE').' `'.$table.'`');
+                $sqlRequest .= ' `'.$table.'`,';
             }
         }
+        $instance->execute(rtrim($sqlRequest, ','));
     }
 
     /**
@@ -283,7 +338,7 @@ class InstallModelInstall extends InstallAbstractModel
         $shop->active = true;
         $shop->id_shop_group = $shop_group->id;
         $shop->id_category = 2;
-        $shop->id_theme = 1;
+        $shop->theme_name = _THEME_NAME_;
         $shop->name = $shop_name;
         if (!$shop->add()) {
             $this->setError($this->language->l('Cannot create shop').' / '.Db::getInstance()->getMsgError());
@@ -320,6 +375,7 @@ class InstallModelInstall extends InstallAbstractModel
 
         $languages_available = $this->language->getIsoList();
         $languages = array();
+
         foreach ($languages_list as $iso) {
             if (!in_array($iso, $languages_available)) {
                 continue;
@@ -335,20 +391,32 @@ class InstallModelInstall extends InstallAbstractModel
             $params_lang = array(
                 'name' => (string)$xml->name,
                 'iso_code' => substr((string)$xml->language_code, 0, 2),
-                'allow_accented_chars_url' => (string)$xml->allow_accented_chars_url
+                'allow_accented_chars_url' => (string)$xml->allow_accented_chars_url,
+                'language_code' => (string)$xml->language_code,
             );
 
             if (InstallSession::getInstance()->safe_mode) {
                 Language::checkAndAddLanguage($iso, false, true, $params_lang);
             } else {
-                Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_, $params_lang);
+                if (file_exists(_PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip') == false) {
+                    $language = Language::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
+
+                    if ($language == false) {
+                        throw new PrestashopInstallerException($this->language->l('Cannot download language pack "%s"', $iso));
+                    }
+                }
+
+                Language::installLanguagePack($iso, $params_lang, $errors);
             }
 
             Language::loadLanguages();
+
             Tools::clearCache();
+
             if (!$id_lang = Language::getIdByIso($iso, true)) {
                 throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
             }
+
             $languages[$id_lang] = $iso;
 
             // Copy language flag
@@ -374,7 +442,6 @@ class InstallModelInstall extends InstallAbstractModel
             'categories' =>        _PS_CAT_IMG_DIR_,
             'manufacturers' =>    _PS_MANU_IMG_DIR_,
             'suppliers' =>        _PS_SUPP_IMG_DIR_,
-            'scenes' =>            _PS_SCENE_IMG_DIR_,
             'stores' =>            _PS_STORE_IMG_DIR_,
             null =>                _PS_IMG_DIR_.'l/', // Little trick to copy images in img/l/ path with all types
         );
@@ -401,24 +468,9 @@ class InstallModelInstall extends InstallAbstractModel
     public function getLocalizationPackContent($version, $country)
     {
         if (InstallModelInstall::$_cache_localization_pack_content === null || array_key_exists($country, InstallModelInstall::$_cache_localization_pack_content)) {
-            $path_cache_file = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$version.$country.'.xml';
-            if (is_file($path_cache_file)) {
-                $localization_file_content = file_get_contents($path_cache_file);
-            } else {
-                $localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$country.'.xml');
-                if (!@simplexml_load_string($localization_file_content)) {
-                    $localization_file_content = false;
-                }
-                if (!$localization_file_content) {
-                    $localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
-                    if (file_exists(_PS_ROOT_DIR_.'/localization/'.$country.'.xml')) {
-                        $localization_file = _PS_ROOT_DIR_.'/localization/'.$country.'.xml';
-                    }
+            $localizationCacheWarmer = new LocalizationCacheWarmer($version, $country);
+            $localization_file_content  = $localizationCacheWarmer->warmUp(_PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR);
 
-                    $localization_file_content = file_get_contents($localization_file);
-                }
-                file_put_contents($path_cache_file, $localization_file_content);
-            }
             InstallModelInstall::$_cache_localization_pack_content[$country] = $localization_file_content;
         }
 
@@ -444,7 +496,7 @@ class InstallModelInstall extends InstallAbstractModel
             'shop_name' => 'My Shop',
             'shop_activity' => '',
             'shop_country' => 'us',
-            'shop_timezone' => 'US/Eastern',
+            'shop_timezone' => 'US/Eastern', // TODO : this timezone is deprecated
             'use_smtp' => false,
             'smtp_encryption' => 'off',
             'smtp_port' => 25,
@@ -459,11 +511,6 @@ class InstallModelInstall extends InstallAbstractModel
 
         Context::getContext()->shop = new Shop(1);
         Configuration::loadConfiguration();
-
-        // use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
-        if (InstallSession::getInstance()->safe_mode) {
-            Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 1);
-        }
 
         $id_country = (int)Country::getByIso($data['shop_country']);
 
@@ -526,8 +573,8 @@ class InstallModelInstall extends InstallAbstractModel
         }
 
         // Set logo configuration
-        if (file_exists(_PS_IMG_DIR_.'logo.jpg')) {
-            list($width, $height) = getimagesize(_PS_IMG_DIR_.'logo.jpg');
+        if (file_exists(_PS_IMG_DIR_.'logo.png')) {
+            list($width, $height) = getimagesize(_PS_IMG_DIR_.'logo.png');
             Configuration::updateGlobalValue('SHOP_LOGO_WIDTH', round($width));
             Configuration::updateGlobalValue('SHOP_LOGO_HEIGHT', round($height));
         }
@@ -601,35 +648,21 @@ class InstallModelInstall extends InstallAbstractModel
             }
         } else {
             $modules = array(
-                'socialsharing',
-                'blockbanner',
                 'bankwire',
-                'blockbestsellers',
+                // 'blockbestsellers',
                 'blockcart',
-                'blocksocial',
-                'blockcategories',
+                'ps_categorytree',
                 'blockcurrencies',
-                'blockfacebook',
+                // 'blockfacebook',
                 'blocklanguages',
                 'blocklayered',
-                'blockcms',
-                'blockcmsinfo',
-                'blockcontact',
-                'blockcontactinfos',
-                'blockmanufacturer',
+                // 'blockmanufacturer',
                 'blockmyaccount',
-                'blockmyaccountfooter',
                 'blocknewproducts',
-                'blocknewsletter',
-                'blockpaymentlogo',
                 'blocksearch',
-                'blockspecials',
-                'blockstore',
-                'blocksupplier',
-                'blocktags',
-                'blocktopmenu',
-                'blockuserinfo',
-                'blockviewed',
+                // 'blockspecials',
+                // 'blocksupplier',
+                // 'blockviewed',
                 'cheque',
                 'dashactivity',
                 'dashtrends',
@@ -637,9 +670,17 @@ class InstallModelInstall extends InstallAbstractModel
                 'dashproducts',
                 'graphnvd3',
                 'gridhtml',
-                'homeslider',
-                'homefeatured',
-                'productpaymentlogos',
+                'ps_banner',
+                'ps_contactinfo',
+                'ps_customersignin',
+                'ps_customtext',
+                'ps_emailsubscription',
+                'ps_featuredproducts',
+                'ps_imageslider',
+                'ps_linklist',
+                'ps_mainmenu',
+                'ps_sharebuttons',
+                'ps_socialfollow',
                 'pagesnotfound',
                 'sekeywords',
                 'statsbestcategories',
@@ -663,7 +704,7 @@ class InstallModelInstall extends InstallAbstractModel
                 'statssearch',
                 'statsstock',
                 'statsvisits',
-                'themeconfigurator',
+                'welcome',
             );
         }
         return $modules;
@@ -671,12 +712,24 @@ class InstallModelInstall extends InstallAbstractModel
 
     public function getAddonsModulesList($params = array())
     {
+        /**
+         * TODO: Remove blacklist once 1.7 is out.
+         */
+        $blacklist = [
+            'productcomments',
+            'blockwishlist',
+            'sendtoafriend',
+            'onboarding'
+        ];
         $addons_modules = array();
         $content = Tools::addonsRequest('install-modules', $params);
         $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
 
-        if ($xml !== false and isset($xml->module)) {
+        if ($xml !== false && isset($xml->module)) {
             foreach ($xml->module as $modaddons) {
+                if (in_array($modaddons->name, $blacklist)) {
+                    continue;
+                }
                 $addons_modules[] = array('id_module' => $modaddons->id, 'name' => $modaddons->name);
             }
         }
@@ -692,13 +745,12 @@ class InstallModelInstall extends InstallAbstractModel
     {
         $addons_modules = $module ? array($module) : $this->getAddonsModulesList();
         $modules = array();
-        if (!InstallSession::getInstance()->safe_mode) {
-            foreach ($addons_modules as $addons_module) {
-                if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module'])))) {
-                    if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_)) {
-                        $modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
-                        unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
-                    }
+
+        foreach ($addons_modules as $addons_module) {
+            if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module'])))) {
+                if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_)) {
+                    $modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
+                    unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
                 }
             }
         }
@@ -720,15 +772,21 @@ class InstallModelInstall extends InstallAbstractModel
 
         Module::updateTranslationsAfterInstall(false);
 
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+
         $errors = array();
         foreach ($modules as $module_name) {
             if (!file_exists(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php')) {
                 continue;
             }
 
-            $module = Module::getInstanceByName($module_name);
-            if (!$module->install()) {
-                $errors[] = $this->language->l('Cannot install module "%s"', $module_name);
+            if (!$moduleManager->install($module_name)) {
+                /*$module_errors = $module->getErrors();
+                if (empty($module_errors)) {*/
+                $module_errors = [$this->language->l('Cannot install module "%s"', $module_name)];
+                /*}*/
+                $errors[$module_name] = $module_errors;
             }
         }
 
@@ -828,23 +886,15 @@ class InstallModelInstall extends InstallAbstractModel
         return true;
     }
 
-    /**
-     * PROCESS : installTheme
-     * Install theme
-     */
     public function installTheme()
     {
-        // @todo do a real install of the theme
-        $sql_loader = new InstallSqlLoader();
-        $sql_loader->setMetaData(array(
-            'PREFIX_' => _DB_PREFIX_,
-            'ENGINE_TYPE' => _MYSQL_ENGINE_,
-        ));
+        $builder = new ThemeManagerBuilder(
+            Context::getContext(),
+            Db::getInstance()
+        );
 
-        $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'theme.sql', false);
-        if ($errors = $sql_loader->getErrors()) {
-            $this->setError($errors);
-            return false;
-        }
+        $theme_manager = $builder->build();
+
+        return $theme_manager->install(_THEME_NAME_) && $theme_manager->enable(_THEME_NAME_);
     }
 }

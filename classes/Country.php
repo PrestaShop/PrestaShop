@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class CountryCore extends ObjectModel
 {
@@ -173,8 +173,7 @@ class CountryCore extends ObjectModel
             .($active ? ' AND active = 1' : '')
         );
 
-        if (isset($result['id_country']))
-        {
+        if (isset($result['id_country'])) {
             return (int)$result['id_country'];
         }
         return false;
@@ -195,8 +194,7 @@ class CountryCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'country`
 		WHERE `id_country` = '.(int)$id_country);
 
-        if (isset($result['id_zone']))
-        {
+        if (isset($result['id_zone'])) {
             self::$_idZones[$id_country] = (int)$result['id_zone'];
             return (int)$result['id_zone'];
         }
@@ -240,8 +238,7 @@ class CountryCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'country`
 			WHERE `id_country` = '.(int)$id_country);
         }
-        if (isset(Country::$cache_iso_by_id[$id_country]))
-        {
+        if (isset(Country::$cache_iso_by_id[$id_country])) {
             return Country::$cache_iso_by_id[$id_country];
         }
         return false;
@@ -266,8 +263,7 @@ class CountryCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
-        if (isset($result['id_country']))
-        {
+        if (isset($result['id_country'])) {
             return (int)$result['id_country'];
         }
         return false;
@@ -296,8 +292,7 @@ class CountryCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'country`
 		WHERE `id_country` = '.(int)$id_country);
 
-        if (isset($zip_code_format) && $zip_code_format)
-        {
+        if (isset($zip_code_format) && $zip_code_format) {
             return $zip_code_format;
         }
         return false;

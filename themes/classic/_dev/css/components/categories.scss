@@ -1,0 +1,225 @@
+#products {
+  color: $gray-dark;
+  .products-select {
+    @include display(flex);
+    @include align-items(baseline);
+    @include justify-content(space-between);
+  }
+}
+.block-category {
+  min-height: em(220px);
+  #category-description {
+    font-size: em(14px);
+    color: $gray-dark;
+    p,
+    strong {
+      font-weight: 400;
+      color: $gray;
+    }
+    p {
+      color: $gray-darker;
+      margin-bottom: 0;
+      &:first-child {
+        margin-bottom: $medium-space;
+      }
+    }
+  }
+  .category-cover {
+    position: absolute;
+    right: 0.75em;
+    bottom: 0;
+    img {
+      width: 141px;
+      height: 180px;
+    }
+  }
+}
+.products-sort-order {
+  color: $gray-dark;
+  .select-title {
+    display: inline-block;
+    width: em(270px);
+    color: $gray-darker;
+    background: white;
+    padding: $small-space;
+    cursor: pointer;
+  }
+  .select-list {
+    display: block;
+    color: $gray-darker;
+    padding: $small-space $medium-space;
+    &:hover {
+      background: $brand-primary;
+      color: white;
+      text-decoration: none;
+    }
+  }
+  .dropdown-menu {
+    right: 0;
+    left: auto;
+    width: em(270px);
+    background: $gray-lighter;
+    border: none;
+    border-radius: 0;
+  }
+}
+#search_filters {
+  @include box-shadow;
+  margin: $medium-space 0;
+  background: white;
+  padding: em(20px);
+  .facet {
+    .facet-title {
+      color: $gray;
+    }
+    .search-link {
+      font-size: em(14px);
+    }
+    .facet-label {
+      margin-bottom: 0;
+      a {
+        margin-top: em(7px);
+        color: $gray-darker;
+        display: inline-block;
+        font-size: em(15px);
+      }
+    }
+  }
+}
+.pagination {
+  width: 100%;
+  .page-list {
+    background: white;
+    padding: em(10px) em(20px);
+    li {
+      display: inline;
+    }
+  }
+  a {
+    color: black;
+    font-weight: 600;
+  }
+  .previous {
+    float: left;
+  }
+  .next {
+    float: right;
+  }
+  .disabled {
+    color: $gray;
+  }
+  .current a {
+    color: $brand-primary;
+    text-decoration: none;
+  }
+}
+.active_filters {
+  background: #dededd;
+  padding: $small-space $large-space 0;
+  margin-bottom: $medium-space;
+  .active-filter-title {
+    font-size: em(15px);
+    display: inline;
+    margin-right: $small-space;
+  }
+  ul {
+    display: inline;
+  }
+  .filter-block {
+    @include box-shadow;
+    color: $gray-darker;
+    margin-right: $small-space;
+    margin-bottom: $small-space;
+    background: white;
+    padding: em(10px);
+    display: inline-block;
+    font-size: em(13px);
+    .close {
+      color: $gray-darker;
+      font-size: em(15px);
+      opacity: 1;
+      margin-top: em(6px);
+      margin-left: em(5px);
+    }
+  }
+}
+.block-categories {
+  @include box-shadow;
+  background: white;
+  padding: $small-space;
+  .category-sub-menu {
+    margin-top: $small-space;
+    .category-sub-link{
+      font-size: em(14px);
+    }
+    li{
+      position: relative;
+    }
+    li[data-depth="0"] > a {
+      font-weight: 600;
+      border-bottom: $gray-light 2px solid;
+      width: 100%;
+      display: inline-block;
+      margin: em(5px) 0;
+    }
+    li:not([data-depth="0"]):not([data-depth="1"]) {
+      padding-left: em(5px);
+      &::before {
+        content: "-";
+        margin-right: em(5px);
+      }
+    }
+  }
+  a {
+    color: $gray-darker;
+  }
+  .collapse-icons {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0;
+    cursor: pointer;
+    &[aria-expanded="true"] {
+      .add {
+        display: none;
+      }
+      .remove {
+        display: block;
+      }
+    }
+    .add,
+    .remove {
+      font-size: em(18px);
+      &:hover {
+        color: $brand-primary;
+      }
+    }
+    .remove {
+      display: none;
+    }
+  }
+  .arrows {
+    .arrow-right,
+    .arrow-down {
+      font-size: em(14px);
+      cursor: pointer;
+      &:hover {
+        color: $brand-primary;
+      }
+    }
+    .arrow-down {
+      display: none;
+    }
+    &[aria-expanded="true"] {
+      .arrow-right {
+        display: none;
+      }
+      .arrow-down {
+        display: inline-block;
+      }
+    }
+  }
+}
+.facets-title {
+  color: $gray-darker;
+}

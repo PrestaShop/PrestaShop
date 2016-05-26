@@ -7,7 +7,7 @@
     <language iso_code="ro"/>
   </languages>
   <taxes>
-    <tax id="1" name="TVA RO 24%" rate="24" eu-tax-group="virtual"/>
+    <tax id="1" name="TVA RO 20%" rate="20" eu-tax-group="virtual"/>
     <tax id="2" name="TVA RO 9%" rate="9"/>
     <tax id="3" name="TVA RO 5%" rate="5"/>
     <tax id="4" name="USt. AT 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>

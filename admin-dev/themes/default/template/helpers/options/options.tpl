@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 <div class="leadin">{block name="leadin"}{/block}</div>
@@ -204,7 +204,7 @@
 										</div>
 									{elseif $field['type'] == 'textarea'}
 										<div class="col-lg-9">
-											<textarea class="textarea-autosize" name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'html':'UTF-8'}</textarea>
+											<textarea class="{if isset($field['autoload_rte']) && $field['autoload_rte']}rte autoload_rte{else}textarea-autosize{/if}" name={$key}{if isset({$field['cols']})} cols="{$field['cols']}"{/if}{if isset({$field['rows']})} rows="{$field['rows']}"{/if}">{$field['value']|escape:'html':'UTF-8'}</textarea>
 										</div>
 									{elseif $field['type'] == 'file'}
 										<div class="col-lg-9">{$field['file']}</div>
@@ -217,7 +217,7 @@
 									{elseif $field['type'] == 'price'}
 										<div class="col-lg-9">
 											<div class="input-group fixed-width-lg">
-												<span class="input-group-addon">{$currency_left_sign}{$currency_right_sign} {l s='(tax excl.)'}</span>
+												<span class="input-group-addon">{$currency_left_sign} {l s='(tax excl.)'}</span>
 												<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" />
 											</div>
 										</div>
@@ -266,7 +266,7 @@
 												{foreach $field['languages'] AS $id_lang => $value}
 													<div class="row translatable-field lang-{$id_lang}" {if $id_lang != $current_id_lang}style="display:none;"{/if}>
 														<div id="{$key}_{$id_lang}" class="col-lg-9" >
-															<textarea class="textarea-autosize" name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
+															<textarea class="{if isset($field['autoload_rte']) && $field['autoload_rte']}rte autoload_rte{else}textarea-autosize{/if}" name="{$key}_{$id_lang}">{$value|replace:'\r\n':"\n"}</textarea>
 														</div>
 														<div class="col-lg-2">
 															<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -370,4 +370,20 @@
 	{/if}
 </form>
 {/block}
-{block name="after"}{/block}
+{block name="after"}
+{if isset($tinymce) && $tinymce}
+<script type="text/javascript">
+	var iso = '{$iso|addslashes}';
+	var pathCSS = '{$smarty.const._THEME_CSS_DIR_|addslashes}';
+	var ad = '{$ad|addslashes}';
+
+	$(document).ready(function(){
+		{block name="autoload_tinyMCE"}
+			tinySetup({
+				editor_selector :"autoload_rte"
+			});
+		{/block}
+	});
+</script>
+{/if}
+{/block}

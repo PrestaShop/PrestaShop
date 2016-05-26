@@ -1,8 +1,8 @@
 Modernizr.load([
 	{
 		test: window.matchMedia,
-		nope: ["themes/default/js/vendor/matchMedia.js", "themes/default/js/vendor/matchMedia.addListener.js"]
+		nope: [baseAdminDir + "themes/default/js/vendor/matchMedia.js", baseAdminDir + "themes/default/js/vendor/matchMedia.addListener.js"]
 	},
-	"themes/default/js/vendor/enquire.min.js",
-	"themes/default/js/admin-theme.js",
+	baseAdminDir + "themes/default/js/vendor/enquire.min.js",
+	baseAdminDir + "themes/default/js/admin-theme.js",
 ]);

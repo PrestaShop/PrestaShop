@@ -18,9 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2015 PrestaShop SA
- *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -142,30 +142,22 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      */
     public function getContent()
     {
-        $invoiceAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
-        $deliveryAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
+        $invoiceAddressPatternRules = json_decode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
+        $deliveryAddressPatternRules = json_decode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
 
         $invoice_address = new Address((int)$this->order->id_address_invoice);
         $country = new Country((int)$invoice_address->id_country);
-
-        if ($this->order_invoice->invoice_address) {
-            $formatted_invoice_address = $this->order_invoice->invoice_address;
-        } else {
-            $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
-        }
+        $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
 
         $delivery_address = null;
         $formatted_delivery_address = '';
         if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery) {
-            if ($this->order_invoice->delivery_address) {
-                $formatted_delivery_address = $this->order_invoice->delivery_address;
-            } else {
-                $delivery_address = new Address((int)$this->order->id_address_delivery);
-                $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
-            }
+            $delivery_address = new Address((int)$this->order->id_address_delivery);
+            $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
         }
 
         $customer = new Customer((int)$this->order->id_customer);
+        $carrier = new Carrier((int)$this->order->id_carrier);
 
         $order_details = $this->order_invoice->getProducts();
 
@@ -291,18 +283,18 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
          */
         $round_type = null;
         switch ($this->order->round_type) {
-        case Order::ROUND_TOTAL:
+            case Order::ROUND_TOTAL:
                 $round_type = 'total';
-            break;
-        case Order::ROUND_LINE:
+                break;
+            case Order::ROUND_LINE:
                 $round_type = 'line';
-            break;
-        case Order::ROUND_ITEM:
+                break;
+            case Order::ROUND_ITEM:
                 $round_type = 'item';
-            break;
-        default:
+                break;
+            default:
                 $round_type = 'line';
-            break;
+                break;
         }
 
         $display_product_images = Configuration::get('PS_PDF_IMG_INVOICE');
@@ -319,6 +311,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'order' => $this->order,
             'order_invoice' => $this->order_invoice,
             'order_details' => $order_details,
+            'carrier' => $carrier,
             'cart_rules' => $cart_rules,
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,
@@ -347,7 +340,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'product_tab' => $this->smarty->fetch($this->getTemplate('invoice.product-tab')),
             'tax_tab' => $this->getTaxTabContent(),
             'payment_tab' => $this->smarty->fetch($this->getTemplate('invoice.payment-tab')),
+			'note_tab' => $this->smarty->fetch($this->getTemplate('invoice.note-tab')),
             'total_tab' => $this->smarty->fetch($this->getTemplate('invoice.total-tab')),
+            'shipping_tab' => $this->smarty->fetch($this->getTemplate('invoice.shipping-tab')),
         );
         $this->smarty->assign($tpls);
 

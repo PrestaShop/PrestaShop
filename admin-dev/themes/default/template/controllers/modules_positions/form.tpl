@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 <div class="leadin">{block name="leadin"}{/block}</div>
@@ -37,9 +37,9 @@
 		<div class="form-group">
 			<label class="control-label col-lg-3 required"> {l s='Module'}</label>
 			<div class="col-lg-9">
-				<select name="id_module" {if $edit_graft} disabled="disabled"{/if}>
+				<select class="chosen" name="id_module" {if $edit_graft} disabled="disabled"{/if}>
 					{if !$hooks}
-						<option value="0">{l s='Please select a module'}</option>
+						<option value="0" selected disabled>{l s='Please select a module'}</option>
 					{/if}
 					{foreach $modules as $module}
 						<option value="{$module->id|intval}"{if $id_module == $module->id || (!$id_module && $show_modules == $module->id)} selected="selected"{/if}>{$module->displayName|stripslashes}</option>
@@ -55,7 +55,7 @@
 						<option value="0">{l s='Select a module above before choosing from available hooks'}</option>
 					{else}
 						{foreach $hooks as $hook}
-							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
+							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
 						{/foreach}
 					{/if}
 				</select>

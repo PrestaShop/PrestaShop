@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 class MediaCore
@@ -136,7 +136,7 @@ class MediaCore
         if (strlen($html_content) > 0) {
             $html_content_copy = $html_content;
             if (!preg_match('/'.Media::$pattern_keepinline.'/', $html_content)) {
-                    $html_content = preg_replace_callback(
+                $html_content = preg_replace_callback(
                     Media::$pattern_js,
                     array('Media', 'packJSinHTMLpregCallback'),
                     $html_content,
@@ -227,8 +227,9 @@ class MediaCore
                 $server = Tools::getMediaServer($tmp);
 
                 return $matches[1].$protocol_link.$server.$tmp;
-            } else
+            } else {
                 return $matches[0];
+            }
         }
         return false;
     }

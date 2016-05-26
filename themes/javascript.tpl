@@ -17,31 +17,15 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($js_def) && is_array($js_def) && $js_def|@count}
 <script type="text/javascript">
 {foreach from=$js_def key=k item=def}
-{if !empty($k) && is_string($k)}
-{if is_bool($def)}
-var {$k} = {$def|var_export:true};
-{elseif is_int($def)}
-var {$k} = {$def|intval};
-{elseif is_float($def)}
-var {$k} = {$def|floatval|replace:',':'.'};
-{elseif is_string($def)}
-var {$k} = '{$def|strval}';
-{elseif is_array($def) || is_object($def)}
-var {$k} = {$def|json_encode};
-{elseif is_null($def)}
-var {$k} = null;
-{else}
-var {$k} = '{$def|@addcslashes:'\''}';
-{/if}
-{/if}
+var {$k} = {$def|json_encode nofilter};
 {/foreach}
 </script>
 {/if}

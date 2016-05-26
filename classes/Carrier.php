@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class CarrierCore extends ObjectModel
 {
@@ -176,14 +176,6 @@ class CarrierCore extends ObjectModel
          */
         if ($this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT) {
             $this->shipping_method = ((int)Configuration::get('PS_SHIPPING_METHOD') ? Carrier::SHIPPING_METHOD_WEIGHT : Carrier::SHIPPING_METHOD_PRICE);
-        }
-
-        /**
-         * keep retrocompatibility id_tax_rules_group
-         * @deprecated 1.5.0
-         */
-        if ($this->id) {
-            $this->id_tax_rules_group = $this->getIdTaxRulesGroup(Context::getContext());
         }
 
         if ($this->name == '0') {
@@ -974,7 +966,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get carrier using the reference id
      */
-    public static function getCarrierByReference($id_reference)
+    public static function getCarrierByReference($id_reference, $id_lang = null)
     {
         // @todo class var $table must became static. here I have to use 'carrier' because this method is static
         $id_carrier = Db::getInstance()->getValue('SELECT `id_carrier` FROM `'._DB_PREFIX_.'carrier`
@@ -982,7 +974,7 @@ class CarrierCore extends ObjectModel
         if (!$id_carrier) {
             return false;
         }
-        return new Carrier($id_carrier);
+        return new Carrier($id_carrier, $id_lang);
     }
 
     /**
@@ -1141,7 +1133,7 @@ class CarrierCore extends ObjectModel
     public function getTaxCalculator(Address $address, $id_order = null, $use_average_tax_of_products = false)
     {
         if ($use_average_tax_of_products) {
-            return Adapter_ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
+            return \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
         } else {
             $tax_manager = TaxManagerFactory::getManager($address, $this->getIdTaxRulesGroup());
             return $tax_manager->getTaxCalculator();
@@ -1345,7 +1337,7 @@ class CarrierCore extends ObjectModel
             }//no linked carrier are available for this zone
         }
 
-        // The product is not dirrectly linked with a carrier
+        // The product is not directly linked with a carrier
         // Get all the carriers linked to a warehouse
         if ($id_warehouse) {
             $warehouse = new Warehouse($id_warehouse);
@@ -1386,7 +1378,7 @@ class CarrierCore extends ObjectModel
             if ($cart_product['id_product'] == $product->id) {
                 $cart_quantity += $cart_product['cart_quantity'];
             }
-            if ($cart_product['weight_attribute'] > 0) {
+            if (isset($cart_product['weight_attribute']) && $cart_product['weight_attribute'] > 0) {
                 $cart_weight += ($cart_product['weight_attribute'] * $cart_product['cart_quantity']);
             } else {
                 $cart_weight += ($cart_product['weight'] * $cart_product['cart_quantity']);

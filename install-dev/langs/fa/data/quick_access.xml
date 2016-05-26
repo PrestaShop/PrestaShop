@@ -5,4 +5,5 @@
   <quick_access id="New_category" name="شاخه جدید"/>
   <quick_access id="New_product" name="محصول جدید"/>
   <quick_access id="New_voucher" name="کوپن جدید"/>
+  <quick_access id="Orders" name="Orders"/>
 </entity_quick_access>

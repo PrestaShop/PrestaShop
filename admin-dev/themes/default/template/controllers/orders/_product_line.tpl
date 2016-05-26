@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {* Assign product price *}
@@ -34,11 +34,14 @@
 <tr class="product-line-row">
 	<td>{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>
 	<td>
-		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&amp;id_product={$product['product_id']|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
+		<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product['product_id']|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
 			<span class="productName">{$product['product_name']}</span><br />
 			{if $product.product_reference}{l s='Reference number:'} {$product.product_reference}<br />{/if}
 			{if $product.product_supplier_reference}{l s='Supplier reference:'} {$product.product_supplier_reference}{/if}
 		</a>
+        {if isset($product.pack_items) && $product.pack_items|@count > 0}<br>
+            <button name="package" class="btn btn-default" type="button" onclick="TogglePackage('{$product['id_order_detail']}'); return false;" value="{$product['id_order_detail']}">{l s='Package content'}</button>
+        {/if}
 		<div class="row-editing-warning" style="display:none;">
 			<div class="alert alert-warning">
 				<strong>{l s='Editing this product line will remove the reduction and base price.'}</strong>
@@ -235,4 +238,42 @@
 	</td>
 	{/if}
 </tr>
+   {if isset($product.pack_items) && $product.pack_items|@count > 0}
+    <tr>
+        <td colspan="8" style="width:100%">
+            <table style="width: 100%; display:none;" class="table" id="pack_items_{$product['id_order_detail']}">
+            <thead>
+                <th style="width:15%;">&nbsp;</th>
+                <th style="width:15%;">&nbsp;</th>
+                <th style="width:50%;"><span class="title_box ">{l s='Product'}</span></th>
+                <th style="width:10%;"><span class="title_box ">{l s='Qty'}</th>
+                {if $stock_management}<th><span class="title_box ">{l s='Available quantity'}</span></th>{/if}
+                <th>&nbsp;</th>
+            </thead>
+            <tbody>
+            {foreach from=$product.pack_items item=pack_item}
+                {if !empty($pack_item.active)}
+                    <tr class="product-line-row" {if isset($pack_item.image) && $pack_item.image->id && isset($pack_item.image_size)} height="{$pack_item['image_size'][1] + 7}"{/if}>
+                        <td>{l s='Package item'}</td>
+                        <td>{if isset($pack_item.image) && $pack_item.image->id}{$pack_item.image_tag}{/if}</td>
+                        <td>
+                            <a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $pack_item.id_product, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
+                                <span class="productName">{$pack_item.name}</span><br />
+                                {if $pack_item.reference}{l s='Ref:'} {$pack_item.reference}<br />{/if}
+                                {if $pack_item.supplier_reference}{l s='Ref Supplier:'} {$pack_item.supplier_reference}{/if}
+                            </a>
+                        </td>
+                        <td class="productQuantity">
+                            <span class="product_quantity_show{if (int)$pack_item.pack_quantity > 1} red bold{/if}">{$pack_item.pack_quantity}</span>
+                        </td>
+                        {if $stock_management}<td class="productQuantity product_stock">{$pack_item.current_stock}</td>{/if}
+                        <td>&nbsp;</td>
+                    </tr>
+                {/if}
+            {/foreach}
+            </tbody>
+            </table>
+        </td>
+    </tr>
+    {/if}
 {/if}

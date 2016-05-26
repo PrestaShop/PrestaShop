@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property Store $object
@@ -334,16 +334,17 @@ class AdminStoresControllerCore extends AdminController
         $days[6] = $this->l('Saturday');
         $days[7] = $this->l('Sunday');
 
-        $hours = $this->getFieldValue($obj, 'hours');
-        if (!empty($hours)) {
-            $hours_unserialized = Tools::unSerialize($hours);
+        $hours_temp = json_decode($this->getFieldValue($obj, 'hours'));
+        $hours = [];
+        foreach ($hours_temp as $h) {
+            $hours[] = implode(' | ', $h);
         }
 
         $this->fields_value = array(
             'latitude' => $this->getFieldValue($obj, 'latitude') ? $this->getFieldValue($obj, 'latitude') : Configuration::get('PS_STORES_CENTER_LAT'),
             'longitude' => $this->getFieldValue($obj, 'longitude') ? $this->getFieldValue($obj, 'longitude') : Configuration::get('PS_STORES_CENTER_LONG'),
             'days' => $days,
-            'hours' => isset($hours_unserialized) ? $hours_unserialized : false
+            'hours' => $hours,
         );
 
         return parent::renderForm();
@@ -393,13 +394,13 @@ class AdminStoresControllerCore extends AdminController
             } elseif ($postcode && !Validate::isPostCode($postcode)) {
                 $this->errors[] = Tools::displayError('The Zip/postal code is invalid.');
             }
-
             /* Store hours */
             $_POST['hours'] = array();
+            $hours = [];
             for ($i = 1; $i < 8; $i++) {
-                $_POST['hours'][] .= Tools::getValue('hours_'.(int)$i);
+                $hours[] = explode(' | ', Tools::getValue('hours_'.(int)$i));
             }
-            $_POST['hours'] = serialize($_POST['hours']);
+            $_POST['hours'] = json_encode($hours);
         }
 
         if (!count($this->errors)) {

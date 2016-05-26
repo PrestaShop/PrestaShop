@@ -1,36 +1,44 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminStatsControllerCore extends AdminStatsTabController
 {
     public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
     {
         $visits = ($granularity == false) ? 0 : array();
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
         /** @var Gapi $gapi */
-        $gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
+        $gapi = $moduleManager->isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
         if (Validate::isLoadedObject($gapi) && $gapi->isConfigured()) {
             $metric = $unique ? 'visitors' : 'visits';
             if ($result = $gapi->requestReportData($granularity ? 'ga:date' : '', 'ga:'.$metric, $date_from, $date_to, null, null, 1, 5000)) {
@@ -139,7 +147,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getPercentProductOutOfStock()
     {
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT SUM(IF(IFNULL(stock.quantity, 0) = 0, 1, 0)) as without_stock, COUNT(*) as products
+		SELECT SUM(IF(IFNULL(stock.quantity, 0) <= 0, 1, 0)) as without_stock, COUNT(*) as products
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
@@ -200,7 +208,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         if ($granularity == 'day') {
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-			SELECT LEFT(`invoice_date`, 10) as date, SUM(total_paid_tax_excl / o.conversion_rate) as sales
+			SELECT LEFT(`invoice_date`, 10) as date, SUM(total_products / o.conversion_rate) as sales
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
@@ -213,7 +221,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         } elseif ($granularity == 'month') {
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-			SELECT LEFT(`invoice_date`, 7) as date, SUM(total_paid_tax_excl / o.conversion_rate) as sales
+			SELECT LEFT(`invoice_date`, 7) as date, SUM(total_products / o.conversion_rate) as sales
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
@@ -225,7 +233,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             return $sales;
         } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT SUM(total_paid_tax_excl / o.conversion_rate)
+			SELECT SUM(total_products / o.conversion_rate)
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
@@ -542,7 +550,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 }
                 $value .= '%';
 
-                // ConfigurationKPI::updateValue('CONVERSION_RATE_CHART', Tools::jsonEncode($data));
+                // ConfigurationKPI::updateValue('CONVERSION_RATE_CHART', json_encode($data));
                 ConfigurationKPI::updateValue('CONVERSION_RATE', $value);
                 ConfigurationKPI::updateValue('CONVERSION_RATE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
                 break;
@@ -579,12 +587,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             case 'percent_product_out_of_stock':
                 $value = AdminStatsController::getPercentProductOutOfStock();
+                $tooltip = sprintf($this->l('%s of your products for sale are out of stock.', null, null, false), $value);
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK', $value);
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE', strtotime('+4 hour'));
                 break;
 
             case 'product_avg_gross_margin':
                 $value = AdminStatsController::getProductAverageGrossMargin();
+                $tooltip = sprintf($this->l('Gross margin expressed in percentage assesses how cost-effectively you sell your goods. Out of $100, you will retain $%s to cover profit and expenses.', null, null, false), str_replace('%', '', $value));
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN', $value);
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN_EXPIRE', strtotime('+6 hour'));
                 break;
@@ -597,12 +607,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             case 'disabled_products':
                 $value = round(100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(), 2).'%';
+                $tooltip = sprintf($this->l('%s of your products are disabled and not visible to your customers', null, null, false), $value);
                 ConfigurationKPI::updateValue('DISABLED_PRODUCTS', $value);
                 ConfigurationKPI::updateValue('DISABLED_PRODUCTS_EXPIRE', strtotime('+2 hour'));
                 break;
 
             case '8020_sales_catalog':
                 $value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-30 days')), date('Y-m-d'));
+                $tooltip = sprintf($this->l('Within your catalog, %s of your products have had sales in the last 30 days', null, null, false), $value);
                 $value = sprintf($this->l('%d%% of your Catalog'), $value);
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG', $value);
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));
@@ -656,12 +668,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'newsletter_registrations':
+                $moduleManagerBuilder = new ModuleManagerBuilder();
+    $moduleManager = $moduleManagerBuilder->build();
+    
                 $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE newsletter = 1
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
-                if (Module::isInstalled('blocknewsletter')) {
+                if ($moduleManager->isInstalled('ps_emailsubscription')) {
                     $value += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 					SELECT COUNT(*)
 					FROM `'._DB_PREFIX_.'newsletter`
@@ -680,13 +695,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'frontoffice_translations':
-                $themes = Theme::getThemes();
+                $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
+                                ->buildRepository()
+                                ->getList();
                 $languages = Language::getLanguages();
                 $total = $translated = 0;
                 foreach ($themes as $theme) {
                     /** @var Theme $theme */
                     foreach ($languages as $language) {
-                        $kpi_key = substr(strtoupper($theme->name.'_'.$language['iso_code']), 0, 16);
+                        $kpi_key = substr(strtoupper($theme->getName().'_'.$language['iso_code']), 0, 16);
                         $total += ConfigurationKPI::get('TRANSLATE_TOTAL_'.$kpi_key);
                         $translated += ConfigurationKPI::get('TRANSLATE_DONE_'.$kpi_key);
                     }
@@ -789,12 +806,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value = false;
         }
         if ($value !== false) {
-            $array = array('value' => $value);
+            $array = array('value' => $value, 'tooltip' => $tooltip);
             if (isset($data)) {
                 $array['data'] = $data;
             }
-            die(Tools::jsonEncode($array));
+            die(json_encode($array));
         }
-        die(Tools::jsonEncode(array('has_errors' => true)));
+        die(json_encode(array('has_errors' => true)));
     }
 }

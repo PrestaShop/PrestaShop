@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property ImageType $object
@@ -62,11 +62,6 @@ class AdminImagesControllerCore extends AdminController
             'suppliers' => array('title' => $this->l('Suppliers'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
             'stores' => array('title' => $this->l('Stores'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
         );
-
-        // Scenes tab has been removed by default from the installation, but may still exists in updates
-        if (Tab::getIdFromClassName('AdminScenes')) {
-            $this->fields_list['scenes'] = array('title' => $this->l('Scenes'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false);
-        }
 
         // No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
         $this->display_move = false;
@@ -309,27 +304,6 @@ class AdminImagesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Scenes'),
-                    'name' => 'scenes',
-                    'required' => false,
-                    'class' => 't',
-                    'is_bool' => true,
-                    'hint' => $this->l('This type will be used for Scene images.'),
-                    'values' => array(
-                        array(
-                            'id' => 'scenes_on',
-                            'value' => 1,
-                            'label' => $this->l('Enabled')
-                        ),
-                        array(
-                            'id' => 'scenes_off',
-                            'value' => 0,
-                            'label' => $this->l('Disabled')
-                        ),
-                    )
-                ),
-                array(
-                    'type' => 'switch',
                     'label' => $this->l('Stores'),
                     'name' => 'stores',
                     'required' => false,
@@ -425,7 +399,6 @@ class AdminImagesControllerCore extends AdminController
             'categories' => $this->l('Categories'),
             'manufacturers' => $this->l('Manufacturers'),
             'suppliers' => $this->l('Suppliers'),
-            'scenes' => $this->l('Scenes'),
             'products' => $this->l('Products'),
             'stores' => $this->l('Stores')
         );
@@ -508,16 +481,12 @@ class AdminImagesControllerCore extends AdminController
         $generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
 
         if (!$productsImages) {
-            $formated_thumb_scene = ImageType::getFormatedName('thumb_scene');
-            $formated_medium = ImageType::getFormatedName('medium');
+            $formated_medium = ImageType::getFormattedName('medium');
             foreach (scandir($dir) as $image) {
                 if (preg_match('/^[0-9]*\.jpg$/', $image)) {
                     foreach ($type as $k => $imageType) {
                         // Customizable writing dir
                         $newDir = $dir;
-                        if ($imageType['name'] == $formated_thumb_scene) {
-                            $newDir .= 'thumbs/';
-                        }
                         if (!file_exists($newDir)) {
                             continue;
                         }
@@ -530,7 +499,7 @@ class AdminImagesControllerCore extends AdminController
                             if (!file_exists($dir.$image) || !filesize($dir.$image)) {
                                 $this->errors[] = sprintf(Tools::displayError('Source file does not exist or is empty (%s)'), $dir.$image);
                             } elseif (!ImageManager::resize($dir.$image, $newDir.substr(str_replace('_thumb.', '.', $image), 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height'])) {
-                                    $this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
+                                $this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
                             }
 
                             if ($generate_hight_dpi_images) {
@@ -651,7 +620,6 @@ class AdminImagesControllerCore extends AdminController
             array('type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_),
             array('type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_),
             array('type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_),
-            array('type' => 'scenes', 'dir' => _PS_SCENE_IMG_DIR_),
             array('type' => 'products', 'dir' => _PS_PROD_IMG_DIR_),
             array('type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_)
         );
@@ -700,17 +668,6 @@ class AdminImagesControllerCore extends AdminController
         return (count($this->errors) > 0 ? false : true);
     }
 
-    /**
-     * Init display for move images block
-     */
-    public function initMoveImages()
-    {
-        $this->context->smarty->assign(array(
-            'safe_mode' => Tools::getSafeModeStatus(),
-            'link_ppreferences' => 'index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'#PS_LEGACY_IMAGES_on',
-        ));
-    }
-
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
@@ -748,7 +705,6 @@ class AdminImagesControllerCore extends AdminController
     {
         if ($this->display != 'edit' && $this->display != 'add') {
             $this->initRegenerate();
-            $this->initMoveImages();
 
             $this->context->smarty->assign(array(
                 'display_regenerate' => true,

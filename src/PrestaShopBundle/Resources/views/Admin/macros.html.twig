@@ -1,0 +1,3 @@
+{% macro form_label_tooltip(name, tooltip, placement) %}
+    {{ form_label(name, null, {'label_attr': {'tooltip': tooltip, 'tooltip_placement': placement|default('top')}}) }}
+{% endmacro %}

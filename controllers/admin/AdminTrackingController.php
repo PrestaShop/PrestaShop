@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property Product|Category $object
@@ -236,19 +236,117 @@ class AdminTrackingControllerCore extends AdminController
         $this->clearFilters();
 
         $this->_join = Shop::addSqlAssociation('product', 'a');
-        $this->toolbar_title = $this->l('List of disabled products:');
+        $this->toolbar_title = $this->l('List of disabled products');
         return $this->renderList();
     }
 
-
-    public function renderList()
+    public function getCustomListProductsWithoutPhoto()
     {
+        $this->table = 'product';
+        $this->list_id = 'products_without_photo';
+        $this->lang = true;
+        $this->identifier = 'id_product';
+        $this->_orderBy = 'id_product';
+        $this->_orderWay = 'DESC';
+        $this->className = 'Product';
+        $this->_list_index = 'index.php?controller=AdminProducts';
+        $this->_list_token = Tools::getAdminTokenLite('AdminProducts');
+        $this->show_toolbar = false;
+        $this->addRowAction('edit');
+        $this->addRowAction('delete');
+        $this->fields_list = array(
+            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->l('Reference')),
+            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
+            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+        );
+        $this->clearFilters();
+        $this->_join = Shop::addSqlAssociation('product', 'a');
+        $this->_filter = 'AND NOT EXISTS (
+			SELECT 1
+			FROM `'._DB_PREFIX_.'image` img
+			WHERE a.id_product = img.id_product
+		)';
+        $this->toolbar_title = $this->l('List of products without images');
+        return $this->renderList(true);
+    }
+
+    public function getCustomListProductsWithoutDescription()
+    {
+        $this->table = 'product';
+        $this->list_id = 'products_without_description';
+        $this->lang = true;
+        $this->identifier = 'id_product';
+        $this->_orderBy = 'id_product';
+        $this->_orderWay = 'DESC';
+        $this->className = 'Product';
+        $this->_list_index = 'index.php?controller=AdminProducts';
+        $this->_list_token = Tools::getAdminTokenLite('AdminProducts');
+        $this->show_toolbar = false;
+        $this->addRowAction('edit');
+        $this->addRowAction('delete');
+        $this->fields_list = array(
+            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->l('Reference')),
+            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
+            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+        );
+        $this->clearFilters();
+        $defaultLanguage = new Language(Configuration::get('PS_LANG_DEFAULT'));
+        $this->_join = Shop::addSqlAssociation('product', 'a');
+        $this->_filter = 'AND EXISTS (
+			SELECT 1
+			FROM `'._DB_PREFIX_.'product_lang` pl
+			WHERE
+			a.id_product = pl.id_product AND
+			pl.id_lang = '.(int)$defaultLanguage->id.' AND
+			pl.id_shop = '.(int)$this->context->shop->id.' AND
+			description = "" AND description_short = ""
+		)';
+        $this->toolbar_title = $this->l('List of products without description');
+        return $this->renderList(true);
+    }
+
+    public function getCustomListProductsWithoutPrice()
+    {
+        $this->table = 'product';
+        $this->list_id = 'products_without_price';
+        $this->lang = true;
+        $this->identifier = 'id_product';
+        $this->_orderBy = 'id_product';
+        $this->_orderWay = 'DESC';
+        $this->className = 'Product';
+        $this->_list_index = 'index.php?controller=AdminProducts';
+        $this->_list_token = Tools::getAdminTokenLite('AdminProducts');
+        $this->show_toolbar = false;
+        $this->addRowAction('edit');
+        $this->addRowAction('delete');
+        $this->fields_list = array(
+            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->l('Reference')),
+            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
+            'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
+        );
+        $this->clearFilters();
+        $this->_join = Shop::addSqlAssociation('product', 'a');
+        $this->_filter = ' AND a.price = "0.000000" AND a.wholesale_price = "0.000000" AND NOT EXISTS (
+			SELECT 1
+			FROM `'._DB_PREFIX_.'specific_price` sp
+			WHERE a.id_product = sp.id_product
+		)';
+        $this->toolbar_title = $this->l('List of products without price');
+        return $this->renderList();
+    }
+
+    public function renderList($withPagination = false)
+    {
+        $paginationLimit = 20;
         $this->processFilter();
 
         if (!($this->fields_list && is_array($this->fields_list))) {
             return false;
         }
-        $this->getList($this->context->language->id);
+        $this->getList($this->context->language->id, null, null, 0, $withPagination ? $paginationLimit : null);
 
         $helper = new HelperList();
 
@@ -259,6 +357,10 @@ class AdminTrackingControllerCore extends AdminController
         }
 
         $this->setHelperDisplay($helper);
+        if ($withPagination) {
+            $helper->_default_pagination = $paginationLimit;
+            $helper->_pagination = $this->_pagination;
+        }
         $helper->tpl_vars = $this->tpl_list_vars;
         $helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
 
@@ -317,6 +419,16 @@ class AdminTrackingControllerCore extends AdminController
 
         if (Tools::isSubmit('submitResetdisabled_products')) {
             $this->processResetFilters('disabled_products');
+        }
+
+        if (Tools::isSubmit('submitResetproducts_without_photo')) {
+            $this->processResetFilters('products_without_photo');
+        }
+        if (Tools::isSubmit('submitResetproducts_without_description')) {
+            $this->processResetFilters('products_without_description');
+        }
+        if (Tools::isSubmit('submitResetproducts_without_price')) {
+            $this->processResetFilters('products_without_price');
         }
     }
 

@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class CategoryCore extends ObjectModel
 {
@@ -246,7 +246,7 @@ class CategoryCore extends ObjectModel
      *
      * @return array Subcategories lite tree
      */
-    public function recurseLiteCategTree($max_depth = 3, $current_depth = 0, $id_lang = null, $excluded_ids_array = null)
+    public function recurseLiteCategTree($max_depth = 3, $current_depth = 0, $id_lang = null, $excluded_ids_array = null, $format = 'default')
     {
         $id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
 
@@ -258,7 +258,7 @@ class CategoryCore extends ObjectModel
                     break;
                 } elseif (!is_array($excluded_ids_array) || !in_array($subcat['id_category'], $excluded_ids_array)) {
                     $categ = new Category($subcat['id_category'], $id_lang);
-                    $children[] = $categ->recurseLiteCategTree($max_depth, $current_depth + 1, $id_lang, $excluded_ids_array);
+                    $children[] = $categ->recurseLiteCategTree($max_depth, $current_depth + 1, $id_lang, $excluded_ids_array, $format);
                 }
             }
         }
@@ -269,6 +269,15 @@ class CategoryCore extends ObjectModel
             }
         } else {
             $this->description = Category::getDescriptionClean($this->description);
+        }
+
+        if ($format === 'sitemap') {
+            return [
+                'id' => 'category-page-'.(int)$this->id,
+                'label' => $this->name,
+                'url' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
+                'children' => $children,
+            ];
         }
 
         return array(
@@ -657,7 +666,7 @@ class CategoryCore extends ObjectModel
 		GROUP BY c.`id_category`
 		ORDER BY `level_depth` ASC, category_shop.`position` ASC');
 
-        $formated_medium = ImageType::getFormatedName('medium');
+        $formated_medium = ImageType::getFormattedName('medium');
 
         foreach ($result as &$row) {
             $row['id_image'] = Tools::file_exists_cache(_PS_CAT_IMG_DIR_.$row['id_category'].'.jpg') ? (int)$row['id_category'] : Language::getIsoById($id_lang).'-default';
@@ -1247,12 +1256,12 @@ class CategoryCore extends ObjectModel
 
     public function cleanGroups()
     {
-    	return Db::getInstance()->delete('category_group', 'id_category = '.(int)$this->id);
+        return Db::getInstance()->delete('category_group', 'id_category = '.(int)$this->id);
     }
 
     public function cleanAssoProducts()
     {
-    	return Db::getInstance()->delete('category_product', 'id_category = '.(int)$this->id);
+        return Db::getInstance()->delete('category_product', 'id_category = '.(int)$this->id);
     }
 
     public function addGroups($groups)
@@ -1785,7 +1794,7 @@ class CategoryCore extends ObjectModel
      */
     public static function deleteCategoriesFromShop($id_shop)
     {
-    	return Db::getInstance()->delete('category_shop', 'id_shop = '.(int)$id_shop);
+        return Db::getInstance()->delete('category_shop', 'id_shop = '.(int)$id_shop);
     }
 
     /**

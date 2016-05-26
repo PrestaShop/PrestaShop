@@ -1,30 +1,32 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
-
 /**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
+ /**
  * @since 1.5.0
  */
 class HelperFormCore extends Helper
@@ -137,7 +139,7 @@ class HelperFormCore extends Helper
                                 $this->context->smarty->assign('categories_tree', $tree->render());
                                 $categories = false;
                             }
-                        break;
+                            break;
 
                         case 'file':
                             $uploader = new HelperUploader();
@@ -153,34 +155,37 @@ class HelperFormCore extends Helper
                             } elseif (isset($params['image']) && $params['image']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
-                                    'type'       => HelperUploader::TYPE_IMAGE,
-                                    'image'      => isset($params['image'])?$params['image']:null,
-                                    'size'       => isset($params['size'])?$params['size']:null,
-                                    'delete_url' => isset($params['delete_url'])?$params['delete_url']:null
-                                )));
+                                        'type'       => HelperUploader::TYPE_IMAGE,
+                                        'image'      => isset($params['image'])?$params['image']:null,
+                                        'size'       => isset($params['size'])?$params['size']:null,
+                                        'delete_url' => isset($params['delete_url'])?$params['delete_url']:null
+                                    )
+                                ));
                             }
 
                             if (isset($params['file']) && $params['file']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
-                                    'type'       => HelperUploader::TYPE_FILE,
-                                    'size'       => isset($params['size'])?$params['size']:null,
-                                    'delete_url' => isset($params['delete_url'])?$params['delete_url']:null,
-                                    'download_url' => isset($params['file'])?$params['file']:null
-                                )));
+                                        'type'       => HelperUploader::TYPE_FILE,
+                                        'size'       => isset($params['size'])?$params['size']:null,
+                                        'delete_url' => isset($params['delete_url'])?$params['delete_url']:null,
+                                        'download_url' => isset($params['file'])?$params['file']:null
+                                    )
+                                ));
                             }
 
                             if (isset($params['thumb']) && $params['thumb']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
-                                    'type'       => HelperUploader::TYPE_IMAGE,
-                                    'image'      => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />':null,
-                                )));
+                                        'type'  => HelperUploader::TYPE_IMAGE,
+                                        'image' => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />':null,
+                                    )
+                                ));
                             }
 
                             $uploader->setTitle(isset($params['title'])?$params['title']:null);
                             $params['file'] = $uploader->render();
-                        break;
+                            break;
 
                         case 'color':
                             if ($color) {
@@ -188,14 +193,14 @@ class HelperFormCore extends Helper
                                 $this->context->controller->addJqueryPlugin('colorpicker');
                                 $color = false;
                             }
-                        break;
+                            break;
 
                         case 'date':
                             if ($date) {
                                 $this->context->controller->addJqueryUI('ui.datepicker');
                                 $date = false;
                             }
-                        break;
+                            break;
 
                         case 'textarea':
                             if ($tinymce) {
@@ -214,9 +219,9 @@ class HelperFormCore extends Helper
                                 $this->context->controller->addJqueryPlugin('autosize');
                                 $textarea_autosize = false;
                             }
-                        break;
+                            break;
 
-                        case 'shop' :
+                        case 'shop':
                             $disable_shops = isset($params['disable_shared']) ? $params['disable_shared'] : false;
                             $params['html'] = $this->renderAssoShop($disable_shops);
                             if (Shop::getTotalShops(false) == 1) {
@@ -224,11 +229,15 @@ class HelperFormCore extends Helper
                                     unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
                                 }
                             }
-                        break;
+                            break;
                     }
                 }
             }
         }
+
+        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManager = $moduleManagerBuilder->build();
+    
 
         $this->tpl->assign(array(
             'title' => $this->title,
@@ -251,7 +260,7 @@ class HelperFormCore extends Helper
             'fields' => $this->fields_form,
             'fields_value' => $this->fields_value,
             'required_fields' => $this->getFieldsRequired(),
-            'vat_number' => Module::isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
+            'vat_number' => $moduleManager->isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
             'module_dir' => _MODULE_DIR_,
             'base_url' => $this->context->shop->getBaseURL(),
             'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
@@ -301,21 +310,21 @@ class HelperFormCore extends Helper
             }
         } else {
             switch (Shop::getContext()) {
-                case Shop::CONTEXT_SHOP :
+                case Shop::CONTEXT_SHOP:
                         $assos[Shop::getContextShopID()] = Shop::getContextShopID();
-                break;
+                    break;
 
-                case Shop::CONTEXT_GROUP :
+                case Shop::CONTEXT_GROUP:
                     foreach (Shop::getShops(false, Shop::getContextShopGroupID(), true) as $id_shop) {
                         $assos[$id_shop] = $id_shop;
                     }
-                break;
+                    break;
 
-                default :
-                        foreach (Shop::getShops(false, null, true) as $id_shop) {
-                            $assos[$id_shop] = $id_shop;
-                        }
-                break;
+                default:
+                    foreach (Shop::getShops(false, null, true) as $id_shop) {
+                        $assos[$id_shop] = $id_shop;
+                    }
+                    break;
             }
         }
 

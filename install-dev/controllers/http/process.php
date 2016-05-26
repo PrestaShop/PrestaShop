@@ -1,28 +1,30 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+use PrestaShop\PrestaShop\Core\Cldr\Update;
 
 class InstallControllerHttpProcess extends InstallControllerHttp
 {
@@ -73,9 +75,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
     public function process()
     {
-        if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE)) {
-            require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
-        }
+        /* avoid exceptions on re-installation */
+        $this->clearConfigXML() && $this->clearConfigThemes();
 
         if (!$this->session->process_validated) {
             $this->session->process_validated = array();
@@ -99,17 +100,12 @@ class InstallControllerHttpProcess extends InstallControllerHttp
             $this->processInstallAddonsModules();
         } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModulesAddons'])) {
             $this->processInstallTheme();
-        } elseif (Tools::getValue('sendEmail') && !empty($this->session->process_validated['installTheme'])) {
-            $this->processSendEmail();
         } else {
             // With no parameters, we consider that we are doing a new install, so session where the last process step
             // was stored can be cleaned
             if (Tools::getValue('restart')) {
                 $this->session->process_validated = array();
                 $this->session->database_clear = true;
-                if (Tools::getSafeModeStatus()) {
-                    $this->session->safe_mode = true;
-                }
             } elseif (!Tools::getValue('submitNext')) {
                 $this->session->step = 'configure';
                 $this->session->last_step = 'configure';
@@ -160,6 +156,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
     {
         // @todo remove true in populateDatabase for 1.5.0 RC version
         $result = $this->model_install->installDefaultData($this->session->shop_name, $this->session->shop_country, false, true);
+
+        $this->installCldrDatas();
 
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
@@ -230,7 +228,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         $this->session->process_validated = array_merge($this->session->process_validated, array('installModules' => true));
         $this->ajaxJsonAnswer(true);
     }
-    
+
     /**
      * PROCESS : installModulesAddons
      * Install modules from addons
@@ -264,7 +262,29 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         }
         $this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
         $this->session->process_validated = array_merge($this->session->process_validated, array('installFixtures' => true));
+
         $this->ajaxJsonAnswer(true);
+    }
+
+    /**
+     * Install Cldr Datas
+     */
+    public function installCldrDatas()
+    {
+        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+        $cldrUpdate->init();
+
+        //get each defined languages and fetch cldr datas
+        $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+
+        foreach ($langs as $lang) {
+            $language_code = explode('-', $lang['language_code']);
+            if (count($language_code) == 1) {
+                $cldrUpdate->fetchLocale($language_code['0']);
+            } else {
+                $cldrUpdate->fetchLocale($language_code['0'].'-'.Tools::strtoupper($language_code[1]));
+            }
+        }
     }
 
     /**
@@ -274,12 +294,10 @@ class InstallControllerHttpProcess extends InstallControllerHttp
     public function processInstallTheme()
     {
         $this->initializeContext();
-
         $this->model_install->installTheme();
         if ($this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
-
         $this->session->process_validated = array_merge($this->session->process_validated, array('installTheme' => true));
         $this->ajaxJsonAnswer(true);
     }
@@ -331,7 +349,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
             }
         }
         $this->process_steps[] = $install_modules;
-        
+
         $install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install Addons modules'));
 
         $params = array(
@@ -352,5 +370,31 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         $this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
 
         $this->displayTemplate('process');
+    }
+
+    private function clearConfigXML()
+    {
+        $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
+        $cacheFiles = scandir($configXMLPath);
+        $excludes = ['.htaccess', 'index.php'];
+
+        foreach($cacheFiles as $file) {
+            $filepath = $configXMLPath.$file;
+            if (is_file($filepath) && !in_array($file, $excludes)) {
+                unlink($filepath);
+            }
+        }
+    }
+
+    private function clearConfigThemes()
+    {
+        $themesPath = _PS_ROOT_DIR_.'/config/themes/';
+        $cacheFiles = scandir($themesPath);
+        foreach($cacheFiles as $file) {
+            $file = $themesPath.$file;
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
     }
 }

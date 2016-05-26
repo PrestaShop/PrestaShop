@@ -1,39 +1,34 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @since 1.5
  */
 class PrestaShopAutoload
 {
-    /**
-     * File where classes index is stored
-     */
-    const INDEX_FILE = 'cache/class_index.php';
-
     /**
      * @var PrestaShopAutoload
      */
@@ -61,7 +56,7 @@ class PrestaShopAutoload
     protected function __construct()
     {
         $this->root_dir = _PS_CORE_DIR_.'/';
-        $file = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
+        $file = PrestaShopAutoload::getCacheFileIndex();
         if (@filemtime($file) && is_readable($file)) {
             $this->index = include($file);
         } else {
@@ -81,6 +76,11 @@ class PrestaShopAutoload
         }
 
         return PrestaShopAutoload::$instance;
+    }
+
+    public static function getCacheFileIndex()
+    {
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_index.php';
     }
 
     /**
@@ -137,9 +137,7 @@ class PrestaShopAutoload
     {
         $classes = array_merge(
             $this->getClassesFromDir('classes/'),
-            $this->getClassesFromDir('controllers/'),
-            $this->getClassesFromDir('Adapter/'),
-            $this->getClassesFromDir('Core/')
+            $this->getClassesFromDir('controllers/')
         );
 
         if ($this->_include_override_path) {
@@ -154,19 +152,13 @@ class PrestaShopAutoload
         $content = '<?php return '.var_export($classes, true).'; ?>';
 
         // Write classes index on disc to cache it
-        $filename = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
-        $filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
-        if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false) {
-            if (!@rename($filename_tmp, $filename)) {
-                unlink($filename_tmp);
-            } else {
-                @chmod($filename, 0666);
-            }
+        $filename = PrestaShopAutoload::getCacheFileIndex();
+        @mkdir(_PS_CACHE_DIR_);
+
+        if (!file_put_contents($filename, $content) !== false) {
+            Tools::error_log('Cannot write temporary file '.$filename);
         }
-        // $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
-        else {
-            Tools::error_log('Cannot write temporary file '.$filename_tmp);
-        }
+
         $this->index = $classes;
     }
 
@@ -192,7 +184,16 @@ class PrestaShopAutoload
                     $pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
                                 .'(?:\s+extends\s+'.$namespacePattern.'[a-z][a-z0-9_]*)?(?:\s+implements\s+'.$namespacePattern.'[a-z][\\a-z0-9_]*(?:\s*,\s*'.$namespacePattern.'[a-z][\\a-z0-9_]*)*)?\s*\{#i';
 
-                    if (preg_match($pattern, $content, $m)) {
+                    //DONT LOAD CLASS WITH NAMESPACE - PSR4 autoloaded from composer
+                    $usesNamespace = false;
+                    foreach (token_get_all($content) as $token) {
+                        if ($token[0] === T_NAMESPACE) {
+                            $usesNamespace = true;
+                            break;
+                        }
+                    }
+
+                    if (!$usesNamespace && preg_match($pattern, $content, $m)) {
                         $classes[$m['classname']] = array(
                             'path' => $path.$file,
                             'type' => trim($m[1]),
@@ -224,3 +225,5 @@ class PrestaShopAutoload
         return rtrim($directory, '/\\').DIRECTORY_SEPARATOR;
     }
 }
+
+spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));

@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 abstract class InstallControllerHttp
 {
@@ -119,7 +119,22 @@ abstract class InstallControllerHttp
 
         // Set timezone
         if ($session->shop_timezone) {
-            @date_default_timezone_set($session->shop_timezone);
+            try {
+                // Search if the session timezone is known in the present zones list.
+                // An unknown timezone can be stored here, in case of upgrade of PHP version (change in many timezones, as disappeared US/Eastern for example).
+                foreach (DateTimeZone::listAbbreviations() as $abbreviations) {
+                    foreach ($abbreviations as $abbreviation) {
+                        if ($session->shop_timezone == $abbreviation['timezone_id']) {
+                            @date_default_timezone_set($session->shop_timezone);
+                            break 2;
+                        }
+                    }
+                }
+                // If not know, does not affect PHP settings. Another default setting is forced before.
+            } catch (\Exception $e) {
+                // for older behavior, keep old way to affect timezone.
+                @date_default_timezone_set($session->shop_timezone);
+            }
         }
 
         // Get current step (check first if step is changed, then take it from session)
@@ -412,7 +427,7 @@ abstract class InstallControllerHttp
         if (!$success && empty($message)) {
             $message = print_r(@error_get_last(), true);
         }
-        die(Tools::jsonEncode(array(
+        die(json_encode(array(
             'success' => (bool)$success,
             'message' => $message,
             // 'memory' => round(memory_get_peak_usage()/1024/1024, 2).' Mo',

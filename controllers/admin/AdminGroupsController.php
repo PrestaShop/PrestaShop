@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property Group $object
@@ -375,7 +375,7 @@ class AdminGroupsControllerCore extends AdminController
             }
 
             $category_reductions[(int)$category['id_category']] = array(
-                'path' => getPath(Context::getContext()->link->getAdminLink('AdminCategories'), (int)$category['id_category']),
+                'path' => Tools::getPath(Context::getContext()->link->getAdminLink('AdminCategories'), (int)$category['id_category']),
                 'reduction' => (float)$category['reduction'] * 100,
                 'id_category' => (int)$category['id_category']
             );
@@ -385,7 +385,7 @@ class AdminGroupsControllerCore extends AdminController
             foreach ($category_reduction as $key => $val) {
                 if (!array_key_exists($key, $category_reductions)) {
                     $category_reductions[(int)$key] = array(
-                        'path' => getPath(Context::getContext()->link->getAdminLink('AdminCategories'), $key),
+                        'path' => Tools::getPath(Context::getContext()->link->getAdminLink('AdminCategories'), $key),
                         'reduction' => (float)$val * 100,
                         'id_category' => (int)$key
                     );
@@ -482,11 +482,11 @@ class AdminGroupsControllerCore extends AdminController
             $result['hasError'] = true;
         } else {
             $result['id_category'] = (int)$id_category;
-            $result['catPath'] = getPath(self::$currentIndex.'?tab=AdminCategories', (int)$id_category);
+            $result['catPath'] = Tools::getPath(self::$currentIndex.'?tab=AdminCategories', (int)$id_category);
             $result['discount'] = $category_reduction;
             $result['hasError'] = false;
         }
-        die(Tools::jsonEncode($result));
+        die(json_encode($result));
     }
 
     /**

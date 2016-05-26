@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @since 1.5.0
@@ -233,5 +233,32 @@ class ProductSupplierCore extends ObjectModel
         }
 
         return $row['price_te'];
+    }
+
+    /**
+     * For a given product and supplier, gets the product supplier datas
+     *
+     * @param int $id_product
+     * @param int $id_product_attribute
+     * @param int $id_supplier
+     * @return array
+     */
+    public static function getProductSupplierData($id_product, $id_product_attribute, $id_supplier)
+    {
+        // build query
+        $query = new DbQuery();
+        $query->select('ps.product_supplier_reference, ps.product_supplier_price_te as price, ps.id_currency');
+        $query->from('product_supplier', 'ps');
+        $query->where('ps.id_product = '.(int)$id_product.'
+			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
+			AND ps.id_supplier = '.(int)$id_supplier
+        );
+
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+        if (isset($res[0])) {
+            return $res[0];
+        }
+
+        return $res;
     }
 }

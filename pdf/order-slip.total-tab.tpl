@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <table id="total-tab" width="100%">
 
@@ -94,8 +94,6 @@
 					{$total_paid = $order->total_paid_tax_incl - $total_cart_rule}
 				{/if}
 				- {displayPrice currency=$order->id_currency price=$total_paid}
-			{elseif $amount_choosen}
-				- {displayPrice currency=$order->id_currency price=($order_slip->amount+$order_slip->shipping_cost_amount)}
 			{else}
 				{if $tax_excluded_display}
 					- {displayPrice currency=$order->id_currency price=$order->total_paid_tax_excl}

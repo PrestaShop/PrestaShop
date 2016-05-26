@@ -5,4 +5,5 @@
   <quick_access id="New_category" name="新分類"/>
   <quick_access id="New_product" name="新產品"/>
   <quick_access id="New_voucher" name="新優惠券"/>
+  <quick_access id="Orders" name="Orders"/>
 </entity_quick_access>

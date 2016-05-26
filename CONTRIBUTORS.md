@@ -129,8 +129,8 @@ GitHub contributors:
 - Florian Kwakkenbos
 - fram
 - Francois Gaillard
-- Francois-Marie de Jouvencel
-- Fran�ois Gaillard
+- François-Marie de Jouvencel
+- François Gaillard
 - Frederic BENOIST
 - Gabriel Schwardy
 - Gaelle ITZKOVITZ
@@ -236,11 +236,10 @@ GitHub contributors:
 - mchelh
 - mchojnacki
 - mdomenjoud
-- Mehdi BOUZIDI
-- Michael Dekker
-- Michael Hjulskov
 - Michel Courtade
+- Michael Dekker
 - Mickael Desgranges
+- Michael Hjulskov
 - Mikael Blotin
 - Mikko Hellsing
 - Milow

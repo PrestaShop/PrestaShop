@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author Prestashop SA <contact@prestashop.com>
-*  @copyright  2007-2010 Prestashop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class WebserviceRequestCore
 {
@@ -275,9 +275,9 @@ class WebserviceRequestCore
             'image_types' => array('description' => 'The image types', 'class' => 'ImageType'),
             'languages' => array('description' => 'Shop languages', 'class' => 'Language'),
             'manufacturers' => array('description' => 'The product manufacturers','class' => 'Manufacturer'),
+            'messages' => array('description' => 'The Messages','class' => 'Message'),
             'order_carriers' => array('description' => 'The Order carriers','class' => 'OrderCarrier'),
             'order_details' => array('description' => 'Details of an order', 'class' => 'OrderDetail'),
-            'order_discounts' => array('description' => 'Discounts of an order', 'class' => 'OrderDiscount'),
             'order_histories' => array('description' => 'The Order histories','class' => 'OrderHistory'),
             'order_invoices' => array('description' => 'The Order invoices','class' => 'OrderInvoice'),
             'orders' => array('description' => 'The Customers orders','class' => 'Order'),
@@ -1428,7 +1428,7 @@ class WebserviceRequestCore
                             $this->setError(400, 'parameter "'.$fieldName.'" not writable. Please remove this attribute of this XML', 93);
                             return false;
                         } else {
-                            $object->$fieldProperties['setter']((string)$attributes->$fieldName);
+                            $object->{$fieldProperties['setter']}((string)$attributes->$fieldName);
                         }
                     } elseif (property_exists($object, $sqlId)) {
                         $object->$sqlId = (string)$attributes->$fieldName;

@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class OrderHistoryCore extends ObjectModel
 {
@@ -155,8 +155,21 @@ class OrderHistoryCore extends ObjectModel
                 );
                 // If there is at least one downloadable file
                 if (!empty($assign)) {
-                    Mail::Send((int)$order->id_lang, 'download_product', Mail::l('The virtual product that you bought is available for download', $order->id_lang), $data, $customer->email, $customer->firstname.' '.$customer->lastname,
-                        null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
+                    Mail::Send(
+                        (int)$order->id_lang,
+                        'download_product',
+                        Mail::l('The virtual product that you bought is available for download', $order->id_lang),
+                        $data,
+                        $customer->email,
+                        $customer->firstname.' '.$customer->lastname,
+                        null,
+                        null,
+                        null,
+                        null,
+                        _PS_MAIL_DIR_,
+                        false,
+                        (int)$order->id_shop
+                    );
                 }
             }
 
@@ -194,9 +207,8 @@ class OrderHistoryCore extends ObjectModel
                             !StockAvailable::dependsOnStock($product['id_product'], (int)$order->id_shop)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
                         }
-                    }
-                    // if becoming unlogable => removes sale
-                    elseif (!$new_os->logable && $old_os->logable) {
+                    } elseif (!$new_os->logable && $old_os->logable) {
+                        // if becoming unlogable => removes sale
                         ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 
                         // @since 1.5.0 - Stock Management
@@ -205,12 +217,12 @@ class OrderHistoryCore extends ObjectModel
                             !StockAvailable::dependsOnStock($product['id_product'])) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
                         }
-                    }
-                    // if waiting for payment => payment error/canceled
-                    elseif (!$new_os->logable && !$old_os->logable &&
-                            in_array($new_os->id, $error_or_canceled_statuses) &&
-                            !in_array($old_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'])) {
+                    } elseif (!$new_os->logable && !$old_os->logable &&
+                        in_array($new_os->id, $error_or_canceled_statuses) &&
+                        !in_array($old_os->id, $error_or_canceled_statuses) &&
+                        !StockAvailable::dependsOnStock($product['id_product'])
+                    ) {
+                        // if waiting for payment => payment error/canceled
                         StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
                     }
                 }
@@ -239,13 +251,14 @@ class OrderHistoryCore extends ObjectModel
                         0,
                         $employee
                     );
-                }
-                // @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
-                elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1 &&
-                        Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
-                        Warehouse::exists($product['id_warehouse']) &&
-                        $manager != null &&
-                        (int)$product['advanced_stock_management'] == 1) {
+                } elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1 &&
+                    Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
+                    Warehouse::exists($product['id_warehouse']) &&
+                    $manager != null &&
+                    (int)$product['advanced_stock_management'] == 1
+                ) {
+                    // @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
+
                     // if the product is a pack, we restock every products in the pack using the last negative stock mvts
                     if (Pack::isPack($product['product_id'])) {
                         $pack_products = Pack::getItems($product['product_id'], Configuration::get('PS_LANG_DEFAULT', null, null, $order->id_shop));
@@ -270,12 +283,15 @@ class OrderHistoryCore extends ObjectModel
                                 }
                             }
                         }
-                    }
-                    // else, it's not a pack, re-stock using the last negative stock mvts
-                    else {
-                        $mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'],
+                    } else {
+                        // else, it's not a pack, re-stock using the last negative stock mvts
+
+                        $mvts = StockMvt::getNegativeStockMvts(
+                            $order->id,
+                            $product['product_id'],
                             $product['product_attribute_id'],
-                            ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']));
+                            ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return'])
+                        );
 
                         foreach ($mvts as $mvt) {
                             $manager->addProduct(
@@ -344,8 +360,8 @@ class OrderHistoryCore extends ObjectModel
                     $payment->conversion_rate = 1;
                     $payment->save();
                     Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
-					VALUES('.(int)$invoice->id.', '.(int)$payment->id.', '.(int)$order->id.')');
+                    INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
+                    VALUES('.(int)$invoice->id.', '.(int)$payment->id.', '.(int)$order->id.')');
                 }
             }
         }
@@ -372,10 +388,10 @@ class OrderHistoryCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
         $id_order_state = Db::getInstance()->getValue('
-		SELECT `id_order_state`
-		FROM `'._DB_PREFIX_.'order_history`
-		WHERE `id_order` = '.(int)$id_order.'
-		ORDER BY `date_add` DESC, `id_order_history` DESC');
+        SELECT `id_order_state`
+        FROM `'._DB_PREFIX_.'order_history`
+        WHERE `id_order` = '.(int)$id_order.'
+        ORDER BY `date_add` DESC, `id_order_history` DESC');
 
         // returns false if there is no state
         if (!$id_order_state) {
@@ -410,13 +426,13 @@ class OrderHistoryCore extends ObjectModel
     public function sendEmail($order, $template_vars = false)
     {
         $result = Db::getInstance()->getRow('
-			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`, os.`id_order_state`, os.`pdf_invoice`, os.`pdf_delivery`
-			FROM `'._DB_PREFIX_.'order_history` oh
-				LEFT JOIN `'._DB_PREFIX_.'orders` o ON oh.`id_order` = o.`id_order`
-				LEFT JOIN `'._DB_PREFIX_.'customer` c ON o.`id_customer` = c.`id_customer`
-				LEFT JOIN `'._DB_PREFIX_.'order_state` os ON oh.`id_order_state` = os.`id_order_state`
-				LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = o.`id_lang`)
-			WHERE oh.`id_order_history` = '.(int)$this->id.' AND os.`send_email` = 1');
+            SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`, os.`id_order_state`, os.`pdf_invoice`, os.`pdf_delivery`
+            FROM `'._DB_PREFIX_.'order_history` oh
+                LEFT JOIN `'._DB_PREFIX_.'orders` o ON oh.`id_order` = o.`id_order`
+                LEFT JOIN `'._DB_PREFIX_.'customer` c ON o.`id_customer` = c.`id_customer`
+                LEFT JOIN `'._DB_PREFIX_.'order_state` os ON oh.`id_order_state` = os.`id_order_state`
+                LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = o.`id_lang`)
+            WHERE oh.`id_order_history` = '.(int)$this->id.' AND os.`send_email` = 1');
         if (isset($result['template']) && Validate::isEmail($result['email'])) {
             ShopUrl::cacheMainDomainForShop($order->id_shop);
 
@@ -465,8 +481,21 @@ class OrderHistoryCore extends ObjectModel
                     $file_attachement = null;
                 }
 
-                if (!Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
-                    null, null, $file_attachement, null, _PS_MAIL_DIR_, false, (int)$order->id_shop)) {
+                if (!Mail::Send(
+                    (int)$order->id_lang,
+                    $result['template'],
+                    $topic,
+                    $data,
+                    $result['email'],
+                    $result['firstname'].' '.$result['lastname'],
+                    null,
+                    null,
+                    $file_attachement,
+                    null,
+                    _PS_MAIL_DIR_,
+                    false,
+                    (int)$order->id_shop
+                )) {
                     return false;
                 }
             }
@@ -499,11 +528,11 @@ class OrderHistoryCore extends ObjectModel
     public function isValidated()
     {
         return Db::getInstance()->getValue('
-		SELECT COUNT(oh.`id_order_history`) AS nb
-		FROM `'._DB_PREFIX_.'order_state` os
-		LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (os.`id_order_state` = oh.`id_order_state`)
-		WHERE oh.`id_order` = '.(int)$this->id_order.'
-		AND os.`logable` = 1');
+        SELECT COUNT(oh.`id_order_history`) AS nb
+        FROM `'._DB_PREFIX_.'order_state` os
+        LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (os.`id_order_state` = oh.`id_order_state`)
+        WHERE oh.`id_order` = '.(int)$this->id_order.'
+        AND os.`logable` = 1');
     }
 
     /**

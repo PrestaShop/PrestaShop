@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-md-4">
+        <fieldset class="form-group">
+            <label class="form-control-label">{{ form.feature.vars.label }}</label>
+            {{ form_widget(form.feature) }}
+        </fieldset>
+    </div>
+    <div class="col-md-4">
+        <fieldset class="form-group">
+            <label class="form-control-label">{{ form.value.vars.label }}</label>
+            {{ form_widget(form.value) }}
+        </fieldset>
+    </div>
+    <div class="col-md-3">
+        <fieldset class="form-group">
+            <label class="form-control-label">{{ form.custom_value.vars.label }}</label>
+            {{ form_widget(form.custom_value) }}
+        </fieldset>
+    </div>
+    <div class="col-md-1">
+        <fieldset class="form-group">
+            <label class="form-control-label">&nbsp;</label>
+            <button type="button" class="btn btn-invisible btn-block delete p-l-0 p-r-0"><i class="material-icons">delete</i></button>
+        </fieldset>
+    </div>
+</div>

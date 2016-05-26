@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
@@ -102,7 +102,7 @@
 						<option value="">{l s='Core (no theme selected)'}</option>
 						{/if}
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
+							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -205,7 +205,7 @@
 				<div class="col-lg-4">
 					<select name="theme[]" id="selectThemeForImport" {if count($themes) > 1}multiple="multiple"{/if} >
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}" selected="selected">{$theme->name} &nbsp;</option>
+							<option value="{$theme->getDirectory()}" selected="selected">{$theme->getName()} &nbsp;</option>
 						{/foreach}
 					</select>
 				</div>
@@ -240,7 +240,7 @@
 				<div class="col-lg-4">
 					<select name="theme" id="export-theme">
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
+							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -273,7 +273,7 @@
 				<div class="col-lg-4">
 					<select name="fromTheme">
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
+							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -290,7 +290,7 @@
 				<div class="col-lg-4">
 					<select name="toTheme">
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
+							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
 						{/foreach}
 					</select>
 				</div>

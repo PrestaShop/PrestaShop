@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 class AddressCore extends ObjectModel
@@ -133,7 +133,6 @@ class AddressCore extends ObjectModel
         ),
     );
 
-    protected $_includeVars = array('addressType' => 'table');
     protected $_includeContainer = false;
 
     protected $webserviceParameters = array(
@@ -346,6 +345,17 @@ class AddressCore extends ObjectModel
             return (bool)$id_address;
         }
         return Cache::retrieve($key);
+    }
+
+    public static function isValid($id_address)
+    {
+        $id_address = (int)$id_address;
+        $isValid = Db::getInstance()->getValue('
+            SELECT `id_address` FROM '._DB_PREFIX_.'address a
+            WHERE a.`id_address` = '.$id_address.' AND a.`deleted` = 0 AND a.`active` = 1
+        ');
+
+        return (bool)$isValid;
     }
 
     public static function getFirstCustomerAddressId($id_customer, $active = true)

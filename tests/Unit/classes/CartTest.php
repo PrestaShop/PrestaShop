@@ -18,19 +18,19 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
 use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use Adapter_ProductPriceCalculator;
-use Adapter_AddressFactory;
-use Core_Business_ConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
+use PrestaShop\PrestaShop\Adapter\AddressFactory;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Address;
 use Cart;
 use Order;
@@ -84,14 +84,14 @@ class CartTest extends UnitTestCase
         parent::setup();
 
         $this->productPriceCalculator = new FakeProductPriceCalculator;
-        $this->container->bind('Adapter_ProductPriceCalculator', $this->productPriceCalculator);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator', $this->productPriceCalculator);
 
-        $addressFactory = Phake::mock('Adapter_AddressFactory');
+        $addressFactory = Phake::mock('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
         $address = new Address;
         $address->id = 1;
 
         Phake::when($addressFactory)->findOrCreate()->thenReturn($address);
-        $this->container->bind('Adapter_AddressFactory', $addressFactory);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory', $addressFactory);
 
         $this->cart = new Cart;
         $this->cart->id = 1;

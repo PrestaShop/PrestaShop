@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/view/view.tpl"}
@@ -73,10 +73,10 @@
 				<div class="panel-heading">
 					{$product->name}
 					<div class="pull-right">
-						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm">
+						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm">
 							<i class="icon-edit"></i> {l s='Edit'}
 						</a>
-						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;deleteproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
+						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'deleteproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
 							<i class="icon-trash"></i> {l s='Delete'}
 						</a>
 					</div>
@@ -97,15 +97,15 @@
 			<div class="panel">
 				<div class="panel-heading">
 
-					<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
+					<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}">
 						{$product->name}
 					</a>
 					<div class="pull-right">
-						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm">
+						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm">
 							<i class="icon-edit"></i>
 							{l s='Edit'}
 						</a>
-						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;deleteproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
+						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'deleteproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
 							<i class="icon-trash"></i>
 							{l s='Delete'}
 						</a>

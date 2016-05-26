@@ -18,17 +18,17 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\IoC;
 
 use Exception;
 use PHPUnit_Framework_TestCase;
-use Core_Foundation_IoC_Container as Container;
+use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure;
@@ -37,7 +37,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
 {
     public function setup()
     {
-        $this->container = new Container;
+        $this->container = new Container();
     }
 
     public function test_bind_by_closure()
@@ -50,7 +50,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Core_Foundation_IoC_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function test_cannot_bind_the_same_service_twice()
     {
@@ -108,7 +108,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Core_Foundation_IoC_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function test_an_alias_cannot_be_changed()
     {
@@ -131,7 +131,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Core_Foundation_IoC_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function test_unbuildable_not_built()
     {
@@ -139,7 +139,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Core_Foundation_IoC_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function test_non_existing_class_not_built()
     {
@@ -147,7 +147,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Core_Foundation_IoC_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function test_dependency_loop_doesnt_crash_container()
     {

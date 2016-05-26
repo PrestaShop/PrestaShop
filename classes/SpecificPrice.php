@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class SpecificPriceCore extends ObjectModel
 {
@@ -92,17 +92,6 @@ class SpecificPriceCore extends ObjectModel
     protected static $_filterOutCache = array();
     protected static $_cache_priorities = array();
     protected static $_no_specific_values = array();
-
-    /**
-     * Flush local cache
-     */
-    protected function flushCache() {
-        SpecificPrice::$_specificPriceCache = array();
-        SpecificPrice::$_filterOutCache = array();
-        SpecificPrice::$_cache_priorities = array();
-        SpecificPrice::$_no_specific_values = array();
-        Product::flushPriceCache();
-    }
 
     public function add($autodate = true, $nullValues = false)
     {
@@ -217,7 +206,7 @@ class SpecificPriceCore extends ObjectModel
      * @return string
      * @throws PrestaShopDatabaseException
      */
-    protected static function filterOutField($field_name, $field_value, $threshold = 1000)
+    private static function filterOutField($field_name, $field_value, $threshold = 1000)
     {
         $query_extra = 'AND `'.$field_name.'` = 0 ';
         if ($field_value == 0 || array_key_exists($field_name, self::$_no_specific_values)) {
@@ -245,8 +234,7 @@ class SpecificPriceCore extends ObjectModel
             $specific_list = SpecificPrice::$_filterOutCache[$key_cache];
         }
 
-        // $specific_list is empty if the threshold is reached
-        if (empty($specific_list) || in_array($field_value, $specific_list)) {
+        if (in_array($field_value, $specific_list)) {
             $query_extra = 'AND `'.$field_name.'` '.self::formatIntInQuery(0, $field_value).' ';
         }
 
@@ -263,7 +251,7 @@ class SpecificPriceCore extends ObjectModel
      * @param string|null $ending
      * @return string
      */
-    protected static function computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart, $beginning = null, $ending = null)
+    private static function computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart, $beginning = null, $ending = null)
     {
         $first_date = date('Y-m-d 00:00:00');
         $last_date = date('Y-m-d 23:59:59');
@@ -322,7 +310,8 @@ class SpecificPriceCore extends ObjectModel
         return $query_extra;
     }
 
-    private static function formatIntInQuery($first_value, $second_value) {
+    private static function formatIntInQuery($first_value, $second_value)
+    {
         $first_value = (int)$first_value;
         $second_value = (int)$second_value;
         if ($first_value != $second_value) {
@@ -477,7 +466,7 @@ class SpecificPriceCore extends ObjectModel
 					`reduction` > 0
 		'.$query_extra);
         $ids_product = array();
-        foreach($results as $key => $value) {
+        foreach ($results as $key => $value) {
             $ids_product[] = $with_combination_id ? array('id_product' => (int)$value['id_product'], 'id_product_attribute' => (int)$value['id_product_attribute']) : (int)$value['id_product'];
         }
 

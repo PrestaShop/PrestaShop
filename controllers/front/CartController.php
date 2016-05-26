@@ -1,28 +1,30 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 
 class CartControllerCore extends FrontController
 {
@@ -34,8 +36,6 @@ class CartControllerCore extends FrontController
     protected $customization_id;
     protected $qty;
     public $ssl = true;
-
-    protected $ajax_refresh = false;
 
     /**
      * This is not a public page, so the canonical redirection is disabled
@@ -65,7 +65,112 @@ class CartControllerCore extends FrontController
         $this->id_address_delivery = (int)Tools::getValue('id_address_delivery');
     }
 
+    /**
+     * @see FrontController::initContent()
+     */
+    public function initContent()
+    {
+        parent::initContent();
+
+        $presenter = new CartPresenter();
+        $presented_cart = $presenter->present($this->context->cart);
+
+        $this->context->smarty->assign([
+            'cart' => $presented_cart,
+            'static_token' => Tools::getToken(false),
+        ]);
+
+        if (count($presented_cart['products']) > 0) {
+            $this->setTemplate('checkout/cart.tpl');
+        } else {
+            $this->context->smarty->assign([
+                'allProductsLink' => $this->context->link->getCategoryLink(Configuration::get('PS_HOME_CATEGORY')),
+            ]);
+            $this->setTemplate('checkout/cart-empty.tpl');
+        }
+    }
+
+    public function displayAjaxUpdate()
+    {
+        if (!$this->errors) {
+            $this->ajaxDie(Tools::jsonEncode([
+                'success' => true,
+                'id_product' => $this->id_product,
+                'id_product_attribute' => $this->id_product_attribute
+            ]));
+        } else {
+            $this->ajaxDie(Tools::jsonEncode([
+                'hasError' => true,
+                'errors' => [$this->l('Something went wrong during cart update')],
+            ]));
+        }
+    }
+
+
+    public function displayAjaxRefresh()
+    {
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxDie(Tools::jsonEncode([
+            'cart_detailed' => $this->render('checkout/_partials/cart-detailed.tpl'),
+            'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals.tpl'),
+            'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal.tpl'),
+            'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals.tpl'),
+            'cart_detailed_actions' => $this->render('checkout/_partials/cart-detailed-actions.tpl'),
+            'cart_voucher' => $this->render('checkout/_partials/cart-voucher.tpl'),
+        ]));
+    }
+
+    public function displayAjaxProductRefresh()
+    {
+        $url = $this->context->link->getProductLink(
+            $this->id_product,
+            null,
+            null,
+            null,
+            $this->context->language->id,
+            null,
+            (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group')),
+            false,
+            false,
+            true,
+            ['quantity_wanted' => (int)$this->qty]
+        );
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxDie(Tools::jsonEncode([
+            'success' => true,
+            'productUrl' => $url
+        ]));
+    }
+
     public function postProcess()
+    {
+        $this->updateCart();
+
+        // Make redirection
+        if (!$this->errors) {
+            if ($back = Tools::getValue('back')) {
+                Tools::redirect(urldecode($back));
+            }
+
+            $queryString = Tools::safeOutput(Tools::getValue('query', null));
+            if ($queryString && !Configuration::get('PS_CART_REDIRECT')) {
+                Tools::redirect('index.php?controller=search&search='.$queryString);
+            }
+
+            // Redirect to previous page
+            if (isset($_SERVER['HTTP_REFERER'])) {
+                preg_match('!http(s?)://(.*)/(.*)!', $_SERVER['HTTP_REFERER'], $regs);
+                if (isset($regs[3]) && !Configuration::get('PS_CART_REDIRECT')) {
+                    $url = preg_replace('/(\?)+content_only=1/', '', $_SERVER['HTTP_REFERER']);
+                    Tools::redirect($url);
+                }
+            }
+        }
+    }
+
+    protected function updateCart()
     {
         // Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
         if ($this->context->cookie->exists() && !$this->errors && !($this->context->customer->isLogged() && !$this->isTokenValid())) {
@@ -73,32 +178,29 @@ class CartControllerCore extends FrontController
                 $this->processChangeProductInCart();
             } elseif (Tools::getIsset('delete')) {
                 $this->processDeleteProductInCart();
-            } elseif (Tools::getIsset('changeAddressDelivery')) {
-                $this->processChangeProductAddressDelivery();
-            } elseif (Tools::getIsset('allowSeperatedPackage')) {
-                $this->processAllowSeperatedPackage();
-            } elseif (Tools::getIsset('duplicate')) {
-                $this->processDuplicateProduct();
-            }
-            // Make redirection
-            if (!$this->errors && !$this->ajax) {
-                $queryString = Tools::safeOutput(Tools::getValue('query', null));
-                if ($queryString && !Configuration::get('PS_CART_REDIRECT')) {
-                    Tools::redirect('index.php?controller=search&search='.$queryString);
-                }
-
-                // Redirect to previous page
-                if (isset($_SERVER['HTTP_REFERER'])) {
-                    preg_match('!http(s?)://(.*)/(.*)!', $_SERVER['HTTP_REFERER'], $regs);
-                    if (isset($regs[3]) && !Configuration::get('PS_CART_REDIRECT')) {
-                        $url = preg_replace('/(\?)+content_only=1/', '', $_SERVER['HTTP_REFERER']);
-                        Tools::redirect($url);
+            } elseif (CartRule::isFeatureActive()) {
+                if (Tools::getIsset('addDiscount')) {
+                    if (!($code = trim(Tools::getValue('discount_name')))) {
+                        $this->errors[] = $this->l('You must enter a voucher code.');
+                    } elseif (!Validate::isCleanHtml($code)) {
+                        $this->errors[] = $this->l('The voucher code is invalid.');
+                    } else {
+                        if (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule)) {
+                            if ($error = $cartRule->checkValidity($this->context, false, true)) {
+                                $this->errors[] = $error;
+                            } else {
+                                $this->context->cart->addCartRule($cartRule->id);
+                            }
+                        } else {
+                            $this->errors[] = Tools::displayError('This voucher does not exists.');
+                        }
                     }
+                } elseif (($id_cart_rule = (int)Tools::getValue('deleteDiscount')) && Validate::isUnsignedId($id_cart_rule)) {
+                    $this->context->cart->removeCartRule($id_cart_rule);
+                    CartRule::autoAddToCart($this->context);
                 }
-
-                Tools::redirect('index.php?controller=order&'.(isset($this->id_product) ? 'ipa='.$this->id_product : ''));
             }
-        } elseif (!$this->isTokenValid()) {
+        } elseif (!$this->isTokenValid() && Tools::getValue('action') !== 'show' && !Tools::getValue('ajax')) {
             Tools::redirect('index.php');
         }
     }
@@ -125,21 +227,21 @@ class CartControllerCore extends FrontController
             }
 
             if ($total_quantity < $minimal_quantity) {
-                $this->ajaxDie(Tools::jsonEncode(array(
-                        'hasError' => true,
-                        'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity)),
-                )));
+                $this->errors[] = sprintf($this->l('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity);
+                return false;
             }
         }
 
         if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery)) {
-            Hook::exec('actionAfterDeleteProductInCart', array(
+            $data = array(
                 'id_cart' => (int)$this->context->cart->id,
                 'id_product' => (int)$this->id_product,
                 'id_product_attribute' => (int)$this->id_product_attribute,
                 'customization_id' => (int)$this->customization_id,
                 'id_address_delivery' => (int)$this->id_address_delivery
-            ));
+            );
+
+            Hook::exec('actionDeleteProductInCartAfter', $data);
 
             if (!Cart::getNbProducts((int)$this->context->cart->id)) {
                 $this->context->cart->setDeliveryOption(null);
@@ -148,67 +250,9 @@ class CartControllerCore extends FrontController
                 $this->context->cart->update();
             }
         }
+
         $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
-        if (count($removed) && (int)Tools::getValue('allow_refresh')) {
-            $this->ajax_refresh = true;
-        }
-    }
-
-    protected function processChangeProductAddressDelivery()
-    {
-        if (!Configuration::get('PS_ALLOW_MULTISHIPPING')) {
-            return;
-        }
-
-        $old_id_address_delivery = (int)Tools::getValue('old_id_address_delivery');
-        $new_id_address_delivery = (int)Tools::getValue('new_id_address_delivery');
-
-        if (!count(Carrier::getAvailableCarrierList(new Product($this->id_product), null, $new_id_address_delivery))) {
-            $this->ajaxDie(Tools::jsonEncode(array(
-                'hasErrors' => true,
-                'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
-            )));
-        }
-
-        $this->context->cart->setProductAddressDelivery(
-            $this->id_product,
-            $this->id_product_attribute,
-            $old_id_address_delivery,
-            $new_id_address_delivery);
-    }
-
-    protected function processAllowSeperatedPackage()
-    {
-        if (!Configuration::get('PS_SHIP_WHEN_AVAILABLE')) {
-            return;
-        }
-
-        if (Tools::getValue('value') === false) {
-            $this->ajaxDie('{"error":true, "error_message": "No value setted"}');
-        }
-
-        $this->context->cart->allow_seperated_package = (bool)Tools::getValue('value');
-        $this->context->cart->update();
-        $this->ajaxDie('{"error":false}');
-    }
-
-    protected function processDuplicateProduct()
-    {
-        if (!Configuration::get('PS_ALLOW_MULTISHIPPING')) {
-            return;
-        }
-
-        if (!$this->context->cart->duplicateProduct(
-                $this->id_product,
-                $this->id_product_attribute,
-                $this->id_address_delivery,
-                (int)Tools::getValue('new_id_address_delivery')
-            )) {
-            //$error_message = $this->l('Error durring product duplication');
-            // For the moment no translations
-            $error_message = 'Error durring product duplication';
-        }
     }
 
     /**
@@ -218,15 +262,19 @@ class CartControllerCore extends FrontController
     {
         $mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
 
+        if (Tools::getIsset('group')) {
+            $this->id_product_attribute = (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group'));
+        }
+
         if ($this->qty == 0) {
-            $this->errors[] = Tools::displayError('Null quantity.', !Tools::getValue('ajax'));
+            $this->errors[] = $this->l('Null quantity.');
         } elseif (!$this->id_product) {
-            $this->errors[] = Tools::displayError('Product not found', !Tools::getValue('ajax'));
+            $this->errors[] = $this->l('Product not found');
         }
 
         $product = new Product($this->id_product, true, $this->context->language->id);
         if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer)) {
-            $this->errors[] = Tools::displayError('This product is no longer available.', !Tools::getValue('ajax'));
+            $this->errors[] = $this->l('This product is no longer available.');
             return;
         }
 
@@ -253,7 +301,7 @@ class CartControllerCore extends FrontController
         // Check product quantity availability
         if ($this->id_product_attribute) {
             if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
-                $this->errors[] = Tools::displayError('There isn\'t enough product in stock.', !Tools::getValue('ajax'));
+                $this->errors[] = $this->l('There isn\'t enough product in stock.');
             }
         } elseif ($product->hasAttributes()) {
             $minimumQuantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
@@ -262,14 +310,14 @@ class CartControllerCore extends FrontController
             if (!$this->id_product_attribute) {
                 Tools::redirectAdmin($this->context->link->getProductLink($product));
             } elseif (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
-                $this->errors[] = Tools::displayError('There isn\'t enough product in stock.', !Tools::getValue('ajax'));
+                $this->errors[] = $this->l('There isn\'t enough product in stock.');
             }
         } elseif (!$product->checkQty($qty_to_check)) {
-            $this->errors[] = Tools::displayError('There isn\'t enough product in stock.', !Tools::getValue('ajax'));
+            $this->errors[] = $this->l('There isn\'t enough product in stock.');
         }
 
         // If no errors, process product addition
-        if (!$this->errors && $mode == 'add') {
+        if (!$this->errors) {
             // Add cart if no cart found
             if (!$this->context->cart->id) {
                 if (Context::getContext()->cookie->id_guest) {
@@ -284,7 +332,7 @@ class CartControllerCore extends FrontController
 
             // Check customizable fields
             if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id) {
-                $this->errors[] = Tools::displayError('Please fill in all of the required fields, and then save your customizations.', !Tools::getValue('ajax'));
+                $this->errors[] = $this->l('Please fill in all of the required fields, and then save your customizations.');
             }
 
             if (!$this->errors) {
@@ -294,127 +342,27 @@ class CartControllerCore extends FrontController
                 if ($update_quantity < 0) {
                     // If product has attribute, minimal quantity is set with minimal quantity of attribute
                     $minimal_quantity = ($this->id_product_attribute) ? Attribute::getAttributeMinimalQty($this->id_product_attribute) : $product->minimal_quantity;
-                    $this->errors[] = sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity);
+                    $this->errors[] = sprintf($this->l('You must add %d minimum quantity'), $minimal_quantity);
                 } elseif (!$update_quantity) {
-                    $this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.', !Tools::getValue('ajax'));
-                } elseif ((int)Tools::getValue('allow_refresh')) {
-                    // If the cart rules has changed, we need to refresh the whole cart
-                    $cart_rules2 = $this->context->cart->getCartRules();
-                    if (count($cart_rules2) != count($cart_rules)) {
-                        $this->ajax_refresh = true;
-                    } elseif (count($cart_rules2)) {
-                        $rule_list = array();
-                        foreach ($cart_rules2 as $rule) {
-                            $rule_list[] = $rule['id_cart_rule'];
-                        }
-                        foreach ($cart_rules as $rule) {
-                            if (!in_array($rule['id_cart_rule'], $rule_list)) {
-                                $this->ajax_refresh = true;
-                                break;
-                            }
-                        }
-                    } else {
-                        $available_cart_rules2 = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart, false, true);
-                        if (count($available_cart_rules2) != count($available_cart_rules)) {
-                            $this->ajax_refresh = true;
-                        } elseif (count($available_cart_rules2)) {
-                            $rule_list = array();
-                            foreach ($available_cart_rules2 as $rule) {
-                                $rule_list[] = $rule['id_cart_rule'];
-                            }
-                            foreach ($cart_rules2 as $rule) {
-                                if (!in_array($rule['id_cart_rule'], $rule_list)) {
-                                    $this->ajax_refresh = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    $this->errors[] = $this->l('You already have the maximum quantity available for this product.');
                 }
             }
         }
 
         $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
-        if (count($removed) && (int)Tools::getValue('allow_refresh')) {
-            $this->ajax_refresh = true;
-        }
     }
 
-    /**
-     * Remove discounts on cart
-     *
-     * @deprecated 1.5.3.0
-     */
-    protected function processRemoveDiscounts()
+    public function getTemplateVarPage()
     {
-        Tools::displayAsDeprecated();
-        $this->errors = array_merge($this->errors, CartRule::autoRemoveFromCart());
-    }
+        $page = parent::getTemplateVarPage();
+        $presenter = new CartPresenter();
+        $presented_cart = $presenter->present($this->context->cart);
 
-    /**
-     * @see FrontController::initContent()
-     */
-    public function initContent()
-    {
-        $this->setTemplate(_PS_THEME_DIR_.'errors.tpl');
-        if (!$this->ajax) {
-            parent::initContent();
-        }
-    }
-
-    /**
-     * Display ajax content (this function is called instead of classic display, in ajax mode)
-     */
-    public function displayAjax()
-    {
-        if ($this->errors) {
-            $this->ajaxDie(Tools::jsonEncode(array('hasError' => true, 'errors' => $this->errors)));
-        }
-        if ($this->ajax_refresh) {
-            $this->ajaxDie(Tools::jsonEncode(array('refresh' => true)));
+        if (count($presented_cart['products']) == 0) {
+            $page['body_classes']['cart-empty'] = true;
         }
 
-        // write cookie if can't on destruct
-        $this->context->cookie->write();
-
-        if (Tools::getIsset('summary')) {
-            $result = array();
-            if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1) {
-                $groups = (Validate::isLoadedObject($this->context->customer)) ? $this->context->customer->getGroups() : array(1);
-                if ($this->context->cart->id_address_delivery) {
-                    $deliveryAddress = new Address($this->context->cart->id_address_delivery);
-                }
-                $id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? (int)$deliveryAddress->id_country : (int)Tools::getCountry();
-
-                Cart::addExtraCarriers($result);
-            }
-            $result['summary'] = $this->context->cart->getSummaryDetails(null, true);
-            $result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);
-            $result['HOOK_SHOPPING_CART'] = Hook::exec('displayShoppingCartFooter', $result['summary']);
-            $result['HOOK_SHOPPING_CART_EXTRA'] = Hook::exec('displayShoppingCart', $result['summary']);
-
-            foreach ($result['summary']['products'] as $key => &$product) {
-                $product['quantity_without_customization'] = $product['quantity'];
-                if ($result['customizedDatas'] && isset($result['customizedDatas'][(int)$product['id_product']][(int)$product['id_product_attribute']])) {
-                    foreach ($result['customizedDatas'][(int)$product['id_product']][(int)$product['id_product_attribute']] as $addresses) {
-                        foreach ($addresses as $customization) {
-                            $product['quantity_without_customization'] -= (int)$customization['quantity'];
-                        }
-                    }
-                }
-            }
-            if ($result['customizedDatas']) {
-                Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
-            }
-
-            $json = '';
-            Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
-            $this->ajaxDie(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
-        }
-        // @todo create a hook
-        elseif (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php')) {
-            require_once(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php');
-        }
+        return $page;
     }
 }
