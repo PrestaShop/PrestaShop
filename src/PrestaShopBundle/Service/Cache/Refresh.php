@@ -41,16 +41,16 @@ class Refresh
     /**
      * Constructor.
      *
-     * Construct SF2 env
+     * Construct the symfony environment.
      *
-     * @param string $env prod|dev
+     * @param string $env Environment to set.
      */
     public function __construct($env = 'prod')
     {
         umask(0000);
         set_time_limit(0);
         $this->env = _PS_MODE_DEV_ ? 'dev' : 'prod';
-        $this->commands = [];
+        $this->commands = array();
 
         require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
         $kernel = new \AppKernel($this->env, false);
@@ -59,9 +59,9 @@ class Refresh
     }
 
     /**
-     * Add cache clear.
+     * Add cache:clear to the execution.
      *
-     * @param string $env Environment to clear
+     * @param string $env Environment to clear.
      */
     public function addCacheClear($env = 'dev')
     {
@@ -74,11 +74,16 @@ class Refresh
     }
 
     /**
-     * Add doctrine schema update.
+     * Add doctrine:schema:update to the execution.
      */
     public function addDoctrineSchemaUpdate()
     {
-        $this->commands[] = ['command' => 'doctrine:schema:update', '--env' => $this->env, '--no-debug' => false, '--force' => true];
+        $this->commands[] = array(
+            'command' => 'doctrine:schema:update',
+            '--env' => $this->env,
+            '--no-debug' => true,
+            '--force' => true,
+        );
     }
 
     /**
