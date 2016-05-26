@@ -45,11 +45,17 @@ class Refresh
      *
      * @param string $env Environment to set.
      */
-    public function __construct($env = 'prod')
+    public function __construct($env = null)
     {
         umask(0000);
         set_time_limit(0);
-        $this->env = _PS_MODE_DEV_ ? 'dev' : 'prod';
+
+        if (null === $env) {
+            $this->env = _PS_MODE_DEV_ ? 'dev' : 'prod';
+        } else {
+            $this->env = $env;
+        }
+
         $this->commands = array();
 
         require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
@@ -63,12 +69,10 @@ class Refresh
      *
      * @param string $env Environment to clear.
      */
-    public function addCacheClear($env = 'dev')
+    public function addCacheClear()
     {
         $this->commands[] = array(
             'command' => 'cache:clear',
-            '--env' => $env,
-            '--no-debug' => true,
             '--no-warmup' => true,
         );
     }
@@ -80,8 +84,6 @@ class Refresh
     {
         $this->commands[] = array(
             'command' => 'doctrine:schema:update',
-            '--env' => $this->env,
-            '--no-debug' => true,
             '--force' => true,
         );
     }

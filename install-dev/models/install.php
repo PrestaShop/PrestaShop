@@ -145,9 +145,18 @@ class InstallModelInstall extends InstallAbstractModel
         }
 
         // Clear the cache
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-        $sf2Refresh->addCacheClear('dev');
-        $sf2Refresh->addCacheClear('prod');
+
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh('prod');
+        $sf2Refresh->addCacheClear();
+        $output = $sf2Refresh->execute();
+
+        if (0 !== $output['cache:clear']['exitCode']) {
+            $this->setError(explode("\n", $output['cache:clear']['output']));
+            return false;
+        }
+
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh('dev');
+        $sf2Refresh->addCacheClear();
         $output = $sf2Refresh->execute();
 
         if (0 !== $output['cache:clear']['exitCode']) {
