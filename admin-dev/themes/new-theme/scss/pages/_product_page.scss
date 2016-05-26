@@ -375,7 +375,7 @@
   #add-categories {
     margin-top: rem(40px);
   }
-  #form_step1_categories {
+  #categories-tree {
     clear: both;
   }
   .ui-widget {
@@ -558,18 +558,43 @@
   display: none;
 }
 .ui-autocomplete {
-  max-width: rem(290px);
   @media screen and (max-width: 1450px) {
     max-width: rem(197px);
   }
-  li:hover {
-    background: $primary-hover;
-    cursor: pointer;
-    a {
-      color: $white;
-      text-decoration: none;
+
+  max-width: rem(290px);
+  position: absolute;
+  z-index: 1000;
+  cursor: default;
+  padding: 0;
+  margin-top: 2px;
+  list-style: none;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+
+  > li {
+    padding: 3px 20px;
+
+    &:hover {
+      background: $primary-hover;
+      cursor: pointer;
+      a {
+        color: $white;
+        text-decoration: none;
+      }
+    }
+
+    &.ui-state-focus {
+      background-color: #DDD;
     }
   }
+
   a {
     color: $gray-medium;
   }
