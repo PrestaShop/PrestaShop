@@ -65,7 +65,12 @@ class Refresh
      */
     public function addCacheClear($env = 'dev')
     {
-        $this->commands[] = ['command' => 'cache:clear', '--env' => $env, '--no-debug' => true];
+        $this->commands[] = array(
+            'command' => 'cache:clear',
+            '--env' => $env,
+            '--no-debug' => true,
+            '--no-warmup' => true,
+        );
     }
 
     /**
