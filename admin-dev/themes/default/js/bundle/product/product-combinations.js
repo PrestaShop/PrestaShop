@@ -50,7 +50,7 @@ var combinations = (function() {
       }
       var priceImpactInput = tableRow.find('.attribute_priceTE');
       var impactOnPrice = priceImpactInput.val() - priceImpactInput.attr('value');
-      var actualFinalPriceInput = tableRow.find('.attribute-finalprice');
+      var actualFinalPriceInput = tableRow.find('.attribute-finalprice span');
       var actualFinalPrice = actualFinalPriceInput.data('price');
 
       var finalPrice = actualFinalPrice + impactOnPrice;
