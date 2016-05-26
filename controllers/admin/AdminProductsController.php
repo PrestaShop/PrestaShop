@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @property Product $object
@@ -275,6 +276,24 @@ class AdminProductsControllerCore extends AdminController
                 'position' => 'position'
             );
         }
+    }
+
+    public function init()
+    {
+        global $kernel;
+
+        if (Tools::getIsset('id_product')) {
+            if (Tools::getIsset('addproduct') || Tools::getIsset('updateproduct')) {
+                if ($kernel instanceof HttpKernelInterface) {
+                    $sfRouter = $kernel->getContainer()->get('router');
+                    Tools::redirectAdmin($sfRouter->generate('admin_product_form',
+                        array('id' => Tools::getValue('id_product'))
+                    ));
+                }
+            }
+        }
+
+        return parent::init();
     }
 
     public static function getQuantities($echo, $tr)
@@ -2597,7 +2616,7 @@ class AdminProductsControllerCore extends AdminController
         $helper->refresh = (bool)(ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time);
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
         if ($moduleManager->isInstalled('statsbestproducts')) {
             $helper->href = Context::getContext()->link->getAdminLink('AdminStats').'&module=statsbestproducts&datepickerFrom='.date('Y-m-d', strtotime('-30 days')).'&datepickerTo='.date('Y-m-d');
         }
