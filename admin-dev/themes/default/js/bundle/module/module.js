@@ -653,10 +653,9 @@ var AdminModuleController = function () {
               // State that we start module upload
               _this.isUploadStarted = true;
               var _that = _this;
-             $(_this.moduleImportStartSelector).fadeOut(function(){
-                 $('.dropzone').css('border', 'none');
-                 $(_that.moduleImportProcessingSelector).fadeIn();
-             });
+             $(_this.moduleImportStartSelector).hide(0);
+             $('.dropzone').css('border', 'none');
+             $(_that.moduleImportProcessingSelector).fadeIn();
           },
           /* processing(file, response) */
           processing: function () {
@@ -664,7 +663,7 @@ var AdminModuleController = function () {
           },
           /* error(file, errorMessage) */
           error: function (file, message) {
-            $(_this.moduleImportProcessingSelector).fadeOut(function() {
+            $(_this.moduleImportProcessingSelector).finish().fadeOut(function() {
               $(_this.moduleImportFailureMsgDetailsSelector).html(message);
               $(_this.moduleImportFailureSelector).fadeIn();
             });
@@ -674,10 +673,10 @@ var AdminModuleController = function () {
               if (file.status !== 'error') {
                   var responseObject = jQuery.parseJSON(file.xhr.response);
 
-                 $(_this.moduleImportProcessingSelector).fadeOut(function() {
+                 $(_this.moduleImportProcessingSelector).finish().fadeOut(function() {
                       if (responseObject.status === true) {
                           if (responseObject.is_configurable === true) {
-                              var configureLink = this.baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
+                              var configureLink = _this.baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name;
                               $(_this.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
                               $(_this.moduleImportSuccessConfigureBtnSelector).show();
                           }
