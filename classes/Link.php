@@ -509,12 +509,12 @@ class LinkCore
                 if (!$redirectLegacy) {
                     if (array_key_exists('id_product', $sfRouteParams)) {
                         if (array_key_exists('deleteproduct', $sfRouteParams)) {
-                            return $sfRouter->generate('admin_product_unit_action',
+                            return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$sfRouter->generate('admin_product_unit_action',
                                 array('action' => 'delete', 'id' => $sfRouteParams['id_product'])
                             );
                         }
                         //default: if (array_key_exists('updateproduct', $sfRouteParams))
-                        return $sfRouter->generate('admin_product_form',
+                        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$sfRouter->generate('admin_product_form',
                             array('id' => $sfRouteParams['id_product'])
                         );
                     }
@@ -526,9 +526,9 @@ class LinkCore
                         if (array_key_exists('filter_column_active', $sfRouteParams)) {
                             $routeParams['active'] = $sfRouteParams['filter_column_active'];
                         }
-                        return $sfRouter->generate('admin_product_catalog_filters', $routeParams);
+                        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$sfRouter->generate('admin_product_catalog_filters', $routeParams);
                     }
-                    return $sfRouter->generate('admin_product_catalog');
+                    return $this->getBaseLink().basename(_PS_ADMIN_DIR_).$sfRouter->generate('admin_product_catalog');
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }
