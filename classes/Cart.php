@@ -2672,21 +2672,22 @@ class CartCore extends ObjectModel
                 $delivery_option = $this->getDeliveryOption($default_country, false, false);
             }
 
-            $_total_shipping = 0;
+            $_total_shipping = array(
+                'with_tax' => 0,
+                'without_tax' => 0,
+            );
             $delivery_option_list = $this->getDeliveryOptionList($default_country);
             foreach ($delivery_option as $id_address => $key) {
                 if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
                     continue;
                 }
-                if ($use_tax) {
-                    $_total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
-                } else {
-                    $_total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
-                }
+
+                $_total_shipping['with_tax'] += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
+                $_total_shipping['without_tax'] += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
             }
         }
 
-        return $_total_shipping;
+        return ($use_tax) ? $_total_shipping['with_tax'] : $_total_shipping['without_tax'];
     }
 
     /**
