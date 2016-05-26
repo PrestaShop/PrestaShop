@@ -211,7 +211,7 @@
 				{/if}
 
 				{* Search *}
-				{include file="search_form.tpl" id="header_search" show_clear_btn=1}
+				{include file="search_form.tpl" show_clear_btn=1}
 
 				{* Employee *}
 				<ul id="header_employee_box">
