@@ -173,4 +173,17 @@ class LegacyContext
     {
         return \LanguageCore::getIsoById($this->getContext()->employee->id_lang);
     }
+
+    /**
+     * Returns Currency set for the current employee
+     */
+    public function getEmployeeCurrency()
+    {
+        static $employeeCurrency;
+
+        if(null === $employeeCurrency) {
+            $employeeCurrency = $this->getContext()->currency->sign;
+        }
+        return $employeeCurrency;
+    }
 }

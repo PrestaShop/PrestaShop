@@ -60,7 +60,7 @@ class ProductCombinationBulk extends CommonAbstractType
             'attr' => ['data-display-price-precision' => $this->priceDisplayPrecision],
             'currency' => $this->isoCode,
         ))
-        ->add('impact_on_weight', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
+        ->add('impact_on_weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
             'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts'),
         ))

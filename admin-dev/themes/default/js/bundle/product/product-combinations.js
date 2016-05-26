@@ -41,7 +41,7 @@ var combinations = (function() {
   }
 
   /**
-   * Update final price, regarding the impact on price
+   * Update final price, regarding the impact on price in combinations table
    * @param {object} elem - The tableau row parent
    */
   function updateFinalPrice(tableRow) {
@@ -50,7 +50,7 @@ var combinations = (function() {
       }
       var priceImpactInput = tableRow.find('.attribute_priceTE');
       var impactOnPrice = priceImpactInput.val() - priceImpactInput.attr('value');
-      var actualFinalPriceInput = tableRow.find('.attribute-finalprice');
+      var actualFinalPriceInput = tableRow.find('.attribute-finalprice span');
       var actualFinalPrice = actualFinalPriceInput.data('price');
 
       var finalPrice = actualFinalPrice + impactOnPrice;
@@ -77,6 +77,16 @@ var combinations = (function() {
       $(document).on('keyup', '.attribute-quantity input', function() {
         var id_attribute = $(this).closest('.combination').attr('data');
         $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').val($(this).val());
+      });
+
+      /** on change shortcut impact on price, update form field impact on price */
+      $(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_price"]', function() {
+        var id_attribute = $(this).closest('.combination-form').attr('data');
+        var input = $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price input');
+        input.val($(this).val());
+
+        /* force the update of final price */
+        input.change();
       });
 
       /** on change default attribute, update which combination is the new default */

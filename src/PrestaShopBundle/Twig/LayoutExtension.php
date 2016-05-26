@@ -67,6 +67,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
     public function getGlobals()
     {
         return array(
+            "default_currency" => $this->context->getEmployeeCurrency(),
             "root_url" => $this->context->getRootUrl(),
             "js_translatable" => [],
         );

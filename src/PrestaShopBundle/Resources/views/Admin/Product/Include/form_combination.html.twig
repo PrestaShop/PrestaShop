@@ -4,11 +4,13 @@
     <td>{{ form.vars.value.name }}</td>
     <td class="attribute-price">
         <div class="input-group">
-            <span class="input-group-addon">€ </span>
+            <span class="input-group-addon">{{ default_currency }}</span>
             <input type="number" class="attribute_priceTE form-control text-xs-right" value="{{ form.vars.value.attribute_price }}">
         </div>
     </td>
-    <td class="attribute-finalprice text-xs-right" data-price="{{ form.vars.value.final_price }}">{{ form.vars.value.final_price }}</td>
+    <td class="attribute-finalprice text-xs-right">
+      <span data-price="{{ form.vars.value.final_price }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}
+    </td>
     <td class="attribute-quantity">
         <div>
             <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control text-xs-right">
@@ -95,7 +97,7 @@
                         </fieldset>
                     </div>
                     <div class="col-md-3">
-                      <small class="combination-label vcenter">{{ "Final retail price (tax excl.) will be €00.00"|trans({}, 'AdminProducts') }}</small>
+                      <small class="combination-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'AdminProducts') }} <span class="final-price" data-price="{{ form.vars.value.final_price }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}</small>
                     </div>
                 </div>
                 <div class="row">

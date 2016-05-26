@@ -1577,6 +1577,7 @@ var priceCalculation = (function() {
       /** combinations : update TTC price field on change */
       $('.combination-form .attribute_priceTE').keyup(function() {
         priceCalculation.impactTaxInclude($(this));
+        priceCalculation.impactFinalPrice($(this));
       });
       /** combinations : update HT price field on change */
       $('.combination-form .attribute_priceTI').keyup(function() {
@@ -1625,6 +1626,14 @@ var priceCalculation = (function() {
       var newPrice = ps_round(addTaxes(price, rates, computation_method));
 
       targetInput.val(newPrice);
+    },
+    'impactFinalPrice': function(obj) {
+      var price = parseFloat(obj.val().replace(/,/g, '.'));
+      var finalPrice = obj.closest('div[id^="combination_form_"]').find('.final-price');
+      var defaultFinalPrice = finalPrice.attr('data-price');
+      var priceToBeChanged = new Number(price) + new Number(defaultFinalPrice);
+
+      finalPrice.html(priceToBeChanged.toFixed(2));
     },
     'impactTaxExclude': function(obj) {
       var price = parseFloat(obj.val().replace(/,/g, '.'));
