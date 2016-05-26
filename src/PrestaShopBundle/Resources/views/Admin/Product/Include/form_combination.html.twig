@@ -97,7 +97,7 @@
                         </fieldset>
                     </div>
                     <div class="col-md-3">
-                      <small class="combination-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'AdminProducts') }} <span class="final-price">{{ form.vars.value.final_price }}</span> {{ default_currency }}</small>
+                      <small class="combination-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'AdminProducts') }} <span class="final-price" data-price="{{ form.vars.value.final_price }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}</small>
                     </div>
                 </div>
                 <div class="row">
