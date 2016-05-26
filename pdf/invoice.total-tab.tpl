@@ -48,7 +48,7 @@
 	{if !$order->isVirtual()}
 	<tr>
 		<td class="grey" width="70%">
-			{l s='Shipping Cost' pdf='true'}
+			{l s='Shipping Costs' pdf='true'}
 		</td>
 		<td class="white" width="30%">
 			{if $footer.shipping_tax_excl > 0}
@@ -63,7 +63,7 @@
 	{if $footer.wrapping_tax_excl > 0}
 		<tr>
 			<td class="grey">
-				{l s='Wrapping Cost' pdf='true'}
+				{l s='Wrapping Costs' pdf='true'}
 			</td>
 			<td class="white">{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_excl}</td>
 		</tr>
