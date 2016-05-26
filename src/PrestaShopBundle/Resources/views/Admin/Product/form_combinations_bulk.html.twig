@@ -12,18 +12,23 @@
   </div>
 
   <div class="col-md-2">
-    <label class="form-control-label">{{ form.impact_on_weight.vars.label }}</label>
-    {{ form_errors(form.impact_on_weight) }}
-    {{ form_widget(form.impact_on_weight) }}
+    <fieldset>
+      <label class="form-control-label">{{ form.impact_on_weight.vars.label }}</label>
+      {{ form_errors(form.impact_on_weight) }}
+      <div class="input-group">
+        <span class="input-group-addon">{{ 'PS_WEIGHT_UNIT'|configuration }}</span>
+        {{ form_widget(form.impact_on_weight) }}
+      </div>
+    </fieldset>
   </div>
 
-  <div class="col-md-2">
+  <div class="col-md-3">
     <label class="form-control-label">{{ form.impact_on_price_te.vars.label }}</label>
     {{ form_errors(form.impact_on_price_te) }}
     {{ form_widget(form.impact_on_price_te) }}
   </div>
 
-  <div class="col-md-2">
+  <div class="col-md-3">
     <label class="form-control-label">{{ form.impact_on_price_ti.vars.label }}</label>
     {{ form_errors(form.impact_on_price_ti) }}
     {{ form_widget(form.impact_on_price_ti) }}
