@@ -176,55 +176,76 @@ class ModuleController extends FrameworkBundleAdminController
         $moduleManager = $this->get('prestashop.module.manager');
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+        $translator = $this->get('prestashop.adapter.translator');
 
-        $ret = array();
+        $response = array();
         if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
             try {
                 if ($action == "uninstall") {
-                    $ret[$module]['status'] = $moduleManager->{$action}($module, $forceDeletion);
+                    $response[$module]['status'] = $moduleManager->{$action}($module, $forceDeletion);
                 } else {
-                    $ret[$module]['status'] = $moduleManager->{$action}($module);
+                    $response[$module]['status'] = $moduleManager->{$action}($module);
                 }
 
-                if ($ret[$module]['status'] === null) {
-                    $ret[$module]['status'] = false;
-                    $ret[$module]['msg'] = $module .' did not return a valid response on '.$action .' action';
-                } elseif ($ret[$module]['status'] === false) {
+                if ($response[$module]['status'] === null) {
+                    $response[$module]['status'] = false;
+                    $response[$module]['msg'] = $translator->trans(
+                        "%s.' did not return a valid response on %s action",
+                        array($module, $action),
+                        'AdminModules'
+                        );
+                } elseif ($response[$module]['status'] === false) {
                     $error = $moduleManager->getError($module);
-                    $ret[$module]['msg'] = sprintf('Cannot %s module %s. %s', str_replace('_', ' ', $action), $module, $error);
+                    $response[$module]['msg'] = $translator->trans(
+                        'Cannot %s module %s. %s',
+                        array(str_replace('_', ' ', $action), $module, $error),
+                        'AdminModules'
+                    );
                 } else {
-                    $ret[$module]['msg'] = sprintf('%s action on module %s succeeded.', ucfirst(str_replace('_', ' ', $action)), $module);
+                    $response[$module]['msg'] = $translator->trans(
+                        '%s action on module %s succeeded.',
+                        array(ucfirst(str_replace('_', ' ', $action))),
+                        'AdminModules'
+                    );
                 }
             } catch (Exception $e) {
-                $ret[$module]['status'] = false;
-                $ret[$module]['msg'] = sprintf('Exception thrown by addon %s on %s. %s', $module, $action, $e->getMessage());
+                $response[$module]['status'] = false;
+                $response[$module]['msg'] = $translator->trans(
+                    'Exception thrown by addon %s on %s. %s',
+                    array($module, $action, $e->getMessage()),
+                    'AdminModules'
+                );
 
                 $logger = $this->get('logger');
-                $logger->error($ret[$module]['msg']);
+                $logger->error($response[$module]['msg']);
             }
         } else {
-            $ret[$module]['status'] = false;
-            $ret[$module]['msg'] = 'Invalid action';
+            $response[$module]['status'] = false;
+            $response[$module]['msg'] = $translator->trans(
+                'Invalid action',
+                array(),
+                'AdminModules'
+            );
         }
 
         if ($request->isXmlHttpRequest()) {
-            if ($ret[$module]['status'] === true && $action != 'uninstall') {
+            if ($response[$module]['status'] === true && $action != 'uninstall') {
                 $moduleInstance = $moduleRepository->getModule($module);
                 $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls(array($moduleInstance));
-                $ret[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig', array(
+                $response[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig', array(
                         'module' => $this->getPresentedProducts($moduleInstanceWithUrl)[0],
                     ))->getContent();
             }
 
-            return new JsonResponse($ret, 200);
+            return new JsonResponse($response, 200);
         }
 
         // We need a better error handler here. Meanwhile, I throw an exception
-        if (! $ret[$module]['status']) {
-            $this->addFlash('error', $ret[$module]['msg']);
+        if (!$response[$module]['status']) {
+            $this->addFlash('error', $response[$module]['msg']);
         } else {
-            $this->addFlash('success', $ret[$module]['msg']);
+            $this->addFlash('success', $response[$module]['msg']);
         }
 
         if ($request->server->get('HTTP_REFERER')) {
