@@ -36,35 +36,37 @@ ServiceLocator::setServiceContainerInstance($container);
 if (!file_exists(_PS_CACHE_DIR_)) {
     @mkdir(_PS_CACHE_DIR_);
     $warmer = new CacheWarmerAggregate([
-        new PrestaShopBundle\CacheWarmer\LocalizationCacheWarmer(_PS_VERSION_, 'en') //@replace hardcore Lang
+        new PrestaShopBundle\CacheWarmer\LocalizationCacheWarmer(_PS_VERSION_, 'en') //@replace hard-coded Lang
     ]);
     $warmer->warmUp(_PS_CACHE_DIR_);
 }
 
-if (!file_exists(__DIR__. '/../app/config/parameters.yml')) {
-    copy(__DIR__. '/../app/config/parameters.yml.dist', __DIR__. '/../app/config/parameters.yml');
-}
+$fmtParamYml = (int)@filemtime(__DIR__. '/../app/config/parameters.yml');
 
-if (_PS_MODE_DEV_ || !file_exists(_PS_CACHE_DIR_. 'appParameters.php')) {
-    $config = Yaml::parse(file_get_contents(__DIR__. '/../app/config/parameters.yml'));
-    file_put_contents(_PS_CACHE_DIR_ .'appParameters.php', '<?php return ' . var_export($config, true). ';');
-}
+if ($fmtParamYml) {
+    $fmtAppParamPhp = (int)@filemtime(_PS_CACHE_DIR_. 'appParameters.php');
+    // If the parameters.ypl file has been updated, let's update its cache
+    if (!$fmtAppParamPhp || $fmtAppParamPhp < $fmtParamYml) {
+        $config = Yaml::parse(file_get_contents(__DIR__. '/../app/config/parameters.yml'));
+        file_put_contents(_PS_CACHE_DIR_ .'appParameters.php', '<?php return ' . var_export($config, true). ';');
+    }
 
-$config = require_once _PS_CACHE_DIR_ .'appParameters.php';
+    $config = require_once _PS_CACHE_DIR_ .'appParameters.php';
 
-define('_DB_SERVER_', $config['parameters']['database_host']);
-define('_DB_NAME_', $config['parameters']['database_name']);
-define('_DB_USER_', $config['parameters']['database_user']);
-define('_DB_PASSWD_', $config['parameters']['database_password']);
-define('_DB_PREFIX_',  $config['parameters']['database_prefix']);
-define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
-define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
-define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
-define('_COOKIE_KEY_', $config['parameters']['cookie_key']);
-define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
-define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);
+    define('_DB_SERVER_', $config['parameters']['database_host']);
+    define('_DB_NAME_', $config['parameters']['database_name']);
+    define('_DB_USER_', $config['parameters']['database_user']);
+    define('_DB_PASSWD_', $config['parameters']['database_password']);
+    define('_DB_PREFIX_',  $config['parameters']['database_prefix']);
+    define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
+    define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
+    define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
+    define('_COOKIE_KEY_', $config['parameters']['cookie_key']);
+    define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
+    define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);
 
-if (isset($config['parameters']['_rijndael_key']) && isset($config['parameters']['_rijndael_iv'])) {
-    define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
-    define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
+    if (isset($config['parameters']['_rijndael_key']) && isset($config['parameters']['_rijndael_iv'])) {
+        define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
+        define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
+    }
 }
