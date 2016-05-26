@@ -525,6 +525,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public function displayAjaxGetKpi()
     {
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $tooltip = null;
         switch (Tools::getValue('kpi')) {
             case 'conversion_rate':
                 $visitors = AdminStatsController::getVisits(true, date('Y-m-d', strtotime('-31 day')), date('Y-m-d', strtotime('-1 day')), false /*'day'*/);
