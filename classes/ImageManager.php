@@ -130,6 +130,7 @@ class ImageManagerCore
      * @param int    $dst_height Desired height (optional)
      * @param string $file_type
      * @param bool   $force_type
+     * @param bool   $no_padding Fit to max width or height and keep ratio (default false)
      * @param int    $error
      * @param int    $tgt_width
      * @param int    $tgt_height
@@ -139,7 +140,7 @@ class ImageManagerCore
      * @return bool Operation result
      */
     public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg',
-                                $force_type = false, &$error = 0, &$tgt_width = null, &$tgt_height = null, $quality = 5,
+                                $force_type = false, $no_padding = false, &$error = 0, &$tgt_width = null, &$tgt_height = null, $quality = 5,
                                 &$src_width = null, &$src_height = null)
     {
         if (PHP_VERSION_ID < 50300) {
@@ -229,6 +230,13 @@ class ImageManagerCore
 
         if (!ImageManager::checkImageMemoryLimit($src_file)) {
             return !($error = self::ERROR_MEMORY_LIMIT);
+        }
+
+        //If no padding one of the two destination size need to be changed (one is already good but we redo it for both to be generic).
+        if ($no_padding)
+        {
+            $dst_width  = $next_width;
+            $dst_height = $next_height;
         }
 
         $tgt_width  = $dst_width;
