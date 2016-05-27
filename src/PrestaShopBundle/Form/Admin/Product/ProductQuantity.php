@@ -69,7 +69,7 @@ class ProductQuantity extends CommonAbstractType
             'attr' =>  [
                 'class' => 'tokenfield',
                 'data-minLength' => 1,
-                'placeholder' => $this->translator->trans('Enter the desired combinations. E.g.: « Size: all », « Color: red ».', [], 'AdminProducts'),
+                'placeholder' => $this->translator->trans('Combine several attributes, e.g.: "Size: all", "Color: red".', [], 'AdminProducts'),
                 'data-prefetch' => $this->router->generate('admin_attribute_get_all'),
                 'data-action' => $this->router->generate('admin_attribute_generator'),
             ],
@@ -119,18 +119,18 @@ class ProductQuantity extends CommonAbstractType
                 'options' => [],
                 'locales' => $this->locales,
                 'hideTabs' => true,
-                'label' =>  $this->translator->trans('Displayed text when in-stock', [], 'AdminProducts')
+                'label' =>  $this->translator->trans('Label when in stock', [], 'AdminProducts')
             ))
             ->add('available_later', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
                 'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
                 'options' => [],
                 'locales' => $this->locales,
                 'hideTabs' => true,
-                'label' =>  $this->translator->trans('Displayed text when out of stock', [], 'AdminProducts')
+                'label' =>  $this->translator->trans('Label when out of stock', [], 'AdminProducts')
             ))
             ->add('available_date', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
                 'required' => false,
-                'label' => $this->translator->trans('Availability date:', [], 'AdminProducts'),
+                'label' => $this->translator->trans('Availability date', [], 'AdminProducts'),
                 'attr' => ['placeholder' => 'YYYY-MM-DD']
             ))
             ->add('virtual_product', 'PrestaShopBundle\Form\Admin\Product\ProductVirtual', array(
@@ -142,16 +142,16 @@ class ProductQuantity extends CommonAbstractType
             $form = $event->getForm();
 
             //Manage out_of_stock field with contextual values/label
-            $defaultChoiceLabel = $this->translator->trans('Use default', [], 'AdminProducts').' (';
+            $defaultChoiceLabel = $this->translator->trans('Use default behavior', [], 'AdminProducts').' (';
             $defaultChoiceLabel .= $this->configuration->get('PS_ORDER_OUT_OF_STOCK') == 1 ?
-                $this->translator->trans('Allow', [], 'AdminProducts') :
-                $this->translator->trans('Deny', [], 'AdminProducts');
+                $this->translator->trans('allow', [], 'AdminProducts') :
+                $this->translator->trans('deny', [], 'AdminProducts');
             $defaultChoiceLabel .= ')';
 
             $form->add('out_of_stock', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    $this->translator->trans('Deny', [], 'AdminProducts') => '0',
-                    $this->translator->trans('Allow', [], 'AdminProducts') => '1',
+                    $this->translator->trans('Deny orders', [], 'AdminProducts') => '0',
+                    $this->translator->trans('Allow orders', [], 'AdminProducts') => '1',
                     $defaultChoiceLabel => '2',
                 ),
                 'choices_as_values' => true,

@@ -120,7 +120,7 @@ class ProductPrice extends CommonAbstractType
         ))
         ->add('on_sale', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
-            'label' => $this->translator->trans('Display the "sale!" flag on the product page, and in the text found within the product listing.', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Display the "On sale!" flag on the product page, and on product listings.', [], 'AdminProducts'),
         ))
         ->add('wholesale_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,

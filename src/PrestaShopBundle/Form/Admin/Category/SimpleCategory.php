@@ -88,7 +88,7 @@ class SimpleCategory extends CommonAbstractType
             'choices' => $this->categories,
             'choices_as_values' => true,
             'required' => true,
-            'label' => $this->translator->trans('Choose a parent for this new category', [], 'AdminProducts')
+            'label' => $this->translator->trans('Parent of the category', [], 'AdminProducts')
         ));
     }
 

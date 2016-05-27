@@ -100,11 +100,11 @@ class ProductOptions extends CommonAbstractType
             'options' => [
                 'attr' => [
                     'class' => 'tokenfield',
-                    'placeholder' => $this->translator->trans('Use a comma to create seperate tags. E.g.: dress, cotton, party dress.', [], 'AdminProducts')
+                    'placeholder' => $this->translator->trans('Use a comma to create seperate tags. E.g.: dress, cotton, party dresses.', [], 'AdminProducts')
                 ]
             ],
             'locales' => $this->locales,
-            'label' => $this->translator->trans('Tags...', [], 'AdminProducts')
+            'label' => $this->translator->trans('Tags', [], 'AdminProducts')
         ))
         ->add(
             $builder->create('display_options', 'Symfony\Component\Form\Extension\Core\Type\FormType', array('required' => false, 'label' => $this->translator->trans('Display options', [], 'AdminProducts')))
@@ -117,7 +117,7 @@ class ProductOptions extends CommonAbstractType
                     'required' => false,
                 ))
                 ->add('online_only', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-                    'label'    => $this->translator->trans('Online only (not sold in your retail store)', [], 'AdminProducts'),
+                    'label'    => $this->translator->trans('Web only (not sold in your retail store)', [], 'AdminProducts'),
                     'required' => false,
                 ))
         )
@@ -138,7 +138,7 @@ class ProductOptions extends CommonAbstractType
         ))
         ->add('isbn', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
+            'label' => $this->translator->trans('ISBN', [], 'AdminProducts')
         ))
         ->add('reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,

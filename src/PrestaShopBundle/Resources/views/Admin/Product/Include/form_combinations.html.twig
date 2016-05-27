@@ -5,17 +5,14 @@
       <span
         class="help-box"
         data-toggle="popover"
-        data-content="{{ "Creating combinations: \n Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!"|trans({}, 'AdminProducts')|raw }}"
+        data-content="{{ "Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Product Attributes for this!"|trans({}, 'AdminProducts')|raw }}"
       ></span>
     </h2>
     <div id="attributes-generator">
-      <p>
-        {{ 'Create a series of combinations by entering the related attributes below.'|trans({}, 'AdminProducts') }}
-      </p>
       <div class="alert alert-info" role="alert">
         <i class="material-icons">help</i>
         <p class="alert-text">
-          {{ 'To add combinations, enter the wanted attributes (like « size » or « color ») and their respective values (« XS », « red », etc.) in the field below, or select it in the right column. Then click on « Generate »: it will automatically create all the combinations for you! <br> If you haven’t got any attributes yet, you should first create some in <a class="alert-link" href=$adminTaxesUrl target="_blank">Attributes & Features</a>.'|trans({'$adminTaxesUrl': getAdminLink("AdminAttributesGroups")}, 'AdminProducts')|raw }}
+          {{ 'To add combinations, enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or select it in the right column. Then click on "Generate": it will automatically create all the combinations for you! <br> If you haven’t got any attributes yet, you should first create some in <a class="alert-link" href=$adminTaxesUrl target="_blank">Attributes & Features</a>.'|trans({'$adminTaxesUrl': getAdminLink("AdminAttributesGroups")}, 'AdminProducts')|raw }}
         </p>
       </div>
       <div class="row">
