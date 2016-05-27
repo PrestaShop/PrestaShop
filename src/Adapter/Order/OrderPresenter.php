@@ -18,7 +18,7 @@ use CustomerMessage;
 use HistoryController;
 use Order;
 use OrderReturn;
-use Product;
+use TaxConfiguration;
 use Tools;
 
 class OrderPresenter implements PresenterInterface
@@ -35,12 +35,16 @@ class OrderPresenter implements PresenterInterface
     /* @var Translator */
     private $translator;
 
+    /* @var TaxConfiguration */
+    private $taxConfiguration;
+
     public function __construct()
     {
         $this->cartPresenter = new CartPresenter();
         $this->objectPresenter = new ObjectPresenter();
         $this->priceFormatter = new PriceFormatter();
         $this->translator = new Translator(new LegacyContext());
+        $this->taxConfiguration = new TaxConfiguration();
     }
 
     /**
@@ -303,10 +307,10 @@ class OrderPresenter implements PresenterInterface
      */
     private function getAddresses(Order $order)
     {
-        $orderAddresses = [
+        $orderAddresses = array(
             'delivery' => array(),
             'invoice' => array(),
-        ];
+        );
 
         $addressDelivery = new Address((int) $order->id_address_delivery);
         $addressInvoice = new Address((int) $order->id_address_invoice);
@@ -339,7 +343,7 @@ class OrderPresenter implements PresenterInterface
 
     private function includeTaxes()
     {
-        return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
+        return $this->taxConfiguration->includeTaxes();
     }
 
     private function getLabels()

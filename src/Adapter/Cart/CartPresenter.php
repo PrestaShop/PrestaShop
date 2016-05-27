@@ -14,6 +14,7 @@ use Context;
 use Cart;
 use Product;
 use Configuration;
+use TaxConfiguration;
 use CartRule;
 use Tools;
 
@@ -23,6 +24,7 @@ class CartPresenter implements PresenterInterface
     private $link;
     private $translator;
     private $imageRetriever;
+    private $taxConfiguration;
 
     public function __construct()
     {
@@ -30,11 +32,12 @@ class CartPresenter implements PresenterInterface
         $this->link = Context::getContext()->link;
         $this->translator = new Translator(new LegacyContext());
         $this->imageRetriever = new ImageRetriever($this->link);
+        $this->taxConfiguration = new TaxConfiguration();
     }
 
     private function includeTaxes()
     {
-        return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
+        return $this->taxConfiguration->includeTaxes();
     }
 
     private function presentProduct(array $rawProduct)
