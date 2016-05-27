@@ -9,6 +9,7 @@ export default function() {
   var combinationsTable = $('#accordion_combinations');
   var deleteCombinationsBtn = $('#delete-combinations');
   var applyChangesBtn = $('#apply-on-combinations');
+  var syncedCollection = $('*[data-uniqid]');
 
   return {
     'init': function init() {
@@ -22,6 +23,14 @@ export default function() {
       applyChangesBtn.on('click', (event) => {
         event.preventDefault();
         that.applyChangesOnCombinations();
+      });
+
+      syncedCollection.on('DOMSubtreeModified', (event) => {
+        event.stopPropagation();
+        var uniqid = event.target.getAttribute('data-uniqid');
+        var newValue = event.target.innerText;
+
+        $('[data-uniqid="'+uniqid+'"]').text(newValue);
       });
 
       // bulk select animation
@@ -111,13 +120,13 @@ class Combination {
 
   updateForm(values) {
     values.forEach((valueObject) => {
-      var valueId = valueObject.id.substr(this.inputBulkPattern.length);console.log('#'+this.convertInput(valueId));
+      var valueId = valueObject.id.substr(this.inputBulkPattern.length);
       $('#'+this.convertInput(valueId)).val(valueObject.value);
     });
     return this.form;
   }
 
-  /**
+  /**http://prestashop-sf.dev/admin-dev/index.php?controller=AdminCustomerThreads&token=ee0b16eab386f352c89c7c5a72121ae5
    * Returns the related input field in legacy form from
    * bulk form field
    *
@@ -173,8 +182,12 @@ class Combination {
 
       if (syncedProperties.indexOf(valueId) !== -1){
         valueId = valueId === 'quantity' ? 'quantity' : 'price';
-        $(`#attribute_${this.domId} .attribute-${valueId} input`).val(value);
+        var input = $(`#attribute_${this.domId} .attribute-${valueId} input`);
+        input.val(value);
+        input.change();
       }
     });
+
+    return true;
   }
 }
