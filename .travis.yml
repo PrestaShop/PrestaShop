@@ -22,6 +22,7 @@ addons:
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.npm
 
 sudo: required
 dist: trusty
