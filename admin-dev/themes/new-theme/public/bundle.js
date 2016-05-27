@@ -87751,7 +87751,7 @@
 	  var combinationsTable = (0, _jquery2.default)('#accordion_combinations');
 	  var deleteCombinationsBtn = (0, _jquery2.default)('#delete-combinations');
 	  var applyChangesBtn = (0, _jquery2.default)('#apply-on-combinations');
-	  var syncedCollection = (0, _jquery2.default)('*[data-uniqid]');
+	  var syncedCollection = (0, _jquery2.default)('[data-uniqid]');
 
 	  return {
 	    'init': function init() {
@@ -87768,11 +87768,17 @@
 	      });
 
 	      syncedCollection.on('DOMSubtreeModified', function (event) {
-	        event.stopPropagation();
+
 	        var uniqid = event.target.getAttribute('data-uniqid');
 	        var newValue = event.target.innerText;
 
-	        (0, _jquery2.default)('[data-uniqid="' + uniqid + '"]').text(newValue);
+	        var spans = (0, _jquery2.default)('[data-uniqid="' + uniqid + '"]');
+
+	        spans.each(function (index, element) {
+	          if ((0, _jquery2.default)(this).text() !== newValue) {
+	            (0, _jquery2.default)(this).text(newValue);
+	          }
+	        });
 	      });
 
 	      // bulk select animation
@@ -87884,7 +87890,7 @@
 	      return this.form;
 	    }
 
-	    /**http://prestashop-sf.dev/admin-dev/index.php?controller=AdminCustomerThreads&token=ee0b16eab386f352c89c7c5a72121ae5
+	    /**
 	     * Returns the related input field in legacy form from
 	     * bulk form field
 	     *

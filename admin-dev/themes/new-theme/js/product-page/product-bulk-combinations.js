@@ -9,7 +9,7 @@ export default function() {
   var combinationsTable = $('#accordion_combinations');
   var deleteCombinationsBtn = $('#delete-combinations');
   var applyChangesBtn = $('#apply-on-combinations');
-  var syncedCollection = $('*[data-uniqid]');
+  var syncedCollection = $('[data-uniqid]');
 
   return {
     'init': function init() {
@@ -26,11 +26,17 @@ export default function() {
       });
 
       syncedCollection.on('DOMSubtreeModified', (event) => {
-        event.stopPropagation();
+
         var uniqid = event.target.getAttribute('data-uniqid');
         var newValue = event.target.innerText;
 
-        $('[data-uniqid="'+uniqid+'"]').text(newValue);
+        var spans = $('[data-uniqid="'+uniqid+'"]');
+
+        spans.each( function( index, element ){
+          if ($(this).text() !== newValue) {
+            $(this).text(newValue);
+          }
+        });
       });
 
       // bulk select animation
@@ -126,7 +132,7 @@ class Combination {
     return this.form;
   }
 
-  /**http://prestashop-sf.dev/admin-dev/index.php?controller=AdminCustomerThreads&token=ee0b16eab386f352c89c7c5a72121ae5
+  /**
    * Returns the related input field in legacy form from
    * bulk form field
    *
