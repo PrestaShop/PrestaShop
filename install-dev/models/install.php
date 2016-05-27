@@ -62,16 +62,31 @@ class InstallModelInstall extends InstallAbstractModel
     }
 
     /**
-     * Generate settings file
+     * Generate the settings file.
      */
-    public function generateSettingsFile($database_host, $database_user, $database_password, $database_name, $database_prefix, $database_engine)
-    {
+    public function generateSettingsFile(
+        $database_host,
+        $database_user,
+        $database_password,
+        $database_name,
+        $database_prefix,
+        $database_engine
+    ) {
         // Check permissions for settings file
-        if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)) {
+        if (
+            file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
+            && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
+        ) {
             $this->setError($this->language->l('%s file is not writable (check permissions)', self::SETTINGS_FILE));
             return false;
-        } elseif (!file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname(self::SETTINGS_FILE))) {
-            $this->setError($this->language->l('%s folder is not writable (check permissions)', dirname(self::SETTINGS_FILE)));
+        } elseif (
+            !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
+            && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname(self::SETTINGS_FILE))
+        ) {
+            $this->setError($this->language->l(
+                '%s folder is not writable (check permissions)',
+                dirname(self::SETTINGS_FILE))
+            );
             return false;
         }
 
@@ -80,7 +95,7 @@ class InstallModelInstall extends InstallAbstractModel
         $cookie_iv = Tools::passwdGen(56);
 
         if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
-            $config = Yaml::parse(file_get_contents(_PS_ROOT_DIR_. '/app/config/parameters.yml'));
+            $config = Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml'));
             $secret = $config['parameters']['secret'];
             $cookie_key = $config['parameters']['cookie_key'];
             $cookie_iv = $config['parameters']['cookie_iv'];
@@ -105,7 +120,8 @@ class InstallModelInstall extends InstallAbstractModel
                 'mailer_host' => '127.0.0.1',
                 'mailer_user' => '~',
                 'mailer_password' => '~',
-            ));
+            )
+        );
 
         // If mcrypt is activated, add Rijndael 128 configuration
         if (function_exists('mcrypt_encrypt')) {
@@ -123,17 +139,30 @@ class InstallModelInstall extends InstallAbstractModel
             return false;
         }
 
-
         if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($parameters))) {
             $this->setError($this->language->l('Cannot write app/config/parameters.yml file'));
             return false;
         }
 
         // Clear the cache
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
-        $sf2Refresh->addCacheClear('dev');
-        $sf2Refresh->addCacheClear('prod');
+
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh('prod');
+        $sf2Refresh->addCacheClear();
         $output = $sf2Refresh->execute();
+
+        if (0 !== $output['cache:clear']['exitCode']) {
+            $this->setError(explode("\n", $output['cache:clear']['output']));
+            return false;
+        }
+
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh('dev');
+        $sf2Refresh->addCacheClear();
+        $output = $sf2Refresh->execute();
+
+        if (0 !== $output['cache:clear']['exitCode']) {
+            $this->setError(explode("\n", $output['cache:clear']['output']));
+            return false;
+        }
 
         return true;
     }
@@ -191,8 +220,8 @@ class InstallModelInstall extends InstallAbstractModel
         $sf2Refresh->addDoctrineSchemaUpdate();
         $output = $sf2Refresh->execute();
 
-        if (!empty($output['sf2_schema_update'])) {
-            $this->setError($this->language->l('SQL error command <i>doctrine:schema:update</i>, please check your app/config/parameters.yml file'));
+        if (0 !== $output['doctrine:schema:update']['exitCode']) {
+            $this->setError(explode("\n", $output['doctrine:schema:update']['output']));
             return false;
         }
 

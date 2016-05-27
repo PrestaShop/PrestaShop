@@ -26,7 +26,7 @@
 namespace PrestaShopBundle\Service\Cache;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 
 /**
@@ -41,16 +41,22 @@ class Refresh
     /**
      * Constructor.
      *
-     * Construct SF2 env
+     * Construct the symfony environment.
      *
-     * @param string $env prod|dev
+     * @param string $env Environment to set.
      */
-    public function __construct($env = 'prod')
+    public function __construct($env = null)
     {
         umask(0000);
         set_time_limit(0);
-        $this->env = _PS_MODE_DEV_ ? 'dev' : 'prod';
-        $this->commands = [];
+
+        if (null === $env) {
+            $this->env = _PS_MODE_DEV_ ? 'dev' : 'prod';
+        } else {
+            $this->env = $env;
+        }
+
+        $this->commands = array();
 
         require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
         $kernel = new \AppKernel($this->env, false);
@@ -59,21 +65,27 @@ class Refresh
     }
 
     /**
-     * Add cache clear.
+     * Add cache:clear to the execution.
      *
-     * @param string $env Environment to clear
+     * @param string $env Environment to clear.
      */
-    public function addCacheClear($env = 'dev')
+    public function addCacheClear()
     {
-        $this->commands[] = ['command' => 'cache:clear', '--env' => $env, '--no-debug' => true];
+        $this->commands[] = array(
+            'command' => 'cache:clear',
+            '--no-warmup' => true,
+        );
     }
 
     /**
-     * Add doctrine schema update.
+     * Add doctrine:schema:update to the execution.
      */
     public function addDoctrineSchemaUpdate()
     {
-        $this->commands[] = ['command' => 'doctrine:schema:update', '--env' => $this->env, '--no-debug' => false, '--force' => true];
+        $this->commands[] = array(
+            'command' => 'doctrine:schema:update',
+            '--force' => true,
+        );
     }
 
     /**
@@ -83,26 +95,20 @@ class Refresh
      */
     public function execute()
     {
-        $output = null;
+        $bufferedOutput = new BufferedOutput();
         $commandOutput = array();
 
         if (empty($this->commands)) {
-            throw new \Exception('Error, you need to define at least on command');
+            throw new \Exception('Error, you need to define at least one command');
         }
 
         foreach ($this->commands as $command) {
-            if (_PS_MODE_DEV_ && isset($command['--no-debug'])) {
-                $command['--no-debug'] = false;
-            }
+            $exitCode = $this->application->run(new ArrayInput($command), $bufferedOutput);
 
-            if (false === _PS_MODE_DEV_) {
-                $output = new NullOutput();
-            }
-
-            $exitCode = $this->application->run(new ArrayInput($command), $output);
-
-            $commandOutput[$command['command']] = $exitCode;
-
+            $commandOutput[$command['command']] = array(
+                'exitCode' => $exitCode,
+                'output' => $bufferedOutput->fetch(),
+            );
         }
 
         return $commandOutput;
