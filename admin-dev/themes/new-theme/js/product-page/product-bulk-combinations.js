@@ -41,9 +41,16 @@ export default function() {
 
       // bulk select animation
       $('#toggle-all-combinations').on('change', (event) => {
-        $('#accordion_combinations td:first-child input[type="checkbox"]').each(function () {
+        $('#accordion_combinations td:first-child input[type="checkbox"]').each(function() {
           $(this).prop('checked', $(event.currentTarget).prop('checked'));
         });
+      });
+
+      $('.js-combination').on('change', () => {
+        if ($('.bulk-action').attr('aria-expanded') === "false" || !$('.js-combination').is(':checked')) {
+          $('.js-collapse').collapse('toggle');
+        }
+      $('.js-bulk-combinations').text($('.js-combination:checked').length);
       });
     },
     'getSelectedCombinations': function getSelectedCombinations() {
@@ -77,7 +84,9 @@ export default function() {
           var deletionURL = $(deleteCombinationsBtn).attr('data');
           $.ajax({
             type: 'DELETE',
-            data: {'attribute-ids': combinationsIds},
+            data: {
+              'attribute-ids': combinationsIds
+            },
             url: deletionURL,
             success: function(response) {
               showSuccessMessage(response.message);
@@ -97,8 +106,11 @@ export default function() {
     'getFormValues': function getFormValues() {
       var values = [];
       $(bulkForm).find('input').each(function() {
-        if($(this).val() !== '' && $(this).attr('id') !== 'product_combination_bulk__token') {
-          values.push({'id' : $(this).attr('id'), 'value': $(this).val()});
+        if ($(this).val() !== '' && $(this).attr('id') !== 'product_combination_bulk__token') {
+          values.push({
+            'id': $(this).attr('id'),
+            'value': $(this).val()
+          });
         }
       });
       return values;
@@ -109,11 +121,11 @@ export default function() {
 class Combination {
   constructor(domId, index) {
     this.inputBulkPattern = "product_combination_bulk_";
-    this.inputPattern = "form_step3_combinations_"+index+"_";
+    this.inputPattern = "form_step3_combinations_" + index + "_";
     this.domId = domId;
-    this.appId = 'attribute_'+this.domId;
-    this.element = $('#'+this.appId);
-    this.form = $('#combination_form_'+this.domId);
+    this.appId = 'attribute_' + this.domId;
+    this.element = $('#' + this.appId);
+    this.form = $('#combination_form_' + this.domId);
   }
 
   isSelected() {
@@ -142,26 +154,26 @@ class Combination {
   convertInput(bulkInput) {
 
     var convertedInput = '';
-    switch(bulkInput) {
+    switch (bulkInput) {
       case "quantity":
       case "reference":
       case "minimal_quantity":
-        convertedInput = this.inputPattern+'attribute_'+bulkInput;
+        convertedInput = this.inputPattern + 'attribute_' + bulkInput;
         break;
       case "cost_price":
-        convertedInput = this.inputPattern+'attribute_wholesale_price';
+        convertedInput = this.inputPattern + 'attribute_wholesale_price';
         break;
       case "date_availability":
-        convertedInput = this.inputPattern+'available_date_attribute';
+        convertedInput = this.inputPattern + 'available_date_attribute';
         break;
       case "impact_on_weight":
-        convertedInput = this.inputPattern+'attribute_weight';
+        convertedInput = this.inputPattern + 'attribute_weight';
         break;
       case "impact_on_price_te":
-        convertedInput = this.inputPattern+'attribute_price';
+        convertedInput = this.inputPattern + 'attribute_price';
         break;
       case "impact_on_price_ti":
-        convertedInput = this.inputPattern+'attribute_priceTI';
+        convertedInput = this.inputPattern + 'attribute_priceTI';
         break;
       default:
     }
@@ -186,7 +198,7 @@ class Combination {
         'impact_on_price_te'
       ];
 
-      if (syncedProperties.indexOf(valueId) !== -1){
+      if (syncedProperties.indexOf(valueId) !== -1) {
         valueId = valueId === 'quantity' ? 'quantity' : 'price';
         var input = $(`#attribute_${this.domId} .attribute-${valueId} input`);
         input.val(value);

@@ -82,6 +82,23 @@
       font-size: rem(24px);
     }
   }
+  .bulk-action {
+    cursor: pointer;
+  }
+  #bulk-combinations-container{
+    border: solid 1px $gray-light;
+    margin: rem(-17px) rem(15px) rem(15px);
+    padding: rem(15px);
+    width: 97%;
+    font-size: rem(12px);
+    font-weight: 600;
+    div.row:first-child .form-control-label{
+      min-height: rem(45px);
+    }
+  }
+  #delete-combinations{
+    max-width: rem(210px);
+  }
   .product-footer {
     box-shadow: $gray-dark 0 0 10px;
     position: fixed;
@@ -509,13 +526,12 @@
       border-top: $gray-light 2px solid;
     }
   }
-
   .combinations-list {
-    th, td {
+    th,
+    td {
       color: $gray-medium;
       vertical-align: middle;
     }
-
     .uppercase th {
       text-transform: uppercase;
       font-weight: $font-weight-normal;
@@ -524,27 +540,23 @@
     .table-striped tbody tr:nth-of-type(odd) {
       background-color: $notice;
     }
-
     .combination {
       .img {
         width: 8%;
       }
-
-      .attribute-price, .attribute-quantity {
+      .attribute-price,
+      .attribute-quantity {
         width: 15%;
       }
-
       .attribute-finalprice {
         width: 10%;
+        font-size: rem(13px);
       }
-
       .attribute-actions {
-        width: 10%;
+        text-align: right;
         line-height: $font-size-base;
-
         .btn-sm {
           padding: 0;
-
           &:hover {
             background-color: transparent;
             border-color: transparent;
@@ -599,37 +611,30 @@
     color: $gray-medium;
   }
 }
-
 #attributes-list {
   .attribute-group {
     border: rem(1px) solid $gray-light;
     border-bottom-width: 0;
-
     &:last-child {
       border-bottom-width: rem(1px);
     }
-
     .attribute-group-name {
       display: block;
       font-weight: $font-weight-semibold;
       color: $gray-dark;
       padding: rem(7px);
-
       &:hover {
         text-decoration: none;
       }
-
       &:after {
         content: "\E316";
         font-family: "Material Icons";
         float: right;
       }
-
       &.collapsed:after {
         content: "\E313";
       }
     }
-
     .attributes {
       border-top: 2px solid $gray-light;
       padding: em(7px);
@@ -643,13 +648,11 @@
       .attribute {
         .js-attribute-checkbox {
           display: none;
-
           +.attribute-label {
             display: inline-block;
             font-size: $font-size-sm;
             color: $gray-light;
             margin: 0;
-
             .pretty-checkbox {
               content: "";
               float: left;
@@ -659,16 +662,13 @@
               border: rem(1px) solid $gray-light;
             }
           }
-
           &:checked {
             +.attribute-label {
               font-weight: $font-weight-semibold;
               color: $gray-medium;
-
               .pretty-checkbox {
                 border-color: $gray-medium;
                 border-width: rem(2px);
-
                 &.not-color:before {
                   content: "\E5CA";
                   font-family: "Material Icons";
@@ -682,10 +682,11 @@
     }
   }
 }
-
-.table{
+.table {
   &.table-no-bordered {
-    thead, tbody, th {
+    thead,
+    tbody,
+    th {
       border: 0;
     }
   }

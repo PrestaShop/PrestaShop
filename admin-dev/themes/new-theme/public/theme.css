@@ -15872,6 +15872,19 @@ ul.category-tree {
       -ms-flex-align: center; }
   .product-page .big-input .form-control {
     font-size: 1.5rem; }
+  .product-page .bulk-action {
+    cursor: pointer; }
+  .product-page #bulk-combinations-container {
+    border: solid 1px #BBCDD2;
+    margin: -1.0625rem 0.9375rem 0.9375rem;
+    padding: 0.9375rem;
+    width: 97%;
+    font-size: 0.75rem;
+    font-weight: 600; }
+    .product-page #bulk-combinations-container div.row:first-child .form-control-label {
+      min-height: 2.8125rem; }
+  .product-page #delete-combinations {
+    max-width: 13.125rem; }
   .product-page .product-footer {
     box-shadow: #363A41 0 0 10px;
     position: fixed;
@@ -16184,7 +16197,8 @@ ul.category-tree {
     .product-page #product-attachment-file tbody {
       border: none;
       border-top: #BBCDD2 2px solid; }
-  .product-page .combinations-list th, .product-page .combinations-list td {
+  .product-page .combinations-list th,
+  .product-page .combinations-list td {
     color: #6C868E;
     vertical-align: middle; }
   .product-page .combinations-list .uppercase th {
@@ -16195,12 +16209,14 @@ ul.category-tree {
     background-color: #DFF5F9; }
   .product-page .combinations-list .combination .img {
     width: 8%; }
-  .product-page .combinations-list .combination .attribute-price, .product-page .combinations-list .combination .attribute-quantity {
+  .product-page .combinations-list .combination .attribute-price,
+  .product-page .combinations-list .combination .attribute-quantity {
     width: 15%; }
   .product-page .combinations-list .combination .attribute-finalprice {
-    width: 10%; }
-  .product-page .combinations-list .combination .attribute-actions {
     width: 10%;
+    font-size: 0.8125rem; }
+  .product-page .combinations-list .combination .attribute-actions {
+    text-align: right;
     line-height: 0.9rem; }
     .product-page .combinations-list .combination .attribute-actions .btn-sm {
       padding: 0; }
@@ -16293,7 +16309,9 @@ ul.category-tree {
             font-family: "Material Icons";
             line-height: 0.75rem; }
 
-.table.table-no-bordered thead, .table.table-no-bordered tbody, .table.table-no-bordered th {
+.table.table-no-bordered thead,
+.table.table-no-bordered tbody,
+.table.table-no-bordered th {
   border: 0; }
 
 .products-catalog > .content {

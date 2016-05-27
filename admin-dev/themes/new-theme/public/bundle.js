@@ -79,7 +79,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.3.0 */
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.3.1 */
 
 	(function(root, factory) {
 	  if (true) {
@@ -191,8 +191,10 @@
 	};
 
 	function removeUtilElements() {
-	  document.body.removeChild(zeroElement);
-	  zeroElement = undefined;
+	  if (zeroElement) {
+	    document.body.removeChild(zeroElement);
+	  }
+	  zeroElement = null;
 	};
 
 	function getBounds(el) {
@@ -553,7 +555,7 @@
 	      return;
 	    }
 
-	    if (typeof pendingTimeout !== 'undefined') {
+	    if (pendingTimeout != null) {
 	      clearTimeout(pendingTimeout);
 	      pendingTimeout = null;
 	    }
@@ -1861,7 +1863,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	 * jQuery JavaScript Library v2.2.3
+	 * jQuery JavaScript Library v2.2.4
 	 * http://jquery.com/
 	 *
 	 * Includes Sizzle.js
@@ -1871,7 +1873,7 @@
 	 * Released under the MIT license
 	 * http://jquery.org/license
 	 *
-	 * Date: 2016-04-05T19:26Z
+	 * Date: 2016-05-20T17:23Z
 	 */
 
 	(function( global, factory ) {
@@ -1927,7 +1929,7 @@
 
 
 	var
-		version = "2.2.3",
+		version = "2.2.4",
 
 		// Define a local copy of jQuery
 		jQuery = function( selector, context ) {
@@ -6868,13 +6870,14 @@
 		isDefaultPrevented: returnFalse,
 		isPropagationStopped: returnFalse,
 		isImmediatePropagationStopped: returnFalse,
+		isSimulated: false,
 
 		preventDefault: function() {
 			var e = this.originalEvent;
 
 			this.isDefaultPrevented = returnTrue;
 
-			if ( e ) {
+			if ( e && !this.isSimulated ) {
 				e.preventDefault();
 			}
 		},
@@ -6883,7 +6886,7 @@
 
 			this.isPropagationStopped = returnTrue;
 
-			if ( e ) {
+			if ( e && !this.isSimulated ) {
 				e.stopPropagation();
 			}
 		},
@@ -6892,7 +6895,7 @@
 
 			this.isImmediatePropagationStopped = returnTrue;
 
-			if ( e ) {
+			if ( e && !this.isSimulated ) {
 				e.stopImmediatePropagation();
 			}
 
@@ -7822,19 +7825,6 @@
 			val = name === "width" ? elem.offsetWidth : elem.offsetHeight,
 			styles = getStyles( elem ),
 			isBorderBox = jQuery.css( elem, "boxSizing", false, styles ) === "border-box";
-
-		// Support: IE11 only
-		// In IE 11 fullscreen elements inside of an iframe have
-		// 100x too small dimensions (gh-1764).
-		if ( document.msFullscreenElement && window.top !== window ) {
-
-			// Support: IE11 only
-			// Running getBoundingClientRect on a disconnected node
-			// in IE throws an error.
-			if ( elem.getClientRects().length ) {
-				val = Math.round( elem.getBoundingClientRect()[ name ] * 100 );
-			}
-		}
 
 		// Some non-html elements return undefined for offsetWidth, so check for null/undefined
 		// svg - https://bugzilla.mozilla.org/show_bug.cgi?id=649285
@@ -9726,6 +9716,7 @@
 		},
 
 		// Piggyback on a donor event to simulate a different one
+		// Used only for `focus(in | out)` events
 		simulate: function( type, elem, event ) {
 			var e = jQuery.extend(
 				new jQuery.Event(),
@@ -9733,27 +9724,10 @@
 				{
 					type: type,
 					isSimulated: true
-
-					// Previously, `originalEvent: {}` was set here, so stopPropagation call
-					// would not be triggered on donor event, since in our own
-					// jQuery.event.stopPropagation function we had a check for existence of
-					// originalEvent.stopPropagation method, so, consequently it would be a noop.
-					//
-					// But now, this "simulate" function is used only for events
-					// for which stopPropagation() is noop, so there is no need for that anymore.
-					//
-					// For the 1.x branch though, guard for "click" and "submit"
-					// events is still used, but was moved to jQuery.event.stopPropagation function
-					// because `originalEvent` should point to the original event for the constancy
-					// with other events and for more focused logic
 				}
 			);
 
 			jQuery.event.trigger( e, null, elem );
-
-			if ( e.isDefaultPrevented() ) {
-				event.preventDefault();
-			}
 		}
 
 	} );
@@ -73446,6 +73420,9 @@
 	var queueIndex = -1;
 
 	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -82676,6 +82653,14 @@
 	    jQuery('[data-toggle="popover"]').popover();
 	  }
 
+	  var initSearchBar = function() {
+	    $('.js-form-search').on('focusin', function() {
+	       if (!$('.js-dropdown-form').hasClass('expanded')) {
+	         $('.js-dropdown-form').addClass('expanded');
+	       }
+	     });
+	  }
+
 	  global.prestaShopUiKit = {
 
 	    /**
@@ -82705,6 +82690,7 @@
 	        initToggleButtons();
 	        initAlerts();
 	        initToolTips();
+	        initSearchBar();
 	      });
 	    },
 
@@ -87806,6 +87792,13 @@
 	          (0, _jquery2.default)(this).prop('checked', (0, _jquery2.default)(event.currentTarget).prop('checked'));
 	        });
 	      });
+
+	      (0, _jquery2.default)('.js-combination').on('change', function () {
+	        if ((0, _jquery2.default)('.bulk-action').attr('aria-expanded') === "false" || !(0, _jquery2.default)('.js-combination').is(':checked')) {
+	          (0, _jquery2.default)('.js-collapse').collapse('toggle');
+	        }
+	        (0, _jquery2.default)('.js-bulk-combinations').text((0, _jquery2.default)('.js-combination:checked').length);
+	      });
 	    },
 	    'getSelectedCombinations': function getSelectedCombinations() {
 	      var combinations = [];
@@ -87838,7 +87831,9 @@
 	          var deletionURL = (0, _jquery2.default)(deleteCombinationsBtn).attr('data');
 	          _jquery2.default.ajax({
 	            type: 'DELETE',
-	            data: { 'attribute-ids': combinationsIds },
+	            data: {
+	              'attribute-ids': combinationsIds
+	            },
 	            url: deletionURL,
 	            success: function success(response) {
 	              showSuccessMessage(response.message);
@@ -87859,7 +87854,10 @@
 	      var values = [];
 	      (0, _jquery2.default)(bulkForm).find('input').each(function () {
 	        if ((0, _jquery2.default)(this).val() !== '' && (0, _jquery2.default)(this).attr('id') !== 'product_combination_bulk__token') {
-	          values.push({ 'id': (0, _jquery2.default)(this).attr('id'), 'value': (0, _jquery2.default)(this).val() });
+	          values.push({
+	            'id': (0, _jquery2.default)(this).attr('id'),
+	            'value': (0, _jquery2.default)(this).val()
+	          });
 	        }
 	      });
 	      return values;
