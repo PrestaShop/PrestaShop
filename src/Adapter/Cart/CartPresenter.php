@@ -123,7 +123,7 @@ class CartPresenter implements PresenterInterface
 
             $product['customizations'] = array();
 
-            $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int)$product['id_customization']);
+            $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int) $product['id_customization']);
 
             if (!$data) {
                 $data = array();
@@ -240,7 +240,7 @@ class CartPresenter implements PresenterInterface
 
         $subtotals['products'] = array(
             'type' => 'products',
-            'label' => $this->translator->trans('Products', array(), 'Cart'),
+            'label' => $this->translator->trans('Subtotal', array(), 'Cart'),
             'amount' => $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS),
             'value' => $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS))),
         );
