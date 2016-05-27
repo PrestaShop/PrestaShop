@@ -330,5 +330,8 @@
     <hook id="actionEmailAddAfterContent">
       <name>actionEmailAddAfterContent</name><title>Add extra content after mail content</title><description>This hook is called just after fetching mail template</description>
     </hook>
+    <hook id="addWebserviceResources">
+      <name>addWebserviceResources</name><title>Add extra webservice resource</title><description>This hook is called when webservice resources list in webservice controller</description>
+    </hook>
   </entities>
 </entity_hook>
