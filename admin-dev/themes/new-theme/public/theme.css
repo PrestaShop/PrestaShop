@@ -16083,7 +16083,7 @@ ul.category-tree {
       visibility: visible; }
   .product-page #add-categories {
     margin-top: 2.5rem; }
-  .product-page #form_step1_categories {
+  .product-page #categories-tree {
     clear: both; }
   .product-page .ui-widget > .form-control-label {
     font-size: 0.625rem;
@@ -16212,16 +16212,34 @@ ul.category-tree {
   display: none; }
 
 .ui-autocomplete {
-  max-width: 18.125rem; }
+  max-width: 18.125rem;
+  position: absolute;
+  z-index: 1000;
+  cursor: default;
+  padding: 0;
+  margin-top: 2px;
+  list-style: none;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); }
   @media screen and (max-width: 1450px) {
     .ui-autocomplete {
       max-width: 12.3125rem; } }
-  .ui-autocomplete li:hover {
-    background: #3ED2F0;
-    cursor: pointer; }
-    .ui-autocomplete li:hover a {
-      color: #FFFFFF;
-      text-decoration: none; }
+  .ui-autocomplete > li {
+    padding: 3px 20px; }
+    .ui-autocomplete > li:hover {
+      background: #3ED2F0;
+      cursor: pointer; }
+      .ui-autocomplete > li:hover a {
+        color: #FFFFFF;
+        text-decoration: none; }
+    .ui-autocomplete > li.ui-state-focus {
+      background-color: #DDD; }
   .ui-autocomplete a {
     color: #6C868E; }
 
@@ -16246,8 +16264,10 @@ ul.category-tree {
   #attributes-list .attribute-group .attributes {
     border-top: 2px solid #BBCDD2;
     padding: 0.4375em;
-    height: 9.875rem;
-    overflow: auto; }
+    height: 10.125rem;
+    overflow-x: hidden; }
+    #attributes-list .attribute-group .attributes .two-columns {
+      columns: 2; }
     #attributes-list .attribute-group .attributes .attribute .js-attribute-checkbox {
       display: none; }
       #attributes-list .attribute-group .attributes .attribute .js-attribute-checkbox + .attribute-label {
@@ -16272,8 +16292,6 @@ ul.category-tree {
             content: "\E5CA";
             font-family: "Material Icons";
             line-height: 0.75rem; }
-    #attributes-list .attribute-group .attributes.two-columns {
-      columns: 2; }
 
 .table.table-no-bordered thead, .table.table-no-bordered tbody, .table.table-no-bordered th {
   border: 0; }

@@ -87751,6 +87751,7 @@
 	  var combinationsTable = (0, _jquery2.default)('#accordion_combinations');
 	  var deleteCombinationsBtn = (0, _jquery2.default)('#delete-combinations');
 	  var applyChangesBtn = (0, _jquery2.default)('#apply-on-combinations');
+	  var syncedCollection = (0, _jquery2.default)('[data-uniqid]');
 
 	  return {
 	    'init': function init() {
@@ -87764,6 +87765,20 @@
 	      applyChangesBtn.on('click', function (event) {
 	        event.preventDefault();
 	        that.applyChangesOnCombinations();
+	      });
+
+	      syncedCollection.on('DOMSubtreeModified', function (event) {
+
+	        var uniqid = event.target.getAttribute('data-uniqid');
+	        var newValue = event.target.innerText;
+
+	        var spans = (0, _jquery2.default)('[data-uniqid="' + uniqid + '"]');
+
+	        spans.each(function (index, element) {
+	          if ((0, _jquery2.default)(this).text() !== newValue) {
+	            (0, _jquery2.default)(this).text(newValue);
+	          }
+	        });
 	      });
 
 	      // bulk select animation
@@ -87869,7 +87884,7 @@
 	      var _this = this;
 
 	      values.forEach(function (valueObject) {
-	        var valueId = valueObject.id.substr(_this.inputBulkPattern.length);console.log('#' + _this.convertInput(valueId));
+	        var valueId = valueObject.id.substr(_this.inputBulkPattern.length);
 	        (0, _jquery2.default)('#' + _this.convertInput(valueId)).val(valueObject.value);
 	      });
 	      return this.form;
@@ -87935,9 +87950,13 @@
 
 	        if (syncedProperties.indexOf(valueId) !== -1) {
 	          valueId = valueId === 'quantity' ? 'quantity' : 'price';
-	          (0, _jquery2.default)('#attribute_' + _this2.domId + ' .attribute-' + valueId + ' input').val(value);
+	          var input = (0, _jquery2.default)('#attribute_' + _this2.domId + ' .attribute-' + valueId + ' input');
+	          input.val(value);
+	          input.change();
 	        }
 	      });
+
+	      return true;
 	    }
 	  }]);
 

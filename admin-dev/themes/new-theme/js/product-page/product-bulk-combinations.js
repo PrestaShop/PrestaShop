@@ -9,6 +9,7 @@ export default function() {
   var combinationsTable = $('#accordion_combinations');
   var deleteCombinationsBtn = $('#delete-combinations');
   var applyChangesBtn = $('#apply-on-combinations');
+  var syncedCollection = $('[data-uniqid]');
 
   return {
     'init': function init() {
@@ -22,6 +23,20 @@ export default function() {
       applyChangesBtn.on('click', (event) => {
         event.preventDefault();
         that.applyChangesOnCombinations();
+      });
+
+      syncedCollection.on('DOMSubtreeModified', (event) => {
+
+        var uniqid = event.target.getAttribute('data-uniqid');
+        var newValue = event.target.innerText;
+
+        var spans = $('[data-uniqid="'+uniqid+'"]');
+
+        spans.each( function( index, element ){
+          if ($(this).text() !== newValue) {
+            $(this).text(newValue);
+          }
+        });
       });
 
       // bulk select animation
@@ -111,7 +126,7 @@ class Combination {
 
   updateForm(values) {
     values.forEach((valueObject) => {
-      var valueId = valueObject.id.substr(this.inputBulkPattern.length);console.log('#'+this.convertInput(valueId));
+      var valueId = valueObject.id.substr(this.inputBulkPattern.length);
       $('#'+this.convertInput(valueId)).val(valueObject.value);
     });
     return this.form;
@@ -173,8 +188,12 @@ class Combination {
 
       if (syncedProperties.indexOf(valueId) !== -1){
         valueId = valueId === 'quantity' ? 'quantity' : 'price';
-        $(`#attribute_${this.domId} .attribute-${valueId} input`).val(value);
+        var input = $(`#attribute_${this.domId} .attribute-${valueId} input`);
+        input.val(value);
+        input.change();
       }
     });
+
+    return true;
   }
 }
