@@ -66,6 +66,7 @@ smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'se
 smartyRegisterFunction($smarty, 'function', 'dump', 'smartyDump'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
+smartyRegisterFunction($smarty, 'block', 'hook_block', 'smartyHookBlock');
 smartyRegisterFunction($smarty, 'function', 'toolsConvertPrice', 'toolsConvertPrice');
 smartyRegisterFunction($smarty, 'modifier', 'json_encode', array('Tools', 'jsonEncode'));
 smartyRegisterFunction($smarty, 'modifier', 'json_decode', array('Tools', 'jsonDecode'));
@@ -172,6 +173,37 @@ function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true
     } else {
         $smarty->registerPlugin($type, $function, $params);
     }
+}
+
+function smartyHookBlock($params, $default_content, &$smarty)
+{
+    $content = '';
+    // TODO: Backup smarty variables and restore them to avoid
+    // new global vars from modules
+
+    if (null === $default_content) {
+        if (_PS_MODE_DEV_) {
+            $content .= '<!-- BEGIN '.$params['h'].' -->';
+        }
+        $params['h'] .= 'Before';
+        $content .= smartyHook($params, $smarty);
+        return $content;
+    }
+
+    // TODO: Shall we pass the $default_content to the hook ?
+    $hook = smartyHook($params, $smarty);
+    if ($hook) {
+        $content .= $hook;
+    } else {
+        $content .= $default_content;
+    }
+
+    $params['h'] .= 'After';
+    $content .= smartyHook($params, $smarty);
+    if (_PS_MODE_DEV_) {
+        $content = '<!-- END '.$params['h'].' -->';
+    }
+    return $content;
 }
 
 function smartyHook($params, &$smarty)
