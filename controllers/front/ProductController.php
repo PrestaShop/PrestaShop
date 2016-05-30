@@ -286,7 +286,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $this->context->smarty->assign(array(
                 'priceDisplay' => $priceDisplay,
-                'productPrice' => $productPrice,
                 'productPriceWithoutReduction' => $productPriceWithoutReduction,
                 'customizationFields' => $customization_fields,
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],

@@ -122,8 +122,9 @@ abstract class AbstractProductPresenter
             $regular_price = $product['price_without_reduction'];
         }
 
-        $presentedProduct['price_amount'] = $this->priceFormatter->format($price);
+        $presentedProduct['price_amount'] = $price;
         $presentedProduct['price'] = $this->priceFormatter->format($price);
+        $presentedProduct['regular_price_amount'] = $regular_price;
         $presentedProduct['regular_price'] = $this->priceFormatter->format($regular_price);
 
         if (isset($product['unit_price']) && $product['unit_price']) {
