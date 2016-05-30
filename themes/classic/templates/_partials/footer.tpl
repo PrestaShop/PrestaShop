@@ -8,5 +8,8 @@
     <div class="row">
       {hook h='displayFooter'}
     </div>
+    <div class="row">
+      {hook h='displayFooterAfter'}
+    </div>
   </div>
 </div>
