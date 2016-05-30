@@ -20,7 +20,7 @@
         <meta itemprop="priceCurrency" content="{$currency.iso_code}">
         <span itemprop="price" content="{$productPrice}">{$product.price}</span>
         {if $feature_active.display_taxes_label}
-          <small class="text-capitalize">{if $priceDisplay} {l s='tax excl.'}{else} {l s='Tax incl.'}{/if}</small>
+          <small class="text-capitalize">{$product.labels.tax_short}</small>
         {/if}
 
         {hook h='displayProductPriceBlock' product=$product type="price"}

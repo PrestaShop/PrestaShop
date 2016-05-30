@@ -75,6 +75,24 @@ abstract class AbstractProductPresenter
         return $presentedProduct;
     }
 
+    private function addLabels(
+        array $presentedProduct,
+        ProductPresentationSettings $settings,
+        array $product
+    ) {
+        // TODO: move it to a common parent, since it's copied in OrderPresenter and CartPresenter
+        $presentedProduct['labels'] = array(
+            'tax_short' => ($settings->include_taxes)
+                ? $this->translator->trans('(tax incl.)', array(), 'Tax')
+                : $this->translator->trans('(tax excl.)', array(), 'Tax'),
+            'tax_long' => ($settings->include_taxes)
+                ? $this->translator->trans('(tax included)', array(), 'Tax')
+                : $this->translator->trans('(tax excluded)', array(), 'Tax'),
+        );
+
+        return $presentedProduct;
+    }
+
     private function addPriceInformation(
         array $presentedProduct,
         ProductPresentationSettings $settings,
@@ -419,6 +437,12 @@ abstract class AbstractProductPresenter
         );
 
         $presentedProduct = $this->addFlags(
+            $presentedProduct,
+            $settings,
+            $product
+        );
+
+        $presentedProduct = $this->addLabels(
             $presentedProduct,
             $settings,
             $product
