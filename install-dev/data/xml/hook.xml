@@ -125,7 +125,7 @@
     </hook>
     <hook id="displayAuthenticateFormBottom">
       <name>displayAuthenticateFormBottom</name><title>Customer authentication form</title><description>This hook displays some information on the bottom of the authentication form</description>
-    </hook>    
+    </hook>
     <hook id="displayCustomerAccountForm">
       <name>displayCustomerAccountForm</name><title>Customer account creation form</title><description>This hook displays some information on the form to create a customer account</description>
     </hook>
@@ -332,6 +332,9 @@
     </hook>
     <hook id="sendMailAlterTemplateVars">
       <name>sendMailAlterTemplateVars</name><title>Alter template vars on the flyt</title><description>This hook is called when Mail::send() is called</description>
+    </hook>
+    <hook id="displayCartExtraProductActions">
+      <name>displayCartExtraProductActions</name><title>Extra buttons in shopping cart</title><description>This hook adds extra buttons to the product lines, in the shopping cart</description>
     </hook>
   </entities>
 </entity_hook>
