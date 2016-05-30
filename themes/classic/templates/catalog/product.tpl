@@ -31,10 +31,10 @@
         {block name='page_content_container'}
           <section class="page-content" id="content">
             {block name='page_content'}
-              {block name='product_labels'}
-                <ul class="product-labels">
-                  {foreach from=$product.labels item=label}
-                    <li class="product-label">{$label.label}</li>
+              {block name='product_flags'}
+                <ul class="product-flags">
+                  {foreach from=$product.flags item=flag}
+                    <li class="product-flag">{$flag.label}</li>
                   {/foreach}
                 </ul>
               {/block}

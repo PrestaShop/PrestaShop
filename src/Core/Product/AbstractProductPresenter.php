@@ -222,51 +222,51 @@ abstract class AbstractProductPresenter
         return $presentedProduct;
     }
 
-    private function addLabels(
+    private function addFlags(
         array $presentedProduct,
         ProductPresentationSettings $settings,
         array $product
     ) {
-        $labels = array();
+        $flags = array();
 
         $show_price = $this->shouldShowPrice($settings, $product);
 
         if ($show_price && $product['online_only']) {
-            $labels['online-only'] = array(
+            $flags['online-only'] = array(
                 'type' => 'online-only',
                 'label' => $this->translator->trans('Online only', array(), 'Product'),
             );
         }
 
         if ($show_price && $product['on_sale'] && !$settings->catalog_mode) {
-            $labels['on-sale'] = array(
+            $flags['on-sale'] = array(
                 'type' => 'on-sale',
                 'label' => $this->translator->trans('On sale!', array(), 'Product'),
             );
         }
 
         if ($show_price && $product['reduction'] && !$settings->catalog_mode && !$product['on_sale']) {
-            $labels['discount'] = array(
+            $flags['discount'] = array(
                 'type' => 'discount',
                 'label' => $this->translator->trans('Reduced price', array(), 'Product'),
             );
         }
 
         if ($product['new']) {
-            $labels['new'] = array(
+            $flags['new'] = array(
                 'type' => 'new',
                 'label' => $this->translator->trans('New', array(), 'Product'),
             );
         }
 
         if ($product['pack']) {
-            $labels['pack'] = array(
+            $flags['pack'] = array(
                 'type' => 'pack',
                 'label' => $this->translator->trans('Pack', array(), 'Product'),
             );
         }
 
-        $presentedProduct['labels'] = $labels;
+        $presentedProduct['flags'] = $flags;
 
         return $presentedProduct;
     }
@@ -418,7 +418,7 @@ abstract class AbstractProductPresenter
             $language
         );
 
-        $presentedProduct = $this->addLabels(
+        $presentedProduct = $this->addFlags(
             $presentedProduct,
             $settings,
             $product

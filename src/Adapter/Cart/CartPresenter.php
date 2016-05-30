@@ -317,7 +317,7 @@ class CartPresenter implements PresenterInterface
 
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
 
-        // TODO: move it to a common parent, since it's copied in OrderPresenter
+        // TODO: move it to a common parent, since it's copied in OrderPresenter and ProductPresenter
         $labels = array(
             'tax_short' => ($this->includeTaxes())
                 ? $this->translator->trans('(tax incl.)', array(), 'Tax')

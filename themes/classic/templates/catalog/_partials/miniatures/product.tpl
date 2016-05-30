@@ -64,10 +64,10 @@
         </div>
       {/block}
 
-      {block name='product_labels'}
-        <ul class="product-labels">
-          {foreach from=$product.labels item=label}
-            <li class="{$label.type}">{$label.label}</li>
+      {block name='product_flags'}
+        <ul class="product-flags">
+          {foreach from=$product.flags item=flag}
+            <li class="{$flag.type}">{$flag.label}</li>
           {/foreach}
         </ul>
       {/block}
