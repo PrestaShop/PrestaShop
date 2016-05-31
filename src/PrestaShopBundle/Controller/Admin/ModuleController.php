@@ -205,7 +205,7 @@ class ModuleController extends FrameworkBundleAdminController
                 } else {
                     $response[$module]['msg'] = $translator->trans(
                         '%s action on module %s succeeded.',
-                        array(ucfirst(str_replace('_', ' ', $action))),
+                        array(ucfirst(str_replace('_', ' ', $action)), $module),
                         'AdminModules'
                     );
                 }
