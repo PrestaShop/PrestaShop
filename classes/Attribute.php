@@ -337,7 +337,7 @@ class AttributeCore extends ObjectModel
      *
      * @param int $id_attribute_group
      * @param bool $use_last_attribute
-     * @return bool $return
+     * @return bool Update result
      */
     public function cleanPositions($id_attribute_group, $use_last_attribute = true)
     {
@@ -350,7 +350,7 @@ class AttributeCore extends ObjectModel
 
         $sql .= ' `id_attribute_group` = '.(int)$id_attribute_group.' ORDER BY `position` ASC';
 
-        $return = Db::getInstance()->execute($sql);
+        return Db::getInstance()->execute($sql);
     }
 
     /**
