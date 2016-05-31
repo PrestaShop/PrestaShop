@@ -16439,11 +16439,14 @@
 	    (0, _jquery2['default'])('#modal').modal('show');
 	  });
 	
-	  var url = (0, _jquery2['default'])('.js-terms a').attr('href') + '?content_only=1';
-	
-	  _jquery2['default'].get(url, function (content) {
-	    (0, _jquery2['default'])('#modal').find('.modal-content').html((0, _jquery2['default'])(content).find('.page-cms').contents());
-	  });
+	  var url = (0, _jquery2['default'])('.js-terms a').attr('href');
+	  if (url) {
+	    // TODO: Handle request if no pretty URL
+	    url += '?content_only=1';
+	    _jquery2['default'].get(url, function (content) {
+	      (0, _jquery2['default'])('#modal').find('.modal-content').html((0, _jquery2['default'])(content).find('.page-cms').contents());
+	    });
+	  }
 	}
 	
 	(0, _jquery2['default'])(document).ready(function () {
@@ -20464,11 +20467,8 @@
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
 	(0, _jquery2['default'])(document).ready(function () {
-	  (0, _jquery2['default'])('.js-file-input').on('change', function (event) {
-	    (0, _jquery2['default'])('.js-file-name').text((0, _jquery2['default'])(event.currentTarget).val());
-	  });
-	
 	  createProductSpin();
+	  createInputFile();
 	
 	  (0, _jquery2['default'])('body').on('click', 'input.product-refresh', function (event) {
 	    event.preventDefault();
@@ -20487,7 +20487,15 @@
 	
 	  prestashop.on('product dom updated', function (event) {
 	    createProductSpin();
+	    createInputFile();
+	    (0, _jquery2['default'])((0, _jquery2['default'])('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
 	  });
+	
+	  function createInputFile() {
+	    (0, _jquery2['default'])('.js-file-input').on('change', function (event) {
+	      (0, _jquery2['default'])('.js-file-name').text((0, _jquery2['default'])(event.currentTarget).val());
+	    });
+	  }
 	
 	  function createProductSpin() {
 	    (0, _jquery2['default'])('#quantity_wanted').TouchSpin({
@@ -21403,7 +21411,11 @@
 	_prestashop2['default'].blockcart = _prestashop2['default'].blockcart || {};
 	_prestashop2['default'].blockcart.showModal = function (html) {
 	  (0, _jquery2['default'])('body').append(html);
-	  (0, _jquery2['default'])('#blockcart-modal').modal('show');
+	  (0, _jquery2['default'])('#blockcart-modal').modal('show').on('hidden.bs.modal', function (e) {
+	    _prestashop2['default'].emit('product updated', {
+	      reason: e.currentTarget.dataset
+	    });
+	  });
 	};
 
 /***/ }
