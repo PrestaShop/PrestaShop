@@ -4,15 +4,27 @@ services:
   - mysql
 
 addons:
-    apt_packages:
-        - mysql-server
+    apt:
+        sources:
+        - deb http://archive.ubuntu.com/ubuntu/ trusty multiverse
+        - deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse
+        - deb http://archive.ubuntu.com/ubuntu/ trusty universe
+        - deb http://archive.ubuntu.com/ubuntu/ trusty-updates universe
+        packages:
+        - mysql-server-5.6
+        - mysql-client-5.6
+        - mysql-client-core-5.6
         - apache2
         - postfix
+        - libapache2-mod-fastcgi
+        - libappindicator1
+        - fonts-liberation
     sauce_connect: true
     
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.npm
 
 sudo: required
 dist: trusty
@@ -29,10 +41,6 @@ matrix:
 
 before_install:
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then sudo cp tests/php7-pool.conf ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/; fi
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty multiverse" && sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-updates multiverse"
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty universe" && sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-updates universe"
-  - sudo apt-get update -qq
-  - sudo apt-get install libapache2-mod-fastcgi
   - phpenv config-rm xdebug.ini
   - mysql -u root -e 'create database prestashop;'
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
@@ -48,7 +56,6 @@ before_install:
   - sudo a2ensite prestashop.conf
   - sudo service apache2 restart
   - cp -Rf .composer/* ~/.composer/ & composer global install;
-  - sudo apt-get install -y libappindicator1 fonts-liberation
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   - sudo dpkg -i google-chrome*.deb
 
