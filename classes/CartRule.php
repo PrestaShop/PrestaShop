@@ -954,13 +954,7 @@ class CartRuleCore extends ObjectModel
                 $minPrice = false;
                 $cheapest_product = null;
                 foreach ($all_products as $product) {
-                    $price = $product['price'];
-                    if ($use_tax) {
-                        // since later on we won't be able to know the product the cart rule was applied to,
-                        // use average cart VAT for price_wt
-                        $price *= (1 + $context->cart->getAverageProductsTaxRate());
-                    }
-
+                    $price = $use_tax ? $product['price_wt'] : $product['price'];
                     if ($price > 0 && ($minPrice === false || $minPrice > $price)) {
                         $minPrice = $price;
                         $cheapest_product = $product['id_product'].'-'.$product['id_product_attribute'];
@@ -987,11 +981,7 @@ class CartRuleCore extends ObjectModel
                     foreach ($package_products as $product) {
                         if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
                             || in_array($product['id_product'].'-0', $selected_products)) {
-                            $price = $product['price'];
-                            if ($use_tax) {
-                                $price *= (1 + $context->cart->getAverageProductsTaxRate());
-                            }
-
+                            $price = $use_tax ? $product['price_wt'] : $product['price'];
                             $selected_products_reduction += $price * $product['cart_quantity'];
                         }
                     }
