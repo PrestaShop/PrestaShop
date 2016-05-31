@@ -1191,6 +1191,12 @@
 							</label>
 						</p>
 						<p class="checkbox">
+							<label for="generateCreditSlip">
+								<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" onclick="toggleShippingCost()" />
+								{l s='Generate a credit slip'}
+							</label>
+						</p>
+						<p class="checkbox">
 							<label for="generateDiscountRefund">
 								<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" onclick="toggleShippingCost()" />
 								{l s='Generate a voucher'}
