@@ -9,6 +9,7 @@ $(document).ready(function () {
   prestashop.on('product updated', function(event) {
     $.post(event.reason.productUrl, {ajax: '1', action: 'refresh'}, null, 'json').then(function(resp) {
       $('.product-prices').replaceWith(resp.product_prices);
+      $('.product-customization').replaceWith(resp.product_customization);
       $('.product-variants').replaceWith(resp.product_variants);
       $('.images-container').replaceWith(resp.product_cover_thumbnails);
       $('#product-details').replaceWith(resp.product_details);

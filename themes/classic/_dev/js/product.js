@@ -1,11 +1,8 @@
 import $ from 'jquery';
 
 $(document).ready(function () {
-  $('.js-file-input').on('change',(event)=>{
-    $('.js-file-name').text($(event.currentTarget).val());
-  });
-
   createProductSpin();
+  createInputFile();
 
   $('body').on(
     'click',
@@ -28,8 +25,16 @@ $(document).ready(function () {
 
   prestashop.on('product dom updated', function(event) {
     createProductSpin();
+    createInputFile();
     $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
   });
+
+  function createInputFile()
+  {
+    $('.js-file-input').on('change',(event)=>{
+      $('.js-file-name').text($(event.currentTarget).val());
+    });
+  }
 
   function createProductSpin()
   {
