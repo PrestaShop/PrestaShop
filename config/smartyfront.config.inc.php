@@ -25,10 +25,18 @@
  */
 
 global $smarty;
+
 $smarty->setTemplateDir(array(
     _PS_THEME_DIR_.'templates',
 ));
-$smarty->addPluginsDir(_PS_THEME_DIR_.'plugins');
+$smarty->addPluginsDir(array(
+    _PS_THEME_DIR_.'plugins',
+));
+
+$smarty->registerResource('module', new SmartyResourceModule(array(
+    'theme' => _PS_THEME_DIR_.'modules/',
+    'modules' => _PS_MODULE_DIR_,
+)));
 
 if (Configuration::get('PS_HTML_THEME_COMPRESSION')) {
     $smarty->registerFilter('output', 'smartyMinifyHTML');
@@ -51,6 +59,107 @@ function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_enc
         return $string;
     } else {
         return smarty_modifier_escape($string, $esc_type, $char_set, $double_encode);
+    }
+}
+
+smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
+smartyRegisterFunction($smarty, 'function', 'render', 'smartyRender');
+smartyRegisterFunction($smarty, 'function', 'form_field', 'smartyFormField');
+smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
+
+function withWidget($params, callable $cb)
+{
+    if (!isset($params['name'])) {
+        throw new Exception('Smarty helper `render_widget` expects at least the `name` parameter.');
+    }
+
+    $moduleName = $params['name'];
+    unset($params['name']);
+
+    $moduleInstance = Module::getInstanceByName($moduleName);
+
+    if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Module\WidgetInterface) {
+        throw new Exception(sprintf(
+            'Module `%1$s` is not a WidgetInterface.',
+            $moduleName
+        ));
+    }
+
+    return $cb($moduleInstance, $params);
+}
+
+function smartyWidget($params, &$smarty)
+{
+    return withWidget($params, function ($widget, $params) {
+        return $widget->renderWidget(null, $params);
+    });
+}
+
+function smartyRender($params, &$smarty)
+{
+    $ui = $params['ui'];
+
+    if (array_key_exists('file', $params)) {
+        $ui->setTemplate($params['file']);
+    }
+
+    return $ui->render($params);
+}
+
+function smartyFormField($params, &$smarty)
+{
+    $scope = $smarty->createData(
+        $smarty
+    );
+
+    $scope->assign($params);
+
+    $file = '_partials/form-field.tpl';
+
+    if (isset($params['file'])) {
+        $file = $params['file'];
+    }
+
+    $tpl = $smarty->createTemplate($file, $scope);
+
+    return $tpl->fetch();
+}
+
+function smartyWidgetBlock($params, $content, &$smarty)
+{
+    static $backedUpVariablesStack = array();
+
+    if (null === $content) {
+        // Function is called twice: at the opening of the block
+        // and when it is closed.
+        // This is the first call.
+        withWidget($params, function ($widget, $params) use (&$smarty, &$backedUpVariablesStack) {
+            // Assign widget variables and backup all the variables they override
+            $currentVariables = $smarty->getTemplateVars();
+            $scopedVariables = $widget->getWidgetVariables();
+            $backedUpVariables = array();
+            foreach ($scopedVariables as $key => $value) {
+                if (array_key_exists($key, $currentVariables)) {
+                    $backedUpVariables[$key] = $currentVariables[$key];
+                }
+                $smarty->assign($key, $value);
+            }
+            $backedUpVariablesStack[] = $backedUpVariables;
+        });
+        // We don't display anything since the template is not rendered yet.
+        return '';
+    } else {
+        // Function gets called for the closing tag of the block.
+        // We restore the backed up variables in order not to override
+        // template variables.
+        if (!empty($backedUpVariablesStack)) {
+            $backedUpVariables = array_pop($backedUpVariablesStack);
+            foreach ($backedUpVariables as $key => $value) {
+                $smarty->assign($key, $value);
+            }
+        }
+        // This time content is filled with rendered template, so return it.
+        return $content;
     }
 }
 

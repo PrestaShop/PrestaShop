@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'prestashop/smarty/');
 
 global $smarty;
@@ -69,18 +68,9 @@ smartyRegisterFunction($smarty, 'modifier', 'json_decode', array('Tools', 'jsonD
 smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
-smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
-smartyRegisterFunction($smarty, 'function', 'render', 'smartyRender');
-smartyRegisterFunction($smarty, 'function', 'form_field', 'smartyFormField');
-smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
-
-$smarty->registerResource('module', new SmartyResourceModule(array(
-    'theme' => _PS_THEME_DIR_.'modules/',
-    'modules' => _PS_MODULE_DIR_,
-)));
 
 function smartyDump($params, &$smarty)
 {
@@ -98,9 +88,10 @@ function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_wo
     if (Tools::strlen($string) > $length) {
         $length -= min($length, Tools::strlen($etc));
         if (!$break_words && !$middle) {
-            $string = preg_replace('/\s+?(\S+)?$/u', '', Tools::substr($string, 0, $length+1, $charset));
+            $string = preg_replace('/\s+?(\S+)?$/u', '', Tools::substr($string, 0, $length + 1, $charset));
         }
-        return !$middle ? Tools::substr($string, 0, $length, $charset).$etc : Tools::substr($string, 0, $length/2, $charset).$etc.Tools::substr($string, -$length/2, $length, $charset);
+
+        return !$middle ? Tools::substr($string, 0, $length, $charset).$etc : Tools::substr($string, 0, $length / 2, $charset).$etc.Tools::substr($string, -$length / 2, $length, $charset);
     } else {
         return $string;
     }
@@ -117,6 +108,7 @@ function smartyMinifyHTML($tpl_output, &$smarty)
         return $tpl_output;
     }
     $tpl_output = Media::minifyHTML($tpl_output);
+
     return $tpl_output;
 }
 
@@ -127,6 +119,7 @@ function smartyPackJSinHTML($tpl_output, &$smarty)
         return $tpl_output;
     }
     $tpl_output = Media::packJSinHTML($tpl_output);
+
     return $tpl_output;
 }
 
@@ -164,6 +157,7 @@ function smartyHook($params, &$smarty)
             $id_module = $module->id;
         } else {
             unset($hook_params['h']);
+
             return '';
         }
     }
@@ -180,9 +174,11 @@ function smartyHook($params, &$smarty)
 
         unset($hook_params['h']);
         unset($hook_params['excl']);
+
         return $result;
     }
     unset($hook_params['h']);
+
     return Hook::exec($params['h'], $hook_params, $id_module);
 }
 
@@ -194,117 +190,23 @@ function smartyCleanHtml($data)
     }
 }
 
-function withWidget($params, callable $cb)
-{
-    if (!isset($params['name'])) {
-        throw new Exception('Smarty helper `render_widget` expects at least the `name` parameter.');
-    }
-
-    $moduleName = $params['name'];
-    unset($params['name']);
-
-    $moduleInstance = Module::getInstanceByName($moduleName);
-
-    if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Module\WidgetInterface) {
-        throw new Exception(sprintf(
-            'Module `%1$s` is not a WidgetInterface.',
-            $moduleName
-        ));
-    }
-
-    return $cb($moduleInstance, $params);
-}
-
-function smartyWidget($params, &$smarty)
-{
-    return withWidget($params, function ($widget, $params) {
-        return $widget->renderWidget(null, $params);
-    });
-}
-
-function smartyRender($params, &$smarty)
-{
-    $ui = $params['ui'];
-
-    if (array_key_exists('file', $params)) {
-        $ui->setTemplate($params['file']);
-    }
-
-    return $ui->render($params);
-}
-
-function smartyFormField($params, &$smarty)
-{
-    $scope = $smarty->createData(
-        $smarty
-    );
-
-    $scope->assign($params);
-
-    $file = '_partials/form-field.tpl';
-
-    if (isset($params['file'])) {
-        $file = $params['file'];
-    }
-
-    $tpl = $smarty->createTemplate($file, $scope);
-
-    return $tpl->fetch();
-}
-
-function smartyWidgetBlock($params, $content, &$smarty)
-{
-    static $backedUpVariablesStack = [];
-
-    if (null === $content) {
-        // Function is called twice: at the opening of the block
-        // and when it is closed.
-        // This is the first call.
-        withWidget($params, function ($widget, $params) use (&$smarty, &$backedUpVariablesStack) {
-            // Assign widget variables and backup all the variables they override
-            $currentVariables = $smarty->getTemplateVars();
-            $scopedVariables = $widget->getWidgetVariables();
-            $backedUpVariables = [];
-            foreach ($scopedVariables as $key => $value) {
-                if (array_key_exists($key, $currentVariables)) {
-                    $backedUpVariables[$key] = $currentVariables[$key];
-                }
-                $smarty->assign($key, $value);
-            }
-            $backedUpVariablesStack[] = $backedUpVariables;
-        });
-        // We don't display anything since the template is not rendered yet.
-        return '';
-    } else {
-        // Function gets called for the closing tag of the block.
-        // We restore the backed up variables in order not to override
-        // template variables.
-        if (!empty($backedUpVariablesStack)) {
-            $backedUpVariables = array_pop($backedUpVariablesStack);
-            foreach ($backedUpVariables as $key => $value) {
-                $smarty->assign($key, $value);
-            }
-        }
-        // This time content is filled with rendered template, so return it.
-        return $content;
-    }
-}
-
 function smartyClassname($classname)
 {
     $classname = Tools::replaceAccentedChars(strtolower($classname));
     $classname = preg_replace('/[^A-Za-z0-9]/', '-', $classname);
     $classname = preg_replace('/[-]+/', '-', $classname);
+
     return $classname;
 }
 
 function smartyClassnames(array $classnames)
 {
-    $enabled_classes = [];
+    $enabled_classes = array();
     foreach ($classnames as $classname => $enabled) {
         if ($enabled) {
             $enabled_classes[] = smartyClassname($classname);
         }
     }
+
     return implode(' ', $enabled_classes);
 }
