@@ -56,32 +56,18 @@ if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_) {
 }
 
 if (defined('_PS_ADMIN_DIR_')) {
-    require_once(dirname(__FILE__).'/smartyadmin.config.inc.php');
+    require_once dirname(__FILE__).'/smartyadmin.config.inc.php';
 } else {
-    require_once(dirname(__FILE__).'/smartyfront.config.inc.php');
+    require_once dirname(__FILE__).'/smartyfront.config.inc.php';
 }
 
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
-smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
 smartyRegisterFunction($smarty, 'function', 'dump', 'smartyDump'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
-smartyRegisterFunction($smarty, 'function', 'toolsConvertPrice', 'toolsConvertPrice');
 smartyRegisterFunction($smarty, 'modifier', 'json_encode', array('Tools', 'jsonEncode'));
 smartyRegisterFunction($smarty, 'modifier', 'json_decode', array('Tools', 'jsonDecode'));
 smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
-smartyRegisterFunction($smarty, 'function', 'convertPrice', array('Product', 'convertPrice'));
-smartyRegisterFunction($smarty, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'));
-smartyRegisterFunction($smarty, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'));
-smartyRegisterFunction($smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'));
-smartyRegisterFunction($smarty, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'));
-smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
-smartyRegisterFunction($smarty, 'function', 'getAdminToken', array('Tools', 'getAdminTokenLiteSmarty'));
-smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
-smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
-smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
-smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
-smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
@@ -214,11 +200,6 @@ function smartyCleanHtml($data)
     if (Validate::isCleanHtml($data)) {
         return $data;
     }
-}
-
-function toolsConvertPrice($params, &$smarty)
-{
-    return Tools::convertPrice($params['price'], Context::getContext()->currency);
 }
 
 function withWidget($params, callable $cb)

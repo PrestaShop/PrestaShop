@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 global $smarty;
 $smarty->debugging = false;
 $smarty->debugging_ctrl = 'NONE';
@@ -32,6 +31,26 @@ $smarty->debugging_ctrl = 'NONE';
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
 // But force compile_check since the performance impact is small and it is better for debugging
 $smarty->compile_check = true;
+
+smartyRegisterFunction($smarty, 'function', 'toolsConvertPrice', 'toolsConvertPrice');
+smartyRegisterFunction($smarty, 'function', 'convertPrice', array('Product', 'convertPrice'));
+smartyRegisterFunction($smarty, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'));
+smartyRegisterFunction($smarty, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'));
+smartyRegisterFunction($smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'));
+smartyRegisterFunction($smarty, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'));
+smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
+smartyRegisterFunction($smarty, 'function', 'getAdminToken', array('Tools', 'getAdminTokenLiteSmarty'));
+smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
+smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
+smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
+smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
+smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
+smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
+
+function toolsConvertPrice($params, &$smarty)
+{
+    return Tools::convertPrice($params['price'], Context::getContext()->currency);
+}
 
 function smartyTranslate($params, &$smarty)
 {
