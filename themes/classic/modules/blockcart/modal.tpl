@@ -32,9 +32,9 @@
               {else}
                 <p class="cart-products-count">{l s='There is %s item in your cart.' sprintf=$cart.products_count}</p>
               {/if}
-              <p><strong>{l s='Total products:' mod='blockcart'}</strong>&nbsp;{$cart.subtotals.products.amount}</p>
-              <p><strong>{l s='Total shipping:' mod='blockcart'}</strong>&nbsp;{$cart.subtotals.shipping.amount}</p>
-              <p><strong>{l s='Total:' mod='blockcart'}</strong>&nbsp;{$cart.total.amount}</p>
+              <p><strong>{l s='Total products:' mod='blockcart'}</strong>&nbsp;{$cart.subtotals.products.value}</p>
+              <p><strong>{l s='Total shipping:' mod='blockcart'}</strong>&nbsp;{$cart.subtotals.shipping.value}</p>
+              <p><strong>{l s='Total:' mod='blockcart'}</strong>&nbsp;{$cart.total.value}</p>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">{l s='Continue shopping' mod='blockcart'}</button>
               <a href="{$cart_url}" class="btn btn-primary"><i class="material-icons">&#xE876;</i>{l s='proceed to checkout' mod='blockcart'}</a>
             </div>
