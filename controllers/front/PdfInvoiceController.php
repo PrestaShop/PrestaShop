@@ -58,7 +58,7 @@ class PdfInvoiceControllerCore extends FrontController
             die(Tools::displayError('The invoice was not found.'));
         }
 
-        if (!OrderState::invoiceAvailable($order->getCurrentState()) && !$order->invoice_number) {
+        if (!OrderState::invoiceAvailable($order->getCurrentState()) || !$order->invoice_number) {
             die(Tools::displayError('No invoice is available.'));
         }
 
