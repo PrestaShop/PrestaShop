@@ -6224,6 +6224,8 @@ body#checkout {
       max-height: 49.375em;
       margin-top: 2.1875em;
       z-index: 1; }
+      #product-modal .modal-content .modal-body .mask.nomargin {
+        margin-top: 0; }
     #product-modal .modal-content .modal-body .product-images {
       margin-left: 40px;
       margin-top: 10px; }
