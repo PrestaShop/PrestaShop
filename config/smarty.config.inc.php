@@ -37,13 +37,12 @@ if (Configuration::get('PS_SMARTY_LOCAL')) {
 
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
-if (!Tools::getSafeModeStatus()) {
-    $smarty->use_sub_dirs = true;
-}
+$smarty->use_sub_dirs = true;
 $smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
+
 if (Configuration::get('PS_SMARTY_CACHING_TYPE') == 'mysql') {
-    include(_PS_CLASS_DIR_.'Smarty/SmartyCacheResourceMysql.php');
+    include _PS_CLASS_DIR_.'Smarty/SmartyCacheResourceMysql.php';
     $smarty->caching_type = 'mysql';
 }
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
@@ -78,22 +77,15 @@ smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
 
-$smarty->registerResource('module', new SmartyResourceModule([
+$smarty->registerResource('module', new SmartyResourceModule(array(
     'theme' => _PS_THEME_DIR_.'modules/',
     'modules' => _PS_MODULE_DIR_,
-]));
-
-function smartyDieObject($params, &$smarty)
-{
-    return Tools::d($params['var']);
-}
-
+)));
 
 function smartyDump($params, &$smarty)
 {
     return Tools::dump($params['var']);
 }
-
 
 function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_words = false, $middle = false, $charset = 'UTF-8')
 {
