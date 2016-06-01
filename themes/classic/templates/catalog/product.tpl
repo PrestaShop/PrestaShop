@@ -209,6 +209,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-body">
+            {assign var=imagesCount value=$product.images|count}
             <figure>
               <img class="js-product-cover product-cover-modal" width="{$product.cover.large.width}" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image">
               <figcaption class="image-caption">
@@ -219,7 +220,7 @@
             </figure>
             <aside id="thumbnails" class="thumbnails js-thumbnails text-xs-center">
               {block name='product_images'}
-                <div class="js-mask mask">
+                <div class="js-mask mask {if $imagesCount <= 5} nomargin {/if}">
                   <ul class="product-images js-product-images">
                     {foreach from=$product.images item=image}
                       <li class="thumb-container">
@@ -229,10 +230,12 @@
                   </ul>
                 </div>
               {/block}
-              <div class="arrows js-arrows">
-                <i class="material-icons arrow-up js-arrow-up">&#xE5C7;</i>
-                <i class="material-icons arrow-down js-arrow-down">&#xE5C5;</i>
-              </div>
+              {if $imagesCount > 5}
+                <div class="arrows js-arrows">
+                  <i class="material-icons arrow-up js-arrow-up">&#xE5C7;</i>
+                  <i class="material-icons arrow-down js-arrow-down">&#xE5C5;</i>
+                </div>
+              {/if}
             </aside>
           </div>
         </div><!-- /.modal-content -->
