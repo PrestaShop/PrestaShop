@@ -325,6 +325,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $this->ajaxDie(Tools::jsonEncode([
             'product_prices' => $this->render('catalog/_partials/product-prices.tpl'),
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails.tpl'),
+            'product_customization' => $this->render(
+                'catalog/_partials/product-customization.tpl',
+                array(
+                    'customizations' => $product_for_template['customizations'],
+                )
+            ),
             'product_details' => $this->render('catalog/_partials/product-details.tpl'),
             'product_variants' => $this->render('catalog/_partials/product-variants.tpl'),
             'product_add_to_cart' => $this->render('catalog/_partials/product-add-to-cart.tpl'),

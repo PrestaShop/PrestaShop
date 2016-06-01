@@ -1,7 +1,7 @@
 <section class="product-customization card card-block">
   <h3 class="h4 card-title">{l s='Product customization'}</h3>
   {l s='Don\'t forget to save your customization to be able to add to cart'}
-  <form method="post" action="{$urls.current_url}" enctype="multipart/form-data">
+  <form method="post" action="{$product.url}" enctype="multipart/form-data">
     <ul class="clearfix">
       {foreach from=$customizations.fields item="field"}
         <li class="product-customization-item">
