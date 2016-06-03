@@ -1288,7 +1288,9 @@ var imagesProduct = (function() {
         },
         error: function(file, response) {
           var message = '';
-          if ($.type(response) === 'string') {
+          if ($.type(response) === 'undefined') {
+            return;
+          } else if ($.type(response) === 'string') {
             message = response;
           } else if (response.message) {
             message = response.message;
