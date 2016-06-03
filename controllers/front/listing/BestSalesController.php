@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,42 +23,51 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Adapter\NewProducts\NewProductsProductSearchProvider;
+use PrestaShop\PrestaShop\Adapter\BestSales\BestSalesProductSearchProvider;
 
-class NewProductsControllerCore extends ProductListingFrontController
+class BestSalesControllerCore extends ProductListingFrontController
 {
-    public $php_self = 'new-products';
+    public $php_self = 'best-sales';
 
     /**
-     * Initializes controller
+     * Initializes controller.
      *
      * @see FrontController::init()
+     *
      * @throws PrestaShopException
      */
     public function init()
     {
-        parent::init();
-
-        $this->doProductSearch('catalog/new-products.tpl');
+        if (Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
+            parent::init();
+            $this->doProductSearch('catalog/listing/best-sales.tpl');
+        } else {
+            Tools::redirect('index.php?controller=404');
+        }
     }
 
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
         $query
-            ->setQueryType('new-products')
-            ->setSortOrder(new SortOrder('product', 'date_add', 'desc'))
+            ->setQueryType('best-sales')
+            ->setSortOrder(new SortOrder('product', 'name', 'asc'))
         ;
+
         return $query;
     }
 
     protected function getDefaultProductSearchProvider()
     {
-        return new NewProductsProductSearchProvider(
+        return new BestSalesProductSearchProvider(
             $this->getTranslator()
         );
+    }
+
+    public function getListingLabel()
+    {
+        return $this->getTranslator()->trans('Best sales', array(), 'Shop.Theme.Catalog');
     }
 }

@@ -26,11 +26,11 @@
 
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Adapter\PricesDrop\PricesDropProductSearchProvider;
+use PrestaShop\PrestaShop\Adapter\NewProducts\NewProductsProductSearchProvider;
 
-class PricesDropControllerCore extends ProductListingFrontController
+class NewProductsControllerCore extends ProductListingFrontController
 {
-    public $php_self = 'prices-drop';
+    public $php_self = 'new-products';
 
     /**
      * Initializes controller
@@ -41,22 +41,23 @@ class PricesDropControllerCore extends ProductListingFrontController
     public function init()
     {
         parent::init();
-        $this->doProductSearch('catalog/prices-drop.tpl');
+
+        $this->doProductSearch('catalog/listing/new-products.tpl');
     }
 
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
         $query
-            ->setQueryType('prices-drop')
-            ->setSortOrder(new SortOrder('product', 'name', 'asc'))
+            ->setQueryType('new-products')
+            ->setSortOrder(new SortOrder('product', 'date_add', 'desc'))
         ;
         return $query;
     }
 
     protected function getDefaultProductSearchProvider()
     {
-        return new PricesDropProductSearchProvider(
+        return new NewProductsProductSearchProvider(
             $this->getTranslator()
         );
     }

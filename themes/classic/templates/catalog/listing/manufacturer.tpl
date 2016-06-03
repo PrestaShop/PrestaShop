@@ -1,4 +1,4 @@
-{extends file='catalog/product-list.tpl'}
+{extends file='catalog/listing/product-list.tpl'}
 
 {block name='product_list_header'}
   <h1>{l s='List of products by manufacturer %s' sprintf=$manufacturer.name}</h1>

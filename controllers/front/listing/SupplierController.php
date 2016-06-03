@@ -76,7 +76,7 @@ class SupplierControllerCore extends ProductListingFrontController
 
             if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
                 $this->assignSupplier();
-                $this->doProductSearch('catalog/supplier.tpl');
+                $this->doProductSearch('catalog/listing/supplier.tpl');
             } else {
                 $this->assignAll();
                 $this->setTemplate('catalog/suppliers.tpl');

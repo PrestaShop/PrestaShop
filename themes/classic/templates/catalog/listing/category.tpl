@@ -1,4 +1,4 @@
-{extends file='catalog/product-list.tpl'}
+{extends file='catalog/listing/product-list.tpl'}
 
 {block name='product_list_header'}
     <div class="block-category card card-block">

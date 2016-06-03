@@ -83,7 +83,7 @@ class CategoryControllerCore extends ProductListingFrontController
             'subcategories' => $this->getTemplateVarSubCategories(),
         ));
 
-        $this->doProductSearch('catalog/category.tpl');
+        $this->doProductSearch('catalog/listing/category.tpl');
     }
 
     protected function getProductSearchQuery()
@@ -177,5 +177,10 @@ class CategoryControllerCore extends ProductListingFrontController
         $page['body_classes']['category-depth-level-'.$this->category->level_depth] = true;
 
         return $page;
+    }
+
+    public function getListingLabel()
+    {
+        return $this->trans('Products', array(), 'Shop.Theme.Catalog');
     }
 }
