@@ -72,6 +72,7 @@
           >
             <i class="material-icons pull-xs-left">delete</i>
           </a>
+          {hook h='displayCartExtraProductActions' product=$product}
         </div>
       </div>
     </div>
