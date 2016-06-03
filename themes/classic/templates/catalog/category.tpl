@@ -1,24 +1,13 @@
-{extends file=$layout}
+{extends file='catalog/product-list.tpl'}
 
-{block name='content'}
-  <section id="main">
-
-    {block name='category_header'}
+{block name='product_list_header'}
+    <div class="block-category card card-block">
+      <h1 class="h1">{$category.name}</h1>
       {if $category.description}
-        <div class="block-category card card-block">
-          <h1 class="h1">{$category.name}</h1>
-          <div id="category-description" class="text-muted">{$category.description nofilter}</div>
-          <div class="category-cover">
-            <img src="{$category.image.large.url}" alt="{$category.image.legend}">
-          </div>
+        <div id="category-description" class="text-muted">{$category.description nofilter}</div>
+        <div class="category-cover">
+          <img src="{$category.image.large.url}" alt="{$category.image.legend}">
         </div>
       {/if}
-    {/block}
-
-    {block name='category_products'}
-      {include file='catalog/_partials/products.tpl' products=$products label=$category.name}
-    {/block}
-
-  </section>
-
+    </div>
 {/block}

@@ -2,7 +2,9 @@
   {if $products|count}
       <div class="row products-selection">
         <div class="col-md-4">
-          <h1 class="h1 title">{$label}</h1>
+          {if $label}
+            <h1 class="h1 title">{$label}</h1>
+          {/if}
         </div>
         <div class="col-md-8">
           <div class="products-select">
