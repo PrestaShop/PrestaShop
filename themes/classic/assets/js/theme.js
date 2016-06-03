@@ -16436,17 +16436,17 @@
 	
 	  (0, _jquery2['default'])('.js-terms a').on('click', function (event) {
 	    event.preventDefault();
+	    var url = (0, _jquery2['default'])(event.target).attr('href');
+	    if (url) {
+	      // TODO: Handle request if no pretty URL
+	      url += '?content_only=1';
+	      _jquery2['default'].get(url, function (content) {
+	        (0, _jquery2['default'])('#modal').find('.modal-content').html((0, _jquery2['default'])(content).find('.page-cms').contents());
+	      });
+	    }
+	
 	    (0, _jquery2['default'])('#modal').modal('show');
 	  });
-	
-	  var url = (0, _jquery2['default'])('.js-terms a').attr('href');
-	  if (url) {
-	    // TODO: Handle request if no pretty URL
-	    url += '?content_only=1';
-	    _jquery2['default'].get(url, function (content) {
-	      (0, _jquery2['default'])('#modal').find('.modal-content').html((0, _jquery2['default'])(content).find('.page-cms').contents());
-	    });
-	  }
 	}
 	
 	(0, _jquery2['default'])(document).ready(function () {
