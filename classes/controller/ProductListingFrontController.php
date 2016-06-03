@@ -424,7 +424,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     {
         $search = $this->getProductSearchVariables();
 
-        $rendered_products = $this->render('catalog/_partials/products.tpl', $search);
+        $rendered_products = $this->render('catalog/_partials/products.tpl', array('listing' => $search));
 
         $data = [
             'products'            => $search['products'],
@@ -457,7 +457,9 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         } else {
             $variables = $this->getProductSearchVariables();
             if (!empty($variables['products'])) {
-                $this->context->smarty->assign($variables);
+                $this->context->smarty->assign(array(
+                    'listing' => $this->getProductSearchVariables(),
+                ));
                 $this->setTemplate($template);
             } else {
                 header('HTTP/1.1 404 Not Found');
