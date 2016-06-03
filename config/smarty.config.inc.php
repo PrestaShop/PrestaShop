@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'prestashop/smarty/');
 
 global $smarty;
@@ -37,13 +36,12 @@ if (Configuration::get('PS_SMARTY_LOCAL')) {
 
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
-if (!Tools::getSafeModeStatus()) {
-    $smarty->use_sub_dirs = true;
-}
+$smarty->use_sub_dirs = true;
 $smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
+
 if (Configuration::get('PS_SMARTY_CACHING_TYPE') == 'mysql') {
-    include(_PS_CLASS_DIR_.'Smarty/SmartyCacheResourceMysql.php');
+    include _PS_CLASS_DIR_.'Smarty/SmartyCacheResourceMysql.php';
     $smarty->caching_type = 'mysql';
 }
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
@@ -56,58 +54,28 @@ if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_) {
 }
 
 if (defined('_PS_ADMIN_DIR_')) {
-    require_once(dirname(__FILE__).'/smartyadmin.config.inc.php');
+    require_once dirname(__FILE__).'/smartyadmin.config.inc.php';
 } else {
-    require_once(dirname(__FILE__).'/smartyfront.config.inc.php');
+    require_once dirname(__FILE__).'/smartyfront.config.inc.php';
 }
 
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
-smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
 smartyRegisterFunction($smarty, 'function', 'dump', 'smartyDump'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
-smartyRegisterFunction($smarty, 'function', 'toolsConvertPrice', 'toolsConvertPrice');
 smartyRegisterFunction($smarty, 'modifier', 'json_encode', array('Tools', 'jsonEncode'));
 smartyRegisterFunction($smarty, 'modifier', 'json_decode', array('Tools', 'jsonDecode'));
 smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
-smartyRegisterFunction($smarty, 'function', 'convertPrice', array('Product', 'convertPrice'));
-smartyRegisterFunction($smarty, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'));
-smartyRegisterFunction($smarty, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'));
-smartyRegisterFunction($smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'));
-smartyRegisterFunction($smarty, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'));
-smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
-smartyRegisterFunction($smarty, 'function', 'getAdminToken', array('Tools', 'getAdminTokenLiteSmarty'));
-smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
-smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
-smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
-smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
-smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
-smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
-smartyRegisterFunction($smarty, 'function', 'render', 'smartyRender');
-smartyRegisterFunction($smarty, 'function', 'form_field', 'smartyFormField');
-smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
-
-$smarty->registerResource('module', new SmartyResourceModule([
-    'theme' => _PS_THEME_DIR_.'modules/',
-    'modules' => _PS_MODULE_DIR_,
-]));
-
-function smartyDieObject($params, &$smarty)
-{
-    return Tools::d($params['var']);
-}
-
 
 function smartyDump($params, &$smarty)
 {
     return Tools::dump($params['var']);
 }
-
 
 function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_words = false, $middle = false, $charset = 'UTF-8')
 {
@@ -120,9 +88,10 @@ function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_wo
     if (Tools::strlen($string) > $length) {
         $length -= min($length, Tools::strlen($etc));
         if (!$break_words && !$middle) {
-            $string = preg_replace('/\s+?(\S+)?$/u', '', Tools::substr($string, 0, $length+1, $charset));
+            $string = preg_replace('/\s+?(\S+)?$/u', '', Tools::substr($string, 0, $length + 1, $charset));
         }
-        return !$middle ? Tools::substr($string, 0, $length, $charset).$etc : Tools::substr($string, 0, $length/2, $charset).$etc.Tools::substr($string, -$length/2, $length, $charset);
+
+        return !$middle ? Tools::substr($string, 0, $length, $charset).$etc : Tools::substr($string, 0, $length / 2, $charset).$etc.Tools::substr($string, -$length / 2, $length, $charset);
     } else {
         return $string;
     }
@@ -139,6 +108,7 @@ function smartyMinifyHTML($tpl_output, &$smarty)
         return $tpl_output;
     }
     $tpl_output = Media::minifyHTML($tpl_output);
+
     return $tpl_output;
 }
 
@@ -149,6 +119,7 @@ function smartyPackJSinHTML($tpl_output, &$smarty)
         return $tpl_output;
     }
     $tpl_output = Media::packJSinHTML($tpl_output);
+
     return $tpl_output;
 }
 
@@ -186,6 +157,7 @@ function smartyHook($params, &$smarty)
             $id_module = $module->id;
         } else {
             unset($hook_params['h']);
+
             return '';
         }
     }
@@ -202,9 +174,11 @@ function smartyHook($params, &$smarty)
 
         unset($hook_params['h']);
         unset($hook_params['excl']);
+
         return $result;
     }
     unset($hook_params['h']);
+
     return Hook::exec($params['h'], $hook_params, $id_module);
 }
 
@@ -216,181 +190,23 @@ function smartyCleanHtml($data)
     }
 }
 
-function toolsConvertPrice($params, &$smarty)
-{
-    return Tools::convertPrice($params['price'], Context::getContext()->currency);
-}
-
-function withWidget($params, callable $cb)
-{
-    if (!isset($params['name'])) {
-        throw new Exception('Smarty helper `render_widget` expects at least the `name` parameter.');
-    }
-
-    $moduleName = $params['name'];
-    unset($params['name']);
-
-    $moduleInstance = Module::getInstanceByName($moduleName);
-
-    if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Module\WidgetInterface) {
-        throw new Exception(sprintf(
-            'Module `%1$s` is not a WidgetInterface.',
-            $moduleName
-        ));
-    }
-
-    return $cb($moduleInstance, $params);
-}
-
-function smartyWidget($params, &$smarty)
-{
-    return withWidget($params, function ($widget, $params) {
-        return $widget->renderWidget(null, $params);
-    });
-}
-
-function smartyRender($params, &$smarty)
-{
-    $ui = $params['ui'];
-
-    if (array_key_exists('file', $params)) {
-        $ui->setTemplate($params['file']);
-    }
-
-    return $ui->render($params);
-}
-
-function smartyFormField($params, &$smarty)
-{
-    $scope = $smarty->createData(
-        $smarty
-    );
-
-    $scope->assign($params);
-
-    $file = '_partials/form-field.tpl';
-
-    if (isset($params['file'])) {
-        $file = $params['file'];
-    }
-
-    $tpl = $smarty->createTemplate($file, $scope);
-
-    return $tpl->fetch();
-}
-
-function smartyWidgetBlock($params, $content, &$smarty)
-{
-    static $backedUpVariablesStack = [];
-
-    if (null === $content) {
-        // Function is called twice: at the opening of the block
-        // and when it is closed.
-        // This is the first call.
-        withWidget($params, function ($widget, $params) use (&$smarty, &$backedUpVariablesStack) {
-            // Assign widget variables and backup all the variables they override
-            $currentVariables = $smarty->getTemplateVars();
-            $scopedVariables = $widget->getWidgetVariables();
-            $backedUpVariables = [];
-            foreach ($scopedVariables as $key => $value) {
-                if (array_key_exists($key, $currentVariables)) {
-                    $backedUpVariables[$key] = $currentVariables[$key];
-                }
-                $smarty->assign($key, $value);
-            }
-            $backedUpVariablesStack[] = $backedUpVariables;
-        });
-        // We don't display anything since the template is not rendered yet.
-        return '';
-    } else {
-        // Function gets called for the closing tag of the block.
-        // We restore the backed up variables in order not to override
-        // template variables.
-        if (!empty($backedUpVariablesStack)) {
-            $backedUpVariables = array_pop($backedUpVariablesStack);
-            foreach ($backedUpVariables as $key => $value) {
-                $smarty->assign($key, $value);
-            }
-        }
-        // This time content is filled with rendered template, so return it.
-        return $content;
-    }
-}
-
 function smartyClassname($classname)
 {
     $classname = Tools::replaceAccentedChars(strtolower($classname));
     $classname = preg_replace('/[^A-Za-z0-9]/', '-', $classname);
     $classname = preg_replace('/[-]+/', '-', $classname);
+
     return $classname;
 }
 
 function smartyClassnames(array $classnames)
 {
-    $enabled_classes = [];
+    $enabled_classes = array();
     foreach ($classnames as $classname => $enabled) {
         if ($enabled) {
             $enabled_classes[] = smartyClassname($classname);
         }
     }
+
     return implode(' ', $enabled_classes);
-}
-
-/**
- * Used to delay loading of external classes with smarty->register_plugin
- */
-class SmartyLazyRegister
-{
-    protected $registry = array();
-    protected static $instance;
-
-    /**
-     * Register a function or method to be dynamically called later
-     * @param string|array $params function name or array(object name, method name)
-     */
-    public function register($params)
-    {
-        if (is_array($params)) {
-            $this->registry[$params[1]] = $params;
-        } else {
-            $this->registry[$params] = $params;
-        }
-    }
-
-    /**
-     * Dynamically call static function or method
-     *
-     * @param string $name function name
-     * @param mixed $arguments function argument
-     * @return mixed function return
-     */
-    public function __call($name, $arguments)
-    {
-        $item = $this->registry[$name];
-
-        // case 1: call to static method - case 2 : call to static function
-        if (is_array($item[1])) {
-            return call_user_func_array($item[1].'::'.$item[0], array($arguments[0], &$arguments[1]));
-        } else {
-            $args = array();
-
-            foreach ($arguments as $a => $argument) {
-                if ($a == 0) {
-                    $args[] = $arguments[0];
-                } else {
-                    $args[] = &$arguments[$a];
-                }
-            }
-
-            return call_user_func_array($item, $args);
-        }
-    }
-
-    public static function getInstance()
-    {
-        if (!self::$instance) {
-            self::$instance = new SmartyLazyRegister();
-        }
-        return self::$instance;
-    }
 }
