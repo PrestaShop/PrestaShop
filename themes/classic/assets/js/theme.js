@@ -20536,6 +20536,9 @@
 	  _prestashop2['default'].on('cart dom updated', function (event) {
 	    createSpin();
 	  });
+	  _prestashop2['default'].on('cart updated', function (event) {
+	    (0, _jquery2['default'])('.quickview').modal('hide');
+	  });
 	
 	  (0, _jquery2['default'])('body').on('click', '.js-touchspin, [data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', function (event) {
 	    event.preventDefault();
@@ -20557,40 +20560,6 @@
 	      // If succesful, refresh cart preview
 	      _prestashop2['default'].emit('cart updated', {
 	        reason: event.currentTarget.dataset
-	      });
-	    });
-	  });
-	  (0, _jquery2['default'])('body').on('click', '[data-button-action="add-to-cart"]', function (event) {
-	    event.preventDefault();
-	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
-	    var query = $form.serialize() + '&add=1&action=update';
-	    var actionURL = $form.attr('action');
-	
-	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
-	      (0, _jquery2['default'])('.quickview').modal('hide');
-	      _prestashop2['default'].emit('cart updated', {
-	        reason: {
-	          idProduct: resp.id_product,
-	          idProductAttribute: resp.id_product_attribute,
-	          linkAction: 'add-to-cart'
-	        }
-	      });
-	    });
-	  });
-	
-	  (0, _jquery2['default'])('body').on('submit', '[data-link-action="add-voucher"]', function (event) {
-	    event.preventDefault();
-	
-	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'ajax').val('1'));
-	    (0, _jquery2['default'])(this).append((0, _jquery2['default'])('<input>').attr('type', 'hidden').attr('name', 'action').val('update'));
-	
-	    // First perform the action using AJAX
-	    var actionURL = (0, _jquery2['default'])(this).attr('action');
-	
-	    _jquery2['default'].post(actionURL, (0, _jquery2['default'])(this).serialize(), null, 'json').then(function () {
-	      // If succesful, refresh cart preview
-	      _prestashop2['default'].emit('cart updated', {
-	        reason: event.target.dataset
 	      });
 	    });
 	  });
