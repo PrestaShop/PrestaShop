@@ -9,7 +9,7 @@
       {% if is_multishop_context %}
         <div class="col-md-12">
           <div class="alert alert-warning" role="alert">
-            <i class="material-icons">info_outline</i><p class="alert-text">{{ 'Be carefull, you are in a multishop context, all modifcation will be apply to each shop or group shop'|trans({}, 'AdminProducts') }}</p>
+            <i class="material-icons">info_outline</i><p class="alert-text">{{ 'You are in a multistore context: any modification will impact all your shops, or each shop of the active group.'|trans({}, 'AdminProducts') }}</p>
           </div>
         </div>
       {% endif %}
@@ -22,7 +22,7 @@
           <div class="col-md-2 form_step1_type_product">
             {{ form_widget(form.step1.type_product) }}
             <span class="help-box pull-xs-right" data-toggle="popover"
-              data-content="{{ "Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, mail-sent product?"|trans({}, 'AdminProducts') }}"></span>
+              data-content="{{ "Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?"|trans({}, 'AdminProducts') }}"></span>
           </div>
           <div class="col-md-1 form_switch_language {{ languages|length == 1 ? 'hide' : '' }}">
             <select id="form_switch_language" class="form-control" data-toggle="select2">
@@ -521,7 +521,7 @@
                             <div class="alert alert-info" role="alert">
                               <i class="material-icons">help</i>
                               <p class="alert-text">
-                                {{ 'Final retail price : '|trans({}, 'AdminProducts') }}
+                                {{ 'Final retail price: '|trans({}, 'AdminProducts') }}
                                 <strong><span id="final_retail_price_ti"></span> {{ 'tax incl.'|trans({}, 'AdminProducts') }}</strong> /
                                 <span id="final_retail_price_te"></span> {{ 'tax excl.'|trans({}, 'AdminProducts') }}
                               </p>
@@ -930,7 +930,7 @@
           class="btn btn-tertiary btn-submit hidden-xs preview"
           data-toggle="tooltip"
           id="product_form_preview_btn"
-          title="{{ 'View the product draft on the site.'|trans({}, 'AdminProducts') }}"
+          title="{{ 'See how the product will look online.'|trans({}, 'AdminProducts') }}"
          >
           {{ 'Preview'|trans({}, 'AdminProducts') }}
         </a>
@@ -954,7 +954,7 @@
           id="product_form_save_duplicate_btn"
           data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
           data-toggle="tooltip"
-          title="{{ 'Save and duplicate (CTRL+D) the current product, then go to the new product.'|trans({}, 'AdminProducts') }}"
+          title="{{ 'Save and duplicate this product, then go to the new product: CTRL+D'|trans({}, 'AdminProducts') }}"
           >
           {{ 'Duplicate'|trans({}, 'AdminProducts')|raw }}
         </button>
@@ -963,7 +963,7 @@
           class="btn btn-tertiary-outline btn-submit hidden-xs uppercase go-catalog"
           id="product_form_save_go_to_catalog_btn"
           data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
-          data-toggle="tooltip" title="{{ 'Save and go back to the catalog (CTRL+Q)'|trans({}, 'AdminProducts') }}"
+          data-toggle="tooltip" title="{{ 'Save and go back to the catalog: CTRL+Q'|trans({}, 'AdminProducts') }}"
           >
           {{ 'Go to catalog'|trans({}, 'AdminProducts')|raw }}
         </button>
@@ -973,7 +973,7 @@
           id="product_form_save_new_btn"
           data-redirect="{{ path('admin_product_new') }}"
           data-toggle="tooltip"
-          title="{{ 'Save and create (CTRL+P) a new product.'|trans({}, 'AdminProducts') }}"
+          title="{{ 'Save and create a new product: CTRL+P'|trans({}, 'AdminProducts') }}"
           >
           {{ 'Add new product'|trans({}, 'AdminProducts')|raw }}
         </button>
@@ -983,7 +983,7 @@
           class="btn btn-primary save uppercase"
           value="{{ 'Save'|trans({}, 'AdminProducts') }}"
           data-toggle="tooltip"
-          title="{{ 'Save (CTRL+S) the product and stay on the current page.'|trans({}, 'AdminProducts') }}"
+          title="{{ 'Save the product and stay on the current page: CTRL+S'|trans({}, 'AdminProducts') }}"
           />
       </div>
     </div>
@@ -1037,22 +1037,22 @@
 {% endblock %}
 
 {% set js_translatable = {
-"Form update success": "Form update success"|trans({}, 'AdminProducts'),
-"Form update errors": "Form update errors"|trans({}, 'AdminProducts'),
+"Form update success": "Settings updated."|trans({}, 'AdminProducts'),
+"Form update errors": "Unable to update settings."|trans({}, 'AdminProducts'),
 "Delete": "Delete"|trans({}, 'AdminProducts'),
-"ToLargeFile": "The file is too large ({{filesize}}). Allowed maximum size is {{maxFilesize}}."|trans({}, 'AdminProducts'),
+"ToLargeFile": "The file is too large ({{filesize}}). Maximum size allowed is {{maxFilesize}}."|trans({}, 'AdminProducts'),
 "Drop images here": "Drop images here"|trans({}, 'AdminProducts'),
 "or select files": "or select files"|trans({}, 'AdminProducts'),
 "files recommandations": "Recommended size 800 x 800px for default theme."|trans({}, 'AdminProducts'),
 "files recommandations2": "JPG, GIF or PNG format."|trans({}, 'AdminProducts'),
 "Cover": "Cover"|trans({}, 'AdminProducts'),
-"Are you sure to disable variations ? they will all be deleted": "Are you sure to disable variations ? they will all be deleted"|trans({}, 'AdminProducts'),
-"Are you sure to delete this?": "Are you sure to delete this?"|trans({}, 'AdminProducts'),
+"Are you sure to disable variations ? they will all be deleted": "This will delete all the combinations. Do you wish to proceed?"|trans({}, 'AdminProducts'),
+"Are you sure to delete this?": "Are you sure?"|trans({}, 'AdminProducts'),
 "Quantities": "Quantities"|trans({}, 'AdminProducts'),
 "Combinations": "Combinations"|trans({}, 'AdminProducts'),
 "Virtual product": "Virtual product"|trans({}, 'AdminProducts'),
 "tax incl.": "tax incl."|trans({}, 'AdminProducts'),
 "tax excl.": "tax excl."|trans({}, 'AdminProducts'),
-"You can't create pack product with variations. Are you sure to disable variations ? they will all be deleted.": "You can't create pack product with variations. Are you sure to disable variations ? they will all be deleted."|trans({}, "AdminProducts"),
-"You can't create virtual product with variations. Are you sure to disable variations ? they will all be deleted.": "You can't create virtual product with variations. Are you sure to disable variations ? they will all be deleted."|trans({}, "AdminProducts"),
+"You can't create pack product with variations. Are you sure to disable variations ? they will all be deleted.": "A pack of products can't have combinations. This will delete all the combinations. Do you wish to proceed?"|trans({}, "AdminProducts"),
+"You can't create virtual product with variations. Are you sure to disable variations ? they will all be deleted.": "A virtual product can't have combinations. This will delete all the combinations. Do you wish to proceed?"|trans({}, "AdminProducts"),
 }|merge(js_translatable) %}
