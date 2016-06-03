@@ -1,0 +1,64 @@
+filter:
+    excluded_paths:
+        - 'vendor/*'
+        - 'Tests/*'
+
+before_commands:
+    - 'composer install --no-interaction --no-scripts'
+
+tools:
+    php_mess_detector:
+        config:
+            code_size_rules: { cyclomatic_complexity: true, npath_complexity: true, excessive_method_length: true, excessive_class_length: true, excessive_parameter_list: true, excessive_public_count: true, too_many_fields: true, too_many_methods: true, excessive_class_complexity: true }
+            design_rules: { number_of_class_children: true, depth_of_inheritance: true, coupling_between_objects: true }
+            unused_code_rules: { unused_local_variable: true, unused_private_method: true, unused_formal_parameter: true }
+            naming_rules: { short_variable: true, long_variable: true, short_method: true, boolean_method_name: true }
+            controversial_rules: { camel_case_class_name: true, camel_case_property_name: true, camel_case_method_name: true, camel_case_parameter_name: true, camel_case_variable_name: true }
+    php_cs_fixer:
+        config:
+            level: symfony
+            fixers: { unused_use: true, phpdoc_params: true, braces: true, php_closing_tag: true }
+    php_analyzer:
+        config:
+            suspicious_code: { enabled: true, overriding_parameter: true, overriding_closure_use: true, parameter_closure_use_conflict: true, parameter_multiple_times: true, non_existent_class_in_instanceof_check: true, non_existent_class_in_catch_clause: true, assignment_of_null_return: true, non_commented_switch_fallthrough: true, non_commented_empty_catch_block: true, overriding_private_members: true, use_statement_alias_conflict: true, precedence_in_condition_assignment: true }
+            verify_php_doc_comments: { enabled: true, parameters: true, return: true, suggest_more_specific_types: true, ask_for_return_if_not_inferrable: true, ask_for_param_type_annotation: true }
+            loops_must_use_braces: { enabled: true }
+            simplify_boolean_return: { enabled: true }
+            phpunit_checks: { enabled: true }
+            reflection_fixes: { enabled: true }
+            use_statement_fixes: { enabled: true, order_alphabetically: true, remove_unused: true, preserve_multiple: false, preserve_blanklines: false }
+            parameter_reference_check: { enabled: false }
+            checkstyle: { enabled: false, no_trailing_whitespace: true, naming: { enabled: true, local_variable: '^[a-z][a-zA-Z0-9]*$', abstract_class_name: ^Abstract|Factory$, utility_class_name: 'Utils?$', constant_name: '^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$', property_name: '^[a-z][a-zA-Z0-9]*$', method_name: '^(?:[a-z]|__)[a-zA-Z0-9]*$', parameter_name: '^[a-z][a-zA-Z0-9]*$', interface_name: '^[A-Z][a-zA-Z0-9]*Interface$', type_name: '^[A-Z][a-zA-Z0-9]*$', exception_name: '^[A-Z][a-zA-Z0-9]*Exception$', isser_method_name: '^(?:is|has|should|may|supports)' } }
+            unreachable_code: { enabled: false }
+            check_access_control: { enabled: false }
+            typo_checks: { enabled: false }
+            check_variables: { enabled: false }
+            check_calls: { enabled: true, too_many_arguments: true, missing_argument: true, argument_type_checks: lenient }
+            dead_assignments: { enabled: false }
+            check_usage_context: { enabled: true, foreach: { value_as_reference: true, traversable: true } }
+            reflection_checks: { enabled: false }
+            precedence_checks: { enabled: true, assignment_in_condition: true, comparison_of_bit_result: true }
+            basic_semantic_checks: { enabled: false }
+            unused_code: { enabled: false }
+            deprecation_checks: { enabled: false }
+            useless_function_calls: { enabled: false }
+            metrics_lack_of_cohesion_methods: { enabled: false }
+            metrics_coupling: { enabled: true, stable_code: { namespace_prefixes: {  }, classes: {  } } }
+            doctrine_parameter_binding: { enabled: false }
+            doctrine_entity_manager_injection: { enabled: false }
+            symfony_request_injection: { enabled: false }
+            doc_comment_fixes: { enabled: false }
+    php_code_sniffer:
+        config:
+            standard: PSR2
+            sniffs: { psr2: { classes: { property_declaration_sniff: true }, methods: { method_declaration_sniff: true } } }
+    sensiolabs_security_checker: true
+    php_loc: true
+    php_pdepend: true
+    php_sim: true
+    php_changetracking: true
+    external_code_coverage: false
+
+build_failure_conditions:
+    - 'elements.rating(<= D).new.exists'
+    - 'issues.severity(>= MAJOR).new.exists'
