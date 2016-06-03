@@ -3,7 +3,7 @@
 include('config/config.php');
 
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
-    die('forbiden');
+    die('forbidden');
 }
 
 include('include/utils.php');
