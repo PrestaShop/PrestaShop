@@ -21,7 +21,7 @@ describe('Customer Identity', function () {
       return browser
         .setValue('[name="password"]', 'wrong password')
         .click('#customer-form button[data-link-action="save-customer"]')
-        .waitForVisible('.alert-danger')
+        .waitForVisible('article[role="alert"][data-alert="danger"]')
       ;
     });
 
@@ -29,7 +29,7 @@ describe('Customer Identity', function () {
       return browser
         .setValue('[name="password"]', '123456789')
         .click('#customer-form button[data-link-action="save-customer"]')
-        .waitForVisible('.alert-success')
+        .waitForVisible('article[role="alert"][data-alert="success"]')
       ;
     });
 
@@ -39,7 +39,7 @@ describe('Customer Identity', function () {
         .setValue('[name="password"]', '123456789')
         .setValue('[name="new_password"]', 'new password')
         .click('#customer-form button[data-link-action="save-customer"]')
-        .waitForVisible('.alert-success')
+        .waitForVisible('article[role="alert"][data-alert="success"]')
         ;
     });
 
@@ -53,7 +53,7 @@ describe('Customer Identity', function () {
         .setValue('[name="password"]', 'new password')
         .setValue('[name="new_password"]', '123456789')
         .click('#customer-form button[data-link-action="save-customer"]')
-        .waitForVisible('.alert-success')
+        .waitForVisible('article[role="alert"][data-alert="success"]')
       ;
     });
 

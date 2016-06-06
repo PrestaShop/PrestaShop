@@ -183,7 +183,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(true, null);
             }
 
-            if (Tools::isSubmit('submitCustomizedDatas')) {
+            if (Tools::isSubmit('submitCustomizedData')) {
                 // If cart has not been saved, we need to do it so that customization fields can have an id_cart
                 // We check that the cookie exists first to avoid ghost carts
                 if (!$this->context->cart->id && isset($_COOKIE[$this->context->cookie->getName()])) {
