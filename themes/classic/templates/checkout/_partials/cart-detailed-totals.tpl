@@ -25,8 +25,8 @@
 
   <div class="card-block">
     <div class="cart-summary-line cart-total">
-      <span class="label">{$cart.total.label} {$cart.labels.tax_short}</span>
-      <span class="value">{$cart.total.value}</span>
+      <span class="label">{$cart.totals.total.label} {$cart.labels.tax_short}</span>
+      <span class="value">{$cart.totals.total.value}</span>
     </div>
 
     <div class="cart-summary-line">
