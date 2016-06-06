@@ -48,9 +48,9 @@
       </tr>
     {/foreach}
 
-    <tr class="text-xs-right line-{$order.total.type}">
-      <td colspan="4">{$order.total.label}</td>
-      <td>{$order.total.value}</td>
+    <tr class="text-xs-right line-{$order.totals.total.type}">
+      <td colspan="4">{$order.totals.total.label}</td>
+      <td>{$order.totals.total.value}</td>
     </tr>
   </tfoot>
 </table>
