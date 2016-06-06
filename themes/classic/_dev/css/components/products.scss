@@ -209,6 +209,10 @@
         max-height: em(790px);
         margin-top: em(35px);
         z-index: 1;
+
+        &.nomargin {
+          margin-top: 0;
+        }
       }
       .product-images {
         margin-left: $extra-large-space;

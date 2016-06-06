@@ -3,6 +3,7 @@ import $ from 'jquery';
 $(document).ready(function () {
   createProductSpin();
   createInputFile();
+  coverImage();
 
   $('body').on(
     'click',
@@ -26,8 +27,18 @@ $(document).ready(function () {
   prestashop.on('product dom updated', function(event) {
     createProductSpin();
     createInputFile();
+    coverImage();
     $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
   });
+
+  function coverImage() {
+    $('.js-thumb').on(
+      'click',
+      (event) => {
+        $('.js-qv-product-cover').prop('src', $(event.currentTarget).data('image-large-src'));
+      }
+    );
+  }
 
   function createInputFile()
   {

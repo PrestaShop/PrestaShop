@@ -20469,6 +20469,7 @@
 	(0, _jquery2['default'])(document).ready(function () {
 	  createProductSpin();
 	  createInputFile();
+	  coverImage();
 	
 	  (0, _jquery2['default'])('body').on('click', 'input.product-refresh', function (event) {
 	    event.preventDefault();
@@ -20488,8 +20489,15 @@
 	  prestashop.on('product dom updated', function (event) {
 	    createProductSpin();
 	    createInputFile();
+	    coverImage();
 	    (0, _jquery2['default'])((0, _jquery2['default'])('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
 	  });
+	
+	  function coverImage() {
+	    (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
+	      (0, _jquery2['default'])('.js-qv-product-cover').prop('src', (0, _jquery2['default'])(event.currentTarget).data('image-large-src'));
+	    });
+	  }
 	
 	  function createInputFile() {
 	    (0, _jquery2['default'])('.js-file-input').on('change', function (event) {
@@ -20796,26 +20804,26 @@
 	      var _this = this;
 	
 	      var MAX_THUMBS = 5;
-	      var $arrows = (0, _jquery2['default'])('.js-arrows');
+	      var $arrows = (0, _jquery2['default'])('.js-modal-arrows');
 	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
-	      (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
-	        if ((0, _jquery2['default'])('.js-thumb').hasClass('selected')) {
-	          (0, _jquery2['default'])('.js-thumb').removeClass('selected');
+	      (0, _jquery2['default'])('.js-modal-thumb').on('click', function (event) {
+	        if ((0, _jquery2['default'])('.js-modal-thumb').hasClass('selected')) {
+	          (0, _jquery2['default'])('.js-modal-thumb').removeClass('selected');
 	        }
 	        (0, _jquery2['default'])(event.currentTarget).addClass('selected');
-	        (0, _jquery2['default'])('.js-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
+	        (0, _jquery2['default'])('.js-modal-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
 	      });
 	
-	      if ((0, _jquery2['default'])('.js-product-images li').length <= MAX_THUMBS) {
+	      if ((0, _jquery2['default'])('.js-modal-product-images li').length <= MAX_THUMBS) {
 	        $arrows.css('opacity', '.2');
 	      } else {
 	        $arrows.on('click', function (event) {
-	          if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && (0, _jquery2['default'])('.js-product-images').position().top < 0) {
+	          if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && (0, _jquery2['default'])('.js-modal-product-images').position().top < 0) {
 	            _this.move('up');
-	            (0, _jquery2['default'])('.js-arrow-down').css('opacity', '1');
-	          } else if ((0, _jquery2['default'])(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > (0, _jquery2['default'])('.js-mask').height()) {
+	            (0, _jquery2['default'])('.js-modal-arrow-down').css('opacity', '1');
+	          } else if ((0, _jquery2['default'])(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > (0, _jquery2['default'])('.js-modal-mask').height()) {
 	            _this.move('down');
-	            (0, _jquery2['default'])('.js-arrow-up').css('opacity', '1');
+	            (0, _jquery2['default'])('.js-modal-arrow-up').css('opacity', '1');
 	          }
 	        });
 	      }
@@ -20824,16 +20832,16 @@
 	    key: 'move',
 	    value: function move(direction) {
 	      var THUMB_MARGIN = 10;
-	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
-	      var thumbHeight = (0, _jquery2['default'])('.js-product-images li img').height() + THUMB_MARGIN;
+	      var $thumbnails = (0, _jquery2['default'])('.js-modal-product-images');
+	      var thumbHeight = (0, _jquery2['default'])('.js-modal-product-images li img').height() + THUMB_MARGIN;
 	      var currentPosition = $thumbnails.position().top;
 	      $thumbnails.velocity({
 	        translateY: direction === 'up' ? currentPosition + thumbHeight : currentPosition - thumbHeight
 	      }, function () {
 	        if ($thumbnails.position().top >= 0) {
-	          (0, _jquery2['default'])('.js-arrow-up').css('opacity', '.2');
-	        } else if ($thumbnails.position().top + $thumbnails.height() <= (0, _jquery2['default'])('.js-mask').height()) {
-	          (0, _jquery2['default'])('.js-arrow-down').css('opacity', '.2');
+	          (0, _jquery2['default'])('.js-modal-arrow-up').css('opacity', '.2');
+	        } else if ($thumbnails.position().top + $thumbnails.height() <= (0, _jquery2['default'])('.js-modal-mask').height()) {
+	          (0, _jquery2['default'])('.js-modal-arrow-down').css('opacity', '.2');
 	        }
 	      });
 	    }
