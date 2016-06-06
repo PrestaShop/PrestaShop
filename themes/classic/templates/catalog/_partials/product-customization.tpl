@@ -27,7 +27,7 @@
       {/foreach}
     </ul>
     <div class="clearfix">
-      <button class="btn btn-primary pull-xs-right" type="submit" name="submitCustomizedDatas">{l s='Save Customization'}</button>
+      <button class="btn btn-primary pull-xs-right" type="submit" name="submitCustomizedData">{l s='Save Customization'}</button>
     </div>
   </form>
 </section>

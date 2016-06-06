@@ -99,7 +99,7 @@ describe('The product page', function () {
     it('should display the add to cart button enabled once the product is customized', function () {
       return browser
         .setValue('.product-customization textarea', 'a cool text')
-        .click('[name="submitCustomizedDatas"]')
+        .click('[name="submitCustomizedData"]')
         .isEnabled('form .add-to-cart')
       ;
     });
