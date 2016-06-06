@@ -46,7 +46,6 @@ class OrderConfirmationControllerCore extends FrontController
         parent::init();
 
         $this->id_cart = (int) (Tools::getValue('id_cart', 0));
-        $is_guest = false;
 
         $redirectLink = 'index.php?controller=history';
 

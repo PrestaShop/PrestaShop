@@ -49,7 +49,7 @@
     </div>
   </section>
 
-  {if $is_guest}
+  {if $customer.is_guest}
     <div id="registration-form" class="card">
       <div class="card-block">
         <h4 class="h4">{l s='Save time on your next order, sign up now' d='Shop.Theme.Checkout'}</h4>
