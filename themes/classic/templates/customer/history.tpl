@@ -23,26 +23,31 @@
       <tbody>
         {foreach from=$orders item=order}
           <tr>
-            <th scope="row">{$order.reference}</th>
-            <td>{$order.order_date}</td>
-            <td class="text-xs-right">{$order.total_price}</td>
-            <td>{$order.payment}</td>
+            <th scope="row">{$order.details.reference}</th>
+            <td>{$order.details.order_date}</td>
+            <td class="text-xs-right">{$order.totals.total.value}</td>
+            <td>{$order.details.payment}</td>
             <td>
-              <span class="label label-pill {$order.contrast}" style="background-color:{$order.order_state_color}">{$order.order_state}</span>
+              <span
+                class="label label-pill {$order.history.current.contrast}"
+                style="background-color:{$order.history.current.color}"
+              >
+                {$order.history.current.ostate_name}
+              </span>
             </td>
             <td class="text-xs-center">
-              {if $order.invoice_url}
-                <a href="{$order.invoice_url}"><i class="material-icons">&#xE415;</i></a>
+              {if $order.details.invoice_url}
+                <a href="{$order.details.invoice_url}"><i class="material-icons">&#xE415;</i></a>
               {else}
                 -
               {/if}
             </td>
             <td class="text-xs-center order-actions">
-              <a href="{$order.url_details}" data-link-action="view-order-details">
+              <a href="{$order.details.details_url}" data-link-action="view-order-details">
                 {l s='Details' d='Shop.Theme.CustomerAccount'}
               </a>
-              {if $order.reorder_url}
-                <a href="{$order.reorder_url}">{l s='Reorder' d='Shop.Theme.Action'}</a>
+              {if $order.details.reorder_url}
+                <a href="{$order.details.reorder_url}">{l s='Reorder' d='Shop.Theme.Action'}</a>
               {/if}
             </td>
           </tr>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
 
 class HistoryControllerCore extends FrontController
 {
@@ -30,14 +31,17 @@ class HistoryControllerCore extends FrontController
     public $php_self = 'history';
     public $authRedirection = 'history';
     public $ssl = true;
+    public $order_presenter;
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
     {
         parent::initContent();
+        $this->order_presenter = new OrderPresenter();
 
         if (Tools::isSubmit('slowvalidation')) {
             $this->warning[] = $this->l('If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.');
@@ -49,30 +53,20 @@ class HistoryControllerCore extends FrontController
             $this->warning[] = $this->l('You have not placed any orders.');
         }
 
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'orders' => $orders,
-        ]);
+        ));
 
         $this->setTemplate('customer/history.tpl');
     }
 
     public function getTemplateVarOrders()
     {
-        $orders = [];
+        $orders = array();
         $customer_orders = Order::getCustomerOrders($this->context->customer->id);
         foreach ($customer_orders as $customer_order) {
-            $myOrder = new Order((int)$customer_order['id_order']);
-            if (Validate::isLoadedObject($myOrder)) {
-                $orders[$customer_order['id_order']] = $customer_order;
-                $orders[$customer_order['id_order']]['virtual'] = $myOrder->isVirtual(false);
-                $orders[$customer_order['id_order']]['reference'] = Order::getUniqReferenceOf($customer_order['id_order']);
-                $orders[$customer_order['id_order']]['order_date'] = Tools::displayDate($customer_order['date_add'], null, false);
-                $orders[$customer_order['id_order']]['total_price'] = Tools::displayPrice($customer_order['total_paid'], (int)$customer_order['id_currency']);
-                $orders[$customer_order['id_order']]['contrast'] = (Tools::getBrightness($customer_order['order_state_color']) > 128) ? 'dark' : 'bright';
-                $orders[$customer_order['id_order']]['url_to_invoice'] = HistoryController::getUrlToInvoice($myOrder, $this->context);
-                $orders[$customer_order['id_order']]['url_details'] = $this->context->link->getPageLink('order-detail', true, null, 'id_order='.(int)$customer_order['id_order']);
-                $orders[$customer_order['id_order']]['url_to_reorder'] = HistoryController::getUrlToReorder((int)$customer_order['id_order'], $this->context);
-            }
+            $order = new Order((int) $customer_order['id_order']);
+            $orders[$customer_order['id_order']] = $this->order_presenter->present($order);
         }
 
         return $orders;
@@ -82,7 +76,7 @@ class HistoryControllerCore extends FrontController
     {
         $url_to_invoice = '';
 
-        if ((bool)Configuration::get('PS_INVOICE') && OrderState::invoiceAvailable($order->current_state) && count($order->getInvoicesCollection())) {
+        if ((bool) Configuration::get('PS_INVOICE') && OrderState::invoiceAvailable($order->current_state) && count($order->getInvoicesCollection())) {
             $url_to_invoice = $context->link->getPageLink('pdf-invoice', true, null, 'id_order='.$order->id);
             if ($context->cookie->is_guest) {
                 $url_to_invoice .= '&amp;secure_key='.$order->secure_key;
@@ -95,8 +89,8 @@ class HistoryControllerCore extends FrontController
     public static function getUrlToReorder($id_order, $context)
     {
         $url_to_reorder = '';
-        if (!(bool)Configuration::get('PS_DISALLOW_HISTORY_REORDERING')) {
-            $url_to_reorder = $context->link->getPageLink('order', true, null, 'submitReorder&id_order='.(int)$id_order);
+        if (!(bool) Configuration::get('PS_DISALLOW_HISTORY_REORDERING')) {
+            $url_to_reorder = $context->link->getPageLink('order', true, null, 'submitReorder&id_order='.(int) $id_order);
         }
 
         return $url_to_reorder;
