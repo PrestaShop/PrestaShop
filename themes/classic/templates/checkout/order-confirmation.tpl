@@ -31,7 +31,13 @@
       <div class="row">
 
         {block name='order_confirmation_table'}
-          {include file='checkout/_partials/order-confirmation-table.tpl' order=$order}
+          {include
+            file='checkout/_partials/order-confirmation-table.tpl'
+            products=$order.products
+            subtotals=$order.subtotals
+            totals=$order.totals
+            labels=$order.labels
+          }
         {/block}
 
         <div id="order-details" class="col-md-4">

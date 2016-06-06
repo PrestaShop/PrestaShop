@@ -1,7 +1,7 @@
 <div id="order-items" class="col-md-8">
   <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
   <table class="table">
-    {foreach from=$order.products item=product}
+    {foreach from=$products item=product}
       <tr>
         <td>
           <span class="thumb-mask product-image media-middle">
@@ -54,7 +54,7 @@
   <hr>
 
   <table>
-    {foreach $order.subtotals as $subtotal}
+    {foreach $subtotals as $subtotal}
       <tr>
         <td>{$subtotal.label}</td>
         <td>{$subtotal.value}</td>
@@ -62,8 +62,8 @@
     {/foreach}
 
     <tr class="font-weight-bold">
-      <td><span class="text-uppercase">{$order.totals.total.label}</span> {$order.labels.tax_short}</td>
-      <td>{$order.totals.total.value}</td>
+      <td><span class="text-uppercase">{$totals.total.label}</span> {$labels.tax_short}</td>
+      <td>{$totals.total.value}</td>
     </tr>
   </table>
 </div>
