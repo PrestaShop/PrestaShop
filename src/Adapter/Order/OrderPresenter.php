@@ -198,7 +198,7 @@ class OrderPresenter implements PresenterInterface
             'reorder_url' => HistoryController::getUrlToReorder((int) $order->id, $context),
             'invoice_url' => HistoryController::getUrlToInvoice($order, $context),
             'gift_message' => nl2br($order->gift_message),
-            'return_allowed' => (int) $order->isReturnable(),
+            'is_returnable' => (int) $order->isReturnable(),
             'payment' => $order->payment,
             'recyclable' => (bool) $order->recyclable,
             'shipping' => $this->getShipping($order),

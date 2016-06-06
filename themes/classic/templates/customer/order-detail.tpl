@@ -108,7 +108,7 @@
   {$hook_orderdetaildisplayed}
 
   {block name='order_detail'}
-    {if $order.details.return_allowed}
+    {if $order.details.is_returnable}
       {include file='customer/_partials/order-detail-return.tpl'}
     {else}
       {include file='customer/_partials/order-detail-no-return.tpl'}
