@@ -120,7 +120,7 @@
   "require-dev": {
     "phpunit/phpunit": "~4.5",
     "phake/phake": "@stable",
-    "fabpot/php-cs-fixer": "^1.10",
+    "friendsofphp/php-cs-fixer": "^1.10",
     "phpdocumentor/phpdocumentor": "2.*"
   },
   "autoload-dev": {
