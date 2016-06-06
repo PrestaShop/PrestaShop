@@ -86,18 +86,11 @@ class OrderConfirmationControllerCore extends FrontController
         $this->context->smarty->assign(array(
             'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($order),
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($order),
-            'url_to_invoice' => HistoryController::getUrlToInvoice($order, $this->context),
             'order' => $presentedOrder,
             'register_form' => $register_form,
         ));
 
         if ($this->context->customer->is_guest) {
-            $this->context->smarty->assign(array(
-                'id_order' => $this->id_order,
-                'reference_order' => $this->reference,
-                'id_order_formatted' => sprintf('#%06d', $this->id_order),
-                'email' => $this->context->customer->email,
-            ));
             /* If guest we clear the cookie for security reason */
             $this->context->customer->mylogout();
         }
