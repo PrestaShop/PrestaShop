@@ -5,10 +5,18 @@
       <div class="card-block">
         <div class="row">
           <div class="col-md-12">
-            <h3 class="h1 card-title"><i class="material-icons done">&#xE876;</i>{l s='Your order is confirmed' d='Shop.Theme.Checkout'}</h3>
+            <h3 class="h1 card-title">
+              <i class="material-icons done">&#xE876;</i>{l s='Your order is confirmed' d='Shop.Theme.Checkout'}
+            </h3>
             <p>
               {l s='An email has been sent to your mail address %s.' d='Shop.Theme.Checkout' sprintf=$customer.email}
-              {if $url_to_invoice !== ''}{l s='You can also [1]download your invoice[/1]' d='Shop.Theme.Checkout' tags=["<a href='{$url_to_invoice}'>"]}{/if}
+              {if $order.details.invoice_url}
+                {l
+                  s='You can also [1]download your invoice[/1]'
+                  d='Shop.Theme.Checkout'
+                  tags=["<a href='{$order.details.invoice_url}'>"]
+                }
+              {/if}
             </p>
             {$HOOK_ORDER_CONFIRMATION nofilter}
           </div>

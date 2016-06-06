@@ -31,8 +31,8 @@
               <span class="label label-pill {$order.contrast}" style="background-color:{$order.order_state_color}">{$order.order_state}</span>
             </td>
             <td class="text-xs-center">
-              {if $order.url_to_invoice}
-                <a href="{$order.url_to_invoice}"><i class="material-icons">&#xE415;</i></a>
+              {if $order.invoice_url}
+                <a href="{$order.invoice_url}"><i class="material-icons">&#xE415;</i></a>
               {else}
                 -
               {/if}
@@ -41,8 +41,8 @@
               <a href="{$order.url_details}" data-link-action="view-order-details">
                 {l s='Details' d='Shop.Theme.CustomerAccount'}
               </a>
-              {if $order.url_to_reorder}
-                <a href="{$order.url_to_reorder}">{l s='Reorder' d='Shop.Theme.Action'}</a>
+              {if $order.reorder_url}
+                <a href="{$order.reorder_url}">{l s='Reorder' d='Shop.Theme.Action'}</a>
               {/if}
             </td>
           </tr>
