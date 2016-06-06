@@ -204,10 +204,10 @@ function displaySummary()
 
 
 
-	$('#summary_shipping_cost').text(tmp);
+	$('#summary_shipping_cost').html(tmp);
 
 	// Weight or price ranges
-	$('#summary_range').text(summary_translation_range+' '+summary_translation_range_limit);
+	$('#summary_range').html(summary_translation_range+' '+summary_translation_range_limit);
 
 
 	if ($('input[name="shipping_method"]:checked').val() == 1)
