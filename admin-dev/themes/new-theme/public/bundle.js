@@ -79,7 +79,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.3.1 */
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.3.0 */
 
 	(function(root, factory) {
 	  if (true) {
@@ -191,10 +191,8 @@
 	};
 
 	function removeUtilElements() {
-	  if (zeroElement) {
-	    document.body.removeChild(zeroElement);
-	  }
-	  zeroElement = null;
+	  document.body.removeChild(zeroElement);
+	  zeroElement = undefined;
 	};
 
 	function getBounds(el) {
@@ -555,7 +553,7 @@
 	      return;
 	    }
 
-	    if (pendingTimeout != null) {
+	    if (typeof pendingTimeout !== 'undefined') {
 	      clearTimeout(pendingTimeout);
 	      pendingTimeout = null;
 	    }
@@ -1863,7 +1861,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	 * jQuery JavaScript Library v2.2.4
+	 * jQuery JavaScript Library v2.2.3
 	 * http://jquery.com/
 	 *
 	 * Includes Sizzle.js
@@ -1873,7 +1871,7 @@
 	 * Released under the MIT license
 	 * http://jquery.org/license
 	 *
-	 * Date: 2016-05-20T17:23Z
+	 * Date: 2016-04-05T19:26Z
 	 */
 
 	(function( global, factory ) {
@@ -1929,7 +1927,7 @@
 
 
 	var
-		version = "2.2.4",
+		version = "2.2.3",
 
 		// Define a local copy of jQuery
 		jQuery = function( selector, context ) {
@@ -6870,14 +6868,13 @@
 		isDefaultPrevented: returnFalse,
 		isPropagationStopped: returnFalse,
 		isImmediatePropagationStopped: returnFalse,
-		isSimulated: false,
 
 		preventDefault: function() {
 			var e = this.originalEvent;
 
 			this.isDefaultPrevented = returnTrue;
 
-			if ( e && !this.isSimulated ) {
+			if ( e ) {
 				e.preventDefault();
 			}
 		},
@@ -6886,7 +6883,7 @@
 
 			this.isPropagationStopped = returnTrue;
 
-			if ( e && !this.isSimulated ) {
+			if ( e ) {
 				e.stopPropagation();
 			}
 		},
@@ -6895,7 +6892,7 @@
 
 			this.isImmediatePropagationStopped = returnTrue;
 
-			if ( e && !this.isSimulated ) {
+			if ( e ) {
 				e.stopImmediatePropagation();
 			}
 
@@ -7825,6 +7822,19 @@
 			val = name === "width" ? elem.offsetWidth : elem.offsetHeight,
 			styles = getStyles( elem ),
 			isBorderBox = jQuery.css( elem, "boxSizing", false, styles ) === "border-box";
+
+		// Support: IE11 only
+		// In IE 11 fullscreen elements inside of an iframe have
+		// 100x too small dimensions (gh-1764).
+		if ( document.msFullscreenElement && window.top !== window ) {
+
+			// Support: IE11 only
+			// Running getBoundingClientRect on a disconnected node
+			// in IE throws an error.
+			if ( elem.getClientRects().length ) {
+				val = Math.round( elem.getBoundingClientRect()[ name ] * 100 );
+			}
+		}
 
 		// Some non-html elements return undefined for offsetWidth, so check for null/undefined
 		// svg - https://bugzilla.mozilla.org/show_bug.cgi?id=649285
@@ -9716,7 +9726,6 @@
 		},
 
 		// Piggyback on a donor event to simulate a different one
-		// Used only for `focus(in | out)` events
 		simulate: function( type, elem, event ) {
 			var e = jQuery.extend(
 				new jQuery.Event(),
@@ -9724,10 +9733,27 @@
 				{
 					type: type,
 					isSimulated: true
+
+					// Previously, `originalEvent: {}` was set here, so stopPropagation call
+					// would not be triggered on donor event, since in our own
+					// jQuery.event.stopPropagation function we had a check for existence of
+					// originalEvent.stopPropagation method, so, consequently it would be a noop.
+					//
+					// But now, this "simulate" function is used only for events
+					// for which stopPropagation() is noop, so there is no need for that anymore.
+					//
+					// For the 1.x branch though, guard for "click" and "submit"
+					// events is still used, but was moved to jQuery.event.stopPropagation function
+					// because `originalEvent` should point to the original event for the constancy
+					// with other events and for more focused logic
 				}
 			);
 
 			jQuery.event.trigger( e, null, elem );
+
+			if ( e.isDefaultPrevented() ) {
+				event.preventDefault();
+			}
 		}
 
 	} );
@@ -73420,9 +73446,6 @@
 	var queueIndex = -1;
 
 	function cleanUpNextTick() {
-	    if (!draining || !currentQueue) {
-	        return;
-	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -82653,14 +82676,6 @@
 	    jQuery('[data-toggle="popover"]').popover();
 	  }
 
-	  var initSearchBar = function() {
-	    $('.js-form-search').on('focusin', function() {
-	       if (!$('.js-dropdown-form').hasClass('expanded')) {
-	         $('.js-dropdown-form').addClass('expanded');
-	       }
-	     });
-	  }
-
 	  global.prestaShopUiKit = {
 
 	    /**
@@ -82690,7 +82705,6 @@
 	        initToggleButtons();
 	        initAlerts();
 	        initToolTips();
-	        initSearchBar();
 	      });
 	    },
 
@@ -85111,76 +85125,81 @@
 
 	exports.default = function () {
 	  (0, _jquery2.default)(document).ready(function () {
-	    var formId = '#' + (0, _jquery2.default)('.autocomplete-search').data('formid') + '-data .delete';
-	    var autocompleteSource = (0, _jquery2.default)('.autocomplete-search').data('formid') + '_source';
+	    (0, _jquery2.default)('.autocomplete-search').each(function () {
+	      var autocompleteObject = (0, _jquery2.default)(this);
+	      var autocompleteFormId = autocompleteObject.attr('data-formid');
+	      var formId = '#' + autocompleteFormId + '-data .delete';
+	      var autocompleteSource = autocompleteFormId + '_source';
 
-	    (0, _jquery2.default)(document).on('click', formId, function (e) {
-	      e.preventDefault();
+	      (0, _jquery2.default)(document).on('click', formId, function (e) {
+	        e.preventDefault();
 
-	      window.modalConfirmation.create(window.translate_javascripts['Are you sure to delete this?'], null, {
-	        onContinue: function onContinue() {
-	          (0, _jquery2.default)(e.target).parent().remove();
-	        }
-	      }).show();
-	    });
-
-	    document[autocompleteSource] = new _typeahead2.default({
-	      datumTokenizer: _typeahead2.default.tokenizers.whitespace,
-	      queryTokenizer: _typeahead2.default.tokenizers.whitespace,
-	      identify: function identify(obj) {
-	        return obj[(0, _jquery2.default)('.autocomplete-search').data('mappingvalue')];
-	      },
-	      remote: {
-	        url: (0, _jquery2.default)('.autocomplete-search').data('remoteurl'),
-	        cache: false,
-	        wildcard: '%QUERY',
-	        transform: function transform(response) {
-	          if (!response) {
-	            return [];
+	        window.modalConfirmation.create(window.translate_javascripts['Are you sure to delete this?'], null, {
+	          onContinue: function onContinue() {
+	            (0, _jquery2.default)(e.target).parent().remove();
 	          }
-	          return response;
+	        }).show();
+	      });
+
+	      document[autocompleteSource] = new _typeahead2.default({
+	        datumTokenizer: _typeahead2.default.tokenizers.whitespace,
+	        queryTokenizer: _typeahead2.default.tokenizers.whitespace,
+	        identify: function identify(obj) {
+	          return obj[autocompleteObject.attr('data-mappingvalue')];
+	        },
+	        remote: {
+	          url: autocompleteObject.attr('data-remoteurl'),
+	          cache: false,
+	          wildcard: '%QUERY',
+	          transform: function transform(response) {
+	            if (!response) {
+	              return [];
+	            }
+	            return response;
+	          }
 	        }
-	      }
-	    });
+	      });
 
-	    //define typeahead
-	    (0, _jquery2.default)('#' + (0, _jquery2.default)('.autocomplete-search').data('formid')).typeahead({
-	      limit: 20,
-	      minLength: 2,
-	      highlight: true,
-	      cache: false,
-	      hint: false
-	    }, {
-	      display: (0, _jquery2.default)('.autocomplete-search').data('mappingname'),
-	      source: this[(0, _jquery2.default)('.autocomplete-search').data('formid') + '_source'],
-	      limit: 30,
-	      templates: {
-	        suggestion: function suggestion(item) {
-	          return '<div><img src="' + item.image + '" style="width:50px" /> ' + item.name + '</div>';
+	      //define typeahead
+	      (0, _jquery2.default)('#' + autocompleteFormId).typeahead({
+	        limit: 20,
+	        minLength: 2,
+	        highlight: true,
+	        cache: false,
+	        hint: false
+	      }, {
+	        display: autocompleteObject.attr('data-mappingname'),
+	        source: document[autocompleteFormId + '_source'],
+	        limit: 30,
+	        templates: {
+	          suggestion: function suggestion(item) {
+	            return '<div><img src="' + item.image + '" style="width:50px" /> ' + item.name + '</div>';
+	          }
 	        }
-	      }
-	    }).bind('typeahead:select', function (e, suggestion) {
-	      //if collection length is up to limit, return
+	      }).bind('typeahead:select', function (e, suggestion) {
+	        //if collection length is up to limit, return
 
-	      var formIdItem = '#' + (0, _jquery2.default)('.autocomplete-search').data('formid') + '-data li)';
+	        var formIdItem = (0, _jquery2.default)('#' + autocompleteFormId + '-data li');
+	        var autocompleteFormLimit = parseInt(autocompleteObject.attr('data-limit'));
 
-	      if ((0, _jquery2.default)('.autocomplete-search').data('limit') !== 0 && formIdItem.length >= (0, _jquery2.default)('.autocomplete-search').data('limit')) {
-	        return false;
-	      }
+	        if (autocompleteFormLimit !== 0 && formIdItem.length >= autocompleteFormLimit) {
+	          return false;
+	        }
 
-	      var value = suggestion[(0, _jquery2.default)('.autocomplete-search').data('mappingvalue')];
-	      if (suggestion.id_product_attribute) {
-	        value = value + ',' + suggestion.id_product_attribute;
-	      }
+	        var value = suggestion[autocompleteObject.attr('data-mappingvalue')];
+	        if (suggestion.id_product_attribute) {
+	          value = value + ',' + suggestion.id_product_attribute;
+	        }
 
-	      var tplcollection = (0, _jquery2.default)('#tplcollection-' + (0, _jquery2.default)('.autocomplete-search').data('formid'));
-	      var tplcollectionHtml = tplcollection.html().replace('%s', suggestion[(0, _jquery2.default)('.autocomplete-search').data('mappingname')]);
+	        var tplcollection = (0, _jquery2.default)('#tplcollection-' + autocompleteFormId);
+	        var tplcollectionHtml = tplcollection.html().replace('%s', suggestion[autocompleteObject.attr('data-mappingname')]);
 
-	      var html = '<li class="card">\n                  <img class="image" src="' + suggestion.image + '" />\n                  ' + tplcollectionHtml + '\n                  <input type="hidden" name="' + (0, _jquery2.default)('.autocomplete-search').data('fullname') + '[data][]" value="' + value + '" />\n                  </li>';
+	        var html = '<li class="card">\n                      <img class="image" src="' + suggestion.image + '" />\n                      ' + tplcollectionHtml + '\n                      <input type="hidden" name="' + autocompleteObject.attr('data-fullname') + '[data][]" value="' + value + '" />\n                      </li>';
 
-	      (0, _jquery2.default)('#' + (0, _jquery2.default)('.autocomplete-search').data('formid') + '-data').append(html);
-	    }).bind('typeahead:close', function (e) {
-	      (0, _jquery2.default)(e.target).val('');
+	        (0, _jquery2.default)('#' + autocompleteFormId + '-data').append(html);
+	      }).bind('typeahead:close', function (e) {
+	        (0, _jquery2.default)(e.target).val('');
+	      });
 	    });
 	  });
 	};

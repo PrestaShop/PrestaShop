@@ -101,7 +101,7 @@ class ProductSeo extends CommonAbstractType
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => $this->translator->trans('To which product the page should redirect?', [], 'AdminProducts'),
-            'template_collection' => '<div class="title col-md-8">%s</div><button type="button" class="btn btn-danger delete"><i class="material-icons">delete</i></button>',
+            'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
             'limit' => 1,
             'required' => false,
             'label' => $this->translator->trans('Target product', [], 'AdminProducts')
