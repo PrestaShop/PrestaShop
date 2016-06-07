@@ -82,7 +82,7 @@
                   {block name='product_pack'}
                     {if $packItems}
                       <section class="product-pack">
-                        <h3 class="h4">{l s='This pack contains'}</h3>
+                        <h3 class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</h3>
                         {foreach from=$packItems item="product_pack"}
                           {block name='product_miniature'}
                             {include file='catalog/_partials/miniatures/pack-product.tpl' product=$product_pack}
@@ -95,13 +95,13 @@
                   {block name='product_discounts'}
                     {if $product.quantity_discounts}
                       <section class="product-discounts">
-                        <h3 class="h6 product-discounts-title">{l s='Volume discounts'}</h3>
+                        <h3 class="h6 product-discounts-title">{l s='Volume discounts' d='Shop.Theme.Catalog'}</h3>
                         <table class="table-product-discounts">
                           <thead>
                             <tr>
-                              <th>{l s='Quantity'}</th>
-                              <th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
-                              <th>{l s='You Save'}</th>
+                              <th>{l s='Quantity' d='Shop.Theme.Catalog'}</th>
+                              <th>{if $display_discount_price}{l s='Price' d='Shop.Theme.Catalog'}{else}{l s='Discount' d='Shop.Theme.Catalog'}{/if}</th>
+                              <th>{l s='You Save' d='Shop.Theme.Catalog'}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -109,7 +109,7 @@
                               <tr data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value}" data-discount-quantity="{$quantity_discount.quantity}">
                                 <td>{$quantity_discount.quantity}</td>
                                 <td>{$quantity_discount.discount}</td>
-                                <td>{l s='Up to %s' sprintf=$quantity_discount.save}</td>
+                                <td>{l s='Up to %s' d='Shop.Theme.Catalog' sprintf=$quantity_discount.save}</td>
                               </tr>
                             {/foreach}
                           </tbody>
@@ -124,7 +124,7 @@
                   {/block}
 
                   {block name='product_refresh'}
-                    <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh'}">
+                    <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}">
                   {/block}
                 </form>
               {/block}
@@ -136,10 +136,10 @@
             <div class="tabs">
               <ul class="nav nav-tabs">
                 <li class="nav-item">
-                  <a class="nav-link active" data-toggle="tab" href="#description">{l s='Description'}</a>
+                  <a class="nav-link active" data-toggle="tab" href="#description">{l s='Description' d='Shop.Theme.Catalog'}</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" data-toggle="tab" href="#product-details">{l s='Product Details'}</a>
+                  <a class="nav-link" data-toggle="tab" href="#product-details">{l s='Product Details' d='Shop.Theme.Catalog'}</a>
                 </li>
               </ul>
 
@@ -174,7 +174,7 @@
       {block name='product_accessories'}
         {if $accessories}
           <section class="product-accessories clearfix">
-            <h3 class="h5 text-uppercase">{l s='You might also like'}</h3>
+            <h3 class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</h3>
             {foreach from=$accessories item="product_accessory"}
               {block name='product_miniature'}
                 {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory}
@@ -191,13 +191,13 @@
       {block name='product_attachments'}
         {if $product.attachments}
           <section class="product-attachments">
-            <h3 class="h5 text-uppercase">{l s='Download'}</h3>
+            <h3 class="h5 text-uppercase">{l s='Download' d='Shop.Theme.Actions'}</h3>
             {foreach from=$product.attachments item=attachment}
               <div class="attachment">
                 <h4><a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}">{$attachment.name}</a></h4>
                 <p>{$attachment.description}</p>
                 <a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}">
-                  {l s='Download'} ({Tools::formatBytes($attachment.file_size, 2)})
+                  {l s='Download' d='Shop.Theme.Actions'} ({Tools::formatBytes($attachment.file_size, 2)})
                 </a>
               </div>
             {/foreach}

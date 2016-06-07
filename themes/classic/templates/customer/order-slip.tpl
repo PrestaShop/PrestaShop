@@ -1,19 +1,19 @@
 {extends file='customer/page.tpl'}
 
 {block name='page_title'}
-  {l s='Credit slips'}
+  {l s='Credit slips' d='Shop.Theme.CustomerAccount'}
 {/block}
 
 {block name='page_content'}
-  <h6>{l s='Credit slips you have received after canceled orders'}.</h6>
+  <h6>{l s='Credit slips you have received after canceled orders' d='Shop.Theme.CustomerAccount'}.</h6>
   {if $credit_slips}
     <table class="table table-striped table-bordered">
       <thead class="thead-default">
         <tr>
-          <th>{l s='Credit slip'}</th>
-          <th>{l s='Order'}</th>
-          <th>{l s='Date issued'}</th>
-          <th>{l s='View credit slip'}</th>
+          <th>{l s='Credit slip' d='Shop.Theme.CustomerAccount'}</th>
+          <th>{l s='Order' d='Shop.Theme.CustomerAccount'}</th>
+          <th>{l s='Date issued' d='Shop.Theme.CustomerAccount'}</th>
+          <th>{l s='View credit slip' d='Shop.Theme.CustomerAccount'}</th>
         </tr>
       </thead>
       <tbody>

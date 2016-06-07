@@ -1,5 +1,5 @@
 <div id="search_filters">
-  <h4 class="h5 facets-title">{l s='Filter By'}</h4>
+  <h4 class="h5 facets-title">{l s='Filter By' d='Shop.Theme.Actions'}</h4>
   {foreach from=$facets item="facet"}
     {if $facet.displayed}
       <section class="facet">
@@ -55,7 +55,7 @@
           <form>
             <input type="hidden" name="order" value="{$sort_order}">
             <select name="q">
-              <option disabled selected hidden>{l s='(no filter)'}</option>
+              <option disabled selected hidden>{l s='(no filter)' d='Shop.Theme'}</option>
               {foreach from=$facet.filters item="filter"}
                 {if $filter.displayed}
                   <option
@@ -76,7 +76,7 @@
             </select>
             {if !$js_enabled}
               <button class="ps-hidden-by-js" type="submit">
-                {l s='Filter'}
+                {l s='Filter' d='Shop.Theme.Actions'}
               </button>
             {/if}
           </form>

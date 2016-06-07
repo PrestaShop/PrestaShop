@@ -1,7 +1,7 @@
 {extends 'customer/page.tpl'}
 
 {block name='page_title'}
-  {l s='Your personal information'}
+  {l s='Your personal information' d='Shop.Theme.CustomerAccount'}
 {/block}
 
 {* StarterTheme: Add confirmation/error messages *}

@@ -15,9 +15,9 @@
     {block name='page_content_container'}
       <section id="content" class="page-content page-restricted">
         {block name='page_content'}
-          <h2>{l s='403 Forbidden'}</h2>
+          <h2>{l s='403 Forbidden' d='Shop.Theme'}</h2>
           <div class="logo"><img src="{$logo_url}" alt="logo"></div>
-          <p>{l s='You cannot access this store from your country. We apologize for the inconvenience.'}</p>
+          <p>{l s='You cannot access this store from your country. We apologize for the inconvenience.' d='Shop.Theme'}</p>
         {/block}
       </section>
     {/block}

@@ -9,6 +9,6 @@
     {/foreach}
   </ul>
   {else}
-    <p>{l s='There are no more items in your cart'}</p>
+    <p>{l s='There are no more items in your cart' d='Shop.Theme.Checkout'}</p>
   {/if}
 </div>

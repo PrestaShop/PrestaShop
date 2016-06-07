@@ -3,11 +3,11 @@
 <table id="order-products" class="table table-bordered">
   <thead class="thead-default">
     <tr>
-      <th>{l s='Reference'}</th>
-      <th>{l s='Product'}</th>
-      <th>{l s='Quantity'}</th>
-      <th>{l s='Unit price'}</th>
-      <th class="text-xs-right">{l s='Total price'}</th>
+      <th>{l s='Reference' d='Shop.Theme.Catalog'}</th>
+      <th>{l s='Product' d='Shop.Theme.Catalog'}</th>
+      <th>{l s='Quantity' d='Shop.Theme.Catalog'}</th>
+      <th>{l s='Unit price' d='Shop.Theme.Catalog'}</th>
+      <th class="text-xs-right">{l s='Total price' d='Shop.Theme.Catalog'}</th>
     </tr>
   </thead>
 

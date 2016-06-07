@@ -15,7 +15,7 @@
       {if $field.type === 'select'}
 
         <select class="form-control form-control-select" name="{$field.name}" {if $field.required}required{/if}>
-          <option value disabled selected>{l s='-- please choose --'}</option>
+          <option value disabled selected>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
           {foreach from=$field.availableValues item="label" key="value"}
             <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
           {/foreach}
@@ -51,7 +51,7 @@
 
         <input class="form-control" type="text" placeholder="MM/DD/YYYY">
         <span class="form-control-comment">
-          {l s='(Ex.:31/05/1970)'}
+          {l s='(Ex.:31/05/1970)' d='Shop.Forms.Help'}
         </span>
 
       {elseif $field.type === 'password'}
@@ -70,10 +70,10 @@
               class="btn"
               type="button"
               data-action="show-password"
-              data-text-show="{l s='Show'}"
-              data-text-hide="{l s='Hide'}"
+              data-text-show="{l s='Show' d='Shop.Theme.Actions'}"
+              data-text-hide="{l s='Hide' d='Shop.Theme.Actions'}"
             >
-              {l s='Show'}
+              {l s='Show' d='Shop.Theme.Actions'}
             </button>
           </span>
         </div>
@@ -96,7 +96,7 @@
 
     <div class="col-md-3 form-control-comment">
       {if (!$field.required && !in_array($field.type, ['radio-buttons', 'checkbox']))}
-       {l s='Optional'}
+       {l s='Optional' d='Shop.Forms.Labels'}
       {/if}
     </div>
   </div>

@@ -6,13 +6,13 @@
 
 {block name='cart_overview' append}
   <a href="{$urls.pages.index}">
-    {l s='Continue shopping'}<i class="material-icons">chevron_right</i>
+    {l s='Continue shopping' d='Shop.Theme.Actions'}<i class="material-icons">chevron_right</i>
   </a>
 {/block}
 
 {block name='cart_actions'}
   <div class="checkout text-xs-center card-block">
-    <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout'}</button>
+    <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
   </div>
 {/block}
 

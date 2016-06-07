@@ -29,8 +29,8 @@
                 data-id-product="{$product.id_product}"
                 data-id-product-attribute="{$product.id_product_attribute}"
                 data-link-action="add-to-cart"
-                title = "{l s='Add to cart'}"
-              >{l s='Add to cart'}</a>
+                title = "{l s='Add to cart' d='Shop.Theme.Actions'}"
+              >{l s='Add to cart' d='Shop.Theme.Actions'}</a>
           {/if}
           {hook h='displayProductListFunctionalButtons' product=$product}
         </div>
@@ -76,11 +76,10 @@
     <div class="highlighted-informations">
       <a
         href="#"
-        title="{l s='Quick view'}"
         class="quick-view"
         data-link-action="quickview"
       >
-        <i class="material-icons search">&#xE8B6;</i> {l s='Quick view'}
+        <i class="material-icons search">&#xE8B6;</i> {l s='Quick view' d='Shop.Theme.Actions'}
       </a>
       {block name='product_variants'}
         {include file='catalog/_partials/variant-links.tpl' variants=$product.main_variants}

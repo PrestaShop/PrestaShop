@@ -4,7 +4,7 @@
   <section id="main">
 
     {block name='manufacturer_header'}
-      <h1>{l s='List of products by manufacturer %s' sprintf=$manufacturer.name}</h1>
+      <h1>{l s='List of products by manufacturer %s' d='Shop.Theme.Catalog' sprintf=$manufacturer.name}</h1>
       <div id="manufacturer-short_description">{$manufacturer.short_description nofilter}</div>
       <div id="manufacturer-description">{$manufacturer.description nofilter}</div>
     {/block}

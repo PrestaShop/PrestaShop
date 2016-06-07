@@ -1,17 +1,17 @@
 {extends file='customer/page.tpl'}
 
 {block name='page_title'}
-  {l s='Order details'}
+  {l s='Order details' d='Shop.Theme.CustomerAccount'}
 {/block}
 
 {block name='page_content'}
   {block name='order_infos'}
     <div id="order-infos">
       <div class="box">
-          <strong>{l s='Order Reference %s - placed on %s' sprintf=[$order.details.reference, $order.details.order_date]}</strong>
+          <strong>{l s='Order Reference %s - placed on %s' d='Shop.Theme.CustomerAccount' sprintf=[$order.details.reference, $order.details.order_date]}</strong>
           {if $order.details.url_to_reorder}
             <div class="pull-xs-right">
-              <a href="{$order.details.url_to_reorder}" class="button-primary">{l s='Reorder'}</a>
+              <a href="{$order.details.url_to_reorder}" class="button-primary">{l s='Reorder' d='Shop.Theme.Actions'}</a>
             </div>
             <div class="clearfix"></div>
           {/if}
@@ -19,20 +19,20 @@
 
       <div class="box">
           <ul>
-          <li><strong>{l s='Carrier'}</strong> {$order.carrier.name}</li>
-          <li><strong>{l s='Payment method'}</strong> {$order.details.payment}</li>
+          <li><strong>{l s='Carrier' d='Shop.Theme.Checkout'}</strong> {$order.carrier.name}</li>
+          <li><strong>{l s='Payment method' d='Shop.Theme.Checkout'}</strong> {$order.details.payment}</li>
 
           {if $order.details.url_to_invoice}
-            <li><a href="{$order.details.url_to_invoice}">{l s='Download your invoice as a PDF file.'}</a></li>
+            <li><a href="{$order.details.url_to_invoice}">{l s='Download your invoice as a PDF file.' d='Shop.Theme.CustomerAccount'}</a></li>
           {/if}
 
           {if $order.details.recyclable}
-            <li>{l s='You have given permission to receive your order in recycled packaging.'}</li>
+            <li>{l s='You have given permission to receive your order in recycled packaging.' d='Shop.Theme.CustomerAccount'}</li>
           {/if}
 
           {if $order.details.gift_message}
-            <li>{l s='You have requested gift wrapping for this order.'}</li>
-            <li>{l s='Message'} {$order.details.gift_message nofilter}</li>
+            <li>{l s='You have requested gift wrapping for this order.' d='Shop.Theme.CustomerAccount'}</li>
+            <li>{l s='Message' d='Shop.Theme.CustomerAccount'} {$order.details.gift_message nofilter}</li>
           {/if}
           </ul>
       </div>
@@ -41,12 +41,12 @@
 
   {block name='order_history'}
     <section id="order-history" class="box">
-      <h3>{l s='Follow your order\'s status step-by-step'}</h3>
+      <h3>{l s='Follow your order\'s status step-by-step' d='Shop.Theme.CustomerAccount'}</h3>
       <table class="table table-striped table-bordered table-labeled">
         <thead class="thead-default">
           <tr>
-            <th>{l s='Date'}</th>
-            <th>{l s='Status'}</th>
+            <th>{l s='Date' d='Shop.Theme'}</th>
+            <th>{l s='Status' d='Shop.Theme'}</th>
           </tr>
         </thead>
         <tbody>
@@ -63,7 +63,7 @@
 
   {if $order.follow_up}
     <div class="box">
-      <p>{l s='Click the following link to track the delivery of your order'}</p>
+      <p>{l s='Click the following link to track the delivery of your order' d='Shop.Theme.CustomerAccount'}</p>
       <a href="{$order.follow_up}">{$order.follow_up}</a>
     </div>
   {/if}
@@ -73,7 +73,7 @@
       {if $order.addresses.delivery}
         <div class="col-lg-6 col-md-6 col-sm-6">
           <article id="delivery-address" class="box">
-            <h4>{l s='Delivery address %s' sprintf=$order.addresses.delivery.alias}</h4>
+            <h4>{l s='Delivery address %s' d='Shop.Theme.Checkout' sprintf=$order.addresses.delivery.alias}</h4>
             <address>{$order.addresses.delivery.formatted nofilter}</address>
           </article>
         </div>
@@ -81,7 +81,7 @@
 
       <div class="col-lg-6 col-md-6 col-sm-6">
         <article id="invoice-address" class="box">
-          <h4>{l s='Invoice address %s' sprintf=$order.addresses.invoice.alias}</h4>
+          <h4>{l s='Invoice address %s' d='Shop.Theme.Checkout' sprintf=$order.addresses.invoice.alias}</h4>
           <address>{$order.addresses.invoice.formatted nofilter}</address>
         </article>
       </div>
@@ -105,11 +105,11 @@
         <table class="table table-striped table-bordered">
           <thead class="thead-default">
             <tr>
-              <th>{l s='Date'}</th>
-              <th>{l s='Carrier'}</th>
-              <th>{l s='Weight'}</th>
-              <th>{l s='Shipping cost'}</th>
-              <th>{l s='Tracking number'}</th>
+              <th>{l s='Date' d='Shop.Theme'}</th>
+              <th>{l s='Carrier' d='Shop.Theme.Checkout'}</th>
+              <th>{l s='Weight' d='Shop.Theme.Checkout'}</th>
+              <th>{l s='Shipping cost' d='Shop.Theme.Checkout'}</th>
+              <th>{l s='Tracking number' d='Shop.Theme.Checkout'}</th>
             </tr>
           </thead>
           <tbody>

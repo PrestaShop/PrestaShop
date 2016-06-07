@@ -1,18 +1,18 @@
 {extends file='customer/page.tpl'}
 
 {block name='page_title'}
-  {l s='Return Merchandise Authorization (RMA)'}
+  {l s='Return Merchandise Authorization (RMA)' d='Shop.Theme.CustomerAccount'}
 {/block}
 
 {block name='page_content'}
-  <h6>{l s='Here is a list of pending merchandise returns'}</h6>
+  <h6>{l s='Here is a list of pending merchandise returns' d='Shop.Theme.CustomerAccount'}</h6>
 
   {if isset($errorMsg) && $errorMsg}
     <form method="post">
 
       <section class="form-fields">
         <div class="form-group row">
-          <label class="col-md-3 form-control-label">{l s='Please provide an explanation for your RMA:'}</label>
+          <label class="col-md-3 form-control-label">{l s='Please provide an explanation for your RMA:' d='Shop.Theme.CustomerAccount'}</label>
           <div class="col-md-9">
             <textarea cols="67" rows="3" name="returnText" class="form-control"></textarea>
           </div>
@@ -29,7 +29,7 @@
         {/foreach}
         <input type="hidden" name="id_order" value="{$id_order}"/>
 
-        <button type="submit" class="btn btn-primary">{l s='Make an RMA slip'}</button>
+        <button type="submit" class="btn btn-primary">{l s='Make an RMA slip' d='Shop.Theme.CustomerAccount'}</button>
       </footer>
 
     </form>
@@ -39,11 +39,11 @@
     <table class="table table-striped table-bordered">
       <thead class="thead-default">
         <tr>
-          <th>{l s='Return'}</th>
-          <th>{l s='Order'}</th>
-          <th>{l s='Package status'}</th>
-          <th>{l s='Date issued'}</th>
-          <th>{l s='Return slip'}</th>
+          <th>{l s='Return' d='Shop.Theme.CustomerAccount'}</th>
+          <th>{l s='Order' d='Shop.Theme.CustomerAccount'}</th>
+          <th>{l s='Package status' d='Shop.Theme.CustomerAccount'}</th>
+          <th>{l s='Date issued' d='Shop.Theme.CustomerAccount'}</th>
+          <th>{l s='Return slip' d='Shop.Theme.CustomerAccount'}</th>
         </tr>
       </thead>
       <tbody>
@@ -55,7 +55,7 @@
             <td>{$return.return_date}</td>
             <td class="text-xs-center">
               {if $return.print_url}
-                <a href="{$return.print_url}">{l s='Print out'}</a>
+                <a href="{$return.print_url}">{l s='Print out' d='Shop.Theme.Actions'}</a>
               {else}
                 -
               {/if}

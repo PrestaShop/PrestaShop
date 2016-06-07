@@ -4,7 +4,7 @@
   <section id="main">
 
     {block name='supplier_header'}
-      <h1>{l s='Suppliers'}</h1>
+      <h1>{l s='Suppliers' d='Shop.Theme.Catalog'}</h1>
     {/block}
 
     {block name='supplier-miniature'}

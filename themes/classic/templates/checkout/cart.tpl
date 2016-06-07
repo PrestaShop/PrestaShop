@@ -11,7 +11,7 @@
         <!-- cart products detailed -->
         <div class="card cart-container">
           <div class="card-block">
-            <h1 class="h1">{l s='Shopping Cart'}</h1>
+            <h1 class="h1">{l s='Shopping Cart' d='Shop.Theme.Checkout'}</h1>
           </div>
           <hr>
           {block name='cart_overview'}
@@ -22,7 +22,7 @@
 
         {block name='continue_shopping'}
           <a class="label" href="{$urls.pages.index}">
-            <i class="material-icons">chevron_left</i>{l s='Continue shopping'}
+            <i class="material-icons">chevron_left</i>{l s='Continue shopping' d='Shop.Theme.Actions'}
           </a>
         {/block}
 

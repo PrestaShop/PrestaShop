@@ -6,12 +6,12 @@
     <thead class="thead-default">
       <tr>
         <th class="head-checkbox"><input type="checkbox"/></th>
-        <th>{l s='Reference'}</th>
-        <th>{l s='Product'}</th>
-        <th>{l s='Quantity'}</th>
-        <th>{l s='Returned'}</th>
-        <th>{l s='Unit price'}</th>
-        <th>{l s='Total price'}</th>
+        <th>{l s='Reference' d='Shop.Theme.Catalog'}</th>
+        <th>{l s='Product' d='Shop.Theme.Catalog'}</th>
+        <th>{l s='Quantity' d='Shop.Theme.Catalog'}</th>
+        <th>{l s='Returned' d='Shop.Theme.Catalog'}</th>
+        <th>{l s='Unit price' d='Shop.Theme.Catalog'}</th>
+        <th>{l s='Total price' d='Shop.Theme.Catalog'}</th>
       </tr>
     </thead>
 
@@ -92,8 +92,8 @@
   </table>
 
   <header>
-    <h3>{l s='Merchandise return'}</h3>
-    <p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.'}</p>
+    <h3>{l s='Merchandise return' d='Shop.Theme.CustomerAccount'}</h3>
+    <p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.' d='Shop.Theme.CustomerAccount'}</p>
   </header>
 
   <section class="form-fields">
@@ -105,7 +105,7 @@
   <footer class="form-footer">
     <input type="hidden" name="id_order" value="{$order.details.id}">
     <button type="submit" name="submitReturnMerchandise" class="form-control-submit">
-      {l s='Make an RMA slip'}
+      {l s='Make an RMA slip' d='Shop.Theme.CustomerAccount'}
     </button>
   </footer>
 </form>
