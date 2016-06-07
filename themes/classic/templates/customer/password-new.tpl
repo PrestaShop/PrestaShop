@@ -1,7 +1,7 @@
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  {l s='Reset your password'}
+  {l s='Reset your password' d='Shop.Theme.CustomerAccount'}
 {/block}
 
 {block name='page_content'}
@@ -10,16 +10,16 @@
       <section class="form-fields">
 
         <label>
-          <span>{l s='Email address: %s' sprintf=$customer_email|stripslashes}</span>
+          <span>{l s='Email address: %s' d='Shop.Theme.CustomerAccount' sprintf=$customer_email|stripslashes}</span>
         </label>
 
         <label>
-          <span>{l s='New password'}</span>
+          <span>{l s='New password' d='Shop.Forms.Labels'}</span>
           <input type="password" data-validate="isPasswd" name="passwd" value="">
         </label>
 
         <label>
-          <span>{l s='Confirmation'}</span>
+          <span>{l s='Confirmation' d='Shop.Forms.Labels'}</span>
           <input type="password" data-validate="isPasswd" name="confirmation" value="">
         </label>
 
@@ -30,7 +30,7 @@
         <input type="hidden" name="id_customer" id="id_customer" value="{$id_customer}">
         <input type="hidden" name="reset_token" id="reset_token" value="{$reset_token}">
         <button type="submit" name="submit">
-          {l s='Change Password'}
+          {l s='Change Password' d='Shop.Theme.Actions'}
         </button>
       </footer>
 
@@ -39,6 +39,6 @@
 
 {block name='page_footer'}
   <ul>
-    <li><a href="{$urls.pages.authentication}">{l s='Back to Login'}</a></li>
+    <li><a href="{$urls.pages.authentication}">{l s='Back to login' d='Shop.Theme.Actions'}</a></li>
   </ul>
 {/block}
