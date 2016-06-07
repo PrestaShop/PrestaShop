@@ -34,17 +34,17 @@
             {/block}
             {block name='product_quantity'}
               <p class="product-quantity">
-                <label for="quantity_wanted">{l s='Quantity'}</label>
+                <label for="quantity_wanted">{l s='Quantity' d='Shop.Theme.Catalog'}</label>
                 <input type="text" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" class="input-group">
               </p>
             {/block}
 
             <button class="btn btn-primary add-to-cart" data-button-action="add-to-cart" type="submit" {if !$product.add_to_cart_url}disabled{/if}>
               <i class="material-icons shopping-cart">&#xE547;</i>
-              {l s='Add to cart'}
+              {l s='Add to cart' d='Shop.Theme.Actions'}
             </button>
             {block name='product_refresh'}
-              <input class="product-refresh hidden-xs-up" name="refresh" type="submit" value="{l s='Refresh'}">
+              <input class="product-refresh hidden-xs-up" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}">
             {/block}
           </form>
         {/block}

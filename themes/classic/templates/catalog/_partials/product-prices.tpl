@@ -27,9 +27,9 @@
 
         {if $product.has_discount}
           {if $product.discount_type === 'percentage'}
-            <span class="discount discount-percentage">{l s='Save %s' sprintf=$product.discount_percentage}</span>
+            <span class="discount discount-percentage">{l s='Save %s' d='Shop.Theme.Catalog' sprintf=$product.discount_percentage}</span>
           {else}
-            <span class="discount discount-amount">{l s='Save %s' sprintf=$product.discount_amount}</span>
+            <span class="discount discount-amount">{l s='Save %s' d='Shop.Theme.Catalog' sprintf=$product.discount_amount}</span>
           {/if}
         {/if}
       </p>
@@ -37,21 +37,21 @@
 
     {block name='product_without_taxes'}
       {if $priceDisplay == 2}
-        <p class="product-without-taxes">{l s='%s tax excl.' sprintf=$product.price_tax_exc}</p>
+        <p class="product-without-taxes">{l s='%s tax excl.' d='Shop.Theme.Catalog' sprintf=$product.price_tax_exc}</p>
       {/if}
     {/block}
 
     {block name='product_pack_price'}
       {if $displayPackPrice}
-        <p class="product-pack-price">{l s='Instead of %s' sprintf=$noPackPrice}</span></p>
+        <p class="product-pack-price">{l s='Instead of %s' d='Shop.Theme.Catalog' sprintf=$noPackPrice}</span></p>
       {/if}
     {/block}
 
     {block name='product_ecotax'}
       {if $product.ecotax.amount > 0}
-        <p class="price-ecotax">{l s='Including %s for ecotax' sprintf=$product.ecotax.value}
+        <p class="price-ecotax">{l s='Including %s for ecotax' d='Shop.Theme.Catalog' sprintf=$product.ecotax.value}
           {if $product.has_discount}
-            {l s='(not impacted by the discount)'}
+            {l s='(not impacted by the discount)' d='Shop.Theme.Catalog'}
           {/if}
         </p>
       {/if}
@@ -59,7 +59,7 @@
 
     {block name='product_unit_price'}
       {if $displayUnitPrice}
-        <p class="product-unit-price sub">{l s='(%s)' sprintf=[$product.unit_price_full]}</p>
+        <p class="product-unit-price sub">{l s='(%s)' d='Shop.Theme.Catalog' sprintf=[$product.unit_price_full]}</p>
       {/if}
     {/block}
 
