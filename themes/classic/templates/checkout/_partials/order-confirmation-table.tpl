@@ -55,15 +55,21 @@
 
   <table>
     {foreach $subtotals as $subtotal}
-      <tr>
-        <td>{$subtotal.label}</td>
-        <td>{$subtotal.value}</td>
-      </tr>
+      {if $subtotal.type !== 'tax'}
+        <tr>
+          <td>{$subtotal.label}</td>
+          <td>{$subtotal.value}</td>
+        </tr>
+      {/if}
     {/foreach}
 
     <tr class="font-weight-bold">
       <td><span class="text-uppercase">{$totals.total.label}</span> {$labels.tax_short}</td>
       <td>{$totals.total.value}</td>
+    </tr>
+    <tr class="sub">
+      <td>{$subtotals.tax.label}</td>
+      <td>{$subtotal.tax.value}</td>
     </tr>
   </table>
 </div>
