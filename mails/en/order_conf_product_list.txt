@@ -11,12 +11,10 @@
 						{$product['price']}
 
 	{foreach $product['customization'] as $customization}
-							{$product['name']} {$customization['customization_text']}
+							{$customization['customization_text']}
 
-							{$product['price']}
-
-							{$product['customization_quantity']}
-
-							{$product['quantity']}
+							{if count($product['customization']) > 1}
+								{$product['customization_quantity']}
+							{/if}
 	{/foreach}
 {/foreach}
