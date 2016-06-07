@@ -619,7 +619,7 @@ Release Notes for PrestaShop 1.6
 	[+] TESTS : Add unit tests for PrestaShop#2867 minifyCSS() && ReplaceByAbsoluteURL()
 
 
-	
+
 
 
 ####################################
@@ -1454,7 +1454,7 @@ Release Notes for PrestaShop 1.6
 	[+] DBQUERY : improve to use SELECT or DELETE syntax.
 
 
-	
+
 
 
 
@@ -3912,7 +3912,7 @@ Release Notes for PrestaShop 1.6
 	[-] CORE : After adding cart rule redirect improvements    This allows us display success message after adding CartRule or create other actions
 	[-] CORE : FixBug #PSCSX-89 - Up configuration name size to 255
 	[-] CORE : Ensure correct parent category for home categories
-	[-] Core: Fix #PSCFV-11165 numerical configuration values should not be overridden if the value is the same between shop and global context
+	[-] Core: Fix #PSCFV-11165 numerical configuration values should not be overridden if the value is the same between shop and global context
 	[-] Core : integrated modified pull request https://github.com/ExploZe/PrestaShop/commit/40abb0aa72607ddfe912b364d8fc7d65733d2bd8
 	[-] CORE : Remove notices on ob clean
 	[-] CORE : Merge of https://github.com/PrestaShop/PrestaShop/pull/816
@@ -5118,7 +5118,7 @@ Release Notes for PrestaShop 1.6
 	[-] FO : fixed customer discounts #PSCFV-7479
 	[-] FO : fixed retro compatibility issue with discounts #PSCFV-7553
 	[-] FO : Fix bug #PSCFI-6864 #PSCFV-6516 Issue with deleted address blocking order process
-	[-] FO: Fix #PSCFV-7474 display taxes on order payment when the price without taxes is displayed
+	[-] FO: Fix #PSCFV-7474 display taxes on order payment when the price without taxes is displayed
 	[-] FO: Fix #PSCFV-7530 bad quantity returned displayed on order detail for multiple return
 	[-] FO : Fix bug #PSCFV-7504 last category for parent and not always default one
 	[-] FO : Fix fatal error when memcache is not installed and using Memcached
@@ -5599,7 +5599,7 @@ Release Notes for PrestaShop 1.6
 	[-] BO : fixed warnings on the anti-XSS page
 	[-] BO : fixed weight and distance units validation
 	[-] BO : fixed image upload (except with OVH firewall) #PSCFV-6152 #PSCFV-6157 #PSCFV-5862 #PSCFV-5756 #PSCFV-6074 #PSCFV-5459
-	[-] BO: Fix #PSCFV-6172 don't htmlentities the cart rule name && increase size of name order_cart_rule field
+	[-] BO: Fix #PSCFV-6172 don't htmlentities the cart rule name && increase size of name order_cart_rule field
 	[-] BO : fixed bug #PSCFV-5408 - Affect a new zone button for selected states in  States doesn't work correctly
 	[-] BO : fixed duplicate code management on cart rules #PSCFV-6119
 	[-] BO: Fix catalog price rules creation with mysql strict mod #PSCFV-5916
@@ -6467,7 +6467,7 @@ Release Notes for PrestaShop 1.6
 	[-] MO : Fix hook name on differents modules - #PSCFV-2784
 	[-] MO : Fix on BlocTopMenu hook name - #PSCFV-2784
 	[-] MO : Fixed bug #PNM-284. Use correctly the new controller for the validation process
-	[-] MO : Fixed #PSCFV-2864 column name statssearch.id_group_shop is now id_shop_group, thanks to Fabien :)
+	[-] MO : Fixed #PSCFV-2864 column name statssearch.id_group_shop is now id_shop_group, thanks to Fabien :)
 	[-] MO : Watermark - Bug Fixed #PSCFV-2770 - Watermark is not working
 	[-] MO : blockadvertising update did not update the image extension #PSCFV-3355
 	[-] MO : blockcart retrocompatibility
