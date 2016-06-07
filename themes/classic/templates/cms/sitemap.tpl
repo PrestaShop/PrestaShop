@@ -1,7 +1,7 @@
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  {l s='Sitemap'}
+  {l s='Sitemap' d='Shop.Theme'}
 {/block}
 
 {block name='page_content_container'}
