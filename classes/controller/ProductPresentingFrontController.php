@@ -1,13 +1,11 @@
 <?php
 
-use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
 abstract class ProductPresentingFrontControllerCore extends FrontController
 {
     private function getFactory()
     {
-        return new ProductPresenterFactory($this->context);
+        return new ProductPresenterFactory($this->context, new TaxConfiguration());
     }
 
     protected function getProductPresentationSettings()

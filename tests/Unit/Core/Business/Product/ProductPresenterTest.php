@@ -217,7 +217,7 @@ class ProductPresenterTest extends UnitTestCase
         );
     }
 
-    public function test_product_has_online_only_label_if_it_is_online_only()
+    public function test_product_has_online_only_flag_if_it_is_online_only()
     {
         $this->product['online_only'] = true;
         $this->assertEquals(
@@ -225,11 +225,11 @@ class ProductPresenterTest extends UnitTestCase
                 'type'  => 'online-only',
                 'label' => 'some label'
             ]],
-            $this->getPresentedProduct('labels')
+            $this->getPresentedProduct('flags')
         );
     }
 
-    public function test_product_has_discount_label_if_it_has_a_discount()
+    public function test_product_has_discount_flag_if_it_has_a_discount()
     {
         $this->product['reduction'] = true;
         $this->assertEquals(
@@ -237,11 +237,11 @@ class ProductPresenterTest extends UnitTestCase
                 'type'  => 'discount',
                 'label' => 'some label'
             ]],
-            $this->getPresentedProduct('labels')
+            $this->getPresentedProduct('flags')
         );
     }
 
-    public function test_product_has_only_on_sale_label_if_it_has_a_discount_and_is_on_sale()
+    public function test_product_has_only_on_sale_flag_if_it_has_a_discount_and_is_on_sale()
     {
         $this->product['reduction'] = true;
         $this->product['on_sale'] = true;
@@ -250,11 +250,11 @@ class ProductPresenterTest extends UnitTestCase
                 'type'  => 'on-sale',
                 'label' => 'some label'
             ]],
-            $this->getPresentedProduct('labels')
+            $this->getPresentedProduct('flags')
         );
     }
 
-    public function test_product_has_new_label_if_it_is_new()
+    public function test_product_has_new_flag_if_it_is_new()
     {
         $this->product['new'] = true;
         $this->assertEquals(
@@ -262,11 +262,11 @@ class ProductPresenterTest extends UnitTestCase
                 'type'  => 'new',
                 'label' => 'some label'
             ]],
-            $this->getPresentedProduct('labels')
+            $this->getPresentedProduct('flags')
         );
     }
 
-    public function test_product_has_new_label_if_condition_must_be_shown()
+    public function test_product_has_new_flag_if_condition_must_be_shown()
     {
         $this->product['show_condition'] = true;
         $this->product['condition'] = 'new';
@@ -280,13 +280,13 @@ class ProductPresenterTest extends UnitTestCase
         );
     }
 
-    public function test_product_has_no_labels_if_not_available_for_order()
+    public function test_product_has_no_flags_if_not_available_for_order()
     {
         $this->product['online_only'] = true;
         $this->product['available_for_order'] = false;
         $this->assertEquals(
             [],
-            $this->getPresentedProduct('labels')
+            $this->getPresentedProduct('flags')
         );
     }
 }

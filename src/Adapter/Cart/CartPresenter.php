@@ -14,6 +14,7 @@ use Context;
 use Cart;
 use Product;
 use Configuration;
+use TaxConfiguration;
 use CartRule;
 use Tools;
 
@@ -23,6 +24,7 @@ class CartPresenter implements PresenterInterface
     private $link;
     private $translator;
     private $imageRetriever;
+    private $taxConfiguration;
 
     public function __construct()
     {
@@ -30,11 +32,12 @@ class CartPresenter implements PresenterInterface
         $this->link = Context::getContext()->link;
         $this->translator = new Translator(new LegacyContext());
         $this->imageRetriever = new ImageRetriever($this->link);
+        $this->taxConfiguration = new TaxConfiguration();
     }
 
     private function includeTaxes()
     {
-        return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
+        return $this->taxConfiguration->includeTaxes();
     }
 
     private function presentProduct(array $rawProduct)
@@ -123,7 +126,7 @@ class CartPresenter implements PresenterInterface
 
             $product['customizations'] = array();
 
-            $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int)$product['id_customization']);
+            $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int) $product['id_customization']);
 
             if (!$data) {
                 $data = array();
@@ -240,7 +243,7 @@ class CartPresenter implements PresenterInterface
 
         $subtotals['products'] = array(
             'type' => 'products',
-            'label' => $this->translator->trans('Products', array(), 'Cart'),
+            'label' => $this->translator->trans('Subtotal', array(), 'Cart'),
             'amount' => $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS),
             'value' => $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS))),
         );
@@ -314,7 +317,7 @@ class CartPresenter implements PresenterInterface
 
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
 
-        // TODO: move it to a common parent, since it's copied in OrderPresenter
+        // TODO: move it to a common parent, since it's copied in OrderPresenter and ProductPresenter
         $labels = array(
             'tax_short' => ($this->includeTaxes())
                 ? $this->translator->trans('(tax incl.)', array(), 'Tax')
