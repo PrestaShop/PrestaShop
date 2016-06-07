@@ -5,18 +5,20 @@
 
     <p class="identity">
       {l s='Connected as [1]%1$s %2$s[/1].'
+        d='Shop.Theme.CustomerAccount'
         sprintf=[$customer.firstname, $customer.lastname]
-        tags=["<a href='{$urls.pages.identity}'>"]}
+        tags=["<a href='{$urls.pages.identity}'>"]
+      }
     </p>
-    <p>{l s='Not you? [1]Log out[/1]' tags=["<a href='{$urls.actions.logout}'>"]}</p>
-    <p><small>{l s='If you sign out now, your cart will be emptied.'}</small></p>
+    <p>{l s='Not you? [1]Log out[/1]' d='Shop.Theme.CustomerAccount' tags=["<a href='{$urls.actions.logout}'>"]}</p>
+    <p><small>{l s='If you sign out now, your cart will be emptied.' d='Shop.Theme.Checkout'}</small></p>
 
   {else}
 
     <ul class="nav nav-inline m-y-2">
       <li class="nav-item">
         <a class="nav-link {if !$show_login_form}active{/if}" data-toggle="tab" href="#checkout-guest-form" role="tab">
-          {l s='Order as a guest'}
+          {l s='Order as a guest' d='Shop.Theme.Checkout'}
         </a>
       </li>
 
@@ -32,7 +34,7 @@
           href="#checkout-login-form"
           role="tab"
         >
-          {l s='Sign in'}
+          {l s='Sign in' d='Shop.Theme.Actions'}
         </a>
       </li>
     </ul>

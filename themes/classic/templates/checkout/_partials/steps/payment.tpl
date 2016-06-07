@@ -14,10 +14,10 @@
             {* This is the way an option should be selected when Javascript is disabled *}
             <form method="GET" class="ps-hidden-by-js">
               {if $option.id === $selected_payment_option}
-                {l s='Selected'}
+                {l s='Selected' d='Shop.Theme.Checkout'}
               {else}
                 <button class="ps-hidden-by-js" type="submit" name="select_payment_option" value="{$option.id}">
-                  {l s='Choose'}
+                  {l s='Choose' d='Shop.Theme.Actions'}
                 </button>
               {/if}
             </form>
@@ -58,7 +58,7 @@
         </div>
       {/foreach}
     {foreachelse}
-      <p class="alert alert-danger">{l s='Unfortunately, there are no payment method available.'}</p>
+      <p class="alert alert-danger">{l s='Unfortunately, there are no payment method available.' d='Shop.Theme.Checkout'}</p>
     {/foreach}
   </div>
 
@@ -68,7 +68,7 @@
          because it makes ensuring they were checked very tricky and overcomplicates
          the template. Might change later.
       *}
-      {l s='By confirming your order, I certify that I have read and agree with all of the conditions below:'}
+      {l s='By confirming your order, I certify that I have read and agree with all of the conditions below:' d='Shop.Theme.Checkout'}
     </p>
 
     <form id="conditions-to-approve" method="GET">
@@ -101,12 +101,12 @@
   <div id="payment-confirmation">
     <div class="ps-shown-by-js">
       <button type="submit" {if !$selected_payment_option} disabled {/if} class="btn btn-primary center-block">
-        {l s='Order with an obligation to pay'}
+        {l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}
       </button>
     </div>
     <div class="ps-hidden-by-js">
       {if $selected_payment_option and $all_conditions_approved}
-        <label for="pay-with-{$selected_payment_option}">{l s='Order with an obligation to pay'}</label>
+        <label for="pay-with-{$selected_payment_option}">{l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}</label>
       {/if}
     </div>
   </div>

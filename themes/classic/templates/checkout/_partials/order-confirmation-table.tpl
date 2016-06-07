@@ -1,6 +1,6 @@
 
 <div id="order-items" class="col-md-8">
-  <h3 class="card-title h3">{l s='Order items'}</h3>
+  <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
   <table class="table">
     {foreach from=$order.products item=product}
       <tr>
@@ -21,7 +21,7 @@
               <ul>
                 {foreach from=$product.customizations item="customization"}
                   <li>
-                    <span class="product-quantity">{l s='Quantity'} {$customization.quantity}</span>
+                    <span class="product-quantity">{l s='Quantity' d='Shop.Theme.Checkout'} {$customization.quantity}</span>
                     <ul>
                       {foreach from=$customization.fields item="field"}
                         <li>

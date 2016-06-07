@@ -4,11 +4,11 @@
       {$cart.minimalPurchaseRequired}
     </div>
     <div class="text-xs-center">
-      <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout'}</button>
+      <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
     </div>
   {else}
     <div class="text-xs-center">
-      <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Checkout'}</a>
+      <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Checkout' d='Shop.Theme.Actions'}</a>
       {hook h='displayExpressCheckout'}
     </div>
   {/if}

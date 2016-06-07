@@ -4,12 +4,12 @@
 <form method="POST" action="{$urls.pages.order}">
 
   {if !$use_same_address}
-    <h2 class="h4">{l s='Shipping Address'}</h2>
+    <h2 class="h4">{l s='Shipping Address' d='Shop.Theme.Checkout'}</h2>
   {/if}
 
   {if $use_same_address}
     <p>
-      {l s='The selected address will be used both as your personal address (for invoice) and as your delivery address.'}
+      {l s='The selected address will be used both as your personal address (for invoice) and as your delivery address.' d='Shop.Theme.Checkout'}
     </p>
   {/if}
 
@@ -34,13 +34,13 @@
     </div>
 
     <p class="add-address">
-      <a href="{$new_address_delivery_url}"><i class="material-icons">&#xE145;</i>{l s='add new address'}</a>
+      <a href="{$new_address_delivery_url}"><i class="material-icons">&#xE145;</i>{l s='add new address' d='Shop.Theme.Actions'}</a>
     </p>
 
     {if $use_same_address}
       <p>
         <a data-link-action="different-invoice-address" href="{$use_different_address_url}">
-          {l s='Billing address differs from shipping address'}
+          {l s='Billing address differs from shipping address' d='Shop.Theme.Checkout'}
         </a>
       </p>
     {/if}
@@ -49,7 +49,7 @@
 
   {if !$use_same_address}
 
-    <h2 class="h4">{l s='Your Invoice Address'}</h2>
+    <h2 class="h4">{l s='Your Invoice Address' d='Shop.Theme.Checkout'}</h2>
 
     {if $show_invoice_address_form}
       <div id="invoice-address">
@@ -72,7 +72,7 @@
       </div>
 
       <p class="add-address">
-        <a href="{$new_address_invoice_url}"><i class="material-icons">&#xE145;</i>{l s='add new address'}</a>
+        <a href="{$new_address_invoice_url}"><i class="material-icons">&#xE145;</i>{l s='add new address' d='Shop.Theme.Actions'}</a>
       </p>
     {/if}
 
@@ -81,7 +81,7 @@
   {if !$form_has_continue_button}
     <div class="clearfix">
       <button type="submit" class="btn btn-primary continue pull-xs-right" name="confirm-addresses" value="1">
-          {l s='Continue'}
+          {l s='Continue' d='Shop.Theme.Actions'}
       </button>
     </div>
   {/if}

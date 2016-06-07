@@ -8,6 +8,6 @@
     type="submit"
     value="1"
   >
-    {l s='Continue'}
+    {l s='Continue' d='Shop.Theme.Actions'}
   </button>
 {/block}
