@@ -89,7 +89,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int) Tab::getIdFromClassName('AdminProducts').(int) Tools::getValue('id_employee')) && $this->product->isAssociatedToShop()) {
                     $this->adminNotifications['inactive_product'] = array(
                         'type' => 'warning',
-                        'message' => $this->l('This product is not visible to your customers.'),
+                        'message' => $this->getTranslator()->trans('This product is not visible to your customers.', array(), 'Shop-Notifications-Warning'),
                     );
                 } else {
                     if (!$this->product->id_product_redirected || $this->product->id_product_redirected == $this->product->id) {
@@ -112,7 +112,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         default:
                             header('HTTP/1.1 404 Not Found');
                             header('Status: 404 Not Found');
-                            $this->errors[] = $this->l('This product is no longer available.');
+                            $this->errors[] = $this->getTranslator()->trans('This product is no longer available.', array(), 'Shop-Notifications-Error');
                             $this->setTemplate('errors/404.tpl');
                         break;
                     }
@@ -120,7 +120,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             } elseif (!$this->product->checkAccess(isset($this->context->customer->id) && $this->context->customer->id ? (int) $this->context->customer->id : 0)) {
                 header('HTTP/1.1 403 Forbidden');
                 header('Status: 403 Forbidden');
-                $this->errors[] = $this->l('You do not have access to this product.');
+                $this->errors[] = $this->getTranslator()->trans('You do not have access to this product.', array(), 'Shop-Notifications-Error');
             } else {
                 // Load category
                 $id_category = false;
@@ -194,7 +194,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->pictureUpload();
                 $this->textRecord();
             } elseif (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture'))) {
-                $this->errors[] = $this->l('An error occurred while deleting the selected picture.');
+                $this->errors[] = $this->getTranslator()->trans('An error occurred while deleting the selected picture.', array(), 'Shop-Notifications-Error');
             }
 
             $pictures = array();
@@ -643,11 +643,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 }
                 /* Original file */
                 if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name)) {
-                    $this->errors[] = $this->l('An error occurred during the image upload process.');
+                    $this->errors[] = $this->getTranslator()->trans('An error occurred during the image upload process.', array(), 'Shop-Notifications-Error');
                 } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height)) {
-                    $this->errors[] = $this->l('An error occurred during the image upload process.');
+                    $this->errors[] = $this->getTranslator()->trans('An error occurred during the image upload process.', array(), 'Shop-Notifications-Error');
                 } elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777)) {
-                    $this->errors[] = $this->l('An error occurred during the image upload process.');
+                    $this->errors[] = $this->getTranslator()->trans('An error occurred during the image upload process.', array(), 'Shop-Notifications-Error');
                 } else {
                     $this->context->cart->addPictureToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_FILE, $file_name);
                 }
@@ -675,7 +675,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         foreach ($_POST as $field_name => $value) {
             if (in_array($field_name, $authorized_text_fields) && $value != '') {
                 if (!Validate::isMessage($value)) {
-                    $this->errors[] = $this->l('Invalid message');
+                    $this->errors[] = $this->getTranslator()->trans('Invalid message', array(), 'Shop-Notifications-Error');
                 } else {
                     $this->context->cart->addTextFieldToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_TEXTFIELD, $value);
                 }
@@ -783,7 +783,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             && $this->product->available_for_order
             && !Configuration::get('PS_CATALOG_MODE')
         );
-        $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->l('Items') : $this->l('Item');
+        $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->getTranslator()->trans('Items', array(), 'Shop-Theme-Catalog') : $this->getTranslator()->trans('Item', array(), 'Shop-Theme-Catalog');
         $product_full['quantity_discounts'] = $this->quantity_discounts;
 
         if ($product_full['price'] && $product_full['unit_price_ratio'] > 0) {

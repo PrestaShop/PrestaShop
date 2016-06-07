@@ -137,7 +137,7 @@ class SupplierControllerCore extends ProductListingFrontController
              $suppliers_for_display[$supplier['id_supplier']]['text'] = $supplier['description'];
              $suppliers_for_display[$supplier['id_supplier']]['image'] = _THEME_SUP_DIR_.$supplier['id_supplier'].'-medium_default.jpg';
              $suppliers_for_display[$supplier['id_supplier']]['url'] = $this->context->link->getsupplierLink($supplier['id_supplier']);
-             $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1 ? sprintf($this->l('%s products'), $supplier['nb_products']) : sprintf($this->l('% product'), $supplier['nb_products']);
+             $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1 ? sprintf($this->getTranslator()->trans('%s products', array(), 'Shop-Theme-Catalog'), $supplier['nb_products']) : sprintf($this->getTranslator()->trans('% product', array(), 'Shop-Theme-Catalog'), $supplier['nb_products']);
          }
 
          return $suppliers_for_display;

@@ -55,11 +55,11 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
             $msgText = Tools::getValue('msgText');
 
             if (!$idOrder || !Validate::isUnsignedId($idOrder)) {
-                $this->errors[] = $this->l('The order is no longer valid.');
+                $this->errors[] = $this->getTranslator()->trans('The order is no longer valid.', array(), 'Shop-Notifications-Error');
             } elseif (empty($msgText)) {
-                $this->errors[] = $this->l('The message cannot be blank.');
+                $this->errors[] = $this->getTranslator()->trans('The message cannot be blank.', array(), 'Shop-Notifications-Error');
             } elseif (!Validate::isMessage($msgText)) {
-                $this->errors[] = $this->l('This message is invalid (HTML is not allowed).');
+                $this->errors[] = $this->getTranslator()->trans('This message is invalid (HTML is not allowed).', array(), 'Shop-Notifications-Error');
             }
             if (!count($this->errors)) {
                 $order = new Order($idOrder);
@@ -151,17 +151,17 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
             $this->redirect();
         } else {
             if (Tools::getIsset('errorQuantity')) {
-                $this->errors[] = $this->l('You do not have enough products to request an additional merchandise return.');
+                $this->errors[] = $this->getTranslator()->trans('You do not have enough products to request an additional merchandise return.', array(), 'Shop-Notifications-Error');
             } elseif (Tools::getIsset('errorMsg')) {
-                $this->errors[] = $this->l('Please provide an explanation for your RMA.');
+                $this->errors[] = $this->getTranslator()->trans('Please provide an explanation for your RMA.', array(), 'Shop-Notifications-Error');
             } elseif (Tools::getIsset('errorDetail1')) {
-                $this->errors[] = $this->l('Please check at least one product you would like to return.');
+                $this->errors[] = $this->getTranslator()->trans('Please check at least one product you would like to return.', array(), 'Shop-Notifications-Error');
             } elseif (Tools::getIsset('errorDetail2')) {
-                $this->errors[] = $this->l('For each product you wish to add, please specify the desired quantity.');
+                $this->errors[] = $this->getTranslator()->trans('For each product you wish to add, please specify the desired quantity.', array(), 'Shop-Notifications-Error');
             } elseif (Tools::getIsset('errorNotReturnable')) {
-                $this->errors[] = $this->l('This order cannot be returned');
+                $this->errors[] = $this->getTranslator()->trans('This order cannot be returned', array(), 'Shop-Notifications-Error');
             } elseif (Tools::getIsset('messagesent')) {
-                $this->success[] = $this->l('Message successfully sent');
+                $this->success[] = $this->getTranslator()->trans('Message successfully sent', array(), 'Shop-Notifications-Success');
             }
 
             $order = new Order($id_order);
