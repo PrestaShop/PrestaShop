@@ -292,7 +292,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'accessories' => $accessories,
                 'product' => $product_for_template,
                 'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
-                'unit_price' => ($this->product->unit_price_ratio > 0) ? ($productPrice / $this->product->unit_price_ratio) : 0,
                 'product_manufacturer' => new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
                 'last_qties' => (int) Configuration::get('PS_LAST_QTIES'),
                 'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE'),
