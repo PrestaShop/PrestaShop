@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Symfony\Component\Translation\Translator;
+
 /**
  * Class ContextCore
  *
@@ -78,6 +80,9 @@ class ContextCore
 
     /** @var int */
     public $mode;
+    
+    /** @var Translator */
+    protected $translator;
 
     /**
      * Mobile device of the customer
@@ -323,5 +328,18 @@ class ContextCore
         $this->cookie->id_cart = (int)$this->cart->id;
         $this->cookie->write();
         $this->cart->autosetProductAddress();
+    }
+    
+    /**
+     * 
+     * @return Translator
+     */
+    public function getTranslator()
+    {
+        if (null === $this->translator) {
+            $this->translator = new Translator($this->language->locale, null, _PS_CACHE_DIR_, false);
+        }
+        
+        return $this->translator;
     }
 }
