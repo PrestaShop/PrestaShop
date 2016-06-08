@@ -49,7 +49,7 @@
 
       {elseif $field.type === 'date'}
 
-        <input class="form-control" type="text" placeholder="MM/DD/YYYY">
+        <input class="form-control" type="text" placeholder="DD/MM/YYYY">
         <span class="form-control-comment">
           {l s='(Ex.:31/05/1970)' d='Shop.Forms.Help'}
         </span>
