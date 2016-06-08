@@ -26,7 +26,7 @@
 
 use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
 
-class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
+class OrderDetailControllerCore extends FrontController
 {
     public $php_self = 'order-detail';
     public $auth = true;
