@@ -295,6 +295,14 @@ var formCategory = (function() {
 
         //inject new category in parent category selector
         $('#form_step1_new_category_id_parent').append('<option value="' + response.category.id + '">' + response.category.name[1] + '</option>');
+
+        // create label
+        var tag = {
+          'name': response.category.name[1],
+          'id': response.category.id,
+          'breadcrumb': ''
+        };
+        productCategoriesTags.createTag(tag);
       },
       error: function(response) {
         $.each(jQuery.parseJSON(response.responseText), function(key, errors) {
