@@ -34,9 +34,9 @@
 
       <footer class="form-footer">
         <input type="hidden" name="submitTransformGuestToCustomer" value="1">
-        <input type="hidden" name="id_order" value="{$order.data.id}">
-        <input type="hidden" name="order_reference" value="{$order.data.reference}">
-        <input type="hidden" name="email" value="{$order.customer.email}">
+        <input type="hidden" name="id_order" value="{$order.details.id}">
+        <input type="hidden" name="order_reference" value="{$order.details.reference}">
+        <input type="hidden" name="email" value="{$customer.email}">
 
         <button type="submit">{l s='Send' d='Shop.Theme.Actions'}</button>
       </footer>

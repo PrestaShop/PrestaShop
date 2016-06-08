@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,125 +23,79 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
 
-class GuestTrackingControllerCore extends OrderDetailController
+class GuestTrackingControllerCore extends FrontController
 {
     public $ssl = true;
     public $auth = false;
     public $php_self = 'guest-tracking';
-    private $order_collection = [];
+    private $order;
 
     /**
-     * Initialize guest tracking controller
+     * Initialize guest tracking controller.
+     *
      * @see FrontController::init()
      */
     public function init()
     {
-        parent::init();
         if ($this->context->customer->isLogged()) {
             Tools::redirect('history.php');
         }
+
+        parent::init();
     }
 
     /**
-     * Start forms process
+     * Start forms process.
+     *
      * @see FrontController::postProcess()
      */
     public function postProcess()
     {
-        if (Tools::isSubmit('submitGuestTracking') || Tools::isSubmit('submitTransformGuestToCustomer')) {
-            // Get order reference, ignore package reference (after the #, on the order reference)
-            $order_reference = current(explode('#', Tools::getValue('order_reference')));
+        $order_reference = current(explode('#', Tools::getValue('order_reference')));
+        $email = Tools::getValue('email');
 
-            if (!empty($order_reference)) {
-                $this->order_collection = Order::getByReference($order_reference);
-            }
-
-            $email = Tools::getValue('email');
-
-            if (empty($order_reference)) {
-                $this->errors[] = $this->trans('Please provide your order\'s reference number.', array(), 'Shop.Notifications.Error');
-            } elseif (empty($email) || !Validate::isEmail($email)) {
-                $this->errors[] = $this->trans('Please provide a valid email address.', array(), 'Shop.Notifications.Error');
-            } elseif (!Customer::customerExists($email, false, false)) {
-                $this->errors[] = $this->trans('There is no account associated with this email address.', array(), 'Shop.Notifications.Error');
-            } elseif (Customer::customerExists($email, false, true)) {
-                $this->errors[] = $this->trans('This page is for guest accounts only. Since your guest account has already been transformed into a customer account, you can no longer view your order here. Please log in to your customer account to view this order', array(), 'Shop.Notifications.Error');
-                $this->context->smarty->assign('show_login_link', true);
-            } elseif (!count($this->order_collection) || $this->order_collection->count() != 1 || !$this->order_collection->getFirst()->isAssociatedAtGuest($email)) {
-                $this->errors[] = $this->trans('Invalid order reference', array(), 'Shop.Notifications.Error');
-            } else {
-                $this->assignOrderTracking($this->order_collection);
-                if (Tools::isSubmit('submitTransformGuestToCustomer')) {
-                    $customer = new Customer((int)$this->order_collection->getFirst()->id_customer);
-                    if (!Validate::isLoadedObject($customer)) {
-                        $this->errors[] = $this->trans('Invalid customer', array(), 'Shop.Notifications.Error');
-                    } elseif (!Tools::getValue('password')) {
-                        $this->errors[] = $this->trans('Invalid password.', array(), 'Shop.Notifications.Error');
-                    } elseif (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password'))) {
-                        $this->errors[] = $this->trans('An error occurred while transforming a guest into a registered customer.', array(), 'Shop.Notifications.Error');
-                    } else {
-                        $this->success[] = $this->trans('Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.', array(), 'Shop.Notifications.Success');
-                    }
-                }
+        if ($email !== false && $order_reference !== false) {
+            $this->order = Order::getByReferenceAndEmail($order_reference, $email);
+            if (!Validate::isLoadedObject($this->order)) {
+                $this->errors[] = $this->getTranslator()->trans(
+                    'We couldn\'t find your order with the information provided, please try again',
+                    array(),
+                    'Shop.Notifications.Error'
+                );
             }
         }
+
+        // TODO: Error message for the form
+
+        // TODO: TRANSFORM TO CUSTOMER
     }
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
     {
-        FrontController::initContent();
+        parent::initContent();
 
-        /* Handle brute force attacks */
-        if (count($this->errors)) {
-            sleep(1);
+        if (!Validate::isLoadedObject($this->order)) {
+            return $this->setTemplate('customer/guest-login.tpl');
         }
 
-        if (count($this->order_collection) > 0) {
-            $this->setTemplate('customer/guest-tracking.tpl');
-        } else {
-            $this->setTemplate('customer/guest-login.tpl');
-        }
-    }
-
-    /**
-     * Assigns template vars related to order tracking information
-     *
-     * @param PrestaShopCollection $this->order_collection
-     *
-     * @throws PrestaShopException
-     */
-    protected function assignOrderTracking($order_collection)
-    {
-        $order = $order_collection->getFirst();
-
-        if ((int)$order->isReturnable()) {
+        if ((int) $this->order->isReturnable()) {
             $this->info[] = $this->trans('You cannot return merchandise with a guest account.', array(), 'Shop.Notifications.Warning');
         }
 
-        $this->order_to_display['data'] = $this->getTemplateVarOrder($order);
-        $this->order_to_display['products'] = $this->getTemplateVarProducts($order);
-        $this->order_to_display['history'] = $this->getTemplateVarOrderHistory($order);
-        $this->order_to_display['addresses'] = $this->getTemplateVarAddresses($order);
-        $this->order_to_display['shipping'] = $this->getTemplateVarShipping($order);
-        $this->order_to_display['messages'] = $this->getTemplateVarMessages($order);
-        $this->order_to_display['carrier'] = $this->getTemplateVarCarrier($order);
+        $presented_order = (new OrderPresenter())->present($this->order);
 
-        $this->order_to_display['data']['followup'] = '';
-        if ($this->order_to_display['carrier']['url'] && $order->shipping_number) {
-            $this->order_to_display['data']['followup'] = str_replace('@', $order->shipping_number, $this->order_to_display['carrier']['url']);
-        }
+        $this->context->smarty->assign(array(
+            'order' => $presented_order,
+            'hook_orderdetaildisplayed' => Hook::exec('displayOrderDetail', array('order' => $this->order)),
+        ));
 
-        $this->order_to_display['customer'] = $this->getTemplateVarCustomer(new Customer($order->id_customer));
-
-        $this->context->smarty->assign([
-            'order' => $this->order_to_display,
-            'hook_orderdetaildisplayed' => Hook::exec('displayOrderDetail', ['order' => $order]),
-            'use_tax' => Configuration::get('PS_TAX'),
-        ]);
+        return $this->setTemplate('customer/guest-tracking.tpl');
     }
 }
