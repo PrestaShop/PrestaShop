@@ -263,6 +263,16 @@ class ValidateCore
         return preg_match('/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/', $s);
     }
 
+    /**
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag#ISO_3166-1_and_UN_M.49
+     * @param string $s
+     * @return bool
+     */
+    public static function isLocale($s)
+    {
+        return preg_match('/^[a-z]{2}-[A-Z]{2}$/', $s);
+    }
+
     public static function isStateIsoCode($iso_code)
     {
         return preg_match('/^[a-zA-Z0-9]{1,4}((-)[a-zA-Z0-9]{1,4})?$/', $iso_code);
