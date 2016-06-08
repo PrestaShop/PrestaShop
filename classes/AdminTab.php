@@ -238,6 +238,7 @@ abstract class AdminTabCore
     /**
      * Uses translations files to find a translation for a given string (string should be in english).
      *
+     * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
      * @param string $string term or expression in english
      * @param string $class
      * @param bool $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
