@@ -93,7 +93,7 @@ class GuestTrackingControllerCore extends FrontController
 
         $this->context->smarty->assign(array(
             'order' => $presented_order,
-            'hook_orderdetaildisplayed' => Hook::exec('displayOrderDetail', array('order' => $this->order)),
+            'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', array('order' => $this->order)),
         ));
 
         return $this->setTemplate('customer/guest-tracking.tpl');

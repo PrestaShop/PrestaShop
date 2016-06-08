@@ -170,7 +170,7 @@ class OrderDetailControllerCore extends FrontController
 
                 $this->context->smarty->assign([
                     'order' => $this->order_to_display,
-                    'hook_orderdetaildisplayed' => Hook::exec('displayOrderDetail', ['order' => $order]),
+                    'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $order]),
                     'use_tax' => Configuration::get('PS_TAX'),
                 ]);
             } else {
