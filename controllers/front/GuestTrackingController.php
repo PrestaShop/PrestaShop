@@ -98,4 +98,16 @@ class GuestTrackingControllerCore extends FrontController
 
         return $this->setTemplate('customer/guest-tracking.tpl');
     }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumbLinks = parent::getBreadcrumbLinks();
+
+        $breadcrumbLinks['links'][] = array(
+            'title' => $this->getTranslator()->trans('Guest order tracking', array(), 'Front.Theme.Checkout'),
+            'url' => '#',
+        );
+
+        return $breadcrumbLinks;
+    }
 }
