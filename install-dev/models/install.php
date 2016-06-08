@@ -422,6 +422,7 @@ class InstallModelInstall extends InstallAbstractModel
                 'iso_code' => substr((string)$xml->language_code, 0, 2),
                 'allow_accented_chars_url' => (string)$xml->allow_accented_chars_url,
                 'language_code' => (string)$xml->language_code,
+                'locale' => (string)$xml->locale,
             );
 
             if (InstallSession::getInstance()->safe_mode) {
