@@ -38,7 +38,7 @@
         <input type="hidden" name="order_reference" value="{$order.details.reference}">
         <input type="hidden" name="email" value="{$customer.email}">
 
-        <button type="submit">{l s='Send' d='Shop.Theme.Actions'}</button>
+        <button class="btn btn-primary" type="submit">{l s='Send' d='Shop.Theme.Actions'}</button>
       </footer>
 
   {/block}
