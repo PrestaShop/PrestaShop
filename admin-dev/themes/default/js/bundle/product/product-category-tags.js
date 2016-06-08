@@ -102,20 +102,25 @@ var productCategoriesTags = (function () {
         });
       }
 
-      tagsContainer.append('<span class="pstaggerTag">' +
-        '<span data-id="' + category.id + '" title="' + category.breadcrumb + '">' + category.name + '</span>' +
-        '<a class="pstaggerClosingCross" href="#" data-id="' + category.id + '">x</a>' +
-        '</span>')
-      ;
+      var isTagExist = tagsContainer.find('span[data-id='+ category.id +']');
 
-      var optionId = '#form_step1_id_category_default_' + category.id;
-      if (0 == $(optionId).length) {
-        defaultCategoryForm.append('<div class="radio">' +
-          '<label class="required">' +
-          '<input type="radio"' + 'id="form_step1_id_category_default_' + category.id + '" name="form[step1][id_category_default]" required="required" value="' + category.id + '">' +
-          category.name +'</label>' +
-          '</div>');
+      if(0 == isTagExist.length) {
+        tagsContainer.append('<span class="pstaggerTag">' +
+          '<span data-id="' + category.id + '" title="' + category.breadcrumb + '">' + category.name + '</span>' +
+          '<a class="pstaggerClosingCross" href="#" data-id="' + category.id + '">x</a>' +
+          '</span>')
+        ;
+
+        var optionId = '#form_step1_id_category_default_' + category.id;
+        if (0 == $(optionId).length) {
+          defaultCategoryForm.append('<div class="radio">' +
+            '<label class="required">' +
+            '<input type="radio"' + 'id="form_step1_id_category_default_' + category.id + '" name="form[step1][id_category_default]" required="required" value="' + category.id + '">' +
+            category.name +'</label>' +
+            '</div>');
+        }
       }
+
 
       return true;
     },
@@ -152,6 +157,7 @@ var productCategoriesTags = (function () {
           var label = ui.item.label;
           var categoryName = that.getNameFromBreadcrumb(label);
           var categoryId = ui.item.value;
+
           that.createTag({
             'name': categoryName,
             'id': categoryId,
