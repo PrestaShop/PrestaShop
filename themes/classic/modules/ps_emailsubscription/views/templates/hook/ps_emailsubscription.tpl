@@ -38,11 +38,17 @@
             <input type="hidden" name="action" value="0">
           </div>
           <div class="col-md-12">
-              {if isset($need_confirmation) && $need_confirmation}
-               <span class="custom-checkbox">
+              {if $need_confirmation}
+                <span class="custom-checkbox">
                   <input type="checkbox" name="confirm-optin" value="1" required>
                   <span><i class="material-icons checkbox-checked"></i></span>
-                  <label>{l s='I agree to receive newsletter emails and I am aware of [1]the privacy policy[/1]' tags=['<a target="_blank" href="%s">'|sprintf:$cms_privacy_link] mod='ps_emailsubscription'}</label>
+                  <label>
+                    {l
+                      s='I want to receive the free newsletter and have read and accepted the [1]conditions[/1].'
+                      tags=['<a data-toggle="modal" data-target="#ps_emailsubscription-modal">']
+                      mod='ps_emailsubscription'
+                    }
+                  </label>
                 </span>
               {/if}
               {if $msg}
@@ -54,3 +60,24 @@
     </div>
   </div>
 </div>
+
+{if $need_confirmation && isset($conditions)}
+  <div
+    class="modal fade"
+    id="ps_emailsubscription-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {$conditions nofilter}
+        </div>
+      </div>
+    </div>
+  </div>
+{/if}
