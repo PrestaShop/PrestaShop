@@ -217,7 +217,7 @@ var nestedCategories = (function() {
       nestedCategoriesForm.categorytree();
 
       // now we can select default category from nested Categories even if it's not related from a "code" point of view.
-      nestedCategoriesForm.find('input[type="radio"]').on('change', function updateDefaultCategory() {
+      nestedCategoriesForm.on('change', 'input[type="radio"]', function updateDefaultCategory() {
         var categoryId = $(this).val();
         /* we can't select a default category if category is not selected
          * that's why we check category first instead of warn user.
