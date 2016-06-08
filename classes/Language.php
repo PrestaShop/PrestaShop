@@ -38,6 +38,9 @@ class LanguageCore extends ObjectModel
     public $iso_code;
 
     /** @var string 5-letter iso code */
+    public $locale;
+
+    /** @var string 5-letter iso code */
     public $language_code;
 
     /** @var string date format http://http://php.net/manual/en/function.date.php with the date only */
@@ -63,6 +66,7 @@ class LanguageCore extends ObjectModel
         'fields' => array(
             'name' =>                array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
             'iso_code' =>            array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 2),
+            'locale' =>        array('type' => self::TYPE_STRING, 'validate' => 'isLocale', 'size' => 5),
             'language_code' =>        array('type' => self::TYPE_STRING, 'validate' => 'isLanguageCode', 'size' => 5),
             'active' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'is_rtl' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
