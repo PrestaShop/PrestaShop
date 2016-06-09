@@ -1036,7 +1036,7 @@
 "Form update success": "Settings updated."|trans({}, 'AdminProducts'),
 "Form update errors": "Unable to update settings."|trans({}, 'AdminProducts'),
 "Delete": "Delete"|trans({}, 'AdminProducts'),
-"ToLargeFile": "The file is too large ({{filesize}}). Maximum size allowed is {{maxFilesize}}."|trans({}, 'AdminProducts'),
+"ToLargeFile": "The file is too large. Maximum size allowed is: [1]. The file you are trying to upload is [2]."|trans({}, 'AdminProducts')|replace({ '[1]': '{{maxFilesize}}', '[2]': '{{filesize}}' }),
 "Drop images here": "Drop images here"|trans({}, 'AdminProducts'),
 "or select files": "or select files"|trans({}, 'AdminProducts'),
 "files recommandations": "Recommended size 800 x 800px for default theme."|trans({}, 'AdminProducts'),
