@@ -28,7 +28,6 @@ $(document).ready(function() {
   nav.init();
   featuresCollection.init();
   displayFormCategory.init();
-  nestedCategories.init();
   formCategory.init();
   stock.init();
   supplier.init();
@@ -203,31 +202,6 @@ var displayFieldsManager = (function() {
           }
         }).show();
       }
-    }
-  };
-})();
-
-/**
- * Nested categories management
- */
-var nestedCategories = (function() {
-  return {
-    'init': function() {
-      var nestedCategoriesForm = $('#form_step1_categories');
-      nestedCategoriesForm.categorytree();
-
-      // now we can select default category from nested Categories even if it's not related from a "code" point of view.
-      nestedCategoriesForm.on('change', 'input[type="radio"]', function updateDefaultCategory() {
-        var categoryId = $(this).val();
-        /* we can't select a default category if category is not selected
-         * that's why we check category first instead of warn user.
-         */
-        var category = nestedCategoriesForm.find('input[value="' + categoryId + '"].category');
-        if (category.is(':checked') === false) {
-          category.trigger('click');
-        }
-        defaultCategory.check(categoryId);
-      });
     }
   };
 })();
