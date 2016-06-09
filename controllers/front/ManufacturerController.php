@@ -27,8 +27,6 @@
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerProductSearchProvider;
-use PrestaShop\PrestaShop\Adapter\Translator;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 class ManufacturerControllerCore extends ProductListingFrontController
 {
@@ -99,9 +97,8 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
     protected function getDefaultProductSearchProvider()
     {
-        $translator = new Translator(new LegacyContext);
         return new ManufacturerProductSearchProvider(
-            $translator,
+            $this->getTranslator(),
             $this->manufacturer
         );
     }

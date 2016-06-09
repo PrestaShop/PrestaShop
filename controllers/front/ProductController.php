@@ -27,8 +27,6 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Adapter\Translator;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
@@ -248,7 +246,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->context->link,
                 new PriceFormatter(),
                 new ProductColorsRetriever(),
-                new Translator(new LegacyContext())
+                $this->getTranslator()
             );
             $presentationSettings = $this->getProductPresentationSettings();
 
