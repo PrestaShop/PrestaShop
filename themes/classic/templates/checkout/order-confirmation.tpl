@@ -5,10 +5,18 @@
       <div class="card-block">
         <div class="row">
           <div class="col-md-12">
-            <h3 class="h1 card-title"><i class="material-icons done">&#xE876;</i>{l s='Your order is confirmed' d='Shop.Theme.Checkout'}</h3>
+            <h3 class="h1 card-title">
+              <i class="material-icons done">&#xE876;</i>{l s='Your order is confirmed' d='Shop.Theme.Checkout'}
+            </h3>
             <p>
               {l s='An email has been sent to your mail address %s.' d='Shop.Theme.Checkout' sprintf=$customer.email}
-              {if $url_to_invoice !== ''}{l s='You can also [1]download your invoice[/1]' d='Shop.Theme.Checkout' tags=["<a href='{$url_to_invoice}'>"]}{/if}
+              {if $order.details.invoice_url}
+                {l
+                  s='You can also [1]download your invoice[/1]'
+                  d='Shop.Theme.Checkout'
+                  tags=["<a href='{$order.details.invoice_url}'>"]
+                }
+              {/if}
             </p>
             {$HOOK_ORDER_CONFIRMATION nofilter}
           </div>
@@ -23,7 +31,13 @@
       <div class="row">
 
         {block name='order_confirmation_table'}
-          {include file='checkout/_partials/order-confirmation-table.tpl' order=$order}
+          {include
+            file='checkout/_partials/order-confirmation-table.tpl'
+            products=$order.products
+            subtotals=$order.subtotals
+            totals=$order.totals
+            labels=$order.labels
+          }
         {/block}
 
         <div id="order-details" class="col-md-4">
@@ -49,7 +63,7 @@
     </div>
   </section>
 
-  {if $is_guest}
+  {if $customer.is_guest}
     <div id="registration-form" class="card">
       <div class="card-block">
         <h4 class="h4">{l s='Save time on your next order, sign up now' d='Shop.Theme.Checkout'}</h4>

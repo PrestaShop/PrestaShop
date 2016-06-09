@@ -8,10 +8,16 @@
   {block name='order_infos'}
     <div id="order-infos">
       <div class="box">
-          <strong>{l s='Order Reference %s - placed on %s' d='Shop.Theme.CustomerAccount' sprintf=[$order.details.reference, $order.details.order_date]}</strong>
-          {if $order.details.url_to_reorder}
+          <strong>
+            {l
+              s='Order Reference %s - placed on %s'
+              d='Shop.Theme.CustomerAccount'
+              sprintf=[$order.details.reference, $order.details.order_date]
+            }
+          </strong>
+          {if $order.details.reorder_url}
             <div class="pull-xs-right">
-              <a href="{$order.details.url_to_reorder}" class="button-primary">{l s='Reorder' d='Shop.Theme.Actions'}</a>
+              <a href="{$order.details.reorder_url}" class="button-primary">{l s='Reorder' d='Shop.Theme.Actions'}</a>
             </div>
             <div class="clearfix"></div>
           {/if}
@@ -22,12 +28,18 @@
           <li><strong>{l s='Carrier' d='Shop.Theme.Checkout'}</strong> {$order.carrier.name}</li>
           <li><strong>{l s='Payment method' d='Shop.Theme.Checkout'}</strong> {$order.details.payment}</li>
 
-          {if $order.details.url_to_invoice}
-            <li><a href="{$order.details.url_to_invoice}">{l s='Download your invoice as a PDF file.' d='Shop.Theme.CustomerAccount'}</a></li>
+          {if $order.details.invoice_url}
+            <li>
+              <a href="{$order.details.invoice_url}">
+                {l s='Download your invoice as a PDF file.' d='Shop.Theme.CustomerAccount'}
+              </a>
+            </li>
           {/if}
 
           {if $order.details.recyclable}
-            <li>{l s='You have given permission to receive your order in recycled packaging.' d='Shop.Theme.CustomerAccount'}</li>
+            <li>
+              {l s='You have given permission to receive your order in recycled packaging.' d='Shop.Theme.CustomerAccount'}
+            </li>
           {/if}
 
           {if $order.details.gift_message}
@@ -53,7 +65,11 @@
           {foreach from=$order.history item=state}
             <tr>
               <td>{$state.history_date}</td>
-              <td><span class="label label-pill {$state.contrast}" style="background-color:{$state.color}">{$state.ostate_name}</span></td>
+              <td>
+                <span class="label label-pill {$state.contrast}" style="background-color:{$state.color}">
+                  {$state.ostate_name}
+                </span>
+              </td>
             </tr>
           {/foreach}
         </tbody>
@@ -92,7 +108,7 @@
   {$hook_orderdetaildisplayed}
 
   {block name='order_detail'}
-    {if $order.details.return_allowed}
+    {if $order.details.is_returnable}
       {include file='customer/_partials/order-detail-return.tpl'}
     {else}
       {include file='customer/_partials/order-detail-no-return.tpl'}

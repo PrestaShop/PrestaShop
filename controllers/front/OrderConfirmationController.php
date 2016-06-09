@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
 
 class OrderConfirmationControllerCore extends FrontController
@@ -38,22 +37,22 @@ class OrderConfirmationControllerCore extends FrontController
     public $order_presenter;
 
     /**
-     * Initialize order confirmation controller
+     * Initialize order confirmation controller.
+     *
      * @see FrontController::init()
      */
     public function init()
     {
         parent::init();
 
-        $this->id_cart = (int)(Tools::getValue('id_cart', 0));
-        $is_guest = false;
+        $this->id_cart = (int) (Tools::getValue('id_cart', 0));
 
         $redirectLink = 'index.php?controller=history';
 
-        $this->id_module = (int)(Tools::getValue('id_module', 0));
-        $this->id_order = Order::getOrderByCartId((int)($this->id_cart));
+        $this->id_module = (int) (Tools::getValue('id_module', 0));
+        $this->id_order = Order::getOrderByCartId((int) ($this->id_cart));
         $this->secure_key = Tools::getValue('key', false);
-        $order = new Order((int)($this->id_order));
+        $order = new Order((int) ($this->id_order));
 
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
             Tools::redirect($redirectLink.(Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
@@ -62,7 +61,7 @@ class OrderConfirmationControllerCore extends FrontController
         if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
             Tools::redirect($redirectLink);
         }
-        $module = Module::getInstanceById((int)($this->id_module));
+        $module = Module::getInstanceById((int) ($this->id_module));
         if ($order->module != $module->name) {
             Tools::redirect($redirectLink);
         }
@@ -70,35 +69,28 @@ class OrderConfirmationControllerCore extends FrontController
     }
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
     {
         parent::initContent();
-        $order = new Order(Order::getOrderByCartId((int)($this->id_cart)));
+        $order = new Order(Order::getOrderByCartId((int) ($this->id_cart)));
+        $presentedOrder = $this->order_presenter->present($order);
         $register_form = $this
             ->makeCustomerForm()
             ->setGuestAllowed(false)
             ->fillWith(Tools::getAllValues());
-        ;
 
         $this->context->smarty->assign(array(
-            'is_guest' => $this->context->customer->is_guest,
-            'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
-            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn(),
-            'url_to_invoice' => HistoryController::getUrlToInvoice($order, $this->context),
-            'order' => $this->order_presenter->present($order),
-            'register_form' => $register_form
+            'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($order),
+            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($order),
+            'order' => $presentedOrder,
+            'register_form' => $register_form,
         ));
 
         if ($this->context->customer->is_guest) {
-            $this->context->smarty->assign(array(
-                'id_order' => $this->id_order,
-                'reference_order' => $this->reference,
-                'id_order_formatted' => sprintf('#%06d', $this->id_order),
-                'email' => $this->context->customer->email
-            ));
             /* If guest we clear the cookie for security reason */
             $this->context->customer->mylogout();
         }
@@ -107,46 +99,22 @@ class OrderConfirmationControllerCore extends FrontController
     }
 
     /**
-     * Execute the hook displayPaymentReturn
+     * Execute the hook displayPaymentReturn.
      */
-    public function displayPaymentReturn()
+    public function displayPaymentReturn($order)
     {
-        if (Validate::isUnsignedId($this->id_order) && Validate::isUnsignedId($this->id_module)) {
-            $params = array();
-            $order = new Order($this->id_order);
-            $currency = new Currency($order->id_currency);
-
-            if (Validate::isLoadedObject($order)) {
-                $params['total_to_pay'] = $order->getOrdersTotalPaid();
-                $params['currency'] = $currency->sign;
-                $params['objOrder'] = $order;
-                $params['currencyObj'] = $currency;
-
-                return Hook::exec('displayPaymentReturn', $params, $this->id_module);
-            }
+        if (!Validate::isUnsignedId($this->id_module)) {
+            return false;
         }
-        return false;
+
+        return Hook::exec('displayPaymentReturn', array('order' => $order), $this->id_module);
     }
 
     /**
-     * Execute the hook displayOrderConfirmation
+     * Execute the hook displayOrderConfirmation.
      */
-    public function displayOrderConfirmation()
+    public function displayOrderConfirmation($order)
     {
-        if (Validate::isUnsignedId($this->id_order)) {
-            $params = array();
-            $order = new Order($this->id_order);
-            $currency = new Currency($order->id_currency);
-
-            if (Validate::isLoadedObject($order)) {
-                $params['total_to_pay'] = $order->getOrdersTotalPaid();
-                $params['currency'] = $currency->sign;
-                $params['objOrder'] = $order;
-                $params['currencyObj'] = $currency;
-
-                return Hook::exec('displayOrderConfirmation', $params);
-            }
-        }
-        return false;
+        return Hook::exec('displayOrderConfirmation', array('order' => $order));
     }
 }

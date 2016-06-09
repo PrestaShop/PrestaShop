@@ -21,8 +21,8 @@
       {/foreach}
     </div>
     <div class="cart-total">
-      <span class="label">{$cart.total.label}</span>
-      <span class="value">{$cart.total.amount}</span>
+      <span class="label">{$cart.totals.total.label}</span>
+      <span class="value">{$cart.totals.total.amount}</span>
     </div>
   </div>
 </div>

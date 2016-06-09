@@ -195,10 +195,11 @@ class OrderPresenter implements PresenterInterface
             'id' => $order->id,
             'reference' => $order->reference,
             'order_date' => Tools::displayDate($order->date_add, null, false),
-            'url_to_reorder' => HistoryController::getUrlToReorder((int) $order->id, $context),
-            'url_to_invoice' => HistoryController::getUrlToInvoice($order, $context),
+            'details_url' => $context->link->getPageLink('order-detail', true, null, 'id_order='.$order->id),
+            'reorder_url' => HistoryController::getUrlToReorder((int) $order->id, $context),
+            'invoice_url' => HistoryController::getUrlToInvoice($order, $context),
             'gift_message' => nl2br($order->gift_message),
-            'return_allowed' => (int) $order->isReturnable(),
+            'is_returnable' => (int) $order->isReturnable(),
             'payment' => $order->payment,
             'recyclable' => (bool) $order->recyclable,
             'shipping' => $this->getShipping($order),
@@ -218,6 +219,9 @@ class OrderPresenter implements PresenterInterface
         $historyList = $order->getHistory($context->language->id, false, true);
 
         foreach ($historyList as $historyId => $history) {
+            if ($history['id_order_state'] == $order->current_state) {
+                $historyId = 'current';
+            }
             $orderHistory[$historyId] = $history;
             $orderHistory[$historyId]['history_date'] = Tools::displayDate($history['date_add'], null, false);
             $orderHistory[$historyId]['contrast'] = (Tools::getBrightness($history['color']) > 128) ? 'dark' : 'bright';

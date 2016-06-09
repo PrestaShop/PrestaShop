@@ -297,12 +297,14 @@ class CartPresenter implements PresenterInterface
             );
         }
 
-        $total = array(
-            'type' => 'total',
-            'label' => $this->translator->trans('Total', array(), 'Cart'),
-            'amount' => $this->includeTaxes() ? $total_including_tax : $total_excluding_tax,
-            'value' => $this->priceFormatter->format(
-                $this->includeTaxes() ? $total_including_tax : $total_excluding_tax
+        $totals = array(
+            'total' => array(
+                'type' => 'total',
+                'label' => $this->translator->trans('Total', array(), 'Cart'),
+                'amount' => $this->includeTaxes() ? $total_including_tax : $total_excluding_tax,
+                'value' => $this->priceFormatter->format(
+                    $this->includeTaxes() ? $total_including_tax : $total_excluding_tax
+                ),
             ),
         );
 
@@ -329,7 +331,7 @@ class CartPresenter implements PresenterInterface
 
         return array(
             'products' => $products,
-            'total' => $total,
+            'totals' => $totals,
             'subtotals' => $subtotals,
             'products_count' => $products_count,
             'summary_string' => $summary_string,
