@@ -243,7 +243,7 @@ class CartPresenter implements PresenterInterface
 
         $subtotals['products'] = array(
             'type' => 'products',
-            'label' => $this->translator->trans('Subtotal', array(), 'Cart'),
+            'label' => $this->translator->trans('Subtotal', array(), 'Shop-Theme-Checkout'),
             'amount' => $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS),
             'value' => $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS))),
         );
@@ -251,7 +251,7 @@ class CartPresenter implements PresenterInterface
         if ($total_discount) {
             $subtotals['discounts'] = array(
                 'type' => 'discount',
-                'label' => $this->translator->trans('Discount', array(), 'Cart'),
+                'label' => $this->translator->trans('Discount', array(), 'Shop-Theme-Checkout'),
                 'amount' => $total_discount,
                 'value' => $this->priceFormatter->format($total_discount),
             );
@@ -266,22 +266,22 @@ class CartPresenter implements PresenterInterface
 
             $subtotals['gift_wrapping'] = array(
                 'type' => 'gift_wrapping',
-                'label' => $this->translator->trans('Gift wrapping', array(), 'Cart'),
+                'label' => $this->translator->trans('Gift wrapping', array(), 'Shop-Theme-Checkout'),
                 'amount' => $giftWrappingPrice,
                 'value' => ($giftWrappingPrice > 0)
                     ? $this->priceFormatter->format($giftWrappingPrice)
-                    : $this->translator->trans('Free', array(), 'Cart'),
+                    : $this->translator->trans('Free', array(), 'Shop-Theme-Checkout'),
             );
         }
 
         $shipping_cost = $cart->getTotalShippingCost(null, $this->includeTaxes());
         $subtotals['shipping'] = array(
             'type' => 'shipping',
-            'label' => $this->translator->trans('Shipping', array(), 'Cart'),
+            'label' => $this->translator->trans('Shipping', array(), 'Shop-Theme-Checkout'),
             'amount' => $shipping_cost,
             'value' => $shipping_cost != 0
                 ? $this->priceFormatter->format($shipping_cost)
-                : $this->translator->trans('Free', array(), 'Cart'),
+                : $this->translator->trans('Free', array(), 'Shop-Theme-Checkout'),
         );
 
         $subtotals['tax'] = null;
@@ -290,8 +290,8 @@ class CartPresenter implements PresenterInterface
             $subtotals['tax'] = array(
                 'type' => 'tax',
                 'label' => ($this->includeTaxes())
-                    ? $this->translator->trans('Included taxes', array(), 'Cart')
-                    : $this->translator->trans('Taxes', array(), 'Cart'),
+                    ? $this->translator->trans('Included taxes', array(), 'Shop-Theme-Checkout')
+                    : $this->translator->trans('Taxes', array(), 'Shop-Theme-Checkout'),
                 'amount' => $taxAmount,
                 'value' => $this->priceFormatter->format($taxAmount),
             );
@@ -300,7 +300,7 @@ class CartPresenter implements PresenterInterface
         $totals = array(
             'total' => array(
                 'type' => 'total',
-                'label' => $this->translator->trans('Total', array(), 'Cart'),
+                'label' => $this->translator->trans('Total', array(), 'Shop-Theme-Checkout'),
                 'amount' => $this->includeTaxes() ? $total_including_tax : $total_excluding_tax,
                 'value' => $this->priceFormatter->format(
                     $this->includeTaxes() ? $total_including_tax : $total_excluding_tax
@@ -313,8 +313,8 @@ class CartPresenter implements PresenterInterface
         }, 0);
 
         $summary_string = $products_count === 1 ?
-            $this->translator->trans('1 item', array(), 'Cart') :
-            sprintf($this->translator->trans('%d items', array(), 'Cart'), $products_count)
+            $this->translator->trans('1 item', array(), 'Shop-Theme-Checkout') :
+            sprintf($this->translator->trans('%d items', array(), 'Shop-Theme-Checkout'), $products_count)
         ;
 
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
@@ -322,11 +322,11 @@ class CartPresenter implements PresenterInterface
         // TODO: move it to a common parent, since it's copied in OrderPresenter and ProductPresenter
         $labels = array(
             'tax_short' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax incl.)', array(), 'Tax')
-                : $this->translator->trans('(tax excl.)', array(), 'Tax'),
+                ? $this->translator->trans('(tax incl.)', array(), 'Shop-Theme')
+                : $this->translator->trans('(tax excl.)', array(), 'Shop-Theme'),
             'tax_long' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax included)', array(), 'Tax')
-                : $this->translator->trans('(tax excluded)', array(), 'Tax'),
+                ? $this->translator->trans('(tax included)', array(), 'Shop-Theme')
+                : $this->translator->trans('(tax excluded)', array(), 'Shop-Theme'),
         );
 
         return array(
@@ -345,7 +345,7 @@ class CartPresenter implements PresenterInterface
                         'A minimum shopping cart total of %s (tax excl.) is required to validate your order.
                         Current cart total is %s (tax excl.).',
                         array(),
-                        'Cart'
+                        'Shop-Theme-Checkout'
                     ),
                     $this->priceFormatter->convertAndFormat($minimalPurchase),
                     $this->priceFormatter->convertAndFormat($productsTotalExcludingTax)
