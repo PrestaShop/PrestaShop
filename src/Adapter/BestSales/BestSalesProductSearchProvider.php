@@ -10,7 +10,6 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use ProductSale;
-use Tools;
 
 class BestSalesProductSearchProvider implements ProductSearchProviderInterface
 {
@@ -35,10 +34,10 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
             $query->getSortOrder()->toLegacyOrderBy(),
             $query->getSortOrder()->toLegacyOrderWay()
         )) {
-            $products = [];
+            $products = array();
         }
 
-        $count = (int)ProductSale::getNbSales();
+        $count = (int) ProductSale::getNbSales();
 
         $result = new ProductSearchResult();
         $result
@@ -47,20 +46,20 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
         ;
 
         $result->setAvailableSortOrders(
-            [
+            array(
                 (new SortOrder('product', 'name', 'asc'))->setLabel(
-                    $this->translator->trans('Name, A to Z', [], 'Product')
+                    $this->translator->trans('Name, A to Z', array(), 'Shop-Theme-Catalog')
                 ),
                 (new SortOrder('product', 'name', 'desc'))->setLabel(
-                    $this->translator->trans('Name, Z to A', [], 'Product')
+                    $this->translator->trans('Name, Z to A', array(), 'Shop-Theme-Catalog')
                 ),
                 (new SortOrder('product', 'price', 'asc'))->setLabel(
-                    $this->translator->trans('Price, low to high', [], 'Product')
+                    $this->translator->trans('Price, low to high', array(), 'Shop-Theme-Catalog')
                 ),
                 (new SortOrder('product', 'price', 'desc'))->setLabel(
-                    $this->translator->trans('Price, high to low', [], 'Product')
-                )
-            ]
+                    $this->translator->trans('Price, high to low', array(), 'Shop-Theme-Catalog')
+                ),
+            )
         );
 
         return $result;
