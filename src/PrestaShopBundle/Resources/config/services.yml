@@ -135,13 +135,6 @@ services:
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
 
-    #TWIG EXTENSIONS
-    prestashop.twig.extension.translation:
-        class: PrestaShopBundle\Twig\TranslationExtension
-        arguments: ["@translator", "@prestashop.adapter.translator"]
-        tags:
-            - { name: twig.extension }
-
     prestashop.twig.extension.hook:
         class: PrestaShopBundle\Twig\HookExtension
         arguments: ["@prestashop.hook.dispatcher", "@prestashop.adapter.data_provider.module"]
