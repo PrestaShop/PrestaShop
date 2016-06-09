@@ -8,8 +8,6 @@ use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use PrestaShop\PrestaShop\Adapter\Translator;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Context;
 use Cart;
 use Product;
@@ -28,9 +26,10 @@ class CartPresenter implements PresenterInterface
 
     public function __construct()
     {
+        $context = Context::getContext();
         $this->priceFormatter = new PriceFormatter();
-        $this->link = Context::getContext()->link;
-        $this->translator = new Translator(new LegacyContext());
+        $this->link = $context->link;
+        $this->translator = $context->getTranslator();
         $this->imageRetriever = new ImageRetriever($this->link);
         $this->taxConfiguration = new TaxConfiguration();
     }

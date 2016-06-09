@@ -6,8 +6,6 @@ use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use PrestaShop\PrestaShop\Adapter\Translator;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 class ProductPresenterFactoryCore
 {
@@ -45,7 +43,7 @@ class ProductPresenterFactoryCore
                 $this->context->link,
                 new PriceFormatter(),
                 new ProductColorsRetriever(),
-                new Translator(new LegacyContext())
+                $this->context->getTranslator()
             );
         }
 
@@ -54,7 +52,7 @@ class ProductPresenterFactoryCore
             $this->context->link,
             new PriceFormatter(),
             new ProductColorsRetriever(),
-            new Translator(new LegacyContext())
+            $this->context->getTranslator()
         );
     }
 }
