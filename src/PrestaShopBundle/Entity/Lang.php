@@ -52,6 +52,13 @@ class Lang
     /**
      * @var string
      *
+     * @ORM\Column(name="locale", type="string", length=5)
+     */
+    private $locale;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="date_format_lite", type="string", length=32)
      */
     private $dateFormatLite;
@@ -247,5 +254,26 @@ class Lang
     public function getIsRtl()
     {
         return $this->isRtl;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * 
+     * @param string $locale
+     * @return Lang
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+        
+        return $this;
     }
 }

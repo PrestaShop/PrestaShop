@@ -285,6 +285,7 @@ class HelperCore
     /**
      * use translations files to replace english expression.
      *
+     * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
      * @param mixed $string term or expression in english
      * @param string $class
      * @param bool $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().

@@ -512,6 +512,7 @@ class FrontControllerCore extends Controller
     /**
      * Non-static translation method for frontoffice
      *
+     * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
      * @param string  $string Term or expression in english
      * @param false|string  $specific Specific name, only for ModuleFrontController
      * @param string|null $class Name of the class

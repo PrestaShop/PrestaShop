@@ -2664,6 +2664,7 @@ class AdminControllerCore extends Controller
     /**
      * Non-static method which uses AdminController::translate()
      *
+     * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
      * @param string  $string Term or expression in english
      * @param string|null $class Name of the class
      * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().

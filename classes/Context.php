@@ -24,6 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
+
 /**
  * Class ContextCore
  *
@@ -78,6 +82,9 @@ class ContextCore
 
     /** @var int */
     public $mode;
+    
+    /** @var Translator */
+    protected $translator;
 
     /**
      * Mobile device of the customer
@@ -323,5 +330,33 @@ class ContextCore
         $this->cookie->id_cart = (int)$this->cart->id;
         $this->cookie->write();
         $this->cart->autosetProductAddress();
+    }
+    
+    /**
+     * 
+     * @return Translator
+     */
+    public function getTranslator()
+    {
+        if (null === $this->translator) {
+            $this->translator = new Translator($this->language->locale, null, _PS_CACHE_DIR_, false);
+            $this->translator->addLoader('xlf', new XliffFileLoader);
+            
+            $finder = Finder::create()
+                ->files()
+                ->filter(function (\SplFileInfo $file) {
+                    return 2 === substr_count($file->getBasename(), '.') && preg_match('/\.\w+$/', $file->getBasename());
+                })
+                ->in(_PS_ROOT_DIR_.'/app/Resources/translations')
+            ;
+
+            foreach ($finder as $file) {
+                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+
+                $this->translator->addResource($format, $file, $locale, $domain);
+            }
+        }
+        
+        return $this->translator;
     }
 }
