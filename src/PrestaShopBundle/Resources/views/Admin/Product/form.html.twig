@@ -1037,6 +1037,10 @@
 {% endblock %}
 
 {% set js_translatable = {
+"Are you sure to disable variations ? they will all be deleted": "This will delete all the combinations. Do you wish to proceed?"|trans({}, 'AdminProducts'),
+}|merge(js_translatable) %}
+
+{% set js_translatable = {
 "Form update success": "Settings updated."|trans({}, 'AdminProducts'),
 "Form update errors": "Unable to update settings."|trans({}, 'AdminProducts'),
 "Delete": "Delete"|trans({}, 'AdminProducts'),
@@ -1046,13 +1050,12 @@
 "files recommandations": "Recommended size 800 x 800px for default theme."|trans({}, 'AdminProducts'),
 "files recommandations2": "JPG, GIF or PNG format."|trans({}, 'AdminProducts'),
 "Cover": "Cover"|trans({}, 'AdminProducts'),
-"Are you sure to disable variations ? they will all be deleted": "This will delete all the combinations. Do you wish to proceed?"|trans({}, 'AdminProducts'),
 "Are you sure to delete this?": "Are you sure?"|trans({}, 'AdminProducts'),
 "Quantities": "Quantities"|trans({}, 'AdminProducts'),
 "Combinations": "Combinations"|trans({}, 'AdminProducts'),
 "Virtual product": "Virtual product"|trans({}, 'AdminProducts'),
 "tax incl.": "tax incl."|trans({}, 'AdminProducts'),
 "tax excl.": "tax excl."|trans({}, 'AdminProducts'),
-"You can't create pack product with variations. Are you sure to disable variations ? they will all be deleted.": "A pack of products can't have combinations. This will delete all the combinations. Do you wish to proceed?"|trans({}, "AdminProducts"),
-"You can't create virtual product with variations. Are you sure to disable variations ? they will all be deleted.": "A virtual product can't have combinations. This will delete all the combinations. Do you wish to proceed?"|trans({}, "AdminProducts"),
+"You can't create pack product with variations. Are you sure to disable variations ? they will all be deleted.": "A pack of products can't have combinations."|trans({}, "AdminProducts") ~ ' ' ~ js_translatable['Are you sure to disable variations ? they will all be deleted'],
+"You can't create virtual product with variations. Are you sure to disable variations ? they will all be deleted.": "A virtual product can't have combinations."|trans({}, "AdminProducts") ~ ' ' ~ js_translatable['Are you sure to disable variations ? they will all be deleted'],
 }|merge(js_translatable) %}
