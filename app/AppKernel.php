@@ -26,6 +26,12 @@ class AppKernel extends Kernel
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
         }
 
+        if (extension_loaded('apc')) {
+            $_SERVER['SYMFONY__CACHE__DRIVER'] = 'apc';
+        } else {
+            $_SERVER['SYMFONY__CACHE__DRIVER'] = 'array';
+        }
+
         return $bundles;
     }
 

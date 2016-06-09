@@ -214,10 +214,10 @@ class ProductOptions extends CommonAbstractType
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
-            $form = $event->getForm();
 
             //If not supplier selected, remove all supplier combinations collection form
             if (!isset($data['suppliers']) || count($data['suppliers']) == 0) {
+                $form = $event->getForm();
                 foreach ($this->suppliers as $supplier => $id) {
                     $form->remove('supplier_combination_'.$id);
                 }

@@ -67,6 +67,7 @@ abstract class CacheCore
         'guest',
         'pagenotfound',
         'page_viewed',
+        'employee',
     );
 
     /**
@@ -321,6 +322,10 @@ abstract class CacheCore
      */
     public function deleteQuery($query)
     {
+        if ($this->isBlacklist($query)) {
+            return;
+        }
+
         if (is_null($this->sql_tables_cached)) {
             $this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
             if (!is_array($this->sql_tables_cached)) {
