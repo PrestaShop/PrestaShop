@@ -54,7 +54,7 @@
         <p class="alert-text">
           {% if 'PS_REWRITING_SETTINGS'|configuration == 0 %}
             <strong>{{ 'Friendly URLs are currently disabled.'|trans({}, 'AdminProducts') }}</strong>
-            {{ 'To enable it, got to'|trans({}, 'AdminProducts') }}
+            {{ 'To enable it, go to'|trans({}, 'AdminProducts') }}
             <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ 'SEO and URLS'|trans({}, 'AdminProducts') }}</a>
           {% else %}
             <strong>{{ 'Friendly URLs are currently enabled.'|trans({}, 'AdminProducts') }}</strong>

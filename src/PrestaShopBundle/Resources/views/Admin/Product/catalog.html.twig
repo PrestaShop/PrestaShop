@@ -66,7 +66,7 @@
               class="btn btn-primary-outline btn-xs"
               id="product_catalog_category_tree_filter_expand"
             >
-              {{ 'Expand All'|trans({}, 'AdminTab') }}
+              {{ 'Expand'|trans({}, 'AdminTab') }}
             </button>
             <button
               name="product_catalog_category_tree_filter_collapse"
@@ -74,7 +74,7 @@
               class="btn btn-primary-outline btn-xs"
               id="product_catalog_category_tree_filter_collapse"
             >
-              {{ 'Collapse All'|trans({}, 'AdminTab') }}
+              {{ 'Collapse'|trans({}, 'AdminTab') }}
             </button>
             <button
               name="product_catalog_category_tree_filter_reset"
@@ -143,7 +143,7 @@
                     } %}
                   </th>
                   <th style="width: 9%">
-                    {{ "Base price"|trans({}, 'AdminProducts') }}
+                    {{ "Price (tax excl.)"|trans({}, 'AdminProducts') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'price'
                     } %}
@@ -356,7 +356,7 @@
 
   {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
     'id': "catalog_duplication_modal",
-    'title': "Duplication in progress..."|trans({}, 'AdminProducts'),
+    'title': "Duplicating products"|trans({}, 'AdminProducts'),
     'closable': true,
     'progressbar': {
     'id': "catalog_duplication_progression",
@@ -366,9 +366,9 @@
   }%}
     {% block content %}
       <div class="modal-body">
-        {{ 'Duplication can take time. Please wait...'|trans({}, 'AdminProducts') }}
+        {{ 'Duplication in progress...'|trans({}, 'AdminProducts') }}
         <span id="catalog_duplication_failure" style="display: none;color: darkred;">
-          {{ 'Duplication failed!'|trans({}, 'AdminProducts') }}
+          {{ 'Duplication failed.'|trans({}, 'AdminProducts') }}
         </span>
       </div>
     {% endblock %}
@@ -376,7 +376,7 @@
 
   {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
     'id': "catalog_deletion_modal",
-    'title': "Please confirm deletion"|trans({}, 'AdminProducts'),
+    'title': "Delete products?"|trans({}, 'AdminProducts'),
     'closable': true,
     'actions': [{
       'type': 'button',
@@ -387,7 +387,7 @@
   }%}
     {% block content %}
       <div class="modal-body">
-        {{ 'Deletion is permanent. Please confirm.'|trans({}, 'AdminProducts') }}
+        {{ 'These products will be deleted for good. Please confirm.'|trans({}, 'AdminProducts') }}
       </div>
     {% endblock %}
   {% endembed %}
