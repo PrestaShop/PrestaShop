@@ -33,23 +33,17 @@ class InstallModelInstall extends InstallAbstractModel
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
 
-    /**
-     * @var FileLogger
-     */
-    public $logger;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $cacheDir = _PS_ROOT_DIR_.'/app/logs/';
-        $file = $cacheDir .(_PS_MODE_DEV_ ? 'dev' : 'prod').'_'.@date('Ymd').'_installation.log';
-        $this->logger = new FileLogger();
-        $this->logger->setFilename($file);
-    }
-
     public function setError($errors)
     {
+        static $logger = null;
+
+        if (null === $logger) {
+            $cacheDir = _PS_ROOT_DIR_.'/app/logs/';
+            $file = $cacheDir .(_PS_MODE_DEV_ ? 'dev' : 'prod').'_'.@date('Ymd').'_installation.log';
+            $logger = new FileLogger();
+            $logger->setFilename($file);
+        }
+
         if (!is_array($errors)) {
             $errors = array($errors);
         }
