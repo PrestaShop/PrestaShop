@@ -50,10 +50,10 @@ class IdentityControllerCore extends FrontController
         if (Tools::isSubmit('submitCreate')) {
             $customer_form->fillWith(Tools::getAllValues());
             if ($customer_form->submit()) {
-                $this->success[] = $this->l('Information successfully updated.');
+                $this->success[] = $this->getTranslator()->trans('Information successfully updated.', array(), 'Shop-Notifications-Success');
                 $should_redirect = true;
             } else {
-                $this->errors[] = $this->l('Could not update your information, please check your data.');
+                $this->errors[] = $this->getTranslator()->trans('Could not update your information, please check your data.', array(), 'Shop-Notifications-Error');
             }
         } else {
             $customer_form->fillFromCustomer(

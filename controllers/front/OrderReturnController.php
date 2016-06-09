@@ -54,7 +54,7 @@ class OrderReturnControllerCore extends FrontController
                     $state = new OrderReturnState((int)$order_return->state);
 
                     if ($order_return->state == 1) {
-                        $this->warning[] = $this->l('You must wait for confirmation before returning any merchandise.');
+                        $this->warning[] = $this->getTranslator()->trans('You must wait for confirmation before returning any merchandise.', array(), 'Shop-Notifications-Warning');
                     }
 
                     $this->context->smarty->assign(array(
