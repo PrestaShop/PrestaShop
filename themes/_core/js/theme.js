@@ -8,6 +8,7 @@ import './checkout';
 import './facets';
 import './listing';
 import './product';
+import './address';
 
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
