@@ -179,8 +179,8 @@ class AdminPreferencesControllerCore extends AdminController
                     'class' => 'fixed-width-xxl'
                 ),
                 'PS_DISPLAY_SUPPLIERS' => array(
-                    'title' => $this->l('Display suppliers and manufacturers'),
-                    'desc' => $this->l('Enable suppliers and manufacturers pages on your front office even when their respective modules are disabled.'),
+                    'title' => $this->l('Display brands and suppliers'),
+                    'desc' => $this->l('Enable brands and suppliers pages on your front office even when their respective modules are disabled.'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool'

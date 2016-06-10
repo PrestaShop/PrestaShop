@@ -88,7 +88,7 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="id_manufacturer">{l s='Manufacturer'}</label>
+		<label class="control-label col-lg-3" for="id_manufacturer">{l s='Brand'}</label>
 		<div class="col-lg-5">
 			<select name="id_manufacturer" id="id_manufacturer">
 				<option value="0">- {l s='Choose (optional)'} -</option>
@@ -100,7 +100,7 @@
 		</div>
 		<div class="col-lg-4">
 			<a class="btn btn-link bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')|escape:'html':'UTF-8'}&amp;addmanufacturer">
-				<i class="icon-plus-sign"></i> {l s='Create new manufacturer'} <i class="icon-external-link-sign"></i>
+				<i class="icon-plus-sign"></i> {l s='Create new brand'} <i class="icon-external-link-sign"></i>
 			</a>
 		</div>
 	</div>

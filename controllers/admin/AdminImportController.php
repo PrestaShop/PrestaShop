@@ -88,7 +88,7 @@ class AdminImportControllerCore extends AdminController
             $this->l('Combinations'),
             $this->l('Customers'),
             $this->l('Addresses'),
-            $this->l('Manufacturers'),
+            $this->l('Brands'),
             $this->l('Suppliers'),
             $this->l('Alias'),
             $this->l('Store contacts'),
@@ -231,7 +231,7 @@ class AdminImportControllerCore extends AdminController
                     'reference' => array('label' => $this->l('Reference #')),
                     'supplier_reference' => array('label' => $this->l('Supplier reference #')),
                     'supplier' => array('label' => $this->l('Supplier')),
-                    'manufacturer' => array('label' => $this->l('Manufacturer')),
+                    'manufacturer' => array('label' => $this->l('Brand')),
                     'ean13' => array('label' => $this->l('EAN13')),
                     'upc' => array('label' => $this->l('UPC')),
                     'ecotax' => array('label' => $this->l('Ecotax')),
@@ -382,7 +382,7 @@ class AdminImportControllerCore extends AdminController
                     'active' => array('label' => $this->l('Active  (0/1)')),
                     'customer_email' => array('label' => $this->l('Customer email *')),
                     'id_customer' => array('label' => $this->l('Customer ID')),
-                    'manufacturer' => array('label' => $this->l('Manufacturer')),
+                    'manufacturer' => array('label' => $this->l('Brand')),
                     'supplier' => array('label' => $this->l('Supplier')),
                     'company' => array('label' => $this->l('Company')),
                     'lastname' => array('label' => $this->l('Last Name *')),
@@ -405,7 +405,7 @@ class AdminImportControllerCore extends AdminController
                     'postcode' => 'X'
                 );
                 break;
-            case $this->entities[$this->l('Manufacturers')]:
+            case $this->entities[$this->l('Brands')]:
             case $this->entities[$this->l('Suppliers')]:
                 //Overwrite validators AS name is not MultiLangField
                 self::$validators = array(
@@ -4191,7 +4191,7 @@ class AdminImportControllerCore extends AdminController
             case $this->entities[$this->l('Addresses')]:
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'address`');
                 break;
-            case $this->entities[$this->l('Manufacturers')]:
+            case $this->entities[$this->l('Brands')]:
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer`');
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang`');
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop`');
@@ -4321,7 +4321,7 @@ class AdminImportControllerCore extends AdminController
                     $doneCount += $this->attributeImport($offset, $limit, $crossStepsVariables, $validateOnly);
                     $this->clearSmartyCache();
                     break;
-                case $this->entities[$import_type = $this->l('Manufacturers')]:
+                case $this->entities[$import_type = $this->l('Brands')]:
                     $doneCount += $this->manufacturerImport($offset, $limit, $validateOnly);
                     $this->clearSmartyCache();
                     break;

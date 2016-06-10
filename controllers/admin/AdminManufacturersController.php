@@ -112,12 +112,12 @@ class AdminManufacturersControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_manufacturer'] = array(
                 'href' => self::$currentIndex.'&addmanufacturer&token='.$this->token,
-                'desc' => $this->l('Add new manufacturer', null, null, false),
+                'desc' => $this->l('Add new brand', null, null, false),
                 'icon' => 'process-icon-new'
             );
             $this->page_header_toolbar_btn['new_manufacturer_address'] = array(
                 'href' => self::$currentIndex.'&addaddress&token='.$this->token,
-                'desc' => $this->l('Add new manufacturer address', null, null, false),
+                'desc' => $this->l('Add new brand address', null, null, false),
                 'icon' => 'process-icon-new'
             );
         } elseif ($this->display == 'editaddresses' || $this->display == 'addaddress') {
@@ -154,7 +154,7 @@ class AdminManufacturersControllerCore extends AdminController
         $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
         $this->_group = 'GROUP BY a.`id_manufacturer`';
 
-        $this->context->smarty->assign('title_list', $this->l('List of manufacturers'));
+        $this->context->smarty->assign('title_list', $this->l('List of brands'));
 
         $this->content .= parent::renderList();
     }
@@ -174,7 +174,7 @@ class AdminManufacturersControllerCore extends AdminController
                 'class' => 'fixed-width-xs'
             ),
             'manufacturer_name' => array(
-                'title' => $this->l('Manufacturer'),
+                'title' => $this->l('Brand'),
                 'width' => 'auto',
                 'filter_key' => 'manufacturer_name'
             ),
@@ -257,7 +257,7 @@ class AdminManufacturersControllerCore extends AdminController
 				ON (a.`id_manufacturer` = m.`id_manufacturer`)';
         $this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`= 0';
 
-        $this->context->smarty->assign('title_list', $this->l('Manufacturers addresses'));
+        $this->context->smarty->assign('title_list', $this->l('Brands addresses'));
 
         // call postProcess() for take care about actions and filters
         $this->postProcess();
@@ -309,7 +309,7 @@ class AdminManufacturersControllerCore extends AdminController
         $this->fields_form = array(
             'tinymce' => true,
             'legend' => array(
-                'title' => $this->l('Manufacturers'),
+                'title' => $this->l('Brands'),
                 'icon' => 'icon-certificate'
             ),
             'input' => array(
@@ -351,7 +351,7 @@ class AdminManufacturersControllerCore extends AdminController
                     'size' => $image_size,
                     'display_image' => true,
                     'col' => 6,
-                    'hint' => $this->l('Upload a manufacturer logo from your computer.')
+                    'hint' => $this->l('Upload a brand logo from your computer.')
                 ),
                 array(
                     'type' => 'text',
@@ -462,7 +462,7 @@ class AdminManufacturersControllerCore extends AdminController
         if (!$address->id_manufacturer || !Manufacturer::manufacturerExists($address->id_manufacturer)) {
             $form['input'][] = array(
                 'type' => 'select',
-                'label' => $this->l('Choose the manufacturer'),
+                'label' => $this->l('Choose the brand'),
                 'name' => 'id_manufacturer',
                 'options' => array(
                     'query' => Manufacturer::getManufacturers(),
@@ -473,7 +473,7 @@ class AdminManufacturersControllerCore extends AdminController
         } else {
             $form['input'][] = array(
                 'type' => 'text',
-                'label' => $this->l('Manufacturer'),
+                'label' => $this->l('Brand'),
                 'name' => 'name',
                 'col' => 4,
                 'disabled' => true,

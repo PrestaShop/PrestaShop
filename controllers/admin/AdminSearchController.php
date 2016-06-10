@@ -299,7 +299,7 @@ class AdminSearchControllerCore extends AdminController
         $this->show_toolbar = false;
         $this->fields_list['products'] = array(
             'id_product' => array('title' => $this->l('ID'), 'width' => 25),
-            'manufacturer_name' => array('title' => $this->l('Manufacturer'), 'align' => 'center', 'width' => 200),
+            'manufacturer_name' => array('title' => $this->l('Brand'), 'align' => 'center', 'width' => 200),
             'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 150),
             'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
             'price_tax_excl' => array('title' => $this->l('Price (tax excl.)'), 'align' => 'right', 'type' => 'price', 'width' => 60),

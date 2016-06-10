@@ -29,7 +29,7 @@
 					<option value="products">{l s='Products'}</option>
 					<option value="attributes">{l s='Attributes'}</option>
 					<option value="categories">{l s='Categories'}</option>
-					<option value="manufacturers">{l s='Manufacturers'}</option>
+					<option value="manufacturers">{l s='Brands'}</option>
 					<option value="suppliers">{l s='Suppliers'}</option>
 				</select>
 			</div>
