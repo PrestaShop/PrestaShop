@@ -83,7 +83,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     public function addAction(Request $request)
     {
         $response = new JsonResponse();
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
         $idProduct = isset($request->get('form')['id_product']) ? $request->get('form')['id_product'] : null;
 
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
@@ -113,7 +113,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     public function deleteAction($idSpecificPrice, Request $request)
     {
         $response = new JsonResponse();
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
 
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
         $res = $adminProductWrapper->deleteSpecificPrice((int) $idSpecificPrice);

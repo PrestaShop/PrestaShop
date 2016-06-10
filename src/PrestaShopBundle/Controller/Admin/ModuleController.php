@@ -21,7 +21,7 @@ class ModuleController extends FrameworkBundleAdminController
      */
     public function catalogAction()
     {
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
@@ -48,7 +48,7 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $translator = $this->get('prestashop.adapter.translator');
+        $translator = $this->get('translator');
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $responseArray = [];
 
@@ -115,7 +115,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     public function manageAction()
     {
-        $translator = $this->get('prestashop.adapter.translator');
+        $translator = $this->get('translator');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $shopService = $this->get('prestashop.adapter.shop.context');
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
@@ -176,7 +176,7 @@ class ModuleController extends FrameworkBundleAdminController
         $moduleManager = $this->get('prestashop.module.manager');
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $translator = $this->get('prestashop.adapter.translator');
+        $translator = $this->get('translator');
 
         $response = array();
         if (method_exists($moduleManager, $action)) {
@@ -257,7 +257,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     public function notificationAction()
     {
-        $translator = $this->get('prestashop.adapter.translator');
+        $translator = $this->get('translator');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
 
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
@@ -439,7 +439,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     protected function getToolbarButtons()
     {
-        $translator = $this->get('prestashop.adapter.translator');
+        $translator = $this->get('translator');
 
         // toolbarButtons
         $toolbarButtons = array();
@@ -503,7 +503,7 @@ class ModuleController extends FrameworkBundleAdminController
     private function getAddonsConnectToolbar()
     {
         $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
-        $translator = $this->get('prestashop.adapter.translator');
+        $translator = $this->get('translator');
 
         if ($addonsProvider->isAddonsAuthenticated()) {
             $addonsEmail = $addonsProvider->getAddonsEmail();

@@ -124,7 +124,7 @@ class FrameworkBundleAdminController extends Controller
     protected function generateSidebarLink($section, $title = "Documentation")
     {
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
-        $translator = $this->get('prestashop.adapter.translator');
+        $translator = $this->get('translator');
         $docLink = urlencode('http://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
             .$section.'?version='._PS_VERSION_.'&country='.$legacyContext->getEmployeeLanguageIso());
 
