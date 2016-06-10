@@ -145,6 +145,11 @@ class CustomerFormatterCore implements FormFormatterInterface
                         'Birthdate', [], 'Customer'
                     )
                 )
+                ->addAvailableValue('placeholder', Tools::getDateFormat())
+                ->addAvailableValue(
+                    'comment',
+                    $this->translator->trans('(Ex.: %date_comment)', array('%date_comment' => Tools::formatDateStr('31 May 1970')), 'Shop.Forms.Help')
+                )
             ;
         }
 
