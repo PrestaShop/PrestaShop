@@ -22,7 +22,10 @@ export default function() {
 
       applyChangesBtn.on('click', (event) => {
         event.preventDefault();
-        that.applyChangesOnCombinations();
+        that.applyChangesOnCombinations()
+            .resetForm()
+            .unselectCombinations()
+            .submitUpdate();
       });
 
       syncedCollection.on('DOMSubtreeModified', (event) => {
@@ -71,6 +74,8 @@ export default function() {
         combination.updateForm(values);
         combination.syncValues(values);
       });
+      
+      return this;
     },
     'deleteCombinations': function deleteCombinations() {
       var combinations = this.getSelectedCombinations();
@@ -114,6 +119,25 @@ export default function() {
         }
       });
       return values;
+    },
+    'resetForm': function resetForm() {
+      bulkForm.find('input').val('');
+      
+      return this;
+    },
+    'unselectCombinations': function unselectCombinations() {
+      $('input.js-combination').prop('checked', false);
+      
+      return this;
+    },
+    'hideForm': function toggleForm() {
+      bulkForm.collapse('hide');
+      
+      return this;
+    },
+    'submitUpdate': function submitUpdate() {
+      var globalProductSubmitButton = $('#form'); // @todo: choose a better identifier
+      globalProductSubmitButton.submit();
     }
   };
 }
