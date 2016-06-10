@@ -22,9 +22,9 @@ export default function() {
 
       applyChangesBtn.on('click', (event) => {
         event.preventDefault();
-        that.applyChangesOnCombinations();
-            .resetForm();
-            .unselectCombinations();
+        that.applyChangesOnCombinations()
+            .resetForm()
+            .unselectCombinations()
             .submitUpdate();
       });
 
