@@ -81,7 +81,7 @@ class ConfigurationTestCore
                 'phpversion' => false,
                 'apache_mod_rewrite' => false,
                 'gd' => false,
-                'mysql_support' => false,
+                'pdo_mysql' => false,
                 'config_dir' => 'config',
                 'files' => false,
                 'mails_dir' => 'mails',
