@@ -56,7 +56,7 @@ class ProductCombinationBulk extends CommonAbstractType
         ))
         ->add('cost_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Cost Price', [], 'AdminProducts'),
             'attr' => ['data-display-price-precision' => $this->priceDisplayPrecision],
             'currency' => $this->isoCode,
         ))

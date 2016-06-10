@@ -12,23 +12,18 @@
   </div>
 
   <div class="col-md-2">
-    <fieldset>
-      <label class="form-control-label">{{ form.impact_on_weight.vars.label }}</label>
-      {{ form_errors(form.impact_on_weight) }}
-      <div class="input-group">
-        <span class="input-group-addon">{{ 'PS_WEIGHT_UNIT'|configuration }}</span>
-        {{ form_widget(form.impact_on_weight) }}
-      </div>
-    </fieldset>
+    <label class="form-control-label">{{ form.impact_on_weight.vars.label }}</label>
+    {{ form_errors(form.impact_on_weight) }}
+    {{ form_widget(form.impact_on_weight) }}
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-2">
     <label class="form-control-label">{{ form.impact_on_price_te.vars.label }}</label>
     {{ form_errors(form.impact_on_price_te) }}
     {{ form_widget(form.impact_on_price_te) }}
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-2 col-md-offset-1">
     <label class="form-control-label">{{ form.impact_on_price_ti.vars.label }}</label>
     {{ form_errors(form.impact_on_price_ti) }}
     {{ form_widget(form.impact_on_price_ti) }}
@@ -42,7 +37,7 @@
     {{ form_widget(form.date_availability) }}
   </div>
 
-  <div class="col-md-4">
+  <div class="col-md-4 col-md-offset-4">
     <label class="form-control-label">{{ form.reference.vars.label }}</label>
     {{ form_errors(form.reference) }}
     {{ form_widget(form.reference) }}
@@ -54,11 +49,11 @@
     {{ form_errors(form.minimal_quantity) }}
     {{ form_widget(form.minimal_quantity) }}
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3 col-md-offset-5">
     <label class="form-control-label">&nbsp;</label>
     <button id="delete-combinations" class="btn btn-tertiary-outline btn-block" data="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}">
       <i class="material-icons">delete</i>
-      {{ trans('Delete selection', {}, 'AdminProducts') }}
+      {{ trans('Delete combinations', {}, 'AdminProducts') }}
     </button>
   </div>
   <div class="col-md-2">
@@ -69,4 +64,3 @@
   </div>
   {{ form_widget(form) }}
 </div>
-

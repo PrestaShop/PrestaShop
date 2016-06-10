@@ -1,5 +1,5 @@
 <tr class="combination" id="attribute_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" data-index="{{ loop_index is defined ? loop_index : '__loop_index__' }}">
-  <td><input type="checkbox" data-id="{{ form.vars.value.id_product_attribute }}" data-index="{{ loop_index is defined ? loop_index : '__loop_index__' }}"></td>
+  <td width="1%"><input class="js-combination" type="checkbox" data-id="{{ form.vars.value.id_product_attribute }}" data-index="{{ loop_index is defined ? loop_index : '__loop_index__' }}"></td>
   <td class="img"><div class="fake-img"></div></td>
     <td>{{ form.vars.value.name }}</td>
     <td class="attribute-price">
@@ -20,9 +20,6 @@
     <td class="attribute-actions">
         <div class="btn-group btn-group-sm" role="group">
             <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-open btn-invisible btn-sm"><i class="material-icons">mode_edit</i></a>
-            <a href="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}" class="btn btn-invisible btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
-            {% set checked = form.vars.value.attribute_default == 1 ? 'checked' : '' %}
-            <input class="attribute-default" type="radio" {{ checked }} data-id="{{ form.vars.value.id_product_attribute }}">
         </div>
         <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide row">
             <div class="col-xs-12 text-xs-right nav">
@@ -168,5 +165,12 @@
                 {{ form_widget(form.id_product_attribute) }}
             </div>
         </div>
+    </td>
+    <td width="5%">
+      <a href="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}" class="btn btn-invisible btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
+    </td>
+    <td>
+      {% set checked = form.vars.value.attribute_default == 1 ? 'checked' : '' %}
+      <input class="attribute-default" type="radio" {{ checked }} data-id="{{ form.vars.value.id_product_attribute }}">
     </td>
 </tr>
