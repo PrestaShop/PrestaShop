@@ -218,11 +218,9 @@
                               </label>
                               <div id="product_type_combinations_shortcut">
                                 <span class="small font-secondary">
-                                  {{ "Advanced settings in"|trans({}, 'AdminProducts') }}
+                                  {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
+                                  {{ "Advanced settings in [1][2]Combinations[/1]"|trans({}, 'AdminProducts')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').tab(\'show\');" class="btn sensitive p-x-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
                                 </span>
-                                <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');" class="btn sensitive p-x-0">
-                                  <i class="material-icons">open_in_new</i> {{ "Combinations"|trans({}, 'AdminProducts')|raw }}
-                                </a>
                               </div>
                             </div>
                           </div>
@@ -240,11 +238,9 @@
                               </div>
                             </div>
                             <span class="small font-secondary">
-                              {{ "Advanced settings in"|trans({}, 'AdminProducts') }}
+                              {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
+                              {{ "Advanced settings in [1][2]Quantities[/1]"|trans({}, 'AdminProducts')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').tab(\'show\');" class="btn sensitive p-x-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
                             </span>
-                            <a href="#tab-step3" onclick="$('a[href=\'#step3\']').tab('show');" class="btn sensitive p-x-0">
-                              <i class="material-icons">open_in_new</i> {{ "Quantities"|trans({}, 'AdminProducts') }}
-                            </a>
                           </div>
 
                           <div class="form-group">
@@ -270,11 +266,9 @@
                               </div>
                               <div class="col-md-12">
                                 <span class="small font-secondary">
-                                  {{ "Advanced settings in"|trans({}, 'AdminProducts') }}
+                                  {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
+                                  {{ "Advanced settings in [1][2]Pricing[/1]"|trans({}, 'AdminProducts')|replace({'[1]': '<a href="#tab-step2" onclick="$(\'a[href=\\\'#step2\\\']\').tab(\'show\');" class="btn sensitive p-x-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
                                 </span>
-                                <a href="#tab-step2" onclick="$('a[href=\'#step2\']').tab('show');" class="btn sensitive p-x-0">
-                                  <i class="material-icons">open_in_new</i> {{ "Pricing"|trans({}, 'AdminProducts') }}
-                                </a>
                               </div>
                             </div>
                             <div class="row hide">
@@ -521,9 +515,7 @@
                             <div class="alert alert-info" role="alert">
                               <i class="material-icons">help</i>
                               <p class="alert-text">
-                                {{ 'Final retail price: '|trans({}, 'AdminProducts') }}
-                                <strong><span id="final_retail_price_ti"></span> {{ 'tax incl.'|trans({}, 'AdminProducts') }}</strong> /
-                                <span id="final_retail_price_te"></span> {{ 'tax excl.'|trans({}, 'AdminProducts') }}
+                                {{ 'Final retail price: [1][2][/2] tax incl.[/1] / [3][/3] tax excl.'|trans({}, 'AdminProducts')|replace({ '[1]': '<strong>', '[/1]': '</strong>', '[2]': '<span id="final_retail_price_ti">', '[/2]': '</span>', '[3]': '<span id="final_retail_price_te">', '[/3]': '</span>', })|raw }}
                               </p>
                             </div>
                           </div>
@@ -1037,22 +1029,25 @@
 {% endblock %}
 
 {% set js_translatable = {
+"Are you sure to disable variations ? they will all be deleted": "This will delete all the combinations. Do you wish to proceed?"|trans({}, 'AdminProducts'),
+}|merge(js_translatable) %}
+
+{% set js_translatable = {
 "Form update success": "Settings updated."|trans({}, 'AdminProducts'),
 "Form update errors": "Unable to update settings."|trans({}, 'AdminProducts'),
 "Delete": "Delete"|trans({}, 'AdminProducts'),
-"ToLargeFile": "The file is too large ({{filesize}}). Maximum size allowed is {{maxFilesize}}."|trans({}, 'AdminProducts'),
+"ToLargeFile": "The file is too large. Maximum size allowed is: [1]. The file you are trying to upload is [2]."|trans({}, 'AdminProducts')|replace({ '[1]': '{{maxFilesize}}', '[2]': '{{filesize}}' }),
 "Drop images here": "Drop images here"|trans({}, 'AdminProducts'),
 "or select files": "or select files"|trans({}, 'AdminProducts'),
 "files recommandations": "Recommended size 800 x 800px for default theme."|trans({}, 'AdminProducts'),
 "files recommandations2": "JPG, GIF or PNG format."|trans({}, 'AdminProducts'),
 "Cover": "Cover"|trans({}, 'AdminProducts'),
-"Are you sure to disable variations ? they will all be deleted": "This will delete all the combinations. Do you wish to proceed?"|trans({}, 'AdminProducts'),
 "Are you sure to delete this?": "Are you sure?"|trans({}, 'AdminProducts'),
 "Quantities": "Quantities"|trans({}, 'AdminProducts'),
 "Combinations": "Combinations"|trans({}, 'AdminProducts'),
 "Virtual product": "Virtual product"|trans({}, 'AdminProducts'),
 "tax incl.": "tax incl."|trans({}, 'AdminProducts'),
 "tax excl.": "tax excl."|trans({}, 'AdminProducts'),
-"You can't create pack product with variations. Are you sure to disable variations ? they will all be deleted.": "A pack of products can't have combinations. This will delete all the combinations. Do you wish to proceed?"|trans({}, "AdminProducts"),
-"You can't create virtual product with variations. Are you sure to disable variations ? they will all be deleted.": "A virtual product can't have combinations. This will delete all the combinations. Do you wish to proceed?"|trans({}, "AdminProducts"),
+"You can't create pack product with variations. Are you sure to disable variations ? they will all be deleted.": "A pack of products can't have combinations."|trans({}, "AdminProducts") ~ ' ' ~ js_translatable['Are you sure to disable variations ? they will all be deleted'],
+"You can't create virtual product with variations. Are you sure to disable variations ? they will all be deleted.": "A virtual product can't have combinations."|trans({}, "AdminProducts") ~ ' ' ~ js_translatable['Are you sure to disable variations ? they will all be deleted'],
 }|merge(js_translatable) %}

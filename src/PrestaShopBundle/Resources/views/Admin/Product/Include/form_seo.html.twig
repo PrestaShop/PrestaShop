@@ -54,19 +54,16 @@
         <p class="alert-text">
           {% if 'PS_REWRITING_SETTINGS'|configuration == 0 %}
             <strong>{{ 'Friendly URLs are currently disabled.'|trans({}, 'AdminProducts') }}</strong>
-            {{ 'To enable it, go to'|trans({}, 'AdminProducts') }}
-            <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ 'SEO and URLS'|trans({}, 'AdminProducts') }}</a>
+            {{ 'To enable it, go to [1]SEO and URLS[/1]'|trans({}, 'AdminProducts')|replace({'[1]': '<a href="' ~ getAdminLink("AdminMeta") ~ '#meta_fieldset_general">', '[/1]': '</a>'})|raw }}
           {% else %}
             <strong>{{ 'Friendly URLs are currently enabled.'|trans({}, 'AdminProducts') }}</strong>
-            {{ 'To disable it, go to'|trans({}, 'AdminProducts') }}
-            <a href="{{ getAdminLink("AdminMeta") }}#meta_fieldset_general">{{ 'SEO and URLs.'|trans({}, 'AdminProducts') }}</a>
+            {{ 'To enable it, go to [1]SEO and URLS[/1]'|trans({}, 'AdminProducts')|replace({'[1]': '<a href="' ~ getAdminLink("AdminMeta") ~ '#meta_fieldset_general">', '[/1]': '</a>'})|raw }}
           {% endif %}
         </p>
         <p class="alert-text">
-            {% if 'PS_FORCE_FRIENDLY_PRODUCT'|configuration == 1 %}
-              <strong>{{ 'The "Force update of friendly URL" option is currently enabled.'|trans({}, 'AdminProducts') }}</strong>
-            {{ 'To disable it, go to'|trans({}, 'AdminProducts') }}
-            <a href="{{ getAdminLink("AdminPPreferences") }}#configuration_fieldset_products">{{ 'Product Settings'|trans({}, 'AdminProducts') }}</a>
+          {% if 'PS_FORCE_FRIENDLY_PRODUCT'|configuration == 1 %}
+            <strong>{{ 'The "Force update of friendly URL" option is currently enabled.'|trans({}, 'AdminProducts') }}</strong>
+            {{ 'To disable it, go to[1]Product Settings[/1]'|trans({}, 'AdminProducts')|replace({'[1]': '<a href="' ~ getAdminLink("AdminPPreferences") ~ '#configuration_fieldset_products">', '[/1]': '</a>'})|raw }}
           {% endif %}
         </p>
       </div>
