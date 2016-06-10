@@ -107,6 +107,9 @@
       color: $gray;
       a {
         color: $gray;
+        &:hover{
+          color:$brand-primary;
+        }
       }
     }
   }

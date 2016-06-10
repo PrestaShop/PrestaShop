@@ -28,6 +28,12 @@
         &::after {
           opacity: 1;
         }
+        &.no-variants{
+          bottom: em(70px);
+        }
+      }
+      .product-description{
+        box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
       }
     }
   }
@@ -40,6 +46,8 @@
   }
   .product-title {
     text-align: center;
+    text-transform: capitalize;
+    margin-top: em(16px);
   }
   .product-description-short,
   .product-list-actions,
@@ -58,7 +66,7 @@
     text-align: center;
     width: 100%;
     top: 0.25em;
-    padding-top: em(5px);
+    padding-top: em(3px);
     min-height: em(40px);
   }
   .highlighted-informations {
@@ -92,7 +100,6 @@
     width: 257px;
     bottom: 0;
     height: 70px;
-    box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
   }
   img {
     margin-left: 4px;
