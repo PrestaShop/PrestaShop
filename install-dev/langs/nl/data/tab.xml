@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
-  <tab id="SELL" name="VERKOPEN" />
-  <tab id="IMPROVE" name="VERBETEREN" />
-  <tab id="CONFIGURE" name="VERANDEREN" />
-  <tab id="DEFAULT" name="DEFAULT" />
+  <tab id="SELL" name="VERKOPEN"/>
+  <tab id="IMPROVE" name="VERBETEREN"/>
+  <tab id="CONFIGURE" name="VERANDEREN"/>
+  <tab id="DEFAULT" name="STANDAARD"/>
   <tab id="Addresses" name="Adressen"/>
   <tab id="Administration" name="Administratie"/>
-  <tab id="Module_Page" name="Modules &amp; Services" />
-  <tab id="AdminModulesSf" name="Modulecatalogus" />
+  <tab id="Module_Page" name="Modules &amp; services"/>
+  <tab id="AdminModulesSf" name="Modulecatalogus"/>
   <tab id="Advanced_Parameters" name="Geavanceerde instellingen"/>
   <tab id="Attachments" name="Bijlagen"/>
-  <tab id="Attributes_and_features" name="Attributen &amp; kenmerken" />
+  <tab id="Attributes_and_features" name="Attributen &amp; kenmerken"/>
   <tab id="Attributes_and_Values" name="Productattributen"/>
   <tab id="Carriers" name="Vervoerders"/>
   <tab id="CarrierWizard" name="Vervoerder"/>
   <tab id="Cart_Rules" name="Winkelwagenregels"/>
-  <tab id="Catalog_Price_Rules" name="Catalogusprijsregels"/>
+  <tab id="Catalog_Price_Rules" name="Catalogus-prijsregels"/>
   <tab id="Catalog" name="Catalogus"/>
   <tab id="Categories" name="Categorieën"/>
   <tab id="CMS_Categories" name="CMS-categorieën"/>
   <tab id="CMS_Pages" name="CMS-pagina's"/>
   <tab id="Combinations_Generator" name="Combinatiegenerator"/>
   <tab id="Configuration" name="Configuratie"/>
-  <tab id="Contact" name="Contact" />
+  <tab id="Contact" name="Contact"/>
   <tab id="Contacts" name="Contactpersonen"/>
   <tab id="Countries" name="Landen"/>
   <tab id="Credit_Slips" name="Creditnota's"/>
   <tab id="CSV_Import" name="Importeren"/>
   <tab id="Currencies" name="Valuta's"/>
-  <tab id="Customer_Service_2" name="Klantenservice" />
+  <tab id="Customer_Service_2" name="Klantenservice"/>
   <tab id="Customer_Service" name="Klantenservice"/>
-  <tab id="Customer_settings" name="Klantinstellingen" />
+  <tab id="Customer_settings" name="Klantinstellingen"/>
   <tab id="Customers_1" name="Klanten"/>
   <tab id="Customers_2" name="Klanten"/>
   <tab id="Customers" name="Klanten"/>
   <tab id="Dashboard" name="Dashboard"/>
-  <tab id="Database" name="Database" />
+  <tab id="Database" name="Database"/>
   <tab id="DB_Backup" name="DB-backup"/>
   <tab id="Delivery_Slips" name="Pakbonnen"/>
   <tab id="E-mail" name="E-mail"/>
-  <tab id="Employees_1" name="Medewerkers" />
+  <tab id="Employees_1" name="Medewerkers"/>
   <tab id="Employees" name="Medewerkers"/>
   <tab id="Features" name="Productkenmerken"/>
-  <tab id="General_1" name="Algemeen" />
+  <tab id="General_1" name="Algemeen"/>
   <tab id="General" name="Algemeen"/>
   <tab id="Geolocation" name="Geolocatie"/>
   <tab id="Groups" name="Groepen"/>
-  <tab id="Image_Settings" name="Afbeeldingsinstellingen" />
+  <tab id="Image_Settings" name="Afbeeldingsinstellingen"/>
   <tab id="Images" name="Afbeeldingen"/>
-  <tab id="Information" name="Informatie" />
+  <tab id="Information" name="Informatie"/>
   <tab id="Instant_Stock_Status" name="Huidige voorraadstatus"/>
-  <tab id="International" name="Internationaal" />
+  <tab id="International" name="Internationaal"/>
   <tab id="Invoices" name="Facturen"/>
   <tab id="Languages" name="Talen"/>
   <tab id="Localization_1" name="Lokalisatie"/>
   <tab id="Localization" name="Lokalisatie"/>
-  <tab id="Locations" name="Locaties" />
+  <tab id="Locations" name="Locaties"/>
   <tab id="Login" name="Inloggen"/>
   <tab id="Logs" name="Logboeken"/>
-  <tab id="Look_feel" name="Design" />
+  <tab id="Look_feel" name="Design"/>
   <tab id="Maintenance" name="Onderhoud"/>
-  <tab id="Manufacturers_and_suppliers" name="Brands &amp; Suppliers" />
+  <tab id="Manufacturers_and_suppliers" name="Merken &amp; leveranciers"/>
   <tab id="Manufacturers" name="Merken"/>
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Menu's"/>
   <tab id="Merchandise_Returns" name="Retourzendingen"/>
-  <tab id="Modules_1" name="Modules" />
-  <tab id="Modules" name="Modules" />
+  <tab id="Modules_1" name="Modules"/>
+  <tab id="Modules" name="Modules"/>
   <tab id="Monitoring" name="Monitoring"/>
   <tab id="Multistore" name="Multistore"/>
   <tab id="Order_Messages" name="Bestellingsberichten"/>
-  <tab id="Order_settings_2" name="Bestelconfiguratie" />
-  <tab id="Order_settings" name="Bestelconfiguratie" />
+  <tab id="Order_settings_2" name="Bestellingsinstellingen"/>
+  <tab id="Order_settings" name="Bestellingsinstellingen"/>
   <tab id="Orders_1" name="Bestellingen"/>
   <tab id="Orders_2" name="Bestellingen"/>
   <tab id="Orders" name="Bestellingen"/>
   <tab id="Outstanding" name="Openstaand"/>
-  <tab id="Pages" name="Pagina's" />
-  <tab id="Payment_methods" name="Betaalmethoden" />
-  <tab id="Payment_preferences" name="Instellingen" />
+  <tab id="Pages" name="Pagina's"/>
+  <tab id="Payment_methods" name="Betaalmethoden"/>
+  <tab id="Payment_preferences" name="Instellingen"/>
   <tab id="Payment" name="Betaling"/>
   <tab id="Performance" name="Prestaties"/>
   <tab id="Permissions" name="Permissies"/>
@@ -98,7 +98,7 @@
   <tab id="SEO_URLs" name="SEO &amp; URL's"/>
   <tab id="Shipping_1" name="Instellingen"/>
   <tab id="Shipping" name="Verzending"/>
-  <tab id="Shop_parameters" name="Winkelinstellingen" />
+  <tab id="Shop_parameters" name="Winkelinstellingen"/>
   <tab id="Shop_URLs" name="Winkel-URL's"/>
   <tab id="Shopping_Carts" name="Winkelwagens"/>
   <tab id="Shops" name="Winkels"/>
@@ -115,17 +115,17 @@
   <tab id="Suppliers" name="Leveranciers"/>
   <tab id="Supply_orders" name="Leveringsbestellingen"/>
   <tab id="Tags" name="Tags"/>
-  <tab id="Tax_Management" name="Belastingen" />
+  <tab id="Tax_Management" name="Belastingen"/>
   <tab id="Tax_Rules" name="Belastingregels"/>
   <tab id="Taxes" name="Belastingen"/>
-  <tab id="Themes_Catalog" name="Themacatalogus" />
+  <tab id="Themes_Catalog" name="Themacatalogus"/>
   <tab id="Themes" name="Thema's"/>
   <tab id="Titles" name="Sociale titels"/>
-  <tab id="Traffic" name="Verkeer" />
+  <tab id="Traffic" name="Verkeer"/>
   <tab id="Translations" name="Vertalingen"/>
   <tab id="Warehouses" name="Magazijnen"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Weight_Ranges" name="Gewichtsklasse"/>
   <tab id="Zones" name="Zones"/>
-  <tab id="Marketing_tools" name="Modules Catalog" />
+  <tab id="Marketing_tools" name="Modulecatalogus"/>
 </entity_tab>
