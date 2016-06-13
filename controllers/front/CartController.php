@@ -181,9 +181,9 @@ class CartControllerCore extends FrontController
             } elseif (CartRule::isFeatureActive()) {
                 if (Tools::getIsset('addDiscount')) {
                     if (!($code = trim(Tools::getValue('discount_name')))) {
-                        $this->errors[] = $this->getTranslator()->trans('You must enter a voucher code.', array(), 'Shop-Notifications-Error');
+                        $this->errors[] = $this->getTranslator()->trans('You must enter a voucher code.', array(), 'Shop.Notifications.Error');
                     } elseif (!Validate::isCleanHtml($code)) {
-                        $this->errors[] = $this->getTranslator()->trans('The voucher code is invalid.', array(), 'Shop-Notifications-Error');
+                        $this->errors[] = $this->getTranslator()->trans('The voucher code is invalid.', array(), 'Shop.Notifications.Error');
                     } else {
                         if (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule)) {
                             if ($error = $cartRule->checkValidity($this->context, false, true)) {
@@ -227,7 +227,7 @@ class CartControllerCore extends FrontController
             }
 
             if ($total_quantity < $minimal_quantity) {
-                $this->errors[] = $this->getTranslator()->trans('You must add %d minimum quantity', array(!Tools::getValue('ajax'), $minimal_quantity), 'Shop-Notifications-Error');
+                $this->errors[] = $this->getTranslator()->trans('You must add %d minimum quantity', array(!Tools::getValue('ajax'), $minimal_quantity), 'Shop.Notifications.Error');
                 return false;
             }
         }
@@ -267,14 +267,14 @@ class CartControllerCore extends FrontController
         }
 
         if ($this->qty == 0) {
-            $this->errors[] = $this->getTranslator()->trans('Null quantity.', array(), 'Shop-Notifications-Error');
+            $this->errors[] = $this->getTranslator()->trans('Null quantity.', array(), 'Shop.Notifications.Error');
         } elseif (!$this->id_product) {
-            $this->errors[] = $this->getTranslator()->trans('Product not found', array(), 'Shop-Notifications-Error');
+            $this->errors[] = $this->getTranslator()->trans('Product not found', array(), 'Shop.Notifications.Error');
         }
 
         $product = new Product($this->id_product, true, $this->context->language->id);
         if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer)) {
-            $this->errors[] = $this->getTranslator()->trans('This product is no longer available.', array(), 'Shop-Notifications-Error');
+            $this->errors[] = $this->getTranslator()->trans('This product is no longer available.', array(), 'Shop.Notifications.Error');
             return;
         }
 
@@ -303,7 +303,7 @@ class CartControllerCore extends FrontController
         // Check product quantity availability
         if ($this->id_product_attribute) {
             if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
-                $this->errors[] = $this->getTranslator()->trans('There isn\'t enough product in stock', array(), 'Shop-Notifications-Error');
+                $this->errors[] = $this->getTranslator()->trans('There isn\'t enough product in stock', array(), 'Shop.Notifications.Error');
             }
         } elseif ($product->hasAttributes()) {
             $minimumQuantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
@@ -312,10 +312,10 @@ class CartControllerCore extends FrontController
             if (!$this->id_product_attribute) {
                 Tools::redirectAdmin($this->context->link->getProductLink($product));
             } elseif (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
-                $this->errors[] = $this->getTranslator()->trans('There isn\'t enough product in stock', array(), 'Shop-Notifications-Error');
+                $this->errors[] = $this->getTranslator()->trans('There isn\'t enough product in stock', array(), 'Shop.Notifications.Error');
             }
         } elseif (!$product->checkQty($qty_to_check)) {
-            $this->errors[] = $this->getTranslator()->trans('There isn\'t enough product in stock', array(), 'Shop-Notifications-Error');
+            $this->errors[] = $this->getTranslator()->trans('There isn\'t enough product in stock', array(), 'Shop.Notifications.Error');
         }
 
         // If no errors, process product addition
@@ -334,7 +334,7 @@ class CartControllerCore extends FrontController
 
             // Check customizable fields
             if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id) {
-                $this->errors[] = $this->getTranslator()->trans('Please fill in all of the required fields, and then save your customizations.', array(), 'Shop-Notifications-Error');
+                $this->errors[] = $this->getTranslator()->trans('Please fill in all of the required fields, and then save your customizations.', array(), 'Shop.Notifications.Error');
             }
 
             if (!$this->errors) {
@@ -344,9 +344,9 @@ class CartControllerCore extends FrontController
                 if ($update_quantity < 0) {
                     // If product has attribute, minimal quantity is set with minimal quantity of attribute
                     $minimal_quantity = ($this->id_product_attribute) ? Attribute::getAttributeMinimalQty($this->id_product_attribute) : $product->minimal_quantity;
-                    $this->errors[] = $this->getTranslator()->trans('You must add %d minimum quantity', array($minimal_quantity), 'Shop-Notifications-Error');
+                    $this->errors[] = $this->getTranslator()->trans('You must add %d minimum quantity', array($minimal_quantity), 'Shop.Notifications.Error');
                 } elseif (!$update_quantity) {
-                    $this->errors[] = $this->getTranslator()->trans('You already have the maximum quantity available for this product.', array(), 'Shop-Notifications-Error');
+                    $this->errors[] = $this->getTranslator()->trans('You already have the maximum quantity available for this product.', array(), 'Shop.Notifications.Error');
                 }
             }
         }

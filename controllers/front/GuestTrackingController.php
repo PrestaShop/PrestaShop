@@ -60,28 +60,28 @@ class GuestTrackingControllerCore extends OrderDetailController
             $email = Tools::getValue('email');
 
             if (empty($order_reference)) {
-                $this->errors[] = $this->getTranslator()->trans('Please provide your order\'s reference number.', array(), 'Shop-Notifications-Error');
+                $this->errors[] = $this->getTranslator()->trans('Please provide your order\'s reference number.', array(), 'Shop.Notifications.Error');
             } elseif (empty($email) || !Validate::isEmail($email)) {
-                $this->errors[] = $this->getTranslator()->trans('Please provide a valid email address.', array(), 'Shop-Notifications-Error');
+                $this->errors[] = $this->getTranslator()->trans('Please provide a valid email address.', array(), 'Shop.Notifications.Error');
             } elseif (!Customer::customerExists($email, false, false)) {
-                $this->errors[] = $this->getTranslator()->trans('There is no account associated with this email address.', array(), 'Shop-Notifications-Error');
+                $this->errors[] = $this->getTranslator()->trans('There is no account associated with this email address.', array(), 'Shop.Notifications.Error');
             } elseif (Customer::customerExists($email, false, true)) {
-                $this->errors[] = $this->getTranslator()->trans('This page is for guest accounts only. Since your guest account has already been transformed into a customer account, you can no longer view your order here. Please log in to your customer account to view this order', array(), 'Shop-Notifications-Error');
+                $this->errors[] = $this->getTranslator()->trans('This page is for guest accounts only. Since your guest account has already been transformed into a customer account, you can no longer view your order here. Please log in to your customer account to view this order', array(), 'Shop.Notifications.Error');
                 $this->context->smarty->assign('show_login_link', true);
             } elseif (!count($this->order_collection) || $this->order_collection->count() != 1 || !$this->order_collection->getFirst()->isAssociatedAtGuest($email)) {
-                $this->errors[] = $this->getTranslator()->trans('Invalid order reference', array(), 'Shop-Notifications-Error');
+                $this->errors[] = $this->getTranslator()->trans('Invalid order reference', array(), 'Shop.Notifications.Error');
             } else {
                 $this->assignOrderTracking($this->order_collection);
                 if (Tools::isSubmit('submitTransformGuestToCustomer')) {
                     $customer = new Customer((int)$this->order_collection->getFirst()->id_customer);
                     if (!Validate::isLoadedObject($customer)) {
-                        $this->errors[] = $this->getTranslator()->trans('Invalid customer', array(), 'Shop-Notifications-Error');
+                        $this->errors[] = $this->getTranslator()->trans('Invalid customer', array(), 'Shop.Notifications.Error');
                     } elseif (!Tools::getValue('password')) {
-                        $this->errors[] = $this->getTranslator()->trans('Invalid password.', array(), 'Shop-Notifications-Error');
+                        $this->errors[] = $this->getTranslator()->trans('Invalid password.', array(), 'Shop.Notifications.Error');
                     } elseif (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password'))) {
-                        $this->errors[] = $this->getTranslator()->trans('An error occurred while transforming a guest into a registered customer.', array(), 'Shop-Notifications-Error');
+                        $this->errors[] = $this->getTranslator()->trans('An error occurred while transforming a guest into a registered customer.', array(), 'Shop.Notifications.Error');
                     } else {
-                        $this->success[] = $this->getTranslator()->trans('Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.', array(), 'Shop-Notifications-Success');
+                        $this->success[] = $this->getTranslator()->trans('Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.', array(), 'Shop.Notifications.Success');
                     }
                 }
             }
@@ -120,7 +120,7 @@ class GuestTrackingControllerCore extends OrderDetailController
         $order = $order_collection->getFirst();
 
         if ((int)$order->isReturnable()) {
-            $this->info[] = $this->getTranslator()->trans('You cannot return merchandise with a guest account.', array(), 'Shop-Notifications-Warning');
+            $this->info[] = $this->getTranslator()->trans('You cannot return merchandise with a guest account.', array(), 'Shop.Notifications.Warning');
         }
 
         $this->order_to_display['data'] = $this->getTemplateVarOrder($order);

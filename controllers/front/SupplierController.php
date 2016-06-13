@@ -88,24 +88,24 @@ class SupplierControllerCore extends ProductListingFrontController
         }
     }
 
-     protected function getProductSearchQuery()
-     {
-         $query = new ProductSearchQuery();
-         $query
+    protected function getProductSearchQuery()
+    {
+        $query = new ProductSearchQuery();
+        $query
             ->setIdSupplier($this->supplier->id)
             ->setSortOrder(new SortOrder('product', 'position', 'asc'))
         ;
-         return $query;
-     }
+        return $query;
+    }
 
-     protected function getDefaultProductSearchProvider()
-     {
-         $translator = new Translator(new LegacyContext);
-         return new SupplierProductSearchProvider(
+    protected function getDefaultProductSearchProvider()
+    {
+        $translator = new Translator(new LegacyContext);
+        return new SupplierProductSearchProvider(
             $translator,
             $this->supplier
         );
-     }
+    }
 
     /**
      * Assign template vars if displaying one supplier
@@ -127,19 +127,19 @@ class SupplierControllerCore extends ProductListingFrontController
         ]);
     }
 
-     public function getTemplateVarSuppliers()
-     {
-         $suppliers = Supplier::getSuppliers(true, $this->context->language->id, true);
-         $suppliers_for_display = [];
+    public function getTemplateVarSuppliers()
+    {
+        $suppliers = Supplier::getSuppliers(true, $this->context->language->id, true);
+        $suppliers_for_display = [];
 
-         foreach ($suppliers as $supplier) {
-             $suppliers_for_display[$supplier['id_supplier']] = $supplier;
-             $suppliers_for_display[$supplier['id_supplier']]['text'] = $supplier['description'];
-             $suppliers_for_display[$supplier['id_supplier']]['image'] = _THEME_SUP_DIR_.$supplier['id_supplier'].'-medium_default.jpg';
-             $suppliers_for_display[$supplier['id_supplier']]['url'] = $this->context->link->getsupplierLink($supplier['id_supplier']);
-             $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1 ? sprintf($this->getTranslator()->trans('%s products', array(), 'Shop-Theme-Catalog'), $supplier['nb_products']) : sprintf($this->getTranslator()->trans('% product', array(), 'Shop-Theme-Catalog'), $supplier['nb_products']);
-         }
+        foreach ($suppliers as $supplier) {
+            $suppliers_for_display[$supplier['id_supplier']] = $supplier;
+            $suppliers_for_display[$supplier['id_supplier']]['text'] = $supplier['description'];
+            $suppliers_for_display[$supplier['id_supplier']]['image'] = _THEME_SUP_DIR_.$supplier['id_supplier'].'-medium_default.jpg';
+            $suppliers_for_display[$supplier['id_supplier']]['url'] = $this->context->link->getsupplierLink($supplier['id_supplier']);
+            $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1 ? sprintf($this->getTranslator()->trans('%s products', array(), 'Shop.Theme.Catalog'), $supplier['nb_products']) : sprintf($this->getTranslator()->trans('% product', array(), 'Shop.Theme.Catalog'), $supplier['nb_products']);
+        }
 
-         return $suppliers_for_display;
-     }
- }
+        return $suppliers_for_display;
+    }
+}
