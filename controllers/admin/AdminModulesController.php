@@ -846,13 +846,13 @@ class AdminModulesControllerCore extends AdminController
                         $this->errors[] = $this->l('Module not found');
                     } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist)) {
                         $this->errors[] = Tools::displayError('You do not have permission to access this module.');
-                    } elseif ($key == 'install' && $this->access('add') !== '1') {
+                    } elseif ($key == 'install' && !$this->access('add')) {
                         $this->errors[] = Tools::displayError('You do not have permission to install this module.');
                     } elseif ($key == 'install' && ($this->context->mode == Context::MODE_HOST) && !Module::isModuleTrusted($module->name)) {
                         $this->errors[] = Tools::displayError('You do not have permission to install this module.');
-                    } elseif ($key == 'delete' && ($this->access('delete') !== '1' || !$module->getPermission('configure'))) {
+                    } elseif ($key == 'delete' && (!$this->access('delete') || !$module->getPermission('configure'))) {
                         $this->errors[] = Tools::displayError('You do not have permission to delete this module.');
-                    } elseif ($key == 'configure' && ($this->access('edit') !== '1' || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
+                    } elseif ($key == 'configure' && (!$this->access('edit') || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
                         $this->errors[] = Tools::displayError('You do not have permission to configure this module.');
                     } elseif ($key == 'install' && $moduleManager->isInstalled($module->name)) {
                         $this->errors[] = sprintf(Tools::displayError('This module is already installed: %s.'), $module->name);
@@ -1187,9 +1187,9 @@ class AdminModulesControllerCore extends AdminController
     {
         foreach ($modules as $k => $module) {
             // Check add permissions, if add permissions not set, addons modules and uninstalled modules will not be displayed
-            if ($this->access('add') !== '1' && isset($module->type) && ($module->type != 'addonsNative' || $module->type != 'addonsBought')) {
+            if (!$this->access('add') && isset($module->type) && ($module->type != 'addonsNative' || $module->type != 'addonsBought')) {
                 unset($modules[$k]);
-            } elseif ($this->access('add') !== '1' && (!isset($module->id) || $module->id < 1)) {
+            } elseif (!$this->access('add') && (!isset($module->id) || $module->id < 1)) {
                 unset($modules[$k]);
             } elseif ($module->id && !Module::getPermissionStatic($module->id, 'view') && !Module::getPermissionStatic($module->id, 'configure')) {
                 unset($modules[$k]);
