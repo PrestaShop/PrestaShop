@@ -7,6 +7,11 @@ export default function() {
   var nestedCategoriesForm = $('#form_step1_categories');
   return {
     'init': function() {
+
+      if (0 === nestedCategoriesForm.length) {
+        return;
+      }
+      
       nestedCategoriesForm.categorytree();
       this.removeDefaultIfNeeded();
 
