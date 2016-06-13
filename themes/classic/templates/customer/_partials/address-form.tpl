@@ -1,7 +1,7 @@
 <div class="js-address-form">
   {include file='_partials/form-errors.tpl' errors=$errors['']}
 
-  <form method="POST" action="{$action}" data-id-address="{$id_address}">
+  <form method="POST" action="{$action}" data-id-address="{$id_address}" data-link-update="{url entity='address' params=['ajax' => 1, 'action' => 'addressForm']}">
     <section class="form-fields">
       {block name='form_fields'}
         {foreach from=$formFields item="field"}

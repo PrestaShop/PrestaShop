@@ -16,8 +16,7 @@ function changeCountry() {
       id_address: $('.js-address-form form').data('id-address'),
     };
 
-    // TODO : Get the URL from the form
-    $.post('http://prestashop-develop.com/en/cart?ajax=1&action=addressForm', requestData).then(function (resp) {
+    $.post($('.js-address-form form').data('link-update'), requestData).then(function (resp) {
       var inputs = [];
       $('.js-address-form input').each(function () {
         inputs[$(this).prop('name')] = $(this).val();
