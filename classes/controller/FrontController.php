@@ -1653,7 +1653,6 @@ class FrontControllerCore extends Controller
             )
         );
 
-        // TODO : Find a way to handle the AJAX case
         $form->setAction($this->getCurrentURL());
 
         return $form;
@@ -1663,6 +1662,10 @@ class FrontControllerCore extends Controller
     {
         $addressForm = $this->makeAddressForm();
 
+        if (Tools::getIsset('id_address')) {
+            $addressForm->loadAddressById(Tools::getValue('id_address'));
+        }
+
         if (Tools::getIsset('id_country')) {
             $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
         }
@@ -1670,7 +1673,10 @@ class FrontControllerCore extends Controller
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode(array(
-            'address_form' => $this->render('customer/_partials/address-form.tpl', $addressForm->getTemplateVariables()),
+            'address_form' => $this->render(
+                'customer/_partials/address-form.tpl',
+                $addressForm->getTemplateVariables()
+            ),
         )));
     }
 }
