@@ -2969,6 +2969,11 @@ abstract class ModuleCore
         }
         return $result;
     }
+
+    public function getTranslator()
+    {
+        return Context::getContext()->getTranslator();
+    }
 }
 
 function ps_module_version_sort($a, $b)
