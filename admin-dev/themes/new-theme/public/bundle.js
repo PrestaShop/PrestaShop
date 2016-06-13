@@ -87759,13 +87759,18 @@
 	exports.default = function () {
 
 	  var bulkForm = (0, _jquery2.default)('#bulk-combinations-container');
-	  var combinationsTable = (0, _jquery2.default)('#accordion_combinations');
 	  var deleteCombinationsBtn = (0, _jquery2.default)('#delete-combinations');
 	  var applyChangesBtn = (0, _jquery2.default)('#apply-on-combinations');
 	  var syncedCollection = (0, _jquery2.default)('[data-uniqid]');
+	  var finalPrice = (0, _jquery2.default)('#form_step2_price');
+	  var finalPriceIT = (0, _jquery2.default)('#form_step2_price_ttc');
+	  var impactOnPriceSelector = 'input.attribute_priceTE';
+	  var finalPriceSelector = '.attribute-finalprice span';
 
 	  return {
 	    'init': function init() {
+	      var _this = this;
+
 	      var that = this;
 	      // stop propagation on buttons
 	      deleteCombinationsBtn.on('click', function (event) {
@@ -87776,6 +87781,15 @@
 	      applyChangesBtn.on('click', function (event) {
 	        event.preventDefault();
 	        that.applyChangesOnCombinations().resetForm().unselectCombinations().submitUpdate();
+	      });
+
+	      /* if final price change with user interaction, combinations should be impacted */
+	      finalPrice.on('blur', function () {
+	        _this.syncToPricingTab();
+	      });
+
+	      finalPriceIT.on('blur', function () {
+	        _this.syncToPricingTab();
 	      });
 
 	      syncedCollection.on('DOMSubtreeModified', function (event) {
@@ -87803,7 +87817,7 @@
 	        if ((0, _jquery2.default)('.bulk-action').attr('aria-expanded') === "false" || !(0, _jquery2.default)('.js-combination').is(':checked')) {
 	          (0, _jquery2.default)('.js-collapse').collapse('toggle');
 	        }
-	        (0, _jquery2.default)('.js-bulk-combinations').text((0, _jquery2.default)('.js-combination:checked').length);
+	        (0, _jquery2.default)('span.js-bulk-combinations').text((0, _jquery2.default)('input.js-combination:checked').length);
 	      });
 	    },
 	    'getSelectedCombinations': function getSelectedCombinations() {
@@ -87888,6 +87902,20 @@
 	    'submitUpdate': function submitUpdate() {
 	      var globalProductSubmitButton = (0, _jquery2.default)('#form'); // @todo: choose a better identifier
 	      globalProductSubmitButton.submit();
+	    },
+	    'syncToPricingTab': function syncToPricingTab() {
+	      var newPrice = finalPrice.val();
+	      (0, _jquery2.default)('tr.combination').toArray().forEach(function (item) {
+	        var jQueryRow = (0, _jquery2.default)('#' + item.id);
+	        var jQueryFinalPriceEl = jQueryRow.find(finalPriceSelector);
+	        var impactOnPriceEl = jQueryRow.find(impactOnPriceSelector);
+	        var impactOnPrice = impactOnPriceEl.val();
+
+	        jQueryFinalPriceEl.data('price', newPrice);
+	        // calculate new price
+	        var newFinalPrice = new Number(newPrice) + new Number(impactOnPrice);
+	        jQueryFinalPriceEl.text(newFinalPrice.toFixed(2));
+	      });
 	    }
 	  };
 	};
@@ -87925,11 +87953,11 @@
 	  }, {
 	    key: 'updateForm',
 	    value: function updateForm(values) {
-	      var _this = this;
+	      var _this2 = this;
 
 	      values.forEach(function (valueObject) {
-	        var valueId = valueObject.id.substr(_this.inputBulkPattern.length);
-	        (0, _jquery2.default)('#' + _this.convertInput(valueId)).val(valueObject.value);
+	        var valueId = valueObject.id.substr(_this2.inputBulkPattern.length);
+	        (0, _jquery2.default)('#' + _this2.convertInput(valueId)).val(valueObject.value);
 	      });
 	      return this.form;
 	    }
@@ -87984,17 +88012,17 @@
 	  }, {
 	    key: 'syncValues',
 	    value: function syncValues(values) {
-	      var _this2 = this;
+	      var _this3 = this;
 
 	      values.forEach(function (valueObject) {
-	        var valueId = valueObject.id.substr(_this2.inputBulkPattern.length);
+	        var valueId = valueObject.id.substr(_this3.inputBulkPattern.length);
 	        var value = valueObject.value;
 
 	        var syncedProperties = ['quantity', 'impact_on_price_te'];
 
 	        if (syncedProperties.indexOf(valueId) !== -1) {
 	          valueId = valueId === 'quantity' ? 'quantity' : 'price';
-	          var input = (0, _jquery2.default)('#attribute_' + _this2.domId + ' .attribute-' + valueId + ' input');
+	          var input = (0, _jquery2.default)('#attribute_' + _this3.domId + ' .attribute-' + valueId + ' input');
 	          input.val(value);
 	          input.change();
 	        }
