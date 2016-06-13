@@ -18,7 +18,10 @@ function changeCountry() {
 
     // TODO : Get the URL from the form
     $.post('http://prestashop-develop.com/en/cart?ajax=1&action=addressForm', requestData).then(function (resp) {
-      // TODO : Save the input values before replacing
+      var inputs = [];
+      $('.js-address-form input').each(function () {
+        inputs[$(this).prop('name')] = $(this).val();
+      });
 
       $('.js-address-form').replaceWith(resp.address_form);
 
