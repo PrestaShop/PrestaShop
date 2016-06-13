@@ -25,7 +25,9 @@ function changeCountry() {
 
       $('.js-address-form').replaceWith(resp.address_form);
 
-      // TODO : Fill the inputs with the saved values
+      $('.js-address-form input').each(function () {
+        $(this).val(inputs[$(this).prop('name')]);
+      });
 
       prestashop.emit('address form updated');
     });
