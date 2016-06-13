@@ -88021,6 +88021,11 @@
 	  var nestedCategoriesForm = (0, _jquery2.default)('#form_step1_categories');
 	  return {
 	    'init': function init() {
+
+	      if (0 === nestedCategoriesForm.length) {
+	        return;
+	      }
+
 	      nestedCategoriesForm.categorytree();
 	      this.removeDefaultIfNeeded();
 
