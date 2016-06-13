@@ -48,10 +48,10 @@ class OrderControllerCore extends FrontController
             $oldCart = new Cart(Order::getCartIdStatic($id_order, $this->context->customer->id));
             $duplication = $oldCart->duplicate();
             if (!$duplication || !Validate::isLoadedObject($duplication['cart'])) {
-                $this->errors[] = $this->getTranslator()->trans('Sorry. We cannot renew your order.', [], 'Order');
+                $this->errors[] = $this->getTranslator()->trans('Sorry. We cannot renew your order.', array(), 'Shop.Notifications.Error');
             } elseif (!$duplication['success']) {
                 $this->errors[] = $this->getTranslator()->trans(
-                    'Some items are no longer available, and we are unable to renew your order.', [], 'Order'
+                    'Some items are no longer available, and we are unable to renew your order.', array(), 'Shop.Notifications.Error'
                 );
             } else {
                 $this->context->cookie->id_cart = $duplication['cart']->id;

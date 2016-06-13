@@ -42,7 +42,7 @@ class DiscountControllerCore extends FrontController
         $cart_rules = $this->getTemplateVarCartRules();
 
         if (count($cart_rules) <= 0) {
-            $this->warning[] = $this->getTranslator()->trans('You do not have any vouchers.', array(), 'Shop-Notifications-Warning');
+            $this->warning[] = $this->getTranslator()->trans('You do not have any vouchers.', array(), 'Shop.Notifications.Warning');
         }
 
         $this->context->smarty->assign([
@@ -59,14 +59,14 @@ class DiscountControllerCore extends FrontController
         foreach ($vouchers as $key => $voucher) {
             $cart_rules[$key] = $voucher;
             $cart_rules[$key]['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
-            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int)$voucher['minimum_amount_currency']) : $this->getTranslator()->trans('None', array(), 'Shop-Theme');
-            $cart_rules[$key]['voucher_cumulable'] = ($voucher['cumulable']) ? $this->getTranslator()->trans('Yes', array(), 'Shop-Theme') : $this->getTranslator()->trans('No', array(), 'Shop-Theme');
+            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int)$voucher['minimum_amount_currency']) : $this->getTranslator()->trans('None', array(), 'Shop.Theme');
+            $cart_rules[$key]['voucher_cumulable'] = ($voucher['cumulable']) ? $this->getTranslator()->trans('Yes', array(), 'Shop.Theme') : $this->getTranslator()->trans('No', array(), 'Shop.Theme');
             if ($voucher['id_discount_type'] == 1) {
                 $cart_rules[$key]['value'] = sprintf('%s%%', $voucher['value']);
             } elseif ($voucher['id_discount_type'] == 2) {
-                $cart_rules[$key]['value'] = sprintf('%s '.($voucher['reduction_tax'] ? $this->getTranslator()->trans('Tax included', array(), 'Shop-Theme-Checkout') : $this->getTranslator()->trans('Tax excluded', array(), 'Shop-Theme-Checkout')), Tools::displayPrice($voucher['value'], (int)$voucher['reduction_currency']));
+                $cart_rules[$key]['value'] = sprintf('%s '.($voucher['reduction_tax'] ? $this->getTranslator()->trans('Tax included', array(), 'Shop.Theme.Checkout') : $this->getTranslator()->trans('Tax excluded', array(), 'Shop.Theme.Checkout')), Tools::displayPrice($voucher['value'], (int)$voucher['reduction_currency']));
             } elseif ($voucher['id_discount_type'] == 3) {
-                $cart_rules[$key]['value'] = $this->getTranslator()->trans('Free shipping', array(), 'Shop-Theme-Checkout');
+                $cart_rules[$key]['value'] = $this->getTranslator()->trans('Free shipping', array(), 'Shop.Theme.Checkout');
             } else {
                 $cart_rules[$key]['value'] = '-';
             }

@@ -60,39 +60,39 @@ class SitemapControllerCore extends FrontController
         if (Configuration::get('PS_STORES_DISPLAY_SITEMAP')) {
             $pages[] = [
                 'id' => 'stores-page',
-                'label' => $this->getTranslator()->trans('Our stores', array(), 'Shop-Theme'),
+                'label' => $this->getTranslator()->trans('Our stores', array(), 'Shop.Theme'),
                 'url' => $this->context->link->getPageLink('stores'),
             ];
         }
 
         $pages[] = [
             'id' => 'contact-page',
-            'label' => $this->getTranslator()->trans('Contact us', array(), 'Shop-Theme'),
+            'label' => $this->getTranslator()->trans('Contact us', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('contact'),
         ];
 
         $pages[] = [
             'id' => 'sitemap-page',
-            'label' => $this->getTranslator()->trans('Sitemap', array(), 'Shop-Theme'),
+            'label' => $this->getTranslator()->trans('Sitemap', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('sitemap'),
         ];
 
         $pages[] = [
             'id' => 'login-page',
-            'label' => $this->getTranslator()->trans('Log in', array(), 'Shop-Theme'),
+            'label' => $this->getTranslator()->trans('Log in', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('authentication'),
         ];
 
         $pages[] = [
             'id' => 'register-page',
-            'label' => $this->getTranslator()->trans('Create new account', array(), 'Shop-Theme'),
+            'label' => $this->getTranslator()->trans('Create new account', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('authentication'),
         ];
 
         $catalog = [
             'new-product' => [
                 'id' => 'new-product-page',
-                'label' => $this->getTranslator()->trans('New products', array(), 'Shop-Theme-Catalog'),
+                'label' => $this->getTranslator()->trans('New products', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('new-products'),
             ],
         ];
@@ -100,44 +100,44 @@ class SitemapControllerCore extends FrontController
         if ($catalog_mode && Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
             $catalog['best-sales'] = [
                 'id' => 'best-sales-page',
-                'label' => $this->getTranslator()->trans('Best sellers', array(), 'Shop-Theme-Catalog'),
+                'label' => $this->getTranslator()->trans('Best sellers', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('best-sales'),
             ];
             $catalog['prices-drop'] = [
                 'id' => 'prices-drop-page',
-                'label' => $this->getTranslator()->trans('Price drop', array(), 'Shop-Theme-Catalog'),
+                'label' => $this->getTranslator()->trans('Price drop', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('prices-drop'),
             ];
         }
 
         $catalog['manufacturer'] = [
             'id' => 'manufacturer-page',
-            'label' => $this->getTranslator()->trans('Manufacturers', array(), 'Shop-Theme-Catalog'),
+            'label' => $this->getTranslator()->trans('Manufacturers', array(), 'Shop.Theme.Catalog'),
             'url' => $this->context->link->getPageLink('manufacturer'),
         ];
 
         $catalog['supplier'] = [
             'id' => 'supplier-page',
-            'label' => $this->getTranslator()->trans('Suppliers', array(), 'Shop-Theme-Catalog'),
+            'label' => $this->getTranslator()->trans('Suppliers', array(), 'Shop.Theme.Catalog'),
             'url' => $this->context->link->getPageLink('supplier'),
         ];
 
         $categories = Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap');
         $catalog['category'] = [
             'id' => 'category-page',
-            'label' => $this->getTranslator()->trans('Categories', array(), 'Shop-Theme-Catalog'),
+            'label' => $this->getTranslator()->trans('Categories', array(), 'Shop.Theme.Catalog'),
             'url' => '#',
             'children' => $categories['children'],
         ];
 
         $sitemap = [[
                 'id' => 'page-page',
-                'label' => $this->getTranslator()->trans('Pages', array(), 'Shop-Theme'),
+                'label' => $this->getTranslator()->trans('Pages', array(), 'Shop.Theme'),
                 'url' => '#',
                 'children' => $pages,
             ],[
                 'id' => 'catalog-page',
-                'label' => $this->getTranslator()->trans('Catalog', array(), 'Shop-Theme'),
+                'label' => $this->getTranslator()->trans('Catalog', array(), 'Shop.Theme'),
                 'url' => '#',
                 'children' => $catalog,
             ],
