@@ -8,7 +8,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Adapter\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use ProductSale;
 
 class BestSalesProductSearchProvider implements ProductSearchProviderInterface
@@ -17,7 +17,7 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
     private $sortOrderFactory;
 
     public function __construct(
-        Translator $translator
+        TranslatorInterface $translator
     ) {
         $this->translator = $translator;
         $this->sortOrderFactory = new SortOrderFactory($this->translator);

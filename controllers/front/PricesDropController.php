@@ -27,8 +27,6 @@
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Adapter\PricesDrop\PricesDropProductSearchProvider;
-use PrestaShop\PrestaShop\Adapter\Translator;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 class PricesDropControllerCore extends ProductListingFrontController
 {
@@ -58,9 +56,8 @@ class PricesDropControllerCore extends ProductListingFrontController
 
     protected function getDefaultProductSearchProvider()
     {
-        $translator = new Translator(new LegacyContext);
         return new PricesDropProductSearchProvider(
-            $translator
+            $this->getTranslator()
         );
     }
 }

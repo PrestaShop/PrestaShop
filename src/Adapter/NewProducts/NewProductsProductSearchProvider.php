@@ -8,9 +8,8 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Adapter\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Product;
-use Tools;
 
 class NewProductsProductSearchProvider implements ProductSearchProviderInterface
 {
@@ -18,7 +17,7 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
     private $sortOrderFactory;
 
     public function __construct(
-        Translator $translator
+        TranslatorInterface $translator
     ) {
         $this->translator = $translator;
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
@@ -44,7 +43,7 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
         ProductSearchQuery $query
     ) {
         if (!$products = $this->getProductsOrCount($context, $query, 'products')) {
-            $products = [];
+            $products = array();
         }
         $count = $this->getProductsOrCount($context, $query, 'count');
 
@@ -55,7 +54,7 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
         ;
 
         $result->setAvailableSortOrders(
-            [
+            array(
                 (new SortOrder('product', 'date_add', 'desc'))->setLabel(
                     $this->translator->trans('Date add, newest to oldest', array(), 'Shop-Theme-Catalog')
                 ),
@@ -73,8 +72,8 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
                 ),
                 (new SortOrder('product', 'price', 'desc'))->setLabel(
                     $this->translator->trans('Price, high to low', array(), 'Shop-Theme-Catalog')
-                )
-            ]
+                ),
+            )
         );
 
         return $result;

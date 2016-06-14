@@ -5,8 +5,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use PrestaShop\PrestaShop\Adapter\Translator;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 use Address;
 use AddressFormat;
@@ -43,7 +41,7 @@ class OrderPresenter implements PresenterInterface
         $this->cartPresenter = new CartPresenter();
         $this->objectPresenter = new ObjectPresenter();
         $this->priceFormatter = new PriceFormatter();
-        $this->translator = new Translator(new LegacyContext());
+        $this->translator = Context::getContext()->getTranslator();
         $this->taxConfiguration = new TaxConfiguration();
     }
 

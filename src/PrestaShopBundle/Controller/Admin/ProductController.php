@@ -112,7 +112,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
         /* @var $productProvider ProductInterfaceProvider */
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
         /* @var $translator TranslatorInterface */
 
         // get old values from persistence (before the current update)
@@ -310,7 +310,7 @@ class ProductController extends FrameworkBundleAdminController
         $context = $contextAdapter->getContext();
         $toolsAdapter = $this->container->get('prestashop.adapter.tools');
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
         $name = $translator->trans('New product', [], 'AdminProducts');
 
         $product = $productAdapter->getProductInstance();
@@ -507,7 +507,7 @@ class ProductController extends FrameworkBundleAdminController
         $productIdList = $request->request->get('bulk_action_selected_products');
         $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
         /* @var $productUpdater ProductInterfaceUpdater */
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
         /* @var $translator TranslatorInterface */
 
         $logger = $this->container->get('logger');
@@ -584,7 +584,7 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $productProvider ProductInterfaceProvider */
         $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
         /* @var $productUpdater ProductInterfaceUpdater */
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
         /* @var $translator TranslatorInterface */
 
         $logger = $this->container->get('logger');
@@ -645,7 +645,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
         /* @var $productUpdater ProductInterfaceUpdater */
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
         /* @var $translator TranslatorInterface */
 
         $logger = $this->container->get('logger');

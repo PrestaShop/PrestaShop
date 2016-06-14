@@ -45,11 +45,6 @@ services:
     prestashop.adapter.legacy.logger:
         class: PrestaShop\PrestaShop\Adapter\LegacyLogger
 
-    # Legacy context service, transitional
-    prestashop.adapter.translator:
-        class: PrestaShop\PrestaShop\Adapter\Translator
-        arguments: ["@prestashop.adapter.legacy.context"]
-
     # SSL middleware
     prestashop.adapter.middleware.ssl:
         class: PrestaShop\PrestaShop\Adapter\Security\SslMiddleware
@@ -124,7 +119,7 @@ services:
     prestashop.adapter.presenter.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
         arguments: ["@=service('prestashop.adapter.legacy.context').getContext().currency", "@prestashop.adapter.formatter.price"]
-        
+
     prestashop.adapter.formatter.price:
         class: PrestaShop\PrestaShop\Adapter\Product\PriceFormatter
 
@@ -134,13 +129,6 @@ services:
 
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
-
-    #TWIG EXTENSIONS
-    prestashop.twig.extension.translation:
-        class: PrestaShopBundle\Twig\TranslationExtension
-        arguments: ["@translator", "@prestashop.adapter.translator"]
-        tags:
-            - { name: twig.extension }
 
     prestashop.twig.extension.hook:
         class: PrestaShopBundle\Twig\HookExtension
@@ -179,7 +167,7 @@ services:
             - "@prestashop.adapter.data_provider.module"
             - "@prestashop.core.module.updater"
             - "@prestashop.adapter.legacy.logger"
-            
+
     prestashop.core.admin.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
         arguments: ["@prestashop.adapter.legacy.configuration", "@=service('prestashop.adapter.legacy.context').getContext().shop"]

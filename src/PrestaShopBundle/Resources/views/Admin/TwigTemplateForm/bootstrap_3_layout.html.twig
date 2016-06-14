@@ -350,8 +350,8 @@
         {%- for error in errors -%}
     <li><span class="glyphicon glyphicon-exclamation-sign"></span> {{
         error.messagePluralization is null
-        ? trans(error.messageTemplate, error.messageParameters, 'form_error')
-        : transchoice(error.messageTemplate, error.messagePluralization, error.messageParameters, 'form_error')
+        ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+        : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
         }}
     </li>
 {%- endfor -%}

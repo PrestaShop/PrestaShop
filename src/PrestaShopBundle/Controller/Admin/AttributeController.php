@@ -43,7 +43,7 @@ class AttributeController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
         $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
         $attributes = $this->container->get('prestashop.adapter.data_provider.attribute')->getAttributes($locales[0]['id_lang'], true);
 
         $dataGroupAttributes = [];
@@ -181,7 +181,7 @@ class AttributeController extends FrameworkBundleAdminController
     public function deleteAttributeAction($idProduct, Request $request)
     {
 
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
         $response = new JsonResponse();
 
         if (!$request->isXmlHttpRequest()) {
@@ -216,7 +216,7 @@ class AttributeController extends FrameworkBundleAdminController
      */
     public function deleteAllAttributeAction($idProduct, Request $request)
     {
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
         $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
         $response = new JsonResponse();
 

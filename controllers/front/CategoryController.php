@@ -27,8 +27,6 @@
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryProductSearchProvider;
-use PrestaShop\PrestaShop\Adapter\Translator;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 
 class CategoryControllerCore extends ProductListingFrontController
@@ -99,9 +97,8 @@ class CategoryControllerCore extends ProductListingFrontController
 
     protected function getDefaultProductSearchProvider()
     {
-        $translator = new Translator(new LegacyContext);
         return new CategoryProductSearchProvider(
-            $translator,
+            $this->getTranslator(),
             $this->category
         );
     }

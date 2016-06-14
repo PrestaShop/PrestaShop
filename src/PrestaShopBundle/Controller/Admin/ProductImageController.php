@@ -49,7 +49,7 @@ class ProductImageController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
         $return_data = [];
 
         if ($idProduct == 0 || !$request->isXmlHttpRequest()) {
@@ -118,7 +118,7 @@ class ProductImageController extends FrameworkBundleAdminController
         $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->container->get('translator');
 
         if ($idImage == 0 || !$request->isXmlHttpRequest()) {
             return new Response();

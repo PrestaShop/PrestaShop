@@ -46,7 +46,7 @@ services:
             - "@prestashop.hook.dispatcher"
     prestashop.adapter.admin.wrapper.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
-        arguments: ["@prestashop.adapter.translator", "@prestashop.adapter.legacy.context"]
+        arguments: ["@translator", "@prestashop.adapter.legacy.context"]
     prestashop.adapter.admin.page_preference:
         class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
         arguments:
@@ -89,7 +89,7 @@ services:
         arguments:
             - "@router"
             - "@twig"
-            - "@prestashop.adapter.translator"
+            - "@translator"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 

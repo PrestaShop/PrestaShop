@@ -24,8 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\Translator;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
@@ -1569,7 +1567,7 @@ class FrontControllerCore extends Controller
 
     protected function getTranslator()
     {
-        return new Translator(new LegacyContext);
+        return Context::getContext()->getTranslator();
     }
 
     protected function makeLoginForm()
