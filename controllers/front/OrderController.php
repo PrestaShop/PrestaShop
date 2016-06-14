@@ -182,7 +182,14 @@ class OrderControllerCore extends FrontController
     public function initContent()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && $this->ajax) {
-            die($this->jsonRenderCartSummary());
+            if(Tools::getValue('action') == 'selectDeliveryOption') {
+                $this->checkoutProcess->handleRequest(
+                    Tools::getAllValues()
+                );
+                die();
+            } else {
+                die($this->jsonRenderCartSummary());
+            }
         }
 
         parent::initContent();

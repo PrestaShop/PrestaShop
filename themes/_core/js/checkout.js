@@ -39,8 +39,8 @@ function confirmPayment () {
 }
 
 function refreshDeliveryOptions (event) {
-  let params = $('#delivery-method').serialize() + '&action=selectDeliveryOption';
-  $.post('', params).then(resp => {
+  let params = $('#delivery-method').serialize() + '&action=selectDeliveryOption&ajax=1';
+  $.post(location.href, params).then(resp => {
     $.post(location.href, null, null, 'json').then(function (resp) {
       $('#checkout-cart-summary').replaceWith(resp.preview);
     });
