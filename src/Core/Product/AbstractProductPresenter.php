@@ -83,11 +83,11 @@ abstract class AbstractProductPresenter
         // TODO: move it to a common parent, since it's copied in OrderPresenter and CartPresenter
         $presentedProduct['labels'] = array(
             'tax_short' => ($settings->include_taxes)
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop-Theme')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop-Theme'),
+                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme')
+                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme'),
             'tax_long' => ($settings->include_taxes)
-                ? $this->translator->trans('(tax included)', array(), 'Shop-Theme')
-                : $this->translator->trans('(tax excluded)', array(), 'Shop-Theme'),
+                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme')
+                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme'),
         );
 
         return $presentedProduct;
@@ -253,35 +253,35 @@ abstract class AbstractProductPresenter
         if ($show_price && $product['online_only']) {
             $flags['online-only'] = array(
                 'type' => 'online-only',
-                'label' => $this->translator->trans('Online only', array(), 'Shop-Theme-Catalog'),
+                'label' => $this->translator->trans('Online only', array(), 'Shop.Theme.Catalog'),
             );
         }
 
         if ($show_price && $product['on_sale'] && !$settings->catalog_mode) {
             $flags['on-sale'] = array(
                 'type' => 'on-sale',
-                'label' => $this->translator->trans('On sale!', array(), 'Shop-Theme-Catalog'),
+                'label' => $this->translator->trans('On sale!', array(), 'Shop.Theme.Catalog'),
             );
         }
 
         if ($show_price && $product['reduction'] && !$settings->catalog_mode && !$product['on_sale']) {
             $flags['discount'] = array(
                 'type' => 'discount',
-                'label' => $this->translator->trans('Reduced price', array(), 'Shop-Theme-Catalog'),
+                'label' => $this->translator->trans('Reduced price', array(), 'Shop.Theme.Catalog'),
             );
         }
 
         if ($product['new']) {
             $flags['new'] = array(
                 'type' => 'new',
-                'label' => $this->translator->trans('New', array(), 'Shop-Theme-Catalog'),
+                'label' => $this->translator->trans('New', array(), 'Shop.Theme.Catalog'),
             );
         }
 
         if ($product['pack']) {
             $flags['pack'] = array(
                 'type' => 'pack',
-                'label' => $this->translator->trans('Pack', array(), 'Shop-Theme-Catalog'),
+                'label' => $this->translator->trans('Pack', array(), 'Shop.Theme.Catalog'),
             );
         }
 
@@ -299,21 +299,21 @@ abstract class AbstractProductPresenter
             case 'new':
                 $presentedProduct['condition'] = array(
                     'type' => 'new',
-                    'label' => $this->translator->trans('New product', array(), 'Shop-Theme-Catalog'),
+                    'label' => $this->translator->trans('New product', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/NewCondition',
                 );
                 break;
             case 'used':
                 $presentedProduct['condition'] = array(
                     'type' => 'used',
-                    'label' => $this->translator->trans('Used', array(), 'Shop-Theme-Catalog'),
+                    'label' => $this->translator->trans('Used', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/UsedCondition',
                 );
                 break;
             case 'refurbished':
                 $presentedProduct['condition'] = array(
                     'type' => 'refurbished',
-                    'label' => $this->translator->trans('Refurbished', array(), 'Shop-Theme-Catalog'),
+                    'label' => $this->translator->trans('Refurbished', array(), 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/RefurbishedCondition',
                 );
                 break;
@@ -356,7 +356,7 @@ abstract class AbstractProductPresenter
                     $presentedProduct['availability_message'] = $this->translator->trans(
                         'Out of stock',
                         array(),
-                        'Shop-Theme-Catalog'
+                        'Shop.Theme.Catalog'
                     );
                     $presentedProduct['availability_date'] = $product['available_date'];
                     $presentedProduct['availability'] = 'unavailable';
@@ -365,7 +365,7 @@ abstract class AbstractProductPresenter
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     array(),
-                    'Shop-Theme-Catalog'
+                    'Shop.Theme.Catalog'
                 );
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
@@ -373,7 +373,7 @@ abstract class AbstractProductPresenter
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'Out of stock',
                     array(),
-                    'Shop-Theme-Catalog'
+                    'Shop.Theme.Catalog'
                 );
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
