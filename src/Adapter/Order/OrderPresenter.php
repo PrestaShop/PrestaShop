@@ -124,7 +124,7 @@ class OrderPresenter implements PresenterInterface
         $total_products = ($this->includeTaxes()) ? $order->total_products_wt : $order->total_products;
         $subtotals['products'] = array(
             'type' => 'products',
-            'label' => $this->translator->trans('Subtotal', array(), 'Shop-Theme-Checkout'),
+            'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
             'amount' => $total_products,
             'value' => $this->priceFormatter->format($total_products),
         );
@@ -135,7 +135,7 @@ class OrderPresenter implements PresenterInterface
         if ((float) $discount_amount) {
             $subtotals['discounts'] = array(
                 'type' => 'discount',
-                'label' => $this->translator->trans('Discount', array(), 'Shop-Theme-Checkout'),
+                'label' => $this->translator->trans('Discount', array(), 'Shop.Theme.Checkout'),
                 'amount' => $discount_amount,
                 'value' => $this->priceFormatter->format($discount_amount),
             );
@@ -144,9 +144,9 @@ class OrderPresenter implements PresenterInterface
         $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
         $subtotals['shipping'] = array(
             'type' => 'shipping',
-            'label' => $this->translator->trans('Shipping and handling', array(), 'Shop-Theme-Checkout'),
+            'label' => $this->translator->trans('Shipping and handling', array(), 'Shop.Theme.Checkout'),
             'amount' => $shipping_cost,
-            'value' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', array(), 'Shop-Theme-Checkout'),
+            'value' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
         );
 
         $tax = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
@@ -154,7 +154,7 @@ class OrderPresenter implements PresenterInterface
         if ((float) $tax && Configuration::get('PS_TAX_DISPLAY')) {
             $subtotals['tax'] = array(
                 'type' => 'tax',
-                'label' => $this->translator->trans('Tax', array(), 'Shop-Theme-Checkout'),
+                'label' => $this->translator->trans('Tax', array(), 'Shop.Theme.Checkout'),
                 'amount' => $tax,
                 'value' => $this->priceFormatter->format($tax),
             );
@@ -165,14 +165,14 @@ class OrderPresenter implements PresenterInterface
         $amounts['totals'] = array();
         $amounts['totals']['total'] = array(
             'type' => 'total',
-            'label' => $this->translator->trans('Total', array(), 'Shop-Theme-Checkout'),
+            'label' => $this->translator->trans('Total', array(), 'Shop.Theme.Checkout'),
             'amount' => $order->total_paid,
             'value' => $this->priceFormatter->format($order->total_paid),
         );
 
         $amounts['totals']['total_paid'] = array(
             'type' => 'total_paid',
-            'label' => $this->translator->trans('Total paid', array(), 'Shop-Theme-Checkout'),
+            'label' => $this->translator->trans('Total paid', array(), 'Shop.Theme.Checkout'),
             'amount' => $order->total_paid_real,
             'value' => $this->priceFormatter->format($order->total_paid_real),
         );
@@ -244,7 +244,7 @@ class OrderPresenter implements PresenterInterface
                 $orderShipping[$shippingId]['shipping_date'] = Tools::displayDate($shipping['date_add'], null, false);
                 $orderShipping[$shippingId]['shipping_weight'] = ($shipping['weight'] > 0) ? sprintf('%.3f', $shipping['weight']).' '.Configuration::get('PS_WEIGHT_UNIT') : '-';
                 $shippingCost = (!$order->getTaxCalculationMethod()) ? $shipping['shipping_cost_tax_excl'] : $shipping['shipping_cost_tax_incl'];
-                $orderShipping[$shippingId]['shipping_cost'] = ($shippingCost > 0) ? Tools::displayPrice($shippingCost, (int) $order->id_currency) : $this->translator->trans('Free', array(), 'Shop-Theme-Checkout');
+                $orderShipping[$shippingId]['shipping_cost'] = ($shippingCost > 0) ? Tools::displayPrice($shippingCost, (int) $order->id_currency) : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout');
 
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {
@@ -352,11 +352,11 @@ class OrderPresenter implements PresenterInterface
     {
         return array(
             'tax_short' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop-Theme')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop-Theme'),
+                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme')
+                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme'),
             'tax_long' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax included)', array(), 'Shop-Theme')
-                : $this->translator->trans('(tax excluded)', array(), 'Shop-Theme'),
+                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme')
+                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme'),
         );
     }
 }
