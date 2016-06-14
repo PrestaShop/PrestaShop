@@ -1,7 +1,4 @@
 {function name="menu" nodes=[] depth=0 parent=null}
-    {if $depth === 1}
-      <a class="top-menu-link" href="{$node.url nofilter}" title="{$node.label}">{$node.label}</a>
-    {/if}
     {if $nodes|count}
       <ul data-depth="{$depth}" class="top-menu">
         {foreach from=$nodes item=node}
@@ -10,7 +7,7 @@
               <a
                 class="{if $depth >= 0}dropdown-item{/if}{if $depth === 1} dropdown-submenu{/if}"
                 {if $depth === 0}
-                  data-toggle="dropdown" 
+                  data-toggle="dropdown"
                 {/if}
                 href="{$node.url nofilter}" data-depth="{$depth}"
                 {if $node.open_in_new_window} target="_blank" {/if}
@@ -39,6 +36,6 @@
     {/if}
 {/function}
 
-<div class="menu col-md-8 js-top-menu">
+<div class="menu col-md-8 js-top-menu m-l-3">
     {menu nodes=$menu.children}
 </div>

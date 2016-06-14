@@ -16,12 +16,12 @@
 {block name='header_top'}
     <div class="container">
       <div class="header-top row">
-        <div class="col-md-2">
+        <div class="col-md-1">
           <a href="{$urls.base_url}">
             <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
           </a>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-11">
           {hook h='displayTop'}
         </div>
       </div>
