@@ -165,38 +165,36 @@ class OrderControllerCore extends FrontController
         }
     }
 
-    private function jsonRenderCartSummary()
+    public function displayAjaxselectDeliveryOption()
     {
-        parent::initContent();
         $cart = $this->cart_presenter->present(
             $this->context->cart
         );
-        $return['preview'] = $this->render('checkout/_partials/cart-summary.tpl', [
-            'cart' => $cart,
-            'static_token' => Tools::getToken(false),
-        ]);
 
-        return json_encode($return);
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxDie(Tools::jsonEncode(array(
+            'preview' => $this->render('checkout/_partials/cart-summary.tpl', array(
+                'cart' => $cart,
+                'static_token' => Tools::getToken(false),
+            ))
+        )));
     }
 
     public function initContent()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && $this->ajax) {
-            die($this->jsonRenderCartSummary());
-        }
-
         parent::initContent();
+
+        $this->restorePersistedData($this->checkoutProcess);
+        $this->checkoutProcess->handleRequest(
+            Tools::getAllValues()
+        );
 
         $presentedCart = $this->cart_presenter->present($this->context->cart);
 
         if (count($presentedCart['products']) <= 0 || $presentedCart['minimalPurchaseRequired']) {
             Tools::redirect('index.php?controller=cart');
         }
-
-        $this->restorePersistedData($this->checkoutProcess);
-        $this->checkoutProcess->handleRequest(
-            Tools::getAllValues()
-        );
 
         $this->checkoutProcess
             ->setNextStepReachable()
