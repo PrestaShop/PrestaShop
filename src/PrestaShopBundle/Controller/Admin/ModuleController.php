@@ -25,7 +25,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Modules & Services', array(), 'AdminModules'),
+                'layoutTitle' => $translator->trans('Modules & Services', array(), 'Admin.Navigation.Menu'),
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
                 'showContentHeader' => true,
@@ -156,7 +156,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Manage my modules', array(), 'AdminModules'),
+                'layoutTitle' => $translator->trans('Manage my modules', array(), 'Admin.Modules'),
                 'modules' => $products,
                 'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($installed_products)),
                 'requireAddonsSearch' => false,
@@ -191,22 +191,22 @@ class ModuleController extends FrameworkBundleAdminController
                 if ($response[$module]['status'] === null) {
                     $response[$module]['status'] = false;
                     $response[$module]['msg'] = $translator->trans(
-                        "%s.' did not return a valid response on %s action",
+                        '%s did not return a valid response on %s action.',
                         array($module, $action),
-                        'AdminModules'
+                        'Admin.Notifications.Error'
                         );
                 } elseif ($response[$module]['status'] === false) {
                     $error = $moduleManager->getError($module);
                     $response[$module]['msg'] = $translator->trans(
                         'Cannot %s module %s. %s',
                         array(str_replace('_', ' ', $action), $module, $error),
-                        'AdminModules'
+                        'Admin.Notifications.Error'
                     );
                 } else {
                     $response[$module]['msg'] = $translator->trans(
                         '%s action on module %s succeeded.',
                         array(ucfirst(str_replace('_', ' ', $action)), $module),
-                        'AdminModules'
+                        'Admin.Notifications.Success'
                     );
                 }
             } catch (Exception $e) {
@@ -214,7 +214,7 @@ class ModuleController extends FrameworkBundleAdminController
                 $response[$module]['msg'] = $translator->trans(
                     'Exception thrown by addon %s on %s. %s',
                     array($module, $action, $e->getMessage()),
-                    'AdminModules'
+                    'Admin.Notifications.Error'
                 );
 
                 $logger = $this->get('logger');
@@ -225,7 +225,7 @@ class ModuleController extends FrameworkBundleAdminController
             $response[$module]['msg'] = $translator->trans(
                 'Invalid action',
                 array(),
-                'AdminModules'
+                'Admin.Notifications.Error'
             );
         }
 
@@ -294,7 +294,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Module notifications', array(), 'AdminModules'),
+                'layoutTitle' => $translator->trans('Module notifications', array(), 'Admin.Modules'),
                 'modules' => $products,
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => false,
@@ -445,9 +445,9 @@ class ModuleController extends FrameworkBundleAdminController
         $toolbarButtons = array();
         $toolbarButtons['add_module'] = array(
             'href' => '#',
-            'desc' => $translator->trans('Upload a module', array(), get_class($this)),
+            'desc' => $translator->trans('Upload a module', array(), 'Admin.Actions'),
             'icon' => 'cloud_upload',
-            'help' => $translator->trans('Upload a module', array(), get_class($this)),
+            'help' => $translator->trans('Upload a module', array(), 'Admin.Actions'),
         );
         $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
 
@@ -511,14 +511,14 @@ class ModuleController extends FrameworkBundleAdminController
                 'href' => $this->generateUrl('admin_addons_logout'),
                 'desc' => $addonsEmail['username_addons'],
                 'icon' => 'exit_to_app',
-                'help' => $translator->trans('Synchronized with Addons Marketplace!', array(), get_class($this))
+                'help' => $translator->trans('Synchronized with Addons marketplace!', array(), 'Admin.Notifications.Success')
             ];
         } else {
             $addonsConnect = [
                 'href' => '#',
-                'desc' => $translator->trans('Connect to addons marketplace', array(), get_class($this)),
+                'desc' => $translator->trans('Connect to Addons marketplace', array(), 'Admin.Actions'),
                 'icon' => 'vpn_key',
-                'help' => $translator->trans('Connect to addons marketplace', array(), get_class($this))
+                'help' => $translator->trans('Connect to Addons marketplace', array(), 'Admin.Actions')
             ];
         }
 
