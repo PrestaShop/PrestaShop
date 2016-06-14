@@ -27,9 +27,13 @@
 
 use Symfony\Component\VarDumper\VarDumper;
 
-function dump($var)
-{
-    return VarDumper::dump($var);
+if (!function_exists('dump')) {
+    function dump($var)
+    {
+        foreach (func_get_args() as $var) {
+            VarDumper::dump($var);
+        }
+    }
 }
 
 /**
