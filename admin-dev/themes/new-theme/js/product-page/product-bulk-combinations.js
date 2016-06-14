@@ -6,10 +6,13 @@ import $ from 'jquery';
 export default function() {
 
   var bulkForm = $('#bulk-combinations-container');
-  var combinationsTable = $('#accordion_combinations');
   var deleteCombinationsBtn = $('#delete-combinations');
   var applyChangesBtn = $('#apply-on-combinations');
   var syncedCollection = $('[data-uniqid]');
+  var finalPrice = $('#form_step2_price');
+  var finalPriceIT = $('#form_step2_price_ttc');
+  var impactOnPriceSelector = 'input.attribute_priceTE';
+  var finalPriceSelector = '.attribute-finalprice span';
 
   return {
     'init': function init() {
@@ -26,6 +29,15 @@ export default function() {
             .resetForm()
             .unselectCombinations()
             .submitUpdate();
+      });
+
+      /* if final price change with user interaction, combinations should be impacted */
+      finalPrice.on('blur', () => {
+        this.syncToPricingTab();
+      });
+
+      finalPriceIT.on('blur', () => {
+        this.syncToPricingTab();
       });
 
       syncedCollection.on('DOMSubtreeModified', (event) => {
@@ -53,7 +65,7 @@ export default function() {
         if ($('.bulk-action').attr('aria-expanded') === "false" || !$('.js-combination').is(':checked')) {
           $('.js-collapse').collapse('toggle');
         }
-      $('.js-bulk-combinations').text($('.js-combination:checked').length);
+        $('span.js-bulk-combinations').text($('input.js-combination:checked').length);
       });
     },
     'getSelectedCombinations': function getSelectedCombinations() {
@@ -74,7 +86,7 @@ export default function() {
         combination.updateForm(values);
         combination.syncValues(values);
       });
-      
+
       return this;
     },
     'deleteCombinations': function deleteCombinations() {
@@ -122,22 +134,36 @@ export default function() {
     },
     'resetForm': function resetForm() {
       bulkForm.find('input').val('');
-      
+
       return this;
     },
     'unselectCombinations': function unselectCombinations() {
       $('input.js-combination').prop('checked', false);
-      
+
       return this;
     },
     'hideForm': function toggleForm() {
       bulkForm.collapse('hide');
-      
+
       return this;
     },
     'submitUpdate': function submitUpdate() {
       var globalProductSubmitButton = $('#form'); // @todo: choose a better identifier
       globalProductSubmitButton.submit();
+    },
+    'syncToPricingTab': function syncToPricingTab() {
+      var newPrice = finalPrice.val();
+      $('tr.combination').toArray().forEach((item) => {
+        var jQueryRow = $('#'+item.id);
+        var jQueryFinalPriceEl = jQueryRow.find(finalPriceSelector);
+        var impactOnPriceEl = jQueryRow.find(impactOnPriceSelector);
+        var impactOnPrice = impactOnPriceEl.val();
+
+        jQueryFinalPriceEl.data('price', newPrice);
+        // calculate new price
+        var newFinalPrice = new Number(newPrice) + new Number(impactOnPrice);
+        jQueryFinalPriceEl.text(newFinalPrice.toFixed(2));
+      });
     }
   };
 }
