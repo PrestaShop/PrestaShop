@@ -8,7 +8,6 @@ export default class TopMenu extends DropDown {
     });
 
     $('.header-top').mouseleave((e)=>{
-        console.log($(e.currentTarget));
       if(!$(e.currentTarget).hasClass('.header-top') || !$(e.currentTarget).hasClass('.row')){
         this.el.trigger('hide.bs.dropdown');
       }
@@ -16,6 +15,7 @@ export default class TopMenu extends DropDown {
     this.el.on('click',(e)=>{
       e.stopPropagation();
     });
+    
     super.init();
   }
 }
