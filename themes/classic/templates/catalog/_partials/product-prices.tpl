@@ -43,7 +43,7 @@
 
     {block name='product_pack_price'}
       {if $displayPackPrice}
-        <p class="product-pack-price">{l s='Instead of %s' d='Shop.Theme.Catalog' sprintf=$noPackPrice}</span></p>
+        <p class="product-pack-price"><span>{l s='Instead of %s' d='Shop.Theme.Catalog' sprintf=$noPackPrice}</span></p>
       {/if}
     {/block}
 
