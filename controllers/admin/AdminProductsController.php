@@ -5132,16 +5132,6 @@ class AdminProductsControllerCore extends AdminController
         return $trad[$key];
     }
 
-    protected function _displayUnavailableProductWarning()
-    {
-        $content = '<div class="alert">
-			<span>'.$this->l('Your product will be saved as a draft.').'</span>
-				<a href="#" class="btn btn-default pull-right" onclick="submitAddProductAndPreview()" ><i class="icon-external-link-sign"></i> '.$this->l('Save and preview').'</a>
-				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
-			</div>';
-        $this->tpl_form_vars['warning_unavailable_product'] = $content;
-    }
-
     public function ajaxProcessCheckProductName()
     {
         if ($this->tabAccess['view'] === '1') {
