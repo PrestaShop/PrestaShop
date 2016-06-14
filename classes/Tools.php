@@ -848,6 +848,36 @@ class ToolsCore
     }
 
     /**
+    * Get localized date format
+    *
+    * @return string Date format
+    */
+    public static function getDateFormat()
+    {
+        $format = Context::getContext()->language->date_format_lite;
+        $search = array('d', 'm', 'Y');
+        $replace = array('DD', 'MM', 'YYYY');
+        $format = str_replace($search, $replace, $format);
+        return $format;
+    }
+
+    /**
+    * Get formatted date
+    *
+    * @param string $date_str Date string
+    * @param bool $full With time or not (optional)
+    * @return string Formatted date
+    */
+    public static function formatDateStr($date_str, $full = false)
+    {
+        $time = strtotime($date_str);
+        $context = Context::getContext();
+        $date_format = ($full ? $context->language->date_format_full : $context->language->date_format_lite);
+        $date = date($date_format, $time);
+        return $date;
+    }
+
+    /**
     * Sanitize a string
     *
     * @param string $string String to sanitize

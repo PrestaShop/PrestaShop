@@ -49,10 +49,12 @@
 
       {elseif $field.type === 'date'}
 
-        <input class="form-control" type="text" placeholder="DD/MM/YYYY">
-        <span class="form-control-comment">
-          {l s='(Ex.:31/05/1970)' d='Shop.Forms.Help'}
-        </span>
+        <input class="form-control" type="text" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
+        {if isset($field.availableValues.comment)}
+          <span class="form-control-comment">
+            {$field.availableValues.comment}
+          </span>
+        {/if}
 
       {elseif $field.type === 'password'}
 
