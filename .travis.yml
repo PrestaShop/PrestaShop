@@ -20,7 +20,7 @@ addons:
         - libappindicator1
         - fonts-liberation
     sauce_connect: true
-    
+
 cache:
   directories:
     - $HOME/.composer/cache
@@ -69,7 +69,7 @@ notifications:
 script:
   - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
   - composer install --prefer-dist --no-interaction --no-progress
-  - tests/check_php_parse_errors.sh
+  - tests/check_file_syntax.sh
   - bash ./travis-scripts/install-prestashop
   - bash ./travis-scripts/backup-prestashop
   - php bin/phpunit -c tests/
