@@ -5,12 +5,12 @@
 
       <div class="form-group row">
         <div class="col-md-9 col-md-offset-3">
-          <h3>{l s='Contact us'}</h3>
+          <h3>{l s='Contact us' d='Shop.Theme'}</h3>
         </div>
       </div>
 
       <div class="form-group row">
-        <label class="col-md-3 form-control-label">{l s='Subject'}</label>
+        <label class="col-md-3 form-control-label">{l s='Subject' d='Shop.Forms.Labels'}</label>
         <div class="col-md-4">
           <select name="id_contact" class="form-control form-control-select">
             {foreach from=$contact.contacts item=contact_elt}
@@ -21,15 +21,21 @@
       </div>
 
       <div class="form-group row">
-        <label class="col-md-3 form-control-label">{l s='Email address'}</label>
+        <label class="col-md-3 form-control-label">{l s='Email address' d='Shop.Forms.Labels'}</label>
         <div class="col-md-4">
-          <input type="email" name="from" value="{$contact.email}" class="form-control" placeholder="your@email.com">
+          <input
+            class="form-control"
+            name="from"
+            type="email"
+            value="{$contact.email}"
+            placeholder="{l s='your@email.com' d='Shop.Forms.Help'}"
+          >
         </div>
       </div>
 
       {if $contact.orders}
         <div class="form-group row">
-          <label class="col-md-3 form-control-label">{l s='Order reference'}</label>
+          <label class="col-md-3 form-control-label">{l s='Order reference' d='Shop.Forms.Labels'}</label>
           <div class="col-md-4">
             <select name="id_order" class="form-control form-control-select">
               {foreach from=$contact.orders item=order}
@@ -41,26 +47,28 @@
       {/if}
 
       <div class="form-group row">
-        <label class="col-md-3 form-control-label">{l s='Attachment'}</label>
+        <label class="col-md-3 form-control-label">{l s='Attachment' d='Shop.Forms.Labels'}</label>
         <div class="col-md-6">
           <input type="file" name="fileUpload" class="filestyle">
         </div>
         <span class="col-md-3 row form-control-comment">
-          {l s='optional'}
+          {l s='optional' d='Shop.Forms.Help'}
         </span>
       </div>
 
       <div class="form-group row">
-        <label class="col-md-3 form-control-label">{l s='Message'}</label>
+        <label class="col-md-3 form-control-label">{l s='Message' d='Shop.Forms.Labels'}</label>
         <div class="col-md-9">
-          <textarea rows="3" name="message" class="form-control" placeholder="{l s='How can we help?'}">{if $contact.message}{$contact.message}{/if}</textarea>
+          <textarea rows="3" name="message" class="form-control" placeholder="{l s='How can we help?' d='Shop.Forms.Help'}">
+            {if $contact.message}{$contact.message}{/if}
+          </textarea>
         </div>
       </div>
 
     </section>
 
     <footer class="form-footer text-xs-right">
-      <input class="btn btn-primary" type="submit" name="submitMessage" value="{l s='Send'}">
+      <input class="btn btn-primary" type="submit" name="submitMessage" value="{l s='Send' d='Shop.Theme.Actions'}">
     </footer>
 
   </form>
