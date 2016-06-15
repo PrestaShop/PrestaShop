@@ -145,13 +145,20 @@ class AttributeController extends FrameworkBundleAdminController
         //get new created combinations Ids
         $newCombinationIds = array_diff($allCombinationsIds, $existingCombinationsIds);
 
-        $newCombinations = [];
+        $attributes = [];
         foreach ($newCombinationIds as $combinationId) {
-            $attribute = $product->getAttributeCombinationsById($combinationId, $locales[0]['id_lang']);
+            $attributeCombination = $product->getAttributeCombinationsById($combinationId, $locales[0]['id_lang']);
+            $attributes[$attributeCombination[0]["position"]] = $attributeCombination[0];
 
+        }
+        
+        ksort($attributes);
+
+        $newCombinations = [];
+        foreach ($attributes as $attribute){
             $form = $this->createForm(
                 'PrestaShopBundle\Form\Admin\Product\ProductCombination',
-                $modelMapper->getFormCombination($attribute[0])
+                $modelMapper->getFormCombination($attribute)
             );
 
             $formRender = $this->renderView(
