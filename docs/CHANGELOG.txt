@@ -24,6 +24,49 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.1.6 - (2016-06-15)
+####################################
+
+	Fixed bugs:
+
+	[-] BO : (2e3d0f6) fixed bug when no results with address and map does not exist
+	[-] BO : (2d30765) add user shop origin in autocomplete cart rule
+	[-] BO : (d207083) fixed bug parent tab list wont show if admin tab class is invalid.
+	[-] BO : (052208b) fixed bug when toggle status product not logged
+
+	[-] FO : (c0ee6b7) Fix CSS 404 when using subdirectory
+	[-] FO : (e4a7b70) Only display vouchers available 'only' for customers
+	[-] FO : (e4e2b61) smartyHook now returns empty string when module is not installed.
+	[-] FO : (b2f9338) #PSCSX-5582 fix wrong displayed specific price on product detail
+	[-] FO : (44c1b4e) Display only available vouchers in customer back office
+	[-] FO : (c736160) on user bo, display all discount values
+
+	[-] TEST : (c586ee3) Fix PHP 7 tests
+
+	[-] CORE : (39241d6) Check for displayPaymentEU to fix advanced checkout restrictions
+	[-] CORE : (fb208a3) Fix fatal error on classes/stock/StockAvailable.php (1.6)
+
+	[-] PDF : (2d14094) Fix generation of PDF files
+
+	[-] WS : (114f10b) Fix for PHP 5.2, 5.3 and 7.0 compatibility
+
+	[-] MO : (e7a51f3) #NM-248 Broken pagination links in loyalty
+
+
+	Improved/changed features:
+
+	[*] FO : (4e1a70a) Added more information about minimum amount
+
+
+	Added Features:
+
+	[+] IN : (a1ce85c) All key must not be nullable
+
+
+	
+
+
+####################################
 #   v1.6.1.5 - (2016-04-08)
 ####################################
 

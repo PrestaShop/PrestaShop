@@ -13,6 +13,7 @@ GitHub contributors:
 - Alexander Grosul
 - Alexander Otchenashev
 - Alexandra Even
+- Alexandre Segura
 - AlexEven
 - Alexey Svistunov
 - alexey-svistunov
@@ -158,6 +159,7 @@ GitHub contributors:
 - hiousi
 - htrex
 - Ian Fung
+- idnovate
 - indesign47
 - iNem0o
 - ironwo0d
@@ -269,6 +271,7 @@ GitHub contributors:
 - Nino Uzelac
 - nodexpl
 - nturato
+- okom3pom
 - oleacorner
 - Otto Nascarella
 - Pan P
@@ -308,6 +311,7 @@ GitHub contributors:
 - Quetzacoalt91
 - Racochejl
 - Rafael Cunha
+- raphael-homann
 - Raphael Droz
 - Raphael Malie
 - raulgundin
