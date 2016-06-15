@@ -26,7 +26,9 @@
 
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerPresenter;
+use PrestaShop\PrestaShop\Adapter\Shop\ShopPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Configuration as Configurator;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
@@ -1341,35 +1343,12 @@ class FrontControllerCore extends Controller
 
     public function getTemplateVarShop()
     {
-        $address = $this->context->shop->getAddress();
+        $shopPresenter = new ShopPresenter(
+            new Configurator(),
+            $this->context->language
+        );
 
-        $shop = [
-            'name' => Configuration::get('PS_SHOP_NAME'),
-            'email' => Configuration::get('PS_SHOP_EMAIL'),
-            'registration_number' => Configuration::get('PS_SHOP_DETAILS'),
-
-            'long' =>Configuration::get('PS_STORES_CENTER_LONG'),
-            'lat' =>Configuration::get('PS_STORES_CENTER_LAT'),
-
-            'logo' => (Configuration::get('PS_LOGO')) ? _PS_IMG_.Configuration::get('PS_LOGO') : '',
-            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? _PS_IMG_.Configuration::get('PS_STORES_ICON') : '',
-            'favicon' => (Configuration::get('PS_FAVICON')) ? _PS_IMG_.Configuration::get('PS_FAVICON') : '',
-            'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
-
-            'address' => [
-                'formatted' => AddressFormat::generateAddress($address, array(), '<br>'),
-                'address1' => $address->address1,
-                'address2' => $address->address2,
-                'postcode' => $address->postcode,
-                'city' => $address->city,
-                'state' => (new State($address->id_state))->name[$this->context->language->id],
-                'country' => (new Country($address->id_country))->name[$this->context->language->id],
-            ],
-            'phone' => Configuration::get('PS_SHOP_PHONE'),
-            'fax' => Configuration::get('PS_SHOP_FAX'),
-        ];
-
-        return $shop;
+        return $shopPresenter->present($this->context->shop);
     }
 
     public function getTemplateVarPage()
