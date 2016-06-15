@@ -339,8 +339,10 @@ class ImageCore extends ObjectModel
                         copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'.jpg',
                         $new_path.'-'.$image_type['name'].'.jpg');
                         if (Configuration::get('WATERMARK_HASH')) {
-                            copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg',
-                            $new_path.'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg');
+                            $old_image_path = _PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg';
+                            if (file_exists($old_image_path)) {
+                                copy($old_image_path, $new_path.'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg');
+                            }
                         }
                     }
                 }
