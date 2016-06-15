@@ -840,7 +840,7 @@ abstract class ModuleCore
             <img src="../img/l/'.$default_language.'.jpg" class="pointer" id="language_current_'.$id.'" onclick="toggleLanguageFlags(this);" alt="" />
         </div>
         <div id="languages_'.$id.'" class="language_flags">
-            '.$this->l('Choose language:').'<br /><br />';
+            '.$this->getTranslator()->trans('Choose language:', array(), 'Admin.Actions').'<br /><br />';
         foreach ($languages as $language) {
             if ($use_vars_instead_of_ids) {
                 $output .= '<img src="../img/l/'.(int)$language['id_lang'].'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" onclick="changeLanguage(\''.$id.'\', '.$ids.', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
