@@ -25,3 +25,8 @@ monolog:
             level: debug
         console:
             type:  console
+
+doctrine:
+    orm:
+        metadata_cache_driver: %cache.driver%
+        query_cache_driver:    %cache.driver%

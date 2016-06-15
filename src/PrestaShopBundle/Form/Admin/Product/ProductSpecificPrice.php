@@ -196,11 +196,12 @@ class ProductSpecificPrice extends CommonAbstractType
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
-            $form = $event->getForm();
 
             if (empty($data['sp_id_product_attribute'])) {
                 return;
             }
+
+            $form = $event->getForm();
 
             //bypass SF validation, define submitted value in choice list
             $form->add('sp_id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(

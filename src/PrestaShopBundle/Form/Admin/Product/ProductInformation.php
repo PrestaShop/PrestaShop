@@ -244,11 +244,11 @@ class ProductInformation extends CommonAbstractType
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
-            $form = $event->getForm();
 
             //if product type is pack, check if inputPackItems is not empty
             if ($data['type_product'] == 1) {
                 if (!isset($data['inputPackItems']) || empty($data['inputPackItems']['data'])) {
+                    $form = $event->getForm();
                     $error = $this->translator->trans('This pack is empty. You must add at least one product item.', [], 'AdminProducts');
                     $form->get('inputPackItems')->addError(new FormError($error));
                 }
