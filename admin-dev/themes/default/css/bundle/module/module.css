@@ -357,7 +357,8 @@ img.module-logo-thumb-list {
 .module-import-failure-details {
   word-wrap: break-word;
   font-size: small;
-  max-height: 120px;
+  overflow: auto;
+  overflow-y: hidden;
   margin: 35px 5px 20px 5px;
   text-align: justify;
   display: none;
