@@ -453,5 +453,9 @@
     <access id="access_1_458" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINGROUPS_READ"/>
     <access id="access_1_459" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINGROUPS_UPDATE"/>
     <access id="access_1_460" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINGROUPS_DELETE"/>
+    <access id="access_1_461" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMODULESSF_CREATE"/>
+    <access id="access_1_462" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMODULESSF_READ"/>
+    <access id="access_1_463" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMODULESSF_UPDATE"/>
+    <access id="access_1_464" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMODULESSF_DELETE"/>
   </entities>
 </entity_access>
