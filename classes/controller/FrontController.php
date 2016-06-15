@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\Customer\CustomerPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
@@ -1330,33 +1331,12 @@ class FrontControllerCore extends Controller
 
     public function getTemplateVarCustomer($customer = null)
     {
-        if (Validate::isLoadedObject($customer)) {
-            $cust = $this->objectPresenter->present($customer);
-        } else {
-            $cust = $this->objectPresenter->present($this->context->customer);
+        if (!Validate::isLoadedObject($customer)) {
+            $customer = $this->context->customer;
         }
 
-        unset($cust['secure_key']);
-        unset($cust['passwd']);
-        unset($cust['show_public_prices']);
-        unset($cust['deleted']);
-        unset($cust['id_lang']);
-
-        $cust['is_logged'] = $this->context->customer->isLogged(true);
-
-        $cust['gender'] = $this->objectPresenter->present(new Gender($cust['id_gender']));
-        unset($cust['id_gender']);
-
-        $cust['risk'] = $this->objectPresenter->present(new Risk($cust['id_risk']));
-        unset($cust['id_risk']);
-
-        $addresses = $this->context->customer->getSimpleAddresses();
-        foreach ($addresses as &$a) {
-            $a['formatted'] = AddressFormat::generateAddress(new Address($a['id']), array(), '<br>');
-        }
-        $cust['addresses'] = $addresses;
-
-        return $cust;
+        $customerPresenter = new CustomerPresenter($this->objectPresenter);
+        return $customerPresenter->present($customer);
     }
 
     public function getTemplateVarShop()
