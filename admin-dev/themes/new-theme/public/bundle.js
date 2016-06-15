@@ -87764,6 +87764,8 @@
 	  var syncedCollection = (0, _jquery2.default)('[data-uniqid]');
 	  var finalPrice = (0, _jquery2.default)('#form_step2_price');
 	  var finalPriceIT = (0, _jquery2.default)('#form_step2_price_ttc');
+	  var finalPriceBasics = (0, _jquery2.default)('#form_step1_price_shortcut');
+	  var finalPriceBasicsIT = (0, _jquery2.default)('#form_step1_price_ttc_shortcut');
 	  var impactOnPriceSelector = 'input.attribute_priceTE';
 	  var finalPriceSelector = '.attribute-finalprice span';
 
@@ -87789,6 +87791,15 @@
 	      });
 
 	      finalPriceIT.on('blur', function () {
+	        _this.syncToPricingTab();
+	      });
+
+	      /* if we use final price shortcuts, also combinations should be impacted */
+	      finalPriceBasics.on('blur', function () {
+	        _this.syncToPricingTab();
+	      });
+
+	      finalPriceBasicsIT.on('blur', function () {
 	        _this.syncToPricingTab();
 	      });
 

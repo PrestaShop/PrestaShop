@@ -53,7 +53,7 @@ var combinations = (function() {
       var actualFinalPriceInput = tableRow.find('.attribute-finalprice span');
       var actualFinalPrice = actualFinalPriceInput.data('price');
 
-      var finalPrice = actualFinalPrice + impactOnPrice;
+      var finalPrice = new Number(actualFinalPrice) + new Number(impactOnPrice);
       actualFinalPriceInput.html(finalPrice.toFixed(2));
   }
 
