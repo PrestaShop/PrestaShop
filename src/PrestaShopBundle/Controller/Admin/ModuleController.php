@@ -192,7 +192,9 @@ class ModuleController extends FrameworkBundleAdminController
                     $response[$module]['status'] = false;
                     $response[$module]['msg'] = $translator->trans(
                         '%module% did not return a valid response on %action% action.',
-                        array('%module%' => $module, '%action%' => $action),
+                        array(
+                            '%module%' => $module,
+                            '%action%' => $action),
                         'Admin.Notifications.Error'
                         );
                 } elseif ($response[$module]['status'] === false) {
@@ -486,7 +488,8 @@ class ModuleController extends FrameworkBundleAdminController
                 return $moduleName;
             } else {
                 throw new Exception(
-                    $translator->trans('Cannot open the following archive: %file% (error code: %code%)',
+                    $translator->trans(
+                        'Cannot open the following archive: %file% (error code: %code%)',
                         array(
                             '%file%' => $fileToInflate,
                             '%code%' => $extractionStatus),

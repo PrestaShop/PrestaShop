@@ -262,7 +262,8 @@ class ModuleManager implements AddonManagerInterface
             return $module->onEnable();
         } catch (Exception $e) {
             throw new Exception(
-                $this->translator->trans('Error when enabling module %module%. %error_details%.',
+                $this->translator->trans(
+                    'Error when enabling module %module%. %error_details%.',
                     array('%module%' => $name,
                         '%error_details%' => $e->getMessage()),
                     'Admin.Modules.Notification'), 0, $e);
@@ -366,7 +367,8 @@ class ModuleManager implements AddonManagerInterface
             return $status;
         } catch (Exception $e) {
             throw new Exception(
-                $this->translator->trans('Error when resetting module %module%. %error_details%',
+                $this->translator->trans(
+                    'Error when resetting module %module%. %error_details%',
                     array(
                         '%module%' => $name,
                         '%error_details%' => $e->getMessage()),
