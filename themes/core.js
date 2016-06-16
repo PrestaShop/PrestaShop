@@ -1798,7 +1798,23 @@
 	
 	  (0, _jquery2['default'])('#' + option + '-additional-information').show();
 	  (0, _jquery2['default'])('#pay-with-' + option + '-form').show();
-	  (0, _jquery2['default'])('#payment-confirmation button').attr('disabled', !show);
+	
+	  var module_name = (0, _jquery2['default'])('#' + option).data('module-name');
+	
+	  if ((0, _jquery2['default'])('#' + option).hasClass('binary')) {
+	    var payment_option = '.js-payment-' + module_name;
+	    (0, _jquery2['default'])('#payment-confirmation').hide();
+	    (0, _jquery2['default'])(payment_option).show();
+	    if (show) {
+	      (0, _jquery2['default'])(payment_option).removeClass('disabled');
+	    } else {
+	      (0, _jquery2['default'])(payment_option).addClass('disabled');
+	    }
+	  } else {
+	    (0, _jquery2['default'])('.js-payment-binary').hide();
+	    (0, _jquery2['default'])('#payment-confirmation').show();
+	    (0, _jquery2['default'])('#payment-confirmation button').attr('disabled', !show);
+	  }
 	}
 	
 	function confirmPayment() {
