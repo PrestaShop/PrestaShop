@@ -1,6 +1,6 @@
 <div class="ps-dropdown dropdown btn-group">
     <span type="button"  id="module-status-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="js-selected-item selected-item module-status-selector-label">Show all modules</span> 
+        <span class="js-selected-item selected-item module-status-selector-label">{{ 'Show all modules'|trans({}, 'Admin.Modules') }}</span> 
         <i class="material-icons arrow-down">keyboard_arrow_down</i>
     </span>
     
@@ -8,17 +8,17 @@
         <ul class="items-list js-items-list module-status-selector">
             <li class="module-status-reset">
                 <a class="dropdown-item" href="#">
-                    Show all modules
+                    {{ 'Show all modules'|trans({}, 'Admin.Modules') }}
                 </a>
             </li>
             <li class="module-status-menu" data-status-ref="1">
                 <a class="dropdown-item" href="#">
-                    Enabled Modules
+                    {{ 'Enabled Modules'|trans({}, 'Admin.Modules') }}
                 </a>
             </li>
             <li class="module-status-menu" data-status-ref="0">
                 <a class="dropdown-item" href="#">
-                    Disabled Modules
+                    {{ 'Disabled Modules'|trans({}, 'Admin.Modules') }}
                 </a>
             </li>
         </ul>

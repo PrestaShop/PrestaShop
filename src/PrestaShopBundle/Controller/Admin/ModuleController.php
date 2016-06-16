@@ -191,29 +191,37 @@ class ModuleController extends FrameworkBundleAdminController
                 if ($response[$module]['status'] === null) {
                     $response[$module]['status'] = false;
                     $response[$module]['msg'] = $translator->trans(
-                        '%s did not return a valid response on %s action.',
-                        array($module, $action),
+                        '%module% did not return a valid response on %action% action.',
+                        array('%module%' => $module, '%action%' => $action),
                         'Admin.Notifications.Error'
                         );
                 } elseif ($response[$module]['status'] === false) {
                     $error = $moduleManager->getError($module);
                     $response[$module]['msg'] = $translator->trans(
-                        'Cannot %s module %s. %s',
-                        array(str_replace('_', ' ', $action), $module, $error),
+                        'Cannot %action% module %module%. %error_details%',
+                        array(
+                            '%action%' => str_replace('_', ' ', $action),
+                            '%module%' => $module,
+                            '%error_details%' => $error),
                         'Admin.Notifications.Error'
                     );
                 } else {
                     $response[$module]['msg'] = $translator->trans(
-                        '%s action on module %s succeeded.',
-                        array(ucfirst(str_replace('_', ' ', $action)), $module),
+                        '%action% action on module %module% succeeded.',
+                        array(
+                            '%action%' => ucfirst(str_replace('_', ' ', $action)),
+                            '%module%' => $module),
                         'Admin.Notifications.Success'
                     );
                 }
             } catch (Exception $e) {
                 $response[$module]['status'] = false;
                 $response[$module]['msg'] = $translator->trans(
-                    'Exception thrown by addon %s on %s. %s',
-                    array($module, $action, $e->getMessage()),
+                    'Exception thrown by addon %module% on %action%. %error_details%',
+                    array(
+                            '%action%' => str_replace('_', ' ', $action),
+                            '%module%' => $module,
+                            '%error_details%' => $e->getMessage()),
                     'Admin.Notifications.Error'
                 );
 
@@ -456,6 +464,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     private function inflateModule($fileToInflate)
     {
+        $translator = $this->get('translator');
         if (file_exists($fileToInflate)) {
             $zipArchive = new \ZipArchive();
             $extractionStatus = $zipArchive->open($fileToInflate);
@@ -469,10 +478,19 @@ class ModuleController extends FrameworkBundleAdminController
 
                 return $moduleName;
             } else {
-                throw new Exception('Cannot open the following archive: '.$fileToInflate.' (error code: '.$extractionStatus.')');
+                throw new Exception(
+                    $translator->trans('Cannot open the following archive: %file% (error code: %code%)',
+                        array(
+                            '%file%' => $fileToInflate,
+                            '%code%' => $extractionStatus),
+                        '<InsertDomain>'));
             }
         } else {
-            throw new Exception('Unable to find uploaded module at the following path: '.$fileToInflate);
+            throw new Exception(
+                $translator->trans(
+                    'Unable to find uploaded module at the following path: %file%',
+                    array('%file%' => $fileToInflate),
+                    '<InsertDomain>'));
         }
     }
 

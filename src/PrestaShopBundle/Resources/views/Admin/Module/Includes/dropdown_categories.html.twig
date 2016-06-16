@@ -11,7 +11,7 @@
             <ul class="items-list js-items-list">
                 <li class="module-category-reset">
                     <a class="dropdown-item" href="#">
-                            All Categories
+                            {{ 'All Categories'|trans({}, 'Admin.Modules') }}
                     </a>
                 </li>
                 {% for subMenu in menu.subMenu|arrayCast %}

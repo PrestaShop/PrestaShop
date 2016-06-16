@@ -113,7 +113,7 @@ services:
 
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
-        arguments: ["@prestashop.adapter.legacy.logger", "@doctrine.orm.entity_manager"]
+        arguments: ["@prestashop.adapter.legacy.logger", "@translator", "@doctrine.orm.entity_manager"]
 
     # Presenters
     prestashop.adapter.presenter.module:
@@ -167,6 +167,7 @@ services:
             - "@prestashop.adapter.data_provider.module"
             - "@prestashop.core.module.updater"
             - "@prestashop.adapter.legacy.logger"
+            - "@translator"
 
     prestashop.core.admin.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
@@ -184,4 +185,5 @@ services:
             - "@prestashop.adapter.data_provider.module"
             - "@prestashop.core.module.updater"
             - "@prestashop.core.admin.module.repository"
+            - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"

@@ -3,15 +3,15 @@
 
         <div class="col-lg-6">
             <div class="module-sorting-search-wording">
-                <span class="module-search-result-wording">{{ totalModules }} modules and services selected for you</span>
+                <span class="module-search-result-wording">{{ '%nbModules% modules and services selected for you'|trans({'%nbModules%' : totalModules}, 'Admin.Modules') }}</span>
                 <span class="help-box" data-toggle="popover"
-                    data-title="{{ "Selection"|trans({}, 'AdminModules') }}"
-                    data-content="{{ "Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules."|trans({}, 'AdminModules') }}">
+                    data-title="{{ "Selection"|trans({}, 'Admin.Modules') }}"
+                    data-content="{{ "Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules."|trans({}, 'Admin.Modules') }}">
                 </span>
             </div>
             <p class="module-addons-search">
                 <a class='module-addons-search-link' href="#">
-                    See all results for this search on Addons Marketplace
+                    {{ 'See all results for this search on Addons Marketplace'|trans({}, 'Admin.Modules') }}
                     <span>
                         <i class="icon-signout"></i>
                     </span>
@@ -26,12 +26,12 @@
             </div>
             <div class="module-sorting module-sorting-author pull-right">
                 <select class="c-select c-select-sm">
-                  <option value="" disabled selected>- Sort by -</option>
-                  <option value="sort-by-name">Name</option>
-                  <option value="sort-by-price-asc">Increasing Price</option>
-                  <option value="sort-by-price-desc">Decreasing Price</option>
-                  <option value="sort-by-scoring">Score</option>
-                  <option value="sort-by-access-date">Last access</option>
+                  <option value="" disabled selected>{{ '- Sort by -'|trans({}, 'Admin.Modules') }}</option>
+                  <option value="sort-by-name">{{ 'Name'|trans({}, 'Admin.Modules') }}</option>
+                  <option value="sort-by-price-asc">{{ 'Increasing Price'|trans({}, 'Admin.Modules') }}</option>
+                  <option value="sort-by-price-desc">{{ 'Decreasing Price'|trans({}, 'Admin.Modules') }}</option>
+                  <option value="sort-by-scoring">{{ 'Score'|trans({}, 'Admin.Modules') }}</option>
+                  <option value="sort-by-access-date">{{ 'Last access'|trans({}, 'Admin.Modules') }}</option>
                 </select>
             </div>
         </div>

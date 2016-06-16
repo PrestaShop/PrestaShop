@@ -334,7 +334,7 @@ abstract class ModuleCore
         }
 
         // Check if module is installed
-        $result = (new ModuleDataProvider(new LegacyLogger()))->isInstalled($this->name);
+        $result = (new ModuleDataProvider(new LegacyLogger(), $this->getTranslator()))->isInstalled($this->name);
         if ($result) {
             $this->_errors[] = Tools::displayError('This module has already been installed.');
             return false;

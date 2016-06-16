@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ModuleDataProvider
 {
@@ -40,14 +41,21 @@ class ModuleDataProvider
     private $logger;
 
     /**
+     * Translator
+     * @var Symfony\Component\Translation\TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * EntityManager for module history
      * @var EntityManager
      */
     private $entityManager;
 
-    public function __construct(LoggerInterface $logger, EntityManager $entityManager = null)
+    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, EntityManager $entityManager = null)
     {
         $this->logger = $logger;
+        $this->translator = $translator;
         $this->entityManager = $entityManager;
     }
 
@@ -178,7 +186,11 @@ class ModuleDataProvider
         $content = preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file);
         $content = preg_replace('/\n[\s\t]*?namespace\s.*?;/', '', $content);
         if (eval('if (false){	'.$content.' }') === false) {
-            $this->logger->critical(sprintf('Parse error detected in main class of module %s!', $name));
+            $this->logger->critical(
+                $this->translator->trans(
+                    'Parse error detected in main class of module %module%!',
+                    array('%module%' => $name),
+                    '<InsertDomain>'));
             return false;
         }
 
@@ -192,7 +204,13 @@ class ModuleDataProvider
             try {
                 require_once $file_path;
             } catch (\Exception $e) {
-                $logger->error(sprintf('Error while loading file of module %s. %s', $name, $e->getMessage()));
+                $logger->error(
+                    $this->translator->trans(
+                        'Error while loading file of module %module%. %error_message%',
+                        array(
+                            '%module%' => $name,
+                            '%error_message%' =>$e->getMessage()),
+                        '<InsertDomain>'));
                 return false;
             }
             return true;
