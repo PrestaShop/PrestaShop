@@ -330,6 +330,7 @@ class ModuleController extends FrameworkBundleAdminController
      */
     public function importModuleAction(Request $request)
     {
+        $translator = $this->get('translator');
         $moduleManager = $this->get('prestashop.module.manager');
         try {
             $file_uploaded = $request->files->get('file_uploaded');
@@ -369,15 +370,21 @@ class ModuleController extends FrameworkBundleAdminController
 
             if ($installation_response['status'] === null) {
                 $installation_response['status'] = false;
-                $installation_response['msg'] = $module_name .' did not return a valid response on install action';
+                $installation_response['msg'] = $translator->trans(
+                    '%module% did not return a valid response on installation',
+                    array('%module' => $module_name),
+                    '<InsertDomain>');
+            } elseif ($installation_response['status'] === true) {
+                $installation_response['msg'] = $translator->trans(
+                    'Installation of module %module% succeded',
+                    array('%module%' => $module_name),
+                    '<InsertDomain>');
+                $installation_response['is_configurable'] = (bool)$this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
             } else {
-                $installation_response['msg'] = 'Install action on module '. $module_name;
-                if ($installation_response['status'] === true) {
-                    $installation_response['is_configurable'] = (bool)$this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
-                    $installation_response['msg'] .= ' succeeded.';
-                } else {
-                    $installation_response['msg'] .= ' failed. '. $moduleManager->getError($module_name);
-                }
+                $installation_response['msg'] = $translator->trans(
+                    'Installation of module %module% failed',
+                    array('%module%' => $module_name),
+                    '<InsertDomain>');
             }
 
             return new JsonResponse(
