@@ -81,7 +81,6 @@ abstract class PaymentModuleCore extends Module
         return parent::uninstall();
     }
 
-
     /**
      * Add checkbox currency restrictions for a new module
      * @param array $shops
@@ -145,11 +144,11 @@ abstract class PaymentModuleCore extends Module
      * Validate an order in database
      * Function called from a payment module
      *
-     * @param int $id_cart
-     * @param int $id_order_state
-     * @param float   $amount_paid    Amount really paid by customer (in the default currency)
-     * @param string  $payment_method Payment method (eg. 'Credit card')
-     * @param null    $message        Message to attach to order
+     * @param int     $id_cart
+     * @param int     $id_order_state
+     * @param float   $amount_paid       Amount really paid by customer (in the default currency)
+     * @param string  $payment_method    Payment method (eg. 'Credit card')
+     * @param null    $message           Message to attach to order
      * @param array   $extra_vars
      * @param null    $currency_special
      * @param bool    $dont_touch_amount
@@ -520,12 +519,12 @@ abstract class PaymentModuleCore extends Module
                         }
 
                         // IF
-                        //	This is not multi-shipping
-                        //	The value of the voucher is greater than the total of the order
-                        //	Partial use is allowed
-                        //	This is an "amount" reduction, not a reduction in % or a gift
+                        //  This is not multi-shipping
+                        //  The value of the voucher is greater than the total of the order
+                        //  Partial use is allowed
+                        //  This is an "amount" reduction, not a reduction in % or a gift
                         // THEN
-                        //	The voucher is cloned with a new value corresponding to the remainder
+                        //  The voucher is cloned with a new value corresponding to the remainder
                         if (count($order_list) == 1 && $values['tax_incl'] > ($order->total_products_wt - $total_reduction_value_ti) && $cart_rule['obj']->partial_use == 1 && $cart_rule['obj']->reduction_amount > 0) {
                             // Create a new voucher from the original
                             $voucher = new CartRule((int)$cart_rule['obj']->id); // We need to instantiate the CartRule without lang parameter to allow saving it
@@ -827,6 +826,7 @@ abstract class PaymentModuleCore extends Module
     /**
      * @deprecated 1.6.0.7
      * @param mixed $content
+     *
      * @return mixed
      */
     public function formatProductAndVoucherForEmail($content)
@@ -837,6 +837,7 @@ abstract class PaymentModuleCore extends Module
 
     /**
      * @param Object Address $the_address that needs to be txt formated
+     *
      * @return String the txt formated address block
      */
     protected function _getTxtFormatedAddress($the_address)
@@ -858,6 +859,7 @@ abstract class PaymentModuleCore extends Module
 
     /**
      * @param Object Address $the_address that needs to be txt formated
+     *
      * @return String the txt formated address block
      */
 
@@ -867,7 +869,8 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param int $id_currency : this parameter is optionnal but on 1.5 version of Prestashop, it will be REQUIRED
+     * @param int $current_id_currency optional but on 1.5 it will be REQUIRED
+     *
      * @return Currency
      */
     public function getCurrency($current_id_currency = null)
@@ -973,11 +976,13 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * Fetch the content of $template_name inside the folder current_theme/mails/current_iso_lang/ if found, otherwise in mails/current_iso_lang
+     * Fetch the content of $template_name inside the folder
+     * current_theme/mails/current_iso_lang/ if found, otherwise in
+     * mails/current_iso_lang
      *
      * @param string  $template_name template name with extension
-     * @param int $mail_type     Mail::TYPE_HTML or Mail::TYPE_TEXT
-     * @param array   $var           list send to smarty
+     * @param int     $mail_type     Mail::TYPE_HTML or Mail::TYPE_TEXT
+     * @param array   $var           sent to smarty as 'list'
      *
      * @return string
      */
