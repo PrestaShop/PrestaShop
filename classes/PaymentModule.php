@@ -976,7 +976,7 @@ abstract class PaymentModuleCore extends Module
      * Fetch the content of $template_name inside the folder current_theme/mails/current_iso_lang/ if found, otherwise in mails/current_iso_lang
      *
      * @param string  $template_name template name with extension
-     * @param int $mail_type     Mail::TYPE_HTML or Mail::TYPE_TXT
+     * @param int $mail_type     Mail::TYPE_HTML or Mail::TYPE_TEXT
      * @param array   $var           list send to smarty
      *
      * @return string
