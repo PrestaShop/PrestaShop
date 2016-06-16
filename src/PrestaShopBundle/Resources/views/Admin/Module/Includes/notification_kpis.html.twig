@@ -4,12 +4,12 @@
 
             <div class="module-kpi">
                 <i class="material-icons">settings</i>
-                {{ '%nbModules% modules to configure'|trans({'%nbModules%' : modules.to_configure|length}, 'Admin.Modules')|replace({'[1]' : '<span class="module-kpi-number">', '[/1]' : '</span>'})|raw }}
+                {{ '%nbModules% modules to configure'|trans({'%nbModules%' : modules.to_configure|length}, 'Admin.Modules.Feature')|replace({'[1]' : '<span class="module-kpi-number">', '[/1]' : '</span>'})|raw }}
             </div>
 
             <div class="module-kpi">
                 <i class="material-icons">update</i>
-                {{ '%nbModules% modules to update'|trans({'%nbModules%' : modules.to_update|length}, 'Admin.Modules')|replace({'[1]' : '<span class="module-kpi-number">', '[/1]' : '</span>'})|raw }}
+                {{ '%nbModules% modules to update'|trans({'%nbModules%' : modules.to_update|length}, 'Admin.Modules.Feature')|replace({'[1]' : '<span class="module-kpi-number">', '[/1]' : '</span>'})|raw }}
             </div>
 
         </div>

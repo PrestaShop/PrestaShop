@@ -232,7 +232,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         array(
                             '%module%' => $name,
                             '%error_details%' => $e->getMessage()),
-                        '<InsertDomain>'));
+                        'Admin.Modules.Notification'));
             } catch (Exception $e) {
                 $this->logger->critical(
                     $this->translator->trans(
@@ -240,7 +240,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         array(
                             '%module%' => $name,
                             '%error_details%' => $e->getMessage()),
-                        '<InsertDomain>'));
+                        'Admin.Modules.Notification'));
             }
         }
 
@@ -278,7 +278,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 $this->translator->trans(
                     'Loading data from Addons failed. %error_details%',
                     array('%error_details%' => $e->getMessage()),
-                    '<InsertDomain>'));
+                    'Admin.Modules.Notification'));
         }
 
         // Now, we check that cache is up to date
@@ -368,7 +368,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         array(
                             '%module%' => $moduleName,
                             '%error_details%' => $e->getMessage()),
-                        '<InsertDomain>'));
+                        'Admin.Modules.Notification'));
             } catch (Exception $e) {
                 $this->logger->critical(
                     $this->translator->trans(
@@ -376,7 +376,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         array(
                             '%module%' => $moduleName,
                             '%error_details%' => $e->getMessage()),
-                        '<InsertDomain>'));
+                        'Admin.Modules.Notification'));
             }
         }
 

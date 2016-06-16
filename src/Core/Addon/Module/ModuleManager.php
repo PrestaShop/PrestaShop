@@ -63,7 +63,7 @@ class ModuleManager implements AddonManagerInterface
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
-    
+
     private $employee;
 
     public function __construct(AdminModuleDataProvider $adminModulesProvider,
@@ -99,7 +99,7 @@ class ModuleManager implements AddonManagerInterface
                     $this->translator->trans(
                         'You are not allowed to install modules.',
                         array(),
-                        '<InsertDomain>'));
+                        'Admin.Modules.Notification'));
             }
         }
 
@@ -108,7 +108,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'The module %module% is already installed.',
                     array('%module%' => $name),
-                    '<InsertDomain>'
+                    'Admin.Modules.Notification'
                 ));
         }
 
@@ -138,7 +138,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'You are not allowed to uninstall this module.',
                     array(),
-                    '<InsertDomain>'));
+                    'Admin.Modules.Notification'));
         }
 
         // Is module installed ?
@@ -174,7 +174,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'You are not allowed to upgrade this module.',
                     array(),
-                    '<InsertDomain>'));
+                    'Admin.Modules.Notification'));
         }
 
         if (! $this->moduleProvider->isInstalled($name)) {
@@ -182,7 +182,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'The module %module% must be installed first',
                     array('%module%' => $name),
-                '<InsertDomain>'));
+                'Admin.Modules.Notification'));
         }
 
         $result = true;
@@ -220,7 +220,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'You are not allowed to disable this module.',
                     array(),
-                    '<InsertDomain>'));
+                    'Admin.Modules.Notification'));
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -233,7 +233,7 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                         '%error_details%' => $e->getMessage()),
-                    '<InsertDomain>'),
+                    'Admin.Modules.Notification'),
                 0, $e);
         }
 
@@ -254,7 +254,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'You are not allowed to enable this module.',
                     array(),
-                    '<InsertDomain>'));
+                    'Admin.Modules.Notification'));
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -265,7 +265,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans('Error when enabling module %module%. %error_details%.',
                     array('%module%' => $name,
                         '%error_details%' => $e->getMessage()),
-                    '<InsertDomain>'), 0, $e);
+                    'Admin.Modules.Notification'), 0, $e);
         }
 
         return true;
@@ -287,7 +287,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'You are not allowed to disable this module on mobile.',
                     array(),
-                    '<InsertDomain>'));
+                    'Admin.Modules.Notification'));
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -300,7 +300,7 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                         '%error_details%' => $e->getMessage()),
-                    '<InsertDomain>'),
+                    'Admin.Modules.Notification'),
                 0, $e);
         }
     }
@@ -321,7 +321,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'You are not allowed to enable this module on mobile.',
                     array(),
-                    '<InsertDomain>'));
+                    'Admin.Modules.Notification'));
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -334,7 +334,7 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                         '%error_details%' => $e->getMessage()),
-                    '<InsertDomain>'), 0, $e);
+                    'Admin.Modules.Notification'), 0, $e);
         }
     }
 
@@ -353,7 +353,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'You are not allowed to reset this module.',
                     array(),
-                    '<InsertDomain>'));
+                    'Admin.Modules.Notification'));
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -370,7 +370,7 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                         '%error_details%' => $e->getMessage()),
-                    '<InsertDomain>'),
+                    'Admin.Modules.Notification'),
                 0, $e);
         }
     }

@@ -156,7 +156,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Manage my modules', array(), 'Admin.Modules'),
+                'layoutTitle' => $translator->trans('Manage my modules', array(), 'Admin.Modules.Feature'),
                 'modules' => $products,
                 'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($installed_products)),
                 'requireAddonsSearch' => false,
@@ -302,7 +302,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Module notifications', array(), 'Admin.Modules'),
+                'layoutTitle' => $translator->trans('Module notifications', array(), 'Admin.Modules.Feature'),
                 'modules' => $products,
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => false,
@@ -460,9 +460,9 @@ class ModuleController extends FrameworkBundleAdminController
         $toolbarButtons = array();
         $toolbarButtons['add_module'] = array(
             'href' => '#',
-            'desc' => $translator->trans('Upload a module', array(), 'Admin.Actions'),
+            'desc' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
             'icon' => 'cloud_upload',
-            'help' => $translator->trans('Upload a module', array(), 'Admin.Actions'),
+            'help' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
         );
         $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
 
@@ -490,14 +490,14 @@ class ModuleController extends FrameworkBundleAdminController
                         array(
                             '%file%' => $fileToInflate,
                             '%code%' => $extractionStatus),
-                        '<InsertDomain>'));
+                        'Admin.Modules.Notification'));
             }
         } else {
             throw new Exception(
                 $translator->trans(
                     'Unable to find uploaded module at the following path: %file%',
                     array('%file%' => $fileToInflate),
-                    '<InsertDomain>'));
+                    'Admin.Modules.Notification'));
         }
     }
 
@@ -536,14 +536,14 @@ class ModuleController extends FrameworkBundleAdminController
                 'href' => $this->generateUrl('admin_addons_logout'),
                 'desc' => $addonsEmail['username_addons'],
                 'icon' => 'exit_to_app',
-                'help' => $translator->trans('Synchronized with Addons marketplace!', array(), 'Admin.Notifications.Success')
+                'help' => $translator->trans('Synchronized with Addons marketplace!', array(), 'Admin.Modules.Notification')
             ];
         } else {
             $addonsConnect = [
                 'href' => '#',
-                'desc' => $translator->trans('Connect to Addons marketplace', array(), 'Admin.Actions'),
+                'desc' => $translator->trans('Connect to Addons marketplace', array(), 'Admin.Modules.Feature'),
                 'icon' => 'vpn_key',
-                'help' => $translator->trans('Connect to Addons marketplace', array(), 'Admin.Actions')
+                'help' => $translator->trans('Connect to Addons marketplace', array(), 'Admin.Modules.Feature')
             ];
         }
 

@@ -20,7 +20,7 @@
           <div class="modal-title module-modal-title">
             <h1>{{ module.attributes.displayName }}<br>
               <small class="version">
-                {{ 'v%version% by '|trans({'%version%' : module.attributes.version}, 'Admin.Modules') }}
+                {{ 'v%version% by '|trans({'%version%' : module.attributes.version}, 'Admin.Modules.Feature') }}
                 {{ module.attributes.author }}
               </small>
             </h1>
@@ -37,16 +37,16 @@
           <nav class="navbar navbar-light">
             <ul class="nav navbar-nav navbar-separator">
               <li class="nav-item active">
-                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#overview-{{module.attributes.name}}">{{ 'Overview'|trans({}, 'Admin.Modules') }}</a>
+                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#overview-{{module.attributes.name}}">{{ 'Overview'|trans({}, 'Admin.Modules.Feature') }}</a>
               </li>
               {% if module.attributes.additionalDescription is defined and module.attributes.additionalDescription|length %}
                   <li class="nav-item">
-                    <a class="nav-link module-readmore-tab" data-toggle="tab" href="#benefits-{{module.attributes.name}}">{{ 'Benefits'|trans({}, 'Admin.Modules') }}</a>
+                    <a class="nav-link module-readmore-tab" data-toggle="tab" href="#benefits-{{module.attributes.name}}">{{ 'Benefits'|trans({}, 'Admin.Modules.Feature') }}</a>
                   </li>
               {% endif %}
               {% if module.attributes.changeLog is defined and module.attributes.changeLog|length %}
                   <li class="nav-item">
-                    <a class="nav-link module-readmore-tab" data-toggle="tab" href="#changelog-{{module.attributes.name}}">{{ 'Changelog'|trans({}, 'Admin.Modules') }}</a>
+                    <a class="nav-link module-readmore-tab" data-toggle="tab" href="#changelog-{{module.attributes.name}}">{{ 'Changelog'|trans({}, 'Admin.Modules.Feature') }}</a>
                   </li>
               {% endif %}
             </ul>
@@ -57,7 +57,7 @@
                 {% if module.attributes.fullDescription is defined and module.attributes.fullDescription|length %}
                     {{ module.attributes.fullDescription|raw }}
                 {% else %}
-                    {{ 'No description found for this module :('|trans({}, 'Admin.Modules') }}
+                    {{ 'No description found for this module :('|trans({}, 'Admin.Modules.Notification') }}
                 {% endif %}
               </p>
             </div>
@@ -66,14 +66,14 @@
                 {% if module.attributes.additionalDescription is defined %}
                     {{ module.attributes.additionalDescription|raw }}
                 {% else %}
-                    {{ 'No benefits description provided for this module :('|trans({}, 'Admin.Modules') }}
+                    {{ 'No benefits description provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
                 {% endif %}
               </p>
             </div>
             <!-- WAITING FOR API UPDATE
             <div id="features-{{module.attributes.name}}" class="tab-pane fade">
               <p class="module-readmore-tab-content">
-                {{ 'No feature list provided for this module :('|trans({}, 'Admin.Modules') }}
+                {{ 'No feature list provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
               </p>
             </div> -->
             <div id="changelog-{{module.attributes.name}}" class="tab-pane fade">
@@ -89,7 +89,7 @@
                     {% endfor %}
                   </ul>
               {% else %}
-                  {{ 'No changelog provided for this module :('|trans({}, 'Admin.Modules') }}
+                  {{ 'No changelog provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
               {% endif %}
             </div>
           </div>
@@ -106,7 +106,7 @@
             </div>
         {% endif %}
         {% if module.attributes.urls.install is defined %}
-            <a href="{{module.attributes.urls.install}}" class="pull-right module-install-button btn-primary-outline btn module-install-button btn-sm light-button">{{ 'Install'|trans({}, 'Admin.Modules') }}</a>
+            <a href="{{module.attributes.urls.install}}" class="pull-right module-install-button btn-primary-outline btn module-install-button btn-sm light-button">{{ 'Install'|trans({}, 'Admin.Actions') }}</a>
         {% endif %}
       </div>
     </div>

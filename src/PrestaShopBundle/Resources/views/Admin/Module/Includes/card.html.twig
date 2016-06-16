@@ -31,10 +31,10 @@
       <div class="text-ellipsis xsmall module-version-author-{{display_type}}">
         {% block addon_version %}
             {% if module.attributes.productType == "service" %}
-                {{ 'Service by '|trans({}, 'Admin.Modules') }}
+                {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
                 <a class="url" href="#">{{ module.attributes.author }}</a>
             {% else %}
-                {{ 'v%version% by '|trans({ '%version%' : module.attributes.version }, 'Admin.Modules') }}
+                {{ 'v%version% by '|trans({ '%version%' : module.attributes.version }, 'Admin.Modules.Feature') }}
                 <a class="url" href="#">{{ module.attributes.author }}</a>
             {% endif %}
         {% endblock %}

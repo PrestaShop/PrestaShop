@@ -4,14 +4,14 @@
         <span type="button"  id="{{refMenu}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="js-selected-item selected-item module-category-selector-label">
                 {{menu.name}}
-            </span> 
+            </span>
             <i class="material-icons arrow-down">keyboard_arrow_down</i>
         </span>
         <div class="ps-dropdown-menu dropdown-menu module-category-selector" aria-labelledby="{{refMenu}}">
             <ul class="items-list js-items-list">
                 <li class="module-category-reset">
                     <a class="dropdown-item" href="#">
-                            {{ 'All Categories'|trans({}, 'Admin.Modules') }}
+                            {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
                     </a>
                 </li>
                 {% for subMenu in menu.subMenu|arrayCast %}
