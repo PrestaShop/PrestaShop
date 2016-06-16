@@ -251,6 +251,7 @@ class PaymentOption
     public function toArray()
     {
         return [
+            'module_name' => $this->moduleName,
             'action' => $this->action,
             'form' => $this->form,
             'inputs' => $this->inputs,
