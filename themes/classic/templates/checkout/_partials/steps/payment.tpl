@@ -9,7 +9,7 @@
             {* This is the way an option should be selected when Javascript is enabled *}
             <span class="custom-radio pull-xs-left">
               <input
-                class="ps-shown-by-js"
+                class="ps-shown-by-js {$option.module_name}"
                 id="{$option.id}"
                 type="radio"
                 name="payment-option"
