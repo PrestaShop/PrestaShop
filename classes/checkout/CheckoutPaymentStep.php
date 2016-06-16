@@ -49,6 +49,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
                 ->getConditionsToApproveForTemplate(),
             'selected_payment_option' => $this->selected_payment_option,
             'selected_delivery_option' => $selectedDeliveryOption,
+            'show_final_summary' => Configuration::get('PS_FINAL_SUMMARY_ENABLED'),
             );
 
         return $this->renderTemplate($this->getTemplate(), $extraParams, $assignedVars);

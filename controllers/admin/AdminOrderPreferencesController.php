@@ -51,6 +51,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
                 'title' =>    $this->l('General'),
                 'icon' =>    'icon-cogs',
                 'fields' =>    array(
+                    'PS_FINAL_SUMMARY_ENABLED' => array(
+                        'title' => $this->l('Enable final summary'),
+                        'hint' => $this->l('Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'type' => 'bool'
+                    ),
                     'PS_GUEST_CHECKOUT_ENABLED' => array(
                         'title' => $this->l('Enable guest checkout'),
                         'hint' => $this->l('Allow guest visitors to place an order without registering.'),
