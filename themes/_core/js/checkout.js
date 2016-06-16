@@ -39,11 +39,9 @@ function confirmPayment () {
 }
 
 function refreshDeliveryOptions (event) {
-  let params = $('#delivery-method').serialize() + '&action=selectDeliveryOption';
-  $.post('', params).then(resp => {
-    $.post(location.href, null, null, 'json').then(function (resp) {
-      $('#checkout-cart-summary').replaceWith(resp.preview);
-    });
+  let params = $('#delivery-method').serialize();
+  $.post($('#delivery-method').data('url-update'), params).then(function (resp) {
+    $('#checkout-cart-summary').replaceWith(resp.preview);
   });
 }
 

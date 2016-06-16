@@ -103,12 +103,7 @@ class AddressControllerCore extends FrontController
      */
     public function initContent()
     {
-        if ($this->ajax) {
-            $this->ajaxDie(json_encode([
-                'hasError'  => !empty($this->errors),
-                'errors'    => $this->errors
-            ]));
-        } elseif ($this->should_redirect) {
+        if (!$this->ajax && $this->should_redirect) {
             if (($back = Tools::getValue('back')) && Tools::secureReferrer($back)) {
                 $mod = Tools::getValue('mod');
                 $this->redirectWithNotifications('index.php?controller='.$back.($mod ? '&back='.$mod : ''));

@@ -71,11 +71,13 @@
 	
 	__webpack_require__(9);
 	
+	__webpack_require__(10);
+	
 	var _prestashop = __webpack_require__(4);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _events = __webpack_require__(10);
+	var _events = __webpack_require__(11);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
@@ -1807,11 +1809,9 @@
 	}
 	
 	function refreshDeliveryOptions(event) {
-	  var params = (0, _jquery2['default'])('#delivery-method').serialize() + '&action=selectDeliveryOption';
-	  _jquery2['default'].post('', params).then(function (resp) {
-	    _jquery2['default'].post(location.href, null, null, 'json').then(function (resp) {
-	      (0, _jquery2['default'])('#checkout-cart-summary').replaceWith(resp.preview);
-	    });
+	  var params = (0, _jquery2['default'])('#delivery-method').serialize();
+	  _jquery2['default'].post((0, _jquery2['default'])('#delivery-method').data('url-update'), params).then(function (resp) {
+	    (0, _jquery2['default'])('#checkout-cart-summary').replaceWith(resp.preview);
 	  });
 	}
 	
@@ -2011,6 +2011,54 @@
 
 /***/ },
 /* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(2);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var _prestashop = __webpack_require__(4);
+	
+	var _prestashop2 = _interopRequireDefault(_prestashop);
+	
+	(0, _jquery2['default'])(document).ready(function () {
+	  _prestashop2['default'].on('address form updated', function (event) {
+	    changeCountry();
+	  });
+	
+	  changeCountry();
+	});
+	
+	function changeCountry() {
+	  (0, _jquery2['default'])('.js-country').change(function () {
+	    var requestData = {
+	      id_country: (0, _jquery2['default'])('.js-country').val(),
+	      id_address: (0, _jquery2['default'])('.js-address-form form').data('id-address')
+	    };
+	
+	    _jquery2['default'].post((0, _jquery2['default'])('.js-address-form form').data('link-update'), requestData).then(function (resp) {
+	      var inputs = [];
+	      (0, _jquery2['default'])('.js-address-form input').each(function () {
+	        inputs[(0, _jquery2['default'])(this).prop('name')] = (0, _jquery2['default'])(this).val();
+	      });
+	
+	      (0, _jquery2['default'])('.js-address-form').replaceWith(resp.address_form);
+	
+	      (0, _jquery2['default'])('.js-address-form input').each(function () {
+	        (0, _jquery2['default'])(this).val(inputs[(0, _jquery2['default'])(this).prop('name')]);
+	      });
+	
+	      _prestashop2['default'].emit('address form updated');
+	    });
+	  });
+	}
+
+/***/ },
+/* 11 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.

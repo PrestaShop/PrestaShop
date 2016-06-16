@@ -21,6 +21,19 @@
           {/foreach}
         </select>
 
+      {elseif $field.type === 'countrySelect'}
+
+        <select
+          class="form-control form-control-select js-country"
+          name="{$field.name}"
+          {if $field.required}required{/if}
+        >
+          <option value disabled selected>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
+          {foreach from=$field.availableValues item="label" key="value"}
+            <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
+          {/foreach}
+        </select>
+
       {elseif $field.type === 'radio-buttons'}
 
         {foreach from=$field.availableValues item="label" key="value"}

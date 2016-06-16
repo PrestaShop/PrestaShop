@@ -109,6 +109,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                 $formField->setName('id_'.strtolower($entity));
 
                 if ($entity === 'Country') {
+                    $formField->setType('countrySelect');
                     $formField->setValue($this->country->id);
                     foreach ($this->availableCountries as $country) {
                         $formField->addAvailableValue(
