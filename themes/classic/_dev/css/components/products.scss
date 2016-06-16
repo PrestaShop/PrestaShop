@@ -6,6 +6,7 @@
   color: $gray-darker;
 }
 .product-information {
+  font-size: em(15px);
   color: $gray-darker;
 }
 .input-color {
@@ -40,11 +41,15 @@
   font-weight: 600;
   border: 2px solid white;
 }
+.product-actions{
+  .add-to-cart{
+    margin-left: em(15px);
+    margin-top: em(47px);
+  }
+}
 .product-quantity {
   display: inline-block;
   .bootstrap-touchspin{
-    float: right;
-    margin-left: $small-space;
     margin-top: em(-6px);
   }
   #quantity_wanted {
@@ -135,9 +140,11 @@
     border-bottom: $gray-light 2px solid;
     .nav-link {
       color: $gray-dark;
+      border: 0 solid transparent;
       &.active {
         border: none;
         border-bottom: $brand-primary 3px solid;
+        color: $brand-primary;
       }
       &:hover {
         border: none;
@@ -145,6 +152,7 @@
       }
     }
     .nav-item {
+      float: left;
       margin-bottom: -2px;
     }
   }
@@ -216,7 +224,6 @@
       }
       .product-images {
         margin-left: $extra-large-space;
-        margin-top: $small-space;
         img {
           width: em(148px);
           cursor: pointer;
@@ -315,6 +322,9 @@
   display: inline-block;
   font-weight: 700;
   margin-left:$small-space;
+  margin-top: em(47px);
+  position: relative;
+  top:em(25px);
   .product-available {
     color: $brand-success;
     margin-right: em(5px);
@@ -350,6 +360,11 @@
 .product-variants {
   > .product-variants-item {
     margin: $medium-space 0;
+    select{
+      border: 1px solid $gray-light;
+      height: em(40px);
+      width: em(60px);
+    }
     ul li{
       margin-right: $small-space;
     }

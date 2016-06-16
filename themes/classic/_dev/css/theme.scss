@@ -25,6 +25,9 @@
 /*** HEADER ***/
 #header {
   background: white;
+  .logo{
+    width: 100%;
+  }
   .header-nav {
     border-bottom: $gray-light 2px solid;
     max-height: 50px;
@@ -114,8 +117,10 @@
     }
   }
   .header-top {
-    padding-bottom: $small-space;
+    padding-bottom: em(20px);
     .menu {
+      position: absolute;
+      top:em(10px);
       > ul {
         display: table;
         > li {

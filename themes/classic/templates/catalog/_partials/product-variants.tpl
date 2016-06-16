@@ -1,9 +1,13 @@
 <div class="product-variants">
   {foreach from=$groups key=id_attribute_group item=group}
     <div class="clearfix product-variants-item">
-      <span>{$group.name}</span>
+      <span class="control-label">{$group.name}</span>
+      <br>
       {if $group.group_type == 'select'}
-        <select data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" id="group_{$id_attribute_group}">
+        <select
+          id="group_{$id_attribute_group}"
+          data-product-attribute="{$id_attribute_group}"
+          name="group[{$id_attribute_group}]">
           {foreach from=$group.attributes key=id_attribute item=group_attribute}
             <option value="{$id_attribute}" title="{$group_attribute.name}"{if $group_attribute.selected} selected="selected"{/if}>{$group_attribute.name}</option>
           {/foreach}

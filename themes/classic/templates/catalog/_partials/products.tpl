@@ -8,9 +8,9 @@
           <div class="products-select">
             <div>
               {if $products|count > 1}
-                <p>{l s='There are %s products.' d='Shop.Theme.Catalog' sprintf=$products|count} |</p>
+                <p>{l s='There are %s products.' d='Shop.Theme.Catalog' sprintf=$products|count}</p>
               {else}
-                <p>{l s='There is %s products.' d='Shop.Theme.Catalog' sprintf=$products|count} |</p>
+                <p>{l s='There is %s products.' d='Shop.Theme.Catalog' sprintf=$products|count}</p>
               {/if}
             </div>
             <div>
@@ -20,15 +20,11 @@
             </div>
           </div>
         </div>
-
       </div>
-
 
       {if isset($rendered_active_filters)}
         {$rendered_active_filters nofilter}
       {/if}
-
-
 
       <div class="products row">
         {foreach from=$products item="product"}

@@ -16,13 +16,6 @@
 }
 .linklist {
   padding-top: $medium-space;
-  li a{
-    color: $gray;
-    cursor: pointer;
-    &:hover {
-      color: $brand-primary;
-    }
-  }
   .blockcms-title a{
     color:$gray-darker;
   }
@@ -115,5 +108,16 @@
 }
 .footer-container {
   margin-top: $medium-space;
-  @include box-shadow;
+  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.3);
+  li{
+    margin-bottom: em(5px);
+  }
+  li a{
+    color: $gray-dark;
+    cursor: pointer;
+    font-size: em(14px);
+    &:hover {
+      color: $brand-primary;
+    }
+  }
 }

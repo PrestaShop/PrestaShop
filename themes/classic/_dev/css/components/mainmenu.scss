@@ -26,18 +26,18 @@
   a[data-depth="1"] {
     padding: 0 em(10px) em(10px) 0;
   }
-}
-.sub-menu {
-  box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11), 0 5px 5px 3px rgba(0,0,0,0.1);
-  min-width: em(1110px);
-  left: em(-190px);
-  border: none;
-  top: em(55px);
-  .category {
-    float: left;
-    margin: 0 em(20px);
-  }
-  a:hover{
-    color: $brand-primary;
+  .sub-menu {
+    box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11), 0 5px 5px 3px rgba(0,0,0,0.1);
+    min-width: em(1110px);
+    left: em(-190px);
+    border: none;
+    top: em(55px);
+    .category {
+      float: left;
+      margin: 0 em(20px);
+    }
+    a:hover{
+      color: $brand-primary;
+    }
   }
 }

@@ -5,7 +5,7 @@ export default class ProductSelect {
   init() {
     const MAX_THUMBS = 5;
     var $arrows =   $('.js-modal-arrows');
-    var $thumbnails = $('.js-product-images');
+    var $thumbnails = $('.js-modal-product-images');
     $('.js-modal-thumb').on('click', (event) => {
       if($('.js-modal-thumb').hasClass('selected')){
         $('.js-modal-thumb').removeClass('selected');
@@ -20,7 +20,7 @@ export default class ProductSelect {
       $arrows.css('opacity', '.2');
     } else {
       $arrows.on('click', (event) => {
-        if ($(event.target).hasClass('arrow-up') && $('.js-modal-product-images').position().top < 0) {
+        if ($(event.target).hasClass('arrow-up') && $thumbnails.position().top < 0) {
           this.move('up');
           $('.js-modal-arrow-down').css('opacity','1');
         } else if ($(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() >  $('.js-modal-mask').height()) {

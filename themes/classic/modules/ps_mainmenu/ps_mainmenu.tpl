@@ -21,6 +21,7 @@
           {else}
             <li>
               <a
+                class="dropdown-item"
                 href="{$node.url nofilter}"
                 data-depth="{$depth}"
                 {if $node.open_in_new_window}
