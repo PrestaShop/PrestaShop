@@ -274,7 +274,7 @@ body#checkout {
       font-size: em(16px);
       margin-top: em(10px);
       margin-bottom: em(20px);
-      color: $gray;      
+      color: $gray;
     }
     h4.black {
       color: #000000;
@@ -395,5 +395,32 @@ body#checkout {
   }
   .cart-container{
     min-height: em(371px);
+  }
+}
+
+.js-payment-atos {
+  display: none;
+
+  .accept-cgv {
+    display: none;
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .accept-cgv {
+      display: block;
+    }
   }
 }

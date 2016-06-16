@@ -28,7 +28,23 @@ function enableOrDisableOrderButton() {
 
   $('#' + option + '-additional-information').show();
   $('#pay-with-' + option + '-form').show();
-  $('#payment-confirmation button').attr('disabled', !show);
+
+  var module_name = $(`#${option}`).data('module-name');
+
+  if ($('#' + option).hasClass('binary')) {
+    var payment_option = `.js-payment-${module_name}`;
+    $('#payment-confirmation').hide();
+    $(payment_option).show();
+    if (show) {
+      $(payment_option).removeClass('disabled');
+    } else {
+      $(payment_option).addClass('disabled');
+    }
+  } else {
+    $('.js-payment-binary').hide();
+    $('#payment-confirmation').show();
+    $('#payment-confirmation button').attr('disabled', !show);
+  }
 }
 
 function confirmPayment () {
