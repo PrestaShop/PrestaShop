@@ -31,6 +31,7 @@ class LanguageCore extends ObjectModel
 {
     const LANGUAGE_PACK_URL = 'http://www.prestashop.com/download/lang_packs/get_language_pack.php?version=%s&iso_lang=%s';
     const LANGUAGE_GZIP_URL = 'http://translations.prestashop.com/download/lang_packs/gzip/%s/%s.gzip';
+    const SF_LANGUAGE_PACK_URL = 'https://crowdin.com/download/project/prestashop-dev.zip';
     
     public $id;
 
@@ -915,8 +916,35 @@ class LanguageCore extends ObjectModel
                 }
             }
         }
-                
+        
+        self::downloadSfLanguagePack($errors);
+        
         return ! count($errors);
+    }
+    
+    public static function downloadSfLanguagePack(&$errors = array())
+    {
+        $sfFile = _PS_TRANSLATIONS_DIR_.'sf-all.zip';
+        $content = Tools::file_get_contents(self::SF_LANGUAGE_PACK_URL);
+        
+        if (!is_writable(dirname($sfFile))) {
+            // @todo Throw exception
+            $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$sfFile.')';
+        } else {
+            @file_put_contents($sfFile, $content);
+        }
+    }
+    
+    public static function installSfLanguagePack(&$errors = array())
+    {
+        if (!file_exists(_PS_TRANSLATIONS_DIR_.'sf-all.zip')) {
+            // @todo Throw exception
+            $errors[] = Tools::displayError('Language pack unavailable.');
+        } else {
+            $zipArchive = new ZipArchive();
+            $zipArchive->open(_PS_TRANSLATIONS_DIR_.'sf-all.zip');
+            $zipArchive->extractTo(_PS_ROOT_DIR_.'/app/Resources/translations');
+        }
     }
 
     public static function installLanguagePack($iso, $params, &$errors = array())
@@ -968,6 +996,8 @@ class LanguageCore extends ObjectModel
             AdminTranslationsController::checkAndAddMailsFiles((string)$iso, $files_list);
             AdminTranslationsController::addNewTabs((string)$iso, $files_list);
         }
+
+        self::installSfLanguagePack($errors);
         
         return count($errors) ? $errors : true;
     }
