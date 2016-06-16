@@ -1,5 +1,7 @@
+{block name='order-items-table-head'}
 <div id="order-items" class="col-md-8">
   <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
+{/block}
   <table class="table">
     {foreach from=$products item=product}
       <tr>

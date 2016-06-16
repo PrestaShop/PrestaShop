@@ -25,6 +25,15 @@ function setupMyCheckoutScripts() {
 
     $('#modal').modal('show');
   });
+
+  $('#order-summary-content span.step-to-addresses').on('click', (event) => {
+	  $('#checkout-addresses-step h1.step-title').trigger('click');
+  });
+
+  $('#order-summary-content span.step-to-delivery').on('click', (event) => {
+	  $('#checkout-delivery-step h1.step-title').trigger('click');
+  });
+  
 }
 
 $(document).ready(() => {

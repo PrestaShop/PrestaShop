@@ -61,6 +61,10 @@
       <p class="alert alert-danger">{l s='Unfortunately, there are no payment method available.' d='Shop.Theme.Checkout'}</p>
     {/foreach}
   </div>
+  
+  {if $show_final_summary}
+    {include file='checkout/_partials/order-final-summary.tpl'}	
+  {/if}
 
   {if $conditions_to_approve|count}
     <p class="ps-hidden-by-js">
