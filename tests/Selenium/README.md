@@ -15,19 +15,19 @@ Dependencies:
 
 The usual:
 
-- `cd tests/StarterTheme`
+- `cd tests/Selenium`
 - `npm install`
 - cross fingers
 
 The less usual :
 
 - install PrestaShop, preferably in English  with URL rewriting enabled (though tests should ideally be language and settings agnostic)
-- copy `tests/StarterTheme/settings.dist.js` to `tests/StarterTheme/settings.js` and customize according to your setup
+- copy `tests/Selenium/settings.dist.js` to `tests/Selenium/settings.js` and customize according to your setup
 - once PrestaShop is installed, run `php prepare-shop.php`. **WARNING: never do this on a production shop because it will edit existing products without asking for your permission.**
 
 ## Usage
 
-- `cd tests/StarterTheme`
+- `cd tests/Selenium`
 - `npm run selenium`
 - `npm test`
 - cross fingers
