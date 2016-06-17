@@ -21,7 +21,7 @@
 
         </ul>
     {% else %}
-        <i>No changelog provided</i>
+        <i>{{ 'No changelog provided'|trans({}, 'Admin.Modules.Notification') }}</i>
     {% endif %}
 
 {% endblock %}

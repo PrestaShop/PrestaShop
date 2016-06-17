@@ -15,58 +15,57 @@
      data-active="{{isModuleActive}}">
   <div class="module-item-wrapper-{{display_type}}">
     <div class="module-item-heading-{{display_type}}"
-        data-toggle="modal"
-        data-target="#module-modal-read-more-{{module.attributes.name}}">
+         data-toggle="modal"
+         data-target="#module-modal-read-more-{{module.attributes.name}}">
       <img class="module-logo-thumb-{{display_type}}" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
       <h3 class="text-ellipsis module-name-{{display_type}}"
           data-toggle="tooltip"
           data-placement="top"
           title="{{ module.attributes.displayName|raw }}">
         {% if module.attributes.displayName %}
-        {{ module.attributes.displayName|raw }}
-      {% else %}
-        {{ module.attributes.name }}
+            {{ module.attributes.displayName|raw }}
+        {% else %}
+            {{ module.attributes.name }}
         {% endif %}
       </h3>
       <div class="text-ellipsis xsmall module-version-author-{{display_type}}">
         {% block addon_version %}
-        {% if module.attributes.productType == "service" %}
-        Service by
-        <a class="url" href="#">{{ module.attributes.author }}</a>
-      {% else %}
-        v{{ module.attributes.version }}
-        by
-        <a class="url" href="#">{{ module.attributes.author }}</a>
-        {% endif %}
+            {% if module.attributes.productType == "service" %}
+                {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
+                <a class="url" href="#">{{ module.attributes.author }}</a>
+            {% else %}
+                {{ 'v%version% by '|trans({ '%version%' : module.attributes.version }, 'Admin.Modules.Feature') }}
+                <a class="url" href="#">{{ module.attributes.author }}</a>
+            {% endif %}
         {% endblock %}
       </div>
     </div>
     <div class="module-quick-description-{{display_type}} small no-padding">
       {% block addon_description %}
-      <div class="module-quick-description-text">
-        {{ module.attributes.description|raw }}
-        {% if module.attributes.description|length < module.attributes.fullDescription|length %}
-        ...
-        {% endif %}
-      </div>
-      <div class="module-read-more-{{display_type}} small no-padding">
-        <a class="module-read-more-{{display_type}}-btn url" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">Read More</a>
-      </div>
+          <div class="module-quick-description-text">
+            {{ module.attributes.description|raw }}
+            {% if module.attributes.description|length < module.attributes.fullDescription|length %}
+                ...
+            {% endif %}
+          </div>
+          <div class="module-read-more-{{display_type}} small no-padding">
+            <a class="module-read-more-{{display_type}}-btn url" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
+          </div>
       {% endblock %}
     </div>
 
     <div class="module-container module-quick-action-{{display_type}} clearfix">
       {% if module.attributes.nbRates > 0 %}
-      <div class="module-star-ranking-grid-{{ module.attributes.starsRate}}">
-        (
-        {{ module.attributes.nbRates }}
-        )
-      </div>
+          <div class="module-star-ranking-grid-{{ module.attributes.starsRate}}">
+            (
+            {{ module.attributes.nbRates }}
+            )
+          </div>
       {% endif %}
       {% if requireBulkActions is defined and requireBulkActions == true %}
-      <div class="pull-right">
-        <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" class="module-checkbox-bulk-{{display_type}}"/>
-      </div>
+          <div class="pull-right">
+            <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" class="module-checkbox-bulk-{{display_type}}"/>
+          </div>
       {% endif %}
       {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}
     </div>

@@ -31,24 +31,24 @@
                     <div class="col-lg-12">
                         <div class="module-sorting module-bulk-actions pull-right">
                             <select class="c-select c-select-sm">
-                              <option value="" disabled selected>Bulk Actions</option>
-                              <option value="bulk-uninstall">Uninstall</option>
-                              <option value="bulk-disable">Disable</option>
-                              <option value="bulk-enable">Enable</option>
-                              <option value="bulk-reset">Reset</option>
-                              <option value="bulk-enable-mobile">Enable Mobile</option>
-                              <option value="bulk-disable-mobile">Disable Mobile</option>
+                              <option value="" disabled selected>{{ 'Bulk Actions'|trans({}, 'Admin.Global') }}</option>
+                              <option value="bulk-uninstall">{{ 'Uninstall'|trans({}, 'Admin.Actions') }}</option>
+                              <option value="bulk-disable">{{ 'Disable'|trans({}, 'Admin.Actions') }}</option>
+                              <option value="bulk-enable">{{ 'Enable'|trans({}, 'Admin.Actions') }}</option>
+                              <option value="bulk-reset">{{ 'Reset'|trans({}, 'Admin.Actions') }}</option>
+                              <option value="bulk-enable-mobile">{{ 'Enable Mobile'|trans({}, 'Admin.Modules.Feature') }}</option>
+                              <option value="bulk-disable-mobile">{{ 'Disable Mobile'|trans({}, 'Admin.Modules.Feature') }}</option>
                             </select>
                             <input type="checkbox" class="module-checkbox-bulk-select-all" />
                         </div>
                         <div class="module-sorting module-sorting-author pull-right">
                             <select class="c-select c-select-sm">
-                              <option value="" disabled selected>- Sort by -</option>
-                              <option value="sort-by-name">Name</option>
-                              <option value="sort-by-price-asc">Increasing Price</option>
-                              <option value="sort-by-price-desc">Decreasing Price</option>
-                              <option value="sort-by-scoring">Score</option>
-                              <option value="sort-by-access-date">Last access</option>
+                              <option value="" disabled selected>- {{ 'Sort by'|trans({}, 'Admin.Actions') }} -</option>
+                              <option value="sort-by-name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>
+                              <option value="sort-by-price-asc">{{ 'Increasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>
+                              <option value="sort-by-price-desc">{{ 'Decreasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>
+                              <option value="sort-by-scoring">{{ 'Score'|trans({}, 'Admin.Modules.Feature') }}</option>
+                              <option value="sort-by-access-date">{{ 'Last access'|trans({}, 'Admin.Modules.Feature') }}</option>
                             </select>
                         </div>
                     </div>
@@ -57,10 +57,10 @@
 
             {# Actual Page Content #}
 		<div class="module-short-list">
-			<span class="module-search-result-wording">{{modules.modules|length}} installed modules</span>
+			<span class="module-search-result-wording">{{ '%nbModules% installed modules'|trans({'%nbModules%' : modules.modules|length}, 'Admin.Modules.Feature') }}</span>
                            <span class="help-box" data-toggle="popover"
-                                data-title="{{ "Installed modules"|trans({}, 'AdminModules') }}"
-                                data-content="{{ "These are all the modules you’ve added to your shop, either by buying it from PrestaShop Addons, or by uploading it directly."|trans({}, 'AdminModules') }}">
+                                data-title="{{ "Installed modules"|trans({}, 'Admin.Modules.Feature') }}"
+                                data-content="{{ "These are all the modules you’ve added to your shop, either by buying it from PrestaShop Addons, or by uploading it directly."|trans({}, 'Admin.Modules.Help') }}">
                            </span>
                    </div>
 		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.modules, 'display_type' : 'list', 'origin' : 'manage'  } %}
@@ -68,10 +68,10 @@
 		<hr class="top-menu-separator">
 
 		<div class="module-short-list">
-			<span class="module-search-result-wording">{{modules.native_modules|length}} built-in modules</span>
+			<span class="module-search-result-wording">{{ '%nbModules% built-in modules'|trans({'%nbModules%' : modules.native_modules|length}, 'Admin.Modules.Feature') }}</span>
                            <span class="help-box" data-toggle="popover"
-                                 data-title="{{ "Built-in modules"|trans({}, 'AdminModules') }}"
-                                data-content="{{ "These modules from PrestaShop are preinstalled when you set-up your shop. They cover the basics of e-commerce and comes for free."|trans({}, 'AdminModules') }}">
+                                 data-title="{{ "Built-in modules"|trans({}, 'Admin.Modules.Feature') }}"
+                                data-content="{{ "These modules from PrestaShop are preinstalled when you set-up your shop. They cover the basics of e-commerce and comes for free."|trans({}, 'Admin.Modules.Help') }}">
                            </span>
 		</div>
 		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list', 'origin' : 'manage'  } %}
@@ -79,10 +79,10 @@
 		<hr class="top-menu-separator">
 
 		<div class="module-short-list">
-			<span class="module-search-result-wording">{{modules.theme_bundle|length}} theme modules</span>
+			<span class="module-search-result-wording">{{ '%nbModules% theme modules'|trans({'%nbModules%' : modules.theme_bundle|length}, 'Admin.Modules.Feature') }}</span>
                            <span class="help-box" data-toggle="popover"
-                                data-title="{{ "Theme modules"|trans({}, 'AdminModules') }}"
-                                data-content="{{ "Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme."|trans({}, 'AdminModules') }}">
+                                data-title="{{ "Theme modules"|trans({}, 'Admin.Modules.Feature') }}"
+                                data-content="{{ "Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme."|trans({}, 'Admin.Modules.Help') }}">
                            </span>
 		</div>
 		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.theme_bundle, 'display_type' : 'list', 'origin' : 'manage'  } %}

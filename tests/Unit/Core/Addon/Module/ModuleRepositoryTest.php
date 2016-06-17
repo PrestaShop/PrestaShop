@@ -97,9 +97,16 @@ class ModuleRepositoryTest extends UnitTestCase
             ->method('getCatalogModulesNames')
             ->willReturn([]);
 
+        $this->translatorStub = $this->getMockBuilder('Symfony\Component\Translation\Translator')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->translatorStub
+            ->method('trans')
+            ->will($this->returnArgument(0));
+
         $this->moduleRepositoryStub = $this->getMock(
             'PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository',
-            ['readCacheFile'],
+            ['readCacheFile', 'generateCacheFile'],
             [
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
@@ -108,7 +115,8 @@ class ModuleRepositoryTest extends UnitTestCase
                     $this->sfRouter,
                     $this->addonsDataProviderS
                 )),
-                new FakeLogger()
+                new FakeLogger(),
+                $this->translatorStub
             ]
         );
 
@@ -118,6 +126,13 @@ class ModuleRepositoryTest extends UnitTestCase
         $this->moduleRepositoryStub
             ->method('readCacheFile')
             ->willReturn([]);
+
+        /**
+         * Mock function 'readCacheFile()' to disable the cache
+         */
+        $this->moduleRepositoryStub
+            ->method('generateCacheFile')
+            ->will($this->returnArgument(0));
 
         /**
          * End of mocking for modules folder

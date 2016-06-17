@@ -3,79 +3,79 @@
         {% if module_action in ['disable', 'uninstall', 'reset'] %}
 
             <div id="module-modal-confirm-{{module.attributes.name}}-{{ module_action }}" class="modal modal-vcenter fade" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title module-modal-title">
-                                {% if module_action == 'disable' %}
-                                    {{ "Disable module?"|trans({}, 'AdminModules') }}
-                                {% endif %}
-                                {% if module_action == 'uninstall' %}
-                                    {{ "Uninstall module?"|trans({}, 'AdminModules') }}
-                                {% endif %}
-                                {% if module_action == 'reset' %}
-                                    {{ "Reset module?"|trans({}, 'AdminModules') }}
-                                {% endif %}
-                            </h4>
-                        </div>
-                        <div class="modal-body row">
-                            <div class="col-md-12">
-                                <p>
-                                    {% if module_action == 'disable' %}
-                                        {{ "You're about to disable %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'AdminModules')|raw }}
-                                        <br/><br/>
-                                        {{ "Your current settings will be saved, but the module will no longer be active."|trans({}, 'AdminModules')|raw }}
-                                    {% endif %}
-                                    {% if module_action == 'uninstall' %}
-                                        {{ "You're about to uninstall %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'AdminModules')|raw }}
-                                        <br/><br/>
-                                        {{ "This will disable the module and delete all its files. For good."|trans({}, 'AdminModules')|raw }}
-                                        <br/>
-                                      <p>
-                                        <label>
-                                          <input type="checkbox" id="force_deletion" name="force_deletion" data-tech-name="{{module.attributes.name}}"> {{ "Optional: delete module folder after uninstall."|trans({}, 'AdminModules')|raw }}
-                                        </label>
-                                        <br>
-                                      </p>
-                                      <span class="italic red">
-                                            {{ "This action cannot be undone."|trans({}, 'AdminModules')|raw }}
-                                        </span>
-                                    {% endif %}
-                                    {% if module_action == 'reset' %}
-                                        {{ "You're about to reset %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'AdminModules')|raw }}
-                                        <br/><br/>
-                                        {{ "This will restore the defaults settings."|trans({}, 'AdminModules')|raw }}
-                                        <br/>
-                                        <span class="italic red">
-                                            {{ "This action cannot be undone."|trans({}, 'AdminModules')|raw }}
-                                        </span>
-                                    {% endif %}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-default uppercase" data-dismiss="modal" value="{{ "Cancel"|trans({}, 'AdminTabs')|raw }}" />
-                            {% if module_action == 'disable' %}
-                                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
-                                    data-tech-name="{{module.attributes.name}}"
-                                    href="{{ module_url }}">{{ "Yes, I want to disable"|trans({}, 'AdminModules')|raw }}</a>
-                            {% endif %}
-                            {% if module_action == 'uninstall' %}
-                                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
-                                    data-tech-name="{{module.attributes.name}}"
-                                    href="{{ module_url }}">{{ "Yes, I want to uninstall"|trans({}, 'AdminModules')|raw }}</a>
-                            {% endif %}
-                            {% if module_action == 'reset' %}
-                                <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
-                                    data-tech-name="{{module.attributes.name}}"
-                                    href="{{ module_url }}">{{ "Yes, I want to reset"|trans({}, 'AdminModules')|raw }}</a>
-                            {% endif %}
-                        </div>
-                    </div>
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title module-modal-title">
+                      {% if module_action == 'disable' %}
+                          {{ "Disable module?"|trans({}, 'Admin.Modules.Feature') }}
+                      {% endif %}
+                      {% if module_action == 'uninstall' %}
+                          {{ "Uninstall module?"|trans({}, 'Admin.Modules.Feature') }}
+                      {% endif %}
+                      {% if module_action == 'reset' %}
+                      {{ "Reset module?"|trans({}, 'Admin.Modules.Feature') }}
+                    {% endif %}
+                  </h4>
                 </div>
-            </div>
+                <div class="modal-body row">
+                  <div class="col-md-12">
+                    <p>
+                      {% if module_action == 'disable' %}
+                          {{ "You're about to disable %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
+                          <br/><br/>
+                          {{ "Your current settings will be saved, but the module will no longer be active."|trans({}, 'Admin.Modules.Notification') }}
+                      {% endif %}
+                      {% if module_action == 'uninstall' %}
+                          {{ "You're about to uninstall %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
+                          <br/><br/>
+                          {{ "This will disable the module and delete all its files. For good."|trans({}, 'Admin.Modules.Notification') }}
+                          <br/>
+                      <p>
+                        <label>
+                          <input type="checkbox" id="force_deletion" name="force_deletion" data-tech-name="{{module.attributes.name}}"> {{ "Optional: delete module folder after uninstall."|trans({}, 'Admin.Modules.Feature') }}
+                        </label>
+                        <br>
+                      </p>
+                      <span class="italic red">
+                        {{ "This action cannot be undone."|trans({}, 'Admin.Modules.Notification') }}
+                      </span>
+                    {% endif %}
+                    {% if module_action == 'reset' %}
+                    {{ "You're about to reset %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
+                    <br/><br/>
+                    {{ "This will restore the defaults settings."|trans({}, 'Admin.Modules.Notification') }}
+                    <br/>
+                    <span class="italic red">
+                      {{ "This action cannot be undone."|trans({}, 'Admin.Modules.Notification') }}
+                    </span>
+                    {% endif %}
+                        </p>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <input type="button" class="btn btn-default uppercase" data-dismiss="modal" value="{{ "Cancel"|trans({}, 'AdminTabs') }}" />
+                    {% if module_action == 'disable' %}
+                        <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
+                           data-tech-name="{{module.attributes.name}}"
+                           href="{{ module_url }}">{{ "Yes, disable it"|trans({}, 'Admin.Modules.Feature') }}</a>
+                    {% endif %}
+                    {% if module_action == 'uninstall' %}
+                        <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
+                           data-tech-name="{{module.attributes.name}}"
+                           href="{{ module_url }}">{{ "Yes, uninstall it"|trans({}, 'Admin.Modules.Feature') }}</a>
+                    {% endif %}
+                    {% if module_action == 'reset' %}
+                    <a class="btn btn-primary uppercase module_action_modal_{{ module_action }}"  data-dismiss="modal"
+                       data-tech-name="{{module.attributes.name}}"
+                       href="{{ module_url }}">{{ "Yes, reset it"|trans({}, 'Admin.Modules.Feature') }}</a>
+                    {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
         {% endif %}
     {% endfor %}

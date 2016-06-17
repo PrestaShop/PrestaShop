@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
@@ -65,6 +66,12 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $moduleUpdater;
 
     /**
+     * Translator
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * Module Data Provider
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
      */
@@ -81,12 +88,14 @@ class ModuleRepository implements ModuleRepositoryInterface
         AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        TranslatorInterface $translator
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->logger = $logger;
         $this->moduleProvider      = $modulesProvider;
         $this->moduleUpdater       = $modulesUpdater;
+        $this->translator = $translator;
         $this->finder              = new Finder();
         $this->cacheFilePath       = _PS_CACHE_DIR_.'modules.json';
         $this->cache               = $this->readCacheFile();
@@ -217,9 +226,21 @@ class ModuleRepository implements ModuleRepositoryInterface
                     $modules[$name] = $module;
                 }
             } catch (\ParseError $e) {
-                $this->logger->critical(sprintf('Parse error on module %s. %s', $name, $e->getMessage()));
+                $this->logger->critical(
+                    $this->translator->trans(
+                        'Parse error on module %module%. %error_details%',
+                        array(
+                            '%module%' => $name,
+                            '%error_details%' => $e->getMessage()),
+                        'Admin.Modules.Notification'));
             } catch (Exception $e) {
-                $this->logger->critical(sprintf('Unexpected exception on module %s. %s', $name, $e->getMessage()));
+                $this->logger->critical(
+                    $this->translator->trans(
+                        'Unexpected exception on module %module%. %error_details%',
+                        array(
+                            '%module%' => $name,
+                            '%error_details%' => $e->getMessage()),
+                        'Admin.Modules.Notification'));
             }
         }
 
@@ -253,7 +274,11 @@ class ModuleRepository implements ModuleRepositoryInterface
                 (array)array_shift($module_catalog_data)
             );
         } catch (Exception $e) {
-            $this->logger->alert(sprintf('Loading data from Addons failed. %s', $e->getMessage()));
+            $this->logger->alert(
+                $this->translator->trans(
+                    'Loading data from Addons failed. %error_details%',
+                    array('%error_details%' => $e->getMessage()),
+                    'Admin.Modules.Notification'));
         }
 
         // Now, we check that cache is up to date
@@ -337,7 +362,21 @@ class ModuleRepository implements ModuleRepositoryInterface
                     $modules[$moduleName] = $module;
                 }
             } catch (\ParseError $e) {
-                // Bypass this module
+                $this->logger->critical(
+                    $this->translator->trans(
+                        'Parse error detected in module %module%. %error_details%.',
+                        array(
+                            '%module%' => $moduleName,
+                            '%error_details%' => $e->getMessage()),
+                        'Admin.Modules.Notification'));
+            } catch (Exception $e) {
+                $this->logger->critical(
+                    $this->translator->trans(
+                        'Exception detected while loading module %module%. %error_details%.',
+                        array(
+                            '%module%' => $moduleName,
+                            '%error_details%' => $e->getMessage()),
+                        'Admin.Modules.Notification'));
             }
         }
 
@@ -355,6 +394,9 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     private function generateCacheFile($data)
     {
+        if (!$data) {
+            return;
+        }
         $encoded_data          = json_encode($data);
         file_put_contents($this->cacheFilePath, $encoded_data);
 

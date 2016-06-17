@@ -27,20 +27,20 @@
         <div class="col-lg-10 col-lg-offset-1">
 
             <div class="module-short-list">
-                <span class="module-search-result-wording">{{modules.to_configure|length}} modules to configure</span> 
+                <span class="module-search-result-wording">{{ '%nbModules% modules to configure'|trans({'%nbModules%' : modules.to_configure|length}, 'Admin.Modules.Feature') }}</span>
                 <span class="help-box" data-toggle="popover"
-                      data-title="{{ "Modules to configure"|trans({}, 'AdminModules') }}"
-                      data-content="{{ "These modules require your attention: you need to take some action to ensure they are fully operational."|trans({}, 'AdminModules') }}">
+                      data-title="{{ "Modules to configure"|trans({}, 'Admin.Modules.Feature') }}"
+                      data-content="{{ "These modules require your attention: you need to take some action to ensure they are fully operational."|trans({}, 'Admin.Modules.Help') }}">
                 </span>
             </div>
             {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_configure.html.twig' with { 'modules' : modules.to_configure, 'display_type' : 'list'  } %}
 
             <hr class="top-menu-separator">
             <div class="module-short-list">
-                <span class="module-search-result-wording">{{modules.to_update|length}} modules to update</span>
+                <span class="module-search-result-wording">{{ '%nbModules% modules to update'|trans({'%nbModules%' : modules.to_update|length}, 'Admin.Modules.Feature') }}</span>
                 <span class="help-box" data-toggle="popover"
-                      data-title="{{ "Modules to update"|trans({}, 'AdminModules') }}"
-                      data-content="{{ "Update these modules to enjoy their latest versions."|trans({}, 'AdminModules') }}">
+                      data-title="{{ "Modules to update"|trans({}, 'Admin.Modules.Feature') }}"
+                      data-content="{{ "Update these modules to enjoy their latest versions."|trans({}, 'Admin.Modules.Help') }}">
                 </span>
             </div>
             {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules' : modules.to_update, 'display_type' : 'list' } %}

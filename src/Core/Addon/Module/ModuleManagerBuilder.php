@@ -25,6 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -45,6 +46,7 @@ class ModuleManagerBuilder
     public static $legacyLogger = null;
     public static $moduleDataProvider = null;
     public static $moduleDataUpdater = null;
+    public static $translator = null;
 
     public function __construct()
     {
@@ -55,9 +57,10 @@ class ModuleManagerBuilder
                 $this->getSymfonyRouter(),
                 $addonsDataProvider
             );
+            self::$translator       = Context::getContext()->getTranslator();
             self::$moduleDataUpdater       = new ModuleDataUpdater($addonsDataProvider, self::$adminModuleDataProvider);
             self::$legacyLogger            = new LegacyLogger();
-            self::$moduleDataProvider      = new ModuleDataProvider(self::$legacyLogger);
+            self::$moduleDataProvider      = new ModuleDataProvider(self::$legacyLogger, self::$translator);
         }
     }
 
@@ -77,7 +80,8 @@ class ModuleManagerBuilder
                 self::$moduleDataProvider,
                 self::$moduleDataUpdater,
                 $this->buildRepository(),
-                \Context::getContext()->employee
+                self::$translator,
+                Context::getContext()->employee
             );
         }
     }
@@ -98,7 +102,8 @@ class ModuleManagerBuilder
                     self::$adminModuleDataProvider,
                     self::$moduleDataProvider,
                     self::$moduleDataUpdater,
-                    self::$legacyLogger
+                    self::$legacyLogger,
+                    self::$translator
                 );
             }
         }
@@ -125,7 +130,7 @@ class ModuleManagerBuilder
      */
     private function getLanguageIso()
     {
-        $langId = \Context::getContext()->employee instanceof \Employee ? \Context::getContext()->employee->id_lang : \Context::getContext()->language->iso_code;
+        $langId = Context::getContext()->employee instanceof \Employee ? Context::getContext()->employee->id_lang : Context::getContext()->language->iso_code;
 
         return \LanguageCore::getIsoById($langId);
     }

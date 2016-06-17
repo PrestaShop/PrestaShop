@@ -9,19 +9,18 @@
           </span>
         </button>
         {% if module.attributes.nbRates > 0 %}
-        <div class="read-more-stars module-star-ranking-grid-{{ module.attributes.starsRate}}">
-          (
-          {{ module.attributes.nbRates }}
-          )
-        </div>
+            <div class="read-more-stars module-star-ranking-grid-{{ module.attributes.starsRate}}">
+              (
+              {{ module.attributes.nbRates }}
+              )
+            </div>
         {% endif %}
         <div>
           <img class="module-logo-thumb" height="57" width="57" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
           <div class="modal-title module-modal-title">
             <h1>{{ module.attributes.displayName }}<br>
               <small class="version">
-                v{{ module.attributes.version }}
-                by
+                {{ 'v%version% by '|trans({'%version%' : module.attributes.version}, 'Admin.Modules.Feature') }}
                 {{ module.attributes.author }}
               </small>
             </h1>
@@ -38,17 +37,17 @@
           <nav class="navbar navbar-light">
             <ul class="nav navbar-nav navbar-separator">
               <li class="nav-item active">
-                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#overview-{{module.attributes.name}}">Overview</a>
+                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#overview-{{module.attributes.name}}">{{ 'Overview'|trans({}, 'Admin.Modules.Feature') }}</a>
               </li>
               {% if module.attributes.additionalDescription is defined and module.attributes.additionalDescription|length %}
-              <li class="nav-item">
-                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#benefits-{{module.attributes.name}}">Benefits</a>
-              </li>
+                  <li class="nav-item">
+                    <a class="nav-link module-readmore-tab" data-toggle="tab" href="#benefits-{{module.attributes.name}}">{{ 'Benefits'|trans({}, 'Admin.Modules.Feature') }}</a>
+                  </li>
               {% endif %}
               {% if module.attributes.changeLog is defined and module.attributes.changeLog|length %}
-              <li class="nav-item">
-                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#changelog-{{module.attributes.name}}">Changelog</a>
-              </li>
+                  <li class="nav-item">
+                    <a class="nav-link module-readmore-tab" data-toggle="tab" href="#changelog-{{module.attributes.name}}">{{ 'Changelog'|trans({}, 'Admin.Modules.Feature') }}</a>
+                  </li>
               {% endif %}
             </ul>
           </nav>
@@ -56,41 +55,41 @@
             <div id="overview-{{module.attributes.name}}" class="tab-pane fade in active">
               <p class="module-readmore-tab-content">
                 {% if module.attributes.fullDescription is defined and module.attributes.fullDescription|length %}
-                {{ module.attributes.fullDescription|raw }}
+                    {{ module.attributes.fullDescription|raw }}
                 {% else %}
-                No description found for this module :(
+                    {{ 'No description found for this module :('|trans({}, 'Admin.Modules.Notification') }}
                 {% endif %}
               </p>
             </div>
             <div id="benefits-{{module.attributes.name}}" class="tab-pane fade">
               <p class="module-readmore-tab-content">
                 {% if module.attributes.additionalDescription is defined %}
-                {{ module.attributes.additionalDescription|raw }}
-              {% else %}
-                No benefits description provided for this module :(
+                    {{ module.attributes.additionalDescription|raw }}
+                {% else %}
+                    {{ 'No benefits description provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
                 {% endif %}
               </p>
             </div>
             <!-- WAITING FOR API UPDATE
             <div id="features-{{module.attributes.name}}" class="tab-pane fade">
               <p class="module-readmore-tab-content">
-                No feature list provided for this module :(
+                {{ 'No feature list provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
               </p>
             </div> -->
             <div id="changelog-{{module.attributes.name}}" class="tab-pane fade">
               {% if module.attributes.changeLog is defined %}
-              <ul class="module-readmore-tab-content">
-                {% for version, lines in module.attributes.changeLog|arrayCast|reverse %}
-                <li>
-                  <b>{{version}}:</b>
-                  {% for line in lines %}
-                  {{line}}<br/>
-                  {% endfor %}
-                </li>
-                {% endfor %}
-              </ul>
-            {% else %}
-              No changelog provided for this module :(
+                  <ul class="module-readmore-tab-content">
+                    {% for version, lines in module.attributes.changeLog|arrayCast|reverse %}
+                        <li>
+                          <b>{{version}}:</b>
+                          {% for line in lines %}
+                              {{line}}<br/>
+                          {% endfor %}
+                        </li>
+                    {% endfor %}
+                  </ul>
+              {% else %}
+                  {{ 'No changelog provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
               {% endif %}
             </div>
           </div>
@@ -99,15 +98,15 @@
 
       <div class="modal-footer module-modal-footer">
         {% if module.attributes.badges is defined %}
-        <div class="pull-left module-badges-display">
-          {% for badge in module.attributes.badges %}
-          <img src="{{badge.img}}" alt="{{badge.label}}"/>
-          {{badge.label}}
-          {% endfor %}
-        </div>
+            <div class="pull-left module-badges-display">
+              {% for badge in module.attributes.badges %}
+                  <img src="{{badge.img}}" alt="{{badge.label}}"/>
+                  {{badge.label}}
+              {% endfor %}
+            </div>
         {% endif %}
         {% if module.attributes.urls.install is defined %}
-        <a href="{{module.attributes.urls.install}}" class="pull-right module-install-button btn-primary-outline btn module-install-button btn-sm light-button">{{ 'Install'|trans({}, 'AdminModules') }}</a>
+            <a href="{{module.attributes.urls.install}}" class="pull-right module-install-button btn-primary-outline btn module-install-button btn-sm light-button">{{ 'Install'|trans({}, 'Admin.Actions') }}</a>
         {% endif %}
       </div>
     </div>
