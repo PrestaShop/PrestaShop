@@ -27,6 +27,7 @@
 class InstallLanguages
 {
     const DEFAULT_ISO = 'en';
+
     /**
      * @var array List of available languages
      */
@@ -38,6 +39,8 @@ class InstallLanguages
     protected $language;
 
     public $locale;
+
+    public $id;
 
     /**
      * @var InstallLanguage Default language (english)

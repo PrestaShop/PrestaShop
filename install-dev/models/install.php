@@ -33,6 +33,8 @@ class InstallModelInstall extends InstallAbstractModel
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
 
+    protected $logger;
+
     public function setError($errors)
     {
         static $logger = null;

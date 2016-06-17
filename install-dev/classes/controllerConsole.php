@@ -98,7 +98,6 @@ abstract class InstallControllerConsole
         }
 
         require_once _PS_INSTALL_CONTROLLERS_PATH_.'console/process.php';
-        $classname = 'InstallControllerConsoleProcess';
         self::$instances['process'] = new InstallControllerConsoleProcess('process');
 
         $datas = Datas::getInstance();
@@ -118,7 +117,9 @@ abstract class InstallControllerConsole
 
         // Set current language
         $this->language = InstallLanguages::getInstance();
-        Context::getContext()->language =  $this->language->locale;
+        Context::getContext()->language =  $this->language;
+        Context::getContext()->locale =  $this->language->locale;
+
         $this->translator = Context::getContext()->getTranslator();
 
         if (!$this->datas->language) {
@@ -152,19 +153,6 @@ abstract class InstallControllerConsole
             }
             die;
         }
-    }
-
-    /**
-     * Get translated string
-     *
-     * @param string $str String to translate
-     * @param ... All other params will be used with sprintf
-     * @return string
-     */
-    public function l($str)
-    {
-        $args = func_get_args();
-        return call_user_func_array(array($this->language, 'l'), $args);
     }
 
     public function process()
