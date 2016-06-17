@@ -8,6 +8,7 @@ imports:
 parameters:
     locale: en
     AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
+    translator.class: PrestaShopBundle\Translation\Translator
 
 framework:
     assets:
