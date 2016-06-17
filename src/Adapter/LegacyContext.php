@@ -45,12 +45,16 @@ class LegacyContext
      */
     public function getContext()
     {
-        $legacyContext = OldContext::getContext();
+        static $legacyContext = null;
+        
+        if(null === $legacyContext) {
+            $legacyContext = OldContext::getContext();
 
-        if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
-            //init real legacy shop context
-            $adminController = new \AdminControllerCore();
-            $adminController->initShopContext();
+            if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
+                //init real legacy shop context
+                $adminController = new \AdminControllerCore();
+                $adminController->initShopContext();
+            }
         }
 
         return $legacyContext;
