@@ -32,28 +32,11 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator as BaseTranslator;
 class Translator extends BaseTranslator
 {
     /**
-     * @var array
-     */
-    private $fallbackLocales = array();
-    
-    /**
      * {@inheritdoc}
      */
     public function addResource($format, $resource, $locale, $domain = null)
     {
-        if (null === $domain) {
-            $domain = 'messages';
-        }
-
-        $this->assertValidLocale($locale);
-
-        $this->resources[$locale][] = array('db', $resource, $domain);
-        $this->resources[$locale][] = array($format, $resource, $domain);
-
-        if (in_array($locale, $this->fallbackLocales)) {
-            $this->catalogues = array();
-        } else {
-            unset($this->catalogues[$locale]);
-        }
+        parent::addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
+        parent::addResource($format, $resource, $locale, $domain);
     }
 }
