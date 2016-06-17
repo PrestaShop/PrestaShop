@@ -51,9 +51,14 @@ abstract class InstallControllerHttp
     public $session;
 
     /**
-     * @var InstallLanguages
+     * InstallLanguages
      */
     public $language;
+
+    /**
+     * @var \Symfony\Component\Translation\Translator
+     */
+    public $translator;
 
     /**
      * @var bool If false, disable next button access
@@ -197,6 +202,10 @@ abstract class InstallControllerHttp
         // Set current language
         $this->language = InstallLanguages::getInstance();
         $detect_language = $this->language->detectLanguage();
+
+        Context::getContext()->language =  $this->language->locale;
+        $this->translator = Context::getContext()->getTranslator();
+
         if (isset($this->session->lang)) {
             $lang = $this->session->lang;
         } else {
@@ -259,19 +268,6 @@ abstract class InstallControllerHttp
     {
         header('location: index.php?step='.$step);
         exit;
-    }
-
-    /**
-     * Get translated string
-     *
-     * @param string $str String to translate
-     * @param ... All other params will be used with sprintf
-     * @return string
-     */
-    public function l($str)
-    {
-        $args = func_get_args();
-        return call_user_func_array(array($this->language, 'l'), $args);
     }
 
     /**
@@ -447,15 +443,15 @@ abstract class InstallControllerHttp
             $path = _PS_INSTALL_PATH_.'theme/views/';
         }
 
-        if (!file_exists($path.$template.'.phtml')) {
-            throw new PrestashopInstallerException("Template '{$template}.phtml' not found");
+        if (!file_exists($path.$template.'.php')) {
+            throw new PrestashopInstallerException("Template '{$template}.php' not found");
         }
 
         if ($get_output) {
             ob_start();
         }
 
-        include($path.$template.'.phtml');
+        include($path.$template.'.php');
 
         if ($get_output) {
             $content = ob_get_contents();

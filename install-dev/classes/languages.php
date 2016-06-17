@@ -37,6 +37,8 @@ class InstallLanguages
      */
     protected $language;
 
+    public $locale;
+
     /**
      * @var InstallLanguage Default language (english)
      */

@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+
 abstract class InstallControllerConsole
 {
     /**
@@ -76,10 +77,10 @@ abstract class InstallControllerConsole
             }
             exit;
         }
-        
+
         $errors = Datas::getInstance()->getAndCheckArgs($argv);
         if (Datas::getInstance()->show_license) {
-            echo strip_tags(file_get_contents(_PS_INSTALL_PATH_.'theme/views/license_content.phtml'));
+            echo strip_tags(file_get_contents(_PS_INSTALL_PATH_.'theme/views/license_content.php'));
             exit;
         }
 
@@ -114,11 +115,15 @@ abstract class InstallControllerConsole
     {
         $this->step = $step;
         $this->datas = Datas::getInstance();
-        
+
         // Set current language
         $this->language = InstallLanguages::getInstance();
+        Context::getContext()->language =  $this->language->locale;
+        $this->translator = Context::getContext()->getTranslator();
+
         if (!$this->datas->language) {
             die('No language defined');
+
         }
         $this->language->setLanguage($this->datas->language);
 
