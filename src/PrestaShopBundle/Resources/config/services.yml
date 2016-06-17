@@ -190,7 +190,7 @@ services:
 
     # TRANSLATIONS
     prestashop.translations.database_loader:
-        class: PrestaShopBundle\Loader\DatabaseTranslationLoader
+        class: PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
         arguments:
             - "@doctrine.orm.entity_manager"
         tags:

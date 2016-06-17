@@ -24,7 +24,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Loader;
+
+namespace PrestaShopBundle\Translation\Loader;
 
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -49,7 +50,7 @@ class DatabaseTranslationLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages')
     {
-        $lang = $this->em->getRepository('PrestaShopBundle:Translation')->findOneByLocale($locale);
+        $lang = $this->em->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
         $translations = $this->em->getRepository('PrestaShopBundle:Translation')->findBy(['lang' => $lang, 'domain' => $domain]);
         $catalogue = new MessageCatalogue($locale);
         
