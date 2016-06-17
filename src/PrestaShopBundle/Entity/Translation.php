@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Translation
  *
- * @ORM\Table()
+ * @ORM\Table(indexes={@ORM\Index(name="key_domain", columns={"key", "domain"})})
  * @ORM\Entity(repositoryClass="TranslationRepository")
  */
 class Translation
