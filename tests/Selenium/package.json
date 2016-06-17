@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "node_modules/.bin/selenium-standalone install",
-    "test": "php prepare-shop.php && node_modules/.bin/wdio wdio.conf.js",
-    "selenium": "node_modules/.bin/selenium-standalone start"
+    "postinstall": "selenium-standalone install",
+    "test": "php prepare-shop.php && wdio wdio.conf.js",
+    "selenium": "selenium-standalone start"
   },
   "author": "",
   "license": "ISC",
