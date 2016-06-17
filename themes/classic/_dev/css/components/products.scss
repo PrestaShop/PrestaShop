@@ -266,6 +266,11 @@
   }
   .modal-body {
     background: $gray-light;
+    padding: em(50px) em(30px);
+    .divide-right span{
+      display: inline-block;
+      margin-bottom: em(5px);
+    }
   }
   .modal-dialog {
     max-width: 1140px;
@@ -291,6 +296,9 @@
   }
   .cart-content {
     padding-left: $extra-large-space;
+    button{
+      margin-right: em(5px);
+    }
   }
   .divide-right{
     border-right: $gray 1px solid;
