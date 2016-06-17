@@ -45,6 +45,10 @@ class SslMiddleware
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if (!$event->isMasterRequest() ||  $event->getRequest()->isXmlHttpRequest()) {
+            return;
+        }
+        
         // already SSL, do nothing more
         if (\ToolsCore::usingSecureMode()) {
             return;

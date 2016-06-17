@@ -41,10 +41,10 @@ class AttributeController extends FrameworkBundleAdminController
      */
     public function getAllAttributesAction()
     {
-        $response = new JsonResponse();
-        $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
-        $translator = $this->container->get('translator');
-        $attributes = $this->container->get('prestashop.adapter.data_provider.attribute')->getAttributes($locales[0]['id_lang'], true);
+        $locales = $this->get('prestashop.adapter.legacy.context')->getLanguages();
+        $translator = $this->get('translator');
+        $attributes = $this->get('prestashop.adapter.data_provider.attribute')->getAttributes($locales[0]['id_lang'], true);
+        $transAll = $translator->trans('All', [], 'AdminTabs');
 
         $dataGroupAttributes = [];
         $data = [];
@@ -52,7 +52,7 @@ class AttributeController extends FrameworkBundleAdminController
             /** Construct attribute group selector. Ex : Color : All */
             $dataGroupAttributes[$attribute['id_attribute_group']] = [
                 'value' => 'group-'.$attribute['id_attribute_group'],
-                'label' => $attribute['public_name'].' : '.$translator->trans('All', [], 'AdminTabs'),
+                'label' => $attribute['public_name'].' : '.$transAll,
                 'data' => [
                     'id_group' => $attribute['id_attribute_group'],
                     'name' => $attribute['public_name'],
@@ -71,8 +71,7 @@ class AttributeController extends FrameworkBundleAdminController
 
         $data = array_merge($dataGroupAttributes, $data);
 
-        $response->setData($data);
-        return $response;
+        return new JsonResponse($data);
     }
 
     /**

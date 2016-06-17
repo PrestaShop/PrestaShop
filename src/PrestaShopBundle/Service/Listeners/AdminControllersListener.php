@@ -45,44 +45,50 @@ class AdminControllersListener
 
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if (!$event->isMasterRequest() ||  $event->getRequest()->isXmlHttpRequest()) {
+            return;
+        }
+        
         $this->request = $event->getRequest();
-        // @TODO: Check if we have to do any check by:
-        //  - Check whether it's an Action Controller method
-        //  - Check that we are not on an XMLHttpRequest, but a classic one
         $this->buildTopNavMenu();
     }
 
     final private function buildTopNavMenu()
     {
-        $yamlParser = new Parser();
-        $yamlNavigationPath = __DIR__.'/../../Resources/config/admin/navigation.yml';
-        $tabConfiguration = $yamlParser->parse(file_get_contents($yamlNavigationPath));
-        $explodedControllerInfo = explode('::', $this->request->attributes->get('_controller'));
-        $explodedControllerName = explode('\\', $explodedControllerInfo[0]);
-        $controllerNameIndex = count($explodedControllerName) - 1;
-        $controllerName = $explodedControllerName[$controllerNameIndex];
-
-        if (isset($tabConfiguration[$controllerName])) {
-            // Construct tabs and inject into twig tpl
-            $tabDataContent = [];
-            // Get current route name to know when to put "current" class on HTML dom
-            $currentRouteName = $this->request->get('_route');
-
-            foreach ($tabConfiguration[$controllerName] as $tabName => $tabData) {
-                $tabData['isCurrent'] = false;
-                if ($currentRouteName === $tabData['route']) {
-                    $tabData['isCurrent'] = true;
+        static $tabDataContent = null;
+        
+        if(null === $tabDataContent) {
+            $yamlParser = new Parser();
+            $yamlNavigationPath = __DIR__.'/../../Resources/config/admin/navigation.yml';
+            $tabConfiguration = $yamlParser->parse(file_get_contents($yamlNavigationPath));
+            $explodedControllerInfo = explode('::', $this->request->get('_controller'));
+            $explodedControllerName = explode('\\', $explodedControllerInfo[0]);
+            $controllerNameIndex = count($explodedControllerName) - 1;
+            $controllerName = $explodedControllerName[$controllerNameIndex];
+    
+            if (isset($tabConfiguration[$controllerName])) {
+                // Construct tabs and inject into twig tpl
+                $tabDataContent = [];
+                // Get current route name to know when to put "current" class on HTML dom
+                $currentRouteName = $this->request->get('_route');
+    
+                foreach ($tabConfiguration[$controllerName] as $tabName => $tabData) {
+                    $tabData['isCurrent'] = false;
+                    if ($currentRouteName === $tabData['route']) {
+                        $tabData['isCurrent'] = true;
+                    }
+                    $tabData['title'] = $this->translator->trans($tabData['title'], [], 'AdminControllersListener');
+                    $tabData['route'] = $this->router->generate($tabData['route']);
+                    $tabDataContent[] = $this->renderer->render(
+                        'PrestaShopBundle:Admin/Common/_partials:_header_tab.html.twig',
+                        ['tabData' => $tabData]
+                    );
                 }
-                $tabData['title'] = $this->translator->trans($tabData['title'], [], 'AdminControllersListener');
-                $tabData['route'] = $this->router->generate($tabData['route']);
-                $tabDataContent[] = $this->renderer->render(
-                    'PrestaShopBundle:Admin/Common/_partials:_header_tab.html.twig',
-                    ['tabData' => $tabData]
-                );
+                // Inject them to templating system as global to be able to pass it to the legacy afterwards and once
+                // controller has given a response
             }
-            // Inject them to templating system as global to be able to pass it to the legacy afterwards and once
-            // controller has given a response
-            $this->renderer->addGlobal('headerTabContent', $tabDataContent);
         }
+        
+        $this->renderer->addGlobal('headerTabContent', $tabDataContent);
     }
 }
