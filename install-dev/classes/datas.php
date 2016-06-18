@@ -151,6 +151,10 @@ class Datas
             'default' => 1,
             'help' => 'get news from PrestaShop',
         ),
+        'theme' => array(
+            'name' => 'theme',
+            'default' => ''
+        )
     );
 
     protected $datas = array();

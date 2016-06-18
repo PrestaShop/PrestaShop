@@ -105,7 +105,7 @@ class ShopCore extends ObjectModel
     protected static $context_id_shop_group;
 
     /** @var Theme **/
-    protected $theme;
+    public $theme;
 
     /**
      * There are 3 kinds of shop context : shop, group shop and general
