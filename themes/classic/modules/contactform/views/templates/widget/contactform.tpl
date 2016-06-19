@@ -59,9 +59,12 @@
       <div class="form-group row">
         <label class="col-md-3 form-control-label">{l s='Message' d='Shop.Forms.Labels'}</label>
         <div class="col-md-9">
-          <textarea rows="3" name="message" class="form-control" placeholder="{l s='How can we help?' d='Shop.Forms.Help'}">
-            {if $contact.message}{$contact.message}{/if}
-          </textarea>
+          <textarea
+            class="form-control"
+            name="message"
+            placeholder="{l s='How can we help?' d='Shop.Forms.Help'}"
+            rows="3"
+          >{if $contact.message}{$contact.message}{/if}</textarea>
         </div>
       </div>
 
