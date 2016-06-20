@@ -373,20 +373,20 @@ class ModuleController extends FrameworkBundleAdminController
             if ($installation_response['status'] === null) {
                 $installation_response['status'] = false;
                 $installation_response['msg'] = $translator->trans(
-                    '%module% did not return a valid response on installation',
-                    array('%module' => $module_name),
-                    '<InsertDomain>');
+                    '%module% did not return a valid response on installation.',
+                    array('%module%' => $module_name),
+                    'Admin.Modules.Notification');
             } elseif ($installation_response['status'] === true) {
                 $installation_response['msg'] = $translator->trans(
-                    'Installation of module %module% succeded',
+                    'Installation of module %module% succeeded',
                     array('%module%' => $module_name),
-                    '<InsertDomain>');
+                    'Admin.Modules.Notification');
                 $installation_response['is_configurable'] = (bool)$this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
             } else {
                 $installation_response['msg'] = $translator->trans(
-                    'Installation of module %module% failed',
+                    'Installation of module %module% failed.',
                     array('%module%' => $module_name),
-                    '<InsertDomain>');
+                    'Admin.Modules.Notification');
             }
 
             return new JsonResponse(
