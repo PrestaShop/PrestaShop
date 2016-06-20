@@ -5,6 +5,7 @@
       &:focus {
         outline: 3px $brand-primary solid;
         color: $gray-darker;
+        background: white;
         + button .search {
           color: $brand-primary;
         }

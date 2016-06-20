@@ -26,16 +26,14 @@
                     </div>
                     <label for="delivery_option_{$carrier.id}" class="col-md-11 delivery-option-2">
                       <div class="row">
-                        <div class="col-md-2">
-                          <div class="logo-container">
-                            {if $carrier.logo}
-                              <img src="{$carrier.logo}" alt="{$carrier.name}">
-                              {else}
-                              &nbsp;
-                            {/if}
-                          </div>
+                        <div class="col-md-1">
+                          {if $carrier.logo}
+                            <img src="{$carrier.logo}" alt="{$carrier.name}">
+                            {else}
+                            &nbsp;
+                          {/if}
                         </div>
-                        <div class="col-md-3 text-xs-left">
+                        <div class="col-md-4 text-xs-left">
                           <span class="h6 carrier-name">{$carrier.name}</span>
                         </div>
                         <div class="col-md-4">

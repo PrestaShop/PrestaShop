@@ -19,7 +19,7 @@
         <div class="card-block">
           <h4 class="h4 black addresshead">{l s='My Delivery Address' d='Shop.Theme.Checkout'}</h4>
           {$customer.addresses[$cart.id_address_delivery]['formatted'] nofilter}
-        </div>      
+        </div>
       </div>
     </div>
     <div class="col-md-6">
@@ -31,7 +31,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-md-12">
       <h4 class="h4">
@@ -47,7 +47,7 @@
                 <img src="{$selected_delivery_option.logo}" alt="{$selected_delivery_option.name}">
               {else}
                 &nbsp;
-              {/if}                              
+              {/if}
             </div>
           </div>
           <div class="col-md-4">
@@ -63,8 +63,8 @@
       </div>
     </div>
   </div>
-  
-  <div class="row">    
+
+  <div class="row">
     {block name='order_confirmation_table'}
       {include file='checkout/_partials/order-final-summary-table.tpl'
          products=$cart.products

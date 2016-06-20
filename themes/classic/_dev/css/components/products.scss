@@ -227,6 +227,7 @@
         img {
           width: em(148px);
           cursor: pointer;
+          background: white;
           &:hover {
             border: $brand-primary 3px solid;
           }

@@ -160,6 +160,9 @@
     }
     li{
       position: relative;
+      &[data-depth="1"]{
+        margin-bottom: $small-space;
+      }    
     }
     li[data-depth="0"] > a {
       font-weight: 600;

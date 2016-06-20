@@ -55,6 +55,10 @@
 }
 .facebook {
   background-image: url(../img/facebook.svg);
+  &::before{
+    content:"";
+    background-image: url(../img/facebook-blue.svg);
+  }
   &.icon-gray {
     background-image: url(../img/facebook-gray.svg);
     &:hover {
@@ -64,6 +68,10 @@
 }
 .twitter {
   background-image: url(../img/twitter.svg);
+  &::before{
+    content:"";
+    background-image: url(../img/twitter-blue.svg);
+  }
   &.icon-gray {
     background-image: url(../img/twitter-gray.svg);
     &:hover {
@@ -79,6 +87,10 @@
 }
 .googleplus {
   background-image: url(../img/gplus.svg);
+  &::before{
+    content:"";
+    background-image: url(../img/gplus-blue.svg);
+  }
   &.icon-gray {
     background-image: url(../img/gplus-gray.svg);
     &:hover {
@@ -93,6 +105,10 @@
 }
 .pinterest {
   background-image: url(../img/pinterest.svg);
+  &::before{
+    content:"";
+    background-image: url(../img/pinterest-blue.svg);
+  }
   &.icon-gray {
     background-image: url(../img/pinterest-gray.svg);
     &:hover {
