@@ -1,34 +1,34 @@
 <?xml version="1.0"?>
 <entity_country>
   <country id="DE">
-    <name>Germany</name>
+    <name>Tyskland</name>
   </country>
   <country id="AT">
-    <name>Austria</name>
+    <name>Österrike</name>
   </country>
   <country id="BE">
-    <name>Belgium</name>
+    <name>Belgien</name>
   </country>
   <country id="CA">
-    <name>Canada</name>
+    <name>Kanada</name>
   </country>
   <country id="CN">
-    <name>China</name>
+    <name>Kina</name>
   </country>
   <country id="ES">
-    <name>Spain</name>
+    <name>Spanien</name>
   </country>
   <country id="FI">
     <name>Finland</name>
   </country>
   <country id="FR">
-    <name>France</name>
+    <name>Frankrike</name>
   </country>
   <country id="GR">
-    <name>Greece</name>
+    <name>Grekland</name>
   </country>
   <country id="IT">
-    <name>Italy</name>
+    <name>Italien</name>
   </country>
   <country id="JP">
     <name>Japan</name>
@@ -37,64 +37,64 @@
     <name>Luxemburg</name>
   </country>
   <country id="NL">
-    <name>Netherlands</name>
+    <name>Holland</name>
   </country>
   <country id="PL">
-    <name>Poland</name>
+    <name>Polen</name>
   </country>
   <country id="PT">
     <name>Portugal</name>
   </country>
   <country id="CZ">
-    <name>Czech Republic</name>
+    <name>Tjeckien</name>
   </country>
   <country id="GB">
-    <name>United Kingdom</name>
+    <name>England</name>
   </country>
   <country id="SE">
-    <name>Sweden</name>
+    <name>Sverige</name>
   </country>
   <country id="CH">
-    <name>Switzerland</name>
+    <name>Schweiz</name>
   </country>
   <country id="DK">
-    <name>Denmark</name>
+    <name>Danmark</name>
   </country>
   <country id="US">
-    <name>United States</name>
+    <name>USA</name>
   </country>
   <country id="HK">
     <name>HongKong</name>
   </country>
   <country id="NO">
-    <name>Norway</name>
+    <name>Norge</name>
   </country>
   <country id="AU">
-    <name>Australia</name>
+    <name>Australien</name>
   </country>
   <country id="SG">
     <name>Singapore</name>
   </country>
   <country id="IE">
-    <name>Ireland</name>
+    <name>Irland</name>
   </country>
   <country id="NZ">
-    <name>New Zealand</name>
+    <name>Nya Zeland</name>
   </country>
   <country id="KR">
-    <name>South Korea</name>
+    <name>Syd Korea</name>
   </country>
   <country id="IL">
     <name>Israel</name>
   </country>
   <country id="ZA">
-    <name>South Africa</name>
+    <name>Syd Afrika</name>
   </country>
   <country id="NG">
     <name>Nigeria</name>
   </country>
   <country id="CI">
-    <name>Ivory Coast</name>
+    <name>Elfenbenskusten</name>
   </country>
   <country id="TG">
     <name>Togo</name>
@@ -106,16 +106,16 @@
     <name>Mauritius</name>
   </country>
   <country id="RO">
-    <name>Romania</name>
+    <name>Rumänien</name>
   </country>
   <country id="SK">
-    <name>Slovakia</name>
+    <name>Slovakien</name>
   </country>
   <country id="DZ">
-    <name>Algeria</name>
+    <name>Algeriet</name>
   </country>
   <country id="AS">
-    <name>American Samoa</name>
+    <name>Amerikanska Samoa</name>
   </country>
   <country id="AD">
     <name>Andorra</name>
@@ -127,13 +127,13 @@
     <name>Anguilla</name>
   </country>
   <country id="AG">
-    <name>Antigua and Barbuda</name>
+    <name>Antigua och Barbuda</name>
   </country>
   <country id="AR">
     <name>Argentina</name>
   </country>
   <country id="AM">
-    <name>Armenia</name>
+    <name>Armenien</name>
   </country>
   <country id="AW">
     <name>Aruba</name>
@@ -154,7 +154,7 @@
     <name>Barbados</name>
   </country>
   <country id="BY">
-    <name>Belarus</name>
+    <name>Vitryssland</name>
   </country>
   <country id="BZ">
     <name>Belize</name>
@@ -172,7 +172,7 @@
     <name>Botswana</name>
   </country>
   <country id="BR">
-    <name>Brazil</name>
+    <name>Brasilien</name>
   </country>
   <country id="BN">
     <name>Brunei</name>
@@ -187,16 +187,16 @@
     <name>Burundi</name>
   </country>
   <country id="KH">
-    <name>Cambodia</name>
+    <name>Kambodja</name>
   </country>
   <country id="CM">
-    <name>Cameroon</name>
+    <name>Kamerun</name>
   </country>
   <country id="CV">
-    <name>Cape Verde</name>
+    <name>Kap Verde</name>
   </country>
   <country id="CF">
-    <name>Central African Republic</name>
+    <name>Centralafrikanska republiken</name>
   </country>
   <country id="TD">
     <name>Chad</name>
@@ -208,43 +208,43 @@
     <name>Colombia</name>
   </country>
   <country id="KM">
-    <name>Comoros</name>
+    <name>Comorerna</name>
   </country>
   <country id="CD">
-    <name>Congo, Dem. Republic</name>
+    <name>Kongo, Dem. Republik</name>
   </country>
   <country id="CG">
-    <name>Congo, Republic</name>
+    <name>Kongo, Republic</name>
   </country>
   <country id="CR">
     <name>Costa Rica</name>
   </country>
   <country id="HR">
-    <name>Croatia</name>
+    <name>Kroatien</name>
   </country>
   <country id="CU">
-    <name>Cuba</name>
+    <name>Kuba</name>
   </country>
   <country id="CY">
-    <name>Cyprus</name>
+    <name>Cypern</name>
   </country>
   <country id="DJ">
     <name>Djibouti</name>
   </country>
   <country id="DM">
-    <name>Dominica</name>
+    <name>Dominikanska</name>
   </country>
   <country id="DO">
-    <name>Dominican Republic</name>
+    <name>Dominikanska republiken</name>
   </country>
   <country id="TL">
-    <name>East Timor</name>
+    <name>Östtimor</name>
   </country>
   <country id="EC">
     <name>Ecuador</name>
   </country>
   <country id="EG">
-    <name>Egypt</name>
+    <name>Egypten</name>
   </country>
   <country id="SV">
     <name>El Salvador</name>
@@ -256,16 +256,16 @@
     <name>Eritrea</name>
   </country>
   <country id="EE">
-    <name>Estonia</name>
+    <name>Estland</name>
   </country>
   <country id="ET">
-    <name>Ethiopia</name>
+    <name>Etiopien</name>
   </country>
   <country id="FK">
-    <name>Falkland Islands</name>
+    <name>Falklandsöarna</name>
   </country>
   <country id="FO">
-    <name>Faroe Islands</name>
+    <name>Färöarna</name>
   </country>
   <country id="FJ">
     <name>Fiji</name>
@@ -277,7 +277,7 @@
     <name>Gambia</name>
   </country>
   <country id="GE">
-    <name>Georgia</name>
+    <name>Georgien</name>
   </country>
   <country id="GH">
     <name>Ghana</name>
@@ -286,7 +286,7 @@
     <name>Grenada</name>
   </country>
   <country id="GL">
-    <name>Greenland</name>
+    <name>Grönland</name>
   </country>
   <country id="GI">
     <name>Gibraltar</name>
@@ -316,22 +316,22 @@
     <name>Haiti</name>
   </country>
   <country id="HM">
-    <name>Heard Island and McDonald Islands</name>
+    <name>Heard - och Mcdonaldöarna</name>
   </country>
   <country id="VA">
-    <name>Vatican City State</name>
+    <name>Vatikanstaten</name>
   </country>
   <country id="HN">
     <name>Honduras</name>
   </country>
   <country id="IS">
-    <name>Iceland</name>
+    <name>Island</name>
   </country>
   <country id="IN">
-    <name>India</name>
+    <name>Indien</name>
   </country>
   <country id="ID">
-    <name>Indonesia</name>
+    <name>Indonesien</name>
   </country>
   <country id="IR">
     <name>Iran</name>
@@ -349,7 +349,7 @@
     <name>Jersey</name>
   </country>
   <country id="JO">
-    <name>Jordan</name>
+    <name>Jordanien</name>
   </country>
   <country id="KZ">
     <name>Kazakhstan</name>
@@ -361,7 +361,7 @@
     <name>Kiribati</name>
   </country>
   <country id="KP">
-    <name>Korea, Dem. Republic of</name>
+    <name>Korea, Dem. Republiken</name>
   </country>
   <country id="KW">
     <name>Kuwait</name>
@@ -376,7 +376,7 @@
     <name>Latvia</name>
   </country>
   <country id="LB">
-    <name>Lebanon</name>
+    <name>Libanon</name>
   </country>
   <country id="LS">
     <name>Lesotho</name>
@@ -385,22 +385,22 @@
     <name>Liberia</name>
   </country>
   <country id="LY">
-    <name>Libya</name>
+    <name>Libyen</name>
   </country>
   <country id="LI">
     <name>Liechtenstein</name>
   </country>
   <country id="LT">
-    <name>Lithuania</name>
+    <name>Litauen</name>
   </country>
   <country id="MO">
     <name>Macau</name>
   </country>
   <country id="MK">
-    <name>Macedonia</name>
+    <name>Makedonien</name>
   </country>
   <country id="MG">
-    <name>Madagascar</name>
+    <name>Madagaskar</name>
   </country>
   <country id="MW">
     <name>Malawi</name>
@@ -409,7 +409,7 @@
     <name>Malaysia</name>
   </country>
   <country id="MV">
-    <name>Maldives</name>
+    <name>Maldiverna</name>
   </country>
   <country id="ML">
     <name>Mali</name>
@@ -418,16 +418,16 @@
     <name>Malta</name>
   </country>
   <country id="MH">
-    <name>Marshall Islands</name>
+    <name>Marshallöarna</name>
   </country>
   <country id="MQ">
     <name>Martinique</name>
   </country>
   <country id="MR">
-    <name>Mauritania</name>
+    <name>Mauretanien</name>
   </country>
   <country id="HU">
-    <name>Hungary</name>
+    <name>Ungern</name>
   </country>
   <country id="YT">
     <name>Mayotte</name>
@@ -436,16 +436,16 @@
     <name>Mexico</name>
   </country>
   <country id="FM">
-    <name>Micronesia</name>
+    <name>Micronesien</name>
   </country>
   <country id="MD">
-    <name>Moldova</name>
+    <name>Moldavien</name>
   </country>
   <country id="MC">
     <name>Monaco</name>
   </country>
   <country id="MN">
-    <name>Mongolia</name>
+    <name>Mongoliet</name>
   </country>
   <country id="ME">
     <name>Montenegro</name>
@@ -469,25 +469,25 @@
     <name>Nepal</name>
   </country>
   <country id="AN">
-    <name>Netherlands Antilles</name>
+    <name>Nederländska Antillerna</name>
   </country>
   <country id="NC">
-    <name>New Caledonia</name>
+    <name>Nya Kaledonien</name>
   </country>
   <country id="NI">
     <name>Nicaragua</name>
   </country>
   <country id="NE">
-    <name>Niger</name>
+    <name>Nigeria</name>
   </country>
   <country id="NU">
     <name>Niue</name>
   </country>
   <country id="NF">
-    <name>Norfolk Island</name>
+    <name>Norfolk Öarna</name>
   </country>
   <country id="MP">
-    <name>Northern Mariana Islands</name>
+    <name>Nordmarianerna Öarna</name>
   </country>
   <country id="OM">
     <name>Oman</name>
@@ -499,13 +499,13 @@
     <name>Palau</name>
   </country>
   <country id="PS">
-    <name>Palestinian Territories</name>
+    <name>Palestinska områdena</name>
   </country>
   <country id="PA">
     <name>Panama</name>
   </country>
   <country id="PG">
-    <name>Papua New Guinea</name>
+    <name>Papua Nya Guinea</name>
   </country>
   <country id="PY">
     <name>Paraguay</name>
@@ -514,7 +514,7 @@
     <name>Peru</name>
   </country>
   <country id="PH">
-    <name>Philippines</name>
+    <name>Philippinerna</name>
   </country>
   <country id="PN">
     <name>Pitcairn</name>
@@ -529,7 +529,7 @@
     <name>Reunion Island</name>
   </country>
   <country id="RU">
-    <name>Russian Federation</name>
+    <name>Ryska Federationen</name>
   </country>
   <country id="RW">
     <name>Rwanda</name>
@@ -538,7 +538,7 @@
     <name>Saint Barthelemy</name>
   </country>
   <country id="KN">
-    <name>Saint Kitts and Nevis</name>
+    <name>Saint Kitts och Nevis</name>
   </country>
   <country id="LC">
     <name>Saint Lucia</name>
@@ -547,10 +547,10 @@
     <name>Saint Martin</name>
   </country>
   <country id="PM">
-    <name>Saint Pierre and Miquelon</name>
+    <name>Saint Pierre och Miquelon</name>
   </country>
   <country id="VC">
-    <name>Saint Vincent and the Grenadines</name>
+    <name>Saint Vincent och the Grenadines</name>
   </country>
   <country id="WS">
     <name>Samoa</name>
@@ -562,31 +562,31 @@
     <name>S&#xE3;o Tom&#xE9; and Pr&#xED;ncipe</name>
   </country>
   <country id="SA">
-    <name>Saudi Arabia</name>
+    <name>Saudiarabien</name>
   </country>
   <country id="SN">
     <name>Senegal</name>
   </country>
   <country id="RS">
-    <name>Serbia</name>
+    <name>Serbien</name>
   </country>
   <country id="SC">
-    <name>Seychelles</name>
+    <name>Seychellerna</name>
   </country>
   <country id="SL">
     <name>Sierra Leone</name>
   </country>
   <country id="SI">
-    <name>Slovenia</name>
+    <name>Slovenien</name>
   </country>
   <country id="SB">
-    <name>Solomon Islands</name>
+    <name>Salomonöarna</name>
   </country>
   <country id="SO">
     <name>Somalia</name>
   </country>
   <country id="GS">
-    <name>South Georgia and the South Sandwich Islands</name>
+    <name>Sydgeorgien och Sydsandwichöarna</name>
   </country>
   <country id="LK">
     <name>Sri Lanka</name>
@@ -598,13 +598,13 @@
     <name>Suriname</name>
   </country>
   <country id="SJ">
-    <name>Svalbard and Jan Mayen</name>
+    <name>Svalbard och Jan Mayen</name>
   </country>
   <country id="SZ">
     <name>Swaziland</name>
   </country>
   <country id="SY">
-    <name>Syria</name>
+    <name>Syrien</name>
   </country>
   <country id="TW">
     <name>Taiwan</name>
@@ -625,19 +625,19 @@
     <name>Tonga</name>
   </country>
   <country id="TT">
-    <name>Trinidad and Tobago</name>
+    <name>Trinidad och Tobago</name>
   </country>
   <country id="TN">
-    <name>Tunisia</name>
+    <name>Tunisien</name>
   </country>
   <country id="TR">
-    <name>Turkey</name>
+    <name>Turkiet</name>
   </country>
   <country id="TM">
     <name>Turkmenistan</name>
   </country>
   <country id="TC">
-    <name>Turks and Caicos Islands</name>
+    <name>Turks - och Caicosöarna</name>
   </country>
   <country id="TV">
     <name>Tuvalu</name>
@@ -646,10 +646,10 @@
     <name>Uganda</name>
   </country>
   <country id="UA">
-    <name>Ukraine</name>
+    <name>Ukraina</name>
   </country>
   <country id="AE">
-    <name>United Arab Emirates</name>
+    <name>Förenade arabemiraten</name>
   </country>
   <country id="UY">
     <name>Uruguay</name>
@@ -667,16 +667,16 @@
     <name>Vietnam</name>
   </country>
   <country id="VG">
-    <name>Virgin Islands (British)</name>
+    <name>Jungfruöarna (Storbritannien)</name>
   </country>
   <country id="VI">
-    <name>Virgin Islands (U.S.)</name>
+    <name>Jungfruöarna (US)</name>
   </country>
   <country id="WF">
-    <name>Wallis and Futuna</name>
+    <name>Wallis och Futuna</name>
   </country>
   <country id="EH">
-    <name>Western Sahara</name>
+    <name>Västsahara</name>
   </country>
   <country id="YE">
     <name>Yemen</name>
@@ -688,31 +688,31 @@
     <name>Zimbabwe</name>
   </country>
   <country id="AL">
-    <name>Albania</name>
+    <name>Albanien</name>
   </country>
   <country id="AF">
     <name>Afghanistan</name>
   </country>
   <country id="AQ">
-    <name>Antarctica</name>
+    <name>Antarktis</name>
   </country>
   <country id="BA">
-    <name>Bosnia and Herzegovina</name>
+    <name>Bosnien och Hercegovina</name>
   </country>
   <country id="BV">
     <name>Bouvet Island</name>
   </country>
   <country id="IO">
-    <name>British Indian Ocean Territory</name>
+    <name>Brittiska territoriet i Indiska oceanen</name>
   </country>
   <country id="BG">
-    <name>Bulgaria</name>
+    <name>Bulgarien</name>
   </country>
   <country id="KY">
-    <name>Cayman Islands</name>
+    <name>Caymanöarna</name>
   </country>
   <country id="CX">
-    <name>Christmas Island</name>
+    <name>Julön</name>
   </country>
   <country id="CC">
     <name>Cocos (Keeling) Islands</name>
@@ -721,13 +721,13 @@
     <name>Cook Islands</name>
   </country>
   <country id="GF">
-    <name>French Guiana</name>
+    <name>Franska Guyana</name>
   </country>
   <country id="PF">
-    <name>French Polynesia</name>
+    <name>Franska Polynesien</name>
   </country>
   <country id="TF">
-    <name>French Southern Territories</name>
+    <name>Franska Sydterritorierna</name>
   </country>
   <country id="AX">
     <name>&#xC5;land Islands</name>
