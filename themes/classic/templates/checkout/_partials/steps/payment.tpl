@@ -8,7 +8,7 @@
           <div id="{$option.id}-container" class="payment-option clearfix">
             {* This is the way an option should be selected when Javascript is enabled *}
             <span class="custom-radio pull-xs-left">
-              <input class="ps-shown-by-j"s id="{$option.id}" type="radio" name="payment-option" required {if $selected_payment_option == $option.id} checked {/if}>
+              <input class="ps-shown-by-js" id="{$option.id}" type="radio" name="payment-option" required {if $selected_payment_option == $option.id} checked {/if}>
               <span></span>
             </span>
             {* This is the way an option should be selected when Javascript is disabled *}
@@ -61,9 +61,9 @@
       <p class="alert alert-danger">{l s='Unfortunately, there are no payment method available.' d='Shop.Theme.Checkout'}</p>
     {/foreach}
   </div>
-  
+
   {if $show_final_summary}
-    {include file='checkout/_partials/order-final-summary.tpl'}	
+    {include file='checkout/_partials/order-final-summary.tpl'}
   {/if}
 
   {if $conditions_to_approve|count}
