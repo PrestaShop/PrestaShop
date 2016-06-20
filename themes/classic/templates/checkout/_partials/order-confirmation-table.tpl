@@ -64,14 +64,17 @@
         </tr>
       {/if}
     {/foreach}
+    
+    {if $subtotals.tax.label !== null}
+      <tr class="sub">
+        <td>{$subtotals.tax.label}</td>
+        <td>{$subtotal.tax.value}</td>
+      </tr>
+    {/if}
 
     <tr class="font-weight-bold">
       <td><span class="text-uppercase">{$totals.total.label}</span> {$labels.tax_short}</td>
       <td>{$totals.total.value}</td>
-    </tr>
-    <tr class="sub">
-      <td>{$subtotals.tax.label}</td>
-      <td>{$subtotal.tax.value}</td>
     </tr>
   </table>
 </div>
