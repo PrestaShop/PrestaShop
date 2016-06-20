@@ -41,7 +41,7 @@
         {/block}
 
         <div id="order-details" class="col-md-4">
-          <h3 class="h3 card-title">{l s='Order details' d='Shop.Theme.Checkout'}</h3>
+          <h3 class="h3 card-title">{l s='Order details' d='Shop.Theme.Checkout'}:</h3>
           <ul>
             <li>{l s='Order reference: %s' d='Shop.Theme.Checkout' sprintf=$order.details.reference}</li>
             <li>{l s='Payment method: %s' d='Shop.Theme.Checkout' sprintf=$order.details.payment}</li>

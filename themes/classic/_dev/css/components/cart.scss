@@ -1,10 +1,10 @@
 .cart-summary-line {
   @include clearfix;
   clear: both;
-  font-weight: 700;
   .label {
     padding-left: 0;
     font-size: em(14px);
+    font-weight: normal;
     @include pull-left;
   }
   .value {
@@ -41,6 +41,10 @@
 .cart-grid-body {
   > a.label {
     font-size: em(16px);
+    margin: em(10px) 0 em(25px);
+    &:hover{
+      color: $brand-primary;
+    }
   }
   hr {
     margin: 0;
@@ -48,10 +52,14 @@
 }
 /** CART RIGHT **/
 .cart-grid-right {
+  hr {
+    margin: 0;
+  }
   > .cart-summary {
     .cart-total {
       > .label {
-        font-size: 100%;
+        font-size: 100;
+        font-weight: normal;
       }
     }
   }
@@ -112,6 +120,9 @@
     > .label {
       font-size: em(15px);
       font-weight: 800;
+      &:hover{
+        color:$brand-primary;
+      }
     }
     > .value {
       color: $gray-darker;

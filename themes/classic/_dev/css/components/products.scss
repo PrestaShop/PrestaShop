@@ -304,11 +304,7 @@
     border-right: $gray 1px solid;
   }
 }
-.product-image {
-  img{
-    @include box-shadow;
-  }
-}
+
 .product-images {
   > li.thumb-container {
     display: inline;

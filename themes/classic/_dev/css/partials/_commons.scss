@@ -258,11 +258,15 @@ label {
         color: $gray-darker;
       }
     }
+
     &:checked + span {
       .checkbox-checked {
         display: block;
       }
     }
+  }
+  label{
+    text-align: left;
   }
 }
 .text-muted {

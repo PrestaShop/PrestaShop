@@ -6,15 +6,26 @@ body#checkout {
     padding: em(80px) 0 em(15px);
     border: none;
     @include box-shadow;
+    .logo {
+      max-height: em(70px);
+      width: auto;
+    }
+  }
+  .custom-checkbox {
+    @include display(flex);
+    span {
+      @include flex(0 0 15px);
+      margin-top: 3px;
+    }
+  }
+  a:hover {
+    color: #1a8196;
   }
   section#content {
     margin-top: 25px;
   }
   .container {
     min-height: 100%;
-  }
-  .logo-container{
-    min-width: em(100px);
   }
   section.checkout-step {
     @include box-shadow;
@@ -118,6 +129,9 @@ body#checkout {
     .payment-option label {
       display: table-cell;
     }
+    .payment-options .custom-radio {
+      margin-right: $medium-space;
+    }
     .step-number {
       display: inline-block;
       padding: em(10px);
@@ -144,12 +158,15 @@ body#checkout {
       margin-bottom: em(10px);
     }
     .address {
-      margin-left: em(50px);
+      margin-left: em(25px);
       font-weight: normal;
     }
     .radio-block {
       padding: em(15px);
       text-align: left;
+    }
+    .custom-radio {
+      margin-right: 0;
     }
     .edit-address,
     .delete-address {
@@ -182,12 +199,7 @@ body#checkout {
         }
       }
     }
-    .delivery-option-2 {
-      img {
-        width: em(100px);
-        float: left;
-      }
-    }
+
     .delivery-option {
       background: $gray-lighter;
       padding: em(15px);
@@ -199,9 +211,6 @@ body#checkout {
       margin: 0 em(20px);
       word-break: break-word;
       text-align: left;
-    }
-    .carrier-price {
-      font-weight: 700;
     }
     #customer-form,
     #login-form,
@@ -353,10 +362,10 @@ body#checkout {
     margin: 0;
     padding: 0;
   }
-  .cart-grid-body{
+  .cart-grid-body {
     width: 100%;
   }
-  .cart-grid-right{
+  .cart-grid-right {
     width: 100%;
   }
   body#checkout section.checkout-step.-reachable.-complete h1 .step-edit {
@@ -376,6 +385,7 @@ body#checkout {
       @include flex(0 0 auto);
     }
   }
+
   #payment-confirmation {
     button[type="submit"] {
       font-size: em(12px);
@@ -388,12 +398,11 @@ body#checkout {
     }
   }
 }
-
-.cart-empty{
-  .cart-summary{
-    opacity: .7;
+.cart-empty {
+  .cart-summary {
+    opacity: 0.7;
   }
-  .cart-container{
+  .cart-container {
     min-height: em(371px);
   }
 }
