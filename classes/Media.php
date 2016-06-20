@@ -710,10 +710,8 @@ class MediaCore
     {
         foreach (array(_PS_THEME_DIR_.'cache') as $dir) {
             if (file_exists($dir)) {
-                foreach (scandir($dir) as $file) {
-                    if ($file[0] != '.' && $file != 'index.php') {
-                        Tools::deleteFile($dir.DIRECTORY_SEPARATOR.$file, array('index.php'));
-                    }
+                foreach (array_diff(scandir($dir), array('..', '.', 'index.php')) as $file) {
+                    Tools::deleteFile($dir.DIRECTORY_SEPARATOR.$file);
                 }
             }
         }
