@@ -12,6 +12,7 @@ function getTinyMaterialIconsAssoc()
         'mce-i-alignleft': '<i class="material-icons">format_align_left</i>',
         'mce-i-aligncenter': '<i class="material-icons">format_align_center</i>',
         'mce-i-alignright': '<i class="material-icons">format_align_right</i>',
+        'mce-i-alignjustify': '<i class="material-icons">format_align_justify</i>',
         'mce-i-bullist': '<i class="material-icons">format_list_bulleted</i>',
         'mce-i-numlist': '<i class="material-icons">format_list_numbered</i>',
         'mce-i-image': '<i class="material-icons">image</i>'
@@ -34,7 +35,7 @@ function tinySetup(config)
 		selector: ".rte" ,
 		plugins : "colorpicker link image filemanager table media placeholder",
 		browser_spellcheck : true,
-		toolbar1 : "colorpicker,bold,italic,underline,strikethrough,blockquote,link,alignleft,aligncenter,alignright,alignfull,bullist,numlist,image",
+		toolbar1 : "colorpicker,bold,italic,underline,strikethrough,blockquote,link,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,image",
 		toolbar2: "",
 		external_filemanager_path: baseAdminDir+"filemanager/",
 		filemanager_title: "File manager" ,
