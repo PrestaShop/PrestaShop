@@ -16,7 +16,7 @@
 </div>
 </form>
 <div id="phone_help">
-	<?php echo $this->translator->trans('If you need some assistance, you can <a href="%help%" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%doc%" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.', array('help' => $this->getTailoredHelp(), 'doc' => $this->getDocumentationLink()), 'Install'); ?>
+	<?php echo $this->translator->trans('If you need some assistance, you can <a href="%help%" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%doc%" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.', array('%help%' => $this->getTailoredHelp(), '%doc%' => $this->getDocumentationLink()), 'Install'); ?>
 </div>
 </div><!-- div id="container" -->
 

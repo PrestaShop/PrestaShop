@@ -54,32 +54,18 @@
 	<div id="loader">&nbsp;</div>
 </div>
 
-<!--This comment is necessary!
-
-	Purpose is to make some strings available for translation,
-	that would not be 'seen' by the translations parser otherwise.
-
-	$this->translator->trans('menu_welcome');
-	$this->translator->trans('menu_license');
-	$this->translator->trans('menu_system');
-	$this->translator->trans('menu_configure');
-	$this->translator->trans('menu_database');
-	$this->translator->trans('menu_process');
-
--->
-
 <!-- List of steps -->
 <div id="leftpannel">
 	<ol id="tabs">
-		<?php foreach ($this->getSteps() as $step): ?>
+		<?php foreach ($this->getSteps() as $step => $translation): ?>
 			<?php if ($this->step == $step): ?>
-				<li class="selected"><?php echo $this->translator->trans('menu_%step%', array('%step%' => $step)); ?></li>
+				<li class="selected"><?php echo $translation; ?></li>
 			<?php elseif ($this->isStepFinished($step)): ?>
-				<li class="finished"><a href="index.php?step=<?php echo $step ?>"><?php echo $this->translator->trans('menu_%step%', array('%step%' => $step)); ?></a></li>
+				<li class="finished"><a href="index.php?step=<?php echo $step ?>"><?php echo $translation; ?></a></li>
 			<?php elseif ($step == $this->getLastStep()): ?>
-				<li class="configuring"><a href="index.php?step=<?php echo $step ?>"><?php echo $this->translator->trans('menu_%step%', array('%step%' => $step)); ?></a></li>
+				<li class="configuring"><a href="index.php?step=<?php echo $step ?>"><?php echo $translation; ?></a></li>
 			<?php else: ?>
-				<li><?php echo $this->translator->trans('menu_%step%', array('%step%' => $step)); ?></li>
+				<li><?php echo $translation; ?></li>
 			<?php endif; ?>
 		<?php endforeach; ?>
 	</ol>
@@ -98,8 +84,8 @@
 	<div class="contentTitle">
 		<h1><?php echo $this->translator->trans('Installation Assistant', array(), 'Install'); ?></h1>
 		<ul id="stepList_1" class="stepList clearfix">
-			<?php foreach ($this->getSteps() as $step): ?>
-				<li <?php if ($this->isStepFinished($step)): ?>class="ok"<?php endif; ?>><?php echo $this->translator->trans('menu_%step%', array('%step%' => $step)); ?></li>
+			<?php foreach ($this->getSteps() as $step => $translation): ?>
+				<li <?php if ($this->isStepFinished($step)): ?>class="ok"<?php endif; ?>><?php echo $this->getSteps()[$step]; ?></li>
 			<?php endforeach; ?>
 		</ul>
 	</div>

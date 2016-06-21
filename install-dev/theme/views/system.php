@@ -23,6 +23,6 @@
 	</ul>
 <?php endforeach; ?>
 
-<p><input class="button" value="<?php echo $this->translator->trans('Refresh these settings', array(), 'Install'); ?> " type="submit" id="req_bt_refresh" /></p>
+<p><input class="button" value="<?php echo $this->translator->trans('Refresh', array(), 'Install'); ?> " type="submit" id="req_bt_refresh" /></p>
 
 <?php $this->displayTemplate('footer') ?>

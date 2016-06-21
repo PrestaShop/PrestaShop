@@ -237,7 +237,14 @@ abstract class InstallControllerHttp
      */
     public function getSteps()
     {
-        return self::$steps;
+        return array(
+            'welcome' => $this->translator->trans('Choose your language', array(), 'Install'),
+            'license'=> $this->translator->trans('License agreements', array(), 'Install'),
+            'system'=> $this->translator->trans('System compatibility', array(), 'Install'),
+            'configure'=> $this->translator->trans('Store information', array(), 'Install'),
+            'database'=> $this->translator->trans('System configuration', array(), 'Install'),
+            'process'=> $this->translator->trans('Store installation', array(), 'Install')
+        );
     }
 
     public function getLastStep()
