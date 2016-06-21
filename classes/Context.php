@@ -27,6 +27,7 @@
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
+use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 
 /**
  * Class ContextCore
@@ -341,6 +342,7 @@ class ContextCore
         if (null === $this->translator) {
             $this->translator = new Translator($this->language->locale, null, _PS_CACHE_DIR_, false);
             $this->translator->addLoader('xlf', new XliffFileLoader);
+            $this->translator->addLoader('db', new SqlTranslationLoader);
             
             $finder = Finder::create()
                 ->files()
@@ -354,6 +356,7 @@ class ContextCore
                 list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
 
                 $this->translator->addResource($format, $file, $locale, $domain);
+                $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
             }
         }
         
