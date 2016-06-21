@@ -65,6 +65,10 @@ class Admin
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
+        if (!$event->isMasterRequest() ||  $event->getRequest()->isXmlHttpRequest()) {
+            return;
+        }
+        
         //if employee loggdin in legacy context, authenticate him into sf2 security context
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->isLoggedBack()) {
             $employee = new Employee($this->legacyContext->employee);
@@ -76,16 +80,5 @@ class Admin
 
         //employee not logged in
         $event->stopPropagation();
-
-        //if http request - add 403 error
-        $request = Request::createFromGlobals();
-        if ($request->isXmlHttpRequest()) {
-            header("HTTP/1.1 403 Forbidden");
-            exit();
-        }
-
-        //redirect to admin home page
-        header("Location: ".$this->context->getAdminLink('', false));
-        exit();
     }
 }
