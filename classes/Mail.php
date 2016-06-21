@@ -119,7 +119,7 @@ class MailCore extends ObjectModel
         // Get the path of theme by id_shop if exist
         if (is_numeric($id_shop) && $id_shop) {
             $shop = new Shop((int)$id_shop);
-            $theme_name = $shop->getTheme();
+            $theme_name = $shop->theme->getDirectory();
 
             if (_THEME_NAME_ != $theme_name) {
                 $theme_path = _PS_ROOT_DIR_.'/themes/'.$theme_name.'/';
@@ -221,7 +221,6 @@ class MailCore extends ObjectModel
                 $connection = \Swift_SmtpTransport::newInstance($configuration['PS_MAIL_SERVER'], $configuration['PS_MAIL_SMTP_PORT'], $configuration['PS_MAIL_SMTP_ENCRYPTION'])
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD']);
-
             } else {
                 $connection = \Swift_MailTransport::newInstance();
             }
