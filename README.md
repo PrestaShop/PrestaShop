@@ -86,6 +86,18 @@ If you want to help translate PrestaShop in your language, [join us on Crowdin][
 Current Crowdin status (for 69 registered languages): [![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
 
 
+Reporting Security Issues
+--------
+
+Responsible (and private) disclosure is a standard practice when someone encounters a security problem: before making it public, the discoverer informs the Core team about it, so that a fix can be prepared, and thus minimize the potential damage.
+
+The PrestaShop team tries to be very proactive when preventing security problems. Even so, critical issues might surface without notice.
+
+This is why we have set up the [security@prestashop.com](mailto:security@prestashop.com) email address: anyone can privately contact us with all the details about issues that affect the security of PrestaShop merchants or customers. Our security team will answer you, and discuss of a timeframe for your publication of the details.
+
+Understanding a security issue means knowing how the attacker got in and hacked the site. If you have those details, then please do contact us privately about it (and please do not publish those details before we answered). If you do not know how the attacker got in, please ask for help on the support forums.
+
+
 Extending PrestaShop
 --------
 
