@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Symfony\Component\Debug\Debug;
 
 class FrontControllerCore extends Controller
 {
@@ -231,6 +232,9 @@ class FrontControllerCore extends Controller
         self::$initialized = true;
 
         parent::init();
+
+        // enable Symfony error handler if debug mode enabled
+        $this->initDebugguer();
 
         // If current URL use SSL, set it true (used a lot for module redirect)
         if (Tools::usingSecureMode()) {
@@ -1678,5 +1682,12 @@ class FrontControllerCore extends Controller
                 $addressForm->getTemplateVariables()
             ),
         )));
+    }
+
+    private function initDebugguer()
+    {
+        if (true === _PS_MODE_DEV_) {
+            Debug::enable();
+        }
     }
 }
