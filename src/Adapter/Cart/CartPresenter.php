@@ -339,6 +339,7 @@ class CartPresenter implements PresenterInterface
             'labels' => $labels,
             'id_address_delivery' => $cart->id_address_delivery,
             'id_address_invoice' => $cart->id_address_invoice,
+            'is_virtual' => $cart->isVirtualCart(),
             'vouchers' => $this->getTemplateVarVouchers($cart),
             'minimalPurchaseRequired' => ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
                 sprintf(
