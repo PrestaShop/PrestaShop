@@ -43,6 +43,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
     {
         require_once _PS_INSTALL_MODELS_PATH_.'system.php';
         $this->model_system = new InstallModelSystem();
+        $this->model_system->setTranslator($this->translator);
     }
 
     /**

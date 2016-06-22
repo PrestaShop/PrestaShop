@@ -31,6 +31,8 @@ abstract class InstallAbstractModel
      */
     public $language;
 
+    public $translator;
+
     /**
      * @var array List of errors
      */
@@ -53,5 +55,12 @@ abstract class InstallAbstractModel
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
+
+        return $this;
     }
 }

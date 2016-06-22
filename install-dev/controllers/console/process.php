@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,6 @@
 
 class InstallControllerConsoleProcess extends InstallControllerConsole
 {
-    const SETTINGS_FILE = 'config/settings.inc.php';
 
     protected $model_install;
     public $process_steps = array();
@@ -37,7 +36,10 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
         require_once _PS_INSTALL_MODELS_PATH_.'install.php';
         require_once _PS_INSTALL_MODELS_PATH_.'database.php';
         $this->model_install = new InstallModelInstall();
+        $this->model_install->setTranslator($this->translator);
+
         $this->model_database = new InstallModelDatabase();
+        $this->model_database->setTranslator($this->translator);
     }
 
     /**

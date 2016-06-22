@@ -320,6 +320,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         if ($low_memory) {
             $populate_step['subtasks'] = array();
             $xml_loader = new InstallXmlLoader();
+            $xml_loader->setTranslator($this->translator);
+
             foreach ($xml_loader->getSortedEntities() as $entity) {
                 $populate_step['subtasks'][] = array('entity' => $entity);
             }
@@ -334,7 +336,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             if ($low_memory) {
                 $fixtures_step['subtasks'] = array();
                 $xml_loader = new InstallXmlLoader();
+                $xml_loader->setTranslator($this->translator);
                 $xml_loader->setFixturesPath();
+
                 foreach ($xml_loader->getSortedEntities() as $entity) {
                     $fixtures_step['subtasks'][] = array('entity' => $entity);
                 }
