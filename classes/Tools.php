@@ -2297,7 +2297,7 @@ class ToolsCore
 FileETag none
 <IfModule mod_deflate.c>
     <IfModule mod_filter.c>
-        AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype
+        AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript font/ttf application/x-font-ttf font/otf application/x-font-otf font/opentype image/svg+xml
     </IfModule>
 </IfModule>\n\n";
             fwrite($write_fd, $cache_control);
