@@ -31,7 +31,7 @@ class LanguageCore extends ObjectModel
 {
     const LANGUAGE_PACK_URL = 'http://www.prestashop.com/download/lang_packs/get_language_pack.php?version=%s&iso_lang=%s';
     const LANGUAGE_GZIP_URL = 'http://translations.prestashop.com/download/lang_packs/gzip/%s/%s.gzip';
-    const SF_LANGUAGE_PACK_URL = 'https://crowdin.com/download/project/prestashop-dev.zip';
+    const SF_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/TEMP/%s.zip';
     
     public $id;
 
@@ -665,6 +665,21 @@ class LanguageCore extends ObjectModel
         }
         return Cache::retrieve($key);
     }
+    
+    /**
+     * 
+     * @param string $isoCode
+     * @return string|false|null
+     * @throws Exception
+     */
+    public static function getLocaleByIso($isoCode)
+    {
+        if (!Validate::isLanguageIsoCode($isoCode)) {
+            throw new Exception(sprintf('The ISO code %s is invalid'));
+        }
+        
+        return Db::getInstance()->getValue('SELECT `locale` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($isoCode)).'\'');
+    }
 
     public static function getLanguageCodeByIso($iso_code)
     {
@@ -917,15 +932,15 @@ class LanguageCore extends ObjectModel
             }
         }
         
-        self::downloadSfLanguagePack($errors);
+        self::downloadSfLanguagePack(self::getLocaleByIso($iso), $errors);
         
         return ! count($errors);
     }
     
-    public static function downloadSfLanguagePack(&$errors = array())
+    public static function downloadSfLanguagePack($locale, &$errors = array())
     {
-        $sfFile = _PS_TRANSLATIONS_DIR_.'sf-all.zip';
-        $content = Tools::file_get_contents(self::SF_LANGUAGE_PACK_URL);
+        $sfFile = _PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip';
+        $content = Tools::file_get_contents(sprintf(self::SF_LANGUAGE_PACK_URL, $locale));
         
         if (!is_writable(dirname($sfFile))) {
             // @todo Throw exception
@@ -935,14 +950,14 @@ class LanguageCore extends ObjectModel
         }
     }
     
-    public static function installSfLanguagePack(&$errors = array())
+    public static function installSfLanguagePack($locale, &$errors = array())
     {
-        if (!file_exists(_PS_TRANSLATIONS_DIR_.'sf-all.zip')) {
+        if (!file_exists(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip')) {
             // @todo Throw exception
             $errors[] = Tools::displayError('Language pack unavailable.');
         } else {
             $zipArchive = new ZipArchive();
-            $zipArchive->open(_PS_TRANSLATIONS_DIR_.'sf-all.zip');
+            $zipArchive->open(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip');
             $zipArchive->extractTo(_PS_ROOT_DIR_.'/app/Resources/translations');
         }
     }
@@ -997,7 +1012,7 @@ class LanguageCore extends ObjectModel
             AdminTranslationsController::addNewTabs((string)$iso, $files_list);
         }
 
-        self::installSfLanguagePack($errors);
+        self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
         
         return count($errors) ? $errors : true;
     }
