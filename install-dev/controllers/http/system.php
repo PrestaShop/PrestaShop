@@ -27,7 +27,7 @@
 /**
  * Step 2 : check system configuration (permissions on folders, PHP version, etc.)
  */
-class InstallControllerHttpSystem extends InstallControllerHttp
+class InstallControllerHttpSystem extends InstallControllerHttp implements HttpConfigureInterface
 {
     public $tests = array();
 

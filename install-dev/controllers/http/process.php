@@ -26,7 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Cldr\Update;
 
-class InstallControllerHttpProcess extends InstallControllerHttp
+class InstallControllerHttpProcess extends InstallControllerHttp implements HttpConfigureInterface
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
 

@@ -27,7 +27,7 @@
 /**
  * Step 2 : display license form
  */
-class InstallControllerHttpLicense extends InstallControllerHttp
+class InstallControllerHttpLicense extends InstallControllerHttp implements HttpConfigureInterface
 {
     /**
      * Process license form
@@ -53,7 +53,7 @@ class InstallControllerHttpLicense extends InstallControllerHttp
     public function process()
     {
     }
-    
+
     /**
      * Display license step
      */

@@ -44,6 +44,7 @@ class InstallModelInstall extends InstallAbstractModel
             $file = $cacheDir .(_PS_MODE_DEV_ ? 'dev' : 'prod').'_'.@date('Ymd').'_installation.log';
             $logger = new FileLogger();
             $logger->setFilename($file);
+            $this->logger = $logger;
         }
 
         if (!is_array($errors)) {

@@ -27,7 +27,7 @@
 /**
  * Step 3 : configure database
  */
-class InstallControllerHttpDatabase extends InstallControllerHttp
+class InstallControllerHttpDatabase extends InstallControllerHttp implements HttpConfigureInterface
 {
     /**
      * @var InstallModelDatabase
@@ -136,7 +136,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
     {
         if (!$this->session->database_server) {
             if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-                @include_once _PS_ROOT_DIR_.'/config/settings.inc.php';
                 $this->database_server = _DB_SERVER_;
                 $this->database_name = _DB_NAME_;
                 $this->database_login = _DB_USER_;
