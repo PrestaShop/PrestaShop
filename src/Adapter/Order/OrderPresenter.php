@@ -191,6 +191,7 @@ class OrderPresenter implements PresenterInterface
     private function getDetails(Order $order)
     {
         $context = Context::getContext();
+        $cart = new Cart($order->id_cart);
 
         return array(
             'id' => $order->id,
@@ -201,6 +202,7 @@ class OrderPresenter implements PresenterInterface
             'invoice_url' => HistoryController::getUrlToInvoice($order, $context),
             'gift_message' => nl2br($order->gift_message),
             'is_returnable' => (int) $order->isReturnable(),
+            'is_virtual' => $cart->isVirtualCart(),
             'payment' => $order->payment,
             'recyclable' => (bool) $order->recyclable,
             'shipping' => $this->getShipping($order),
