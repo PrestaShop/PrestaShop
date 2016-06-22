@@ -76,7 +76,11 @@ class Lang
      * @ORM\Column(name="is_rtl", type="boolean")
      */
     private $isRtl;
-
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Translation", mappedBy="lang")
+     */
+    private $translations;
 
     /**
      * Get id

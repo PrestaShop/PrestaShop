@@ -187,3 +187,11 @@ services:
             - "@prestashop.core.admin.module.repository"
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+
+    # TRANSLATIONS
+    prestashop.translations.database_loader:
+        class: PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - {name: translation.loader, alias: db}
