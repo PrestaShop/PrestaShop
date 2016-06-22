@@ -181,6 +181,17 @@ class CategoryControllerCore extends ProductListingFrontController
 
     public function getListingLabel()
     {
-        return $this->trans('Products', array(), 'Shop.Theme.Catalog');
+        if (!Validate::isLoadedObject($this->category)) {
+            $this->category = new Category(
+                (int) Tools::getValue('id_category'),
+                $this->context->language->id
+            );
+        }
+
+        return $this->trans(
+            'Category: %category_name%',
+            array('%category_name%' => $this->category->name),
+            'Shop.Theme.Catalog'
+        );
     }
 }

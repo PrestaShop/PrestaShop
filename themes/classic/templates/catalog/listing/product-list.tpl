@@ -4,15 +4,7 @@
   <section id="main">
 
     {block name='product_list_header'}
-      {if $category.description}
-        <div class="block-category card card-block">
-          <h1 class="h1">{$category.name}</h1>
-          <div id="category-description" class="text-muted">{$category.description nofilter}</div>
-          <div class="category-cover">
-            <img src="{$category.image.large.url}" alt="{$category.image.legend}">
-          </div>
-        </div>
-      {/if}
+      <h2 class="h2">{$listing.label}</h2>
     {/block}
 
     {block name='product_list'}
