@@ -107,7 +107,7 @@ class ThemeManager implements AddonManagerInterface
             return false;
         }
 
-        $theme = $this->theme_repository->getInstanceByName($name);
+        $theme = $this->themeRepository->getInstanceByName($name);
         $theme->onUninstall();
 
         $this->filesystem->remove($theme->getDirectory());
@@ -228,7 +228,7 @@ class ThemeManager implements AddonManagerInterface
     {
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
 
         foreach ($modules as $key => $moduleName) {
             if ($moduleManager->isInstalled($moduleName) && $moduleManager->isEnabled($moduleName)) {
@@ -243,7 +243,7 @@ class ThemeManager implements AddonManagerInterface
     {
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
 
         foreach ($modules as $key => $moduleName) {
             if (!$moduleManager->isInstalled($moduleName)) {
