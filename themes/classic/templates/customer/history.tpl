@@ -47,7 +47,7 @@
                 {l s='Details' d='Shop.Theme.CustomerAccount'}
               </a>
               {if $order.details.reorder_url}
-                <a href="{$order.details.reorder_url}">{l s='Reorder' d='Shop.Theme.Action'}</a>
+                <a href="{$order.details.reorder_url}">{l s='Reorder' d='Shop.Theme.Actions'}</a>
               {/if}
             </td>
           </tr>
