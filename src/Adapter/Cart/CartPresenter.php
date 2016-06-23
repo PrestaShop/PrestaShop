@@ -273,15 +273,17 @@ class CartPresenter implements PresenterInterface
             );
         }
 
-        $shipping_cost = $cart->getTotalShippingCost(null, $this->includeTaxes());
-        $subtotals['shipping'] = array(
-            'type' => 'shipping',
-            'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
-            'amount' => $shipping_cost,
-            'value' => $shipping_cost != 0
-                ? $this->priceFormatter->format($shipping_cost)
-                : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
-        );
+        if (!$cart->isVirtualCart()) {
+            $shippingCost = $cart->getTotalShippingCost(null, $this->includeTaxes());
+            $subtotals['shipping'] = array(
+                'type' => 'shipping',
+                'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
+                'amount' => $shippingCost,
+                'value' => $shippingCost != 0
+                    ? $this->priceFormatter->format($shippingCost)
+                    : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
+            );
+        }
 
         $subtotals['tax'] = null;
         if (Configuration::get('PS_TAX_DISPLAY')) {
@@ -337,6 +339,7 @@ class CartPresenter implements PresenterInterface
             'labels' => $labels,
             'id_address_delivery' => $cart->id_address_delivery,
             'id_address_invoice' => $cart->id_address_invoice,
+            'is_virtual' => $cart->isVirtualCart(),
             'vouchers' => $this->getTemplateVarVouchers($cart),
             'minimalPurchaseRequired' => ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
                 sprintf(

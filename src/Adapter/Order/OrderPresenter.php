@@ -141,13 +141,16 @@ class OrderPresenter implements PresenterInterface
             );
         }
 
-        $shipping_cost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
-        $subtotals['shipping'] = array(
-            'type' => 'shipping',
-            'label' => $this->translator->trans('Shipping and handling', array(), 'Shop.Theme.Checkout'),
-            'amount' => $shipping_cost,
-            'value' => $shipping_cost != 0 ? $this->priceFormatter->format($shipping_cost) : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
-        );
+        $cart = new Cart($order->id_cart);
+        if (!$cart->isVirtualCart()) {
+            $shippingCost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
+            $subtotals['shipping'] = array(
+                'type' => 'shipping',
+                'label' => $this->translator->trans('Shipping and handling', array(), 'Shop.Theme.Checkout'),
+                'amount' => $shippingCost,
+                'value' => $shippingCost != 0 ? $this->priceFormatter->format($shippingCost) : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
+            );
+        }
 
         $tax = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
         $subtotals['tax'] = null;
@@ -188,6 +191,7 @@ class OrderPresenter implements PresenterInterface
     private function getDetails(Order $order)
     {
         $context = Context::getContext();
+        $cart = new Cart($order->id_cart);
 
         return array(
             'id' => $order->id,
@@ -198,6 +202,7 @@ class OrderPresenter implements PresenterInterface
             'invoice_url' => HistoryController::getUrlToInvoice($order, $context),
             'gift_message' => nl2br($order->gift_message),
             'is_returnable' => (int) $order->isReturnable(),
+            'is_virtual' => $cart->isVirtualCart(),
             'payment' => $order->payment,
             'recyclable' => (bool) $order->recyclable,
             'shipping' => $this->getShipping($order),
