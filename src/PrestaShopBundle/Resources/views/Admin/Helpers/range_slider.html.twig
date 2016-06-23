@@ -25,22 +25,22 @@
 	                var slider = $('#{{ input_name }}');
 	                if (values[0] == {{ min|default('0') }} && values[1] == {{ max|default('10') }}) {
 	                    slider.attr('sql', '');
-	                    return "{{ 'Not filtered'|trans({}, 'AdminTab') }}";
+	                    return "{{ 'Not filtered'|trans({}, 'Admin.Global') }}";
 	                }
 	                if (values[0] == values[1]) {
 	                    slider.attr('sql', ''); //'='+values[0]);
-	                    return "{{ 'Equals'|trans({}, 'AdminTab') }} " + values[0];
+	                    return "{{ 'Equals'|trans({}, 'Admin.Global') }} " + values[0];
 	                }
 	                if (values[0] == {{ min|default('0') }}) {
 	                    slider.attr('sql', '<'+values[1]);
-	                    return "{{ 'Below'|trans({}, 'AdminTab') }} " + values[1];
+	                    return "{{ 'Below'|trans({}, 'Admin.Global') }} " + values[1];
 	                }
 	                if (values[1] == {{ max|default('10') }}) {
 	                    slider.attr('sql', '>'+values[0]);
-	                    return "{{ 'Above'|trans({}, 'AdminTab') }} " + values[0];
+	                    return "{{ 'Above'|trans({}, 'Admin.Global') }} " + values[0];
 	                }
 	                slider.attr('sql', 'BETWEEN '+values[0]+' AND '+values[1]);
-	                return "{{ 'Inside range'|trans({}, 'AdminTab') }} [" + values[0] + "~" + values[1] + "]";
+	                return "{{ 'Inside range'|trans({}, 'Admin.Global') }} [" + values[0] + "~" + values[1] + "]";
 	            }
             },
             min: {{ min|default('0') }},

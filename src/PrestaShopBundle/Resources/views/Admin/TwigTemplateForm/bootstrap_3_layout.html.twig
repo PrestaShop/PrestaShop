@@ -227,15 +227,15 @@
 
 {% block _form_step6_attachments_widget %}
     <div class="js-options-no-attachments {{ form|length >1 ? 'hide' : '' }}">
-        <small>{{ 'There is no attachment yet.'|trans({}, 'AdminProducts') }}</small>
+        <small>{{ 'There is no attachment yet.'|trans({}, 'Admin.Catalog.Notification') }}</small>
     </div>
     <div class="js-options-with-attachments {{ form|length == 0 ? 'hide' : '' }}">
         <table id="product-attachment-file" class="table table-striped table-fixed">
             <thead>
             <tr>
-                <th class="col-md-3"><input type="checkbox" id="product-attachment-files-check"> {{ 'Title'|trans({}, 'AdminProducts') }}</th>
-                <th class="col-md-6">{{ 'File name'|trans({}, 'AdminProducts') }}</th>
-                <th class="col-md-2">{{ 'Type'|trans({}, 'AdminProducts') }}</th>
+                <th class="col-md-3"><input type="checkbox" id="product-attachment-files-check"> {{ 'Title'|trans({}, 'Admin.Global') }}</th>
+                <th class="col-md-6">{{ 'File name'|trans({}, 'Admin.Global') }}</th>
+                <th class="col-md-2">{{ 'Type'|trans({}, 'Admin.Catalog.Feature') }}</th>
             </tr>
             </thead>
           <tbody>

@@ -20,11 +20,11 @@
     <ul class="pagination">
         <li style="float: left; margin-left: 2em;">
             {{ "Viewing $from-$to on $total (page # $current_page / $page_count)"|trans({'$from': from+1, '$to': min(to+1, total), '$total': total, '$current_page': current_page, '$page_count': page_count},
-                'AdminTab') }}
+                'Admin.Catalog.Feature') }}
             &nbsp;
             |
             &nbsp;
-            {{ "Items per page:"|trans({}, 'AdminTab') }}&nbsp;
+            {{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}&nbsp;
             <select name="paginator_select_page_limit" psurl="{{ changeLimitUrl }}" style="display:inline;width:6em;" class="pagination-link">
                 {% if limit not in limit_choices %}<option value="{{ limit }}" selected="selected">{{ limit }}</option>{% endif %}
                 {% for limit_choice in limit_choices %}

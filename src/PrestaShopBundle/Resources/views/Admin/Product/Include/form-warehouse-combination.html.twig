@@ -1,11 +1,11 @@
 {% if warehouses|length > 0 %}
-    <h4>{{ 'Product location in warehouses'|trans({}, 'AdminProducts') }}</h4>
+    <h4>{{ 'Product location in warehouses'|trans({}, 'Admin.Catalog.Feature') }}</h4>
 
     <div class="alert alert-info" style="display:block; position: 'auto';">
-        <p>{{ 'This interface allows you to specify the warehouse in which the product is stocked.'|trans({}, 'AdminProducts') }}</p>
-        <p>{{ 'It is also possible to specify the location within the warehouse for each product or combination.'|trans({}, 'AdminProducts') }}</p>
+        <p>{{ 'This interface allows you to specify the warehouse in which the product is stocked.'|trans({}, 'Admin.Catalog.Help') }}</p>
+        <p>{{ 'It is also possible to specify the location within the warehouse for each product or combination.'|trans({}, 'Admin.Catalog.Help') }}</p>
     </div>
-    <p>{{ 'Please choose the warehouses associated with this product.'|trans({}, 'AdminProducts') }}</p>
+    <p>{{ 'Please choose the warehouses associated with this product.'|trans({}, 'Admin.Catalog.Feature') }}</p>
 
     {% for warehouse in warehouses %}
         <div class="panel panel-default">
@@ -15,7 +15,7 @@
                     <h4>{{ form[collectionName].vars.label }}</h4><br/>
                     {% if form[collectionName]|length() > 1 %}
                         <button type="button" class="btn btn-default check_all_warehouse">
-                            <i class="icon-check-sign"></i> {{ 'Mark / Unmark all'|trans({}, 'AdminTab') }}
+                            <i class="icon-check-sign"></i> {{ 'Check / Uncheck all'|trans({}, 'Admin.Actions') }}
                         </button>
                     {% endif %}
                 </label>

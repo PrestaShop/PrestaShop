@@ -15,8 +15,8 @@
 
             {% if progressbar is defined %}
                 <div class="modal-body" id="{{ progressbar.id }}">
-                    <div class="pull-right progress-details-text" default-value="{{ progressbar.label|default('Processing...'|trans({}, 'AdminTab')) }}">
-                        {{ progressbar.label|default('Processing...'|trans({}, 'AdminTab')) }}
+                    <div class="pull-right progress-details-text" default-value="{{ progressbar.label|default('Processing...'|trans({}, 'Admin.Global')) }}">
+                        {{ progressbar.label|default('Processing...'|trans({}, 'Admin.Global')) }}
                     </div>
                     <div class="progress active progress-striped" style="display: block; width: 100%">
                         <div class="progress-bar progress-bar-success" role="progressbar" style="width: 0%">
@@ -30,7 +30,7 @@
                 {% if actions is defined %}
                     <div class="modal-footer">
                         {% if closable is defined and closable == true %}
-                            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Close'|trans({}, 'AdminTab') }}</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Close'|trans({}, 'Admin.Actions') }}</button>
                         {% endif %}
                         {% for action in actions %}
                             {% if action.type is defined and action.type == 'link' %}

@@ -1,12 +1,12 @@
 <div class="card card-block">
-  <h4>{{ 'Specific price conditions'|trans({}, 'AdminProducts') }}</h4>
+  <h4>{{ 'Specific price conditions'|trans({}, 'Admin.Catalog.Feature') }}</h4>
   {{ form_errors(form) }}
 
   {% if form.sp_id_shop.vars.choices is defined %}
   <div class="row">
     <div class="col-md-4">
       <fieldset class="form-group">
-        <label>{{ 'Shop'|trans({}, 'AdminProducts') }}</label>
+        <label>{{ 'Shop'|trans({}, 'Admin.Global') }}</label>
         {{ form_errors(form.sp_id_shop) }}
         {{ form_widget(form.sp_id_shop) }}
       </fieldset>
@@ -19,7 +19,7 @@
   <div class="row">
     <div class="col-md-3">
       <fieldset class="form-group">
-        <label>{{ 'For'|trans({}, 'AdminProducts') }}</label>
+        <label>{{ 'For'|trans({}, 'Admin.Global') }}</label>
         {{ form_errors(form.sp_id_currency) }}
         {{ form_widget(form.sp_id_currency) }}
       </fieldset>
@@ -40,7 +40,7 @@
     </div>
     <div class="col-md-6">
       <fieldset class="form-group">
-        <label>{{ 'Customer'|trans({}, 'AdminProduct') }}</label>
+        <label>{{ 'Customer'|trans({}, 'Admin.Global') }}</label>
         {{ form_errors(form.sp_id_customer) }}
         {{ form_widget(form.sp_id_customer) }}
       </fieldset>
@@ -64,7 +64,7 @@
     </div>
     <div class="col-md-3">
       <fieldset class="form-group">
-        <label>{{ 'to'|trans({}, 'AdminProducts')|raw }}</label>
+        <label>{{ 'to'|trans({}, 'Admin.Global')|raw }}</label>
         {{ form_errors(form.sp_to) }}
         {{ form_widget(form.sp_to) }}
       </fieldset>
@@ -75,13 +75,13 @@
         {{ form_errors(form.sp_from_quantity) }}
         <div class="input-group">
           {{ form_widget(form.sp_from_quantity) }}
-          <span class="input-group-addon">{{ 'Unit(s)'|trans({}, 'Adminproducts') }}</span>
+          <span class="input-group-addon">{{ 'Unit(s)'|trans({}, 'Admin.Catalog.Feature') }}</span>
         </div>
       </fieldset>
     </div>
   </div>
 
-  <h4>{{ 'Impact on price'|trans({}, 'Adminproducts') }}</h4>
+  <h4>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</h4>
   <div class="row">
     <div class="col-md-3">
       <fieldset class="form-group">
@@ -101,14 +101,14 @@
   <div class="row">
     <div class="col-md-2">
       <fieldset class="form-group">
-        <label>{{ 'Product price (tax excl.)'|trans({}, 'Adminproducts') }}</label>
+        <label>{{ 'Price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</label>
         {{ form_errors(form.sp_reduction) }}
         {{ form_widget(form.sp_reduction) }}
       </fieldset>
     </div>
     <div class="col-md-2">
       <fieldset class="form-group">
-        <label>{{ 'OR Apply a discount of'|trans({}, 'Adminproducts') }}</label>
+        <label>{{ 'OR Apply a discount of'|trans({}, 'Admin.Catalog.Feature') }}</label>
         {{ form_errors(form.sp_reduction_type) }}
         {{ form_widget(form.sp_reduction_type) }}
       </fieldset>

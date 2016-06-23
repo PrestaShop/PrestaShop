@@ -52,7 +52,7 @@ class AttributeController extends FrameworkBundleAdminController
             /** Construct attribute group selector. Ex : Color : All */
             $dataGroupAttributes[$attribute['id_attribute_group']] = [
                 'value' => 'group-'.$attribute['id_attribute_group'],
-                'label' => $attribute['public_name'].' : '.$translator->trans('All', [], 'AdminTabs'),
+                'label' => $attribute['public_name'].' : '.$translator->trans('All', [], 'Admin.Global'),
                 'data' => [
                     'id_group' => $attribute['id_attribute_group'],
                     'name' => $attribute['public_name'],
@@ -149,13 +149,12 @@ class AttributeController extends FrameworkBundleAdminController
         foreach ($newCombinationIds as $combinationId) {
             $attributeCombination = $product->getAttributeCombinationsById($combinationId, $locales[0]['id_lang']);
             $attributes[$attributeCombination[0]["position"]] = $attributeCombination[0];
-
         }
-        
+
         ksort($attributes);
 
         $newCombinations = [];
-        foreach ($attributes as $attribute){
+        foreach ($attributes as $attribute) {
             $form = $this->createForm(
                 'PrestaShopBundle\Form\Admin\Product\ProductCombination',
                 $modelMapper->getFormCombination($attribute)
@@ -187,7 +186,6 @@ class AttributeController extends FrameworkBundleAdminController
      */
     public function deleteAttributeAction($idProduct, Request $request)
     {
-
         $translator = $this->container->get('translator');
         $response = new JsonResponse();
 
@@ -195,9 +193,9 @@ class AttributeController extends FrameworkBundleAdminController
             return $response;
         }
 
-        if($request->request->has('attribute-ids')) {
+        if ($request->request->has('attribute-ids')) {
             $attributeIds = $request->request->get('attribute-ids');
-            foreach($attributeIds as $attributeId) {
+            foreach ($attributeIds as $attributeId) {
                 $legacyResponse = $this->container->get('prestashop.adapter.admin.controller.attribute_generator')
                     ->ajaxProcessDeleteProductAttribute($attributeId, $idProduct);
             }
