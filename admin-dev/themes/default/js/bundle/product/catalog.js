@@ -192,6 +192,7 @@ function productColumnFilterReset(tr) {
 }
 
 function bulkDuplicateAction(allItems, postUrl, redirectUrl) {
+	var csrf = $('form#product_catalog_list input[name="csrf"]').val();
 	var itemsCount = allItems.length;
 	var currentItemIdx = 0;
 	if (itemsCount < 1) {
@@ -220,7 +221,10 @@ function bulkDuplicateAction(allItems, postUrl, redirectUrl) {
 		$.ajax({
 			type: 'POST',
 			url: postUrl,
-			data: { bulk_action_selected_products: [item0] },
+			data: {
+				bulk_action_selected_products: [item0],
+				csrf: csrf
+			},
 			success: function(data, status) {
 				$('#catalog_duplication_progression .progress-bar').css('width', (currentItemIdx*100/itemsCount)+'%');
 				$('#catalog_duplication_progression .progress-bar span').html(currentItemIdx+' / '+itemsCount);
