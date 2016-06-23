@@ -55,6 +55,14 @@ class AdminMaintenanceControllerCore extends AdminController
                         'type' => 'maintenance_ip',
                         'default' => ''
                     ),
+                    'PS_MAINTENANCE_TEXT' => array(
+                        'title' => $this->l('Custom maintenance text'),
+                        'hint' => $this->l('Custom text displayed on maintenance page while shop is deactivated.'),
+                        'validation' => 'isCleanHtml',
+                        'type' => 'textareaLang',
+                        'autoload_rte' => true,
+                        'default' => ''
+                    ),
                 ),
                 'submit' => array('title' => $this->l('Save'))
             ),

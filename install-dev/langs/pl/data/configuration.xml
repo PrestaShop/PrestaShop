@@ -21,4 +21,7 @@
 Z wyrazami szacunku,&#xD;
 Dzial obslugi klienta</value>
   </configuration>
+  <configuration id="PS_MAINTENANCE_TEXT">
+    <value>We are currently updating our shop and will be back really soon.&lt;br&gt;Thanks for your patience.</value>
+  </configuration>
 </entity_configuration>
