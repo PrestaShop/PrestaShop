@@ -664,7 +664,12 @@ abstract class ModuleCore
         $this->disable(true);
 
         // Delete permissions module access
-        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_module` = '.(int)$this->id);
+        $roles = Db::getInstance()->executeS('SELECT `id_authorization_role` FROM `'._DB_PREFIX_.'authorization_role` WHERE `slug` LIKE "ROLE_MOD_MODULE_'.strtoupper($this->name).'_%"');
+        
+        foreach ($roles as $role) {
+            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_authorization_role` = '.$role['id_authorization_role']);
+            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'authorization_role` WHERE `id_authorization_role` = '.$role['id_authorization_role']);
+        }
 
         // Remove restrictions for client groups
         Group::truncateRestrictionsByModule($this->id);
