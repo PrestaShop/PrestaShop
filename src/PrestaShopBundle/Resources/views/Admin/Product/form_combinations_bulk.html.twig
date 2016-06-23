@@ -53,13 +53,13 @@
     <label class="form-control-label">&nbsp;</label>
     <button id="delete-combinations" class="btn btn-tertiary-outline btn-block" data="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}">
       <i class="material-icons">delete</i>
-      {{ 'Delete combinations'|trans({}, 'AdminProducts') }}
+      {{ 'Delete combinations'|trans({}, 'Admin.Catalog.Feature') }}
     </button>
   </div>
   <div class="col-md-2">
     <label class="form-control-label">&nbsp;</label>
     <button id="apply-on-combinations" class="btn btn-primary-outline btn-block">
-      {{ 'Apply'|trans({}, 'AdminProducts') }}
+      {{ 'Apply'|trans({}, 'Admin.Actions') }}
     </button>
   </div>
   {{ form_widget(form) }}

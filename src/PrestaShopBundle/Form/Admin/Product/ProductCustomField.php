@@ -65,13 +65,13 @@ class ProductCustomField extends CommonAbstractType
             )],
             'locales' => $this->locales,
             'hideTabs' => true,
-            'label' => $this->translator->trans('Label', [], 'AdminProducts')
+            'label' => $this->translator->trans('Label', [], 'Admin.Global')
         ))
         ->add('type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'label' => $this->translator->trans('Type', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Type', [], 'Admin.Catalog.Feature'),
             'choices'  => array(
-                $this->translator->trans('Text', [], 'AdminProducts') => 1,
-                $this->translator->trans('File', [], 'AdminProducts') => 0,
+                $this->translator->trans('Text', [], 'Admin.Global') => 1,
+                $this->translator->trans('File', [], 'Admin.Global') => 0,
             ),
             'attr' => array(
                 'class' => 'c-select',
@@ -79,7 +79,7 @@ class ProductCustomField extends CommonAbstractType
             'choices_as_values' => true,
             'required' =>  true
         ))->add('require', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-            'label'    => $this->translator->trans('Required', [], 'AdminProducts'),
+            'label'    => $this->translator->trans('Required', [], 'Admin.Global'),
             'required' => false,
         ));
     }

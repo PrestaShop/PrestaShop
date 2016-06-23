@@ -71,7 +71,7 @@ class ProductShipping extends CommonAbstractType
     {
         $builder->add('width', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Width', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Width', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric'))
@@ -79,7 +79,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('height', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Height', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Height', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric'))
@@ -87,7 +87,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('depth', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Depth', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Depth', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric'))
@@ -95,7 +95,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Weight', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Weight', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric'))
@@ -103,7 +103,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('additional_shipping_cost', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Shipping fees', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Shipping fees', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
@@ -116,7 +116,7 @@ class ProductShipping extends CommonAbstractType
             'expanded' =>  true,
             'multiple' =>  true,
             'required' =>  false,
-            'label' => $this->translator->trans('Available carriers', [], 'AdminProducts')
+            'label' => $this->translator->trans('Available carriers', [], 'Admin.Catalog.Feature')
         ));
 
         foreach ($this->warehouses as $warehouse) {

@@ -82,7 +82,7 @@ class ProductPrice extends CommonAbstractType
     {
         $builder->add('price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Price - Tax excluded', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
             'attr' => ['data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')],
             'currency' => $this->currency->iso_code,
             'constraints' => array(
@@ -93,12 +93,12 @@ class ProductPrice extends CommonAbstractType
         ->add('price_ttc', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'mapped' => false,
-            'label' => $this->translator->trans('Price - Tax included', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price (tax incl.)', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('ecotax', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
@@ -116,38 +116,38 @@ class ProductPrice extends CommonAbstractType
                     'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
                 ];
             },
-            'label' => $this->translator->trans('Tax rule', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Tax rule', [], 'Admin.Catalog.Feature'),
         ))
         ->add('on_sale', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
-            'label' => $this->translator->trans('Display the "On sale!" flag on the product page, and on product listings.', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Display the "On sale!" flag on the product page, and on product listings.', [], 'Admin.Catalog.Feature'),
         ))
         ->add('wholesale_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Price - Tax excluded', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('unit_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Price per unit - Tax excluded', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('unity', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'AdminProducts')]
+            'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'Admin.Catalog.Help')]
         ))
         ->add('specific_price', 'PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice')
         ->add('specificPricePriorityToAll', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
-            'label' => $this->translator->trans('Apply to all products', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Apply to all products', [], 'Admin.Catalog.Feature'),
         ));
 
         //generates fields for price priority
         $specificPricePriorityChoices = [
-             $this->translator->trans('Shop', [], 'AdminProducts') => 'id_shop',
-             $this->translator->trans('Currency', [], 'AdminProducts') => 'id_currency',
-             $this->translator->trans('Country', [], 'AdminProducts') => 'id_country',
-             $this->translator->trans('Group', [], 'AdminProducts') => 'id_group',
+             $this->translator->trans('Shop', [], 'Admin.Global') => 'id_shop',
+             $this->translator->trans('Currency', [], 'Admin.Global') => 'id_currency',
+             $this->translator->trans('Country', [], 'Admin.Global') => 'id_country',
+             $this->translator->trans('Group', [], 'Admin.Global') => 'id_group',
         ];
 
         for ($i=0; $i < count($specificPricePriorityChoices); $i++) {

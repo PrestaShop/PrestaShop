@@ -20,33 +20,33 @@
         <div class="row">
           <div class="pull-right">
             <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
-              <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ "Export"|trans({}, 'AdminTab') }}" data-html="true" data-placement="top">
+              <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ "Export"|trans({}, 'Admin.Actions') }}" data-html="true" data-placement="top">
                 <i class="material-icons">cloud_upload</i>
               </span>
             </a>
             <a id="desc-product-import" class="list-toolbar-btn" href="{{ import_link }}">
-              <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ "Import"|trans({}, 'AdminTab') }}" data-html="true" data-placement="top">
+              <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ "Import"|trans({}, 'Admin.Actions') }}" data-html="true" data-placement="top">
                 <i class="material-icons">cloud_download</i>
               </span>
             </a>
             <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
-              <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ "Show SQL query"|trans({}, 'AdminTab') }}" data-html="true" data-placement="top">
+              <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ "Show SQL query"|trans({}, 'Admin.Actions') }}" data-html="true" data-placement="top">
                 <i class="material-icons">code</i>
               </span>
             </a>
             <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
-              <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ "Export to SQL Manager"|trans({}, 'AdminTab') }}" data-html="true" data-placement="top">
+              <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ "Export to SQL Manager"|trans({}, 'Admin.Actions') }}" data-html="true" data-placement="top">
                 <i class="material-icons">storage</i>
               </span>
             </a>
           </div>
           <h2>
-            {{ "Products"|trans({}, 'AdminProducts') }}
+            {{ "Products"|trans({}, 'Admin.Catalog.Feature') }}
             {% if has_category_filter == true and activate_drag_and_drop == true %}
-              {{ "(ordering)"|trans({}, 'AdminProducts') }}
+              {{ "(ordering)"|trans({}, 'Admin.Catalog.Feature') }}
             {% else %}
               {% if has_filter == true %}
-                {{ "(filtered)"|trans({}, 'AdminProducts') }}
+                {{ "(filtered)"|trans({}, 'Admin.Catalog.Feature') }}
               {% endif %}
             {% endif %}
             {% if has_filter == true %}{{ product_count_filtered }} / {{ product_count }}{% endif %}
@@ -66,7 +66,7 @@
               class="btn btn-primary-outline btn-xs"
               id="product_catalog_category_tree_filter_expand"
             >
-              {{ 'Expand'|trans({}, 'AdminTab') }}
+              {{ 'Expand'|trans({}, 'Admin.Actions') }}
             </button>
             <button
               name="product_catalog_category_tree_filter_collapse"
@@ -74,7 +74,7 @@
               class="btn btn-primary-outline btn-xs"
               id="product_catalog_category_tree_filter_collapse"
             >
-              {{ 'Collapse'|trans({}, 'AdminTab') }}
+              {{ 'Collapse'|trans({}, 'Admin.Actions') }}
             </button>
             <button
               name="product_catalog_category_tree_filter_reset"
@@ -82,7 +82,7 @@
               class="btn btn-warning"
               id="product_catalog_category_tree_filter_reset"
             >
-              {{ 'Unselect'|trans({}, 'AdminTab') }}
+              {{ 'Unselect'|trans({}, 'Admin.Actions') }}
             </button>
           </div>
         </div>
@@ -116,56 +116,56 @@
               <thead>
                 <tr class="column-headers">
                   <th style="width: 8%">
-                    {{ "ID"|trans({}, 'AdminProducts') }}
+                    {{ "ID"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'id_product'
                     } %}
                   </th>
                   <th>
-                    {{ "Image"|trans({}, 'AdminProducts') }}
+                    {{ "Image"|trans({}, 'Admin.Global') }}
                   </th>
                   <th>
-                    {{ "Name"|trans({}, 'AdminProducts') }}
+                    {{ "Name"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'name'
                     } %}
                   </th>
                   <th style="width: 9%">
-                    {{ "Reference"|trans({}, 'AdminProducts') }}
+                    {{ "Reference"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'reference'
                     } %}
                   </th>
                   <th>
-                    {{ "Category"|trans({}, 'AdminProducts') }}
+                    {{ "Category"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'name_category'
                     } %}
                   </th>
                   <th style="width: 9%">
-                    {{ "Price (tax excl.)"|trans({}, 'AdminProducts') }}
+                    {{ "Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'price'
                     } %}
                   </th>
                   <th>
-                    {{ "Final price"|trans({}, 'AdminProducts') }}
+                    {{ "Final price"|trans({}, 'Admin.Catalog.Feature') }}
                   </th>
                   <th style="width: 9%">
-                    {{ "Quantity"|trans({}, 'AdminProducts') }}
+                    {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'sav_quantity'
                     } %}
                   </th>
                   <th>
-                    {{ "Status"|trans({}, 'AdminProducts') }}
+                    {{ "Status"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'active'
                     } %}
                   </th>
                   {% if has_category_filter == true %}
                     <th>
-                      {{ "Position"|trans({}, 'AdminProducts') }}
+                      {{ "Position"|trans({}, 'Admin.Global') }}
                       {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                         'column': 'position'
                       } %}
@@ -179,8 +179,8 @@
                       'input_name': "filter_column_id_product",
                       'min': '0',
                       'max': '1000000',
-                      'minLabel': "Min"|trans({}, 'AdminProducts'),
-                      'maxLabel': "Max"|trans({}, 'AdminProducts'),
+                      'minLabel': "Min"|trans({}, 'Admin.Global'),
+                      'maxLabel': "Max"|trans({}, 'Admin.Global'),
                       'value': filter_column_id_product,
                     } %}
                   </th>
@@ -189,7 +189,7 @@
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="{{ "Search name"|trans({}, 'AdminProducts') }}"
+                      placeholder="{{ "Search name"|trans({}, 'Admin.Catalog.Help') }}"
                       name="filter_column_name"
                       value="{{ filter_column_name }}"
                     />
@@ -198,7 +198,7 @@
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="{{ "Search ref."|trans({}, 'AdminProducts') }}"
+                      placeholder="{{ "Search ref."|trans({}, 'Admin.Catalog.Help') }}"
                       name="filter_column_reference"
                       value="{{ filter_column_reference }}"
                     />
@@ -207,7 +207,7 @@
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="{{ "Search category"|trans({}, 'AdminProducts') }}"
+                      placeholder="{{ "Search category"|trans({}, 'Admin.Catalog.Help') }}"
                       name="filter_column_name_category"
                       value="{{ filter_column_name_category }}"
                     />
@@ -217,8 +217,8 @@
                       'input_name': "filter_column_price",
                       'min': '0',
                       'max': '1000000',
-                      'minLabel': "Min"|trans({}, 'AdminProducts'),
-                      'maxLabel': "Max"|trans({}, 'AdminProducts'),
+                      'minLabel': "Min"|trans({}, 'Admin.Global'),
+                      'maxLabel': "Max"|trans({}, 'Admin.Global'),
                       'value': filter_column_price,
                     } %}
                   </th>
@@ -228,8 +228,8 @@
                       'input_name': "filter_column_sav_quantity",
                       'min': '-1000000',
                       'max': '1000000',
-                      'minLabel': "Min"|trans({}, 'AdminProducts'),
-                      'maxLabel': "Max"|trans({}, 'AdminProducts'),
+                      'minLabel': "Min"|trans({}, 'Admin.Global'),
+                      'maxLabel': "Max"|trans({}, 'Admin.Global'),
                       'value': filter_column_sav_quantity,
                     } %}
                   </th>
@@ -243,7 +243,7 @@
                   {% if has_category_filter == true %}
                     <th>
                       {% if not(activate_drag_and_drop) %}
-                        <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort"|trans({}, 'AdminProducts') }}" onclick="productOrderPrioritiesTable();" />
+                        <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
                       {% endif %}
                     </th>
                   {% endif %}
@@ -252,7 +252,7 @@
                       type="submit"
                       class="btn btn-action"
                       name="products_filter_submit"
-                      title="{{ "Filter"|trans({}, 'AdminProducts') }}"
+                      title="{{ "Filter"|trans({}, 'Admin.Actions') }}"
                     >
                       <i class="material-icons">search</i>
                     </button>
@@ -261,7 +261,7 @@
                       class="btn btn-invisible"
                       name="products_filter_reset"
                       onclick="productColumnFilterReset($(this).closest('tr.column-filters'))"
-                      title="{{ "Reset"|trans({}, 'AdminProducts') }}"
+                      title="{{ "Reset"|trans({}, 'Admin.Actions') }}"
                     >
                       <i class="material-icons">clear</i>
                     </button>
@@ -289,7 +289,7 @@
                   id="bulk_action_select_all"
                   onclick="$(this).closest('form').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
                 />
-                {{ "Select all"|trans({}, 'AdminTab') }}
+                {{ "Select all"|trans({}, 'Admin.Actions') }}
               </label>
             </div>
           </div>
@@ -307,35 +307,35 @@
               'div_style': "btn-group dropup",
               'button_id': "product_bulk_menu",
               'disabled': true,
-              'menu_label': "Bulk actions"|trans({}, 'AdminTab'),
+              'menu_label': "Bulk actions"|trans({}, 'Admin.Global'),
               'menu_icon': "icon-caret-up",
               'items':[{
                 "onclick": "bulkProductAction(this, 'activate_all');",
                 "icon": "radio_button_checked",
-                "label": "Activate selection"|trans({}, 'AdminTab')
+                "label": "Activate selection"|trans({}, 'Admin.Actions')
               }, {
                 "onclick": "bulkProductAction(this, 'deactivate_all');",
                 "icon": "radio_button_unchecked",
-                "label": "Deactivate selection"|trans({}, 'AdminTab')
+                "label": "Deactivate selection"|trans({}, 'Admin.Actions')
               }, {
                 "divider": true
               }, {
                 "onclick": "bulkProductAction(this, 'duplicate_all');",
                 "icon": "content_copy",
-                "label": "Duplicate selection"|trans({}, 'AdminTab')
+                "label": "Duplicate selection"|trans({}, 'Admin.Actions')
               }, {
                 "divider": true
               }, {
                 "onclick": "bulkProductAction(this, 'delete_all');",
                 "icon": "delete",
-                "label": "Delete selection"|trans({}, 'AdminTab')
+                "label": "Delete selection"|trans({}, 'Admin.Actions')
               }]
             }%}
           </div>
           <div class="col-md-8 text-md-right" id="bulk_edition_toolbar" style="display: none;">
-            <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'AdminProducts')|raw }}" />
-            <input type="submit" id="bulk_edition_save_next" class="btn btn-primary" onclick="return bulkProductAction(this, 'edition_next');" value="{{ "Save & next page"|trans({}, 'AdminProducts')|raw }}" />
-            <input type="button" class="btn btn-warning" onclick="bulkProductEdition(this, 'cancel');" value="{{ "Cancel"|trans({}, 'AdminProducts') }}" />
+            <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'Admin.Actions')|raw }}" />
+            <input type="submit" id="bulk_edition_save_next" class="btn btn-primary" onclick="return bulkProductAction(this, 'edition_next');" value="{{ "Save & next page"|trans({}, 'Admin.Actions')|raw }}" />
+            <input type="button" class="btn btn-warning" onclick="bulkProductEdition(this, 'cancel');" value="{{ "Cancel"|trans({}, 'Admin.Actions') }}" />
           </div>
         </div>
 
@@ -356,19 +356,19 @@
 
   {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
     'id': "catalog_duplication_modal",
-    'title': "Duplicating products"|trans({}, 'AdminProducts'),
+    'title': "Duplicating products"|trans({}, 'Admin.Catalog.Notification'),
     'closable': true,
     'progressbar': {
     'id': "catalog_duplication_progression",
-    'label': "Duplicating..."|trans({}, 'AdminProducts')
+    'label': "Duplicating..."|trans({}, 'Admin.Catalog.Notification')
   },
     'actions': [],
   }%}
     {% block content %}
       <div class="modal-body">
-        {{ 'Duplication in progress...'|trans({}, 'AdminProducts') }}
+        {{ 'Duplication in progress...'|trans({}, 'Admin.Catalog.Notification') }}
         <span id="catalog_duplication_failure" style="display: none;color: darkred;">
-          {{ 'Duplication failed.'|trans({}, 'AdminProducts') }}
+          {{ 'Duplication failed.'|trans({}, 'Admin.Catalog.Notification') }}
         </span>
       </div>
     {% endblock %}
@@ -376,29 +376,29 @@
 
   {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
     'id': "catalog_deletion_modal",
-    'title': "Delete products?"|trans({}, 'AdminProducts'),
+    'title': "Delete products?"|trans({}, 'Admin.Catalog.Feature'),
     'closable': true,
     'actions': [{
       'type': 'button',
-      'label': "Delete now"|trans({}, 'AdminProducts'),
+      'label': "Delete now"|trans({}, 'Admin.Actions'),
       'value': 'confirm',
       'class': 'btn btn-warning',
     }],
   }%}
     {% block content %}
       <div class="modal-body">
-        {{ 'These products will be deleted for good. Please confirm.'|trans({}, 'AdminProducts') }}
+        {{ 'These products will be deleted for good. Please confirm.'|trans({}, 'Admin.Catalog.Feature') }}
       </div>
     {% endblock %}
   {% endembed %}
 
   {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
     'id': "catalog_sql_query_modal",
-    'title': "SQL query"|trans({}, 'AdminProducts'),
+    'title': "SQL query"|trans({}, 'Admin.Global'),
     'closable': true,
     'actions': [{
       'type': 'button',
-      'label': "Export to SQL Manager"|trans({}, 'AdminTab'),
+      'label': "Export to SQL Manager"|trans({}, 'Admin.Actions'),
       'value': 'sql_manager',
       'class': 'btn',
     }],

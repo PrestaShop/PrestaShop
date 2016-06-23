@@ -1,23 +1,23 @@
 <div>
     <div class="quicknav-header">
         <div class="pull-left"><a href="#" data-toggle="sidebar" data-target=".sidebar">&times;</a></div>
-        <h2>{{ "Quick navigation"|trans({}, 'AdminProducts') }}</h2>
+        <h2>{{ "Quick navigation"|trans({}, 'Admin.Global') }}</h2>
     </div>
     <div class="quicknav-scroller">
         <table class="table table-condensed table-striped product quicknav-products">
             <thead>
                 <tr class="column-headers">
                     <th class="hidden-xs hidden-sm hidden-md">
-                        {{ "ID"|trans({}, 'AdminProducts') }}
+                        {{ "ID"|trans({}, 'Admin.Global') }}
                     </th>
                     <th>
-                        {{ "Name"|trans({}, 'AdminProducts') }}
+                        {{ "Name"|trans({}, 'Admin.Global') }}
                     </th>
                     <th class="hidden-xs hidden-sm">
-                        {{ "Base price"|trans({}, 'AdminProducts') }}
+                        {{ "Price"|trans({}, 'Admin.Global') }}
                     </th>
                     <th class="hidden-xs">
-                        {{ "Quantity"|trans({}, 'AdminProducts') }}
+                        {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                     </th>
                 </tr>
             </thead>
@@ -28,24 +28,24 @@
                             <a href="{{ product.url|default('') }}#tab-step1">{{ product.id_product }}</a>
                         </td>
                         <td>
-                            <a href="{{ product.url|default('') }}#tab-step1">{{ product.name|default('N/A'|trans({}, 'AdminTab')) }}</a>
+                            <a href="{{ product.url|default('') }}#tab-step1">{{ product.name|default('N/A'|trans({}, 'Admin.Global')) }}</a>
                         </td>
                         <td class="hidden-xs hidden-sm">
-                            <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'AdminTab')) }}</a>
+                            <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'Admin.Global')) }}</a>
                         </td>
                         <td class="hidden-xs product-sav-quantity" productquantityvalue="{{ product.sav_quantity|default('') }}">
                             <a href="{{ product.url|default('') }}#tab-step3">
                                 {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
                                     {{ product.sav_quantity }}
                                 {% else %}
-                                    <span class="badge badge-danger">{{ product.sav_quantity|default('N/A'|trans({}, 'AdminTab')) }}</span>
+                                    <span class="badge badge-danger">{{ product.sav_quantity|default('N/A'|trans({}, 'Admin.Global')) }}</span>
                                 {% endif %}
                             </a>
                         </td>
                     </tr>
                 {% else %}
                     <tr><td colspan="5">
-                        {{ "There is no result for this search. Update your filters to view other products."|trans({}, 'AdminProducts') }}
+                        {{ "There is no result for this search. Update your filters to view other products."|trans({}, 'Admin.Catalog.Notification') }}
                     </td></tr>
                 {% endfor %}
             </tbody>

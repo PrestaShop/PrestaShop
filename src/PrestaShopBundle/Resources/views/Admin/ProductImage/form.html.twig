@@ -5,9 +5,9 @@
 {{ form_errors(form.legend) }}
 
 {{ form_widget(form.cover) }}
-<i class="icon-search-plus"></i> <a href="{{ image.base_image_url }}.{{ image.format }}" class="open-image" target="_blank">{{ 'Enlarge image'|trans({}, 'AdminProducts') }}</a>
+<i class="icon-search-plus"></i> <a href="{{ image.base_image_url }}.{{ image.format }}" class="open-image" target="_blank">{{ 'Enlarge image'|trans({}, 'Admin.Catalog.Feature') }}</a>
 
 <div class="actions">
-    <button type="button" class="btn btn-sm tn-primary" onclick="formImagesProduct.send({{ image.id }})">{{ 'Save'|trans({}, 'AdminProducts') }}</button>
-    <button type="button" class="btn btn-sm btn-danger" onclick="formImagesProduct.delete({{ image.id }})"><i class="icon-trash"></i> {{ 'Delete'|trans({}, 'AdminProducts') }}</button>
+    <button type="button" class="btn btn-sm tn-primary" onclick="formImagesProduct.send({{ image.id }})">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    <button type="button" class="btn btn-sm btn-danger" onclick="formImagesProduct.delete({{ image.id }})"><i class="icon-trash"></i> {{ 'Delete'|trans({}, 'Admin.Actions') }}</button>
 </div>

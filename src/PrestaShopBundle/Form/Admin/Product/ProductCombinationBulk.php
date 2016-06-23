@@ -52,41 +52,41 @@ class ProductCombinationBulk extends CommonAbstractType
 
         $builder->add('quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => true,
-            'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
         ))
         ->add('cost_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Cost Price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Cost Price', [], 'Admin.Catalog.Feature'),
             'attr' => ['data-display-price-precision' => $this->priceDisplayPrecision],
             'currency' => $this->isoCode,
         ))
         ->add('impact_on_weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature'),
         ))
         ->add('impact_on_price_te', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'Admin.Catalog.Feature'),
             'currency' => $this->isoCode,
         ))
         ->add('impact_on_price_ti', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'mapped' => false,
-            'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'Admin.Catalog.Feature'),
             'currency' => $this->isoCode,
         ))
         ->add('date_availability', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
-            'label' => $this->translator->trans('Availability date', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),
             'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD'],
         ))
         ->add('reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('Reference', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Reference', [], 'Admin.Catalog.Feature'),
         ))
         ->add('minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Minimum quantity', [], 'Admin.Catalog.Feature'),
         ));
     }
 

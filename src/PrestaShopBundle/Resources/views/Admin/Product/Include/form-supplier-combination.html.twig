@@ -1,11 +1,11 @@
 {% if suppliers|length > 0 %}
-  <h4>{{ 'Supplier reference(s)'|trans({}, 'AdminProducts') }}</h4>
+  <h4>{{ 'Supplier reference(s)'|trans({}, 'Admin.Catalog.Feature') }}</h4>
   <div class="row">
     <div class="col-md-12">
       <div class="alert alert-info" role="alert">
         <i class="material-icons">help</i>
         <p>
-          {{ 'You can specify product reference(s) for each associated supplier. Click "Save" after changing selected suppliers to display the associated product references.'|trans({}, 'AdminProducts')|raw }}
+          {{ 'You can specify product reference(s) for each associated supplier. Click "Save" after changing selected suppliers to display the associated product references.'|trans({}, 'Admin.Catalog.Help')|raw }}
         </p>
       </div>
     </div>
@@ -22,10 +22,10 @@
         <table class="table table-striped">
           <thead>
             <tr class="text-uppercase">
-              <th width="40%">{{ 'Product name'|trans({}, 'AdminProducts') }}</th>
-              <th width="20%">{{ 'Supplier reference'|trans({}, 'AdminProducts') }}</th>
-              <th width="20%">{{ 'Price (tax excl.)'|trans({}, 'AdminProducts') }}</th>
-              <th width="20%">{{ 'Currency'|trans({}, 'AdminProducts') }}</th>
+              <th width="40%">{{ 'Product name'|trans({}, 'Admin.Catalog.Feature') }}</th>
+              <th width="20%">{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
+              <th width="20%">{{ 'Price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
+              <th width="20%">{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
             </tr>
           </thead>
           <tbody>
