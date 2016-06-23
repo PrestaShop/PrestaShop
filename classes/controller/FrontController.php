@@ -804,7 +804,7 @@ class FrontControllerCore extends Controller
                     $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_);
                     $record = $reader->city(Tools::getRemoteAddr());
 
-                    if (is_object($record)) {
+                    if (is_object($record) && Validate::isLanguageIsoCode($record->country->isoCode) && (int)Country::getByIso(strtoupper($record->country->isoCode)) != 0) {
                         if (!in_array(strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
                             if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
                                 $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
