@@ -100,6 +100,7 @@ class OrderPresenter implements PresenterInterface
                         $orderProduct['attributes'] = array();
                     }
                     $orderProduct['cover'] = $cartProduct['cover'];
+                    $orderProduct['unit_price_full'] = $cartProduct['unit_price_full'];
                 }
             }
 
