@@ -60,23 +60,23 @@ class ProductSeo extends CommonAbstractType
         $builder->add('meta_title', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'AdminProducts')],
+                'attr' => ['placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'Admin.Catalog.Help')],
                 'required' => false
             ],
             'locales' => $this->locales,
             'hideTabs' => true,
-            'label' => $this->translator->trans('Meta title', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Meta title', [], 'Admin.Catalog.Feature'),
             'required' => false
         ))
         ->add('meta_description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'AdminProducts')],
+                'attr' => ['placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help')],
                 'required' => false
             ],
             'locales' => $this->locales,
             'hideTabs' => true,
-            'label' => $this->translator->trans('Meta description', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Meta description', [], 'Admin.Catalog.Feature'),
             'required' => false
         ))
         ->add('link_rewrite', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
@@ -84,27 +84,27 @@ class ProductSeo extends CommonAbstractType
             'options' => [],
             'locales' => $this->locales,
             'hideTabs' => true,
-            'label' => $this->translator->trans('Friendly URL', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Friendly URL', [], 'Admin.Catalog.Feature'),
         ))
         ->add('redirect_type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => array(
-                $this->translator->trans('No redirection (404)', [], 'AdminProducts') => '404',
-                $this->translator->trans('Permanent redirection (301)', [], 'AdminProducts') => '301',
-                $this->translator->trans('Temporary redirection (302)', [], 'AdminProducts') => '302',
+                $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => '404',
+                $this->translator->trans('Permanent redirection (301)', [], 'Admin.Catalog.Feature') => '301',
+                $this->translator->trans('Temporary redirection (302)', [], 'Admin.Catalog.Feature') => '302',
             ),
             'choices_as_values' => true,
             'required' => true,
-            'label' => $this->translator->trans('Redirection when offline', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Redirection when offline', [], 'Admin.Catalog.Feature'),
         ))
         ->add('id_product_redirected', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
-            'placeholder' => $this->translator->trans('To which product the page should redirect?', [], 'AdminProducts'),
+            'placeholder' => $this->translator->trans('To which product the page should redirect?', [], 'Admin.Catalog.Help'),
             'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
             'limit' => 1,
             'required' => false,
-            'label' => $this->translator->trans('Target product', [], 'AdminProducts')
+            'label' => $this->translator->trans('Target product', [], 'Admin.Catalog.Feature')
         ));
     }
 

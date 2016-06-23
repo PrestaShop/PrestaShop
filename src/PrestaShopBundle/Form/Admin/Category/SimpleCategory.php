@@ -76,7 +76,7 @@ class SimpleCategory extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'label' => $this->translator->trans('Name', [], 'AdminGlobal'),
+            'label' => $this->translator->trans('Name', [], 'Admin.Global'),
             'required' => false,
             'attr' => ['placeholder' => $this->translator->trans('Category name', [], 'Admin.Catalog.Feature'), 'class' => 'ajax'],
             'constraints' => $options['ajax'] ? [] : array(

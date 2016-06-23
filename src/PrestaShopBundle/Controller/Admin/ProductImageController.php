@@ -60,7 +60,7 @@ class ProductImageController extends FrameworkBundleAdminController
             ->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
                 'error_bubbling' => true,
                 'constraints' => [
-                    new Assert\NotNull(array('message' => $translator->trans('Please select a file', [], 'AdminProducts'))),
+                    new Assert\NotNull(array('message' => $translator->trans('Please select a file', [], 'Admin.Catalog.Feature'))),
                     new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
                 ]
             ))
@@ -132,11 +132,11 @@ class ProductImageController extends FrameworkBundleAdminController
                 'options' => [],
                 'locales' => $locales,
                 'hideTabs' => true,
-                'label' => $translator->trans('Legend', [], 'AdminProducts'),
+                'label' => $translator->trans('Legend', [], 'Admin.Catalog.Feature'),
                 'required' => false,
             ))
             ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-                'label'    => $translator->trans('Choose as cover image', [], 'AdminProducts'),
+                'label'    => $translator->trans('Choose as cover image', [], 'Admin.Catalog.Feature'),
                 'required' => false,
             ))
             ->getForm();

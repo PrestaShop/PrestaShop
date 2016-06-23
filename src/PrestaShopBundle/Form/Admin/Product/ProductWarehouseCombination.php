@@ -60,14 +60,14 @@ class ProductWarehouseCombination extends CommonAbstractType
     {
         $builder->add('activated', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
-            'label' => $this->translator->trans('Stored', [], 'AdminProducts')
+            'label' => $this->translator->trans('Stored', [], 'Admin.Catalog.Feature')
         ))
         ->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
         ->add('product_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
         ->add('warehouse_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
         ->add('location', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('Location (optional)', [], 'AdminProducts')
+            'label' => $this->translator->trans('Location (optional)', [], 'Admin.Catalog.Feature')
         ));
 
         //set default minimal values for collection prototype

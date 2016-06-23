@@ -68,48 +68,48 @@ class ProductCombination extends CommonAbstractType
         ))
         ->add('attribute_reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('Reference', [], 'AdminProducts')
+            'label' => $this->translator->trans('Reference', [], 'Admin.Global')
         ))
         ->add('attribute_ean13', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
             'error_bubbling' => true,
-            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
+            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\Regex("/^[0-9]{0,13}$/"),
             )
         ))
         ->add('attribute_isbn', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
+            'label' => $this->translator->trans('ISBN code', [], 'Admin.Catalog.Feature')
         ))
         ->add('attribute_upc', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
+            'label' => $this->translator->trans('UPC barcode', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\Regex("/^[0-9]{0,12}$/"),
             )
         ))
         ->add('attribute_wholesale_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Cost price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('attribute_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
             'attr' => ['class' => 'attribute_priceTE']
         ))
         ->add('attribute_priceTI', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'mapped' => false,
-            'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
             'attr' => ['class' => 'attribute_priceTI']
         ))
         ->add('attribute_ecotax', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Ecotax', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Ecotax', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
@@ -118,16 +118,16 @@ class ProductCombination extends CommonAbstractType
         ))
         ->add('attribute_weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts')
+            'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature')
         ))
         ->add('attribute_unity', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Impact on price per unit (tax excl.)', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
         ))
         ->add('attribute_minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Min. quantity for sale', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Min. quantity for sale', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric')),
@@ -135,17 +135,17 @@ class ProductCombination extends CommonAbstractType
         ))
         ->add('available_date_attribute', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
-            'label' => $this->translator->trans('Availability date', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),
             'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD']
         ))
         ->add('attribute_default', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-            'label'    => $this->translator->trans('Set as default combination', [], 'AdminProducts'),
+            'label'    => $this->translator->trans('Set as default combination', [], 'Admin.Catalog.Feature'),
             'required' => false,
             'attr' => array('class' => 'attribute_default_checkbox'),
         ))
         ->add('attribute_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => true,
-            'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric')),
@@ -157,12 +157,12 @@ class ProductCombination extends CommonAbstractType
             'required' => false,
             'expanded' => true,
             'multiple' => true,
-            'label' => $this->translator->trans('Select images of this combination:', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Select images of this combination:', [], 'Admin.Catalog.Feature'),
             'attr' => array('class' => 'images'),
         ))
         ->add('final_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Final price', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Final price', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
         ));
 

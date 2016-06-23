@@ -64,8 +64,8 @@ class ProductVirtual extends CommonAbstractType
     {
         $builder->add('is_virtual_file', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => array(
-                $this->translator->trans('Yes', [], 'AdminProducts') => 1,
-                $this->translator->trans('No', [], 'AdminProducts') => 0,
+                $this->translator->trans('Yes', [], 'Admin.Global') => 1,
+                $this->translator->trans('No', [], 'Admin.Global') => 0,
             ),
             'choices_as_values' => true,
             'expanded' => true,
@@ -74,38 +74,38 @@ class ProductVirtual extends CommonAbstractType
         ))
         ->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
             'required' => false,
-            'label' => $this->translator->trans('File', [], 'AdminProducts'),
+            'label' => $this->translator->trans('File', [], 'Admin.Global'),
             'constraints' => array(
                 new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
             )
         ))
         ->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'label'    => $this->translator->trans('Filename', [], 'AdminProducts'),
+            'label'    => $this->translator->trans('Filename', [], 'Admin.Global'),
             'constraints' => array(
                 new Assert\NotBlank(),
             ),
         ))
         ->add('nb_downloadable', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
-            'label'    => $this->translator->trans('Number of allowed downloads', [], 'AdminProducts'),
+            'label'    => $this->translator->trans('Number of allowed downloads', [], 'Admin.Catalog.Feature'),
             'required' => false,
             'constraints' => array(
                 new Assert\Type(array('type' => 'numeric')),
             ),
         ))
         ->add('expiration_date', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
-            'label'    => $this->translator->trans('Expiration date', [], 'AdminProducts'),
+            'label'    => $this->translator->trans('Expiration date', [], 'Admin.Catalog.Feature'),
             'required' => false,
             'attr' => ['placeholder' => 'YYYY-MM-DD']
         ))
         ->add('nb_days', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
-            'label'    => $this->translator->trans('Number of days', [], 'AdminProducts'),
+            'label'    => $this->translator->trans('Number of days', [], 'Admin.Catalog.Feature'),
             'required' => false,
             'constraints' => array(
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
         ->add('save', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
-            'label' => $this->translator->trans('Save', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Save', [], 'Admin.Action'),
             'attr' => ['class' => 'btn-primary pull-right']
         ));
 
