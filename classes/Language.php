@@ -29,6 +29,10 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 class LanguageCore extends ObjectModel
 {
+    const LANGUAGE_PACK_URL = 'http://www.prestashop.com/download/lang_packs/get_language_pack.php?version=%s&iso_lang=%s';
+    const LANGUAGE_GZIP_URL = 'http://translations.prestashop.com/download/lang_packs/gzip/%s/%s.gzip';
+    const SF_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/TEMP/%s.zip';
+    
     public $id;
 
     /** @var string Name */
@@ -56,7 +60,7 @@ class LanguageCore extends ObjectModel
     public $active = true;
 
     protected static $_cache_language_installation = null;
-
+    
     /**
      * @see ObjectModel::$definition
      */
@@ -661,6 +665,21 @@ class LanguageCore extends ObjectModel
         }
         return Cache::retrieve($key);
     }
+    
+    /**
+     * 
+     * @param string $isoCode
+     * @return string|false|null
+     * @throws Exception
+     */
+    public static function getLocaleByIso($isoCode)
+    {
+        if (!Validate::isLanguageIsoCode($isoCode)) {
+            throw new Exception(sprintf('The ISO code %s is invalid'));
+        }
+        
+        return Db::getInstance()->getValue('SELECT `locale` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($isoCode)).'\'');
+    }
 
     public static function getLanguageCodeByIso($iso_code)
     {
@@ -774,7 +793,7 @@ class LanguageCore extends ObjectModel
 
         // If the language pack has not been provided, retrieve it from prestashop.com
         if (!$lang_pack) {
-            $lang_pack = json_decode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso_code));
+            $lang_pack = json_decode(Tools::file_get_contents(sprintf(self::LANGUAGE_PACK_URL, _PS_VERSION_, $iso_code)));
         }
 
         // If a language pack has been found or provided, prefill the language object with the value
@@ -896,13 +915,13 @@ class LanguageCore extends ObjectModel
         $file = _PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip';
 
         $lang_pack = false;
-        $lang_pack_link = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$version.'&iso_lang='.Tools::strtolower((string)$iso));
+        $lang_pack_link = Tools::file_get_contents(sprintf(self::LANGUAGE_PACK_URL, $version, Tools::strtolower((string)$iso)));
 
         if (!$lang_pack_link) {
             $errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
         } elseif (!$lang_pack = json_decode($lang_pack_link)) {
             $errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
-        } elseif (empty($lang_pack->error) && ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.Tools::strtolower($lang_pack->iso_code.'.gzip')))) {
+        } elseif (empty($lang_pack->error) && ($content = Tools::file_get_contents(sprintf(self::LANGUAGE_GZIP_URL, $lang_pack->version, Tools::strtolower($lang_pack->iso_code))))) {
             if (!@file_put_contents($file, $content)) {
                 if (is_writable(dirname($file))) {
                     @unlink($file);
@@ -912,8 +931,35 @@ class LanguageCore extends ObjectModel
                 }
             }
         }
-
+        
+        self::downloadSfLanguagePack(self::getLocaleByIso($iso), $errors);
+        
         return ! count($errors);
+    }
+    
+    public static function downloadSfLanguagePack($locale, &$errors = array())
+    {
+        $sfFile = _PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip';
+        $content = Tools::file_get_contents(sprintf(self::SF_LANGUAGE_PACK_URL, $locale));
+        
+        if (!is_writable(dirname($sfFile))) {
+            // @todo Throw exception
+            $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$sfFile.')';
+        } else {
+            @file_put_contents($sfFile, $content);
+        }
+    }
+    
+    public static function installSfLanguagePack($locale, &$errors = array())
+    {
+        if (!file_exists(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip')) {
+            // @todo Throw exception
+            $errors[] = Tools::displayError('Language pack unavailable.');
+        } else {
+            $zipArchive = new ZipArchive();
+            $zipArchive->open(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip');
+            $zipArchive->extractTo(_PS_ROOT_DIR_.'/app/Resources/translations');
+        }
     }
 
     public static function installLanguagePack($iso, $params, &$errors = array())
@@ -966,6 +1012,8 @@ class LanguageCore extends ObjectModel
             AdminTranslationsController::addNewTabs((string)$iso, $files_list);
         }
 
+        self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
+        
         return count($errors) ? $errors : true;
     }
 
