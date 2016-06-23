@@ -5320,6 +5320,30 @@ body#checkout {
       width: 3.125em; }
     body#checkout #cart-summary-product-list .media-body {
       vertical-align: middle; }
+  body#checkout #order-summary-content {
+    padding-top: 1.5625em; }
+    body#checkout #order-summary-content h4.h4 {
+      font-size: 1em;
+      margin-top: 0.625em;
+      margin-bottom: 1.25em;
+      color: #acaaa6; }
+    body#checkout #order-summary-content h4.black {
+      color: #000000; }
+    body#checkout #order-summary-content h4.addresshead {
+      margin-top: 0.1875em; }
+    body#checkout #order-summary-content .noshadow {
+      box-shadow: none; }
+    body#checkout #order-summary-content #order-items {
+      border-right: 0; }
+      body#checkout #order-summary-content #order-items h3.h3 {
+        color: #acaaa6;
+        margin-top: 1.25em; }
+    body#checkout #order-summary-content .step-edit {
+      display: inline; }
+    body#checkout #order-summary-content .step-edit:hover {
+      cursor: pointer; }
+    body#checkout #order-summary-content a .step-edit {
+      color: #acaaa6; }
   body#checkout #footer {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     margin-top: 5.625em;
@@ -5408,6 +5432,24 @@ body#checkout {
 
 .cart-empty .cart-container {
   min-height: 23.1875em; }
+
+.js-payment-atos {
+  display: none; }
+  .js-payment-atos .accept-cgv {
+    display: none; }
+  .js-payment-atos.disabled {
+    opacity: 0.6;
+    cursor: not-allowed; }
+    .js-payment-atos.disabled::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      pointer-events: none; }
+    .js-payment-atos.disabled .accept-cgv {
+      display: block; }
 
 /*** SOME GENERIC STYLES ***/
 .table-labeled th {
@@ -5756,9 +5798,9 @@ body#checkout {
 
 #products .product-miniature, .featured-products .product-miniature, .product-accessories .product-miniature {
   margin: 0 0.625em; }
-  #products .product-miniature .product-labels .new,
-  #products .product-miniature .discount-percentage, .featured-products .product-miniature .product-labels .new,
-  .featured-products .product-miniature .discount-percentage, .product-accessories .product-miniature .product-labels .new,
+  #products .product-miniature .product-flags .new,
+  #products .product-miniature .discount-percentage, .featured-products .product-miniature .product-flags .new,
+  .featured-products .product-miniature .discount-percentage, .product-accessories .product-miniature .product-flags .new,
   .product-accessories .product-miniature .discount-percentage {
     display: block;
     position: absolute;
@@ -5772,9 +5814,9 @@ body#checkout {
     font-size: 1em;
     font-weight: 600;
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
-    #products .product-miniature .product-labels .new.discount-percentage,
-    #products .product-miniature .discount-percentage.discount-percentage, .featured-products .product-miniature .product-labels .new.discount-percentage,
-    .featured-products .product-miniature .discount-percentage.discount-percentage, .product-accessories .product-miniature .product-labels .new.discount-percentage,
+    #products .product-miniature .product-flags .new.discount-percentage,
+    #products .product-miniature .discount-percentage.discount-percentage, .featured-products .product-miniature .product-flags .new.discount-percentage,
+    .featured-products .product-miniature .discount-percentage.discount-percentage, .product-accessories .product-miniature .product-flags .new.discount-percentage,
     .product-accessories .product-miniature .discount-percentage.discount-percentage {
       z-index: 2;
       background: #f39d72; }
@@ -5822,11 +5864,11 @@ body#checkout {
       color: #acaaa6;
       font-weight: 400; }
 
-.page-cms {
+.page-content.page-cms {
   background: white;
   padding: 1.25em;
   text-align: justify; }
-  .page-cms .cms-box img {
+  .page-content.page-cms .cms-box img {
     max-width: 100%; }
 
 @media (max-width: 991px) {
@@ -6351,12 +6393,12 @@ body#checkout {
   .product-variants > .product-variants-item ul li {
     margin-right: 10px; }
 
-.product-labels {
+.product-flags {
   margin-bottom: 0; }
 
-li.product-label {
+li.product-flag {
   display: none; }
-  li.product-label:last-child {
+  li.product-flag:last-child {
     display: block;
     position: absolute;
     background: #2fb5d2;

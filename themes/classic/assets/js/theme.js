@@ -16447,6 +16447,14 @@
 	
 	    (0, _jquery2['default'])('#modal').modal('show');
 	  });
+	
+	  (0, _jquery2['default'])('#order-summary-content span.step-to-addresses').on('click', function (event) {
+	    (0, _jquery2['default'])('#checkout-addresses-step h1.step-title').trigger('click');
+	  });
+	
+	  (0, _jquery2['default'])('#order-summary-content span.step-to-delivery').on('click', function (event) {
+	    (0, _jquery2['default'])('#checkout-delivery-step h1.step-title').trigger('click');
+	  });
 	}
 	
 	(0, _jquery2['default'])(document).ready(function () {

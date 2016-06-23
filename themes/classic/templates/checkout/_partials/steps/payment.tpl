@@ -8,7 +8,15 @@
           <div id="{$option.id}-container" class="payment-option clearfix">
             {* This is the way an option should be selected when Javascript is enabled *}
             <span class="custom-radio pull-xs-left">
-              <input class="ps-shown-by-js" id="{$option.id}" type="radio" name="payment-option" required {if $selected_payment_option == $option.id} checked {/if}>
+              <input
+                class="ps-shown-by-js {if $option.binary} binary {/if}"
+                id="{$option.id}"
+                data-module-name="{$option.module_name}"
+                name="payment-option"
+                type="radio"
+                required
+                {if $selected_payment_option == $option.id} checked {/if}
+              >
               <span></span>
             </span>
             {* This is the way an option should be selected when Javascript is disabled *}
@@ -114,6 +122,9 @@
       {/if}
     </div>
   </div>
+
+  {hook h='displayPaymentByBinaries'}
+
   <div class="modal fade" id="modal">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
