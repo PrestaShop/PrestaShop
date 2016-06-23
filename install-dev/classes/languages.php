@@ -129,32 +129,6 @@ class InstallLanguages
     }
 
     /**
-     * Get translated string
-     *
-     * @param string $str String to translate
-     * @param ... All other params will be used with sprintf
-     * @return string
-     */
-    public function l($str)
-    {
-        $args = func_get_args();
-        $translation = $this->getLanguage()->getTranslation($args[0]);
-        if (is_null($translation)) {
-            $translation = $this->getLanguage(self::DEFAULT_ISO)->getTranslation($args[0]);
-            if (is_null($translation)) {
-                $translation = $args[0];
-            }
-        }
-
-        $args[0] = $translation;
-        if (count($args) > 1) {
-            return call_user_func_array('sprintf', $args);
-        } else {
-            return $translation;
-        }
-    }
-
-    /**
      * Get an information from language (phone, links, etc.)
      *
      * @param string $key Information identifier

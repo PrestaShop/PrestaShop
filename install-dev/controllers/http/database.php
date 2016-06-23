@@ -38,6 +38,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     {
         require_once _PS_INSTALL_MODELS_PATH_.'database.php';
         $this->model_database = new InstallModelDatabase();
+        $this->model_database->setTranslator($this->translator);
     }
 
     /**
@@ -125,7 +126,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
 
         $this->ajaxJsonAnswer(
             $success,
-            $success ? $this->l('Database is created') : $this->translator->trans('Cannot create the database automatically', array(), 'Install')
+            $success ?  $this->translator->trans('Database is created', array(), 'Install') : $this->translator->trans('Cannot create the database automatically', array(), 'Install')
         );
     }
 

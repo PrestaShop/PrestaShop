@@ -227,7 +227,7 @@ class InstallControllerHttp
             }
         }
         // Go to previous step
-        elseif (Tools::getValue('submitPrevious') && $current_step != self::$steps[0]) {
+        elseif (Tools::getValue('submitPrevious') && $current_step != array_keys(self::$steps)[0]) {
             $current_step = self::$instances[$current_step]->findPreviousStep($current_step);
             $session->step = $current_step;
         }
@@ -307,7 +307,8 @@ class InstallControllerHttp
      */
     public function findPreviousStep()
     {
-        return (isset(self::$steps[$this->getStepOffset($this->step) - 1])) ? self::$steps[$this->getStepOffset($this->step) - 1] : false;
+        $steps = array_keys(self::$steps);
+        return (isset($steps[$this->getStepOffset($this->step) - 1])) ? $steps[$this->getStepOffset($this->step) - 1] : false;
     }
 
     /**
