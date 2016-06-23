@@ -64,11 +64,11 @@
         </tr>
       {/if}
     {/foreach}
-    
+
     {if $subtotals.tax.label !== null}
       <tr class="sub">
         <td>{$subtotals.tax.label}</td>
-        <td>{$subtotal.tax.value}</td>
+        <td>{$subtotals.tax.value}</td>
       </tr>
     {/if}
 
