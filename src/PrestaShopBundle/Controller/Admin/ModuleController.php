@@ -11,7 +11,7 @@ use PrestaShopBundle\Entity\ModuleHistory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ModuleController extends FrameworkBundleAdminController
 {
@@ -336,18 +336,19 @@ class ModuleController extends FrameworkBundleAdminController
         $moduleManager = $this->get('prestashop.module.manager');
         try {
             $file_uploaded = $request->files->get('file_uploaded');
-            $violations = $this->get('validator')->validate($file_uploaded, new File(
-                [
+            $constraints = array(
+                new Assert\NotNull(),
+                new Assert\File(array(
                     'maxSize' => ini_get('upload_max_filesize'),
-                    'mimeTypes' => [
+                    'mimeTypes' => array(
                         'application/zip',
                         'application/x-gzip',
                         'application/gzip',
                         'application/x-gtar',
-                        'application/x-tgz'
-                    ],
-                ]
-            ));
+                        'application/x-tgz',
+            ))));
+
+            $violations = $this->get('validator')->validateValue($file_uploaded, $constraints);
             if (0 !== count($violations)) {
                 $violationsMessages = '';
                 foreach ($violations as $violation) {
