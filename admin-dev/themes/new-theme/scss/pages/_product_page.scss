@@ -363,9 +363,19 @@
       width: 100%;
       border: 1px solid $gray-medium;
       background: $white;
+      padding: rem(5px) 0;
+      max-height: rem(312px);
+      overflow: auto;
     }
     .tt-suggestion {
       cursor: pointer;
+      padding: rem(5px) rem(10px);
+      color: $gray-light;
+
+      &:hover {
+        background-color: $primary-hover;
+        color: $white;
+      }
     }
   }
   .pack-product {
