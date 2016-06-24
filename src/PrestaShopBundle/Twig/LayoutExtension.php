@@ -39,10 +39,16 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * @var LegacyContext
      */
     private $context;
+
     /**
      * @var string
      */
     private $environment;
+
+    /**
+     * @var Configuration
+     */
+    private $configuration;
 
     /**
      * Constructor.
@@ -50,12 +56,12 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * Keeps the Context to look inside language settings.
      *
      * @param LegacyContext $context
-     * @param Kernel $kernel
+     * @param string environment
      */
-    public function __construct(LegacyContext $context, Kernel $kernel)
+    public function __construct(LegacyContext $context, $environment)
     {
         $this->context = $context;
-        $this->environment = $kernel->getEnvironment();
+        $this->environment = $environment;
         $this->configuration = new Configuration();
     }
 

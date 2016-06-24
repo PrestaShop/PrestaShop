@@ -143,13 +143,20 @@ services:
 
     prestashop.twig.extension.layout:
         class: PrestaShopBundle\Twig\LayoutExtension
-        arguments: ["@prestashop.adapter.legacy.context", "@kernel"]
+        arguments: ["@prestashop.adapter.legacy.context", "%kernel.environment%"]
         tags:
             - { name: twig.extension }
 
     prestashop.twig.extension.dataFormatter:
         class: PrestaShopBundle\Twig\DataFormatterExtension
         tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.admin:
+       class: PrestaShopBundle\Twig\AdminExtension
+       arguments:
+            - "@request_stack"
+       tags:
             - { name: twig.extension }
 
     # Updaters

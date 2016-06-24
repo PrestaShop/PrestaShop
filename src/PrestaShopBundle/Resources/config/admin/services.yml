@@ -72,7 +72,7 @@ services:
 
     #SECURITY
     prestashop.adapter.security.admin:
-        class: %AdapterSecurityAdminClass%
+        class: "%AdapterSecurityAdminClass%"
         arguments:
             - "@prestashop.adapter.legacy.context"
             - "@security.token_storage"
@@ -82,14 +82,3 @@ services:
         class: PrestaShopBundle\Security\Admin\EmployeeProvider
         arguments:
             - "@prestashop.adapter.legacy.context"
-
-    #LISTENER
-    prestashop.core.admin.controllers.listener:
-        class: PrestaShopBundle\Service\Listeners\AdminControllersListener
-        arguments:
-            - "@router"
-            - "@twig"
-            - "@translator"
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
