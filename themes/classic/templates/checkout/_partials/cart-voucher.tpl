@@ -8,7 +8,7 @@
               <span class="label">{$voucher.name}</span>
               <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">{l s='delete' d='Shop.Theme.Actions'}</i></a>
               <div class="pull-xs-right">
-                {$voucher.reduction_formated}
+                {$voucher.reduction_formatted}
               </div>
             </li>
           {/foreach}
