@@ -55,11 +55,10 @@ abstract class AbstractProductPresenter
 
         if (isset($product['id_product_attribute'])) {
             foreach ($presentedProduct['images'] as $image) {
-                foreach ($image['associatedVariants'] as $id) {
-                    if ((int) $id === (int) $product['id_product_attribute']) {
-                        $presentedProduct['cover'] = $image;
-                        break 2;
-                    }
+                if (isset($image['cover']) && null !== $image['cover']) {
+                    $presentedProduct['cover'] = $image;
+
+                    break;
                 }
             }
         }
