@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2016 PrestaShop
+ * 2007-2016 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Twig;
 
 use Symfony\Component\Yaml\Parser;
@@ -64,38 +63,42 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
         $this->environment = $environment;
     }
 
-
     final private function buildTopNavMenu(ParameterBag $parameterBag)
     {
-        $yamlParser = new Parser();
-        $yamlNavigationPath = __DIR__.'/../Resources/config/admin/navigation.yml';
-        $tabConfiguration = $yamlParser->parse(file_get_contents($yamlNavigationPath));
-        $explodedControllerInfo = explode('::', $parameterBag->get('_controller'));
-        $explodedControllerName = explode('\\', $explodedControllerInfo[0]);
-        $controllerNameIndex = count($explodedControllerName) - 1;
-        $controllerName = $explodedControllerName[$controllerNameIndex];
+        static $tabDataContent = null;
 
-        if (isset($tabConfiguration[$controllerName])) {
-            // Construct tabs and inject into twig tpl
-            $tabDataContent = [];
-            // Get current route name to know when to put "current" class on HTML dom
-            $currentRouteName = $parameterBag->get('_route');
+        if (null === $tabDataContent) {
+            $yamlParser = new Parser();
+            $yamlNavigationPath = __DIR__.'/../Resources/config/admin/navigation.yml';
+            $tabConfiguration = $yamlParser->parse(file_get_contents($yamlNavigationPath));
+            $explodedControllerInfo = explode('::', $parameterBag->get('_controller'));
+            $explodedControllerName = explode('\\', $explodedControllerInfo[0]);
+            $controllerNameIndex = count($explodedControllerName) - 1;
+            $controllerName = $explodedControllerName[$controllerNameIndex];
 
-            foreach ($tabConfiguration[$controllerName] as $tabName => $tabData) {
-                $tabData['isCurrent'] = false;
-                if ($currentRouteName === $tabData['route']) {
-                    $tabData['isCurrent'] = true;
+            if (isset($tabConfiguration[$controllerName])) {
+                // Construct tabs and inject into twig tpl
+                $tabDataContent = array();
+                // Get current route name to know when to put "current" class on HTML dom
+                $currentRouteName = $parameterBag->get('_route');
+
+                foreach ($tabConfiguration[$controllerName] as $tabName => $tabData) {
+                    $tabData['isCurrent'] = false;
+                    if ($currentRouteName === $tabData['route']) {
+                        $tabData['isCurrent'] = true;
+                    }
+
+                    $tabDataContent[] = $this->environment->render(
+                        'PrestaShopBundle:Admin/Common/_partials:_header_tab.html.twig',
+                        array('tabData' => $tabData)
+                    );
                 }
-
-                $tabDataContent[] = $this->environment->render(
-                    'PrestaShopBundle:Admin/Common/_partials:_header_tab.html.twig',
-                    ['tabData' => $tabData]
-                );
+                // Inject them to templating system as global to be able to pass it to the legacy afterwards and once
+                // controller has given a response
             }
-            // Inject them to templating system as global to be able to pass it to the legacy afterwards and once
-            // controller has given a response
-            return $tabDataContent;
         }
+
+        return $tabDataContent;
     }
 
     /**
