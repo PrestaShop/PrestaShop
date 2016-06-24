@@ -104,6 +104,9 @@ class ShopCore extends ObjectModel
     /** @var int ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
     protected static $context_id_shop_group;
 
+    /** @var Theme **/
+    public $theme;
+
     /**
      * There are 3 kinds of shop context : shop, group shop and general
      */
@@ -135,7 +138,9 @@ class ShopCore extends ObjectModel
 
         if ($this->id) {
             $this->setUrl();
-            $this->setTheme();
+            if ($this->theme == null) {
+                $this->setTheme();
+            }
         }
     }
 

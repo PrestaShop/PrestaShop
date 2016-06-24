@@ -290,7 +290,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
     public function processInstallTheme()
     {
         $this->initializeContext();
-        return $this->model_install->installTheme();
+        return $this->model_install->installTheme($this->datas->theme);
     }
 
     private function clearConfigXML()

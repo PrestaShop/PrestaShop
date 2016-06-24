@@ -910,8 +910,9 @@ class InstallModelInstall extends InstallAbstractModel
         return true;
     }
 
-    public function installTheme()
+    public function installTheme($themeName = null)
     {
+        $themeName = $themeName ?: _THEME_NAME_;
         $builder = new ThemeManagerBuilder(
             Context::getContext(),
             Db::getInstance()
@@ -919,6 +920,6 @@ class InstallModelInstall extends InstallAbstractModel
 
         $theme_manager = $builder->build();
 
-        return $theme_manager->install(_THEME_NAME_) && $theme_manager->enable(_THEME_NAME_);
+        return $theme_manager->install($themeName) && $theme_manager->enable($themeName);
     }
 }
