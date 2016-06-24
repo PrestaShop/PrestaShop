@@ -16076,9 +16076,17 @@ ul.category-tree {
   .product-page .twitter-typeahead .tt-menu {
     width: 100%;
     border: 1px solid #6C868E;
-    background: #FFFFFF; }
+    background: #FFFFFF;
+    padding: 0.3125rem 0;
+    max-height: 19.5rem;
+    overflow: auto; }
   .product-page .twitter-typeahead .tt-suggestion {
-    cursor: pointer; }
+    cursor: pointer;
+    padding: 0.3125rem 0.625rem;
+    color: #BBCDD2; }
+    .product-page .twitter-typeahead .tt-suggestion:hover {
+      background-color: #3ED2F0;
+      color: #FFFFFF; }
   .product-page .pack-product {
     position: relative;
     border: 0.0625rem solid #BBCDD2;
