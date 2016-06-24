@@ -27,9 +27,10 @@
 /**
  * Step 4 : configure the shop and admin access
  */
-class InstallControllerHttpConfigure extends InstallControllerHttp
+class InstallControllerHttpConfigure extends InstallControllerHttp implements HttpConfigureInterface
 {
     public $list_countries = array();
+    public $install_type;
 
     /**
      * @see InstallAbstractModel::processNextStep()
@@ -37,6 +38,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
     public function processNextStep()
     {
         if (Tools::isSubmit('shop_name')) {
+
             // Save shop configuration
             $this->session->shop_name = trim(Tools::getValue('shop_name'));
             $this->session->shop_activity = Tools::getValue('shop_activity');
@@ -80,42 +82,42 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
         $required_fields = array('shop_name', 'shop_country', 'shop_timezone', 'admin_firstname', 'admin_lastname', 'admin_email', 'admin_password');
         foreach ($required_fields as $field) {
             if (!$this->session->$field) {
-                $this->errors[$field] = $this->l('Field required');
+                $this->errors[$field] = $this->translator->trans('Field required', array(), 'Install');
             }
         }
 
         // Check shop name
         if ($this->session->shop_name && !Validate::isGenericName($this->session->shop_name)) {
-            $this->errors['shop_name'] = $this->l('Invalid shop name');
+            $this->errors['shop_name'] = $this->translator->trans('Invalid shop name', array(), 'Install');
         } elseif (strlen($this->session->shop_name) > 64) {
-            $this->errors['shop_name'] = $this->l('The field %s is limited to %d characters', $this->l('shop name'), 64);
+            $this->errors['shop_name'] = $this->translator->trans('The field %shop_name% is limited to %limit% characters', array('limit' => 64, 'shop_name' => $this->translator->trans('shop name', array(), 'Install')), 'Install');
         }
 
         // Check admin name
         if ($this->session->admin_firstname && !Validate::isName($this->session->admin_firstname)) {
-            $this->errors['admin_firstname'] = $this->l('Your firstname contains some invalid characters');
+            $this->errors['admin_firstname'] = $this->translator->trans('Your firstname contains some invalid characters', array(), 'Install');
         } elseif (strlen($this->session->admin_firstname) > 32) {
-            $this->errors['admin_firstname'] = $this->l('The field %s is limited to %d characters', $this->l('firstname'), 32);
+            $this->errors['admin_firstname'] = $this->translator->trans('The field %field% is limited to %d characters', array('field' => $this->translator->trans('firstname', array(), 'Install'), 'limit' => 32), 'Install');
         }
 
         if ($this->session->admin_lastname && !Validate::isName($this->session->admin_lastname)) {
-            $this->errors['admin_lastname'] = $this->l('Your lastname contains some invalid characters');
+            $this->errors['admin_lastname'] = $this->translator->trans('Your lastname contains some invalid characters');
         } elseif (strlen($this->session->admin_lastname) > 32) {
-            $this->errors['admin_lastname'] = $this->l('The field %s is limited to %d characters', $this->l('lastname'), 32);
+            $this->errors['admin_lastname'] = $this->translator->trans('The field %s is limited to %d characters', array('%field%' => $this->translator->trans('lastname', array(), 'Install'), '%limit%' => 32), 'Install');
         }
 
         // Check passwords
         if ($this->session->admin_password) {
             if (!Validate::isPasswdAdmin($this->session->admin_password)) {
-                $this->errors['admin_password'] = $this->l('The password is incorrect (alphanumeric string with at least 8 characters)');
+                $this->errors['admin_password'] = $this->translator->trans('The password is incorrect (alphanumeric string with at least 8 characters)', array(), 'Install');
             } elseif ($this->session->admin_password != $this->session->admin_password_confirm) {
-                $this->errors['admin_password'] = $this->l('Password and its confirmation are different');
+                $this->errors['admin_password'] = $this->translator->trans('Password and its confirmation are different', array(), 'Install');
             }
         }
 
         // Check email
         if ($this->session->admin_email && !Validate::isEmail($this->session->admin_email)) {
-            $this->errors['admin_email'] = $this->l('This e-mail address is invalid');
+            $this->errors['admin_email'] = $this->translator->trans('This e-mail address is invalid', array(), 'Install');
         }
 
         return count($this->errors) ? false : true;
@@ -153,7 +155,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
                 $newheight = $height * $percent;
 
                 if (!is_writable(_PS_ROOT_DIR_.'/img/')) {
-                    $error = $this->l('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/');
+                    $error = $this->translator->trans('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/', array(), 'Install');
                 }
                 if (!$error) {
                     list($src_width, $src_height, $type) = getimagesize($tmp_name);
@@ -170,7 +172,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
                     }
                 }
             } else {
-                $error = $this->l('An error occurred during logo upload.');
+                $error = $this->translator->trans('An error occurred during logo upload.', array(), 'Install');
             }
         }
 
@@ -240,26 +242,26 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
     {
         // List of activities
         $list_activities = array(
-            1 => $this->l('Lingerie and Adult'),
-            2 => $this->l('Animals and Pets'),
-            3 => $this->l('Art and Culture'),
-            4 => $this->l('Babies'),
-            5 => $this->l('Beauty and Personal Care'),
-            6 => $this->l('Cars'),
-            7 => $this->l('Computer Hardware and Software'),
-            8 => $this->l('Download'),
-            9 => $this->l('Fashion and accessories'),
-            10 => $this->l('Flowers, Gifts and Crafts'),
-            11 => $this->l('Food and beverage'),
-            12 => $this->l('HiFi, Photo and Video'),
-            13 => $this->l('Home and Garden'),
-            14 => $this->l('Home Appliances'),
-            15 => $this->l('Jewelry'),
-            16 => $this->l('Mobile and Telecom'),
-            17 => $this->l('Services'),
-            18 => $this->l('Shoes and accessories'),
-            19 => $this->l('Sports and Entertainment'),
-            20 => $this->l('Travel'),
+            1 => $this->translator->trans('Lingerie and Adult', array(), 'Install'),
+            2 => $this->translator->trans('Animals and Pets', array(), 'Install'),
+            3 => $this->translator->trans('Art and Culture', array(), 'Install'),
+            4 => $this->translator->trans('Babies', array(), 'Install'),
+            5 => $this->translator->trans('Beauty and Personal Care', array(), 'Install'),
+            6 => $this->translator->trans('Cars', array(), 'Install'),
+            7 => $this->translator->trans('Computer Hardware and Software', array(), 'Install'),
+            8 => $this->translator->trans('Download', array(), 'Install'),
+            9 => $this->translator->trans('Fashion and accessories', array(), 'Install'),
+            10 => $this->translator->trans('Flowers, Gifts and Crafts', array(), 'Install'),
+            11 => $this->translator->trans('Food and beverage', array(), 'Install'),
+            12 => $this->translator->trans('HiFi, Photo and Video', array(), 'Install'),
+            13 => $this->translator->trans('Home and Garden', array(), 'Install'),
+            14 => $this->translator->trans('Home Appliances', array(), 'Install'),
+            15 => $this->translator->trans('Jewelry', array(), 'Install'),
+            16 => $this->translator->trans('Mobile and Telecom', array(), 'Install'),
+            17 => $this->translator->trans('Services', array(), 'Install'),
+            18 => $this->translator->trans('Shoes and accessories', array(), 'Install'),
+            19 => $this->translator->trans('Sports and Entertainment', array(), 'Install'),
+            20 => $this->translator->trans('Travel', array(), 'Install'),
         );
 
         asort($list_activities);

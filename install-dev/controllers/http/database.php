@@ -27,7 +27,7 @@
 /**
  * Step 3 : configure database
  */
-class InstallControllerHttpDatabase extends InstallControllerHttp
+class InstallControllerHttpDatabase extends InstallControllerHttp implements HttpConfigureInterface
 {
     /**
      * @var InstallModelDatabase
@@ -38,6 +38,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
     {
         require_once _PS_INSTALL_MODELS_PATH_.'database.php';
         $this->model_database = new InstallModelDatabase();
+        $this->model_database->setTranslator($this->translator);
     }
 
     /**
@@ -107,7 +108,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 
         $this->ajaxJsonAnswer(
             (count($errors)) ? false : true,
-            (count($errors)) ? implode('<br />', $errors) : $this->l('Database is connected')
+            (count($errors)) ? implode('<br />', $errors) : $this->translator->trans('Database is connected', array(), 'Install')
         );
     }
 
@@ -125,7 +126,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 
         $this->ajaxJsonAnswer(
             $success,
-            $success ? $this->l('Database is created') : $this->l('Cannot create the database automatically')
+            $success ?  $this->translator->trans('Database is created', array(), 'Install') : $this->translator->trans('Cannot create the database automatically', array(), 'Install')
         );
     }
 
@@ -136,7 +137,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
     {
         if (!$this->session->database_server) {
             if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-                @include_once _PS_ROOT_DIR_.'/config/settings.inc.php';
                 $this->database_server = _DB_SERVER_;
                 $this->database_name = _DB_NAME_;
                 $this->database_login = _DB_USER_;

@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+
 abstract class InstallControllerConsole
 {
     /**
@@ -76,10 +77,10 @@ abstract class InstallControllerConsole
             }
             exit;
         }
-        
+
         $errors = Datas::getInstance()->getAndCheckArgs($argv);
         if (Datas::getInstance()->show_license) {
-            echo strip_tags(file_get_contents(_PS_INSTALL_PATH_.'theme/views/license_content.phtml'));
+            echo strip_tags(file_get_contents(_PS_INSTALL_PATH_.'theme/views/license_content.php'));
             exit;
         }
 
@@ -97,7 +98,6 @@ abstract class InstallControllerConsole
         }
 
         require_once _PS_INSTALL_CONTROLLERS_PATH_.'console/process.php';
-        $classname = 'InstallControllerConsoleProcess';
         self::$instances['process'] = new InstallControllerConsoleProcess('process');
 
         $datas = Datas::getInstance();
@@ -114,11 +114,17 @@ abstract class InstallControllerConsole
     {
         $this->step = $step;
         $this->datas = Datas::getInstance();
-        
+
         // Set current language
         $this->language = InstallLanguages::getInstance();
+        Context::getContext()->language =  $this->language;
+        Context::getContext()->locale =  $this->language->locale;
+
+        $this->translator = Context::getContext()->getTranslator();
+
         if (!$this->datas->language) {
             die('No language defined');
+
         }
         $this->language->setLanguage($this->datas->language);
 
@@ -147,19 +153,6 @@ abstract class InstallControllerConsole
             }
             die;
         }
-    }
-
-    /**
-     * Get translated string
-     *
-     * @param string $str String to translate
-     * @param ... All other params will be used with sprintf
-     * @return string
-     */
-    public function l($str)
-    {
-        $args = func_get_args();
-        return call_user_func_array(array($this->language, 'l'), $args);
     }
 
     public function process()

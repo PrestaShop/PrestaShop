@@ -33,6 +33,8 @@ class InstallModelInstall extends InstallAbstractModel
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
 
+    protected $logger;
+
     public function setError($errors)
     {
         static $logger = null;
@@ -42,6 +44,7 @@ class InstallModelInstall extends InstallAbstractModel
             $file = $cacheDir .(_PS_MODE_DEV_ ? 'dev' : 'prod').'_'.@date('Ymd').'_installation.log';
             $logger = new FileLogger();
             $logger->setFilename($file);
+            $this->logger = $logger;
         }
 
         if (!is_array($errors)) {
@@ -71,15 +74,15 @@ class InstallModelInstall extends InstallAbstractModel
             file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
             && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
         ) {
-            $this->setError($this->language->l('%s file is not writable (check permissions)', self::SETTINGS_FILE));
+            $this->setError($this->translator->trans('%file% file is not writable (check permissions)', array('%file' => self::SETTINGS_FILE), 'Install'));
             return false;
         } elseif (
             !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
             && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname(self::SETTINGS_FILE))
         ) {
-            $this->setError($this->language->l(
-                '%s folder is not writable (check permissions)',
-                dirname(self::SETTINGS_FILE))
+            $this->setError($this->translator->trans(
+                '%folder% folder is not writable (check permissions)',
+                array('%folder%' => dirname(self::SETTINGS_FILE)), 'Install')
             );
             return false;
         }
@@ -129,12 +132,12 @@ class InstallModelInstall extends InstallAbstractModel
         $settings_content .= "//@deprecated 1.7";
 
         if (!file_put_contents(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE, $settings_content)) {
-            $this->setError($this->language->l('Cannot write settings file'));
+            $this->setError($this->translator->trans('Cannot write settings file', array(), 'Install'));
             return false;
         }
 
         if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($parameters))) {
-            $this->setError($this->language->l('Cannot write app/config/parameters.yml file'));
+            $this->setError($this->translator->trans('Cannot write app/config/parameters.yml file', array(), 'Install'));
             return false;
         }
 
@@ -186,13 +189,13 @@ class InstallModelInstall extends InstallAbstractModel
         try {
             $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'db_structure.sql');
         } catch (PrestashopInstallerException $e) {
-            $this->setError($this->language->l('Database structure file not found'));
+            $this->setError($this->translator->trans('Database structure file not found', array(), 'Install'));
             return false;
         }
 
         if ($errors = $sql_loader->getErrors()) {
             foreach ($errors as $error) {
-                $this->setError($this->language->l('SQL error on query <i>%s</i>', $error['error']));
+                $this->setError($this->translator->trans('SQL error on query <i>%error%</i>', array('%error%' => $error['error']), 'Install'));
             }
             return false;
         }
@@ -352,7 +355,7 @@ class InstallModelInstall extends InstallAbstractModel
         $shop_group->name = 'Default';
         $shop_group->active = true;
         if (!$shop_group->add()) {
-            $this->setError($this->language->l('Cannot create group shop').' / '.Db::getInstance()->getMsgError());
+            $this->setError($this->translator->trans('Cannot create group shop', array(), 'Install').' / '.Db::getInstance()->getMsgError());
             return false;
         }
 
@@ -364,7 +367,7 @@ class InstallModelInstall extends InstallAbstractModel
         $shop->theme_name = _THEME_NAME_;
         $shop->name = $shop_name;
         if (!$shop->add()) {
-            $this->setError($this->language->l('Cannot create shop').' / '.Db::getInstance()->getMsgError());
+            $this->setError($this->translator->trans('Cannot create shop', array(), 'Install').' / '.Db::getInstance()->getMsgError());
             return false;
         }
         Context::getContext()->shop = $shop;
@@ -378,7 +381,7 @@ class InstallModelInstall extends InstallAbstractModel
         $shop_url->main = true;
         $shop_url->active = true;
         if (!$shop_url->add()) {
-            $this->setError($this->language->l('Cannot create shop URL').' / '.Db::getInstance()->getMsgError());
+            $this->setError($this->translator->trans('Cannot create shop URL', array(), 'Install').' / '.Db::getInstance()->getMsgError());
             return false;
         }
 
@@ -404,11 +407,11 @@ class InstallModelInstall extends InstallAbstractModel
                 continue;
             }
             if (!file_exists(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml')) {
-                throw new PrestashopInstallerException($this->language->l('File "language.xml" not found for language iso "%s"', $iso));
+                throw new PrestashopInstallerException($this->translator->trans('File "language.xml" not found for language iso "%iso%"', array('%iso%' => $iso), 'Install'));
             }
 
             if (!$xml = @simplexml_load_file(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml')) {
-                throw new PrestashopInstallerException($this->language->l('File "language.xml" not valid for language iso "%s"', $iso));
+                throw new PrestashopInstallerException($this->translator->trans('File "language.xml" not valid for language iso "%iso%"', array('%iso%' => $iso), 'Install'));
             }
 
             $params_lang = array(
@@ -426,7 +429,7 @@ class InstallModelInstall extends InstallAbstractModel
                     $language = Language::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
 
                     if ($language == false) {
-                        throw new PrestashopInstallerException($this->language->l('Cannot download language pack "%s"', $iso));
+                        throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', array('%iso%' => $iso), 'Install'));
                     }
                 }
 
@@ -438,7 +441,7 @@ class InstallModelInstall extends InstallAbstractModel
             Tools::clearCache();
 
             if (!$id_lang = Language::getIdByIso($iso, true)) {
-                throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
+                throw new PrestashopInstallerException($this->translator->trans('Cannot install language "%iso%"', array('%iso%' => ($xml->name ? $xml->name : $iso) ), 'Install'));
             }
 
             $languages[$id_lang] = $iso;
@@ -446,7 +449,7 @@ class InstallModelInstall extends InstallAbstractModel
             // Copy language flag
             if (is_writable(_PS_IMG_DIR_.'l/')) {
                 if (!copy(_PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg', _PS_IMG_DIR_.'l/'.$id_lang.'.jpg')) {
-                    throw new PrestashopInstallerException($this->language->l('Cannot copy flag language "%s"', _PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg => '._PS_IMG_DIR_.'l/'.$id_lang.'.jpg'));
+                    throw new PrestashopInstallerException($this->translator->trans('Cannot copy flag language "%flag%"', array('%flag%' => _PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg => '._PS_IMG_DIR_.'l/'.$id_lang.'.jpg')));
                 }
             }
         }
@@ -635,11 +638,11 @@ class InstallModelInstall extends InstallAbstractModel
             $employee->id_lang = Configuration::get('PS_LANG_DEFAULT');
             $employee->bo_menu = 1;
             if (!$employee->add()) {
-                $this->setError($this->language->l('Cannot create admin account'));
+                $this->setError($this->translator->trans('Cannot create admin account', array(), 'Install'));
                 return false;
             }
         } else {
-            $this->setError($this->language->l('Cannot create admin account'));
+            $this->setError($this->translator->trans('Cannot create admin account', array(), 'Install'));
             return false;
         }
 
@@ -808,7 +811,7 @@ class InstallModelInstall extends InstallAbstractModel
             if (!$moduleManager->install($module_name)) {
                 /*$module_errors = $module->getErrors();
                 if (empty($module_errors)) {*/
-                $module_errors = [$this->language->l('Cannot install module "%s"', $module_name)];
+                $module_errors = [$this->translator->trans('Cannot install module "%module%"', array('module' => $module_name), 'Install')];
                 /*}*/
                 $errors[$module_name] = $module_errors;
             }
@@ -862,13 +865,13 @@ class InstallModelInstall extends InstallAbstractModel
             require_once $fixtures_path.'/install.php';
             $class = 'InstallFixtures'.Tools::toCamelCase($fixtures_name);
             if (!class_exists($class, false)) {
-                $this->setError($this->language->l('Fixtures class "%s" not found', $class));
+                $this->setError($this->translator->trans('Fixtures class "%class%" not found', array('%class%' => $class), 'Install'));
                 return false;
             }
 
             $xml_loader = new $class();
             if (!$xml_loader instanceof InstallXmlLoader) {
-                $this->setError($this->language->l('"%s" must be an instance of "InstallXmlLoader"', $class));
+                $this->setError($this->translator->trans('"%class%" must be an instance of "InstallXmlLoader"', array('%class%' => $class), 'Install'));
                 return false;
             }
         } else {
