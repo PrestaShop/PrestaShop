@@ -23,31 +23,18 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle;
+namespace PrestaShopBundle\Security\Role;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
-use PrestaShopBundle\DependencyInjection\DynamicRolePass;
+use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
- * Symfony entry point: adds Extension, that will add other stuff.
+ * Class DynamicRoleHierarchy is used for Symfony role hierarchy voter to load roles from database.
+ * @package PrestaShopBundle\Security\Role
  */
-class PrestaShopBundle extends Bundle
+class DynamicRoleHierarchy implements RoleHierarchyInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getContainerExtension()
+    public function getReachableRoles(array $roles)
     {
-        return new PrestaShopExtension();
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new DynamicRolePass());
+
     }
 }

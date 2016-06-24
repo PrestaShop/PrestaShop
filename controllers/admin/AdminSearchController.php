@@ -32,6 +32,11 @@ class AdminSearchControllerCore extends AdminController
         parent::__construct();
     }
 
+    public function getTabSlug()
+    {
+        return 'ROLE_MOD_TAB_ADMINSEARCHCONF_';
+    }
+    
     public function postProcess()
     {
         $this->context = Context::getContext();
@@ -221,14 +226,13 @@ class AdminSearchControllerCore extends AdminController
 		SELECT class_name, name
 		FROM '._DB_PREFIX_.'tab t
 		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->employee->id_lang.')
-		LEFT JOIN '._DB_PREFIX_.'access a ON (a.id_tab = t.id_tab AND a.id_profile = '.(int)$this->context->employee->id_profile.')
-		WHERE active = 1
-		'.($this->context->employee->id_profile != 1 ? 'AND view = 1' : '').
-        (defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
+		WHERE active = 1'.(defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
         );
         foreach ($result as $row) {
-            $tabs[strtolower($row['class_name'])] = $row['name'];
-            $key_match[strtolower($row['class_name'])] = $row['class_name'];
+            if (Access::isGranted('ROLE_MOD_TAB_'.strtoupper($row['class_name']).'_READ', $this->context->employee->id_profile)) {
+                $tabs[strtolower($row['class_name'])] = $row['name'];
+                $key_match[strtolower($row['class_name'])] = $row['class_name'];
+            }
         }
         foreach (AdminTab::$tabParenting as $key => $value) {
             $value = stripslashes($value);

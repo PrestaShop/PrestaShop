@@ -4414,7 +4414,7 @@ class AdminImportControllerCore extends AdminController
 
     public function ajaxProcessSaveImportMatchs()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $match = implode('|', Tools::getValue('type_value'));
             Db::getInstance()->execute('INSERT IGNORE INTO  `'._DB_PREFIX_.'import_match` (
 										`id_import_match` ,
@@ -4435,7 +4435,7 @@ class AdminImportControllerCore extends AdminController
 
     public function ajaxProcessLoadImportMatchs()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $return = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
                 .(int)Tools::getValue('idImportMatchs'), true, false);
             die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'
@@ -4445,7 +4445,7 @@ class AdminImportControllerCore extends AdminController
 
     public function ajaxProcessDeleteImportMatchs()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
                 .(int)Tools::getValue('idImportMatchs'), false);
             die;

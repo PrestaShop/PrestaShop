@@ -339,7 +339,7 @@ class AdminImagesControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitRegenerate'.$this->table)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 if ($this->_regenerateThumbnails(Tools::getValue('type'), Tools::getValue('erase'))) {
                     Tools::redirectAdmin(self::$currentIndex.'&conf=9'.'&token='.$this->token);
                 }
@@ -347,7 +347,7 @@ class AdminImagesControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('submitMoveImages'.$this->table)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 if ($this->_moveImagesToNewFileSystem()) {
                     Tools::redirectAdmin(self::$currentIndex.'&conf=25'.'&token='.$this->token);
                 }
@@ -355,7 +355,7 @@ class AdminImagesControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('submitOptions'.$this->table)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 if ((int)Tools::getValue('PS_JPEG_QUALITY') < 0
                     || (int)Tools::getValue('PS_JPEG_QUALITY') > 100) {
                     $this->errors[] = Tools::displayError('Incorrect value for the selected JPEG image compression.');

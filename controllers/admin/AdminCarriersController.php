@@ -425,7 +425,7 @@ class AdminCarriersControllerCore extends AdminController
                 /* Object update */
                 if (isset($id) && !empty($id)) {
                     try {
-                        if ($this->tabAccess['edit'] === '1') {
+                        if ($this->access('edit')) {
                             $current_carrier = new Carrier($id);
                             if (!Validate::isLoadedObject($current_carrier)) {
                                 throw new PrestaShopException('Cannot load Carrier object');
@@ -469,7 +469,7 @@ class AdminCarriersControllerCore extends AdminController
 
                 /* Object creation */
                 else {
-                    if ($this->tabAccess['add'] === '1') {
+                    if ($this->access('add')) {
                         // Create new Carrier
                         $carrier = new Carrier();
                         $this->copyFromPost($carrier, $this->table);
@@ -495,7 +495,7 @@ class AdminCarriersControllerCore extends AdminController
         /*
 elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
         {
-            if ($this->tabAccess['edit'] === '1')
+            if ($this->access('edit'))
             {
                 if (Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT'))
                     $this->errors[] = Tools::displayError('You cannot disable the default carrier, however you can change your default carrier. ');
@@ -694,7 +694,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
     public function displayEditLink($token = null, $id, $name = null)
     {
-        if ($this->tabAccess['edit'] == 1) {
+        if ($this->access('edit')) {
             $tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
             if (!array_key_exists('Edit', self::$cache_lang)) {
                 self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
@@ -714,7 +714,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
     public function displayDeleteLink($token = null, $id, $name = null)
     {
-        if ($this->tabAccess['delete'] == 1) {
+        if ($this->access('delete')) {
             $tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
 
             if (!array_key_exists('Delete', self::$cache_lang)) {

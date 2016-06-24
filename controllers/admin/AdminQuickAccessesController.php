@@ -124,6 +124,11 @@ class AdminQuickAccessesControllerCore extends AdminController
         parent::__construct();
     }
 
+    public function getTabSlug()
+    {
+        return 'ROLE_MOD_TAB_ADMINACCESS_';
+    }
+
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
@@ -140,7 +145,7 @@ class AdminQuickAccessesControllerCore extends AdminController
     public function initProcess()
     {
         if ((isset($_GET['new_window'.$this->table]) || isset($_GET['new_window'])) && Tools::getValue($this->identifier)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'newWindow';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');

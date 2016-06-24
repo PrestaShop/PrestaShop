@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Security\Admin;
 
+use Access;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -58,7 +59,11 @@ class EmployeeProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->email == $username) {
-            return new Employee($this->legacyContext->employee);
+            $employee = new Employee($this->legacyContext->employee);
+            $employee->setRoles(
+                Access::getRoles($this->legacyContext->employee->id_profile)
+            );
+            return $employee;
         }
 
         throw new UsernameNotFoundException(

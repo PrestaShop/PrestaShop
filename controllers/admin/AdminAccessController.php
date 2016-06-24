@@ -79,24 +79,7 @@ class AdminAccessControllerCore extends AdminController
 
         $modules = array();
         foreach ($profiles as $profile) {
-            $modules[$profile['id_profile']] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT ma.`id_module`, m.`name`, ma.`view`, ma.`configure`, ma.`uninstall`
-				FROM '._DB_PREFIX_.'module_access ma
-				LEFT JOIN '._DB_PREFIX_.'module m
-					ON ma.id_module = m.id_module
-				WHERE id_profile = '.(int)$profile['id_profile'].'
-				ORDER BY m.name
-			');
-            foreach ($modules[$profile['id_profile']] as $k => &$module) {
-                $m = Module::getInstanceById($module['id_module']);
-                // the following condition handles invalid modules
-                if ($m) {
-                    $module['name'] = $m->displayName;
-                } else {
-                    unset($modules[$profile['id_profile']][$k]);
-                }
-            }
-
+            $modules[$profile['id_profile']] = Module::getModulesAccessesByIdProfile($profile['id_profile']);
             uasort($modules[$profile['id_profile']], array($this, 'sortModuleByName'));
         }
 
@@ -109,7 +92,7 @@ class AdminAccessControllerCore extends AdminController
             'tabs' => $this->displayTabs($tabs),
             'current_profile' => (int)$current_profile,
             'admin_profile' => (int)_PS_ADMIN_PROFILE_,
-            'access_edit' => $this->tabAccess['edit'],
+            'access_edit' => $this->access('edit'),
             'perms' => array('view', 'add', 'edit', 'delete'),
             'modules' => $modules,
             'link' => $this->context->link
@@ -158,11 +141,13 @@ class AdminAccessControllerCore extends AdminController
         if (_PS_MODE_DEMO_) {
             throw new PrestaShopException(Tools::displayError('This functionality has been disabled.'));
         }
-        if ($this->tabAccess['edit'] != '1') {
+        if ($this->access('edit') != '1') {
             throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
         }
 
         if (Tools::isSubmit('submitAddAccess')) {
+            $res = array();
+            $access = new Access;
             $perm = Tools::getValue('perm');
             if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all'))) {
                 throw new PrestaShopException('permission does not exist');
@@ -171,42 +156,8 @@ class AdminAccessControllerCore extends AdminController
             $enabled = (int)Tools::getValue('enabled');
             $id_tab = (int)Tools::getValue('id_tab');
             $id_profile = (int)Tools::getValue('id_profile');
-            $where = '`id_tab`';
-            $join = '';
-            if (Tools::isSubmit('addFromParent')) {
-                $where = 't.`id_parent`';
-                $join = 'LEFT JOIN `'._DB_PREFIX_.'tab` t ON (t.`id_tab` = a.`id_tab`)';
-            }
-
-            if ($id_tab == -1) {
-                if ($perm == 'all') {
-                    $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a
-					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile;
-                } else {
-                    $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile;
-                }
-            } else {
-                if ($perm == 'all') {
-                    $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a '.$join.'
-					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE '.$where.' = '.(int)$id_tab.' AND `id_profile` = '.(int)$id_profile;
-                } else {
-                    $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a '.$join.'
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE '.$where.' = '.(int)$id_tab.' AND `id_profile` = '.(int)$id_profile;
-                }
-            }
-
-            $res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
-
-            die($res);
+            
+            die($access->updateLgcAccess((int)$id_profile, $id_tab, $perm, $enabled));
         }
     }
 
@@ -215,11 +166,12 @@ class AdminAccessControllerCore extends AdminController
         if (_PS_MODE_DEMO_) {
             throw new PrestaShopException(Tools::displayError('This functionality has been disabled.'));
         }
-        if ($this->tabAccess['edit'] != '1') {
+        if ($this->access('edit') != '1') {
             throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
         }
 
         if (Tools::isSubmit('changeModuleAccess')) {
+            $access = new Access;
             $perm = Tools::getValue('perm');
             $enabled = (int)Tools::getValue('enabled');
             $id_module = (int)Tools::getValue('id_module');
@@ -229,22 +181,7 @@ class AdminAccessControllerCore extends AdminController
                 throw new PrestaShopException('permission does not exist');
             }
 
-            if ($id_module == -1) {
-                $sql = '
-					UPDATE `'._DB_PREFIX_.'module_access`
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile;
-            } else {
-                $sql = '
-					UPDATE `'._DB_PREFIX_.'module_access`
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE `id_module` = '.(int)$id_module.'
-						AND `id_profile` = '.(int)$id_profile;
-            }
-
-            $res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
-
-            die($res);
+            die($access->updateLgcModuleAccess((int)$id_profile, $id_module, $perm, $enabled));
         }
     }
 

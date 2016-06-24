@@ -111,7 +111,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
         }
         /* Change object statuts (active, inactive) */
         elseif (Tools::isSubmit('statuscms_category') && Tools::getValue($this->identifier)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 if (Validate::isLoadedObject($object = $this->loadObject())) {
                     if ($object->toggleStatus()) {
                         $identifier = ((int)$object->id_parent ? '&id_cms_category='.(int)$object->id_parent : '');
@@ -129,7 +129,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
         }
         /* Delete object */
         elseif (Tools::isSubmit('delete'.$this->table)) {
-            if ($this->tabAccess['delete'] === '1') {
+            if ($this->access('delete')) {
                 if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings)) {
                     // check if request at least one object with noZeroObject
                     if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1) {
@@ -156,7 +156,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
             }
         } elseif (Tools::isSubmit('position')) {
             $object = new CMSCategory((int)Tools::getValue($this->identifier, Tools::getValue('id_cms_category_to_move', 1)));
-            if ($this->tabAccess['edit'] !== '1') {
+            if ($this->access('edit') !== '1') {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             } elseif (!Validate::isLoadedObject($object)) {
                 $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.')
@@ -173,7 +173,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
         }
         /* Delete multiple objects */
         elseif (Tools::getValue('submitDel'.$this->table) || Tools::getValue('submitBulkdelete'.$this->table)) {
-            if ($this->tabAccess['delete'] === '1') {
+            if ($this->access('delete')) {
                 if (Tools::isSubmit($this->table.'Box')) {
                     $cms_category = new CMSCategory();
                     $result = true;

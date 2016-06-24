@@ -338,7 +338,7 @@ class AdminOrdersControllerCore extends AdminController
         $this->addJS(_PS_JS_DIR_.'vendor/d3.v3.min.js');
         $this->addJS('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false');
 
-        if ($this->tabAccess['edit'] == 1 && $this->display == 'view') {
+        if ($this->access('edit') && $this->display == 'view') {
             $this->addJS(_PS_JS_DIR_.'admin/orders.js');
             $this->addJS(_PS_JS_DIR_.'tools.js');
             $this->addJqueryPlugin('autocomplete');
@@ -379,7 +379,7 @@ class AdminOrdersControllerCore extends AdminController
     {
         if (Tools::isSubmit('submitUpdateOrderStatus')
             && ($id_order_state = (int)Tools::getValue('id_order_state'))) {
-            if ($this->tabAccess['edit'] !== '1') {
+            if ($this->access('edit') !== '1') {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             } else {
                 $order_state = new OrderState($id_order_state);
@@ -460,7 +460,7 @@ class AdminOrdersControllerCore extends AdminController
 
         /* Update shipping number */
         if (Tools::isSubmit('submitShippingNumber') && isset($order)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $order_carrier = new OrderCarrier(Tools::getValue('id_order_carrier'));
                 if (!Validate::isLoadedObject($order_carrier)) {
                     $this->errors[] = Tools::displayError('The order carrier ID is invalid.');
@@ -511,7 +511,7 @@ class AdminOrdersControllerCore extends AdminController
 
         /* Change order status, add a new entry in order history and send an e-mail to the customer if needed */
         elseif (Tools::isSubmit('submitState') && isset($order)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $order_state = new OrderState(Tools::getValue('id_order_state'));
 
                 if (!Validate::isLoadedObject($order_state)) {
@@ -561,7 +561,7 @@ class AdminOrdersControllerCore extends AdminController
 
         /* Add a new message for the current order and send an e-mail to the customer if needed */
         elseif (Tools::isSubmit('submitMessage') && isset($order)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $customer = new Customer(Tools::getValue('id_customer'));
                 if (!Validate::isLoadedObject($customer)) {
                     $this->errors[] = Tools::displayError('The customer is invalid.');
@@ -647,7 +647,7 @@ class AdminOrdersControllerCore extends AdminController
 
         /* Partial refund from order */
         elseif (Tools::isSubmit('partialRefund') && isset($order)) {
-            if ($this->tabAccess['edit'] == '1') {
+            if ($this->access('edit')) {
                 if (Tools::isSubmit('partialRefundProduct') && ($refunds = Tools::getValue('partialRefundProduct')) && is_array($refunds)) {
                     $amount = 0;
                     $order_detail_list = array();
@@ -830,7 +830,7 @@ class AdminOrdersControllerCore extends AdminController
 
         /* Cancel product from order */
         elseif (Tools::isSubmit('cancelProduct') && isset($order)) {
-            if ($this->tabAccess['delete'] === '1') {
+            if ($this->access('delete')) {
                 if (!Tools::isSubmit('id_order_detail') && !Tools::isSubmit('id_customization')) {
                     $this->errors[] = Tools::displayError('You must select a product.');
                 } elseif (!Tools::isSubmit('cancelQuantity') && !Tools::isSubmit('cancelCustomizationQuantity')) {
@@ -1078,7 +1078,7 @@ class AdminOrdersControllerCore extends AdminController
         } elseif (Tools::isSubmit('messageReaded')) {
             Message::markAsReaded(Tools::getValue('messageReaded'), $this->context->employee->id);
         } elseif (Tools::isSubmit('submitAddPayment') && isset($order)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $amount = str_replace(',', '.', Tools::getValue('payment_amount'));
                 $currency = new Currency(Tools::getValue('payment_currency'));
                 $order_has_invoice = $order->hasInvoice();
@@ -1116,7 +1116,7 @@ class AdminOrdersControllerCore extends AdminController
             $note = Tools::getValue('note');
             $order_invoice = new OrderInvoice((int)Tools::getValue('id_order_invoice'));
             if (Validate::isLoadedObject($order_invoice) && Validate::isCleanHtml($note)) {
-                if ($this->tabAccess['edit'] === '1') {
+                if ($this->access('edit')) {
                     $order_invoice->note = $note;
                     if ($order_invoice->save()) {
                         Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order_invoice->id_order.'&vieworder&conf=4&token='.$this->token);
@@ -1132,7 +1132,7 @@ class AdminOrdersControllerCore extends AdminController
         } elseif (Tools::isSubmit('submitAddOrder') && ($id_cart = Tools::getValue('id_cart')) &&
             ($module_name = Tools::getValue('payment_module_name')) &&
             ($id_order_state = Tools::getValue('id_order_state')) && Validate::isModuleName($module_name)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 if (!Configuration::get('PS_CATALOG_MODE')) {
                     $payment_module = Module::getInstanceByName($module_name);
                 } else {
@@ -1166,7 +1166,7 @@ class AdminOrdersControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('You do not have permission to add this.');
             }
         } elseif ((Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice')) && isset($order)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $address = new Address(Tools::getValue('id_address'));
                 if (Validate::isLoadedObject($address)) {
                     // Update the address on order
@@ -1184,7 +1184,7 @@ class AdminOrdersControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('submitChangeCurrency') && isset($order)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 if (Tools::getValue('new_currency') != $order->id_currency && !$order->valid) {
                     $old_currency = new Currency($order->id_currency);
                     $currency = new Currency(Tools::getValue('new_currency'));
@@ -1289,7 +1289,7 @@ class AdminOrdersControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
             }
         } elseif (Tools::isSubmit('submitDeleteVoucher') && isset($order)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $order_cart_rule = new OrderCartRule(Tools::getValue('id_order_cart_rule'));
                 if (Validate::isLoadedObject($order_cart_rule) && $order_cart_rule->id_order == $order->id) {
                     if ($order_cart_rule->id_order_invoice) {
@@ -1329,7 +1329,7 @@ class AdminOrdersControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('submitNewVoucher') && isset($order)) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 if (!Tools::getValue('discount_name')) {
                     $this->errors[] = Tools::displayError('You must specify a name in order to create a new discount.');
                 } else {
@@ -1497,7 +1497,7 @@ class AdminOrdersControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('sendStateEmail') && Tools::getValue('sendStateEmail') > 0 && Tools::getValue('id_order') > 0) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $order_state = new OrderState((int)Tools::getValue('sendStateEmail'));
 
                 if (!Validate::isLoadedObject($order_state)) {
@@ -1781,7 +1781,7 @@ class AdminOrdersControllerCore extends AdminController
             'carrierModuleCall' => $carrier_module_call,
             'iso_code_lang' => $this->context->language->iso_code,
             'id_lang' => $this->context->language->id,
-            'can_edit' => ($this->tabAccess['edit'] == 1),
+            'can_edit' => ($this->access('edit')),
             'current_id_lang' => $this->context->language->id,
             'invoices_collection' => $order->getInvoicesCollection(),
             'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
@@ -1894,7 +1894,7 @@ class AdminOrdersControllerCore extends AdminController
 
     public function ajaxProcessSendMailValidateOrder()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $cart = new Cart((int)Tools::getValue('id_cart'));
             if (Validate::isLoadedObject($cart)) {
                 $customer = new Customer((int)$cart->id_customer);
@@ -2192,7 +2192,7 @@ class AdminOrdersControllerCore extends AdminController
             'product' => $product,
             'order' => $order,
             'currency' => new Currency($order->id_currency),
-            'can_edit' => $this->tabAccess['edit'],
+            'can_edit' => $this->access('edit'),
             'invoices_collection' => $invoice_collection,
             'current_id_lang' => Context::getContext()->language->id,
             'link' => Context::getContext()->link,
@@ -2240,7 +2240,7 @@ class AdminOrdersControllerCore extends AdminController
         die(json_encode(array(
             'result' => true,
             'view' => $this->createTemplate('_product_line.tpl')->fetch(),
-            'can_edit' => $this->tabAccess['add'],
+            'can_edit' => $this->access('add'),
             'order' => $order,
             'invoices' => $invoice_array,
             'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
@@ -2449,7 +2449,7 @@ class AdminOrdersControllerCore extends AdminController
             'product' => $product,
             'order' => $order,
             'currency' => new Currency($order->id_currency),
-            'can_edit' => $this->tabAccess['edit'],
+            'can_edit' => $this->access('edit'),
             'invoices_collection' => $invoice_collection,
             'current_id_lang' => Context::getContext()->language->id,
             'link' => Context::getContext()->link,
@@ -2476,7 +2476,7 @@ class AdminOrdersControllerCore extends AdminController
         die(json_encode(array(
             'result' => $res,
             'view' => $view,
-            'can_edit' => $this->tabAccess['add'],
+            'can_edit' => $this->access('add'),
             'invoices_collection' => $invoice_collection,
             'order' => $order,
             'invoices' => $invoice_array,

@@ -298,7 +298,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxPreProcess()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $id_customer = (int)Tools::getValue('id_customer');
             $customer = new Customer((int)$id_customer);
             $this->context->customer = $customer;
@@ -355,7 +355,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessDeleteProduct()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $errors = array();
             if ((!$id_product = (int)Tools::getValue('id_product')) || !Validate::isInt($id_product)) {
                 $errors[] = Tools::displayError('Invalid product');
@@ -375,7 +375,7 @@ class AdminCartsControllerCore extends AdminController
     public function ajaxProcessUpdateCustomizationFields()
     {
         $errors = array();
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $errors = array();
             if (Tools::getValue('only_display') != 1) {
                 if (!$this->context->cart->id || (!$id_product = (int)Tools::getValue('id_product'))) {
@@ -435,7 +435,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessUpdateQty()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $errors = array();
             if (!$this->context->cart->id) {
                 return;
@@ -487,7 +487,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessUpdateDeliveryOption()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $delivery_option = Tools::getValue('delivery_option');
             if ($delivery_option !== false) {
                 $this->context->cart->setDeliveryOption(array($this->context->cart->id_address_delivery => $delivery_option));
@@ -508,7 +508,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessUpdateOrderMessage()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $id_message = false;
             if ($old_message = Message::getMessageByCartId((int)$this->context->cart->id)) {
                 $id_message = $old_message['id_message'];
@@ -530,7 +530,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessUpdateCurrency()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $currency = new Currency((int)Tools::getValue('id_currency'));
             if (Validate::isLoadedObject($currency) && !$currency->deleted && $currency->active) {
                 $this->context->cart->id_currency = (int)$currency->id;
@@ -542,7 +542,7 @@ class AdminCartsControllerCore extends AdminController
     }
     public function ajaxProcessUpdateLang()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $lang = new Language((int)Tools::getValue('id_lang'));
             if (Validate::isLoadedObject($lang) && $lang->active) {
                 $this->context->cart->id_lang = (int)$lang->id;
@@ -554,7 +554,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessDuplicateOrder()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $errors = array();
             if (!$id_order = Tools::getValue('id_order')) {
                 $errors[] = Tools::displayError('Invalid order');
@@ -574,7 +574,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessDeleteVoucher()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             if ($this->context->cart->removeCartRule((int)Tools::getValue('id_cart_rule'))) {
                 echo json_encode($this->ajaxReturnVars());
             }
@@ -583,7 +583,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessupdateFreeShipping()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             if (!$id_cart_rule = CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id)) {
                 $cart_rule = new CartRule();
                 $cart_rule->code = CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id;
@@ -613,7 +613,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessAddVoucher()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $errors = array();
             if (!($id_cart_rule = Tools::getValue('id_cart_rule')) || !$cart_rule = new CartRule((int)$id_cart_rule)) {
                 $errors[] = Tools::displayError('Invalid voucher.');
@@ -631,14 +631,14 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessUpdateAddress()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             echo json_encode(array('addresses' => $this->context->customer->getAddresses((int)$this->context->cart->id_lang)));
         }
     }
 
     public function ajaxProcessUpdateAddresses()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             if (($id_address_delivery = (int)Tools::getValue('id_address_delivery')) &&
                 ($address_delivery = new Address((int)$id_address_delivery)) &&
                 $address_delivery->id_customer == $this->context->cart->id_customer) {
@@ -825,7 +825,7 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxProcessUpdateProductPrice()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             SpecificPrice::deleteByIdCart((int)$this->context->cart->id, (int)Tools::getValue('id_product'), (int)Tools::getValue('id_product_attribute'));
             $specific_price = new SpecificPrice();
             $specific_price->id_cart = (int)$this->context->cart->id;

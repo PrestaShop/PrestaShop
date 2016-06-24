@@ -288,19 +288,19 @@ class AdminCustomersControllerCore extends AdminController
         parent::initProcess();
 
         if (Tools::isSubmit('submitGuestToCustomer') && $this->id_object) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'guest_to_customer';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('changeNewsletterVal') && $this->id_object) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'change_newsletter_val';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         } elseif (Tools::isSubmit('changeOptinVal') && $this->id_object) {
-            if ($this->tabAccess['edit'] === '1') {
+            if ($this->access('edit')) {
                 $this->action = 'change_optin_val';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
@@ -319,7 +319,7 @@ class AdminCustomersControllerCore extends AdminController
 
     public function renderList()
     {
-        if ((Tools::isSubmit('submitBulkdelete'.$this->table) || Tools::isSubmit('delete'.$this->table)) && $this->tabAccess['delete'] === '1') {
+        if ((Tools::isSubmit('submitBulkdelete'.$this->table) || Tools::isSubmit('delete'.$this->table)) && $this->access('delete')) {
             $this->tpl_list_vars = array(
                 'delete_customer' => true,
                 'REQUEST_URI' => $_SERVER['REQUEST_URI'],
@@ -1108,7 +1108,7 @@ class AdminCustomersControllerCore extends AdminController
      */
     public function ajaxProcessUpdateCustomerNote()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $note = Tools::htmlentitiesDecodeUTF8(Tools::getValue('note'));
             $customer = new Customer((int)Tools::getValue('id_customer'));
             if (!Validate::isLoadedObject($customer)) {

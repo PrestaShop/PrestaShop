@@ -526,7 +526,7 @@ class AdminModulesControllerCore extends AdminController
 
     public function postProcessReset()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $module = Module::getInstanceByName(Tools::getValue('module_name'));
             if (Validate::isLoadedObject($module)) {
                 if (!$module->getPermission('configure')) {
@@ -571,7 +571,7 @@ class AdminModulesControllerCore extends AdminController
         }
 
         // Try to upload and unarchive the module
-        if ($this->tabAccess['add'] === '1') {
+        if ($this->access('add')) {
             // UPLOAD_ERR_OK: 0
             // UPLOAD_ERR_INI_SIZE: 1
             // UPLOAD_ERR_FORM_SIZE: 2
@@ -613,7 +613,7 @@ class AdminModulesControllerCore extends AdminController
 
     public function postProcessEnable()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $module = Module::getInstanceByName(Tools::getValue('module_name'));
             if (Validate::isLoadedObject($module)) {
                 if (!$module->getPermission('configure')) {
@@ -636,7 +636,7 @@ class AdminModulesControllerCore extends AdminController
 
     public function postProcessEnable_Device()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $module = Module::getInstanceByName(Tools::getValue('module_name'));
             if (Validate::isLoadedObject($module)) {
                 if (!$module->getPermission('configure')) {
@@ -655,7 +655,7 @@ class AdminModulesControllerCore extends AdminController
 
     public function postProcessDisable_Device()
     {
-        if ($this->tabAccess['edit'] === '1') {
+        if ($this->access('edit')) {
             $module = Module::getInstanceByName(Tools::getValue('module_name'));
             if (Validate::isLoadedObject($module)) {
                 if (!$module->getPermission('configure')) {
@@ -680,7 +680,7 @@ class AdminModulesControllerCore extends AdminController
             return;
         }
 
-        if ($this->tabAccess['delete'] === '1') {
+        if ($this->access('delete')) {
             if (Tools::getValue('module_name') != '') {
                 $module = Module::getInstanceByName(Tools::getValue('module_name'));
                 if (Validate::isLoadedObject($module) && !$module->getPermission('configure')) {
@@ -846,13 +846,13 @@ class AdminModulesControllerCore extends AdminController
                         $this->errors[] = $this->l('Module not found');
                     } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist)) {
                         $this->errors[] = Tools::displayError('You do not have permission to access this module.');
-                    } elseif ($key == 'install' && $this->tabAccess['add'] !== '1') {
+                    } elseif ($key == 'install' && !$this->access('add')) {
                         $this->errors[] = Tools::displayError('You do not have permission to install this module.');
                     } elseif ($key == 'install' && ($this->context->mode == Context::MODE_HOST) && !Module::isModuleTrusted($module->name)) {
                         $this->errors[] = Tools::displayError('You do not have permission to install this module.');
-                    } elseif ($key == 'delete' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure'))) {
+                    } elseif ($key == 'delete' && (!$this->access('delete') || !$module->getPermission('configure'))) {
                         $this->errors[] = Tools::displayError('You do not have permission to delete this module.');
-                    } elseif ($key == 'configure' && ($this->tabAccess['edit'] !== '1' || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
+                    } elseif ($key == 'configure' && (!$this->access('edit') || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
                         $this->errors[] = Tools::displayError('You do not have permission to configure this module.');
                     } elseif ($key == 'install' && $moduleManager->isInstalled($module->name)) {
                         $this->errors[] = sprintf(Tools::displayError('This module is already installed: %s.'), $module->name);
@@ -933,7 +933,7 @@ class AdminModulesControllerCore extends AdminController
                                     'theme_language_dir' => _THEME_LANG_DIR_,
                                     'page_header_toolbar_title' => $this->page_header_toolbar_title,
                                     'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
-                                    'add_permission' => $this->tabAccess['add'],
+                                    'add_permission' => $this->access('add'),
                                     'is_reset_ready' => $is_reset_ready,
                                 )
                             );
@@ -1187,9 +1187,9 @@ class AdminModulesControllerCore extends AdminController
     {
         foreach ($modules as $k => $module) {
             // Check add permissions, if add permissions not set, addons modules and uninstalled modules will not be displayed
-            if ($this->tabAccess['add'] !== '1' && isset($module->type) && ($module->type != 'addonsNative' || $module->type != 'addonsBought')) {
+            if (!$this->access('add') && isset($module->type) && ($module->type != 'addonsNative' || $module->type != 'addonsBought')) {
                 unset($modules[$k]);
-            } elseif ($this->tabAccess['add'] !== '1' && (!isset($module->id) || $module->id < 1)) {
+            } elseif (!$this->access('add') && (!isset($module->id) || $module->id < 1)) {
                 unset($modules[$k]);
             } elseif ($module->id && !Module::getPermissionStatic($module->id, 'view') && !Module::getPermissionStatic($module->id, 'configure')) {
                 unset($modules[$k]);
@@ -1649,7 +1649,7 @@ class AdminModulesControllerCore extends AdminController
             'nb_modules_unactivated' => $this->nb_modules_installed - $this->nb_modules_activated,
             'list_modules_categories' => $cleaned_list,
             'list_modules_authors' => $this->modules_authors,
-            'add_permission' => $this->tabAccess['add'],
+            'add_permission' => $this->access('add'),
             'tab_modules_preferences' => $tab_modules_preferences,
             'kpis' => $this->renderKpis(),
             'module_name' => Tools::getValue('module_name'),

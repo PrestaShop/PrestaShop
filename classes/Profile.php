@@ -80,16 +80,7 @@ class ProfileCore extends ObjectModel
 
     public function add($autodate = true, $null_values = false)
     {
-        if (parent::add($autodate, true)) {
-            $result = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'access (SELECT '.(int)$this->id.', id_tab, 0, 0, 0, 0 FROM '._DB_PREFIX_.'tab)');
-            $result &= Db::getInstance()->execute('
-				INSERT INTO '._DB_PREFIX_.'module_access
-				(`id_profile`, `id_module`, `configure`, `view`, `uninstall`)
-				(SELECT '.(int)$this->id.', id_module, 0, 1, 0 FROM '._DB_PREFIX_.'module)
-			');
-            return $result;
-        }
-        return false;
+        return parent::add($autodate, true);
     }
 
     public function delete()
@@ -109,7 +100,7 @@ class ProfileCore extends ObjectModel
         $accesses = Profile::getProfileAccesses($id_profile);
         return (isset($accesses[$id_tab]) ? $accesses[$id_tab] : false);
     }
-
+    
     public static function getProfileAccesses($id_profile, $type = 'id_tab')
     {
         if (!in_array($type, array('id_tab', 'class_name'))) {
@@ -124,30 +115,89 @@ class ProfileCore extends ObjectModel
             self::$_cache_accesses[$id_profile][$type] = array();
             // Super admin profile has full auth
             if ($id_profile == _PS_ADMIN_PROFILE_) {
-                foreach (Tab::getTabs(Context::getContext()->language->id) as $tab) {
-                    self::$_cache_accesses[$id_profile][$type][$tab[$type]] = array(
+                self::fillCacheAccesses(
+                    $id_profile,
+                    $type,
+                    array(
                         'id_profile' => _PS_ADMIN_PROFILE_,
-                        'id_tab' => $tab['id_tab'],
-                        'class_name' => $tab['class_name'],
                         'view' => '1',
                         'add' => '1',
                         'edit' => '1',
-                        'delete' => '1',
-                    );
-                }
+                        'delete' => '1'
+                    )
+                );
             } else {
+                self::fillCacheAccesses(
+                    $id_profile,
+                    $type,
+                    array(
+                        'id_profile' => _PS_ADMIN_PROFILE_,
+                        'view' => '0',
+                        'add' => '0',
+                        'edit' => '0',
+                        'delete' => '0'
+                    )
+                );
+                
                 $result = Db::getInstance()->executeS('
-				SELECT *
-				FROM `'._DB_PREFIX_.'access` a
-				LEFT JOIN `'._DB_PREFIX_.'tab` t ON t.id_tab = a.id_tab
-				WHERE `id_profile` = '.(int)$id_profile);
+				SELECT `slug`,
+                                    `slug` LIKE "%CREATE" as "add",
+                                    `slug` LIKE "%READ" as "view",
+                                    `slug` LIKE "%UPDATE" as "edit",
+                                    `slug` LIKE "%DELETE" as "delete"
+				FROM `'._DB_PREFIX_.'authorization_role` a
+				LEFT JOIN `'._DB_PREFIX_.'access` j ON j.id_authorization_role = a.id_authorization_role
+				WHERE j.`id_profile` = '.(int)$id_profile);
 
                 foreach ($result as $row) {
-                    self::$_cache_accesses[$id_profile][$type][$row[$type]] = $row;
+                    $id_tab = self::findIdTabByAuthSlug($row['slug']);
+                    
+                    self::$_cache_accesses[$id_profile][$type][$id_tab][array_search('1', $row)] = '1';
                 }
             }
         }
 
         return self::$_cache_accesses[$id_profile][$type];
+    }
+    
+    /**
+     * 
+     * @param int $id_profile
+     * @param string $type
+     * @param array $cacheData
+     */
+    private static function fillCacheAccesses($id_profile, $type, $cacheData = [])
+    {
+        foreach (Tab::getTabs(Context::getContext()->language->id) as $tab) {
+            self::$_cache_accesses[$id_profile][$type][$tab[$type]] = array_merge(
+                array(
+                    'id_tab' => $tab['id_tab'],
+                    'class_name' => $tab['class_name']
+                ),
+                $cacheData
+            );
+        }
+    }
+    
+    /**
+     * 
+     * @param string $authSlug
+     * @return int
+     */
+    private static function findIdTabByAuthSlug($authSlug)
+    {
+        preg_match(
+            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z]+)_(?P<auth>[A-Z]+)/',
+            $authSlug,
+            $matches
+        );
+
+        $result = Db::getInstance()->getRow('
+            SELECT `id_tab`
+            FROM `'._DB_PREFIX_.'tab` t
+            WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
+        ');
+        
+        return $result['id_tab'];
     }
 }

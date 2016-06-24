@@ -26,12 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
+use Access;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use PrestaShopBundle\Security\Admin\Employee;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Admin Middleware security
@@ -41,6 +42,7 @@ class Admin
     private $context;
     private $legacyContext;
     private $securityTokenStorage;
+    private $userProvider;
 
     /**
      * Constructor.
@@ -48,11 +50,12 @@ class Admin
      * @param LegacyContext $context
      * @param TokenStorage $securityTokenStorage
      */
-    public function __construct(LegacyContext $context, TokenStorage $securityTokenStorage)
+    public function __construct(LegacyContext $context, TokenStorage $securityTokenStorage, UserProviderInterface $userProvider)
     {
         $this->context = $context;
         $this->legacyContext = $context->getContext();
         $this->securityTokenStorage = $securityTokenStorage;
+        $this->userProvider = $userProvider;
     }
 
     /**
@@ -67,8 +70,8 @@ class Admin
     {
         //if employee loggdin in legacy context, authenticate him into sf2 security context
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->isLoggedBack()) {
-            $employee = new Employee($this->legacyContext->employee);
-            $token = new UsernamePasswordToken($employee, null, 'admin', ['ROLE_ADMIN']);
+            $user = $this->userProvider->loadUserByUsername($this->legacyContext->employee->email);
+            $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
             $this->securityTokenStorage->setToken($token);
 
             return true;
