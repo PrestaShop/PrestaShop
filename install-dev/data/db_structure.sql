@@ -186,6 +186,7 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`reduction_tax` tinyint(1) unsigned NOT NULL DEFAULT '0',
 	`reduction_currency` int(10) unsigned NOT NULL DEFAULT '0',
 	`reduction_product` int(10) NOT NULL DEFAULT '0',
+  `reduction_exclude_special` tinyint(1) unsigned NOT NULL DEFAULT '0',
 	`gift_product` int(10) unsigned NOT NULL DEFAULT '0',
 	`gift_product_attribute` int(10) unsigned NOT NULL DEFAULT '0',
 	`highlight` tinyint(1) unsigned NOT NULL DEFAULT '0',

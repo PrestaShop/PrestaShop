@@ -144,6 +144,7 @@ function toggleApplyDiscount(percent, amount, apply_to)
 		$('*[for=apply_discount_to_cheapest]').show();
 		$('#apply_discount_to_selection').show();
 		$('*[for=apply_discount_to_selection]').show();
+		$('#apply_discount_to_product_special').show(400);
 	}
 	else
 	{
@@ -162,6 +163,7 @@ function toggleApplyDiscount(percent, amount, apply_to)
 		$('#apply_discount_to_selection').hide();
 		$('*[for=apply_discount_to_selection]').hide();
 		$('#apply_discount_to_selection').prop('checked', false);
+		$('#apply_discount_to_product_special').hide(200);
 	}
 	else
 	{

@@ -65,6 +65,7 @@ class CartRuleCore extends ObjectModel
     public $reduction_tax;
     public $reduction_currency;
     public $reduction_product;
+    public $reduction_exclude_special;
     public $gift_product;
     public $gift_product_attribute;
     public $highlight;
@@ -105,6 +106,7 @@ class CartRuleCore extends ObjectModel
             'reduction_tax' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'reduction_currency' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'reduction_product' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'reduction_exclude_special' =>      array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'gift_product' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'gift_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'highlight' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -578,6 +580,20 @@ class CartRuleCore extends ObjectModel
             }
         }
 
+        if ($this->reduction_exclude_special) {
+            $products = $context->cart->getProducts();
+            $is_ok = false;
+            foreach ($products as $product) {
+                if (!$product['reduction_applies']) {
+                    $is_ok = true;
+                    break;
+                }
+            }
+            if (!$is_ok) {
+                return (!$display_error) ? false : Tools::displayError('You cannot use this voucher on reduced products');
+            }
+        }
+
         // Check if the cart rules appliy to the shop browsed by the customer
         if ($this->shop_restriction && $context->shop->id && Shop::isFeatureActive()) {
             $id_cart_rule = (int)Db::getInstance()->getValue('
@@ -938,13 +954,26 @@ class CartRuleCore extends ObjectModel
                     $order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), _PS_PRICE_COMPUTE_PRECISION_);
                 }
 
+                // Remove products that are on special
+                if ($this->reduction_exclude_special) {
+                    foreach ($package_products as $product) {
+                        if ($product['reduction_applies']) {
+                            if ($use_tax) {
+                                $order_total -= Tools::ps_round($product['total_wt'], _PS_PRICE_COMPUTE_PRECISION_);
+                            } else {
+                                $order_total -= Tools::ps_round($product['total'], _PS_PRICE_COMPUTE_PRECISION_);
+                            }
+                        }
+                    }
+                }
+
                 $reduction_value += $order_total * $this->reduction_percent / 100;
             }
 
             // Discount (%) on a specific product
             if ($this->reduction_percent && $this->reduction_product > 0) {
                 foreach ($package_products as $product) {
-                    if ($product['id_product'] == $this->reduction_product) {
+                    if ($product['id_product'] == $this->reduction_product && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                         $reduction_value += ($use_tax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
                     }
                 }
@@ -962,7 +991,7 @@ class CartRuleCore extends ObjectModel
                         $price *= (1 + $context->cart->getAverageProductsTaxRate());
                     }
 
-                    if ($price > 0 && ($minPrice === false || $minPrice > $price)) {
+                    if ($price > 0 && ($minPrice === false || $minPrice > $price) && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                         $minPrice = $price;
                         $cheapest_product = $product['id_product'].'-'.$product['id_product_attribute'];
                     }
@@ -987,7 +1016,8 @@ class CartRuleCore extends ObjectModel
                 if (is_array($selected_products)) {
                     foreach ($package_products as $product) {
                         if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
-                            || in_array($product['id_product'].'-0', $selected_products)) {
+                            || in_array($product['id_product'].'-0', $selected_products)
+                            && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                             $price = $product['price'];
                             if ($use_tax) {
                                 $price *= (1 + $context->cart->getAverageProductsTaxRate());
