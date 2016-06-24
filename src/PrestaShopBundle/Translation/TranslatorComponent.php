@@ -27,18 +27,9 @@
 
 namespace PrestaShopBundle\Translation;
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator as BaseTranslator;
+use Symfony\Component\Translation\Translator as BaseTranslatorComponent;
 
-class Translator extends BaseTranslator
+class TranslatorComponent extends BaseTranslatorComponent
 {
     use SprintfTranslatorTrait;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addResource($format, $resource, $locale, $domain = null)
-    {
-        parent::addResource($format, $resource, $locale, $domain);
-        parent::addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
-    }
 }
