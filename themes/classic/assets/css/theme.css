@@ -4657,6 +4657,12 @@ a.bg-danger:focus, a.bg-danger:hover {
   color: #acaaa6;
   font-size: 0.875rem; }
 
+.lang-rtl * {
+  direction: rtl !important; }
+
+.lang-rtl main {
+  text-align: right !important; }
+
 html,
 body {
   height: 100%; }
@@ -6532,6 +6538,9 @@ li.product-flag {
     -moz-transition: all 0.2s ease-in;
     transition: all 0.2s ease-in; }
     .social-sharing li a {
+      display: block;
+      width: 100%;
+      height: 100%;
       white-space: nowrap;
       text-indent: 100%;
       overflow: hidden; }
