@@ -60,7 +60,7 @@ class FrameworkBundleAdminController extends Controller
             return $errors;
         }
 
-        $translator = $this->container->get('prestashop.twig.extension.translation');
+        $translator = $this->container->get('translator');
 
         foreach ($form->getErrors(true) as $error) {
             if (!$error->getCause()) {
