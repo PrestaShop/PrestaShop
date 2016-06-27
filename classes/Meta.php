@@ -242,7 +242,7 @@ class MetaCore extends ObjectModel
     public static function getHomeMetas($id_lang, $page_name)
     {
         $metas = Meta::getMetaByPage($page_name, $id_lang);
-        $ret['meta_title'] = (isset($metas['title']) && $metas['title']) ? $metas['title'].'' : Configuration::get('PS_SHOP_NAME');
+        $ret['meta_title'] = (isset($metas['title']) && $metas['title']) ? $metas['title'] : Configuration::get('PS_SHOP_NAME');
         $ret['meta_description'] = (isset($metas['description']) && $metas['description']) ? $metas['description'] : '';
         $ret['meta_keywords'] = (isset($metas['keywords']) && $metas['keywords']) ? $metas['keywords'] :  '';
         return $ret;
