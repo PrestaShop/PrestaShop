@@ -179,7 +179,7 @@ class OrderControllerCore extends FrontController
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode(array(
-            'preview' => $this->render('checkout/_partials/cart-summary.tpl', array(
+            'preview' => $this->render('checkout/_partials/cart-summary', array(
                 'cart' => $cart,
                 'static_token' => Tools::getToken(false),
             ))
@@ -220,6 +220,6 @@ class OrderControllerCore extends FrontController
             'checkout_process' => new RenderableProxy($this->checkoutProcess),
             'cart' => $presentedCart,
         ]);
-        $this->setTemplate('checkout/checkout.tpl');
+        $this->setTemplate('checkout/checkout');
     }
 }

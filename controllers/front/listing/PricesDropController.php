@@ -41,7 +41,7 @@ class PricesDropControllerCore extends ProductListingFrontController
     public function init()
     {
         parent::init();
-        $this->doProductSearch('catalog/listing/prices-drop.tpl');
+        $this->doProductSearch('catalog/listing/prices-drop');
     }
 
     protected function getProductSearchQuery()

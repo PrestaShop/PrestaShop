@@ -81,12 +81,12 @@ class CartControllerCore extends FrontController
         ]);
 
         if (count($presented_cart['products']) > 0) {
-            $this->setTemplate('checkout/cart.tpl');
+            $this->setTemplate('checkout/cart');
         } else {
             $this->context->smarty->assign([
                 'allProductsLink' => $this->context->link->getCategoryLink(Configuration::get('PS_HOME_CATEGORY')),
             ]);
-            $this->setTemplate('checkout/cart-empty.tpl');
+            $this->setTemplate('checkout/cart-empty');
         }
     }
 
@@ -112,12 +112,12 @@ class CartControllerCore extends FrontController
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode([
-            'cart_detailed' => $this->render('checkout/_partials/cart-detailed.tpl'),
-            'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals.tpl'),
-            'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal.tpl'),
-            'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals.tpl'),
-            'cart_detailed_actions' => $this->render('checkout/_partials/cart-detailed-actions.tpl'),
-            'cart_voucher' => $this->render('checkout/_partials/cart-voucher.tpl'),
+            'cart_detailed' => $this->render('checkout/_partials/cart-detailed'),
+            'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals'),
+            'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal'),
+            'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals'),
+            'cart_detailed_actions' => $this->render('checkout/_partials/cart-detailed-actions'),
+            'cart_voucher' => $this->render('checkout/_partials/cart-voucher'),
         ]));
     }
 

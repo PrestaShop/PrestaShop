@@ -75,10 +75,10 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
-                $this->doProductSearch('catalog/listing/manufacturer.tpl');
+                $this->doProductSearch('catalog/listing/manufacturer');
             } else {
                 $this->assignAll();
-                $this->setTemplate('catalog/manufacturers.tpl');
+                $this->setTemplate('catalog/manufacturers');
             }
         } else {
             $this->redirect_after = '404';

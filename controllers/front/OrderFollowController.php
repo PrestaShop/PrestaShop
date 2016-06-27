@@ -104,7 +104,7 @@ class OrderFollowControllerCore extends FrontController
 
         $this->context->smarty->assign('ordersReturn', $ordersReturn);
 
-        $this->setTemplate('customer/order-follow.tpl');
+        $this->setTemplate('customer/order-follow');
     }
 
     public function getTemplateVarOrdersReturns()

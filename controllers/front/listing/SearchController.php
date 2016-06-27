@@ -57,7 +57,7 @@
             'search_tag' => $this->search_tag,
         ));
 
-        $this->doProductSearch('catalog/listing/search.tpl');
+        $this->doProductSearch('catalog/listing/search', array('entity' => 'search'));
     }
 
      protected function getProductSearchQuery()

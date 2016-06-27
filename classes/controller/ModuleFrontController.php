@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -47,12 +47,13 @@ class ModuleFrontControllerCore extends FrontController
     }
 
     /**
-     * Assigns module template for page content
+     * Assigns module template for page content.
      *
      * @param string $template Template filename
+     *
      * @throws PrestaShopException
      */
-    public function setTemplate($template)
+    public function setTemplate($template, $params = array())
     {
         if (!$path = $this->getTemplatePath($template)) {
             throw new PrestaShopException("Template '$template' not found");
@@ -62,9 +63,10 @@ class ModuleFrontControllerCore extends FrontController
     }
 
     /**
-     * Finds and returns module front template that take the highest precedence
+     * Finds and returns module front template that take the highest precedence.
      *
      * @param string $template Template filename
+     *
      * @return string|false
      */
     public function getTemplatePath($template)
@@ -83,9 +85,9 @@ class ModuleFrontControllerCore extends FrontController
     public function initContent()
     {
         if (Tools::isSubmit('module') && Tools::getValue('controller') == 'payment') {
-            $currency = Currency::getCurrency((int)$this->context->cart->id_currency);
+            $currency = Currency::getCurrency((int) $this->context->cart->id_currency);
             $orderTotal = $this->context->cart->getOrderTotal();
-            $minimal_purchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
+            $minimal_purchase = Tools::convertPrice((float) Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
             if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase) {
                 Tools::redirect('index.php?controller=order&step=1');
             }

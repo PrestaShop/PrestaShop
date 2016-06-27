@@ -37,7 +37,7 @@ class PasswordControllerCore extends FrontController
      */
     public function postProcess()
     {
-        $this->setTemplate('customer/password-email.tpl');
+        $this->setTemplate('customer/password-email');
 
         if (Tools::isSubmit('email')) {
             $this->sendRenewPasswordLink();
@@ -76,7 +76,7 @@ class PasswordControllerCore extends FrontController
 
                 if (Mail::Send($this->context->language->id, 'password_query', Mail::l('Password query confirmation'), $mail_params, $customer->email, $customer->firstname.' '.$customer->lastname)) {
                     $this->success[] = $this->trans('A link to reset your password has been sent to your address: %s', array($customer->email), 'Shop.Notifications.Success');
-                    $this->setTemplate('customer/password-infos.tpl');
+                    $this->setTemplate('customer/password-infos');
                 } else {
                     $this->errors[] = $this->trans('An error occurred while sending the email.', array(), 'Shop.Notifications.Error');
                 }
@@ -115,7 +115,7 @@ class PasswordControllerCore extends FrontController
                     'reset_token' => Tools::getValue('reset_token'),
                 ]);
 
-                $this->setTemplate('customer/password-new.tpl');
+                $this->setTemplate('customer/password-new');
             } else {
                 // Both password fields posted. Check if all is right and store new password properly.
                 if (!Tools::getValue('reset_token') || (strtotime($customer->last_passwd_gen.'+'.(int)Configuration::get('PS_PASSWD_TIME_FRONT').' minutes') - time()) > 0) {

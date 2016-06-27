@@ -98,10 +98,10 @@ class CmsControllerCore extends FrontController
                 $this->context->smarty->assign('nobots', true);
             }
 
-            $this->setTemplate('cms/page.tpl');
+            $this->setTemplate('cms/page');
         } elseif ($this->assignCase == 2) {
             $this->context->smarty->assign($this->getTemplateVarCategoryCms());
-            $this->setTemplate('cms/category.tpl');
+            $this->setTemplate('cms/category');
         }
     }
 

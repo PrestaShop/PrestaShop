@@ -49,7 +49,7 @@ class DiscountControllerCore extends FrontController
             'cart_rules' => $cart_rules,
         ]);
 
-        $this->setTemplate('customer/discount.tpl');
+        $this->setTemplate('customer/discount');
     }
 
     public function getTemplateVarCartRules()

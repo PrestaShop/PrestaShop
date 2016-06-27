@@ -133,7 +133,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             }
         }
 
-        return $this->render('catalog/_partials/facets.tpl', array(
+        return $this->render('catalog/_partials/facets', array(
             'facets' => $facetsVar,
             'js_enabled' => $this->ajax,
             'activeFilters' => $activeFilters,
@@ -170,7 +170,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             }
         }
 
-        return $this->render('catalog/_partials/active_filters.tpl', array(
+        return $this->render('catalog/_partials/active_filters', array(
             'activeFilters' => $activeFilters,
         ));
     }
@@ -433,7 +433,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     {
         $search = $this->getProductSearchVariables();
 
-        $rendered_products = $this->render('catalog/_partials/products.tpl', array('listing' => $search));
+        $rendered_products = $this->render('catalog/_partials/products', array('listing' => $search));
 
         $data = array(
             'products' => $search['products'],
@@ -468,7 +468,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $variables = $this->getProductSearchVariables();
             if (!empty($variables['products'])) {
                 $this->context->smarty->assign(array(
-                    'listing' => $this->getProductSearchVariables(),
+                    'listing' => $variables,
                 ));
                 $this->setTemplate($template);
             } else {
@@ -480,7 +480,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                     'title',
                     $this->trans('No results were found for your search.', array(), 'Shop.Notifications.Error')
                 );
-                $this->setTemplate('errors/404.tpl');
+                $this->setTemplate('errors/404');
             }
         }
     }

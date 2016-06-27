@@ -95,7 +95,7 @@ class OrderConfirmationControllerCore extends FrontController
             $this->context->customer->mylogout();
         }
 
-        $this->setTemplate('checkout/order-confirmation.tpl');
+        $this->setTemplate('checkout/order-confirmation');
     }
 
     /**

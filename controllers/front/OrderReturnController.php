@@ -81,7 +81,7 @@ class OrderReturnControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->setTemplate('customer/order-return.tpl');
+        $this->setTemplate('customer/order-return');
     }
 
     public function getTemplateVarOrderReturn($orderReturn)
