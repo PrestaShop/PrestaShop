@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -68,9 +68,9 @@ class AdminOrdersControllerCore extends AdminController
 
         $this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
-		INNER JOIN `'._DB_PREFIX_.'address` address ON address.id_address = a.id_address_delivery
-		INNER JOIN `'._DB_PREFIX_.'country` country ON address.id_country = country.id_country
-		INNER JOIN `'._DB_PREFIX_.'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = '.(int)$this->context->language->id.')
+		LEFT JOIN `'._DB_PREFIX_.'address` address ON address.id_address = a.id_address_delivery
+		LEFT JOIN `'._DB_PREFIX_.'country` country ON address.id_country = country.id_country
+		LEFT JOIN `'._DB_PREFIX_.'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = '.(int)$this->context->language->id.')
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = a.`current_state`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$this->context->language->id.')';
         $this->_orderBy = 'id_order';

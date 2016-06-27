@@ -3,7 +3,7 @@
   <meta id='404' id_shop='1'>
     <title>404 fout</title>
     <description>We hebben de pagina niet gevonden</description>
-    <keywords>error, 404, not found</keywords>
+    <keywords>error, 404, niet gevonden</keywords>
     <url_rewrite>pagina-niet-gevonden</url_rewrite>
   </meta>
   <meta id='best-sales' id_shop='1'>
@@ -15,8 +15,8 @@
   <meta id='contact' id_shop='1'>
     <title>Contact met ons opnemen</title>
     <description>Neem contact met ons op via ons formulier</description>
-    <keywords>contact, form, e-mail</keywords>
-    <url_rewrite>contact-met-ons-opnemen</url_rewrite>
+    <keywords>contact, formulier, e-mail</keywords>
+    <url_rewrite>contact-opnemen</url_rewrite>
   </meta>
   <meta id='index' id_shop='1'>
     <title/>
@@ -27,26 +27,26 @@
   <meta id='manufacturer' id_shop='1'>
     <title>Fabrikanten</title>
     <description>Lijst met fabrikanten</description>
-    <keywords>manufacturer</keywords>
-    <url_rewrite>fabrikanten</url_rewrite>
+    <keywords>fabrikant</keywords>
+    <url_rewrite>fabrikant</url_rewrite>
   </meta>
   <meta id='new-products' id_shop='1'>
     <title>Nieuwe producten</title>
     <description>Onze nieuwe producten</description>
-    <keywords>new, products</keywords>
+    <keywords>nieuw, producten</keywords>
     <url_rewrite>nieuwe-producten</url_rewrite>
   </meta>
   <meta id='password' id_shop='1'>
     <title>Uw wachtwoord vergeten</title>
     <description>Voer het e-mailadres in dat u heeft gebruikt voor uw aanmelding om een e-mail met een nieuw wachtwoord te ontvangen</description>
-    <keywords>forgot, password, e-mail, new, reset</keywords>
+    <keywords>vergeten, wachtwoord, e-mail, nieuw, herstellen</keywords>
     <url_rewrite>wachtwoord-opvragen</url_rewrite>
   </meta>
   <meta id='prices-drop' id_shop='1'>
-    <title>Prijsverlaging</title>
+    <title>Aanbiedingen</title>
     <description>Onze speciale producten</description>
-    <keywords>special, prices drop</keywords>
-    <url_rewrite>prijs-verlaging</url_rewrite>
+    <keywords>aanbiedingen, prijsverlagingen</keywords>
+    <url_rewrite>aanbiedingen</url_rewrite>
   </meta>
   <meta id='sitemap' id_shop='1'>
     <title>Sitemap</title>
@@ -94,7 +94,7 @@
     <title>Besteloverzicht</title>
     <description/>
     <keywords/>
-    <url_rewrite>bestel-overzicht</url_rewrite>
+    <url_rewrite>besteloverzicht</url_rewrite>
   </meta>
   <meta id='identity' id_shop='1'>
     <title>Identiteit</title>
@@ -145,10 +145,10 @@
     <url_rewrite>snel bestellen</url_rewrite>
   </meta>
   <meta id='guest-tracking' id_shop='1'>
-    <title>Gast traceren</title>
+    <title>Bestelling volgen als gast</title>
     <description/>
     <keywords/>
-    <url_rewrite>gast traceren</url_rewrite>
+    <url_rewrite>bestelling-volgen-als-gast</url_rewrite>
   </meta>
   <meta id='order-confirmation' id_shop='1'>
     <title>Orderbevestiging</title>

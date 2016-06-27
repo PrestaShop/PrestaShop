@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -82,7 +82,9 @@
 
 		</td>
 	</tr>
-
+	
+	{$note_tab}
+	
 	<tr>
 		<td colspan="12" height="10">&nbsp;</td>
 	</tr>
@@ -91,6 +93,15 @@
 		<td colspan="6" class="left">
 
 			{$payment_tab}
+
+		</td>
+		<td colspan="1">&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td colspan="6" class="left">
+
+			{$shipping_tab}
 
 		</td>
 		<td colspan="1">&nbsp;</td>
@@ -113,7 +124,6 @@
 
 		</td>
 	</tr>
-	
 	<!-- Hook -->
 	{if isset($HOOK_DISPLAY_PDF)}
 	<tr>

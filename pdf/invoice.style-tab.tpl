@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -60,11 +60,19 @@
 		padding: {$table_padding};
 		border: 1pt solid {$color_border};
 	}
+	table#note-tab {
+		padding: {$table_padding};
+		border: 1px solid {$color_border};
+	}
+	table#note-tab td.note{
+		word-wrap: break-word;
+	}
 	table#tax-tab {
 		padding: {$table_padding};
 		border: 1pt solid {$color_border};
 	}
-	table#payment-tab {
+	table#payment-tab,
+	table#shipping-tab {
 		padding: {$table_padding};
 		border: 1px solid {$color_border};
 	}
@@ -115,7 +123,8 @@
 		font-weight: bold;
 	}
 
-	th.payment {
+	th.payment,
+	th.shipping {
 		background-color: {$color_header};
 		vertical-align: middle;
 		font-weight: bold;

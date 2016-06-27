@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -45,6 +45,11 @@
 			</div>
 		</div>
 	</td>
+	{if ($order->getTaxCalculationMethod() != $smarty.const.PS_TAX_EXC)}
+	<td class="unit_price_tax_excl">
+		<span>{displayPrice price=$product.unit_price_tax_excl currency=$currency->id}</span>
+	</td>
+	{/if}
 	<td>
 		<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id}</span>
 		{if $can_edit}

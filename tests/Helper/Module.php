@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Tests\Helper;
 
 define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/module/'));
 
-class    Module
+class Module
 {
     /**
      * Copy the directory in resources which get the name $module_dir_name in the module directory

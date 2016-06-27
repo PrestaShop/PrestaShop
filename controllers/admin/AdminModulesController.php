@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -1489,7 +1489,7 @@ class AdminModulesControllerCore extends AdminController
                     require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
                 }
 
-                if ($object = new $module->name()) {
+                if ($object = Adapter_ServiceLocator::get($module->name)) {
                     /** @var Module $object */
                     $object->runUpgradeModule();
                     if ((count($errors_module_list = $object->getErrors()))) {
@@ -1507,7 +1507,7 @@ class AdminModulesControllerCore extends AdminController
                 if (!class_exists($module->name)) {
                     if (file_exists(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php')) {
                         require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
-                        $object = new $module->name();
+                        $object = Adapter_ServiceLocator::get($module->name);
                         $module_success[] = array('name' => $module->name, 'message' => array(
                             0 => sprintf($this->l('Current version: %s'), $object->version),
                             1 => $this->l('No file upgrades applied (none exist).'))

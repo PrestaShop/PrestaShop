@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -453,7 +453,7 @@ class ProductControllerCore extends FrontController
 
                 $combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
                 $combinations[$row['id_product_attribute']]['attributes'][] = (int)$row['id_attribute'];
-                $combinations[$row['id_product_attribute']]['price'] = (float)$row['price'];
+                $combinations[$row['id_product_attribute']]['price'] = (float)Tools::convertPriceFull($row['price'], null, Context::getContext()->currency);
 
                 // Call getPriceStatic in order to set $combination_specific_price
                 if (!isset($combination_prices_set[(int)$row['id_product_attribute']])) {
@@ -465,7 +465,7 @@ class ProductControllerCore extends FrontController
                 $combinations[$row['id_product_attribute']]['weight'] = (float)$row['weight'];
                 $combinations[$row['id_product_attribute']]['quantity'] = (int)$row['quantity'];
                 $combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
-                $combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
+                $combinations[$row['id_product_attribute']]['unit_impact'] = Tools::convertPriceFull($row['unit_price_impact'], null, Context::getContext()->currency);
                 $combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
                 if ($row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date'])) {
                     $combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];

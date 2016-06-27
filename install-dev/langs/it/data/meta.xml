@@ -7,20 +7,20 @@
     <url_rewrite>pagina-non-trovata</url_rewrite>
   </meta>
   <meta id='best-sales' id_shop='1'>
-    <title>Migliori vendite</title>
-    <description>Le nostre migliori vendite</description>
-    <keywords>vendite migliori</keywords>
-    <url_rewrite>migliori-vendite</url_rewrite>
+    <title>Più venduti</title>
+    <description>I nostri prodotti più venduti</description>
+    <keywords>best sellers, più venduti, migliori prodotti</keywords>
+    <url_rewrite>piu-venduti</url_rewrite>
   </meta>
   <meta id='contact' id_shop='1'>
-    <title>Contattarci</title>
-    <description>Usate il nostro modulo per contattarci</description>
+    <title>Contattaci</title>
+    <description>Si può usare il nostro modulo per contattarci</description>
     <keywords>contatto, modulo, e-mail</keywords>
-    <url_rewrite>contattarci</url_rewrite>
+    <url_rewrite>contattaci</url_rewrite>
   </meta>
   <meta id='index' id_shop='1'>
     <title/>
-    <description>Negozio powered by PrestaShop</description>
+    <description>Negozio creato usando PrestaShop</description>
     <keywords>negozio, prestashop</keywords>
     <url_rewrite/>
   </meta>
@@ -32,8 +32,8 @@
   </meta>
   <meta id='new-products' id_shop='1'>
     <title>Nuovi prodotti</title>
-    <description>I nostri nuovi prodotti</description>
-    <keywords>nuovi, prodotti</keywords>
+    <description>I nostri nuovi prodotti, gli ultimi arrivi</description>
+    <keywords>nuovi, prodotti, ultimi arrivi</keywords>
     <url_rewrite>nuovi-prodotti</url_rewrite>
   </meta>
   <meta id='password' id_shop='1'>
@@ -43,22 +43,22 @@
     <url_rewrite>recupero-password</url_rewrite>
   </meta>
   <meta id='prices-drop' id_shop='1'>
-    <title>Calo dei prezzi</title>
-    <description>I nostri prodotti speciali</description>
+    <title>Offerte</title>
+    <description>I nostri prodotti in offerta</description>
     <keywords>speciali, riduzione prezzi</keywords>
-    <url_rewrite>calo-prezzi</url_rewrite>
+    <url_rewrite>offerte</url_rewrite>
   </meta>
   <meta id='sitemap' id_shop='1'>
     <title>Mappa del sito</title>
-    <description>Vi siete persi? Trovate quello che state cercando</description>
+    <description>Vi siete persi? Qui potete trovate quello che state cercando</description>
     <keywords>sitemap</keywords>
-    <url_rewrite>mappa del sito</url_rewrite>
+    <url_rewrite>mappa-del-sito</url_rewrite>
   </meta>
   <meta id='supplier' id_shop='1'>
     <title>Fornitori</title>
-    <description>Elenco fornitori</description>
-    <keywords>fornitori</keywords>
-    <url_rewrite>fornitore</url_rewrite>
+    <description>Elenco dei fornitori</description>
+    <keywords>fornitore</keywords>
+    <url_rewrite>fornitori</url_rewrite>
   </meta>
   <meta id='address' id_shop='1'>
     <title>Indirizzo</title>
@@ -73,7 +73,7 @@
     <url_rewrite>indirizzi</url_rewrite>
   </meta>
   <meta id='authentication' id_shop='1'>
-    <title>Login</title>
+    <title>Accesso</title>
     <description/>
     <keywords/>
     <url_rewrite>login</url_rewrite>
@@ -85,10 +85,10 @@
     <url_rewrite>carrello</url_rewrite>
   </meta>
   <meta id='discount' id_shop='1'>
-    <title>Sconto</title>
+    <title>Buoni sconto</title>
     <description/>
     <keywords/>
-    <url_rewrite>sconto</url_rewrite>
+    <url_rewrite>buoni-sconto</url_rewrite>
   </meta>
   <meta id='history' id_shop='1'>
     <title>Cronologia ordini</title>
@@ -97,16 +97,16 @@
     <url_rewrite>cronologia-ordini</url_rewrite>
   </meta>
   <meta id='identity' id_shop='1'>
-    <title>Identità</title>
+    <title>Dati personali</title>
     <description/>
     <keywords/>
-    <url_rewrite>identita</url_rewrite>
+    <url_rewrite>dati-personali</url_rewrite>
   </meta>
   <meta id='my-account' id_shop='1'>
     <title>Il mio account</title>
     <description/>
     <keywords/>
-    <url_rewrite>il-mio-account</url_rewrite>
+    <url_rewrite>account</url_rewrite>
   </meta>
   <meta id='order-follow' id_shop='1'>
     <title>Segui l&apos;ordine</title>

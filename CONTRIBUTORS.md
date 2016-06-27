@@ -13,6 +13,7 @@ GitHub contributors:
 - Alexander Grosul
 - Alexander Otchenashev
 - Alexandra Even
+- Alexandre Segura
 - AlexEven
 - Alexey Svistunov
 - alexey-svistunov
@@ -79,6 +80,7 @@ GitHub contributors:
 - Daniele Giachino
 - danoosh
 - Danoosh Mir
+- daresh
 - David Eschmeyer
 - David Gasperoni
 - David Sivocha
@@ -135,6 +137,7 @@ GitHub contributors:
 - Gabriel Schwardy
 - Gaelle ITZKOVITZ
 - Gamesh
+- Geoffray
 - ggedamed
 - Giant Leap Lab
 - Gordon Coubrough
@@ -155,6 +158,8 @@ GitHub contributors:
 - harelguy
 - hiousi
 - htrex
+- Ian Fung
+- idnovate
 - indesign47
 - iNem0o
 - ironwo0d
@@ -163,6 +168,7 @@ GitHub contributors:
 - ivancasasempere
 - J. Danse
 - janisVincent
+- Jaume
 - Javsmile
 - JEAN
 - jeanbe
@@ -205,6 +211,7 @@ GitHub contributors:
 - ldecoker
 - Lesley Paone
 - LOIC ROSSET ltd
+- lozal2244
 - luc
 - Luc Vandesype
 - Luca T.
@@ -241,6 +248,7 @@ GitHub contributors:
 - Michael Hjulskov
 - Michel Courtade
 - Mickael Desgranges
+- Mickael Andrieu
 - Mikael Blotin
 - Mikko Hellsing
 - Milow
@@ -254,6 +262,7 @@ GitHub contributors:
 - natrim
 - neemzy
 - nezenmoins
+- Nicolas Martin
 - Nicolas Sorosac
 - Niklas Ekman
 - Niko Wicaksono
@@ -262,6 +271,7 @@ GitHub contributors:
 - Nino Uzelac
 - nodexpl
 - nturato
+- okom3pom
 - oleacorner
 - Otto Nascarella
 - Pan P
@@ -301,6 +311,7 @@ GitHub contributors:
 - Quetzacoalt91
 - Racochejl
 - Rafael Cunha
+- raphael-homann
 - Raphael Droz
 - Raphael Malie
 - raulgundin
@@ -311,6 +322,7 @@ GitHub contributors:
 - robert
 - Roland Schütz
 - romainberger
+- Roy
 - runningz
 - Remi Gaillard
 - s-duval

@@ -1,5 +1,5 @@
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -259,7 +259,8 @@ $('#free_gift_on').click(function(){
 	toggleGiftProduct();}
 );
 $('#free_gift_off').click(function(){
-	toggleGiftProduct();}
+	toggleGiftProduct();
+	$('#gift_products_found').hide();}
 );
 toggleGiftProduct();
 
@@ -330,7 +331,7 @@ $('#customerFilter')
 			parse: function(data) {
 				var mytab = new Array();
 				for (var i = 0; i < data.length; i++)
-					mytab[mytab.length] = { data: data[i], value: data[i].cname + ' (' + data[i].email + ')' };
+					mytab[mytab.length] = { data: data[i], value: data[i].cname + ' (' + data[i].email + ')' + (data[i].from_shop_name ? ' - ' + data[i].from_shop_name : '' ) };
 				return mytab;
 			},
 			extraParams: {

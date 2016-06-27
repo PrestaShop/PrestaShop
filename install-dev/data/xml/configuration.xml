@@ -120,10 +120,10 @@
       <value>#IN</value>
     </configuration>
     <configuration id="PS_INVCE_INVOICE_ADDR_RULES" name="PS_INVCE_INVOICE_ADDR_RULES">
-      <value>{"avoid":["vat_number","phone","phone_mobile"]}</value>
+      <value>{"avoid":[]}</value>
     </configuration>
     <configuration id="PS_INVCE_DELIVERY_ADDR_RULES" name="PS_INVCE_DELIVERY_ADDR_RULES">
-      <value>{"avoid":["vat_number","phone","phone_mobile"]}</value>
+      <value>{"avoid":[]}</value>
     </configuration>
 	<configuration id="PS_DELIVERY_PREFIX" name="PS_DELIVERY_PREFIX">
 		<value>#DE</value>
@@ -261,7 +261,7 @@
 		<value>0</value>
 	</configuration>
 	<configuration id="PS_SMARTY_FORCE_COMPILE" name="PS_SMARTY_FORCE_COMPILE">
-		<value>1</value>
+		<value>0</value>
 	</configuration>
 	<configuration id="PS_DISTANCE_UNIT" name="PS_DISTANCE_UNIT">
 		<value>km</value>

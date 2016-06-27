@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,15 +39,26 @@ class DiscountControllerCore extends FrontController
     {
         parent::initContent();
 
-        $cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, false);
+        $cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, true, true);
         $nb_cart_rules = count($cart_rules);
 
-        foreach ($cart_rules as &$discount) {
+        foreach ($cart_rules as $key => &$discount ) {
+            if ($discount['quantity_for_user'] === 0) {
+                unset($cart_rules[$key]);
+            }
+
+
             $discount['value'] = Tools::convertPriceFull(
                                             $discount['value'],
                                             new Currency((int)$discount['reduction_currency']),
                                             new Currency((int)$this->context->cart->id_currency)
                                         );
+            if ($discount['gift_product'] !== 0) {
+                $product = new Product((int) $discount['gift_product']);
+                if (isset($product->name)) {
+                    $discount['gift_product_name'] = current($product->name);
+                }
+            }
         }
 
         $this->context->smarty->assign(array(

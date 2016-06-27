@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
+ *  @copyright  2007-2016 PrestaShop SA
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -126,19 +126,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $tax_calculator = new TaxCalculator(array($tax));
         $tax_excluded_display = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 
-        if (/*$this->order_slip->partial == 1 && */$this->order_slip->shipping_cost_amount > 0) {
-            if ($tax_excluded_display) {
-                $this->order->total_shipping_tax_incl = Tools::ps_round($tax_calculator->addTaxes($this->order_slip->shipping_cost_amount), 2);
-            } else {
-                $this->order->total_shipping_tax_incl = $this->order_slip->shipping_cost_amount;
-            }
-        }
-
-        if ($tax_excluded_display) {
-            $this->order->total_shipping_tax_excl = $this->order_slip->shipping_cost_amount;
-        } else {
-            $this->order->total_shipping_tax_excl = Tools::ps_round($tax_calculator->removeTaxes($this->order_slip->shipping_cost_amount), 2);
-        }
+        $this->order->total_shipping_tax_incl = $this->order_slip->total_shipping_tax_incl;
+        $this->order->total_shipping_tax_excl = $this->order_slip->total_shipping_tax_excl;
+        $this->order_slip->shipping_cost_amount = $tax_excluded_display ? $this->order_slip->total_shipping_tax_excl : $this->order_slip->total_shipping_tax_incl;
 
         $this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
         $this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;

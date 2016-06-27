@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,6 +44,9 @@ class UploaderCore
 
     public function setAcceptTypes($value)
     {
+        if (is_array($value) && count($value)) {
+            $value = array_map(array('Tools', 'strtolower'), $value);
+        }
         $this->_accept_types = $value;
         return $this;
     }
@@ -235,6 +238,10 @@ class UploaderCore
     {
         $file['error'] = $this->checkUploadError($file['error']);
 
+        if ($file['error']) {
+            return false;
+        }
+
         $post_max_size = $this->getPostMaxSizeBytes();
 
         if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size)) {
@@ -250,7 +257,7 @@ class UploaderCore
         $types = $this->getAcceptTypes();
 
         //TODO check mime type.
-        if (isset($types) && !in_array(pathinfo($file['name'], PATHINFO_EXTENSION), $types)) {
+        if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
             $file['error'] = Tools::displayError('Filetype not allowed');
             return false;
         }

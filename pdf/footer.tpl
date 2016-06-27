@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,13 +18,13 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <table style="width: 100%;">
 	<tr>
-		<td style="text-align: center; font-size: 6pt; color: #444;  width:87%;">
+		<td style="text-align: center; font-size: 6pt; color: #444;  width:100%;">
 			{if $available_in_your_account}
 				{l s='An electronic version of this invoice is available in your account. To access it, log in to our website using your e-mail address and password (which you created when placing your first order).' pdf='true'}
 				<br />
@@ -51,9 +51,6 @@
 				{$free_text|escape:'html':'UTF-8'}<br />
 			{/if}
 		</td>
-		<td style="text-align: right; font-size: 8pt; color: #444;  width:13%;">
-            {literal}{:pnp:} / {:ptp:}{/literal}
-        </td>
 	</tr>
 </table>
 

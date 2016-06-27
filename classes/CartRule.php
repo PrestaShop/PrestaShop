@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -368,10 +368,14 @@ class CartRuleCore extends ObjectModel
                             WHERE crc.id_cart_rule = '.(int)$cart_rule['id_cart_rule'].'
                             AND crc.id_country = '.(int)$country['id_country']);
                         if ($id_cart_rule) {
-                            $result[$id_cart_rule] = $result_bak[$key];
+                            $result[] = $result_bak[$key];
+                            break;
                         }
                     }
                 }
+            }
+            else {
+                $result[] = $result_bak[$key];
             }
         }
 

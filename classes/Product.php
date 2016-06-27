@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -2973,6 +2973,10 @@ class ProductCore extends ObjectModel
         );
 
         if (isset(self::$_prices[$cache_id])) {
+            /* Affect reference before returning cache */
+            if (isset($specific_price['price']) && $specific_price['price'] > 0) {
+                $specific_price['price'] = self::$_prices[$cache_id];
+            }
             return self::$_prices[$cache_id];
         }
 
@@ -3023,6 +3027,9 @@ class ProductCore extends ObjectModel
         // convert only if the specific price is in the default currency (id_currency = 0)
         if (!$specific_price || !($specific_price['price'] >= 0 && $specific_price['id_currency'])) {
             $price = Tools::convertPrice($price, $id_currency);
+            if (isset($specific_price['price']) && $specific_price['price'] >= 0) {
+                $specific_price['price'] = $price;
+            }
         }
 
         // Attribute price
@@ -3082,11 +3089,11 @@ class ProductCore extends ObjectModel
 
                 $specific_price_reduction = $reduction_amount;
 
-                    // Adjust taxes if required
+                // Adjust taxes if required
 
-                    if (!$use_tax && $specific_price['reduction_tax']) {
-                        $specific_price_reduction = $product_tax_calculator->removeTaxes($specific_price_reduction);
-                    }
+                if (!$use_tax && $specific_price['reduction_tax']) {
+                    $specific_price_reduction = $product_tax_calculator->removeTaxes($specific_price_reduction);
+                }
                 if ($use_tax && !$specific_price['reduction_tax']) {
                     $specific_price_reduction = $product_tax_calculator->addTaxes($specific_price_reduction);
                 }

@@ -1,4 +1,4 @@
-2007-2015 PrestaShop
+2007-2016 PrestaShop
 
 NOTICE OF LICENSE
 
@@ -17,12 +17,155 @@ versions in the future. If you wish to customize PrestaShop for your
 needs please refer to http://www.prestashop.com for more information.
 
 @author PrestaShop SA <contact@prestashop.com>
-@copyright 2007-2015 PrestaShop  SA
+@copyright 2007-2016 PrestaShop  SA
 @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 International Registred Trademark & Property of PrestaShop SA
 
 Release Notes for PrestaShop 1.6
 --------------------------------
+####################################
+#   v1.6.1.6 - (2016-06-15)
+####################################
+
+	Fixed bugs:
+
+	[-] BO : (2e3d0f6) fixed bug when no results with address and map does not exist
+	[-] BO : (2d30765) add user shop origin in autocomplete cart rule
+	[-] BO : (d207083) fixed bug parent tab list wont show if admin tab class is invalid.
+	[-] BO : (052208b) fixed bug when toggle status product not logged
+
+	[-] FO : (c0ee6b7) Fix CSS 404 when using subdirectory
+	[-] FO : (e4a7b70) Only display vouchers available 'only' for customers
+	[-] FO : (e4e2b61) smartyHook now returns empty string when module is not installed.
+	[-] FO : (b2f9338) #PSCSX-5582 fix wrong displayed specific price on product detail
+	[-] FO : (44c1b4e) Display only available vouchers in customer back office
+	[-] FO : (c736160) on user bo, display all discount values
+
+	[-] TEST : (c586ee3) Fix PHP 7 tests
+
+	[-] CORE : (39241d6) Check for displayPaymentEU to fix advanced checkout restrictions
+	[-] CORE : (fb208a3) Fix fatal error on classes/stock/StockAvailable.php (1.6)
+
+	[-] PDF : (2d14094) Fix generation of PDF files
+
+	[-] WS : (114f10b) Fix for PHP 5.2, 5.3 and 7.0 compatibility
+
+	[-] MO : (e7a51f3) #NM-248 Broken pagination links in loyalty
+
+
+	Improved/changed features:
+
+	[*] FO : (4e1a70a) Added more information about minimum amount
+
+
+	Added Features:
+
+	[+] IN : (a1ce85c) All key must not be nullable
+
+
+	
+
+
+####################################
+#   v1.6.1.5 - (2016-04-08)
+####################################
+
+	Fixed bugs:
+
+	[-] PDF : (9f7ab92) update constraints on Addresses display
+	[-] PDF : (e7103c4) updated b2b template
+	[-] PDF : (e0bde47) invoices printing now done as page groups to keep the pagination relevant
+	[-] PDF : (3464ca0) fixed pagination block display
+	[-] PDF : (a788652) Moved note block to his own remplate
+	[-] PDF : (b5ef9f2) (re) added shipping box in invoice
+
+	[-] FO : (331527c) Fix incorrect cart rules list in case of country restriction (PSCSX-7873)
+	[-] FO : (a343610) PSCSX-7449, fix parse error in AuthController.php
+	[-] FO : (42d8847) #PSCSX-5582 fix wrong displayed specific price on product detail
+	[-] FO : (755f77b) Fix warning if combinations are disabled
+	[-] FO : (05b701f) Fix combination price calculation with impact and reduction
+	[-] FO : (b1352d7) Fix JavaScript mistake in blocklayered.js
+	[-] FO : (8ee195a) fixed bug on payment module, check if defined $order object
+
+	[-] CORE : (9870d84) use a cached cacert file for curl
+	[-] CORE : (deebce3) Fixed double preg_quote()
+
+	[-] BO : (647eba0) Fix the display of the listing filters on the toolbar
+	[-] BO : (6e69c4a) Change only active state on bulk status change
+	[-] BO : (69b87a8) Fix incorrect shipping taxes in order slips (PSCSX-4881)
+	[-] BO : (44eb96c) Fix filter by category change not working after other actions. …
+	[-] BO : (76d53ac) add error message on upload theme bigger than post_max_size
+
+	[-] LO : (011a2e5) Traditionnal Chinese for HK pack
+
+	[-] TR : (948a3e5) language.xml - fix TW script
+
+	[-] SECURITY : (cc49345) Fixes PSCSX-4841 Usage of ECB mode
+
+	[-] CLASS : (7234efd) Alias / return false if feature is not active in aliasExists()
+
+	[-] MO : (de7e9aa) bankwire / correct module name for translation
+
+
+	Improved/changed features:
+
+	[*] CORE : (85e6025) Update swift mailer
+	[*] CORE : (81465fe) Add a fallback to curl when file_get_content() return an empty response
+
+	[*] TR : (4b3ddf5) Update Polish installer
+	[*] TR : (62bbc16) feature.xml in Vietnamese
+	[*] TR : (1cce929) Update italian installer
+	[*] TR : (5319857) Improve Dutch meta info
+
+	[*] CLASS : (ec03391) Hook / indicate which method to use for deprecated methods
+
+	[*] FO : (999ff45) Removed template logic that is not needed
+
+
+	Added Features:
+
+	[+] TR : (30c4adc) Adding Vietnamese installer
+
+
+	
+
+
+####################################
+#   v1.6.1.4 - (2016-01-06)
+####################################
+
+	Fixed bugs:
+
+	[-] CORE : (c243c8a) Fix ObjectModel error management on validation
+	[-] CORE : (508e1cd) Fix AdminTab PHP 7 compatibilty
+	[-] CORE : (355a4a7) Report of https://github.com/PrestaShop/PrestaShop/pull/3673
+	[-] CORE : (0a07da9) fix #PSCSX-7007, notice in searchcron
+	[-] CORE : (13285fd) Fix PSCSX-6953, bad upload error check
+
+	[-] TESTS : (b826568) removed tests for prestafraud module
+
+	[-] BO : (c35d896) Fixed bug in HTMLTemplateInvoice prevents problems with invoice prefixs
+	[-] BO : (e71bdaa) fixed translation bug in prestashop addons modal
+	[-] BO : (48d9da7) Fixed upgrade index specific_price table
+
+	[-] FO : (0eecc7a) Fix #PSCSX-7021, bad specific base price for combinations
+	[-] FO : (40717fa) Fix #PSCSX-7021, bad impact price / currency
+	[-] FO : (0bd1bdc) Fix robots.txt rules for default language URLs
+	[-] FO : (ed08594) Fix quantity discount table wont appear again after swith on combination without quantity discount
+
+
+	Improved/changed features:
+
+	[*] PROJECT : (bcbec89) Improve PHP 7 compatibility
+
+	[*] BO : (ad3c187) #PSCSX-6251 on product order add unit product price without tax
+	[*] BO : (06502f9) Dont restrict orders listing to addresses join
+
+	[*] CORE : (94846bd) Fix #PSCSX-7015, Uploader setAcceptFiles case sensitive
+
+	[*] FO : (83c7ee1) #PSCSX-5582 update price from discount when changing quantity
+
+
 ####################################
 #   v1.6.1.3 - (2015-11-26)
 ####################################

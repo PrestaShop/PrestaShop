@@ -1,5 +1,5 @@
 {*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -414,8 +414,13 @@
 							</tr>
 						</thead>
 						<tbody>
-							{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-							<tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}" data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value|floatval}" data-discount-quantity="{$quantity_discount.quantity|intval}">
+						{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
+							{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
+								{$realDiscountPrice=$productPriceWithoutReduction|floatval-$quantity_discount.real_value|floatval}
+							{else}
+								{$realDiscountPrice=$productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction)|floatval}
+							{/if}
+							<tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}" data-real-discount-value="{convertPrice price = $realDiscountPrice}" data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value|floatval}" data-discount-quantity="{$quantity_discount.quantity|intval}">
 								<td>
 									{$quantity_discount.quantity|intval}
 								</td>
@@ -454,7 +459,7 @@
 									{convertPrice price=$qtyProductPrice - $discountPrice}
 								</td>
 							</tr>
-							{/foreach}
+						{/foreach}
 						</tbody>
 					</table>
 				</div>

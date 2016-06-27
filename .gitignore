@@ -30,6 +30,7 @@ admin-dev/backups/*
 admin-dev/import/*
 
 themes/*/cache/*
+admin-dev/themes/*/cache/*
 
 # Config
 

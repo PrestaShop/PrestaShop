@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2015 PrestaShop SA
+ *  @copyright 2007-2016 PrestaShop SA
  *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -1146,9 +1146,17 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
             // Checking for fields validity
             // Hack for postcode required for country which does not have postcodes
             if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0')) {
-                if (isset($data['validate']) && !Validate::$data['validate']($value) && (!empty($value) || $data['required'])) {
-                    $errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
-                } else {
+                $validation_error = false;
+                if (isset($data['validate'])) {
+                    $data_validate = $data['validate'];
+                    if (!Validate::$data_validate($value) && (!empty($value) || $data['required'])) {
+                        $errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).
+                            '</b> '.Tools::displayError('is invalid.');
+                        $validation_error = true;
+                    }
+                }
+
+                if (!$validation_error) {
                     if (isset($data['copy_post']) && !$data['copy_post']) {
                         continue;
                     }

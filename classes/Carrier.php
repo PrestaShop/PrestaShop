@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -1386,7 +1386,7 @@ class CarrierCore extends ObjectModel
             if ($cart_product['id_product'] == $product->id) {
                 $cart_quantity += $cart_product['cart_quantity'];
             }
-            if ($cart_product['weight_attribute'] > 0) {
+            if (isset($cart_product['weight_attribute']) && $cart_product['weight_attribute'] > 0) {
                 $cart_weight += ($cart_product['weight_attribute'] * $cart_product['cart_quantity']);
             } else {
                 $cart_weight += ($cart_product['weight'] * $cart_product['cart_quantity']);

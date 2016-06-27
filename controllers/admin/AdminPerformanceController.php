@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2016 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -856,7 +856,7 @@ class AdminPerformanceControllerCore extends AdminController
                         $this->errors[] = Tools::displayError('The "Mcrypt" PHP extension is not activated on this server.');
                     } else {
                         if (!strstr($new_settings, '_RIJNDAEL_KEY_')) {
-                            $key_size = mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
+                            $key_size = mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
                             $key = Tools::passwdGen($key_size);
                             $new_settings = preg_replace(
                                 '/define\(\'_COOKIE_KEY_\', \'([a-z0-9=\/+-_]+)\'\);/i',
@@ -865,7 +865,7 @@ class AdminPerformanceControllerCore extends AdminController
                             );
                         }
                         if (!strstr($new_settings, '_RIJNDAEL_IV_')) {
-                            $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
+                            $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
                             $iv = base64_encode(mcrypt_create_iv($iv_size, MCRYPT_RAND));
                             $new_settings = preg_replace(
                                 '/define\(\'_COOKIE_IV_\', \'([a-z0-9=\/+-_]+)\'\);/i',
