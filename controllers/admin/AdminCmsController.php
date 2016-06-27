@@ -80,6 +80,11 @@ class AdminCmsControllerCore extends AdminController
         parent::__construct();
     }
 
+    public function getTabSlug()
+    {
+       return 'ROLE_MOD_TAB_ADMINCMSCONTENT_';
+    }
+
     public function initPageHeaderToolbar()
     {
         $this->page_header_toolbar_btn['save-and-preview'] = array(
@@ -347,7 +352,7 @@ class AdminCmsControllerCore extends AdminController
             }
         } elseif (Tools::isSubmit('way') && Tools::isSubmit('id_cms') && (Tools::isSubmit('position'))) {
             /** @var CMS $object */
-            if ($this->access('edit') !== '1') {
+            if (!$this->access('edit')) {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             } elseif (!Validate::isLoadedObject($object = $this->loadObject())) {
                 $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.')
