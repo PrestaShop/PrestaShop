@@ -12,6 +12,8 @@ export default class ProductSelect {
       }
       $(event.currentTarget).addClass('selected');
       $('.js-modal-product-cover').attr('src', $(event.target).data('image-large-src'));
+      $('.js-modal-product-cover').attr('title', $(event.target).attr('title'));
+      $('.js-modal-product-cover').attr('alt', $(event.target).attr('alt'));
     });
 
     if ($('.js-modal-product-images li').length <= MAX_THUMBS) {
