@@ -31,7 +31,7 @@ class AccessCore extends ObjectModel
 
     /** @var int AuthorizationRole id which address belongs to */
     public $id_authorization_role = null;
-    
+
     /**
      * @see ObjectModel::$definition
      */
@@ -43,9 +43,9 @@ class AccessCore extends ObjectModel
             'id_authorization_role' =>    array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
         ),
     );
-    
+
     /**
-     * 
+     *
      * @param string $role
      * @param int $idProfile
      */
@@ -58,9 +58,9 @@ class AccessCore extends ObjectModel
                 $matches
             );
 
-            if ($matches['type'] == 'TAB') {
+            if (isset($matches['type']) && $matches['type'] == 'TAB') {
                 $joinTable = _DB_PREFIX_.'access';
-            } elseif ($matches['type'] == 'MODULE') {
+            } elseif (isset($matches['type']) && $matches['type'] == 'MODULE') {
                 $joinTable = _DB_PREFIX_.'module_access';
             } else {
                 throw new Exception('The slug '.$currentRole.' is invalid');
@@ -74,17 +74,17 @@ class AccessCore extends ObjectModel
                 WHERE `slug` = "'.$currentRole.'"
                 AND j.`id_profile` = "'.$idProfile.'"
             ');
-            
+
             if (!$isCurrentGranted) {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     /**
-     * 
+     *
      * @param int $idProfile
      * @return array
      */
@@ -100,16 +100,16 @@ class AccessCore extends ObjectModel
             ON r.`id_authorization_role` = ma.`id_authorization_role`
             AND ma.`id_profile` = "'.$idProfile.'"
         ');
-        
+
         foreach ((array) $result as $key => $role) {
             $result[$key] = $role['slug'];
         }
-        
+
         return $result;
     }
-    
+
     /**
-     * 
+     *
      * @param string $authSlug
      * @return string
      */
@@ -126,12 +126,12 @@ class AccessCore extends ObjectModel
             FROM `'._DB_PREFIX_.'tab` t
             WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
         ');
-        
+
         return $result['id_tab'];
     }
-    
+
     /**
-     * 
+     *
      * @param string $idTab
      * @return string
      */
@@ -144,9 +144,9 @@ class AccessCore extends ObjectModel
         ');
         return self::sluggifyTab($result);
     }
-    
+
     /**
-     * 
+     *
      * @param string $idModule
      * @return string
      */
@@ -159,9 +159,9 @@ class AccessCore extends ObjectModel
         ');
         return self::sluggifyModule($result);
     }
-    
+
     /**
-     * 
+     *
      * @param string $tab Tab class name
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
      * @return string
@@ -170,9 +170,9 @@ class AccessCore extends ObjectModel
     {
         return sprintf('ROLE_MOD_TAB_%s_%s', strtoupper($tab['class_name']), $authorization);
     }
-    
+
     /**
-     * 
+     *
      * @param string $module Module name
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
      * @return string
@@ -181,9 +181,9 @@ class AccessCore extends ObjectModel
     {
         return sprintf('ROLE_MOD_MODULE_%s_%s', strtoupper($module['name']), $authorization);
     }
-    
+
     /**
-     * 
+     *
      * @param string $legacyAuth
      * @return string|array
      */
@@ -199,12 +199,12 @@ class AccessCore extends ObjectModel
             'duplicate' => array('CREATE', 'UPDATE'),
             'all' => array('CREATE', 'READ', 'UPDATE', 'DELETE'),
         );
-        
+
         return isset($auth[$legacyAuth]) ? $auth[$legacyAuth] : false;
     }
-    
+
     /**
-     * 
+     *
      * @param int $idProfile
      * @param int $idRole
      * @return string
@@ -215,12 +215,12 @@ class AccessCore extends ObjectModel
             INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
             VALUES ('.$idProfile.','.$idRole.')
         ';
-        
+
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
     }
-    
+
     /**
-     * 
+     *
      * @param int $idProfile
      * @param int $idRole
      * @return string 'ok'|'error'
@@ -232,12 +232,12 @@ class AccessCore extends ObjectModel
             WHERE `id_profile` = "'.$idProfile.'"
             AND `id_authorization_role` = "'.$idRole.'"
         ';
-        
+
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
     }
-    
+
     /**
-     * 
+     *
      * @param int $idProfile
      * @param int $idRole
      * @return string
@@ -248,12 +248,12 @@ class AccessCore extends ObjectModel
             INSERT IGNORE INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_authorization_role`)
             VALUES ('.$idProfile.','.$idRole.')
         ';
-        
+
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
     }
-    
+
     /**
-     * 
+     *
      * @param int $idProfile
      * @param int $idRole
      * @return string 'ok'|'error'
@@ -265,12 +265,12 @@ class AccessCore extends ObjectModel
             WHERE `id_profile` = "'.$idProfile.'"
             AND `id_authorization_role` = "'.$idRole.'"
         ';
-        
+
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
     }
-    
+
     /**
-     * 
+     *
      * @param int $idProfile
      * @param int $idTab
      * @param string $lgcAuth
@@ -283,7 +283,7 @@ class AccessCore extends ObjectModel
         } else {
             $slug = self::findSlugByIdTab($idTab);
         }
-        
+
         $whereClauses = array();
 
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
@@ -295,11 +295,11 @@ class AccessCore extends ObjectModel
             FROM `'._DB_PREFIX_.'authorization_role` t
             WHERE '.implode(' OR ', $whereClauses).'
         ');
-        
+
         if (empty($roles)) {
             throw new \Exception('Cannot find role slug');
         }
-        
+
         foreach ($roles as $role) {
             if ($enabled) {
                 $res[] = $this->addAccess($idProfile, $role['id_authorization_role']);
@@ -307,12 +307,12 @@ class AccessCore extends ObjectModel
                 $res[] = $this->removeAccess($idProfile, $role['id_authorization_role']);
             }
         }
-        
+
         return in_array('error', $res) ? 'error' : 'ok';
     }
-    
+
     /**
-     * 
+     *
      * @param int $idProfile
      * @param int $idModule
      * @param string $lgcAuth
@@ -325,7 +325,7 @@ class AccessCore extends ObjectModel
         } else {
             $slug = self::findSlugByIdModule($idModule);
         }
-        
+
         $whereClauses = array();
 
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
@@ -337,7 +337,7 @@ class AccessCore extends ObjectModel
             FROM `'._DB_PREFIX_.'authorization_role` t
             WHERE '.implode(' OR ', $whereClauses).'
         ');
-        
+
         foreach ($roles as $role) {
             if ($enabled) {
                 $res[] = $this->addModuleAccess($idProfile, $role['id_authorization_role']);
@@ -345,7 +345,7 @@ class AccessCore extends ObjectModel
                 $res[] = $this->removeModuleAccess($idProfile, $role['id_authorization_role']);
             }
         }
-        
+
         return in_array('error', $res) ? 'error' : 'ok';
     }
 }
