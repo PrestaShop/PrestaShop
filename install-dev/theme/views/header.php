@@ -19,8 +19,8 @@
 	<script type="text/javascript" src="../js/jquery/plugins/jquery.chosen.js"></script>
 	<script type="text/javascript" src="theme/js/install.js"></script>
 	<script type="text/javascript" src="//www.prestashop.com/js/user-assistance.js"></script>
-	<?php if (file_exists(_PS_INSTALL_PATH_.'theme/js/'.$this->step.'.js')): ?>
-		<script type="text/javascript" src="theme/js/<?php echo $this->step ?>.js"></script>
+	<?php if (file_exists(_PS_INSTALL_PATH_.'theme/js/'.self::$steps->current()->getName().'.js')): ?>
+		<script type="text/javascript" src="theme/js/<?php echo self::$steps->current()->getName() ?>.js"></script>
 	<?php endif; ?>
 	<script type="text/javascript">
 		var ps_base_uri = '<?php echo addslashes(__PS_BASE_URI__) ?>';
@@ -57,15 +57,15 @@
 <!-- List of steps -->
 <div id="leftpannel">
 	<ol id="tabs">
-		<?php foreach ($this->getSteps() as $step => $translation): ?>
-			<?php if ($this->step == $step): ?>
-				<li class="selected"><?php echo $translation; ?></li>
-			<?php elseif ($this->isStepFinished($step)): ?>
-				<li class="finished"><a href="index.php?step=<?php echo $step ?>"><?php echo $translation; ?></a></li>
-			<?php elseif ($step == $this->getLastStep()): ?>
-				<li class="configuring"><a href="index.php?step=<?php echo $step ?>"><?php echo $translation; ?></a></li>
+		<?php foreach ($this->getSteps() as $step): ?>
+			<?php if ($this->step == $step->getName()): ?>
+				<li class="selected"><?php echo $step; ?></li>
+			<?php elseif ($this->isStepFinished($step->getName())): ?>
+				<li class="finished"><a href="index.php?step=<?php echo $step->getName() ?>"><?php echo $step; ?></a></li>
+			<?php elseif ($step->getName() == $this->getLastStep()): ?>
+				<li class="configuring"><a href="index.php?step=<?php echo $step->getName() ?>"><?php echo $step; ?></a></li>
 			<?php else: ?>
-				<li><?php echo $translation; ?></li>
+				<li><?php echo $step; ?></li>
 			<?php endif; ?>
 		<?php endforeach; ?>
 	</ol>
@@ -84,8 +84,8 @@
 	<div class="contentTitle">
 		<h1><?php echo $this->translator->trans('Installation Assistant', array(), 'Install'); ?></h1>
 		<ul id="stepList_1" class="stepList clearfix">
-			<?php foreach ($this->getSteps() as $step => $translation): ?>
-				<li <?php if ($this->isStepFinished($step)): ?>class="ok"<?php endif; ?>><?php echo $this->getSteps()[$step]; ?></li>
+			<?php foreach ($this->getSteps() as $step): ?>
+				<li <?php if ($this->isStepFinished($step->getName())): ?>class="ok"<?php endif; ?>><?php echo $step ?></li>
 			<?php endforeach; ?>
 		</ul>
 	</div>

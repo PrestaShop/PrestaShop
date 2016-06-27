@@ -1,6 +1,6 @@
 <?php
 
-class StepList
+class StepList implements IteratorAggregate
 {
     /**
      *
@@ -63,9 +63,19 @@ class StepList
      */
     public function setOffsetFromStepName($stepName)
     {
-        $this->offset = array_search($stepName, $this->stepNames);
+        $this->offset = (int) array_search($stepName, $this->stepNames);
 
         return $this;
+    }
+
+    /**
+     *
+     * @param string $stepName
+     * @return int
+     */
+    public function getOffsetFromStepName($stepName)
+    {
+        return (int) array_search($stepName, $this->stepNames);
     }
 
     /**
@@ -128,5 +138,14 @@ class StepList
     public function isLastStep()
     {
         return $this->offset == count($this->steps) -1;
+    }
+
+    /**
+     *
+     * @return Traversable
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->steps);
     }
 }
