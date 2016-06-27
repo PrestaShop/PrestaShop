@@ -153,18 +153,6 @@ class CustomerFormatterCore implements FormFormatterInterface
             ;
         }
 
-        if ($this->ask_for_newsletter) {
-            $format['newsletter'] = (new FormField)
-                ->setName('newsletter')
-                ->setType('checkbox')
-                ->setLabel(
-                    $this->translator->trans(
-                        'Sign up for our newsletter', [], 'Customer'
-                    )
-                )
-            ;
-        }
-
         if ($this->ask_for_partner_optin) {
             $format['optin'] = (new FormField)
                 ->setName('optin')
