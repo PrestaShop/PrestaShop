@@ -177,6 +177,14 @@ class CustomerFormatterCore implements FormFormatterInterface
             ;
         }
 
+        $additionalCustomerFormFields = Hook::exec('additionalCustomerFormFields', array(), null, true);
+
+        if (!is_array($additionalCustomerFormFields)) {
+            $additionalCustomerFormFields = array();
+        }
+
+        $format = array_merge($format, $additionalCustomerFormFields);
+
         // TODO: TVA etc.?
 
         return $this->addConstraints($format);
