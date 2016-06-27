@@ -182,7 +182,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'name' => 'name',
                     'maxlength' => 255,
                     'required' => true,
-                    'hint' => $this->trans('Invalid characters', array(), 'Admin.Notifications.Info').' <>;=#{}'
                 ),
                 array(
                     'type' => 'select',
