@@ -72,24 +72,3 @@
     </div>
   </div>
 </div>
-
-{if $need_confirmation && isset($conditions)}
-  <div
-    class="modal fade"
-    id="ps_emailsubscription-modal"
-    tabindex="-1"
-    role="dialog"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-body">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          {$conditions nofilter}
-        </div>
-      </div>
-    </div>
-  </div>
-{/if}
