@@ -9,6 +9,15 @@
     <field name="active"/>
   </fields>
   <entities>
+     <state id="AA" id_country="US" id_zone="North_America" iso_code="AA" tax_behavior="0" active="1">
+      <name>AA</name>
+    </state>
+    <state id="AE" id_country="US" id_zone="North_America" iso_code="AE" tax_behavior="0" active="1">
+      <name>AE</name>
+    </state>
+    <state id="AP" id_country="US" id_zone="North_America" iso_code="AP" tax_behavior="0" active="1">
+      <name>AP</name>
+    </state>   
     <state id="AL" id_country="US" id_zone="North_America" iso_code="AL" tax_behavior="0" active="1">
       <name>Alabama</name>
     </state>
