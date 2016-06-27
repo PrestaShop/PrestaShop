@@ -40,7 +40,7 @@ class AdminCustomersControllerCore extends AdminController
     {
         $this->bootstrap = true;
         $this->required_database = true;
-        $this->required_fields = array('newsletter','optin');
+        $this->required_fields = array('optin');
         $this->table = 'customer';
         $this->className = 'Customer';
         $this->lang = false;
@@ -429,28 +429,6 @@ class AdminCustomersControllerCore extends AdminController
                         )
                     ),
                     'hint' => $this->l('Enable or disable customer login.')
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => $this->l('Newsletter'),
-                    'name' => 'newsletter',
-                    'required' => false,
-                    'class' => 't',
-                    'is_bool' => true,
-                    'values' => array(
-                        array(
-                            'id' => 'newsletter_on',
-                            'value' => 1,
-                            'label' => $this->l('Enabled')
-                        ),
-                        array(
-                            'id' => 'newsletter_off',
-                            'value' => 0,
-                            'label' => $this->l('Disabled')
-                        )
-                    ),
-                    'disabled' =>  (bool)!Configuration::get('PS_CUSTOMER_NWSL'),
-                    'hint' => $this->l('This customer will receive your newsletter via email.')
                 ),
                 array(
                     'type' => 'switch',

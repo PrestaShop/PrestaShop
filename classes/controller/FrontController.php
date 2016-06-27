@@ -1309,11 +1309,9 @@ class FrontControllerCore extends Controller
             'is_catalog' => (bool)Configuration::get('PS_CATALOG_MODE'),
             'show_prices' => (Configuration::get('PS_CATALOG_MODE')
                             || (Group::isFeatureActive() && !(bool)Group::getCurrent()->show_prices)),
-            'opt_in' => [
+            'opt_in' => array(
                 'partner' => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
-                'newsletter' => (Configuration::get('PS_CUSTOMER_NWSL')
-                                || ($moduleManager->isInstalled('ps_emailsubscription') && Module::getInstanceByName('ps_emailsubscription')->active)),
-            ],
+            ),
         ];
     }
 
@@ -1598,7 +1596,6 @@ class FrontControllerCore extends Controller
         );
 
         $formatter
-            ->setAskForNewsletter(Configuration::get('PS_CUSTOMER_NWSL'))
             ->setAskForPartnerOptin(Configuration::get('PS_CUSTOMER_OPTIN'))
             ->setAskForBirthdate(Configuration::get('PS_CUSTOMER_BIRTHDATE'))
         ;
