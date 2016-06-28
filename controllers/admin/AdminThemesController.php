@@ -1490,7 +1490,7 @@ class AdminThemesControllerCore extends AdminController
             if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server')) {
                 $uniqid = uniqid();
                 $sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
-                mkdir($sandbox);
+                mkdir($sandbox, 0777, true);
                 $archive_uploaded = false;
 
                 if (Tools::getValue('filename') != '') {
