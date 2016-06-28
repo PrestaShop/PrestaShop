@@ -74,7 +74,7 @@ class InstallModelInstall extends InstallAbstractModel
             file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
             && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
         ) {
-            $this->setError($this->translator->trans('%file% file is not writable (check permissions)', array('%file' => self::SETTINGS_FILE), 'Install'));
+            $this->setError($this->translator->trans('%file% file is not writable (check permissions)', array('%file%' => self::SETTINGS_FILE), 'Install'));
             return false;
         } elseif (
             !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
