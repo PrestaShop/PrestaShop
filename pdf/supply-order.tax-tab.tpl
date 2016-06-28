@@ -27,7 +27,7 @@
 <table id="tax-tab" width="100%">
 	<thead>
 		<tr>
-			<th class="header-right small">{l s='Base TE' pdf='true'}</th>
+			<th class="header-right small">{l s='Net price' pdf='true'}</th>
 			<th class="header-right small">{l s='Tax Rate' pdf='true'}</th>
 			<th class="header-right small">{l s='Tax Value' pdf='true'}</th>
 		</tr>
