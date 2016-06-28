@@ -182,7 +182,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->l('Name'),
                     'name' => 'name',
-                    'maxlength' => 64,
+                    'maxlength' => 255,
                     'required' => true,
                     'hint' => $this->l('Forbidden characters').' <>;=#{}'
                 ),
