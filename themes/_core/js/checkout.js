@@ -80,20 +80,31 @@ function setupCheckoutScripts () {
   $('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
 
-  $('body').on('click', '.checkout-step.-reachable h1', function (event) {
+  changeCurrentCheckoutStep();
+  collapsePaymentOptions();
+}
+
+function changeCurrentCheckoutStep() {
+  $('.checkout-step').off('click');
+
+  $('.-js-current').prevAll().on('click', function() {
     $('.-js-current, .-current').removeClass('-js-current -current');
     $(event.target).closest('.checkout-step').toggleClass('-js-current');
-  });
-  $('body').on('click', '.checkout-step.-unreachable h1', function (event) {
-    $('button.continue').last().click();
+    prestashop.emit('change current checkout step');
   });
 
-  collapsePaymentOptions();
-
+  $('.-js-current').nextAll().on('click', function() {
+    $('.-js-current button.continue').click();
+    prestashop.emit('change current checkout step');
+  });
 }
 
 $(document).ready(() => {
   if ($('body#checkout').length === 1) {
     setupCheckoutScripts();
   }
+
+  prestashop.on('change current checkout step', function(event) {
+    changeCurrentCheckoutStep();
+  });
 });
