@@ -272,6 +272,9 @@ var combinations = (function() {
           _this.refreshDefaultImage();
         }
       });
+    },
+    'updateIdProduct': function(id) {
+        id_product = id;
     }
   };
 })();
