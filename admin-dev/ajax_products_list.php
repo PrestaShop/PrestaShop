@@ -76,7 +76,7 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, imag
 
 $items = Db::getInstance()->executeS($sql);
 
-if ($items && ($disableCombination ||$excludeIds || isset($_SERVER['HTTP_REFERER']))) {
+if ($items && ($disableCombination ||$excludeIds)) {
     $results = [];
     foreach ($items as $item) {
         if (!$forceJson) {
