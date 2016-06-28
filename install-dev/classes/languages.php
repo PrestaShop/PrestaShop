@@ -26,7 +26,7 @@
 
 class InstallLanguages
 {
-    const DEFAULT_ISO = 'en';
+    const DEFAULT_ISO = 'en-US';
 
     /**
      * @var array List of available languages
