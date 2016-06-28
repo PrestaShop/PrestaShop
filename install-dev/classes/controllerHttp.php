@@ -144,7 +144,7 @@ class InstallControllerHttp
         }
 
         if (!in_array($lang, $this->language->getIsoList())) {
-            $lang = 'en-US';
+            $lang = 'en';
         }
         $this->language->setLanguage($lang);
 
