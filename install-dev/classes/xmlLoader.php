@@ -27,7 +27,7 @@
 class InstallXmlLoader
 {
     /**
-     * @var InstallLanguages
+     * @var LanguageList
      */
     protected $language;
 
@@ -64,7 +64,7 @@ class InstallXmlLoader
 
     public function __construct()
     {
-        $this->language = InstallLanguages::getInstance();
+        $this->language = LanguageList::getInstance();
         $this->setDefaultPath();
     }
 

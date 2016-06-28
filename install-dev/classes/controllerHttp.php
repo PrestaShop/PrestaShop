@@ -59,7 +59,7 @@ class InstallControllerHttp
     public $session;
 
     /**
-     * InstallLanguages
+     * LanguageList
      */
     public $language;
 
@@ -130,7 +130,7 @@ class InstallControllerHttp
         $this->session = InstallSession::getInstance();
 
         // Set current language
-        $this->language = InstallLanguages::getInstance();
+        $this->language = LanguageList::getInstance();
         $detect_language = $this->language->detectLanguage();
 
         Context::getContext()->language =  $this->language;

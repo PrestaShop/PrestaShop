@@ -69,7 +69,6 @@ require_once _PS_INSTALL_PATH_.'install_version.php';
 
 require_once _PS_CORE_DIR_.'/config/alias.php';
 require_once _PS_INSTALL_PATH_.'classes/exception.php';
-require_once _PS_INSTALL_PATH_.'classes/languages.php';
 require_once _PS_INSTALL_PATH_.'classes/language.php';
 require_once _PS_INSTALL_PATH_.'classes/model.php';
 require_once _PS_INSTALL_PATH_.'classes/session.php';

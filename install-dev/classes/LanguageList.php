@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class InstallLanguages
+class LanguageList
 {
     const DEFAULT_ISO = 'en-US';
 

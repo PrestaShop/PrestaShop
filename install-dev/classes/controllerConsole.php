@@ -52,7 +52,7 @@ abstract class InstallControllerConsole
     public $session;
 
     /**
-     * @var InstallLanguages
+     * @var LanguageList
      */
     public $language;
 
@@ -116,7 +116,7 @@ abstract class InstallControllerConsole
         $this->datas = Datas::getInstance();
 
         // Set current language
-        $this->language = InstallLanguages::getInstance();
+        $this->language = LanguageList::getInstance();
         Context::getContext()->language =  $this->language;
         Context::getContext()->locale =  $this->language->locale;
 
