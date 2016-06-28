@@ -98,25 +98,21 @@ class InstallModelInstall extends InstallAbstractModel
             $cookie_iv = $config['parameters']['cookie_iv'];
         }
 
-        $parameters  = array(
-            'parameters' => array(
-                'database_host' => $database_host,
-                'database_port' => '~',
-                'database_user' => $database_user,
-                'database_password' => $database_password,
-                'database_name' => $database_name,
-                'database_prefix' => $database_prefix,
-                'database_engine' =>  $database_engine,
-                'cookie_key' => $cookie_key,
-                'cookie_iv' =>  $cookie_iv,
-                'ps_caching' => 'CacheMemcache',
-                'ps_cache_enable' => false,
-                'ps_creation_date' => date('Y-m-d'),
-                'secret' => $secret,
-                'mailer_transport' => 'smtp',
-                'mailer_host' => '127.0.0.1',
-                'mailer_user' => '~',
-                'mailer_password' => '~',
+        $parameters  = array_replace_recursive(
+            Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml.dist')),
+            array(
+                'parameters' => array(
+                    'database_host' => $database_host,
+                    'database_user' => $database_user,
+                    'database_password' => $database_password,
+                    'database_name' => $database_name,
+                    'database_prefix' => $database_prefix,
+                    'database_engine' =>  $database_engine,
+                    'cookie_key' => $cookie_key,
+                    'cookie_iv' =>  $cookie_iv,
+                    'ps_creation_date' => date('Y-m-d'),
+                    'secret' => $secret,
+                )
             )
         );
 
