@@ -140,3 +140,5 @@ CREATE TABLE `PREFIX_module_access` (
 
 DROP TABLE `PREFIX_access_old`;
 DROP TABLE `PREFIX_module_access_old`;
+
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_CUSTOMER_NWSL';

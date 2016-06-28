@@ -7,7 +7,6 @@ class CustomerFormatterCore implements FormFormatterInterface
     private $language;
 
     private $ask_for_birthdate              = true;
-    private $ask_for_newsletter             = true;
     private $ask_for_partner_optin          = true;
     private $ask_for_password               = true;
     private $password_is_required           = true;
@@ -24,12 +23,6 @@ class CustomerFormatterCore implements FormFormatterInterface
     public function setAskForBirthdate($ask_for_birthdate)
     {
         $this->ask_for_birthdate = $ask_for_birthdate;
-        return $this;
-    }
-
-    public function setAskForNewsletter($ask_for_newsletter)
-    {
-        $this->ask_for_newsletter = $ask_for_newsletter;
         return $this;
     }
 
@@ -153,18 +146,6 @@ class CustomerFormatterCore implements FormFormatterInterface
             ;
         }
 
-        if ($this->ask_for_newsletter) {
-            $format['newsletter'] = (new FormField)
-                ->setName('newsletter')
-                ->setType('checkbox')
-                ->setLabel(
-                    $this->translator->trans(
-                        'Sign up for our newsletter', [], 'Customer'
-                    )
-                )
-            ;
-        }
-
         if ($this->ask_for_partner_optin) {
             $format['optin'] = (new FormField)
                 ->setName('optin')
@@ -176,6 +157,14 @@ class CustomerFormatterCore implements FormFormatterInterface
                 )
             ;
         }
+
+        $additionalCustomerFormFields = Hook::exec('additionalCustomerFormFields', array(), null, true);
+
+        if (!is_array($additionalCustomerFormFields)) {
+            $additionalCustomerFormFields = array();
+        }
+
+        $format = array_merge($format, $additionalCustomerFormFields);
 
         // TODO: TVA etc.?
 
