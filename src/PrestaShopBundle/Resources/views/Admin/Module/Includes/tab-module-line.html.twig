@@ -1,0 +1,100 @@
+<tr>
+  <td class="fixed-with-sm center">
+    <img
+      class="img-thumbnail"
+      alt="{{ module.name }}"
+      src="{% if module.image_absolute is defined %}
+        {{ module.image_absolute }}
+        {% else %}
+          {{ constant('_MODULE_DIR_') ~ module.name ~ '/' ~ module.logo }}
+        {% endif %}"
+    />
+  </td>
+  <td>
+    <div id="anchor{{ module.name|capitalize }}" title="{{ module.displayName }}">
+      <div class="module_name">
+        <span style="display:none">{{ module.name }}</span>
+        {{ module.displayName }}
+        <small class="text-muted">v{{ module.version }} - by {{ module.author }}</small>
+        {% if module.type is defined and module.type == 'addonsBought' %}
+        - <span class="module-badge-bought help-tooltip text-warning" data-title="{{ 'You bought this module on PrestaShop Addons. Thank You.'|trans({}) }}"><i class="icon-pushpin"></i> <small>{{ 'Bought'|trans({}) }}</small></span>
+        {% elseif module.type is defined and module.type == 'addonsMustHave' %}
+        - <span class="module-badge-popular help-tooltip text-primary" data-title="{{ 'This module is available on PrestaShop Addons.'|trans({}) }}"><i class="icon-group"></i> <small>{{ 'Popular'|trans({}) }}</small></span>
+        {% elseif module.type is defined and module.type == 'addonsPartner' %}
+        - <span class="module-badge-partner help-tooltip text-warning" data-title="{{ 'This module is available for free thanks to our partner.'|trans({}) }}"><i class="icon-pushpin"></i> <small>{{ 'Official'|trans({}) }}</small></span>
+        {% elseif module.id is defined and module.id >= 0 %}
+          {% if module.version_addons is defined and module.version_addons %}
+            <span class="label label-warning">{{ 'Need update'|trans({}) }}</span>
+          {% endif %}
+        {% endif %}
+      </div>
+      <p class="module_description">
+        {% if module.description is defined and module.description is not empty %}
+          {{ module.description }}
+        {% endif %}
+      </p>
+      {% if (module.message is defined and module.name is not empty) and (module.type is not defined or module.type != 'addonsMustHave' or module.type != 'addonsNative') %}
+        <div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{{ module.message }}</div>
+      {% endif %}
+    </div>
+  </td>
+
+  {% if module.type is defined and module.type == 'addonsMustHave' %}
+  <td>&nbsp;</td>
+  <td style="text-align: right;">
+    <p>
+      <a href="{{ module.addons_buy_url|replace({' ': '+'})|e('html') }}" onclick="return !window.open(this.href, '_blank');" class="button updated _blank">
+          <span class="btn btn-default">
+            <i class="icon-shopping-cart"></i>
+            {% if module.price is defined %}
+              {% if module.price == 0 %}
+                {{ 'Free'|trans({}) }}
+              {% elseif module.id_currency is defined %}
+                &nbsp;&nbsp; {{ module.price }} {{ module.id_currency }}
+              {% endif %}
+            {% endif %}
+          </span>
+      </a>
+    </p>
+  </td>
+  {% elseif module.not_on_disk is not defined %}
+  <td>&nbsp;</td>
+  <td class="actions">
+    <div class="btn-group-action">
+      {% if module.optionsHtml|length > 0 %}
+      <div class="btn-group">
+        {% set firstOption = module.optionsHtml[0] %}
+        {{ firstOption|raw }}
+        {% if module.optionsHtml|length > 0 %}
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
+          <span class="caret">&nbsp;</span>
+        </button>
+        <ul class="dropdown-menu pull-right">
+
+          {% for key, option in module.optionsHtml  %}
+            {% if key != 0 %}
+              {% if 'title="divider"' not in option %}
+                <li class="divider"></li>
+              {% else %}
+                <li>{{ option }}</li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </td>
+  {% else %}
+  <td>&nbsp;</td>
+  <td style="text-align: right;">
+    <p>
+      <a href="{{ module.options.install_url|e('html') }}" class="btn btn-success">
+        <i class="icon-plus-sign-alt"></i>
+        {{ 'Install'|trans({}) }}
+      </a>
+    </p>
+  </td>
+  {% endif %}
+</tr>

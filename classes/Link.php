@@ -535,7 +535,7 @@ class LinkCore
                 break;
             case 'AdminModulesSf':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                return $sfRouter->generate('admin_module_catalog', array());
+                return $sfRouter->generate('admin_module_catalog', array(), true);
         }
 
         $id_lang = Context::getContext()->language->id;

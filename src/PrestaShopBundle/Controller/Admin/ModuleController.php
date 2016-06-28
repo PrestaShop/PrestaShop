@@ -278,7 +278,7 @@ class ModuleController extends FrameworkBundleAdminController
         $installed_products = $moduleRepository->getFilteredList($filters);
 
         $products = new \stdClass();
-        foreach (['to_configure', 'to_update'] as $subpart) {
+        foreach (array('to_configure', 'to_update') as $subpart) {
             $products->{$subpart} = [];
         }
 
@@ -314,16 +314,440 @@ class ModuleController extends FrameworkBundleAdminController
         ));
     }
 
-    public function getPreferredModulesAction()
+    public function getPreferredModulesAction(Request $request)
     {
-        $controller = new \AdminModulesControllerCore();
-        ob_start();
+        $tabModulesList = $request->request->get('tab_modules_list');
+        $back = $request->request->get('back_tab_modules_list');
 
-        $controller->ajaxProcessGetTabModulesList();
+        if ($back) {
+            $back .= '&tab_modules_open=1';
+        }
+        if ($tabModulesList) {
+            $tabModulesList = explode(',', $tabModulesList);
+            $modulesListUnsorted = $this->getModulesByInstallation($tabModulesList, $request->request->get('admin_list_from_source'));
+        }
 
-        $content = ob_get_clean();
-        return new Response($content);
+        $installed = $uninstalled = array();
+
+        foreach ($tabModulesList as $key => $value) {
+            $continue = 0;
+            foreach ($modulesListUnsorted['installed'] as $moduleInstalled) {
+                if ($moduleInstalled->name == $value) {
+                    $continue = 1;
+                    $installed[] = $moduleInstalled;
+                }
+            }
+            if ($continue) {
+                continue;
+            }
+            foreach ($modulesListUnsorted['not_installed'] as $moduleNotinstalled) {
+                if ($moduleNotinstalled->name == $value) {
+                    $uninstalled[] = $moduleNotinstalled;
+                }
+            }
+        }
+
+        $moduleListSorted = array(
+            'installed' => $installed,
+            'notInstalled' => $uninstalled
+        );
+
+        $twigParams = array(
+            'currentIndex' => '',
+            'modulesList' => $moduleListSorted
+        );
+
+        if ($request->request->has('admin_list_from_source')) {
+            $twigParams['adminListFromSource'] = $request->request->get('admin_list_from_source');
+        }
+
+        return $this->render('PrestaShopBundle:Admin/Module:tab-modules-list.html.twig', $twigParams);
     }
+
+    protected function getModulesByInstallation($tab_modules_list = null, $install_source_tracking = false)
+    {
+        $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
+        $listModulesPartners = [];
+
+        $all_modules = \Module::getModulesOnDisk(true, $addonsProvider->isAddonsAuthenticated(), $this->getContext()->employee->id);
+        $all_unik_modules = array();
+        $modules_list = array('installed' =>array(), 'not_installed' => array());
+
+        foreach ($all_modules as $mod) {
+            if (!isset($all_unik_modules[$mod->name])) {
+                $all_unik_modules[$mod->name] = $mod;
+            }
+        }
+
+        $all_modules = $all_unik_modules;
+
+        foreach ($all_modules as $module) {
+            if (!isset($tab_modules_list) || in_array($module->name, $tab_modules_list)) {
+                $perm = true;
+                if ($module->id) {
+                    $perm &= \Module::getPermissionStatic($module->id, 'configure');
+                } else {
+                    $id_admin_module = \Tab::getIdFromClassName('AdminModules');
+                    $access = \Profile::getProfileAccess($this->getContext()->employee->id_profile, $id_admin_module);
+                    if (!$access['edit']) {
+                        $perm &= false;
+                    }
+                }
+
+                if (in_array($module->name, $listModulesPartners)) {
+                    $module->type = 'addonsPartner';
+                }
+
+                if ($perm) {
+                    $this->fillModuleData($module, 'array', null, $install_source_tracking);
+                    if ($module->id) {
+                        $modules_list['installed'][] = $module;
+                    } else {
+                        $modules_list['not_installed'][] = $module;
+                    }
+                }
+            }
+        }
+
+        return $modules_list;
+    }
+
+    /**
+     * @param Module $module
+     * @param string $output_type
+     * @param string|null $back
+     * @param string|bool $install_source_tracking
+     */
+    public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
+    {
+        $translator = $this->get('translator');
+        /** @var Module $obj */
+        $obj = null;
+        if ($module->onclick_option) {
+            $obj = new $module->name();
+        }
+        // Fill module data
+        $module->logo = '../../img/questionmark.png';
+
+        if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$module->name
+            .DIRECTORY_SEPARATOR.'logo.gif')) {
+            $module->logo = 'logo.gif';
+        }
+        if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$module->name
+            .DIRECTORY_SEPARATOR.'logo.png')) {
+            $module->logo = 'logo.png';
+        }
+
+        $link_admin_modules = $this->getContext()->link->getAdminLink('AdminModules', true);
+
+        $module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name
+            .'&anchor='.ucfirst($module->name).($install_source_tracking ? '&source='.$install_source_tracking : '');
+        $module->options['update_url'] = $link_admin_modules.'&update='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+        $module->options['uninstall_url'] = $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+
+        // free modules get their source tracking data here
+        $module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back, $install_source_tracking);
+        // pay modules get their source tracking data here
+        if ($install_source_tracking && isset($module->addons_buy_url)) {
+            $module->addons_buy_url .= ($install_source_tracking ? '&utm_term='.$install_source_tracking : '');
+        }
+
+        $module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
+            ((empty($module->confirmUninstall)) ? 'return confirm(\''.$translator->trans('Do you really want to uninstall this module?').'\');' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
+            $obj->onclickOption('uninstall', $module->options['uninstall_url']));
+
+        if ((\Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', \Tools::getValue('modules_list')))) && (int)\Tools::getValue('conf') > 0) {
+            $module->message = $this->_conf[(int)\Tools::getValue('conf')];
+        }
+
+        if ((\Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', \Tools::getValue('modules_list')))) && (int)\Tools::getValue('conf') > 0) {
+            unset($obj);
+        }
+
+        if (!empty($module->image) && false !== strpos($module->image, '../img')) {
+            $module->image_absolute = str_replace('../', _PS_BASE_URL_.__PS_BASE_URI__, $module->image);
+        }
+    }
+
+    /**
+     * Display modules list
+     *
+     * @param Module $module
+     * @param string $output_type (link or select)
+     * @param string|null $back
+     * @param string|bool $install_source_tracking
+     * @return string|array
+     */
+    public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false)
+    {
+        $translator = $this->get('translator');
+        if (!isset($module->enable_device)) {
+            $module->enable_device = \Context::DEVICE_COMPUTER | \Context::DEVICE_TABLET | \Context::DEVICE_MOBILE;
+        }
+
+        $this->translationsTab['confirm_uninstall_popup'] = (isset($module->confirmUninstall) ? $module->confirmUninstall : $translator->trans('Do you really want to uninstall this module?'));
+        if (!isset($this->translationsTab['Disable this module'])) {
+            $this->translationsTab['Disable this module'] = $translator->trans('Disable this module');
+            $this->translationsTab['Enable this module for all shops'] = $translator->trans('Enable this module for all shops');
+            $this->translationsTab['Disable'] = $translator->trans('Disable');
+            $this->translationsTab['Enable'] = $translator->trans('Enable');
+            $this->translationsTab['Disable on mobiles'] = $translator->trans('Disable on mobiles');
+            $this->translationsTab['Disable on tablets'] = $translator->trans('Disable on tablets');
+            $this->translationsTab['Disable on computers'] = $translator->trans('Disable on computers');
+            $this->translationsTab['Display on mobiles'] = $translator->trans('Display on mobiles');
+            $this->translationsTab['Display on tablets'] = $translator->trans('Display on tablets');
+            $this->translationsTab['Display on computers'] = $translator->trans('Display on computers');
+            $this->translationsTab['Reset'] = $translator->trans('Reset');
+            $this->translationsTab['Configure'] = $translator->trans('Configure');
+            $this->translationsTab['Delete'] = $translator->trans('Delete');
+            $this->translationsTab['Install'] = $translator->trans('Install');
+            $this->translationsTab['Uninstall'] = $translator->trans('Uninstall');
+            $this->translationsTab['Would you like to delete the content related to this module ?'] = $translator->trans('Would you like to delete the content related to this module ?');
+            $this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $translator->trans('This action will permanently remove the module from the server. Are you sure you want to do this?');
+            $this->translationsTab['Remove from Favorites'] = $translator->trans('Remove from Favorites');
+            $this->translationsTab['Mark as Favorite'] = $translator->trans('Mark as Favorite');
+        }
+
+        $link_admin_modules = $this->getContext()->link->getAdminLink('AdminModules', true);
+        $modules_options = array();
+
+        $configure_module = array(
+            'href' => $link_admin_modules.'&configure='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
+            'onclick' => $module->onclick_option && isset($module->onclick_option_content['configure']) ? $module->onclick_option_content['configure'] : '',
+            'title' => '',
+            'text' => $this->translationsTab['Configure'],
+            'cond' => $module->id && isset($module->is_configurable) && $module->is_configurable,
+            'icon' => 'wrench',
+        );
+
+        $desactive_module = array(
+            'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab,
+            'onclick' => $module->active && $module->onclick_option && isset($module->onclick_option_content['desactive']) ? $module->onclick_option_content['desactive'] : '' ,
+            'title' => \Shop::isFeatureActive() ? htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']) : '',
+            'text' => $module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable'],
+            'cond' => $module->id,
+            'icon' => 'off',
+        );
+        $link_reset_module = $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab;
+
+        $is_reset_ready = false;
+        if (\Validate::isModuleName($module->name)) {
+            if (method_exists(\Module::getInstanceByName($module->name), 'reset')) {
+                $is_reset_ready = true;
+            }
+        }
+
+        $reset_module = array(
+            'href' => $link_reset_module,
+            'onclick' => $module->onclick_option && isset($module->onclick_option_content['reset']) ? $module->onclick_option_content['reset'] : '',
+            'title' => '',
+            'text' => $this->translationsTab['Reset'],
+            'cond' => $module->id && $module->active,
+            'icon' => 'undo',
+            'class' => ($is_reset_ready ? 'reset_ready' : '')
+        );
+
+        $delete_module = array(
+            'href' => $link_admin_modules.'&delete='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
+            'onclick' => $module->onclick_option && isset($module->onclick_option_content['delete']) ? $module->onclick_option_content['delete'] : 'return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'].'\');',
+            'title' => '',
+            'text' => $this->translationsTab['Delete'],
+            'cond' => true,
+            'icon' => 'trash',
+            'class' => 'text-danger'
+        );
+
+        $display_mobile = array(
+            'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->enable_device & \Context::DEVICE_MOBILE ? 'disable_device' : 'enable_device').'='.\Context::DEVICE_MOBILE.'&tab_module='.$module->tab,
+            'onclick' => '',
+            'title' => htmlspecialchars($module->enable_device & \Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles']),
+            'text' => $module->enable_device & \Context::DEVICE_MOBILE ? $this->translationsTab['Disable on mobiles'] : $this->translationsTab['Display on mobiles'],
+            'cond' => $module->id,
+            'icon' => 'mobile'
+        );
+
+        $display_tablet = array(
+            'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->enable_device & \Context::DEVICE_TABLET ? 'disable_device' : 'enable_device').'='.\Context::DEVICE_TABLET.'&tab_module='.$module->tab,
+            'onclick' => '',
+            'title' => htmlspecialchars($module->enable_device & \Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets']),
+            'text' => $module->enable_device & \Context::DEVICE_TABLET ? $this->translationsTab['Disable on tablets'] : $this->translationsTab['Display on tablets'],
+            'cond' => $module->id,
+            'icon' => 'tablet'
+        );
+
+        $display_computer = array(
+            'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->enable_device & \Context::DEVICE_COMPUTER ? 'disable_device' : 'enable_device').'='.\Context::DEVICE_COMPUTER.'&tab_module='.$module->tab,
+            'onclick' => '',
+            'title' => htmlspecialchars($module->enable_device & \Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers']),
+            'text' => $module->enable_device & \Context::DEVICE_COMPUTER ? $this->translationsTab['Disable on computers'] : $this->translationsTab['Display on computers'],
+            'cond' => $module->id,
+            'icon' => 'desktop'
+        );
+
+        $install = array(
+            'href' => $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name)
+                .(!is_null($back) ? '&back='.urlencode($back) : '').($install_source_tracking ? '&source='.$install_source_tracking : ''),
+            'onclick' => '',
+            'title' => $this->translationsTab['Install'],
+            'text' => $this->translationsTab['Install'],
+            'cond' => $module->id,
+            'icon' => 'plus-sign-alt'
+        );
+
+        $uninstall = array(
+            'href' => $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : ''),
+            'onclick' => (isset($module->onclick_option_content['uninstall']) ? $module->onclick_option_content['uninstall'] : 'return confirm(\''.$this->translationsTab['confirm_uninstall_popup'].'\');'),
+            'title' => $this->translationsTab['Uninstall'],
+            'text' => $this->translationsTab['Uninstall'],
+            'cond' => $module->id,
+            'icon' => 'minus-sign-alt'
+        );
+
+        $remove_from_favorite = array(
+            'href' => '#',
+            'class' => 'action_unfavorite toggle_favorite',
+            'onclick' =>'',
+            'title' => $this->translationsTab['Remove from Favorites'],
+            'text' => $this->translationsTab['Remove from Favorites'],
+            'cond' => $module->id,
+            'icon' => 'star',
+            'data-value' => '0',
+            'data-module' => $module->name
+        );
+
+        $mark_as_favorite = array(
+            'href' => '#',
+            'class' => 'action_favorite toggle_favorite',
+            'onclick' => '',
+            'title' => $this->translationsTab['Mark as Favorite'],
+            'text' => $this->translationsTab['Mark as Favorite'],
+            'cond' => $module->id,
+            'icon' => 'star',
+            'data-value' => '1',
+            'data-module' => $module->name
+        );
+
+        $update = array(
+            'href' => $module->options['update_url'],
+            'onclick' => '',
+            'title' => 'Update it!',
+            'text' => 'Update it!',
+            'icon' => 'refresh',
+            'cond' => $module->id,
+        );
+
+        $divider = array(
+            'href' => '#',
+            'onclick' => '',
+            'title' => 'divider',
+            'text' => 'divider',
+            'cond' => $module->id,
+        );
+
+        if (isset($module->version_addons) && $module->version_addons) {
+            $modules_options[] = $update;
+        }
+
+        if ($module->active) {
+            $modules_options[] = $configure_module;
+            $modules_options[] = $desactive_module;
+            $modules_options[] = $display_mobile;
+            $modules_options[] = $display_tablet;
+            $modules_options[] = $display_computer;
+        } else {
+            $modules_options[] = $desactive_module;
+            $modules_options[] = $configure_module;
+        }
+
+        $modules_options[] = $reset_module;
+
+        if ($output_type == 'select') {
+            if (!$module->id) {
+                $modules_options[] = $install;
+            } else {
+                $modules_options[] = $uninstall;
+            }
+        } elseif ($output_type == 'array') {
+            if ($module->id) {
+                $modules_options[] = $uninstall;
+            }
+        }
+
+        if (isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1) {
+            $remove_from_favorite['style'] = '';
+            $mark_as_favorite['style'] = 'display:none;';
+            $modules_options[] = $remove_from_favorite;
+            $modules_options[] = $mark_as_favorite;
+        } else {
+            $mark_as_favorite['style'] = '';
+            $remove_from_favorite['style'] = 'display:none;';
+            $modules_options[] = $remove_from_favorite;
+            $modules_options[] = $mark_as_favorite;
+        }
+
+        if ($module->id == 0) {
+            $install['cond'] = 1;
+            $install['flag_install'] = 1;
+            $modules_options[] = $install;
+        }
+        $modules_options[] = $divider;
+        $modules_options[] = $delete_module;
+
+        $return = '';
+        foreach ($modules_options as $option_name => $option) {
+            if ($option['cond']) {
+                if ($output_type == 'link') {
+                    $return .= '<li><a class="'.$option_name.' action_module';
+                    $return .= '" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'"';
+                    $return .= ' onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog').'"></i>&nbsp;'.$option['text'].'</a></li>';
+                } elseif ($output_type == 'array') {
+                    if (!is_array($return)) {
+                        $return = array();
+                    }
+
+                    $html = '<a class="';
+
+                    $is_install = isset($option['flag_install']) ? true : false;
+
+                    if (isset($option['class'])) {
+                        $html .= $option['class'];
+                    }
+                    if ($is_install) {
+                        $html .= ' btn btn-success';
+                    }
+                    if (!$is_install && count($return) == 0) {
+                        $html .= ' btn btn-default';
+                    }
+
+                    $html .= '"';
+
+                    if (isset($option['data-value'])) {
+                        $html .= ' data-value="'.$option['data-value'].'"';
+                    }
+
+                    if (isset($option['data-module'])) {
+                        $html .= ' data-module="'.$option['data-module'].'"';
+                    }
+
+                    if (isset($option['style'])) {
+                        $html .= ' style="'.$option['style'].'"';
+                    }
+
+                    $html .= ' href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog').'"></i> '.$option['text'].'</a>';
+                    $return[] = $html;
+                } elseif ($output_type == 'select') {
+                    $return .= '<option id="'.$option_name.'" data-href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
+                }
+            }
+        }
+
+        if ($output_type == 'select') {
+            $return = '<select id="select_'.$module->name.'">'.$return.'</select>';
+        }
+
+        return $return;
+    }
+
 
     /**
      * Controller responsible for importing new module from DropFile zone in BO
