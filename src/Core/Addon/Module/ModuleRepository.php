@@ -41,6 +41,10 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
+    const NATIVE_AUTHOR = "PrestaShop";
+
+    const PARTNER_AUTHOR = "PrestaShop Partners";
+
     /**
      * Admin Module Data Provider
      * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
@@ -214,6 +218,82 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->getAddonsCatalogModules(),
             $this->getModulesOnDisk()
         );
+    }
+
+    /**
+     * @return AddonInterface[] retrieve the list of native modules
+     */
+    public function getNativeModules()
+    {
+        static $nativeModules = null;
+
+        if (null === $nativeModules) {
+            $filter = new AddonListFilter();
+            $filter->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE);
+
+            $nativeModules = $this->getFilteredList($filter);
+
+            foreach ($nativeModules as $key => $module) {
+                $moduleAuthor = $module->attributes->get('author');
+                if (self::NATIVE_AUTHOR !== $moduleAuthor) {
+                    unset($nativeModules[$key]);
+                }
+            }
+        }
+
+        return $nativeModules;
+    }
+
+    /**
+     * @return AddonInterface[] retrieve the list of partners modules
+     */
+    public function getPartnersModules()
+    {
+            $filter = new AddonListFilter();
+            $filter->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE);
+
+            $partnersModules = $this->getFilteredList($filter);
+
+            foreach ($partnersModules as $key => $module) {
+                $moduleAuthor = $module->attributes->get('author');
+                if (self::PARTNER_AUTHOR !== $moduleAuthor) {
+                    unset($partnersModules[$key]);
+                }
+            }
+
+        return $partnersModules;
+    }
+
+    /**
+     * @return AddonInterface[] get the list of installed partners modules
+     */
+    public function getInstalledPartnersModules()
+    {
+        $partnersModules = $this->getPartnersModules();
+
+        foreach ($partnersModules as $key => $module) {
+            if (1 !== $module->database->get('installed')) {
+                unset($partnersModules[$key]);
+            }
+        }
+
+        return $partnersModules;
+    }
+
+    /**
+     * @return AddonInterface[] get the list of not installed partners modules
+     */
+    public function getNotInstalledPartnersModules()
+    {
+        $partnersModules = $this->getPartnersModules();
+
+        foreach ($partnersModules as $key => $module) {
+            if (0 !== $module->database->get('installed')) {
+                unset($partnersModules[$key]);
+            }
+        }
+
+        return $partnersModules;
     }
 
     private function getAddonsCatalogModules()

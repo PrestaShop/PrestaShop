@@ -25,7 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LinkCore
 {
@@ -535,7 +535,7 @@ class LinkCore
                 break;
             case 'AdminModulesSf':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                return $sfRouter->generate('admin_module_catalog', array(), true);
+                return $sfRouter->generate('admin_module_catalog', array(), UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $id_lang = Context::getContext()->language->id;
