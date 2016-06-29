@@ -729,6 +729,13 @@ var form = (function() {
         $('*.has-danger').removeClass('has-danger');
       },
       success: function(response) {
+        // A save of the product is supposed to return the product data.
+        // If we have nothing, we notify the merchant something went wrong
+        if (typeof response.product == 'undefined' || typeof response.product.id == 'undefined') {
+            showErrorMessage(translate_javascripts['Form update errors']);
+            return;
+        }
+
         var id_product = $('#form_id_product').val();
         if (!id_product) {
             $('#form_id_product').val(response.product.id);
