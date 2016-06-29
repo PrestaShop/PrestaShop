@@ -134,7 +134,7 @@ class CategoryCore extends ObjectModel
 
     public function __construct($id_category = null, $id_lang = null, $id_shop = null)
     {
-        parent::__construct($id_category, $id_lang, $id_shop);
+        parent::__construct((int)$id_category, (int)$id_lang, (int)$id_shop);
         $this->id_image = ($this->id && file_exists(_PS_CAT_IMG_DIR_.(int)$this->id.'.jpg')) ? (int)$this->id : false;
         $this->image_dir = _PS_CAT_IMG_DIR_;
     }
