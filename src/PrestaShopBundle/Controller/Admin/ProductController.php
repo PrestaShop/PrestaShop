@@ -318,6 +318,10 @@ class ProductController extends FrameworkBundleAdminController
     public function formAction($id, Request $request)
     {
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $legacyContextService = $this->get('prestashop.adapter.legacy.context');
+        $legacyContext = $legacyContextService->getContext();
         // In case of missing ID in the URL, we may have it in the form data
         if (!$id
         && $request->request->has('form')
@@ -333,11 +337,10 @@ class ProductController extends FrameworkBundleAdminController
             }
         } else {
             $product = $productAdapter->getProductInstance();
+            $product->active = $productProvider->isNewProductDefaultActivated();
+            $product->id_category_default = $legacyContext->shop->id_category;
         }
 
-        $shopContext = $this->get('prestashop.adapter.shop.context');
-        $legacyContextService = $this->get('prestashop.adapter.legacy.context');
-        $legacyContext = $legacyContextService->getContext();
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1 ? true : false;
 
         // Redirect to legacy controller (FIXME: temporary behavior)
