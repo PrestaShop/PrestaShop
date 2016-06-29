@@ -1388,6 +1388,7 @@ var imagesProduct = (function() {
     'updateIdProduct': function(id) {
         id_product = id;
         dropZone.processQueue();
+        dropZone.options.autoProcessQueue = true;
     }
   };
 })();
