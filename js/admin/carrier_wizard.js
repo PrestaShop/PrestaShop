@@ -185,22 +185,22 @@ function displaySummary()
 	$('#summary_name').text($('#name').val());
 
 	// Delay and pricing
-	tmp = summary_translation_meta_informations.replace('@s2', '<strong>' + delay_text + '</strong>');
+	tmp = summary_translation_meta_informations.replace('%2$s', '<strong>' + delay_text + '</strong>');
 	if ($('#is_free_on').attr('checked'))
-		tmp = tmp.replace('@s1', summary_translation_free);
+		tmp = tmp.replace('%1$s', summary_translation_free);
 	else
-		tmp = tmp.replace('@s1', summary_translation_paid);
+		tmp = tmp.replace('%1$s', summary_translation_paid);
 	$('#summary_meta_informations').html(tmp);
 
 	// Tax and calculation mode for the shipping cost
-	tmp = summary_translation_shipping_cost.replace('@s2', '<strong>' + $('#id_tax_rules_group option:selected').text() + '</strong>');
+	tmp = summary_translation_shipping_cost.replace('%2$s', '<strong>' + $('#id_tax_rules_group option:selected').text() + '</strong>');
 
 		if ($('#billing_price').attr('checked'))
-			tmp = tmp.replace('@s1', summary_translation_price);
+			tmp = tmp.replace('%1$s', summary_translation_price);
 		else if ($('#billing_weight').attr('checked'))
-			tmp = tmp.replace('@s1', summary_translation_weight);
+			tmp = tmp.replace('%1$s', summary_translation_weight);
 		else
-			tmp = tmp.replace('@s1', '<strong>' + summary_translation_undefined + '</strong>');
+			tmp = tmp.replace('%1$s', '<strong>' + summary_translation_undefined + '</strong>');
 
 
 
@@ -232,9 +232,9 @@ function displaySummary()
 
 	$('#summary_range').html(
 		$('#summary_range').html()
-		.replace('@s1', '<strong>' + range_inf +' '+ unit + '</strong>')
-		.replace('@s2', '<strong>' + range_sup +' '+ unit + '</strong>')
-		.replace('@s3', '<strong>' + $('#range_behavior option:selected').text().toLowerCase() + '</strong>')
+		.replace('%1$s', '<strong>' + range_inf +' '+ unit + '</strong>')
+		.replace('%2$s', '<strong>' + range_sup +' '+ unit + '</strong>')
+		.replace('%3$s', '<strong>' + $('#range_behavior option:selected').text().toLowerCase() + '</strong>')
 	);
 	if ($('#is_free_on').attr('checked'))
 		$('span.is_free').hide();
