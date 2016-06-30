@@ -900,7 +900,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $product_full['id_customization'] = $id_customization;
             $product_full['is_customizable'] = true;
         } else {
-            $product_full['customizations'] = array();
+            $product_full['customizations'] = array(
+                'fields' => array(),
+            );
             $product_full['id_customization'] = 0;
             $product_full['is_customizable'] = false;
         }
