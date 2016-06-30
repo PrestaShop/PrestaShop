@@ -29,13 +29,13 @@
 			{$shop_address|escape:'html':'UTF-8'}<br />
 
 			{if !empty($shop_phone) OR !empty($shop_fax)}
-				{l s='For more assistance, contact Support:' pdf='true'}<br />
+				{l s='For more assistance, contact Support:' d='Shop.PDF' pdf='true'}<br />
 				{if !empty($shop_phone)}
-					{l s='Tel: %s' sprintf=[$shop_phone|escape:'html':'UTF-8'] pdf='true'}
+					{l s='Tel: %s' sprintf=[$shop_phone|escape:'html':'UTF-8'] d='Shop.PDF' pdf='true'}
 				{/if}
 
 				{if !empty($shop_fax)}
-					{l s='Fax: %s' sprintf=[$shop_fax|escape:'html':'UTF-8'] pdf='true'}
+					{l s='Fax: %s' sprintf=[$shop_fax|escape:'html':'UTF-8'] d='Shop.PDF' pdf='true'}
 				{/if}
 				<br />
 			{/if}

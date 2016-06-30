@@ -27,10 +27,10 @@
 
 	<thead>
 		<tr>
-			<th class="product header small" width="60%">{l s='Product / Reference' pdf='true'}</th>
-			<th class="product header small" width="10%">{l s='Qty' pdf='true'}</th>
-			<th class="product header-right small" width="15%">{l s='Unit price' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' pdf='true'}{else}{l s='(Tax Incl.)' pdf='true'}{/if}</th>
-			<th class="product header-right small" width="15%">{l s='Price' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' pdf='true'}{else}{l s='(Tax Incl.)' pdf='true'}{/if}</th>
+			<th class="product header small" width="60%">{l s='Product / Reference' d='Shop.PDF' pdf='true'}</th>
+			<th class="product header small" width="10%">{l s='Qty' d='Shop.PDF' pdf='true'}</th>
+			<th class="product header-right small" width="15%">{l s='Unit price' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.PDF' pdf='true'}{/if}</th>
+			<th class="product header-right small" width="15%">{l s='Price' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.PDF' pdf='true'}{/if}</th>
 		</tr>
 	</thead>
 
@@ -38,7 +38,7 @@
 		{if !isset($order_details) || count($order_details) == 0}
 			<tr class="product" colspan="4">
 				<td class="product center">
-					{l s='No details' pdf='true'}
+					{l s='No details' d='Shop.PDF' pdf='true'}
 				</td>
 			</tr>
 		{else}
@@ -81,7 +81,7 @@
 										{/if}
 
 										{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
-											{count($customization.datas[Product::CUSTOMIZE_FILE])} {l s='image(s)' pdf='true'}
+											{count($customization.datas[Product::CUSTOMIZE_FILE])} {l s='image(s)' d='Shop.PDF' pdf='true'}
 										{/if}
 
 									{/foreach}

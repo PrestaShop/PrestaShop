@@ -22,14 +22,14 @@
 * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 *}
-{l s='Taxes:' pdf='true'}<br/>
+{l s='Taxes:' d='Shop.PDF' pdf='true'}<br/>
 
 <table id="tax-tab" width="100%">
 	<thead>
 		<tr>
-			<th class="header-right small">{l s='Base TE' pdf='true'}</th>
-			<th class="header-right small">{l s='Tax Rate' pdf='true'}</th>
-			<th class="header-right small">{l s='Tax Value' pdf='true'}</th>
+			<th class="header-right small">{l s='Base TE' d='Shop.PDF' pdf='true'}</th>
+			<th class="header-right small">{l s='Tax Rate' d='Shop.PDF' pdf='true'}</th>
+			<th class="header-right small">{l s='Tax Value' d='Shop.PDF' pdf='true'}</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -47,7 +47,7 @@
 		{if !$has_line}
 		<tr>
 			<td class="white center" colspan="3">
-				{l s='No taxes' pdf='true'}
+				{l s='No taxes' d='Shop.PDF' pdf='true'}
 			</td>
 		</tr>
 		{/if}

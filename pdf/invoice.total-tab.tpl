@@ -26,7 +26,7 @@
 
 	<tr>
 		<td class="grey" width="70%">
-			{l s='Total Products' pdf='true'}
+			{l s='Total Products' d='Shop.PDF' pdf='true'}
 		</td>
 		<td class="white" width="30%">
 			{displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
@@ -37,7 +37,7 @@
 
 		<tr>
 			<td class="grey" width="70%">
-				{l s='Total Discounts' pdf='true'}
+				{l s='Total Discounts' d='Shop.PDF' pdf='true'}
 			</td>
 			<td class="white" width="30%">
 				- {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
@@ -48,13 +48,13 @@
 	{if !$order->isVirtual()}
 	<tr>
 		<td class="grey" width="70%">
-			{l s='Shipping Costs' pdf='true'}
+			{l s='Shipping Costs' d='Shop.PDF' pdf='true'}
 		</td>
 		<td class="white" width="30%">
 			{if $footer.shipping_tax_excl > 0}
 				{displayPrice currency=$order->id_currency price=$footer.shipping_tax_excl}
 			{else}
-				{l s='Free Shipping' pdf='true'}
+				{l s='Free Shipping' d='Shop.PDF' pdf='true'}
 			{/if}
 		</td>
 	</tr>
@@ -63,7 +63,7 @@
 	{if $footer.wrapping_tax_excl > 0}
 		<tr>
 			<td class="grey">
-				{l s='Wrapping Costs' pdf='true'}
+				{l s='Wrapping Costs' d='Shop.PDF' pdf='true'}
 			</td>
 			<td class="white">{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_excl}</td>
 		</tr>
@@ -71,7 +71,7 @@
 
 	<tr class="bold">
 		<td class="grey">
-			{l s='Total (Tax excl.)' pdf='true'}
+			{l s='Total (Tax excl.)' d='Shop.PDF' pdf='true'}
 		</td>
 		<td class="white">
 			{displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
@@ -80,7 +80,7 @@
 	{if $footer.total_taxes > 0}
 	<tr class="bold">
 		<td class="grey">
-			{l s='Total Tax' pdf='true'}
+			{l s='Total Tax' d='Shop.PDF' pdf='true'}
 		</td>
 		<td class="white">
 			{displayPrice currency=$order->id_currency price=$footer.total_taxes}
@@ -89,7 +89,7 @@
 	{/if}
 	<tr class="bold big">
 		<td class="grey">
-			{l s='Total' pdf='true'}
+			{l s='Total' d='Shop.PDF' pdf='true'}
 		</td>
 		<td class="white">
 			{displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}

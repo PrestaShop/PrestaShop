@@ -31,7 +31,7 @@
 		<td colspan="6" class="left">
 			<table id="note-tab" style="width: 100%">
 				<tr>
-					<td class="grey">{l s='Note' pdf='true'}</td>
+					<td class="grey">{l s='Note' d='Shop.PDF' pdf='true'}</td>
 				</tr>
 				<tr>
 					<td class="note">{$order_invoice->note|nl2br}</td>
