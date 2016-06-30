@@ -1932,8 +1932,8 @@ class AdminTranslationsControllerCore extends AdminController
 
         //Parse SF2/Twig files
         $regexSf2Tpl = [
-            '/trans\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?\{(.*)\})(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
-            '/transchoice\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?(.*))(,\s*?\{(.*)\})(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
+            '/trans\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?[\{\[](.*)[\}\]])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
+            '/transchoice\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?(.*))(,\s*?[\{\[](.*)[\}\]])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
         ];
 
         foreach ($files_per_directory['tpl-sf2'] as $file) {
