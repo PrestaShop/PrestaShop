@@ -122,7 +122,7 @@
 				{if count($quick_access) >= 0}
 					<ul id="header_quick">
 						<li class="dropdown">
-							<a href="javascript:void(0)" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <i class="icon-caret-down"></i></a>
+							<a href="javascript:void(0)" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access' d='Admin.Navigation.Header'} <i class="icon-caret-down"></i></a>
 							<ul class="dropdown-menu">
 								{foreach $quick_access as $quick}
 									<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
@@ -231,12 +231,12 @@
 							</li>
 							<li class="text-center text-nowrap">{$employee->firstname} {$employee->lastname}</li>
 							<li class="divider"></li>
-							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences' d='Admin.Navigation.Header'}</a></li>
 							{if $host_mode}
-							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account'}</a></li>
+							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
 							{/if}
 							<li class="divider"></li>
-							<li><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
+							<li><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
 						</ul>
 					</li>
 				</ul>
