@@ -41,7 +41,7 @@ $(document).ready(function() {
 });
 </script>
 {assign var=order_state value=$supply_order_state->name[$employee->id_lang]|regex_replace:"/[^A-Za-z_ \t]/":""}
-<div class="alert alert-warning"><strong>{l s='Current order status: %s'|sprintf:$order_state}</strong></div>
+<div class="alert alert-warning"><strong>{l s='Current order status: %s' sprintf=$order_state}</strong></div>
 <div class="alert alert-info">{l s='Choose the new status for your order'}</div>
 <div class="form-horizontal">
 	<input type="hidden" name="id_supply_order" id="id_supply_order" value="{$supply_order->id}">

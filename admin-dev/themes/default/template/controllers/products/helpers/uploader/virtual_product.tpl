@@ -133,7 +133,7 @@
 			$('#{$id|escape:'html':'UTF-8'}').closest('form').on('submit', function(e) {
 				if ($('#{$id|escape:'html':'UTF-8'}')[0].files.length > {$id|escape:'html':'UTF-8'}_max_files) {
 					e.preventDefault();
-					alert('{l s='You can upload a maximum of %s files'|sprintf:$max_files}');
+					alert('{l s='You can upload a maximum of %s files' sprintf=$max_files}');
 				}
 			});
 		}

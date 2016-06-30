@@ -137,7 +137,7 @@
 			if (typeof {$id|escape:'html':'UTF-8'}_max_files !== 'undefined') {
 				if ({$id|escape:'html':'UTF-8'}_total_files >= {$id|escape:'html':'UTF-8'}_max_files) {
 					e.preventDefault();
-					alert('{l s='You can upload a maximum of %s files'|sprintf:$max_files}');
+					alert('{l s='You can upload a maximum of %s files' sprintf=$max_files}');
 					return;
 				}
 			}
