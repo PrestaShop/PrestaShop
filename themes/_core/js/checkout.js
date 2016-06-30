@@ -87,13 +87,13 @@ function setupCheckoutScripts () {
 function changeCurrentCheckoutStep() {
   $('.checkout-step').off('click');
 
-  $('.-js-current').prevAll().add($('#checkout-personal-information-step.-js-current').nextAll()).on('click', function() {
+  $('.-js-current').prevAll().add($('#checkout-personal-information-step.-js-current').nextAll()).on('click', function(event) {
     $('.-js-current, .-current').removeClass('-js-current -current');
     $(event.target).closest('.checkout-step').toggleClass('-js-current');
     prestashop.emit('change current checkout step');
   });
 
-  $('.-js-current:not(#checkout-personal-information-step)').nextAll().on('click', function() {
+  $('.-js-current:not(#checkout-personal-information-step)').nextAll().on('click', function(event) {
     $('.-js-current button.continue').click();
     prestashop.emit('change current checkout step');
   });
