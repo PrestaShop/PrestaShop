@@ -2,7 +2,7 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 
 $(document).ready(function () {
-  $('body').on('change', '.product-variants [data-product-attribute], #quantity_wanted', function () {
+  $('body').on('change', '.product-variants [data-product-attribute]', function () {
     $("input[name$='refresh']").click();
   });
 
