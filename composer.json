@@ -42,6 +42,7 @@
     "incenteev/composer-parameter-handler": "~2.0",
     "curl/curl": "1.2.1",
     "ircmaxell/password-compat": "1.0.4",
+    "ircmaxell/random-lib": "*",
     "shudrum/array-finder": "1.1.0",
     "phpoffice/phpexcel": "1.8",
     "prestashop/smarty": "dev-master",
@@ -136,6 +137,7 @@
   },
   "scripts": {
     "post-install-cmd": [
+      "PrestaShop\\PrestaShop\\Core\\Migrate\\Migrate::migrateSettingsFile",
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
@@ -145,6 +147,7 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
     "post-update-cmd": [
+      "PrestaShop\\PrestaShop\\Core\\Migrate\\Migrate::migrateSettingsFile",
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",

@@ -1,4 +1,7 @@
 <?php
+
+use PrestaShop\PrestaShop\Core\Migrate\Migrate;
+
 /**
  * 2007-2015 PrestaShop
  *
@@ -59,14 +62,6 @@ define('INSTALL_PATH', dirname(dirname(__FILE__)).'/');
 
 require_once(INSTALL_PATH . 'install_version.php');
 
-define('SETTINGS_FILE', INSTALL_PATH . '/../config/settings.inc.php');
-
-if (file_exists(SETTINGS_FILE)) {
-    include_once(SETTINGS_FILE);
-} else {
-    die('settings.inc.php is missing (error code 30).');
-}
-
 // need for upgrade before 1.5
 if (!defined('__PS_BASE_URI__')) {
     define('__PS_BASE_URI__', str_replace('//', '/', '/'.trim(preg_replace('#/(install(-dev)?/upgrade)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/').'/'));
@@ -78,6 +73,9 @@ if (!defined('_THEME_NAME_')) {
 }
 
 require_once(dirname(__FILE__).'/../init.php');
+Migrate::migrateSettingsFile();
+require_once(_PS_CONFIG_DIR_.'bootstrap.php');
+
 
 // set logger
 require_once(_PS_INSTALL_PATH_.'upgrade/classes/AbstractLogger.php');
