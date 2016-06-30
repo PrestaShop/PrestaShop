@@ -22,21 +22,21 @@
 * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 *}
-{l s='Products ordered:' pdf='true'}<br/>
+{l s='Products ordered:' d='Shop.PDF' pdf='true'}<br/>
 
 <table class="product small" width="100%" cellpadding="4" cellspacing="0">
 
 	<thead>
 	<tr>
-		<th class="product header small" width="14%">{l s='Reference' pdf='true'}</th>
-		<th class="product header small" width="21%">{l s='Designation' pdf='true'}</th>
-		<th class="product header small" width="5%">{l s='Qty' pdf='true'}</th>
-		<th class="product header small" width="10%">{l s='Unit Price TE' pdf='true'}</th>
-		<th class="product header small" width="11%">{l s='Total TE' pdf='true'} <br /> {l s='Before discount' pdf='true'}</th>
-		<th class="product header small" width="9%">{l s='Discount Rate' pdf='true'}</th>
-		<th class="product header small" width="11%">{l s='Total TE' pdf='true'} <br /> {l s='After discount' pdf='true'}</th>
-		<th class="product header small" width="9%">{l s='Tax rate' pdf='true'}</th>
-		<th class="product header small" width="10%">{l s='Total TI' pdf='true'}</th>
+		<th class="product header small" width="14%">{l s='Reference' d='Shop.PDF' pdf='true'}</th>
+		<th class="product header small" width="21%">{l s='Designation' d='Shop.PDF' pdf='true'}</th>
+		<th class="product header small" width="5%">{l s='Qty' d='Shop.PDF' pdf='true'}</th>
+		<th class="product header small" width="10%">{l s='Unit Price TE' d='Shop.PDF' pdf='true'}</th>
+		<th class="product header small" width="11%">{l s='Total TE' pdf='true'} <br /> {l s='Before discount' d='Shop.PDF' pdf='true'}</th>
+		<th class="product header small" width="9%">{l s='Discount Rate' d='Shop.PDF' pdf='true'}</th>
+		<th class="product header small" width="11%">{l s='Total TE' pdf='true'} <br /> {l s='After discount' d='Shop.PDF' pdf='true'}</th>
+		<th class="product header small" width="9%">{l s='Tax rate' d='Shop.PDF' pdf='true'}</th>
+		<th class="product header small" width="10%">{l s='Total TI' d='Shop.PDF' pdf='true'}</th>
 	</tr>
 	</thead>
 

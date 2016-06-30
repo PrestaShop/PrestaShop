@@ -26,9 +26,9 @@
 	
 	<thead>
 		<tr>
-			<th class="product header small" width="25%">{l s='Reference' pdf='true'}</th>
-			<th class="product header small" width="65%">{l s='Product' pdf='true'}</th>
-			<th class="product header small" width="10%">{l s='Qty' pdf='true'}</th>
+			<th class="product header small" width="25%">{l s='Reference' d='Shop.PDF' pdf='true'}</th>
+			<th class="product header small" width="65%">{l s='Product' d='Shop.PDF' pdf='true'}</th>
+			<th class="product header small" width="10%">{l s='Qty' d='Shop.PDF' pdf='true'}</th>
 		</tr>
 	</thead>
 
@@ -81,7 +81,7 @@
 									{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
 										<tr>
 											<td style="width: 30%;">
-												{$customization_infos.name|string_format:{l s='%s:' pdf='true'}}
+												{$customization_infos.name|string_format:{l s='%s:' d='Shop.PDF' pdf='true'}}
 											</td>
 											<td>{$customization_infos.value}</td>
 										</tr>
@@ -92,7 +92,7 @@
 							{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
 								<table style="width: 100%;">
 									<tr>
-										<td style="width: 30%;">{l s='image(s):' pdf='true'}</td>
+										<td style="width: 30%;">{l s='image(s):' d='Shop.PDF' pdf='true'}</td>
 										<td>{count($customization.datas[Product::CUSTOMIZE_FILE])}</td>
 									</tr>
 								</table>

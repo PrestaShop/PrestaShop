@@ -26,18 +26,18 @@
 <!--  TAX DETAILS -->
 {if $tax_exempt}
 
-	{l s='Exempt of VAT according to section 259B of the General Tax Code.' pdf='true'}
+	{l s='Exempt of VAT according to section 259B of the General Tax Code.' d='Shop.PDF' pdf='true'}
 
 {elseif (isset($tax_breakdowns) && $tax_breakdowns)}
 	<table id="tax-tab" width="100%">
 		<thead>
 			<tr>
-				<th class="header small">{l s='Tax Detail' pdf='true'}</th>
-				<th class="header small">{l s='Tax Rate' pdf='true'}</th>
+				<th class="header small">{l s='Tax Detail' d='Shop.PDF' pdf='true'}</th>
+				<th class="header small">{l s='Tax Rate' d='Shop.PDF' pdf='true'}</th>
 				{if $display_tax_bases_in_breakdowns}
-					<th class="header small">{l s='Base price' pdf='true'}</th>
+					<th class="header small">{l s='Base price' d='Shop.PDF' pdf='true'}</th>
 				{/if}
-				<th class="header-right small">{l s='Total Tax' pdf='true'}</th>
+				<th class="header-right small">{l s='Total Tax' d='Shop.PDF' pdf='true'}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -55,13 +55,13 @@
 					<td class="white">
 						{if !$label_printed}
 							{if $label == 'product_tax'}
-								{l s='Products' pdf='true'}
+								{l s='Products' d='Shop.PDF' pdf='true'}
 							{elseif $label == 'shipping_tax'}
-								{l s='Shipping' pdf='true'}
+								{l s='Shipping' d='Shop.PDF' pdf='true'}
 							{elseif $label == 'ecotax_tax'}
-								{l s='Ecotax' pdf='true'}
+								{l s='Ecotax' d='Shop.PDF' pdf='true'}
 							{elseif $label == 'wrapping_tax'}
-								{l s='Wrapping' pdf='true'}
+								{l s='Wrapping' d='Shop.PDF' pdf='true'}
 							{/if}
 							{assign var=label_printed value=true}
 						{/if}
@@ -89,7 +89,7 @@
 		{if !$has_line}
 		<tr>
 			<td class="white center" colspan="{if $display_tax_bases_in_breakdowns}4{else}3{/if}">
-				{l s='No taxes' pdf='true'}
+				{l s='No taxes' d='Shop.PDF' pdf='true'}
 			</td>
 		</tr>
 		{/if}
