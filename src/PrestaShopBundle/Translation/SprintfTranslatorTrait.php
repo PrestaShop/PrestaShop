@@ -27,18 +27,40 @@
 
 namespace PrestaShopBundle\Translation;
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator as BaseTranslator;
-
-class Translator extends BaseTranslator
+trait SprintfTranslatorTrait
 {
-    use SprintfTranslatorTrait;
+    /**
+     * {@inheritdoc}
+     */
+    public function trans($id, array $parameters = array(), $domain = null, $locale = null)
+    {
+        if (!$this->isSprintfString($id) || empty($parameters)) {
+            return parent::trans($id, $parameters, $domain, $locale);
+        }
+
+        return vsprintf(parent::trans($id, array(), $domain, $locale), $parameters);
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function addResource($format, $resource, $locale, $domain = null)
+    public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
-        parent::addResource($format, $resource, $locale, $domain);
-        parent::addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
+        if (!$this->isSprintfString($id)) {
+            return parent::transChoice($id, $number, $parameters, $domain, $locale);
+        }
+
+        return vsprintf(parent::transChoice($id, $number, array(), $domain, $locale), $parameters);
+    }
+
+    /**
+     *
+     * @param  string  $string
+     * @return boolean
+     */
+    private final function isSprintfString($string)
+    {
+        return (bool) preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string)
+            && !(bool) preg_match_all('/%\w+%/', $string);
     }
 }

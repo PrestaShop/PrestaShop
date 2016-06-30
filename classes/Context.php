@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
+use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 
 /**
@@ -83,7 +83,7 @@ class ContextCore
 
     /** @var int */
     public $mode;
-    
+
     /** @var Translator */
     protected $translator;
 
@@ -332,9 +332,9 @@ class ContextCore
         $this->cookie->write();
         $this->cart->autosetProductAddress();
     }
-    
+
     /**
-     * 
+     *
      * @return Translator
      */
     public function getTranslator()
@@ -343,7 +343,7 @@ class ContextCore
             $this->translator = new Translator($this->language->locale, null, _PS_CACHE_DIR_, false);
             $this->translator->addLoader('xlf', new XliffFileLoader);
             $this->translator->addLoader('db', new SqlTranslationLoader);
-            
+
             $finder = Finder::create()
                 ->files()
                 ->filter(function (\SplFileInfo $file) {
@@ -359,7 +359,7 @@ class ContextCore
                 $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
             }
         }
-        
+
         return $this->translator;
     }
 }
