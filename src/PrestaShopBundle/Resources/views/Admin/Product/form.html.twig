@@ -114,12 +114,11 @@
                     <div id="product-images-container" class="m-b-2">
                       <div id="product-images-dropzone" class="panel dropzone ui-sortable" url-upload="{{ path('admin_product_image_upload') }}" url-position="{{ path('admin_product_image_positions') }}" url-update="{{ path('admin_product_image_form') }}" url-delete="{{ path('admin_product_image_delete') }}" data-max-size="{{ 'PS_ATTACHMENT_MAXIMUM_SIZE'|configuration }}">
                         <div id="product-images-dropzone-error" class="text-danger"></div>
+                        <div class="dz-default dz-message openfilemanager"><i class="material-icons">add_a_photo</i><br/>{{js_translatable['Drop images here']}}<br/>{{js_translatable['or select files']}}<br/><small>{{js_translatable['files recommandations']}}<br/> {{js_translatable['files recommandations2']}}</small></div>
                         {% if form.step1.vars.value.images is defined %}
-                          {% if form.step1.vars.value.images|length > 0 %}
                             <div class="dz-preview disabled openfilemanager">
                               <div><span>+</span></div>
                             </div>
-                          {% endif %}
                           {% for image in form.step1.vars.value.images %}
                             <div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle" data-id="{{ image.id }}">
                               <div class="dz-image bg" style="background-image: url('{{ image.base_image_url }}-home_default.{{ image.format }}');"></div>

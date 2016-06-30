@@ -1233,19 +1233,20 @@ var imagesProduct = (function() {
         paramName: 'form[file]',
         maxFilesize: dropZoneElem.attr('data-max-size'),
         addRemoveLinks: true,
-        clickable: true,
-        thumbnailWidth: 130,
+        clickable: ".openfilemanager",
+        thumbnailWidth: 250,
         thumbnailHeight: null,
         acceptedFiles: 'image/*',
-        dictDefaultMessage: '<i class="material-icons">perm_media</i><br/>' + translate_javascripts['Drop images here'] + '<br/>' + translate_javascripts['or select files'] + '<br/><small>' + translate_javascripts['files recommandations'] + '<br/>' + translate_javascripts['files recommandations2'] + '</small></div>',
         dictRemoveFile: translate_javascripts['Delete'],
         dictFileTooBig: translate_javascripts['ToLargeFile'],
         dictCancelUpload: translate_javascripts['Delete'],
         sending: function(file, response) {
+          dropZoneElem.find('.dz-preview.openfilemanager').show();
           $('#product-images-container .dropzone-expander').addClass('expand').click();
           errorElem.html('');
         },
         queuecomplete: function() {
+          dropZoneElem.find('.dz-preview.openfilemanager').show();
           dropZoneElem.sortable('enable');
         },
         processing: function() {
@@ -1290,13 +1291,11 @@ var imagesProduct = (function() {
         },
         init: function() {
           //if already images uploaded, mask drop file message
-          if (dropZoneElem.find('.dz-preview').length) {
+          if (dropZoneElem.find('.dz-preview:not(.openfilemanager)').length) {
             dropZoneElem.addClass('dz-started');
+          } else {
+            dropZoneElem.find('.dz-preview.openfilemanager').hide();
           }
-
-          dropZoneElem.find('.openfilemanager').click(function() {
-            dropZoneElem.click();
-          });
 
           //init sortable
           dropZoneElem.sortable({
@@ -1417,6 +1416,10 @@ var formImagesProduct = (function() {
               formZoneElem.find('.close').click();
               dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
               combinations.refreshImagesCombination();
+              if (!dropZoneElem.find('.dz-preview:not(.openfilemanager)').length) {
+                dropZoneElem.removeClass('dz-started');
+                dropZoneElem.find('.dz-preview.openfilemanager').hide();
+              }
             }
           });
         }
