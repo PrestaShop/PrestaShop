@@ -25,6 +25,9 @@
 /*** HEADER ***/
 #header {
   background: white;
+  .logo {
+    max-width: em(200px);
+  }
   .header-nav {
     border-bottom: $gray-light 2px solid;
     max-height: 50px;
@@ -107,16 +110,19 @@
       color: $gray;
       a {
         color: $gray;
+        &:hover {
+          color: $brand-primary;
+        }
       }
     }
   }
   .header-top {
-    padding-bottom: $small-space;
+    padding-bottom: em(20px);
     .menu {
+      margin-left: em(-30px);
       > ul {
-        display: table;
         > li {
-          display: table-cell;
+          float: left;
         }
       }
     }
@@ -248,6 +254,9 @@
   }
 }
 @include media-breakpoint-down(md) {
+  #header .logo {
+    width: auto;
+  }
   #products .product-miniature,
   .featured-products .product-miniature {
     margin: 0 auto;

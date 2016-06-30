@@ -38,6 +38,7 @@
   color: $gray-dark;
   .select-title {
     display: inline-block;
+    margin-left: em(6px);
     width: em(270px);
     color: $gray-darker;
     background: white;
@@ -67,8 +68,9 @@
   @include box-shadow;
   margin: $medium-space 0;
   background: white;
-  padding: em(20px);
+  padding: em(25px) em(20px);
   .facet {
+    padding-top: $small-space;
     .facet-title {
       color: $gray;
     }
@@ -88,6 +90,9 @@
 }
 .pagination {
   width: 100%;
+  > div:first-child{
+    line-height: em(40px);
+  }
   .page-list {
     background: white;
     padding: em(10px) em(20px);
@@ -121,6 +126,7 @@
     font-size: em(15px);
     display: inline;
     margin-right: $small-space;
+    font-weight: 600;
   }
   ul {
     display: inline;
@@ -146,7 +152,7 @@
 .block-categories {
   @include box-shadow;
   background: white;
-  padding: $small-space;
+  padding: em(25px) em(20px);
   .category-sub-menu {
     margin-top: $small-space;
     .category-sub-link{
@@ -154,13 +160,17 @@
     }
     li{
       position: relative;
+      &[data-depth="1"]{
+        margin-bottom: $small-space;
+      }    
     }
     li[data-depth="0"] > a {
       font-weight: 600;
       border-bottom: $gray-light 2px solid;
       width: 100%;
       display: inline-block;
-      margin: em(5px) 0;
+      margin: 0.3125em 0 0;
+      padding-bottom: em(3px);
     }
     li:not([data-depth="0"]):not([data-depth="1"]) {
       padding-left: em(5px);
@@ -203,6 +213,7 @@
     .arrow-down {
       font-size: em(14px);
       cursor: pointer;
+      margin-left: 2px;
       &:hover {
         color: $brand-primary;
       }

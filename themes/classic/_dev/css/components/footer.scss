@@ -16,13 +16,6 @@
 }
 .linklist {
   padding-top: $medium-space;
-  li a{
-    color: $gray;
-    cursor: pointer;
-    &:hover {
-      color: $brand-primary;
-    }
-  }
   .blockcms-title a{
     color:$gray-darker;
   }
@@ -62,6 +55,10 @@
 }
 .facebook {
   background-image: url(../img/facebook.svg);
+  &::before{
+    content:"";
+    background-image: url(../img/facebook-blue.svg);
+  }
   &.icon-gray {
     background-image: url(../img/facebook-gray.svg);
     &:hover {
@@ -71,6 +68,10 @@
 }
 .twitter {
   background-image: url(../img/twitter.svg);
+  &::before{
+    content:"";
+    background-image: url(../img/twitter-blue.svg);
+  }
   &.icon-gray {
     background-image: url(../img/twitter-gray.svg);
     &:hover {
@@ -86,6 +87,10 @@
 }
 .googleplus {
   background-image: url(../img/gplus.svg);
+  &::before{
+    content:"";
+    background-image: url(../img/gplus-blue.svg);
+  }
   &.icon-gray {
     background-image: url(../img/gplus-gray.svg);
     &:hover {
@@ -100,6 +105,10 @@
 }
 .pinterest {
   background-image: url(../img/pinterest.svg);
+  &::before{
+    content:"";
+    background-image: url(../img/pinterest-blue.svg);
+  }
   &.icon-gray {
     background-image: url(../img/pinterest-gray.svg);
     &:hover {
@@ -115,5 +124,16 @@
 }
 .footer-container {
   margin-top: $medium-space;
-  @include box-shadow;
+  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.3);
+  li{
+    margin-bottom: em(5px);
+  }
+  li a{
+    color: $gray-dark;
+    cursor: pointer;
+    font-size: em(14px);
+    &:hover {
+      color: $brand-primary;
+    }
+  }
 }

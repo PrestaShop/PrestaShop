@@ -73,7 +73,7 @@
       {/block}
 
     </div>
-    <div class="highlighted-informations">
+    <div class="highlighted-informations{if !$product.main_variants} no-variants{/if}">
       <a
         href="#"
         class="quick-view"
@@ -81,8 +81,11 @@
       >
         <i class="material-icons search">&#xE8B6;</i> {l s='Quick view' d='Shop.Theme.Actions'}
       </a>
+
       {block name='product_variants'}
-        {include file='catalog/_partials/variant-links.tpl' variants=$product.main_variants}
+        {if $product.main_variants}
+          {include file='catalog/_partials/variant-links.tpl' variants=$product.main_variants}
+        {/if}
       {/block}
     </div>
 

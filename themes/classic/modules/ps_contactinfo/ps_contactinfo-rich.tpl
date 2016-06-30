@@ -53,10 +53,10 @@
     <hr/>
     <div class="block">
       <div class="icon"><i class="material-icons">&#xE158;</i></div>
-      <div class="data">
+      <div class="data email">
         {l s='Email us:' d='Shop.Theme'}<br/>
-        <a href="mailto:{$contact_infos.email}">{$contact_infos.email}</a>
        </div>
+       <a href="mailto:{$contact_infos.email}">{$contact_infos.email}</a>
     </div>
   {/if}
 </div>

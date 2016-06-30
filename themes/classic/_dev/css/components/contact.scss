@@ -23,6 +23,9 @@
       font-size: rem(14px);
       width: auto;
       overflow: hidden;
+      &.email{
+        padding-top: rem(6px);
+      }
     }
   }
 }

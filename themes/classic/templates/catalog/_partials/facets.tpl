@@ -1,5 +1,5 @@
 <div id="search_filters">
-  <h4 class="h5 facets-title">{l s='Filter By' d='Shop.Theme.Actions'}</h4>
+  <h4 class="text-uppercase h6 ">{l s='Filter By' d='Shop.Theme.Actions'}</h4>
   {foreach from=$facets item="facet"}
     {if $facet.displayed}
       <section class="facet">

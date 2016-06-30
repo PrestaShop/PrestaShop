@@ -4,13 +4,18 @@
   }
   .modal-content {
     background: $gray-light;
+    min-height: em(450px);
   }
   .modal-header {
     border: none;
     padding: $small-space;
   }
+  .modal-body {
+    min-height: em(380px);
+  }
   .modal-footer {
     margin-top: $extra-large-space;
+    border-top: 1px solid rgba($gray,.3);
   }
   .layer {
     display: none;
@@ -23,25 +28,28 @@
     position: absolute;
     z-index: 1;
     min-height: em(350px);
-    .product-images > li.thumb-container > .thumb{
+    .product-images > li.thumb-container > .thumb {
       width: 79px;
+      margin-bottom: em(13px);
+      background: white;
     }
   }
-  .mask{
+  .mask {
     width: 33%;
-    height: em(350px);
+    height: em(360px);
     overflow: hidden;
+    margin-left: $small-space;
   }
   .arrows {
     position: absolute;
     top: 0;
-    height: em(350px);
+    height: em(360px);
     right: 80px;
     z-index: 0;
     .arrow-up {
       margin-top: -50px;
       cursor: pointer;
-      opacity: .2;
+      opacity: 0.2;
     }
     .arrow-down {
       position: absolute;

@@ -17,7 +17,7 @@
     }
   }
   li .block-reassurance-item{
-    padding: em(15px);
+    padding: 1rem 1.5rem;
   }
   #product &{
     @include box-shadow;
@@ -27,4 +27,3 @@
     }
   }
 }
-

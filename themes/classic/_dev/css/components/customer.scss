@@ -42,10 +42,19 @@
     }
   }
 }
-#authentication{
-  .tooltip.tooltip-bottom{
+#authentication {
+  .tooltip.tooltip-bottom {
     padding: 0;
     margin: 0;
+  }
+}
+#identity,
+#authentication {
+  .radio-inline {
+    padding: 0;
+    .custom-radio {
+      margin-right: 0;
+    }
   }
 }
 /*** Most of the customer accpunt pages ***/
@@ -61,6 +70,7 @@
       text-align: center;
       font-size: rem(14px);
       margin-top: rem(16px);
+      padding-bottom: rem(15px);
     }
     .no-account {
       text-align: center;
@@ -127,7 +137,7 @@
       span {
         font-size: em(16px);
         vertical-align: middle;
-        margin-top: $small-space
+        margin-top: $small-space;
       }
     }
   }
@@ -193,7 +203,7 @@
 }
 /*** Order return page ***/
 #order-return-infos {
-  .thead-default th{
+  .thead-default th {
     color: $gray-darker;
   }
 }
@@ -211,12 +221,13 @@
       color: $gray-dark;
       width: 100%;
       margin-bottom: rem(30px);
+      padding: 1.6rem;
       i {
         display: block;
-        font-size: rem(48px);
+        font-size: 2.6rem;
         width: 100%;
         color: $gray-darker;
-        padding-bottom: rem(24px);
+        padding-bottom: 3.4rem;
       }
       &:hover {
         color: $gray-darker;

@@ -4,6 +4,8 @@
     input[type=text] {
       &:focus {
         outline: 3px $brand-primary solid;
+        color: $gray-darker;
+        background: white;
         + button .search {
           color: $brand-primary;
         }
@@ -23,7 +25,7 @@
       background: none;
       border: none;
       bottom: em(5px);
-      right: em(10px);
+      right: em(2px);
       font-size: 25px;
       color: $gray-dark;
       .search:hover {

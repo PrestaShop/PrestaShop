@@ -13,6 +13,9 @@
       }
       .divide-left {
         border-left: $gray-light 1px solid;
+        tr{
+          height: em(25px);
+        }
       }
       .store-description{
         @include flex(0 0 50%);

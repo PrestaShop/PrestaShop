@@ -72,6 +72,9 @@ a:hover {
   font-weight: $headings-font-weight;
   color: $gray-darker;
 }
+.h6{
+  font-size: em(15px);
+}
 .btn-primary,
 .btn-secondary {
   @include box-shadow;
@@ -241,6 +244,7 @@ label {
     cursor: pointer;
     position: absolute;
     + span {
+      margin-right: 3px;
       display: inline-block;
       width: em(15px);
       height: em(15px);
@@ -254,11 +258,15 @@ label {
         color: $gray-darker;
       }
     }
+
     &:checked + span {
       .checkbox-checked {
         display: block;
       }
     }
+  }
+  label{
+    text-align: left;
   }
 }
 .text-muted {

@@ -119,7 +119,7 @@
 	(0, _expose$ExposeJQueryJquery2['default'])(document).ready(function () {
 	  var dropDownEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-dropdown');
 	  var form = new _componentsForm2['default']();
-	  var topMenuEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-top-menu ul');
+	  var topMenuEl = (0, _expose$ExposeJQueryJquery2['default'])('.js-top-menu ul[data-depth="0"]');
 	  var dropDown = new _componentsDropDown2['default'](dropDownEl);
 	  var topMenu = new _componentsTopMenu2['default'](topMenuEl);
 	  var productMinitature = new _componentsProductMiniature2['default']();
@@ -16491,14 +16491,15 @@
 	    };
 	    _jquery2['default'].post(_prestashop2['default'].urls.pages.product, data, null, 'json').then(function (resp) {
 	      (0, _jquery2['default'])('body').append(resp.quickview_html);
-	      (0, _jquery2['default'])('#quickview-modal-' + resp.product.id + '-' + resp.product.id_product_attribute).modal('show');
-	      productConfig();
+	      var productModal = (0, _jquery2['default'])('#quickview-modal-' + resp.product.id + '-' + resp.product.id_product_attribute);
+	      productModal.modal('show');
+	      productConfig(productModal);
 	    });
 	  });
-	  var productConfig = function productConfig() {
+	  var productConfig = function productConfig(qv) {
 	    var MAX_THUMBS = 4;
 	    var $arrows = (0, _jquery2['default'])('.js-arrows');
-	    var $thumbnails = (0, _jquery2['default'])('.js-qv-product-images');
+	    var $thumbnails = qv.find('.js-qv-product-images');
 	    (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
 	      if ((0, _jquery2['default'])('.js-thumb').hasClass('selected')) {
 	        (0, _jquery2['default'])('.js-thumb').removeClass('selected');
@@ -16506,8 +16507,8 @@
 	      (0, _jquery2['default'])(event.currentTarget).addClass('selected');
 	      (0, _jquery2['default'])('.js-qv-product-cover').attr('src', (0, _jquery2['default'])(event.target).data('image-large-src'));
 	    });
-	    if ((0, _jquery2['default'])('.js-qv-product-images li').length <= MAX_THUMBS) {
-	      $arrows.css('opacity', '.2');
+	    if ($thumbnails.find('li').length <= MAX_THUMBS) {
+	      $arrows.hide();
 	    } else {
 	      $arrows.on('click', function (event) {
 	        if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && (0, _jquery2['default'])('.js-qv-product-images').position().top < 0) {
@@ -16521,7 +16522,7 @@
 	    }
 	  };
 	  var move = function move(direction) {
-	    var THUMB_MARGIN = 10;
+	    var THUMB_MARGIN = 20;
 	    var $thumbnails = (0, _jquery2['default'])('.js-qv-product-images');
 	    var thumbHeight = (0, _jquery2['default'])('.js-qv-product-images li img').height() + THUMB_MARGIN;
 	    var currentPosition = $thumbnails.position().top;
@@ -20587,12 +20588,20 @@
 	  _createClass(DropDown, [{
 	    key: 'init',
 	    value: function init() {
-	      this.el.on('show.bs.dropdown', function (e) {
-	        (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideDown();
+	      this.el.on('show.bs.dropdown', function (e, el) {
+	        if (el) {
+	          (0, _jquery2['default'])('#' + el).find('.dropdown-menu').first().stop(true, true).slideDown();
+	        } else {
+	          (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideDown();
+	        }
 	      });
 	
-	      this.el.on('hide.bs.dropdown', function (e) {
-	        (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideUp();
+	      this.el.on('hide.bs.dropdown', function (e, el) {
+	        if (el) {
+	          (0, _jquery2['default'])('#' + el).find('.dropdown-menu').first().stop(true, true).slideUp();
+	        } else {
+	          (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideUp();
+	        }
 	      });
 	    }
 	  }]);
@@ -20754,7 +20763,7 @@
 	
 	      var MAX_THUMBS = 5;
 	      var $arrows = (0, _jquery2['default'])('.js-modal-arrows');
-	      var $thumbnails = (0, _jquery2['default'])('.js-product-images');
+	      var $thumbnails = (0, _jquery2['default'])('.js-modal-product-images');
 	      (0, _jquery2['default'])('.js-modal-thumb').on('click', function (event) {
 	        if ((0, _jquery2['default'])('.js-modal-thumb').hasClass('selected')) {
 	          (0, _jquery2['default'])('.js-modal-thumb').removeClass('selected');
@@ -20769,7 +20778,7 @@
 	        $arrows.css('opacity', '.2');
 	      } else {
 	        $arrows.on('click', function (event) {
-	          if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && (0, _jquery2['default'])('.js-modal-product-images').position().top < 0) {
+	          if ((0, _jquery2['default'])(event.target).hasClass('arrow-up') && $thumbnails.position().top < 0) {
 	            _this.move('up');
 	            (0, _jquery2['default'])('.js-modal-arrow-down').css('opacity', '1');
 	          } else if ((0, _jquery2['default'])(event.target).hasClass('arrow-down') && $thumbnails.position().top + $thumbnails.height() > (0, _jquery2['default'])('.js-modal-mask').height()) {
@@ -20824,6 +20833,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	var _jquery = __webpack_require__(4);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
 	var _dropDown = __webpack_require__(83);
 	
 	var _dropDown2 = _interopRequireDefault(_dropDown);
@@ -20840,6 +20853,27 @@
 	  _createClass(TopMenu, [{
 	    key: 'init',
 	    value: function init() {
+	      var elmId = undefined;
+	      this.el.find('li').hover(function (e) {
+	        if (elmId !== (0, _jquery2['default'])(e.currentTarget).attr('id')) {
+	          if ((0, _jquery2['default'])(e.target).data('depth') === 0) {
+	            (0, _jquery2['default'])('#' + elmId + ' .js-sub-menu').hide();
+	          }
+	          elmId = (0, _jquery2['default'])(e.currentTarget).attr('id');
+	        }
+	        if (elmId && (0, _jquery2['default'])(e.target).data('depth') === 0) {
+	          (0, _jquery2['default'])('#' + elmId + ' .js-sub-menu').show().css({
+	            top: (0, _jquery2['default'])('#' + elmId).height() + (0, _jquery2['default'])('#' + elmId).position().top,
+	            left: (0, _jquery2['default'])('#' + elmId).position().left
+	          });
+	        }
+	      });
+	      (0, _jquery2['default'])('.js-top-menu').mouseleave(function () {
+	        (0, _jquery2['default'])('#' + elmId + ' .js-sub-menu').hide();
+	      });
+	      this.el.on('click', function (e) {
+	        e.stopPropagation();
+	      });
 	      _get(Object.getPrototypeOf(TopMenu.prototype), 'init', this).call(this);
 	    }
 	  }]);
@@ -20913,12 +20947,8 @@
 	      er = arguments[1];
 	      if (er instanceof Error) {
 	        throw er; // Unhandled 'error' event
-	      } else {
-	        // At least give some kind of context to the user
-	        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
-	        err.context = er;
-	        throw err;
 	      }
+	      throw TypeError('Uncaught, unspecified "error" event.');
 	    }
 	  }
 	

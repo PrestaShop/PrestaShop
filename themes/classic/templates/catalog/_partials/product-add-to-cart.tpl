@@ -1,7 +1,7 @@
 <div class="product-add-to-cart">
   {block name='product_quantity'}
     <p class="product-quantity">
-      <label for="quantity_wanted">{l s='Quantity' d='Shop.Theme.Catalog'}</label>
+      <label for="quantity_wanted">{l s='Quantity' d='Shop.Theme.Catalog'}</label><br>
       <input type="text" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" class="input-group">
     </p>
   {/block}

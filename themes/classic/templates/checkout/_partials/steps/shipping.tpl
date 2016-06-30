@@ -24,29 +24,25 @@
                         <span></span>
                       </span>
                     </div>
-                    <div class="col-md-11">
+                    <label for="delivery_option_{$carrier.id}" class="col-md-11 delivery-option-2">
                       <div class="row">
-                        <label for="delivery_option_{$carrier.id}" class="delivery-option-2">
-                          <div class="col-md-3">
-                            <div class="logo-container">
-                              {if $carrier.logo}
-                                <img src="{$carrier.logo}" alt="{$carrier.name}">
-                                {else}
-                                &nbsp;
-                              {/if}
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <span class="carrier-name">{$carrier.name}</span>
-                          </div>
-                          <div class="col-md-4">
-                            <span class="carrier-delay">{$carrier.delay}</span>
-                          </div>
-                          <div class="col-md-1">
-                            <span class="carrier-price">{$carrier.price}</span>
-                          </div>
-                        </label>
-                      </div>
+                        <div class="col-md-1">
+                          {if $carrier.logo}
+                            <img src="{$carrier.logo}" alt="{$carrier.name}">
+                            {else}
+                            &nbsp;
+                          {/if}
+                        </div>
+                        <div class="col-md-4 text-xs-left">
+                          <span class="h6 carrier-name">{$carrier.name}</span>
+                        </div>
+                        <div class="col-md-4">
+                          <span class="carrier-delay">{$carrier.delay}</span>
+                        </div>
+                        <div class="col-md-3">
+                          <span class="carrier-price">{$carrier.price}</span>
+                        </div>
+                      </label>
                     </div>
                   </div>
               {/foreach}

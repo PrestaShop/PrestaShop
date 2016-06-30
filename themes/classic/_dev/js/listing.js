@@ -11,14 +11,15 @@ $(document).ready(() => {
     };
     $.post(prestashop.urls.pages.product, data, null, 'json').then(function(resp) {
       $('body').append(resp.quickview_html);
-      $('#quickview-modal-' + resp.product.id + '-' + resp.product.id_product_attribute).modal('show');
-      productConfig();
+      let productModal = $(`#quickview-modal-${resp.product.id}-${resp.product.id_product_attribute}`);
+      productModal.modal('show');
+      productConfig(productModal);
     });
   });
-  var productConfig = () => {
+  var productConfig = (qv) => {
     const MAX_THUMBS = 4;
     var $arrows = $('.js-arrows');
-    var $thumbnails = $('.js-qv-product-images');
+    var $thumbnails = qv.find('.js-qv-product-images');
     $('.js-thumb').on('click', (event) => {
       if ($('.js-thumb').hasClass('selected')) {
         $('.js-thumb').removeClass('selected');
@@ -26,8 +27,8 @@ $(document).ready(() => {
       $(event.currentTarget).addClass('selected');
       $('.js-qv-product-cover').attr('src', $(event.target).data('image-large-src'));
     });
-    if ($('.js-qv-product-images li').length <= MAX_THUMBS) {
-      $arrows.css('opacity', '.2');
+    if ($thumbnails.find('li').length <= MAX_THUMBS) {
+      $arrows.hide();
     } else {
       $arrows.on('click', (event) => {
         if ($(event.target).hasClass('arrow-up') && $('.js-qv-product-images').position().top < 0) {
@@ -41,7 +42,7 @@ $(document).ready(() => {
     }
   };
   var move = (direction) => {
-    const THUMB_MARGIN = 10;
+    const THUMB_MARGIN = 20;
     var $thumbnails = $('.js-qv-product-images');
     var thumbHeight = $('.js-qv-product-images li img').height() + THUMB_MARGIN;
     var currentPosition = $thumbnails.position().top;
