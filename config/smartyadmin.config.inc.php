@@ -59,6 +59,10 @@ function smartyTranslate($params, &$smarty)
     $addslashes = (isset($params['slashes']) || isset($params['js']));
     $sprintf = isset($params['sprintf']) ? $params['sprintf'] : null;
 
+    if (!empty($params['d'])) {
+        return Context::getContext()->getTranslator()->trans($params['s'], $sprintf, $params['d']);
+    }
+    
     if ($pdf) {
         return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s'], $sprintf), $params);
     }

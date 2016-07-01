@@ -179,6 +179,10 @@ function smartyTranslate($params, &$smarty)
     if (!isset($params['sprintf'])) {
         $params['sprintf'] = null;
     }
+    
+    if (!empty($params['d'])) {
+        return Context::getContext()->getTranslator()->trans($params['s'], (array) $params['sprintf'], $params['d']);
+    }
 
     $string = str_replace('\'', '\\\'', $params['s']);
     $filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
