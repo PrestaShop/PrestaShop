@@ -36,6 +36,8 @@ class Migrate
             $generator = $factory->getLowStrengthGenerator();
             $secret    = $generator->generateString(56);
 
+            $default_parameters = Yaml::parse($root_dir.'/app/config/parameters.yml.dist');
+
             $parameters = array(
                 'parameters' => array(
                     'database_host'     => _LEGACY_DB_SERVER_,
@@ -55,7 +57,7 @@ class Migrate
                     'mailer_host'       => '127.0.0.1',
                     'mailer_user'       => '~',
                     'mailer_password'   => '~',
-                )
+                ) + $default_parameters['parameters']
             );
 
             if (file_put_contents($root_dir.'/app/config/parameters.yml', Yaml::dump($parameters))) {
