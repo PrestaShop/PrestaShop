@@ -36,7 +36,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         $visits = ($granularity == false) ? 0 : array();
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
         /** @var Gapi $gapi */
         $gapi = $moduleManager->isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
         if (Validate::isLoadedObject($gapi) && $gapi->isConfigured()) {
@@ -670,8 +670,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             case 'newsletter_registrations':
                 $moduleManagerBuilder = new ModuleManagerBuilder();
-    $moduleManager = $moduleManagerBuilder->build();
-    
+                $moduleManager = $moduleManagerBuilder->build();
+
                 $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'customer`
@@ -680,7 +680,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 if ($moduleManager->isInstalled('ps_emailsubscription')) {
                     $value += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 					SELECT COUNT(*)
-					FROM `'._DB_PREFIX_.'newsletter`
+					FROM `'._DB_PREFIX_.'emailsubscription`
 					WHERE active = 1
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER));
                 }
