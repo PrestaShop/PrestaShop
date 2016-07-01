@@ -368,15 +368,18 @@ class CartPresenter implements PresenterInterface
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = $cartVoucher['reduction_amount'];
 
-            if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_percent'] == '0.00') {
-                $cartVoucher['reduction_formated'] = $cartVoucher['reduction_percent'].'%';
-            } elseif (isset($cartVoucher['reduction_amount'])) {
-                $cartVoucher['reduction_formated'] = $this->priceFormatter->format($cartVoucher['reduction_amount']);
+            if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
+                $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'].'%';
+            } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
+                $cartVoucher['reduction_formatted'] = $this->priceFormatter->format($cartVoucher['reduction_amount']);
             }
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-'.$cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
-                'cart', true, null, array(
+                'cart',
+                true,
+                null,
+                array(
                     'deleteDiscount' => $cartVoucher['id_cart_rule'],
                     'token' => Tools::getToken(false),
                 )
