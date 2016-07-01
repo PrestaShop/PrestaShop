@@ -197,7 +197,7 @@ class ConfigurationCore extends ObjectModel
         }
 
         // If conf if not initialized, try manual query
-        if (self::$_new_cache === null) {
+        if (self::$_new_cache === null || !isset(self::$_cache[self::$definition['table']])) {
             Configuration::loadConfiguration();
             if (self::$_new_cache === array()) {
                 return Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` WHERE `name` = "'.pSQL($key).'"');
