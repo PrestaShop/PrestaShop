@@ -20476,6 +20476,8 @@
 	
 	  function coverImage() {
 	    (0, _jquery2['default'])('.js-thumb').on('click', function (event) {
+	      (0, _jquery2['default'])('.selected').removeClass('selected');
+	      (0, _jquery2['default'])(event.target).addClass('selected');
 	      (0, _jquery2['default'])('.js-qv-product-cover').prop('src', (0, _jquery2['default'])(event.currentTarget).data('image-large-src'));
 	    });
 	  }

@@ -35,6 +35,8 @@ $(document).ready(function () {
     $('.js-thumb').on(
       'click',
       (event) => {
+        $('.selected').removeClass('selected');
+        $(event.target).addClass('selected');
         $('.js-qv-product-cover').prop('src', $(event.currentTarget).data('image-large-src'));
       }
     );
