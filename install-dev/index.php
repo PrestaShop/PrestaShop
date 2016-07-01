@@ -25,6 +25,7 @@
  */
 
 require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'init.php');
+require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php'; 
 
 try {
     require_once(_PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'controllerHttp.php');

@@ -24,3 +24,4 @@ parameters:
     ps_creation_date: ~
     cookie_key: ThisTokenIsNotSoSecretChangeIt
     cookie_iv: ThisTokenIsNotSoSecretChangeIt
+    locale: en-US

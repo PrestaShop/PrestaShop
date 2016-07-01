@@ -6,7 +6,6 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: en-US
     AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
     translator.class: PrestaShopBundle\Translation\Translator
 
@@ -34,7 +33,7 @@ framework:
         handler_id:  ~
     fragments:       ~
     http_method_override: true
- 
+
 # Monolog configuration #
 monolog:
     handlers:
