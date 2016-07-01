@@ -592,6 +592,12 @@
 			<div class="panel">
 				<div class="panel-heading">
 					<i class="icon-map-marker"></i> {l s='Addresses'} <span class="badge">{count($addresses)}</span>
+					<div class="panel-heading-action">
+						<a class="btn btn-default" href="?controller=AdminAddresses&amp;addaddress&amp;id_customer={$customer->id|intval}&amp;token={getAdminToken tab='AdminAddresses'}">
+							<i class="icon-plus-sign"></i>
+							{l s='Add'}
+						</a>
+					</div>
 				</div>
 				{if count($addresses)}
 					<table class="table">
