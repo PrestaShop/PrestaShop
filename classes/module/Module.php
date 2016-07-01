@@ -1846,6 +1846,10 @@ abstract class ModuleCore
         if (self::$_generate_config_xml_mode) {
             return $string;
         }
+        
+        if (($translation = Context::getContext()->getTranslator()->trans($string)) !== $string) {
+            return $translation;
+        }
 
         return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
     }
