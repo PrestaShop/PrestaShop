@@ -211,7 +211,12 @@ class AdminStatusesControllerCore extends AdminController
         //init and render the first list
         $this->addRowAction('edit');
         $this->addRowAction('delete');
-        $this->addRowActionSkipList('delete', range(1, 14));
+
+        $unremovable_os = array();
+        $buf = Db::getInstance()->executeS('SELECT id_order_state FROM '._DB_PREFIX_.'order_state WHERE unremovable = 1');
+        foreach ($buf as $row) $unremovable_os[] = $row['id_order_state'];
+        $this->addRowActionSkipList('delete', $unremovable_os);
+
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
