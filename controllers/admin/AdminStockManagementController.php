@@ -101,7 +101,7 @@ class AdminStockManagementControllerCore extends AdminController
         $this->addRowAction('addstock');
         $this->addRowAction('removestock');
 
-        if (count(Warehouse::getWarehouses()) > 1) {
+        if (count(Warehouse::getWarehouses(true)) > 1) {
             $this->addRowAction('transferstock');
         }
 
@@ -820,7 +820,7 @@ class AdminStockManagementControllerCore extends AdminController
             $this->addRowAction('addstock');
             $this->addRowAction('removestock');
 
-            if (count(Warehouse::getWarehouses()) > 1) {
+            if (count(Warehouse::getWarehouses(true)) > 1) {
                 $this->addRowAction('transferstock');
             }
 
