@@ -152,7 +152,7 @@ class CustomerPersisterCore
             _COOKIE_KEY_
         );
 
-        if (Customer::customerExists($customer->email, false, $customer->is_guest)) {
+        if (Customer::customerExists($customer->email, false, true)) {
             $this->errors['email'][] = $this->translator->trans(
                 'An account was already registered with this email address',
                 [],
