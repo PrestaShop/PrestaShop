@@ -7,10 +7,8 @@
   }
 }
 .block-category {
-  min-height: em(220px);
+  min-height: rem(220px);
   #category-description {
-    font-size: em(14px);
-    color: $gray-dark;
     p,
     strong {
       font-weight: 400;
@@ -26,7 +24,7 @@
   }
   .category-cover {
     position: absolute;
-    right: 0.75em;
+    right: 0.75rem;
     bottom: 0;
     img {
       width: 141px;
@@ -38,8 +36,8 @@
   color: $gray-dark;
   .select-title {
     display: inline-block;
-    margin-left: em(6px);
-    width: em(270px);
+    margin-left: rem(6px);
+    width: rem(270px);
     color: $gray-darker;
     background: white;
     padding: $small-space;
@@ -58,7 +56,7 @@
   .dropdown-menu {
     right: 0;
     left: auto;
-    width: em(270px);
+    width: rem(270px);
     background: $gray-lighter;
     border: none;
     border-radius: 0;
@@ -68,22 +66,19 @@
   @include box-shadow;
   margin: $medium-space 0;
   background: white;
-  padding: em(25px) em(20px);
+  padding: rem(25px) rem(20px);
   .facet {
     padding-top: $small-space;
     .facet-title {
       color: $gray;
     }
-    .search-link {
-      font-size: em(14px);
-    }
     .facet-label {
       margin-bottom: 0;
       a {
-        margin-top: em(7px);
+        margin-top: rem(7px);
         color: $gray-darker;
         display: inline-block;
-        font-size: em(15px);
+        font-size:$font-size-lg;
       }
     }
   }
@@ -91,11 +86,11 @@
 .pagination {
   width: 100%;
   > div:first-child{
-    line-height: em(40px);
+    line-height: rem(40px);
   }
   .page-list {
     background: white;
-    padding: em(10px) em(20px);
+    padding: rem(10px) rem(20px);
     li {
       display: inline;
     }
@@ -123,7 +118,6 @@
   padding: $small-space $large-space 0;
   margin-bottom: $medium-space;
   .active-filter-title {
-    font-size: em(15px);
     display: inline;
     margin-right: $small-space;
     font-weight: 600;
@@ -137,46 +131,46 @@
     margin-right: $small-space;
     margin-bottom: $small-space;
     background: white;
-    padding: em(10px);
+    padding: rem(10px);
     display: inline-block;
-    font-size: em(13px);
+    font-size: $font-size-xs;
     .close {
       color: $gray-darker;
-      font-size: em(15px);
+      font-size: $font-size-lg;
       opacity: 1;
-      margin-top: em(6px);
-      margin-left: em(5px);
+      margin-top: rem(3px);
+      margin-left: rem(5px);
     }
   }
 }
 .block-categories {
   @include box-shadow;
   background: white;
-  padding: em(25px) em(20px);
+  padding: rem(25px) rem(20px);
   .category-sub-menu {
     margin-top: $small-space;
     .category-sub-link{
-      font-size: em(14px);
+      font-size: $font-size-sm;
     }
     li{
       position: relative;
       &[data-depth="1"]{
         margin-bottom: $small-space;
-      }    
+      }
     }
     li[data-depth="0"] > a {
       font-weight: 600;
       border-bottom: $gray-light 2px solid;
       width: 100%;
       display: inline-block;
-      margin: 0.3125em 0 0;
-      padding-bottom: em(3px);
+      margin: 0.3125rem 0 0;
+      padding-bottom: rem(3px);
     }
     li:not([data-depth="0"]):not([data-depth="1"]) {
-      padding-left: em(5px);
+      padding-left: rem(5px);
       &::before {
         content: "-";
-        margin-right: em(5px);
+        margin-right: rem(5px);
       }
     }
   }
@@ -199,7 +193,6 @@
     }
     .add,
     .remove {
-      font-size: em(18px);
       &:hover {
         color: $brand-primary;
       }
@@ -211,7 +204,7 @@
   .arrows {
     .arrow-right,
     .arrow-down {
-      font-size: em(14px);
+      font-size: $font-size-sm;
       cursor: pointer;
       margin-left: 2px;
       &:hover {

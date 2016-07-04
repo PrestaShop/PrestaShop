@@ -1,6 +1,6 @@
 .block_newsletter {
   @include search-box;
-  font-size: em(14px);
+  font-size: $font-size-sm;
   p {
     padding-top: $small-space;
   }
@@ -8,7 +8,7 @@
 .block-contact {
   margin-top: $medium-space;
   border-left: $gray-light 2px solid;
-  padding-left: em(70px);
+  padding-left: rem(70px);
   color: $gray;
   .block-contact-title{
     color:$gray-darker;
@@ -31,15 +31,15 @@
 .myaccount-title a,
 .block-contact-title {
   font-weight: 700;
-  font-size: em(16px);
+  font-size: $base-font-size;
 }
 .block-social li {
-  height: em(40px);
-  width: em(40px);
+  height: rem(40px);
+  width: rem(40px);
   background-color: $gray-light;
   background-repeat: no-repeat;
   display: inline-block;
-  margin: em(2px);
+  margin: rem(2px);
   cursor: pointer;
   &:hover {
     background-color: $brand-primary;
@@ -126,12 +126,12 @@
   margin-top: $medium-space;
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.3);
   li{
-    margin-bottom: em(5px);
+    margin-bottom: rem(5px);
   }
   li a{
     color: $gray-dark;
     cursor: pointer;
-    font-size: em(14px);
+    font-size: $font-size-sm;
     &:hover {
       color: $brand-primary;
     }

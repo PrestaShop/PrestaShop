@@ -2,7 +2,7 @@
   box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
   .direction {
     z-index: auto;
-    margin-top: em(-40px);
+    margin-top: rem(-40px);
   }
   .carousel-inner {
     height: 340px;
@@ -19,30 +19,20 @@
       left: 90px;
       color: white;
       max-width: 340px;
-      .caption-title {
-        font-weight: 600;
-        font-size: em(55px);
+      .caption-description p {
         color: white;
-      }
-      .caption-description {
-        h2 {
-          font-size: em(20px);
-        }
-        p {
-          font-weight: 400;
-        }
       }
     }
   }
   .carousel-control {
     opacity: 1;
-    .icon-prev,
-    .icon-next {
+    .icon-next,
+    .icon-prev {
       &::before {
         content: "";
       }
       i {
-        font-size: 50px;
+        font-size: rem(50px);
         color: white;
       }
       &:hover {
@@ -52,13 +42,13 @@
       }
     }
     .icon-prev {
-      margin-left: -75px;
+      margin-left: rem(-75px);
     }
     .icon-next {
-      margin-right: -60px;
+      margin-right: rem(-60px);
     }
-    &.right,
-    &.left {
+    &.left,
+    &.right {
       background: none;
     }
   }

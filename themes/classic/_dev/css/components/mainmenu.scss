@@ -1,10 +1,10 @@
 .top-menu {
   &[data-depth="1"] {
-    margin: em(10px);
+    margin: rem(10px);
   }
   a:not([data-depth="0"]) {
     display: block;
-    padding: 10px;
+    padding: rem(10px);
     color: $gray;
     font-weight: 400;
   }
@@ -15,7 +15,7 @@
   }
   a[data-depth="0"] {
     font-weight: 600;
-    padding: em(3px) $small-space;
+    padding: rem(3px) $small-space;
     &:hover {
       #header & {
         color: $brand-primary;
@@ -25,26 +25,26 @@
   }
   a[data-depth="1"],
   a[data-depth="2"] {
-    padding: 0 em(10px) em(10px) 0;
+    padding: 0 rem(10px) rem(10px) 0;
   }
   .sub-menu {
     box-shadow: 2px 1px 11px 2px rgba(0, 0, 0, 0.1);
-    left: em(-143px);
+    left: rem(-143px);
     border: none;
     width: auto;
     z-index: 18;
     display: none;
     ul[data-depth="1"] > li {
       float: left;
-      margin: 0 em(20px);
+      margin: 0 rem(20px);
     }
     a:hover {
       color: $brand-primary;
     }
     &:before {
       position: absolute;
-      top: -7px;
-      left: 9px;
+      top: rem(-7px);
+      left: rem(9px);
       display: inline-block;
       border-right: 7px solid transparent;
       border-bottom: 7px solid $gray-light;
@@ -53,8 +53,8 @@
     }
      &:after {
       position: absolute;
-      top: -6px;
-      left: 10px;
+      top: rem(-6px);
+      left: rem(10px);
       display: inline-block;
       border-right: 6px solid transparent;
       border-bottom: 6px solid #ffffff;

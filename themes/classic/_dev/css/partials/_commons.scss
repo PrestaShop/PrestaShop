@@ -6,14 +6,13 @@
     text-align: right !important;
   }
 }
-
-html,
-body {
+body,
+html {
   height: 100%;
 }
 body {
   font-family: 'Open Sans', sans-serif;
-  font-size: 16px;
+  font-size: $base-font-size;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: $gray-darker;
@@ -23,12 +22,14 @@ ul {
   list-style: none;
   padding-left: 0;
 }
-.material-icons {
-  vertical-align: middle;
-}
 a:hover {
   color: $brand-primary;
   text-decoration: none;
+}
+p {
+  font-size: rem(15px);
+  color: $gray-dark;
+  font-weight: 400;
 }
 .dropdown-item:focus,
 .dropdown-item:hover {
@@ -36,30 +37,26 @@ a:hover {
 }
 .color,
 .custom-checkbox input[type="checkbox"] + span.color {
-  width: 20px;
-  height: 20px;
+  width: rem(20px);
+  height: rem(20px);
   display: inline-block;
-  margin: em(5px);
+  margin: rem(5px);
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(0,0,0,0.05);
   cursor: pointer;
   background-size: contain;
-  &:hover, &.active {
+  &.active,
+  &:hover {
     border: 2px solid $gray-darker;
   }
 }
 .facet-label {
-  &:hover, &.active {
+  &.active,
+  &:hover {
     .custom-checkbox span.color {
       border: 2px solid $gray-darker;
     }
   }
-}
-.h1 {
-  font-size: em(20px);
-}
-.h3 {
-  font-size: em(16px);
 }
 .h1,
 .h2,
@@ -68,19 +65,15 @@ a:hover {
   color: $gray-darker;
 }
 .h4 {
-  font-size: em(18px);
   font-weight: $headings-font-weight;
   color: $gray-darker;
-}
-.h6{
-  font-size: em(15px);
 }
 .btn-primary,
 .btn-secondary {
   @include box-shadow;
   text-transform: uppercase;
   font-weight: 600;
-  padding: em(8px) em(20px);
+  padding: rem(8px) rem(20px);
   .material-icons {
     margin-right: $small-space;
   }
@@ -88,10 +81,13 @@ a:hover {
 .card {
   @include box-shadow;
 }
-label {
+label ,.label {
   color: $gray-darker;
   text-align: right;
   font-size: rem(14px);
+}
+small.label, small.value {
+  font-size: rem(13px);
 }
 .form-control-label {
   padding-top: rem(10px);
@@ -100,7 +96,6 @@ label {
   background: $gray-light;
   color: $gray;
   border: none;
-  font-size: rem(14px);
   padding: rem(8px) rem(16px);
   &:focus {
     background-color: white;
@@ -129,7 +124,7 @@ label {
   height: rem(42px);
   -moz-appearance: none;
   -webkit-appearance: none;
-  background: $gray-light url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAPklEQVR4Ae3TwREAEBQD0V/6do4SXPZg7EsBhsQ8IEmSMOsiuEfg3gL3oXC7wK0bd1G4o8X9F4yIkyQfSrIByQBjp7QuND8AAAAASUVORK5CYII=) no-repeat scroll right rem(8px) center / rem(20px) rem(20px);
+  background: $gray-light url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAPklEQVR4Ae3TwREAEBQD0V/6do4SXPZg7EsBhsQ8IEmSMOsiuEfg3gL3oXC7wK0bd1G4o8X9F4yIkyQfSrIByQBjp7QuND8AAAAASUVORK5CYII=") no-repeat scroll right rem(8px) center / rem(20px) rem(20px);
   padding-right: rem(32px);
 }
 .form-control-valign {
@@ -220,7 +215,7 @@ label {
   border-radius: 50%;
   border: $gray 2px solid;
   background: white;
-  margin-right: em(20px);
+  margin-right: rem(20px);
   input[type="radio"] {
     opacity: 0;
     cursor: pointer;
@@ -232,57 +227,56 @@ label {
     height: 12px;
     border-radius: 50%;
     position: absolute;
-    left: 2px;
-    top: 2px;
+    left: rem(2px);
+    top: rem(2px);
   }
 }
 .custom-checkbox {
   position: relative;
   input[type="checkbox"] {
-    margin-top: 4px;
+    margin-top: rem(4px);
     opacity: 0;
     cursor: pointer;
     position: absolute;
     + span {
       margin-right: 3px;
       display: inline-block;
-      width: em(15px);
-      height: em(15px);
+      width: rem(15px);
+      height: rem(15px);
       vertical-align: middle;
       cursor: pointer;
       border: 2px $gray-darker solid;
       .checkbox-checked {
         display: none;
-        margin: em(-4px) em(-2px);
-        font-size: 1.1em;
+        margin: rem(-4px) rem(-2px);
+        font-size: 1.1rem;
         color: $gray-darker;
       }
     }
-
     &:checked + span {
       .checkbox-checked {
         display: block;
       }
     }
   }
-  label{
+  label {
     text-align: left;
   }
 }
 .text-muted {
-  font-size: em(14px);
+  font-size: rem(14px);
 }
 .done {
   color: $brand-success;
   display: inline-block;
-  padding: 0 em(13px);
-  margin-right: em(25px);
+  padding: 0 rem(13px);
+  margin-right: rem(25px);
 }
 .thumb-mask {
   > .mask {
     position: relative;
-    width: em(55px);
-    height: em(55px);
+    width: rem(55px);
+    height: rem(55px);
     overflow: hidden;
     border: $gray-light 1px solid;
     margin: $small-space 0;
@@ -299,12 +293,12 @@ label {
     dt {
       font-weight: normal;
     }
-    dt,
-    dd {
+    dd,
+    dt {
       @include flex(0 0 45%);
       background: $gray-light;
-      padding: em(10px);
-      margin: em(2px);
+      padding: rem(10px);
+      margin: rem(2px);
       &:nth-of-type(even) {
         background: $gray-lighter;
       }
@@ -314,19 +308,19 @@ label {
 .help-block {
   margin-top: $small-space;
 }
-
-.btn.disabled, .btn.disabled:hover {
+.btn.disabled,
+.btn.disabled:hover {
   background: $gray;
 }
 .alert-warning {
   .material-icons {
     color: $warning;
-    font-size: em(32px);
+    font-size: rem(32px);
     margin-right: $small-space;
     padding-top: $extra-small-space;
   }
   .alert-text {
-    font-size: em(15px);
+    font-size: rem(15px);
     padding-top: $small-space;
   }
   .alert-link {
@@ -335,7 +329,7 @@ label {
     margin-left: $small-space;
     padding: $extra-small-space $medium-space;
     font-weight: 600;
-    font-size: em(13px);
+    font-size: rem(13px);
     color: $btn-tertiary-color;
   }
   ul li:last-child .alert-link {
@@ -345,7 +339,7 @@ label {
     margin-top: $extra-small-space;
   }
 }
-.btn-warning{
+.btn-warning {
   @include transition(all .4s ease-in-out);
 }
 .btn-tertiary-outline {
@@ -353,20 +347,19 @@ label {
   background-image: none;
   background-color: transparent;
   border-color: $btn-tertiary-color;
-  border: 0.15em solid $btn-tertiary-color;
+  border: 0.15rem solid $btn-tertiary-color;
   @include transition(all .4s ease-in-out);
   &:hover {
     border-color: $btn-tertiary-hover;
     color: $btn-tertiary-hover;
   }
 }
-
 .alert {
-  font-size: em(13px);
+  font-size: rem(13px);
 }
-
 .nav-item {
-  .nav-link, .nav-separtor {
+  .nav-link,
+  .nav-separtor {
     color: $gray;
     font-weight: bold;
     &.active {

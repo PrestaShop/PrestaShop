@@ -2,8 +2,6 @@
   color: $gray-dark;
   margin-bottom: rem(32px);
   h4 {
-    font-size: rem(18px);
-    font-weight: 700;
     text-transform: uppercase;
     color: $gray-darker;
     margin-bottom: rem(32px);
@@ -20,7 +18,7 @@
     }
     .data {
       color: $gray-darker;
-      font-size: rem(14px);
+      font-size: $font-size-sm;
       width: auto;
       overflow: hidden;
       &.email{
@@ -36,8 +34,6 @@
   color: $gray-dark;
   width: 100%;
   h3 {
-    font-size: rem(18px);
-    font-weight: 700;
     text-transform: uppercase;
     color: $gray-darker;
   }

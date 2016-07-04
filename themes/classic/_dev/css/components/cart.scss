@@ -3,9 +3,7 @@
   clear: both;
   .label {
     padding-left: 0;
-    font-size: em(14px);
     font-weight: normal;
-    @include pull-left;
   }
   .value {
     color: $gray-darker;
@@ -16,12 +14,6 @@
     .value {
       font-weight: normal;
     }
-  }
-  .sub,
-  &.sub {
-    font-weight: normal;
-    bottom: 0;
-    font-size: em(13px);
   }
 }
 /*** CART ***/
@@ -40,9 +32,8 @@
 /** CART BODY **/
 .cart-grid-body {
   > a.label {
-    font-size: em(16px);
-    margin: em(10px) 0 em(25px);
-    &:hover{
+    margin: rem(10px) 0 rem(25px);
+    &:hover {
       color: $brand-primary;
     }
   }
@@ -55,16 +46,7 @@
   hr {
     margin: 0;
   }
-  > .cart-summary {
-    .cart-total {
-      > .label {
-        font-size: 100;
-        font-weight: normal;
-      }
-    }
-  }
 }
-
 .block-promo {
   .promo-code {
     padding: 1.60rem;
@@ -73,15 +55,16 @@
   .promo-input {
     color: $gray-darker;
     border: $gray 1px solid;
-    height: em(40px);
-    text-indent: em(10px);
+    height: rem(40px);
+    text-indent: rem(10px);
     width: 60%;
     + button {
       margin-top: -4px;
       text-transform: capitalize;
     }
   }
-  .cart-summary-line .label, .promo-name {
+  .cart-summary-line .label,
+  .promo-name {
     color: $brand-warning;
     font-weight: 600;
     a {
@@ -92,13 +75,11 @@
     }
   }
   .promo-code-button {
-    padding-left: rem(25px);
+    padding-left: rem(20px);
     margin-bottom: rem(20px);
     display: inline-block;
-    font-size: rem(14px);
   }
 }
-
 /*** PRODUCT LINE ***/
 .product-line-grid {
   @include make-row();
@@ -117,18 +98,8 @@
 /** CONTENT BODY **/
 .product-line-grid-body {
   > .product-line-info {
-    > .label {
-      font-size: em(15px);
-      font-weight: 800;
-      &:hover{
-        color:$gray-darker;
-      }
-    }
     > .value {
-      color: $gray-darker;
-      font-size: em(15px);
-      font-weight: 400;
-      padding: 0.25em 0.4em;
+      padding-left:rem(5px);
     }
     > .out-of-stock {
       color: red;
@@ -136,43 +107,36 @@
     > .available {
       color: $brand-success;
     }
-    .sub {
-      color: $gray-dark;
-      font-size: em(13px);
-    }
   }
 }
 /** CONTENT LEFT **/
 .product-line-grid-right {
   .bootstrap-touchspin {
-    max-width: em(75px);
+    max-width: rem(75px);
     @include pull-left;
     @include box-shadow;
-    > .form-control,
-    > .input-group {
+     > .input-group,
+    > .form-control {
       color: $gray-darker;
       background-color: white;
       border: $input-btn-border-width solid $input-border-color;
       height: $input-height;
       padding: 0.175rem 0.5rem;
-      width: em(40px);
+      width: rem(40px);
     }
     > .input-group-btn-vertical {
       width: auto;
     }
   }
-  .product-price,
-  .cart-line-product-actions {
+  .cart-line-product-actions,
+  .product-price {
     color: $gray-darker;
     line-height: 40px;
     .remove-from-cart {
       color: $gray-darker;
       display: inline-block;
-      margin-top: em(5px);
+      margin-top: rem(5px);
       opacity: 0.7;
-      i {
-        font-size: em(25px);
-      }
     }
   }
 }

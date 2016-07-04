@@ -1,6 +1,6 @@
+@import "~bourbon/app/assets/stylesheets/bourbon";
 @import "partials/_variables";
 @import "~bootstrap/scss/bootstrap";
-@import "~bourbon/app/assets/stylesheets/bourbon";
 @import "~bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.css";
 @import "partials/_mixins";
 @import "partials/_fonts";
@@ -26,7 +26,7 @@
 #header {
   background: white;
   .logo {
-    max-width: em(200px);
+    max-width: rem(200px);
   }
   .header-nav {
     border-bottom: $gray-light 2px solid;
@@ -37,19 +37,13 @@
       @include flex-wrap(nowrap);
       @include justify-content(flex-end);
     }
-    .login {
-      color: $gray-darker;
-      display: inline-block;
-      font-weight: 400;
-      font-size: 16px;
-    }
     .currency-selector {
-      margin-top: em(15px);
-      margin-left: em(15px);
+      margin-top: rem(15px);
+      margin-left: rem(15px);
     }
     .user-info {
-      margin-left: em(40px);
-      margin-top: em(15px);
+      margin-left: rem(40px);
+      margin-top: rem(15px);
       text-align: right;
       a {
         color: $gray;
@@ -63,7 +57,7 @@
       }
     }
     .language-selector {
-      margin-top: em(15px);
+      margin-top: rem(15px);
     }
     .cart-preview {
       &.active {
@@ -84,11 +78,10 @@
     }
     .blockcart {
       background: $gray-light;
-      font-size: 16px;
-      width: em(135px);
-      height: em(48px);
-      padding-top: em(12px);
-      margin-left: em(15px);
+      width: rem(135px);
+      height: rem(48px);
+      padding-top: rem(12px);
+      margin-left: rem(15px);
       text-align: center;
       a {
         color: $gray;
@@ -102,11 +95,11 @@
         }
       }
       .header {
-        margin-top: em(2px);
+        margin-top: rem(2px);
       }
     }
     #contact-link {
-      margin-top: em(15px);
+      margin-top: rem(15px);
       color: $gray;
       a {
         color: $gray;
@@ -117,9 +110,9 @@
     }
   }
   .header-top {
-    padding-bottom: em(20px);
+    padding-bottom: rem(20px);
     .menu {
-      margin-left: em(-30px);
+      margin-left: rem(-30px);
       > ul {
         > li {
           float: left;
@@ -139,7 +132,7 @@
 #wrapper {
   background: $gray-light;
   box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11);
-  padding-top: em(25px);
+  padding-top: rem(25px);
   .banner img {
     box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
   }
@@ -162,7 +155,7 @@
       &:last-child {
         content: "/";
         color: $gray-dark;
-        margin: em(5px);
+        margin: rem(5px);
         &::after {
           content: "";
         }
@@ -173,16 +166,7 @@
     }
   }
 }
-/*** PAGE HEADER ***/
-.page-header {
-  h1 {
-    text-align: center;
-    font-size: rem(22px);
-    font-weight: 700;
-    color: $gray-darker;
-    text-transform: uppercase;
-  }
-}
+
 /*** MAIN ***/
 #main {
   .page-header {
@@ -200,7 +184,7 @@
 }
 /*** FOOTER ***/
 #footer {
-  padding-top: em(40px);
+  padding-top: rem(40px);
 }
 @include media-breakpoint-down(sm) {
   #checkout-cart-summary {

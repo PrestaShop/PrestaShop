@@ -29,7 +29,7 @@
         <li>
           <div class="block-reassurance-item">
             <img src="{$element.image}" alt="{$element.text}">
-            <span>{$element.text}</span>
+            <span class="h6">{$element.text}</span>
           </div>
         </li>
       {/foreach}

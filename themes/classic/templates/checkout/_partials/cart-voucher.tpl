@@ -14,9 +14,11 @@
           {/foreach}
         </ul>
       {/if}
-      <a class="collapse-button promo-code-button" data-toggle="collapse" href="#promo-code" aria-expanded="false" aria-controls="promo-code">
-        {l s='Have a promo code?' d='Shop.Theme.Checkout'}
-      </a>
+      <p>
+        <a class="collapse-button promo-code-button" data-toggle="collapse" href="#promo-code" aria-expanded="false" aria-controls="promo-code">
+          {l s='Have a promo code?' d='Shop.Theme.Checkout'}
+        </a>
+      </p>    
       <div class="promo-code collapse" id="promo-code">
         <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">
           <input type="hidden" name="token" value="{$static_token}">

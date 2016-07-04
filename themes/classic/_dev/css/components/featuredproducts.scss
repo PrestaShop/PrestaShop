@@ -9,7 +9,7 @@
   }
   .product-title a {
     color: $gray;
-    font-size: 14px;
+    font-size: $font-size-sm;
     text-decoration: none;
     text-align: center;
     font-weight: 400;
@@ -24,12 +24,12 @@
     &:hover {
       @include box-shadow;
       .highlighted-informations {
-        bottom: em(90px);
+        bottom: rem(90px);
         &::after {
           opacity: 1;
         }
         &.no-variants{
-          bottom: em(70px);
+          bottom: rem(70px);
         }
       }
       .product-description{
@@ -39,15 +39,12 @@
   }
   .products-section-title {
     text-align: center;
-    font-size: em(22px);
-    font-weight: 700;
     margin: 4.2em 0 1.8em;
-    color: $gray-darker;
   }
   .product-title {
     text-align: center;
     text-transform: capitalize;
-    margin-top: em(16px);
+    margin-top: rem(16px);
   }
   .product-description-short,
   .product-list-actions,
@@ -66,23 +63,23 @@
     text-align: center;
     width: 100%;
     top: 0.25em;
-    padding-top: em(3px);
-    min-height: em(40px);
+    padding-top: rem(3px);
+    min-height: rem(40px);
   }
   .highlighted-informations {
     position: absolute;
-    bottom: em(20px);
+    bottom: rem(20px);
     z-index: 0;
     background: white;
     text-align: center;
     width: 257px;
-    height: em(50px);
-    padding-top: em(5px);
+    height: rem(50px);
+    padding-top: rem(5px);
     box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
     @include transition(bottom .7s $ease-out-expo);
     .quick-view {
       color: $gray-dark;
-      font-size: 1em;
+      font-size: $base-font-size;
       &:hover {
         color: $brand-primary;
       }
@@ -105,19 +102,19 @@
     margin-left: 4px;
   }
   .product-miniature {
-    margin: 0 em(10px);
+    margin: 0 rem(10px);
     .product-flags .new,
     .discount-percentage {
       display: block;
       position: absolute;
-      top: em(-242px);
-      left: em(-7px);
-      padding: em(5px) em(7px);
+      top: rem(-242px);
+      left: rem(-7px);
+      padding: rem(5px) rem(7px);
       color: white;
       background: $brand-primary;
       text-transform: uppercase;
       width: 50px;
-      font-size: em(16px);
+      font-size: $base-font-size;
       font-weight: 600;
       @include box-shadow;
       &.discount-percentage {
@@ -133,21 +130,19 @@
   .regular-price {
     color: $gray;
     text-decoration: line-through;
-    font-size: em(14px);
+    font-size: $font-size-sm;
   }
   .count {
     color: $gray-dark;
     font-weight: 700;
     position: relative;
-    bottom: em(8px);
-    font-size: em(18px);
+    bottom: rem(8px);
   }
   .all-product-link {
     clear: both;
     color: $gray-dark;
     font-weight: 700;
-    margin-top: em(30px);
-    margin-bottom: em(50px);
-    font-size: em(18px);
+    margin-top: rem(30px);
+    margin-bottom: rem(50px);
   }
 }
