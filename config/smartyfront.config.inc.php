@@ -181,6 +181,22 @@ function smartyTranslate($params, &$smarty)
     }
 
     if (!empty($params['d'])) {
+        if (isset($params['tags'])) {
+            $backTrace = debug_backtrace();
+
+            $errorMessage = sprintf(
+                'Unable to translate "%s" in %s. tags() is not supported anymore, please use sprintf().',
+                $params['s'],
+                $backTrace[0]['args'][1]->template_resource
+            );
+
+            if (_PS_MODE_DEV_) {
+                throw new Exception($errorMessage);
+            } else {
+                PrestaShopLogger::addLog($errorMessage);
+            }
+        }
+
         if (!is_array($params['sprintf'])) {
             $backTrace = debug_backtrace();
 
