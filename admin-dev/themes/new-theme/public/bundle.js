@@ -88264,7 +88264,7 @@
 	        jQueryFinalPriceEl.data('price', newPrice);
 	        // calculate new price
 	        var newFinalPrice = new Number(newPrice) + new Number(impactOnPrice);
-	        jQueryFinalPriceEl.text(newFinalPrice.toFixed(2));
+	        jQueryFinalPriceEl.text(ps_round(newFinalPrice, 6));
 	      });
 	    }
 	  };

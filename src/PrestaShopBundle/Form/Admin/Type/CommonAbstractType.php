@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
  */
 abstract class CommonAbstractType extends AbstractType
 {
+    const PRESTASHOP_DECIMALS = 6;
+    
     /**
      * Get the configuration adapter
      *

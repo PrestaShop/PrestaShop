@@ -1532,7 +1532,8 @@ var priceCalculation = (function() {
 
   function getEcotaxTaxIncluded() {
     var ecotax_tax_excl = ecoTaxElem.val().replace(/,/g, '.') / (1 + ecoTaxRate);
-    return ps_round(ecotax_tax_excl * (1 + ecoTaxRate), 2);
+    var displayPrecision = 6;
+    return ps_round(ecotax_tax_excl * (1 + ecoTaxRate), displayPrecision);
   }
 
   function getEcotaxTaxExcluded() {
@@ -1647,7 +1648,7 @@ var priceCalculation = (function() {
       var defaultFinalPrice = finalPrice.attr('data-price');
       var priceToBeChanged = new Number(price) + new Number(defaultFinalPrice);
 
-      finalPrice.html(priceToBeChanged.toFixed(2));
+      finalPrice.html(ps_round(priceToBeChanged, 6));
     },
     'impactTaxExclude': function(obj) {
       var price = parseFloat(obj.val().replace(/,/g, '.'));

@@ -57,7 +57,7 @@ class ProductCombinationBulk extends CommonAbstractType
         ->add('cost_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Cost Price', [], 'Admin.Catalog.Feature'),
-            'attr' => ['data-display-price-precision' => $this->priceDisplayPrecision],
+            'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
             'currency' => $this->isoCode,
         ))
         ->add('impact_on_weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(

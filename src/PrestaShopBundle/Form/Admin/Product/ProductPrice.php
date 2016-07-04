@@ -83,7 +83,7 @@ class ProductPrice extends CommonAbstractType
         $builder->add('price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
             'label' => $this->translator->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
-            'attr' => ['data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')],
+            'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),

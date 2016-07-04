@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 
 /**
  * This form class is responsible to map the form data to the product object
@@ -781,7 +782,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'attribute_price_impact' => $attribute_price_impact,
             'attribute_price' => $combination['price'],
             'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->contextShop->currency->iso_code),
-            'final_price' => $this->product->price + $combination['price'],
+            'final_price' => $this->tools->bcadd($this->product->price, $combination['price'], CommonAbstractType::PRESTASHOP_DECIMALS),
             'attribute_priceTI' => '',
             'attribute_ecotax' => $combination['ecotax'],
             'attribute_weight_impact' => $attribute_weight_impact,
