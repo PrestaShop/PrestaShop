@@ -177,11 +177,28 @@ function smartyTranslate($params, &$smarty)
         $params['mod'] = false;
     }
     if (!isset($params['sprintf'])) {
-        $params['sprintf'] = null;
+        $params['sprintf'] = array();
     }
-    
+
     if (!empty($params['d'])) {
-        return Context::getContext()->getTranslator()->trans($params['s'], (array) $params['sprintf'], $params['d']);
+        if (!is_array($params['sprintf'])) {
+            $backTrace = debug_backtrace();
+
+            $errorMessage = sprintf(
+                'Unable to translate "%s" in %s. sprintf() parameter should be an array.',
+                $params['s'],
+                $backTrace[0]['args'][1]->template_resource
+            );
+
+            if (_PS_MODE_DEV_) {
+                throw new Exception($errorMessage);
+            } else {
+                PrestaShopLogger::addLog($errorMessage);
+                return $params['s'];
+            }
+        }
+
+        return Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d']);
     }
 
     $string = str_replace('\'', '\\\'', $params['s']);
