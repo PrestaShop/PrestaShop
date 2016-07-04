@@ -57,10 +57,27 @@ function smartyTranslate($params, &$smarty)
     $htmlentities = !isset($params['js']);
     $pdf = isset($params['pdf']);
     $addslashes = (isset($params['slashes']) || isset($params['js']));
-    $sprintf = isset($params['sprintf']) ? $params['sprintf'] : null;
+    $sprintf = isset($params['sprintf']) ? $params['sprintf'] : array();
 
     if (!empty($params['d'])) {
-        return Context::getContext()->getTranslator()->trans($params['s'], (array) $sprintf, $params['d']);
+        if (!is_array($sprintf)) {
+            $backTrace = debug_backtrace();
+
+            $errorMessage = sprintf(
+                'Unable to translate "%s" in %s. sprintf() parameter should be an array.',
+                $params['s'],
+                $backTrace[0]['args'][1]->template_resource
+            );
+
+            if (_PS_MODE_DEV_) {
+                throw new Exception($errorMessage);
+            } else {
+                PrestaShopLogger::addLog($errorMessage);
+                return $params['s'];
+            }
+        }
+
+        return Context::getContext()->getTranslator()->trans($params['s'], $sprintf, $params['d']);
     }
 
     if ($pdf) {
