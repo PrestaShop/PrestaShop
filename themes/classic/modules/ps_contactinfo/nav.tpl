@@ -24,7 +24,7 @@
 *}
 <div id="contact-link">
   {if $contact_infos.phone}
-    {l s='Call us: [1]%s[/1]' tags=['<span>'] sprintf=$contact_infos.phone d='Shop.Theme'}
+    {l s='Call us: [1]%phone%[/1]' tags=['<span>'] sprintf=['%phone%' => $contact_infos.phone] d='Shop.Theme'}
   {else}
     <a href="{$urls.pages.contact}">{l s='Contact us' d='Shop.Theme'}</a>
   {/if}

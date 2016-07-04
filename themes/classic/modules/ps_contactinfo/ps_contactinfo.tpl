@@ -26,7 +26,7 @@
 <div class="block-contact col-md-4 pull-md-right">
 	<h4 class="text-uppercase block-contact-title">{l s='Store information' d='Shop.Theme'}</h4>
     {$contact_infos.address.formatted nofilter}
-    {if $contact_infos.phone}<br>{l s='Call us: [1]%s[/1]' tags=['<span>'] sprintf=$contact_infos.phone}{/if}
-    {if $contact_infos.fax}<br>{l s='Fax: [1]%s[/1]' tags=['<span>'] sprintf=$contact_infos.fax}{/if}
-    {if $contact_infos.email}<br>{l s='Email us: [1]%s[/1]' tags=['<span>'] sprintf=$contact_infos.email}{/if}
+    {if $contact_infos.phone}<br>{l s='Call us: [1]%phone%[/1]' tags=['<span>'] sprintf=['%phone%' => $contact_infos.phone]}{/if}
+    {if $contact_infos.fax}<br>{l s='Fax: [1]%fax%[/1]' tags=['<span>'] sprintf=['%fax%' => $contact_infos.fax]}{/if}
+    {if $contact_infos.email}<br>{l s='Email us: [1]%email%[/1]' tags=['<span>'] sprintf=['%email%' => $contact_infos.email]}{/if}
 </div>

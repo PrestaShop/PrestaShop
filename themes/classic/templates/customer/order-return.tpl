@@ -8,10 +8,10 @@
   {block name='order_return_infos'}
     <div id="order-return-infos" class="card">
       <div class="card-block">
-        <p><strong>{l s='RE#%s on %s' d='Shop.Theme.CustomerAccount' sprintf=[$orderRet.return_number, $orderRet.return_date]}</strong></p>
+        <p><strong>{l s='RE#%number% on %date%' d='Shop.Theme.CustomerAccount' sprintf=['%number%' => $orderRet.return_number, '%date%' => $orderRet.return_date]}</strong></p>
         <p>{l s='We have logged your return request.' d='Shop.Theme.CustomerAccount'}</p>
-        <p>{l s='Your package must be returned to us within %s days of receiving your order.' d='Shop.Theme.CustomerAccount' sprintf=$nbdaysreturn}</p>
-        <p>{l s='The current status of your merchandise return is: [1] %s [/1]' d='Shop.Theme.CustomerAccount' sprintf=$state_name tags=['<strong>']}</p>
+        <p>{l s='Your package must be returned to us within %number% days of receiving your order.' d='Shop.Theme.CustomerAccount' sprintf=['%number%' => $nbdaysreturn]}</p>
+        <p>{l s='The current status of your merchandise return is: [1] %state% [/1]' d='Shop.Theme.CustomerAccount' sprintf=['%state%' => $state_name] tags=['<strong>']}</p>
         <p>{l s='List of items to be returned:' d='Shop.Theme.CustomerAccount'}</p>
         <table class="table table-striped table-bordered">
           <thead class="thead-default">

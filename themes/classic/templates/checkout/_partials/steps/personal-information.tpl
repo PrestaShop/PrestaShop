@@ -4,9 +4,9 @@
   {if $customer.is_logged && !$customer.is_guest}
 
     <p class="identity">
-      {l s='Connected as [1]%1$s %2$s[/1].'
+      {l s='Connected as [1]%firstname% %lastname%[/1].'
         d='Shop.Theme.CustomerAccount'
-        sprintf=[$customer.firstname, $customer.lastname]
+        sprintf=['%firstname%' => $customer.firstname, '%lastname%' => $customer.lastname]
         tags=["<a href='{$urls.pages.identity}'>"]
       }
     </p>

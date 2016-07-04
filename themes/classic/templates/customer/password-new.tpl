@@ -10,7 +10,7 @@
       <section class="form-fields">
 
         <label>
-          <span>{l s='Email address: %s' d='Shop.Theme.CustomerAccount' sprintf=$customer_email|stripslashes}</span>
+          <span>{l s='Email address: %email%' d='Shop.Theme.CustomerAccount' sprintf=['%email%' => $customer_email|stripslashes]}</span>
         </label>
 
         <label>

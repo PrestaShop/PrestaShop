@@ -10,9 +10,9 @@
       <div class="box">
           <strong>
             {l
-              s='Order Reference %s - placed on %s'
+              s='Order Reference %reference% - placed on %date%'
               d='Shop.Theme.CustomerAccount'
-              sprintf=[$order.details.reference, $order.details.order_date]
+              sprintf=['%reference%' => $order.details.reference, '%date%' => $order.details.order_date]
             }
           </strong>
           {if $order.details.reorder_url}
@@ -89,7 +89,7 @@
       {if $order.addresses.delivery}
         <div class="col-lg-6 col-md-6 col-sm-6">
           <article id="delivery-address" class="box">
-            <h4>{l s='Delivery address %s' d='Shop.Theme.Checkout' sprintf=$order.addresses.delivery.alias}</h4>
+            <h4>{l s='Delivery address %alias%' d='Shop.Theme.Checkout' sprintf=['%alias%' => $order.addresses.delivery.alias]}</h4>
             <address>{$order.addresses.delivery.formatted nofilter}</address>
           </article>
         </div>
@@ -97,7 +97,7 @@
 
       <div class="col-lg-6 col-md-6 col-sm-6">
         <article id="invoice-address" class="box">
-          <h4>{l s='Invoice address %s' d='Shop.Theme.Checkout' sprintf=$order.addresses.invoice.alias}</h4>
+          <h4>{l s='Invoice address %alias%' d='Shop.Theme.Checkout' sprintf=['%alias%' => $order.addresses.invoice.alias]}</h4>
           <address>{$order.addresses.invoice.formatted nofilter}</address>
         </article>
       </div>
