@@ -60,9 +60,9 @@ function smartyTranslate($params, &$smarty)
     $sprintf = isset($params['sprintf']) ? $params['sprintf'] : null;
 
     if (!empty($params['d'])) {
-        return Context::getContext()->getTranslator()->trans($params['s'], $sprintf, $params['d']);
+        return Context::getContext()->getTranslator()->trans($params['s'], (array) $sprintf, $params['d']);
     }
-    
+
     if ($pdf) {
         return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s'], $sprintf), $params);
     }
