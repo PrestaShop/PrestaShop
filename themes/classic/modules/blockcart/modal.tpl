@@ -28,9 +28,9 @@
           <div class="col-md-6">
             <div class="cart-content">
               {if $cart.products_count > 1}
-                <p class="cart-products-count">{l s='There are %s items in your cart.' sprintf=$cart.products_count d='Shop.Theme.Checkout'}</p>
+                <p class="cart-products-count">{l s='There are %products_count% items in your cart.' sprintf=['%products_count%' => $cart.products_count] d='Shop.Theme.Checkout'}</p>
               {else}
-                <p class="cart-products-count">{l s='There is %s item in your cart.' sprintf=$cart.products_count d='Shop.Theme.Checkout'}</p>
+                <p class="cart-products-count">{l s='There is %product_count% item in your cart.' sprintf=['%product_count%' =>$cart.products_count] d='Shop.Theme.Checkout'}</p>
               {/if}
               <p><strong>{l s='Total products:' d='Shop.Theme.Checkout'}</strong>&nbsp;{$cart.subtotals.products.value}</p>
               <p><strong>{l s='Total shipping:' d='Shop.Theme.Checkout'}</strong>&nbsp;{$cart.subtotals.shipping.value}</p>
