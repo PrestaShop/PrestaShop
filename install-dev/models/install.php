@@ -32,6 +32,7 @@ use Symfony\Component\Yaml\Yaml;
 class InstallModelInstall extends InstallAbstractModel
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
+    const BOOTSTRAP_FILE = 'config/bootstrap.php';
 
     protected $logger;
 
@@ -149,7 +150,7 @@ class InstallModelInstall extends InstallAbstractModel
             return false;
         }
 
-        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh('dev');
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
         $sf2Refresh->addCacheClear();
         $output = $sf2Refresh->execute();
 
@@ -168,7 +169,7 @@ class InstallModelInstall extends InstallAbstractModel
     public function installDatabase($clear_database = false)
     {
         // Clear database (only tables with same prefix)
-        require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
+        require_once _PS_ROOT_DIR_.'/'.self::BOOTSTRAP_FILE;
         if ($clear_database) {
             $this->clearDatabase();
         }

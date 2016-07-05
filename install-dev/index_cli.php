@@ -34,6 +34,8 @@ try {
     require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
     InstallControllerConsole::execute($argc, $argv);
     echo '-- Installation successfull! --'."\n";
+    exit(0);
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();
 }
+exit(1);
