@@ -805,7 +805,11 @@ product_tabs['Associations'] = new function(){
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
-					return item[1]+' - '+item[0];
+					var itemStringToReturn = item[item.length - 1];
+					for(var istr = 0; istr < item.length - 1;istr++){
+						itemStringToReturn += " " + item[istr];
+					}
+					return itemStringToReturn;
 				}
 			}).result(self.addAccessory);
 
@@ -827,8 +831,11 @@ product_tabs['Associations'] = new function(){
 	{
 		if (data == null)
 			return false;
-		var productId = data[1];
-		var productName = data[0];
+		var productId = data[data.length - 1];
+		var productName;
+		for(var istr = 0; istr < data.length - 1;istr++){
+			productName += " " + data[istr];
+		}
 
 		var $divAccessories = $('#divAccessories');
 		var $inputAccessories = $('#inputAccessories');
