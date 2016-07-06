@@ -56,6 +56,14 @@ $(document).ready(function() {
     displayFieldsManager.refresh();
   });
 
+  /* validate price fields , as Thomas de Nabord said */
+  $(".money-type input[type='text']").change(function validate() {
+    var inputValue = $(this).val();
+    var parsedValue = parseFloat(inputValue).toFixed(6);
+
+    $(this).val(parsedValue);
+  });
+
   /** Attach date picker */
   $('.datepicker').datetimepicker({
     locale: iso_user,
