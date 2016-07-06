@@ -42,7 +42,7 @@ function formatedNumberToFloat(price, currencyFormat, currencySign)
 
 /**
  * @deprecated Please use asynchronous formatNumberCldr() instead.
- * 
+ *
  * @param value float The number to format
  * @param numberOfDecimal Size of fractionnal part in the number
  * @param thousenSeparator Not used anymore
@@ -61,14 +61,14 @@ function formatNumber(value, numberOfDecimal, thousenSeparator, virgule)
 /**
  * This call will load CLDR data to format a number according to the page locale, and then send formatted
  * number into parameter of the callback function. This function is asynchronous as AJAX calls may occur.
- * 
+ *
  * @param value float The number to format
  * @param callback The function to call with the resulting formatted number as unique parameter
  * @param numberOfDecimal Size of fractionnal part in the number
  */
 function formatNumberCldr(value, callback, numberOfDecimal) {
 	if (typeof numberOfDecimal === 'undefined') numberOfDecimal = 2;
-	
+
 	cldrForNumber(function(globalize) {
 		var result = globalize.numberFormatter({
 			minimumFractionDigits: 2,
@@ -80,7 +80,7 @@ function formatNumberCldr(value, callback, numberOfDecimal) {
 
 /**
  * @deprecated Please use asynchronous formatCurrencyCldr() instead.
- * 
+ *
  * @param price float The value to format in a price
  * @param currencyFormat Not used anymore
  * @param currencySign Not used anymore
@@ -98,7 +98,7 @@ function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 /**
  * This call will load CLDR data to format a price according to the page locale, and then send formatted
  * price into parameter of the callback function. This function is asynchronous as AJAX calls may occur.
- * 
+ *
  * @param price float The price to format
  * @param callback The function to call with the resulting formatted price as unique parameter
  */
@@ -246,6 +246,15 @@ function toggleMultiple(tab)
     for (var i = 0; i < len; i++)
         if (tab[i].style)
             toggle(tab[i], tab[i].style.display == 'none');
+}
+
+function truncateDecimals(value, decimals)
+{
+  var numPower = Math.pow(10, decimals);
+
+  var value = ~~(value * numPower)/numPower;
+
+  return value.toFixed(decimals);
 }
 
 /**

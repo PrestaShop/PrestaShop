@@ -59,7 +59,7 @@ $(document).ready(function() {
   /* validate price fields , as Thomas de Nabord said */
   $(".money-type input[type='text']").change(function validate() {
     var inputValue = $(this).val();
-    var parsedValue = parseFloat(inputValue).toFixed(6);
+    var parsedValue = truncateDecimals(parseFloat(inputValue),6);
 
     $(this).val(parsedValue);
   });
@@ -1508,7 +1508,7 @@ var priceCalculation = (function() {
       }
     }
 
-    return price_with_taxes.toFixed(6);
+    return price_with_taxes;
   }
 
   /**
@@ -1625,9 +1625,10 @@ var priceCalculation = (function() {
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
       var newPrice = new Number(ps_round(addTaxes(price, rates, computation_method), displayPricePrecision)) + new Number(getEcotaxTaxIncluded());
+      newPrice = truncateDecimals(newPrice, 6);
 
-      priceTTCElem.val(newPrice.toFixed(6));
-      priceTTCShorcutElem.val(newPrice.toFixed(6));
+      priceTTCElem.val(newPrice);
+      priceTTCShorcutElem.val(newPrice);
     },
     'taxExclude': function() {
       var price = parseFloat(priceTTCElem.val().replace(/,/g, '.'));
@@ -1638,6 +1639,7 @@ var priceCalculation = (function() {
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
       var newPrice = ps_round(removeTaxes(ps_round(price - getEcotaxTaxIncluded(), displayPricePrecision), rates, computation_method), displayPricePrecision);
+      newPrice = truncateDecimals(newPrice, 6);
 
       priceHTElem.val(newPrice);
       priceHTShortcutElem.val(newPrice);
@@ -1652,6 +1654,7 @@ var priceCalculation = (function() {
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
       var newPrice = ps_round(addTaxes(price, rates, computation_method));
+      newPrice = truncateDecimals(newPrice, 6);
 
       targetInput.val(newPrice);
     },
@@ -1660,8 +1663,9 @@ var priceCalculation = (function() {
       var finalPrice = obj.closest('div[id^="combination_form_"]').find('.final-price');
       var defaultFinalPrice = finalPrice.attr('data-price');
       var priceToBeChanged = new Number(price) + new Number(defaultFinalPrice);
+      priceToBeChanged = truncateDecimals(newPrice, 6);
 
-      finalPrice.html(ps_round(priceToBeChanged, 6));
+      finalPrice.html(priceToBeChanged);
     },
     'impactTaxExclude': function(obj) {
       var price = parseFloat(obj.val().replace(/,/g, '.'));
@@ -1673,6 +1677,7 @@ var priceCalculation = (function() {
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
       var newPrice = ps_round(removeTaxes(ps_round(price, displayPricePrecision), rates, computation_method), displayPricePrecision);
+      newPrice = truncateDecimals(newPrice, 6);
 
       targetInput.val(newPrice);
     }
