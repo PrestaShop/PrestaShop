@@ -42,7 +42,7 @@
 						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="datepicker" />
 					</p>
 					<button type="submit" name="submitDatePicker" id="submitDatePicker" class="btn btn-default">
-						<i class="icon-save"></i> {if isset($translations.Save)}{$translations.Save}{else}{l s='Save'}{/if}
+						<i class="icon-save"></i> {if isset($translations.Save)}{$translations.Save}{else}{l s='Save' d='Admin.Actions'}{/if}
 					</button>
 				</div>
 			</form>

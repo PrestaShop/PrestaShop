@@ -85,7 +85,7 @@
 				<input type="hidden" name="id_module" value="{$id_module}" />
 				<input type="hidden" name="id_hook" value="{$id_hook}" />
 			{/if}
-			<button type="submit" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+			<button type="submit" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save' d='Admin.Actions'}</button>
 		</div>
 	</div>
 </form>

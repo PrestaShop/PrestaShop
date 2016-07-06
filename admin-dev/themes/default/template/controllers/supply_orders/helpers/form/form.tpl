@@ -112,7 +112,7 @@
 				<i class="process-icon-save"></i> {l s='Save order'}
 			</button>
 			<a class="btn btn-default" onclick="window.history.back();">
-				<i class="process-icon-cancel"></i> {l s='Cancel'}
+				<i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}
 			</a>
 			<button type="submit" class="btn btn-default btn btn-default pull-right" name="submitAddsupply_orderAndStay"><i class="process-icon-save"></i> {l s='Save order and stay'}</button>
 		</div>

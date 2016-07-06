@@ -117,7 +117,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="control-label col-lg-3">{l s='Search'}</label>
+				<label class="control-label col-lg-3">{l s='Search' d='Admin.Actions'}</label>
 				<div class="col-lg-9">
 					<input class="btn btn-default" type="text" size="34" id="filterProduct" name="filterProduct" onkeyup="fillProducts();" />
 				</div>

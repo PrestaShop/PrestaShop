@@ -131,7 +131,7 @@
 					<div class="panel-footer">
 						<button type="button" href="#" class="btn btn-default show-login-form" tabindex="7">
 							<i class="icon-caret-left"></i>
-							{l s='Cancel'}
+							{l s='Cancel' d='Admin.Actions'}
 						</button>
 						<button class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
 							<i class="icon-ok text-success"></i>

@@ -145,11 +145,11 @@
 								<p>
 									<button type="submit" name="submitEditNote" class="btn btn-default">
 										<i class="icon-save"></i>
-										{l s='Save'}
+										{l s='Save' d='Admin.Actions'}
 									</button>
 									<a class="btn btn-default" href="#" id="cancelNote" onclick="$('#invoiceNote{$document->id}').hide();return false;">
 										<i class="icon-remove"></i>
-										{l s='Cancel'}
+										{l s='Cancel' d='Admin.Actions'}
 									</a>
 								</p>
 							</form>

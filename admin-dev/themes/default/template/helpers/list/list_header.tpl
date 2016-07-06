@@ -377,7 +377,7 @@
 							<span class="pull-right">
 								{*Search must be before reset for default form submit*}
 								<button type="submit" id="submitFilterButton{$list_id}" name="submitFilter" class="btn btn-default" data-list-id="{$list_id}">
-									<i class="icon-search"></i> {l s='Search'}
+									<i class="icon-search"></i> {l s='Search' d='Admin.Actions'}
 								</button>
 								{if $filters_has_value}
 									<button type="submit" name="submitReset{$list_id}" class="btn btn-warning">

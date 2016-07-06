@@ -78,16 +78,16 @@
 				</div>
 				<div id="translation_mails-control-actions" class="panel-footer">
 					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default">
-						<i class="process-icon-cancel"></i> {l s='Cancel'}
+						<i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}
 					</a>
 					{*$toggle_button*}
 					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right">
 						<i class="process-icon-save"></i>
-						{l s='Save'}
+						{l s='Save' d='Admin.Actions'}
 					</button>
 					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right">
 						<i class="process-icon-save"></i>
-						{l s='Save and stay'}
+						{l s='Save and stay' d='Admin.Actions'}
 					</button>
 				</div>
 			</div>

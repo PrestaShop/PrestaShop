@@ -40,7 +40,7 @@
 			{if isset($file.delete_url)}
 			<p>
 				<a class="btn btn-default" href="{$file.delete_url}">
-					<i class="icon-trash"></i> {l s='Delete'}
+					<i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}
 				</a>
 			</p>
 			{/if}

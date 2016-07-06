@@ -38,7 +38,7 @@
 				<div class="pull-right">
 					<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers')|escape:'html':'UTF-8'}&amp;id_address={$addresse.id_address}&amp;editaddresses=1">
 						<i class="icon-edit"></i>
-						{l s='Edit'}</a>
+						{l s='Edit' d='Admin.Actions'}</a>
 				</div>
 			</div>
 
@@ -74,10 +74,10 @@
 					{$product->name}
 					<div class="pull-right">
 						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm">
-							<i class="icon-edit"></i> {l s='Edit'}
+							<i class="icon-edit"></i> {l s='Edit' d='Admin.Actions'}
 						</a>
 						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'deleteproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
-							<i class="icon-trash"></i> {l s='Delete'}
+							<i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}
 						</a>
 					</div>
 				</div>
@@ -103,11 +103,11 @@
 					<div class="pull-right">
 						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'updateproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm">
 							<i class="icon-edit"></i>
-							{l s='Edit'}
+							{l s='Edit' d='Admin.Actions'}
 						</a>
 						<a href="{$link->getAdminLink('AdminProducts', true, ['id_product' => $product->id|intval, 'deleteproduct' => '1'])|escape:'html':'UTF-8'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
 							<i class="icon-trash"></i>
-							{l s='Delete'}
+							{l s='Delete' d='Admin.Actions'}
 						</a>
 					</div>
 

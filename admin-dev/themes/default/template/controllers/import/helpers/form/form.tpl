@@ -34,7 +34,7 @@
 		<div class="panel">
 			<h3>
 				<i class="icon-upload"></i>
-				{l s='Import'}
+				{l s='Import' d='Admin.Actions'}
 			</h3>
 			<div class="alert alert-info">
 				<ul class="list-unstyled">
@@ -123,7 +123,7 @@
 											<li>
 												<a class="csv-delete-link" href="#">
 													<i class="icon-trash"></i>
-													{l s='Delete'}
+													{l s='Delete' d='Admin.Actions'}
 												</a>
 											</li>
 										</ul>
@@ -155,7 +155,7 @@
 											<li>
 												<a href="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;csvfilename={$filename|@urlencode}&amp;delete=1">
 													<i class="icon-trash"></i>
-													{l s='Delete'}
+													{l s='Delete' d='Admin.Actions'}
 												</a>
 											</li>
 										</ul>

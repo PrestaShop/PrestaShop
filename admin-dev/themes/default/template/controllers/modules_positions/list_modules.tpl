@@ -133,7 +133,7 @@
 									<div class="btn-group">
 										<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']}&amp;editGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token|escape:'html':'UTF-8'}">
 											<i class="icon-pencil"></i>
-											{l s='Edit'}
+											{l s='Edit' d='Admin.Actions'}
 										</a>
 										<a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 											<span class="caret"></span>&nbsp;

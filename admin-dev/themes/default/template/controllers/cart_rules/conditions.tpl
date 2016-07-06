@@ -136,7 +136,7 @@
 									<option value="{$country.id_country|intval}">&nbsp;{$country.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="country_select_add" class="btn  btn-default btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
+							<a id="country_select_add" class="btn  btn-default btn-block clearfix">{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Selected countries'}</p>
@@ -170,7 +170,7 @@
 									<option value="{$carrier.id_reference|intval}">&nbsp;{$carrier.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="carrier_select_add" class="btn btn-default btn-block clearfix" >{l s='Add'} <i class="icon-arrow-right"></i></a>
+							<a id="carrier_select_add" class="btn btn-default btn-block clearfix" >{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Selected carriers'}</p>
@@ -204,7 +204,7 @@
 									<option value="{$group.id_group|intval}">&nbsp;{$group.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="group_select_add" class="btn btn-default btn-block clearfix" >{l s='Add'} <i class="icon-arrow-right"></i></a>
+							<a id="group_select_add" class="btn btn-default btn-block clearfix" >{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Selected groups'}</p>
@@ -233,15 +233,15 @@
 					<tr>
 						<td>
 							<p>{l s='Uncombinable cart rules'}</p>
-							<input id="cart_rule_select_1_filter" autocomplete="off" class="form-control uncombinable_search_filter" type="text" name="uncombinable_filter" placeholder="{l s='Search'}" value="">
+							<input id="cart_rule_select_1_filter" autocomplete="off" class="form-control uncombinable_search_filter" type="text" name="uncombinable_filter" placeholder="{l s='Search' d='Admin.Actions'}" value="">
 							<select id="cart_rule_select_1" class="jscroll" multiple="">
 							</select>
 							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next'}</a>
-							<a id="cart_rule_select_add" class="btn btn-default btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
+							<a id="cart_rule_select_add" class="btn btn-default btn-block clearfix">{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Combinable cart rules'}</p>
-							<input id="cart_rule_select_2_filter" autocomplete="off" class="form-control combinable_search_filter" type="text" name="combinable_filter" placeholder="{l s='Search'}" value="">
+							<input id="cart_rule_select_2_filter" autocomplete="off" class="form-control combinable_search_filter" type="text" name="combinable_filter" placeholder="{l s='Search' d='Admin.Actions'}" value="">
 							<select name="cart_rule_select[]" class="jscroll" id="cart_rule_select_2" multiple>
 							</select>
 							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next'}</a>
@@ -288,7 +288,7 @@
 									<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="shop_select_add" class="btn btn-default btn-block clearfix" >{l s='Add'} <i class="icon-arrow-right"></i></a>
+							<a id="shop_select_add" class="btn btn-default btn-block clearfix" >{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Selected shops'}</p>

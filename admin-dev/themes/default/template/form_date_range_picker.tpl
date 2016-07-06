@@ -31,7 +31,7 @@
 					</div>
 					<div class="col-md-4">
 						<div class="row">
-							<button type="submit" name="submitDatePicker" id="submitDatePicker" class="btn btn-default"><i class="icon-save"></i> {l s='Save'}</button>
+							<button type="submit" name="submitDatePicker" id="submitDatePicker" class="btn btn-default"><i class="icon-save"></i> {l s='Save' d='Admin.Actions'}</button>
 						</div>
 					</div>
 				</div>

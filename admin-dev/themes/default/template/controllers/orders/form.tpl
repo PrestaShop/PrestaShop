@@ -774,7 +774,7 @@
 				else
 					var value = this.value_real;
 
-				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+value+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete'}</a></td></tr>';
+				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+value+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete' d='Admin.Actions'}</a></td></tr>';
 			});
 		$('#voucher_list tbody').html($.trim(vouchers_html));
 		if ($('#voucher_list tbody').html().length == 0)
@@ -1365,7 +1365,7 @@
 					<select id="id_address_delivery" name="id_address_delivery"></select>
 				</div>
 				<div class="well">
-					<a href="" id="edit_delivery_address" class="btn btn-default pull-right fancybox"><i class="icon-pencil"></i> {l s='Edit'}</a>
+					<a href="" id="edit_delivery_address" class="btn btn-default pull-right fancybox"><i class="icon-pencil"></i> {l s='Edit' d='Admin.Actions'}</a>
 					<div id="address_delivery_detail"></div>
 				</div>
 			</div>
@@ -1378,7 +1378,7 @@
 					<select id="id_address_invoice" name="id_address_invoice"></select>
 				</div>
 				<div class="well">
-					<a href="" id="edit_invoice_address" class="btn btn-default pull-right fancybox"><i class="icon-pencil"></i> {l s='Edit'}</a>
+					<a href="" id="edit_invoice_address" class="btn btn-default pull-right fancybox"><i class="icon-pencil"></i> {l s='Edit' d='Admin.Actions'}</a>
 					<div id="address_invoice_detail"></div>
 				</div>
 			</div>

@@ -63,7 +63,7 @@
 						<input type="hidden" name="{$key|escape:'html':'UTF-8'}" value="{$value|escape:'html':'UTF-8'}" />
 					{/if}
 				{/foreach}
-				<input type="submit" class="btn btn-default" value="{l s='Delete'}" />
+				<input type="submit" class="btn btn-default" value="{l s='Delete' d='Admin.Actions'}" />
 			</div>
 		</form>
 		<script>

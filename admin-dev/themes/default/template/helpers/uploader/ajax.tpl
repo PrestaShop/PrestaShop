@@ -33,7 +33,7 @@
 			{if isset($file.delete_url)}
 			<p>
 				<a class="btn btn-default" href="{$file.delete_url}">
-					<i class="icon-trash"></i> {l s='Delete'}
+					<i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}
 				</a>
 			</p>
 			{/if}
@@ -139,7 +139,7 @@
 										template += data.result.{$name|escape:'html':'UTF-8'}[i].image;
 
 										if (typeof data.result.{$name|escape:'html':'UTF-8'}[i].delete_url !== 'undefined')
-											template += '<p><a class="btn btn-default" href="'+data.result.{$name|escape:'html':'UTF-8'}[i].delete_url+'"><i class="icon-trash"></i> {l s='Delete'}</a></p>';
+											template += '<p><a class="btn btn-default" href="'+data.result.{$name|escape:'html':'UTF-8'}[i].delete_url+'"><i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}</a></p>';
 
 										template += '</div>';
 										$('#{$id|escape:'html':'UTF-8'}-images-thumbnails').html($('#{$id|escape:'html':'UTF-8'}-images-thumbnails').html()+template);

@@ -74,7 +74,7 @@
 				</div>
 				<div class="col-lg-2">
 					<a id="loadImportMatchs" href="#" class="btn btn-default"><i class="icon-cogs"></i> {l s='Load'}</a>
-					<a id="deleteImportMatchs" href="#" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a>
+					<a id="deleteImportMatchs" href="#" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete' d='Admin.Actions'}</a>
 				</div>
 			</div>
 			<div class="form-group">
@@ -83,7 +83,7 @@
 					<input type="text" name="newImportMatchs" id="newImportMatchs" />
 				</div>
 				<div class="col-lg-2">
-					<a id="saveImportMatchs" class="btn btn-default" href="#"><i class="icon-save"></i> {l s='Save'}</a>
+					<a id="saveImportMatchs" class="btn btn-default" href="#"><i class="icon-save"></i> {l s='Save' d='Admin.Actions'}</a>
 				</div>
 			</div>
 		</div>
@@ -134,11 +134,11 @@
 			<div class="panel-footer">
 				<button type="button" class="btn btn-default" onclick="window.history.back();">
 					<i class="process-icon-cancel text-danger"></i>
-					{l s='Cancel'}
+					{l s='Cancel' d='Admin.Actions'}
 				</button>
 				<button id="import" name="import" type="submit" onclick="return (validateImportation(new Array({$res})));"  class="btn btn-default pull-right">
 					<i class="process-icon-ok text-success"></i>
-					{l s='Import'}
+					{l s='Import' d='Admin.Actions'}
 				</button>
 			</div>
 		</form>
