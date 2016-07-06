@@ -29,7 +29,7 @@
             <tr>
               <th>{l s='Reference' d='Shop.Theme.Catalog'}</th>
               <th>{l s='Product' d='Shop.Theme.Catalog'}</th>
-              <th>{l s='Quantity' d='Shop.Theme.Catalog'}</th>
+              <th>{l s='Quantity' d='Shop.Theme.Checkout'}</th>
             </tr>
           </thead>
           <tbody>
