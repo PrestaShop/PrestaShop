@@ -5,7 +5,7 @@
       <thead>
       <tr>
         <th>{l s='Quantity' d='Shop.Theme.Catalog'}</th>
-        <th>{if $display_discount_price}{l s='Price' d='Shop.Theme.Catalog'}{else}{l s='Discount' d='Shop.Theme.Catalog'}{/if}</th>
+        <th>{$feature_active.quantity_discount.label}</th>
         <th>{l s='You Save' d='Shop.Theme.Catalog'}</th>
       </tr>
       </thead>

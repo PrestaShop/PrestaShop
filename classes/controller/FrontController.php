@@ -1301,7 +1301,7 @@ class FrontControllerCore extends Controller
     {
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-
+        $quantity_discount_price = Configuration::get('PS_DISPLAY_DISCOUNT_PRICE');
 
         return [
             'display_taxes_label' => $this->getDisplayTaxesLabel(),
@@ -1311,6 +1311,12 @@ class FrontControllerCore extends Controller
                             || (Group::isFeatureActive() && !(bool)Group::getCurrent()->show_prices)),
             'opt_in' => array(
                 'partner' => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
+            ),
+            'quantity_discount' => array(
+                'type' => ($quantity_discount_price) ? 'price' : 'discount',
+                'label' => ($quantity_discount_price)
+                    ? $this->getTranslator()->trans('Price', array(), 'Shop.Theme.Catalog')
+                    : $this->getTranslator()->trans('Discount', array(), 'Shop.Theme.Catalog'),
             ),
         ];
     }
