@@ -57,7 +57,7 @@ $(document).ready(function() {
   });
 
   /* validate price fields , as Thomas de Nabord said */
-  $(".money-type input[type='text']").change(function validate() {
+  $(".money-type input[type='text'], .attribute-price input[type='number']").change(function validate() {
     var inputValue = $(this).val();
     var parsedValue = truncateDecimals(parseFloat(inputValue),6);
 
