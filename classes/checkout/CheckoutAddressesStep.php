@@ -50,6 +50,12 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
         if (isset($requestParams['id_address_delivery'])) {
             $id_address = $requestParams['id_address_delivery'];
+
+            if ($this->getCheckoutSession()->getIdAddressDelivery() != $id_address) {
+                $this->setCurrent(true);
+                $this->getCheckoutProcess()->invalidateAllStepsAfterCurrent();
+            }
+
             $this->getCheckoutSession()->setIdAddressDelivery($id_address);
             if ($this->use_same_address) {
                 $this->getCheckoutSession()->setIdAddressInvoice($id_address);

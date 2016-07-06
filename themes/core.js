@@ -1850,21 +1850,33 @@
 	  (0, _jquery2['default'])('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
 	  (0, _jquery2['default'])('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
 	
-	  (0, _jquery2['default'])('body').on('click', '.checkout-step.-reachable h1', function (event) {
+	  changeCurrentCheckoutStep();
+	  collapsePaymentOptions();
+	}
+	
+	function changeCurrentCheckoutStep() {
+	  (0, _jquery2['default'])('.checkout-step').off('click');
+	
+	  (0, _jquery2['default'])('.-js-current').prevAll().add((0, _jquery2['default'])('#checkout-personal-information-step.-js-current').nextAll()).on('click', function (event) {
 	    (0, _jquery2['default'])('.-js-current, .-current').removeClass('-js-current -current');
 	    (0, _jquery2['default'])(event.target).closest('.checkout-step').toggleClass('-js-current');
-	  });
-	  (0, _jquery2['default'])('body').on('click', '.checkout-step.-unreachable h1', function (event) {
-	    (0, _jquery2['default'])('button.continue').last().click();
+	    _prestashop2['default'].emit('change current checkout step');
 	  });
 	
-	  collapsePaymentOptions();
+	  (0, _jquery2['default'])('.-js-current:not(#checkout-personal-information-step)').nextAll().on('click', function (event) {
+	    (0, _jquery2['default'])('.-js-current button.continue').click();
+	    _prestashop2['default'].emit('change current checkout step');
+	  });
 	}
 	
 	(0, _jquery2['default'])(document).ready(function () {
 	  if ((0, _jquery2['default'])('body#checkout').length === 1) {
 	    setupCheckoutScripts();
 	  }
+	
+	  _prestashop2['default'].on('change current checkout step', function (event) {
+	    changeCurrentCheckoutStep();
+	  });
 	});
 
 /***/ },
@@ -2135,12 +2147,8 @@
 	      er = arguments[1];
 	      if (er instanceof Error) {
 	        throw er; // Unhandled 'error' event
-	      } else {
-	          // At least give some kind of context to the user
-	          var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
-	          err.context = er;
-	          throw err;
-	        }
+	      }
+	      throw TypeError('Uncaught, unspecified "error" event.');
 	    }
 	  }
 	

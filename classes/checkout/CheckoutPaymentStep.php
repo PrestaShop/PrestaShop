@@ -37,7 +37,11 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
     {
         $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
         $deliveryOptionKey = $this->getCheckoutSession()->getSelectedDeliveryOption();
-        $selectedDeliveryOption = $deliveryOptions[$deliveryOptionKey];
+        if (isset($deliveryOptions[$deliveryOptionKey])) {
+            $selectedDeliveryOption = $deliveryOptions[$deliveryOptionKey];
+        } else {
+            $selectedDeliveryOption = 0;
+        }
         unset($selectedDeliveryOption['product_list']);
 
         $assignedVars = array(
