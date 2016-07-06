@@ -47,24 +47,24 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_attribute_group' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'filter_key' => 'b!name',
                 'align' => 'left'
             ),
             'count_values' => array(
-                'title' => $this->l('Values count'),
+                'title' => $this->trans('Values count', array(), 'Admin.Catalog.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'orderby' => false,
                 'search' => false
             ),
             'position' => array(
-                'title' => $this->l('Position'),
+                'title' => $this->trans('Position', array(), 'Admin.Global'),
                 'filter_key' => 'a!position',
                 'position' => 'position',
                 'align' => 'center',
@@ -74,9 +74,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Notifications.Info'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->l('Delete selected items?')
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Info')
             )
         );
         $this->fieldImageSettings = array('name' => 'texture', 'dir' => 'co');
@@ -114,19 +114,19 @@ class AdminAttributesGroupsControllerCore extends AdminController
             ));
 
             if (!Validate::isLoadedObject($obj = new AttributeGroup((int)$id))) {
-                $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)');
                 return;
             }
 
             $this->attribute_name = $obj->name;
             $this->fields_list = array(
                 'id_attribute' => array(
-                    'title' => $this->l('ID'),
+                    'title' => $this->trans('ID', array(), 'Admin.Global'),
                     'align' => 'center',
                     'class' => 'fixed-width-xs'
                 ),
                 'name' => array(
-                    'title' => $this->l('Value'),
+                    'title' => $this->trans('Value', array(), 'Admin.Catalog.Feature'),
                     'width' => 'auto',
                     'filter_key' => 'b!name'
                 )
@@ -134,13 +134,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
             if ($obj->group_type == 'color') {
                 $this->fields_list['color'] = array(
-                    'title' => $this->l('Color'),
+                    'title' => $this->trans('Color', array(), 'Admin.Catalog.Feature'),
                     'filter_key' => 'a!color',
                 );
             }
 
             $this->fields_list['position'] = array(
-                'title' => $this->l('Position'),
+                'title' => $this->trans('Position', array(), 'Admin.Global'),
                 'filter_key' => 'a!position',
                 'position' => 'position',
                 'class' => 'fixed-width-md'
@@ -170,45 +170,45 @@ class AdminAttributesGroupsControllerCore extends AdminController
         $group_type = array(
             array(
                 'id' => 'select',
-                'name' => $this->l('Drop-down list')
+                'name' => $this->trans('Drop-down list', array(), 'Admin.Global')
             ),
             array(
                 'id' => 'radio',
-                'name' => $this->l('Radio buttons')
+                'name' => $this->trans('Radio buttons', array(), 'Admin.Global')
             ),
             array(
                 'id' => 'color',
-                'name' => $this->l('Color or texture')
+                'name' => $this->trans('Color or texture', array(), 'Admin.Catalog.Feature')
             ),
         );
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Attributes'),
+                'title' => $this->trans('Attributes', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'icon-info-sign'
             ),
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'required' => true,
                     'col' => '4',
-                    'hint' => $this->l('Your internal name for this attribute.').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
+                    'hint' => $this->trans('Your internal name for this attribute.', array(), 'Admin.Catalog.Help').'&nbsp;'.$this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}'
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Public name'),
+                    'label' => $this->trans('Public name', array(), 'Admin.Catalog.Feature'),
                     'name' => 'public_name',
                     'lang' => true,
                     'required' => true,
                     'col' => '4',
-                    'hint' => $this->l('The public name for this attribute, displayed to the customers.').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
+                    'hint' => $this->trans('The public name for this attribute, displayed to the customers.', array(), 'Admin.Catalog.Help').'&nbsp;'.$this->trans('Invalid characters:', array(), 'Admin.Notifications.INfo').' <>;=#{}'
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Attribute type'),
+                    'label' => $this->trans('Attribute type', array(), 'Admin.Catalog.Feature'),
                     'name' => 'group_type',
                     'required' => true,
                     'options' => array(
@@ -217,7 +217,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                         'name' => 'name'
                     ),
                     'col' => '2',
-                    'hint' => $this->l('The way the attribute\'s values will be presented to the customers in the product\'s page.')
+                    'hint' => $this->trans('The way the attribute\'s values will be presented to the customers in the product\'s page.', array(), 'Admin.Catalog.Help')
                 )
             )
         );
@@ -225,7 +225,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->l('Shop association'),
+                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             );
         }
@@ -251,13 +251,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
         $this->show_form_cancel_button = true;
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Values'),
+                'title' => $this->trans('Values', array(), 'Admin.Global'),
                 'icon' => 'icon-info-sign'
             ),
             'input' => array(
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Attribute group'),
+                    'label' => $this->trans('Attribute group', array(), 'Admin.Catalog.Feature'),
                     'name' => 'id_attribute_group',
                     'required' => true,
                     'options' => array(
@@ -265,15 +265,15 @@ class AdminAttributesGroupsControllerCore extends AdminController
                         'id' => 'id_attribute_group',
                         'name' => 'name'
                     ),
-                    'hint' => $this->l('Choose the attribute group for this value.')
+                    'hint' => $this->trans('Choose the attribute group for this value.', array(), 'Admin.Catalog.Help')
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Value'),
+                    'label' => $this->trans('Value', array(), 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'required' => true,
-                    'hint' => $this->l('Invalid characters:').' <>;=#{}'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}'
                 )
             )
         );
@@ -289,7 +289,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->l('Shop association'),
+                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
                 'values' => Shop::getTree()
             );
@@ -301,24 +301,24 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         $this->fields_form['input'][] = array(
             'type' => 'color',
-            'label' => $this->l('Color'),
+            'label' => $this->trans('Color', array(), 'Admin.Catalog.Feature'),
             'name' => 'color',
-            'hint' => $this->l('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").')
+            'hint' => $this->trans('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").', array(), 'Admin.Catalog.Help')
         );
 
         $this->fields_form['input'][] = array(
             'type' => 'file',
-            'label' => $this->l('Texture'),
+            'label' => $this->trans('Texture', array(), 'Admin.Catalog.Feature'),
             'name' => 'texture',
             'hint' => array(
-                $this->l('Upload an image file containing the color texture from your computer.'),
-                $this->l('This will override the HTML color!')
+                $this->trans('Upload an image file containing the color texture from your computer.', array(), 'Admin.Catalog.Help'),
+                $this->trans('This will override the HTML color!', array(), 'Admin.Catalog.Help')
             )
         );
 
         $this->fields_form['input'][] = array(
             'type' => 'current_texture',
-            'label' => $this->l('Current texture'),
+            'label' => $this->trans('Current texture', array(), 'Admin.Catalog.Feature'),
             'name' => 'current_texture'
         );
 
@@ -333,7 +333,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         $this->fields_form['buttons'] = array(
             'save-and-stay' => array(
-                'title' => $this->l('Save then add another value'),
+                'title' => $this->trans('Save then add another value', array(), 'Admin.Catalog.Feature'),
                 'name' => 'submitAdd'.$this->table.'AndStay',
                 'type' => 'submit',
                 'class' => 'btn btn-default pull-right',
@@ -403,7 +403,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 if ($object->isAttribute((int)Tools::getValue('id_attribute_group'),
                     Tools::getValue('name_'.$language['id_lang']), $language['id_lang'])) {
                     $this->errors['name_'.$language['id_lang']] =
-                        sprintf(Tools::displayError('The attribute value "%1$s" already exist for %2$s language'),
+                        sprintf($this->trans('The attribute value "%1$s" already exist for %2$s language'),
                         Tools::getValue('name_'.$language['id_lang']), $language['name']);
                 }
             }
@@ -465,8 +465,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
     {
         if (!Combination::isFeatureActive()) {
             $url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
-                    $this->l('Performance').'</a>';
-            $this->displayWarning(sprintf($this->l('This feature has been disabled. You can activate it here: %s.'), $url));
+                    $this->trans('Performance', array(), 'Admin.Global').'</a>';
+            $this->displayWarning(sprintf($this->trans('This feature has been disabled. You can activate it here: %s.', array('%s' => $url), 'Admin.Catalog.Notification')));
             return;
         }
 
@@ -509,12 +509,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_attribute_group'] = array(
                 'href' => self::$currentIndex.'&addattribute_group&token='.$this->token,
-                'desc' => $this->l('Add new attribute', null, null, false),
+                'desc' => $this->trans('Add new attribute', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new'
             );
             $this->page_header_toolbar_btn['new_value'] = array(
                 'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
-                'desc' => $this->l('Add new value', null, null, false),
+                'desc' => $this->trans('Add new value', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -522,7 +522,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         if ($this->display == 'view') {
             $this->page_header_toolbar_btn['new_value'] = array(
                 'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
-                'desc' => $this->l('Add new value', null, null, false),
+                'desc' => $this->trans('Add new value', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -540,44 +540,44 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 // Default save button - action dynamically handled in javascript
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions'),
                 );
 
                 if ($this->display == 'editAttributes' && !$this->id_attribute) {
                     $this->toolbar_btn['save-and-stay'] = array(
                         'short' => 'SaveAndStay',
                         'href' => '#',
-                        'desc' => $this->l('Save then add another value', null, null, false),
+                        'desc' => $this->trans('Save then add another value', array(), 'Admin.Catalog.Help'),
                         'force_desc' => true,
                     );
                 }
 
                 $this->toolbar_btn['back'] = array(
                     'href' => self::$currentIndex.'&token='.$this->token,
-                    'desc' => $this->l('Back to list', null, null, false)
+                    'desc' => $this->trans('Back to list', array(), 'Admin.Actions')
                 );
                 break;
             case 'view':
                 $this->toolbar_btn['newAttributes'] = array(
                     'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
-                    'desc' => $this->l('Add New Values', null, null, false),
+                    'desc' => $this->trans('Add New Values', array(), 'Admin.Catalog.Feature'),
                     'class' => 'toolbar-new'
                 );
 
                 $this->toolbar_btn['back'] = array(
                     'href' => self::$currentIndex.'&token='.$this->token,
-                    'desc' => $this->l('Back to list', null, null, false)
+                    'desc' => $this->trans('Back to list', array(), 'Admin.Actions')
                 );
                 break;
             default: // list
                 $this->toolbar_btn['new'] = array(
                     'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
-                    'desc' => $this->l('Add New Attributes', null, null, false)
+                    'desc' => $this->trans('Add New Attributes', array(), 'Admin.Catalog.Feature')
                 );
                 if ($this->can_import) {
                     $this->toolbar_btn['import'] = array(
                         'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
-                        'desc' => $this->l('Import', null, null, false)
+                        'desc' => $this->trans('Import', array(), 'Admin.Actions')
                     );
                 }
         }
@@ -589,11 +589,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         switch ($this->display) {
             case 'edit':
-                $bread_extended[] = $this->l('Edit New Attribute');
+                $bread_extended[] = $this->trans('Edit New Attribute', array(), 'Admin.Catalog.Feature');
                 break;
 
             case 'add':
-                $bread_extended[] = $this->l('Add New Attribute');
+                $bread_extended[] = $this->trans('Add New Attribute', array(), 'Admin.Catalog.Feature');
                 break;
 
             case 'view':
@@ -615,13 +615,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
                             $bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminAttributesGroups').'&id_attribute_group='.$id.'&viewattribute_group">'.$obj->name[$this->context->employee->id_lang].'</a>';
                         }
                         if (Validate::isLoadedObject($obj = new Attribute((int)$this->id_attribute))) {
-                            $bread_extended[] =  sprintf($this->l('Edit: %s'), $obj->name[$this->context->employee->id_lang]);
+                            $bread_extended[] =  sprintf($this->trans('Edit: %s', array('%s' => $obj->name[$this->context->employee->id_lang]), 'Admin.Catalog.Feature'));
                         }
                     } else {
-                        $bread_extended[] = $this->l('Edit Value');
+                        $bread_extended[] = $this->trans('Edit Value', array(), 'Admin.Catalog.Feature');
                     }
                 } else {
-                    $bread_extended[] = $this->l('Add New Value');
+                    $bread_extended[] = $this->trans('Add New Value', array(), 'Admin.Catalog.Feature');
                 }
                 break;
         }
@@ -678,10 +678,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
         }
 
         if (!Validate::isLoadedObject($object)) {
-            $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
-                ' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').
+                ' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         } elseif (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position'))) {
-            $this->errors[] = Tools::displayError('Failed to update the position.');
+            $this->errors[] = $this->trans('Failed to update the position.', array(), 'Admin.Notifications.Error');
         } else {
             $id_identifier_str = ($id_identifier = (int)Tools::getValue($this->identifier)) ? '&'.$this->identifier.'='.$id_identifier : '';
             $redirect = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.$id_identifier_str.'&token='.$this->token;
@@ -724,21 +724,21 @@ class AdminAttributesGroupsControllerCore extends AdminController
         // If it's an attribute, load object Attribute()
         if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute')) {
             if ($this->access('edit') !== '1') {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } elseif (!$object = new Attribute((int)Tools::getValue($this->identifier))) {
-                $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)');
             }
 
             if (Tools::getValue('position') !== false && Tools::getValue('id_attribute')) {
                 $_POST['id_attribute_group'] = $object->id_attribute_group;
                 if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position'))) {
-                    $this->errors[] = Tools::displayError('Failed to update the position.');
+                    $this->errors[] = $this->trans('Failed to update the position.', array(), 'Admin.Notifications.Error');
                 } else {
                     Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminAttributesGroups').'#details_details_'.$object->id_attribute_group);
                 }
             } elseif (Tools::isSubmit('deleteattribute') && Tools::getValue('id_attribute')) {
                 if (!$object->delete()) {
-                    $this->errors[] = Tools::displayError('Failed to delete the attribute.');
+                    $this->errors[] = $this->trans('Failed to delete the attribute.', array(), 'Admin.Catalog.Notification');
                 } else {
                     Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getAdminTokenLite('AdminAttributesGroups'));
                 }
@@ -774,12 +774,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
                             AttributeGroup::cleanPositions();
                             Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
                         }
-                        $this->errors[] = Tools::displayError('An error occurred while deleting this selection.');
+                        $this->errors[] = $this->trans('An error occurred while deleting this selection.', array(), 'Admin.Notifications.Error');
                     } else {
-                        $this->errors[] = Tools::displayError('You must select at least one element to delete.');
+                        $this->errors[] = $this->trans('You must select at least one element to delete.', array(), 'Admin.Notifications.Error');
                     }
                 } else {
-                    $this->errors[] = Tools::displayError('You do not have permission to delete this.');
+                    $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
                 }
                 // clean position after delete
                 AttributeGroup::cleanPositions();
