@@ -1,6 +1,6 @@
 <nav class="pagination">
   <div class="col-md-4">
-    {l s='Showing %s-%s of %s item(s)' d='Shop.Theme.Catalog' sprintf=[$pagination.items_shown_from ,$pagination.items_shown_to, $pagination.total_items]}
+    {l s='Showing %from%-%to% of %total% item(s)' d='Shop.Theme.Catalog' sprintf=['%from%' => $pagination.items_shown_from ,'%to%' => $pagination.items_shown_to, '%total%' => $pagination.total_items]}
   </div>
   <div class="col-md-6">
     <ul class="page-list clearfix text-xs-center">
