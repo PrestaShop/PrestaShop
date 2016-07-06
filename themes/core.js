@@ -2017,7 +2017,7 @@
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
 	(0, _jquery2['default'])(document).ready(function () {
-	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute], #quantity_wanted', function () {
+	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute]', function () {
 	    (0, _jquery2['default'])("input[name$='refresh']").click();
 	  });
 	
@@ -2026,6 +2026,7 @@
 	      (0, _jquery2['default'])('.product-prices').replaceWith(resp.product_prices);
 	      (0, _jquery2['default'])('.product-customization').replaceWith(resp.product_customization);
 	      (0, _jquery2['default'])('.product-variants').replaceWith(resp.product_variants);
+	      (0, _jquery2['default'])('.product-discounts').replaceWith(resp.product_discounts);
 	      (0, _jquery2['default'])('.images-container').replaceWith(resp.product_cover_thumbnails);
 	      (0, _jquery2['default'])('#product-details').replaceWith(resp.product_details);
 	      (0, _jquery2['default'])('.product-add-to-cart').replaceWith(resp.product_add_to_cart);
@@ -2147,8 +2148,12 @@
 	      er = arguments[1];
 	      if (er instanceof Error) {
 	        throw er; // Unhandled 'error' event
-	      }
-	      throw TypeError('Uncaught, unspecified "error" event.');
+	      } else {
+	          // At least give some kind of context to the user
+	          var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
+	          err.context = er;
+	          throw err;
+	        }
 	    }
 	  }
 	
