@@ -5,7 +5,7 @@
       <thead>
       <tr>
         <th>{l s='Quantity' d='Shop.Theme.Catalog'}</th>
-        <th>{$feature_active.quantity_discount.label}</th>
+        <th>{$configuration.quantity_discount.label}</th>
         <th>{l s='You Save' d='Shop.Theme.Catalog'}</th>
       </tr>
       </thead>

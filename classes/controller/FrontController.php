@@ -459,13 +459,13 @@ class FrontControllerCore extends Controller
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
             'urls' => $this->getTemplateVarUrls(),
-            'feature_active' => $this->getTemplateVarFeatureActive(),
+            'configuration' => $this->getTemplateVarConfiguration(),
             'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
             'breadcrumb' => $this->getBreadcrumb(),
-            'link'                  => $this->context->link,
-            'time'                  => time(),
-            'static_token'          => Tools::getToken(false),
-            'token'                 => Tools::getToken(),
+            'link' => $this->context->link,
+            'time' => time(),
+            'static_token' => Tools::getToken(false),
+            'token' => Tools::getToken(),
         ];
 
         $this->context->smarty->assign($templateVars);
@@ -1297,21 +1297,19 @@ class FrontControllerCore extends Controller
         return $urls;
     }
 
-    public function getTemplateVarFeatureActive()
+    public function getTemplateVarConfiguration()
     {
-        $moduleManagerBuilder = new ModuleManagerBuilder();
-        $moduleManager = $moduleManagerBuilder->build();
         $quantity_discount_price = Configuration::get('PS_DISPLAY_DISCOUNT_PRICE');
 
         return [
             'display_taxes_label' => $this->getDisplayTaxesLabel(),
             'low_quantity_threshold' => (int) Configuration::get('PS_LAST_QTIES'),
-            'is_b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
-            'is_catalog' => (bool)Configuration::get('PS_CATALOG_MODE'),
+            'is_b2b' => (bool) Configuration::get('PS_B2B_ENABLE'),
+            'is_catalog' => (bool) Configuration::get('PS_CATALOG_MODE'),
             'show_prices' => (Configuration::get('PS_CATALOG_MODE')
-                            || (Group::isFeatureActive() && !(bool)Group::getCurrent()->show_prices)),
+                            || (Group::isFeatureActive() && !(bool) Group::getCurrent()->show_prices)),
             'opt_in' => array(
-                'partner' => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
+                'partner' => (bool) Configuration::get('PS_CUSTOMER_OPTIN'),
             ),
             'quantity_discount' => array(
                 'type' => ($quantity_discount_price) ? 'price' : 'discount',
@@ -1319,12 +1317,14 @@ class FrontControllerCore extends Controller
                     ? $this->getTranslator()->trans('Price', array(), 'Shop.Theme.Catalog')
                     : $this->getTranslator()->trans('Discount', array(), 'Shop.Theme.Catalog'),
             ),
+            'voucher_enabled' => (int)CartRule::isFeatureActive(),
+            'return_enabled' => (int)Configuration::get('PS_ORDER_RETURN'),
         ];
     }
 
     protected function getDisplayTaxesLabel()
     {
-        return (Module::isEnabled('ps_legalcompliance') && (bool)Configuration::get('AEUC_LABEL_TAX_INC_EXC')) || $this->context->country->display_tax_label;
+        return (Module::isEnabled('ps_legalcompliance') && (bool) Configuration::get('AEUC_LABEL_TAX_INC_EXC')) || $this->context->country->display_tax_label;
     }
 
     public function getTemplateVarCurrency()
