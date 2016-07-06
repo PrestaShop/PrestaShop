@@ -1305,6 +1305,7 @@ class FrontControllerCore extends Controller
 
         return [
             'display_taxes_label' => $this->getDisplayTaxesLabel(),
+            'low_quantity_threshold' => (int) Configuration::get('PS_LAST_QTIES'),
             'is_b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
             'is_catalog' => (bool)Configuration::get('PS_CATALOG_MODE'),
             'show_prices' => (Configuration::get('PS_CATALOG_MODE')

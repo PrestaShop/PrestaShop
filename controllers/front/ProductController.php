@@ -291,7 +291,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'product' => $product_for_template,
                 'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
                 'product_manufacturer' => new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
-                'last_qties' => (int) Configuration::get('PS_LAST_QTIES'),
             ));
 
             // Assign attribute groups to the template
