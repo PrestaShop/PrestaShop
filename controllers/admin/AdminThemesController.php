@@ -382,7 +382,7 @@ class AdminThemesControllerCore extends AdminController
                 'after_tabs' => array(
                     'cur_theme' => $this->context->shop->theme,
                 ),
-                'submit' => array('title' => $this->l('Save')),
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
                 'buttons' => array(
                     'storeLink' => array(
                         'title' => $this->l('Visit the theme catalog'),
@@ -425,7 +425,7 @@ class AdminThemesControllerCore extends AdminController
             $helper->toolbar_btn = array(
                 'save' => array(
                     'href' => '#',
-                    'desc' => $this->l('Save')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
                 )
             );
             $helper->id = $this->id;
@@ -442,7 +442,7 @@ class AdminThemesControllerCore extends AdminController
 
         $toolbar_btn['save'] = array(
             'href' => '#',
-            'desc' => $this->l('Save')
+            'desc' => $this->trans('Save', array(), 'Admin.Actions')
         );
 
         if ($this->context->mode != Context::MODE_HOST) {
@@ -463,7 +463,7 @@ class AdminThemesControllerCore extends AdminController
                     ),
                     'submit' => array(
                         'id' => 'zip',
-                        'title' => $this->l('Save'),
+                        'title' => $this->trans('Save', array(), 'Admin.Actions'),
                         )
                     ),
                 );
@@ -484,7 +484,7 @@ class AdminThemesControllerCore extends AdminController
                         ),
                     ),
                     'submit' => array(
-                        'title' => $this->l('Save'),
+                        'title' => $this->trans('Save', array(), 'Admin.Actions'),
                         )
                     ),
                 );
@@ -523,7 +523,7 @@ class AdminThemesControllerCore extends AdminController
                         ),
                     ),
                     'submit' => array(
-                        'title' => $this->l('Save'),
+                        'title' => $this->trans('Save', array(), 'Admin.Actions'),
                         )
                     ),
                 );

@@ -2814,7 +2814,7 @@ class AdminProductsControllerCore extends AdminController
             $this->toolbar_btn['save'] = array(
                 'short' => 'Save',
                 'href' => '#',
-                'desc' => $this->l('Save'),
+                'desc' => $this->trans('Save', array(), 'Admin.Actions'),
             );
 
             $this->toolbar_btn['save-and-stay'] = array(
@@ -2832,7 +2832,7 @@ class AdminProductsControllerCore extends AdminController
         } elseif ($this->can_import) {
             $this->toolbar_btn['import'] = array(
                 'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=products',
-                'desc' => $this->l('Import')
+                'desc' => $this->trans('Import', array(), 'Admin.Actions')
             );
         }
 
@@ -3743,8 +3743,8 @@ class AdminProductsControllerCore extends AdminController
 			</table>
 			</div>
 			<div class="panel-footer">
-				<a href="'.$this->context->link->getAdminLink('AdminProducts').($page > 1 ? '&submitFilter'.$this->table.'='.(int)$page : '').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->l('Cancel').'</a>
-				<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->l('Save') .'</button>
+				<a href="'.$this->context->link->getAdminLink('AdminProducts').($page > 1 ? '&submitFilter'.$this->table.'='.(int)$page : '').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->trans('Cancel', array(), 'Admin.Actions').'</a>
+				<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->trans('Save', array(), 'Admin.Actions') .'</button>
 				<button id="product_form_submit_btn"  type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->l('Save and stay') .'</button>
 			</div>
 		</div>';
@@ -3821,8 +3821,8 @@ class AdminProductsControllerCore extends AdminController
 			</div>
 		</div>
 		<div class="panel-footer">
-				<a href="'.$this->context->link->getAdminLink('AdminProducts').($page > 1 ? '&submitFilter'.$this->table.'='.(int)$page : '').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->l('Cancel').'</a>
-				<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->l('Save') .'</button>
+				<a href="'.$this->context->link->getAdminLink('AdminProducts').($page > 1 ? '&submitFilter'.$this->table.'='.(int)$page : '').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->trans('Cancel', array(), 'Admin.Actions').'</a>
+				<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->trans('Save', array(), 'Admin.Actions') .'</button>
 				<button id="product_form_submit_btn"  type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->l('Save and stay') .'</button>
 			</div>
 		</div>

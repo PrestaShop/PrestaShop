@@ -218,7 +218,7 @@ class AdminCustomersControllerCore extends AdminController
         } elseif (!$this->display && $this->can_import) {
             $this->toolbar_btn['import'] = array(
                 'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=customers',
-                'desc' => $this->l('Import')
+                'desc' => $this->trans('Import', array(), 'Admin.Actions')
             );
         }
     }
@@ -563,7 +563,7 @@ class AdminCustomersControllerCore extends AdminController
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
         $birthday = explode('-', $this->getFieldValue($obj, 'birthday'));
@@ -1036,7 +1036,7 @@ class AdminCustomersControllerCore extends AdminController
         $tpl->assign(array(
             'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
             'confirm' => $this->l('Delete the selected item?').$name,
-            'action' => $this->l('Delete'),
+            'action' => $this->trans('Delete', array(), 'Admin.Actions'),
             'id' => $id,
         ));
 

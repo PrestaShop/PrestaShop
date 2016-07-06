@@ -399,7 +399,7 @@ class AdminCarriersControllerCore extends AdminController
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
         if (!($obj = $this->loadObject(true))) {

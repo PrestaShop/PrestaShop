@@ -302,7 +302,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             ),
         );
         if (($value = $this->getFieldValue($this->object, 'price')) != -1) {

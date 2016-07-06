@@ -91,7 +91,7 @@ class AdminLogsControllerCore extends AdminController
                         'type' => 'text'
                     )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
         $this->list_no_link = true;

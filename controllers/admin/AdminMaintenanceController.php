@@ -64,7 +64,7 @@ class AdminMaintenanceControllerCore extends AdminController
                         'default' => ''
                     ),
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
         );
     }

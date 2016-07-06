@@ -231,7 +231,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
         if (!($obj = $this->loadObject(true))) {
@@ -328,7 +328,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         );
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
         $this->fields_form['buttons'] = array(
@@ -540,7 +540,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 // Default save button - action dynamically handled in javascript
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->l('Save')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
                 );
 
                 if ($this->display == 'editAttributes' && !$this->id_attribute) {

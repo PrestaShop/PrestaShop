@@ -83,7 +83,7 @@ class AdminShopGroupControllerCore extends AdminController
                         'visibility' => Shop::CONTEXT_ALL
                     )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
 
@@ -276,7 +276,7 @@ class AdminShopGroupControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
 

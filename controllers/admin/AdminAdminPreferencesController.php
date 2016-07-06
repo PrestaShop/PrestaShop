@@ -86,7 +86,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
                         'visibility' => Shop::CONTEXT_ALL
                     ),
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'upload' => array(
                 'title' =>    $this->l('Upload quota'),
@@ -120,7 +120,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
                         'default' => '1'
                     ),
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'notifications' => array(
                 'title' =>    $this->l('Notifications'),
@@ -149,7 +149,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
                         'type' => 'bool'
                     ),
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
         );
     }

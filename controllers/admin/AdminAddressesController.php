@@ -92,7 +92,7 @@ class AdminAddressesControllerCore extends AdminController
         if (!$this->display && $this->can_import) {
             $this->toolbar_btn['import'] = array(
                 'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=addresses',
-                'desc' => $this->l('Import')
+                'desc' => $this->trans('Import', array(), 'Admin.Actions')
             );
         }
     }
@@ -163,7 +163,7 @@ class AdminAddressesControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
 

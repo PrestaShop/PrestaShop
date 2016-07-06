@@ -229,7 +229,7 @@ class AdminReferrersControllerCore extends AdminController
                     'autocomplete' => false
                 )
             ),
-            'submit' => array('title' => $this->l('Save')),
+            'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
         ));
 
         $moduleManagerBuilder = new ModuleManagerBuilder();
@@ -271,7 +271,7 @@ class AdminReferrersControllerCore extends AdminController
                     'desc' => $this->l('Percent of the sales.')
                 )
             ),
-            'submit' => array('title' => $this->l('Save'))
+            'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
         ));
 
         if (Shop::isFeatureActive()) {
@@ -323,7 +323,7 @@ class AdminReferrersControllerCore extends AdminController
             'desc' => $this->l('If you know how to use MySQL regular expressions, you can use the').'
 					<a style="cursor: pointer; font-weight: bold;" onclick="$(\'#tracking_expert\').slideToggle();">'.$this->l('expert mode').'.</a>',
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         ));
 

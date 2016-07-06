@@ -785,7 +785,7 @@ class AdminImportControllerCore extends AdminController
 
                 $this->toolbar_btn['cancel'] = array(
                     'href' => $back,
-                    'desc' => $this->l('Cancel')
+                    'desc' => $this->trans('Cancel', array(), 'Admin.Actions')
                 );
                 // Default save button - action dynamically handled in javascript
                 $this->toolbar_btn['save-import'] = array(

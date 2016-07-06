@@ -66,7 +66,7 @@ class AdminRequestSqlControllerCore extends AdminController
                         'visibility' => Shop::CONTEXT_ALL
                     )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
 
@@ -157,7 +157,7 @@ class AdminRequestSqlControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             )
         );
 
@@ -261,7 +261,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
         $tpl->assign(array(
             'href' => self::$currentIndex.'&token='.$this->token.'&'.$this->identifier.'='.$id.'&export'.$this->table.'=1',
-            'action' => $this->l('Export')
+            'action' => $this->trans('Export', array(), 'Admin.Actions')
         ));
 
         return $tpl->fetch();

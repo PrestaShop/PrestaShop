@@ -58,7 +58,7 @@ class AdminSearchConfControllerCore extends AdminController
 
         $this->fields_list = array(
             'alias' => array('title' => $this->l('Aliases')),
-            'search' => array('title' => $this->l('Search')),
+            'search' => array('title' => $this->trans('Search', array(), 'Admin.Actions')),
             'active' => array('title' => $this->l('Status'), 'class' => 'fixed-width-sm', 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
         );
 
@@ -105,10 +105,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'desc' => $this->l('Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.')
                     )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'search' => array(
-                'title' =>    $this->l('Search'),
+                'title' =>    $this->trans('Search', array(), 'Admin.Actions'),
                 'icon' =>    'icon-search',
                 'fields' =>    array(
                     'PS_SEARCH_START' => array(
@@ -149,7 +149,7 @@ class AdminSearchConfControllerCore extends AdminController
                         'type' => 'textareaLang'
                     )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'relevance' => array(
                 'title' =>    $this->l('Weight'),
@@ -215,7 +215,7 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval'
                     )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
         );
     }
@@ -259,7 +259,7 @@ class AdminSearchConfControllerCore extends AdminController
             $helper->toolbar_scroll = true;
             $helper->toolbar_btn = array('save' => array(
                 'href' => '#',
-                'desc' => $this->l('Save')
+                'desc' => $this->trans('Save', array(), 'Admin.Actions')
             ));
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;
@@ -296,7 +296,7 @@ class AdminSearchConfControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
 

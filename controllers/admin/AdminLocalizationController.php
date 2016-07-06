@@ -78,7 +78,7 @@ class AdminLocalizationControllerCore extends AdminController
                         'list' => Currency::getCurrencies(false, true, true)
                     ),
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'localization' => array(
                 'title' =>    $this->l('Local units'),
@@ -117,7 +117,7 @@ class AdminLocalizationControllerCore extends AdminController
                         'class' => 'fixed-width-sm'
                     )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'options' => array(
                 'title' =>    $this->l('Advanced'),
@@ -139,7 +139,7 @@ class AdminLocalizationControllerCore extends AdminController
                         'class' => 'fixed-width-sm'
                     )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
 
@@ -355,7 +355,7 @@ class AdminLocalizationControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->l('Import'),
+                'title' => $this->trans('Import', array(), 'Admin.Actions'),
                 'icon' => 'process-icon-import',
                 'name' => 'submitLocalizationPack'
             ),

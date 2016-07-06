@@ -75,7 +75,7 @@ class AdminBackupControllerCore extends AdminController
                         'type' => 'bool'
                     )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
         );
     }
@@ -119,13 +119,13 @@ class AdminBackupControllerCore extends AdminController
             case 'view':
                 $this->toolbar_btn['cancel'] = array(
                     'href' => self::$currentIndex.'&token='.$this->token,
-                    'desc' => $this->l('Cancel')
+                    'desc' => $this->trans('Cancel', array(), 'Admin.Actions')
                 );
                 break;
             case 'options':
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->l('Save')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
                 );
                 break;
         }

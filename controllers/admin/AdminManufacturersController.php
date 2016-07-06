@@ -282,7 +282,7 @@ class AdminManufacturersControllerCore extends AdminController
     public function displayEditaddressesLink($token = null, $id)
     {
         if (!array_key_exists('editaddresses', self::$cache_lang)) {
-            self::$cache_lang['editaddresses'] = $this->l('Edit');
+            self::$cache_lang['editaddresses'] = $this->trans('Edit', array(), 'Admin.Actions');
         }
 
         $this->context->smarty->assign(array(
@@ -382,7 +382,7 @@ class AdminManufacturersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Enable'),
+                    'label' => $this->trans('Enable', array(), 'Admin.Actions'),
                     'name' => 'active',
                     'required' => false,
                     'class' => 't',
@@ -416,7 +416,7 @@ class AdminManufacturersControllerCore extends AdminController
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save')
+            'title' => $this->trans('Save', array(), 'Admin.Actions')
         );
 
         foreach ($this->_languages as $language) {
@@ -602,7 +602,7 @@ class AdminManufacturersControllerCore extends AdminController
             'col' => 6,
         );
         $form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
         $this->fields_value = array(
@@ -653,7 +653,7 @@ class AdminManufacturersControllerCore extends AdminController
             case 'addaddress':
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->l('Save')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
                 );
 
                 // Default cancel button - like old back link
@@ -665,7 +665,7 @@ class AdminManufacturersControllerCore extends AdminController
 
                     $this->toolbar_btn['cancel'] = array(
                         'href' => $back,
-                        'desc' => $this->l('Cancel')
+                        'desc' => $this->trans('Cancel', array(), 'Admin.Actions')
                     );
                 }
             break;
@@ -676,7 +676,7 @@ class AdminManufacturersControllerCore extends AdminController
                 if ($this->can_import) {
                     $this->toolbar_btn['import'] = array(
                         'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=manufacturers',
-                        'desc' => $this->l('Import')
+                        'desc' => $this->trans('Import', array(), 'Admin.Actions')
                     );
                 }
         }

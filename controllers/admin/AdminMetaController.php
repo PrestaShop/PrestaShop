@@ -179,7 +179,7 @@ class AdminMetaControllerCore extends AdminController
                             'defaultValue' => $this->url->physical_uri,
                         )
                     );
-                    $shop_url_options['submit'] = array('title' => $this->l('Save'));
+                    $shop_url_options['submit'] = array('title' => $this->trans('Save', array(), 'Admin.Actions'));
                 }
             } else {
                 $shop_url_options['description'] = $this->l('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.');
@@ -192,7 +192,7 @@ class AdminMetaControllerCore extends AdminController
                 'title' =>    $this->l('Set up URLs'),
                 'description' => $url_description,
                 'fields' =>    $general_fields,
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
 
@@ -220,7 +220,7 @@ class AdminMetaControllerCore extends AdminController
             }
             $this->fields_options['routes']['title'] = $this->l('Schema of URLs');
             $this->fields_options['routes']['description'] = $this->l('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.').'<br />'.$this->l('There are several available keywords for each route listed below; note that keywords with * are required!').'<br />'.$this->l('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.');
-            $this->fields_options['routes']['submit'] = array('title' => $this->l('Save'));
+            $this->fields_options['routes']['submit'] = array('title' => $this->trans('Save', array(), 'Admin.Actions'));
         }
 
         $this->fields_options['robots'] = $robots_options;
@@ -344,7 +344,7 @@ class AdminMetaControllerCore extends AdminController
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             )
         );
         return parent::renderForm();
@@ -663,7 +663,7 @@ class AdminMetaControllerCore extends AdminController
             $helper->toolbar_btn = array(
                 'save' => array(
                     'href' => '#',
-                    'desc' => $this->l('Save')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
                 )
             );
             $helper->id = $this->id;

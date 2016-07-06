@@ -172,7 +172,7 @@ class AdminTranslationsControllerCore extends AdminController
         );
         $this->toolbar_btn['cancel'] = array(
             'href' => self::$currentIndex.'&token='.$this->token,
-            'desc' => $this->l('Cancel')
+            'desc' => $this->trans('Cancel', array(), 'Admin.Actions')
         );
     }
 

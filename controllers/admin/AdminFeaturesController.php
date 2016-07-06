@@ -181,7 +181,7 @@ class AdminFeaturesControllerCore extends AdminController
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
         return parent::renderForm();
@@ -226,7 +226,7 @@ class AdminFeaturesControllerCore extends AdminController
             case 'edit':
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->l('Save')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
                 );
 
                 if ($this->display == 'editFeatureValue') {
@@ -346,7 +346,7 @@ class AdminFeaturesControllerCore extends AdminController
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             ),
             'buttons' => array(
                 'save-and-stay' => array(
