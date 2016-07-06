@@ -11,7 +11,7 @@ $(document).ready(() => {
 
   $('body').on(
     'click',
-    '.js-touchspin, [data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]',
+    '.-js-cart .js-touchspin, [data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]',
     function(event) {
       event.preventDefault();
       // First perform the action using AJAX

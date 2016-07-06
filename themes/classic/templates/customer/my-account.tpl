@@ -44,7 +44,7 @@
       </a>
     </div>
 
-    {if $feature_active.voucher}
+    {if $configuration.voucher_enabled}
       <div class="col-lg-4 col-md-6 col-sm-6">
         <a id="discounts-link" href="{$urls.pages.discount}">
           <i class="material-icons">&#xE54E;</i>
@@ -53,7 +53,7 @@
       </div>
     {/if}
 
-    {if $feature_active.return}
+    {if $configuration.return_enabled}
       <div class="col-lg-4 col-md-6 col-sm-6">
         <a id="returns-link" href="{$urls.pages.order_follow}">
           <i class="material-icons">&#xE860;</i>

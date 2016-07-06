@@ -5,6 +5,10 @@ $(document).ready(function () {
   createInputFile();
   coverImage();
 
+  $('body').on('click', '.product-quantity .js-touchspin', function () {
+    $("input[name$='refresh']").click();
+  });
+
   $('body').on(
     'click',
     'input.product-refresh',

@@ -19,7 +19,7 @@
         <link itemprop="availability" href="https://schema.org/InStock"/>
         <meta itemprop="priceCurrency" content="{$currency.iso_code}">
         <span itemprop="price" content="{$product.price_amount}">{$product.price}</span>
-        {if $feature_active.display_taxes_label}
+        {if $configuration.display_taxes_label}
           <small class="text-capitalize">{$product.labels.tax_short}</small>
         {/if}
 

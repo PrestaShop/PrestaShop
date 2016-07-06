@@ -291,8 +291,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'product' => $product_for_template,
                 'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
                 'product_manufacturer' => new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id),
-                'last_qties' => (int) Configuration::get('PS_LAST_QTIES'),
-                'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE'),
             ));
 
             // Assign attribute groups to the template
@@ -329,6 +327,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             ),
             'product_details' => $this->render('catalog/_partials/product-details.tpl'),
             'product_variants' => $this->render('catalog/_partials/product-variants.tpl'),
+            'product_discounts' => $this->render('catalog/_partials/product-discounts.tpl'),
             'product_add_to_cart' => $this->render('catalog/_partials/product-add-to-cart.tpl'),
             'product_url' => $this->context->link->getProductLink(
                 $product_for_template['id_product'],
@@ -366,9 +365,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $id_currency = (int) $this->context->cookie->id_currency;
         $id_product = (int) $this->product->id;
+        $id_product_attribute = Tools::getValue('id_product_attribute', null);
         $id_shop = $this->context->shop->id;
 
-        $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true, (int) $this->context->customer->id);
+        $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute, false, (int) $this->context->customer->id);
         foreach ($quantity_discounts as &$quantity_discount) {
             if ($quantity_discount['id_product_attribute']) {
                 $combination = new Combination((int) $quantity_discount['id_product_attribute']);
@@ -900,7 +900,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $product_full['id_customization'] = $id_customization;
             $product_full['is_customizable'] = true;
         } else {
-            $product_full['customizations'] = array();
+            $product_full['customizations'] = array(
+                'fields' => array(),
+            );
             $product_full['id_customization'] = 0;
             $product_full['is_customizable'] = false;
         }
