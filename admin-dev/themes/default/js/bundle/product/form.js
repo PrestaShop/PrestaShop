@@ -57,7 +57,7 @@ $(document).ready(function() {
   });
 
   /* validate price fields , as Thomas de Nabord said */
-  $(".money-type input[type='text'], .attribute-price input[type='number']").change(function validate() {
+  $(".money-type input[type='text']").change(function validate(event) {
     var inputValue = $(this).val();
     var parsedValue = truncateDecimals(parseFloat(inputValue),6);
 
@@ -1653,7 +1653,7 @@ var priceCalculation = (function() {
       }
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
-      var newPrice = ps_round(addTaxes(price, rates, computation_method));
+      var newPrice = ps_round(addTaxes(price, rates, computation_method), 6);
       newPrice = truncateDecimals(newPrice, 6);
 
       targetInput.val(newPrice);
@@ -1663,11 +1663,12 @@ var priceCalculation = (function() {
       var finalPrice = obj.closest('div[id^="combination_form_"]').find('.final-price');
       var defaultFinalPrice = finalPrice.attr('data-price');
       var priceToBeChanged = new Number(price) + new Number(defaultFinalPrice);
-      priceToBeChanged = truncateDecimals(newPrice, 6);
+      priceToBeChanged = truncateDecimals(priceToBeChanged, 6);
 
       finalPrice.html(priceToBeChanged);
     },
     'impactTaxExclude': function(obj) {
+      console.log('yo');
       var price = parseFloat(obj.val().replace(/,/g, '.'));
       var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
       if (isNaN(price)) {
@@ -1676,7 +1677,7 @@ var priceCalculation = (function() {
       }
       var rates = taxElem.find('option:selected').attr('data-rates').split(',');
       var computation_method = taxElem.find('option:selected').attr('data-computation-method');
-      var newPrice = ps_round(removeTaxes(ps_round(price, displayPricePrecision), rates, computation_method), displayPricePrecision);
+      var newPrice = removeTaxes(ps_round(price, displayPricePrecision), rates, computation_method);
       newPrice = truncateDecimals(newPrice, 6);
 
       targetInput.val(newPrice);
