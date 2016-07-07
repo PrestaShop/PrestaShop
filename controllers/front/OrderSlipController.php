@@ -42,7 +42,7 @@ class OrderSlipControllerCore extends FrontController
         $credit_slips = $this->getTemplateVarCreditSlips();
 
         if (count($credit_slips) <= 0) {
-            $this->warning[] = $this->getTranslator()->trans('You have not received any credit slips.', array(), 'Shop.Notifications.Warning');
+            $this->warning[] = $this->trans('You have not received any credit slips.', array(), 'Shop.Notifications.Warning');
         }
 
         $this->context->smarty->assign([
@@ -59,8 +59,8 @@ class OrderSlipControllerCore extends FrontController
         foreach ($orders_slip as $order_slip) {
             $order = new Order($order_slip['id_order']);
             $credit_slips[$order_slip['id_order_slip']] = $order_slip;
-            $credit_slips[$order_slip['id_order_slip']]['credit_slip_number'] = sprintf($this->getTranslator()->trans('#%06d', array(), 'Shop.Theme.CustomerAccount'), $order_slip['id_order_slip']);
-            $credit_slips[$order_slip['id_order_slip']]['order_number'] = sprintf($this->getTranslator()->trans('#%06d', array(), 'Shop.Theme.CustomerAccount'), $order_slip['id_order']);
+            $credit_slips[$order_slip['id_order_slip']]['credit_slip_number'] = sprintf($this->trans('#%06d', array(), 'Shop.Theme.CustomerAccount'), $order_slip['id_order_slip']);
+            $credit_slips[$order_slip['id_order_slip']]['order_number'] = sprintf($this->trans('#%06d', array(), 'Shop.Theme.CustomerAccount'), $order_slip['id_order']);
             $credit_slips[$order_slip['id_order_slip']]['order_reference'] = $order->reference;
             $credit_slips[$order_slip['id_order_slip']]['credit_slip_date'] = Tools::displayDate($order_slip['date_add'], null, false);
             $credit_slips[$order_slip['id_order_slip']]['url'] = $this->context->link->getPageLink('pdf-order-slip', true, null, 'id_order_slip='.(int)$order_slip['id_order_slip']);

@@ -44,23 +44,23 @@ class PasswordControllerCore extends FrontController
         } elseif (($token = Tools::getValue('token')) && ($id_customer = (int)Tools::getValue('id_customer'))) {
             $this->changePassword();
         } elseif (Tools::getValue('token') || Tools::getValue('id_customer')) {
-            $this->errors[] = $this->getTranslator()->trans('We cannot regenerate your password with the data you\'ve submitted', array(), 'Shop.Notifications.Error');
+            $this->errors[] = $this->trans('We cannot regenerate your password with the data you\'ve submitted', array(), 'Shop.Notifications.Error');
         }
     }
 
     protected function sendRenewPasswordLink()
     {
         if (!($email = trim(Tools::getValue('email'))) || !Validate::isEmail($email)) {
-            $this->errors[] = $this->getTranslator()->trans('Invalid email address.', array(), 'Shop.Notifications.Error');
+            $this->errors[] = $this->trans('Invalid email address.', array(), 'Shop.Notifications.Error');
         } else {
             $customer = new Customer();
             $customer->getByEmail($email);
             if (!Validate::isLoadedObject($customer)) {
-                $this->errors[] = $this->getTranslator()->trans('There is no account registered for this email address.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('There is no account registered for this email address.', array(), 'Shop.Notifications.Error');
             } elseif (!$customer->active) {
-                $this->errors[] = $this->getTranslator()->trans('You cannot regenerate the password for this account.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('You cannot regenerate the password for this account.', array(), 'Shop.Notifications.Error');
             } elseif ((strtotime($customer->last_passwd_gen.'+'.($min_time = (int)Configuration::get('PS_PASSWD_TIME_FRONT')).' minutes') - time()) > 0) {
-                $this->errors[] = $this->getTranslator()->trans('You can regenerate your password only every %d minute(s)', array((int) $min_time), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('You can regenerate your password only every %d minute(s)', array((int) $min_time), 'Shop.Notifications.Error');
             } else {
                 if (!$customer->hasRecentResetPasswordToken()) {
                     $customer->stampResetPasswordToken();
@@ -75,10 +75,10 @@ class PasswordControllerCore extends FrontController
                 ];
 
                 if (Mail::Send($this->context->language->id, 'password_query', Mail::l('Password query confirmation'), $mail_params, $customer->email, $customer->firstname.' '.$customer->lastname)) {
-                    $this->success[] = $this->getTranslator()->trans('A link to reset your password has been sent to your address: %s', array($customer->email), 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('A link to reset your password has been sent to your address: %s', array($customer->email), 'Shop.Notifications.Success');
                     $this->setTemplate('customer/password-infos.tpl');
                 } else {
-                    $this->errors[] = $this->getTranslator()->trans('An error occurred while sending the email.', array(), 'Shop.Notifications.Error');
+                    $this->errors[] = $this->trans('An error occurred while sending the email.', array(), 'Shop.Notifications.Error');
                 }
             }
         }
@@ -93,9 +93,9 @@ class PasswordControllerCore extends FrontController
             $customer->getByEmail($email);
 
             if (!Validate::isLoadedObject($customer)) {
-                $this->errors[] = $this->getTranslator()->trans('Customer account not found', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('Customer account not found', array(), 'Shop.Notifications.Error');
             } elseif (!$customer->active) {
-                $this->errors[] = $this->getTranslator()->trans('You cannot regenerate the password for this account.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('You cannot regenerate the password for this account.', array(), 'Shop.Notifications.Error');
             }
 
             // Case if both password params not posted or different, then "change password" form is not POSTED, show it.
@@ -105,7 +105,7 @@ class PasswordControllerCore extends FrontController
                 || !Validate::isPasswd($passwd) || !Validate::isPasswd($confirmation)) {
                 // Check if passwords are here anyway, BUT does not match the password validation format
                 if (Tools::isSubmit('passwd') || Tools::isSubmit('confirmation')) {
-                    $this->errors[] = $this->getTranslator()->trans('The password and its confirmation do not match.', array(), 'Shop.Notifications.Error');
+                    $this->errors[] = $this->trans('The password and its confirmation do not match.', array(), 'Shop.Notifications.Error');
                 }
 
                 $this->context->smarty->assign([
@@ -123,12 +123,12 @@ class PasswordControllerCore extends FrontController
                 } else {
                     // To update password, we must have the temporary reset token that matches.
                     if ($customer->getValidResetPasswordToken() !== Tools::getValue('reset_token')) {
-                        $this->errors[] = $this->getTranslator()->trans('The password change request expired. You should ask for a new one.', array(), 'Shop.Notifications.Error');
+                        $this->errors[] = $this->trans('The password change request expired. You should ask for a new one.', array(), 'Shop.Notifications.Error');
                     } else {
                         try {
                             $crypto = new Hashing();
                         } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
-                            $this->errors[] = $this->getTranslator()->trans('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.', array(), 'Shop.Notifications.Error');
+                            $this->errors[] = $this->trans('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.', array(), 'Shop.Notifications.Error');
                             return false;
                         }
 
@@ -150,20 +150,20 @@ class PasswordControllerCore extends FrontController
                                 $this->context->smarty->assign([
                                     'customer_email' => $customer->email
                                 ]);
-                                $this->success[] = $this->getTranslator()->trans('Your password has been successfully reset and a confirmation has been sent to your email address: %s', array($customer->email), 'Shop.Notifications.Success');
+                                $this->success[] = $this->trans('Your password has been successfully reset and a confirmation has been sent to your email address: %s', array($customer->email), 'Shop.Notifications.Success');
                                 $this->context->updateCustomer($customer);
                                 $this->redirectWithNotifications('index.php?controller=my-account');
                             } else {
-                                $this->errors[] = $this->getTranslator()->trans('An error occurred while sending the email.', array(), 'Shop.Notifications.Error');
+                                $this->errors[] = $this->trans('An error occurred while sending the email.', array(), 'Shop.Notifications.Error');
                             }
                         } else {
-                            $this->errors[] = $this->getTranslator()->trans('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.', array(), 'Shop.Notifications.Error');
+                            $this->errors[] = $this->trans('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.', array(), 'Shop.Notifications.Error');
                         }
                     }
                 }
             }
         } else {
-            $this->errors[] = $this->getTranslator()->trans('We cannot regenerate your password with the data you\'ve submitted', array(), 'Shop.Notifications.Error');
+            $this->errors[] = $this->trans('We cannot regenerate your password with the data you\'ve submitted', array(), 'Shop.Notifications.Error');
         }
     }
 }

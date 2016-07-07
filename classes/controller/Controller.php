@@ -78,6 +78,10 @@ abstract class ControllerCore
     /** @var string Controller name */
     public $php_self;
 
+    /** @var PrestaShopBundle\Translation\Translator */
+    protected $translator;
+
+
     /**
      * Check if the controller is available for the current user/visitor
      */
@@ -150,6 +154,7 @@ abstract class ControllerCore
 
         $this->context = Context::getContext();
         $this->context->controller = $this;
+        $this->translator = Context::getContext()->getTranslator();
 
         // Usage of ajax parameter is deprecated
         $this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
@@ -219,6 +224,12 @@ abstract class ControllerCore
             $this->initCursedPage();
             $this->smartyOutputContent($this->layout);
         }
+    }
+
+
+    protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
+    {
+        return $this->translator->trans($id, $parameters, $domain, $locale);
     }
 
     /**

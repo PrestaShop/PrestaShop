@@ -1577,7 +1577,7 @@ class FrontControllerCore extends Controller
 
     protected function getTranslator()
     {
-        return Context::getContext()->getTranslator();
+        return $this->translator;
     }
 
     protected function makeLoginForm()
