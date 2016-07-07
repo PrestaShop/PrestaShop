@@ -388,9 +388,6 @@ class AdminControllerCore extends Controller
     /** @var string */
     protected $tabSlug;
 
-    /** @var PrestaShopBundle\Translation\Translator */
-    private $translator;
-
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
         global $timer_start;
@@ -404,8 +401,6 @@ class AdminControllerCore extends Controller
             $this->controller_name = substr($this->controller_name, 0, -10);
         }
         parent::__construct();
-
-        $this->translator = $this->context->getTranslator();
 
         if ($this->multishop_context == -1) {
             $this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
@@ -2710,11 +2705,6 @@ class AdminControllerCore extends Controller
             $class = substr($class, 0, -10);
         }
         return Translate::getAdminTranslation($string, $class, $addslashes, $htmlentities);
-    }
-
-    protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
-    {
-        return $this->translator->trans($id, $parameters, $domain, $locale);
     }
 
     /**

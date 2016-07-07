@@ -54,7 +54,7 @@ class OrderReturnControllerCore extends FrontController
                     $state = new OrderReturnState((int)$order_return->state);
 
                     if ($order_return->state == 1) {
-                        $this->warning[] = $this->getTranslator()->trans('You must wait for confirmation before returning any merchandise.', array(), 'Shop.Notifications.Warning');
+                        $this->warning[] = $this->trans('You must wait for confirmation before returning any merchandise.', array(), 'Shop.Notifications.Warning');
                     }
 
                     $this->context->smarty->assign(array(
@@ -169,7 +169,7 @@ class OrderReturnControllerCore extends FrontController
 
         if (($id_order_return = (int)Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
             $breadcrumb['links'][] =[
-                'title' => $this->getTranslator()->trans('Merchandise returns', array(), 'Shop.Theme'),
+                'title' => $this->trans('Merchandise returns', array(), 'Shop.Theme'),
                 'url' => $this->context->link->getPageLink('order-follow')
             ];
         }

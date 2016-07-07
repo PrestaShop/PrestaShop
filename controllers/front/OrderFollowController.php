@@ -94,7 +94,7 @@ class OrderFollowControllerCore extends FrontController
 
         $ordersReturn = $this->getTemplateVarOrdersReturns();
         if (count($ordersReturn) <= 0) {
-            $this->errors[] = $this->getTranslator()->trans('You have no merchandise return authorizations.', array(), 'Shop.Notifications.Error');
+            $this->errors[] = $this->trans('You have no merchandise return authorizations.', array(), 'Shop.Notifications.Error');
         }
 
         $this->context->smarty->assign('ordersReturn', $ordersReturn);

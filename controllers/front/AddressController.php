@@ -56,12 +56,12 @@ class AddressControllerCore extends FrontController
         $this->address_form->fillWith(Tools::getAllValues());
         if (Tools::isSubmit('submitAddress')) {
             if (!$this->address_form->submit()) {
-                $this->errors[] = $this->getTranslator()->trans('Please fix the error below.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('Please fix the error below.', array(), 'Shop.Notifications.Error');
             } else {
                 if (Tools::getValue('id_address')) {
-                    $this->success[] = $this->getTranslator()->trans('Address successfully updated!', array(), 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('Address successfully updated!', array(), 'Shop.Notifications.Success');
                 } else {
-                    $this->success[] = $this->getTranslator()->trans('Address successfully added!', array(), 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('Address successfully added!', array(), 'Shop.Notifications.Success');
                 }
                 $this->should_redirect = true;
             }
@@ -86,10 +86,10 @@ class AddressControllerCore extends FrontController
                     Tools::getValue('token')
                 );
                 if ($ok) {
-                    $this->success[] = $this->getTranslator()->trans('Address successfully deleted!', array(), 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('Address successfully deleted!', array(), 'Shop.Notifications.Success');
                     $this->should_redirect = true;
                 } else {
-                    $this->errors[] = $this->getTranslator()->trans('Could not delete address.', array(), 'Shop.Notifications.Error');
+                    $this->errors[] = $this->trans('Could not delete address.', array(), 'Shop.Notifications.Error');
                 }
             } else {
                 $this->context->smarty->assign('editing', true);
@@ -123,7 +123,7 @@ class AddressControllerCore extends FrontController
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
         $breadcrumb['links'][] = [
-            'title' => $this->getTranslator()->trans('Addresses', array(), 'Shop.Theme'),
+            'title' => $this->trans('Addresses', array(), 'Shop.Theme'),
             'url' => $this->context->link->getPageLink('addresses')
         ];
 

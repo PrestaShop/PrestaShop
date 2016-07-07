@@ -72,7 +72,7 @@ class CategoryControllerCore extends ProductListingFrontController
         if (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
-            $this->errors[] = $this->getTranslator()->trans('You do not have access to this category.', array(), 'Shop.Notifications.Error');
+            $this->errors[] = $this->trans('You do not have access to this category.', array(), 'Shop.Notifications.Error');
             $this->setTemplate('catalog/forbidden-category.tpl');
             return;
         }
