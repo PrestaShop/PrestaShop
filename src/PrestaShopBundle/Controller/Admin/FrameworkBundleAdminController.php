@@ -133,4 +133,15 @@ class FrameworkBundleAdminController extends Controller
             'title' => $translator->trans($title, [], 'AdminCommon')
         ]);
     }
+
+    /**
+     * Get the old but still useful context
+     *
+     */
+    protected function getContext()
+    {
+        $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
+
+        return $legacyContextProvider->getContext();
+    }
 }

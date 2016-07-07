@@ -26,9 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
-use \PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
+use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 
 /**
  * This class is the interface to the legacy Module class.
@@ -41,28 +42,29 @@ class Module implements ModuleInterface
     public $instance = null;
 
     /**
-     * Module attributes (name, displayName etc.)
+     * Module attributes (name, displayName etc.).
      *
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $attributes;
 
     /**
-     * Module attributes from disk
+     * Module attributes from disk.
      *
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $disk;
 
     /**
-     * Module attributes from database
+     * Module attributes from database.
      *
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $database;
 
     /**
-     * Default values for ParameterBag attributes
+     * Default values for ParameterBag attributes.
+     *
      * @var array
      */
     private $attributes_default = array(
@@ -91,6 +93,7 @@ class Module implements ModuleInterface
             'USD' => 0,
             'GBP' => 0,
         ),
+        'type' => '',
         // From the marketplace
         'url' => null,
         'avgRate' => 0,
@@ -99,18 +102,20 @@ class Module implements ModuleInterface
     );
 
     /**
-     * Default values for ParameterBag disk
+     * Default values for ParameterBag disk.
+     *
      * @var array
      */
     private $disk_default = array(
         'filemtype' => 0,
         'is_present' => 0,
         'is_valid' => 0,
-        'version' => null
+        'version' => null,
     );
 
     /**
-     * Default values for ParameterBag database
+     * Default values for ParameterBag database.
+     *
      * @var array
      */
     private $database_default = array(
@@ -124,12 +129,11 @@ class Module implements ModuleInterface
     );
 
     /**
-     *
      * @param array $attributes
      * @param array $disk
      * @param array $database
      */
-    public function __construct(array $attributes = [], array $disk = [], array $database = [])
+    public function __construct(array $attributes = array(), array $disk = array(), array $database = array())
     {
         $this->attributes = new ParameterBag($this->attributes_default);
         $this->disk = new ParameterBag($this->disk_default);
@@ -140,8 +144,8 @@ class Module implements ModuleInterface
         $this->disk->add($disk);
         $this->database->add($database);
 
-        $version = $this->disk->get('is_valid')?
-            $this->disk->get('version'):
+        $version = $this->disk->get('is_valid') ?
+            $this->disk->get('version') :
             $this->attributes->get('version');
 
         $img = $this->attributes->get('img');
@@ -150,22 +154,23 @@ class Module implements ModuleInterface
         }
 
         $this->attributes->set('version', $version);
+        $this->attributes->set('type', $this->convertType($this->get('origin_filter_value')));
+
         // Unfortunately, we can sometime have an array, and sometimes an object.
         // This is the first place where this value *always* exists
-        $this->attributes->set('price', (array)$this->attributes->get('price'));
+        $this->attributes->set('price', (array) $this->attributes->get('price'));
     }
 
     public function getInstance()
     {
         if (!$this->hasValidInstance()) {
-            return null;
+            return;
         }
 
         return $this->instance;
     }
 
     /**
-     *
      * @return bool True if valid Module instance
      */
     public function hasValidInstance()
@@ -184,6 +189,7 @@ class Module implements ModuleInterface
             }
         }
         $this->disk->set('is_valid', ($this->instance instanceof \ModuleCore));
+
         return $this->disk->get('is_valid');
     }
 
@@ -192,6 +198,7 @@ class Module implements ModuleInterface
         if (!$this->hasValidInstance()) {
             return false;
         }
+
         return $this->instance->install();
     }
 
@@ -200,15 +207,16 @@ class Module implements ModuleInterface
         if (!$this->hasValidInstance()) {
             return false;
         }
+
         return $this->instance->uninstall();
     }
 
     /**
-    * Execute up files. You can update configuration, update sql schema.
-    * No file modification.
-    *
-    * @return bool true for success
-    */
+     * Execute up files. You can update configuration, update sql schema.
+     * No file modification.
+     *
+     * @return bool true for success
+     */
     public function onUpgrade($version)
     {
         return true;
@@ -225,13 +233,14 @@ class Module implements ModuleInterface
         if (!$this->hasValidInstance()) {
             return false;
         }
+
         return $this->instance->enable();
     }
 
     /**
      * Not necessarily the opposite of enable. Use this method if
      * something must be done when switching to another theme (like uninstall
-     * very specific modules for example)
+     * very specific modules for example).
      *
      * @return bool true for success
      */
@@ -249,6 +258,7 @@ class Module implements ModuleInterface
         if (!$this->hasValidInstance()) {
             return false;
         }
+
         return $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
     }
 
@@ -257,6 +267,7 @@ class Module implements ModuleInterface
         if (!$this->hasValidInstance()) {
             return false;
         }
+
         return $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
     }
 
@@ -265,12 +276,52 @@ class Module implements ModuleInterface
         if (!$this->hasValidInstance()) {
             return false;
         }
+
         return $this->instance->reset();
     }
 
     protected function instanciateLegacyModule()
     {
-        require_once _PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->attributes->get('name') . DIRECTORY_SEPARATOR . $this->attributes->get('name') . '.php';
+        require_once _PS_MODULE_DIR_.DIRECTORY_SEPARATOR.$this->attributes->get('name').DIRECTORY_SEPARATOR.$this->attributes->get('name').'.php';
         $this->instance = \Module::getInstanceByName($this->attributes->get('name'));
+    }
+
+    public function get($attribute)
+    {
+        return $this->attributes->get($attribute, null);
+    }
+
+    public function set($attribute, $value)
+    {
+        $this->attributes->set($attribute, $value);
+    }
+
+    private function convertType($value)
+    {
+        $conversionTable = array(
+            AddonListFilterOrigin::ADDONS_CUSTOMER => 'addonsBought',
+            AddonListFilterOrigin::ADDONS_MUST_HAVE => 'addonsMustHave',
+        );
+
+        return isset($conversionTable[$value]) ? $conversionTable[$value] : '';
+    }
+
+    public function fillLogo()
+    {
+        $this->set('logo', '../../img/questionmark.png');
+
+        if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$this->get('name')
+            .DIRECTORY_SEPARATOR.'logo.gif')) {
+            $this->set('logo', 'logo.gif');
+        }
+        if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$this->get('name')
+            .DIRECTORY_SEPARATOR.'logo.png')) {
+            $this->set('logo', 'logo.png');
+        }
+
+        $img = $this->get('img');
+        if (!empty($img)) {
+            $this->set('image_absolute', $this->get('img'));
+        }
     }
 }

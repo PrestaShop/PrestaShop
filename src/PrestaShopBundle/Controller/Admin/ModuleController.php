@@ -6,7 +6,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShopBundle\Entity\ModuleHistory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ModuleController extends FrameworkBundleAdminController
 {
     /**
-     * Controller responsible for displaying "Catalog" section of Module management pages
+     * Controller responsible for displaying "Catalog" section of Module management pages.
+     *
      * @return Response
      */
     public function catalogAction()
@@ -36,8 +37,10 @@ class ModuleController extends FrameworkBundleAdminController
     }
 
     /**
-     * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax
-     * @param  Request $request
+     * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
+     *
+     * @param Request $request
+     *
      * @return Response
      */
     public function refreshCatalogAction(Request $request)
@@ -50,11 +53,11 @@ class ModuleController extends FrameworkBundleAdminController
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->get('translator');
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
-        $responseArray = [];
+        $responseArray = array();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setStatus(~ AddonListFilterStatus::INSTALLED);
+            ->setStatus(~AddonListFilterStatus::INSTALLED);
 
         try {
             $products = $modulesProvider->generateAddonsUrls(
@@ -80,20 +83,20 @@ class ModuleController extends FrameworkBundleAdminController
     private function constructJsonCatalogBodyResponse($modulesProvider, $products)
     {
         $products = $modulesProvider->generateAddonsUrls($products);
-        $formattedContent = [];
+        $formattedContent = array();
         $formattedContent['selector'] = '.module-catalog-page';
         $formattedContent['content'] = $this->render(
             'PrestaShopBundle:Admin/Module/Includes:sorting.html.twig',
-            [
-                'totalModules' => count($products)
-            ]
+            array(
+                'totalModules' => count($products),
+            )
         )->getContent();
         $formattedContent['content'] .= $this->render(
             'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
-            [
+            array(
                 'modules' => $this->getPresentedProducts($products),
-                'requireAddonsSearch' => true
-            ]
+                'requireAddonsSearch' => true,
+            )
         )->getContent();
 
         return $formattedContent;
@@ -101,13 +104,13 @@ class ModuleController extends FrameworkBundleAdminController
 
     private function constructJsonCatalogCategoriesMenuResponse($modulesProvider, $products)
     {
-        $formattedContent = [];
+        $formattedContent = array();
         $formattedContent['selector'] = '.module-menu-item';
         $formattedContent['content'] = $this->render(
             'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig',
-            [
-                'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products))
-            ]
+            array(
+                'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products)),
+            )
         )->getContent();
 
         return $formattedContent;
@@ -134,8 +137,8 @@ class ModuleController extends FrameworkBundleAdminController
         $installed_products = $moduleRepository->getFilteredList($filters);
 
         $products = new \stdClass();
-        foreach (['native_modules', 'theme_bundle', 'modules'] as $subpart) {
-            $products->{$subpart} = [];
+        foreach (array('native_modules', 'theme_bundle', 'modules') as $subpart) {
+            $products->{$subpart} = array();
         }
 
         foreach ($installed_products as $installed_product) {
@@ -144,9 +147,9 @@ class ModuleController extends FrameworkBundleAdminController
             } elseif ($installed_product->attributes->has('origin') && $installed_product->attributes->get('origin') === 'native' && $installed_product->attributes->get('author') === 'PrestaShop') {
                 $row = 'native_modules';
             } else {
-                $row= 'modules';
+                $row = 'modules';
             }
-            $products->{$row}[] = (object)$installed_product;
+            $products->{$row}[] = (object) $installed_product;
         }
 
         foreach ($products as $product_label => $products_part) {
@@ -182,7 +185,7 @@ class ModuleController extends FrameworkBundleAdminController
         if (method_exists($moduleManager, $action)) {
             // ToDo : Check if allowed to call this action
             try {
-                if ($action == "uninstall") {
+                if ($action == 'uninstall') {
                     $response[$module]['status'] = $moduleManager->{$action}($module, $forceDeletion);
                 } else {
                     $response[$module]['status'] = $moduleManager->{$action}($module);
@@ -194,7 +197,7 @@ class ModuleController extends FrameworkBundleAdminController
                         '%module% did not return a valid response on %action% action.',
                         array(
                             '%module%' => $module,
-                            '%action%' => $action),
+                            '%action%' => $action, ),
                         'Admin.Notifications.Error'
                         );
                 } elseif ($response[$module]['status'] === false) {
@@ -204,7 +207,7 @@ class ModuleController extends FrameworkBundleAdminController
                         array(
                             '%action%' => str_replace('_', ' ', $action),
                             '%module%' => $module,
-                            '%error_details%' => $error),
+                            '%error_details%' => $error, ),
                         'Admin.Notifications.Error'
                     );
                 } else {
@@ -212,7 +215,7 @@ class ModuleController extends FrameworkBundleAdminController
                         '%action% action on module %module% succeeded.',
                         array(
                             '%action%' => ucfirst(str_replace('_', ' ', $action)),
-                            '%module%' => $module),
+                            '%module%' => $module, ),
                         'Admin.Notifications.Success'
                     );
                 }
@@ -223,7 +226,7 @@ class ModuleController extends FrameworkBundleAdminController
                     array(
                             '%action%' => str_replace('_', ' ', $action),
                             '%module%' => $module,
-                            '%error_details%' => $e->getMessage()),
+                            '%error_details%' => $e->getMessage(), ),
                     'Admin.Notifications.Error'
                 );
 
@@ -278,8 +281,8 @@ class ModuleController extends FrameworkBundleAdminController
         $installed_products = $moduleRepository->getFilteredList($filters);
 
         $products = new \stdClass();
-        foreach (['to_configure', 'to_update'] as $subpart) {
-            $products->{$subpart} = [];
+        foreach (array('to_configure', 'to_update') as $subpart) {
+            $products->{$subpart} = array();
         }
 
         foreach ($installed_products as $installed_product) {
@@ -293,7 +296,7 @@ class ModuleController extends FrameworkBundleAdminController
             }
 
             if ($row) {
-                $products->{$row}[] = (object)$installed_product;
+                $products->{$row}[] = (object) $installed_product;
             }
         }
 
@@ -314,20 +317,102 @@ class ModuleController extends FrameworkBundleAdminController
         ));
     }
 
-    public function getPreferredModulesAction()
+    public function getPreferredModulesAction(Request $request)
     {
-        $controller = new \AdminModulesControllerCore();
-        ob_start();
+        $tabModulesList = $request->request->get('tab_modules_list');
 
-        $controller->ajaxProcessGetTabModulesList();
+        if ($tabModulesList) {
+            $tabModulesList = explode(',', $tabModulesList);
+            $modulesListUnsorted = $this->getModulesByInstallation($tabModulesList, $request->request->get('admin_list_from_source'));
+        }
 
-        $content = ob_get_clean();
-        return new Response($content);
+        $installed = $uninstalled = array();
+
+        foreach ($tabModulesList as $key => $value) {
+            $continue = 0;
+            foreach ($modulesListUnsorted['installed'] as $moduleInstalled) {
+                if ($moduleInstalled['attributes']['name'] == $value) {
+                    $continue = 1;
+                    $installed[] = $moduleInstalled;
+                }
+            }
+            if ($continue) {
+                continue;
+            }
+            foreach ($modulesListUnsorted['not_installed'] as $moduleNotInstalled) {
+                if ($moduleNotInstalled['attributes']['name'] == $value) {
+                    $uninstalled[] = $moduleNotInstalled;
+                }
+            }
+        }
+
+        $moduleListSorted = array(
+            'installed' => $installed,
+            'notInstalled' => $uninstalled,
+        );
+
+        $twigParams = array(
+            'currentIndex' => '',
+            'modulesList' => $moduleListSorted,
+        );
+
+        if ($request->request->has('admin_list_from_source')) {
+            $twigParams['adminListFromSource'] = $request->request->get('admin_list_from_source');
+        }
+
+        return $this->render('PrestaShopBundle:Admin/Module:tab-modules-list.html.twig', $twigParams);
+    }
+
+    private function getModulesByInstallation($modulesSelectList = null)
+    {
+        $addonsProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+
+        $modulesOnDisk = $moduleRepository->getList();
+
+        $modulesList = array(
+            'installed' => array(),
+            'not_installed' => array(),
+        );
+
+        $modulesOnDisk = $addonsProvider->generateAddonsUrls($modulesOnDisk);
+        foreach ($modulesOnDisk as $module) {
+            if (!isset($modulesSelectList) || in_array($module->get('name'), $modulesSelectList)) {
+                $perm = true;
+                if ($module->get('id')) {
+                    $perm &= \Module::getPermissionStatic($module->get('id'), 'configure');
+                } else {
+                    $id_admin_module = \Tab::getIdFromClassName('AdminModules');
+                    $access = \Profile::getProfileAccess($this->getContext()->employee->id_profile, $id_admin_module);
+                    if (!$access['edit']) {
+                        $perm &= false;
+                    }
+                }
+
+                if ($module->get('author') === ModuleRepository::PARTNER_AUTHOR) {
+                    $module->set('type', 'addonsPartner');
+                }
+
+                if ($perm) {
+                    $module->fillLogo();
+                    if ($module->database->get('installed') == 1) {
+                        $modulesList['installed'][] = $modulePresenter->present($module);
+                    } else {
+                        $modulesList['not_installed'][] = $modulePresenter->present($module);
+                    }
+                }
+            }
+        }
+
+        return $modulesList;
     }
 
     /**
-     * Controller responsible for importing new module from DropFile zone in BO
-     * @param  Request $request
+     * Controller responsible for importing new module from DropFile zone in BO.
+     *
+     * @param Request $request
+     *
      * @return JsonResponse
      */
     public function importModuleAction(Request $request)
@@ -346,13 +431,13 @@ class ModuleController extends FrameworkBundleAdminController
                         'application/gzip',
                         'application/x-gtar',
                         'application/x-tgz',
-            ))));
+            ), )), );
 
             $violations = $this->get('validator')->validateValue($file_uploaded, $constraints);
             if (0 !== count($violations)) {
                 $violationsMessages = '';
                 foreach ($violations as $violation) {
-                    $violationsMessages .= $violation->getMessage() . PHP_EOL;
+                    $violationsMessages .= $violation->getMessage().PHP_EOL;
                 }
                 throw new Exception($violationsMessages);
             }
@@ -365,11 +450,11 @@ class ModuleController extends FrameworkBundleAdminController
             // Try to inflate archive given, and do check to verify we have a valid module architecture
             $module_name = $this->inflateModule($file_uploaded_tmp_fullpath);
             // Install the module
-            $installation_response = [
+            $installation_response = array(
                 'status' => $moduleManager->install($module_name),
                 'msg' => '',
                 'module_name' => $module_name,
-            ];
+            );
 
             if ($installation_response['status'] === null) {
                 $installation_response['status'] = false;
@@ -382,7 +467,7 @@ class ModuleController extends FrameworkBundleAdminController
                     'Installation of module %module% succeeded',
                     array('%module%' => $module_name),
                     'Admin.Modules.Notification');
-                $installation_response['is_configurable'] = (bool)$this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
+                $installation_response['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
             } else {
                 $installation_response['msg'] = $translator->trans(
                     'Installation of module %module% failed.',
@@ -393,19 +478,20 @@ class ModuleController extends FrameworkBundleAdminController
             return new JsonResponse(
                 $installation_response,
                 200,
-                array( 'Content-Type' => 'application/json' )
+                array('Content-Type' => 'application/json')
             );
         } catch (Exception $e) {
             if (isset($module_name)) {
                 $moduleManager->uninstall($module_name);
                 $moduleManager->removeModuleFromDisk($module_name);
             }
+
             return new JsonResponse(
                 array(
                 'status' => false,
-                'msg' => $e->getMessage()),
+                'msg' => $e->getMessage(), ),
                 200,
-                array( 'Content-Type' => 'application/json' )
+                array('Content-Type' => 'application/json')
             );
         }
     }
@@ -423,15 +509,15 @@ class ModuleController extends FrameworkBundleAdminController
         // Get current employee ID
         $currentEmployeeID = $legacyContext->employee->id;
         // Get accessed module DB ID
-        $moduleAccessedID = (int)$moduleAccessed->database->get('id');
+        $moduleAccessedID = (int) $moduleAccessed->database->get('id');
 
         // Save history for this module
         $moduleHistory = $this->getDoctrine()
             ->getRepository('PrestaShopBundle:ModuleHistory')
-            ->findOneBy([
+            ->findOneBy(array(
                 'idEmployee' => $currentEmployeeID,
-                'idModule' => $moduleAccessedID
-            ]);
+                'idModule' => $moduleAccessedID,
+            ));
 
         if (is_null($moduleHistory)) {
             $moduleHistory = new ModuleHistory();
@@ -449,6 +535,7 @@ class ModuleController extends FrameworkBundleAdminController
             // do not transmit limit & offset: go to the first page when redirecting
             'configure' => $module_name,
         );
+
         return $this->redirect(
             $legacyUrlGenerator->generate('admin_module_configure_action', $redirectionParams),
             302
@@ -493,7 +580,7 @@ class ModuleController extends FrameworkBundleAdminController
                         'Cannot open the following archive: %file% (error code: %code%)',
                         array(
                             '%file%' => $fileToInflate,
-                            '%code%' => $extractionStatus),
+                            '%code%' => $extractionStatus, ),
                         'Admin.Modules.Notification'));
             }
         } else {
@@ -508,7 +595,7 @@ class ModuleController extends FrameworkBundleAdminController
     private function getPresentedProducts(array &$products)
     {
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
-        $presentedProducts = [];
+        $presentedProducts = array();
         foreach ($products as $name => $product) {
             $presentedProducts[$name] = $modulePresenter->present($product);
         }
@@ -526,7 +613,7 @@ class ModuleController extends FrameworkBundleAdminController
             }
         }
 
-        return (array)$topMenuData;
+        return (array) $topMenuData;
     }
 
     private function getAddonsConnectToolbar()
@@ -536,19 +623,19 @@ class ModuleController extends FrameworkBundleAdminController
 
         if ($addonsProvider->isAddonsAuthenticated()) {
             $addonsEmail = $addonsProvider->getAddonsEmail();
-            $addonsConnect = [
+            $addonsConnect = array(
                 'href' => $this->generateUrl('admin_addons_logout'),
                 'desc' => $addonsEmail['username_addons'],
                 'icon' => 'exit_to_app',
-                'help' => $translator->trans('Synchronized with Addons marketplace!', array(), 'Admin.Modules.Notification')
-            ];
+                'help' => $translator->trans('Synchronized with Addons marketplace!', array(), 'Admin.Modules.Notification'),
+            );
         } else {
-            $addonsConnect = [
+            $addonsConnect = array(
                 'href' => '#',
                 'desc' => $translator->trans('Connect to Addons marketplace', array(), 'Admin.Modules.Feature'),
                 'icon' => 'vpn_key',
-                'help' => $translator->trans('Connect to Addons marketplace', array(), 'Admin.Modules.Feature')
-            ];
+                'help' => $translator->trans('Connect to Addons marketplace', array(), 'Admin.Modules.Feature'),
+            );
         }
 
         return $addonsConnect;

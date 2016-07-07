@@ -54,8 +54,8 @@ DirectoryIndex index.php
     # - disable this feature by commenting the following 2 lines or
     # - use Apache >= 2.3.9 and replace all L flags by END flags and remove the
     #   following RewriteCond (best solution)
-    RewriteCond %{ENV:REDIRECT_STATUS} ^$
-    RewriteRule ^index\.php(/(.*)) %{ENV:BASE}/$2 [R=301,L]
+    # RewriteCond %{ENV:REDIRECT_STATUS} ^$
+    # RewriteRule ^index\.php(/(.*)) %{ENV:BASE}/$2 [R=301,L]
 
     # If the requested filename exists, simply serve it.
     # We only want to let Apache serve files and not directories.

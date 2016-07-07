@@ -1,0 +1,44 @@
+<tr>
+  <td class="fixed-with-sm center">
+    <img
+      class="img-thumbnail"
+      alt="{{ module.attributes.name }}"
+      src="{% if module.attributes.image_absolute is not empty %}
+        {{ module.attributes.image_absolute }}
+        {% else %}
+          {{ constant('_MODULE_DIR_') ~ module.attributes.name ~ '/' ~ module.attributes.logo }}
+        {% endif %}"
+    />
+  </td>
+  <td>
+    <div id="anchor{{ module.attributes.name|capitalize }}" title="{{ module.attributes.displayName }}">
+      <div class="module_name">
+        <span style="display:none">{{ module.attributes.name }}</span>
+        {{ module.attributes.displayName }}
+        <small class="text-muted">v{{ module.attributes.version }} - by {{ module.attributes.author }}</small>
+        {% if module.attributes.type is not empty and module.attributes.type == 'addonsBought' %}
+        - <span class="module-badge-bought help-tooltip text-warning" data-title="{{ 'You bought this module on PrestaShop Addons. Thank You.'|trans({}) }}"><i class="icon-pushpin"></i> <small>{{ 'Bought'|trans({}) }}</small></span>
+        {% elseif module.attributes.type is not empty and module.attributes.type == 'addonsMustHave' %}
+        - <span class="module-badge-popular help-tooltip text-primary" data-title="{{ 'This module is available on PrestaShop Addons.'|trans({}) }}"><i class="icon-group"></i> <small>{{ 'Popular'|trans({}) }}</small></span>
+        {% elseif module.attributes.type is not empty and module.attributes.type == 'addonsPartner' %}
+        - <span class="module-badge-partner help-tooltip text-warning" data-title="{{ 'This module is available for free thanks to our partner.'|trans({}) }}"><i class="icon-pushpin"></i> <small>{{ 'Official'|trans({}) }}</small></span>
+        {% elseif module.attributes.id is defined and module.attributes.id >= 0 %}
+          {% if module.attributes.version_addons is defined and module.attributes.version_addons %}
+            <span class="label label-warning">{{ 'Need update'|trans({}) }}</span>
+          {% endif %}
+        {% endif %}
+      </div>
+      <p class="module_description">
+        {% if module.attributes.description is defined and module.attributes.description is not empty %}
+          {{ module.attributes.description }}
+        {% endif %}
+      </p>
+      {% if (module.attributes.message is defined and module.attributes.name is not empty) and (module.attributes.type is not defined or module.attributes.type != 'addonsMustHave' or module.attributes.type != 'addonsNative') %}
+        <div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{{ module.attributes.message }}</div>
+      {% endif %}
+    </div>
+  </td>
+  <td class="module-container module-quick-action-list clearfix">
+    {{ include('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig',{'module': module}) }}
+  </td>
+</tr>
