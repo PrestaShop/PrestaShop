@@ -143,9 +143,6 @@ class ConfigurationCore extends ObjectModel
      */
     public static function loadConfiguration()
     {
-        self::$_cache[self::$definition['table']] = array();
-        self::$_new_cache = array();
-
         $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
                 FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` c
                 LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang` cl ON (c.`'.bqSQL(self::$definition['primary']).'` = cl.`'.bqSQL(self::$definition['primary']).'`)';
@@ -197,7 +194,7 @@ class ConfigurationCore extends ObjectModel
         }
 
         // If conf if not initialized, try manual query
-        if (self::$_new_cache === null) {
+        if (self::$_new_cache === null || !isset(self::$_cache[self::$definition['table']])) {
             Configuration::loadConfiguration();
             if (self::$_new_cache === array()) {
                 return Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` WHERE `name` = "'.pSQL($key).'"');
@@ -224,6 +221,7 @@ class ConfigurationCore extends ObjectModel
         } elseif (Configuration::hasKey($key, $id_lang)) {
             return self::$_new_cache[$key][$id_lang]['global'];
         }
+
         return $default;
     }
 
