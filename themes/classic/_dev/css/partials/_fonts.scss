@@ -24,6 +24,7 @@
   font-style: normal;
   font-size: 24px;  /* Preferred icon size */
   display: inline-block;
+  vertical-align: middle;
   width: 1em;
   height: 1em;
   line-height: 1;
@@ -44,9 +45,3 @@
   /* Support for IE. */
   font-feature-settings: 'liga';
 }
-
-.text-light {
-  color: $gray;
-  font-size: rem(14px);
-}
-

@@ -41,6 +41,6 @@
     {/if}
 {/function}
 
-<div class="menu col-md-8 js-top-menu">
+<div class="menu col-md-9 js-top-menu">
     {menu nodes=$menu.children}
 </div>

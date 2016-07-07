@@ -5,7 +5,7 @@
 {/block}
 
 {block name='cart_overview' append}
-  <a href="{$urls.pages.index}">
+  <a class="p-l-2" href="{$urls.pages.index}">
     {l s='Continue shopping' d='Shop.Theme.Actions'}<i class="material-icons">chevron_right</i>
   </a>
 {/block}

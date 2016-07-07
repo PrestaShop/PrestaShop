@@ -6,7 +6,7 @@
 }
 @mixin customer-area-box {
   @include customer-area-base-box;
-  font-size: rem(14px);
+  font-size: $font-size-sm;
   color: $gray-dark;
 }
 .table-labeled {
@@ -68,13 +68,13 @@
     }
     .forgot-password {
       text-align: center;
-      font-size: rem(14px);
+      font-size: $font-size-sm;
       margin-top: rem(16px);
       padding-bottom: rem(15px);
     }
     .no-account {
       text-align: center;
-      font-size: rem(16px);
+      font-size: $base-font-size;
     }
   }
 }
@@ -93,12 +93,12 @@
     @include box-shadow;
     background: white;
     margin-bottom: rem(30px);
-    font-size: rem(14px);
+    font-size: $font-size-sm;
     color: $gray-darker;
     .address-body {
       padding: rem(16px);
       h4 {
-        font-size: rem(16px);
+        font-size: $base-font-size;
         font-weight: 700;
       }
       address {
@@ -115,10 +115,10 @@
           color: $gray-darker;
         }
         i {
-          font-size: em(16px);
+          font-size: $base-font-size;
         }
         span {
-          font-size: em(14px);
+          font-size: $font-size-lg;
           vertical-align: middle;
         }
       }
@@ -132,10 +132,10 @@
         color: $gray-darker;
       }
       i {
-        font-size: em(18px);
+        font-size: $base-font-size;
       }
       span {
-        font-size: em(16px);
+        font-size: $base-font-size;
         vertical-align: middle;
         margin-top: $small-space;
       }
@@ -151,7 +151,7 @@
     margin-bottom: rem(16px);
   }
   h3 {
-    font-size: rem(16px);
+    font-size: $base-font-size;
     font-weight: 700;
     text-transform: uppercase;
     color: $gray-darker;
@@ -165,7 +165,7 @@
   .addresses {
     margin: 0 rem(-15px);
     h4 {
-      font-size: rem(16px);
+      font-size: $base-font-size;
       font-weight: 700;
     }
   }
@@ -215,7 +215,7 @@
       @include customer-area-base-box;
       text-align: center;
       display: inline-block;
-      font-size: rem(16px);
+      font-size: $base-font-size;
       font-weight: 700;
       text-transform: uppercase;
       color: $gray-dark;
@@ -243,10 +243,10 @@
   .account-link {
     margin-right: rem(16px);
     i {
-      font-size: rem(16px);
+      font-size: $base-font-size;
     }
     span {
-      font-size: rem(14px);
+      font-size: $font-size-sm;
       vertical-align: middle;
     }
   }

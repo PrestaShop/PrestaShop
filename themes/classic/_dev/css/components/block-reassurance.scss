@@ -1,13 +1,9 @@
 #block-reassurance{
-  margin-top: em(60px);
+  margin-top: rem(60px);
   img{
     opacity: .7;
-    width: 25px;
-    margin-right: em(10px);
-  }
-  span{
-    color:$gray-darker;
-    font-size: em(15px);
+    width: rem(25px);
+    margin-right: rem(10px);
   }
   li{
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);

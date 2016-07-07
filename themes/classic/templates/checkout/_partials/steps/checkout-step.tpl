@@ -6,11 +6,11 @@
                       '-complete'     => $step_is_complete
                   ]|classnames}"
 >
-  <h1 class="step-title">
+  <h1 class="step-title h3">
     <i class="material-icons done">&#xE876;</i>
     <span class="step-number">{$position}</span>
     {$title}
-    <span class="step-edit"><i class="material-icons edit">mode_edit</i> edit</span>
+    <span class="step-edit text-muted"><i class="material-icons edit">mode_edit</i> edit</span>
   </h1>
 
   <div class="content">

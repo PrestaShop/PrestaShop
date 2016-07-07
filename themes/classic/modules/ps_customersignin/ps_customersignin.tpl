@@ -18,7 +18,6 @@
     </a>
   {else}
     <a
-      class="login"
       href="{$my_account_url}"
       title="{l s='Log in to your customer account' d='Shop.Theme.CustomerAccount'}"
       rel="nofollow"

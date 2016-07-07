@@ -11,12 +11,12 @@
     @include box-shadow;
     background: white;
     padding: rem(16px);
-    font-size: rem(14px);
+    font-size: $font-size-sm;
     color: $gray-dark;
     max-width: 570px;
     margin: 0 auto;
     h4 {
-      font-size: rem(16px);
+      font-size: $base-font-size;
       font-weight: 700;
       margin: rem(8px) 0 rem(16px);
     }

@@ -1,13 +1,13 @@
 #custom-text {
   background: white;
   border-radius: 2px;
-  margin: em(70px) 0;
-  padding: em(50px) em(50px);
+  margin: rem(70px) 0;
+  padding: rem(50px) rem(50px);
   text-align: center;
   h3 {
     text-transform: uppercase;
     color: $gray-darker;
-    font-size: em(25px);
+    font-size: rem(25px);
     font-weight: 700;
   }
   p {
@@ -22,7 +22,7 @@
 }
 .page-content.page-cms{
   background: white;
-  padding: em(20px);
+  padding: rem(20px);
   text-align: justify;
   .cms-box{
     img{

@@ -9,17 +9,17 @@
       padding: $large-space 0;
       ul {
         margin-bottom: 0;
-        font-size: em(15px);
+        font-size: $font-size-lg;
       }
       .divide-left {
         border-left: $gray-light 1px solid;
         tr{
-          height: em(25px);
+          height: rem(25px);
         }
       }
       .store-description{
         @include flex(0 0 50%);
-        font-size: em(16px);
+        font-size: $base-font-size;
       }
     }
     .store-item-footer {
@@ -36,7 +36,7 @@
       i.material-icons{
         margin-right: $small-space;
         color: $gray;
-        font-size: em(16px);
+        font-size: $base-font-size;
       }
       li{
         margin-bottom: $small-space;
