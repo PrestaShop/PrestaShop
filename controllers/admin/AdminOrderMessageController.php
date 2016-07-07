@@ -45,38 +45,40 @@ class AdminOrderMessageControllerCore extends AdminController
             $this->deleted = false;
         }
 
+        parent::__construct();
+
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Notifications.Info'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Info'),
                 'icon' => 'icon-trash'
             )
         );
 
         $this->fields_list = array(
             'id_order_message' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center'
             ),
             'name' => array(
-                'title' => $this->l('Name')
+                'title' => $this->trans('Name', array(), 'Admin.Global')
             ),
             'message' => array(
-                'title' => $this->l('Message'),
+                'title' => $this->trans('Message', array(), 'Admin.Global'),
                 'maxlength' => 300
             )
         );
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Order messages'),
+                'title' => $this->trans('Order messages', array(), 'Admin.OrdersCustomers.Feature'),
                 'icon' => 'icon-mail'
             ),
             'input' => array(
                 array(
                     'type' => 'text',
                     'lang' => true,
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'size' => 53,
                     'required' => true
@@ -84,7 +86,7 @@ class AdminOrderMessageControllerCore extends AdminController
                 array(
                     'type' => 'textarea',
                     'lang' => true,
-                    'label' => $this->l('Message'),
+                    'label' => $this->trans('Message', array(), 'Admin.Global'),
                     'name' => 'message',
                     'required' => true
                 )
@@ -93,8 +95,6 @@ class AdminOrderMessageControllerCore extends AdminController
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()
@@ -102,7 +102,7 @@ class AdminOrderMessageControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_order_message'] = array(
                 'href' => self::$currentIndex.'&addorder_message&token='.$this->token,
-                'desc' => $this->l('Add new order message'),
+                'desc' => $this->trans('Add new order message', array(), 'Admin.OrdersCustomers.Feature'),
                 'icon' => 'process-icon-new'
             );
         }

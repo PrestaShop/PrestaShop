@@ -40,22 +40,22 @@ class AdminCustomerPreferencesControllerCore extends AdminController
         $registration_process_type = array(
             array(
                 'value' => PS_REGISTRATION_PROCESS_STANDARD,
-                'name' => $this->l('Only account creation')
+                'name' => $this->trans('Only account creation', array(), 'Admin.Parameters.Feature')
             ),
             array(
                 'value' => PS_REGISTRATION_PROCESS_AIO,
-                'name' => $this->l('Standard (account creation and address creation)')
+                'name' => $this->trans('Standard (account creation and address creation)', array(), 'Admin.Parameters.Feature')
             )
         );
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->l('General'),
+                'title' =>    $this->trans('General', array(), 'Admin.Global'),
                 'icon' =>    'icon-cogs',
                 'fields' =>    array(
                     'PS_REGISTRATION_PROCESS_TYPE' => array(
-                        'title' => $this->l('Registration process type'),
-                        'hint' => $this->l('The "Only account creation" registration option allows the customer to register faster, and create his/her address later.'),
+                        'title' => $this->trans('Registration process type', array(), 'Admin.Parameters.Feature'),
+                        'hint' => $this->trans('The "Only account creation" registration option allows the customer to register faster, and create his/her address later.', array(), 'Admin.Parameters.Help'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'select',
@@ -63,45 +63,45 @@ class AdminCustomerPreferencesControllerCore extends AdminController
                         'identifier' => 'value'
                     ),
                     'PS_CART_FOLLOWING' => array(
-                        'title' => $this->l('Re-display cart at login'),
-                        'hint' => $this->l('After a customer logs in, you can recall and display the content of his/her last shopping cart.'),
+                        'title' => $this->trans('Re-display cart at login', array(), 'Admin.Parameters.Feature'),
+                        'hint' => $this->trans('After a customer logs in, you can recall and display the content of his/her last shopping cart.', array(), 'Admin.Parameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_CREATION_EMAIL' => array(
-                        'title' => $this->l('Send an email after registration'),
-                        'hint' => $this->l('Send an email with summary of the account information (email, password) after registration.'),
+                        'title' => $this->trans('Send an email after registration', array(), 'Admin.Parameters.Feature'),
+                        'hint' => $this->trans('Send an email with summary of the account information (email, password) after registration.', array(), 'Admin.Parameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_PASSWD_TIME_FRONT' => array(
-                        'title' => $this->l('Password reset delay'),
-                        'hint' => $this->l('Minimum time required between two requests for a password reset.'),
+                        'title' => $this->trans('Password reset delay', array(), 'Admin.Parameters.Feature'),
+                        'hint' => $this->trans('Minimum time required between two requests for a password reset.', array(), 'Admin.Parameters.Help'),
                         'validation' => 'isUnsignedInt',
                         'cast' => 'intval',
                         'size' => 5,
                         'type' => 'text',
-                        'suffix' => $this->l('minutes')
+                        'suffix' => $this->trans('minutes', array(), 'Admin.Parameters.Feature')
                     ),
                     'PS_B2B_ENABLE' => array(
-                        'title' => $this->l('Enable B2B mode'),
-                        'hint' => $this->l('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.'),
+                        'title' => $this->trans('Enable B2B mode', array(), 'Admin.Parameters.Feature'),
+                        'hint' => $this->trans('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.', array(), 'Admin.Parameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_BIRTHDATE' => array(
-                        'title' => $this->l('Ask for birthdate'),
-                        'hint' => $this->l('Display or not the birthdate field.'),
+                        'title' => $this->trans('Ask for birthdate', array(), 'Admin.Parameters.Feature'),
+                        'hint' => $this->trans('Display or not the birthdate field.', array(), 'Admin.Parameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_OPTIN' => array(
-                        'title' => $this->l('Enable opt-in'),
-                        'hint' => $this->l('Display or not the opt-in tick box, to receive offers from the store\'s partners.'),
+                        'title' => $this->trans('Enable opt-in', array(), 'Admin.Parameters.Feature'),
+                        'hint' => $this->trans('Display or not the opt-in tick box, to receive offers from the store\'s partners.', array(), 'Admin.Parameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
