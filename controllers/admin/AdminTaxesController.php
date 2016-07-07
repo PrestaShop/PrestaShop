@@ -94,7 +94,7 @@ class AdminTaxesControllerCore extends AdminController
                         'type' => 'bool'
                         ),
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
         );
 
@@ -140,7 +140,7 @@ class AdminTaxesControllerCore extends AdminController
     public function displayDeleteLink($token = null, $id)
     {
         if (!array_key_exists('Delete', self::$cache_lang)) {
-            self::$cache_lang['Delete'] = $this->l('Delete');
+            self::$cache_lang['Delete'] = $this->trans('Delete', array(), 'Admin.Actions');
         }
 
         if (!array_key_exists('DeleteItem', self::$cache_lang)) {
@@ -212,7 +212,7 @@ class AdminTaxesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Enable'),
+                    'label' => $this->trans('Enable', array(), 'Admin.Actions'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
@@ -231,7 +231,7 @@ class AdminTaxesControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             )
         );
 

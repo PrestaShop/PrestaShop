@@ -355,11 +355,11 @@
 													</span>
 													<button href="#" class="edit_shipping_number_link">
 														<i class="icon-pencil"></i>
-														{l s='Edit'}
+														{l s='Edit' d='Admin.Actions'}
 													</button>
 													<button href="#" class="cancel_shipping_number_link" style="display: none;">
 														<i class="icon-remove"></i>
-														{l s='Cancel'}
+														{l s='Cancel' d='Admin.Actions'}
 													</button>
 												</form>
 												{/if}
@@ -534,7 +534,7 @@
 									</td>
 									<td class="actions">
 										<button class="btn btn-primary" type="submit" name="submitAddPayment">
-											{l s='Add'}
+											{l s='Add' d='Admin.Actions'}
 										</button>
 									</td>
 								</tr>
@@ -638,7 +638,7 @@
 										<div class="col-lg-12">
 											<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled">
 												<i class="icon-save"></i>
-												{l s='Save'}
+												{l s='Save' d='Admin.Actions'}
 											</button>
 										</div>
 									</div>
@@ -705,7 +705,7 @@
 										<div class="col-sm-6">
 											<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.delivery->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}&amp;address_type=1&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 												<i class="icon-pencil"></i>
-												{l s='Edit'}
+												{l s='Edit' d='Admin.Actions'}
 											</a>
 											{displayAddressDetail address=$addresses.delivery newLine='<br />'}
 											{if $addresses.delivery->other}
@@ -755,7 +755,7 @@
 									<div class="col-sm-6">
 										<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.invoice->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}&amp;address_type=2&amp;back={$smarty.server.REQUEST_URI|urlencode}&amp;token={getAdminToken tab='AdminAddresses'}">
 											<i class="icon-pencil"></i>
-											{l s='Edit'}
+											{l s='Edit' d='Admin.Actions'}
 										</a>
 										{displayAddressDetail address=$addresses.invoice newLine='<br />'}
 										{if $addresses.invoice->other}
@@ -942,7 +942,7 @@
 										{elseif ($order->hasBeenPaid())}
 											{l s='Refund'}
 										{else}
-											{l s='Cancel'}
+											{l s='Cancel' d='Admin.Actions'}
 										{/if}
 									</th>
 									<th style="display:none" class="partial_refund_fields">

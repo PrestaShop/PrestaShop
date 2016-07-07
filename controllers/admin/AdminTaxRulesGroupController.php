@@ -178,7 +178,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Enable'),
+                    'label' => $this->trans('Enable', array(), 'Admin.Actions'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,

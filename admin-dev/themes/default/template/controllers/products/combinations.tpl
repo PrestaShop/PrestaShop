@@ -89,7 +89,7 @@
 						</select>
 					</div>
 					<div class="col-lg-4">
-						<button type="button" class="btn btn-default btn-block" onclick="add_attr();"><i class="icon-plus-sign-alt"></i> {l s='Add'}</button>
+						<button type="button" class="btn btn-default btn-block" onclick="add_attr();"><i class="icon-plus-sign-alt"></i> {l s='Add' d='Admin.Actions'}</button>
 					</div>
 				</div>
 				<div class="form-group">
@@ -97,7 +97,7 @@
 						<select id="product_att_list" name="attribute_combination_list[]" multiple="multiple" ></select>
 					</div>
 					<div class="col-lg-4">
-						<button type="button" class="btn btn-default btn-block" onclick="del_attr()"><i class="icon-minus-sign-alt"></i> {l s='Delete'}</button>
+						<button type="button" class="btn btn-default btn-block" onclick="del_attr()"><i class="icon-minus-sign-alt"></i> {l s='Delete' d='Admin.Actions'}</button>
 					</div>
 				</div>
 			</div>
@@ -366,9 +366,9 @@
 	</div>
 	{$list}
 	<div class="panel-footer">
-		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}{if isset($smarty.request.page) && $smarty.request.page > 1}&amp;submitFilterproduct={$smarty.request.page|intval}{/if}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
-		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save'}</button>
-		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}{if isset($smarty.request.page) && $smarty.request.page > 1}&amp;submitFilterproduct={$smarty.request.page|intval}{/if}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}</a>
+		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save' d='Admin.Actions'}</button>
+		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay' d='Admin.Actions'}</button>
 		<a href="#" id="desc-product-newCombination" class="btn btn-default pull-right"><i class="process-icon-new"></i> <span>{l s="New combination"}</span></a>
 	</div>
 </div>

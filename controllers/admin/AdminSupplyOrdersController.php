@@ -94,7 +94,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                 'filter_key' => 'a!date_delivery_expected'
             ),
             'id_export' => array(
-                'title' => $this->l('Export'),
+                'title' => $this->trans('Export', array(), 'Admin.Actions'),
                 'callback' => 'printExportIcons',
                 'orderby' => false,
                 'search' => false
@@ -636,7 +636,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
             ),
             'input' => array(),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             )
         );
 
@@ -1985,7 +1985,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
             case 'update_order_state':
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->l('Save')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
                 );
 
             case 'update_receipt':
@@ -1998,7 +1998,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
                     $this->toolbar_btn['cancel'] = array(
                         'href' => $back,
-                        'desc' => $this->l('Cancel')
+                        'desc' => $this->trans('Cancel', array(), 'Admin.Actions')
                     );
                 }
             break;

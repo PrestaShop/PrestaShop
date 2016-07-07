@@ -308,7 +308,7 @@
 														{/if}
 													{/foreach}
 													</select>
-													<a href="#" id="addSwap" class="btn btn-default btn-block">{l s='Add'} <i class="icon-arrow-right"></i></a>
+													<a href="#" id="addSwap" class="btn btn-default btn-block">{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
 												</div>
 												<div class="col-xs-6">
 													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)} onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}" id="selectedSwap" name="{$input.name|escape:'html':'utf-8'}_selected[]" multiple="multiple">
@@ -579,7 +579,7 @@
 													<div class="col-lg-12">
 														<button type="button" id="{$input.name}-cancel-btn" class="btn btn-default">
 															<i class="icon-remove"></i>
-															{l s='Cancel'}
+															{l s='Cancel' d='Admin.Actions'}
 														</button>
 													</div>
 												</div>
@@ -849,7 +849,7 @@
 						{/if}
 						{if isset($show_cancel_button) && $show_cancel_button}
 						<a href="{$back_url|escape:'html':'UTF-8'}" class="btn btn-default" onclick="window.history.back();">
-							<i class="process-icon-cancel"></i> {l s='Cancel'}
+							<i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}
 						</a>
 						{/if}
 						{if isset($fieldset['form']['reset'])}

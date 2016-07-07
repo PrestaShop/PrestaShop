@@ -238,7 +238,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;
@@ -249,7 +249,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Brand'}</td><td>'+$('#id_manufacturer option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Brand'}</td><td>'+$('#id_manufacturer option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;
@@ -260,7 +260,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Supplier'}</td><td>'+$('#id_supplier option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Supplier'}</td><td>'+$('#id_supplier option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;
@@ -271,7 +271,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Attribute'}</td><td>'+$('#id_attribute_group option:selected').html()+': '+$('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Attribute'}</td><td>'+$('#id_attribute_group option:selected').html()+': '+$('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;
@@ -282,7 +282,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Feature'}</td><td>'+$('#id_feature option:selected').html()+': '+$('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Feature'}</td><td>'+$('#id_feature option:selected').html()+': '+$('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;

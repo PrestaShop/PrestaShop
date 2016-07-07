@@ -54,7 +54,7 @@
 			<div class="panel-footer">
 				<button type="submit" name="cancel" class="btn btn-default">
 					<i class="icon-remove"></i>
-					{l s='Cancel'}
+					{l s='Cancel' d='Admin.Actions'}
 				</button>
 				<button type="submit" class="btn btn-default" name="submitUpdateOrderStatus">
 					<i class="icon-check"></i>

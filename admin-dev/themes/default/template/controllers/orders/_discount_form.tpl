@@ -99,11 +99,11 @@
 		<div class="col-lg-9 col-lg-offset-3">
 			<button class="btn btn-default" type="button" id="cancel_add_voucher">
 				<i class="icon-remove text-danger"></i>
-				{l s='Cancel'}
+				{l s='Cancel' d='Admin.Actions'}
 			</button>
 			<button class="btn btn-default" type="submit" name="submitNewVoucher">
 				<i class="icon-ok text-success"></i>
-				{l s='Add'}
+				{l s='Add' d='Admin.Actions'}
 			</button>
 		</div>
 	</div>

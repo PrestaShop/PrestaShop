@@ -43,7 +43,7 @@
 					<div class="panel-heading-action">
 						<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 							<i class="icon-edit"></i>
-							{l s='Edit'}
+							{l s='Edit' d='Admin.Actions'}
 						</a>
 					</div>
 				</div>
@@ -225,7 +225,7 @@
 									<td>{$order['total_paid_real']}</td>
 									<td>
 										<a class="btn btn-default" href="?tab=AdminOrders&amp;id_order={$order['id_order']|intval}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
-											<i class='icon-search'></i> {l s='View'}
+											<i class='icon-search'></i> {l s='View' d='Admin.Actions'}
 										</a>
 									</td>
 								</tr>
@@ -372,7 +372,7 @@
 						<div class="col-lg-12">
 							<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled">
 								<i class="icon-save"></i>
-								{l s='Save'}
+								{l s='Save' d='Admin.Actions'}
 							</button>
 						</div>
 					</div>
@@ -523,7 +523,7 @@
 					{l s='Groups'}
 					<span class="badge">{count($groups)}</span>
 					<a class="btn btn-default pull-right" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
-						<i class="icon-edit"></i> {l s='Edit'}
+						<i class="icon-edit"></i> {l s='Edit' d='Admin.Actions'}
 					</a>
 				</div>
 				{if $groups AND count($groups)}
@@ -629,7 +629,7 @@
 								<td class="text-right">
 									<div class="btn-group">
 										<a class="btn btn-default" href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;addaddress=1&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
-											<i class="icon-edit"></i> {l s='Edit'}
+											<i class="icon-edit"></i> {l s='Edit' d='Admin.Actions'}
 										</a>
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 											<span class="caret"></span>
@@ -638,7 +638,7 @@
 											<li>
 												<a href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;deleteaddress&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 													<i class="icon-trash"></i>
-													{l s='Delete'}
+													{l s='Delete' d='Admin.Actions'}
 												</a>
 											</li>
 										</ul>

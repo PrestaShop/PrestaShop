@@ -62,7 +62,7 @@
     </div>
     <div class="panel-footer">
       <button name="submitFields" type="submit" class="btn btn-default pull-right">
-        <i class="process-icon-save "></i> <span>{l s='Save'}</span>
+        <i class="process-icon-save "></i> <span>{l s='Save' d='Admin.Actions'}</span>
       </button>
     </div>
   </form>

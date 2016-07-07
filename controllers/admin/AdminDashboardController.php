@@ -83,7 +83,7 @@ class AdminDashboardControllerCore extends AdminController
         foreach ($forms as &$form) {
             $form['icon'] = 'tab-preferences';
             $form['fields'] = array();
-            $form['submit'] = array('title' => $this->l('Save'));
+            $form['submit'] = array('title' => $this->trans('Save', array(), 'Admin.Actions'));
         }
 
         foreach ($modules as $module) {

@@ -81,7 +81,7 @@
 					</div>
 				</div>
 				<button type="submit" class="btn btn-default" name="submitSettings" id="submitSettings">
-					<i class="icon-save"></i> {l s='Save'}
+					<i class="icon-save"></i> {l s='Save' d='Admin.Actions'}
 				</button>
 			</div>
 		</form>

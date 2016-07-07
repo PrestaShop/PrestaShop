@@ -97,7 +97,7 @@
 								<td>&nbsp;</td>
 							{else}
 								<td>
-									<button class="btn btn-default">{l s='Delete'}</button>
+									<button class="btn btn-default">{l s='Delete' d='Admin.Actions'}</button>
 								</td>
 							{/if}
 						{/foreach}

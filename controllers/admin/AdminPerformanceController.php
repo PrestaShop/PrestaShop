@@ -156,7 +156,7 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             )
         );
 
@@ -239,7 +239,7 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             )
         );
 
@@ -323,7 +323,7 @@ class AdminPerformanceControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             )
         );
 
@@ -433,7 +433,7 @@ class AdminPerformanceControllerCore extends AdminController
 
             ),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             )
         );
 
@@ -500,7 +500,7 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             )
         );
 
@@ -550,7 +550,7 @@ class AdminPerformanceControllerCore extends AdminController
                     )
                 ),
                 'submit' => array(
-                    'title' => $this->l('Save')
+                    'title' => $this->trans('Save', array(), 'Admin.Actions')
                 )
             );
         }
@@ -650,7 +650,7 @@ class AdminPerformanceControllerCore extends AdminController
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save')
+                'title' => $this->trans('Save', array(), 'Admin.Actions')
             ),
             'memcachedServers' => true
         );

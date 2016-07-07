@@ -86,8 +86,8 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<button type="button" class="btn btn-default" onclick="del_attr_multiple();"><i class="icon-minus-sign"></i> {l s='Delete'}</button>
-					<button type="button" class="btn btn-default pull-right" onclick="add_attr_multiple();"><i class="icon-plus-sign"></i> {l s='Add'}</button>
+					<button type="button" class="btn btn-default" onclick="del_attr_multiple();"><i class="icon-minus-sign"></i> {l s='Delete' d='Admin.Actions'}</button>
+					<button type="button" class="btn btn-default pull-right" onclick="add_attr_multiple();"><i class="icon-plus-sign"></i> {l s='Add' d='Admin.Actions'}</button>
 				</div>
 			</div>
 			<div class="col-lg-8 col-lg-offset-1">

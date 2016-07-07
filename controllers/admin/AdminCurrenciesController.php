@@ -120,7 +120,7 @@ class AdminCurrenciesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'hidden',
-                    'label' => $this->l('Enable'),
+                    'label' => $this->trans('Enable', array(), 'Admin.Actions'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
@@ -149,7 +149,7 @@ class AdminCurrenciesControllerCore extends AdminController
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save')
+            'title' => $this->trans('Save', array(), 'Admin.Actions')
         );
 
         //form preselect : define the default currency or object value

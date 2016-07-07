@@ -65,7 +65,7 @@
 						<td class="text-center">
 							<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;deleteorder_return_detail&amp;id_order_detail={$returnedCustomization['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;id_customization={$returnedCustomization['id_customization']}&amp;token={$token|escape:'html':'UTF-8'}">
 								<i class="icon-remove"></i>
-								{l s='Delete'}
+								{l s='Delete' d='Admin.Actions'}
 							</a>
 						</td>
 					</tr>
@@ -114,7 +114,7 @@
 							<td class="text-center">
 								<a class="btn btn-default"  href="{$current|escape:'html':'UTF-8'}&amp;deleteorder_return_detail&amp;id_order_detail={$product['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;token={$token|escape:'html':'UTF-8'}">
 									<i class="icon-remove"></i>
-									{l s='Delete'}
+									{l s='Delete' d='Admin.Actions'}
 								</a>
 							</td>
 						</tr>

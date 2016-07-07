@@ -156,7 +156,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             'lang' => true
                         )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'general' => array(
                 'title' =>    $this->l('Customer service options'),
@@ -228,7 +228,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         'hint' => $this->l('Do not use start-TLS to encrypt the session, even with servers that support it.'),
                     ),
                 ),
-                'submit' => array('title' => $this->l('Save')),
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             ),
         );
 

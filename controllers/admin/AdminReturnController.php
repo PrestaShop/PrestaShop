@@ -69,7 +69,7 @@ class AdminReturnControllerCore extends AdminController
                         'type' => 'textLang'
                     ),
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
         );
 
@@ -146,7 +146,7 @@ class AdminReturnControllerCore extends AdminController
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
 

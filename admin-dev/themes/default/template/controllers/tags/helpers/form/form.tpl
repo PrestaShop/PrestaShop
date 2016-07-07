@@ -38,7 +38,7 @@
 					{/foreach}
 				</select>
 				<a href="#" id="move_to_right" class="btn btn-default btn-block multiple_select_add">
-					{l s='Add'} <i class="icon-arrow-right"></i>
+					{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i>
 				</a>
 			</div>
 			<div class="col-lg-6">

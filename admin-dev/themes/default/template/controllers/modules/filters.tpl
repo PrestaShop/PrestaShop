@@ -75,7 +75,7 @@
 		</button>
 		<button class="btn btn-default " name="filterModules" id="filterModulesButton" type="submit">
 			<i class="icon-filter"></i> 
-			{l s='Filter'}
+			{l s='Filter' d='Admin.Actions'}
 		</button>
 	</span> -->
 </form>

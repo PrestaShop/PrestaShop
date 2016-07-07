@@ -84,7 +84,7 @@
     <div class="panel-footer">
       <input type="hidden" name="action" value="submitConfigureLayouts">
       <button type="submit" class="btn btn-default pull-right" name="submitConfigureLayouts">
-        <i class="process-icon-save"></i> {l s='Save'}
+        <i class="process-icon-save"></i> {l s='Save' d='Admin.Actions'}
       </button>
     </div>
 

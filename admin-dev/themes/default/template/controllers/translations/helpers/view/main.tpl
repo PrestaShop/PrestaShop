@@ -211,7 +211,7 @@
 				</div>
 			</div>
 			<div class="panel-footer">
-				<button type="submit" name="submitImport" class="btn btn-default pull-right"><i class="process-icon-upload"></i> {l s='Import'}</button>
+				<button type="submit" name="submitImport" class="btn btn-default pull-right"><i class="process-icon-upload"></i> {l s='Import' d='Admin.Actions'}</button>
 			</div>
 		</div>
 	</form>
@@ -246,7 +246,7 @@
 				</div>
 			</div>
 			<div class="panel-footer">
-				<button type="submit" name="submitExport" class="btn btn-default pull-right"><i class="process-icon-download"></i> {l s='Export'}</button>
+				<button type="submit" name="submitExport" class="btn btn-default pull-right"><i class="process-icon-download"></i> {l s='Export' d='Admin.Actions'}</button>
 			</div>
 		</div>
 	</form>

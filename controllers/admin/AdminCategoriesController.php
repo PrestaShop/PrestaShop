@@ -280,7 +280,7 @@ class AdminCategoriesControllerCore extends AdminController
             if ($this->can_import) {
                 $this->toolbar_btn['import'] = array(
                     'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
-                    'desc' => $this->l('Import')
+                    'desc' => $this->trans('Import', array(), 'Admin.Actions')
                 );
             }
         }
@@ -289,13 +289,13 @@ class AdminCategoriesControllerCore extends AdminController
             && ($this->display == 'view' || empty($this->display))) {
             $this->toolbar_btn['edit'] = array(
                 'href' => self::$currentIndex.'&update'.$this->table.'&id_category='.(int)$this->_category->id.'&token='.$this->token,
-                'desc' => $this->l('Edit')
+                'desc' => $this->trans('Edit', array(), 'Admin.Actions')
             );
         }
         if (Tools::getValue('id_category') && !Tools::isSubmit('updatecategory')) {
             $this->toolbar_btn['edit'] = array(
                 'href' => self::$currentIndex.'&update'.$this->table.'&id_category='.(int)Tools::getValue('id_category').'&token='.$this->token,
-                'desc' => $this->l('Edit')
+                'desc' => $this->trans('Edit', array(), 'Admin.Actions')
             );
         }
 
@@ -618,7 +618,7 @@ class AdminCategoriesControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
                 'name' => 'submitAdd'.$this->table.($this->_category->is_root_category && !Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('add'.$this->table.'root') ? '': 'AndBackToParent')
             )
         );

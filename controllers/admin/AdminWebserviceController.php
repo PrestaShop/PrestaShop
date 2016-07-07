@@ -84,7 +84,7 @@ class AdminWebserviceControllerCore extends AdminController
                             'cast' => 'intval',
                             'type' => 'bool'),
                     ),
-                    'submit' => array('title' => $this->l('Save'))
+                    'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
                 ),
             );
 
@@ -186,7 +186,7 @@ class AdminWebserviceControllerCore extends AdminController
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
         if (!($obj = $this->loadObject(true))) {
@@ -224,7 +224,7 @@ class AdminWebserviceControllerCore extends AdminController
             $helper->toolbar_scroll = true;
             $helper->toolbar_btn = array('save' => array(
                                 'href' => '#',
-                                'desc' => $this->l('Save')
+                                'desc' => $this->trans('Save', array(), 'Admin.Actions')
                             ));
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;

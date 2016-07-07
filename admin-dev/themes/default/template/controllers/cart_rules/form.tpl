@@ -25,9 +25,9 @@
 		<div id="cart_rule_actions" class="panel cart_rule_tab">
 			{include file='controllers/cart_rules/actions.tpl'}
 		</div>
-		<button type="submit" class="btn btn-default pull-right" name="submitAddcart_rule" id="{$table|escape}_form_submit_btn">{l s='Save'}
+		<button type="submit" class="btn btn-default pull-right" name="submitAddcart_rule" id="{$table|escape}_form_submit_btn">{l s='Save' d='Admin.Actions'}
 		</button>
-		<!--<input type="submit" value="{l s='Save and stay'}" class="button" name="submitAddcart_ruleAndStay" id="" />-->
+		<!--<input type="submit" value="{l s='Save and stay' d='Admin.Actions'}" class="button" name="submitAddcart_ruleAndStay" id="" />-->
 	</form>
 
 	<script type="text/javascript">

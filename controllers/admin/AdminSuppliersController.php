@@ -262,7 +262,7 @@ class AdminSuppliersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Enable'),
+                    'label' => $this->trans('Enable', array(), 'Admin.Actions'),
                     'name' => 'active',
                     'required' => false,
                     'class' => 't',
@@ -282,7 +282,7 @@ class AdminSuppliersControllerCore extends AdminController
                 )
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
 
@@ -341,7 +341,7 @@ class AdminSuppliersControllerCore extends AdminController
         if (empty($this->display) && $this->can_import) {
             $this->toolbar_btn['import'] = array(
                 'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
-                'desc' => $this->l('Import')
+                'desc' => $this->trans('Import', array(), 'Admin.Actions')
             );
         }
     }

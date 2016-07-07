@@ -222,7 +222,7 @@ class AdminPreferencesControllerCore extends AdminController
                     'title' =>    $this->l('General'),
                     'icon' =>    'icon-cogs',
                     'fields' =>    $fields,
-                    'submit' => array('title' => $this->l('Save')),
+                    'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
                 ),
             );
         }

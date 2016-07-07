@@ -8,7 +8,7 @@
 		</select>
 		<div class="clearfix">&nbsp;</div>
 		<a id="product_rule_select_{$product_rule_group_id|intval}_{$product_rule_id|intval}_add" class="btn btn-default btn-block" >
-			{l s='Add'}
+			{l s='Add' d='Admin.Actions'}
 			<i class="icon-arrow-right"></i>
 		</a>
 	</div>

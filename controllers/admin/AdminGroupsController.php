@@ -131,7 +131,7 @@ class AdminGroupsControllerCore extends AdminController
                         ),
                     ),
                     'submit' => array(
-                        'title' => $this->l('Save'),
+                        'title' => $this->trans('Save', array(), 'Admin.Actions'),
                     )
                 ),
             );
@@ -266,7 +266,7 @@ class AdminGroupsControllerCore extends AdminController
                 'icon' => 'icon-group'
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             ),
             'input' => array(
                 array(

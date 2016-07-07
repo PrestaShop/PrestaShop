@@ -276,7 +276,7 @@
 			// <![CDATA[
 				ThickboxI18nImage = "{l s='Image'}";
 				ThickboxI18nOf = "{l s='of'}";
-				ThickboxI18nClose = "{l s='Close'}";
+				ThickboxI18nClose = "{l s='Close' d='Admin.Actions'}";
 				ThickboxI18nOrEscKey = "{l s='(or "Esc")'}";
 				ThickboxI18nNext = "{l s='Next >'}";
 				ThickboxI18nPrev = "{l s='< Previous'}";

@@ -224,19 +224,19 @@
                            <th></th>
                            <th>
                               <input type="checkbox" name="1" class="viewall ajaxPower"{if $access_edit == 1} data-rel="-1||{$profile.id_profile}||view||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
-                              {l s='View'}
+                              {l s='View' d='Admin.Actions'}
                            </th>
                            <th>
                               <input type="checkbox" name="1" class="addall ajaxPower"{if $access_edit == 1} data-rel="-1||{$profile.id_profile}||add||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
-                              {l s='Add'}
+                              {l s='Add' d='Admin.Actions'}
                            </th>
                            <th>
                               <input type="checkbox" name="1" class="editall ajaxPower"{if $access_edit == 1} data-rel="-1||{$profile.id_profile}||edit||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
-                              {l s='Edit'}
+                              {l s='Edit' d='Admin.Actions'}
                            </th>
                            <th>
                               <input type="checkbox" name="1" class="deleteall ajaxPower"{if $access_edit == 1} data-rel="-1||{$profile.id_profile}||delete||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
-                              {l s='Delete'}
+                              {l s='Delete' d='Admin.Actions'}
                            </th>
                            <th>
                               <input type="checkbox" name="1" class="allall ajaxPower"{if $access_edit == 1} data-rel="-1||{$profile.id_profile}||all||{$tabsize}||{count($tabs)}"{else} disabled="disabled"{/if}/>
@@ -366,10 +366,10 @@
                         <tr>
                            <th></th>
                            <th>
-                              <input type="checkbox"{if $access_edit == 1} class="changeModuleAccess" data-rel="-1||view||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='View'}
+                              <input type="checkbox"{if $access_edit == 1} class="changeModuleAccess" data-rel="-1||view||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='View' d='Admin.Actions'}
                            </th>
                            <th>
-                              <input type="checkbox"{if $access_edit == 1} class="changeModuleAccess" data-rel="-1||configure||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='Configure'}
+                              <input type="checkbox"{if $access_edit == 1} class="changeModuleAccess" data-rel="-1||configure||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='Configure' d='Admin.Actions'}
                            </th>
                            <th>
                               <input type="checkbox"{if $access_edit == 1} class="changeModuleAccess" data-rel="-1||uninstall||{$profile.id_profile}"{else} disabled="disabled"{/if}/> {l s='Uninstall'}

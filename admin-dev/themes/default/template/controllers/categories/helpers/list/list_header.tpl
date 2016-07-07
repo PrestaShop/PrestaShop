@@ -98,11 +98,11 @@
 				<div class="panel-footer">
 					<button type="submit" name="cancel" class="btn btn-default">
 						<i class="icon-remove"></i>
-						{l s='Cancel'}
+						{l s='Cancel' d='Admin.Actions'}
 					</button>
 					<button type="submit" class="btn btn-default">
 						<i class="icon-trash text-danger"></i>
-						{l s='Delete'}
+						{l s='Delete' d='Admin.Actions'}
 					</button>
 				</div>
 			</form>

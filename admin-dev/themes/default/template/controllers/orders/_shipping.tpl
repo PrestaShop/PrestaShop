@@ -77,11 +77,11 @@
 							</span>
 							<a href="#" class="edit_shipping_number_link btn btn-default">
 								<i class="icon-pencil"></i>
-								{l s='Edit'}
+								{l s='Edit' d='Admin.Actions'}
 							</a>
 							<a href="#" class="cancel_shipping_number_link btn btn-default" style="display: none;">
 								<i class="icon-remove"></i>
-								{l s='Cancel'}
+								{l s='Cancel' d='Admin.Actions'}
 							</a>
 						</form>
 					{/if}

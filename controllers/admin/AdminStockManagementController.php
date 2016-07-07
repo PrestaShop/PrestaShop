@@ -765,7 +765,7 @@ class AdminStockManagementControllerCore extends AdminController
             case 'transferstock':
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->l('Save')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
                 );
 
                 // Default cancel button - like old back link
@@ -776,7 +776,7 @@ class AdminStockManagementControllerCore extends AdminController
 
                 $this->toolbar_btn['cancel'] = array(
                     'href' => $back,
-                    'desc' => $this->l('Cancel')
+                    'desc' => $this->trans('Cancel', array(), 'Admin.Actions')
                 );
             break;
 

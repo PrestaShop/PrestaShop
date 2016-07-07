@@ -100,7 +100,7 @@
 						<span class="input-group-addon">
 							<i class="icon-search"></i>
 						</span>
-						<input class="form-control" placeholder="{l s='Search'}" type="text" value="" name="moduleQuicksearch" id="moduleQuicksearch" autocomplete="off" />
+						<input class="form-control" placeholder="{l s='Search' d='Admin.Actions'}" type="text" value="" name="moduleQuicksearch" id="moduleQuicksearch" autocomplete="off" />
 					</div>
 				</form>
 				<a class="categoryModuleFilterLink list-group-item {if isset($categoryFiltered.favorites)}active{/if}" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;filterCategory=favorites" id="filter_favorite">

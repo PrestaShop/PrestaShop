@@ -117,7 +117,7 @@ class AdminEmployeesControllerCore extends AdminController
                         )
                     ), 'visibility' => Shop::CONTEXT_ALL)
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
         $rtl = $this->context->language->is_rtl ? '_rtl' : '';
@@ -414,7 +414,7 @@ class AdminEmployeesControllerCore extends AdminController
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
         );
 
         $this->fields_value['passwd'] = false;

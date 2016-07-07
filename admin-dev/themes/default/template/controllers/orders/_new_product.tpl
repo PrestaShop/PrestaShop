@@ -90,11 +90,11 @@
 	<td style="display:none;">
 		<button type="button" class="btn btn-default" id="cancelAddProduct">
 			<i class="icon-remove text-danger"></i>
-			{l s='Cancel'}
+			{l s='Cancel' d='Admin.Actions'}
 		</button>
 		<button type="button" class="btn btn-default" id="submitAddProduct" disabled="disabled">
 			<i class="icon-ok text-success"></i>
-			{l s='Add'}
+			{l s='Add' d='Admin.Actions'}
 		</button>
 	</td>
 </tr>

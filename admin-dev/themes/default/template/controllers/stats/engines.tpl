@@ -63,7 +63,7 @@
 			</div>
 
 			<p>
-				<input type="submit" value="{l s='Save'}" name="submitSettings" id="submitSettings" class="btn btn-default" />
+				<input type="submit" value="{l s='Save' d='Admin.Actions'}" name="submitSettings" id="submitSettings" class="btn btn-default" />
 			</p>
 		</form>
 *}

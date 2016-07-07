@@ -106,7 +106,7 @@ class AdminStoresControllerCore extends AdminController
                         'size' => '10'
                     )
                 ),
-                'submit' => array('title' => $this->l('Save'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
 
@@ -313,7 +313,7 @@ class AdminStoresControllerCore extends AdminController
             'hours' => array(
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
 
@@ -553,7 +553,7 @@ class AdminStoresControllerCore extends AdminController
             'title' =>    $this->l('Contact details'),
             'icon' =>    'icon-user',
             'fields' =>    $fields,
-            'submit' => array('title' => $this->l('Save'))
+            'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
         );
     }
 

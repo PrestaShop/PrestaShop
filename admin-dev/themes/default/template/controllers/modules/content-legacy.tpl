@@ -70,7 +70,7 @@
 
 					<div class="panel-footer">
 						<a href="{$link->getAdminLink('AdminModules', true)|escape:'html':'UTF-8'}" class="btn btn-default">
-							<i class="process-icon-cancel"></i> {l s='Cancel'}
+							<i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}
 						</a>
 						<a href="#" data-toggle="modal" data-target="#modal_addons_connect" class="btn btn-default pull-right">
 							<i class="process-icon-next"></i> {l s='Next'}

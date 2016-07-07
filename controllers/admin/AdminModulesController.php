@@ -90,7 +90,7 @@ class AdminModulesControllerCore extends AdminController
         $this->list_modules_categories['checkout']['name'] = $this->l('Checkout');
         $this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
         $this->list_modules_categories['customer_reviews']['name'] = $this->l('Customer Reviews');
-        $this->list_modules_categories['export']['name'] = $this->l('Export');
+        $this->list_modules_categories['export']['name'] = $this->trans('Export', array(), 'Admin.Actions');
         $this->list_modules_categories['emailing']['name'] = $this->l('Emailing');
         $this->list_modules_categories['front_office_features']['name'] = $this->l('Front office Features');
         $this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization and Localization');
@@ -624,7 +624,7 @@ class AdminModulesControllerCore extends AdminController
                     } else {
                         $module->disable();
                     }
-                    Tools::redirectAdmin($this->getCurrentUrl('enable'));
+                    Tools::redirectAdmin($this->getCurrentUrtrans('enable', array(), 'Admin.Actions'));
                 }
             } else {
                 $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
@@ -952,7 +952,7 @@ class AdminModulesControllerCore extends AdminController
                                 $this->context->smarty->assign(array(
                                     'module' => $module,
                                     'display_multishop_checkbox' => true,
-                                    'current_url' => $this->getCurrentUrl('enable'),
+                                    'current_url' => $this->getCurrentUrtrans('enable', array(), 'Admin.Actions'),
                                     'shop_context' => $shop_context,
                                 ));
                             }
