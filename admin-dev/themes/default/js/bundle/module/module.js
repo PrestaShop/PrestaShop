@@ -809,8 +809,8 @@ var AdminModuleController = function () {
             'bulk-uninstall': 'uninstall',
             'bulk-disable': 'disable',
             'bulk-enable': 'enable',
-            'bulk-disable-mobile': 'disable-mobile',
-            'bulk-enable-mobile': 'enable-mobile',
+            'bulk-disable-mobile': 'disable_mobile',
+            'bulk-enable-mobile': 'enable_mobile',
             'bulk-reset': 'reset'
         };
 
