@@ -451,7 +451,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'advanced_stock_management' => (bool) $this->product->advanced_stock_management,
                 'depends_on_stock' => $this->product->depends_on_stock?"1":"0",
                 'qty_0' => $this->product->getQuantity($this->product->id),
-                'combinations' => $this->getProductAttributes(),
+                'id_product_attributes' => $this->getProductAttributes(),
                 'out_of_stock' => $this->product->out_of_stock,
                 'minimal_quantity' => $this->product->minimal_quantity,
                 'available_now' => $this->product->available_now,
