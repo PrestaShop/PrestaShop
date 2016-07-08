@@ -1,0 +1,19 @@
+cache_dir: /tmp/TranslationTool/
+paths:
+  - classes
+  - controllers
+  - admin-dev
+  - modules
+  - src
+  - override
+  - install-dev
+  - themes
+exclude_files:
+  - classes/PrestaShopAutoload.php
+  - app/cache/
+  - app/logs
+  - node_modules
+  - vendor
+  - tools
+  - mails
+  - js
