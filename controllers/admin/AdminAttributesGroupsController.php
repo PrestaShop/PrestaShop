@@ -37,13 +37,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->table = 'attribute_group';
         $this->list_id = 'attribute_group';
         $this->identifier = 'id_attribute_group';
         $this->className = 'AttributeGroup';
         $this->lang = true;
         $this->_defaultOrderBy = 'position';
+
+        parent::__construct();
 
         $this->fields_list = array(
             'id_attribute_group' => array(
@@ -80,8 +81,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
             )
         );
         $this->fieldImageSettings = array('name' => 'texture', 'dir' => 'co');
-
-        parent::__construct();
     }
 
     /**

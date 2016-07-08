@@ -39,6 +39,8 @@ class AdminSlipControllerCore extends AdminController
         $this->_join .= ' LEFT JOIN '._DB_PREFIX_.'orders o ON (o.`id_order` = a.`id_order`)';
         $this->_group = ' GROUP BY a.`id_order_slip`';
 
+        parent::__construct();
+
         $this->fields_list = array(
             'id_order_slip' => array(
                 'title' => $this->l('ID'),
@@ -83,8 +85,6 @@ class AdminSlipControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
-
-        parent::__construct();
 
         $this->_where = Shop::addSqlRestriction(false, 'o');
     }
@@ -187,7 +187,7 @@ class AdminSlipControllerCore extends AdminController
             'desc' => $this->l('Generate PDF file')
         );
     }
-    
+
     public function printPDFIcons($id_order_slip, $tr)
     {
         $order_slip = new OrderSlip((int)$id_order_slip);

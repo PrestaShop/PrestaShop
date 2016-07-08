@@ -42,7 +42,8 @@ class AdminAddressesControllerCore extends AdminController
         $this->lang = false;
         $this->addressType = 'customer';
         $this->explicitSelect = true;
-        $this->context = Context::getContext();
+
+        parent::__construct();
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
@@ -73,8 +74,6 @@ class AdminAddressesControllerCore extends AdminController
             'postcode' => array('title' => $this->trans('Zip/Postal Code', array(), 'Admin.Global'), 'align' => 'right'),
             'city' => array('title' => $this->trans('City', array(), 'Admin.Global')),
             'country' => array('title' => $this->trans('Country', array(), 'Admin.Global'), 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'));
-
-        parent::__construct();
 
         $this->_select = 'cl.`name` as country';
         $this->_join = '

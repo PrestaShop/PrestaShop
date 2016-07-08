@@ -35,7 +35,7 @@ class AdminPaymentPreferencesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
-        $shop_id = Context::getContext()->shop->id;
+        $shop_id = $this->context->shop->id;
 
         /* Get all modules then select only payment ones */
         $modules = Module::getModulesOnDisk(true);

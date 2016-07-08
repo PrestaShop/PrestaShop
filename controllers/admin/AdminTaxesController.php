@@ -38,6 +38,8 @@ class AdminTaxesControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
+        parent::__construct();
+
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
@@ -108,8 +110,6 @@ class AdminTaxesControllerCore extends AdminController
                 'list' => TaxRulesGroup::getTaxRulesGroupsForOptions()
                 );
         }
-
-        parent::__construct();
 
         $this->_where .= ' AND a.deleted = 0';
     }

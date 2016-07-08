@@ -31,7 +31,7 @@ class AdminDeliverySlipControllerCore extends AdminController
         $this->bootstrap = true;
         $this->table = 'delivery';
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         $this->fields_options = array(
             'general' => array(
@@ -59,8 +59,6 @@ class AdminDeliverySlipControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
-
-        parent::__construct();
     }
 
     public function renderForm()

@@ -45,7 +45,7 @@ class AdminRequestSqlControllerCore extends AdminController
         $this->lang = false;
         $this->export = true;
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         $this->fields_list = array(
             'id_request_sql' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs'),
@@ -77,8 +77,6 @@ class AdminRequestSqlControllerCore extends AdminController
                 'icon' => 'icon-trash'
             )
         );
-
-        parent::__construct();
     }
 
     public function renderOptions()

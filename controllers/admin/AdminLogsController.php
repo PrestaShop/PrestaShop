@@ -36,6 +36,8 @@ class AdminLogsControllerCore extends AdminController
         $this->className = 'PrestaShopLogger';
         $this->lang = false;
         $this->noLink = true;
+        
+        parent::__construct();
 
         $this->fields_list = array(
             'id_log' => array(
@@ -98,7 +100,6 @@ class AdminLogsControllerCore extends AdminController
         $this->_select .= 'CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname) employee';
         $this->_join .= ' LEFT JOIN '._DB_PREFIX_.'employee e ON (a.id_employee = e.id_employee)';
         $this->_use_found_rows = false;
-        parent::__construct();
     }
 
     public function processDelete()
