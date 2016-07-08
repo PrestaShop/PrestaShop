@@ -77,7 +77,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
                     ),
                     'PS_COOKIE_LIFETIME_BO' => array(
                         'title' => $this->trans('Lifetime of back office cookies', array(), 'Admin.Parameters.Feature'),
-                        'hint' => $this->trans('Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.', array(), 'Admin.Parameters.Hint'),
+                        'hint' => $this->trans('Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.', array(), 'Admin.Parameters.Help'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'text',

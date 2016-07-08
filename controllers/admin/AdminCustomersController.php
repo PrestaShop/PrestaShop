@@ -203,7 +203,7 @@ class AdminCustomersControllerCore extends AdminController
         }
 
         if (!$this->can_add_customer && !$this->display) {
-            $this->informations[] = $this->trans('You have to select a shop if you want to create a customer.', array(), 'Admin.OrdersCustomers.Notifications');
+            $this->informations[] = $this->trans('You have to select a shop if you want to create a customer.', array(), 'Admin.OrdersCustomers.Notification');
         }
 
         parent::initContent();
