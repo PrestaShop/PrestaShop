@@ -47,6 +47,8 @@ class AdminAttachmentsControllerCore extends AdminController
         $this->_join = 'LEFT JOIN (SELECT id_attachment, COUNT(*) as products FROM '._DB_PREFIX_.'product_attachment GROUP BY id_attachment) virtual ON a.id_attachment = virtual.id_attachment';
         $this->_use_found_rows = false;
 
+        parent::__construct();
+
         $this->fields_list = array(
             'id_attachment' => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
@@ -79,8 +81,6 @@ class AdminAttachmentsControllerCore extends AdminController
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Info')
             )
         );
-
-        parent::__construct();
     }
 
     public function setMedia()

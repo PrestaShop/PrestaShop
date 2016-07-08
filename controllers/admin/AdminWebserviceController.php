@@ -43,6 +43,8 @@ class AdminWebserviceControllerCore extends AdminController
         $this->delete = true;
         $this->id_lang_default = Configuration::get('PS_LANG_DEFAULT');
 
+        parent::__construct();
+
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
@@ -96,8 +98,6 @@ class AdminWebserviceControllerCore extends AdminController
                 'type' => 'bool'
             );
         }
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

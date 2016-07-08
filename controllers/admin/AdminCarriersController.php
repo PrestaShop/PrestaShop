@@ -48,7 +48,7 @@ class AdminCarriersControllerCore extends AdminController
 
         $this->_defaultOrderBy = 'position';
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         $this->bulk_actions = array(
             'delete' => array(
@@ -108,7 +108,6 @@ class AdminCarriersControllerCore extends AdminController
                 'position' => 'position'
             )
         );
-        parent::__construct();
     }
 
     public function initToolbar()

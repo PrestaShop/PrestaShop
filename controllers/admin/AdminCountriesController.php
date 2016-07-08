@@ -42,7 +42,7 @@ class AdminCountriesControllerCore extends AdminController
         $this->explicitSelect = true;
         $this->addRowAction('edit');
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         $this->bulk_actions = array(
             'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
@@ -114,8 +114,6 @@ class AdminCountriesControllerCore extends AdminController
                 'class' => 'fixed-width-sm'
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

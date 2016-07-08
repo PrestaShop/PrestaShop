@@ -43,6 +43,8 @@ class AdminImagesControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
+        parent::__construct();
+
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
@@ -327,8 +329,6 @@ class AdminImagesControllerCore extends AdminController
                 'title' => $this->trans('Save', array(), 'Admin.Actions')
             )
         );
-
-        parent::__construct();
     }
 
     public function postProcess()

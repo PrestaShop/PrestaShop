@@ -46,7 +46,8 @@ class AdminEmployeesControllerCore extends AdminController
         $this->table = 'employee';
         $this->className = 'Employee';
         $this->lang = false;
-        $this->context = Context::getContext();
+
+        parent::__construct();
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
@@ -155,7 +156,6 @@ class AdminEmployeesControllerCore extends AdminController
                 }
             }
         }
-        parent::__construct();
 
         // An employee can edit its own profile
         if ($this->context->employee->id == Tools::getValue('id_employee')) {

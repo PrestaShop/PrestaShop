@@ -50,6 +50,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $language_array[$language['id_lang']] = $language['name'];
         }
 
+        parent::__construct();
+
         $icon_array = array(
             'open' => array('class' => 'icon-circle text-success', 'alt' => $this->l('Open')),
             'closed' => array('class' => 'icon-circle text-danger', 'alt' => $this->l('Closed')),
@@ -231,8 +233,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             ),
         );
-
-        parent::__construct();
     }
 
     public function renderList()

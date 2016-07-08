@@ -32,9 +32,10 @@ class AdminPreferencesControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->className = 'Configuration';
         $this->table = 'configuration';
+
+        parent::__construct();
 
         // Prevent classes which extend AdminPreferences to load useless data
         if (get_class($this) == 'AdminPreferencesController') {
@@ -226,8 +227,6 @@ class AdminPreferencesControllerCore extends AdminController
                 ),
             );
         }
-
-        parent::__construct();
     }
 
     /**
