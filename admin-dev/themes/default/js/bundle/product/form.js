@@ -1196,6 +1196,18 @@ var attachmentProduct = (function() {
 var imagesProduct = (function() {
   var id_product = $('#form_id_product').val();
 
+  function checkDropzoneMode() {
+      var dropZoneElem = $('#product-images-dropzone');
+
+      if (!dropZoneElem.find('.dz-preview:not(.openfilemanager)').length) {
+        dropZoneElem.removeClass('dz-started');
+        dropZoneElem.find('.dz-preview.openfilemanager').hide();
+      }
+      else {
+          dropZoneElem.find('.dz-preview.openfilemanager').show();
+      }
+  };
+
   return {
     'expander': function() {
       var closedHeight = $('#product-images-dropzone').outerHeight();
@@ -1210,7 +1222,7 @@ var imagesProduct = (function() {
           $('#product-images-dropzone').css('height', 'auto');
           $('#product-images-container .dropzone-expander').removeClass('expand').addClass('compress');
         } else {
-          $('#product-images-dropzone').css('height', closedHeight + 'px');
+          $('#product-images-dropzone').css('height', '');
           $('#product-images-container .dropzone-expander').removeClass('compress').addClass('expand');
         }
       });
@@ -1233,7 +1245,7 @@ var imagesProduct = (function() {
         paramName: 'form[file]',
         maxFilesize: dropZoneElem.attr('data-max-size'),
         addRemoveLinks: true,
-        clickable: ".openfilemanager",
+        clickable: '.openfilemanager',
         thumbnailWidth: 250,
         thumbnailHeight: null,
         acceptedFiles: 'image/*',
@@ -1241,12 +1253,12 @@ var imagesProduct = (function() {
         dictFileTooBig: translate_javascripts['ToLargeFile'],
         dictCancelUpload: translate_javascripts['Delete'],
         sending: function(file, response) {
-          dropZoneElem.find('.dz-preview.openfilemanager').show();
+          checkDropzoneMode();
           $('#product-images-container .dropzone-expander').addClass('expand').click();
           errorElem.html('');
         },
         queuecomplete: function() {
-          dropZoneElem.find('.dz-preview.openfilemanager').show();
+          checkDropzoneMode();
           dropZoneElem.sortable('enable');
         },
         processing: function() {
@@ -1347,6 +1359,9 @@ var imagesProduct = (function() {
       $('#product-images-dropzone .dz-preview .iscover').remove();
       $('#product-images-dropzone .dz-preview[data-id="' + id_image + '"]')
         .append('<div class="iscover">' + translate_javascripts['Cover'] + '</div>');
+    },
+    'checkDropzoneMode': function() {
+      checkDropzoneMode();
     }
   };
 })();
@@ -1361,14 +1376,27 @@ var formImagesProduct = (function() {
     type: 'image'
   });
 
+  function toggleColDropzone(enlarge) {
+      var smallCol = "col-md-8";
+      var largeCol = "col-md-12";
+      if (true === enlarge) {
+          dropZoneElem.removeClass(smallCol).addClass(largeCol);
+      } else {
+          dropZoneElem.removeClass(largeCol).addClass(smallCol);
+      }
+  }
+
   return {
     'form': function(id) {
+      dropZoneElem.find(".dz-preview.active").removeClass("active");
+      dropZoneElem.find(".dz-preview[data-id='"+id+"']").addClass("active");
       $.ajax({
         url: dropZoneElem.attr('url-update') + '/' + id,
         success: function(response) {
           formZoneElem.find('#product-images-form').html(response);
         },
         complete: function() {
+          toggleColDropzone(false);
           formZoneElem.show();
         }
       });
@@ -1377,7 +1405,7 @@ var formImagesProduct = (function() {
       $.ajax({
         type: 'POST',
         url: dropZoneElem.attr('url-update') + '/' + id,
-        data: formZoneElem.find('input').serialize(),
+        data: formZoneElem.find('textarea').serialize(),
         beforeSend: function() {
           formZoneElem.find('.actions button').prop('disabled', 'disabled');
           formZoneElem.find('ul.text-danger').remove();
@@ -1416,18 +1444,17 @@ var formImagesProduct = (function() {
               formZoneElem.find('.close').click();
               dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
               combinations.refreshImagesCombination();
-              if (!dropZoneElem.find('.dz-preview:not(.openfilemanager)').length) {
-                dropZoneElem.removeClass('dz-started');
-                dropZoneElem.find('.dz-preview.openfilemanager').hide();
-              }
+              imagesProduct.checkDropzoneMode();
             }
           });
         }
       }).show();
     },
     'close': function() {
+      toggleColDropzone(true);
       formZoneElem.find('#product-images-form').html('');
       formZoneElem.hide();
+      dropZoneElem.find(".dz-preview.active").removeClass("active");
     }
   };
 })();

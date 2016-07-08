@@ -1,13 +1,21 @@
 <button type="button" class="pull-right close" onclick="formImagesProduct.close()"><i class="material-icons">close</i></button>
 
+<div class="row">
+    <div class="col-lg-12 col-xl-7">
+      {{ form_widget(form.cover) }}
+    </div>
+    <div class="col-lg-12 col-xl-4">
+        <a href="{{ image.base_image_url }}.{{ image.format }}" class="btn btn-invisible btn-sm open-image" target="_blank">
+          <i class="material-icons">zoom_in</i> {{ 'Zoom'|trans({}, 'Admin.Catalog.Feature') }}
+        </a>
+    </div>
+</div>
+
 <label class="control-label">{{ form.legend.vars.label }}</label>
 {{ form_widget(form.legend) }}
 {{ form_errors(form.legend) }}
 
-{{ form_widget(form.cover) }}
-<i class="icon-search-plus"></i> <a href="{{ image.base_image_url }}.{{ image.format }}" class="open-image" target="_blank">{{ 'Enlarge image'|trans({}, 'Admin.Catalog.Feature') }}</a>
-
 <div class="actions">
-    <button type="button" class="btn btn-sm tn-primary" onclick="formImagesProduct.send({{ image.id }})">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-    <button type="button" class="btn btn-sm btn-danger" onclick="formImagesProduct.delete({{ image.id }})"><i class="icon-trash"></i> {{ 'Delete'|trans({}, 'Admin.Actions') }}</button>
+    <button type="button" class="btn btn-sm btn-primary pull-sm-right" onclick="formImagesProduct.send({{ image.id }})">{{ 'Save image settings'|trans({}, 'Admin.Actions') }}</button>
+    <button type="button" class="btn btn-sm btn-invisible" onclick="formImagesProduct.delete({{ image.id }})"><i class="material-icons">delete</i> {{ 'Delete'|trans({}, 'Admin.Actions') }}</button>
 </div>
