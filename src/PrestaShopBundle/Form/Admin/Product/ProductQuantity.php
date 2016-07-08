@@ -96,11 +96,6 @@ class ProductQuantity extends CommonAbstractType
                     new Assert\Type(array('type' => 'numeric')),
                 ),
             ))
-            ->add('combinations', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-                'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductCombination',
-                'allow_add' => true,
-                'allow_delete' => true,
-            ))
             ->add('out_of_stock', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices_as_values' => true,
             ))
