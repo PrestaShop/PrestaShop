@@ -6,9 +6,11 @@ php=$?
 php app/console lint:twig src
 twig=$?
 php app/console lint:yaml themes/classic/config/theme.yml
-yaml=$?
+yaml_theme=$?
+php app/console lint:yaml .t9n.yml
+yaml_trad=$?
 
-if [[ "$php" == "0" && "$twig" == 0 && "$yaml == 0" ]]; then
+if [[ "$php" == "0" && "$twig" == 0 && "$yaml_theme == 0"  && "$yaml_trad == 0" ]]; then
   exit 0;
 else
   exit 255;
