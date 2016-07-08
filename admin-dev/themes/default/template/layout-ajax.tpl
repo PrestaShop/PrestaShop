@@ -46,7 +46,7 @@
 			{if count($errors) == 1}
 				{$errors[0]}
 			{else}
-				{l s='%d errors' sprintf=$errors|count}
+				{l s='%d errors' sprintf=[$errors|count]}
 				<br/>
 				<ul>
 					{foreach $errors AS $error}

@@ -32,9 +32,9 @@ $(function() {
 {if $query}
 	<h2>
 	{if isset($nb_results) && $nb_results == 0}
-		<h2>{l s='There are no results matching your query "%s".' sprintf=$query}</h2>
+		<h2>{l s='There are no results matching your query "%s".' sprintf=[$query]}</h2>
 	{elseif isset($nb_results) && $nb_results == 1}
-		{l s='1 result matches your query "%s".' sprintf=$query}
+		{l s='1 result matches your query "%s".' sprintf=[$query]}
 	{elseif isset($nb_results)}
 		{l s='%d results match your query "%s".' sprintf=[$nb_results|intval, $query]}
 	{/if}
@@ -49,7 +49,7 @@ $(function() {
 			{if $features|@count == 1}
 				{l s='1 feature'}
 			{else}
-				{l s='%d features' sprintf=$features|@count}
+				{l s='%d features' sprintf=[$features|@count]}
 			{/if}
 		</h3>
 		<table class="table">
@@ -73,7 +73,7 @@ $(function() {
 			{if $modules|@count == 1}
 				{l s='1 module'}
 			{else}
-				{l s='%d modules' sprintf=$modules|@count}
+				{l s='%d modules' sprintf=[$modules|@count]}
 			{/if}
 		</h3>
 		<table class="table">
@@ -95,7 +95,7 @@ $(function() {
 			{if $categories|@count == 1}
 				{l s='1 category'}
 			{else}
-				{l s='%d categories' sprintf=$categories|@count}
+				{l s='%d categories' sprintf=[$categories|@count]}
 			{/if}
 		</h3>
 		<table class="table" style="border-spacing : 0; border-collapse : collapse;">
@@ -114,7 +114,7 @@ $(function() {
 			{if $products|@count == 1}
 				{l s='1 product'}
 			{else}
-				{l s='%d products' sprintf=$products|@count}
+				{l s='%d products' sprintf=[$products|@count]}
 			{/if}
 		</h3>
 		{$products}
@@ -128,7 +128,7 @@ $(function() {
 			{if $customerCount == 1}
 				{l s='1 customer'}
 			{else}
-				{l s='%d customers' sprintf=$customerCount}
+				{l s='%d customers' sprintf=[$customerCount]}
 			{/if}
 		</h3>
 		{$customers}
@@ -141,7 +141,7 @@ $(function() {
 			{if $orders|@count == 1}
 				{l s='1 order'}
 			{else}
-				{l s='%d orders' sprintf=$orders|@count}
+				{l s='%d orders' sprintf=[$orders|@count]}
 			{/if}
 		</h3>
 		{$orders}
@@ -154,7 +154,7 @@ $(function() {
 			{if $addons|@count == 1}
 				{l s='1 addon'}
 			{else}
-				{l s='%d addons' sprintf=$addons|@count}
+				{l s='%d addons' sprintf=[$addons|@count]}
 			{/if}
 		</h3>
 		<table class="table">

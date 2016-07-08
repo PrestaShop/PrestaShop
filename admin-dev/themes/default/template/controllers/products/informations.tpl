@@ -95,7 +95,7 @@
 	</script>
 
 	{if isset($display_common_field) && $display_common_field}
-	<div class="alert alert-warning" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
+	<div class="alert alert-warning" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=[$bullet_common_field]}</div>
 	{/if}
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Informations"}
@@ -374,7 +374,7 @@
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-info">
 				{capture}<a class="addImageDescription" href="javascript:void(0);">{l s='Click here'}</a>{/capture}
-				{l s='Would you like to add an image in your description? %s and paste the given tag in the description.' sprintf=$smarty.capture.default}
+				{l s='Would you like to add an image in your description? %s and paste the given tag in the description.' sprintf=[$smarty.capture.default]}
 			</div>
 		</div>
 	</div>

@@ -59,7 +59,7 @@
 				<div class="col-lg-push-3 col-lg-9">
 					<div class="alert alert-danger" id="file_missing">
 						{$download_product_file_missing} :<br/>
-						<strong>{l s='Server file name : %s' sprintf=$product->productDownload->filename}</strong>
+						<strong>{l s='Server file name : %s' sprintf=[$product->productDownload->filename]}</strong>
 					</div>
 				</div>
 			</div>

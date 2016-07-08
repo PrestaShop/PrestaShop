@@ -43,9 +43,9 @@
 					<br />
 					<li>
 						{l s='The "request_uri" field is the URL from which the customers come to your website.'}<br />
-						{l s='For example, if the visitor accesses a product page, the URL will be like this one: "%smusic-ipods/1-ipod-nano.html".' sprintf=$uri}<br />
+						{l s='For example, if the visitor accesses a product page, the URL will be like this one: "%smusic-ipods/1-ipod-nano.html".' sprintf=[$uri]}<br />
 						{l s='This is helpful because you can add tags or tokens in the links pointing to your website.'}
-						{l s='For example, you can post a link (such as "%sindex.php?myuniquekeyword" -- note that you added "?myuniquekeyword" at the end of the URL) in an online forum or as a blog comment, and get visitors statistics for that unique link by entering "%%myuniquekeyword" in the "request_uri" field.' sprintf=$uri}
+						{l s='For example, you can post a link (such as "%sindex.php?myuniquekeyword" -- note that you added "?myuniquekeyword" at the end of the URL) in an online forum or as a blog comment, and get visitors statistics for that unique link by entering "%%myuniquekeyword" in the "request_uri" field.' sprintf=[$uri]}
 						{l s='This method is more reliable than the "http_referer" one, but there is one disadvantage: if a search engine references a page with your link, then it will be displayed in the search results and you will not only indicate visitors from the places where you posted the link, but also those from the search engines that picked up that link.'}
 					</li>
 					<br />
