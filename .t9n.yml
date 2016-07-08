@@ -8,6 +8,7 @@ paths:
   - override
   - install-dev
   - themes
+  - pdf
 exclude_files:
   - classes/PrestaShopAutoload.php
   - app/cache/
