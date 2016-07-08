@@ -38,7 +38,7 @@
 
             <tr>
               <th>{l s='Page'}</th>
-              <th>{l s='Description'}</th>
+              <th>{l s='Description' d='Admin.Global'}</th>
               <th>{l s='Layout'}</th>
             </tr>
 

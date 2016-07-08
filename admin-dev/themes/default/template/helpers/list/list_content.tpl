@@ -67,9 +67,9 @@
 						{$tr.$key}
 					{elseif isset($params.activeVisu)}
 						{if $tr.$key}
-							<i class="icon-check-ok"></i> {l s='Enabled'}
+							<i class="icon-check-ok"></i> {l s='Enabled' d='Admin.Global'}
 						{else}
-							<i class="icon-remove"></i> {l s='Disabled'}
+							<i class="icon-remove"></i> {l s='Disabled' d='Admin.Global'}
 						{/if}
 					{elseif isset($params.position)}
 						{if !$filters_has_value && $order_by == 'position' && $order_way != 'DESC'}

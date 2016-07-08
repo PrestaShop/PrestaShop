@@ -186,7 +186,7 @@
 	</table>
 	<div class="btn-group pull-left">
 		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-			{l s='bulk actions'}
+			{l s='bulk actions' d='Admin.Global'}
 			 <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">

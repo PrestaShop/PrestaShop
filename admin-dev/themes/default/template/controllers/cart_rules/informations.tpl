@@ -2,7 +2,7 @@
 	<label class="control-label col-lg-3 required">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l s='This will be displayed in the cart summary, as well as on the invoice.'}">
-			{l s='Name'}
+			{l s='Name' d='Admin.Global'}
 		</span>
 	</label>
 	<div class="col-lg-8">
@@ -37,7 +37,7 @@
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 		title="{l s='For your eyes only. This will never be displayed to the customer.'}">
-			{l s='Description'}
+			{l s='Description' d='Admin.Global'}
 		</span>
 	</label>
 	<div class="col-lg-8">
@@ -73,9 +73,9 @@
 	<div class="col-lg-9">
 		<span class="switch prestashop-switch fixed-width-lg">
 			<input type="radio" name="highlight" id="highlight_on" value="1" {if $currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if}/>
-			<label for="highlight_on">{l s='Yes'}</label>
+			<label for="highlight_on">{l s='Yes' d='Admin.Global'}</label>
 			<input type="radio" name="highlight" id="highlight_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
-			<label for="highlight_off">{l s='No'}</label>
+			<label for="highlight_off">{l s='No' d='Admin.Global'}</label>
 			<a class="slide-button btn"></a>
 		</span>
 	</div>
@@ -92,9 +92,9 @@
 	<div class="col-lg-9">
 		<span class="switch prestashop-switch fixed-width-lg">
 			<input type="radio" name="partial_use" id="partial_use_on" value="1" {if $currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
-			<label class="t" for="partial_use_on">{l s='Yes'}</label>
+			<label class="t" for="partial_use_on">{l s='Yes' d='Admin.Global'}</label>
 			<input type="radio" name="partial_use" id="partial_use_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'partial_use')|intval}checked="checked"{/if} />
-			<label class="t" for="partial_use_off">{l s='No'}</label>
+			<label class="t" for="partial_use_off">{l s='No' d='Admin.Global'}</label>
 			<a class="slide-button btn"></a>
 		</span>
 	</div>
@@ -117,9 +117,9 @@
 	<div class="col-lg-9">
 		<span class="switch prestashop-switch fixed-width-lg">
 			<input type="radio" name="active" id="active_on" value="1" {if $currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
-			<label class="t" for="active_on">{l s='Yes'}</label>
+			<label class="t" for="active_on">{l s='Yes' d='Admin.Global'}</label>
 			<input type="radio" name="active" id="active_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'active')|intval}checked="checked"{/if} />
-			<label class="t" for="active_off">{l s='No'}</label>
+			<label class="t" for="active_off">{l s='No' d='Admin.Global'}</label>
 			<a class="slide-button btn"></a>
 		</span>
 	</div>

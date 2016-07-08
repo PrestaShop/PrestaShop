@@ -571,7 +571,7 @@
 				{if $customer->id}
 					<div class="panel-heading">
 						<i class="icon-user"></i>
-						{l s='Customer'}
+						{l s='Customer' d='Admin.Global'}
 						<span class="badge">
 							<a href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}">
 								{if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
@@ -601,7 +601,7 @@
 								{/if}
 							{else}
 								<dl class="well list-detail">
-									<dt>{l s='Email'}</dt>
+									<dt>{l s='Email' d='Admin.Global'}</dt>
 										<dd><a href="mailto:{$customer->email}"><i class="icon-envelope-o"></i> {$customer->email}</a></dd>
 									<dt>{l s='Account registered'}</dt>
 										<dd class="text-muted"><i class="icon-calendar-o"></i> {dateFormat date=$customer->date_add full=true}</dd>
@@ -843,11 +843,11 @@
 									<span class="switch prestashop-switch fixed-width-lg">
 										<input type="radio" name="visibility" id="visibility_on" value="0" />
 										<label for="visibility_on">
-											{l s='Yes'}
+											{l s='Yes' d='Admin.Global'}
 										</label>
 										<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" />
 										<label for="visibility_off">
-											{l s='No'}
+											{l s='No' d='Admin.Global'}
 										</label>
 										<a class="slide-button btn"></a>
 									</span>

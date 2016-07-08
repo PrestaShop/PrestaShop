@@ -78,8 +78,8 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th class="fixed-width-xs align-center"><span class="title_box">{l s='ID'}</span></th>
-				<th><span class="title_box">{l s='Name'}</span></th>
+				<th class="fixed-width-xs align-center"><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
+				<th><span class="title_box">{l s='Name' d='Admin.Global'}</span></th>
 			</tr>
 		</thead>
 		<tbody>

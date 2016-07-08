@@ -189,9 +189,9 @@
 				<div class="input-group col-lg-8">
 					<span class="switch prestashop-switch fixed-width-lg">
 						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_on" value="1" checked="checked"/>
-						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes'}</label>
+						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes' d='Admin.Global'}</label>
 						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_off" value="0"/>
-						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No'}</label>
+						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No' d='Admin.Global'}</label>
 						<a class="slide-button btn"></a>
 					</span>
 					<input type="hidden" name="modulesBoxAuth[]" value="{$module->id|intval}"/>
@@ -204,9 +204,9 @@
 				<div class="input-group col-lg-8">
 					<span class="switch prestashop-switch fixed-width-lg">
 						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_on" value="1"/>
-						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes'}</label>
+						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes' d='Admin.Global'}</label>
 						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_off" value="0" checked="checked"/>
-						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No'}</label>
+						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No' d='Admin.Global'}</label>
 						<a class="slide-button btn"></a>
 					</span>
 					<input type="hidden" name="modulesBoxUnauth[]" value="{$module->id|intval}"/>

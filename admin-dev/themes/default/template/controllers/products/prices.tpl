@@ -336,7 +336,7 @@ $(document).ready(function () {
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="control-label col-lg-2" for="customer">{l s='Customer'}</label>
+				<label class="control-label col-lg-2" for="customer">{l s='Customer' d='Admin.Global'}</label>
 				<div class="col-lg-4">
 					<input type="hidden" name="sp_id_customer" id="id_customer" value="0" />
 					<div class="input-group">
@@ -482,11 +482,11 @@ $(document).ready(function () {
 			<tr>
 				<th>{l s='Rule'}</th>
 				<th>{l s='Combination'}</th>
-				{if $multi_shop}<th>{l s='Shop'}</th>{/if}
+				{if $multi_shop}<th>{l s='Shop' d='Admin.Global'}</th>{/if}
 				<th>{l s='Currency'}</th>
-				<th>{l s='Country'}</th>
-				<th>{l s='Group'}</th>
-				<th>{l s='Customer'}</th>
+				<th>{l s='Country' d='Admin.Global'}</th>
+				<th>{l s='Group' d='Admin.Global'}</th>
+				<th>{l s='Customer' d='Admin.Global'}</th>
 				{if $country_display_tax_label}
 					<th>{l s='Fixed price (tax excl.)'}</th>
 				{else}

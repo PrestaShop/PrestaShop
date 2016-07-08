@@ -76,7 +76,7 @@ function check_all_shop() {
 <div class="assoShop">
 	<table class="table">
 		<tr>
-			<th>{l s='Shop'}</th>
+			<th>{l s='Shop' d='Admin.Global'}</th>
 		</tr>
 		<tr>
 			<td>

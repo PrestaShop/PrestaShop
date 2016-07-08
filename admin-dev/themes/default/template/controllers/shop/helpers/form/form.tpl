@@ -81,11 +81,11 @@
 				<span class="switch prestashop-switch">
 					<input type="radio" name="{$field.name}" id="{$field.name}_on" value="1" {if $field.value } checked="checked" {/if} />
 					<label for="{$field.name}_on">
-						{l s='Yes'}
+						{l s='Yes' d='Admin.Global'}
 					</label>
 					<input type="radio" name="{$field.name}" id="{$field.name}_off" value="0"  {if !$field.value } checked="checked" {/if} />
 					<label for="{$field.name}_off">
-						{l s='No'}
+						{l s='No' d='Admin.Global'}
 					</label>
 					<a class="slide-button btn"></a>
 				</span>

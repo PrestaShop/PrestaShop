@@ -32,7 +32,7 @@
 				<thead>
 					<tr>
 						<th><input type="checkbox" name="checkAll" onclick="checkDelBoxes(this.form, 'countries[]', this.checked)" /></th>
-						<th>{l s='Name'}</th>
+						<th>{l s='Name' d='Admin.Global'}</th>
 					</tr>
 				</thead>
 				<tbody>

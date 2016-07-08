@@ -26,7 +26,7 @@
 <script type="text/javascript">
 	var newLabel = '{l s='New label'}';
 	var choose_language = '{l s='Choose language:'}';
-	var required = '{l s='Required'}';
+	var required = '{l s='Required' d='Admin.Global'}';
 	var customizationUploadableFileNumber = '{$product->uploadable_files}';
 	var customizationTextFieldNumber = '{$product->text_fields}';
 	var uploadableFileLabel = 0;
@@ -46,9 +46,9 @@
 			<div class="col-lg-2">
 				<span class="switch prestashop-switch">
 					<input type="radio" name="is_virtual_file" id="is_virtual_file_on" value="1" {if $product_downloaded} checked="checked"{/if} />
-					<label for="is_virtual_file_on">{l s='Yes'}</label>
+					<label for="is_virtual_file_on">{l s='Yes' d='Admin.Global'}</label>
 					<input type="radio" name="is_virtual_file" id="is_virtual_file_off" value="0" {if !$product_downloaded} checked="checked"{/if} />
-					<label for="is_virtual_file_off">{l s='No'}</label>
+					<label for="is_virtual_file_off">{l s='No' d='Admin.Global'}</label>
 					<a class="slide-button btn"></a>
 				</span>
 			</div>
@@ -82,7 +82,7 @@
 					<label id="virtual_product_file_label" for="virtual_product_file" class="control-label col-lg-3">
 						<span class="label-tooltip" data-toggle="tooltip"
 							title="{l s='Upload a file from your computer'} ({Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')|string_format:'%.2f'} {l s='MB max.'})">
-							{l s='File'}
+							{l s='File' d='Admin.Global'}
 						</span>
 					</label>
 					<div class="col-lg-5">

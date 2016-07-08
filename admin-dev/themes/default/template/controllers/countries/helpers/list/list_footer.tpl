@@ -29,7 +29,7 @@
 		{if $bulk_actions && $has_bulk_actions}
 			<div class="btn-group bulk-actions dropup">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					{l s='Bulk actions'} <span class="caret"></span>
+					{l s='Bulk actions' d='Admin.Global'} <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
 					<li>
@@ -138,7 +138,7 @@
 		<div class="col-lg-6">
 			<div class="form-group col-lg-3">
 				<select id="zone_to_affect" name="zone_to_affect" class="form-control">
-					<option value="0">{l s='Zone'}</option>
+					<option value="0">{l s='Zone' d='Admin.Global'}</option>
 					{foreach $zones as $z}
 						<option value="{$z['id_zone']}">{$z['name']}</option>
 					{/foreach}

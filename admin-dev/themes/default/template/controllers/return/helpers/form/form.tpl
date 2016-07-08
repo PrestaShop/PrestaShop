@@ -50,7 +50,7 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>{l s='Reference'}</th>
+					<th>{l s='Reference' d='Admin.Global'}</th>
 					<th>{l s='Product name'}</th>
 					<th class="text-center">{l s='Quantity'}</th>
 					<th class="text-center">{l s='Action'}</th>
