@@ -109,9 +109,7 @@
               {% endfor %}
             </div>
         {% endif %}
-        {% if module.attributes.urls.install is defined %}
-            <a href="{{module.attributes.urls.install}}" class="pull-right module-install-button btn-primary-outline btn module-install-button btn-sm light-button">{{ 'Install'|trans({}, 'Admin.Actions') }}</a>
-        {% endif %}
+        {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}
       </div>
     </div>
   </div>
