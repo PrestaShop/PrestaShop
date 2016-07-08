@@ -266,9 +266,9 @@ class AdminSearchControllerCore extends AdminController
     protected function initOrderList()
     {
         $this->fields_list['orders'] = array(
-            'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 65),
-            'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-            'customer' => array('title' => $this->l('Customer')),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global'), 'align' => 'center', 'width' => 65),
+            'id_order' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'width' => 25),
+            'customer' => array('title' => $this->trans('Customer', array(), 'Admin.Global')),
             'total_paid_tax_incl' => array('title' => $this->l('Total'), 'width' => 70, 'align' => 'right', 'type' => 'price', 'currency' => true),
             'payment' => array( 'title' => $this->l('Payment'), 'width' => 100),
             'osname' => array('title' => $this->l('Status'), 'width' => 280),
@@ -286,15 +286,15 @@ class AdminSearchControllerCore extends AdminController
             $genders[$gender->id] = $gender->name;
         }
         $this->fields_list['customers'] = (array(
-            'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+            'id_customer' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'width' => 25),
             'id_gender' => array('title' => $this->l('Social title'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25),
             'firstname' => array('title' => $this->l('First Name'), 'align' => 'left', 'width' => 150),
-            'lastname' => array('title' => $this->l('Name'), 'align' => 'left', 'width' => 'auto'),
+            'lastname' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'align' => 'left', 'width' => 'auto'),
             'email' => array('title' => $this->l('Email address'), 'align' => 'left', 'width' => 250),
             'birthday' => array('title' => $this->l('Birth date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
             'date_add' => array('title' => $this->l('Registration date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
             'orders' => array('title' => $this->l('Orders'), 'align' => 'center', 'width' => 50),
-            'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 25),
+            'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 25),
         ));
     }
 
@@ -302,10 +302,10 @@ class AdminSearchControllerCore extends AdminController
     {
         $this->show_toolbar = false;
         $this->fields_list['products'] = array(
-            'id_product' => array('title' => $this->l('ID'), 'width' => 25),
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'width' => 25),
             'manufacturer_name' => array('title' => $this->l('Brand'), 'align' => 'center', 'width' => 200),
-            'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 150),
-            'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global'), 'align' => 'center', 'width' => 150),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto'),
             'price_tax_excl' => array('title' => $this->l('Price (tax excl.)'), 'align' => 'right', 'type' => 'price', 'width' => 60),
             'price_tax_incl' => array('title' => $this->l('Price (tax incl.)'), 'align' => 'right', 'type' => 'price', 'width' => 60),
             'active' => array('title' => $this->l('Active'), 'width' => 70, 'active' => 'status', 'align' => 'center', 'type' => 'bool')

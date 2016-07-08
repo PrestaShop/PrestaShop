@@ -56,7 +56,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
         $this->fields_list = array(
             'reference' => array(
-                'title' => $this->l('Reference'),
+                'title' => $this->trans('Reference', array(), 'Admin.Global'),
                 'havingFilter' => true
             ),
             'supplier' => array(
@@ -228,7 +228,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                 'input' => array(
                     array(
                         'type' => 'text',
-                        'label' => $this->l('Reference'),
+                        'label' => $this->trans('Reference', array(), 'Admin.Global'),
                         'name' => 'reference',
                         'required' => true,
                         'hint' => $this->l('The reference number for your order.'),
@@ -766,7 +766,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                 'search' => false,
             ),
             'reference' => array(
-                'title' => $this->l('Reference'),
+                'title' => $this->trans('Reference', array(), 'Admin.Global'),
                 'orderby' => false,
                 'filter' => false,
                 'search' => false,
@@ -784,7 +784,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                 'search' => false,
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'orderby' => false,
                 'filter' => false,
                 'search' => false,
@@ -1790,7 +1790,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                     'search' => false,
                 ),
                 'reference' => array(
-                    'title' => $this->l('Reference'),
+                    'title' => $this->trans('Reference', array(), 'Admin.Global'),
                     'align' => 'center',
                     'orderby' => false,
                     'filter' => false,
@@ -1811,7 +1811,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                     'search' => false,
                 ),
                 'name' => array(
-                    'title' => $this->l('Name'),
+                    'title' => $this->trans('Name', array(), 'Admin.Global'),
                     'orderby' => false,
                     'filter' => false,
                     'search' => false,

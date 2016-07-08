@@ -67,12 +67,12 @@ class AdminStatusesControllerCore extends AdminController
     {
         $this->fields_list = array(
             'id_order_state' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'text-center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'width' => 'auto',
                 'color' => 'color'
             ),
@@ -132,12 +132,12 @@ class AdminStatusesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_order_return_state' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'align' => 'left',
                 'width' => 'auto',
                 'color' => 'color'

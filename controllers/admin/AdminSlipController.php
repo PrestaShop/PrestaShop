@@ -41,7 +41,7 @@ class AdminSlipControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_order_slip' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),

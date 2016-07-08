@@ -68,12 +68,12 @@ class AdminOutstandingControllerCore  extends AdminController
                 'filter_key' => 'a!date_add'
             ),
             'customer' => array(
-                'title' => $this->l('Customer'),
+                'title' => $this->trans('Customer', array(), 'Admin.Global'),
                 'filter_key' => 'customer',
                 'tmpTableFilter' => true
             ),
             'company' => array(
-                'title' => $this->l('Company'),
+                'title' => $this->trans('Company', array(), 'Admin.Global'),
                 'align' => 'center'
             ),
             'risk' => array(

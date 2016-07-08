@@ -125,7 +125,7 @@ class AdminImportControllerCore extends AdminController
                         'label' => $this->l('Value (Value:Position)').'*'
                     ),
                     'supplier_reference' => array('label' => $this->l('Supplier reference')),
-                    'reference' => array('label' => $this->l('Reference')),
+                    'reference' => array('label' => $this->trans('Reference', array(), 'Admin.Global')),
                     'ean13' => array('label' => $this->l('EAN13')),
                     'upc' => array('label' => $this->l('UPC')),
                     'wholesale_price' => array('label' => $this->l('Wholesale price')),
@@ -180,15 +180,15 @@ class AdminImportControllerCore extends AdminController
             case $this->entities[$this->l('Categories')]:
                 $this->available_fields = array(
                     'no' => array('label' => $this->l('Ignore this column')),
-                    'id' => array('label' => $this->l('ID')),
+                    'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'active' => array('label' => $this->l('Active (0/1)')),
-                    'name' => array('label' => $this->l('Name')),
+                    'name' => array('label' => $this->trans('Name', array(), 'Admin.Global')),
                     'parent' => array('label' => $this->l('Parent category')),
                     'is_root_category' => array(
                         'label' => $this->l('Root category (0/1)'),
                         'help' => $this->l('A category root is where a category tree can begin. This is used with multistore.')
                         ),
-                    'description' => array('label' => $this->l('Description')),
+                    'description' => array('label' => $this->trans('Description', array(), 'Admin.Global')),
                     'meta_title' => array('label' => $this->l('Meta title')),
                     'meta_keywords' => array('label' => $this->l('Meta keywords')),
                     'meta_description' => array('label' => $this->l('Meta description')),
@@ -215,9 +215,9 @@ class AdminImportControllerCore extends AdminController
 
                 $this->available_fields = array(
                     'no' => array('label' => $this->l('Ignore this column')),
-                    'id' => array('label' => $this->l('ID')),
+                    'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'active' => array('label' => $this->l('Active (0/1)')),
-                    'name' => array('label' => $this->l('Name')),
+                    'name' => array('label' => $this->trans('Name', array(), 'Admin.Global')),
                     'category' => array('label' => $this->l('Categories (x,y,z...)')),
                     'price_tex' => array('label' => $this->l('Price tax excluded')),
                     'price_tin' => array('label' => $this->l('Price tax included')),
@@ -246,7 +246,7 @@ class AdminImportControllerCore extends AdminController
                     'unity' => array('label' => $this->l('Unit for the unit price')),
                     'unit_price' => array('label' => $this->l('Unit price')),
                     'description_short' => array('label' => $this->l('Short description')),
-                    'description' => array('label' => $this->l('Description')),
+                    'description' => array('label' => $this->trans('Description', array(), 'Admin.Global')),
                     'tags' => array('label' => $this->l('Tags (x,y,z...)')),
                     'meta_title' => array('label' => $this->l('Meta title')),
                     'meta_keywords' => array('label' => $this->l('Meta keywords')),
@@ -337,7 +337,7 @@ class AdminImportControllerCore extends AdminController
 
                 $this->available_fields = array(
                     'no' => array('label' => $this->l('Ignore this column')),
-                    'id' => array('label' => $this->l('ID')),
+                    'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'active' => array('label' => $this->l('Active  (0/1)')),
                     'id_gender' => array('label' => $this->l('Titles ID (Mr = 1, Ms = 2, else 0)')),
                     'email' => array('label' => $this->l('Email *')),
@@ -377,14 +377,14 @@ class AdminImportControllerCore extends AdminController
 
                 $this->available_fields = array(
                     'no' => array('label' => $this->l('Ignore this column')),
-                    'id' => array('label' => $this->l('ID')),
+                    'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'alias' => array('label' => $this->l('Alias *')),
                     'active' => array('label' => $this->l('Active  (0/1)')),
                     'customer_email' => array('label' => $this->l('Customer email *')),
                     'id_customer' => array('label' => $this->l('Customer ID')),
                     'manufacturer' => array('label' => $this->l('Brand')),
                     'supplier' => array('label' => $this->l('Supplier')),
-                    'company' => array('label' => $this->l('Company')),
+                    'company' => array('label' => $this->trans('Company', array(), 'Admin.Global')),
                     'lastname' => array('label' => $this->l('Last Name *')),
                     'firstname' => array('label' => $this->l('First Name *')),
                     'address1' => array('label' => $this->l('Address 1 *')),
@@ -418,10 +418,10 @@ class AdminImportControllerCore extends AdminController
 
                 $this->available_fields = array(
                     'no' => array('label' => $this->l('Ignore this column')),
-                    'id' => array('label' => $this->l('ID')),
+                    'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'active' => array('label' => $this->l('Active (0/1)')),
-                    'name' => array('label' => $this->l('Name')),
-                    'description' => array('label' => $this->l('Description')),
+                    'name' => array('label' => $this->trans('Name', array(), 'Admin.Global')),
+                    'description' => array('label' => $this->trans('Description', array(), 'Admin.Global')),
                     'short_description' => array('label' => $this->l('Short description')),
                     'meta_title' => array('label' => $this->l('Meta title')),
                     'meta_keywords' => array('label' => $this->l('Meta keywords')),
@@ -445,7 +445,7 @@ class AdminImportControllerCore extends AdminController
                 );
                 $this->available_fields = array(
                     'no' => array('label' => $this->l('Ignore this column')),
-                    'id' => array('label' => $this->l('ID')),
+                    'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'alias' => array('label' => $this->l('Alias *')),
                     'search' => array('label' => $this->l('Search *')),
                     'active' => array('label' => $this->l('Active')),
@@ -468,15 +468,15 @@ class AdminImportControllerCore extends AdminController
                 );
                 $this->available_fields = array(
                     'no' => array('label' => $this->l('Ignore this column')),
-                    'id' => array('label' => $this->l('ID')),
+                    'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'active' => array('label' => $this->l('Active (0/1)')),
-                    'name' => array('label' => $this->l('Name')),
+                    'name' => array('label' => $this->trans('Name', array(), 'Admin.Global')),
                     'address1' => array('label' => $this->l('Address').'*'),
                     'address2' => array('label' => $this->l('Address (2)')),
                     'postcode' => array('label' => $this->l('Zip/postal Code')),
                     'state' => array('label' => $this->l('State')),
-                    'city' => array('label' => $this->l('City').'*'),
-                    'country' => array('label' => $this->l('Country').'*'),
+                    'city' => array('label' => $this->trans('City', array(), 'Admin.Global').'*'),
+                    'country' => array('label' => $this->trans('Country', array(), 'Admin.Global').'*'),
                     'latitude' => array('label' => $this->l('Latitude').'*'),
                     'longitude' => array('label' => $this->l('Longitude').'*'),
                     'phone' => array('label' => $this->l('Phone')),
@@ -510,7 +510,7 @@ class AdminImportControllerCore extends AdminController
                     // available fields
                     $this->available_fields = array(
                         'no' => array('label' => $this->l('Ignore this column')),
-                        'id' => array('label' => $this->l('ID')),
+                        'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                         'id_supplier' => array('label' => $this->l('Supplier ID *')),
                         'id_lang' => array('label' => $this->l('Lang ID')),
                         'id_warehouse' => array('label' => $this->l('Warehouse ID *')),

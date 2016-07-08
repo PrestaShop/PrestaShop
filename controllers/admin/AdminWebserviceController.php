@@ -62,7 +62,7 @@ class AdminWebserviceControllerCore extends AdminController
                 'orderby' => false
             ),
             'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',
@@ -73,7 +73,7 @@ class AdminWebserviceControllerCore extends AdminController
 
         $this->fields_options = array(
                 'general' => array(
-                    'title' =>    $this->l('Configuration'),
+                    'title' =>    $this->trans('Configuration', array(), 'Admin.Global'),
                     'fields' =>    array(
                         'PS_WEBSERVICE' => array('title' => $this->l('Enable PrestaShop\'s webservice'),
                             'desc' => $this->l('Before activating the webservice, you must be sure to: ').
@@ -160,12 +160,12 @@ class AdminWebserviceControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     )
                 ),

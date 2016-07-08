@@ -45,7 +45,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
         $this->fields_list = array(
             'reference' => array(
-                'title' => $this->l('Reference'),
+                'title' => $this->trans('Reference', array(), 'Admin.Global'),
                 'align' => 'center',
                 'havingFilter' => true
             ),
@@ -58,7 +58,7 @@ class AdminStockInstantStateControllerCore extends AdminController
                 'align' => 'center',
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'havingFilter' => true
             ),
             'price_te' => array(

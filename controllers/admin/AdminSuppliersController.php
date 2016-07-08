@@ -59,11 +59,11 @@ class AdminSuppliersControllerCore extends AdminController
         $this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
 
         $this->fields_list = array(
-            'id_supplier' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'id_supplier' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'logo' => array('title' => $this->l('Logo'), 'align' => 'center', 'image' => 'su', 'orderby' => false, 'search' => false),
-            'name' => array('title' => $this->l('Name')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
             'products' => array('title' => $this->l('Number of products'), 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true),
-            'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-xs')
+            'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-xs')
         );
 
         parent::__construct();
@@ -120,7 +120,7 @@ class AdminSuppliersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'col' => 4,
@@ -129,7 +129,7 @@ class AdminSuppliersControllerCore extends AdminController
                 (in_array('company', $required_fields) ?
                     array(
                         'type' => 'text',
-                        'label' => $this->l('Company'),
+                        'label' => $this->trans('Company', array(), 'Admin.Global'),
                         'name' => 'company',
                         'display' => in_array('company', $required_fields),
                         'required' => in_array('company', $required_fields),
@@ -141,7 +141,7 @@ class AdminSuppliersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->l('Description'),
+                    'label' => $this->trans('Description', array(), 'Admin.Global'),
                     'name' => 'description',
                     'lang' => true,
                     'hint' => array(
@@ -194,7 +194,7 @@ class AdminSuppliersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('City'),
+                    'label' => $this->trans('City', array(), 'Admin.Global'),
                     'name' => 'city',
                     'maxlength' => 32,
                     'col' => 4,
@@ -202,7 +202,7 @@ class AdminSuppliersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Country'),
+                    'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'id_country',
                     'required' => true,
                     'col' => 4,
@@ -271,12 +271,12 @@ class AdminSuppliersControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     )
                 )

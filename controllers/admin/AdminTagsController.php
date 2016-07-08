@@ -38,7 +38,7 @@ class AdminTagsControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_tag' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
@@ -47,7 +47,7 @@ class AdminTagsControllerCore extends AdminController
                 'filter_key' => 'l!name'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'filter_key' => 'a!name'
             ),
             'products' => array(
@@ -138,7 +138,7 @@ class AdminTagsControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true
                 ),

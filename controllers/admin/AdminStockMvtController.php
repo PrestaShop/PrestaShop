@@ -45,7 +45,7 @@ class AdminStockMvtControllerCore extends AdminController
 
         $this->fields_list = array(
             'product_reference' => array(
-                'title' => $this->l('Reference'),
+                'title' => $this->trans('Reference', array(), 'Admin.Global'),
                 'havingFilter' => true
             ),
             'product_ean13' => array(
@@ -57,7 +57,7 @@ class AdminStockMvtControllerCore extends AdminController
                 'havingFilter' => true
             ),
             'product_name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'havingFilter' => true
             ),
             'warehouse_name' => array(
@@ -94,7 +94,7 @@ class AdminStockMvtControllerCore extends AdminController
                 'filter_key' => 'a!price_te'
             ),
             'reason' => array(
-                'title' => $this->l('Label'),
+                'title' => $this->trans('Label', array(), 'Admin.Global'),
                 'havingFilter' => true
             ),
             'employee' => array(

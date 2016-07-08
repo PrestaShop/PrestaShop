@@ -51,11 +51,11 @@ class AdminProfilesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_profile' => array(
-                        'title' => $this->l('ID'),
+                        'title' => $this->trans('ID', array(), 'Admin.Global'),
                         'align' => 'center',
                         'class' => 'fixed-width-xs'
                         ),
-            'name' => array('title' => $this->l('Name'))
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'))
             );
             
         $this->identifier = 'id_profile';
@@ -68,7 +68,7 @@ class AdminProfilesControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,

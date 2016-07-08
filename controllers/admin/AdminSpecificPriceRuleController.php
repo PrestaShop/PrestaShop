@@ -76,17 +76,17 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_specific_price_rule' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'filter_key' => 'a!name',
                 'width' => 'auto'
             ),
             'shop_name' => array(
-                'title' => $this->l('Shop'),
+                'title' => $this->trans('Shop', array(), 'Admin.Global'),
                 'filter_key' => 's!name'
             ),
             'currency_name' => array(
@@ -95,12 +95,12 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'filter_key' => 'cu!name'
             ),
             'country_name' => array(
-                'title' => $this->l('Country'),
+                'title' => $this->trans('Country', array(), 'Admin.Global'),
                 'align' => 'center',
                 'filter_key' => 'cl!name'
             ),
             'group_name' => array(
-                'title' => $this->l('Group'),
+                'title' => $this->trans('Group', array(), 'Admin.Global'),
                 'align' => 'center',
                 'filter_key' => 'gl!name'
             ),
@@ -180,7 +180,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'maxlength' => 255,
                     'required' => true,
@@ -188,7 +188,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Shop'),
+                    'label' => $this->trans('Shop', array(), 'Admin.Global'),
                     'name' => 'shop_id',
                     'options' => array(
                         'query' => Shop::getShops(),
@@ -210,7 +210,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Country'),
+                    'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'id_country',
                     'options' => array(
                         'query' => array_merge(array(0 => array('id_country' => 0, 'name' => $this->l('All countries'))), Country::getCountries((int)$this->context->language->id)),
@@ -220,7 +220,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Group'),
+                    'label' => $this->trans('Group', array(), 'Admin.Global'),
                     'name' => 'id_group',
                     'options' => array(
                         'query' => array_merge(array(0 => array('id_group' => 0, 'name' => $this->l('All groups'))), Group::getGroups((int)$this->context->language->id)),

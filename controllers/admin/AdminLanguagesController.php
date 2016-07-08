@@ -53,7 +53,7 @@ class AdminLanguagesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_lang' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
@@ -66,7 +66,7 @@ class AdminLanguagesControllerCore extends AdminController
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name')
+                'title' => $this->trans('Name', array(), 'Admin.Global')
             ),
             'iso_code' => array(
                 'title' => $this->l('ISO code'),
@@ -85,7 +85,7 @@ class AdminLanguagesControllerCore extends AdminController
                 'title' => $this->l('Date format (full)')
             ),
             'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',
@@ -144,7 +144,7 @@ class AdminLanguagesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'maxlength' => 32,
                     'required' => true
@@ -208,12 +208,12 @@ class AdminLanguagesControllerCore extends AdminController
                         array(
                             'id' => 'is_rtl_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => array(
@@ -231,12 +231,12 @@ class AdminLanguagesControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Activate this language.')

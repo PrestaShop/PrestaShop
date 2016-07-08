@@ -54,7 +54,7 @@ class AdminSearchEnginesControllerCore extends AdminController
         );
 
         $this->fields_list = array(
-            'id_search_engine' => array('title' => $this->l('ID'), 'width' => 25),
+            'id_search_engine' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'width' => 25),
             'server' => array('title' => $this->l('Server')),
             'getvar' => array('title' => $this->l('GET variable'), 'width' => 100)
         );

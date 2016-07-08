@@ -145,11 +145,11 @@ class AdminPPreferencesControllerCore extends AdminController
                         'list' => array(
                             array(
                                 'id' => '0',
-                                'name' => $this->l('Ascending')
+                                'name' => $this->trans('Ascending', array(), 'Admin.Global')
                             ),
                             array(
                                 'id' => '1',
-                                'name' => $this->l('Descending')
+                                'name' => $this->trans('Descending', array(), 'Admin.Global')
                             )
                         ),
                         'identifier' => 'id'

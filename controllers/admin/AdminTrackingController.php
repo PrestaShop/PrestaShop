@@ -104,9 +104,9 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowActionSkipList('edit', array((int)Configuration::get('PS_ROOT_CATEGORY')));
 
         $this->fields_list = (array(
-            'id_category' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
-            'description' => array('title' => $this->l('Description'), 'callback' => 'getDescriptionClean'),
+            'id_category' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
+            'description' => array('title' => $this->trans('Description', array(), 'Admin.Global'), 'callback' => 'getDescriptionClean'),
             'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
         ));
         $this->clearFilters();
@@ -143,9 +143,9 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
             'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
         );
 
@@ -187,9 +187,9 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name')),
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
             'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
         );
         $this->clearFilters();
@@ -228,9 +228,9 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name')
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name')
         );
 
         $this->clearFilters();
@@ -255,9 +255,9 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
             'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
         );
         $this->clearFilters();
@@ -286,9 +286,9 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
             'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
         );
         $this->clearFilters();
@@ -322,9 +322,9 @@ class AdminTrackingControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
         $this->fields_list = array(
-            'id_product' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
-            'reference' => array('title' => $this->l('Reference')),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
+            'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
             'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs')
         );
         $this->clearFilters();

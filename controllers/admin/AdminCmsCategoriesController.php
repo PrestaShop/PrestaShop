@@ -57,9 +57,9 @@ class AdminCmsCategoriesControllerCore extends AdminController
         $this->tpl_list_vars['icon'] = 'icon-folder-close';
         $this->tpl_list_vars['title'] = $this->l('Categories');
         $this->fields_list = array(
-        'id_cms_category' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-        'name' => array('title' => $this->l('Name'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
-        'description' => array('title' => $this->l('Description'), 'maxlength' => 90, 'orderby' => false),
+        'id_cms_category' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+        'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
+        'description' => array('title' => $this->trans('Description', array(), 'Admin.Global'), 'maxlength' => 90, 'orderby' => false),
         'position' => array('title' => $this->l('Position'),'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
         'active' => array(
             'title' => $this->l('Displayed'), 'class' => 'fixed-width-sm', 'active' => 'status',
@@ -82,7 +82,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 
     public function getTabSlug()
     {
-       return 'ROLE_MOD_TAB_ADMINCMSCONTENT_';
+        return 'ROLE_MOD_TAB_ADMINCMSCONTENT_';
     }
 
     public function renderList()
@@ -217,7 +217,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
@@ -233,12 +233,12 @@ class AdminCmsCategoriesControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                 ),
@@ -253,7 +253,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->l('Description'),
+                    'label' => $this->trans('Description', array(), 'Admin.Global'),
                     'name' => 'description',
                     'lang' => true,
                     'rows' => 5,

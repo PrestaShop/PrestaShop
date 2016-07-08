@@ -54,7 +54,7 @@ class AdminStockManagementControllerCore extends AdminController
                 'filter_key' => 'a!upc'
             ),
             'name' => array(
-                'title' => $this->l('Name')
+                'title' => $this->trans('Name', array(), 'Admin.Global')
             ),
             'stock' => array(
                 'title' => $this->l('Quantity'),
@@ -216,7 +216,7 @@ class AdminStockManagementControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'text',
-                            'label' => $this->l('Name'),
+                            'label' => $this->trans('Name', array(), 'Admin.Global'),
                             'name' => 'name',
                             'disabled' => true,
                         ),
@@ -230,7 +230,7 @@ class AdminStockManagementControllerCore extends AdminController
                                         $this->l('Indicate the physical quantity of this product that you want to add.'),
                                         $this->l('Last physical quantity added: %s items (usable for sale: %s).'),
                                         ($last_sm_quantity > 0 ? $last_sm_quantity : $this->l('N/A')),
-                                        ($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->l('Yes') : $this->l('No')) : $this->l('N/A'))),
+                                        ($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->trans('Yes', array(), 'Admin.Global') : $this->trans('No', array(), 'Admin.Global')) : $this->l('N/A'))),
                         ),
                         array(
                             'type' => 'switch',
@@ -242,12 +242,12 @@ class AdminStockManagementControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Enabled')
+                                    'label' => $this->trans('Enabled', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('Disabled')
+                                    'label' => $this->trans('Disabled', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Is this quantity ready to be displayed in your shop, or is it reserved in the warehouse for other purposes?')
@@ -290,7 +290,7 @@ class AdminStockManagementControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'select',
-                            'label' => $this->l('Label'),
+                            'label' => $this->trans('Label', array(), 'Admin.Global'),
                             'name' => 'id_stock_mvt_reason',
                             'required' => true,
                             'options' => array(
@@ -347,7 +347,7 @@ class AdminStockManagementControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'text',
-                            'label' => $this->l('Name'),
+                            'label' => $this->trans('Name', array(), 'Admin.Global'),
                             'name' => 'name',
                             'disabled' => true,
                         ),
@@ -369,12 +369,12 @@ class AdminStockManagementControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Enabled')
+                                    'label' => $this->trans('Enabled', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('Disabled')
+                                    'label' => $this->trans('Disabled', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Do you want to remove this quantity from the usable quantity (yes) or the physical quantity (no)?')
@@ -393,7 +393,7 @@ class AdminStockManagementControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'select',
-                            'label' => $this->l('Label'),
+                            'label' => $this->trans('Label', array(), 'Admin.Global'),
                             'name' => 'id_stock_mvt_reason',
                             'required' => true,
                             'options' => array(
@@ -449,7 +449,7 @@ class AdminStockManagementControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'text',
-                            'label' => $this->l('Name'),
+                            'label' => $this->trans('Name', array(), 'Admin.Global'),
                             'name' => 'name',
                             'disabled' => true,
                         ),
@@ -483,12 +483,12 @@ class AdminStockManagementControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Yes')
+                                    'label' => $this->trans('Yes', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('No')
+                                    'label' => $this->trans('No', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Is this the usable quantity for sale?')
@@ -516,12 +516,12 @@ class AdminStockManagementControllerCore extends AdminController
                                 array(
                                     'id' => 'active_on',
                                     'value' => 1,
-                                    'label' => $this->l('Yes')
+                                    'label' => $this->trans('Yes', array(), 'Admin.Global')
                                 ),
                                 array(
                                     'id' => 'active_off',
                                     'value' => 0,
-                                    'label' => $this->l('No')
+                                    'label' => $this->trans('No', array(), 'Admin.Global')
                                 )
                             ),
                             'hint' => $this->l('Do you want it to be for sale/usable?')
@@ -857,7 +857,7 @@ class AdminStockManagementControllerCore extends AdminController
                     'filter_key' => 'a!upc'
                 ),
                 'name' => array(
-                    'title' => $this->l('Name'),
+                    'title' => $this->trans('Name', array(), 'Admin.Global'),
                     'orderby' => false,
                     'filter' => false,
                     'search' => false

@@ -42,13 +42,13 @@ class AdminShippingControllerCore extends AdminController
         }
 
         $carrier_default_sort = array(
-            array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->l('Price')),
+            array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->trans('Price', array(), 'Admin.Global')),
             array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->l('Position'))
         );
 
         $carrier_default_order = array(
-            array('value' => Carrier::SORT_BY_ASC, 'name' => $this->l('Ascending')),
-            array('value' => Carrier::SORT_BY_DESC, 'name' => $this->l('Descending'))
+            array('value' => Carrier::SORT_BY_ASC, 'name' => $this->trans('Ascending', array(), 'Admin.Global')),
+            array('value' => Carrier::SORT_BY_DESC, 'name' => $this->trans('Descending', array(), 'Admin.Global'))
         );
 
         $this->fields_options = array(

@@ -46,10 +46,10 @@ class AdminContactsControllerCore extends AdminController
         );
 
         $this->fields_list = array(
-            'id_contact' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->l('Title')),
+            'id_contact' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'name' => array('title' => $this->trans('Title', array(), 'Admin.Global')),
             'email' => array('title' => $this->l('Email address')),
-            'description' => array('title' => $this->l('Description')),
+            'description' => array('title' => $this->trans('Description', array(), 'Admin.Global')),
         );
 
         parent::__construct();
@@ -65,7 +65,7 @@ class AdminContactsControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Title'),
+                    'label' => $this->trans('Title', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
@@ -92,18 +92,18 @@ class AdminContactsControllerCore extends AdminController
                         array(
                             'id' => 'customer_service_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'customer_service_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->l('Description'),
+                    'label' => $this->trans('Description', array(), 'Admin.Global'),
                     'name' => 'description',
                     'required' => false,
                     'lang' => true,

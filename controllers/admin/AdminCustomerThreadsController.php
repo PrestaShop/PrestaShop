@@ -64,17 +64,17 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_customer_thread' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'customer' => array(
-                'title' => $this->l('Customer'),
+                'title' => $this->trans('Customer', array(), 'Admin.Global'),
                 'filter_key' => 'customer',
                 'tmpTableFilter' => true,
             ),
             'email' => array(
-                'title' => $this->l('Email'),
+                'title' => $this->trans('Email', array(), 'Admin.Global'),
                 'filter_key' => 'a!email',
             ),
             'contact' => array(
@@ -119,8 +119,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 'cast' => 'intval',
                 'callback' => 'printOptinIcon',
                 'list' => array(
-                    '0' => $this->l('No'),
-                    '1' => $this->l('Yes')
+                    '0' => $this->trans('No', array(), 'Admin.Global'),
+                    '1' => $this->trans('Yes', array(), 'Admin.Global')
                 )
             ),
             'date_upd' => array(
@@ -1155,13 +1155,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
     }
 
-	protected function getEncoding($structure)
-	{
-		foreach ($structure->parameters as $parameter) {
-			if ($parameter->attribute == 'CHARSET') {
-				return $parameter->value;
-			}
-		}
-		return 'utf-8';
-	}
+    protected function getEncoding($structure)
+    {
+        foreach ($structure->parameters as $parameter) {
+            if ($parameter->attribute == 'CHARSET') {
+                return $parameter->value;
+            }
+        }
+        return 'utf-8';
+    }
 }

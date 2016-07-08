@@ -43,12 +43,12 @@ class AdminFeaturesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_feature' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'width' => 'auto',
                 'filter_key' => 'b!name'
             ),
@@ -131,7 +131,7 @@ class AdminFeaturesControllerCore extends AdminController
             $this->toolbar_title = $this->feature_name[$this->context->employee->id_lang];
             $this->fields_list = array(
                 'id_feature_value' => array(
-                    'title' => $this->l('ID'),
+                    'title' => $this->trans('ID', array(), 'Admin.Global'),
                     'align' => 'center',
                     'class' => 'fixed-width-xs'
                 ),
@@ -162,7 +162,7 @@ class AdminFeaturesControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'size' => 33,

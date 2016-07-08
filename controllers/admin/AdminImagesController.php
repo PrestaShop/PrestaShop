@@ -52,8 +52,8 @@ class AdminImagesControllerCore extends AdminController
         );
 
         $this->fields_list = array(
-            'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->l('Name')),
+            'id_image_type' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
             'width' => array('title' => $this->l('Width'),  'suffix' => ' px'),
             'height' => array('title' => $this->l('Height'),  'suffix' => ' px'),
             'products' => array('title' => $this->l('Products'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
@@ -232,12 +232,12 @@ class AdminImagesControllerCore extends AdminController
                         array(
                             'id' => 'products_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'products_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         ),
                     )
                 ),
@@ -253,12 +253,12 @@ class AdminImagesControllerCore extends AdminController
                         array(
                             'id' => 'categories_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'categories_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         ),
                     )
                 ),
@@ -273,12 +273,12 @@ class AdminImagesControllerCore extends AdminController
                         array(
                             'id' => 'manufacturers_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'manufacturers_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         ),
                     )
                 ),
@@ -293,12 +293,12 @@ class AdminImagesControllerCore extends AdminController
                         array(
                             'id' => 'suppliers_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'suppliers_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         ),
                     )
                 ),
@@ -313,12 +313,12 @@ class AdminImagesControllerCore extends AdminController
                         array(
                             'id' => 'stores_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'stores_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         ),
                     )
                 ),
