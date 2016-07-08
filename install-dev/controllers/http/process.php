@@ -312,7 +312,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
         // We fill the process step used for Ajax queries
         $this->process_steps[] = array('key' => 'generateSettingsFile', 'lang' => $this->translator->trans('Create settings.inc file', array(), 'Install'));
-        $this->process_steps[] = array('key' => 'installDatabase', 'lang' => $this->translator->trans('Create database tables', array(), 'Install' ));
+        $this->process_steps[] = array('key' => 'installDatabase', 'lang' => $this->translator->trans('Create database tables', array(), 'Install'));
         $this->process_steps[] = array('key' => 'installDefaultData', 'lang' => $this->translator->trans('Create default shop and languages', array(), 'Install'));
 
         // If low memory, create subtasks for populateDatabase step (entity per entity)
@@ -371,7 +371,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         }
         $this->process_steps[] = $install_modules;
 
-        $this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->translator->trans('Install theme', array(), 'Intall'));
+        $this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->translator->trans('Install theme', array(), 'Install'));
 
         $this->displayTemplate('process');
     }
@@ -382,7 +382,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $cacheFiles = scandir($configXMLPath);
         $excludes = ['.htaccess', 'index.php'];
 
-        foreach($cacheFiles as $file) {
+        foreach ($cacheFiles as $file) {
             $filepath = $configXMLPath.$file;
             if (is_file($filepath) && !in_array($file, $excludes)) {
                 unlink($filepath);
@@ -394,7 +394,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $themesPath = _PS_ROOT_DIR_.'/config/themes/';
         $cacheFiles = scandir($themesPath);
-        foreach($cacheFiles as $file) {
+        foreach ($cacheFiles as $file) {
             $file = $themesPath.$file;
             if (is_file($file)) {
                 unlink($file);
