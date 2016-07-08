@@ -20,7 +20,11 @@
           <div class="modal-title module-modal-title">
             <h1>{{ module.attributes.displayName }}<br>
               <small class="version">
-                {{ 'v%version% by '|trans({'%version%' : module.attributes.version}, 'Admin.Modules.Feature') }}
+                {% if module.attributes.productType == "service" %}
+                  {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
+                {% else %}
+                  {{ 'v%version% by '|trans({ '%version%' : module.attributes.version }, 'Admin.Modules.Feature') }}
+                {% endif %}
                 {{ module.attributes.author }}
               </small>
             </h1>
