@@ -133,7 +133,7 @@
 				{foreach $input['values'] key=key item=category }
 					<tr class="alt_row" id="{$category.id_category}">
 						<td>{$category.path}</td>
-						<td>{l s='Discount: %.2f%%' sprintf=$category.reduction}</td>
+						<td>{l s='Discount: %.2f%%' sprintf=[$category.reduction]}</td>
 						<td>
 							<a href="#" onclick="deleteCategoryReduction({$category.id_category});"class="btn btn-default">
 								<i class="icon-trash"></i> {l s='Delete' d='Admin.Actions'}

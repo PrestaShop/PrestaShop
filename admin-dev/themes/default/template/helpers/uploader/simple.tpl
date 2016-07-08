@@ -53,7 +53,7 @@
 {/if}
 {if isset($max_files) && $files|count >= $max_files}
 <div class="row">
-	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=$max_files}</div>
+	<div class="alert alert-warning">{l s='You have reached the limit (%s) of files to upload, please remove files to continue uploading' sprintf=[$max_files]}</div>
 </div>
 {else}
 <div class="form-group">
@@ -69,7 +69,7 @@
 				{if (!isset($multiple) || !$multiple) && isset($files) && $files|count == 1 && isset($files[0].download_url)}
 					<a href="{$files[0].download_url|escape:'html':'UTF-8'}" class="btn btn-default">
 						<i class="icon-cloud-download"></i>
-						{if isset($size)}{l s='Download current file (%skb)' sprintf=$size}{else}{l s='Download current file'}{/if}
+						{if isset($size)}{l s='Download current file (%skb)' sprintf=[$size]}{else}{l s='Download current file'}{/if}
 					</a>
 				{/if}
 			</span>
@@ -131,7 +131,7 @@
 			$('#{$id|escape:'html':'UTF-8'}').closest('form').on('submit', function(e) {
 				if ($('#{$id|escape:'html':'UTF-8'}')[0].files.length > {$id|escape:'html':'UTF-8'}_max_files) {
 					e.preventDefault();
-					alert('{l s='You can upload a maximum of %s files' sprintf=$max_files}');
+					alert('{l s='You can upload a maximum of %s files' sprintf=[$max_files]}');
 				}
 			});
 		}

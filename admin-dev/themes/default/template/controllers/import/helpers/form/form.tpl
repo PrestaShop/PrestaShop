@@ -86,7 +86,7 @@
 						<p class="help-block">
 							{l s='Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots'}.<br/>
 							{l s='Only UTF-8 and ISO 8859-1 encodings are allowed'}.<br/>
-							{l s='You can also upload your file via FTP to the following directory: %s .' sprintf=$path_import}
+							{l s='You can also upload your file via FTP to the following directory: %s .' sprintf=[$path_import]}
 						</p>
 					</div>
 					<div class="alert alert-danger" id="file-errors" style="display:none"></div>

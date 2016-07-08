@@ -24,7 +24,7 @@
 *}
 <div class="alert alert-success">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {l s='The "%1$s" theme has been successfully installed.' sprintf=$theme_name}
+    {l s='The "%1$s" theme has been successfully installed.' sprintf=[$theme_name]}
 </div>
 
 {hook h='displayAfterThemeInstallation' theme_name=$theme_name}
@@ -64,7 +64,7 @@
         <ul>
             {foreach $img_error['error'] as $error}
                 <li>
-                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='(width: %1$spx, height: %2$spx).' sprintf=$error['width']:$error['height']}
+                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='(width: %1$spx, height: %2$spx).' sprintf=[$error['width']:$error['height']]}
                 </li>
             {/foreach}
         </ul>
@@ -78,7 +78,7 @@
         <ul>
             {foreach $img_error['ok'] as $error}
                 <li>
-                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='(width: %1$spx, height: %2$spx).' sprintf=$error['width']:$error['height']}
+                    {l s='Name image type:'} <strong>{$error['name']}</strong> {l s='(width: %1$spx, height: %2$spx).' sprintf=[$error['width']:$error['height']]}
                 </li>
             {/foreach}
         </ul>

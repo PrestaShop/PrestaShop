@@ -49,7 +49,7 @@
 					<span class="star{if $avg_rate == 2} active{/if}"></span>
 					<span class="star{if $avg_rate == 1} active{/if}"></span>
 				</span>
-				<p class="small">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=$nb_rates}{else}{l s="(%s vote)" sprintf=$nb_rates}{/if}</p>
+				<p class="small">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=[$nb_rates]}{else}{l s="(%s vote)" sprintf=[$nb_rates]}{/if}</p>
 			{/if}
 			</div>
 			<div class="col-sm-6">

@@ -136,7 +136,7 @@
 							{elseif ($type == Product::CUSTOMIZE_TEXTFIELD)}
 								{foreach from=$datas item=data}
 									<div class="form-group">
-										<span class="col-lg-4 control-label"><strong>{if $data['name']}{l s='%s' sprintf=$data['name']}{else}{l s='Text #%s' sprintf=$data@iteration}{/if}</strong></span>
+										<span class="col-lg-4 control-label"><strong>{if $data['name']}{l s='%s' sprintf=[$data['name']]}{else}{l s='Text #%s' sprintf=[$data@iteration]}{/if}</strong></span>
 										<div class="col-lg-8">
 											<p class="form-control-static">{$data['value']}</p>
 										</div>

@@ -44,7 +44,7 @@
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
 			{l s='Please ask your hosting provider to increase this limit to'}
 		{/if}
-		{l s='%s at least, or you will have to edit the translation files.' sprintf=$limit_warning['needed_limit']}
+		{l s='%s at least, or you will have to edit the translation files.' sprintf=[$limit_warning['needed_limit']]}
 	</div>
 	{else}
 		<div class="alert alert-info">
@@ -53,8 +53,8 @@
 			</p>
 		</div>
 		<div class="panel">
-			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=$count}</span></p>
-			<p>{l s='Total missing expressions:'} <span class="badge">{l s='%d' sprintf=$missing_translations}</p>
+			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=[$count]}</span></p>
+			<p>{l s='Total missing expressions:'} <span class="badge">{l s='%d' sprintf=[$missing_translations]}</p>
 		</div>
 
 		<form method="post" id="{$table}_form" action="{$url_submit|escape:'html':'UTF-8'}" class="form-horizontal">

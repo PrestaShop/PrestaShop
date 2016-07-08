@@ -81,7 +81,7 @@
 				<button type="button" class="btn btn-default delAccessory" name="{$accessory.id_product}">
 					<i class="icon-remove text-danger"></i>
 				</button>
-				{$accessory.name|escape:'html':'UTF-8'}{if !empty($accessory.reference)}&nbsp;{l s='(ref: %s)' sprintf=$accessory.reference}{/if}
+				{$accessory.name|escape:'html':'UTF-8'}{if !empty($accessory.reference)}&nbsp;{l s='(ref: %s)' sprintf=[$accessory.reference]}{/if}
 			</div>
 			{/foreach}
 			</div>

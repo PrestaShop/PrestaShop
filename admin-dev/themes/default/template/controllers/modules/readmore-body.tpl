@@ -32,7 +32,7 @@
 				<span class="star{if $avg_rate == 2} active{/if}"></span>
 				<span class="star{if $avg_rate == 1} active{/if}"></span>
 			</div>
-			<div class="col-md-2">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=$nb_rates}{else}{l s="(%s vote)" sprintf=$nb_rates}{/if}</div>
+			<div class="col-md-2">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=[$nb_rates]}{else}{l s="(%s vote)" sprintf=[$nb_rates]}{/if}</div>
 			<div class="col-md-3">
 			{if isset($badges)}
 				{foreach $badges as $badge}

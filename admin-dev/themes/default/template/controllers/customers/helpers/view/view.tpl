@@ -191,7 +191,7 @@
 								<i class="icon-ok-circle icon-big"></i>
 								{l s='Valid orders:'}
 								<span class="label label-success">{$count_ok}</span>
-								{l s='for a total amount of %s' sprintf=$total_ok}
+								{l s='for a total amount of %s' sprintf=[$total_ok]}
 							</div>
 							<div class="col-lg-6">
 								<i class="icon-exclamation-sign icon-big"></i>

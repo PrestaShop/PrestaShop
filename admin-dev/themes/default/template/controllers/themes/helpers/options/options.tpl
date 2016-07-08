@@ -87,7 +87,7 @@
 			<div id="js_theme_form_container" class="col-md-9">
 				<h2>{$cur_theme->getName()} <small>version {$cur_theme->get('version')}</small></h2>
 				<p>
-					{l s='Designed by %s' sprintf=$cur_theme->get('author.name')}
+					{l s='Designed by %s' sprintf=[$cur_theme->get('author.name')]}
 				</p>
 
 				<hr />
