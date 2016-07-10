@@ -1393,15 +1393,13 @@ class AdminControllerCore extends Controller
                 if (isset($values['type']) && $values['type'] == 'textLang') {
                     foreach ($languages as $language) {
                         if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation'])) {
-                            $values_validation = $values['validation'];
-                            if (!Validate::$values_validation(Tools::getValue($field.'_'.$language['id_lang']))) {
+                            if ((PHP_MAJOR_VERSION < 7 && !Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang']))) || !Validate::{$values['validation']}(Tools::getValue($field.'_'.$language['id_lang']))) {
                                 $this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                             }
                         }
                     }
                 } elseif (Tools::getValue($field) && isset($values['validation'])) {
-                    $values_validation = $values['validation'];
-                    if (!Validate::$values_validation(Tools::getValue($field))) {
+                    if ((PHP_MAJOR_VERSION < 7 && !Validate::$values['validation'](Tools::getValue($field))) || !Validate::{$values['validation']}(Tools::getValue($field))) {
                         $this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                     }
                 }
@@ -3490,9 +3488,9 @@ class AdminControllerCore extends Controller
                 foreach ($languages as $language) {
                     if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value)) {
                         if (Tools::strtolower($function) == 'iscleanhtml' && Configuration::get('PS_ALLOW_HTML_IFRAME')) {
-                            $res = Validate::$function($value, true);
+                            $res = PHP_MAJOR_VERSION < 7 ? Validate::$function($value, true) : Validate::{$function}($value, true);
                         } else {
-                            $res = Validate::$function($value);
+                            $res = PHP_MAJOR_VERSION < 7 ? Validate::$function($value) : Validate::{$function}($value);
                         }
                         if (!$res) {
                             $this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
@@ -3690,8 +3688,7 @@ class AdminControllerCore extends Controller
         if (isset($field['validation'])) {
             $valid_method_exists = method_exists('Validate', $field['validation']);
             if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && $valid_method_exists) {
-                $field_validation = $field['validation'];
-                if (!Validate::$field_validation($value)) {
+                if ((PHP_MAJOR_VERSION < 7 && !Validate::$field['validation']($value)) || !Validate::{$field['validation']}($value)) {
                     $this->errors[] = Tools::displayError($field['title'].' : Incorrect value');
                     return false;
                 }
