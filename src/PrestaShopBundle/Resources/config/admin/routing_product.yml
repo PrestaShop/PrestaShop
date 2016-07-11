@@ -58,8 +58,7 @@ admin_product_form:
         _legacy_controller: AdminProducts
         _legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
         _legacy_param_mapper_method: mapLegacyParametersProductForm
-    requirements:
-        id: \d+
+        id: 0
 
 admin_product_use_legacy_setter:
     path:     /uselegacy/{use}

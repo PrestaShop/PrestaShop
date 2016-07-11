@@ -304,30 +304,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function newAction()
     {
-        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
-        /* @var $productProvider ProductInterfaceProvider */
-        $contextAdapter = $this->get('prestashop.adapter.legacy.context');
-        $context = $contextAdapter->getContext();
-        $toolsAdapter = $this->container->get('prestashop.adapter.tools');
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $translator = $this->container->get('translator');
-        $name = $translator->trans('New product', [], 'Admin.Catalog.Feature');
-
-        $product = $productAdapter->getProductInstance();
-        $product->active = $productProvider->isNewProductDefaultActivated()? 1 : 0;
-        $product->id_category_default = $context->shop->id_category;
-
-        //set name and link_rewrite in each lang
-        foreach ($contextAdapter->getLanguages() as $lang) {
-            $product->name[$lang['id_lang']] = $name;
-            $product->link_rewrite[$lang['id_lang']] = $toolsAdapter->link_rewrite($name);
-        }
-
-        $product->save();
-
-        $product->addToCategories([$context->shop->id_category]);
-
-        return $this->redirectToRoute('admin_product_form', ['id' => $product->id]);
+        return $this->redirectToRoute('admin_product_form');
     }
 
     /**
@@ -341,14 +318,29 @@ class ProductController extends FrameworkBundleAdminController
     public function formAction($id, Request $request)
     {
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct($id);
-        if (!$product || empty($product->id)) {
-            return $this->redirectToRoute('admin_product_catalog');
-        }
-
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $legacyContextService = $this->get('prestashop.adapter.legacy.context');
         $legacyContext = $legacyContextService->getContext();
+        // In case of missing ID in the URL, we may have it in the form data
+        if (!$id
+        && $request->request->has('form')
+        && !empty($request->request->get('form')['id_product'])) {
+            $id = $request->request->get('form')['id_product'];
+        }
+
+        // No ID ? This is a product creation
+        if ($id) {
+            $product = $productAdapter->getProduct($id);
+            if (!$product || empty($product->id)) {
+                return $this->redirectToRoute('admin_product_catalog');
+            }
+        } else {
+            $product = $productAdapter->getProductInstance();
+            $product->active = $productProvider->isNewProductDefaultActivated();
+            $product->id_category_default = $legacyContext->shop->id_category;
+        }
+
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1 ? true : false;
 
         // Redirect to legacy controller (FIXME: temporary behavior)
@@ -822,7 +814,11 @@ class ProductController extends FrameworkBundleAdminController
     public function renderFieldAction($productId, $step, $fieldName)
     {
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct($productId);
+        if ($productId) {
+            $product = $productAdapter->getProduct($productId);
+        } else {
+            $product = $productAdapter->getProductInstance();
+        }
 
         $modelMapper = new ProductAdminModelAdapter(
             $product,
