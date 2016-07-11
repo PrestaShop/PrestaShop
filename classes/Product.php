@@ -2111,7 +2111,7 @@ class ProductCore extends ObjectModel
     * @param int $id_lang Language id
     * @return array Product attribute combination by id_product_attribute
     */
-    public function getAttributeCombinationsById($id_product_attribute, $id_lang)
+    public function getAttributeCombinationsById($id_product_attribute, $id_lang, $groupByIdAttributeGroup = true)
     {
         if (!Combination::isFeatureActive()) {
             return array();
@@ -2127,7 +2127,7 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
 				WHERE pa.`id_product` = '.(int)$this->id.'
 				AND pa.`id_product_attribute` = '.(int)$id_product_attribute.'
-				GROUP BY pa.`id_product_attribute`, ag.`id_attribute_group`
+				GROUP BY pa.`id_product_attribute`'.($groupByIdAttributeGroup ? ',ag.`id_attribute_group`' : '').'
 				ORDER BY pa.`id_product_attribute`';
 
         $res = Db::getInstance()->executeS($sql);
