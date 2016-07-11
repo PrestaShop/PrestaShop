@@ -293,7 +293,7 @@ class AdminRequestSqlControllerCore extends AdminController
             }
             $this->content .= $this->renderView();
         } elseif ($this->display == 'export') {
-            $this->generateExport();
+            $this->processExport();
         } elseif (!$this->ajax) {
             $this->content .= $this->renderList();
             $this->content .= $this->renderOptions();
@@ -324,7 +324,7 @@ class AdminRequestSqlControllerCore extends AdminController
     /**
      * Genrating a export file
      */
-    public function generateExport()
+    public function processExport($textDelimiter = '"')
     {
         $id = Tools::getValue($this->identifier);
         $export_dir = defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_.'/export/' : _PS_ADMIN_DIR_.'/export/';
@@ -344,7 +344,7 @@ class AdminRequestSqlControllerCore extends AdminController
                 foreach ($results as $result) {
                     fputs($csv, "\n");
                     foreach ($tab_key as $name) {
-                        fputs($csv, '"'.strip_tags($result[$name]).'";');
+                        fputs($csv, $textDelimiter.strip_tags($result[$name]).$textDelimiter.';');
                     }
                 }
                 if (file_exists($export_dir.$file)) {
