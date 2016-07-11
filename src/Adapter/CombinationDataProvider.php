@@ -26,6 +26,8 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShop\PrestaShop\Adapter\Tools;
 
 /**
  * This class will provide data from DB / ORM about product combination
@@ -41,6 +43,7 @@ class CombinationDataProvider
         $this->context = new LegacyContext();
         $this->productAdapter = new ProductDataProvider();
         $this->cldrRepository = \Tools::getCldr($this->context->getContext());
+        $this->tools = new Tools();
     }
 
     /**
@@ -87,7 +90,7 @@ class CombinationDataProvider
             'attribute_price_impact' => $attribute_price_impact,
             'attribute_price' => $combination['price'],
             'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->context->getContext()->currency->iso_code),
-            'final_price' => $product->price + $combination['price'],
+            'final_price' => $this->tools->bcadd($product->price, $combination['price'], CommonAbstractType::PRESTASHOP_DECIMALS),
             'attribute_priceTI' => '',
             'attribute_ecotax' => $combination['ecotax'],
             'attribute_weight_impact' => $attribute_weight_impact,
