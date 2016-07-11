@@ -30,8 +30,25 @@
       </div>
     </div>
 
-    <div class="js-combinations-list" data-ids-product-attribute="{{ ids_product_attribute }}" data-combinations-url="{{ path('admin_combination_generate_form') }}">
-
+    <div class="combinations-list">
+      <table class="table table-striped table-no-bordered">
+        <thead id="combinations_thead" {% if not has_combinations %}style="display: none;"{% endif %}>
+        <tr class="uppercase">
+          <th>
+            <span>{{ 'Select'|trans([], 'Admin.Actions') }}</span>
+            <input type="checkbox" id="toggle-all-combinations" >
+          </th>
+          <th></th>
+          <th>{{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          <th>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          <th>{{ 'Final price'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          <th>{{ 'Quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          <th colspan="3" class="text-xs-right">{{ 'Default combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
+        </tr>
+        </thead>
+        <tbody class="js-combinations-list panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}"  data-ids-product-attribute="{{ ids_product_attribute }}" data-combinations-url="{{ path('admin_combination_generate_form') }}">
+        </tbody>
+      </table>
     </div>
   </div>
 
