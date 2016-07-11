@@ -14,6 +14,10 @@ module.exports = {
     aCustomizableProduct: {
       id: 1
     },
+    order: {
+      id: 5,
+      reference: 'KHWLILZLL'
+    },
     urls: {
       login: '/en/login',
       myAccount: '/en/my-account',
@@ -24,7 +28,8 @@ module.exports = {
       orderdetail: '/en/index.php?controller=order-detail&id_order=5',
       aCategoryWithProducts: '/en/3-women',
       identity: '/en/identity',
-      adminLogin: '/admin-dev'
+      adminLogin: '/admin-dev',
+      guestTracking: '/en/guest-tracking'
     },
     customer: {
       email: 'pub@prestashop.com',
