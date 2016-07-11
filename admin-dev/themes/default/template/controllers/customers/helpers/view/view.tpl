@@ -88,7 +88,7 @@
 					{/if}
 					{if $shop_is_feature_active}
 						<div class="row">
-							<label class="control-label col-lg-3">{l s='Shop'}</label>
+							<label class="control-label col-lg-3">{l s='Shop' d='Admin.Global'}</label>
 							<div class="col-lg-9">
 								<p class="form-control-static">{$name_shop}</p>
 							</div>
@@ -205,7 +205,7 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th class="center"><span class="title_box ">{l s='ID'}</span></th>
+									<th class="center"><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
 									<th><span class="title_box">{l s='Date'}</span></th>
 									<th><span class="title_box">{l s='Payment'}</span></th>
 									<th><span class="title_box">{l s='Status'}</span></th>
@@ -238,7 +238,7 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th><span class="title_box ">{l s='ID'}</span></th>
+									<th><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
 									<th><span class="title_box ">{l s='Date'}</span></th>
 									<th><span class="title_box ">{l s='Payment'}</span></th>
 									<th><span class="title_box ">{l s='Status'}</span></th>
@@ -275,7 +275,7 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box ">{l s='ID'}</span></th>
+								<th><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
 								<th><span class="title_box ">{l s='Date'}</span></th>
 								<th><span class="title_box ">{l s='Carrier'}</span></th>
 								<th><span class="title_box ">{l s='Total'}</span></th>
@@ -311,7 +311,7 @@
 					<thead>
 						<tr>
 							<th><span class="title_box">{l s='Date'}</span></th>
-							<th><span class="title_box">{l s='Name'}</span></th>
+							<th><span class="title_box">{l s='Name' d='Admin.Global'}</span></th>
 							<th><span class="title_box">{l s='Quantity'}</span></th>
 						</tr>
 					</thead>
@@ -339,8 +339,8 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th><span class="title_box ">{l s='ID'}</span></th>
-							<th><span class="title_box ">{l s='Name'}</span></th>
+							<th><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
+							<th><span class="title_box ">{l s='Name' d='Admin.Global'}</span></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -416,9 +416,9 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 								<th><span class="title_box">{l s='Code'}</span></th>
-								<th><span class="title_box">{l s='Name'}</span></th>
+								<th><span class="title_box">{l s='Name' d='Admin.Global'}</span></th>
 								<th><span class="title_box">{l s='Status'}</span></th>
 								<th><span class="title_box">{l s='Qty available'}</span></th>
 								<th><span class="title_box">{l s='Actions'}</span></th>
@@ -493,7 +493,7 @@
 				<table class="table">
 					<thead>
 					<tr>
-						<th><span class="title_box">{l s='ID'}</span></th>
+						<th><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 						<th><span class="title_box">{l s='Date'}</span></th>
 						<th><span class="title_box">{l s='Pages viewed'}</span></th>
 						<th><span class="title_box">{l s='Total time'}</span></th>
@@ -530,8 +530,8 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th><span class="title_box ">{l s='ID'}</span></th>
-							<th><span class="title_box ">{l s='Name'}</span></th>
+							<th><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
+							<th><span class="title_box ">{l s='Name' d='Admin.Global'}</span></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -566,8 +566,8 @@
 					<thead>
 						<tr>
 							<th><span class="title_box ">{l s='Date'}</span></th>
-							<th><span class="title_box ">{l s='Name'}</span></th>
-							{if $shop_is_feature_active}<th>{l s='Shop'}</th>{/if}
+							<th><span class="title_box ">{l s='Name' d='Admin.Global'}</span></th>
+							{if $shop_is_feature_active}<th>{l s='Shop' d='Admin.Global'}</th>{/if}
 						</tr>
 					</thead>
 					<tbody>
@@ -603,10 +603,10 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box ">{l s='Company'}</span></th>
-								<th><span class="title_box ">{l s='Name'}</span></th>
+								<th><span class="title_box ">{l s='Company' d='Admin.Global'}</span></th>
+								<th><span class="title_box ">{l s='Name' d='Admin.Global'}</span></th>
 								<th><span class="title_box ">{l s='Address'}</span></th>
-								<th><span class="title_box ">{l s='Country'}</span></th>
+								<th><span class="title_box ">{l s='Country' d='Admin.Global'}</span></th>
 								<th><span class="title_box ">{l s='Phone number(s)'}</span></th>
 								<th></th>
 							</tr>

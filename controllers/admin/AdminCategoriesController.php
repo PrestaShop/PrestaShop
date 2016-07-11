@@ -63,15 +63,15 @@ class AdminCategoriesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_category' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name')
+                'title' => $this->trans('Name', array(), 'Admin.Global')
             ),
             'description' => array(
-                'title' => $this->l('Description'),
+                'title' => $this->trans('Description', array(), 'Admin.Global'),
                 'callback' => 'getDescriptionClean',
                 'orderby' => false
             ),
@@ -493,7 +493,7 @@ class AdminCategoriesControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'required' => true,
@@ -510,12 +510,12 @@ class AdminCategoriesControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     )
                 ),
@@ -532,7 +532,7 @@ class AdminCategoriesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->l('Description'),
+                    'label' => $this->trans('Description', array(), 'Admin.Global'),
                     'name' => 'description',
                     'autoload_rte' => true,
                     'lang' => true,
@@ -639,12 +639,12 @@ class AdminCategoriesControllerCore extends AdminController
                     array(
                         'id' => 'is_root_on',
                         'value' => 1,
-                        'label' => $this->l('Yes')
+                        'label' => $this->trans('Yes', array(), 'Admin.Global')
                     ),
                     array(
                         'id' => 'is_root_off',
                         'value' => 0,
-                        'label' => $this->l('No')
+                        'label' => $this->trans('No', array(), 'Admin.Global')
                     )
                 )
             );

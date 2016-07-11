@@ -56,7 +56,7 @@ class AdminEmailsControllerCore extends AdminController
             }
 
             $this->fields_list = array(
-                'id_mail' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+                'id_mail' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
                 'recipient' => array('title' => $this->l('Recipient')),
                 'template' => array('title' => $this->l('Template')),
                 'language' => array(
@@ -87,7 +87,7 @@ class AdminEmailsControllerCore extends AdminController
 
         $this->fields_options = array(
             'email' => array(
-                'title' => $this->l('Email'),
+                'title' => $this->trans('Email', array(), 'Admin.Global'),
                 'icon' => 'icon-envelope',
                 'fields' =>    array(
                     'PS_MAIL_EMAIL_MESSAGE' => array(
@@ -130,7 +130,7 @@ class AdminEmailsControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'smtp' => array(
-                'title' => $this->l('Email'),
+                'title' => $this->trans('Email', array(), 'Admin.Global'),
                 'fields' =>    array(
                     'PS_MAIL_DOMAIN' => array(
                         'title' => $this->l('Mail domain name'),

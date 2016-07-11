@@ -236,7 +236,7 @@
 							<input id="cart_rule_select_1_filter" autocomplete="off" class="form-control uncombinable_search_filter" type="text" name="uncombinable_filter" placeholder="{l s='Search' d='Admin.Actions'}" value="">
 							<select id="cart_rule_select_1" class="jscroll" multiple="">
 							</select>
-							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next'}</a>
+							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next' d='Admin.Global'}</a>
 							<a id="cart_rule_select_add" class="btn btn-default btn-block clearfix">{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
@@ -244,7 +244,7 @@
 							<input id="cart_rule_select_2_filter" autocomplete="off" class="form-control combinable_search_filter" type="text" name="combinable_filter" placeholder="{l s='Search' d='Admin.Actions'}" value="">
 							<select name="cart_rule_select[]" class="jscroll" id="cart_rule_select_2" multiple>
 							</select>
-							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next'}</a>
+							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next' d='Admin.Global'}</a>
 							<a id="cart_rule_select_remove" class="btn btn-default btn-block clearfix" ><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 						</td>
 					</tr>

@@ -34,7 +34,7 @@
 							<input type="checkbox" name="checkme" id="checkme" onclick="checkDelBoxes(this.form, 'groupBox[]', this.checked)" />
 						</span>
 					</th>
-					<th class="fixed-width-xs"><span class="title_box">{l s='ID'}</span></th>
+					<th class="fixed-width-xs"><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 					<th>
 						<span class="title_box">
 							{l s='Group name'}

@@ -55,12 +55,12 @@ class AdminQuickAccessesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_quick_access' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name')
+                'title' => $this->trans('Name', array(), 'Admin.Global')
             ),
             'link' => array(
                 'title' => $this->l('Link')
@@ -82,7 +82,7 @@ class AdminQuickAccessesControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'maxlength' => 32,
@@ -106,12 +106,12 @@ class AdminQuickAccessesControllerCore extends AdminController
                         array(
                             'id' => 'new_window_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->trans('Enabled', array(), 'Admin.Global').'" title="'.$this->trans('Enabled', array(), 'Admin.Global').'" />'
                         ),
                         array(
                             'id' => 'new_window_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->trans('Disabled', array(), 'Admin.Global').'" title="'.$this->trans('Disabled', array(), 'Admin.Global').'" />'
                         )
                     )
                 )

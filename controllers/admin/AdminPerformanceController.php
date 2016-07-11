@@ -90,12 +90,12 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'smarty_cache_1',
                             'value' => 1,
-                            'label' => $this->l('Yes'),
+                            'label' => $this->trans('Yes', array(), 'Admin.Global'),
                         ),
                         array(
                             'id' => 'smarty_cache_0',
                             'value' => 0,
-                            'label' => $this->l('No')
+                            'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Should be enabled except for debugging.')
@@ -109,12 +109,12 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'smarty_local_1',
                             'value' => 1,
-                            'label' => $this->l('Yes'),
+                            'label' => $this->trans('Yes', array(), 'Admin.Global'),
                         ),
                         array(
                             'id' => 'smarty_local_0',
                             'value' => 0,
-                            'label' => $this->l('No')
+                            'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Should be enabled if you want to avoid to store the smarty cache on NFS.')
@@ -187,12 +187,12 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'native_module_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'native_module_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Enable or disable non PrestaShop Modules.')
@@ -207,12 +207,12 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'overrides_module_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'overrides_module_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Enable or disable all classes and controllers overrides.')
@@ -227,12 +227,12 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'debug_mode_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'debug_mode_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Enable or disable debug mode.')
@@ -271,12 +271,12 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'combination_1',
                             'value' => 1,
-                            'label' => $this->l('Yes'),
+                            'label' => $this->trans('Yes', array(), 'Admin.Global'),
                         ),
                         array(
                             'id' => 'combination_0',
                             'value' => 0,
-                            'label' => $this->l('No')
+                            'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Choose "No" to disable Product Combinations.'),
@@ -291,12 +291,12 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'feature_1',
                             'value' => 1,
-                            'label' => $this->l('Yes'),
+                            'label' => $this->trans('Yes', array(), 'Admin.Global'),
                         ),
                         array(
                             'id' => 'feature_0',
                             'value' => 0,
-                            'label' => $this->l('No')
+                            'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Choose "No" to disable Product Features.')
@@ -311,12 +311,12 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'group_1',
                             'value' => 1,
-                            'label' => $this->l('Yes'),
+                            'label' => $this->trans('Yes', array(), 'Admin.Global'),
                         ),
                         array(
                             'id' => 'group_0',
                             'value' => 0,
-                            'label' => $this->l('No')
+                            'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Choose "No" to disable Customer Groups.')
@@ -447,12 +447,12 @@ class AdminPerformanceControllerCore extends AdminController
                     array(
                         'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
                         'value' => 1,
-                        'label' => $this->l('Yes'),
+                        'label' => $this->trans('Yes', array(), 'Admin.Global'),
                     ),
                     array(
                         'id' => 'PS_HTACCESS_CACHE_CONTROL_0',
                         'value' => 0,
-                        'label' => $this->l('No'),
+                        'label' => $this->trans('No', array(), 'Admin.Global'),
                     ),
                 ),
             );
@@ -600,12 +600,12 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'cache_active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'cache_active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     )
                 ),

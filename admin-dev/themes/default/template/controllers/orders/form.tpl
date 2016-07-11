@@ -1093,7 +1093,7 @@
 	<div class="panel form-horizontal" id="customer_part">
 		<div class="panel-heading">
 			<i class="icon-user"></i>
-			{l s='Customer'}
+			{l s='Customer' d='Admin.Global'}
 		</div>
 		<div id="search-customer-form-group" class="form-group">
 			<label class="control-label col-lg-3">
@@ -1148,7 +1148,7 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 								<th><span class="title_box">{l s='Date'}</span></th>
 								<th><span class="title_box">{l s='Total'}</span></th>
 								<th></th>
@@ -1162,7 +1162,7 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 								<th><span class="title_box">{l s='Date'}</span></th>
 								<th><span class="title_box">{l s='Products'}</span></th>
 								<th><span class="title_box">{l s='Total paid'}</span></th>
@@ -1252,11 +1252,11 @@
 					<thead>
 						<tr>
 							<th><span class="title_box">{l s='Product'}</span></th>
-							<th><span class="title_box">{l s='Description'}</span></th>
-							<th><span class="title_box">{l s='Reference'}</span></th>
+							<th><span class="title_box">{l s='Description' d='Admin.Global'}</span></th>
+							<th><span class="title_box">{l s='Reference' d='Admin.Global'}</span></th>
 							<th><span class="title_box">{l s='Unit price'}</span></th>
 							<th><span class="title_box">{l s='Quantity'}</span></th>
-							<th><span class="title_box">{l s='Price'}</span></th>
+							<th><span class="title_box">{l s='Price' d='Admin.Global'}</span></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -1335,8 +1335,8 @@
 			<table class="table" id="voucher_list">
 				<thead>
 					<tr>
-						<th><span class="title_box">{l s='Name'}</span></th>
-						<th><span class="title_box">{l s='Description'}</span></th>
+						<th><span class="title_box">{l s='Name' d='Admin.Global'}</span></th>
+						<th><span class="title_box">{l s='Description' d='Admin.Global'}</span></th>
 						<th><span class="title_box">{l s='Value'}</span></th>
 						<th></th>
 					</tr>
@@ -1424,11 +1424,11 @@
 					<span class="switch prestashop-switch">
 						<input type="radio" name="free_shipping" id="free_shipping" value="1">
 						<label for="free_shipping" class="radioCheck">
-							{l s='yes'}
+							{l s='yes' d='Admin.Global'}
 						</label>
 						<input type="radio" name="free_shipping" id="free_shipping_off" value="0" checked="checked">
 						<label for="free_shipping_off" class="radioCheck">
-							{l s='No'}
+							{l s='No' d='Admin.Global'}
 						</label>
 						<a class="slide-button btn"></a>
 					</span>

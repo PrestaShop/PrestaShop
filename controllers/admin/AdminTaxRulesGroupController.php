@@ -45,15 +45,15 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_tax_rules_group' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name')
+                'title' => $this->trans('Name', array(), 'Admin.Global')
             ),
             'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'active' => 'status',
                 'type' => 'bool',
                 'orderby' => false,
@@ -113,7 +113,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
         $this->fields_list = array(
             'country_name' => array(
-                'title' => $this->l('Country')
+                'title' => $this->trans('Country', array(), 'Admin.Global')
             ),
             'state_name' => array(
                 'title' => $this->l('State')
@@ -130,7 +130,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 'class' => 'fixed-width-sm'
             ),
             'description' => array(
-                'title' => $this->l('Description')
+                'title' => $this->trans('Description', array(), 'Admin.Global')
             )
         );
 
@@ -171,7 +171,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'hint' => $this->l('Invalid characters:').' <>;=#{}'
@@ -186,12 +186,12 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     )
                 )
@@ -243,7 +243,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Country'),
+                    'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'country',
                     'id' => 'country',
                     'options' => array(
@@ -331,7 +331,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Description'),
+                    'label' => $this->trans('Description', array(), 'Admin.Global'),
                     'name' => 'description',
                 )
             ),

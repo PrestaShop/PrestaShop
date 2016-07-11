@@ -54,9 +54,9 @@ class AdminCmsControllerCore extends AdminController
             )
         );
         $this->fields_list = array(
-            'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'id_cms' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'link_rewrite' => array('title' => $this->l('URL')),
-            'meta_title' => array('title' => $this->l('Title'), 'filter_key' => 'b!meta_title'),
+            'meta_title' => array('title' => $this->trans('Title', array(), 'Admin.Global'), 'filter_key' => 'b!meta_title'),
             'position' => array('title' => $this->l('Position'),'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
             'active' => array('title' => $this->l('Displayed'), 'align' => 'center', 'active' => 'status', 'class' => 'fixed-width-sm', 'type' => 'bool', 'orderby' => false)
         );
@@ -82,7 +82,7 @@ class AdminCmsControllerCore extends AdminController
 
     public function getTabSlug()
     {
-       return 'ROLE_MOD_TAB_ADMINCMSCONTENT_';
+        return 'ROLE_MOD_TAB_ADMINCMSCONTENT_';
     }
 
     public function initPageHeaderToolbar()
@@ -190,12 +190,12 @@ class AdminCmsControllerCore extends AdminController
                         array(
                             'id' => 'indexation_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'indexation_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                 ),
@@ -209,12 +209,12 @@ class AdminCmsControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                 ),

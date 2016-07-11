@@ -105,7 +105,7 @@ class ProductVirtual extends CommonAbstractType
             )
         ))
         ->add('save', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
-            'label' => $this->translator->trans('Save', [], 'Admin.Action'),
+            'label' => $this->translator->trans('Save', [], 'Admin.Actions'),
             'attr' => ['class' => 'btn-primary pull-right']
         ));
 

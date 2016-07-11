@@ -72,7 +72,7 @@ class AdminShopControllerCore extends AdminController
                 'havingFilter' => 'url',
             ),
             /*'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',
@@ -378,7 +378,7 @@ class AdminShopControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Shop'),
+                'title' => $this->trans('Shop', array(), 'Admin.Global'),
                 'icon' => 'icon-shopping-cart'
             ),
             'identifier' => 'shop_id',
@@ -508,7 +508,7 @@ class AdminShopControllerCore extends AdminController
         );
         /*$this->fields_form['input'][] = array(
             'type' => 'switch',
-            'label' => $this->l('Enabled'),
+            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
             'name' => 'active',
             'required' => true,
             'is_bool' => true,
@@ -771,7 +771,7 @@ class AdminShopControllerCore extends AdminController
             if (!isset($tree[$id_shop_group])) {
                 $tree[$id_shop_group] = array(
                     'data' => array(
-                        'title' => '<b>'.$this->l('Group').'</b> '.$row['group_name'],
+                        'title' => '<b>'.$this->trans('Group', array(), 'Admin.Global').'</b> '.$row['group_name'],
                         'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-groups.png',
                         'attr' => array(
                             'href' => $this->context->link->getAdminLink('AdminShop').'&id_shop_group='.$id_shop_group,

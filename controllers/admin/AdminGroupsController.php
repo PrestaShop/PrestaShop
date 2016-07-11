@@ -55,7 +55,7 @@ class AdminGroupsControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_group' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
@@ -229,14 +229,14 @@ class AdminGroupsControllerCore extends AdminController
         $this->explicitSelect = true;
 
         $this->fields_list = (array(
-            'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'filter_key' => 'c!id_customer', 'class' => 'fixed-width-xs'),
+            'id_customer' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'filter_key' => 'c!id_customer', 'class' => 'fixed-width-xs'),
             'id_gender' => array('title' => $this->l('Social title'), 'icon' => $genders_icon, 'list' => $genders),
             'firstname' => array('title' => $this->l('First name')),
             'lastname' => array('title' => $this->l('Last name')),
             'email' => array('title' => $this->l('Email address'), 'filter_key' => 'c!email', 'orderby' => true),
             'birthday' => array('title' => $this->l('Birth date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
             'date_add' => array('title' => $this->l('Registration date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
-            'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'class' => 'fixed-width-sm', 'type' => 'bool', 'search' => false, 'orderby' => false, 'filter_key' => 'c!active', 'callback' => 'printOptinIcon')
+            'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-sm', 'type' => 'bool', 'search' => false, 'orderby' => false, 'filter_key' => 'c!active', 'callback' => 'printOptinIcon')
         ));
         $this->_select = 'c.*, a.id_group';
         $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (a.`id_customer` = c.`id_customer`)';
@@ -271,7 +271,7 @@ class AdminGroupsControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
@@ -318,12 +318,12 @@ class AdminGroupsControllerCore extends AdminController
                         array(
                             'id' => 'show_prices_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'show_prices_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Customers in this group can view prices.')

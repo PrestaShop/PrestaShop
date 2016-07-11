@@ -41,7 +41,7 @@ class AdminLogsControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_log' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'text-center',
                 'class' => 'fixed-width-xs'
             ),

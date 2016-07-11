@@ -98,7 +98,7 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th class="fixed-width-xs"><span class="title_box">{l s='ID'}</span></th>
+							<th class="fixed-width-xs"><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
 							<th><span class="title_box">{l s='IP address'}</span></th>
 							<th class="fixed-width-xs"><span class="title_box">{l s='Port'}</span></th>
 							<th class="fixed-width-xs"><span class="title_box">{l s='Weight'}</span></th>

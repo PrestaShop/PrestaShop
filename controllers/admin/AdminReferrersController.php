@@ -67,12 +67,12 @@ class AdminReferrersControllerCore extends AdminController
         $this->className = 'Referrer';
         $this->fields_list = array(
             'id_referrer' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'width' => 25,
                 'align' => 'center'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'width' => 80
             ),
             'cache_visitors' => array(
@@ -101,7 +101,7 @@ class AdminReferrersControllerCore extends AdminController
                 'align' => 'center'
             ),
             'cache_sales' => array(
-                'title' => $this->l('Sales'),
+                'title' => $this->trans('Sales', array(), 'Admin.Global'),
                 'width' => 80,
                 'align' => 'right',
                 'prefix' => '<b>',
@@ -216,7 +216,7 @@ class AdminReferrersControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'autocomplete' => false
@@ -485,7 +485,7 @@ class AdminReferrersControllerCore extends AdminController
             'pages' => $this->l('Pages viewed'),
             'registrations' => $this->l('Registrations'),
             'orders' => $this->l('Orders'),
-            'sales' => $this->l('Sales'),
+            'sales' => $this->trans('Sales', array(), 'Admin.Global'),
             'reg_rate' => $this->l('Registration rate'),
             'order_rate' => $this->l('Order rate'),
             'click_fee' => $this->l('Click fee'),

@@ -47,7 +47,7 @@ class AdminGeolocationControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'geolocationCountries' => array(
-                'title' =>    $this->l('Options'),
+                'title' =>    $this->trans('Options', array(), 'Admin.Global'),
                 'icon' =>    'icon-map-marker',
                 'description' => $this->l('The following features are only available if you enable the Geolocation by IP address feature.'),
                 'fields' =>    array(

@@ -46,7 +46,7 @@
 
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="attachment_description_{$id_lang}">
-			{l s='Description'}
+			{l s='Description' d='Admin.Global'}
 		</label>
 		<div class="col-lg-9">
 			{include
@@ -62,7 +62,7 @@
 		<label class="control-label col-lg-3" for="attachement_filename">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Upload a file from your computer'} ({Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')|string_format:'%.2f'} {l s='MB max.'})">
-				{l s='File'}
+				{l s='File' d='Admin.Global'}
 			</span>
 		</label>
 		{$attachment_uploader}

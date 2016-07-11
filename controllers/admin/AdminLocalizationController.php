@@ -33,7 +33,7 @@ class AdminLocalizationControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->l('Configuration'),
+                'title' =>    $this->trans('Configuration', array(), 'Admin.Global'),
                 'fields' =>    array(
                     'PS_LANG_DEFAULT' => array(
                         'title' => $this->l('Default language'),
@@ -344,12 +344,12 @@ class AdminLocalizationControllerCore extends AdminController
                         array(
                             'id'    => 'download_updated_pack_yes',
                             'value'    => 1,
-                            'label' => $this->l('Yes')
+                            'label' => $this->trans('Yes', array(), 'Admin.Global')
                         ),
                         array(
                             'id'    => 'download_updated_pack_no',
                             'value'    => 0,
-                            'label' => $this->l('No')
+                            'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     )
                 )

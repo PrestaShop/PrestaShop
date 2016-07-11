@@ -60,7 +60,7 @@ class AdminMetaControllerCore extends AdminController
         );
 
         $this->fields_list = array(
-            'id_meta' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'id_meta' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'page' => array('title' => $this->l('Page')),
             'title' => array('title' => $this->l('Page title')),
             'url_rewrite' => array('title' => $this->l('Friendly URL'))

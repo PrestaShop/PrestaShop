@@ -58,7 +58,7 @@ class AdminCartsControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_cart' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'text-center',
                 'class' => 'fixed-width-xs'
             ),
@@ -69,7 +69,7 @@ class AdminCartsControllerCore extends AdminController
                 'havingFilter' => true
             ),
             'customer' => array(
-                'title' => $this->l('Customer'),
+                'title' => $this->trans('Customer', array(), 'Admin.Global'),
                 'filter_key' => 'c!lastname'
             ),
             'total' => array(

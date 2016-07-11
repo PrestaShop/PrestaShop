@@ -73,7 +73,7 @@
 							<i class="process-icon-cancel"></i> {l s='Cancel' d='Admin.Actions'}
 						</a>
 						<a href="#" data-toggle="modal" data-target="#modal_addons_connect" class="btn btn-default pull-right">
-							<i class="process-icon-next"></i> {l s='Next'}
+							<i class="process-icon-next"></i> {l s='Next' d='Admin.Global'}
 						</a>
 					</div>
 				</div>

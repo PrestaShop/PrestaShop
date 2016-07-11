@@ -4,11 +4,11 @@
 		<span class="switch prestashop-switch fixed-width-lg">
 			<input type="radio" name="free_shipping" id="free_shipping_on" value="1" {if $currentTab->getFieldValue($currentObject, 'free_shipping')|intval}checked="checked"{/if} />
 			<label class="t" for="free_shipping_on">
-				{l s='Yes'}
+				{l s='Yes' d='Admin.Global'}
 			</label>
 			<input type="radio" name="free_shipping" id="free_shipping_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'free_shipping')|intval}checked="checked"{/if} />
 			<label class="t" for="free_shipping_off">
-				{l s='No'}
+				{l s='No' d='Admin.Global'}
 			</label>
 			<a class="slide-button btn"></a>
 		</span>
@@ -121,11 +121,11 @@
  		<span class="switch prestashop-switch fixed-width-lg">
  			<input type="radio" name="reduction_exclude_special" id="reduction_exclude_special_on" value="1"{if $currentTab->getFieldValue($currentObject, 'reduction_exclude_special')|intval} checked="checked"{/if}/>
  			<label class="t" for="reduction_exclude_special_on">
- 				{l s='Yes'}
+ 				{l s='Yes' d='Admin.Global'}
  			</label>
  			<input type="radio" name="reduction_exclude_special" id="reduction_exclude_special_off" value="0"{if !$currentTab->getFieldValue($currentObject, 'reduction_exclude_special')|intval} checked="checked"{/if}/>
  			<label class="t" for="reduction_exclude_special_off">
- 				{l s='No'}
+ 				{l s='No' d='Admin.Global'}
  			</label>
  			<a class="slide-button btn"></a>
  		</span>
@@ -138,11 +138,11 @@
 		<span class="switch prestashop-switch fixed-width-lg">
 			<input type="radio" name="free_gift" id="free_gift_on" value="1" {if $currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
 			<label class="t" for="free_gift_on">
-				{l s='Yes'}
+				{l s='Yes' d='Admin.Global'}
 			</label>
 			<input type="radio" name="free_gift" id="free_gift_off" value="0" {if !$currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
 			<label class="t" for="free_gift_off">
-				{l s='No'}
+				{l s='No' d='Admin.Global'}
 			</label>
 			<a class="slide-button btn"></a>
 		</span>

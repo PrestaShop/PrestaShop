@@ -420,9 +420,9 @@
 										{strip}
 										<label {if $value.value == 1} for="{$input.name}_on"{else} for="{$input.name}_off"{/if}>
 											{if $value.value == 1}
-												{l s='Yes'}
+												{l s='Yes' d='Admin.Global'}
 											{else}
-												{l s='No'}
+												{l s='No' d='Admin.Global'}
 											{/if}
 										</label>
 										{/strip}

@@ -49,16 +49,16 @@ class AdminStoresControllerCore extends AdminController
         );
 
         $this->fields_list = array(
-            'id_store' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->l('Name'), 'filter_key' => 'a!name'),
+            'id_store' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'a!name'),
             'address1' => array('title' => $this->l('Address'), 'filter_key' => 'a!address1'),
-            'city' => array('title' => $this->l('City')),
+            'city' => array('title' => $this->trans('City', array(), 'Admin.Global')),
             'postcode' => array('title' => $this->l('Zip/postal code')),
             'state' => array('title' => $this->l('State'), 'filter_key' => 'st!name'),
-            'country' => array('title' => $this->l('Country'), 'filter_key' => 'cl!name'),
+            'country' => array('title' => $this->trans('Country', array(), 'Admin.Global'), 'filter_key' => 'cl!name'),
             'phone' => array('title' => $this->l('Phone')),
             'fax' => array('title' => $this->l('Fax')),
-            'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+            'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
         );
 
         $this->bulk_actions = array(
@@ -196,7 +196,7 @@ class AdminStoresControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => false,
                     'hint' => array(
@@ -223,13 +223,13 @@ class AdminStoresControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('City'),
+                    'label' => $this->trans('City', array(), 'Admin.Global'),
                     'name' => 'city',
                     'required' => true
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Country'),
+                    'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'id_country',
                     'required' => true,
                     'default_value' => (int)$this->context->country->id,
@@ -290,12 +290,12 @@ class AdminStoresControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Whether or not to display this store.')
@@ -487,12 +487,12 @@ class AdminStoresControllerCore extends AdminController
                 'type' => 'text'
             ),
             'PS_SHOP_CITY' => array(
-                'title' => $this->l('City'),
+                'title' => $this->trans('City', array(), 'Admin.Global'),
                 'validation' => 'isGenericName',
                 'type' => 'text'
             ),
             'PS_SHOP_COUNTRY_ID' => array(
-                'title' => $this->l('Country'),
+                'title' => $this->trans('Country', array(), 'Admin.Global'),
                 'validation' => 'isInt',
                 'type' => 'select',
                 'list' => $countryList,

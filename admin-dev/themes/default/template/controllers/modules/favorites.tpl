@@ -95,15 +95,15 @@
 								<td>
 									<select name="i_{$module->name}" class="moduleFavorite">
 										<option value="" selected="selected">-</option>
-										<option value="1" {if isset($module->preferences.interest) && $module->preferences.interest eq '1'}selected="selected"{/if}>{l s='Yes'}</option>
-										<option value="0" {if isset($module->preferences.interest) && $module->preferences.interest eq '0'}selected="selected"{/if}>{l s='No'}</option>
+										<option value="1" {if isset($module->preferences.interest) && $module->preferences.interest eq '1'}selected="selected"{/if}>{l s='Yes' d='Admin.Global'}</option>
+										<option value="0" {if isset($module->preferences.interest) && $module->preferences.interest eq '0'}selected="selected"{/if}>{l s='No' d='Admin.Global'}</option>
 									</select>
 								</td>
 								<td>
 									<select name="f_{$module->name}" class="moduleFavorite">
 										<option value="" selected="selected">-</option>
-										<option value="1" {if isset($module->preferences.favorite) && $module->preferences.favorite eq '1'}selected="selected"{/if}>{l s='Yes'}</option>
-										<option value="0" {if isset($module->preferences.favorite) && $module->preferences.favorite eq '0'}selected="selected"{/if}>{l s='No'}</option>
+										<option value="1" {if isset($module->preferences.favorite) && $module->preferences.favorite eq '1'}selected="selected"{/if}>{l s='Yes' d='Admin.Global'}</option>
+										<option value="0" {if isset($module->preferences.favorite) && $module->preferences.favorite eq '0'}selected="selected"{/if}>{l s='No' d='Admin.Global'}</option>
 									</select>
 								</td>
 							</tr>

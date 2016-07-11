@@ -308,7 +308,7 @@ class AdminCarriersControllerCore extends AdminController
                         array(
                             'id' => 'billing_default',
                             'value' => Carrier::SHIPPING_METHOD_DEFAULT,
-                            'label' => $this->trans('Default behavior', array(), 'Admin.Shipping.Featurep')
+                            'label' => $this->trans('Default behavior', array(), 'Admin.Shipping.Feature')
                         ),
                         array(
                             'id' => 'billing_price',

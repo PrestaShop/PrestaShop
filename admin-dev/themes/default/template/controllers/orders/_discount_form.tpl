@@ -26,7 +26,7 @@
 <div class="form-horizontal well">
 	<div class="form-group">
 		<label class="control-label col-lg-3">
-			{l s='Name'}
+			{l s='Name' d='Admin.Global'}
 		</label>
 		<div class="col-lg-9">
 			<input class="form-control" type="text" name="discount_name" value="" />

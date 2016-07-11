@@ -55,11 +55,11 @@ class AdminDashboardControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        $this->page_header_toolbar_title = $this->l('Dashboard');
+        $this->page_header_toolbar_title = $this->trans('Dashboard', array(), 'Admin.Dashboard.Feature');
         $this->page_header_toolbar_btn['switch_demo'] = array(
-            'desc' => $this->l('Demo mode', null, null, false),
+            'desc' => $this->trans('Demo mode', array(), 'Admin.Dashboard.Feature'),
             'icon' => 'process-icon-toggle-'.(Configuration::get('PS_DASHBOARD_SIMULATION') ? 'on' : 'off'),
-            'help' => $this->l('This mode displays sample data so you can try your dashboard without real numbers.', null, null, false)
+            'help' => $this->trans('This mode displays sample data so you can try your dashboard without real numbers.', array(), 'Admin.Dashboard.Help')
         );
 
         parent::initPageHeaderToolbar();
@@ -76,9 +76,9 @@ class AdminDashboardControllerCore extends AdminController
         $modules = Module::getModulesOnDisk(true);
 
         $forms = array(
-            'payment' => array('title' => $this->l('Average bank fees per payment method'), 'id' => 'payment'),
-            'carriers' => array('title' => $this->l('Average shipping fees per shipping method'), 'id' => 'carriers'),
-            'other' => array('title' => $this->l('Other settings'), 'id' => 'other')
+            'payment' => array('title' => $this->trans('Average bank fees per payment method', array(), 'Admin.Dashboard.Feature'), 'id' => 'payment'),
+            'carriers' => array('title' => $this->trans('Average shipping fees per shipping method', array(), 'Admin.Dashboard.Feature'), 'id' => 'carriers'),
+            'other' => array('title' => $this->trans('Other settings', array(), 'Admin.Dashboard.Feature'), 'id' => 'other')
         );
         foreach ($forms as &$form) {
             $form['icon'] = 'tab-preferences';
@@ -95,7 +95,14 @@ class AdminDashboardControllerCore extends AdminController
 
                 $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = array(
                     'title' => $module->displayName,
-                    'desc' => sprintf($this->l('Choose a fixed fee for each order placed in %1$s with %2$s.'), $currency->iso_code, $module->displayName),
+                    'desc' => $this->trans(
+                        'Choose a fixed fee for each order placed in %currency% with %module%.',
+                        array(
+                            '%currency' => $currency->iso_code,
+                            '%module%' => $module->displayName,
+                            ),
+                        'Admin.Dashboard.Help'
+                    ),
                     'validation' => 'isPrice',
                     'cast' => 'floatval',
                     'type' => 'text',
@@ -104,7 +111,14 @@ class AdminDashboardControllerCore extends AdminController
                 );
                 $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR'] = array(
                     'title' => $module->displayName,
-                    'desc' => sprintf($this->l('Choose a variable fee for each order placed in %1$s with %2$s. It will be applied on the total paid with taxes.'), $currency->iso_code, $module->displayName),
+                    'desc' => $this->trans(
+                        'Choose a variable fee for each order placed in %currency% with %module%. It will be applied on the total paid with taxes.',
+                        array(
+                            '%currency' => $currency->iso_code,
+                            '%module%' => $module->displayName,
+                        ),
+                        'Admin.Dashboard.Help'
+                    ),
                     'validation' => 'isPercentage',
                     'cast' => 'floatval',
                     'type' => 'text',
@@ -115,7 +129,12 @@ class AdminDashboardControllerCore extends AdminController
                 if (Currency::isMultiCurrencyActivated()) {
                     $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED_FOREIGN'] = array(
                         'title' => $module->displayName,
-                        'desc' => sprintf($this->l('Choose a fixed fee for each order placed with a foreign currency with %s.'), $module->displayName),
+                        'desc' => $this->trans(
+                            'Choose a fixed fee for each order placed with a foreign currency with %module%.',
+                            array(
+                                '%module%' => $module->displayName
+                            ),
+                            'Admin.Dashboard.Help'),
                         'validation' => 'isPrice',
                         'cast' => 'floatval',
                         'type' => 'text',
@@ -124,7 +143,11 @@ class AdminDashboardControllerCore extends AdminController
                     );
                     $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR_FOREIGN'] = array(
                         'title' => $module->displayName,
-                        'desc' => sprintf($this->l('Choose a variable fee for each order placed with a foreign currency with %s. It will be applied on the total paid with taxes.'), $module->displayName),
+                        'desc' => $this->trans(
+                            'Choose a variable fee for each order placed with a foreign currency with %module%. It will be applied on the total paid with taxes.',
+                             array('%module%' => $module->displayName),
+                             'Admin.Dashboard.Help'
+                            ),
                         'validation' => 'isPercentage',
                         'cast' => 'floatval',
                         'type' => 'text',
@@ -138,7 +161,13 @@ class AdminDashboardControllerCore extends AdminController
         foreach ($carriers as $carrier) {
             $forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP'] = array(
                 'title' => $carrier['name'],
-                'desc' => sprintf($this->l('For the carrier named %s, indicate the domestic delivery costs  in percentage of the price charged to customers.'), $carrier['name']),
+                'desc' => $this->trans(
+                    'For the carrier named %s, indicate the domestic delivery costs  in percentage of the price charged to customers.',
+                    array(
+                        '%s' => $carrier['name'],
+                    ),
+                    'Admin.Dashboard.Help'
+                ),
                 'validation' => 'isPercentage',
                 'cast' => 'floatval',
                 'type' => 'text',
@@ -147,7 +176,13 @@ class AdminDashboardControllerCore extends AdminController
             );
             $forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP_OVERSEAS'] = array(
                 'title' => $carrier['name'],
-                'desc' => sprintf($this->l('For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.'), $carrier['name']),
+                'desc' => $this->trans(
+                    'For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.',
+                    array(
+                        '%s' => $carrier['name'],
+                ),
+                    'Admin.Dashboard.Help'
+                ),
                 'validation' => 'isPercentage',
                 'cast' => 'floatval',
                 'type' => 'text',
@@ -156,11 +191,11 @@ class AdminDashboardControllerCore extends AdminController
             );
         }
 
-        $forms['carriers']['description'] = $this->l('Method: Indicate the percentage of your carrier margin. For example, if you charge $10 of shipping fees to your customer for each shipment, but you really pay $4 to this carrier, then you should indicate "40" in the percentage field.');
+        $forms['carriers']['description'] = $this->trans('Method: Indicate the percentage of your carrier margin. For example, if you charge $10 of shipping fees to your customer for each shipment, but you really pay $4 to this carrier, then you should indicate "40" in the percentage field.', array(), 'Admin.Dashboard.Help');
 
         $forms['other']['fields']['CONF_AVERAGE_PRODUCT_MARGIN'] = array(
-            'title' => $this->l('Average gross margin percentage'),
-            'desc' => $this->l('You should calculate this percentage as follows: ((total sales revenue) - (cost of goods sold)) / (total sales revenue) * 100. This value is only used to calculate the Dashboard approximate gross margin, if you do not specify the wholesale price for each product.'),
+            'title' => $this->trans('Average gross margin percentage', array(), 'Admin.Dashboard.Feature'),
+            'desc' => $this->trans('You should calculate this percentage as follows: ((total sales revenue) - (cost of goods sold)) / (total sales revenue) * 100. This value is only used to calculate the Dashboard approximate gross margin, if you do not specify the wholesale price for each product.', array(), 'Admin.Dashboard.Help'),
             'validation' => 'isPercentage',
             'cast' => 'intval',
             'type' => 'text',
@@ -169,8 +204,8 @@ class AdminDashboardControllerCore extends AdminController
         );
 
         $forms['other']['fields']['CONF_ORDER_FIXED'] = array(
-            'title' => $this->l('Other fees per order'),
-            'desc' => $this->l('You should calculate this value by making the sum of all of your additional costs per order.'),
+            'title' => $this->trans('Other fees per order', array(), 'Admin.Dashboard.Feature'),
+            'desc' => $this->trans('You should calculate this value by making the sum of all of your additional costs per order.', array(), 'Admin.Dashboard.Help'),
             'validation' => 'isPrice',
             'cast' => 'floatval',
             'type' => 'text',
@@ -193,13 +228,13 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         // $translations = array(
-        // 	'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
-        // 	'Day' => $this->l('Day', 'AdminStatsTab'),
-        // 	'Month' => $this->l('Month', 'AdminStatsTab'),
-        // 	'Year' => $this->l('Year', 'AdminStatsTab'),
-        // 	'From' => $this->l('From:', 'AdminStatsTab'),
-        // 	'To' => $this->l('To:', 'AdminStatsTab'),
-        // 	'Save' => $this->l('Save', 'AdminStatsTab')
+        // 	'Calendar' => $this->trans('Calendar', array(),'Admin.Global'),
+        // 	'Day' => $this->trans('Day', array(), 'Admin.Global'),
+        // 	'Month' => $this->trans('Month', array(), 'Admin.Global'),
+        // 	'Year' => $this->trans('Year', array(), 'Admin.Global'),
+        // 	'From' => $this->trans('From:', array(), 'Admin.Global'),
+        // 	'To' => $this->trans('To:', array(), 'Admin.Global'),
+        // 	'Save' => $this->trans('Save', array(), 'Admin.Global')
         // );
 
         if ($this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
@@ -264,7 +299,7 @@ class AdminDashboardControllerCore extends AdminController
 
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
 
         $this->tpl_view_vars = array(
             'date_from' => $this->context->employee->stats_date_from,
@@ -343,13 +378,32 @@ class AdminDashboardControllerCore extends AdminController
 
         $shop = Context::getContext()->shop;
         if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl && Tools::getValue('ajax') == false && !defined('_PS_HOST_MODE_')) {
-            $warning = $this->l('You are currently connected under the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />';
+            $warning = $this->trans('You are currently connected under the following domain name:', array(), 'Admin.Dashboard.Notification').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />';
             if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
-                $warning .= sprintf($this->l('This is different from the shop domain name set in the Multistore settings: "%s".'), $shop->domain).'
-				'.preg_replace('@{link}(.*){/link}@', '<a href="index.php?controller=AdminShopUrl&id_shop_url='.(int)$shop->id.'&updateshop_url&token='.Tools::getAdminTokenLite('AdminShopUrl').'">$1</a>', $this->l('If this is your main domain, please {link}change it now{/link}.'));
+                $warning .= $this->trans(
+                    'This is different from the shop domain name set in the Multistore settings: "%s".',
+                    array(
+                        '%s' => $shop->domain
+                    ),
+                    'Admin.Dashboard.Notification'
+                ).$this->trans(
+                    'If this is your main domain, please {link}change it now{/link}.',
+                    array(
+                        '{link}' => '<a href="index.php?controller=AdminShopUrl&id_shop_url='.(int)$shop->id.'&updateshop_url&token='.Tools::getAdminTokenLite('AdminShopUrl').'">',
+                        '{/link}' => '</a>',
+                        ),
+                    'Admin.Dashboard.Notification'
+                    );
             } else {
-                $warning .= $this->l('This is different from the domain name set in the "SEO & URLs" tab.').'
-				'.preg_replace('@{link}(.*){/link}@', '<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#meta_fieldset_shop_url">$1</a>', $this->l('If this is your main domain, please {link}change it now{/link}.'));
+                $warning .= $this->trans('This is different from the domain name set in the "SEO & URLs" tab.', array(), 'Admin.Dashboard.Notification').'
+				'.$this->trans(
+                    'If this is your main domain, please {link}change it now{/link}.',
+                    array(
+                        '{link}' => '<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#meta_fieldset_shop_url">',
+                        '{/link}' => '</a>',
+                    'Admin.Dashboard.Notification'
+                    )
+                );
             }
         }
         return $warning;

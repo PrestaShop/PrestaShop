@@ -48,14 +48,14 @@ class AdminRequestSqlControllerCore extends AdminController
         parent::__construct();
 
         $this->fields_list = array(
-            'id_request_sql' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs'),
+            'id_request_sql' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs'),
             'name' => array('title' => $this->l('SQL query Name')),
             'sql' => array('title' => $this->l('SQL query'))
         );
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->l('Settings'),
+                'title' =>    $this->trans('Settings', array(), 'Admin.Global'),
                 'fields' =>    array(
                     'PS_ENCODING_FILE_MANAGER_SQL' => array(
                         'title' => $this->l('Select your default file encoding'),

@@ -62,7 +62,7 @@ class AdminManufacturersControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_manufacturer' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
@@ -74,7 +74,7 @@ class AdminManufacturersControllerCore extends AdminController
                 'align' => 'center',
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'width' => 'auto'
             ),
             'addresses' => array(
@@ -88,7 +88,7 @@ class AdminManufacturersControllerCore extends AdminController
                 'align' => 'center',
             ),
             'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'active' => 'status',
                 'type' => 'bool',
                 'align' => 'center',
@@ -169,7 +169,7 @@ class AdminManufacturersControllerCore extends AdminController
 
         return array(
             'id_address' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
@@ -190,10 +190,10 @@ class AdminManufacturersControllerCore extends AdminController
                 'align' => 'right'
             ),
             'city' => array(
-                'title' => $this->l('City')
+                'title' => $this->trans('City', array(), 'Admin.Global')
             ),
             'country' => array(
-                'title' => $this->l('Country'),
+                'title' => $this->trans('Country', array(), 'Admin.Global'),
                 'type' => 'select',
                 'list' => $this->countries_array,
                 'filter_key' => 'cl!id_country'
@@ -315,7 +315,7 @@ class AdminManufacturersControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'col' => 4,
                     'required' => true,
@@ -334,7 +334,7 @@ class AdminManufacturersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'textarea',
-                    'label' => $this->l('Description'),
+                    'label' => $this->trans('Description', array(), 'Admin.Global'),
                     'name' => 'description',
                     'lang' => true,
                     'cols' => 60,
@@ -391,12 +391,12 @@ class AdminManufacturersControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     )
                 )
@@ -498,7 +498,7 @@ class AdminManufacturersControllerCore extends AdminController
         if (in_array('company', $required_fields)) {
             $form['input'][] = array(
                 'type' => 'text',
-                'label' => $this->l('Company'),
+                'label' => $this->trans('Company', array(), 'Admin.Global'),
                 'name' => 'company',
                 'display' => in_array('company', $required_fields),
                 'required' => in_array('company', $required_fields),
@@ -547,14 +547,14 @@ class AdminManufacturersControllerCore extends AdminController
         );
         $form['input'][] = array(
             'type' => 'text',
-            'label' => $this->l('City'),
+            'label' => $this->trans('City', array(), 'Admin.Global'),
             'name' => 'city',
             'col' => 4,
             'required' => true,
         );
         $form['input'][] = array(
             'type' => 'select',
-            'label' => $this->l('Country'),
+            'label' => $this->trans('Country', array(), 'Admin.Global'),
             'name' => 'id_country',
             'required' => false,
             'default_value' => (int)$this->context->country->id,

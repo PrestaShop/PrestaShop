@@ -134,7 +134,7 @@
 		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="name" type="default" multilang="true"}</span></div>
 		<label class="control-label col-lg-2 required" for="name_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The public name for this product.'} {l s='Invalid characters:'} &lt;&gt;;=#{}">
-				{l s='Name'}
+				{l s='Name' d='Admin.Global'}
 			</span>
 		</label>
 		<div class="col-lg-5">
@@ -202,17 +202,17 @@
 	<div class="form-group">
 		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}</span></div>
 		<label class="control-label col-lg-2">
-			{l s='Enabled'}
+			{l s='Enabled' d='Admin.Global'}
 		</label>
 		<div class="col-lg-9">
 			<span class="switch prestashop-switch fixed-width-lg">
 				<input onclick="toggleDraftWarning(false);showOptions(true);showRedirectProductOptions(false);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
 				<label for="active_on" class="radioCheck">
-					{l s='Yes'}
+					{l s='Yes' d='Admin.Global'}
 				</label>
 				<input onclick="toggleDraftWarning(true);showOptions(false);showRedirectProductOptions(true);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
 				<label for="active_off" class="radioCheck">
-					{l s='No'}
+					{l s='No' d='Admin.Global'}
 				</label>
 				<a class="slide-button btn"></a>
 			</span>
@@ -300,7 +300,7 @@
 					</span>
 				</div>
 				<label class="control-label col-lg-2" for="available_for_order">
-					{l s='Options'}
+					{l s='Options' d='Admin.Global'}
 				</label>
 				<div class="col-lg-9">
 					<div class="checkbox">
@@ -358,7 +358,7 @@
 		<label class="control-label col-lg-2" for="description_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Appears in the body of the product page.'}">
-				{l s='Description'}
+				{l s='Description' d='Admin.Global'}
 			</span>
 		</label>
 		<div class="col-lg-9">

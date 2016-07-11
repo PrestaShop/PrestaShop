@@ -69,12 +69,12 @@ class AdminStatesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_state' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'filter_key' => 'a!name'
             ),
             'iso_code' => array(
@@ -83,7 +83,7 @@ class AdminStatesControllerCore extends AdminController
                 'class' => 'fixed-width-xs'
             ),
             'zone' => array(
-                'title' => $this->l('Zone'),
+                'title' => $this->trans('Zone', array(), 'Admin.Global'),
                 'type' => 'select',
                 'list' => $zones_array,
                 'filter_key' => 'z!id_zone',
@@ -91,7 +91,7 @@ class AdminStatesControllerCore extends AdminController
                 'order_key' => 'zone'
             ),
             'country' => array(
-                'title' => $this->l('Country'),
+                'title' => $this->trans('Country', array(), 'Admin.Global'),
                 'type' => 'select',
                 'list' => $countries_array,
                 'filter_key' => 'cl!id_country',
@@ -99,7 +99,7 @@ class AdminStatesControllerCore extends AdminController
                 'order_key' => 'country'
             ),
             'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'active' => 'status',
                 'filter_key' => 'a!active',
                 'align' => 'center',
@@ -144,7 +144,7 @@ class AdminStatesControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'maxlength' => 32,
                     'required' => true,
@@ -161,7 +161,7 @@ class AdminStatesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Country'),
+                    'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'id_country',
                     'required' => true,
                     'default_value' => (int)$this->context->country->id,
@@ -174,7 +174,7 @@ class AdminStatesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Zone'),
+                    'label' => $this->trans('Zone', array(), 'Admin.Global'),
                     'name' => 'id_zone',
                     'required' => true,
                     'options' => array(
@@ -196,12 +196,12 @@ class AdminStatesControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->trans('Enabled', array(), 'Admin.Global').'" title="'.$this->trans('Enabled', array(), 'Admin.Global').'" />'
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->trans('Disabled', array(), 'Admin.Global').'" title="'.$this->trans('Disabled', array(), 'Admin.Global').'" />'
                         )
                     )
                 )

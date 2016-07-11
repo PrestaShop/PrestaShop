@@ -50,7 +50,7 @@ class AdminShopGroupControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_shop_group' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
             ),
@@ -60,7 +60,7 @@ class AdminShopGroupControllerCore extends AdminController
                 'filter_key' => 'a!name',
             ),
             /*'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',

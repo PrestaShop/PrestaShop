@@ -198,7 +198,7 @@ class AdminProductsControllerCore extends AdminController
 
         $this->fields_list = array();
         $this->fields_list['id_product'] = array(
-            'title' => $this->l('ID'),
+            'title' => $this->trans('ID', array(), 'Admin.Global'),
             'align' => 'center',
             'class' => 'fixed-width-xs',
             'type' => 'int'
@@ -212,11 +212,11 @@ class AdminProductsControllerCore extends AdminController
             'search' => false
         );
         $this->fields_list['name'] = array(
-            'title' => $this->l('Name'),
+            'title' => $this->trans('Name', array(), 'Admin.Global'),
             'filter_key' => 'b!name'
         );
         $this->fields_list['reference'] = array(
-            'title' => $this->l('Reference'),
+            'title' => $this->trans('Reference', array(), 'Admin.Global'),
             'align' => 'left',
         );
 
@@ -3785,31 +3785,31 @@ class AdminProductsControllerCore extends AdminController
 			<label class="control-label col-lg-3" for="specificPricePriority1">'.$this->l('Priorities').'</label>
 			<div class="input-group col-lg-9">
 				<select id="specificPricePriority1" name="specificPricePriority[]">
-					<option value="id_shop"'.($specific_price_priorities[0] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
+					<option value="id_shop"'.($specific_price_priorities[0] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->trans('Shop', array(), 'Admin.Global').'</option>
 					<option value="id_currency"'.($specific_price_priorities[0] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
-					<option value="id_country"'.($specific_price_priorities[0] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
-					<option value="id_group"'.($specific_price_priorities[0] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
+					<option value="id_country"'.($specific_price_priorities[0] == 'id_country' ? ' selected="selected"' : '').'>'.$this->trans('Country', array(), 'Admin.Global').'</option>
+					<option value="id_group"'.($specific_price_priorities[0] == 'id_group' ? ' selected="selected"' : '').'>'.$this->trans('Group', array(), 'Admin.Global').'</option>
 				</select>
 				<span class="input-group-addon"><i class="icon-chevron-right"></i></span>
 				<select name="specificPricePriority[]">
-					<option value="id_shop"'.($specific_price_priorities[1] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
+					<option value="id_shop"'.($specific_price_priorities[1] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->trans('Shop', array(), 'Admin.Global').'</option>
 					<option value="id_currency"'.($specific_price_priorities[1] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
-					<option value="id_country"'.($specific_price_priorities[1] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
-					<option value="id_group"'.($specific_price_priorities[1] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
+					<option value="id_country"'.($specific_price_priorities[1] == 'id_country' ? ' selected="selected"' : '').'>'.$this->trans('Country', array(), 'Admin.Global').'</option>
+					<option value="id_group"'.($specific_price_priorities[1] == 'id_group' ? ' selected="selected"' : '').'>'.$this->trans('Group', array(), 'Admin.Global').'</option>
 				</select>
 				<span class="input-group-addon"><i class="icon-chevron-right"></i></span>
 				<select name="specificPricePriority[]">
-					<option value="id_shop"'.($specific_price_priorities[2] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
+					<option value="id_shop"'.($specific_price_priorities[2] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->trans('Shop', array(), 'Admin.Global').'</option>
 					<option value="id_currency"'.($specific_price_priorities[2] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
-					<option value="id_country"'.($specific_price_priorities[2] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
-					<option value="id_group"'.($specific_price_priorities[2] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
+					<option value="id_country"'.($specific_price_priorities[2] == 'id_country' ? ' selected="selected"' : '').'>'.$this->trans('Country', array(), 'Admin.Global').'</option>
+					<option value="id_group"'.($specific_price_priorities[2] == 'id_group' ? ' selected="selected"' : '').'>'.$this->trans('Group', array(), 'Admin.Global').'</option>
 				</select>
 				<span class="input-group-addon"><i class="icon-chevron-right"></i></span>
 				<select name="specificPricePriority[]">
-					<option value="id_shop"'.($specific_price_priorities[3] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
+					<option value="id_shop"'.($specific_price_priorities[3] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->trans('Shop', array(), 'Admin.Global').'</option>
 					<option value="id_currency"'.($specific_price_priorities[3] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
-					<option value="id_country"'.($specific_price_priorities[3] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
-					<option value="id_group"'.($specific_price_priorities[3] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
+					<option value="id_country"'.($specific_price_priorities[3] == 'id_country' ? ' selected="selected"' : '').'>'.$this->trans('Country', array(), 'Admin.Global').'</option>
+					<option value="id_group"'.($specific_price_priorities[3] == 'id_group' ? ' selected="selected"' : '').'>'.$this->trans('Group', array(), 'Admin.Global').'</option>
 				</select>
 			</div>
 		</div>
@@ -3876,7 +3876,7 @@ class AdminProductsControllerCore extends AdminController
             .'<div class="checkbox">'
             .'<label for="require_'.$type.'_'.(int)($id_customization_field).'">'
             .'<input type="checkbox" name="require_'.$type.'_'.(int)($id_customization_field).'" id="require_'.$type.'_'.(int)($id_customization_field).'" value="1" '.($required ? 'checked="checked"' : '').'/>'
-            .$this->l('Required')
+            .$this->trans('Required', array(), 'Admin.Global')
             .'</label>'
             .'</div>'
             .'</div>'
@@ -4474,7 +4474,7 @@ class AdminProductsControllerCore extends AdminController
             'attributes' => array('title' => $this->l('Attribute - value pair'), 'align' => 'left'),
             'price' => array('title' => $this->l('Impact on price'), 'type' => 'price', 'align' => 'left'),
             'weight' => array('title' => $this->l('Impact on weight'), 'align' => 'left'),
-            'reference' => array('title' => $this->l('Reference'), 'align' => 'left'),
+            'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global'), 'align' => 'left'),
             'ean13' => array('title' => $this->l('EAN-13'), 'align' => 'left'),
             'isbn' => array('title' => $this->l('ISBN'), 'align' => 'left'),
             'upc' => array('title' => $this->l('UPC'), 'align' => 'left')
@@ -5125,8 +5125,8 @@ class AdminProductsControllerCore extends AdminController
             'Default category:' => $this->l('Default category'),
             'Catalog:' => $this->l('Catalog'),
             'Consider changing the default category.' => $this->l('Consider changing the default category.'),
-            'ID' => $this->l('ID'),
-            'Name' => $this->l('Name'),
+            'ID' => $this->trans('ID', array(), 'Admin.Global'),
+            'Name' => $this->trans('Name', array(), 'Admin.Global'),
             'Mark all checkbox(es) of categories in which product is to appear' => $this->l('Mark the checkbox of each categories in which this product will appear.')
         );
         return $trad[$key];

@@ -41,14 +41,14 @@ class AdminWarehousesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_warehouse'    => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'width' => 50,
             ),
             'reference'    => array(
-                'title' => $this->l('Reference'),
+                'title' => $this->trans('Reference', array(), 'Admin.Global'),
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
             ),
             'management_type' => array(
                 'title' => $this->l('Management type'),
@@ -181,7 +181,7 @@ class AdminWarehousesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Reference'),
+                    'label' => $this->trans('Reference', array(), 'Admin.Global'),
                     'name' => 'reference',
                     'maxlength' => 32,
                     'required' => true,
@@ -189,7 +189,7 @@ class AdminWarehousesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Name'),
+                    'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'maxlength' => 45,
                     'required' => true,
@@ -238,14 +238,14 @@ class AdminWarehousesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('City'),
+                    'label' => $this->trans('City', array(), 'Admin.Global'),
                     'name' => 'city',
                     'maxlength' => 32,
                     'required' => true,
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Country'),
+                    'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'id_country',
                     'required' => true,
                     'default_value' => (int)$this->context->country->id,

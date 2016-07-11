@@ -77,12 +77,12 @@ class AdminCountriesControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_country' => array(
-                'title' => $this->l('ID'),
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'name' => array(
-                'title' => $this->l('Country'),
+                'title' => $this->trans('Country', array(), 'Admin.Global'),
                 'filter_key' => 'b!name'
             ),
             'iso_code' => array(
@@ -97,7 +97,7 @@ class AdminCountriesControllerCore extends AdminController
                 'class' => 'fixed-width-sm'
             ),
             'zone' => array(
-                'title' => $this->l('Zone'),
+                'title' => $this->trans('Zone', array(), 'Admin.Global'),
                 'type' => 'select',
                 'list' => $zones_array,
                 'filter_key' => 'z!id_zone',
@@ -105,7 +105,7 @@ class AdminCountriesControllerCore extends AdminController
                 'order_key' => 'z!name'
             ),
             'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',
@@ -190,7 +190,7 @@ class AdminCountriesControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Country'),
+                    'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'required' => true,
@@ -235,7 +235,7 @@ class AdminCountriesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Zone'),
+                    'label' => $this->trans('Zone', array(), 'Admin.Global'),
                     'name' => 'id_zone',
                     'options' => array(
                         'query' => Zone::getZones(),
@@ -254,12 +254,12 @@ class AdminCountriesControllerCore extends AdminController
                         array(
                             'id' => 'need_zip_code_on',
                             'value' => 1,
-                            'label' => $this->l('Yes')
+                            'label' => $this->trans('Yes', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'need_zip_code_off',
                             'value' => 0,
-                            'label' => $this->l('No')
+                            'label' => $this->trans('No', array(), 'Admin.Global')
                         )
                     )
                 ),
@@ -289,12 +289,12 @@ class AdminCountriesControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->l('Enabled')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->l('Disabled')
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
                         )
                     ),
                     'hint' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office).')
@@ -308,12 +308,12 @@ class AdminCountriesControllerCore extends AdminController
                         array(
                             'id' => 'contains_states_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'.$this->l('Yes')
+                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->trans('Yes', array(), 'Admin.Global').'" title="'.$this->trans('Yes', array(), 'Admin.Global').'" />'.$this->trans('Yes', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'contains_states_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'.$this->l('No')
+                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->trans('No', array(), 'Admin.Global').'" title="'.$this->trans('No', array(), 'Admin.Global').'" />'.$this->trans('No', array(), 'Admin.Global')
                         )
                     )
                 ),
@@ -326,12 +326,12 @@ class AdminCountriesControllerCore extends AdminController
                         array(
                             'id' => 'need_identification_number_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'.$this->l('Yes')
+                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->trans('Yes', array(), 'Admin.Global').'" title="'.$this->trans('Yes', array(), 'Admin.Global').'" />'.$this->trans('Yes', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'need_identification_number_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'.$this->l('No')
+                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->trans('No', array(), 'Admin.Global').'" title="'.$this->trans('No', array(), 'Admin.Global').'" />'.$this->trans('No', array(), 'Admin.Global')
                         )
                     )
                 ),
@@ -344,12 +344,12 @@ class AdminCountriesControllerCore extends AdminController
                         array(
                             'id' => 'display_tax_label_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'.$this->l('Yes')
+                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->trans('Yes', array(), 'Admin.Global').'" title="'.$this->trans('Yes', array(), 'Admin.Global').'" />'.$this->trans('Yes', array(), 'Admin.Global')
                         ),
                         array(
                             'id' => 'display_tax_label_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'.$this->l('No')
+                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->trans('No', array(), 'Admin.Global').'" title="'.$this->trans('No', array(), 'Admin.Global').'" />'.$this->trans('No', array(), 'Admin.Global')
                         )
                     )
                 )
@@ -480,9 +480,9 @@ class AdminCountriesControllerCore extends AdminController
     protected function displayValidFields()
     {
         /* The following translations are needed later - don't remove the comments!
-        $this->l('Customer');
+        $this->trans('Customer', array(), 'Admin.Global');
         $this->l('Warehouse');
-        $this->l('Country');
+        $this->trans('Country', array(), 'Admin.Global');
         $this->l('State');
         $this->l('Address');
         */

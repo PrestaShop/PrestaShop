@@ -78,7 +78,7 @@ class AdminShopUrlControllerCore extends AdminController
                 'class' => 'fixed-width-md'
             ),
             'active' => array(
-                'title' => $this->l('Enabled'),
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',
@@ -139,7 +139,7 @@ class AdminShopUrlControllerCore extends AdminController
                     'input' => array(
                         array(
                             'type' => 'select',
-                            'label' => $this->l('Shop'),
+                            'label' => $this->trans('Shop', array(), 'Admin.Global'),
                             'name' => 'id_shop',
                             'onchange' => 'checkMainUrlInfo(this.value);',
                             'options' => array(
@@ -184,7 +184,7 @@ class AdminShopUrlControllerCore extends AdminController
                         ),
                         array(
                             'type' => 'switch',
-                            'label' => $this->l('Enabled'),
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
                             'name' => 'active',
                             'required' => false,
                             'is_bool' => true,

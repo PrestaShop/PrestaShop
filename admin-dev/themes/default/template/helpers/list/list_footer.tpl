@@ -29,7 +29,7 @@
 		{if $bulk_actions && $has_bulk_actions}
 		<div class="btn-group bulk-actions dropup">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				{l s='Bulk actions'} <span class="caret"></span>
+				{l s='Bulk actions' d='Admin.Global'} <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
 				<li>

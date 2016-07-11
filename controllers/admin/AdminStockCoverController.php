@@ -47,7 +47,7 @@ class AdminStockCoverControllerCore extends AdminController
 
         $this->fields_list = array(
             'reference' => array(
-                'title' => $this->l('Reference'),
+                'title' => $this->trans('Reference', array(), 'Admin.Global'),
                 'align' => 'center',
                 'filter_key' => 'a!reference'
             ),
@@ -62,7 +62,7 @@ class AdminStockCoverControllerCore extends AdminController
                 'filter_key' => 'a!upc'
             ),
             'name' => array(
-                'title' => $this->l('Name'),
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'filter_key' => 'b!name'
             ),
             'qty_sold' => array(

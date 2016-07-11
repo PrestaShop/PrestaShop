@@ -42,7 +42,7 @@
 			{* Options category title *}
 			<div class="panel-heading">
 				<i class="{if isset($categoryData['icon'])}{$categoryData['icon']}{else}icon-cogs{/if}"></i>
-				{if isset($categoryData['title'])}{$categoryData['title']}{else}{l s='Options'}{/if}
+				{if isset($categoryData['title'])}{$categoryData['title']}{else}{l s='Options' d='Admin.Global'}{/if}
 			</div>
 
 			{* Category description *}
@@ -65,11 +65,11 @@
 						{strip}
 						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)"/>
 						<label for="{$table}_multishop_{$category}_on">
-							{l s='Yes'}
+							{l s='Yes' d='Admin.Global'}
 						</label>
 						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)"/>
 						<label for="{$table}_multishop_{$category}_off">
-							{l s='No'}
+							{l s='No' d='Admin.Global'}
 						</label>
 						{/strip}
 						<a class="slide-button btn"></a>
@@ -146,11 +146,11 @@
 												{strip}
 												<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}{if isset($field['disabled']) && (bool)$field['disabled']} disabled="disabled"{/if}/>
 												<label for="{$key}_on" class="radioCheck">
-													{l s='Yes'}
+													{l s='Yes' d='Admin.Global'}
 												</label>
 												<input type="radio" name="{$key}" id="{$key}_off" value="0" {if !$field['value']} checked="checked"{/if}{if isset($field['js']['off'])} {$field['js']['off']}{/if}{if isset($field['disabled']) && (bool)$field['disabled']} disabled="disabled"{/if}/>
 												<label for="{$key}_off" class="radioCheck">
-													{l s='No'}
+													{l s='No' d='Admin.Global'}
 												</label>
 												{/strip}
 												<a class="slide-button btn"></a>

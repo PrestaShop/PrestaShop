@@ -43,7 +43,7 @@ class AdminReturnControllerCore extends AdminController
         parent::__construct();
 
         $this->fields_list = array(
-            'id_order_return' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+            'id_order_return' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'width' => 25),
             'id_order' => array('title' => $this->l('Order ID'), 'width' => 100, 'align' => 'center', 'filter_key'=>'a!id_order'),
             'name' => array('title' => $this->l('Status'),'color' => 'color', 'width' => 'auto', 'align' => 'left'),
             'date_add' => array('title' => $this->l('Date issued'), 'width' => 150, 'type' => 'date', 'align' => 'right', 'filter_key'=>'a!date_add'),
@@ -96,7 +96,7 @@ class AdminReturnControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text_customer',
-                    'label' => $this->l('Customer'),
+                    'label' => $this->trans('Customer', array(), 'Admin.Global'),
                     'name' => '',
                     'size' => '',
                     'required' => false,

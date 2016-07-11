@@ -84,7 +84,7 @@ class AdminEmployeesControllerCore extends AdminController
         }
 
         $this->fields_list = array(
-            'id_employee' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'id_employee' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'firstname' => array('title' => $this->l('First Name')),
             'lastname' => array('title' => $this->l('Last Name')),
             'email' => array('title' => $this->l('Email address')),
@@ -113,8 +113,8 @@ class AdminEmployeesControllerCore extends AdminController
                         'type' => 'select',
                         'identifier' => 'value',
                         'list' => array(
-                            '0' => array('value' => 0, 'name' => $this->l('No')),
-                            '1' => array('value' => 1, 'name' => $this->l('Yes')
+                            '0' => array('value' => 0, 'name' => $this->trans('No', array(), 'Admin.Global')),
+                            '1' => array('value' => 1, 'name' => $this->trans('Yes', array(), 'Admin.Global')
                         )
                     ), 'visibility' => Shop::CONTEXT_ALL)
                 ),
@@ -294,12 +294,12 @@ class AdminEmployeesControllerCore extends AdminController
                     array(
                         'id' => 'optin_on',
                         'value' => 1,
-                        'label' => $this->l('Yes')
+                        'label' => $this->trans('Yes', array(), 'Admin.Global')
                     ),
                     array(
                         'id' => 'optin_off',
                         'value' => 0,
-                        'label' => $this->l('No')
+                        'label' => $this->trans('No', array(), 'Admin.Global')
                     )
                 ),
                 'hint' => $this->l('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.')
@@ -366,12 +366,12 @@ class AdminEmployeesControllerCore extends AdminController
                     array(
                         'id' => 'active_on',
                         'value' => 1,
-                        'label' => $this->l('Enabled')
+                        'label' => $this->trans('Enabled', array(), 'Admin.Global')
                     ),
                     array(
                         'id' => 'active_off',
                         'value' => 0,
-                        'label' => $this->l('Disabled')
+                        'label' => $this->trans('Disabled', array(), 'Admin.Global')
                     )
                 ),
                 'hint' => $this->l('Allow or disallow this employee to log into the Admin panel.')

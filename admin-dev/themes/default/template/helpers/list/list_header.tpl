@@ -289,7 +289,7 @@
 						<th>
 							<span class="title_box">
 							{if $shop_link_type == 'shop'}
-								{l s='Shop'}
+								{l s='Shop' d='Admin.Global'}
 							{else}
 								{l s='Shop group'}
 							{/if}
@@ -316,8 +316,8 @@
 								{if $params.type == 'bool'}
 									<select class="filter fixed-width-sm center" name="{$list_id}Filter_{$key}">
 										<option value="">-</option>
-										<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes'}</option>
-										<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>
+										<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes' d='Admin.Global'}</option>
+										<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No' d='Admin.Global'}</option>
 									</select>
 								{elseif $params.type == 'date' || $params.type == 'datetime'}
 									<div class="date_range row">
