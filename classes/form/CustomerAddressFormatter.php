@@ -189,7 +189,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             case 'alias':
                 return $this->translator->trans('Alias', [], 'Shop.Forms.Labels');
             case 'firstname':
-                return $this->translator->trans('First name', [], 'Shop.Forms.Labelsl');
+                return $this->translator->trans('First name', [], 'Shop.Forms.Labels');
             case 'lastname':
                 return $this->translator->trans('Last name', [], 'Shop.Forms.Labels');
             case 'address1':
