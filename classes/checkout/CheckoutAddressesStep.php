@@ -133,13 +133,13 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             );
 
             if ($addressPersister->delete(new Address((int) Tools::getValue('id_address'), $this->context->language->id), Tools::getValue('token'))) {
-                $this->context->controller->success[] = $this->getTranslator()->trans('Address successfully deleted!', array(), 'Checkout');
+                $this->context->controller->success[] = $this->getTranslator()->trans('Address successfully deleted!', array(), 'Shop.Notifications.Success');
                 $this->context->controller->redirectWithNotifications(
                     $this->getCheckoutSession()->getCheckoutURL()
                 );
             } else {
                 $this->getCheckoutProcess()->setHasErrors(true);
-                $this->context->controller->errors[] = $this->getTranslator()->trans('Could not delete address.', array(), 'Checkout');
+                $this->context->controller->errors[] = $this->getTranslator()->trans('Could not delete address.', array(), 'Shop.Notifications.Error');
             }
         }
 
@@ -174,7 +174,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $this->getTranslator()->trans(
                 'Addresses',
                 array(),
-                'Checkout'
+                'Shop.Theme.Checkout'
             )
         );
 

@@ -28,7 +28,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
             $this->getTranslator()->trans(
                 'Payment',
                 array(),
-                'Checkout'
+                'Shop.Theme.Checkout'
             )
         );
     }

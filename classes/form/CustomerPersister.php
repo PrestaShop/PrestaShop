@@ -47,7 +47,7 @@ class CustomerPersisterCore
             $msg = $this->translator->trans(
                 'Invalid email/password combination',
                 [],
-                'Customer'
+                'Shop.Notifications.Error'
             );
             $this->errors['email'][]    = $msg;
             $this->errors['password'][] = $msg;
@@ -77,7 +77,7 @@ class CustomerPersisterCore
                 $this->errors['email'][] = $this->translator->trans(
                     'There seems to be an issue with your account, please contact support',
                     [],
-                    'Customer'
+                    'Shop.Notifications.Error'
                 );
                 return false;
             }
@@ -100,7 +100,7 @@ class CustomerPersisterCore
                 $this->errors['email'][] = $this->translator->trans(
                     'An account was already registered with this email address',
                     [],
-                    'Customer'
+                    'Shop.Notifications.Error'
                 );
                 return false;
             }
@@ -129,7 +129,7 @@ class CustomerPersisterCore
                 $this->errors['password'][] = $this->translator->trans(
                     'Password is required',
                     [],
-                    'Customer'
+                    'Shop.Notifications.Error'
                 );
                 return false;
             }
@@ -156,7 +156,7 @@ class CustomerPersisterCore
             $this->errors['email'][] = $this->translator->trans(
                 'An account was already registered with this email address',
                 [],
-                'Customer'
+                'Shop.Notifications.Error'
             );
             return false;
         }

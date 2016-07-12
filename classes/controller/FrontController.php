@@ -1458,7 +1458,7 @@ class FrontControllerCore extends Controller
         $breadcrumb = [];
 
         $breadcrumb['links'][] = [
-            'title' => $this->getTranslator()->trans('Home', [], 'Breadcrumb'),
+            'title' => $this->getTranslator()->trans('Home', [], 'Shop.Theme'),
             'url'   => $this->context->link->getPageLink('index', true)
         ];
 

@@ -77,7 +77,7 @@ class CustomerAddressFormCore extends AbstractForm
                     // but once it is not, the sprintf needs to go away.
                     $postcode->addError(sprintf(
                         $this->translator->trans(
-                            'invalid postcode - should look like "%1$s"', [], 'Address'
+                            'Invalid postcode - should look like "%1$s"', [], 'Shop.Forms.Errors'
                         ),
                         $country->zip_code_format
                     ));
@@ -105,7 +105,7 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         if (empty($address->alias)) {
-            $address->alias = $this->translator->trans('My Address', [], 'Address');
+            $address->alias = $this->translator->trans('My Address', [], 'Shop.Theme.Checkout');
         }
 
         $this->address = $address;

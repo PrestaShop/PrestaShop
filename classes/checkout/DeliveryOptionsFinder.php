@@ -65,7 +65,7 @@ class DeliveryOptionsFinderCore
                             $carrier['delay'] = $delay;
                             if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
                                 $carrier['price'] = $this->translator->trans(
-                                    'Free', array(), 'Carrier'
+                                    'Free', array(), 'Shop.Theme.Checkout'
                                 );
                             } else {
                                 if ($include_taxes) {
@@ -73,7 +73,7 @@ class DeliveryOptionsFinderCore
                                     if ($display_taxes_label) {
                                         $carrier['price'] = sprintf(
                                             $this->translator->trans(
-                                                '%s tax incl.', array(), 'Carrier'
+                                                '%s tax incl.', array(), 'Shop.Theme.Checkout'
                                             ),
                                             $carrier['price']
                                         );
@@ -83,7 +83,7 @@ class DeliveryOptionsFinderCore
                                     if ($display_taxes_label) {
                                         $carrier['price'] = sprintf(
                                             $this->translator->trans(
-                                                '%s tax excl.', array(), 'Carrier'
+                                                '%s tax excl.', array(), 'Shop.Theme.Checkout'
                                             ),
                                             $carrier['price']
                                         );

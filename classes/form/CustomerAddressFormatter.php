@@ -187,33 +187,33 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
 
         switch ($field) {
             case 'alias':
-                return $this->translator->trans('Alias', [], 'Address');
+                return $this->translator->trans('Alias', [], 'Shop.Forms.Labels');
             case 'firstname':
-                return $this->translator->trans('First name', [], 'Address');
+                return $this->translator->trans('First name', [], 'Shop.Forms.Labelsl');
             case 'lastname':
-                return $this->translator->trans('Last name', [], 'Address');
+                return $this->translator->trans('Last name', [], 'Shop.Forms.Labels');
             case 'address1':
-                return $this->translator->trans('Address', [], 'Address');
+                return $this->translator->trans('Address', [], 'Shop.Forms.Labels');
             case 'address2':
-                return $this->translator->trans('Address Complement', [], 'Address');
+                return $this->translator->trans('Address Complement', [], 'Shop.Forms.Labels');
             case 'postcode':
-                return $this->translator->trans('Zip/Postal Code', [], 'Address');
+                return $this->translator->trans('Zip/Postal Code', [], 'Shop.Forms.Labels');
             case 'city':
-                return $this->translator->trans('City', [], 'Address');
+                return $this->translator->trans('City', [], 'Admin.Global');
             case 'Country':
-                return $this->translator->trans('Country', [], 'Address');
+                return $this->translator->trans('Country', [], 'Admin.Global');
             case 'State':
-                return $this->translator->trans('State', [], 'Address');
+                return $this->translator->trans('State', [], 'Admin.Global');
             case 'phone':
-                return $this->translator->trans('Phone', [], 'Address');
+                return $this->translator->trans('Phone', [], 'Shop.Forms.Labels');
             case 'phone_mobile':
-                return $this->translator->trans('Mobile phone', [], 'Address');
+                return $this->translator->trans('Mobile phone', [], 'Shop.Forms.Labels');
             case 'company':
-                return $this->translator->trans('Company', [], 'Address');
+                return $this->translator->trans('Company', [], 'Admin.Global');
             case 'vat_number':
-                return $this->translator->trans('VAT number', [], 'Address');
+                return $this->translator->trans('VAT number', [], 'Shop.Forms.Labels');
             case 'dni':
-                return $this->translator->trans('Identification number', [], 'Address');
+                return $this->translator->trans('Identification number', [], 'Shop.Forms.Labels');
             default:
                 return $field;
         }

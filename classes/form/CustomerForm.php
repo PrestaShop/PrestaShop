@@ -81,7 +81,7 @@ class CustomerFormCore extends AbstractForm
         if ($id_customer && $id_customer != $this->getCustomer()->id) {
             $emailField->addError(sprintf(
                 $this->translator->trans(
-                    'The email "%s" is already used, please choose another one or sign in', array(), 'Customer'
+                    'The email "%s" is already used, please choose another one or sign in', array(), 'Shop.Notifications.Error'
                 ),
                 $emailField->getValue()
             ));
