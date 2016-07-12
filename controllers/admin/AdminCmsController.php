@@ -46,6 +46,8 @@ class AdminCmsControllerCore extends AdminController
         $this->addRowAction('delete');
         $this->_orderBy = 'position';
 
+        parent::__construct();
+
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
@@ -76,8 +78,6 @@ class AdminCmsControllerCore extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
         $this->_select = 'a.position ';
         $this->_where = ' AND c.id_cms_category = '.(int)$this->_category->id;
-
-        parent::__construct();
     }
 
     public function getTabSlug()

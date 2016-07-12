@@ -49,6 +49,8 @@ class AdminCustomersControllerCore extends AdminController
 
         $this->allow_export = true;
 
+        parent::__construct();
+
         $this->addRowAction('edit');
         $this->addRowAction('view');
         $this->addRowAction('delete');
@@ -59,8 +61,6 @@ class AdminCustomersControllerCore extends AdminController
                 'icon' => 'icon-trash'
             )
         );
-
-        $this->context = Context::getContext();
 
         $this->default_form_language = $this->context->language->id;
 
@@ -152,8 +152,6 @@ class AdminCustomersControllerCore extends AdminController
 
         $this->shopLinkType = 'shop';
         $this->shopShareDatas = Shop::SHARE_CUSTOMER;
-
-        parent::__construct();
 
         $this->_select = '
         a.date_add, gl.name as title, (

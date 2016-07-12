@@ -41,7 +41,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $this->className = 'TaxRulesGroup';
         $this->lang = false;
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         $this->fields_list = array(
             'id_tax_rules_group' => array(
@@ -71,8 +71,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         );
 
         $this->_where .= ' AND a.deleted = 0';
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

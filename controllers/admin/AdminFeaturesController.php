@@ -40,6 +40,8 @@ class AdminFeaturesControllerCore extends AdminController
         $this->list_id = 'feature';
         $this->identifier = 'id_feature';
         $this->lang = true;
+        
+        parent::__construct();
 
         $this->fields_list = array(
             'id_feature' => array(
@@ -75,7 +77,6 @@ class AdminFeaturesControllerCore extends AdminController
                 'confirm' => $this->l('Delete selected items?')
             )
         );
-        parent::__construct();
     }
 
     /**

@@ -37,6 +37,9 @@ class AdminContactsControllerCore extends AdminController
         $this->lang = true;
         $this->addRowAction('edit');
         $this->addRowAction('delete');
+
+        parent::__construct();
+        
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
@@ -51,8 +54,6 @@ class AdminContactsControllerCore extends AdminController
             'email' => array('title' => $this->l('Email address')),
             'description' => array('title' => $this->trans('Description', array(), 'Admin.Global')),
         );
-
-        parent::__construct();
     }
 
     public function renderForm()
@@ -115,7 +116,7 @@ class AdminContactsControllerCore extends AdminController
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
-        
+
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',

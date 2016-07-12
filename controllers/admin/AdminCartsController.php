@@ -37,6 +37,8 @@ class AdminCartsControllerCore extends AdminController
         $this->lang = false;
         $this->explicitSelect = true;
 
+        parent::__construct();
+
         $this->addRowAction('view');
         $this->addRowAction('delete');
         $this->allow_export = true;
@@ -111,8 +113,6 @@ class AdminCartsControllerCore extends AdminController
                 'icon' => 'icon-trash'
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

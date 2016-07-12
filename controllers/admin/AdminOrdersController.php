@@ -54,7 +54,8 @@ class AdminOrdersControllerCore extends AdminController
         $this->explicitSelect = true;
         $this->allow_export = true;
         $this->deleted = false;
-        $this->context = Context::getContext();
+
+        parent::__construct();
 
         $this->_select = '
 		a.id_currency,
@@ -192,8 +193,6 @@ class AdminOrdersControllerCore extends AdminController
         $this->bulk_actions = array(
             'updateOrderStatus' => array('text' => $this->trans('Change Order Status', array(), 'Admin.OrdersCustomers.Feature'), 'icon' => 'icon-refresh')
         );
-
-        parent::__construct();
     }
 
     public static function setOrderCurrency($echo, $tr)
