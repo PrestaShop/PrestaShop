@@ -22,8 +22,18 @@ class CombinationController extends Controller
         $combinationDataProvider = new combinationDataProvider();
 
         foreach ($combinations as $combinationId) {
-            $form = $this->createForm(ProductCombination::class, $combinationDataProvider->getFormCombination($combinationId));
-            $result .= $this->renderView('PrestaShopBundle:Admin/Product/Include:form_combination.html.twig', ['form' => $form->createView()]);
+            $form = $this->get('form.factory')
+                ->createNamed(
+                    "combination_$combinationId",
+                    'PrestaShopBundle\Form\Admin\Product\ProductCombination',
+                    $combinationDataProvider->getFormCombination($combinationId)
+                );
+            $result .= $this->renderView(
+                'PrestaShopBundle:Admin/Product/Include:form_combination.html.twig',
+                array(
+                    'form' => $form->createView(),
+                )
+            );
         }
 
         return $response->create($result);
