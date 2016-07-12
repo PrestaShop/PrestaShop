@@ -15,20 +15,20 @@ class ValidateConstraintTranslatorCore
     {
         if ($validator === 'isName') {
             return $this->translator->trans(
-                'invalid name', [], 'ValidateConstraint'
+                'Invalid name', [], 'Shop.Forms.Errors'
             );
         } elseif ($validator === 'required') {
             return $this->translator->trans(
-                'required field', [], 'ValidateConstraint'
+                'Required field', [], 'Shop.Forms.Errors'
             );
         }
 
 
         return sprintf(
             $this->translator->trans(
-                'does not satisfy the "%1$s" validation constraint - sorry about the cryptic explanation',
+                'Invalid format.',
                 [],
-                'ValidateConstraint'
+                'Shop.Forms.Errors'
             ),
             $validator
         );

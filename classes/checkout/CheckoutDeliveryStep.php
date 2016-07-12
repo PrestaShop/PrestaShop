@@ -88,7 +88,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 $this->getTranslator()->trans(
                     ' (additional cost of %s%s)',
                     array(),
-                    'Checkout'
+                    'Shop.Theme.Checkout'
                 ),
                 $priceFormatter->convertAndFormat($this->getGiftCost()),
                 $taxLabel
@@ -129,7 +129,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             $this->getTranslator()->trans(
                 'Shipping Method',
                 array(),
-                'Checkout'
+                'Shop.Theme.Checkout'
             )
         );
 

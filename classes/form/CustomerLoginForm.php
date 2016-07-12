@@ -43,9 +43,9 @@ class CustomerLoginFormCore extends AbstractForm
             );
 
             if (isset($authentication->active) && !$authentication->active) {
-                $this->errors[''][] = $this->translator->trans('Your account isn\'t available at this time, please contact us', [], 'Customer');
+                $this->errors[''][] = $this->translator->trans('Your account isn\'t available at this time, please contact us', [], 'Shop.Notifications.Error');
             } elseif (!$authentication || !$customer->id || $customer->is_guest) {
-                $this->errors[''][] = $this->translator->trans('Authentication failed.', [], 'Customer');
+                $this->errors[''][] = $this->translator->trans('Authentication failed.', [], 'Shop.Notifications.Error');
             } else {
                 $this->context->updateCustomer($customer);
 
