@@ -22,7 +22,7 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
                 ->setType('email')
                 ->setRequired(true)
                 ->setLabel($this->translator->trans(
-                    'Email', [], 'Customer'
+                    'Email', [], 'Shop.Forms.Labels'
                 ))
                 ->addConstraint('isEmail'),
             'password' => (new FormField)
@@ -30,7 +30,7 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
                 ->setType('password')
                 ->setRequired(true)
                 ->setLabel($this->translator->trans(
-                    'Password', [], 'Customer'
+                    'Password', [], 'Shop.Forms.Labels'
                 ))
                 ->addConstraint('isPasswd'),
         ];
