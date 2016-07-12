@@ -596,6 +596,10 @@
       }
     }
   }
+  .form-control-static {
+    display: inline-block;
+    margin-top: rem(25px);
+  }
 }
 .popover-title {
   display: none;

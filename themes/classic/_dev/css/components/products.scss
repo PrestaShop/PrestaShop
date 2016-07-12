@@ -350,14 +350,15 @@
   > dl.data-sheet {
     @include display(flex);
     @include flex-wrap(wrap);
+    @include align-items(flex-start);
     dd.value,
     dt.name {
-      @include flex(0 0 40%);
+      @include flex(1 0 40%);
       font-weight: normal;
       background: $gray-light;
       padding: $small-space;
       margin-right: $small-space;
-      height: rem(40px);
+      min-height: rem(40px);
       &:nth-of-type(even) {
         background: $gray-lighter;
       }

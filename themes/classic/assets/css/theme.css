@@ -6419,21 +6419,30 @@ body#checkout {
     -webkit-flex-wrap: wrap;
     -moz-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
-    flex-wrap: wrap; }
+    flex-wrap: wrap;
+    -webkit-box-align: start;
+    -moz-box-align: start;
+    box-align: start;
+    -webkit-align-items: flex-start;
+    -moz-align-items: flex-start;
+    -ms-align-items: flex-start;
+    -o-align-items: flex-start;
+    align-items: flex-start;
+    -ms-flex-align: start; }
     .product-features > dl.data-sheet dd.value,
     .product-features > dl.data-sheet dt.name {
-      -webkit-box-flex: 0;
-      -moz-box-flex: 0;
-      box-flex: 0;
-      -webkit-flex: 0 0 40%;
-      -moz-flex: 0 0 40%;
-      -ms-flex: 0 0 40%;
-      flex: 0 0 40%;
+      -webkit-box-flex: 1;
+      -moz-box-flex: 1;
+      box-flex: 1;
+      -webkit-flex: 1 0 40%;
+      -moz-flex: 1 0 40%;
+      -ms-flex: 1 0 40%;
+      flex: 1 0 40%;
       font-weight: normal;
       background: #ebebeb;
       padding: 0.625rem;
       margin-right: 0.625rem;
-      height: 2.5rem; }
+      min-height: 2.5rem; }
       .product-features > dl.data-sheet dd.value:nth-of-type(even),
       .product-features > dl.data-sheet dt.name:nth-of-type(even) {
         background: #f6f6f6; }
