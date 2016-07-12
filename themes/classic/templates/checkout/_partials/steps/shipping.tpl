@@ -56,12 +56,15 @@
               </label>
             {/if}
             {if $gift.allowed}
-              <label>
-                <input type="checkbox" name="gift" value="1" {if $gift.isGift} checked {/if}>
-                <span>{$gift.label}</span>
-              </label>
-              <label for="gift_message">{l s='If you\'d like, you can add a note to the gift:' d='Shop.Theme.Checkout'}</label>
-              <textarea rows="2" cols="120" id="gift_message" name="gift_message">{$gift.message}</textarea>
+
+              <input data-toggle="collapse" data-target="#gift" type="checkbox" name="gift" value="1" {if $gift.isGift} checked {/if}>
+              <span>{$gift.label}</span>
+
+              <div id="gift" class="collapse">
+                <label for="gift_message">{l s='If you\'d like, you can add a note to the gift:' d='Shop.Theme.Checkout'}</label>
+                <textarea rows="2" cols="120" id="gift_message" name="gift_message">{$gift.message}</textarea>
+              </div>
+
             {/if}
           </div>
         </div>

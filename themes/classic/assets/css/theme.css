@@ -5382,6 +5382,9 @@ body#checkout {
       cursor: pointer; }
     body#checkout #order-summary-content a .step-edit {
       color: #acaaa6; }
+  body#checkout #gift_message {
+    max-width: 100%;
+    border-color: #414141; }
   body#checkout #footer {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     margin-top: 5.625rem;
