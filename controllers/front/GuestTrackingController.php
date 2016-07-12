@@ -56,7 +56,27 @@ class GuestTrackingControllerCore extends FrontController
         $order_reference = current(explode('#', Tools::getValue('order_reference')));
         $email = Tools::getValue('email');
 
-        if ($email !== false && $order_reference !== false) {
+        if (!$email && !$order_reference) {
+            return;
+        } elseif (!$email || !$order_reference) {
+            $this->errors[] = $this->getTranslator()->trans(
+                'Please provide the required information',
+                array(),
+                'Shop.Notifications.Error'
+            );
+
+            return;
+        }
+
+        $isCustomer = Customer::customerExists($email, false, true);
+        if ($isCustomer) {
+            $this->info[] = $this->trans(
+                'Please log in to your customer account to view the order',
+                array(),
+                'Shop.Notifications.Info'
+            );
+            $this->redirectWithNotifications($this->context->link->getPageLink('history'));
+        } else {
             $this->order = Order::getByReferenceAndEmail($order_reference, $email);
             if (!Validate::isLoadedObject($this->order)) {
                 $this->errors[] = $this->getTranslator()->trans(
@@ -66,8 +86,6 @@ class GuestTrackingControllerCore extends FrontController
                 );
             }
         }
-
-        // TODO: Error message for the form
 
         // TODO: TRANSFORM TO CUSTOMER
     }

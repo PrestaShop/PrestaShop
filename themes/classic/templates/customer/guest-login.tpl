@@ -5,7 +5,7 @@
 {/block}
 
 {block name='page_content'}
-  <form action="{$urls.base_url}" method="get">
+  <form id="guestOrderTrackingForm" action="{$urls.pages.guest_tracking}" method="get">
     <header>
       <p>{l s='To track your order, please enter the following information:' d='Shop.Theme.CustomerAccount'}</p>
     </header>
@@ -47,12 +47,9 @@
     </section>
 
     <footer class="form-footer text-xs-center clearfix">
-      <input type="hidden" name="controller" value="guest-tracking">
-
       <button class="btn btn-primary" type="submit">
         {l s='Send' d='Shop.Theme.Actions'}
       </button>
-
     </footer>
   </form>
 {/block}
