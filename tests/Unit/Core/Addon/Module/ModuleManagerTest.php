@@ -64,8 +64,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
     public function testInstallSuccessful()
     {
         $this->assertTrue($this->moduleManager->install(self::UNINSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'The module %module% is already installed.');
-        $this->moduleManager->install(self::INSTALLED_MODULE);
+        $this->assertTrue($this->moduleManager->install(self::UNINSTALLED_MODULE));
     }
 
     public function testUninstallSuccessful()

@@ -104,12 +104,8 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if ($this->moduleProvider->isInstalled($name)) {
-            throw new Exception(
-                $this->translator->trans(
-                    'The module %module% is already installed.',
-                    array('%module%' => $name),
-                    'Admin.Modules.Notification'
-                ));
+            $module = $this->moduleRepository->getModule($name);
+            $module->onUninstall();
         }
 
         if (! $this->moduleProvider->isOnDisk($name)) {
