@@ -1668,7 +1668,6 @@ var priceCalculation = (function() {
       finalPrice.html(priceToBeChanged);
     },
     'impactTaxExclude': function(obj) {
-      console.log('yo');
       var price = parseFloat(obj.val().replace(/,/g, '.'));
       var targetInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
       if (isNaN(price)) {
