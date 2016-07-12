@@ -30,6 +30,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the product quantity form.
@@ -181,6 +182,17 @@ class ProductQuantity extends CommonAbstractType
         });
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * Configure options
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'allow_extra_fields' => true,
+        ));
+    }
     /**
      * Returns the block prefix of this type.
      *
