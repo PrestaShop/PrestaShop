@@ -128,15 +128,15 @@ class ProductImageController extends FrameworkBundleAdminController
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form_image', 'form', $image, array('csrf_protection' => false))
             ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
-                'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
-                'options' => [],
+                'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
+                'options' => array(),
                 'locales' => $locales,
                 'hideTabs' => true,
-                'label' => $translator->trans('Legend', [], 'Admin.Catalog.Feature'),
+                'label' => $translator->trans('Caption', array(), 'Admin.Catalog.Feature'),
                 'required' => false,
             ))
             ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-                'label'    => $translator->trans('Choose as cover image', [], 'Admin.Catalog.Feature'),
+                'label'    => $translator->trans('Cover image', array(), 'Admin.Catalog.Feature'),
                 'required' => false,
             ))
             ->getForm();

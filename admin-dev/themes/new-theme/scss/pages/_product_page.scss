@@ -212,19 +212,28 @@
   }
   // Dropzone & Image manager
   #product-images-dropzone {
-    width: 100%;
     height: 340px;
-    border: dashed 1px $gray-light;
-    padding: 10px;
+    min-height: 340px;
+    border:none;
+    padding: 5px;
     margin-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     overflow-y: hidden;
+    transition: width 0.5s ease-out, margin 0.5s ease-out;
+    z-index: 1;
+    &.col-md-8 {
+        border-right: solid 1px $gray-light;
+    }
     &.dropzone {
       .dz-preview {
         width: 130px;
         height: 130px;
         border: 1px solid $gray-light;
+        &.active {
+            border: 3px solid $brand-primary;
+            border-radius: 3px;
+        }
         &.openfilemanager {
           text-align: center;
           color: $gray-light;
@@ -249,17 +258,20 @@
         }
         .dz-image {
           border-radius: 0;
+          line-height: 130px;
           width: 100%;
           height: 100%;
-          line-height: 130px;
           &.bg {
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
           }
           img {
-            vertical-align: middle;
-            display: inline-block;
+            max-width: 130px;
+            max-height: 130px;
+            position: absolute;
+            top: 0; bottom:0; left: 0; right:0;
+            margin: auto;
           }
         }
         .iscover {
@@ -305,7 +317,12 @@
       }
     }
     .dz-default.dz-message {
-      //margin-top : ;
+      padding: 2em 0;
+      margin: 0;
+      height: 100%;
+      a {
+        font-weight: bold;
+      }
       i {
         font-size: 60px;
         color: $gray-light;
@@ -315,38 +332,41 @@
       small {
         font-size: 12px;
         font-style: italic;
+        color: $gray-medium;
       }
     }
   }
   #product-images-form-container {
-    position: absolute !important;
-    z-index: 1000;
     min-height: 200px;
-    right: 5px;
     top: 0;
+    right: 0.5em;
     cursor: default !important;
-    display: none;
-    padding: 10px !important;
+    margin: 5px;
+    float:left;
+    position: absolute;
+    z-index: 0;
     .close {
       position: absolute;
-      right: 0;
+      right: 0.5em;
       top: 0;
+      z-index: 1;
     }
     .actions {
       padding-top: 15px;
     }
   }
   #product-images-container {
+    border: solid 1px $gray-light;
+    display: inline-block;
+    width: 100%;
     .dropzone-expander {
-      border-bottom: dashed 1px $gray-light;
-      border-left: dashed 1px $gray-light;
-      border-right: dashed 1px $gray-light;
       font-weight: bold;
       font-size: 12px;
       color: $gray-medium;
       padding: 5px 0;
       cursor: pointer;
       display: none;
+      border-top: solid 1px $gray-light;
       span {
         display: none;
       }
