@@ -82,6 +82,9 @@ class AdminImportControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
+
+        parent::__construct();
+
         $this->entities = array(
             $this->l('Categories'),
             $this->l('Products'),
@@ -559,7 +562,6 @@ class AdminImportControllerCore extends AdminController
         $this->separator = ($separator = Tools::substr(strval(trim(Tools::getValue('separator'))), 0, 1)) ? $separator :  ';';
         $this->convert = false;
         $this->multiple_value_separator = ($separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator :  ',';
-        parent::__construct();
     }
 
     public function setMedia()

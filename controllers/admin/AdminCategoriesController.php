@@ -54,7 +54,7 @@ class AdminCategoriesControllerCore extends AdminController
         $this->_defaultOrderBy = 'position';
         $this->allow_export = true;
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         $this->fieldImageSettings = array(
             'name' => 'image',
@@ -100,8 +100,6 @@ class AdminCategoriesControllerCore extends AdminController
             )
         );
         $this->specificConfirmDelete = false;
-
-        parent::__construct();
     }
 
     public function init()

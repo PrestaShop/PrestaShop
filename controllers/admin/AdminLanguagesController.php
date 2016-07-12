@@ -38,7 +38,7 @@ class AdminLanguagesControllerCore extends AdminController
         $this->deleted = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         $this->fieldImageSettings = array(
             array(
@@ -101,8 +101,6 @@ class AdminLanguagesControllerCore extends AdminController
             )
         );
         $this->specificConfirmDelete = $this->l('When you delete a language, all related translations in the database will be deleted. Are you sure you want to proceed?');
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

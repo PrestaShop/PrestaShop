@@ -43,6 +43,8 @@ class AdminEmailsControllerCore extends AdminController
             $this->explicitSelect = true;
             $this->addRowAction('delete');
 
+            parent::__construct();
+
             $this->bulk_actions = array(
                 'delete' => array(
                     'text' => $this->l('Delete selected'),
@@ -78,8 +80,6 @@ class AdminEmailsControllerCore extends AdminController
             $this->_join .= ' LEFT JOIN '._DB_PREFIX_.'lang l ON (a.id_lang = l.id_lang)';
             $this->_use_found_rows = false;
         }
-
-        parent::__construct();
 
         foreach (Contact::getContacts($this->context->language->id) as $contact) {
             $arr[] = array('email_message' => $contact['id_contact'], 'name' => $contact['name']);

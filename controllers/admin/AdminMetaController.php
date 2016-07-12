@@ -48,6 +48,8 @@ class AdminMetaControllerCore extends AdminController
         $this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
         $this->rb_data = $this->getRobotsContent();
 
+        parent::__construct();
+
         $this->explicitSelect = true;
         $this->addRowAction('edit');
         $this->addRowAction('delete');
@@ -67,8 +69,6 @@ class AdminMetaControllerCore extends AdminController
         );
         $this->_where = ' AND a.configurable = 1';
         $this->_group = 'GROUP BY a.id_meta';
-
-        parent::__construct();
 
         $this->sm_file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->context->shop->id.'_index_sitemap.xml';
         // Options to generate friendly urls

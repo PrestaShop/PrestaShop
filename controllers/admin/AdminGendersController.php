@@ -38,7 +38,7 @@ class AdminGendersControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         if (!Tools::getValue('realedit')) {
             $this->deleted = false;
@@ -91,8 +91,6 @@ class AdminGendersControllerCore extends AdminController
                 'search' => false
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

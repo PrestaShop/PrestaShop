@@ -37,10 +37,10 @@ class AdminStatesControllerCore extends AdminController
         $this->lang = false;
         $this->requiredDatabase = true;
 
+        parent::__construct();
+
         $this->addRowAction('edit');
         $this->addRowAction('delete');
-
-        $this->context = Context::getContext();
 
         if (!Tools::getValue('realedit')) {
             $this->deleted = false;
@@ -108,8 +108,6 @@ class AdminStatesControllerCore extends AdminController
                 'class' => 'fixed-width-sm'
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

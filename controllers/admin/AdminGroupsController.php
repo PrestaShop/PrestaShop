@@ -36,6 +36,9 @@ class AdminGroupsControllerCore extends AdminController
         $this->className = 'Group';
         $this->list_id = 'group';
         $this->lang = true;
+
+        parent::__construct();
+        
         $this->addRowAction('edit');
         $this->addRowAction('view');
         $this->addRowAction('delete');
@@ -88,8 +91,6 @@ class AdminGroupsControllerCore extends AdminController
         );
 
         $this->addRowActionSkipList('delete', $groups_to_keep);
-
-        parent::__construct();
 
         $this->_select .= '(SELECT COUNT(jcg.`id_customer`)
 		FROM `'._DB_PREFIX_.'customer_group` jcg

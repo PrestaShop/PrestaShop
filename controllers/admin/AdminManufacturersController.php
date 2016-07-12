@@ -45,6 +45,8 @@ class AdminManufacturersControllerCore extends AdminController
         $this->_defaultOrderBy = 'name';
         $this->_defaultOrderWay = 'ASC';
 
+        parent::__construct();
+
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
@@ -52,8 +54,6 @@ class AdminManufacturersControllerCore extends AdminController
                 'confirm' => $this->l('Delete selected items?')
             )
         );
-
-        $this->context = Context::getContext();
 
         $this->fieldImageSettings = array(
             'name' => 'logo',
@@ -96,8 +96,6 @@ class AdminManufacturersControllerCore extends AdminController
                 'orderby' => false
             )
         );
-
-        parent::__construct();
     }
 
     public function setMedia()

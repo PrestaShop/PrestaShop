@@ -39,6 +39,8 @@ class AdminCartRulesControllerCore extends AdminController
         $this->addRowAction('delete');
         $this->_orderWay = 'DESC';
 
+        parent::__construct();
+
         $this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'icon' => 'icon-trash', 'confirm' => $this->l('Delete selected items?')));
 
         $this->fields_list = array(
@@ -50,8 +52,6 @@ class AdminCartRulesControllerCore extends AdminController
             'date_to' => array('title' => $this->l('Expiration date'), 'type' => 'datetime', 'class' => 'fixed-width-lg'),
             'active' => array('title' => $this->l('Status'), 'active' => 'status', 'type' => 'bool', 'align' => 'center', 'class' => 'fixed-width-xs', 'orderby' => false),
         );
-
-        parent::__construct();
     }
 
     public function ajaxProcessLoadCartRules()

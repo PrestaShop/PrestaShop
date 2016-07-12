@@ -38,6 +38,8 @@ class AdminZonesControllerCore extends AdminController
         $this->className = 'Zone';
         $this->lang = false;
 
+        parent::__construct();
+
         $this->fields_list = array(
             'id_zone' => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
@@ -63,8 +65,6 @@ class AdminZonesControllerCore extends AdminController
                 'icon' => 'icon-trash'
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

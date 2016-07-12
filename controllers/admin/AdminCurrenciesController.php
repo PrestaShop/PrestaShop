@@ -41,6 +41,8 @@ class AdminCurrenciesControllerCore extends AdminController
         $this->lang = false;
         $this->cldr = Tools::getCldr(Context::getContext());
 
+        parent::__construct();
+
         $this->fields_list = array(
             'name' => array('title' => $this->l('Currency'), 'orderby' => false, 'search' => false),
             'sign' => array('title' => $this->l('Symbol'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false, 'class' => 'fixed-width-xs'),
@@ -48,8 +50,6 @@ class AdminCurrenciesControllerCore extends AdminController
             'conversion_rate' => array('title' => $this->l('Exchange rate'), 'type' => 'float', 'align' => 'center', 'width' => 130, 'search' => false, 'filter_key' => 'currency_shop!conversion_rate'),
             'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm'),
         );
-
-        parent::__construct();
 
         $this->_select .= 'currency_shop.conversion_rate conversion_rate';
         $this->_join .= Shop::addSqlAssociation('currency', 'a');
@@ -304,7 +304,7 @@ class AdminCurrenciesControllerCore extends AdminController
     {
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
         if (!$moduleManager->isInstalled('cronjobs')) {
             die(json_encode(array()));
         }
