@@ -339,9 +339,9 @@
   #product-images-form-container {
     min-height: 200px;
     top: 0;
-    right: 0.5em;
+    right: 0;
     cursor: default !important;
-    margin: 5px;
+    margin: 10px 0 5px 5px;
     float:left;
     position: absolute;
     z-index: 0;
@@ -359,6 +359,7 @@
     border: solid 1px $gray-light;
     display: inline-block;
     width: 100%;
+    position: relative;
     .dropzone-expander {
       font-weight: bold;
       font-size: 12px;
