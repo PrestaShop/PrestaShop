@@ -29,7 +29,7 @@
     "file-loader": "^0.8.5",
     "imports-loader": "^0.6.5",
     "jquery": "^2.2.0",
-    "jquery-ui": "^1.10.5",
+    "jquery-ui": "1.10.5",
     "jwerty": "^0.3.2",
     "magnific-popup": "^1.0.1",
     "moment": "^2.11.2",
