@@ -104,7 +104,7 @@ var combinations = (function() {
 
 
         $('.attribute_default_checkbox').removeAttr('checked');
-        $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_default"]').prop("checked", true);
+        $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_default"]').prop("checked", true);
       });
 
 
