@@ -1531,12 +1531,12 @@ var priceCalculation = (function() {
   }
 
   function getEcotaxTaxIncluded() {
-    var ecotax_tax_excl = ecoTaxElem.val() / (1 + ecoTaxRate);
+    var ecotax_tax_excl = ecoTaxElem.val().replace(/,/g, '.') / (1 + ecoTaxRate);
     return ps_round(ecotax_tax_excl * (1 + ecoTaxRate), 2);
   }
 
   function getEcotaxTaxExcluded() {
-    return ecoTaxElem.val() / (1 + ecoTaxRate);
+    return ecoTaxElem.val().replace(/,/g, '.') / (1 + ecoTaxRate);
   }
 
   return {
