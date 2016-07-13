@@ -393,6 +393,20 @@ class DispatcherCore
     {
         $context = Context::getContext();
 
+        // Hook before loading routes
+        Hook::exec(
+            'actionBeforeLoadRoutes',
+            array(
+                'id_shop' => $id_shop,
+                'dispatcher' => $this,
+                'default_routes' => &$this->default_routes,
+                'routes' => &$this->routes,
+            ),
+            null,
+            true,
+            false
+        );
+
         // Load custom routes from modules
         $modules_routes = Hook::exec('moduleRoutes', array('id_shop' => $id_shop), null, true, false);
         if (is_array($modules_routes) && count($modules_routes)) {
@@ -417,6 +431,20 @@ class DispatcherCore
             $language_ids[] = (int)$context->language->id;
         }
 
+        // Hook after adding routes
+        Hook::exec(
+            'actionBeforeAddDefaultRoutes',
+            array(
+                'id_shop' => $id_shop,
+                'dispatcher' => $this,
+                'default_routes' => &$this->default_routes,
+                'routes' => &$this->routes,
+            ),
+            null,
+            true,
+            false
+        );
+
         // Set default routes
         foreach ($language_ids as $id_lang) {
             foreach ($this->default_routes as $id => $route) {
@@ -431,6 +459,21 @@ class DispatcherCore
                 );
             }
         }
+
+        // Hook after adding routes
+        Hook::exec(
+            'actionAfterAddDefaultRoutes',
+            array(
+                'id_shop' => $id_shop,
+                'dispatcher' => $this,
+                'default_routes' => &$this->default_routes,
+                'routes' => &$this->routes,
+            ),
+            null,
+            true,
+            false
+        );
+
 
         // Load the custom routes prior the defaults to avoid infinite loops
         if ($this->use_routes) {
@@ -477,6 +520,19 @@ class DispatcherCore
                 }
             }
         }
+
+        // Hook after loading routes
+        Hook::exec(
+            'actionAfterLoadRoutes',
+            array(
+                'id_shop' => $id_shop,
+                'default_routes' => &$this->default_routes,
+                'routes' => &$this->routes,
+            ),
+            null,
+            true,
+            false
+        );
     }
 
     /**
@@ -704,12 +760,38 @@ class DispatcherCore
     /**
      * Retrieve the controller from url or request uri if routes are activated
      *
-     * @return string
+     * @param int $id_shop Shop ID
+     * @return string Controller name
      */
     public function getController($id_shop = null)
     {
         if (defined('_PS_ADMIN_DIR_')) {
             $_GET['controllerUri'] = Tools::getvalue('controller');
+        }
+        $foundControllers = Hook::exec(
+            'actionGetController',
+            array(
+                'dispatcher' => $this,
+                'use_routes' => $this->use_routes,
+                'request_uri' => $this->request_uri,
+                'routes' => &$this->routes,
+                'default_routes' => &$this->default_routes,
+                'empty_route' => $this->empty_route,
+                'controller_not_found' => $this->controller_not_found,
+                'default_controller' => $this->default_controller,
+                'use_default_controller' => $this->use_default_controller,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($foundControllers) && is_array($foundControllers)) {
+            foreach ($foundControllers as $controller) {
+                if (!empty($controller) && Validate::isControllerName($controller)) {
+                    $this->controller = $controller;
+                    break;
+                }
+            }
         }
         if ($this->controller) {
             $_GET['controller'] = $this->controller;

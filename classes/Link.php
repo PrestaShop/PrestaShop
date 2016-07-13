@@ -30,14 +30,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class LinkCore
 {
     /** @var bool Rewriting activation */
-    protected $allow;
-    protected $url;
+    public $allow;
+    public $url;
     public static $cache = array('page' => array());
 
     public $protocol_link;
     public $protocol_content;
 
-    protected $ssl_enable;
+    public $ssl_enable;
 
     protected static $category_disable_rewrite = null;
 
@@ -74,6 +74,24 @@ class LinkCore
      */
     public function getProductDeletePictureLink($product, $id_picture)
     {
+        $deletePictureLinks = Hook::exec(
+            'actionGetProductDeletePictureLink',
+            array(
+                'product' => $product,
+                'alias' => $id_picture,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($deletePictureLinks) && is_array($deletePictureLinks)) {
+            foreach ($deletePictureLinks as $deletePictureLink) {
+                if (!empty($deletePictureLink)) {
+                    return $deletePictureLink;
+                }
+            }
+        }
         $url = $this->getProductLink($product);
         return $url.((strpos($url, '?')) ? '&' : '?').'deletePicture='.$id_picture;
     }
@@ -93,6 +111,35 @@ class LinkCore
     public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false, $add_anchor = false, $extra_params = [])
     {
         $dispatcher = Dispatcher::getInstance();
+
+        $productLinks = Hook::exec(
+            'actionGetProductLink',
+            array(
+                'product' => $product,
+                'alias' => $alias,
+                'category' => $category,
+                'ean13' => $ean13,
+                'id_lang' => $id_lang,
+                'id_shop' => $id_shop,
+                'ipa' => $ipa,
+                'force_routes' => $force_routes,
+                'relative_protocol' => $relative_protocol,
+                'add_anchor' => $add_anchor,
+                'extra_params' => $extra_params,
+                'category_disable_rewrite' => self::$category_disable_rewrite,
+                'link' => $this,
+            0),
+            null,
+            true,
+            false
+        );
+        if (!empty($productLinks) && is_array($productLinks)) {
+            foreach ($productLinks as $productLink) {
+                if (!empty($productLink)) {
+                    return $productLink;
+                }
+            }
+        }
 
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
@@ -164,6 +211,25 @@ class LinkCore
         $id_product_attribute,
         $id_customization = null
     ) {
+        $removeFromCartUrls = Hook::exec(
+            'actionGetRemoveFromCartURL',
+            array(
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'id_customization' => $id_customization,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($removeFromCartUrls) && is_array($removeFromCartUrls)) {
+            foreach ($removeFromCartUrls as $removeFromCartUrl) {
+                if (!empty($removeFromCartUrl)) {
+                    return $removeFromCartUrl;
+                }
+            }
+        }
         $params = [
             'delete' => 1,
             'id_product' => $id_product,
@@ -188,6 +254,25 @@ class LinkCore
         $id_product_attribute,
         $id_customization = null
     ) {
+        $upQuantityCartUrls = Hook::exec(
+            'actionGetUpQuantityCartURL',
+            array(
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'id_customization' => $id_customization,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($upQuantityCartUrls) && is_array($upQuantityCartUrls)) {
+            foreach ($upQuantityCartUrls as $up_quantity_cart_url) {
+                if (!empty($up_quantity_cart_url)) {
+                    return $up_quantity_cart_url;
+                }
+            }
+        }
         $params = [
             'update' => 1,
             'op' => 'up',
@@ -214,6 +299,25 @@ class LinkCore
         $id_product_attribute,
         $id_customization = null
     ) {
+        $downQuantityCartUrls = Hook::exec(
+            'actionGetDownQuantityCartURL',
+            array(
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'id_customization' => $id_customization,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($downQuantityCartUrls) && is_array($downQuantityCartUrls)) {
+            foreach ($downQuantityCartUrls as $down_quantity_cart_url) {
+                if (!empty($down_quantity_cart_url)) {
+                    return $down_quantity_cart_url;
+                }
+            }
+        }
         $params = [
             'update' => 1,
             'op' => 'down',
@@ -237,6 +341,24 @@ class LinkCore
 
     public function getAddToCartURL($id_product, $id_product_attribute)
     {
+        $addToCartUrls = Hook::exec(
+            'actionGetAddToCartURL',
+            array(
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($addToCartUrls) && is_array($addToCartUrls)) {
+            foreach ($addToCartUrls as $up_quantity_cart_url) {
+                if (!empty($up_quantity_cart_url)) {
+                    return $up_quantity_cart_url;
+                }
+            }
+        }
         $params = [
             'add' => 1,
             'id_product' => $id_product,
@@ -263,6 +385,30 @@ class LinkCore
      */
     public function getCategoryLink($category, $alias = null, $id_lang = null, $selected_filters = null, $id_shop = null, $relative_protocol = false)
     {
+        $categoryLinks = Hook::exec(
+            'actionGetCategoryLink',
+            array(
+                'category' => $category,
+                'alias' => $alias,
+                'id_lang' => $id_lang,
+                'id_shop' => $id_shop,
+                'selected_filters' => $selected_filters,
+                'relative_protocol' => $relative_protocol,
+                'category_disable_rewrite' => self::$category_disable_rewrite,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($categoryLinks) && is_array($categoryLinks)) {
+            foreach ($categoryLinks as $categoryLink) {
+                if (!empty($categoryLink)) {
+                    return $categoryLink;
+                }
+            }
+        }
+
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
@@ -303,6 +449,28 @@ class LinkCore
      */
     public function getCMSCategoryLink($cms_category, $alias = null, $id_lang = null, $id_shop = null, $relative_protocol = false)
     {
+        $cmsCategoryLinks = Hook::exec(
+            'actionGetCMSCategoryLink',
+            array(
+                'cms_category' => $cms_category,
+                'alias' => $alias,
+                'id_lang' => $id_lang,
+                'id_shop' => $id_shop,
+                'relative_protocol' => $relative_protocol,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($cmsCategoryLinks) && is_array($cmsCategoryLinks)) {
+            foreach ($cmsCategoryLinks as $cmsCategoryLink) {
+                if (!empty($cmsCategoryLink)) {
+                    return $cmsCategoryLink;
+                }
+            }
+        }
+
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
@@ -347,6 +515,29 @@ class LinkCore
      */
     public function getCMSLink($cms, $alias = null, $ssl = null, $id_lang = null, $id_shop = null, $relative_protocol = false)
     {
+        $cmsLinks = Hook::exec(
+            'actionGetCMSLink',
+            array(
+                'cms' => $cms,
+                'alias' => $alias,
+                'ssl' => $ssl,
+                'id_lang' => $id_lang,
+                'id_shop' => $id_shop,
+                'relative_protocol' => $relative_protocol,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($cmsLinks) && is_array($cmsLinks)) {
+            foreach ($cmsLinks as $cmsLink) {
+                if (!empty($cmsLink)) {
+                    return $cmsLink;
+                }
+            }
+        }
+
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
@@ -389,6 +580,28 @@ class LinkCore
      */
     public function getSupplierLink($supplier, $alias = null, $id_lang = null, $id_shop = null, $relative_protocol = false)
     {
+        $supplierLinks = Hook::exec(
+            'actionGetSupplierLink',
+            array(
+                'supplier' => $supplier,
+                'alias' => $alias,
+                'id_lang' => $id_lang,
+                'id_shop' => $id_shop,
+                'relative_protocol' => $relative_protocol,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($supplierLinks) && is_array($supplierLinks)) {
+            foreach ($supplierLinks as $supplierLink) {
+                if (!empty($supplierLink)) {
+                    return $supplierLink;
+                }
+            }
+        }
+
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
@@ -423,6 +636,28 @@ class LinkCore
      */
     public function getManufacturerLink($manufacturer, $alias = null, $id_lang = null, $id_shop = null, $relative_protocol = false)
     {
+        $manufacturerLinks = Hook::exec(
+            'actionGetManufacturerLink',
+            array(
+                'manufacturer' => $manufacturer,
+                'alias' => $alias,
+                'id_lang' => $id_lang,
+                'id_shop' => $id_shop,
+                'relative_protocol' => $relative_protocol,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($manufacturerLinks) && is_array($manufacturerLinks)) {
+            foreach ($manufacturerLinks as $manufacturerLink) {
+                if (!empty($manufacturerLink)) {
+                    return $manufacturerLink;
+                }
+            }
+        }
+
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
@@ -458,6 +693,30 @@ class LinkCore
      */
     public function getModuleLink($module, $controller = 'default', array $params = array(), $ssl = null, $id_lang = null, $id_shop = null, $relative_protocol = false)
     {
+        $moduleLinks = Hook::exec(
+            'actionGetModuleLink',
+            array(
+                'module' => $module,
+                'controller' => $controller,
+                'params' => $params,
+                'ssl' => $ssl,
+                'id_lang' => $id_lang,
+                'id_shop' => $id_shop,
+                'relative_protocol' => $relative_protocol,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($moduleLinks) && is_array($moduleLinks)) {
+            foreach ($moduleLinks as $moduleLink) {
+                if (!empty($moduleLink)) {
+                    return $moduleLink;
+                }
+            }
+        }
+
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
@@ -490,6 +749,26 @@ class LinkCore
         // Cannot generate admin link from front
         if (!defined('_PS_ADMIN_DIR_')) {
             return '';
+        }
+
+        $adminLinks = Hook::exec(
+            'actionGetAdminLink',
+            array(
+                'product' => $controller,
+                'with_token' => $with_token,
+                'sfRouteParams' => $sfRouteParams,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($adminLinks) && is_array($adminLinks)) {
+            foreach ($adminLinks as $adminLink) {
+                if (!empty($adminLink)) {
+                    return $adminLink;
+                }
+            }
         }
 
         $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
@@ -557,6 +836,26 @@ class LinkCore
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
 
+        $imageLinks = Hook::exec(
+            'actionGetImageLink',
+            array(
+                'name' => $name,
+                'ids' => $ids,
+                'type' => $type,
+                'module_manager' => $moduleManager,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($imageLinks) && is_array($imageLinks)) {
+            foreach ($imageLinks as $imageLink) {
+                if (!empty($imageLink)) {
+                    return $imageLink;
+                }
+            }
+        }
 
         // Check if module is installed, enabled, customer is logged in and watermark logged option is on
         if (Configuration::get('WATERMARK_LOGGED') && ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
@@ -590,6 +889,24 @@ class LinkCore
 
     public function getMediaLink($filepath)
     {
+        $mediaLinks = Hook::exec(
+            'actionGetMediaLink',
+            array(
+                'product' => $filepath,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($mediaLinks) && is_array($mediaLinks)) {
+            foreach ($mediaLinks as $mediaLink) {
+                if (!empty($mediaLink)) {
+                    return $mediaLink;
+                }
+            }
+        }
+
         return $this->protocol_content.Tools::getMediaServer($filepath).$filepath;
     }
 
@@ -606,6 +923,30 @@ class LinkCore
      */
     public function getPageLink($controller, $ssl = null, $id_lang = null, $request = null, $request_url_encode = false, $id_shop = null, $relative_protocol = false)
     {
+        $pageLinks = Hook::exec(
+            'actionGetPageLink',
+            array(
+                'controller' => $controller,
+                'ssl' => $ssl,
+                'id_lang' => $id_lang,
+                'request' => $request,
+                'request_url_encode' => $request_url_encode,
+                'id_shop' => $id_shop,
+                'relative_protocol' => $relative_protocol,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($pageLinks) && is_array($pageLinks)) {
+            foreach ($pageLinks as $pageLink) {
+                if (!empty($pageLink)) {
+                    return $pageLink;
+                }
+            }
+        }
+
         //If $controller contains '&' char, it means that $controller contains request data and must be parsed first
         $p = strpos($controller, '&');
         if ($p !== false) {
@@ -647,6 +988,26 @@ class LinkCore
 
     public function getCatImageLink($name, $id_category, $type = null)
     {
+        $catImageLinks = Hook::exec(
+            'actionGetCatImageLink',
+            array(
+                'name' => $name,
+                'id_category' => $id_category,
+                'type' => $type,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($catImageLinks) && is_array($catImageLinks)) {
+            foreach ($catImageLinks as $catImageLink) {
+                if (!empty($catImageLink)) {
+                    return $catImageLink;
+                }
+            }
+        }
+
         if ($this->allow == 1 && $type) {
             $uri_path = __PS_BASE_URI__.'c/'.$id_category.'-'.$type.'/'.$name.'.jpg';
         } else {
@@ -663,6 +1024,25 @@ class LinkCore
      */
     public function getLanguageLink($id_lang, Context $context = null)
     {
+        $languageLinks = Hook::exec(
+            'actionGetLanguageLink',
+            array(
+                'id_lang' => $id_lang,
+                'context' => $context,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($languageLinks) && is_array($languageLinks)) {
+            foreach ($languageLinks as $languageLink) {
+                if (!empty($languageLink)) {
+                    return $languageLink;
+                }
+            }
+        }
+
         if (!$context) {
             $context = Context::getContext();
         }
@@ -723,6 +1103,29 @@ class LinkCore
      */
     public function getPaginationLink($type, $id_object, $nb = false, $sort = false, $pagination = false, $array = false)
     {
+        $paginationLinks = Hook::exec(
+            'actionGetPaginationLink',
+            array(
+                'type' => $type,
+                'id_object' => $id_object,
+                'nb' => $nb,
+                'sort' => $sort,
+                'pagination' => $pagination,
+                'array' => $array,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($paginationLinks) && is_array($paginationLinks)) {
+            foreach ($paginationLinks as $paginationLink) {
+                if (!empty($paginationLink)) {
+                    return $paginationLink;
+                }
+            }
+        }
+
         // If no parameter $type, try to get it by using the controller name
         if (!$type && !$id_object) {
             $method_name = 'get'.Dispatcher::getInstance()->getController().'Link';
@@ -794,8 +1197,28 @@ class LinkCore
         return $url.(!strstr($url, '?') ? '?' : '&').'orderby='.urlencode($orderby).'&orderway='.urlencode($orderway);
     }
 
-    protected function getLangLink($id_lang = null, Context $context = null, $id_shop = null)
+    public function getLangLink($id_lang = null, Context $context = null, $id_shop = null)
     {
+        $langLinks = Hook::exec(
+            'actionGetLangLink',
+            array(
+                'id_lang' => $id_lang,
+                'context' => $context,
+                'id_shop' => $id_shop,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($langLinks) && is_array($langLinks)) {
+            foreach ($langLinks as $langLink) {
+                if (!empty($langLink)) {
+                    return $langLink;
+                }
+            }
+        }
+
         if (!$context) {
             $context = Context::getContext();
         }
@@ -813,6 +1236,26 @@ class LinkCore
 
     public function getBaseLink($id_shop = null, $ssl = null, $relative_protocol = false)
     {
+        $base_links = Hook::exec(
+            'actionGetBaseLink',
+            array(
+                'id_shop' => $id_shop,
+                'ssl' => $ssl,
+                'relative_protocol' => $relative_protocol,
+                'link' => $this,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($base_links) && is_array($base_links)) {
+            foreach ($base_links as $base_link) {
+                if (!empty($base_link)) {
+                    return $base_link;
+                }
+            }
+        }
+
         static $force_ssl = null;
 
         if ($ssl === null) {
@@ -839,6 +1282,23 @@ class LinkCore
 
     public static function getQuickLink($url)
     {
+        $quickLinks = Hook::exec(
+            'actionGetQuickLink',
+            array(
+                'url' => $url,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($quickLinks) && is_array($quickLinks)) {
+            foreach ($quickLinks as $quickLink) {
+                if (!empty($quickLink)) {
+                    return $quickLink;
+                }
+            }
+        }
+
         // We need to know if we are in Legacy or SF environment
         if (Tools::getIsset('token')) {
             $parsedUrl = parse_url($url);
@@ -865,6 +1325,24 @@ class LinkCore
 
     public static function getUrlSmarty($params, &$smarty)
     {
+        $smartyLinks = Hook::exec(
+            'actionGetUrlSmarty',
+            array(
+                'params' => $params,
+                'smarty' => &$smarty,
+            ),
+            null,
+            true,
+            false
+        );
+        if (!empty($smartyLinks) && is_array($smartyLinks)) {
+            foreach ($smartyLinks as $smartyLink) {
+                if (!empty($smartyLink)) {
+                    return $smartyLink;
+                }
+            }
+        }
+
         $context = Context::getContext();
 
         if (!isset($params['params'])) {
