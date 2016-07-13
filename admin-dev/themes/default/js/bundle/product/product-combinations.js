@@ -68,7 +68,7 @@ var combinations = (function() {
       });
 
       /** on change quantity, update field quantity row */
-      $(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_quantity"]', function() {
+      $(document).on('keyup', 'input[id^="combination"][id$="_attribute_quantity"]', function() {
         var id_attribute = $(this).closest('.combination-form').attr('data');
         $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-quantity input').val($(this).val());
       });
@@ -76,11 +76,11 @@ var combinations = (function() {
       /** on change shortcut quantity, update form field quantity */
       $(document).on('keyup', '.attribute-quantity input', function() {
         var id_attribute = $(this).closest('.combination').attr('data');
-        $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').val($(this).val());
+        $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_quantity"]').val($(this).val());
       });
 
       /** on change shortcut impact on price, update form field impact on price */
-      $(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_price"]', function() {
+      $(document).on('keyup', 'input[id^="combination"][id$="_attribute_price"]', function() {
         var id_attribute = $(this).closest('.combination-form').attr('data');
         var input = $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price input');
         input.val($(this).val());
@@ -111,12 +111,12 @@ var combinations = (function() {
       /** on change price on impact, update price on impact form field */
       $(document).on('change', '.attribute-price input', function() {
         var id_attribute = $(this).closest('.combination').attr('data');
-        $('#combination_form_' + id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').val($(this).val());
+        $('#combination_form_' + id_attribute).find('input[id^="combination"][id$="_attribute_price"]').val($(this).val());
         updateFinalPrice($(this).parent().parent().parent());
       });
 
       /** on change price, update price row */
-      $(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_price"]', function() {
+      $(document).on('keyup', 'input[id^="combination"][id$="_attribute_price"]', function() {
         var id_attribute = $(this).closest('.combination-form').attr('data');
         $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price-display').html(formatCurrency(parseFloat($(this).val())));
       });
