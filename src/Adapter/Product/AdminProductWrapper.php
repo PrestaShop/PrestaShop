@@ -86,7 +86,7 @@ class AdminProductWrapper
         if (!isset($combinationValues['attribute_ecotax'])) {
             $combinationValues['attribute_ecotax'] = 0;
         }
-        if ($combinationValues['attribute_default']) {
+        if ((isset($combinationValues['attribute_default']) && $combinationValues['attribute_default'] == 1)) {
             $product->deleteDefaultAttributes();
         }
         if (!empty($combinationValues['id_image_attr'])) {
@@ -103,7 +103,7 @@ class AdminProductWrapper
             $images,
             $combinationValues['attribute_reference'],
             $combinationValues['attribute_ean13'],
-            $combinationValues['attribute_default'],
+            (isset($combinationValues['attribute_default']) && $combinationValues['attribute_default'] == 1),
             isset($combinationValues['attribute_location']) ? $combinationValues['attribute_location'] : null,
             $combinationValues['attribute_upc'],
             $combinationValues['attribute_minimal_quantity'],
@@ -118,7 +118,7 @@ class AdminProductWrapper
 
         $product->checkDefaultAttributes();
 
-        if ($combinationValues['attribute_default']) {
+        if ((isset($combinationValues['attribute_default']) && $combinationValues['attribute_default'] == 1)) {
             \ProductCore::updateDefaultAttribute((int)$product->id);
             if (isset($id_product_attribute)) {
                 $product->cache_default_attribute = (int)$id_product_attribute;
