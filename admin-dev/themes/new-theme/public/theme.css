@@ -16081,9 +16081,9 @@ ul.category-tree {
   .product-page #product-images-form-container {
     min-height: 200px;
     top: 0;
-    right: 0.5em;
+    right: 0;
     cursor: default !important;
-    margin: 5px;
+    margin: 10px 0 5px 5px;
     float: left;
     position: absolute;
     z-index: 0; }
@@ -16097,7 +16097,8 @@ ul.category-tree {
   .product-page #product-images-container {
     border: solid 1px #BBCDD2;
     display: inline-block;
-    width: 100%; }
+    width: 100%;
+    position: relative; }
     .product-page #product-images-container .dropzone-expander {
       font-weight: bold;
       font-size: 12px;
