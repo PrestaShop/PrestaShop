@@ -399,7 +399,7 @@ class ProductController extends FrameworkBundleAdminController
                 // Legacy code. To fix when Object model will change. But report Hooks.
                 $postData = $request->request->all();
                 $combinations = array_filter((array) $postData, function ($postKey) {
-                    return strpos($postKey, 'combination_') !== false;
+                    return preg_match('/^combination_.*/', $postKey);
                 }, ARRAY_FILTER_USE_KEY);
 
                 $formData['step3']['combinations'] = $combinations;
@@ -489,6 +489,7 @@ class ProductController extends FrameworkBundleAdminController
             'id_product' => $id,
             'ids_product_attribute' => (isset($formData['step3']['id_product_attributes']) ? implode(',', $formData['step3']['id_product_attributes']) : ''),
             'has_combinations' => (isset($formData['step3']['id_product_attributes']) && count($formData['step3']['id_product_attributes']) > 0),
+            'combinations_count' => isset($formData['step3']['id_product_attributes']) ? count($formData['step3']['id_product_attributes']) : 0,
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
             'warehouses' => ($stockManager->isAsmGloballyActivated())? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
