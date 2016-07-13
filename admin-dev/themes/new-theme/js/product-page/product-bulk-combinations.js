@@ -28,6 +28,7 @@ export default function() {
       applyChangesBtn.on('click', (event) => {
         event.preventDefault();
         that.applyChangesOnCombinations()
+            .hideForm()
             .resetForm()
             .unselectCombinations()
             .submitUpdate();
