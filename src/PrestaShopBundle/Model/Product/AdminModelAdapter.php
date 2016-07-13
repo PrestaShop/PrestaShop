@@ -727,8 +727,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $combinations = $this->product->getAttributesResume($this->context->getContext()->language->id);
         $idsProductAttribute = array();
 
-        foreach ($combinations as $combination) {
-            $idsProductAttribute[] = $combination['id_product_attribute'];
+        if (is_array($combinations)) {
+            foreach ($combinations as $combination) {
+                $idsProductAttribute[] = $combination['id_product_attribute'];
+            }
         }
 
         return $idsProductAttribute;
