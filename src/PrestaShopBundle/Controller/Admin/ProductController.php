@@ -392,18 +392,18 @@ class ProductController extends FrameworkBundleAdminController
 
         $form->handleRequest($request);
         $formData = $form->getData();
-        
+
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                
+
                 // Legacy code. To fix when Object model will change. But report Hooks.
                 $postData = $request->request->all();
-                $combinations = array_filter((array) $postData, function($postKey) {
+                $combinations = array_filter((array) $postData, function ($postKey) {
                     return strpos($postKey, 'combination_') !== false;
                 }, ARRAY_FILTER_USE_KEY);
-                
-                dump($combinations);die;
-                
+
+                $formData['step3']['combinations'] = $combinations;
+
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelData($formData, $isMultiShopContext);
 
