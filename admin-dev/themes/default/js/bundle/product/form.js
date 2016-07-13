@@ -151,11 +151,6 @@ var displayFieldsManager = (function() {
         $('#specific-price-combination-selector').hide();
         $('#product_qty_0_shortcut_div, #quantities').show();
       }
-      if ($('#combinations_thead').next().children().length) {
-        $('#combinations_thead').show();
-      } else {
-        $('#combinations_thead').hide();
-      }
 
       /** Tooltip for product type combinations */
       if ($('input[name="show_variations"][value="1"]:checked').length >= 1) {
