@@ -150,7 +150,7 @@ export default function() {
       return this;
     },
     'unselectCombinations': function unselectCombinations() {
-      $('input.js-combination').prop('checked', false);
+      $('#toggle-all-combinations').prop('checked', false);
 
       return this;
     },
