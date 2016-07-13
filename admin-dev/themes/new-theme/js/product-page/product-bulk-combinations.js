@@ -73,7 +73,7 @@ export default function() {
         });
       });
 
-      $('.js-combination').on('change', () => {
+      $(document).on('change', '.js-combination', () => {
         if ($('.bulk-action').attr('aria-expanded') === "false" || !$('.js-combination').is(':checked')) {
           $('.js-collapse').collapse('toggle');
         }
