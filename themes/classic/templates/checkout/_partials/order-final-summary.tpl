@@ -72,6 +72,7 @@
          subtotals=$cart.subtotals
          totals=$cart.totals
          labels=$cart.labels
+         is_final_summary=true
        }
     {/block}
   </div>
