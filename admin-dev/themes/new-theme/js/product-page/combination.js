@@ -8,7 +8,7 @@ export default function() {
     let currentCount = 0;
     let step = 5;
 
-    $.get($jsCombinationsList.attr('data-action-refresh-images') + '/' + 2)
+    $.get($jsCombinationsList.attr('data-action-refresh-images') + '/' + $jsCombinationsList.data('id-product'))
       .then(function(response) {
         getCombinations(response);
       });
