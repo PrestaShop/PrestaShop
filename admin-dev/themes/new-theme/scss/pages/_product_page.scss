@@ -569,6 +569,9 @@
       background-color: $notice;
     }
     .combination {
+      &.loaded {
+        display: none;
+      }
       .img {
         width: 8%;
       }

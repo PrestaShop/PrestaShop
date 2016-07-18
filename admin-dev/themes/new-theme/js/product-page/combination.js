@@ -42,6 +42,8 @@ export default function() {
                   <img src="' + image.base_image_url + '-small_default.' + image.format + '" alt="" />\
                 </div>');
       });
+
+      $combinationElem.fadeIn(1000);
     });
 
     refreshDefaultImage();
