@@ -554,6 +554,18 @@
       border-top: $gray-light 2px solid;
     }
   }
+  #combinations-bulk-form {
+    transition: opacity 1s ease-in-out;
+
+    &.inactive {
+      cursor: progress;
+      opacity: 0.3;
+
+      > * {
+        pointer-events: none;
+      }
+    }
+  }
   .combinations-list {
     th,
     td {

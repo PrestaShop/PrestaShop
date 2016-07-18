@@ -23,6 +23,8 @@ export default function() {
         combinationUrl = $jsCombinationsList.data('combinations-url') + '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-');
         if (currentCount <= idsCount) {
           getCombinations(combinationsImages);
+        } else {
+          $('#combinations-bulk-form').removeClass('inactive');
         }
       });
     };
