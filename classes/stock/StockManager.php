@@ -251,7 +251,17 @@ class StockManagerCore implements StockManagerInterface
                                 if (!$warehouse_stock_found) {
                                     if (Warehouse::exists($product_warehouse['id_warehouse'])) {
                                         $current_warehouse = new Warehouse($product_warehouse['id_warehouse']);
-                                        $return[] = $this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $current_warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
+                                        $return[] = $this->removeProduct(
+                                            $product_pack->id,
+                                            $product_pack->id_pack_product_attribute,
+                                            $current_warehouse,
+                                            $product_pack->pack_quantity * $quantity,
+                                            $id_stock_mvt_reason,
+                                            $is_usable,
+                                            $id_order,
+                                            $ignore_pack,
+                                            $employee
+                                        );
 
                                         // The product was found on this warehouse. Stop the stock searching.
                                         $warehouse_stock_found = !empty($return[count($return) - 1]);
