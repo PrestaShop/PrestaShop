@@ -17,7 +17,7 @@ export default function() {
 
     let getCombinations = (combinationsImages) => {
       $.get(combinationUrl).then(function (resp) {
-        $jsCombinationsList.append(resp);
+        $('#loading-attribute').before(resp);
         refreshImagesCombination(combinationsImages, idsProductAttribute.slice(currentCount, currentCount+step));
         currentCount += step;
         combinationUrl = $jsCombinationsList.data('combinations-url') + '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-');
@@ -25,6 +25,7 @@ export default function() {
           getCombinations(combinationsImages);
         } else {
           $('#combinations-bulk-form').removeClass('inactive');
+          $('#loading-attribute').fadeOut(1000).remove();
         }
       });
     };

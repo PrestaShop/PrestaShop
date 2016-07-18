@@ -584,6 +584,13 @@
       &.loaded {
         display: none;
       }
+      &.timeline-wrapper, .timeline-item {
+        background-color: transparent;
+        border-radius: 0;
+      }
+      .animated-background {
+        height: rem(50px);
+      }
       .img {
         width: 8%;
       }
