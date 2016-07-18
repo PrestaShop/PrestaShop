@@ -56,7 +56,18 @@ class CombinationDataProvider
     public function getFormCombination($combinationId)
     {
         $product = new \Product((new \Combination($combinationId))->id_product);
-        $attributesCombinations = $product->getAttributeCombinationsById($combinationId, $this->context->getContext()->language->id);
+
+        return $this->completeCombination(
+            $product->getAttributeCombinationsById(
+                $combinationId,
+                $this->context->getContext()->language->id
+            ),
+            $product
+        );
+    }
+
+    public function completeCombination($attributesCombinations, $product)
+    {
         $combination = $attributesCombinations[0];
 
         $attribute_price_impact = 0;
@@ -81,7 +92,7 @@ class CombinationDataProvider
         }
 
         return array(
-            'id_product_attribute' => $combinationId,
+            'id_product_attribute' => $combination['id_product_attribute'],
             'attribute_reference' => $combination['reference'],
             'attribute_ean13' => $combination['ean13'],
             'attribute_isbn' => $combination['isbn'],
@@ -100,7 +111,7 @@ class CombinationDataProvider
             'attribute_minimal_quantity' => $combination['minimal_quantity'],
             'available_date_attribute' =>  $combination['available_date'],
             'attribute_default' => (bool)$combination['default_on'],
-            'attribute_quantity' => $this->productAdapter->getQuantity($product->id, $combinationId),
+            'attribute_quantity' => $this->productAdapter->getQuantity($product->id, $combination['id_product_attribute']),
             'name' => $this->getCombinationName($attributesCombinations),
             'id_product' => $product->id,
         );
