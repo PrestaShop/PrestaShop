@@ -141,7 +141,7 @@ class AttributeController extends FrameworkBundleAdminController
         ksort($attributes);
 
         $response = new JsonResponse();
-        $combinationDataProvider = new combinationDataProvider();
+        $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
         $result = array(
             'ids_product_attribute' => array(),
             'form' => ''

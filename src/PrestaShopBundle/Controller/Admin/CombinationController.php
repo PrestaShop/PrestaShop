@@ -21,7 +21,7 @@ class CombinationController extends Controller
             return $response;
         }
 
-        $combinationDataProvider = new combinationDataProvider();
+        $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
 
         foreach ($combinations as $combinationId) {
             $form = $this->get('form.factory')
