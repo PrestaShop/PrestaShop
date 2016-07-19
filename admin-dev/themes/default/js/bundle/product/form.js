@@ -905,56 +905,8 @@ var form = (function() {
           $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
             $('#attribute-generator-' + e.attrs.value).remove();
           });
-
-          $('#create-combinations').click(function() {
-            generate();
-          });
         });
         imagesProduct.expander();
-
-        /** Generate combinations */
-        function generate() {
-          /**
-           * Combination row maker
-           * @param {object} attribute
-           */
-          var combinationRowMaker = function(form) {
-            var combinationsLength = $('#accordion_combinations').children().length;
-            var newForm = form.replace(/product_combination\[/g, 'form[step3][combinations][' + combinationsLength + '][')
-              .replace(/id="product_combination_/g, 'id="form_step3_combinations_' + combinationsLength + '_')
-              .replace(/__loop_index__/g, combinationsLength);
-
-            $('#accordion_combinations').prepend(newForm);
-            displayFieldsManager.refresh();
-            combinations.refreshImagesCombination();
-          };
-
-          $.ajax({
-            type: 'POST',
-            url: $('#form_step3_attributes').attr('data-action'),
-            data: $('#attributes-generator input.attribute-generator, #form_id_product').serialize(),
-            beforeSend: function() {
-              $('#create-combinations').attr('disabled', 'disabled');
-            },
-            success: function(response) {
-              $.each(response, function(key, val) {
-                combinationRowMaker(val);
-              });
-
-              /** initialize form */
-              $('input.attribute-generator').remove();
-              $('#attributes-generator div.token').remove();
-              $('.js-attribute-checkbox:checked').each(function() {
-                $(this).prop('checked', false);
-              });
-            },
-            complete: function() {
-              $('#create-combinations').removeAttr('disabled');
-              supplierCombinations.refresh();
-              warehouseCombinations.refresh();
-            }
-          });
-        }
       });
     },
     'send': function() {

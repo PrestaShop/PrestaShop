@@ -11,6 +11,9 @@ export default function() {
     $.get($jsCombinationsList.attr('data-action-refresh-images') + '/' + $jsCombinationsList.data('id-product'))
       .then(function(response) {
         getCombinations(response);
+        $('#create-combinations').click(function() {
+          generate(response);
+        });
       });
 
     let combinationUrl = $jsCombinationsList.data('combinations-url') + '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-');
@@ -82,6 +85,34 @@ export default function() {
       if (defaultImageUrl) {
         var img = '<img src="' + defaultImageUrl + '" class="img-responsive" />';
         $('#accordion_combinations #attribute_' + $(elem).attr('data')).find('td.img').html(img);
+      }
+    });
+  };
+
+  let generate = (combinationsImages) => {
+    $.ajax({
+      type: 'POST',
+      url: $('#form_step3_attributes').attr('data-action'),
+      data: $('#attributes-generator input.attribute-generator, #form_id_product').serialize(),
+      beforeSend: function() {
+        $('#create-combinations').attr('disabled', 'disabled');
+      },
+      success: function(response) {
+        $('#accordion_combinations').append(response.form);
+        displayFieldsManager.refresh();
+        refreshImagesCombination(combinationsImages, response.ids_product_attribute);
+
+        /** initialize form */
+        $('input.attribute-generator').remove();
+        $('#attributes-generator div.token').remove();
+        $('.js-attribute-checkbox:checked').each(function() {
+          $(this).prop('checked', false);
+        });
+      },
+      complete: function() {
+        $('#create-combinations').removeAttr('disabled');
+        supplierCombinations.refresh();
+        warehouseCombinations.refresh();
       }
     });
   };

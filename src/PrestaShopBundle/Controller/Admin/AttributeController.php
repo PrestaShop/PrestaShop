@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
+use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
 
 /**
  * Admin controller for the attribute / attribute group
@@ -98,19 +99,6 @@ class AttributeController extends FrameworkBundleAdminController
             return $response;
         }
 
-        $modelMapper = new ProductAdminModelAdapter(
-            $product,
-            $this->container->get('prestashop.adapter.legacy.context'),
-            $this->container->get('prestashop.adapter.admin.wrapper.product'),
-            $this->container->get('prestashop.adapter.tools'),
-            $this->container->get('prestashop.adapter.data_provider.product'),
-            $this->container->get('prestashop.adapter.data_provider.supplier'),
-            $this->container->get('prestashop.adapter.data_provider.warehouse'),
-            $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack'),
-            $this->container->get('prestashop.adapter.shop.context')
-        );
-
         //store exisiting product combinations
         $existingCombinationsIds = array_map(function ($o) {
             return $o['id_product_attribute'];
@@ -153,27 +141,30 @@ class AttributeController extends FrameworkBundleAdminController
 
         ksort($attributes);
 
-        $newCombinations = [];
-        foreach ($attributes as $attribute) {
-            $form = $this->createForm(
-                'PrestaShopBundle\Form\Admin\Product\ProductCombination',
-                $modelMapper->getFormCombination($attribute)
-            );
+        $response = new JsonResponse();
+        $combinationDataProvider = new combinationDataProvider();
+        $result = array(
+            'ids_product_attribute' => array(),
+            'form' => ''
+        );
 
-            $formRender = $this->renderView(
+        foreach ($attributes as $attribute) {
+            $form = $this->get('form.factory')
+                ->createNamed(
+                    'combination_'.$attribute['id_product_attribute'],
+                    'PrestaShopBundle\Form\Admin\Product\ProductCombination',
+                    $combinationDataProvider->getFormCombination($attribute['id_product_attribute'])
+                );
+            $result['form'] .= $this->renderView(
                 'PrestaShopBundle:Admin/Product/Include:form_combination.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'id_product' => $idProduct
                 )
             );
-
-            $newCombinations[] = $formRender;
+            $result['ids_product_attribute'][] = $attribute['id_product_attribute'];
         }
 
-        $response->setData($newCombinations);
-
-        return $response;
+        return $response->create($result);
     }
 
     /**
