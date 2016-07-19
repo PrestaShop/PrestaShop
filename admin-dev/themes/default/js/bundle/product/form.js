@@ -140,7 +140,7 @@ var displayFieldsManager = (function() {
       }
 
       /** check quantity / combinations display */
-      if (showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr').length > 0) {
+      if (showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr:not(#loading-attribute)').length > 0) {
         combinationsBlock.show();
 
         $('#specific-price-combination-selector').removeClass('hide').show();
@@ -181,7 +181,7 @@ var displayFieldsManager = (function() {
      * @param errorMessage
      */
     'checkAccessVariations': function() {
-      if ((showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr').length > 0) && (typeProduct.val() === '1' || typeProduct.val() === '2')) {
+      if ((showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr:not(#loading-attribute)').length > 0) && (typeProduct.val() === '1' || typeProduct.val() === '2')) {
         var typeOfProduct = this.getProductType();
         var errorMessage = "You can't create " + typeOfProduct + " product with variations. Are you sure to disable variations ? they will all be deleted.";
         modalConfirmation.create(translate_javascripts[errorMessage], null, {

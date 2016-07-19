@@ -68,6 +68,7 @@
           </tr>
         </thead>
         <tbody class="js-combinations-list panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}"  data-id-product= {{ id_product }} data-ids-product-attribute="{{ ids_product_attribute }}" data-combinations-url="{{ path('admin_combination_generate_form') }}">
+          {% if has_combinations %}
             <tr class="combination loading timeline-wrapper" id="loading-attribute">
               <td class="timeline-item" width="1%">
               </td>
@@ -88,6 +89,7 @@
               </td>
               <td colspan="6"></td>
             </tr>
+          {%  endif %}
         </tbody>
       </table>
     </div>
