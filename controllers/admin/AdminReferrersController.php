@@ -65,6 +65,9 @@ class AdminReferrersControllerCore extends AdminController
         $this->bootstrap = true;
         $this->table = 'referrer';
         $this->className = 'Referrer';
+
+        parent::__construct();
+
         $this->fields_list = array(
             'id_referrer' => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
@@ -155,8 +158,6 @@ class AdminReferrersControllerCore extends AdminController
                 'icon' => 'icon-trash'
             )
         );
-
-        parent::__construct();
     }
 
     public function setMedia()
@@ -234,7 +235,7 @@ class AdminReferrersControllerCore extends AdminController
 
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
         if ($moduleManager->isInstalled('trackingfront')) {
             $this->fields_form[0]['form']['desc'] = array(
                 $this->l('Affiliates can access their data with this name and password.'),

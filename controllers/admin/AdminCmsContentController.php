@@ -48,6 +48,8 @@ class AdminCmsContentControllerCore extends AdminController
             die('Category cannot be loaded');
         }
 
+        parent::__construct();
+
         $this->table = 'cms';
         $this->className = 'CMS';
         $this->bulk_actions = array(
@@ -57,8 +59,6 @@ class AdminCmsContentControllerCore extends AdminController
                 'icon' => 'icon-trash'
             )
         );
-
-        parent::__construct();
 
         $this->admin_cms_categories = new AdminCmsCategoriesController();
         $this->admin_cms_categories->tabAccess = $this->tabAccess;

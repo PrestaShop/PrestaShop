@@ -36,6 +36,8 @@ class AdminTagsControllerCore extends AdminController
         $this->table = 'tag';
         $this->className = 'Tag';
 
+        parent::__construct();
+
         $this->fields_list = array(
             'id_tag' => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
@@ -65,8 +67,6 @@ class AdminTagsControllerCore extends AdminController
                 'confirm' => $this->l('Delete selected items?')
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

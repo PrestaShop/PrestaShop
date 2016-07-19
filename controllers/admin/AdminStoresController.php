@@ -37,7 +37,7 @@ class AdminStoresControllerCore extends AdminController
         $this->lang = false;
         $this->toolbar_scroll = false;
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         if (!Tools::getValue('realedit')) {
             $this->deleted = false;
@@ -109,8 +109,6 @@ class AdminStoresControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
-
-        parent::__construct();
 
         $this->_buildOrderedFieldsShop($this->_getDefaultFieldsContent());
     }
