@@ -28,16 +28,6 @@ admin_delete_all_attributes:
     requirements:
         idProduct: \d+
 
-admin_get_product_combinations:
-    path:     /product-combinations/{idProduct}
-    methods:  [GET]
-    defaults:
-        _controller: PrestaShopBundle\Controller\Admin\AttributeController::getProductCombinationsAction
-        _format: json
-        idProduct: 0
-    requirements:
-        idProduct: \d+
-
 admin_get_form_images_combination:
     path:     /product-form-images/{idProduct}
     methods:  [GET]

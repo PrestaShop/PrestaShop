@@ -511,6 +511,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         return $form_data;
     }
 
+    public function getAttributesResume()
+    {
+        return $this->product->getAttributesResume($this->context->getContext()->language->id);
+    }
+
     /**
      * Get product attachments
      *
@@ -724,7 +729,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function getProductAttributes()
     {
-        $combinations = $this->product->getAttributesResume($this->context->getContext()->language->id);
+        $combinations = $this->getAttributesResume();
         $idsProductAttribute = array();
 
         if (is_array($combinations)) {

@@ -27,7 +27,6 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
 
 /**
@@ -234,48 +233,6 @@ class AttributeController extends FrameworkBundleAdminController
         }
 
         $response->setData(['message' => $translator->trans($res['message'], [], 'AdminProducts')]);
-
-        return $response;
-    }
-
-    /**
-     * get All Combinations for a product
-     *
-     * @param int $idProduct The product id
-     *
-     * @return string Json
-     */
-    public function getProductCombinationsAction($idProduct)
-    {
-        $response = new JsonResponse();
-        $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
-        $combinations = $attributeAdapter->getProductCombinations($idProduct);
-
-        //get product
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct((int)$idProduct);
-
-        //get combinations
-        $modelMapper = new ProductAdminModelAdapter(
-            $product,
-            $this->container->get('prestashop.adapter.legacy.context'),
-            $this->container->get('prestashop.adapter.admin.wrapper.product'),
-            $this->container->get('prestashop.adapter.tools'),
-            $this->container->get('prestashop.adapter.data_provider.product'),
-            $this->container->get('prestashop.adapter.data_provider.supplier'),
-            $this->container->get('prestashop.adapter.data_provider.warehouse'),
-            $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack'),
-            $this->container->get('prestashop.adapter.shop.context')
-        );
-
-        $combinationList = [];
-        foreach ($combinations as $combination) {
-            $newCombination = $modelMapper->getFormCombination($combination);
-            $combinationList[] = ['id' => $newCombination['id_product_attribute'], 'name' => $newCombination['name']];
-        }
-
-        $response->setData($combinationList);
 
         return $response;
     }
