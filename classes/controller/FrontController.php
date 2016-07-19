@@ -588,8 +588,6 @@ class FrontControllerCore extends Controller
      */
     public function display()
     {
-        Tools::safePostVars();
-
         // assign css_files and js_files at the very last time
         if (is_writable(_PS_THEME_DIR_.'cache')) {
             // CSS compressor management
