@@ -3,7 +3,7 @@ import $ from 'jquery';
 export default function() {
   $(document).ready(function() {
     let $jsCombinationsList = $('.js-combinations-list');
-    let idsProductAttribute = $jsCombinationsList.data('ids-product-attribute').split(',');
+    let idsProductAttribute = $jsCombinationsList.data('ids-product-attribute').toString().split(',');
     let idsCount = idsProductAttribute.length;
     let currentCount = 0;
     let step = 5;
