@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,5 +31,5 @@ use Symfony\Component\Translation\Translator as BaseTranslatorComponent;
 
 class TranslatorComponent extends BaseTranslatorComponent
 {
-    use SprintfTranslatorTrait;
+    use PrestaShopTranslatorTrait;
 }

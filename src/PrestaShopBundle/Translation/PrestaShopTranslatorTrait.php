@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,13 +27,15 @@
 
 namespace PrestaShopBundle\Translation;
 
-trait SprintfTranslatorTrait
+trait PrestaShopTranslatorTrait
 {
     /**
      * {@inheritdoc}
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
+        $domain = preg_replace('/\./', '', $domain);
+
         if (!$this->isSprintfString($id) || empty($parameters)) {
             return parent::trans($id, $parameters, $domain, $locale);
         }
@@ -46,6 +48,8 @@ trait SprintfTranslatorTrait
      */
     public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
+        $domain = preg_replace('/\./', '', $domain);
+
         if (!$this->isSprintfString($id)) {
             return parent::transChoice($id, $number, $parameters, $domain, $locale);
         }
@@ -54,11 +58,11 @@ trait SprintfTranslatorTrait
     }
 
     /**
+     * @param string $string
      *
-     * @param  string  $string
-     * @return boolean
+     * @return bool
      */
-    private final function isSprintfString($string)
+    final private function isSprintfString($string)
     {
         return (bool) preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string)
             && !(bool) preg_match_all('/%\w+%/', $string);
