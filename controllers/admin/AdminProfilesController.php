@@ -41,6 +41,8 @@ class AdminProfilesControllerCore extends AdminController
         $this->addRowAction('delete');
         $this->addRowActionSkipList('delete', array(1));
 
+        parent::__construct();
+
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->l('Delete selected'),
@@ -57,7 +59,7 @@ class AdminProfilesControllerCore extends AdminController
                         ),
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'))
             );
-            
+
         $this->identifier = 'id_profile';
 
         $this->fields_form = array(
@@ -83,8 +85,6 @@ class AdminProfilesControllerCore extends AdminController
         foreach (Profile::getProfiles($this->context->language->id) as $profil) {
             $list_profile[] = array('value' => $profil['id_profile'], 'name' => $profil['name']);
         }
-
-        parent::__construct();
     }
 
     public function postProcess()
@@ -112,7 +112,7 @@ class AdminProfilesControllerCore extends AdminController
                 'icon' => 'process-icon-new'
             );
         }
-        
+
         parent::initPageHeaderToolbar();
     }
 }

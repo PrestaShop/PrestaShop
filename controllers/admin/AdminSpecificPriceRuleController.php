@@ -43,6 +43,8 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->multishop_context = Shop::CONTEXT_ALL;
         $this->cldr = Tools::getCldr(Context::getContext());
 
+        parent::__construct();
+
         /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
         if ($this->id_shop = (int)Tools::getValue('shop_id')) {
             $_GET['id_shop'] = $this->id_shop;
@@ -56,8 +58,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
-
-        $this->context = Context::getContext();
 
         $this->_select = 's.name shop_name, cu.iso_code as currency_iso_code, cl.name country_name, gl.name group_name';
         $this->_join = 'LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = a.id_shop)
@@ -133,8 +133,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'type' => 'datetime'
             ),
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

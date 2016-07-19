@@ -36,6 +36,8 @@ class AdminSuppliersControllerCore extends AdminController
         $this->table = 'supplier';
         $this->className = 'Supplier';
 
+        parent::__construct();
+
         $this->addRowAction('view');
         $this->addRowAction('edit');
         $this->addRowAction('delete');
@@ -65,8 +67,6 @@ class AdminSuppliersControllerCore extends AdminController
             'products' => array('title' => $this->l('Number of products'), 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true),
             'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-xs')
         );
-
-        parent::__construct();
     }
 
     public function setMedia()
