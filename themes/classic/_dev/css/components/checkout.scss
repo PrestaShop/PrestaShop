@@ -11,6 +11,9 @@ body#checkout {
       width: auto;
     }
   }
+  [data-action="show-password"]{
+    background: $gray-dark;
+  }
   .custom-checkbox {
     @include display(flex);
     span {

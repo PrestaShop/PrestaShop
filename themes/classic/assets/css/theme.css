@@ -5113,6 +5113,8 @@ body#checkout {
     body#checkout #header .header-nav .logo {
       max-height: 4.375rem;
       width: auto; }
+  body#checkout [data-action="show-password"] {
+    background: #878787; }
   body#checkout .custom-checkbox {
     display: -webkit-box;
     display: -moz-box;
