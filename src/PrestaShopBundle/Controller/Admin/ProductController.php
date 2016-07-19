@@ -398,9 +398,13 @@ class ProductController extends FrameworkBundleAdminController
 
                 // Legacy code. To fix when Object model will change. But report Hooks.
                 $postData = $request->request->all();
-                $combinations = array_filter((array) $postData, function ($postKey) {
-                    return preg_match('/^combination_.*/', $postKey);
-                }, ARRAY_FILTER_USE_KEY);
+                $combinations = array();
+
+                foreach ((array) $postData as $postKey => $postValue) {
+                    if (preg_match('/^combination_.*/', $postKey)) {
+                        $combinations[$postKey] = $postValue;
+                    }
+                }
 
                 $formData['step3']['combinations'] = $combinations;
 
