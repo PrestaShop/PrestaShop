@@ -117,7 +117,7 @@ var AdminModuleCard = function () {
     this.requestToController = function (action, element, forceDeletion) {
         var _this = this;
         var jqElementObj = element.closest(".btn-group");
-        var spinnerObj = $("<button class=\"btn btn-primary-reverse btn-lg onclick unbind pull-right\"></button>");
+        var spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind pull-right\"></button>");
         var url = "//" + window.location.host + element.attr("href");
 
         if (forceDeletion === "true" || forceDeletion === true) {

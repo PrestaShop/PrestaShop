@@ -2,7 +2,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/module.css') }}" />
     <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
     <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
 {% endblock %}
@@ -17,7 +16,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-10 col-md-offset-1 module-catalog-page">
+        <div class="col-lg-10 col-lg-offset-1 module-catalog-page">
             {# Addons connect modal #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' %}
             {# Contains toolbar-nav for module page #}
