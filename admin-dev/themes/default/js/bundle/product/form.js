@@ -1233,8 +1233,6 @@ var imagesProduct = (function() {
           if (response.cover === 1) {
             imagesProduct.updateDisplayCover(response.id);
           }
-
-          combinations.refreshImagesCombination();
         },
         error: function(file, response) {
           var message = '';
@@ -1398,7 +1396,6 @@ var formImagesProduct = (function() {
             complete: function() {
               formZoneElem.find('.close').click();
               dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
-              combinations.refreshImagesCombination();
               imagesProduct.checkDropzoneMode();
             }
           });
