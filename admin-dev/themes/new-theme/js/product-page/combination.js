@@ -12,7 +12,7 @@ export default function() {
       .then(function(response) {
         getCombinations(response);
         $('#create-combinations').click(function() {
-          generate(response);
+          generate();
         });
       });
 
@@ -89,7 +89,7 @@ export default function() {
     });
   };
 
-  let generate = (combinationsImages) => {
+  let generate = () => {
     $.ajax({
       type: 'POST',
       url: $('#form_step3_attributes').attr('data-action'),
@@ -100,7 +100,11 @@ export default function() {
       success: function(response) {
         $('#accordion_combinations').append(response.form);
         displayFieldsManager.refresh();
-        refreshImagesCombination(combinationsImages, response.ids_product_attribute);
+        $.get($('.js-combinations-list').attr('data-action-refresh-images') + '/' + $('.js-combinations-list').data('id-product'))
+          .then(function(combinationsImages) {
+            refreshImagesCombination(combinationsImages, response.ids_product_attribute);
+          });
+
 
         /** initialize form */
         $('input.attribute-generator').remove();
