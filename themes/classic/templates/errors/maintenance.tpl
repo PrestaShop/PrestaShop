@@ -7,7 +7,7 @@
     {block name='page_header_container'}
       <header class="page-header">
         <div class="logo"><img src="{$shop.logo}" alt="logo"></div>
-        {hook h='displayMaintenance'}
+        {$HOOK_MAINTENANCE nofilter}
         {block name='page_header'}
           <h1>{block name='page_title'}{l s='We\'ll be back soon.' d='Shop.Theme'}{/block}</h1>
         {/block}
