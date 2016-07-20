@@ -6628,7 +6628,8 @@ li.product-flag {
     clear: both; }
   .cart-summary-line .label {
     padding-left: 0;
-    font-weight: normal; }
+    font-weight: normal;
+    white-space: inherit; }
   .cart-summary-line .value {
     color: #414141;
     float: right !important; }
@@ -6636,37 +6637,20 @@ li.product-flag {
   .cart-summary-line.cart-summary-subtotals .value {
     font-weight: normal; }
 
-/*** CART ***/
-.cart-grid {
-  margin-left: -0.9375rem;
-  margin-right: -0.9375rem; }
-  .cart-grid::after {
-    content: "";
-    display: table;
-    clear: both; }
-  .cart-grid > .cart-grid-body {
-    position: relative;
-    float: left;
-    min-height: 1px;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem; }
-  .cart-grid > .cart-grid-right {
-    position: relative;
-    float: left;
-    min-height: 1px;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem; }
-  .cart-grid .card {
-    padding: 0; }
-
 /** CART BODY **/
-.cart-grid-body > a.label {
-  margin: 0.625rem 0 1.5625rem; }
-  .cart-grid-body > a.label:hover {
-    color: #2fb5d2; }
+.cart-grid-body a.label:hover {
+  color: #2fb5d2; }
+
+.cart-grid-body .card-block {
+  padding: 1rem; }
+  .cart-grid-body .card-block h1 {
+    margin-bottom: 0; }
 
 .cart-grid-body hr {
   margin: 0; }
+
+.cart-grid-body .cart-overview {
+  padding: 1rem; }
 
 /** CART RIGHT **/
 .cart-grid-right hr {
@@ -6702,37 +6686,12 @@ li.product-flag {
   margin-bottom: 1.25rem;
   display: inline-block; }
 
-/*** PRODUCT LINE ***/
-.product-line-grid {
-  margin-left: -0.9375rem;
-  margin-right: -0.9375rem; }
-  .product-line-grid::after {
-    content: "";
-    display: table;
-    clear: both; }
-  .product-line-grid > .product-line-grid-left {
-    position: relative;
-    float: left;
-    min-height: 1px;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem; }
-  .product-line-grid > .product-line-grid-body {
-    position: relative;
-    float: left;
-    min-height: 1px;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem; }
-  .product-line-grid > .product-line-grid-right {
-    position: relative;
-    float: left;
-    min-height: 1px;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem; }
-
-/** CONTENT LEFT **/
 /** CONTENT BODY **/
-.product-line-grid-body > .product-line-info > .value {
-  padding-left: 0.3125rem; }
+.product-line-grid-body > .product-line-info > .label {
+  padding: 0;
+  line-height: inherit;
+  text-align: left;
+  white-space: inherit; }
 
 .product-line-grid-body > .product-line-info > .out-of-stock {
   color: red; }
