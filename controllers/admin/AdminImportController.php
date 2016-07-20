@@ -349,7 +349,7 @@ class AdminImportControllerCore extends AdminController
                     'lastname' => array('label' => $this->l('Last Name *')),
                     'firstname' => array('label' => $this->l('First Name *')),
                     'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
-                    'optin' => array('label' => $this->l('Opt-in (0/1)')),
+                    'optin' => array('label' => $this->l('Partner offers (0/1)')),
                     'date_add' => array('label' => $this->l('Registration date (yyyy-mm-dd)')),
                     'group' => array('label' => $this->l('Groups (x,y,z...)')),
                     'id_default_group' => array('label' => $this->l('Default group ID')),
