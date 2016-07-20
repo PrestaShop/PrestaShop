@@ -1850,6 +1850,16 @@
 	  (0, _jquery2['default'])('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
 	  (0, _jquery2['default'])('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
 	
+	  (0, _jquery2['default'])('.js-edit-addresses').on('click', function (event) {
+	    event.stopPropagation();
+	    (0, _jquery2['default'])('#checkout-addresses-step').trigger('click');
+	  });
+	
+	  (0, _jquery2['default'])('.js-edit-delivery').on('click', function (event) {
+	    event.stopPropagation();
+	    (0, _jquery2['default'])('#checkout-delivery-step').trigger('click');
+	  });
+	
 	  changeCurrentCheckoutStep();
 	  collapsePaymentOptions();
 	}
@@ -2148,12 +2158,8 @@
 	      er = arguments[1];
 	      if (er instanceof Error) {
 	        throw er; // Unhandled 'error' event
-	      } else {
-	          // At least give some kind of context to the user
-	          var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
-	          err.context = er;
-	          throw err;
-	        }
+	      }
+	      throw TypeError('Uncaught, unspecified "error" event.');
 	    }
 	  }
 	
