@@ -6447,7 +6447,8 @@ body#checkout {
       background: #ebebeb;
       padding: 0.625rem;
       margin-right: 0.625rem;
-      min-height: 2.5rem; }
+      min-height: 2.5rem;
+      word-break: break-all; }
       .product-features > dl.data-sheet dd.value:nth-of-type(even),
       .product-features > dl.data-sheet dt.name:nth-of-type(even) {
         background: #f6f6f6; }
@@ -6673,6 +6674,24 @@ li.product-flag {
 .block-promo .promo-code {
   padding: 1.60rem;
   background: #ebebeb; }
+  .block-promo .promo-code .alert-danger {
+    position: relative;
+    margin-top: 1.25rem;
+    background: #ff4c4c;
+    color: white;
+    display: none; }
+    .block-promo .promo-code .alert-danger::after {
+      bottom: 100%;
+      left: 10%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-bottom-color: #ff4c4c;
+      border-width: 10px;
+      margin-left: -10px; }
 
 .block-promo .promo-input {
   color: #414141;
@@ -6723,8 +6742,8 @@ li.product-flag {
   max-width: 4.6875rem;
   float: left !important;
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
-  .product-line-grid-right .bootstrap-touchspin > .input-group,
-  .product-line-grid-right .bootstrap-touchspin > .form-control {
+  .product-line-grid-right .bootstrap-touchspin > .form-control,
+  .product-line-grid-right .bootstrap-touchspin > .input-group {
     color: #414141;
     background-color: white;
     border: 1px solid #ccc;

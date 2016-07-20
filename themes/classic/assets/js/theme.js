@@ -16412,6 +16412,10 @@
 	
 	    (0, _jquery2['default'])('#modal').modal('show');
 	  });
+	
+	  (0, _jquery2['default'])('.js-gift-checkbox').on('click', function (event) {
+	    (0, _jquery2['default'])('#gift').collapse('toggle');
+	  });
 	}
 	
 	(0, _jquery2['default'])(document).ready(function () {

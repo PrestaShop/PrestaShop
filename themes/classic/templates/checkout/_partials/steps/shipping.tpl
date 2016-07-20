@@ -56,9 +56,17 @@
               </label>
             {/if}
             {if $gift.allowed}
-
-              <input data-toggle="collapse" data-target="#gift" type="checkbox" name="gift" value="1" {if $gift.isGift} checked {/if}>
-              <span>{$gift.label}</span>
+              <span class="custom-checkbox">
+                <input
+                  class="js-gift-checkbox"
+                  name="gift"
+                  type="checkbox"
+                  value="1"
+                  {if $gift.isGift}checked="checked"{/if}
+                >
+                <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                <label>{$gift.label}</label >
+              </span>
 
               <div id="gift" class="collapse">
                 <label for="gift_message">{l s='If you\'d like, you can add a note to the gift:' d='Shop.Theme.Checkout'}</label>

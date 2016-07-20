@@ -359,6 +359,7 @@
       padding: $small-space;
       margin-right: $small-space;
       min-height: rem(40px);
+      word-break: break-all;
       &:nth-of-type(even) {
         background: $gray-lighter;
       }

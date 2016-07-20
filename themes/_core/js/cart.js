@@ -64,7 +64,10 @@ $(document).ready(() => {
       // First perform the action using AJAX
       var actionURL = $(this).attr('action');
 
-      $.post(actionURL, $(this).serialize(), null, 'json').then(function() {
+      $.post(actionURL, $(this).serialize(), null, 'json').then(function(res) {
+        if(res.hasError){
+          return $('.js-error').show().find('.js-error-text').text(res.errors[0]);
+        }
         // If succesful, refresh cart preview
         prestashop.emit('cart updated', {
           reason: event.target.dataset
@@ -73,5 +76,3 @@ $(document).ready(() => {
     }
   );
 });
-
-
