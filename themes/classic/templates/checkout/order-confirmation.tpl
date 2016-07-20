@@ -41,6 +41,7 @@
             subtotals=$order.subtotals
             totals=$order.totals
             labels=$order.labels
+            add_product_link=false
           }
         {/block}
 

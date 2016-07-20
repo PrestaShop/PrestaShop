@@ -72,7 +72,7 @@
          subtotals=$cart.subtotals
          totals=$cart.totals
          labels=$cart.labels
-         is_final_summary=true
+         add_product_link=true
        }
     {/block}
   </div>
