@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,40 +25,32 @@
  */
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * This subclass contains common functions for specific Form types needs.
- */
-abstract class CommonAbstractType extends AbstractType
+class CustomMoneyType extends AbstractTypeExtension
 {
     const PRESTASHOP_DECIMALS = 6;
-    
-    /**
-     * Get the configuration adapter
-     *
-     * @return object Configuration adapter
-     */
-    protected function getConfiguration()
+
+    public function getExtendedType()
     {
-        return new Configuration();
+        return 'Symfony\Component\Form\Extension\Core\Type\MoneyType';
     }
 
     /**
-     * Format legacy data list to mapping SF2 form field choice
-     *
-     * @param array $list
-     * @param string $mapping_value
-     * @param string $mapping_name
-     * @return array
+     * {@inheritdoc}
      */
-    protected function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $new_list = array();
-        foreach ($list as $item) {
-            $new_list[$item[$mapping_name]] = $item[$mapping_value];
-        }
-        return $new_list;
+        $resolver->setDefaults(array(
+            'precision' => null,
+            'scale' => self::PRESTASHOP_DECIMALS,
+            'grouping' => false,
+            'divisor' => 1,
+            'currency' => 'EUR',
+            'compound' => false,
+        ));
+
+        $resolver->setAllowedTypes('scale', 'int');
     }
 }

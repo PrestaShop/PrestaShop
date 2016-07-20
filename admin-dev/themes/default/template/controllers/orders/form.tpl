@@ -351,7 +351,7 @@
 				id_product: id_product,
 				id_product_attribute: id_product_attribute,
 				id_customer: id_customer,
-				price: new Number(new_price.replace(",",".")).toFixed(4).toString()
+				price: ps_round(new Number(new_price.replace(",",".")), 6).toString()
 				},
 			success : function(res)
 			{

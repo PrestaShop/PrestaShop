@@ -54,7 +54,7 @@ var combinations = (function() {
       var actualFinalPrice = actualFinalPriceInput.data('price');
 
       var finalPrice = new Number(actualFinalPrice) + new Number(impactOnPrice);
-      actualFinalPriceInput.html(finalPrice.toFixed(2));
+      actualFinalPriceInput.html(ps_round(finalPrice, 6));
   }
 
   return {
