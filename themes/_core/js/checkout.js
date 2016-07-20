@@ -80,6 +80,16 @@ function setupCheckoutScripts () {
   $('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
 
+  $('.js-edit-addresses').on('click', (event) => {
+    event.stopPropagation();
+    $('#checkout-addresses-step').trigger('click');
+  });
+
+  $('.js-edit-delivery').on('click', (event) => {
+    event.stopPropagation();
+    $('#checkout-delivery-step').trigger('click');
+  });
+
   changeCurrentCheckoutStep();
   collapsePaymentOptions();
 }
