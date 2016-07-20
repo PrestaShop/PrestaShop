@@ -107,6 +107,11 @@
     > .available {
       color: $brand-success;
     }
+    > .unit-price-cart {
+      padding-left: 0.3125rem;
+      font-size: 0.875rem;
+      color: $gray-dark;
+    }
   }
 }
 /** CONTENT LEFT **/
