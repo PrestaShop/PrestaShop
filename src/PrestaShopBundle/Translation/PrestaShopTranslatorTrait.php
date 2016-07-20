@@ -34,7 +34,9 @@ trait PrestaShopTranslatorTrait
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
-        $domain = preg_replace('/\./', '', $domain);
+        if (null !== $domain) {
+            $domain = preg_replace('/\./', '', $domain);
+        }
 
         if (!$this->isSprintfString($id) || empty($parameters)) {
             return parent::trans($id, $parameters, $domain, $locale);
@@ -48,7 +50,9 @@ trait PrestaShopTranslatorTrait
      */
     public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
-        $domain = preg_replace('/\./', '', $domain);
+        if (null !== $domain) {
+            $domain = preg_replace('/\./', '', $domain);
+        }
 
         if (!$this->isSprintfString($id)) {
             return parent::transChoice($id, $number, $parameters, $domain, $locale);
