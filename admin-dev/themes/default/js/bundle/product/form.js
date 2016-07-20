@@ -1544,7 +1544,7 @@ var priceCalculation = (function() {
     if ( ecoTaxElem.val() == 0) {
       return ecoTaxElem.val();
     }
-    var ecotax_tax_excl = ecoTaxElem.val()replace(/,/g, '.') / (1 + ecoTaxRate);
+    var ecotax_tax_excl = ecoTaxElem.val().replace(/,/g, '.') / (1 + ecoTaxRate);
 
     return ps_round(ecotax_tax_excl * (1 + ecoTaxRate), displayPrecision);
   }
