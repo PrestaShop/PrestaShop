@@ -131,7 +131,7 @@ class AdminCustomersControllerCore extends AdminController
                 'orderby' => false
             ),
             'optin' => array(
-                'title' => $this->trans('Opt-in', array(), 'Admin.OrdersCustomers.Feature'),
+                'title' => $this->trans('Partner offers', array(), 'Admin.OrdersCustomers.Feature'),
                 'align' => 'text-center',
                 'type' => 'bool',
                 'callback' => 'printOptinIcon',
@@ -430,7 +430,7 @@ class AdminCustomersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->trans('Opt-in', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Partner offers', array(), 'Admin.OrdersCustomers.Feature'),
                     'name' => 'optin',
                     'required' => false,
                     'class' => 't',

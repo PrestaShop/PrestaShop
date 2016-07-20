@@ -100,8 +100,8 @@ class AdminCustomerPreferencesControllerCore extends AdminController
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_OPTIN' => array(
-                        'title' => $this->trans('Enable opt-in', array(), 'Admin.Parameters.Feature'),
-                        'hint' => $this->trans('Display or not the opt-in tick box, to receive offers from the store\'s partners.', array(), 'Admin.Parameters.Help'),
+                        'title' => $this->trans('Enable partner offers', array(), 'Admin.Parameters.Feature'),
+                        'hint' => $this->trans('Display or not the partner offers tick box, to receive offers from the store\'s partners.', array(), 'Admin.Parameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
