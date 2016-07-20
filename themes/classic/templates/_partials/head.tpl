@@ -28,5 +28,5 @@
 {/if}
 
 {block name='hook_header'}
-  {$HOOK_HEADER}
+  {$HOOK_HEADER nofilter}
 {/block}

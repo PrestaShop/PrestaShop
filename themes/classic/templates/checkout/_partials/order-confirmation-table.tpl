@@ -13,7 +13,9 @@
           </span>
         </td>
         <td>
-          {$product.name}
+          {if $add_product_link}<a href="{$product.url}" target="_blank">{/if}
+            {$product.name}
+          {if $add_product_link}</a>{/if}
           {foreach from=$product.attributes key="attribute" item="value"}
             - <span class="value">{$value}</span>
           {/foreach}
