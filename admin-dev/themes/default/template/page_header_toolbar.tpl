@@ -48,9 +48,7 @@
 			{* Container *}
 			{if $breadcrumbs2.container.name != ''}
 				<li class="breadcrumb-container">
-					{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
 					{$breadcrumbs2.container.name|escape}
-					{if $breadcrumbs2.container.href != ''}</a>{/if}
 				</li>
 			{/if}
 
