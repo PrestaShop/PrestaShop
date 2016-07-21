@@ -70,10 +70,6 @@
     {/foreach}
   </div>
 
-  {if $show_final_summary}
-    {include file='checkout/_partials/order-final-summary.tpl'}
-  {/if}
-
   {if $conditions_to_approve|count}
     <p class="ps-hidden-by-js">
       {* At the moment, we're not showing the checkboxes when JS is disabled
@@ -108,6 +104,10 @@
         {/foreach}
       </ul>
     </form>
+  {/if}
+
+  {if $show_final_summary}
+    {include file='checkout/_partials/order-final-summary.tpl'}
   {/if}
 
   <div id="payment-confirmation">

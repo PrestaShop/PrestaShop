@@ -122,6 +122,9 @@ body#checkout {
     .form-footer {
       text-align: center;
     }
+    #conditions-to-approve {
+      padding-top: rem(30px);
+    }
     .payment-option label {
       display: table-cell;
     }
@@ -255,7 +258,7 @@ body#checkout {
     }
   }
   #order-summary-content {
-    padding-top: rem(25px);
+    padding-top: rem(15px);
     h4.h4 {
       margin-top: rem(10px);
       margin-bottom: rem(20px);
