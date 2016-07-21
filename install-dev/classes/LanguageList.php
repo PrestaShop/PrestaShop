@@ -75,7 +75,14 @@ class LanguageList
             $language = simplexml_load_file($langFile->getRealPath());
             $this->languages[$langFile->getRelativePath()] = new InstallLanguage($langFile->getRelativePath());
         }
-        uasort($this->languages, 'ps_usort_languages');
+        uasort($this->languages, function ($a, $b) {
+            $aname = $a->getMetaInformation('name');
+            $bname = $b->getMetaInformation('name');
+            if ($aname == $bname) {
+                return 0;
+            }
+            return ($aname < $bname) ? -1 : 1;
+        });
     }
 
     /**
@@ -180,14 +187,4 @@ class LanguageList
         }
         return false;
     }
-}
-
-function ps_usort_languages($a, $b)
-{
-    $aname = $a->getMetaInformation('name');
-    $bname = $b->getMetaInformation('name');
-    if ($aname == $bname) {
-        return 0;
-    }
-    return ($aname < $bname) ? -1 : 1;
 }
