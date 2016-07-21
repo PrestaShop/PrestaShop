@@ -68,7 +68,7 @@
                 <label>{$gift.label}</label >
               </span>
 
-              <div id="gift" class="collapse">
+              <div id="gift" class="collapse{if $gift.isGift} in{/if}">
                 <label for="gift_message">{l s='If you\'d like, you can add a note to the gift:' d='Shop.Theme.Checkout'}</label>
                 <textarea rows="2" cols="120" id="gift_message" name="gift_message">{$gift.message}</textarea>
               </div>
