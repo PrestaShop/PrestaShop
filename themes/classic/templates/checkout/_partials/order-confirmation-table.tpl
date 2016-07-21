@@ -2,6 +2,7 @@
 <div id="order-items" class="col-md-8">
   <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
 {/block}
+<div class="order-confirmation-table">
   <table class="table">
     {foreach from=$products item=product}
       <tr>
@@ -79,4 +80,5 @@
       <td>{$totals.total.value}</td>
     </tr>
   </table>
+</div>
 </div>
