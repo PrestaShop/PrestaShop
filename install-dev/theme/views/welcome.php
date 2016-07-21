@@ -22,7 +22,7 @@
 	<select id="langList" name="language">
 	<?php foreach ($this->language->getIsoList() as $iso): ?>
 		<option value="<?php echo $iso ?>" <?php if ($iso == $this->language->getLanguageIso()) echo 'selected="selected"' ?>>
-			<?php echo $this->language->getLanguage($iso)->getMetaInformation('name') ?>
+			<?php echo $this->language->getLanguage($iso)->getName() ?>
 		</option>
 	<?php endforeach; ?>
 	</select>

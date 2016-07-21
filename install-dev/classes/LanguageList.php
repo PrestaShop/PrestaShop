@@ -72,12 +72,11 @@ class LanguageList
 
         // Load other languages
         foreach ((new Finder)->files()->name('language.xml')->in(_PS_INSTALL_LANGS_PATH_) as $langFile) {
-            $language = simplexml_load_file($langFile->getRealPath());
             $this->languages[$langFile->getRelativePath()] = new InstallLanguage($langFile->getRelativePath());
         }
         uasort($this->languages, function ($a, $b) {
-            $aname = $a->getMetaInformation('name');
-            $bname = $b->getMetaInformation('name');
+            $aname = $a->getName();
+            $bname = $b->getName();
             if ($aname == $bname) {
                 return 0;
             }
