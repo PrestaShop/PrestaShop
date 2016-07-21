@@ -44,7 +44,7 @@ export default function() {
 
       $.each(combinationsImages[value], function(key, image) {
         $imagesElem.append('<div class="product-combination-image ' + (image.id_image_attr ? 'img-highlight' : '') + '">\
-                 <input type="checkbox" name="form[step3][combinations][' + $index + '][id_image_attr][]" value="' + image.id + '" ' + (image.id_image_attr ? 'checked="checked"' : '') + '>\
+                 <input type="checkbox" name="combination_' + $index + '[id_image_attr][]" value="' + image.id + '" ' + (image.id_image_attr ? 'checked="checked"' : '') + '>\
                   <img src="' + image.base_image_url + '-small_default.' + image.format + '" alt="" />\
                 </div>');
       });
