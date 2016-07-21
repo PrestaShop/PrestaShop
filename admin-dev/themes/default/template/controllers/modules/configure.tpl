@@ -35,9 +35,7 @@
 <ul class="breadcrumb page-breadcrumb">
 	{if $breadcrumbs2.container.name != ''}
 		<li class="breadcrumb-current">
-			{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
 			{$breadcrumbs2.container.name|escape}
-			{if $breadcrumbs2.container.href != ''}</a>{/if}
 		</li>
 	{/if}
 	<li>{$module_name}</li>
