@@ -21398,6 +21398,10 @@
 	
 	_prestashop2['default'].blockcart = _prestashop2['default'].blockcart || {};
 	_prestashop2['default'].blockcart.showModal = function (html) {
+	  var $modal = (0, _jquery2['default'])('#blockcart-modal');
+	  if ($modal.length) {
+	    $modal.remove();
+	  }
 	  (0, _jquery2['default'])('body').append(html);
 	  (0, _jquery2['default'])('#blockcart-modal').modal('show').on('hidden.bs.modal', function (e) {
 	    _prestashop2['default'].emit('product updated', {
