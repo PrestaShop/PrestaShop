@@ -183,7 +183,7 @@ export default function() {
 class Combination {
   constructor(domId, index) {
     this.inputBulkPattern = "product_combination_bulk_";
-    this.inputPattern = "form_step3_combinations_" + index + "_";
+    this.inputPattern = "combination_" + index + "_";
     this.domId = domId;
     this.appId = 'attribute_' + this.domId;
     this.element = $('#' + this.appId);
