@@ -90,15 +90,6 @@ class InstallLanguage
         return isset($this->meta[$key]) ? $this->meta[$key] : null;
     }
 
-    public function getTranslation($key, $type = 'translations')
-    {
-        if (!is_array($this->data)) {
-            $this->data = file_exists($this->path.'install.php') ? include($this->path.'install.php') : array();
-        }
-
-        return isset($this->data[$type][$key]) ? $this->data[$type][$key] : null;
-    }
-
     public function getCountries()
     {
         if (!is_array($this->countries)) {

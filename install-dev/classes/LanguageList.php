@@ -130,20 +130,6 @@ class LanguageList
     }
 
     /**
-     * Get an information from language (phone, links, etc.)
-     *
-     * @param string $key Information identifier
-     */
-    public function getInformation($key, $with_default = true)
-    {
-        $information = $this->getLanguage()->getTranslation($key, 'informations');
-        if (is_null($information) && $with_default) {
-            return $this->getLanguage(self::DEFAULT_ISO)->getTranslation($key, 'informations');
-        }
-        return $information;
-    }
-
-    /**
      * Get list of countries for current language
      *
      * @return array
