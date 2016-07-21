@@ -2,7 +2,7 @@
 
   <div class="card-block">
     {foreach from=$cart.subtotals item="subtotal"}
-      {if $subtotal.amount && $subtotal.type !== 'tax'}
+      {if $subtotal.value && $subtotal.type !== 'tax'}
         <div class="cart-summary-line" id="cart-subtotal-{$subtotal.type}">
           <span class="label">
             {if 'products' == $subtotal.type}
