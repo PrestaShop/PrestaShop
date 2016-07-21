@@ -187,6 +187,11 @@ var combinations = (function() {
         priceCalculation.impactTaxInclude(contentElem.find('.attribute_priceTE'));
 
         contentElem.insertBefore('#form-nav').removeClass('hide').show();
+
+        contentElem.find('.datepicker').datetimepicker({
+          locale: iso_user,
+          format: 'YYYY-MM-DD'
+        });
         $('#form-nav, #form_content').hide();
       });
 
