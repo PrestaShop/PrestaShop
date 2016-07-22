@@ -115,6 +115,20 @@
       <button type="submit" {if !$selected_payment_option} disabled {/if} class="btn btn-primary center-block">
         {l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}
       </button>
+      {if $show_final_summary}
+        <article class="alert alert-danger m-t-2 js-alert-payment-condtions" role="alert" data-alert="danger">
+          {l
+            s='Please make sure you\'ve chosen a [1]payment method[/1] and accepted the [2]terms and conditions[/2].'
+            sprintf=[
+              '[1]' => '<a href="#checkout-payment-step">',
+              '[/1]' => '</a>',
+              '[2]' => '<a href="#conditions-to-approve">',
+              '[/2]' => '</a>'
+            ]
+            d='Shop.Theme.Checkout'
+          }
+        </article>
+      {/if}
     </div>
     <div class="ps-hidden-by-js">
       {if $selected_payment_option and $all_conditions_approved}
