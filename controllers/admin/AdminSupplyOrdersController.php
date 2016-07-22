@@ -38,7 +38,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->table = 'supply_order';
 
         $this->className = 'SupplyOrder';
@@ -46,6 +45,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
         $this->lang = false;
         $this->is_template_list = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
+
+        parent::__construct();
 
         $this->addRowAction('updatereceipt');
         $this->addRowAction('changestate');
@@ -105,8 +106,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
         $this->warehouses = Warehouse::getWarehouses(true);
         // gets the final list of warehouses
         array_unshift($this->warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
-
-        parent::__construct();
     }
 
     /**

@@ -36,7 +36,6 @@ class AdminStockCoverControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->table = 'product';
         $this->className = 'Product';
         $this->list_id = 'product';
@@ -44,6 +43,8 @@ class AdminStockCoverControllerCore extends AdminController
         $this->colorOnBackground = true;
         $this->multishop_context = Shop::CONTEXT_ALL;
         $this->tpl_list_vars['show_filter'] = true;
+
+        parent::__construct();
 
         $this->fields_list = array(
             'reference' => array(
@@ -99,8 +100,6 @@ class AdminStockCoverControllerCore extends AdminController
         $this->stock_cover_warehouses = Warehouse::getWarehouses(true);
         // gets the final list of warehouses
         array_unshift($this->stock_cover_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()
@@ -377,7 +376,7 @@ class AdminStockCoverControllerCore extends AdminController
         $quantity = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
         return $quantity;
     }
-    
+
     public function initContent()
     {
         if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
@@ -386,7 +385,7 @@ class AdminStockCoverControllerCore extends AdminController
         }
         parent::initContent();
     }
-    
+
     public function initProcess()
     {
         if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {

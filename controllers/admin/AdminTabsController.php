@@ -34,12 +34,14 @@ class AdminTabsControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->multishop_context = Shop::CONTEXT_ALL;
         $this->table = 'tab';
         $this->list_id = 'tab';
         $this->className = 'Tab';
         $this->lang = true;
+
+        parent::__construct();
+
         $this->fieldImageSettings = array(
             'name' => 'icon',
             'dir' => 't'
@@ -82,8 +84,6 @@ class AdminTabsControllerCore extends AdminController
                 'class' => 'fixed-width-md'
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

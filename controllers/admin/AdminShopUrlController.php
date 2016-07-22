@@ -39,14 +39,14 @@ class AdminShopUrlControllerCore extends AdminController
         $this->multishop_context = Shop::CONTEXT_ALL;
         $this->bulk_actions = array();
 
+        parent::__construct();
+
         /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
         if ($this->id_shop = (int)Tools::getValue('shop_id')) {
             $_GET['id_shop'] = $this->id_shop;
         } else {
             $this->id_shop = (int)Tools::getValue('id_shop');
         }
-
-        $this->context = Context::getContext();
 
         if (!Tools::getValue('realedit')) {
             $this->deleted = false;
@@ -87,8 +87,6 @@ class AdminShopUrlControllerCore extends AdminController
                 'class' => 'fixed-width-md'
             ),
         );
-
-        parent::__construct();
     }
 
     public function viewAccess($disable = false)
