@@ -25,8 +25,16 @@
 /*** HEADER ***/
 #header {
   background: white;
+  color: $gray;
   .logo {
     max-width: rem(200px);
+  }
+  a {
+    color: $gray-darker;
+    &:hover {
+      text-decoration: none;
+      color: $brand-primary;
+    }
   }
   .header-nav {
     border-bottom: $gray-light 2px solid;
@@ -40,24 +48,20 @@
     .currency-selector {
       margin-top: rem(15px);
       margin-left: rem(15px);
+      white-space: nowrap;
     }
     .user-info {
       margin-left: rem(40px);
       margin-top: rem(15px);
       text-align: right;
-      a {
-        color: $gray;
-        &:hover {
-          text-decoration: none;
-          color: $brand-primary;
-        }
-      }
+      white-space: nowrap;
       .account {
         margin-left: $small-space;
       }
     }
     .language-selector {
       margin-top: rem(15px);
+      white-space: nowrap;
     }
     .cart-preview {
       &.active {
@@ -78,11 +82,11 @@
     }
     .blockcart {
       background: $gray-light;
-      width: rem(135px);
       height: rem(48px);
-      padding-top: rem(12px);
+      padding: rem(12px);
       margin-left: rem(15px);
       text-align: center;
+      white-space: nowrap;
       a {
         color: $gray;
         &:hover {
@@ -100,12 +104,11 @@
     }
     #contact-link {
       margin-top: rem(15px);
-      color: $gray;
-      a {
-        color: $gray;
-        &:hover {
-          color: $brand-primary;
-        }
+    }
+    .material-icons {
+      line-height: inherit;
+      &.expand-more {
+        margin-left: rem(-6px);
       }
     }
   }
