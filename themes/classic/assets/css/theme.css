@@ -5359,7 +5359,7 @@ body#checkout {
       padding: 1rem;
       margin-bottom: 2rem;
       background-color: #fff;
-      border: 1px solid #e5e5e5;
+      border: 3px solid #e5e5e5;
       border-radius: 0; }
     body#checkout #order-summary-content .summary-selected-carrier {
       margin-bottom: 0.75rem;
@@ -6740,8 +6740,8 @@ li.product-flag {
   max-width: 4.6875rem;
   float: left !important;
   box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15); }
-  .product-line-grid-right .bootstrap-touchspin > .input-group,
-  .product-line-grid-right .bootstrap-touchspin > .form-control {
+  .product-line-grid-right .bootstrap-touchspin > .form-control,
+  .product-line-grid-right .bootstrap-touchspin > .input-group {
     color: #414141;
     background-color: white;
     border: 1px solid #ccc;
