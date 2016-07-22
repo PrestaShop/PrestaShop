@@ -6175,17 +6175,20 @@ body#checkout {
 
 .product-prices {
   margin-top: 1.25rem; }
+  .product-prices div {
+    margin-bottom: 0.625rem; }
+  .product-prices .tax-shipping-delivery-label {
+    font-size: 0.8125rem;
+    color: #878787; }
 
 .product-discount {
-  display: inline-block; }
+  color: #acaaa6; }
   .product-discount .regular-price {
-    font-size: 1.25rem;
     text-decoration: line-through;
-    color: #acaaa6;
     font-weight: normal;
     margin-right: 0.625rem; }
 
-.has-discount.product-price {
+.has-discount.product-price, .has-discount p {
   color: #f39d72; }
 
 .has-discount .discount {
@@ -6195,11 +6198,12 @@ body#checkout {
   padding: 0.3125rem 0.625rem;
   font-size: 1rem;
   margin-left: 0.625rem;
-  text-transform: uppercase; }
+  text-transform: uppercase;
+  display: inline-block; }
 
 .product-unit-price {
-  color: #acaaa6;
-  font-size: 0.8125rem; }
+  font-size: 0.8125rem;
+  margin-bottom: 0; }
 
 .tabs {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);

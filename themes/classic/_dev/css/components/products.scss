@@ -94,19 +94,26 @@
 }
 .product-prices {
   margin-top: $medium-space;
+
+  div {
+    margin-bottom: rem(10px);
+  }
+
+  .tax-shipping-delivery-label {
+    font-size: rem(13px);
+    color: $gray-dark;
+  }
 }
 .product-discount {
-  display: inline-block;
+  color: $gray;
   .regular-price {
-    font-size: rem(20px);
     text-decoration: line-through;
-    color: $gray;
     font-weight: normal;
     margin-right: $small-space;
   }
 }
 .has-discount {
-  &.product-price {
+  &.product-price, p {
     color: $brand-secondary;
   }
   .discount {
@@ -117,11 +124,12 @@
     font-size: $font-size-base;
     margin-left: $small-space;
     text-transform: uppercase;
+    display: inline-block;
   }
 }
 .product-unit-price {
-  color: $gray;
   font-size: $font-size-xs;
+  margin-bottom: 0;
 }
 .tabs {
   @include box-shadow;

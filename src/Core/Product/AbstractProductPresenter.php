@@ -85,8 +85,8 @@ abstract class AbstractProductPresenter
                 ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme')
                 : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme'),
             'tax_long' => ($settings->include_taxes)
-                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('Tax included', array(), 'Shop.Theme')
+                : $this->translator->trans('Tax excluded', array(), 'Shop.Theme'),
         );
 
         return $presentedProduct;
