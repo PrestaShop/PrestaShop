@@ -26,13 +26,14 @@
 
 class InstallLanguage
 {
-    protected $name;
-    protected $locale;
-    protected $language_code;
-    protected $is_rtl;
-    protected $date_format_lite;
-    protected $date_format_full;
-    protected $countries;
+    public $id;
+    public $name;
+    public $locale;
+    public $language_code;
+    public $is_rtl;
+    public $date_format_lite;
+    public $date_format_full;
+    public $countries;
 
     public function __construct($iso)
     {

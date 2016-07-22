@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 abstract class InstallControllerConsole
 {
     /**
@@ -62,13 +60,13 @@ abstract class InstallControllerConsole
     public $model;
 
     /**
-     * Validate current step
+     * Validate current step.
      */
     abstract public function validate();
 
     final public static function execute($argc, $argv)
     {
-        if (!($argc-1)) {
+        if (!($argc - 1)) {
             $available_arguments = Datas::getInstance()->getArgs();
             echo 'Arguments available:'."\n";
             foreach ($available_arguments as $key => $arg) {
@@ -117,14 +115,12 @@ abstract class InstallControllerConsole
 
         // Set current language
         $this->language = LanguageList::getInstance();
-        Context::getContext()->language =  $this->language;
-        Context::getContext()->locale =  $this->language->locale;
+        Context::getContext()->language = $this->language->getLanguage($this->datas->language);
 
         $this->translator = Context::getContext()->getTranslator();
 
         if (!$this->datas->language) {
             die('No language defined');
-
         }
         $this->language->setLanguage($this->datas->language);
 
@@ -132,7 +128,7 @@ abstract class InstallControllerConsole
     }
 
     /**
-     * Initialize model
+     * Initialize model.
      */
     public function init()
     {

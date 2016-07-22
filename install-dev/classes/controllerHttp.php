@@ -133,7 +133,7 @@ class InstallControllerHttp
         $this->language = LanguageList::getInstance();
         $detect_language = $this->language->detectLanguage();
 
-        Context::getContext()->language =  $this->language;
+        Context::getContext()->language = $this->language->getLanguage($this->session->lang);
 
         $this->translator = Context::getContext()->getTranslator();
 
