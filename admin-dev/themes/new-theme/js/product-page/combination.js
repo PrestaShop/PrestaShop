@@ -16,6 +16,20 @@ export default function() {
         });
       });
 
+    $(document).on('click', '#form .product-combination-image', function() {
+      var input = $(this).find('input');
+      var isChecked = input.prop('checked');
+      input.prop('checked', isChecked ? false : true);
+
+      if (isChecked) {
+        $(this).removeClass('img-highlight');
+
+      } else {
+        $(this).addClass('img-highlight');
+      }
+      refreshDefaultImage();
+    });
+
     /*
      * Retrieve URL to get a set of combination forms from data attribute
      * Concatenate ids_product_attribute to load from a slice of idsProductAttribute depending of step and last set

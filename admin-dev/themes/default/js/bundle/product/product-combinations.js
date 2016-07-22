@@ -121,20 +121,6 @@ var combinations = (function() {
         $('#accordion_combinations #attribute_' + id_attribute).find('.attribute-price-display').html(formatCurrency(parseFloat($(this).val())));
       });
 
-      /** on change images selection */
-      $(document).on('click', '#form .product-combination-image', function() {
-        var input = $(this).find('input');
-        var isChecked = input.prop('checked');
-        input.prop('checked', isChecked ? false : true);
-
-        if (isChecked) {
-          $(this).removeClass('img-highlight');
-
-        } else {
-          $(this).addClass('img-highlight');
-        }
-      });
-
       /** Combinations fields display management */
       $('#show_variations_selector input').change(function() {
         displayFieldsManager.refresh();
