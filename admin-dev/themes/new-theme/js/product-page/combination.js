@@ -16,6 +16,10 @@ export default function() {
         });
       });
 
+    /*
+     * Retrieve URL to get a set of combination forms from data attribute
+     * Concatenate ids_product_attribute to load from a slice of idsProductAttribute depending of step and last set
+     */
     let combinationUrl = $jsCombinationsList.data('combinations-url') + '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-');
 
     let getCombinations = (combinationsImages) => {

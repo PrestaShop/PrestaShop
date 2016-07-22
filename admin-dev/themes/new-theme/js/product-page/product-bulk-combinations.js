@@ -150,6 +150,7 @@ export default function() {
       return this;
     },
     'unselectCombinations': function unselectCombinations() {
+      // Use of the bulk action button. It has an event listener to unselect all the combinations
       $('#toggle-all-combinations').prop('checked', false);
 
       return this;
