@@ -122,6 +122,9 @@ body#checkout {
     .form-footer {
       text-align: center;
     }
+    #conditions-to-approve {
+      padding-top: rem(30px);
+    }
     .payment-option label {
       display: table-cell;
     }
@@ -255,11 +258,11 @@ body#checkout {
     }
   }
   #order-summary-content {
-    padding-top: rem(25px);
+    padding-top: rem(15px);
     h4.h4 {
       margin-top: rem(10px);
       margin-bottom: rem(20px);
-      color: $gray;
+      color: $gray-darker;
     }
     h4.black {
       color: #000000;
@@ -273,12 +276,36 @@ body#checkout {
     #order-items {
       border-right: 0;
       h3.h3 {
-        color: $gray;
+        color: $gray-darker;
         margin-top: rem(20px);
       }
+      table {
+        tr {
+          &:first-child {
+            td {
+              border-top: 0;
+            }
+          }
+        }
+      }
     }
+    .order-confirmation-table {
+      padding: 1rem;
+      margin-bottom: 2rem;
+      background-color: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 0;      
+    }
+    .summary-selected-carrier {
+      margin-bottom: 0.75rem;
+      background-color: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 0;
+      padding: 1rem;      
+    }    
     .step-edit {
       display: inline;
+      color: $gray;
     }
     .step-edit:hover {
       cursor: pointer;

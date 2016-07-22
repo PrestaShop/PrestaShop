@@ -15,7 +15,7 @@
     <div class="product-line-info">
       <span class="value">{$product.price}</span>
       {if $product.unit_price_full}
-        <small class="sub">{$product.unit_price_full}</small>
+        <div class="unit-price-cart">{$product.unit_price_full}</div>
       {/if}
     </div>
 

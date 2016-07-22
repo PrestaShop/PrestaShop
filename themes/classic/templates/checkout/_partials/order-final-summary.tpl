@@ -39,7 +39,7 @@
         <span class="step-edit step-to-delivery js-edit-delivery"><i class="material-icons edit">mode_edit</i> edit</span>
       </h4>
 
-      <div class="col-md-12">
+      <div class="col-md-12 summary-selected-carrier">
         <div class="row">
           <div class="col-md-2">
             <div class="logo-container">
