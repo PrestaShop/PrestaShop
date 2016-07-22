@@ -42,7 +42,7 @@ export default function() {
         refreshImagesCombination(combinationsImages, idsProductAttribute.slice(currentCount, currentCount+step));
         currentCount += step;
         combinationUrl = $jsCombinationsList.data('combinations-url') + '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-');
-        if (currentCount <= idsCount) {
+        if (currentCount < idsCount) {
           getCombinations(combinationsImages);
         } else {
           $('#combinations-bulk-form').removeClass('inactive');
