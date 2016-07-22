@@ -458,11 +458,18 @@ abstract class PaymentModuleCore extends Module
                             'id_product' => $product['id_product'],
                             'reference' => $product['reference'],
                             'name' => $product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : ''),
-                            'unit_price' => Tools::displayPrice($product_price, $this->context->currency, false),
                             'price' => Tools::displayPrice($product_price * $product['quantity'], $this->context->currency, false),
                             'quantity' => $product['quantity'],
                             'customization' => array()
                         );
+
+                        if (isset($product['unit_price']) && $product['unit_price']) {
+                            $product_var_tpl['unit_price'] = Tools::displayPrice($product['unit_price'], $this->context->currency, false);
+                            $product_var_tpl['unit_price_full'] = Tools::displayPrice($product['unit_price'], $this->context->currency, false)
+                                .' '.$product['unity'];
+                        } else {
+                            $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
+                        }
 
                         $customized_datas = Product::getAllCustomizedDatas((int)$order->id_cart, null, true, null, (int)$product['id_customization']);
                         if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']])) {
