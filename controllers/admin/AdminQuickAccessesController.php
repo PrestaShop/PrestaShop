@@ -39,7 +39,7 @@ class AdminQuickAccessesControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-        $this->context = Context::getContext();
+        parent::__construct();
 
         if (!Tools::getValue('realedit')) {
             $this->deleted = false;
@@ -120,8 +120,6 @@ class AdminQuickAccessesControllerCore extends AdminController
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
             )
         );
-
-        parent::__construct();
     }
 
     public function getTabSlug()
