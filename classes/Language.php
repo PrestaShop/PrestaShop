@@ -682,10 +682,12 @@ class LanguageCore extends ObjectModel
         if ($locale) {
             return $locale;
         }
+
         $xmlPath = _PS_INSTALL_LANGS_PATH_.$isoCode.'/'.'/language.xml';
         if (!file_exists($xmlPath)) {
             return false;
         }
+
         $xml = @simplexml_load_file($xmlPath);
         if ($xml) {
             foreach ($xml->children() as $node) {
@@ -694,6 +696,7 @@ class LanguageCore extends ObjectModel
                 }
             }
         }
+
         return false;
     }
 
@@ -855,14 +858,11 @@ class LanguageCore extends ObjectModel
             Language::_copyNoneFlag((int)$lang->id);
         }
 
-        $files_copy = array(
-            '/en.jpg',
-            '/en-default-'.ImageType::getFormattedName('thickbox').'.jpg',
-            '/en-default-'.ImageType::getFormattedName('home').'.jpg',
-            '/en-default-'.ImageType::getFormattedName('large').'.jpg',
-            '/en-default-'.ImageType::getFormattedName('medium').'.jpg',
-            '/en-default-'.ImageType::getFormattedName('small').'.jpg',
-        );
+        $files_copy = array('/en.jpg');
+        foreach (ImageType::getAll() as $alias => $config) {
+            $files_copy[] = '/en-default-'.ImageType::getFormattedName($alias).'.jpg';
+
+        }
 
         foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to) {
             foreach ($files_copy as $file) {

@@ -45,6 +45,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
     {
         if (Tools::getValue('language')) {
             $this->session->lang = Tools::getValue('language');
+            Language::downloadAndInstallLanguagePack($this->session->lang);
             $this->redirect('welcome');
         }
     }
