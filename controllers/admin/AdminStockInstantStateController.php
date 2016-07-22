@@ -35,13 +35,14 @@ class AdminStockInstantStateControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->table = 'stock';
         $this->list_id = 'stock';
         $this->className = 'Stock';
         $this->tpl_list_vars['show_filter'] = true;
         $this->lang = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
+
+        parent::__construct();
 
         $this->fields_list = array(
             'reference' => array(
@@ -103,8 +104,6 @@ class AdminStockInstantStateControllerCore extends AdminController
         $this->addRowAction('details');
         $this->stock_instant_state_warehouses = Warehouse::getWarehouses(true);
         array_unshift($this->stock_instant_state_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()

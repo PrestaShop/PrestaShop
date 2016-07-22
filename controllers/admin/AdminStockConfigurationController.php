@@ -36,11 +36,12 @@ class AdminStockConfigurationControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->table = 'stock_mvt_reason';
         $this->className = 'StockMvtReason';
         $this->lang = true;
         $this->multishop_context = Shop::CONTEXT_ALL;
+
+        parent::__construct();
 
         // defines fields
         $this->fields_list = array(
@@ -122,8 +123,6 @@ class AdminStockConfigurationControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             )
         );
-
-        parent::__construct();
     }
 
     public function init()
@@ -546,7 +545,7 @@ class AdminStockConfigurationControllerCore extends AdminController
             }
         }
     }
-    
+
     public function initContent()
     {
         if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
@@ -555,7 +554,7 @@ class AdminStockConfigurationControllerCore extends AdminController
         }
         parent::initContent();
     }
-    
+
     public function initProcess()
     {
         if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {

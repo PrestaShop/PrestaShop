@@ -33,12 +33,13 @@ class AdminStockManagementControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        $this->context = Context::getContext();
         $this->table = 'product';
         $this->list_id = 'product';
         $this->className = 'Product';
         $this->lang = true;
         $this->multishop_context = Shop::CONTEXT_ALL;
+
+        parent::__construct();
 
         $this->fields_list = array(
             'reference' => array(
@@ -66,8 +67,6 @@ class AdminStockManagementControllerCore extends AdminController
                 'hint' => $this->l('Quantity total for all warehouses.')
             ),
         );
-
-        parent::__construct();
 
         // overrides confirmation messages specifically for this controller
         $this->_conf = array(

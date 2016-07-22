@@ -39,6 +39,8 @@ class AdminWarehousesControllerCore extends AdminController
         $this->lang = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
 
+        parent::__construct();
+
         $this->fields_list = array(
             'id_warehouse'    => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
@@ -79,8 +81,6 @@ class AdminWarehousesControllerCore extends AdminController
                 'confirm' => $this->l('Delete selected items?')
             )
         );
-
-        parent::__construct();
     }
 
     public function initPageHeaderToolbar()
