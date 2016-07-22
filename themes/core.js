@@ -1814,6 +1814,11 @@
 	    (0, _jquery2['default'])('.js-payment-binary').hide();
 	    (0, _jquery2['default'])('#payment-confirmation').show();
 	    (0, _jquery2['default'])('#payment-confirmation button').attr('disabled', !show);
+	    if (show) {
+	      (0, _jquery2['default'])('.js-alert-payment-condtions').hide();
+	    } else {
+	      (0, _jquery2['default'])('.js-alert-payment-condtions').show();
+	    }
 	  }
 	}
 	

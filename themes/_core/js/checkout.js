@@ -44,6 +44,11 @@ function enableOrDisableOrderButton() {
     $('.js-payment-binary').hide();
     $('#payment-confirmation').show();
     $('#payment-confirmation button').attr('disabled', !show);
+    if (show) {
+      $('.js-alert-payment-condtions').hide();
+    } else {
+      $('.js-alert-payment-condtions').show();
+    }
   }
 }
 
