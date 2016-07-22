@@ -304,6 +304,7 @@ class OrderPresenter implements PresenterInterface
         $carrier = new Carrier((int) $order->id_carrier, (int) $order->id_lang);
         $orderCarrier = $this->objectPresenter->present($carrier);
         $orderCarrier['name'] = ($carrier->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
+        $orderCarrier['delay'] = $carrier->delay;
 
         return $orderCarrier;
     }
