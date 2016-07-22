@@ -20523,7 +20523,8 @@
 	      verticalupclass: 'material-icons touchspin-up',
 	      verticaldownclass: 'material-icons touchspin-down',
 	      buttondown_class: 'btn btn-touchspin js-touchspin',
-	      buttonup_class: 'btn btn-touchspin js-touchspin'
+	      buttonup_class: 'btn btn-touchspin js-touchspin',
+	      max: 1000000
 	    });
 	  }
 	});
@@ -20544,6 +20545,10 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
+	_prestashop2['default'].cart = _prestashop2['default'].cart || {};
+	
+	_prestashop2['default'].cart.active_inputs = null;
+	
 	(0, _jquery2['default'])(document).ready(function () {
 	  _prestashop2['default'].on('cart dom updated', function (event) {
 	    createSpin();
@@ -20554,26 +20559,37 @@
 	
 	  (0, _jquery2['default'])('body').on('click', '.-js-cart .js-touchspin, [data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]', function (event) {
 	    event.preventDefault();
+	    var el = (0, _jquery2['default'])(event.currentTarget);
 	    // First perform the action using AJAX
 	    var actionURL = null;
-	
-	    if ((0, _jquery2['default'])(event.currentTarget).hasClass('bootstrap-touchspin-up')) {
-	      actionURL = (0, _jquery2['default'])(event.currentTarget).parents('.bootstrap-touchspin').find('[data-up-url]').data('up-url');
-	    } else if ((0, _jquery2['default'])(event.currentTarget).hasClass('bootstrap-touchspin-down')) {
-	      actionURL = (0, _jquery2['default'])(event.currentTarget).parents('.bootstrap-touchspin').find('[data-up-url]').data('down-url');
+	    if (el.hasClass('bootstrap-touchspin-up') || el.hasClass('bootstrap-touchspin-down')) {
+	      var input = el.parents('.bootstrap-touchspin').find('input.cart-line-product-quantity');
+	      if (input.is(':focus')) {
+	        return;
+	      }
+	      actionURL = el.hasClass('bootstrap-touchspin-up') ? input.data('up-url') : input.data('down-url');
 	    } else {
 	      actionURL = (0, _jquery2['default'])(event.currentTarget).attr('href');
 	    }
-	
 	    _jquery2['default'].post(actionURL, {
 	      ajax: '1',
 	      action: 'update'
 	    }, null, 'json').then(function () {
 	      // If succesful, refresh cart preview
 	      _prestashop2['default'].emit('cart updated', {
-	        reason: event.currentTarget.dataset
+	        reason: el.dataset
 	      });
 	    });
+	  });
+	
+	  (0, _jquery2['default'])('body').on('focusout', 'input.cart-line-product-quantity', function (event) {
+	    updateQty(event);
+	  });
+	
+	  (0, _jquery2['default'])('body').on('keyup', 'input.cart-line-product-quantity', function (event) {
+	    if (event.keyCode == 13) {
+	      updateQty(event);
+	    }
 	  });
 	
 	  createSpin();
@@ -20585,7 +20601,34 @@
 	    verticalupclass: 'material-icons touchspin-up',
 	    verticaldownclass: 'material-icons touchspin-down',
 	    buttondown_class: 'btn btn-touchspin js-touchspin',
-	    buttonup_class: 'btn btn-touchspin js-touchspin'
+	    buttonup_class: 'btn btn-touchspin js-touchspin',
+	    max: 1000000
+	  });
+	}
+	
+	function updateQty(event) {
+	  var el = (0, _jquery2['default'])(event.currentTarget);
+	  var actionURL = el.data('update-url');
+	  var baseValue = el.attr('value');
+	  var targetValue = el.val();
+	  if (targetValue != parseInt(targetValue) || targetValue < 0) {
+	    return;
+	  }
+	  var qty = targetValue - baseValue;
+	  if (qty == 0) {
+	    return;
+	  }
+	  var dir = qty > 0 ? 'up' : 'down';
+	  _jquery2['default'].post(actionURL, {
+	    ajax: '1',
+	    qty: Math.abs(qty),
+	    action: 'update',
+	    op: dir
+	  }, null, 'json').then(function () {
+	    // If succesful, refresh cart preview
+	    _prestashop2['default'].emit('cart updated', {
+	      reason: el.dataset
+	    });
 	  });
 	}
 

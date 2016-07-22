@@ -147,6 +147,7 @@
   @include box-shadow;
   background: white;
   padding: rem(25px) rem(20px);
+  margin-bottom: rem(25px);
   .category-sub-menu {
     margin-top: $small-space;
     .category-sub-link{

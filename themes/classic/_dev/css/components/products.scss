@@ -332,9 +332,14 @@
   margin-top: rem(47px);
   position: relative;
   top: rem(25px);
+  .material-icons {
+    margin-right: rem(5px);
+  }
   .product-available {
     color: $brand-success;
-    margin-right: rem(5px);
+  }
+  .product-unavailable {
+    color: $brand-warning;
   }
 }
 #product-details {

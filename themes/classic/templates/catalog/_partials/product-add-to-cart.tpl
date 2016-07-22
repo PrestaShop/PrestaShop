@@ -25,7 +25,14 @@
 
   {block name='product_availability'}
    {if $product.show_availability}
-      <p id="product-availability"><i class="material-icons product-available">&#xE5CA;</i>{$product.availability_message}</p>
+      <p id="product-availability">
+        {if $product.availability == 'available'}
+        <i class="material-icons product-available">&#xE5CA;</i>
+        {else}
+        <i class="material-icons product-unavailable">&#xE14B;</i>
+        {/if}
+        {$product.availability_message}
+      </p>
    {/if}
   {/block}
   {hook h='displayProductButtons' product=$product}

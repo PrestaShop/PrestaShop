@@ -1,13 +1,13 @@
 <div class="product-line-grid">
   <!--  product left content: image-->
-  <div class="product-line-grid-left col-md-2 col-xs-4">
+  <div class="product-line-grid-left col-md-3 col-xs-4">
     <span class="product-image media-middle">
       <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}">
     </span>
   </div>
 
   <!--  product left body: description -->
-  <div class="product-line-grid-body col-md-5 col-xs-5">
+  <div class="product-line-grid-body col-md-4 col-xs-5">
     <div class="product-line-info">
       <a class="label" href="{$product.url}">{$product.name}</a>
     </div>
@@ -54,7 +54,7 @@
   <div class="product-line-grid-right product-line-actions col-md-5 col-xs-3">
     <div class="row">
       <div class="col-md-1 col-xs-12">
-        <input class="cart-line-product-quantity" data-down-url="{$product.down_quantity_url}" data-up-url="{$product.up_quantity_url}" data-product-id="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
+        <input class="cart-line-product-quantity" data-down-url="{$product.down_quantity_url}" data-up-url="{$product.up_quantity_url}" data-update-url="{$product.update_quantity_url}" data-product-id="{$product.id_product}" type="text" value="{$product.quantity}" name="product-quantity-spin">
       </div>
       <div class="col-md-5 col-md-offset-3 col-xs-12">
         <span class="product-price"><strong>{$product.total}</strong></span>
