@@ -137,7 +137,7 @@
   },
   "scripts": {
     "post-install-cmd": [
-      "PrestaShop\\PrestaShop\\Core\\Migrate\\Migrate::migrateSettingsFile",
+      "PrestaShopBundle\\Utils\\Migrate::migrateSettingsFile",
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
@@ -147,7 +147,7 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
     "post-update-cmd": [
-      "PrestaShop\\PrestaShop\\Core\\Migrate\\Migrate::migrateSettingsFile",
+      "PrestaShopBundle\\Utils\\Migrate::migrateSettingsFile",
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",

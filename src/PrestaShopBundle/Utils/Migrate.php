@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Core\Migrate;
+namespace PrestaShopBundle\Utils;
 
 use Symfony\Component\Yaml\Yaml;
 use RandomLib;

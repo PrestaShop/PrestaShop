@@ -1,6 +1,6 @@
 <?php
 
-use PrestaShop\PrestaShop\Core\Migrate\Migrate;
+use PrestaShopBundle\Utils\Migrate;
 
 /**
  * 2007-2015 PrestaShop
