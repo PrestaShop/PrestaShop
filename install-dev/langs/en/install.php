@@ -50,7 +50,7 @@ return array(
         'Database is connected' => 'Database is connected',
         'Database is created' => 'Database is created',
         'Cannot create the database automatically' => 'Cannot create the database automatically',
-        'Create settings.inc file' => 'Create settings.inc file',
+        'Create file parameters' => 'Create file parameters',
         'Create database tables' => 'Create database tables',
         'Create default shop and languages' => 'Create default shop and languages',
         'Populate database tables' => 'Populate database tables',

@@ -142,7 +142,7 @@ if ($versionCompare == '-1') {
     $logger->logError(sprintf('You already have the %s version.', _PS_INSTALL_VERSION_));
     $fail_result .= '<action result="fail" error="28" />'."\n";
 } elseif ($versionCompare === false) {
-    $logger->logError('There is no older version. Did you delete or rename the config/settings.inc.php file?');
+    $logger->logError('There is no older version. Did you delete or rename the app/config/parameters.yml file?');
     $fail_result .= '<action result="fail" error="29" />'."\n";
 }
 
@@ -309,24 +309,6 @@ if (empty($fail_result)) {
         $sqlContent = preg_split("/;\s*[\r\n]+/", $sqlContent);
 
         $sqlContentVersion[$version] = $sqlContent;
-    }
-}
-
-
-if (empty($fail_result)) {
-    error_reporting($oldLevel);
-    $confFile = new AddConfToFile(SETTINGS_FILE, 'w');
-    if ($confFile->error) {
-        $logger->logError($confFile->error);
-        $fail_result .= '<action result="fail" error="'.$confFile->error.'" />'."\n";
-    } else {
-        foreach ($datas as $data) {
-            $confFile->writeInFile($data[0], $data[1]);
-        }
-    }
-    if ($confFile->error != false) {
-        $logger->logError($confFile->error);
-        $fail_result .= '<action result="fail" error="'.$confFile->error.'" />'."\n";
     }
 }
 

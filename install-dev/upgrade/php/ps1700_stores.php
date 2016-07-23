@@ -34,8 +34,12 @@ function ps1700_stores()
     $result = false;
     foreach ($stores as $store) {
         $hours = Tools::unSerialize($store['hours']);
-        foreach ($hours as $key => $h) {
-            $hours[$key] = [$h];
+        if (is_array($hours)) {
+            foreach ($hours as $key => $h) {
+                $hours[$key] = [$h];
+            }
+        } else {
+            $hours = array();
         }
         $hours = json_encode($hours);
 
