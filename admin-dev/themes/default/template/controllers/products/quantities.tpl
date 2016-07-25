@@ -239,7 +239,7 @@
 				<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}</span></div>
 				<label class="control-label col-lg-2" for="available_now_{$default_language}">
 					<span class="label-tooltip" data-toggle="tooltip" title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
-						{l s='Displayed text when in-stock'}
+						{l s='Label when in stock'}
 					</span>
 				</label>
 				<div class="col-lg-9">
@@ -254,7 +254,7 @@
 				<label class="control-label col-lg-2" for="available_later_{$default_language}">
 					<span class="label-tooltip" data-toggle="tooltip"
 						title="{l s='If empty, the message "in stock" will be displayed.'} {l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
-						{l s='Displayed text when backordering is allowed'}
+						{l s='Label when out of stock (and back order allowed)'}
 					</span>
 				</label>
 				<div class="col-lg-9">

@@ -249,7 +249,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                         'query' => array(
                             array(
                                 'id' => 'on',
-                                'name' => $this->l('Leave base price'),
+                                'name' => $this->l('Leave initial price'),
                                 'val' => '1',
                                 'checked' => '1'
                             ),

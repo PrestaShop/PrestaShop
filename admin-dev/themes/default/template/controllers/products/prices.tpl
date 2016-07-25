@@ -407,7 +407,7 @@ $(document).ready(function () {
 								<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:$priceDisplayPrecisionFormat}" />
 							</div>
 							<p class="checkbox">
-								<label for="leave_bprice">{l s='Leave base price:'}</label>
+								<label for="leave_bprice">{l s='Leave initial price:'}</label>
 								<input type="checkbox" id="leave_bprice" name="leave_bprice"  value="1" checked="checked"  />
 							</p>
 						</div>
