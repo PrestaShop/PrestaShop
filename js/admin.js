@@ -1620,15 +1620,15 @@ function refresh_kpis()
 
 function createSqlQueryName()
 {
-	var container = false;
-	if ($('.breadcrumb-container'))
-		container = $('.breadcrumb-container').first().text().replace(/\s+/g, ' ').trim();
-	var current = false;
-	if ($('.breadcrumb-current'))
-		current = $('.breadcrumb-current').first().text().replace(/\s+/g, ' ').trim();
-	var title = false;
-	if ($('.page-title'))
-		title = $('.page-title').first().text().replace(/\s+/g, ' ').trim();
+  var container = false;
+  var current = false;
+  if ($('.breadcrumb')) {
+    container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ').trim();
+    current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ').trim();
+  }
+  var title = false;
+  if ($('h2.title'))
+    title = $('h2.title').first().text().replace(/\s+/g, ' ').trim();
 
 	var name = false;
 	if (container && current && container != current)
