@@ -135,7 +135,7 @@ class AttributeController extends FrameworkBundleAdminController
         $attributes = [];
         foreach ($newCombinationIds as $combinationId) {
             $attributeCombination = $product->getAttributeCombinationsById($combinationId, $locales[0]['id_lang']);
-            $attributes[$attributeCombination[0]["position"]] = $attributeCombination[0];
+            $attributes[$attributeCombination[0]["position"]][$combinationId] = $attributeCombination[0];
         }
 
         ksort($attributes);
@@ -148,19 +148,21 @@ class AttributeController extends FrameworkBundleAdminController
         );
 
         foreach ($attributes as $attribute) {
-            $form = $this->get('form.factory')
-                ->createNamed(
-                    'combination_'.$attribute['id_product_attribute'],
-                    'PrestaShopBundle\Form\Admin\Product\ProductCombination',
-                    $combinationDataProvider->getFormCombination($attribute['id_product_attribute'])
+            foreach ($attribute as $combination) {
+                $form = $this->get('form.factory')
+                    ->createNamed(
+                        'combination_'.$combination['id_product_attribute'],
+                        'PrestaShopBundle\Form\Admin\Product\ProductCombination',
+                        $combinationDataProvider->getFormCombination($combination['id_product_attribute'])
+                    );
+                $result['form'] .= $this->renderView(
+                    'PrestaShopBundle:Admin/Product/Include:form_combination.html.twig',
+                    array(
+                        'form' => $form->createView(),
+                    )
                 );
-            $result['form'] .= $this->renderView(
-                'PrestaShopBundle:Admin/Product/Include:form_combination.html.twig',
-                array(
-                    'form' => $form->createView(),
-                )
-            );
-            $result['ids_product_attribute'][] = $attribute['id_product_attribute'];
+                $result['ids_product_attribute'][] = $combination['id_product_attribute'];
+            }
         }
 
         return $response->create($result);
