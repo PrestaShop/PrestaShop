@@ -17,6 +17,8 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             // PrestaShop Core bundle
             new PrestaShopBundle\PrestaShopBundle(),
+            // Api consumer
+            new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

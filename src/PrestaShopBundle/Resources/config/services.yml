@@ -228,3 +228,12 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - {name: translation.loader, alias: db}
+
+# Addons API Client
+    prestashop.addons.client_api:
+        class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
+        arguments:
+            - "@csa_guzzle.client.addons_api"
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
+            - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+            - "@=constant('_PS_VERSION_')"
