@@ -47,6 +47,26 @@
   .promo-code {
     padding: 1.60rem;
     background: $gray-light;
+    .alert-danger {
+      position: relative;
+      margin-top: rem(20px);
+      background: $brand-danger;
+      color: white;
+      display: none;
+      &::after {
+        bottom: 100%;
+        left: 10%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-bottom-color:  $brand-danger;
+        border-width: 10px;
+        margin-left: -10px;
+      }
+    }
   }
   .promo-input {
     color: $gray-darker;
@@ -104,8 +124,8 @@
     max-width: rem(75px);
     @include pull-left;
     @include box-shadow;
-     > .input-group,
-    > .form-control {
+     > .form-control,
+    > .input-group {
       color: $gray-darker;
       background-color: white;
       border: $input-btn-border-width solid $input-border-color;

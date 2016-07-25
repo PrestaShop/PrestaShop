@@ -11,6 +11,9 @@ body#checkout {
       width: auto;
     }
   }
+  [data-action="show-password"]{
+    background: $gray-dark;
+  }
   .custom-checkbox {
     @include display(flex);
     span {
@@ -315,6 +318,10 @@ body#checkout {
         color: $gray;
       }
     }
+  }
+  #gift_message{
+    max-width: 100%;
+    border-color: $gray-darker;
   }
   #footer {
     @include box-shadow;

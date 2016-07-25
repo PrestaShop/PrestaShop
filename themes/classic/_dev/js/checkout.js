@@ -18,6 +18,10 @@ function setupMyCheckoutScripts() {
 
     $('#modal').modal('show');
   });
+
+  $('.js-gift-checkbox').on('click', (event) => {
+    $('#gift').collapse('toggle');
+  });
 }
 
 $(document).ready(() => {

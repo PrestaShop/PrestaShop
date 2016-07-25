@@ -5113,6 +5113,8 @@ body#checkout {
     body#checkout #header .header-nav .logo {
       max-height: 4.375rem;
       width: auto; }
+  body#checkout [data-action="show-password"] {
+    background: #878787; }
   body#checkout .custom-checkbox {
     display: -webkit-box;
     display: -moz-box;
@@ -5382,6 +5384,9 @@ body#checkout {
       cursor: pointer; }
     body#checkout #order-summary-content a .step-edit {
       color: #acaaa6; }
+  body#checkout #gift_message {
+    max-width: 100%;
+    border-color: #414141; }
   body#checkout #footer {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
     margin-top: 5.625rem;
@@ -6419,21 +6424,31 @@ body#checkout {
     -webkit-flex-wrap: wrap;
     -moz-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
-    flex-wrap: wrap; }
+    flex-wrap: wrap;
+    -webkit-box-align: start;
+    -moz-box-align: start;
+    box-align: start;
+    -webkit-align-items: flex-start;
+    -moz-align-items: flex-start;
+    -ms-align-items: flex-start;
+    -o-align-items: flex-start;
+    align-items: flex-start;
+    -ms-flex-align: start; }
     .product-features > dl.data-sheet dd.value,
     .product-features > dl.data-sheet dt.name {
-      -webkit-box-flex: 0;
-      -moz-box-flex: 0;
-      box-flex: 0;
-      -webkit-flex: 0 0 40%;
-      -moz-flex: 0 0 40%;
-      -ms-flex: 0 0 40%;
-      flex: 0 0 40%;
+      -webkit-box-flex: 1;
+      -moz-box-flex: 1;
+      box-flex: 1;
+      -webkit-flex: 1 0 40%;
+      -moz-flex: 1 0 40%;
+      -ms-flex: 1 0 40%;
+      flex: 1 0 40%;
       font-weight: normal;
       background: #ebebeb;
       padding: 0.625rem;
       margin-right: 0.625rem;
-      height: 2.5rem; }
+      min-height: 2.5rem;
+      word-break: break-all; }
       .product-features > dl.data-sheet dd.value:nth-of-type(even),
       .product-features > dl.data-sheet dt.name:nth-of-type(even) {
         background: #f6f6f6; }
@@ -6659,6 +6674,24 @@ li.product-flag {
 .block-promo .promo-code {
   padding: 1.60rem;
   background: #ebebeb; }
+  .block-promo .promo-code .alert-danger {
+    position: relative;
+    margin-top: 1.25rem;
+    background: #ff4c4c;
+    color: white;
+    display: none; }
+    .block-promo .promo-code .alert-danger::after {
+      bottom: 100%;
+      left: 10%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-bottom-color: #ff4c4c;
+      border-width: 10px;
+      margin-left: -10px; }
 
 .block-promo .promo-input {
   color: #414141;
@@ -6709,8 +6742,8 @@ li.product-flag {
   max-width: 4.6875rem;
   float: left !important;
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
-  .product-line-grid-right .bootstrap-touchspin > .input-group,
-  .product-line-grid-right .bootstrap-touchspin > .form-control {
+  .product-line-grid-right .bootstrap-touchspin > .form-control,
+  .product-line-grid-right .bootstrap-touchspin > .input-group {
     color: #414141;
     background-color: white;
     border: 1px solid #ccc;

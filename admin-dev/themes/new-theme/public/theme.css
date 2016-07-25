@@ -16271,6 +16271,9 @@ ul.category-tree {
       .product-page .combinations-list .combination .attribute-actions .btn-sm:hover {
         background-color: transparent;
         border-color: transparent; }
+  .product-page .form-control-static {
+    display: inline-block;
+    margin-top: 1.5625rem; }
 
 .popover-title {
   display: none; }

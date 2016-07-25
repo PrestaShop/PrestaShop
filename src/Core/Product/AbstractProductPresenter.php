@@ -101,6 +101,7 @@ abstract class AbstractProductPresenter
         $presentedProduct['has_discount'] = false;
         $presentedProduct['discount_type'] = null;
         $presentedProduct['discount_percentage'] = null;
+        $presentedProduct['discount_percentage_absolute'] = null;
         $presentedProduct['discount_amount'] = null;
 
         if ($settings->include_taxes) {
@@ -114,6 +115,7 @@ abstract class AbstractProductPresenter
             $presentedProduct['discount_type'] = $product['specific_prices']['reduction_type'];
             // TODO: format according to locale preferences
             $presentedProduct['discount_percentage'] = -round(100 * $product['specific_prices']['reduction']).'%';
+            $presentedProduct['discount_percentage_absolute'] = round(100 * $product['specific_prices']['reduction']).'%';
             // TODO: Fix issue with tax calculation
             $presentedProduct['discount_amount'] = $this->priceFormatter->format(
                 $product['specific_prices']['reduction']

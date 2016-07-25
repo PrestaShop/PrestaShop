@@ -124,7 +124,7 @@ class ProductQuantity extends CommonAbstractType
                 'options' => array(),
                 'locales' => $this->locales,
                 'hideTabs' => true,
-                'label' => $this->translator->trans('Label when out of stock', array(), 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Displayed text when out of stock', array(), 'Admin.Catalog.Feature'),
             ))
             ->add('available_date', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
                 'required' => false,

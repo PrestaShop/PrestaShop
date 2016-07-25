@@ -118,6 +118,9 @@
                 <li class="nav-item">
                   <a class="nav-link" data-toggle="tab" href="#product-details">{l s='Product Details' d='Shop.Theme.Catalog'}</a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="tab" href="#attachments">{l s='Product Attachments' d='Shop.Theme.Catalog'}</a>
+                </li>
               </ul>
 
               <div class="tab-content" id="tab-content">
@@ -129,6 +132,24 @@
 
                {block name='product_details'}
                  {include file='catalog/_partials/product-details.tpl'}
+               {/block}
+               {block name='product_attachments'}
+                 {if $product.attachments}
+                  <div class="tab-pane fade in" id="attachments">
+                     <section class="product-attachments">
+                       <h3 class="h5 text-uppercase">{l s='Download' d='Shop.Theme.Actions'}</h3>
+                       {foreach from=$product.attachments item=attachment}
+                         <div class="attachment">
+                           <h4><a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}">{$attachment.name}</a></h4>
+                           <p>{$attachment.description}</p>
+                           <a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}">
+                             {l s='Download' d='Shop.Theme.Actions'} ({Tools::formatBytes($attachment.file_size, 2)})
+                           </a>
+                         </div>
+                       {/foreach}
+                     </section>
+                   </div>
+                 {/if}
                {/block}
             </div>
           </div>
@@ -163,23 +184,6 @@
 
       {block name='product_footer'}
         {hook h='displayFooterProduct' product=$product category=$category}
-      {/block}
-
-      {block name='product_attachments'}
-        {if $product.attachments}
-          <section class="product-attachments">
-            <h3 class="h5 text-uppercase">{l s='Download' d='Shop.Theme.Actions'}</h3>
-            {foreach from=$product.attachments item=attachment}
-              <div class="attachment">
-                <h4><a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}">{$attachment.name}</a></h4>
-                <p>{$attachment.description}</p>
-                <a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}">
-                  {l s='Download' d='Shop.Theme.Actions'} ({Tools::formatBytes($attachment.file_size, 2)})
-                </a>
-              </div>
-            {/foreach}
-          </section>
-        {/if}
       {/block}
 
     <div class="modal fade" id="product-modal">
