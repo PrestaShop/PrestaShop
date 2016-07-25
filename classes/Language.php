@@ -32,7 +32,7 @@ class LanguageCore extends ObjectModel
     const LANGUAGE_PACK_URL = 'http://www.prestashop.com/download/lang_packs/get_language_pack.php?version=%s&iso_lang=%s';
     const LANGUAGE_GZIP_URL = 'http://translations.prestashop.com/download/lang_packs/gzip/%s/%s.gzip';
     const SF_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/TEMP/%s.zip';
-    
+
     public $id;
 
     /** @var string Name */
@@ -60,7 +60,7 @@ class LanguageCore extends ObjectModel
     public $active = true;
 
     protected static $_cache_language_installation = null;
-    
+
     /**
      * @see ObjectModel::$definition
      */
@@ -665,9 +665,9 @@ class LanguageCore extends ObjectModel
         }
         return Cache::retrieve($key);
     }
-    
+
     /**
-     * 
+     *
      * @param string $isoCode
      * @return string|false|null
      * @throws Exception
@@ -677,8 +677,24 @@ class LanguageCore extends ObjectModel
         if (!Validate::isLanguageIsoCode($isoCode)) {
             throw new Exception(sprintf('The ISO code %s is invalid'));
         }
-        
-        return Db::getInstance()->getValue('SELECT `locale` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($isoCode)).'\'');
+
+        $locale = Db::getInstance()->getValue('SELECT `locale` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($isoCode)).'\'');
+        if ($locale) {
+            return $locale;
+        }
+        $xmlPath = _PS_INSTALL_LANGS_PATH_.$isoCode.'/'.'/language.xml';
+        if (!file_exists($xmlPath)) {
+            return false;
+        }
+        $xml = @simplexml_load_file($xmlPath);
+        if ($xml) {
+            foreach ($xml->children() as $node) {
+                if ($node->getName() === 'locale') {
+                    return (string)$node;
+                }
+            }
+        }
+        return false;
     }
 
     public static function getLanguageCodeByIso($iso_code)
@@ -931,17 +947,17 @@ class LanguageCore extends ObjectModel
                 }
             }
         }
-        
+
         self::downloadSfLanguagePack(self::getLocaleByIso($iso), $errors);
-        
+
         return ! count($errors);
     }
-    
+
     public static function downloadSfLanguagePack($locale, &$errors = array())
     {
         $sfFile = _PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip';
         $content = Tools::file_get_contents(sprintf(self::SF_LANGUAGE_PACK_URL, $locale));
-        
+
         if (!is_writable(dirname($sfFile))) {
             // @todo Throw exception
             $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$sfFile.')';
@@ -949,7 +965,7 @@ class LanguageCore extends ObjectModel
             @file_put_contents($sfFile, $content);
         }
     }
-    
+
     public static function installSfLanguagePack($locale, &$errors = array())
     {
         if (!file_exists(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip')) {
@@ -1013,7 +1029,7 @@ class LanguageCore extends ObjectModel
         }
 
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
-        
+
         return count($errors) ? $errors : true;
     }
 
