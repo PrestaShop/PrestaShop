@@ -1,7 +1,7 @@
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  {l s='Log into your account' d='Shop.Theme.CustomerAccount'}
+  {l s='Log in to your account' d='Shop.Theme.CustomerAccount'}
 {/block}
 
 {block name='page_content'}
