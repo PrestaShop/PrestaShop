@@ -722,7 +722,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         // If it's an attribute, load object Attribute()
         if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute')) {
-            if ($this->access('edit') !== '1') {
+            if (true !== $this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } elseif (!$object = new Attribute((int)Tools::getValue($this->identifier))) {
                 $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)');
