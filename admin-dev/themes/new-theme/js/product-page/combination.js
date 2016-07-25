@@ -10,7 +10,7 @@ export default function() {
 
     $.get($jsCombinationsList.attr('data-action-refresh-images') + '/' + $jsCombinationsList.data('id-product'))
       .then(function(response) {
-        if (idsProductAttribute.length > 1) {
+        if (idsProductAttribute[0] != '') {
           getCombinations(response);
         }
         $('#create-combinations').click(function() {
@@ -134,6 +134,7 @@ export default function() {
         $('.js-attribute-checkbox:checked').each(function() {
           $(this).prop('checked', false);
         });
+        $('#combinations_thead').fadeIn();
       },
       complete: function() {
         $('#create-combinations').removeAttr('disabled');
