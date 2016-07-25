@@ -10,7 +10,9 @@ export default function() {
 
     $.get($jsCombinationsList.attr('data-action-refresh-images') + '/' + $jsCombinationsList.data('id-product'))
       .then(function(response) {
-        getCombinations(response);
+        if (idsProductAttribute.length > 1) {
+          getCombinations(response);
+        }
         $('#create-combinations').click(function() {
           generate();
         });
@@ -37,6 +39,8 @@ export default function() {
     let combinationUrl = $jsCombinationsList.data('combinations-url') + '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-');
 
     let getCombinations = (combinationsImages) => {
+      let $jsCombinationsBulkForm = $('#combinations-bulk-form');
+      $jsCombinationsBulkForm.toggleClass('inactive', !$jsCombinationsBulkForm.hasClass('inactive'));
       $.get(combinationUrl).then(function (resp) {
         $('#loading-attribute').before(resp);
         refreshImagesCombination(combinationsImages, idsProductAttribute.slice(currentCount, currentCount+step));
@@ -45,7 +49,7 @@ export default function() {
         if (currentCount < idsCount) {
           getCombinations(combinationsImages);
         } else {
-          $('#combinations-bulk-form').removeClass('inactive');
+          $jsCombinationsBulkForm.removeClass('inactive');
           $('#loading-attribute').fadeOut(1000).remove();
         }
       });
