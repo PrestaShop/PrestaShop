@@ -1141,7 +1141,7 @@ class AdminOrdersControllerCore extends AdminController
                     $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 }
             } else {
-                $this->errors[] = $this->trans('The invoice for edit note was unable to load.', array(), 'Admin.OrdersCustomers.Notification');
+                $this->errors[] = $this->trans('Failed to upload the invoice and edit its note.', array(), 'Admin.OrdersCustomers.Notification');
             }
         } elseif (Tools::isSubmit('submitAddOrder') && ($id_cart = Tools::getValue('id_cart')) &&
             ($module_name = Tools::getValue('payment_module_name')) &&

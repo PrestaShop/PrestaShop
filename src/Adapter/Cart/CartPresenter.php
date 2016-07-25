@@ -344,13 +344,13 @@ class CartPresenter implements PresenterInterface
             'minimalPurchaseRequired' => ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
                 sprintf(
                     $this->translator->trans(
-                        'A minimum shopping cart total of %s (tax excl.) is required to validate your order.
-                        Current cart total is %s (tax excl.).',
-                        array(),
+                        'A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).',
+                        array(
+                            '%amount%' => $this->priceFormatter->convertAndFormat($minimalPurchase),
+                            '%total%' => $this->priceFormatter->convertAndFormat($productsTotalExcludingTax),
+                        ),
                         'Shop.Theme.Checkout'
-                    ),
-                    $this->priceFormatter->convertAndFormat($minimalPurchase),
-                    $this->priceFormatter->convertAndFormat($productsTotalExcludingTax)
+                    )
                 ) :
                 '',
         );

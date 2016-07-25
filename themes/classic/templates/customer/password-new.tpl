@@ -39,6 +39,6 @@
 
 {block name='page_footer'}
   <ul>
-    <li><a href="{$urls.pages.authentication}">{l s='Back to login' d='Shop.Theme.Actions'}</a></li>
+    <li><a href="{$urls.pages.authentication}">{l s='Back to Login' d='Shop.Theme.Actions'}</a></li>
   </ul>
 {/block}

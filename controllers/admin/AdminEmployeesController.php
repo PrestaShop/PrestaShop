@@ -374,7 +374,7 @@ class AdminEmployeesControllerCore extends AdminController
                         'label' => $this->trans('Disabled', array(), 'Admin.Global')
                     )
                 ),
-                'hint' => $this->l('Allow or disallow this employee to log into the Admin panel.')
+                'hint' => $this->l('Allow or disallow this employee to log in to the Admin panel.')
             );
 
             // if employee is not SuperAdmin (id_profile = 1), don't make it possible to select the admin profile

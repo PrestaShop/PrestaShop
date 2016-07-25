@@ -60,7 +60,7 @@
 {if isset($img_error['error'])}
     <div class="alert alert-warning">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {l s='Warning: Copy/paste your errors if you want to manually set the image type (in the "Images" page under the "Preferences" menu):'}
+        {l s='Warning: This image type doesn’t exist. To manually set it, use the values below to create a new image type (in the "Images" page under the "Design" menu):'}
         <ul>
             {foreach $img_error['error'] as $error}
                 <li>

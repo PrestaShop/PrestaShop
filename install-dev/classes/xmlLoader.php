@@ -619,7 +619,7 @@ class InstallXmlLoader
             $entity_id = $this->retrieveId($entity, $identifier);
 
             if (!@copy($from_path.$identifier.'.'.$extension, $dst_path.$entity_id.'.'.$extension)) {
-                $this->setError($this->translator->trans('Cannot create image "%$identifier%" for entity "%$entity%"', array('%entity%' =>  $entity, '%identifier%' => $identifier), 'Install'));
+                $this->setError($this->translator->trans('Cannot create image "%identifier%" for entity "%entity%"', array('%entity%' =>  $entity, '%identifier%' => $identifier), 'Install'));
                 return;
             }
 
@@ -629,7 +629,7 @@ class InstallXmlLoader
 
                 // Test if dest folder is writable
                 if (!is_writable(dirname($target_file))) {
-                    $this->setError($this->translator->trans('Cannot create image "%identifier%" (bad permissions on folder "%2$s")', array('%identifier%' => $identifier.'-'.$type['name'], '%folder%' => dirname($target_file)), 'Install'));
+                    $this->setError($this->translator->trans('Cannot create image "%identifier%" (bad permissions on folder "%folder%")', array('%identifier%' => $identifier.'-'.$type['name'], '%folder%' => dirname($target_file)), 'Install'));
                 }
                 // If a file named folder/entity-type.extension exists just copy it, this is an optimisation in order to prevent to much resize
                 elseif (file_exists($origin_file)) {
@@ -640,7 +640,7 @@ class InstallXmlLoader
                 }
                 // Resize the image if no cache was prepared in fixtures
                 elseif (!ImageManager::resize($from_path.$identifier.'.'.$extension, $target_file, $type['width'], $type['height'])) {
-                    $this->setError($this->translator->trans('Cannot create image "%$identifier%" for entity "%entity%"', array('%identifier%' => $identifier.'-'.$type['name'], '%entity%' => $entity), 'Install'));
+                    $this->setError($this->translator->trans('Cannot create image "%identifier%" for entity "%entity%"', array('%identifier%' => $identifier.'-'.$type['name'], '%entity%' => $entity), 'Install'));
                 }
             }
         }
@@ -659,7 +659,7 @@ class InstallXmlLoader
         if (file_exists($from_path.$data['class_name'].'.gif') && !file_exists($dst_path.$data['class_name'].'.gif')) {
             //test if file exist in install dir and if do not exist in dest folder.
             if (!@copy($from_path.$data['class_name'].'.gif', $dst_path.$data['class_name'].'.gif')) {
-                $this->setError($this->translator->trans('Cannot create image "$identifier" for entity "%entity%"', array('%identifier%' => $identifier, '%tab%' => 'tab'), 'Install'));
+                $this->setError($this->translator->trans('Cannot create image "%identifier%" for entity "%entity%"', array('%identifier%' => $identifier, '%tab%' => 'tab'), 'Install'));
                 return;
             }
         }

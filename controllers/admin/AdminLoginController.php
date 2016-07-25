@@ -77,7 +77,7 @@ class AdminLoginControllerCore extends AdminController
                 $url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
                 $warningSslMessage = sprintf(
                     Translate::ppTags(
-                        Tools::displayError('SSL is activated. Please connect using the following link to [1]log into secure mode (https://)[/1]', false),
+                        Tools::displayError('SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]', false),
                         array('<a href="%s">')
                     ),
                     $url
@@ -284,7 +284,7 @@ class AdminLoginControllerCore extends AdminController
                 Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
                 die(Tools::jsonEncode(array(
                     'hasErrors' => false,
-                    'confirm' => $this->l('An email with a link to reset your password has been sent. Please check your mailbox.', 'AdminTab', false, false)
+                    'confirm' => $this->l('Please, check your mailbox. A link to reset your password has been sent to you.', 'AdminTab', false, false)
                 )));
             } else {
                 die(Tools::jsonEncode(array(
