@@ -1547,12 +1547,12 @@ var priceCalculation = (function() {
       });
 
       /** combinations : update TTC price field on change */
-      $('.combination-form .attribute_priceTE').keyup(function() {
+      $(document).on('keyup', '.combination-form .attribute_priceTE', function() {
         priceCalculation.impactTaxInclude($(this));
         priceCalculation.impactFinalPrice($(this));
       });
       /** combinations : update HT price field on change */
-      $('.combination-form .attribute_priceTI').keyup(function() {
+      $(document).on('keyup', '.combination-form .attribute_priceTI', function() {
         priceCalculation.impactTaxExclude($(this));
       });
 
