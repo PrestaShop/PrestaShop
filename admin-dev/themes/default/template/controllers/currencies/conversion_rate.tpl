@@ -20,7 +20,7 @@
 		<div class="panel">
 			<div class="panel-heading">{l s='Update exchange rates'}</div>
 			<form action="{$link->getAdminLink('AdminCurrencies')|escape:'html':'UTF-8'}" id="currency_form" method="post">
-				<button type="submit" class="btn btn-default col-lg-12 col-xs-4" name="SubmitExchangesRates">{l s="Update"|upper}</button>
+				<button type="submit" class="btn btn-default col-lg-12 col-xs-4" name="SubmitExchangesRates">{l s="Update"}</button>
 			</form>
 			<div class="clearfix"></div>
 		</div>

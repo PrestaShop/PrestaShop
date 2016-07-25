@@ -284,7 +284,7 @@ class AdminLoginControllerCore extends AdminController
                 Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
                 die(Tools::jsonEncode(array(
                     'hasErrors' => false,
-                    'confirm' => $this->l('An email with a link to reset your password has been sent. Please check your mailbox.', 'AdminTab', false, false)
+                    'confirm' => $this->l('Please, check your mailbox. A link to reset your password has been sent to you.', 'AdminTab', false, false)
                 )));
             } else {
                 die(Tools::jsonEncode(array(
