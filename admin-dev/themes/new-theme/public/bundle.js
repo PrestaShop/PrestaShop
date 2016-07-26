@@ -79,7 +79,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.3.1 */
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.3.3 */
 
 	(function(root, factory) {
 	  if (true) {
@@ -103,6 +103,32 @@
 	}
 
 	var zeroElement = null;
+
+	// Same as native getBoundingClientRect, except it takes into account parent <frame> offsets
+	// if the element lies within a nested document (<frame> or <iframe>-like).
+	function getActualBoundingClientRect(node) {
+	  var boundingRect = node.getBoundingClientRect();
+
+	  // The original object returned by getBoundingClientRect is immutable, so we clone it
+	  // We can't use extend because the properties are not considered part of the object by hasOwnProperty in IE9
+	  var rect = {};
+	  for (var k in boundingRect) {
+	    rect[k] = boundingRect[k];
+	  }
+
+	  if (node.ownerDocument !== document) {
+	    var _frameElement = node.ownerDocument.defaultView.frameElement;
+	    if (_frameElement) {
+	      var frameRect = getActualBoundingClientRect(_frameElement);
+	      rect.top += frameRect.top;
+	      rect.bottom += frameRect.top;
+	      rect.left += frameRect.left;
+	      rect.right += frameRect.left;
+	    }
+	  }
+
+	  return rect;
+	}
 
 	function getScrollParents(el) {
 	  // In firefox if the el is inside an iframe with display: none; window.getComputedStyle() will return null;
@@ -139,7 +165,13 @@
 	    }
 	  }
 
-	  parents.push(document.body);
+	  parents.push(el.ownerDocument.body);
+
+	  // If the node is within a frame, account for the parent window scroll
+	  if (el.ownerDocument !== document) {
+	    parents.push(el.ownerDocument.defaultView);
+	  }
+
 	  return parents;
 	}
 
@@ -173,13 +205,7 @@
 
 	  var id = node.getAttribute('data-tether-id');
 	  if (typeof zeroPosCache[id] === 'undefined') {
-	    zeroPosCache[id] = {};
-
-	    var rect = node.getBoundingClientRect();
-	    for (var k in rect) {
-	      // Can't use extend, as on IE9, elements don't resolve to be hasOwnProperty
-	      zeroPosCache[id][k] = rect[k];
-	    }
+	    zeroPosCache[id] = getActualBoundingClientRect(node);
 
 	    // Clear the cache when this position call is done
 	    defer(function () {
@@ -208,13 +234,7 @@
 
 	  var docEl = doc.documentElement;
 
-	  var box = {};
-	  // The original object returned by getBoundingClientRect is immutable, so we clone it
-	  // We can't use extend because the properties are not considered part of the object by hasOwnProperty in IE9
-	  var rect = el.getBoundingClientRect();
-	  for (var k in rect) {
-	    box[k] = rect[k];
-	  }
+	  var box = getActualBoundingClientRect(el);
 
 	  var origin = getOrigin();
 
@@ -333,7 +353,9 @@
 	}
 
 	function getClassName(el) {
-	  if (el.className instanceof SVGAnimatedString) {
+	  // Can't use just SVGAnimatedString here since nodes within a Frame in IE have
+	  // completely separately SVGAnimatedString base classes
+	  if (el.className instanceof el.ownerDocument.defaultView.SVGAnimatedString) {
 	    return el.className.baseVal;
 	  }
 	  return el.className;
@@ -398,7 +420,7 @@
 	  }, {
 	    key: 'off',
 	    value: function off(event, handler) {
-	      if (typeof this.bindings !== 'undefined' && typeof this.bindings[event] !== 'undefined') {
+	      if (typeof this.bindings === 'undefined' || typeof this.bindings[event] === 'undefined') {
 	        return;
 	      }
 
@@ -452,6 +474,7 @@
 	})();
 
 	TetherBase.Utils = {
+	  getActualBoundingClientRect: getActualBoundingClientRect,
 	  getScrollParents: getScrollParents,
 	  getBounds: getBounds,
 	  getOffsetParent: getOffsetParent,
@@ -510,7 +533,7 @@
 	  }
 	  var el = document.createElement('div');
 
-	  var transforms = ['transform', 'webkitTransform', 'OTransform', 'MozTransform', 'msTransform'];
+	  var transforms = ['transform', 'WebkitTransform', 'OTransform', 'MozTransform', 'msTransform'];
 	  for (var i = 0; i < transforms.length; ++i) {
 	    var key = transforms[i];
 	    if (el.style[key] !== undefined) {
@@ -909,7 +932,7 @@
 	      this.enabled = true;
 
 	      this.scrollParents.forEach(function (parent) {
-	        if (parent !== document) {
+	        if (parent !== _this3.target.ownerDocument) {
 	          parent.addEventListener('scroll', _this3.position);
 	        }
 	      });
@@ -1109,21 +1132,24 @@
 	        }
 	      };
 
+	      var doc = this.target.ownerDocument;
+	      var win = doc.defaultView;
+
 	      var scrollbarSize = undefined;
-	      if (document.body.scrollWidth > window.innerWidth) {
+	      if (doc.body.scrollWidth > win.innerWidth) {
 	        scrollbarSize = this.cache('scrollbar-size', getScrollBarSize);
 	        next.viewport.bottom -= scrollbarSize.height;
 	      }
 
-	      if (document.body.scrollHeight > window.innerHeight) {
+	      if (doc.body.scrollHeight > win.innerHeight) {
 	        scrollbarSize = this.cache('scrollbar-size', getScrollBarSize);
 	        next.viewport.right -= scrollbarSize.width;
 	      }
 
-	      if (['', 'static'].indexOf(document.body.style.position) === -1 || ['', 'static'].indexOf(document.body.parentElement.style.position) === -1) {
+	      if (['', 'static'].indexOf(doc.body.style.position) === -1 || ['', 'static'].indexOf(doc.body.parentElement.style.position) === -1) {
 	        // Absolute positioning in the body will be relative to the page, not the 'initial containing block'
-	        next.page.bottom = document.body.scrollHeight - top - height;
-	        next.page.right = document.body.scrollWidth - left - width;
+	        next.page.bottom = doc.body.scrollHeight - top - height;
+	        next.page.right = doc.body.scrollWidth - left - width;
 	      }
 
 	      if (typeof this.options.optimizations !== 'undefined' && this.options.optimizations.moveElement !== false && !(typeof this.targetModifier !== 'undefined')) {
@@ -1142,8 +1168,8 @@
 	            offsetBorder[side.toLowerCase()] = parseFloat(offsetParentStyle['border' + side + 'Width']);
 	          });
 
-	          offsetPosition.right = document.body.scrollWidth - offsetPosition.left - offsetParentSize.width + offsetBorder.right;
-	          offsetPosition.bottom = document.body.scrollHeight - offsetPosition.top - offsetParentSize.height + offsetBorder.bottom;
+	          offsetPosition.right = doc.body.scrollWidth - offsetPosition.left - offsetParentSize.width + offsetBorder.right;
+	          offsetPosition.bottom = doc.body.scrollHeight - offsetPosition.top - offsetParentSize.height + offsetBorder.bottom;
 
 	          if (next.page.top >= offsetPosition.top + offsetBorder.top && next.page.bottom >= offsetPosition.bottom) {
 	            if (next.page.left >= offsetPosition.left + offsetBorder.left && next.page.right >= offsetPosition.right) {
@@ -1301,7 +1327,7 @@
 
 	        if (!offsetParentIsBody) {
 	          this.element.parentNode.removeChild(this.element);
-	          document.body.appendChild(this.element);
+	          this.element.ownerDocument.body.appendChild(this.element);
 	        }
 	      }
 
@@ -1361,11 +1387,21 @@
 
 	  if (typeof to.nodeType !== 'undefined') {
 	    (function () {
+	      var node = to;
 	      var size = getBounds(to);
 	      var pos = size;
 	      var style = getComputedStyle(to);
 
 	      to = [pos.left, pos.top, size.width + pos.left, size.height + pos.top];
+
+	      // Account any parent Frames scroll offset
+	      if (node.ownerDocument !== document) {
+	        var win = node.ownerDocument.defaultView;
+	        to[0] += win.pageXOffset;
+	        to[1] += win.pageYOffset;
+	        to[2] += win.pageXOffset;
+	        to[3] += win.pageYOffset;
+	      }
 
 	      BOUNDS_FORMAT.forEach(function (side, i) {
 	        side = side[0].toUpperCase() + side.substr(1);
@@ -73675,9 +73711,6 @@
 	var queueIndex = -1;
 
 	function cleanUpNextTick() {
-	    if (!draining || !currentQueue) {
-	        return;
-	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -85246,11 +85279,11 @@
 
 	__webpack_require__(257);
 
-	var _header = __webpack_require__(265);
+	var _header = __webpack_require__(266);
 
 	var _header2 = _interopRequireDefault(_header);
 
-	var _notifications = __webpack_require__(266);
+	var _notifications = __webpack_require__(267);
 
 	var _notifications2 = _interopRequireDefault(_notifications);
 
@@ -85413,6 +85446,10 @@
 
 	var _nestedCategories2 = _interopRequireDefault(_nestedCategories);
 
+	var _combination = __webpack_require__(265);
+
+	var _combination2 = _interopRequireDefault(_combination);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	(0, _jquery2.default)(function () {
@@ -85420,6 +85457,7 @@
 	  (0, _productSearchAutocomplete2.default)();
 	  (0, _categoryTree2.default)();
 	  (0, _attributes2.default)();
+	  (0, _combination2.default)();
 	  var bulkCombination_ = (0, _productBulkCombinations2.default)();
 	  bulkCombination_.init();
 	  var nestedCategory_ = (0, _nestedCategories2.default)();
@@ -88121,7 +88159,7 @@
 
 	      applyChangesBtn.on('click', function (event) {
 	        event.preventDefault();
-	        that.applyChangesOnCombinations().resetForm().unselectCombinations().submitUpdate();
+	        that.applyChangesOnCombinations().hideForm().resetForm().unselectCombinations().submitUpdate();
 	      });
 
 	      /* if final price change with user interaction, combinations should be impacted */
@@ -88163,7 +88201,7 @@
 	        });
 	      });
 
-	      (0, _jquery2.default)('.js-combination').on('change', function () {
+	      (0, _jquery2.default)(document).on('change', '.js-combination', function () {
 	        if ((0, _jquery2.default)('.bulk-action').attr('aria-expanded') === "false" || !(0, _jquery2.default)('.js-combination').is(':checked')) {
 	          (0, _jquery2.default)('.js-collapse').collapse('toggle');
 	        }
@@ -88240,7 +88278,8 @@
 	      return this;
 	    },
 	    'unselectCombinations': function unselectCombinations() {
-	      (0, _jquery2.default)('input.js-combination').prop('checked', false);
+	      // Use of the bulk action button. It has an event listener to unselect all the combinations
+	      (0, _jquery2.default)('#toggle-all-combinations').prop('checked', false);
 
 	      return this;
 	    },
@@ -88283,7 +88322,7 @@
 	    _classCallCheck(this, Combination);
 
 	    this.inputBulkPattern = "product_combination_bulk_";
-	    this.inputPattern = "form_step3_combinations_" + index + "_";
+	    this.inputPattern = "combination_" + index + "_";
 	    this.domId = domId;
 	    this.appId = 'attribute_' + this.domId;
 	    this.element = (0, _jquery2.default)('#' + this.appId);
@@ -88457,13 +88496,165 @@
 	  value: true
 	});
 
+	exports.default = function () {
+	  (0, _jquery2.default)(document).ready(function () {
+	    var $jsCombinationsList = (0, _jquery2.default)('.js-combinations-list');
+	    var idsProductAttribute = $jsCombinationsList.data('ids-product-attribute').toString().split(',');
+	    var idsCount = idsProductAttribute.length;
+	    var currentCount = 0;
+	    var step = 5;
+
+	    _jquery2.default.get($jsCombinationsList.attr('data-action-refresh-images') + '/' + $jsCombinationsList.data('id-product')).then(function (response) {
+	      if (idsProductAttribute[0] != '') {
+	        getCombinations(response);
+	      }
+	      (0, _jquery2.default)('#create-combinations').click(function () {
+	        generate();
+	      });
+	    });
+
+	    (0, _jquery2.default)(document).on('click', '#form .product-combination-image', function () {
+	      var input = (0, _jquery2.default)(this).find('input');
+	      var isChecked = input.prop('checked');
+	      input.prop('checked', isChecked ? false : true);
+
+	      if (isChecked) {
+	        (0, _jquery2.default)(this).removeClass('img-highlight');
+	      } else {
+	        (0, _jquery2.default)(this).addClass('img-highlight');
+	      }
+	      refreshDefaultImage();
+	    });
+
+	    /*
+	     * Retrieve URL to get a set of combination forms from data attribute
+	     * Concatenate ids_product_attribute to load from a slice of idsProductAttribute depending of step and last set
+	     */
+	    var combinationUrl = $jsCombinationsList.data('combinations-url') + '/' + idsProductAttribute.slice(currentCount, currentCount + step).join('-');
+
+	    var getCombinations = function getCombinations(combinationsImages) {
+	      var $jsCombinationsBulkForm = (0, _jquery2.default)('#combinations-bulk-form');
+	      $jsCombinationsBulkForm.toggleClass('inactive', !$jsCombinationsBulkForm.hasClass('inactive'));
+	      _jquery2.default.get(combinationUrl).then(function (resp) {
+	        (0, _jquery2.default)('#loading-attribute').before(resp);
+	        refreshImagesCombination(combinationsImages, idsProductAttribute.slice(currentCount, currentCount + step));
+	        currentCount += step;
+	        combinationUrl = $jsCombinationsList.data('combinations-url') + '/' + idsProductAttribute.slice(currentCount, currentCount + step).join('-');
+	        if (currentCount < idsCount) {
+	          getCombinations(combinationsImages);
+	        } else {
+	          $jsCombinationsBulkForm.removeClass('inactive');
+	          (0, _jquery2.default)('#loading-attribute').fadeOut(1000).remove();
+	        }
+	      });
+	    };
+	  });
+
+	  var refreshImagesCombination = function refreshImagesCombination(combinationsImages, idsProductAttribute) {
+	    _jquery2.default.each(idsProductAttribute, function (index, value) {
+	      var $combinationElem = (0, _jquery2.default)('.combination[data="' + value + '"]');
+	      var $imagesElem = $combinationElem.find('.images');
+	      var $index = $combinationElem.attr('data-index');
+
+	      $imagesElem.html('');
+
+	      _jquery2.default.each(combinationsImages[value], function (key, image) {
+	        $imagesElem.append('<div class="product-combination-image ' + (image.id_image_attr ? 'img-highlight' : '') + '">\n          <input type="checkbox" name="combination_' + $index + '[id_image_attr][]" value="' + image.id + '" ' + (image.id_image_attr ? 'checked="checked"' : '') + '>\n          <img src="' + image.base_image_url + '-small_default.' + image.format + '" alt="" />\n        </div>');
+	      });
+
+	      $combinationElem.fadeIn(1000);
+	    });
+
+	    refreshDefaultImage();
+	  };
+
+	  var refreshDefaultImage = function refreshDefaultImage() {
+	    var productDefaultImageUrl = null;
+	    var productCoverImageElem = (0, _jquery2.default)('#product-images-dropzone').find('.iscover');
+
+	    /** get product cover image */
+	    if (productCoverImageElem.length === 1) {
+	      var imgElem = productCoverImageElem.parent().find('.dz-image');
+
+	      /** Dropzone.js workaround : If this is a fresh upload image, look up for an img, else find a background url */
+	      if (imgElem.find('img').length) {
+	        productDefaultImageUrl = imgElem.find('img').attr('src');
+	      } else {
+	        productDefaultImageUrl = imgElem.css('background-image').replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+	      }
+	    }
+
+	    _jquery2.default.each((0, _jquery2.default)('#form .combination-form'), function (key, elem) {
+	      var defaultImageUrl = productDefaultImageUrl;
+
+	      /** get first selected image */
+	      var defaultImageElem = (0, _jquery2.default)(elem).find('.product-combination-image input:checked:first');
+	      if (defaultImageElem.length === 1) {
+	        defaultImageUrl = defaultImageElem.parent().find('img').attr('src');
+	      }
+
+	      if (defaultImageUrl) {
+	        var img = '<img src="' + defaultImageUrl + '" class="img-responsive" />';
+	        (0, _jquery2.default)('#accordion_combinations #attribute_' + (0, _jquery2.default)(elem).attr('data')).find('td.img').html(img);
+	      }
+	    });
+	  };
+
+	  var generate = function generate() {
+	    _jquery2.default.ajax({
+	      type: 'POST',
+	      url: (0, _jquery2.default)('#form_step3_attributes').attr('data-action'),
+	      data: (0, _jquery2.default)('#attributes-generator input.attribute-generator, #form_id_product').serialize(),
+	      beforeSend: function beforeSend() {
+	        (0, _jquery2.default)('#create-combinations').attr('disabled', 'disabled');
+	      },
+	      success: function success(response) {
+	        (0, _jquery2.default)('#accordion_combinations').append(response.form);
+	        displayFieldsManager.refresh();
+	        _jquery2.default.get((0, _jquery2.default)('.js-combinations-list').attr('data-action-refresh-images') + '/' + (0, _jquery2.default)('.js-combinations-list').data('id-product')).then(function (combinationsImages) {
+	          refreshImagesCombination(combinationsImages, response.ids_product_attribute);
+	        });
+
+	        /** initialize form */
+	        (0, _jquery2.default)('input.attribute-generator').remove();
+	        (0, _jquery2.default)('#attributes-generator div.token').remove();
+	        (0, _jquery2.default)('.js-attribute-checkbox:checked').each(function () {
+	          (0, _jquery2.default)(this).prop('checked', false);
+	        });
+	        (0, _jquery2.default)('#combinations_thead').fadeIn();
+	      },
+	      complete: function complete() {
+	        (0, _jquery2.default)('#create-combinations').removeAttr('disabled');
+	        supplierCombinations.refresh();
+	        warehouseCombinations.refresh();
+	      }
+	    });
+	  };
+	};
+
+	var _jquery = __webpack_require__(3);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _jquery = __webpack_require__(3);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _notifications = __webpack_require__(266);
+	var _notifications = __webpack_require__(267);
 
 	var _notifications2 = _interopRequireDefault(_notifications);
 
@@ -88595,7 +88786,7 @@
 	exports.default = Header;
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports) {
 
 	"use strict";

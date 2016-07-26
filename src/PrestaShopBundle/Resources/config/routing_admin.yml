@@ -7,6 +7,10 @@ _admin_product_routing:
     resource: "admin/routing_product.yml"
     prefix: /product
 
+_admin_combination_routing:
+    resource: "admin/routing_combination.yml"
+    prefix: /combination
+
 _admin_category_routing:
     resource: "admin/routing_category.yml"
     prefix: /category

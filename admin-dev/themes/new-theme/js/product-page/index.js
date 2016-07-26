@@ -5,12 +5,14 @@ import categoryTree from './category-tree';
 import attributes from './attributes';
 import bulkCombination from './product-bulk-combinations'
 import nestedCategory from './nested-categories'
+import combination from './combination'
 
 $(() => {
   productHeader();
   productSearchAutocomplete();
   categoryTree();
   attributes();
+  combination();
   var bulkCombination_ = bulkCombination()
   bulkCombination_.init();
   var nestedCategory_ = nestedCategory()

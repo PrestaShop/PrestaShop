@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 
 /**
  * This form class is responsible to map the form data to the product object
@@ -451,7 +450,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'advanced_stock_management' => (bool) $this->product->advanced_stock_management,
                 'depends_on_stock' => $this->product->depends_on_stock?"1":"0",
                 'qty_0' => $this->product->getQuantity($this->product->id),
-                'combinations' => $this->getFormCombinations(),
+                'id_product_attributes' => $this->getProductAttributes(),
                 'out_of_stock' => $this->product->out_of_stock,
                 'minimal_quantity' => $this->product->minimal_quantity,
                 'available_now' => $this->product->available_now,
@@ -510,6 +509,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $form_data['step4'] = array_merge($form_data['step4'], $this->getDataWarehousesCombinations());
 
         return $form_data;
+    }
+
+    public function getAttributesResume()
+    {
+        return $this->product->getAttributesResume($this->context->getContext()->language->id);
     }
 
     /**
@@ -719,82 +723,22 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     }
 
     /**
-     * Get all product combinations values
+     * Get all product id_product_attribute
      *
-     * @return array combinations
+     * @return array id_product_attribute
      */
-    private function getFormCombinations()
+    private function getProductAttributes()
     {
-        $combinations = $this->product->getAttributeCombinations(1, false);
-        $formCombinations = [];
-        foreach ($combinations as $combination) {
-            $formCombinations[] = $this->getFormCombination($combination);
+        $combinations = $this->getAttributesResume();
+        $idsProductAttribute = array();
+
+        if (is_array($combinations)) {
+            foreach ($combinations as $combination) {
+                $idsProductAttribute[] = $combination['id_product_attribute'];
+            }
         }
 
-        return $formCombinations;
-    }
-
-    /**
-     * Get a combination values
-     *
-     * @param array $combination The combination values
-     *
-     * @return array combinations
-     */
-    public function getFormCombination($combination)
-    {
-        $attribute_price_impact = 0;
-        if ($combination['price'] > 0) {
-            $attribute_price_impact = 1;
-        } elseif ($combination['price'] < 0) {
-            $attribute_price_impact = -1;
-        }
-
-        $attribute_weight_impact = 0;
-        if ($combination['weight'] > 0) {
-            $attribute_weight_impact = 1;
-        } elseif ($combination['weight'] < 0) {
-            $attribute_weight_impact = -1;
-        }
-
-        $attribute_unity_price_impact = 0;
-        if ($combination['unit_price_impact'] > 0) {
-            $attribute_unity_price_impact = 1;
-        } elseif ($combination['unit_price_impact'] < 0) {
-            $attribute_unity_price_impact = -1;
-        }
-
-        //generate combination name
-        $attributesCombinations = $this->product->getAttributeCombinationsById($combination['id_product_attribute'], $this->locales[0]['id_lang']);
-        $name = [];
-        foreach ($attributesCombinations as $attribute) {
-            $name[] = $attribute['group_name'].' - '.$attribute['attribute_name'];
-        }
-
-        return [
-            'id_product_attribute' => $combination['id_product_attribute'],
-            'attributes' => array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']),
-            'attribute_reference' => $combination['reference'],
-            'attribute_ean13' => $combination['ean13'],
-            'attribute_isbn' => $combination['isbn'],
-            'attribute_upc' => $combination['upc'],
-            'attribute_wholesale_price' => $combination['wholesale_price'],
-            'attribute_price_impact' => $attribute_price_impact,
-            'attribute_price' => $combination['price'],
-            'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->contextShop->currency->iso_code),
-            'final_price' => $this->tools->bcadd($this->product->price, $combination['price'], CommonAbstractType::PRESTASHOP_DECIMALS),
-            'attribute_priceTI' => '',
-            'attribute_ecotax' => $combination['ecotax'],
-            'attribute_weight_impact' => $attribute_weight_impact,
-            'attribute_weight' => $combination['weight'],
-            'attribute_unit_impact' => $attribute_unity_price_impact,
-            'attribute_unity' => $combination['unit_price_impact'],
-            'attribute_minimal_quantity' => $combination['minimal_quantity'],
-            'available_date_attribute' =>  $combination['available_date'],
-            'attribute_default' => (bool)$combination['default_on'],
-            'attribute_quantity' => $this->productAdapter->getQuantity($this->product->id, $combination['id_product_attribute']),
-            'name' => implode(', ', $name)
-        ];
+        return $idsProductAttribute;
     }
 
     /**

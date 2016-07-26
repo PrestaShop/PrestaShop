@@ -49,9 +49,6 @@
     list-style: none;
     padding-left: 0;
   }
-  #form-loading {
-    display: none;
-  }
   .tab-content {
     padding: 0;
   }
@@ -557,6 +554,18 @@
       border-top: $gray-light 2px solid;
     }
   }
+  #combinations-bulk-form {
+    transition: opacity 1s ease-in-out;
+
+    &.inactive {
+      cursor: progress;
+      opacity: 0.3;
+
+      > * {
+        pointer-events: none;
+      }
+    }
+  }
   .combinations-list {
     th,
     td {
@@ -572,6 +581,16 @@
       background-color: $notice;
     }
     .combination {
+      &.loaded {
+        display: none;
+      }
+      &.timeline-wrapper, .timeline-item {
+        background-color: transparent;
+        border-radius: 0;
+      }
+      .animated-background {
+        height: rem(50px);
+      }
       .img {
         width: 8%;
       }

@@ -27,6 +27,7 @@ namespace PrestaShopBundle\Tests\Model\Product;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
+use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
 
 class AdminModelAdapterTest extends KernelTestCase
 {
@@ -122,7 +123,7 @@ class AdminModelAdapterTest extends KernelTestCase
     }
     private function fakeCombination()
     {
-        return [
+        return array('0' => [
             "id_product_attribute" => "6",
             "id_product" => "1",
             "reference" => "",
@@ -146,7 +147,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "group_name" => "Taille",
             "attribute_name" => "L",
             "id_attribute" => "3"
-        ];
+        ]);
     }
 
     private function fakeProduct()
@@ -213,13 +214,8 @@ class AdminModelAdapterTest extends KernelTestCase
      */
     public function testGetFormCombination()
     {
-        $expectedStructureReturn = [
+        $expectedStructureReturn = array(
             "id_product_attribute" => "6",
-            "attributes" => [
-                0 => "Taille",
-                1 => "L",
-                2 => "3"
-            ],
             "attribute_reference" => "",
             "attribute_ean13" => "",
             "attribute_isbn" => "",
@@ -227,6 +223,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_wholesale_price" => "0.000000",
             "attribute_price_impact" => 0,
             "attribute_price" => "0.000000",
+            "final_price" => 0,
             "attribute_priceTI" => "",
             "attribute_ecotax" => "0.000000",
             "attribute_weight_impact" => 0,
@@ -236,8 +233,11 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_minimal_quantity" => "1",
             "available_date_attribute" => "0000-00-00",
             "attribute_default" => false,
-        ];
-        $actualReturn = $this->adminModelAdapter->getFormCombination($this->fakeCombination());
+            "attribute_quantity" => 300,
+            "name" => "Taille - L",
+        );
+        $combinationDataProvider = new combinationDataProvider();
+        $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);
 
         foreach ($expectedStructureReturn as $property => $value) {
             $this->assertArrayHasKey($property, $actualReturn, sprintf('The expected key %s was not found', $property));

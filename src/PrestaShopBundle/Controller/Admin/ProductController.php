@@ -391,16 +391,28 @@ class ProductController extends FrameworkBundleAdminController
         ));
 
         $form->handleRequest($request);
+        $formData = $form->getData();
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+
                 // Legacy code. To fix when Object model will change. But report Hooks.
+                $postData = $request->request->all();
+                $combinations = array();
+
+                foreach ((array) $postData as $postKey => $postValue) {
+                    if (preg_match('/^combination_.*/', $postKey)) {
+                        $combinations[$postKey] = $postValue;
+                    }
+                }
+
+                $formData['step3']['combinations'] = $combinations;
 
                 //define POST values for keeping legacy adminController skills
-                $_POST = $modelMapper->getModelData($form->getData(), $isMultiShopContext);
+                $_POST = $modelMapper->getModelData($formData, $isMultiShopContext);
 
                 $adminProductController = $adminProductWrapper->getInstance();
-                $adminProductController->setIdObject($form->getData()['id_product']);
+                $adminProductController->setIdObject($formData['id_product']);
                 $adminProductController->setAction('save');
 
                 // Hooks: this will trigger legacy AdminProductController, postProcess():
@@ -479,7 +491,9 @@ class ProductController extends FrameworkBundleAdminController
             'formCombinations' => $formBulkCombinations->createView(),
             'categories' => $this->get('prestashop.adapter.data_provider.category')->getCategoriesWithBreadCrumb(),
             'id_product' => $id,
-            'has_combinations' => (isset($form->getData()['step3']['combinations']) && count($form->getData()['step3']['combinations']) > 0),
+            'ids_product_attribute' => (isset($formData['step3']['id_product_attributes']) ? implode(',', $formData['step3']['id_product_attributes']) : ''),
+            'has_combinations' => (isset($formData['step3']['id_product_attributes']) && count($formData['step3']['id_product_attributes']) > 0),
+            'combinations_count' => isset($formData['step3']['id_product_attributes']) ? count($formData['step3']['id_product_attributes']) : 0,
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
             'warehouses' => ($stockManager->isAsmGloballyActivated())? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,

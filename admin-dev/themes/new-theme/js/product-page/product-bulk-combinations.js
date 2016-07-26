@@ -28,6 +28,7 @@ export default function() {
       applyChangesBtn.on('click', (event) => {
         event.preventDefault();
         that.applyChangesOnCombinations()
+            .hideForm()
             .resetForm()
             .unselectCombinations()
             .submitUpdate();
@@ -72,7 +73,7 @@ export default function() {
         });
       });
 
-      $('.js-combination').on('change', () => {
+      $(document).on('change', '.js-combination', () => {
         if ($('.bulk-action').attr('aria-expanded') === "false" || !$('.js-combination').is(':checked')) {
           $('.js-collapse').collapse('toggle');
         }
@@ -149,7 +150,8 @@ export default function() {
       return this;
     },
     'unselectCombinations': function unselectCombinations() {
-      $('input.js-combination').prop('checked', false);
+      // Use of the bulk action button. It has an event listener to unselect all the combinations
+      $('#toggle-all-combinations').prop('checked', false);
 
       return this;
     },
@@ -182,7 +184,7 @@ export default function() {
 class Combination {
   constructor(domId, index) {
     this.inputBulkPattern = "product_combination_bulk_";
-    this.inputPattern = "form_step3_combinations_" + index + "_";
+    this.inputPattern = "combination_" + index + "_";
     this.domId = domId;
     this.appId = 'attribute_' + this.domId;
     this.element = $('#' + this.appId);

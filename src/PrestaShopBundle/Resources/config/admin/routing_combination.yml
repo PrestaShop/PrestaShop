@@ -1,0 +1,18 @@
+#All the combination related routes
+
+admin_combination_generate_form:
+    path:     /{combinationIds}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\CombinationController::generateCombinationFormAction
+        combinationIds: 0
+
+admin_get_product_combinations:
+    path:     /product-combinations/{idProduct}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\CombinationController::getProductCombinationsAction
+        _format: json
+        idProduct: 0
+    requirements:
+        idProduct: \d+

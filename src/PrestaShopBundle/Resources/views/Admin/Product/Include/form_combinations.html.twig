@@ -52,26 +52,44 @@
     </div>
 
     <div class="combinations-list">
-      {{ form_errors(form.combinations) }}
       <table class="table table-striped table-no-bordered">
-        <thead id="combinations_thead" {% if form.combinations|length == 0 %}style="display: none;"{% endif %}>
-        <tr class="uppercase">
-          <th>
-            <span>{{ 'Select'|trans([], 'Admin.Actions') }}</span>
-            <input type="checkbox" id="toggle-all-combinations" >
-          </th>
-          <th></th>
-          <th>{{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}</th>
-          <th>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}<br>{{ '(Tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
-          <th>{{ 'Final price'|trans({}, 'Admin.Catalog.Feature') }}<br>{{ '(Tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
-          <th>{{ 'Quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
-          <th colspan="3" class="text-xs-right">{{ 'Default combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
-        </tr>
+        <thead id="combinations_thead" {% if not has_combinations %}style="display: none;"{% endif %}>
+          <tr class="uppercase">
+            <th>
+              <span>{{ 'Select'|trans([], 'Admin.Actions') }}</span>
+              <input type="checkbox" id="toggle-all-combinations" >
+            </th>
+            <th></th>
+            <th>{{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th>{{ 'Final price'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th>{{ 'Quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th colspan="3" class="text-xs-right">{{ 'Default combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          </tr>
         </thead>
-        <tbody class="panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
-        {% for combination in form.combinations %}
-          {{ include('PrestaShopBundle:Admin/Product/Include:form_combination.html.twig', { 'form': combination, 'loop_index': loop.index0, 'id_product': id_product }) }}
-        {% endfor %}
+        <tbody class="js-combinations-list panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}"  data-id-product= {{ id_product }} data-ids-product-attribute="{{ ids_product_attribute }}" data-combinations-url="{{ path('admin_combination_generate_form') }}">
+          {% if has_combinations %}
+            <tr class="combination loading timeline-wrapper" id="loading-attribute">
+              <td class="timeline-item" width="1%">
+              </td>
+              <td class="timeline-item img">
+                <div class="animated-background"></div>
+              </td>
+              <td>
+                <div class="animated-background"></div>
+              </td>
+              <td class="attribute-price">
+                <div class="animated-background"></div>
+              </td>
+              <td class="attribute-finalprice">
+                <div class="animated-background"></div>
+              </td>
+              <td class="attribute-quantity">
+                <div class="animated-background"></div>
+              </td>
+              <td colspan="6"></td>
+            </tr>
+          {%  endif %}
         </tbody>
       </table>
     </div>

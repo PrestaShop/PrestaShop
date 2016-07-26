@@ -13,7 +13,7 @@ services:
     prestashop.data_provider.modules.recommended:
         class: PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules
         arguments: ["@router"]
-        
+
     prestashop.security.role.dynamic_role_hierarchy:
         class:      PrestaShopBundle\Security\Role\DynamicRoleHierarchy
 
@@ -105,6 +105,9 @@ services:
 
     prestashop.adapter.data_provider.addon:
         class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
+
+    prestashop.adapter.data_provider.combination:
+        class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
 
     prestashop.adapter.stock_manager:
         class: PrestaShop\PrestaShop\Adapter\StockManager

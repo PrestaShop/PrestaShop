@@ -140,7 +140,7 @@ var displayFieldsManager = (function() {
       }
 
       /** check quantity / combinations display */
-      if (showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr').length > 0) {
+      if (showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr:not(#loading-attribute)').length > 0) {
         combinationsBlock.show();
 
         $('#specific-price-combination-selector').removeClass('hide').show();
@@ -150,11 +150,6 @@ var displayFieldsManager = (function() {
         combinationsBlock.hide();
         $('#specific-price-combination-selector').hide();
         $('#product_qty_0_shortcut_div, #quantities').show();
-      }
-      if ($('#combinations_thead').next().children().length) {
-        $('#combinations_thead').show();
-      } else {
-        $('#combinations_thead').hide();
       }
 
       /** Tooltip for product type combinations */
@@ -186,7 +181,7 @@ var displayFieldsManager = (function() {
      * @param errorMessage
      */
     'checkAccessVariations': function() {
-      if ((showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr').length > 0) && (typeProduct.val() === '1' || typeProduct.val() === '2')) {
+      if ((showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr:not(#loading-attribute)').length > 0) && (typeProduct.val() === '1' || typeProduct.val() === '2')) {
         var typeOfProduct = this.getProductType();
         var errorMessage = "You can't create " + typeOfProduct + " product with variations. Are you sure to disable variations ? they will all be deleted.";
         modalConfirmation.create(translate_javascripts[errorMessage], null, {
@@ -910,56 +905,8 @@ var form = (function() {
           $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
             $('#attribute-generator-' + e.attrs.value).remove();
           });
-
-          $('#create-combinations').click(function() {
-            generate();
-          });
         });
         imagesProduct.expander();
-
-        /** Generate combinations */
-        function generate() {
-          /**
-           * Combination row maker
-           * @param {object} attribute
-           */
-          var combinationRowMaker = function(form) {
-            var combinationsLength = $('#accordion_combinations').children().length;
-            var newForm = form.replace(/product_combination\[/g, 'form[step3][combinations][' + combinationsLength + '][')
-              .replace(/id="product_combination_/g, 'id="form_step3_combinations_' + combinationsLength + '_')
-              .replace(/__loop_index__/g, combinationsLength);
-
-            $('#accordion_combinations').prepend(newForm);
-            displayFieldsManager.refresh();
-            combinations.refreshImagesCombination();
-          };
-
-          $.ajax({
-            type: 'POST',
-            url: $('#form_step3_attributes').attr('data-action'),
-            data: $('#attributes-generator input.attribute-generator, #form_id_product').serialize(),
-            beforeSend: function() {
-              $('#create-combinations').attr('disabled', 'disabled');
-            },
-            success: function(response) {
-              $.each(response, function(key, val) {
-                combinationRowMaker(val);
-              });
-
-              /** initialize form */
-              $('input.attribute-generator').remove();
-              $('#attributes-generator div.token').remove();
-              $('.js-attribute-checkbox:checked').each(function() {
-                $(this).prop('checked', false);
-              });
-            },
-            complete: function() {
-              $('#create-combinations').removeAttr('disabled');
-              supplierCombinations.refresh();
-              warehouseCombinations.refresh();
-            }
-          });
-        }
       });
     },
     'send': function() {
@@ -1286,8 +1233,6 @@ var imagesProduct = (function() {
           if (response.cover === 1) {
             imagesProduct.updateDisplayCover(response.id);
           }
-
-          combinations.refreshImagesCombination();
         },
         error: function(file, response) {
           var message = '';
@@ -1451,7 +1396,6 @@ var formImagesProduct = (function() {
             complete: function() {
               formZoneElem.find('.close').click();
               dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
-              combinations.refreshImagesCombination();
               imagesProduct.checkDropzoneMode();
             }
           });
@@ -1603,12 +1547,12 @@ var priceCalculation = (function() {
       });
 
       /** combinations : update TTC price field on change */
-      $('.combination-form .attribute_priceTE').keyup(function() {
+      $(document).on('keyup', '.combination-form .attribute_priceTE', function() {
         priceCalculation.impactTaxInclude($(this));
         priceCalculation.impactFinalPrice($(this));
       });
       /** combinations : update HT price field on change */
-      $('.combination-form .attribute_priceTI').keyup(function() {
+      $(document).on('keyup', '.combination-form .attribute_priceTI', function() {
         priceCalculation.impactTaxExclude($(this));
       });
 

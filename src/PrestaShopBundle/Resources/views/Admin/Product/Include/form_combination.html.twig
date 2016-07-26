@@ -1,5 +1,5 @@
-<tr class="combination" id="attribute_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" data-index="{{ loop_index is defined ? loop_index : '__loop_index__' }}">
-  <td width="1%"><input class="js-combination" type="checkbox" data-id="{{ form.vars.value.id_product_attribute }}" data-index="{{ loop_index is defined ? loop_index : '__loop_index__' }}"></td>
+<tr class="combination loaded" id="attribute_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" data-index="{{ form.vars.value.id_product_attribute }}">
+  <td width="1%"><input class="js-combination" type="checkbox" data-id="{{ form.vars.value.id_product_attribute }}" data-index="{{ form.vars.value.id_product_attribute }}"></td>
   <td class="img"><div class="fake-img"></div></td>
     <td>{{ form.vars.value.name }}</td>
     <td class="attribute-price">
@@ -168,7 +168,7 @@
         </div>
     </td>
     <td width="5%">
-      <a href="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}" class="btn btn-invisible btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
+      <a href="{{ path('admin_delete_attribute', {'idProduct': form.vars.value.id_product}) }}" class="btn btn-invisible btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
     </td>
     <td>
       {% set checked = form.vars.value.attribute_default == 1 ? 'checked' : '' %}

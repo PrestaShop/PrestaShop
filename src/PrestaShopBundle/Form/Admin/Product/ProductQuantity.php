@@ -30,6 +30,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the product quantity form.
@@ -95,11 +96,6 @@ class ProductQuantity extends CommonAbstractType
                     new Assert\NotBlank(),
                     new Assert\Type(array('type' => 'numeric')),
                 ),
-            ))
-            ->add('combinations', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-                'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductCombination',
-                'allow_add' => true,
-                'allow_delete' => true,
             ))
             ->add('out_of_stock', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices_as_values' => true,
@@ -186,6 +182,17 @@ class ProductQuantity extends CommonAbstractType
         });
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * Configure options
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'allow_extra_fields' => true,
+        ));
+    }
     /**
      * Returns the block prefix of this type.
      *
