@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 
@@ -63,7 +65,7 @@ class ModuleManagerBuilder
             self::$moduleDataUpdater       = new ModuleDataUpdater($addonsDataProvider, self::$adminModuleDataProvider);
             self::$legacyLogger            = new LegacyLogger();
             self::$moduleDataProvider      = new ModuleDataProvider(self::$legacyLogger, self::$translator);
-            self::$moduleZipManager = new ModuleZipManager(self::$translator);
+            self::$moduleZipManager = new ModuleZipManager(new Filesystem, new Finder, self::$translator);
         }
     }
 

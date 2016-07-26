@@ -54,10 +54,10 @@ class ModuleZipManager
     private $finder;
     private $translator;
     
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(Filesystem $filesystem, Finder $finder, TranslatorInterface $translator)
     {
-        $this->filesystem = new Filesystem();
-        $this->finder = new Finder();
+        $this->filesystem = $filesystem;
+        $this->finder = $finder;
         $this->translator = $translator;
     }
 
