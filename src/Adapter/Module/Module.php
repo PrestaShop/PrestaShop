@@ -199,6 +199,10 @@ class Module implements ModuleInterface
             return false;
         }
 
+        // If not modified, code used in installer is executed:
+        // "Notice: Use of undefined constant _PS_INSTALL_LANGS_PATH_ - assumed '_PS_INSTALL_LANGS_PATH_'"
+        \Module::updateTranslationsAfterInstall(false);
+
         return $this->instance->install();
     }
 

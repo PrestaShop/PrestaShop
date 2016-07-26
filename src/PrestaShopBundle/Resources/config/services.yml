@@ -198,8 +198,14 @@ services:
             - "@prestashop.adapter.data_provider.module"
             - "@prestashop.core.module.updater"
             - "@prestashop.core.admin.module.repository"
+            - "@prestashop.module.zip.manager"
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+            
+    prestashop.module.zip.manager:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
+        arguments:
+            - "@translator"
 
     # TRANSLATIONS
     prestashop.translations.database_loader:
