@@ -40,8 +40,8 @@
             aria-expanded="false"
             aria-controls="bulk-combinations-container"
           >
-            {# First tag [1][/1] is for a HTML tag. Second tag [2] is the total of combinations available. #}
-            <strong>{{ 'Bulk actions ([1]0[/1]/[2] combination(s) selected)'|trans({}, 'Admin.Catalog.Feature')|replace({ '[1]': '<span class="js-bulk-combinations">', '[/1]': '</span>', '[2]': combinations_count })|raw }}</strong>
+            {# First tag [1] is number of combinations selected. Second tag [2] is the total of combinations available. #}
+            <strong>{{ 'Bulk actions ([1]/[2] combination(s) selected)'|trans({}, 'Admin.Catalog.Feature')|replace({ '[1]': '<span class="js-bulk-combinations">0</span>', '[2]': form.combinations|length })|raw }}</strong>
             <i class="material-icons pull-right">keyboard_arrow_down</i>
           </p>
         </div>
