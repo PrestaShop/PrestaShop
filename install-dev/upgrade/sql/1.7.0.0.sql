@@ -143,4 +143,5 @@ DROP TABLE `PREFIX_module_access_old`;
 
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_CUSTOMER_NWSL';
 
-ALTER TABLE  `PREFIX_cart_rule` ADD  `reduction_exclude_special` TINYINT(1) UNSIGNED NOT NULL DEFAULT  '0' AFTER  `reduction_percent`;
+ALTER TABLE `PREFIX_cart_rule` ADD  `reduction_exclude_special` TINYINT(1) UNSIGNED NOT NULL DEFAULT  '0' AFTER  `reduction_percent`;
+ALTER TABLE `PREFIX_product` ADD state INT UNSIGNED NOT NULL DEFAULT '1';

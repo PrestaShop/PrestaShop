@@ -207,6 +207,9 @@ class ProductCore extends ObjectModel
     /*** @var array Tags */
     public $tags;
 
+    /** @var int temporary or saved object */
+    public $state;
+
     /**
      * @var float Base price of the product
      * @deprecated 1.6.0.13
@@ -266,6 +269,9 @@ class ProductCore extends ObjectModel
     /** @var array cache stock data in getStock() method */
     protected static $cacheStock = array();
 
+    const STATE_TEMP = 0;
+    const STATE_SAVED = 1;
+
     public static $definition = array(
         'table' => 'product',
         'primary' => 'id_product',
@@ -290,6 +296,7 @@ class ProductCore extends ObjectModel
             'cache_is_pack' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'cache_has_attachments' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'is_virtual' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'state' =>                     array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 
             /* Shop fields */
             'id_category_default' =>        array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
@@ -330,14 +337,14 @@ class ProductCore extends ObjectModel
                 'type' => self::TYPE_STRING,
                 'lang' => true,
                 'validate' => 'isLinkRewrite',
-                'required' => true,
+                'required' => false,
                 'size' => 128,
                 'ws_modifier' => array(
                     'http_method' => WebserviceRequest::HTTP_POST,
                     'modifier' => 'modifierWsLinkRewrite'
                 )
             ),
-            'name' =>                        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
+            'name' =>                        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => false, 'size' => 128),
             'description' =>                array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
             'description_short' =>            array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
             'available_now' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),

@@ -311,16 +311,17 @@ class ProductController extends FrameworkBundleAdminController
         $toolsAdapter = $this->container->get('prestashop.adapter.tools');
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
         $translator = $this->container->get('translator');
-        $name = $translator->trans('New product', [], 'Admin.Catalog.Feature');
 
+        /** @var \Product $product */
         $product = $productAdapter->getProductInstance();
         $product->active = $productProvider->isNewProductDefaultActivated()? 1 : 0;
         $product->id_category_default = $context->shop->id_category;
+        $product->state = \Product::STATE_TEMP;
 
         //set name and link_rewrite in each lang
         foreach ($contextAdapter->getLanguages() as $lang) {
-            $product->name[$lang['id_lang']] = $name;
-            $product->link_rewrite[$lang['id_lang']] = $toolsAdapter->link_rewrite($name);
+            $product->name[$lang['id_lang']] = '';
+            $product->link_rewrite[$lang['id_lang']] = '';
         }
 
         $product->save();
@@ -410,6 +411,7 @@ class ProductController extends FrameworkBundleAdminController
 
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelData($formData, $isMultiShopContext);
+                $_POST['state'] = \Product::STATE_SAVED;
 
                 $adminProductController = $adminProductWrapper->getInstance();
                 $adminProductController->setIdObject($formData['id_product']);
