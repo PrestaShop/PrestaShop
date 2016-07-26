@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
+use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
 use Configuration;
 use Context;
@@ -42,18 +43,25 @@ class AddonsDataProvider implements AddonsInterface
 {
     protected static $is_addons_up = true;
 
+    private $marketplaceClient;
+
+    public function __construct(ApiClient $apiClient)
+    {
+        $this->marketplaceClient = $apiClient;
+    }
+
     public function downloadModule($module_id)
     {
-        $params = [
+        $params = array(
             'id_module' => $module_id,
-            'format' => 'json'
-        ];
+            'format' => 'json',
+        );
 
         // Module downloading
         try {
             $module_data = $this->request('module', $params);
         } catch (Exception $e) {
-            if (! $this->isAddonsAuthenticated()) {
+            if (!$this->isAddonsAuthenticated()) {
                 throw new Exception('Error sent by Addons. You may need to be logged.', 0, $e);
             } else {
                 throw new Exception('Error sent by Addons. You may be not allowed to download this module.', 0, $e);
@@ -92,14 +100,14 @@ class AddonsDataProvider implements AddonsInterface
         }
 
         $post_query_data = array(
-            'version' => isset($params['version'])?$params['version']:_PS_VERSION_,
-            'iso_lang' => Tools::strtolower(isset($params['iso_lang'])?$params['iso_lang']
-                        :Context::getContext()->language->iso_code),
-            'iso_code' => Tools::strtolower(isset($params['iso_country'])?$params['iso_country']
-                        :Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-            'shop_url' => isset($params['shop_url'])?$params['shop_url']:Tools::getShopDomain(),
-            'mail' => isset($params['email'])?$params['email']:Configuration::get('PS_SHOP_EMAIL'),
-            'format' => isset($params['format'])?$params['format']:'xml',
+            'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
+            'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang']
+                        : Context::getContext()->language->iso_code),
+            'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country']
+                        : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
+            'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
+            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'),
+            'format' => isset($params['format']) ? $params['format'] : 'xml',
         );
         if (isset($params['source'])) {
             $post_query_data['source'] = $params['source'];
@@ -111,21 +119,19 @@ class AddonsDataProvider implements AddonsInterface
         $end_point = 'api.addons.prestashop.com';
 
         switch ($action) {
-            case 'native':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=native';
+            case 'native' :
+                return $this->marketplaceClient->getNativesModules();
                 break;
             case 'service':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=service';
+                return $this->marketplaceClient->getServices();
                 break;
             case 'native_all':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=native&iso_code=all';
+                return $this->marketplaceClient->setIsoCode('all')
+                    ->getNativesModules()
+                ;
                 break;
             case 'must-have':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=must-have';
+                return $this->marketplaceClient->getMustHaveModules();
                 break;
             case 'must-have-themes':
                 $protocols[] = 'http';
@@ -146,26 +152,23 @@ class AddonsDataProvider implements AddonsInterface
                 $post_data .= '&method=check&module_name='.urlencode($params['module_name']).'&module_key='.urlencode($params['module_key']);
                 break;
             case 'module':
-                $post_data .= '&method=module&id_module='.urlencode($params['id_module']);
-                if (isset($params['username_addons']) && isset($params['password_addons'])) {
-                    $post_data .= '&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-                } else {
-                    $protocols[] = 'http';
-                }
+                return $this->marketplaceClient
+                    ->getModule($params['id_module'])
+                ;
                 break;
             case 'hosted_module':
-                $post_data .= '&method=module&id_module='.urlencode((int)$params['id_module']).'&username='.urlencode($params['hosted_email'])
+                $post_data .= '&method=module&id_module='.urlencode((int) $params['id_module']).'&username='.urlencode($params['hosted_email'])
                     .'&password='.urlencode($params['password_addons'])
-                    .'&shop_url='.urlencode(isset($params['shop_url'])?$params['shop_url']
-                                :Tools::getShopDomain())
-                    .'&mail='.urlencode(isset($params['email'])?$params['email']
-                                :Configuration::get('PS_SHOP_EMAIL'));
+                    .'&shop_url='.urlencode(isset($params['shop_url']) ? $params['shop_url']
+                                : Tools::getShopDomain())
+                    .'&mail='.urlencode(isset($params['email']) ? $params['email']
+                                : Configuration::get('PS_SHOP_EMAIL'));
                 $protocols[] = 'https';
                 break;
-            case 'install-modules':
+            case 'install-modules' :
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=install-modules';
-                $post_data .= defined('_PS_HOST_MODE_')?'-od':'';
+                $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
                 break;
             default:
                 return false;
@@ -177,7 +180,7 @@ class AddonsDataProvider implements AddonsInterface
                 'content' => $post_data,
                 'header' => 'Content-type: application/x-www-form-urlencoded',
                 'timeout' => 5,
-            )
+            ),
         ));
 
         foreach ($protocols as $protocol) {
@@ -196,6 +199,7 @@ class AddonsDataProvider implements AddonsInterface
                 if (!empty($json_result->errors)) {
                     throw new Exception('Error received from Addons: '.json_encode($json_result->errors));
                 }
+
                 return $json_result;
             } else {
                 return $content; // Return raw result
@@ -210,10 +214,10 @@ class AddonsDataProvider implements AddonsInterface
     {
         $request = Request::createFromGlobals();
 
-        return [
+        return array(
            'username_addons' => $request->cookies->get('username_addons'),
            'password_addons' => $request->cookies->get('password_addons'),
-        ];
+        );
     }
 
     /** Does this function should be in a User related class ? **/
@@ -221,13 +225,14 @@ class AddonsDataProvider implements AddonsInterface
     {
         $request = Request::createFromGlobals();
 
-        return [
+        return array(
             'username_addons' => $request->cookies->get('username_addons'),
-        ];
+        );
     }
 
     /**
-     * Check if a request has already failed
+     * Check if a request has already failed.
+     *
      * @return bool
      */
     public function isAddonsUp()
@@ -250,6 +255,7 @@ class AddonsDataProvider implements AddonsInterface
         } else {
             throw new Exception('Cannot open the zip file');
         }
+
         return $result;
     }
 }

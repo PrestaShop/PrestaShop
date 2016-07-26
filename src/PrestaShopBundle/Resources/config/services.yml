@@ -115,6 +115,7 @@ services:
 
     prestashop.adapter.data_provider.addon:
         class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
+        arguments: ['@prestashop.addons.client_api']
 
     prestashop.adapter.data_provider.combination:
         class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
@@ -236,4 +237,3 @@ services:
             - "@csa_guzzle.client.addons_api"
             - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
             - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
-            - "@=constant('_PS_VERSION_')"

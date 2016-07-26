@@ -37,14 +37,13 @@ class ApiClient
     public function __construct(
         Client $addonsApiClient,
         $isoLang,
-        $isoCode,
-        $version
+        $isoCode
     ) {
         $this->addonsApiClient = $addonsApiClient;
 
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
-            ->setVersion($version)
+            ->setVersion(_PS_VERSION_)
         ;
     }
 
