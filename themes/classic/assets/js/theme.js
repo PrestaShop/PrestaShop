@@ -16545,6 +16545,15 @@
 	        }
 	      });
 	    }
+	    qv.find('#quantity_wanted').TouchSpin({
+	      verticalbuttons: true,
+	      verticalupclass: 'material-icons touchspin-up',
+	      verticaldownclass: 'material-icons touchspin-down',
+	      buttondown_class: 'btn btn-touchspin js-touchspin',
+	      buttonup_class: 'btn btn-touchspin js-touchspin',
+	      min: 1,
+	      max: 1000000
+	    });
 	  };
 	  var move = function move(direction) {
 	    var THUMB_MARGIN = 20;
@@ -20524,6 +20533,7 @@
 	      verticaldownclass: 'material-icons touchspin-down',
 	      buttondown_class: 'btn btn-touchspin js-touchspin',
 	      buttonup_class: 'btn btn-touchspin js-touchspin',
+	      min: 1,
 	      max: 1000000
 	    });
 	  }
@@ -20602,6 +20612,7 @@
 	    verticaldownclass: 'material-icons touchspin-down',
 	    buttondown_class: 'btn btn-touchspin js-touchspin',
 	    buttonup_class: 'btn btn-touchspin js-touchspin',
+	    min: 1,
 	    max: 1000000
 	  });
 	}

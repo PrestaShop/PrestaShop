@@ -26,27 +26,19 @@
             <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
           {/block}
           {block name='product_buy'}
-            <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
-              <input type="hidden" name="token" value="{$static_token}">
-              <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id">
-            {block name='product_variants'}
-              {include file='catalog/_partials/product-variants.tpl'}
-            {/block}
-            {block name='product_quantity'}
-              <p class="product-quantity">
-                <label for="quantity_wanted">{l s='Quantity' d='Shop.Theme.Catalog'}</label>
-                <input type="text" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" class="input-group">
-              </p>
-            {/block}
+            <div class="product-actions">
+              <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
+                <input type="hidden" name="token" value="{$static_token}">
+                <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id">
+                {block name='product_variants'}
+                  {include file='catalog/_partials/product-variants.tpl'}
+                {/block}
 
-            <button class="btn btn-primary add-to-cart" data-button-action="add-to-cart" type="submit" {if !$product.add_to_cart_url}disabled{/if}>
-              <i class="material-icons shopping-cart">&#xE547;</i>
-              {l s='Add to cart' d='Shop.Theme.Actions'}
-            </button>
-            {block name='product_refresh'}
-              <input class="product-refresh hidden-xs-up" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}">
-            {/block}
-          </form>
+                {block name='product_add_to_cart'}
+                  {include file='catalog/_partials/product-add-to-cart.tpl'}
+                {/block}
+            </form>
+          </div>
         {/block}
         </div>
       </div>

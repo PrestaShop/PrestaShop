@@ -100,6 +100,8 @@
                     {include file='catalog/_partials/product-add-to-cart.tpl'}
                   {/block}
 
+                  {hook h='displayProductButtons' product=$product}
+
                   {block name='product_refresh'}
                     <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}">
                   {/block}
@@ -112,19 +114,23 @@
 
             <div class="tabs">
               <ul class="nav nav-tabs">
+                {if $product.description}
                 <li class="nav-item">
-                  <a class="nav-link active" data-toggle="tab" href="#description">{l s='Description' d='Shop.Theme.Catalog'}</a>
+                  <a class="nav-link{if $product.description} active{/if}" data-toggle="tab" href="#description">{l s='Description' d='Shop.Theme.Catalog'}</a>
                 </li>
+                {/if}
                 <li class="nav-item">
-                  <a class="nav-link" data-toggle="tab" href="#product-details">{l s='Product Details' d='Shop.Theme.Catalog'}</a>
+                  <a class="nav-link{if !$product.description} active{/if}" data-toggle="tab" href="#product-details">{l s='Product Details' d='Shop.Theme.Catalog'}</a>
                 </li>
+                {if $product.attachments}
                 <li class="nav-item">
-                  <a class="nav-link" data-toggle="tab" href="#attachments">{l s='Product Attachments' d='Shop.Theme.Catalog'}</a>
+                  <a class="nav-link" data-toggle="tab" href="#attachments">{l s='Attachments' d='Shop.Theme.Catalog'}</a>
                 </li>
+                {/if}
               </ul>
 
               <div class="tab-content" id="tab-content">
-               <div class="tab-pane fade in active" id="description">
+               <div class="tab-pane fade in{if $product.description} active{/if}" id="description">
                  {block name='product_description'}
                    <div class="product-description">{$product.description nofilter}</div>
                  {/block}

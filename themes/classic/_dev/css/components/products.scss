@@ -43,26 +43,53 @@
   border: 2px solid white;
 }
 .product-actions {
+  .control-label {
+    width: 100%;
+    margin-bottom: rem(6px);
+    display: block;
+    width: 100%;
+  }
   .add-to-cart {
-    margin-left: rem(15px);
-    margin-top: rem(47px);
+    height: rem(44px);
+    line-height: inherit;
+    padding-top: rem(10px);
+    .material-icons {
+      line-height: inherit;
+    }
   }
 }
 .product-quantity {
-  display: inline-block;
-  .bootstrap-touchspin {
-    margin-top: rem(-6px);
+  .qty {
+    float: left;
+    width: 80px;
+    margin-bottom: rem(8px);
+  }
+  .add {
+    float: left;
+    margin-bottom: rem(8px);
   }
   #quantity_wanted {
     color: $gray-darker;
     background-color: white;
-    border: 1px solid $gray-light;
-    height: 2.25rem;
+    height: rem(44px);
     padding: 0.175rem 0.5rem;
-    width: 3rem;
+    width: rem(48px);
   }
   .input-group-btn-vertical {
     float: left;
+  }
+  .input-group-btn-vertical {
+    .btn {
+      padding: rem(11px) rem(10px) rem(10px) rem(10px);
+      i {
+        font-size: rem(16px);
+        top: rem(2px);
+        left: rem(3px);
+      }
+    }
+  }
+  .btn-touchspin {
+    height: rem(23px);
   }
 }
 .product-discounts {
@@ -133,7 +160,7 @@
 }
 .tabs {
   @include box-shadow;
-  margin-top: $medium-space;
+  margin-top: rem(32px);
   background: white;
   padding: $medium-space $large-space;
   .tab-pane {
@@ -329,11 +356,8 @@
   display: inline-block;
   font-weight: 700;
   margin-left: $small-space;
-  margin-top: rem(47px);
-  position: relative;
-  top: rem(25px);
   .material-icons {
-    margin-right: rem(5px);
+    line-height: inherit;
   }
   .product-available {
     color: $brand-success;
@@ -381,6 +405,10 @@
     }
     ul li {
       margin-right: $small-space;
+    }
+    .color {
+      margin-left: 0;
+      margin-top: 0;
     }
   }
 }
@@ -478,19 +506,22 @@ li.product-flag {
   width: 100%;
   @include display(flex);
   @include align-items(center);
-  margin-top: $medium-space;
+  margin-top: rem(24px);
   ul {
     margin-bottom: 0;
   }
   li {
     @include box-shadow;
-    height: 2.5em;
-    width: 2.5em;
+    height: rem(40px);
+    width: rem(40px);
     border-radius: 50%;
     display: inline-block;
     background-color: white;
+    background-repeat: no-repeat;
+    background-size: rem(32px) rem(32px);
+    background-position: rem(4px) rem(4px);
     cursor: pointer;
-    margin-left: $font-size-base;
+    margin-left: rem(8px);
     @include transition(all .2s ease-in);
     a {
       display: block;

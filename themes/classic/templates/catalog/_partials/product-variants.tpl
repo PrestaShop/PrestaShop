@@ -2,7 +2,6 @@
   {foreach from=$groups key=id_attribute_group item=group}
     <div class="clearfix product-variants-item">
       <span class="control-label">{$group.name}</span>
-      <br>
       {if $group.group_type == 'select'}
         <select
           id="group_{$id_attribute_group}"
