@@ -95,7 +95,7 @@
 										{if !isset($product.attributes_small)}
 											<dd data-id="cart_block_combination_of_{$product.id_product|intval}_{if $product.id_product_attribute}{$product.id_product_attribute|intval}{else}0{/if}_{if $product.id_address_delivery}{$product.id_address_delivery|intval}{else}0{/if}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
 										{/if}
-										<ul class="cart_block_customizations" data-id="customization_{$productId}_{$productAttributeId}">
+										<ul class="cart_block_customizations" data-id="customization_{$productId}_{$productAttributeId}_{$product.id_address_delivery}">">
 											{foreach from=$customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key='id_customization' item='customization' name='customizations'}
 												<li name="customization">
 													<div data-id="deleteCustomizableProduct_{$id_customization|intval}_{$product.id_product|intval}_{$product.id_product_attribute|intval}_{$product.id_address_delivery|intval}" class="deleteCustomizableProduct">
