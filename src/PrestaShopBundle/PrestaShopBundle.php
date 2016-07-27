@@ -31,7 +31,9 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
-use PrestaShopBundle\DependencyInjection\DynamicRolePass;
+use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
+use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
 /**
  * Symfony entry point: adds Extension, that will add other stuff.
@@ -55,5 +57,6 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new DynamicRolePass());
         $container->addCompilerPass(new PopulateTranslationProvidersPass());
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
+        $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
     }
 }
