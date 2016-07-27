@@ -1443,7 +1443,8 @@ CREATE TABLE `PREFIX_product` (
   KEY `product_manufacturer` (`id_manufacturer`, `id_product`),
   KEY `id_category_default` (`id_category_default`),
   KEY `indexed` (`indexed`),
-  KEY `date_add` (`date_add`)
+  KEY `date_add` (`date_add`),
+  KEY `state` (`state`, `date_upd`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (

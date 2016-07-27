@@ -4979,6 +4979,16 @@ class ProductCore extends ObjectModel
         return true;
     }
 
+    /**
+     * Return the list of old temp products
+     *
+     * @return array|false|mysqli_result|null|PDOStatement|resource
+     */
+    public static function getOldTempProducts()
+    {
+        $sql = 'SELECT id_product FROM `'._DB_PREFIX_.'product` WHERE state='.\Product::STATE_TEMP.' AND date_upd < NOW() - INTERVAL 1 DAY';
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
+    }
 
     /**
      * Checks if the product is in at least one of the submited categories

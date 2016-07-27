@@ -241,6 +241,8 @@ class ProductController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
         $totalCount = 0;
 
+        $this->get('prestashop.service.product')->cleanupOldTempProducts();
+
         $products = $request->attributes->get('products', null); // get from action subcall data, if any
         $lastSql = $request->attributes->get('last_sql', null); // get from action subcall data, if any
 
