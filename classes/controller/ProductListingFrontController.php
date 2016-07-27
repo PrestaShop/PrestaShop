@@ -455,8 +455,21 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             header('Content-Type: application/json');
             die(json_encode($this->getAjaxProductSearchVariables()));
         } else {
-            $this->context->smarty->assign($this->getProductSearchVariables());
-            $this->setTemplate($template);
+            $variables = $this->getProductSearchVariables();
+            if (!empty($variables['products'])) {
+                $this->context->smarty->assign($variables);
+                $this->setTemplate($template);
+            } else {
+                header('HTTP/1.1 404 Not Found');
+                header('Status: 404 Not Found');
+                $this->php_self = 'pagenotfound';
+                $this->page_name = 'pagenotfound';
+                $this->context->smarty->assign(
+                    'title',
+                    $this->trans('No results were found for your search.', array(), 'Shop.Notifications.Error')
+                );
+                $this->setTemplate('errors/404.tpl');
+            }
         }
     }
 
