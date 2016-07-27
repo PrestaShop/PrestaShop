@@ -4982,7 +4982,7 @@ class ProductCore extends ObjectModel
     /**
      * Return the list of old temp products
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array
      */
     public static function getOldTempProducts()
     {

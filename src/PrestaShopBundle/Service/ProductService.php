@@ -42,7 +42,6 @@ class ProductService {
 
         foreach ($oldProducts as $oldProduct) {
             $id_product = $oldProduct['id_product'];
-            /** @var \Product $product */
             $product = $this->dataProvider->getProduct($id_product);
             $product->delete();
         }
