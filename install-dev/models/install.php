@@ -809,7 +809,7 @@ class InstallModelInstall extends InstallAbstractModel
             if (!$moduleManager->install($module_name)) {
                 /*$module_errors = $module->getErrors();
                 if (empty($module_errors)) {*/
-                $module_errors = [$this->translator->trans('Cannot install module "%module%"', array('module' => $module_name), 'Install')];
+                $module_errors = [$this->translator->trans('Cannot install module "%module%"', array('%module%' => $module_name), 'Install')];
                 /*}*/
                 $errors[$module_name] = $module_errors;
             }

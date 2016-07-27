@@ -38,6 +38,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         require_once _PS_INSTALL_MODELS_PATH_.'install.php';
         $this->model_install = new InstallModelInstall();
+        $this->model_install->setTranslator($this->translator);
     }
 
     /**
