@@ -170,6 +170,16 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->assertEquals($modules2, $modules);
     }
 
+    public function testProductTypeShouldBeCorrectOk()
+    {
+        $this->clearModuleCache();
+        $modules = $this->adminModuleDataProvider->getCatalogModules();
+        $possible_values = array('module', 'service', 'theme');
+        foreach ($modules as $module) {
+            $this->assertTrue(in_array($module->productType, $possible_values));
+        }
+    }
+
     public function teardown()
     {
         parent::teardown();
