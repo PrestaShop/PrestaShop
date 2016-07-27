@@ -208,7 +208,7 @@ class ProductCore extends ObjectModel
     public $tags;
 
     /** @var int temporary or saved object */
-    public $state;
+    public $state = self::STATE_SAVED;
 
     /**
      * @var float Base price of the product
