@@ -41,6 +41,7 @@ var AdminModuleController = function () {
     this.addonsSearchSelector = '.module-addons-search';
     this.addonsSearchLinkSelector = '.module-addons-search-link';
     this.addonsLoginButtonSelector = '#addons_login_btn';
+    this.addonsLogoutButtonSelector = '#addons_logout_btn';
     this.categoryResetBtnSelector = '.module-category-reset';
     this.moduleInstallBtnSelector = 'input.module-install-btn';
     this.moduleInstallLoaderSelector = '.module-install-loader';
@@ -73,9 +74,11 @@ var AdminModuleController = function () {
     /* Selectors for Module Import and Addons connect */
     this.dropModuleBtnSelector = '#page-header-desc-configuration-add_module';
     this.addonsConnectModalBtnSelector = '#page-header-desc-configuration-addons_connect';
+    this.addonsLogoutModalBtnSelector = '#page-header-desc-configuration-addons_logout';
     this.dropZoneModalSelector = '#module-modal-import';
     this.dropZoneImportZoneSelector = '#importDropzone';
     this.addonsConnectModalSelector = '#module-modal-addons-connect';
+    this.addonsLogoutModalSelector = '#module-modal-addons-logout';
     this.addonsConnectForm = '#addons-connect-form';
     this.moduleImportModalCloseBtn = '#module-modal-import-closing-cross';
     this.moduleImportStartSelector = '.module-import-start';
@@ -534,7 +537,10 @@ var AdminModuleController = function () {
             $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
             $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
         }
-
+        if ($(this.addonsLogoutModalBtnSelector).attr('href') == '#') {
+            $(this.addonsLogoutModalBtnSelector).attr('data-toggle', 'modal');
+            $(this.addonsLogoutModalBtnSelector).attr('data-target', this.addonsLogoutModalSelector);
+        }
         $('body').on('submit', this.addonsConnectForm, function (event) {
             event.preventDefault();
             event.stopPropagation();

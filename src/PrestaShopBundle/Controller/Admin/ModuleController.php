@@ -552,9 +552,7 @@ class ModuleController extends FrameworkBundleAdminController
             'icon' => 'cloud_upload',
             'help' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
         );
-        $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
-
-        return $toolbarButtons;
+        return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
     }
 
     private function getPresentedProducts(array &$products)
@@ -585,17 +583,19 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
         $translator = $this->get('translator');
+        $addonsConnect = array();
 
         if ($addonsProvider->isAddonsAuthenticated()) {
             $addonsEmail = $addonsProvider->getAddonsEmail();
-            $addonsConnect = array(
-                'href' => $this->generateUrl('admin_addons_logout'),
+            $addonsConnect['addons_logout'] = array(
+                'href' => '#',
                 'desc' => $addonsEmail['username_addons'],
                 'icon' => 'exit_to_app',
                 'help' => $translator->trans('Synchronized with Addons marketplace!', array(), 'Admin.Modules.Notification'),
+                'data-trololo' => 'lol',
             );
         } else {
-            $addonsConnect = array(
+            $addonsConnect['addons_connect'] = array(
                 'href' => '#',
                 'desc' => $translator->trans('Connect to Addons marketplace', array(), 'Admin.Modules.Feature'),
                 'icon' => 'vpn_key',
