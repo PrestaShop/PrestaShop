@@ -84,6 +84,7 @@ class ModuleDataUpdater
             } elseif (\ModuleCore::getUpgradeStatus($name)) {
                 return true;
             }
+            return true;
         }
 
         return false;

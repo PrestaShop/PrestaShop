@@ -30,8 +30,11 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 
@@ -46,6 +49,7 @@ class ModuleManagerBuilder
     public static $legacyLogger = null;
     public static $moduleDataProvider = null;
     public static $moduleDataUpdater = null;
+    public static $moduleZipManager = null;
     public static $translator = null;
 
     public function __construct()
@@ -61,6 +65,7 @@ class ModuleManagerBuilder
             self::$moduleDataUpdater       = new ModuleDataUpdater($addonsDataProvider, self::$adminModuleDataProvider);
             self::$legacyLogger            = new LegacyLogger();
             self::$moduleDataProvider      = new ModuleDataProvider(self::$legacyLogger, self::$translator);
+            self::$moduleZipManager = new ModuleZipManager(new Filesystem, new Finder, self::$translator);
         }
     }
 
@@ -80,6 +85,7 @@ class ModuleManagerBuilder
                 self::$moduleDataProvider,
                 self::$moduleDataUpdater,
                 $this->buildRepository(),
+                self::$moduleZipManager,
                 self::$translator,
                 Context::getContext()->employee
             );

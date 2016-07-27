@@ -3,6 +3,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleZip;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
@@ -419,6 +420,8 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $translator = $this->get('translator');
         $moduleManager = $this->get('prestashop.module.manager');
+        $moduleZipManager = $this->get('prestashop.module.zip.manager');
+
         try {
             $file_uploaded = $request->files->get('file_uploaded');
             $constraints = array(
@@ -442,16 +445,11 @@ class ModuleController extends FrameworkBundleAdminController
                 throw new Exception($violationsMessages);
             }
 
-            $file_uploaded_tmp_path = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload';
-            $tmp_filename_uniq = md5(uniqid()).$file_uploaded->guessExtension();
-            $file_uploaded_tmp_fullpath = $file_uploaded_tmp_path.'/'.$tmp_filename_uniq;
-            // Move file from server tmp DIR to PrestaShop tmp DIR
-            $file_uploaded->move($file_uploaded_tmp_path, $tmp_filename_uniq);
-            // Try to inflate archive given, and do check to verify we have a valid module architecture
-            $module_name = $this->inflateModule($file_uploaded_tmp_fullpath);
+            $module_name = $moduleZipManager->getName($file_uploaded->getPathname());
+
             // Install the module
             $installation_response = array(
-                'status' => $moduleManager->install($module_name),
+                'status' => $moduleManager->install($file_uploaded->getPathname()),
                 'msg' => '',
                 'module_name' => $module_name,
             );
@@ -557,39 +555,6 @@ class ModuleController extends FrameworkBundleAdminController
         $toolbarButtons['addons_connect'] = $this->getAddonsConnectToolbar();
 
         return $toolbarButtons;
-    }
-
-    private function inflateModule($fileToInflate)
-    {
-        $translator = $this->get('translator');
-        if (file_exists($fileToInflate)) {
-            $zipArchive = new \ZipArchive();
-            $extractionStatus = $zipArchive->open($fileToInflate);
-
-            if ($extractionStatus === true) {
-                $filename = $zipArchive->getNameIndex(0);
-                $moduleName = substr($filename, 0, strpos($filename, '/'));
-                $zipArchive->extractTo(_PS_MODULE_DIR_);
-                $zipArchive->close();
-                unlink($fileToInflate);
-
-                return $moduleName;
-            } else {
-                throw new Exception(
-                    $translator->trans(
-                        'Cannot open the following archive: %file% (error code: %code%)',
-                        array(
-                            '%file%' => $fileToInflate,
-                            '%code%' => $extractionStatus, ),
-                        'Admin.Modules.Notification'));
-            }
-        } else {
-            throw new Exception(
-                $translator->trans(
-                    'Unable to find uploaded module at the following path: %file%',
-                    array('%file%' => $fileToInflate),
-                    'Admin.Modules.Notification'));
-        }
     }
 
     private function getPresentedProducts(array &$products)

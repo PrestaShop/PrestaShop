@@ -30,6 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -59,6 +60,12 @@ class ModuleManager implements AddonManagerInterface
     private $moduleRepository;
 
     /**
+     * Module Zip Manager
+     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
+     */
+    private $moduleZipManager;
+
+    /**
      * Translator
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
@@ -70,6 +77,7 @@ class ModuleManager implements AddonManagerInterface
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
         ModuleRepository $moduleRepository,
+        ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
         Employee $employee = null)
     {
@@ -77,6 +85,7 @@ class ModuleManager implements AddonManagerInterface
         $this->moduleProvider = $modulesProvider;
         $this->moduleUpdater = $modulesUpdater;
         $this->moduleRepository = $moduleRepository;
+        $this->moduleZipManager = $moduleZipManager;
         $this->translator = $translator;
         $this->employee = $employee;
     }
@@ -90,7 +99,7 @@ class ModuleManager implements AddonManagerInterface
      * or a location (url or path to the zip file)
      * @return bool true for success
      */
-    public function install($name)
+    public function install($source)
     {
         // in CLI mode, there is no employee set up
         if (!Tools::isPHPCLI()) {
@@ -103,13 +112,15 @@ class ModuleManager implements AddonManagerInterface
             }
         }
 
+        if (is_file($source)) {
+            $name = $this->moduleZipManager->getName($source);
+        } else {
+            $name = $source;
+            $source = null;
+        }
+
         if ($this->moduleProvider->isInstalled($name)) {
-            throw new Exception(
-                $this->translator->trans(
-                    'The module %module% is already installed.',
-                    array('%module%' => $name),
-                    'Admin.Modules.Notification'
-                ));
+            return $this->upgrade($name, 'latest', $source);
         }
 
         if (! $this->moduleProvider->isOnDisk($name)) {
@@ -190,7 +201,7 @@ class ModuleManager implements AddonManagerInterface
         // Get new module
         // 1- From source
         if ($source != null) {
-            throw new \InvalidArgumentException('Upgrading with a specific zip is not implemented yet.');
+            $this->moduleZipManager->storeInModulesFolder($source);
         }
         // 2- From Addons
         else {

@@ -3,6 +3,10 @@ imports:
     - { resource: admin/services-form.yml }
 
 services:
+    finder:
+        class: Symfony\Component\Finder\Finder
+        public: false
+
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
         arguments: ["%database_prefix%"]
@@ -204,8 +208,16 @@ services:
             - "@prestashop.adapter.data_provider.module"
             - "@prestashop.core.module.updater"
             - "@prestashop.core.admin.module.repository"
+            - "@prestashop.module.zip.manager"
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+            
+    prestashop.module.zip.manager:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
+        arguments:
+            - "@filesystem"
+            - "@finder"
+            - "@translator"
 
 
 
