@@ -1437,12 +1437,14 @@ CREATE TABLE `PREFIX_product` (
   `date_upd` datetime NOT NULL,
   `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
+  `state` int(11) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_product`),
   KEY `product_supplier` (`id_supplier`),
   KEY `product_manufacturer` (`id_manufacturer`, `id_product`),
   KEY `id_category_default` (`id_category_default`),
   KEY `indexed` (`indexed`),
-  KEY `date_add` (`date_add`)
+  KEY `date_add` (`date_add`),
+  KEY `state` (`state`, `date_upd`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (

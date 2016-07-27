@@ -262,6 +262,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             }
             // for 'filter_category', see next if($showPositionColumn) block.
         }
+        $sqlWhere[] = 'state = '.\Product::STATE_SAVED;
 
         $sqlOrder = array($orderBy.' '.$sortOrder);
         if ($orderBy != 'id_product') {

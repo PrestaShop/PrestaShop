@@ -17,6 +17,12 @@ services:
     prestashop.security.role.dynamic_role_hierarchy:
         class:      PrestaShopBundle\Security\Role\DynamicRoleHierarchy
 
+
+    prestashop.service.product:
+        class: PrestaShopBundle\Service\ProductService
+        arguments:
+            - "@prestashop.adapter.data_provider.product"
+
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
         class: PrestaShopBundle\Service\DataProvider\StockInterface
@@ -200,6 +206,8 @@ services:
             - "@prestashop.core.admin.module.repository"
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+
+
 
     # TRANSLATIONS
     prestashop.translations.database_loader:
