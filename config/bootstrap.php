@@ -53,7 +53,13 @@ if ($fmtParamYml) {
 
     $config = require_once _PS_CACHE_DIR_ .'appParameters.php';
 
-    define('_DB_SERVER_', $config['parameters']['database_host']);
+    $database_host = $config['parameters']['database_host'];
+
+    if (!empty($config['parameters']['database_port'])) {
+        $database_host .= ':'. $config['parameters']['database_port'];
+    }
+
+    define('_DB_SERVER_', $database_host);
     define('_DB_NAME_', $config['parameters']['database_name']);
     define('_DB_USER_', $config['parameters']['database_user']);
     define('_DB_PASSWD_', $config['parameters']['database_password']);
