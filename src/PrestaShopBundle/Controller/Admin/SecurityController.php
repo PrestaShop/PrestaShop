@@ -26,14 +26,23 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Admin controller for warehouse on the /product/form page.
  */
 class SecurityController extends FrameworkBundleAdminController
 {
+    const TOKEN_CONTEXT = 'PRESTASHOP';
+
     public function compromisedAccessAction(Request $request)
     {
-        return new Response('page de transition');
+        $requestUri = urldecode($request->query->get('uri'));
+        $newToken = $this->get('security.csrf.token_manager')->getToken(self::TOKEN_CONTEXT);
+        $newUri = $requestUri . urlencode($newToken);
+
+        return $this->render('PrestaShopBundle:Admin/Security:compromised.html.twig', array(
+            'requestUri' => $newUri
+        ));
     }
 }

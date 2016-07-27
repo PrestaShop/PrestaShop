@@ -58,6 +58,7 @@ class TokenizedUrlsListener
         }
 
         $route = $event->getRequest()->get('_route');
+        $uri = $event->getRequest()->getUri();
 
         /**
          * every route prefixed by '_' won't be secured
@@ -69,7 +70,9 @@ class TokenizedUrlsListener
         $token = urldecode($request->query->get('_token', false));
 
         if (false === $token || !$this->tokenManager->isTokenValid(new CsrfToken(self::TOKEN_CONTEXT, $token))) {
-            $response = new RedirectResponse($this->router->generate('compromised_access'));
+            // remove token if any
+            $uri = substr($uri, 0, strpos($uri, '_token=') + strlen('_token='));
+            $response = new RedirectResponse($this->router->generate('admin_security_compromised', array('uri' => urlencode($uri))));
             $event->setResponse($response);
         }
     }

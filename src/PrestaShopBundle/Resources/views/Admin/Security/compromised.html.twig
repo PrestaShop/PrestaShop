@@ -1,0 +1,30 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" />
+{% endblock %}
+
+{% block title %}
+  {{ 'Invalid security token'|trans({},'Admin.Catalog.Help' ) }}
+{% endblock %}
+{% block body %}
+  <div class="row" id="security-compromised-page" >
+    <div class="col-md-6 col-md-offset-3">
+      <div class="alert alert-danger" role="alert">
+        <i class="material-icons">error_outline</i>
+        <p>
+          {{ 'Invalid security token: direct access to this link may lead to a potential CSRF attack. Do you want to display this page ?'|trans({},'Admin.Catalog.Help' ) }}
+        </p>
+      </div>
+
+      <div class="col-md-10 col-md-offset-1">
+        <a class="btn btn-warning" href="{{ requestUri }}">
+          {{ 'I understand the risks and I really want to display this page'|trans({},'Admin.Catalog.Help' ) }}
+        </a>
+        <a class="btn btn-primary" href="{{ getAdminLink("AdminDashboard") }}">
+          {{ 'Take me out of there !'|trans({},'Admin.Catalog.Help' ) }}
+        </a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
