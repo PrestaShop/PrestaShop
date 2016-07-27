@@ -601,8 +601,8 @@ var ajaxCart = {
 				}
 				//if product is not in the displayed cart, add a new product's line
 				var domIdProduct = this.id + '_' + (this.idCombination ? this.idCombination : '0') + '_' + (this.idAddressDelivery ? this.idAddressDelivery : '0');
-				var domIdProductAttribute = this.id + '_' + (this.idCombination ? this.idCombination : '0');
-
+				var domIdProductAttribute = this.id + '_' + (this.idCombination ? this.idCombination : '0') + '_' + (this.idAddressDelivery ? this.idAddressDelivery : '0');
+				
 				if ($('dt[data-id="cart_block_product_' + domIdProduct + '"]').length == 0)
 				{
 					var productId = parseInt(this.id);
@@ -677,21 +677,22 @@ var ajaxCart = {
 		var content = '';
 		var productId = parseInt(product.id);
 		var productAttributeId = typeof(product.idCombination) == 'undefined' ? 0 : parseInt(product.idCombination);
-		var hasAlreadyCustomizations = $('ul[data-id="customization_' + productId + '_' + productAttributeId + '"]').length;
+		var productIdAddressDelivery = typeof(product.idAddressDelivery) == 'undefined' ? 0 : parseInt(product.idAddressDelivery);
+		var hasAlreadyCustomizations = $('ul[data-id="customization_' + productId + '_' + productAttributeId + '_' + productIdAddressDelivery + '_' + (product.idAddressDelivery ? product.idAddressDelivery : '0') + '"]').length;
 
 		if (!hasAlreadyCustomizations)
 		{
 			if (!product.hasAttributes)
 				content += '<dd data-id="cart_block_combination_of_' + productId + '" class="unvisible">';
-			if ($('ul[data-id="customization_' + productId + '_' + productAttributeId + '"]').val() == undefined)
-				content += '<ul class="cart_block_customizations" data-id="customization_' + productId + '_' + productAttributeId + '">';
+			if ($('ul[data-id="customization_' + productId + '_' + productAttributeId + '_' + productIdAddressDelivery + '"]').val() == undefined)
+				content += '<ul class="cart_block_customizations" data-id="customization_' + productId + '_' + productAttributeId + '_' + productIdAddressDelivery + '">';
 		}
 
 		$(product.customizedDatas).each(function(){
 			var done = 0;
 			customizationId = parseInt(this.customizationId);
 			productAttributeId = typeof(product.idCombination) == 'undefined' ? 0 : parseInt(product.idCombination);
-			content += '<li name="customization"><div class="deleteCustomizableProduct" data-id="deleteCustomizableProduct_' + customizationId + '_' + productId + '_' + (productAttributeId ?  productAttributeId : '0') + '"><a rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + productId + '&amp;ipa=' + productAttributeId + '&amp;id_customization=' + customizationId + '&amp;token=' + static_token + '"></a></div>';
+			content += '<li name="customization"><div class="deleteCustomizableProduct" data-id="deleteCustomizableProduct_' + customizationId + '_' + productId + '_' + (productAttributeId ?  productAttributeId : '0') +  '_' + productIdAddressDelivery + '"><a rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + productId + '&amp;ipa=' + productAttributeId + '&amp;id_address_delivery=' + productIdAddressDelivery  + '&amp;id_customization=' + customizationId + '&amp;token=' + static_token + '"></a></div>';
 
 			// Give to the customized product the first textfield value as name
 			$(this.datas).each(function(){
