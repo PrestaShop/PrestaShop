@@ -1,23 +1,22 @@
 <div class="ps-dropdown dropdown btn-group">
     {% for menu in topMenuData %}
-        {% set refMenu = menu.refMenu %}
-        <span type="button"  id="{{refMenu}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span type="button"  id="{{ menu.id_category }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="js-selected-item selected-item module-category-selector-label">
                 {{menu.name}}
             </span>
             <i class="material-icons arrow-down">keyboard_arrow_down</i>
         </span>
-        <div class="ps-dropdown-menu dropdown-menu module-category-selector" aria-labelledby="{{refMenu}}">
+        <div class="ps-dropdown-menu dropdown-menu module-category-selector" aria-labelledby="{{ menu.id_category }}">
             <ul class="items-list js-items-list">
                 <li class="module-category-reset">
                     <a class="dropdown-item" href="#">
                             {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
                     </a>
                 </li>
-                {% for subMenu in menu.subMenu|arrayCast %}
-                    <li class="module-category-menu" data-category-ref="{{subMenu.refMenu}}" data-category-display-name="{{subMenu.name}}">
+                {% for category in menu.categories %}
+                    <li class="module-category-menu" data-category-ref="{{category.link_rewrite }}" data-category-display-name="{{category.name}}">
                         <a  class="dropdown-item" href="#">
-                            {{subMenu.name}}<span class="pull-right">{{subMenu.modulesRef|length}}</span>
+                            {{category.name}}<span class="pull-right">???</span>
                         </a>
                     </li>
                 {% endfor %}

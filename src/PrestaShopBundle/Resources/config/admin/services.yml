@@ -58,6 +58,7 @@ services:
     prestashop.adapter.admin.data_provider.addons:
         class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
         decorates: prestashop.core.admin.data_provider.addons_interface
+        arguments: ['@prestashop.addons.client_api']
         public: false
     prestashop.adapter.admin.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider

@@ -212,7 +212,7 @@ services:
             - "@prestashop.module.zip.manager"
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
-            
+
     prestashop.module.zip.manager:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
         arguments:
@@ -237,3 +237,4 @@ services:
             - "@csa_guzzle.client.addons_api"
             - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
             - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+

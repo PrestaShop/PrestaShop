@@ -49,10 +49,14 @@ class ApiClient
 
     public function getNativesModules()
     {
-        return $this->setMethod('listing')
+        $response = $this->setMethod('listing')
             ->setAction('native')
             ->getResponse()
         ;
+
+        $responseArray = json_decode($response);
+
+        return $responseArray->modules;
     }
 
     public function getPreInstalledModules()
@@ -65,32 +69,44 @@ class ApiClient
 
     public function getMustHaveModules()
     {
-        return $this->setMethod('listing')
+        $response = $this->setMethod('listing')
             ->setAction('must-have')
             ->getResponse()
         ;
+
+        $responseArray = json_decode($response);
+        return $responseArray->modules;
     }
 
     public function getServices()
     {
-        return $this->setMethod('listing')
+        $response = $this->setMethod('listing')
             ->setAction('service')
             ->getResponse()
         ;
+
+        $responseArray = json_decode($response);
+
+        return $responseArray->services;
     }
 
     public function getCategories()
     {
-        return $this->setMethod('listing')
+        $response = $this->setMethod('listing')
             ->setAction('categories')
             ->getResponse()
         ;
+
+        $responseArray = json_decode($response);
+
+        return $responseArray->module;
     }
 
     public function getModule($moduleId)
     {
         return $this->setMethod('listing')
             ->setAction('module')
+            ->ModuleId($moduleId)
             ->getResponse()
         ;
     }
@@ -98,7 +114,7 @@ class ApiClient
     public function getResponse()
     {
         return (string) $this->addonsApiClient
-            ->request('GET', '/',
+            ->get(null,
                 array('query' => $this->queryParameters,
                 )
             )->getBody()
@@ -136,6 +152,13 @@ class ApiClient
     public function setVersion($version)
     {
         $this->queryParameters['version'] = $version;
+
+        return $this;
+    }
+
+    public function setModuleId($moduleId)
+    {
+        $this->queryParameters['id_module'] = $moduleId;
 
         return $this;
     }

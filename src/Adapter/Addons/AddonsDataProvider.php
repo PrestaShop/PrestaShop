@@ -170,6 +170,9 @@ class AddonsDataProvider implements AddonsInterface
                 $post_data .= '&method=listing&action=install-modules';
                 $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
                 break;
+            case 'categories':
+                return $this->marketplaceClient->getCategories();
+                break;
             default:
                 return false;
         }

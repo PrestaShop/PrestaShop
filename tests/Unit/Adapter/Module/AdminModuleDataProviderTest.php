@@ -150,7 +150,6 @@ class AdminModuleDataProviderTest extends UnitTestCase
                 'addonsDataProvider' => $this->addonsDataProviderS,
             )
         );
-        $mock->expects($this->once())->method('convertJsonForNewCatalog')->will($this->returnValue($this->adminModuleDataProvider->getCatalogModules()));
 
         $mock->clearCatalogCache();
 

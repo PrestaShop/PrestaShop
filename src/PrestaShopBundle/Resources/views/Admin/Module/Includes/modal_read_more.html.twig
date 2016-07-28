@@ -74,12 +74,16 @@
                 {% endif %}
               </p>
             </div>
-            <!-- WAITING FOR API UPDATE
+
             <div id="features-{{module.attributes.name}}" class="tab-pane fade">
               <p class="module-readmore-tab-content">
-                {{ 'No feature list provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
+                {% if module.attributes.features is defined %}
+                  {{ module.attributes.features|raw }}
+                {% else %}
+                  {{ 'No feature list provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
+                {% endif %}
               </p>
-            </div> -->
+            </div>
             <div id="changelog-{{module.attributes.name}}" class="tab-pane fade">
               {% if module.attributes.changeLog is defined %}
                   <ul class="module-readmore-tab-content">
