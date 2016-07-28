@@ -40,6 +40,12 @@ if (!defined('_PS_CORE_DIR_')) {
     define('_PS_CORE_DIR_', realpath(dirname(__FILE__).'/..'));
 }
 
+/* in dev mode - check if composer was executed */
+if ((!is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
+    !file_exists(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'))) {
+    die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
+}
+
 $themes = glob(dirname(dirname(__FILE__)).'/themes/*/config/theme.yml');
 usort($themes, function ($a, $b) {
     return strcmp($b, $a);
