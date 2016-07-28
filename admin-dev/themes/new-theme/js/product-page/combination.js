@@ -40,7 +40,9 @@ export default function() {
 
     let getCombinations = (combinationsImages) => {
       let $jsCombinationsBulkForm = $('#combinations-bulk-form');
-      $jsCombinationsBulkForm.toggleClass('inactive', !$jsCombinationsBulkForm.hasClass('inactive'));
+      if (!$jsCombinationsBulkForm.hasClass('inactive')) {
+        $jsCombinationsBulkForm.addClass('inactive');
+      }
       $.get(combinationUrl).then(function (resp) {
         $('#loading-attribute').before(resp);
         refreshImagesCombination(combinationsImages, idsProductAttribute.slice(currentCount, currentCount+step));
