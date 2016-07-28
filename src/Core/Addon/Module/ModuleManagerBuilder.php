@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Doctrine\Common\Cache\FilesystemCache;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -54,6 +55,7 @@ class ModuleManagerBuilder
      */
     public static $modulesRepository = null;
     public static $adminModuleDataProvider = null;
+    public static $lecacyContext;
     public static $legacyLogger = null;
     public static $moduleDataProvider = null;
     public static $moduleDataUpdater = null;

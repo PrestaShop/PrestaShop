@@ -352,11 +352,6 @@ abstract class ModuleCore
             return false;
         }
 
-        if (!$this->installTabs()) {
-            $this->uninstallOverrides();
-            return false;
-        }
-
         // Install module and retrieve the installation id
         $result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
         if (!$result) {
@@ -651,10 +646,6 @@ abstract class ModuleCore
 
         // Uninstall overrides
         if (!$this->uninstallOverrides()) {
-            return false;
-        }
-
-        if (!$this->uninstallTabs()) {
             return false;
         }
 
@@ -999,126 +990,6 @@ abstract class ModuleCore
         }
 
         return $result;
-    }
-
-    /**
-     * Install a tab according to its defined structure
-     *
-     * @param array $tab_info The structure of the tab.
-     *
-     * @return bool   true if the tab was installed successfully, false otherwise
-     *                (and a descriptive error will be added to $_errors)
-     */
-    private function installTab($tab_info)
-    {
-        $class_name = isset($tab_info['class_name']) ? $tab_info['class_name'] : null;
-        if (!$class_name) {
-            $this->_errors[] = Tools::displayError('Missing class name for tab "'.$tab_info['name'].'"');
-            return false;
-        }
-
-        $tab = new Tab();
-        $tab->module = $this->name;
-        $tab->class_name = $class_name;
-
-        // Default to active if it's not specified
-        $tab->active = (!isset($tab_info['active']) || $tab_info['active'] ? 1 : 0);
-
-        $tab->name = array();
-        foreach (Language::getLanguages(true) as $lang) {
-            $tab->name[$lang['id_lang']] = $tab_info['name'];
-        }
-
-        // Setup the parent relationship
-        if (isset($tab_info['parent_class'])) {
-            $tab->id_parent = Tab::getIdFromClassName($tab_info['parent_class']);
-            if (!$tab->id_parent) {
-                $this->_errors[] = Tools::displayError('Failed to find tab parent class "'.$tab_info['parent_class'].'"');
-                return false;
-            }
-        } elseif (isset($tab_info['hidden']) && $tab_info['hidden']) {
-            $tab->id_parent = -1;
-        } else {
-            $tab->id_parent = 0;
-        }
-
-        $success = $tab->add();
-        if (!$success) {
-            $this->_errors[] = Tools::displayError('Failed to install admin tab "'.$tab_info['name'].'"');
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Uninstalls a tab given its defined structure.
-     *
-     * @param array $tab_info The structure of the tab.
-     *
-     * @return bool Returns true if the specified tab was successfully deleted, false otherwise
-     *              (and a descriptive error will be added to $_errors).
-     */
-    private function uninstallTab($tab_info)
-    {
-        $class_name = isset($tab_info['class_name']) ? $tab_info['class_name'] : null;
-        if (!$class_name) {
-            $this->_errors[] = Tools::displayError('Missing class name for tab "'.$tab_info['name'].'"');
-            return false;
-        }
-
-        while ($id_tab = (int)Tab::getIdFromClassName($class_name)) {
-            $tab = new Tab($id_tab);
-            if (!$tab->delete()) {
-                $this->_errors[] = Tools::displayError('Failed to uninstall admin tab "'.$tab->name.'"');
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Install all module-defined tabs.
-     *
-     * This is done automatically as part of the module installation.
-     *
-     * @return bool Returns true if the tabs were successfully installed, false otherwise.
-     */
-    public function installTabs()
-    {
-        // The list of installed tabs, so we can remove them in case of failure.
-        $installed_tabs = array();
-
-        foreach ($this->tabs as $tab_info) {
-            $success = $this->installTab($tab_info);
-            if (!$success) {
-                // Something failed, remove already added tabs.
-                foreach ($installed_tabs as $tab_info) {
-                    $this->uninstallTab($tab_info);
-                }
-                return false;
-            }
-            $installed_tabs[] = $tab_info;
-        }
-        return true;
-    }
-
-
-    /**
-     * Uninstall all module-defined tabs.
-     *
-     * This is done automatically as part of the module uninstallation.
-     *
-     * @return bool Returns true if the module tabs were successfully uninstalled, false if any of them failed to do so.
-     */
-    public function uninstallTabs()
-    {
-        $success = true;
-        foreach ($this->tabs as $tab_info) {
-            $success = ($this->uninstallTab($tab_info) && $success);
-        }
-        return $success;
     }
 
     /**
@@ -2787,6 +2658,16 @@ abstract class ModuleCore
             AND `id_shop` = '.(int)Context::getContext()->shop->id);
 
         return $result['position'];
+    }
+
+    /**
+     * Getter for $tabs attribute
+     * 
+     * @return array
+     */
+    public function getTabs()
+    {
+        return $this->tabs;
     }
 
     /**
