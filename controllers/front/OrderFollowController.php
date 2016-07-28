@@ -111,7 +111,7 @@ class OrderFollowControllerCore extends FrontController
             $orders_returns[$id_order_return] = $order_return;
             $orders_returns[$id_order_return]['return_number'] = sprintf('#%06d', $order_return['id_order_return']);
             $orders_returns[$id_order_return]['return_date'] = Tools::displayDate($order_return['date_add'], null, false);
-            $orders_returns[$id_order_return]['print_url'] = ($order_return['date_add'] == 2) ? $this->context->link->getPageLink('pdf-order-return', true, null, 'id_order_return='.$order_return['id_order_return']) : '';
+            $orders_returns[$id_order_return]['print_url'] = ($order_return['state'] == 2) ? $this->context->link->getPageLink('pdf-order-return', true, null, 'id_order_return='.$order_return['id_order_return']) : '';
             $orders_returns[$id_order_return]['details_url'] = $this->context->link->getPageLink('order-detail', true, null, 'id_order='.(int)$order_return['id_order']);
             $orders_returns[$id_order_return]['return_url'] = $this->context->link->getPageLink('order-return', true, null, 'id_order_return='.(int)$order_return['id_order_return']);
         }
