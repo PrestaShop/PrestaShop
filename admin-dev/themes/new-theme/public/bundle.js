@@ -88534,7 +88534,9 @@
 
 	    var getCombinations = function getCombinations(combinationsImages) {
 	      var $jsCombinationsBulkForm = (0, _jquery2.default)('#combinations-bulk-form');
-	      $jsCombinationsBulkForm.toggleClass('inactive', !$jsCombinationsBulkForm.hasClass('inactive'));
+	      if (!$jsCombinationsBulkForm.hasClass('inactive')) {
+	        $jsCombinationsBulkForm.addClass('inactive');
+	      }
 	      _jquery2.default.get(combinationUrl).then(function (resp) {
 	        (0, _jquery2.default)('#loading-attribute').before(resp);
 	        refreshImagesCombination(combinationsImages, idsProductAttribute.slice(currentCount, currentCount + step));
