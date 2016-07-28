@@ -712,6 +712,8 @@ var form = (function() {
     if (typeof(target) == 'undefined') {
       target = false;
     }
+    seo.onSave();
+
     var data = $('input, textarea, select', elem).not(':input[type=button], :input[type=submit], :input[type=reset]').serialize();
     $.ajax({
       type: 'POST',
@@ -1642,6 +1644,14 @@ var seo = (function() {
       $('#id-product-redirected').show();
     }
   }
+    /** Update friendly URL */
+    var updateFriendlyUrl = function(elem) {
+        /** Attr name equals "form[step1][name][1]".
+         * We need in this string the second integer */
+        var id_lang = elem.attr('name').match(/\d+/g)[1];
+        $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
+    };
+  
 
   return {
     'init': function() {
@@ -1652,14 +1662,6 @@ var seo = (function() {
       redirectTypeElem.change(function() {
         hideShowRedirectToProduct();
       });
-
-      /** Update friendly URL */
-      var updateFriendlyUrl = function(elem) {
-        /** Attr name equals "form[step1][name][1]".
-         * We need in this string the second integer */
-        var id_lang = elem.attr('name').match(/\d+/g)[1];
-        $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
-      };
 
       /** On product title change, update friendly URL*/
       $('#form_step1_names.friendly-url-force-update input').keyup(function() {
@@ -1672,6 +1674,16 @@ var seo = (function() {
           updateFriendlyUrl($(this));
         });
       });
+    },
+    'onSave': function() {
+        // check all friendly URLs have been filled. If not, fill them.
+        $('input[id^="form_step5_link_rewrite_"]', "#form_step5_link_rewrite").each(function(){
+            var elem = $(this);
+            if (0 === elem.val().length) {
+                var id_lang = elem.attr('name').match(/\d+/g)[1];
+                updateFriendlyUrl($('#form_step1_name_' + id_lang));
+            }
+        });
     }
   };
 })();
