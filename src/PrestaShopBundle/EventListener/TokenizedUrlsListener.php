@@ -38,15 +38,15 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  */
 class TokenizedUrlsListener
 {
-    const TOKEN_CONTEXT = 'PRESTASHOP';
-
     private $tokenManager;
     private $router;
+    private $username;
 
-    public function __construct(CsrfTokenManager $tokenManager, RouterInterface $router)
+    public function __construct(CsrfTokenManager $tokenManager, RouterInterface $router, $username)
     {
         $this->tokenManager = $tokenManager;
         $this->router = $router;
+        $this->username = $username;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -69,9 +69,13 @@ class TokenizedUrlsListener
 
         $token = urldecode($request->query->get('_token', false));
 
-        if (false === $token || !$this->tokenManager->isTokenValid(new CsrfToken(self::TOKEN_CONTEXT, $token))) {
+        if (false === $token || !$this->tokenManager->isTokenValid(new CsrfToken($this->username, $token))) {
             // remove token if any
-            $uri = substr($uri, 0, strpos($uri, '_token=') + strlen('_token='));
+            if (false !== strpos($uri, '_token=')) {
+                $uri = substr($uri, 0, strpos($uri, '_token='));
+            }
+
+
             $response = new RedirectResponse($this->router->generate('admin_security_compromised', array('uri' => urlencode($uri))));
             $event->setResponse($response);
         }

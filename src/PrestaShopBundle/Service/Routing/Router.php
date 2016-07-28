@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2016 PrestaShop
+ * 2007-2016 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,20 +25,18 @@
  */
 namespace PrestaShopBundle\Service\Routing;
 
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use PrestaShopBundle\Service\DataProvider\UserProvider;
 
 /**
- * We decorate Symfony Router in order to add a token to each url
+ * We extends Symfony Router in order to add a token to each url.
  *
- * This is for Security purposes
+ * This is done for Security purposes.
  */
 class Router extends BaseRouter
 {
-    const TOKEN_CONTEXT = 'PRESTASHOP';
-
+    private $userProvider;
     private $tokenManager;
 
     /**
@@ -47,16 +45,34 @@ class Router extends BaseRouter
     public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
         $url = parent::generate($name, $parameters, $referenceType);
-        $queryParams = parse_url($url, PHP_URL_QUERY);
-        $delimiter = (empty($queryParams)) ? '?' : '&';
+        $token = $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
 
-        $url .= $delimiter .'_token='. urlencode($this->tokenManager->getToken(self::TOKEN_CONTEXT));
-
-        return $url;
+        return self::generateTokenizedUrl($url, $token);
     }
 
     public function setTokenManager(CsrfTokenManager $tokenManager)
     {
         $this->tokenManager = $tokenManager;
+    }
+
+    public function setUserProvider(UserProvider $userProvider)
+    {
+        $this->userProvider = $userProvider;
+    }
+
+    public static function generateTokenizedUrl($url, $token)
+    {
+        $components = parse_url($url);
+        $baseUrl = (isset($components['path']) ? $components['path'] : '');
+        $queryParams = array();
+        if (isset($components['query'])) {
+            $query = $components['query'];
+
+            parse_str($query, $queryParams);
+        }
+
+        $queryParams['_token'] = $token;
+
+        return $baseUrl.'?'.http_build_query($queryParams);
     }
 }

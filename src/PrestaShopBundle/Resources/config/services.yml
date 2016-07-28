@@ -79,11 +79,16 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     # CSRF/XSS additional protection middleware
+    prestashop.user_provider:
+        class: PrestaShopBundle\Service\DataProvider\UserProvider
+        arguments: ['@security.token_storage']
+
     prestashop.tokenized_url_listener:
         class: PrestaShopBundle\EventListener\TokenizedUrlsListener
         arguments:
             - "@security.csrf.token_manager"
             - "@router"
+            - "@=service('prestashop.user_provider').getUsername()"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
@@ -93,6 +98,7 @@ services:
         public: public
         calls:
           - ['setTokenManager', ['@security.csrf.token_manager']]
+          - ['setUserProvider', ["@=service('prestashop.user_provider')"]]
 
     # Legacy Hooks registrator
     prestashop.adapter.legacy.hook.subscriber:

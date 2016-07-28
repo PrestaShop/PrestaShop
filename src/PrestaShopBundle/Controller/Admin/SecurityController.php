@@ -25,8 +25,8 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShopBundle\Service\Routing\Router as PrestaShopRouter;
 
 /**
  * Admin controller for warehouse on the /product/form page.
@@ -38,11 +38,19 @@ class SecurityController extends FrameworkBundleAdminController
     public function compromisedAccessAction(Request $request)
     {
         $requestUri = urldecode($request->query->get('uri'));
-        $newToken = $this->get('security.csrf.token_manager')->getToken(self::TOKEN_CONTEXT);
-        $newUri = $requestUri . urlencode($newToken);
+
+        // getToken() actually generate a new token
+        $username = $this->get('prestashop.user_provider')->getUsername();
+
+        $newToken = $this->get('security.csrf.token_manager')
+            ->getToken($username)
+            ->getValue()
+        ;
+
+        $newUri = PrestaShopRouter::generateTokenizedUrl($requestUri, $newToken);
 
         return $this->render('PrestaShopBundle:Admin/Security:compromised.html.twig', array(
-            'requestUri' => $newUri
+            'requestUri' => $newUri,
         ));
     }
 }
