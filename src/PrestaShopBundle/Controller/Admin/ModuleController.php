@@ -110,7 +110,7 @@ class ModuleController extends FrameworkBundleAdminController
         $formattedContent['content'] = $this->render(
             'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig',
             array(
-                'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products)),
+                'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules()),
             )
         )->getContent();
 
@@ -157,6 +157,8 @@ class ModuleController extends FrameworkBundleAdminController
             $products->{$product_label} = $modulesProvider->generateAddonsUrls($products_part);
             $products->{$product_label} = $this->getPresentedProducts($products_part);
         }
+
+        dump($this->getTopMenuData($modulesProvider->getCategoriesFromModules($installed_products)));die;
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),

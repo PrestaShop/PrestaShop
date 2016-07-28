@@ -161,35 +161,29 @@ class AdminModuleDataProvider implements ModuleInterface
         return $addons;
     }
 
-    public function getCategoriesFromModules(&$modules)
+    public function getCategoriesFromModules()
     {
-        return (array) $this->addonsDataProvider->request('categories', null);
-        /*$categories = array();
+        $categoriesFromApi =  $this->addonsDataProvider->request('categories', null);
+
+        $categories = array();
 
         // Only Tab: Categories
         $categories['categories'] = $this->createMenuObject('categories',
             'Categories');
 
-        foreach ($modules as &$module) {
-            $refs = array();
-            foreach ($module->attributes->get('refs') as $name) {
-                if (!isset($categories['categories']->subMenu[$name])) {
-                    $categories['categories']->subMenu[$name] = $this->createMenuObject($name,
-                        $name
-                    );
-                }
+        foreach ($categoriesFromApi as $category) {
+            $categoryName = $category->name;
 
-                $categories['categories']->subMenu[$name]->modulesRef[] = $module->attributes->get('name');
-                $refs[] = $name;
-            }
-            $module->attributes->set('refs', $refs);
+            $categories['categories']->subMenu[$categoryName] = $this->createMenuObject($categoryName,
+                $categoryName
+            );
         }
 
         usort($categories['categories']->subMenu, function ($a, $b) {
             return strcmp($a->name, $b->name);
         });
 
-        return $categories;*/
+        return $categories;
     }
 
     protected function applyModuleFilters(array $modules, array $filters)
