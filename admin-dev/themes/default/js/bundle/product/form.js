@@ -713,7 +713,8 @@ var form = (function() {
       target = false;
     }
     seo.onSave();
-
+    updateMissingTranslatedNames();
+    
     var data = $('input, textarea, select', elem).not(':input[type=button], :input[type=submit], :input[type=reset]').serialize();
     $.ajax({
       type: 'POST',
@@ -772,6 +773,20 @@ var form = (function() {
   function switchLanguage(iso_code) {
     $('div.translations.tabbable > div > div.tab-pane:not(.translation-label-' + iso_code + ')').removeClass('active');
     $('div.translations.tabbable > div > div.tab-pane.translation-label-' + iso_code).addClass('active');
+  }
+  
+  function updateMissingTranslatedNames() {
+      var namesDiv = $('#form_step1_names');
+      var defaultLanguageValue = null;
+      $("input[id^='form_step1_name_']", namesDiv).each(function(index) {
+          var value = $(this).val();
+          // The first language is ALWAYS the employee language
+          if (0 === index) {
+              defaultLanguageValue = value;
+          } else if (0 === value.length) {
+              $(this).val(defaultLanguageValue);
+          }
+      });
   }
 
   return {
