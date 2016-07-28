@@ -91,6 +91,15 @@ class InstallModelInstall extends InstallAbstractModel
         $secret = Tools::passwdGen(56);
         $cookie_key = Tools::passwdGen(8);
         $cookie_iv = Tools::passwdGen(56);
+        $database_port = null;
+        
+        $splits = preg_split('#:#', $database_host);
+        $nbSplits = count($splits);
+
+        if ($nbSplits >= 2) {
+            $database_port = array_pop($splits);
+            $database_host = implode(':', $splits);
+        }
 
         if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
             $config = Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml'));
@@ -104,6 +113,7 @@ class InstallModelInstall extends InstallAbstractModel
             array(
                 'parameters' => array(
                     'database_host' => $database_host,
+                    'database_port' => $database_port,
                     'database_user' => $database_user,
                     'database_password' => $database_password,
                     'database_name' => $database_name,
