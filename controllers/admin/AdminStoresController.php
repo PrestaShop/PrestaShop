@@ -373,24 +373,24 @@ class AdminStoresControllerCore extends AdminController
 
             /* If the selected country contains states, then a state have to be selected */
             if ((int)$country->contains_states && !$id_state) {
-                $this->errors[] = Tools::displayError('An address located in a country containing states must have a state selected.');
+                $this->errors[] = $this->trans('An address located in a country containing states must have a state selected.', array(), 'Admin.Parameters.Notification');
             }
 
             $latitude = (float)Tools::getValue('latitude');
             $longitude = (float)Tools::getValue('longitude');
 
             if (empty($latitude) || empty($longitude)) {
-                $this->errors[] = Tools::displayError('Latitude and longitude are required.');
+                $this->errors[] = $this->trans('Latitude and longitude are required.', array(), 'Admin.Parameters.Notification');
             }
 
             $postcode = Tools::getValue('postcode');
             /* Check zip code format */
             if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
-                $this->errors[] = Tools::displayError('Your Zip/postal code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+                $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error').'<br />'.$this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
             } elseif (empty($postcode) && $country->need_zip_code) {
-                $this->errors[] = Tools::displayError('A Zip/postal code is required.');
+                $this->errors[] = $this->trans('A Zip/postal code is required.', array(), 'Admin.Notifications.Error');
             } elseif ($postcode && !Validate::isPostCode($postcode)) {
-                $this->errors[] = Tools::displayError('The Zip/postal code is invalid.');
+                $this->errors[] = $this->trans('The Zip/postal code is invalid.', array(), 'Admin.Notifications.Error');
             }
             /* Store hours */
             $_POST['hours'] = array();
@@ -563,7 +563,7 @@ class AdminStoresControllerCore extends AdminController
 						AND `id_state` = '.(int)Tools::getValue('PS_SHOP_STATE_ID');
             $isStateOk = Db::getInstance()->getValue($sql);
             if ($isStateOk != 1) {
-                $this->errors[] = Tools::displayError('The specified state is not located in this country.');
+                $this->errors[] = $this->trans('The specified state is not located in this country.', array(), 'Admin.Parameters.Notification');
             }
         }
     }

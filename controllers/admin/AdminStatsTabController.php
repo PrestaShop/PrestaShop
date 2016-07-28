@@ -51,7 +51,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             }
             $this->content .= $this->renderView();
         }
-        
+
         $this->content .= $this->displayMenu();
         $this->content .= $this->displayCalendar();
         $this->content .= $this->displayStats();
@@ -97,7 +97,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             $identifier = 'module';
             $id = Tools::getValue('module');
         }
-        
+
         $action = Context::getContext()->link->getAdminLink('AdminStats');
         $action .= ($action && $table ? '&'.Tools::safeOutput($action) : '');
         $action .= ($identifier && $id ? '&'.Tools::safeOutput($identifier).'='.(int)$id : '');
@@ -172,7 +172,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
         return $tpl->fetch();
     }
-    
+
     public function checkModulesNames($a, $b)
     {
         return (bool)($a['displayName'] > $b['displayName']);
@@ -205,7 +205,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             if (!isset($module_instance)) {
                 $module_instance = Module::getInstanceByName($module_name);
             }
-                
+
             if ($module_instance && $module_instance->active) {
                 $hook = Hook::exec('displayAdminStatsModules', null, $module_instance->id);
             }
@@ -223,9 +223,9 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
     public function postProcess()
     {
         $this->context = Context::getContext();
-        
+
         $this->processDateRange();
-        
+
         if (Tools::getValue('submitSettings')) {
             if ($this->access('edit')) {
                 self::$currentIndex .= '&module='.Tools::getValue('module');
@@ -233,16 +233,16 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
                 Configuration::updateValue('PS_STATS_GRID_RENDER', Tools::getValue('PS_STATS_GRID_RENDER', Configuration::get('PS_STATS_GRID_RENDER')));
                 Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
         }
     }
-    
+
     public function processDateRange()
     {
         if (Tools::isSubmit('submitDatePicker')) {
             if ((!Validate::isDate($from = Tools::getValue('datepickerFrom')) || !Validate::isDate($to = Tools::getValue('datepickerTo'))) || (strtotime($from) > strtotime($to))) {
-                $this->errors[] = Tools::displayError('The specified date is invalid.');
+                $this->errors[] = $this->trans('The specified date is invalid.', array(), 'Admin.Stats.Notification');
             }
         }
         if (Tools::isSubmit('submitDateDay')) {
@@ -281,11 +281,11 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             }
         }
     }
-    
+
     public function ajaxProcessSetDashboardDateRange()
     {
         $this->processDateRange();
-        
+
         if ($this->isXmlHttpRequest()) {
             if (is_array($this->errors) && count($this->errors)) {
                 die(json_encode(array(

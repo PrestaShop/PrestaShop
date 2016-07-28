@@ -304,7 +304,7 @@ class AdminEmailsControllerCore extends AdminController
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
             return;
         }
         /* PrestaShop demo mode*/
@@ -316,7 +316,7 @@ class AdminEmailsControllerCore extends AdminController
 
         if (isset($_POST['PS_MAIL_METHOD']) && $_POST['PS_MAIL_METHOD'] == 2
             && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT']))) {
-            $this->errors[] = Tools::displayError('You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.');
+            $this->errors[] = $this->trans('You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.', array(), 'Admin.Parameters.Notification');
         }
     }
 
@@ -324,7 +324,7 @@ class AdminEmailsControllerCore extends AdminController
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
-            die(Tools::displayError('This functionality has been disabled.'));
+            die($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
         }
         /* PrestaShop demo mode */
         if ($this->access('view')) {

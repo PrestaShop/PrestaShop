@@ -355,7 +355,7 @@ class AdminMetaControllerCore extends AdminController
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_ && Tools::isSubmit('submitOptionsmeta')
             && (Tools::getValue('domain') != Configuration::get('PS_SHOP_DOMAIN') || Tools::getValue('domain_ssl') != Configuration::get('PS_SHOP_DOMAIN_SSL'))) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
             return;
         }
 
@@ -370,7 +370,7 @@ class AdminMetaControllerCore extends AdminController
             }
 
             if (!$defaultLangIsValidated && !$englishLangIsValidated) {
-                $this->errors[] = Tools::displayError('The URL rewrite field must be filled in either the default or English language.');
+                $this->errors[] = $this->trans('The URL rewrite field must be filled in either the default or English language.', array(), 'Admin.Notifications.Error');
                 return false;
             }
 
@@ -405,7 +405,7 @@ class AdminMetaControllerCore extends AdminController
     public function generateRobotsFile()
     {
         if (!$write_fd = @fopen($this->rb_file, 'w')) {
-            $this->errors[] = sprintf(Tools::displayError('Cannot write into file: %s. Please check write permissions.'), $this->rb_file);
+            $this->errors[] = $this->trans('Cannot write into file: %filename%. Please check write permissions.', array( '%filename' => $this->rb_file), 'Admin.Notifications.Error');
         } else {
             Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
                 'rb_data' => &$this->rb_data
@@ -606,7 +606,7 @@ class AdminMetaControllerCore extends AdminController
                 $this->url->update();
                 Configuration::updateGlobalValue('PS_SHOP_DOMAIN', $value);
             } else {
-                $this->errors[] = Tools::displayError('This domain is not valid.');
+                $this->errors[] = $this->trans('This domain is not valid.', array(), 'Admin.Notifications.Error');
             }
         }
     }
@@ -626,7 +626,7 @@ class AdminMetaControllerCore extends AdminController
                 $this->url->update();
                 Configuration::updateGlobalValue('PS_SHOP_DOMAIN_SSL', $value);
             } else {
-                $this->errors[] = Tools::displayError('The SSL domain is not valid.');
+                $this->errors[] = $this->trans('The SSL domain is not valid.', array(), 'Admin.Notifications.Error');
             }
         }
     }

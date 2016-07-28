@@ -844,7 +844,7 @@ class AdminManufacturersControllerCore extends AdminController
         }
 
         if (!$res) {
-            $this->errors[] = Tools::displayError('Unable to resize one or more of your pictures.');
+            $this->errors[] = $this->trans('Unable to resize one or more of your pictures.', array(), 'Admin.Catalog.Notification');
         }
 
         return $res;

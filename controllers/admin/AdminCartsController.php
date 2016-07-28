@@ -358,10 +358,10 @@ class AdminCartsControllerCore extends AdminController
         if ($this->access('edit')) {
             $errors = array();
             if ((!$id_product = (int)Tools::getValue('id_product')) || !Validate::isInt($id_product)) {
-                $errors[] = Tools::displayError('Invalid product');
+                $errors[] = $this->trans('Invalid product', array(), 'Admin.Catalog.Notification');
             }
             if (($id_product_attribute = (int)Tools::getValue('id_product_attribute')) && !Validate::isInt($id_product_attribute)) {
-                $errors[] = Tools::displayError('Invalid combination');
+                $errors[] = $this->trans('Invalid combination', array(), 'Admin.Catalog.Notification');
             }
             if (count($errors)) {
                 die(json_encode($errors));
@@ -390,18 +390,18 @@ class AdminCartsControllerCore extends AdminController
                     if ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD) {
                         if (!Tools::getValue($field_id)) {
                             if ($customization_field['required']) {
-                                $errors[] = Tools::displayError('Please fill in all the required fields.');
+                                $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
                             }
                             continue;
                         }
                         if (!Validate::isMessage(Tools::getValue($field_id))) {
-                            $errors[] = Tools::displayError('Invalid message');
+                            $errors[] = $this->trans('Invalid message', array(), 'Admin.Notifications.Error');
                         }
                         $this->context->cart->addTextFieldToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, Tools::getValue($field_id));
                     } elseif ($customization_field['type'] == Product::CUSTOMIZE_FILE) {
                         if (!isset($_FILES[$field_id]) || !isset($_FILES[$field_id]['tmp_name']) || empty($_FILES[$field_id]['tmp_name'])) {
                             if ($customization_field['required']) {
-                                $errors[] = Tools::displayError('Please fill in all the required fields.');
+                                $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
                             }
                             continue;
                         }
@@ -409,15 +409,15 @@ class AdminCartsControllerCore extends AdminController
                             $errors[] = $error;
                         }
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name)) {
-                            $errors[] = Tools::displayError('An error occurred during the image upload process.');
+                            $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         }
                         $file_name = md5(uniqid(rand(), true));
                         if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name)) {
                             continue;
                         } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int)Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
-                            $errors[] = Tools::displayError('An error occurred during the image upload process.');
+                            $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         } elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777)) {
-                            $errors[] = Tools::displayError('An error occurred during the image upload process.');
+                            $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         } else {
                             $this->context->cart->addPictureToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_FILE, $file_name);
                         }
@@ -441,28 +441,28 @@ class AdminCartsControllerCore extends AdminController
                 return;
             }
             if ($this->context->cart->OrderExists()) {
-                $errors[] = Tools::displayError('An order has already been placed with this cart.');
+                $errors[] = $this->trans('An order has already been placed with this cart.', array(), 'Admin.Catalog.Notification');
             } elseif (!($id_product = (int)Tools::getValue('id_product')) || !($product = new Product((int)$id_product, true, $this->context->language->id))) {
-                $errors[] = Tools::displayError('Invalid product');
+                $errors[] = $this->trans('Invalid product', array(), 'Admin.Catalog.Notification');
             } elseif (!($qty = Tools::getValue('qty')) || $qty == 0) {
-                $errors[] = Tools::displayError('Invalid quantity');
+                $errors[] = $this->trans('Invalid quantity', array(), 'Admin.Catalog.Notification');
             }
 
             // Don't try to use a product if not instanciated before due to errors
             if (isset($product) && $product->id) {
                 if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0) {
                     if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty)) {
-                        $errors[] = Tools::displayError('There is not enough product in stock.');
+                        $errors[] = $this->trans('There is not enough product in stock.', array(), 'Admin.Catalog.Notification');
                     }
                 } elseif (!$product->checkQty((int)$qty)) {
-                    $errors[] = Tools::displayError('There is not enough product in stock.');
+                    $errors[] = $this->trans('There is not enough product in stock.', array(), 'Admin.Catalog.Notification');
                 }
                 if (!($id_customization = (int)Tools::getValue('id_customization', 0)) && !$product->hasAllRequiredCustomizableFields()) {
-                    $errors[] = Tools::displayError('Please fill in all the required fields.');
+                    $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
                 }
                 $this->context->cart->save();
             } else {
-                $errors[] = Tools::displayError('This product cannot be added to the cart.');
+                $errors[] = $this->trans('This product cannot be added to the cart.', array(), 'Admin.Catalog.Notification');
             }
 
             if (!count($errors)) {
@@ -474,7 +474,7 @@ class AdminCartsControllerCore extends AdminController
                 }
 
                 if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int)$id_product_attribute, (int)$id_customization, $operator))) {
-                    $errors[] = Tools::displayError('You already have the maximum quantity available for this product.');
+                    $errors[] = $this->trans('You already have the maximum quantity available for this product.', array(), 'Admin.Catalog.Notification');
                 } elseif ($qty_upd < 0) {
                     $minimal_qty = $id_product_attribute ? Attribute::getAttributeMinimalQty((int)$id_product_attribute) : $product->minimal_quantity;
                     $errors[] = sprintf(Tools::displayError('You must add a minimum quantity of %d', false), $minimal_qty);
@@ -557,14 +557,14 @@ class AdminCartsControllerCore extends AdminController
         if ($this->access('edit')) {
             $errors = array();
             if (!$id_order = Tools::getValue('id_order')) {
-                $errors[] = Tools::displayError('Invalid order');
+                $errors[] = $this->trans('Invalid order', array(), 'Admin.OrdersCustomers.Notification');
             }
             $cart = Cart::getCartByOrderId($id_order);
             $new_cart = $cart->duplicate();
             if (!$new_cart || !Validate::isLoadedObject($new_cart['cart'])) {
-                $errors[] = Tools::displayError('The order cannot be renewed.');
+                $errors[] = $this->trans('The order cannot be renewed.', array(), 'Admin.OrdersCustomers.Notification');
             } elseif (!$new_cart['success']) {
-                $errors[] = Tools::displayError('The order cannot be renewed.');
+                $errors[] = $this->trans('The order cannot be renewed.', array(), 'Admin.OrdersCustomers.Notification');
             } else {
                 $this->context->cart = $new_cart['cart'];
                 echo json_encode($this->ajaxReturnVars());
@@ -616,7 +616,7 @@ class AdminCartsControllerCore extends AdminController
         if ($this->access('edit')) {
             $errors = array();
             if (!($id_cart_rule = Tools::getValue('id_cart_rule')) || !$cart_rule = new CartRule((int)$id_cart_rule)) {
-                $errors[] = Tools::displayError('Invalid voucher.');
+                $errors[] = $this->trans('Invalid voucher.', array(), 'Admin.Catalog.Notification');
             } elseif ($err = $cart_rule->checkValidity($this->context)) {
                 $errors[] = $err;
             }

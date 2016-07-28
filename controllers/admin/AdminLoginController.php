@@ -72,7 +72,7 @@ class AdminLoginControllerCore extends AdminController
             $clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'), explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
             // If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
             if ($clientIsMaintenanceOrLocal) {
-                $warningSslMessage = Tools::displayError('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.');
+                $warningSslMessage = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', array(), 'Admin.Notifications.Error');
             } else {
                 $url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
                 $warningSslMessage = sprintf(
@@ -185,15 +185,15 @@ class AdminLoginControllerCore extends AdminController
         $passwd = trim(Tools::getValue('passwd'));
         $email = trim(Tools::getValue('email'));
         if (empty($email)) {
-            $this->errors[] = Tools::displayError('Email is empty.');
+            $this->errors[] = $this->trans('Email is empty.', array(), 'Admin.Notifications.Error');
         } elseif (!Validate::isEmail($email)) {
-            $this->errors[] = Tools::displayError('Invalid email address.');
+            $this->errors[] = $this->trans('Invalid email address.', array(), 'Admin.Notifications.Error');
         }
 
         if (empty($passwd)) {
-            $this->errors[] = Tools::displayError('The password field is blank.');
+            $this->errors[] = $this->trans('The password field is blank.', array(), 'Admin.Notifications.Error');
         } elseif (!Validate::isPasswd($passwd)) {
-            $this->errors[] = Tools::displayError('Invalid password.');
+            $this->errors[] = $this->trans('Invalid password.', array(), 'Admin.Notifications.Error');
         }
 
         if (!count($this->errors)) {
@@ -202,10 +202,10 @@ class AdminLoginControllerCore extends AdminController
             $is_employee_loaded = $this->context->employee->getByEmail($email, $passwd);
             $employee_associated_shop = $this->context->employee->getAssociatedShops();
             if (!$is_employee_loaded) {
-                $this->errors[] = Tools::displayError('The Employee does not exist, or the password provided is incorrect.');
+                $this->errors[] = $this->trans('The Employee does not exist, or the password provided is incorrect.', array(), 'Admin.Notifications.Error');
                 $this->context->employee->logout();
             } elseif (empty($employee_associated_shop) && !$this->context->employee->isSuperAdmin()) {
-                $this->errors[] = Tools::displayError('This employee does not manage the shop anymore (Either the shop has been deleted or permissions have been revoked).');
+                $this->errors[] = $this->trans('This employee does not manage the shop anymore (Either the shop has been deleted or permissions have been revoked).', array(), 'Admin.Notifications.Error');
                 $this->context->employee->logout();
             } else {
                 PrestaShopLogger::addLog(sprintf($this->l('Back Office connection from %s', 'AdminTab', false, false), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
@@ -248,18 +248,18 @@ class AdminLoginControllerCore extends AdminController
     public function processForgot()
     {
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
         } elseif (!($email = trim(Tools::getValue('email_forgot')))) {
-            $this->errors[] = Tools::displayError('Email is empty.');
+            $this->errors[] = $this->trans('Email is empty.', array(), 'Admin.Notifications.Error');
         } elseif (!Validate::isEmail($email)) {
-            $this->errors[] = Tools::displayError('Invalid email address.');
+            $this->errors[] = $this->trans('Invalid email address.', array(), 'Admin.Notifications.Error');
         } else {
             $employee = new Employee();
             if (!$employee->getByEmail($email) || !$employee) {
-                $this->errors[] = Tools::displayError('This account does not exist.');
+                $this->errors[] = $this->trans('This account does not exist.', array(), 'Admin.Notifications.Error');
             } elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0) {
                 $this->errors[] = sprintf(
-                    Tools::displayError('You can reset your password every %d minute(s) only. Please try again later.'),
+                    $this->trans('You can reset your password every %d minute(s) only. Please try again later.', array(), 'Admin.Notifications.Error'),
                     Configuration::get('PS_PASSWD_TIME_BACK')
                 );
             }
@@ -289,7 +289,7 @@ class AdminLoginControllerCore extends AdminController
             } else {
                 die(Tools::jsonEncode(array(
                     'hasErrors' => true,
-                    'errors' => array(Tools::displayError('An error occurred while attempting to reset your password.'))
+                    'errors' => array($this->trans('An error occurred while attempting to reset your password.', array(), 'Admin.Notifications.Error'))
                 )));
             }
         } elseif (Tools::isSubmit('ajax')) {
@@ -300,35 +300,35 @@ class AdminLoginControllerCore extends AdminController
     public function processReset()
     {
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
         } elseif (!($reset_token_value = trim(Tools::getValue('reset_token')))) {
             // hidden fields
-            $this->errors[] = Tools::displayError('Some identification information is missing.');
+            $this->errors[] = $this->trans('Some identification information is missing.', array(), 'Admin.Login.Notification');
         } elseif (!($id_employee = trim(Tools::getValue('id_employee')))) {
-            $this->errors[] = Tools::displayError('Some identification information is missing.');
+            $this->errors[] = $this->trans('Some identification information is missing.', array(), 'Admin.Login.Notification');
         } elseif (!($reset_email = trim(Tools::getValue('reset_email')))) {
-            $this->errors[] = Tools::displayError('Some identification information is missing.');
+            $this->errors[] = $this->trans('Some identification information is missing.', array(), 'Admin.Login.Notification');
         } elseif (!($reset_password = trim(Tools::getValue('reset_passwd')))) {
             // password (twice)
-            $this->errors[] = Tools::displayError('The password is missing: please enter your new password.');
+            $this->errors[] = $this->trans('The password is missing: please enter your new password.', array(), 'Admin.Login.Notification');
         } elseif (!Validate::isPasswd($reset_password)) {
-            $this->errors[] = Tools::displayError('The password is not in a valid format.');
+            $this->errors[] = $this->trans('The password is not in a valid format.', array(), 'Admin.Login.Notification');
         } elseif (!($reset_confirm = trim(Tools::getValue('reset_confirm')))) {
-            $this->errors[] = Tools::displayError('The confirmation is empty: please fill in the password confirmation as well.');
+            $this->errors[] = $this->trans('The confirmation is empty: please fill in the password confirmation as well.', array(), 'Admin.Login.Notification');
         } elseif ($reset_password !== $reset_confirm) {
-            $this->errors[] = Tools::displayError('The password and its confirmation do not match. Please double check both passwords.');
+            $this->errors[] = $this->trans('The password and its confirmation do not match. Please double check both passwords.', array(), 'Admin.Login.Notification');
         } else {
             $employee = new Employee();
             if (!$employee->getByEmail($reset_email) || !$employee || $employee->id != $id_employee) { // check matching employee id with its email
-                $this->errors[] = Tools::displayError('This account does not exist.');
+                $this->errors[] = $this->trans('This account does not exist.', array(), 'Admin.Login.Notification');
             } elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0) {
                 $this->errors[] = sprintf(
-                    Tools::displayError('You can reset your password every %d minute(s) only. Please try again later.'),
+                    $this->trans('You can reset your password every %d minute(s) only. Please try again later.', array(), 'Admin.Login.Notification'),
                     Configuration::get('PS_PASSWD_TIME_BACK')
                 );
             } elseif ($employee->getValidResetPasswordToken() !== $reset_token_value) {
                 // To update password, we must have the temporary reset token that matches.
-                $this->errors[] = Tools::displayError('Your password reset request expired. Please start again.');
+                $this->errors[] = $this->trans('Your password reset request expired. Please start again.', array(), 'Admin.Login.Notification');
             }
         }
 
@@ -348,7 +348,7 @@ class AdminLoginControllerCore extends AdminController
 
                 $result = $employee->update();
                 if (!$result) {
-                    $this->errors[] = Tools::displayError('An error occurred while attempting to change your password.');
+                    $this->errors[] = $this->trans('An error occurred while attempting to change your password.', array(), 'Admin.Login.Notification');
                 } else {
                     $employee->removeResetPasswordToken(); // Delete temporary reset token
                     $employee->update();
@@ -360,7 +360,7 @@ class AdminLoginControllerCore extends AdminController
             } else {
                 die(Tools::jsonEncode(array(
                     'hasErrors' => true,
-                    'errors' => array(Tools::displayError('An error occurred while attempting to change your password.'))
+                    'errors' => array($this->trans('An error occurred while attempting to change your password.', array(), 'Admin.Login.Notification'))
                 )));
             }
         } elseif (Tools::isSubmit('ajax')) {

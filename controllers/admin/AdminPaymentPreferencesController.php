@@ -124,7 +124,7 @@ class AdminPaymentPreferencesControllerCore extends AdminController
                 $this->action = 'group';
             }
         } else {
-            $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
         }
     }
 

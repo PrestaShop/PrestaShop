@@ -37,7 +37,7 @@ class AdminReturnControllerCore extends AdminController
         $this->colorOnBackground = true;
 
         parent::__construct();
-        
+
         $this->_select = 'ors.color, orsl.`name`, o.`id_shop`';
         $this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
         $this->_join .= 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$this->context->language->id.')';
@@ -214,19 +214,19 @@ class AdminReturnControllerCore extends AdminController
                             if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int)(Tools::getValue('id_customization', 0)))) {
                                 Tools::redirectAdmin(self::$currentIndex.'&conf=4token='.$this->token);
                             } else {
-                                $this->errors[] = Tools::displayError('An error occurred while deleting the details of your order return.');
+                                $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', array(), 'Admin.OrdersCustomers.Notification');
                             }
                         } else {
-                            $this->errors[] = Tools::displayError('You need at least one product.');
+                            $this->errors[] = $this->trans('You need at least one product.', array(), 'Admin.OrdersCustomers.Notification');
                         }
                     } else {
-                        $this->errors[] = Tools::displayError('The order return is invalid.');
+                        $this->errors[] = $this->trans('The order return is invalid.', array(), 'Admin.OrdersCustomers.Notification');
                     }
                 } else {
-                    $this->errors[] = Tools::displayError('The order return content is invalid.');
+                    $this->errors[] = $this->trans('The order return content is invalid.', array(), 'Admin.OrdersCustomers.Notification');
                 }
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to delete this.');
+                $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
             }
         } elseif (Tools::isSubmit('submitAddorder_return') || Tools::isSubmit('submitAddorder_returnAndStay')) {
             if ($this->access('edit')) {
@@ -253,10 +253,10 @@ class AdminReturnControllerCore extends AdminController
                         }
                     }
                 } else {
-                    $this->errors[] = Tools::displayError('No order return ID has been specified.');
+                    $this->errors[] = $this->trans('No order return ID has been specified.', array(), 'Admin.OrdersCustomers.Notification');
                 }
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
         }
         parent::postProcess();

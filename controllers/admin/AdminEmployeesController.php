@@ -218,7 +218,7 @@ class AdminEmployeesControllerCore extends AdminController
         $available_profiles = Profile::getProfiles($this->context->language->id);
 
         if ($obj->id_profile == _PS_ADMIN_PROFILE_ && $this->context->employee->id_profile != _PS_ADMIN_PROFILE_) {
-            $this->errors[] = Tools::displayError('You cannot edit the SuperAdmin profile.');
+            $this->errors[] = $this->trans('You cannot edit the SuperAdmin profile.', array(), 'Admin.Parameters.Notification');
             return parent::renderForm();
         }
 
@@ -434,13 +434,13 @@ class AdminEmployeesControllerCore extends AdminController
         }
 
         if (Tools::getValue('id_profile') == _PS_ADMIN_PROFILE_ && $this->context->employee->id_profile != _PS_ADMIN_PROFILE_) {
-            $this->errors[] = Tools::displayError('The provided profile is invalid');
+            $this->errors[] = $this->trans('The provided profile is invalid', array(), 'Admin.Parameters.Notification');
         }
 
         $email = $this->getFieldValue($obj, 'email');
         if (Validate::isEmail($email) && Employee::employeeExists($email) && (!Tools::getValue('id_employee')
             || ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email)) {
-            $this->errors[] = Tools::displayError('An account already exists for this email address:').' '.$email;
+            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.OrdersCustomers.Notification').' '.$email;
         }
     }
 
@@ -479,20 +479,20 @@ class AdminEmployeesControllerCore extends AdminController
     protected function canModifyEmployee()
     {
         if ($this->restrict_edition) {
-            $this->errors[] = Tools::displayError('You cannot disable or delete your own account.');
+            $this->errors[] = $this->trans('You cannot disable or delete your own account.', array(), 'Admin.Parameters.Notification');
             return false;
         }
 
         $employee = new Employee(Tools::getValue('id_employee'));
         if ($employee->isLastAdmin()) {
-            $this->errors[] = Tools::displayError('You cannot disable or delete the administrator account.');
+            $this->errors[] = $this->trans('You cannot disable or delete the administrator account.', array(), 'Admin.Parameters.Notification');
             return false;
         }
 
         // It is not possible to delete an employee if he manages warehouses
         $warehouses = Warehouse::getWarehousesByEmployee((int)Tools::getValue('id_employee'));
         if (Tools::isSubmit('deleteemployee') && count($warehouses) > 0) {
-            $this->errors[] = Tools::displayError('You cannot delete this account because it manages warehouses. Check your warehouses first.');
+            $this->errors[] = $this->trans('You cannot delete this account because it manages warehouses. Check your warehouses first.', array(), 'Admin.Parameters.Notification');
             return false;
         }
 
@@ -507,9 +507,9 @@ class AdminEmployeesControllerCore extends AdminController
         if ($this->restrict_edition) {
             $current_password = trim(Tools::getValue('old_passwd'));
             if (Tools::getValue('passwd') && (empty($current_password) || !Validate::isPasswdAdmin($current_password) || !$employee->getByEmail($employee->email, $current_password))) {
-                $this->errors[] = Tools::displayError('Your current password is invalid.');
+                $this->errors[] = $this->trans('Your current password is invalid.', array(), 'Admin.Parameters.Notification');
             } elseif (Tools::getValue('passwd') && (!Tools::getValue('passwd2') || Tools::getValue('passwd') !== Tools::getValue('passwd2'))) {
-                $this->errors[] = Tools::displayError('The confirmation password does not match.');
+                $this->errors[] = $this->trans('The confirmation password does not match.', array(), 'Admin.Parameters.Notification');
             }
 
             $_POST['id_profile'] = $_GET['id_profile'] = $employee->id_profile;
@@ -564,12 +564,12 @@ class AdminEmployeesControllerCore extends AdminController
 
         if ($employee->isLastAdmin()) {
             if (Tools::getValue('id_profile') != (int)_PS_ADMIN_PROFILE_) {
-                $this->errors[] = Tools::displayError('You should have at least one employee in the administrator group.');
+                $this->errors[] = $this->trans('You should have at least one employee in the administrator group.', array(), 'Admin.Parameters.Notification');
                 return false;
             }
 
             if (Tools::getvalue('active') == 0) {
-                $this->errors[] = Tools::displayError('You cannot disable or delete the administrator account.');
+                $this->errors[] = $this->trans('You cannot disable or delete the administrator account.', array(), 'Admin.Parameters.Notification');
                 return false;
             }
         }
@@ -578,7 +578,7 @@ class AdminEmployeesControllerCore extends AdminController
             $bo_theme = explode('|', Tools::getValue('bo_theme_css'));
             $_POST['bo_theme'] = $bo_theme[0];
             if (!in_array($bo_theme[0], scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'))) {
-                $this->errors[] = Tools::displayError('Invalid theme');
+                $this->errors[] = $this->trans('Invalid theme', array(), 'Admin.Parameters.Notification');
                 return false;
             }
             if (isset($bo_theme[1])) {
@@ -589,7 +589,7 @@ class AdminEmployeesControllerCore extends AdminController
         $assos = $this->getSelectedAssoShop($this->table);
         if (!$assos && $this->table = 'employee') {
             if (Shop::isFeatureActive() && _PS_ADMIN_PROFILE_ != $_POST['id_profile']) {
-                $this->errors[] = Tools::displayError('The employee must be associated with at least one shop.');
+                $this->errors[] = $this->trans('The employee must be associated with at least one shop.', array(), 'Admin.Parameters.Notification');
             }
         }
 
@@ -605,7 +605,7 @@ class AdminEmployeesControllerCore extends AdminController
         $employee = new Employee((int)Tools::getValue('id_employee'));
 
         if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), Validate::ADMIN_PASSWORD_LENGTH)) {
-            return !($this->errors[] = sprintf(Tools::displayError('The password must be at least %s characters long.'),
+            return !($this->errors[] = sprintf($this->trans('The password must be at least %s characters long.', array(), 'Admin.Parameters.Notification'),
                 Validate::ADMIN_PASSWORD_LENGTH));
         }
 
@@ -616,7 +616,7 @@ class AdminEmployeesControllerCore extends AdminController
     {
         /* PrestaShop demo mode */
         if ((Tools::isSubmit('submitBulkdeleteemployee') || Tools::isSubmit('submitBulkdisableSelectionemployee') || Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee') || Tools::isSubmit('submitAddemployee')) && _PS_MODE_DEMO_) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
             return;
         }
 

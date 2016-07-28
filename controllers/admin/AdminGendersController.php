@@ -197,7 +197,7 @@ class AdminGendersControllerCore extends AdminController
     {
         if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir'])) {
             if (!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height'))) {
-                $this->errors[] = Tools::displayError('Width and height must be numeric values.');
+                $this->errors[] = $this->trans('Width and height must be numeric values.', array(), 'Admin.Parameters.Notification');
             } else {
                 if ((int)Tools::getValue('img_width') > 0 && (int)Tools::getValue('img_height') > 0) {
                     $width = (int)Tools::getValue('img_width');

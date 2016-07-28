@@ -139,10 +139,10 @@ class AdminAccessControllerCore extends AdminController
     public function ajaxProcessUpdateAccess()
     {
         if (_PS_MODE_DEMO_) {
-            throw new PrestaShopException(Tools::displayError('This functionality has been disabled.'));
+            throw new PrestaShopException($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
         }
         if ($this->access('edit') != '1') {
-            throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 
         if (Tools::isSubmit('submitAddAccess')) {
@@ -164,10 +164,10 @@ class AdminAccessControllerCore extends AdminController
     public function ajaxProcessUpdateModuleAccess()
     {
         if (_PS_MODE_DEMO_) {
-            throw new PrestaShopException(Tools::displayError('This functionality has been disabled.'));
+            throw new PrestaShopException($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
         }
         if ($this->access('edit') != '1') {
-            throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 
         if (Tools::isSubmit('changeModuleAccess')) {
@@ -214,7 +214,7 @@ class AdminAccessControllerCore extends AdminController
     private function getChildrenTab(array &$tabs, $id_parent = 0)
     {
         $children = [];
-        foreach($tabs as &$tab) {
+        foreach ($tabs as &$tab) {
             $id = $tab['id_tab'];
 
             if ($tab['id_parent'] == $id_parent) {

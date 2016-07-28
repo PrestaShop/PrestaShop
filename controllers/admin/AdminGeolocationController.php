@@ -91,12 +91,12 @@ class AdminGeolocationControllerCore extends AdminController
         }
         // stop processing if geolocation is set to yes but geolite pack is not available
         elseif (Tools::getValue('PS_GEOLOCATION_ENABLED')) {
-            $this->errors[] = Tools::displayError('The geolocation database is unavailable.');
+            $this->errors[] = $this->trans('The geolocation database is unavailable.', array(), 'Admin.International.Notification');
         }
 
         if (empty($this->errors)) {
             if (!is_array(Tools::getValue('countries')) || !count(Tools::getValue('countries'))) {
-                $this->errors[] = Tools::displayError('Country selection is invalid.');
+                $this->errors[] = $this->trans('Country selection is invalid.', array(), 'Admin.International.Notification');
             } else {
                 Configuration::updateValue(
                     'PS_GEOLOCATION_BEHAVIOR',
@@ -107,7 +107,7 @@ class AdminGeolocationControllerCore extends AdminController
             }
 
             if (!Validate::isCleanHtml(Tools::getValue('PS_GEOLOCATION_WHITELIST'))) {
-                $this->errors[] = Tools::displayError('Invalid whitelist');
+                $this->errors[] = $this->trans('Invalid whitelist', array(), 'Admin.International.Notification');
             } else {
                 Configuration::updateValue(
                     'PS_GEOLOCATION_WHITELIST',

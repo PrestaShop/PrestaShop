@@ -181,8 +181,8 @@ class AdminCurrenciesControllerCore extends AdminController
                 return true;
             }
         } else {
-            $this->errors[] = Tools::displayError('An error occurred while deleting the object.').'
-                <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+            $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error').'
+                <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         }
 
         return false;
@@ -197,8 +197,8 @@ class AdminCurrenciesControllerCore extends AdminController
                 return true;
             }
         } else {
-            $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').'
-				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').'
+				<b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         }
 
         return false;
@@ -275,14 +275,14 @@ class AdminCurrenciesControllerCore extends AdminController
             if ($this->access('edit')) {
                 $this->action = 'exchangeRates';
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
         }
         if (Tools::isSubmit('submitAddcurrency') && !Tools::getValue('id_currency') && Currency::exists(Tools::getValue('iso_code'))) {
-            $this->errors[] = Tools::displayError('This currency already exists.');
+            $this->errors[] = $this->trans('This currency already exists.', array(), 'Admin.International.Notification');
         }
         if (Tools::isSubmit('submitAddcurrency') && (float)Tools::getValue('conversion_rate') <= 0) {
-            $this->errors[] = Tools::displayError('The currency conversion rate can not be equal to 0.');
+            $this->errors[] = $this->trans('The currency conversion rate can not be equal to 0.', array(), 'Admin.International.Notification');
         }
         parent::initProcess();
     }

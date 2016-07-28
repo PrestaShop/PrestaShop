@@ -146,7 +146,7 @@ class AdminQuickAccessesControllerCore extends AdminController
             if ($this->access('edit')) {
                 $this->action = 'newWindow';
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
         }
 
@@ -185,7 +185,7 @@ class AdminQuickAccessesControllerCore extends AdminController
             $this->beforeAdd($this->object);
 
             if (method_exists($this->object, 'add') && !$this->object->add()) {
-                $this->errors[] = Tools::displayError('An error occurred while creating an object.').
+                $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error').
                     ' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
             }
             /* voluntary do affectation here */
@@ -234,12 +234,12 @@ class AdminQuickAccessesControllerCore extends AdminController
             if ($object->toggleNewWindow()) {
                 $this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
             } else {
-                $this->errors[] = Tools::displayError('An error occurred while updating new window property.');
+                $this->errors[] = $this->trans('An error occurred while updating new window property.', array(), 'Admin.Parameters.Notification');
             }
         } else {
-            $this->errors[] = Tools::displayError('An error occurred while updating the new window property for this object.').
+            $this->errors[] = $this->trans('An error occurred while updating the new window property for this object.', array(), 'Admin.Parameters.Notification').
                 ' <b>'.$this->table.'</b> '.
-                Tools::displayError('(cannot load object)');
+                $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         }
 
         return $object;

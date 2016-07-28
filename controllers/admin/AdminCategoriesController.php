@@ -344,7 +344,7 @@ class AdminCategoriesControllerCore extends AdminController
                     $this->display = 'add';
                 }
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
         }
 
@@ -710,7 +710,7 @@ class AdminCategoriesControllerCore extends AdminController
         if (($id_thumb = Tools::getValue('deleteThumb', false)) !== false) {
             if (file_exists(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg')
                 && !unlink(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg')) {
-                $this->context->controller->errors[] = Tools::displayError('Error while delete');
+                $this->context->controller->errors[] = $this->trans('Error while delete', array(), 'Admin.Notifications.Error');
             }
 
             if (empty($this->context->controller->errors)) {
@@ -773,10 +773,10 @@ class AdminCategoriesControllerCore extends AdminController
         if ($id_category) {
             if ($id_category != $id_parent) {
                 if (!Category::checkBeforeMove($id_category, $id_parent)) {
-                    $this->errors[] = Tools::displayError('The category cannot be moved here.');
+                    $this->errors[] = $this->trans('The category cannot be moved here.', array(), 'Admin.Catalog.Notification');
                 }
             } else {
-                $this->errors[] = Tools::displayError('The category cannot be a parent of itself.');
+                $this->errors[] = $this->trans('The category cannot be a parent of itself.', array(), 'Admin.Catalog.Notification');
             }
         }
         $object = parent::processAdd();
@@ -821,7 +821,7 @@ class AdminCategoriesControllerCore extends AdminController
                 return false;
             }
         } else {
-            $this->errors[] = Tools::displayError('You do not have permission to delete this.');
+            $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
         }
     }
 
@@ -831,14 +831,14 @@ class AdminCategoriesControllerCore extends AdminController
             /** @var Category $category */
             $category = $this->loadObject();
             if ($category->isRootCategoryForAShop()) {
-                $this->errors[] = Tools::displayError('You cannot remove this category because one of your shops uses it as a root category.');
+                $this->errors[] = $this->trans('You cannot remove this category because one of your shops uses it as a root category.', array(), 'Admin.Catalog.Notification');
             } elseif (parent::processDelete()) {
                 $this->setDeleteMode();
                 $this->processFatherlessProducts((int)$category->id_parent);
                 return true;
             }
         } else {
-            $this->errors[] = Tools::displayError('You do not have permission to delete this.');
+            $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
         }
         return false;
     }
@@ -871,13 +871,13 @@ class AdminCategoriesControllerCore extends AdminController
     public function processPosition()
     {
         if ($this->access('edit') !== '1') {
-            $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
         } elseif (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1))))) {
-            $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.
-                $this->table.'</b> '.Tools::displayError('(cannot load object)');
+            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').' <b>'.
+                $this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         }
         if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position'))) {
-            $this->errors[] = Tools::displayError('Failed to update the position.');
+            $this->errors[] = $this->trans('Failed to update the position.', array(), 'Admin.Notifications.Error');
         } else {
             $object->regenerateEntireNtree();
             Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCategories'));
@@ -898,7 +898,7 @@ class AdminCategoriesControllerCore extends AdminController
                         (int)$image_type['width'],
                         (int)$image_type['height']
                     )) {
-                        $this->errors = Tools::displayError('An error occurred while uploading category image.');
+                        $this->errors = $this->trans('An error occurred while uploading category image.', array(), 'Admin.Catalog.Notification');
                     }
                 }
             }
@@ -922,7 +922,7 @@ class AdminCategoriesControllerCore extends AdminController
                                 (int)$image_type['width'],
                                 (int)$image_type['height']
                             )) {
-                                $this->errors = Tools::displayError('An error occurred while uploading thumbnail image.');
+                                $this->errors = $this->trans('An error occurred while uploading thumbnail image.', array(), 'Admin.Catalog.Notification');
                             } elseif (($infos = getimagesize($tmpName)) && is_array($infos)) {
                                 ImageManager::resize(
                                     $tmpName,
@@ -1022,8 +1022,8 @@ class AdminCategoriesControllerCore extends AdminController
             $total_errors = array();
 
             if (count($available_keys) < count($files)) {
-                $total_errors['name'] = sprintf(Tools::displayError('An error occurred while uploading the image :'));
-                $total_errors['error'] = sprintf(Tools::displayError('You cannot upload more files'));
+                $total_errors['name'] = $this->trans('An error occurred while uploading the image:', array(), 'Admin.Catalog.Notification');
+                $total_errors['error'] = $this->trans('You cannot upload more files', array(), 'Admin.Notifications.Error');
                 die(Tools::jsonEncode(array('thumbnail' => array($total_errors))));
             }
 
@@ -1037,7 +1037,7 @@ class AdminCategoriesControllerCore extends AdminController
                 // Copy new image
                 if (!isset($file['save_path']) || (empty($errors) && !ImageManager::resize($file['save_path'], _PS_CAT_IMG_DIR_
                             .(int)Tools::getValue('id_category').'-'.$id.'_thumb.jpg'))) {
-                    $errors[] = Tools::displayError('An error occurred while uploading the image.');
+                    $errors[] = $this->trans('An error occurred while uploading the image.', array(), 'Admin.Catalog.Notification');
                 }
 
                 if (count($errors)) {

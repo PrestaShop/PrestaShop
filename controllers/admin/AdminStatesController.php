@@ -221,12 +221,12 @@ class AdminStatesControllerCore extends AdminController
         // Idiot-proof controls
         if (!Tools::getValue('id_'.$this->table)) {
             if (Validate::isStateIsoCode(Tools::getValue('iso_code')) && State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country'))) {
-                $this->errors[] = Tools::displayError('This ISO code already exists. You cannot create two states with the same ISO code.');
+                $this->errors[] = $this->trans('This ISO code already exists. You cannot create two states with the same ISO code.', array(), 'Admin.International.Notification');
             }
         } elseif (Validate::isStateIsoCode(Tools::getValue('iso_code'))) {
             $id_state = State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country'));
             if ($id_state && $id_state != Tools::getValue('id_'.$this->table)) {
-                $this->errors[] = Tools::displayError('This ISO code already exists. You cannot create two states with the same ISO code.');
+                $this->errors[] = $this->trans('This ISO code already exists. You cannot create two states with the same ISO code.', array(), 'Admin.International.Notification');
             }
         }
 
@@ -239,15 +239,15 @@ class AdminStatesControllerCore extends AdminController
                         if ($object->delete()) {
                             Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.(Tools::getValue('token') ? Tools::getValue('token') : $this->token));
                         }
-                        $this->errors[] = Tools::displayError('An error occurred during deletion.');
+                        $this->errors[] = $this->trans('An error occurred during deletion.', array(), 'Admin.Notifications.Error');
                     } else {
-                        $this->errors[] = Tools::displayError('This state was used in at least one address. It cannot be removed.');
+                        $this->errors[] = $this->trans('This state was used in at least one address. It cannot be removed.', array(), 'Admin.International.Notification');
                     }
                 } else {
-                    $this->errors[] = Tools::displayError('An error occurred while deleting the object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+                    $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
                 }
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to delete this.');
+                $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
             }
         }
 
