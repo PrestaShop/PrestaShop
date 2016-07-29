@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
@@ -55,6 +56,7 @@ class ModuleManagerBuilder
     public static $moduleZipManager = null;
     public static $translator = null;
     public static $addonsDataProvider = null;
+    public static $categoriesProvider = null;
 
     public function __construct()
     {
@@ -66,19 +68,21 @@ class ModuleManagerBuilder
         ;
 
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient);
+        self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
 
         if (is_null(self::$adminModuleDataProvider)) {
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 $this->getLanguageIso(),
                 $this->getSymfonyRouter(),
-                self::$addonsDataProvider
+                self::$addonsDataProvider,
+                self::$categoriesProvider
             );
 
-            self::$translator       = Context::getContext()->getTranslator();
-            self::$moduleDataUpdater       = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
-            self::$legacyLogger            = new LegacyLogger();
-            self::$moduleDataProvider      = new ModuleDataProvider(self::$legacyLogger, self::$translator);
-            self::$moduleZipManager = new ModuleZipManager(new Filesystem, new Finder, self::$translator);
+            self::$translator = Context::getContext()->getTranslator();
+            self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
+            self::$legacyLogger = new LegacyLogger();
+            self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
+            self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
         }
     }
 

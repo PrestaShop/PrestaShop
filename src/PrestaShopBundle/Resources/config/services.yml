@@ -132,6 +132,10 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
         arguments: ["@prestashop.adapter.legacy.logger", "@translator", "@doctrine.orm.entity_manager"]
 
+    prestashop.categories_provider:
+        class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
+        arguments: ['@prestashop.addons.client_api']
+
     # Presenters
     prestashop.adapter.presenter.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
@@ -219,8 +223,6 @@ services:
             - "@filesystem"
             - "@finder"
             - "@translator"
-
-
 
     # TRANSLATIONS
     prestashop.translations.database_loader:

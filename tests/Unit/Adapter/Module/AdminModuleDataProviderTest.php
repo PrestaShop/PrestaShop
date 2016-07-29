@@ -36,6 +36,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
     private $languageISOCode;
     private $legacyContext;
     private $addonsDataProviderS;
+    private $categoriesProviderS;
     private $adminModuleDataProvider;
 
     public function setUp()
@@ -57,6 +58,10 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->categoriesProviderS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider')
+            ->disableOriginalConstructor()
+            ->getmock();
 
         /* The module catalog will contains only 5 modules for theses tests */
         $fakeModules = array(
@@ -96,7 +101,12 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->clearModuleCache();
         file_put_contents(_PS_CACHE_DIR_.'en_catalog_modules.json', json_encode($fakeModules, true));
 
-        $this->adminModuleDataProvider = new AdminModuleDataProvider($this->languageISOCode, $this->sfRouter, $this->addonsDataProviderS);
+        $this->adminModuleDataProvider = new AdminModuleDataProvider(
+            $this->languageISOCode,
+            $this->sfRouter,
+            $this->addonsDataProviderS,
+            $this->categoriesProviderS
+        );
     }
 
     public function testGetListOfModulesOk()
@@ -148,6 +158,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
                 'languageISO' => $this->languageISOCode,
                 'router' => $this->sfRouter,
                 'addonsDataProvider' => $this->addonsDataProviderS,
+                'categoriesProvider' => $this->categoriesProviderS,
             )
         );
 

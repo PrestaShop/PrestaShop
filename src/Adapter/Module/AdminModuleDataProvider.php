@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -41,22 +42,27 @@ use Symfony\Component\Routing\Router;
 class AdminModuleDataProvider implements ModuleInterface
 {
     const _CACHEFILE_MODULES_ = '_catalog_modules.json';
-    const _CACHEFILE_CATEGORIES_ = '_categories.json';
 
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
     private $languageISO;
     private $router;
     private $addonsDataProvider;
+    private $categoriesProvider;
     private $cache_dir = _PS_CACHE_DIR_;
     protected $catalog_modules = array();
     protected $catalog_modules_names;
 
-    public function __construct($languageISO, Router $router = null, AddonsDataProvider $addonsDataProvider)
-    {
+    public function __construct(
+        $languageISO,
+        Router $router = null,
+        AddonsDataProvider $addonsDataProvider,
+        CategoriesProvider $categoriesProvider
+    ) {
         $this->languageISO = $languageISO;
         $this->router = $router;
         $this->addonsDataProvider = $addonsDataProvider;
+        $this->categoriesProvider = $categoriesProvider;
     }
 
     public function clearCatalogCache()
@@ -158,58 +164,12 @@ class AdminModuleDataProvider implements ModuleInterface
                 $addon->attributes->set('urls', $urls);
             }
             $addon->attributes->set('url_active', $url_active);
-            $addon->attributes->set('categoryParent', $this->getParentCategory($addon->attributes->get('categoryName')));
+
+            $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
+            $addon->attributes->set('categoryParent', $categoryParent);
         }
 
         return $addons;
-    }
-
-    /**
-     * @todo rename it to ``getCategories()``
-     * @todo extract to AdminCategoryDataProvider
-     */
-    public function getCategoriesFromModules()
-    {
-        $categoriesFromApi = $this->addonsDataProvider->request('categories', null);
-        $categories = array();
-
-        // Only Tab: Categories
-        $categories['categories'] = $this->createMenuObject('categories',
-            'Categories');
-
-        foreach ($categoriesFromApi as $category) {
-            $categoryName = $category->name;
-
-            $categories['categories']->subMenu[$categoryName] = $this->createMenuObject($categoryName,
-                $categoryName
-            );
-        }
-
-        usort($categories['categories']->subMenu, function ($a, $b) {
-            return strcmp($a->name, $b->name);
-        });
-
-        return $categories;
-    }
-
-    /**
-     * @todo extract to AdminCategoryDataProvider
-     */
-    public function getParentCategory($categoryName)
-    {
-        static $categoriesFromApi = null;
-
-        if (null === $categoriesFromApi) {
-            $categoriesFromApi = $this->addonsDataProvider->request('categories', null);
-        }
-
-        foreach ($categoriesFromApi as $parentCategory) {
-            foreach ($parentCategory->categories as $childCategory) {
-                if ($childCategory->name === $categoryName) {
-                    return $parentCategory->name;
-                }
-            }
-        }
     }
 
     protected function applyModuleFilters(array $modules, array $filters)
@@ -298,7 +258,8 @@ class AdminModuleDataProvider implements ModuleInterface
                     foreach ($addons as $addon) {
                         $addon->origin = $action;
                         $addon->origin_filter_value = $action_filter_value;
-                        $addon->categoryParent = $this->getParentCategory($addon->categoryName);
+                        $categoryParent = $this->categoriesProvider->getParentCategory($addon->categoryName);
+                        $addon->categoryParent = $categoryParent;
                     }
 
                     $listAddons = array_merge($listAddons, $addons);
@@ -313,16 +274,6 @@ class AdminModuleDataProvider implements ModuleInterface
                 }
             }
         }
-    }
-
-    protected function createMenuObject($ref, $name)
-    {
-        return (object) array(
-                'name' => $name,
-                'refMenu' => $ref,
-                'subMenu' => array(),
-                'modulesRef' => array(),
-        );
     }
 
     protected function fallbackOnCatalogCache()
