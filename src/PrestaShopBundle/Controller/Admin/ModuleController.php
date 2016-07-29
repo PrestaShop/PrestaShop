@@ -3,7 +3,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleZip;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
@@ -92,6 +91,7 @@ class ModuleController extends FrameworkBundleAdminController
                 'totalModules' => count($products),
             )
         )->getContent();
+
         $formattedContent['content'] .= $this->render(
             'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
             array(
@@ -157,8 +157,6 @@ class ModuleController extends FrameworkBundleAdminController
             $products->{$product_label} = $modulesProvider->generateAddonsUrls($products_part);
             $products->{$product_label} = $this->getPresentedProducts($products_part);
         }
-
-        dump($this->getTopMenuData($modulesProvider->getCategoriesFromModules($installed_products)));die;
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
