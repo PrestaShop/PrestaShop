@@ -1,4 +1,7 @@
 <?php
+
+use PrestaShopBundle\Utils\Migrate;
+
 /**
  * 2007-2015 PrestaShop
  *
@@ -59,14 +62,6 @@ define('INSTALL_PATH', dirname(dirname(__FILE__)).'/');
 
 require_once(INSTALL_PATH . 'install_version.php');
 
-define('SETTINGS_FILE', INSTALL_PATH . '/../config/settings.inc.php');
-
-if (file_exists(SETTINGS_FILE)) {
-    include_once(SETTINGS_FILE);
-} else {
-    die('settings.inc.php is missing (error code 30).');
-}
-
 // need for upgrade before 1.5
 if (!defined('__PS_BASE_URI__')) {
     define('__PS_BASE_URI__', str_replace('//', '/', '/'.trim(preg_replace('#/(install(-dev)?/upgrade)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/').'/'));
@@ -78,6 +73,9 @@ if (!defined('_THEME_NAME_')) {
 }
 
 require_once(dirname(__FILE__).'/../init.php');
+Migrate::migrateSettingsFile();
+require_once(_PS_CONFIG_DIR_.'bootstrap.php');
+
 
 // set logger
 require_once(_PS_INSTALL_PATH_.'upgrade/classes/AbstractLogger.php');
@@ -144,7 +142,7 @@ if ($versionCompare == '-1') {
     $logger->logError(sprintf('You already have the %s version.', _PS_INSTALL_VERSION_));
     $fail_result .= '<action result="fail" error="28" />'."\n";
 } elseif ($versionCompare === false) {
-    $logger->logError('There is no older version. Did you delete or rename the config/settings.inc.php file?');
+    $logger->logError('There is no older version. Did you delete or rename the app/config/parameters.yml file?');
     $fail_result .= '<action result="fail" error="29" />'."\n";
 }
 
@@ -311,24 +309,6 @@ if (empty($fail_result)) {
         $sqlContent = preg_split("/;\s*[\r\n]+/", $sqlContent);
 
         $sqlContentVersion[$version] = $sqlContent;
-    }
-}
-
-
-if (empty($fail_result)) {
-    error_reporting($oldLevel);
-    $confFile = new AddConfToFile(SETTINGS_FILE, 'w');
-    if ($confFile->error) {
-        $logger->logError($confFile->error);
-        $fail_result .= '<action result="fail" error="'.$confFile->error.'" />'."\n";
-    } else {
-        foreach ($datas as $data) {
-            $confFile->writeInFile($data[0], $data[1]);
-        }
-    }
-    if ($confFile->error != false) {
-        $logger->logError($confFile->error);
-        $fail_result .= '<action result="fail" error="'.$confFile->error.'" />'."\n";
     }
 }
 

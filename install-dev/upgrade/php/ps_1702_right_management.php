@@ -51,7 +51,7 @@ function ps_1702_right_management()
     $oldAccess = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'access_old`');
     foreach ($oldAccess as $currOldAccess) {
         foreach (array('view', 'add', 'edit', 'delete') as $action) {
-            if ($currOldAccess[$action] == '1') {
+            if (array_key_exists($action, $currOldAccess) && $currOldAccess[$action] == '1') {
                 $accessObject->updateLgcAccess(
                     $currOldAccess['id_profile'],
                     $currOldAccess['id_tab'],
@@ -66,7 +66,7 @@ function ps_1702_right_management()
     $oldAccess = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'module_access_old`');
     foreach ($oldAccess as $currOldAccess) {
         foreach (array('configure', 'view', 'uninstall') as $action) {
-            if ($currOldAccess[$action] == '1') {
+            if (array_key_exists($action, $currOldAccess) && $currOldAccess[$action] == '1') {
                 $accessObject->updateLgcAccess(
                     $currOldAccess['id_profile'],
                     $currOldAccess['id_tab'],

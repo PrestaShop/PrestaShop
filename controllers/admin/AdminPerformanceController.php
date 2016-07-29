@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Symfony\Component\Yaml\Yaml;
+
 /**
  * @property Configuration $object
  */
@@ -899,38 +901,28 @@ class AdminPerformanceControllerCore extends AdminController
         if ((bool)Tools::getValue('ciphering_up') && Configuration::get('PS_CIPHER_ALGORITHM') != (int)Tools::getValue('PS_CIPHER_ALGORITHM')) {
             if ($this->access('edit')) {
                 $algo = (int)Tools::getValue('PS_CIPHER_ALGORITHM');
-                $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
-                $new_settings = $prev_settings;
+
+                $config = Yaml::parse(_PS_ROOT_DIR_.'/app/config/parameters.yml');
+
                 if ($algo) {
                     if (!function_exists('mcrypt_encrypt')) {
                         $this->errors[] = Tools::displayError('The "Mcrypt" PHP extension is not activated on this server.');
                     } else {
-                        if (!strstr($new_settings, '_RIJNDAEL_KEY_')) {
+                        if (!isset($config['parameters']['_rijndael_key'])) {
                             $key_size = mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
                             $key = Tools::passwdGen($key_size);
-                            $new_settings = preg_replace(
-                                '/define\(\'_COOKIE_KEY_\', \'([a-z0-9=\/+-_]+)\'\);/i',
-                                'define(\'_COOKIE_KEY_\', \'\1\');'."\n".'define(\'_RIJNDAEL_KEY_\', \''.$key.'\');',
-                                $new_settings
-                            );
+                            $config['parameters']['_rijndael_key'] = $key;
                         }
-                        if (!strstr($new_settings, '_RIJNDAEL_IV_')) {
+                        if (!isset($config['parameters']['_rijndael_iv'])) {
                             $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
                             $iv = base64_encode(mcrypt_create_iv($iv_size, MCRYPT_RAND));
-                            $new_settings = preg_replace(
-                                '/define\(\'_COOKIE_IV_\', \'([a-z0-9=\/+-_]+)\'\);/i',
-                                'define(\'_COOKIE_IV_\', \'\1\');'."\n".'define(\'_RIJNDAEL_IV_\', \''.$iv.'\');',
-                                $new_settings
-                            );
+                            $config['parameters']['_rijndael_iv'] = $iv;
                         }
                     }
                 }
                 if (!count($this->errors)) {
                     // If there is not settings file modification or if the backup and replacement of the settings file worked
-                    if ($new_settings == $prev_settings || (
-                        copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
-                        && (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
-                    )) {
+                    if (file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($config))) {
                         Configuration::updateValue('PS_CIPHER_ALGORITHM', $algo);
                         $redirectAdmin = true;
                     } else {
@@ -944,15 +936,12 @@ class AdminPerformanceControllerCore extends AdminController
 
         if ((bool)Tools::getValue('cache_up')) {
             if ($this->access('edit')) {
-                $new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
+                $config = Yaml::parse(_PS_ROOT_DIR_.'/app/config/parameters.yml');
+
                 $cache_active = (bool)Tools::getValue('cache_active');
 
                 if ($caching_system = preg_replace('[^a-zA-Z0-9]', '', Tools::getValue('caching_system'))) {
-                    $new_settings = preg_replace(
-                        '/define\(\'_PS_CACHING_SYSTEM_\', \'([a-z0-9=\/+-_]*)\'\);/Ui',
-                        'define(\'_PS_CACHING_SYSTEM_\', \''.$caching_system.'\');',
-                        $new_settings
-                    );
+                    $config['parameters']['ps_caching'] = $caching_system;
                 } else {
                     $cache_active = false;
                     $this->errors[] = Tools::displayError('The caching system is missing.');
@@ -998,14 +987,11 @@ class AdminPerformanceControllerCore extends AdminController
                 }
 
                 if (!count($this->errors)) {
-                    $new_settings = preg_replace('/define\(\'_PS_CACHE_ENABLED_\', \'([01]?)\'\);/Ui', 'define(\'_PS_CACHE_ENABLED_\', \''.(int)$cache_active.'\');', $new_settings);
+                    $config['parameters']['ps_cache_enable'] = $cache_active;
                     // If there is not settings file modification or if the backup and replacement of the settings file worked
-                    if ($new_settings == $prev_settings || (
-                        copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
-                        && (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
-                    )) {
+                    if (file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($config))) {
                         if (function_exists('opcache_invalidate')) {
-                            opcache_invalidate(_PS_ROOT_DIR_.'/config/settings.inc.php');
+                            opcache_invalidate(_PS_ROOT_DIR_.'/app/config/parameters.yml');
                         }
                         $redirectAdmin = true;
                     } else {

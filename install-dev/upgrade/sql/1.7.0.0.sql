@@ -43,7 +43,7 @@ CREATE TABLE `PREFIX_module_history` (
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_employee` (`id_employee`,`id_module`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 
 ALTER TABLE `PREFIX_product` ADD `show_condition` TINYINT(1) NOT NULL DEFAULT '0' AFTER `available_date`;
@@ -118,22 +118,22 @@ CREATE TABLE `PREFIX_authorization_role` (
   `id_authorization_role` int(10) unsigned NOT NULL auto_increment,
   `slug` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id_authorization_role`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-RENAME TABLE `PREFIX_access` TO `PREFIX_access_old` 
-RENAME TABLE `PREFIX_module_access` TO `PREFIX_module_access_old` 
+RENAME TABLE `PREFIX_access` TO `PREFIX_access_old`;
+RENAME TABLE `PREFIX_module_access` TO `PREFIX_module_access_old`;
 
 CREATE TABLE `PREFIX_access` (
   `id_profile` int(10) unsigned NOT NULL,
   `id_authorization_role` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_profile`,`id_authorization_role`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_module_access` (
   `id_profile` int(10) unsigned NOT NULL,
   `id_authorization_role` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_profile`,`id_authorization_role`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 /* Add Payment Preferences tab. SuperAdmin profile is the only one to access it. */
 /* PHP:ps_1702_right_management(); */;

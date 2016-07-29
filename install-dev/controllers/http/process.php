@@ -28,8 +28,6 @@ use PrestaShop\PrestaShop\Core\Cldr\Update;
 
 class InstallControllerHttpProcess extends InstallControllerHttp implements HttpConfigureInterface
 {
-    const SETTINGS_FILE = 'config/settings.inc.php';
-
     protected $model_install;
     public $process_steps = array();
     public $previous_button = false;
@@ -311,7 +309,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $low_memory = Tools::getMemoryLimit() < Tools::getOctets('42M');
 
         // We fill the process step used for Ajax queries
-        $this->process_steps[] = array('key' => 'generateSettingsFile', 'lang' => $this->translator->trans('Create settings.inc file', array(), 'Install'));
+        $this->process_steps[] = array('key' => 'generateSettingsFile', 'lang' => $this->translator->trans('Create file parameters', array(), 'Install'));
         $this->process_steps[] = array('key' => 'installDatabase', 'lang' => $this->translator->trans('Create database tables', array(), 'Install'));
         $this->process_steps[] = array('key' => 'installDefaultData', 'lang' => $this->translator->trans('Create default shop and languages', array(), 'Install'));
 
