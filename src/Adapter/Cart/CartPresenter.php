@@ -15,6 +15,7 @@ use Configuration;
 use TaxConfiguration;
 use CartRule;
 use Tools;
+use Hook;
 
 class CartPresenter implements PresenterInterface
 {
@@ -327,6 +328,10 @@ class CartPresenter implements PresenterInterface
 
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
 
+        Hook::exec('overrideMinimalPurchasePrice', array(
+            'minimalPurchase' => &$minimalPurchase
+        ));
+
         // TODO: move it to a common parent, since it's copied in OrderPresenter and ProductPresenter
         $labels = array(
             'tax_short' => ($this->includeTaxes())
@@ -348,6 +353,7 @@ class CartPresenter implements PresenterInterface
             'id_address_invoice' => $cart->id_address_invoice,
             'is_virtual' => $cart->isVirtualCart(),
             'vouchers' => $this->getTemplateVarVouchers($cart),
+            'minimalPurchase' => $minimalPurchase,
             'minimalPurchaseRequired' => ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
                 sprintf(
                     $this->translator->trans(

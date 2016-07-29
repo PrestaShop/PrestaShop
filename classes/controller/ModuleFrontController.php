@@ -88,6 +88,9 @@ class ModuleFrontControllerCore extends FrontController
             $currency = Currency::getCurrency((int) $this->context->cart->id_currency);
             $orderTotal = $this->context->cart->getOrderTotal();
             $minimal_purchase = Tools::convertPrice((float) Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
+            Hook::exec('overrideMinimalPurchasePrice', array(
+                'minimalPurchase' => &$minimalPurchase
+            ));
             if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase) {
                 Tools::redirect('index.php?controller=order&step=1');
             }
