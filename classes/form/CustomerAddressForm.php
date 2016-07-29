@@ -69,6 +69,19 @@ class CustomerAddressFormCore extends AbstractForm
     {
         $is_valid = parent::validate();
 
+        if (($city = $this->getField('city'))) {
+            if (isset(Address::$definition['fields']['city']['size']) &&
+                strlen($city->getValue()) > Address::$definition['fields']['city']['size']) {
+                $city->addError(sprintf(
+                    $this->translator->trans(
+                        'city name is too long - should have a maximum of %d characters', [], 'Address'
+                    ),
+                    (int)Address::$definition['fields']['city']['size']
+                ));
+                $is_valid = false;
+            }
+        }
+
         if (($postcode = $this->getField('postcode'))) {
             if ($postcode->isRequired()) {
                 $country = $this->formatter->getCountry();
