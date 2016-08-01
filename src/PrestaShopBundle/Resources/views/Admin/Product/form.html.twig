@@ -31,7 +31,7 @@
               {% endfor %}
             </select>
           </div>
-          <div class="col-lg-2 text-md-right">
+          <div class="toolbar col-lg-2 text-md-right">
             <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"
                id="product_form_go_to_sales">
               <i class="material-icons">assessment</i>
@@ -81,19 +81,25 @@
 
     {# FORM TABS CONTAINER #}
     <div id="form-loading" class="col-md-10 col-md-offset-1">
-
-      <ul class="nav nav-tabs" id="form-nav" role="tablist">
-        <li id="tab_step1" class="nav-item"><a href="#step1" role="tab" data-toggle="tab" class="nav-link active">{{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-        <li id="tab_step3" class="nav-item"><a href="#step3" role="tab" data-toggle="tab" class="nav-link">{{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-        <li id="tab_step4" class="nav-item"><a href="#step4" role="tab" data-toggle="tab" class="nav-link">{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-        <li id="tab_step2" class="nav-item"><a href="#step2" role="tab" data-toggle="tab" class="nav-link">{{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-        <li id="tab_step5" class="nav-item"><a href="#step5" role="tab" data-toggle="tab" class="nav-link">{{ 'SEO'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-        <li id="tab_step6" class="nav-item"><a href="#step6" role="tab" data-toggle="tab" class="nav-link">{{ 'Options'|trans({}, 'Admin.Global') }}</a></li>
-        {% if hookcount('displayAdminProductsExtra') > 0 %}
-          <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">&laquo;{{ 'Modules options'|trans({}, 'Admin.Catalog.Feature') }}&raquo;</a></li>
-        {% endif %}
-      </ul>
-
+      <div class="tabs js-tabs">
+        <div class="arrow js-arrow left-arrow pull-left">
+          <i class="material-icons hide">chevron_left</i>
+        </div>
+        <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
+          <li id="tab_step1" class="nav-item"><a href="#step1" role="tab" data-toggle="tab" class="nav-link active">{{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
+          <li id="tab_step3" class="nav-item"><a href="#step3" role="tab" data-toggle="tab" class="nav-link">{{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
+          <li id="tab_step4" class="nav-item"><a href="#step4" role="tab" data-toggle="tab" class="nav-link">{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
+          <li id="tab_step2" class="nav-item"><a href="#step2" role="tab" data-toggle="tab" class="nav-link">{{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
+          <li id="tab_step5" class="nav-item"><a href="#step5" role="tab" data-toggle="tab" class="nav-link">{{ 'SEO'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
+          <li id="tab_step6" class="nav-item"><a href="#step6" role="tab" data-toggle="tab" class="nav-link">{{ 'Options'|trans({}, 'Admin.Global') }}</a></li>
+          {% if hookcount('displayAdminProductsExtra') > 0 %}
+            <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">&laquo;{{ 'Modules options'|trans({}, 'Admin.Catalog.Feature') }}&raquo;</a></li>
+          {% endif %}
+        </ul>
+        <div class="arrow js-arrow right-arrow visible pull-right">
+          <i class="material-icons hide">chevron_right</i>
+        </div>
+      </div>
       <div id="form_content" class="tab-content">
 
         {# STEP 1 #}
@@ -104,7 +110,7 @@
                 <div class="row">
 
                   {# LEFT #}
-                  <div class="col-md-9">
+                  <div class="col-md-9 left-column">
 
                     <div id="js_form_step1_inputPackItems">
                       {{ form_errors(form.step1.inputPackItems) }}
@@ -202,9 +208,9 @@
                   </div>
 
                   {# RIGHT #}
-                  <div class="col-md-3">
+                  <div class="col-md-3 right-column">
 
-                      <div class="row right-column">
+                      <div class="row">
                         <div class="col-md-12">
 
                           <div class="form-group" id="show_variations_selector">
@@ -884,7 +890,7 @@
                   <div class="row">
 
                     {# LEFT #}
-                    <div class="col-md-9">
+                    <div class="col-md-12">
                       {% for module in renderhooksarray('displayAdminProductsExtra', {'id_product': id_product}) %}
                         <div class="card">
                           <div class="card-header">
@@ -895,11 +901,6 @@
                           </div>
                         </div>
                       {% endfor %}
-                    </div>
-
-                    <div class="col-md-3">
-                      {{ render(controller('PrestaShopBundle:Admin\\Common:recommendedModules',
-                      {'limit': 3, 'randomize': 1, 'domain': 'products_others' })) }}
                     </div>
 
                   </div>
@@ -968,7 +969,8 @@
           class="btn btn-tertiary-outline btn-submit hidden-xs uppercase go-catalog"
           id="product_form_save_go_to_catalog_btn"
           data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
-          data-toggle="tooltip" title="{{ 'Save and go back to the catalog: CTRL+Q'|trans({}, 'Admin.Catalog.Help') }}"
+          data-toggle="tooltip"
+          title="{{ 'Save and go back to the catalog: CTRL+Q'|trans({}, 'Admin.Catalog.Help') }}"
           >
           {{ 'Go to catalog'|trans({}, 'Admin.Catalog.Feature')|raw }}
         </button>
@@ -990,9 +992,40 @@
           data-toggle="tooltip"
           title="{{ 'Save the product and stay on the current page: CTRL+S'|trans({}, 'Admin.Catalog.Help') }}"
           />
+
+          <div class="dropdown hide pull-right">
+           <button
+            class="btn btn-primary dropdown-toggle save"
+            type="submit"
+            id="dropdownMenu"
+            data-toggle="dropdown"
+            aria-expanded="false"
+            >
+             {{ 'Save'|trans({}, 'Admin.Actions') }}
+           </button>
+           <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+             <button
+               class="dropdown-item duplicate"
+               data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}"
+             >
+             {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
+             </button>
+             <button
+                class="dropdown-item go-catalog"
+                data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
+              >
+              {{ 'Go to catalog'|trans({}, 'Admin.Catalog.Feature')|raw }}
+            </button>
+             <button
+                class="dropdown-item new-product"
+                data-redirect="{{ path('admin_product_new') }}"
+              >
+              {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-
   </form>
 
 
