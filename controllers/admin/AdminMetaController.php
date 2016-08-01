@@ -287,11 +287,11 @@ class AdminMetaControllerCore extends AdminController
 
         $pages = array(
             'common' => array(
-                'name' => $this->trans('Default pages', array(), 'Admin.Parameters'),
+                'name' => $this->trans('Default pages', array(), 'Admin.Parameters.Feature'),
                 'query' => array(),
             ),
             'module' => array(
-                'name' => $this->trans('Modules pages', array(), 'Admin.Parameters'),
+                'name' => $this->trans('Modules pages', array(), 'Admin.Parameters.Feature'),
                 'query' => array(),
             ),
         );
@@ -316,7 +316,7 @@ class AdminMetaControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->trans('Page', array(), 'Admin.Parameters'),
+                    'label' => $this->trans('Page', array(), 'Admin.Parameters.Feature'),
                     'name' => 'page',
 
                     'options' => array(
@@ -330,7 +330,7 @@ class AdminMetaControllerCore extends AdminController
                             'query' => 'query',
                         ),
                     ),
-                    'hint' => $this->trans('Name of the related page.', array(), 'AdminParameters'),
+                    'hint' => $this->trans('Name of the related page.', array(), 'AdminParameters.Help'),
                     'required' => true,
                 ),
                 array(
