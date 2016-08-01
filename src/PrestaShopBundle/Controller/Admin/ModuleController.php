@@ -173,8 +173,8 @@ class ModuleController extends FrameworkBundleAdminController
 
     public function moduleAction(Request $request)
     {
-        $action = $request->attributes->get('action');
-        $module = $request->attributes->get('module_name');
+        $action = $request->get('action');
+        $module = $request->get('module_name');
         $forceDeletion = $request->query->has('deletion');
 
         $moduleManager = $this->get('prestashop.module.manager');
@@ -320,7 +320,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     public function getPreferredModulesAction(Request $request)
     {
-        $tabModulesList = $request->request->get('tab_modules_list');
+        $tabModulesList = $request->get('tab_modules_list');
 
         if ($tabModulesList) {
             $tabModulesList = explode(',', $tabModulesList);

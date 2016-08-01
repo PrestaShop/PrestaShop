@@ -127,6 +127,7 @@ var AdminModuleCard = function () {
         $.ajax({
             url: url,
             dataType: 'json',
+            method: 'POST',
             beforeSend: function () {
                 jqElementObj.hide();
                 jqElementObj.after(spinnerObj);

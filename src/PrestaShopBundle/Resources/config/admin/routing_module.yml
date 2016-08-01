@@ -17,7 +17,7 @@ admin_module_catalog_refresh:
 
 admin_module_catalog_post:
     path:     /catalog
-    methods:  [POST]
+    methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::getPreferredModulesAction
         _legacy_controller: AdminModules
@@ -33,7 +33,7 @@ admin_module_manage:
 
 admin_module_manage_action:
     path:     /manage/action/{action}/{module_name}
-    methods:  [GET]
+    methods:  [POST]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction
     requirements:
@@ -56,7 +56,7 @@ admin_module_manage_action_bulk:
 
 admin_module_manage_update_all:
     path:     /manage/update/all
-    methods:  [GET]
+    methods:  [POST]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction
 
