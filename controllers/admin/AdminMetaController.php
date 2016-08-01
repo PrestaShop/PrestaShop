@@ -291,7 +291,7 @@ class AdminMetaControllerCore extends AdminController
                 'query' => array(),
             ),
             'module' => array(
-                'name' => $this->trans('Modules pages', array(), 'Admin.Parameters.Feature'),
+                'name' => $this->trans('Module pages', array(), 'Admin.Parameters.Feature'),
                 'query' => array(),
             ),
         );
@@ -316,7 +316,7 @@ class AdminMetaControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->trans('Page', array(), 'Admin.Parameters.Feature'),
+                    'label' => $this->trans('Page name', array(), 'Admin.Parameters.Feature'),
                     'name' => 'page',
 
                     'options' => array(
