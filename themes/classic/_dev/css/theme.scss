@@ -27,7 +27,7 @@
   background: white;
   color: $gray;
   .logo {
-    max-width: rem(200px);
+    max-width: 100%;
   }
   a {
     color: $gray-darker;
@@ -113,14 +113,19 @@
     }
   }
   .header-top {
+    position: relative;
     padding-bottom: rem(20px);
     .menu {
-      margin-left: rem(-30px);
       > ul {
         > li {
           float: left;
         }
       }
+      padding-left: 15px;
+      margin-bottom: rem(6px);
+    }
+    .position-static {
+      position: static;
     }
     a[data-depth="0"] {
       color: $gray;

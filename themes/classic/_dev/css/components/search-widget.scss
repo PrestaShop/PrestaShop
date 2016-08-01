@@ -2,3 +2,13 @@
   float: right;
   @include search-box;
 }
+.header-top {
+  .search-widget {
+    form {
+      input[type="text"] {
+        min-width: inherit;
+        width: 100%;
+      }
+    }
+  }
+}
