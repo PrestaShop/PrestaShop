@@ -96,6 +96,12 @@
     display: inline-block;
   }
 }
+/** CONTENT LEFT **/
+.product-line-grid-left {
+  img {
+    max-width: 100%;
+  }
+}
 /** CONTENT BODY **/
 .product-line-grid-body {
   > .product-line-info {
@@ -123,15 +129,15 @@
   .bootstrap-touchspin {
     max-width: rem(75px);
     @include pull-left;
-    @include box-shadow;
-     > .form-control,
-    > .input-group {
+    box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15);
+    > .input-group,
+    > .form-control {
       color: $gray-darker;
       background-color: white;
       border: $input-btn-border-width solid $input-border-color;
       height: $input-height;
       padding: 0.175rem 0.5rem;
-      width: rem(40px);
+      width: rem(48px);
     }
     > .input-group-btn-vertical {
       width: auto;

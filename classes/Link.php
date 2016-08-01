@@ -188,25 +188,7 @@ class LinkCore
         $id_product_attribute,
         $id_customization = null
     ) {
-        $params = [
-            'update' => 1,
-            'op' => 'up',
-            'id_product' => $id_product,
-            'id_product_attribute' => $id_product_attribute,
-            'token' => Tools::getToken(false)
-        ];
-
-        if ($id_customization) {
-            $params['id_customization'] = $id_customization;
-        }
-
-        return $this->getPageLink(
-            'cart',
-            true,
-            null,
-            $params,
-            false
-        );
+        return $this->getUpdateQuantityCartURL($id_product, $id_product_attribute, $id_customization, 'up');
     }
 
     public function getDownQuantityCartURL(
@@ -214,13 +196,25 @@ class LinkCore
         $id_product_attribute,
         $id_customization = null
     ) {
+        return $this->getUpdateQuantityCartURL($id_product, $id_product_attribute, $id_customization, 'down');
+    }
+
+    public function getUpdateQuantityCartURL(
+        $id_product,
+        $id_product_attribute,
+        $id_customization = null,
+        $op = null
+    ) {
         $params = [
             'update' => 1,
-            'op' => 'down',
             'id_product' => $id_product,
             'id_product_attribute' => $id_product_attribute,
             'token' => Tools::getToken(false)
         ];
+
+        if (!is_null($op)) {
+            $params['op'] = $op;
+        }
 
         if ($id_customization) {
             $params['id_customization'] = $id_customization;

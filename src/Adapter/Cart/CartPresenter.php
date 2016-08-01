@@ -83,6 +83,11 @@ class CartPresenter implements PresenterInterface
             $rawProduct['id_product_attribute']
         );
 
+        $rawProduct['update_quantity_url'] = $this->link->getUpdateQuantityCartURL(
+            $rawProduct['id_product'],
+            $rawProduct['id_product_attribute']
+        );
+
         $rawProduct['ecotax_rate'] = '';
         $rawProduct['specific_prices'] = '';
         $rawProduct['customizable'] = '';

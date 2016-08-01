@@ -6058,7 +6058,8 @@ body#checkout {
 .block-categories {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
   background: white;
-  padding: 1.5625rem 1.25rem; }
+  padding: 1.5625rem 1.25rem;
+  margin-bottom: 1.5625rem; }
   .block-categories .category-sub-menu {
     margin-top: 0.625rem; }
     .block-categories .category-sub-menu .category-sub-link {
@@ -6397,9 +6398,12 @@ body#checkout {
   margin-top: 2.9375rem;
   position: relative;
   top: 1.5625rem; }
-  #product-availability .product-available {
-    color: #4cbb6c;
+  #product-availability .material-icons {
     margin-right: 0.3125rem; }
+  #product-availability .product-available {
+    color: #4cbb6c; }
+  #product-availability .product-unavailable {
+    color: #ff9a52; }
 
 #product-details .label {
   font-size: 1rem;
@@ -6719,6 +6723,10 @@ li.product-flag {
   margin-bottom: 1.25rem;
   display: inline-block; }
 
+/** CONTENT LEFT **/
+.product-line-grid-left img {
+  max-width: 100%; }
+
 /** CONTENT BODY **/
 .product-line-grid-body > .product-line-info > .label {
   padding: 0;
@@ -6741,15 +6749,15 @@ li.product-flag {
 .product-line-grid-right .bootstrap-touchspin {
   max-width: 4.6875rem;
   float: left !important;
-  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1); }
-  .product-line-grid-right .bootstrap-touchspin > .form-control,
-  .product-line-grid-right .bootstrap-touchspin > .input-group {
+  box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15); }
+  .product-line-grid-right .bootstrap-touchspin > .input-group,
+  .product-line-grid-right .bootstrap-touchspin > .form-control {
     color: #414141;
     background-color: white;
     border: 1px solid #ccc;
     height: 2.25rem;
     padding: 0.175rem 0.5rem;
-    width: 2.5rem; }
+    width: 3rem; }
   .product-line-grid-right .bootstrap-touchspin > .input-group-btn-vertical {
     width: auto; }
 
@@ -7265,15 +7273,15 @@ li.product-flag {
 
 /*** MAIN ***/
 #main .page-header {
-  margin-bottom: 1.5rem; }
+  margin-bottom: 1.5625rem; }
 
 #main .page-content {
-  margin-bottom: 1.5rem; }
+  margin-bottom: 1.5625rem; }
   #main .page-content h6 {
     margin-bottom: 1.125rem px; }
 
 #main .page-footer {
-  margin-bottom: 1.5rem; }
+  margin-bottom: 1.5625rem; }
 
 /*** FOOTER ***/
 #footer {

@@ -60,7 +60,8 @@ $(document).ready(function () {
       verticalupclass: 'material-icons touchspin-up',
       verticaldownclass: 'material-icons touchspin-down',
       buttondown_class: 'btn btn-touchspin js-touchspin',
-      buttonup_class: 'btn btn-touchspin js-touchspin'
+      buttonup_class: 'btn btn-touchspin js-touchspin',
+      max: 1000000
     });
   }
 
