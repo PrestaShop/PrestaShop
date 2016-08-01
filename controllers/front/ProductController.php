@@ -762,6 +762,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function getTemplateVarProduct()
     {
+        $productSettings = $this->getProductPresentationSettings();
+
         $product = $this->objectPresenter->present($this->product);
         $product['id_product'] = (int) $this->product->id;
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
@@ -783,8 +785,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->trans('Items', array(), 'Shop.Theme.Catalog') : $this->trans('Item', array(), 'Shop.Theme.Catalog');
         $product_full['quantity_discounts'] = $this->quantity_discounts;
 
-        if ($product_full['price'] && $product_full['unit_price_ratio'] > 0) {
-            $product_full['unit_price'] = $product_full['price'] / $product_full['unit_price_ratio'];
+        if ($product_full['unit_price_ratio'] > 0) {
+            $unitPrice = ($productSettings->include_taxes) ? $product_full['price'] : $product_full['price_tax_exc'];
+            $product_full['unit_price'] = $unitPrice / $product_full['unit_price_ratio'];
         }
 
         $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int) Group::getCurrent()->id);
@@ -796,7 +799,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $presenter = $this->getProductPresenter();
 
         return $presenter->present(
-            $this->getProductPresentationSettings(),
+            $productSettings,
             $product_full,
             $this->context->language
         );
