@@ -3,6 +3,10 @@ import $ from 'jquery';
 export default function() {
   $(document).ready(function() {
     let $jsCombinationsList = $('.js-combinations-list');
+    // If we are not on the product page, return
+    if (0 === $jsCombinationsList.length) {
+        return;
+    }
     let idsProductAttribute = $jsCombinationsList.data('ids-product-attribute').toString().split(',');
     let idsCount = idsProductAttribute.length;
     let currentCount = 0;
