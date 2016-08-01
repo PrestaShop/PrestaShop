@@ -25,6 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
@@ -152,9 +153,7 @@ class AddonsDataProvider implements AddonsInterface
                 $post_data .= '&method=check&module_name='.urlencode($params['module_name']).'&module_key='.urlencode($params['module_key']);
                 break;
             case 'module':
-                return $this->marketplaceClient
-                    ->getModule($params['id_module'])
-                ;
+                return $this->marketplaceClient->getModule($params['id_module']);
                 break;
             case 'hosted_module':
                 $post_data .= '&method=module&id_module='.urlencode((int) $params['id_module']).'&username='.urlencode($params['hosted_email'])

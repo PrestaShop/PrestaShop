@@ -30,6 +30,14 @@
             {% if topMenuData.categories is defined %}
                 {% include 'PrestaShopBundle:Admin/Module/Includes:categories_grid.html.twig' with { 'categories' : topMenuData.categories }  %}
             {% endif %}
+            <script>
+              $('body').on('show.bs.modal', '.modal', function (event) {
+                var url = event.relatedTarget.href;
+                $.get(url, function(data) {
+                  $(this).text(data);
+                })
+              })
+            </script>
         </div>
     </div>
 {% endblock %}

@@ -1,0 +1,118 @@
+<div class="modal-dialog module-modal-dialog">
+  <!-- Modal content-->
+  <div class="modal-content module-modal-content no-padding">
+    <div class="modal-header module-modal-header">
+      <button aria-label="Close" data-dismiss="modal" class="close" type="button">
+          <span aria-hidden="true">
+            <i class="material-icons">close</i>
+          </span>
+      </button>
+      {% if module.attributes.get('nbRates') > 0 %}
+        <div class="read-more-stars module-star-ranking-grid-{{ module.attributes.get('starsRate') }}">
+          (
+          {{ module.attributes.get('nbRates') }}
+          )
+        </div>
+      {% endif %}
+      <div>
+        <img class="module-logo-thumb" height="57" width="57" src="{{ module.attributes.get('img') }}" alt="{{ module.attributes.get('displayName') }}"/>
+        <div class="modal-title module-modal-title">
+          <h1>{{ module.attributes.get('displayName') }}<br>
+            <small class="version">
+              {% if module.attributes.get('productType') == "service" %}
+                {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
+              {% else %}
+                {{ 'v%version% by '|trans({ '%version%' : module.attributes.get('version') }, 'Admin.Modules.Feature') }}
+              {% endif %}
+              {{ module.attributes.get('author') }}
+            </small>
+          </h1>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-body row module-modal-body">
+      <div class="col-md-12 module-big-cover">
+        <img src="{% if module.attributes.get('cover').big is defined %}{{module.attributes.get('cover').big}}{% else %}https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png{% endif %}"/>
+      </div>
+      <div class="col-md-12 module-menu-readmore">
+        <nav class="navbar navbar-light">
+          <ul class="nav navbar-nav navbar-separator">
+            <li class="nav-item active">
+              <a class="nav-link module-readmore-tab" data-toggle="tab" href="#overview-{{module.attributes.get('name') }}">{{ 'Overview'|trans({}, 'Admin.Modules.Feature') }}</a>
+            </li>
+            {% if module.attributes.get('additionalDescription') is defined and module.attributes.get('additionalDescription')|length %}
+              <li class="nav-item">
+                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#benefits-{{module.attributes.get('name') }}">{{ 'Benefits'|trans({}, 'Admin.Modules.Feature') }}</a>
+              </li>
+            {% endif %}
+            {% if module.attributes.get('changeLog') is defined and module.attributes.get('changeLog')|length %}
+              <li class="nav-item">
+                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#changelog-{{module.attributes.get('name') }}">{{ 'Changelog'|trans({}, 'Admin.Modules.Feature') }}</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+        <div class="tab-content">
+          <div id="overview-{{module.attributes.get('name') }}" class="tab-pane fade in active">
+            <p class="module-readmore-tab-content">
+              {% if module.attributes.get('fullDescription') is defined and module.attributes.get('fullDescription')|length %}
+                {{ module.attributes.get('fullDescription')|raw }}
+              {% else %}
+                {{ 'No description found for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+          <div id="benefits-{{module.attributes.get('name') }}" class="tab-pane fade">
+            <p class="module-readmore-tab-content">
+              {% if module.attributes.get('additionalDescription') is defined %}
+                {{ module.attributes.get('additionalDescription')|raw }}
+              {% else %}
+                {{ 'No benefits description provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div id="features-{{module.attributes.get('name') }}" class="tab-pane fade">
+            <p class="module-readmore-tab-content">
+              {% if module.attributes.get('features') is defined %}
+                {{ module.attributes.get('features')|raw }}
+              {% else %}
+                {{ 'No feature list provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+          <div id="changelog-{{module.attributes.get('name')}}" class="tab-pane fade">
+            {% if module.attributes.get('changeLog') is defined %}
+              <ul class="module-readmore-tab-content">
+                {% for version, lines in module.attributes.get('changeLog')|arrayCast|reverse %}
+                  <li>
+                    <b>{{version}}:</b>
+                    {% for line in lines %}
+                      {{line}}<br/>
+                    {% endfor %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              {{ 'No changelog provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer module-modal-footer">
+      {% if module.attributes.get('badges') is defined %}
+        <div class="pull-left module-badges-display">
+          {% for badge in module.attributes.get('badges') %}
+            <img src="{{badge.img}}" alt="{{badge.label}}"/>
+            {{badge.label}}
+          {% endfor %}
+        </div>
+      {% endif %}
+      {#{% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}#}
+    </div>
+  </div>
+</div>

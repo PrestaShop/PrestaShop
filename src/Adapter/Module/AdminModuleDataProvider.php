@@ -258,11 +258,11 @@ class AdminModuleDataProvider implements ModuleInterface
                     foreach ($addons as $addon) {
                         $addon->origin = $action;
                         $addon->origin_filter_value = $action_filter_value;
-                        $categoryParent = $this->categoriesProvider->getParentCategory($addon->categoryName);
-                        $addon->categoryParent = $categoryParent;
+                        $addon->categoryParent = $this->categoriesProvider
+                            ->getParentCategory($addon->categoryName)
+                        ;
+                        $listAddons[$addon->name] = $addon;
                     }
-
-                    $listAddons = array_merge($listAddons, $addons);
                 }
 
                 $this->catalog_modules = $listAddons;

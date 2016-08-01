@@ -104,11 +104,17 @@ class ApiClient
 
     public function getModule($moduleId)
     {
-        return $this->setMethod('listing')
+        $response =  $this->setMethod('listing')
             ->setAction('module')
-            ->ModuleId($moduleId)
+            ->setModuleId($moduleId)
             ->getResponse()
         ;
+
+        $responseArray = json_decode($response);
+
+        if (!empty($responseArray->modules)) {
+            return $responseArray->modules[0];
+        }
     }
 
     public function getResponse()

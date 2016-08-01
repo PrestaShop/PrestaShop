@@ -1,3 +1,12 @@
+admin_module_cart:
+    path: /cart/{moduleId}
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:getModuleCart
+    requirements:
+        moduleId: \d+
+
+
 admin_module_catalog:
     path:     /catalog
     methods:  [GET]

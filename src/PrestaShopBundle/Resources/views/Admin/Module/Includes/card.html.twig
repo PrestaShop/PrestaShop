@@ -50,7 +50,9 @@
             {% endif %}
           </div>
           <div class="module-read-more-{{display_type}} small no-padding">
-            <a class="module-read-more-{{display_type}}-btn url" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
+            {% if module.attributes.id != "0" %}
+              <a class="module-read-more-{{display_type}}-btn url plop" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
+            {% endif %}
           </div>
       {% endblock %}
     </div>

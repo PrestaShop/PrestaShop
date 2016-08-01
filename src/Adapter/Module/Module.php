@@ -141,7 +141,6 @@ class Module implements ModuleInterface
         $this->database = new ParameterBag($this->database_default);
         // Set all attributes
         $this->attributes->add($attributes);
-
         $this->disk->add($disk);
         $this->database->add($database);
 
