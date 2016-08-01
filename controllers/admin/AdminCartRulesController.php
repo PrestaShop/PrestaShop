@@ -41,16 +41,16 @@ class AdminCartRulesControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'icon' => 'icon-trash', 'confirm' => $this->l('Delete selected items?')));
+        $this->bulk_actions = array('delete' => array('text' => $this->trans('Delete selected', array(), 'Admin.Actions'),'icon' => 'icon-trash', 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')));
 
         $this->fields_list = array(
             'id_cart_rule' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
-            'priority' => array('title' => $this->l('Priority'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'code' => array('title' => $this->l('Code'), 'class' => 'fixed-width-sm'),
-            'quantity' => array('title' => $this->l('Quantity'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'date_to' => array('title' => $this->l('Expiration date'), 'type' => 'datetime', 'class' => 'fixed-width-lg'),
-            'active' => array('title' => $this->l('Status'), 'active' => 'status', 'type' => 'bool', 'align' => 'center', 'class' => 'fixed-width-xs', 'orderby' => false),
+            'priority' => array('title' => $this->trans('Priority', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'code' => array('title' => $this->trans('Code', array(), 'Admin.Global'), 'class' => 'fixed-width-sm'),
+            'quantity' => array('title' => $this->trans('Quantity', array(), 'Admin.Catalog.Feature'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'date_to' => array('title' => $this->trans('Expiration date', array(), 'Admin.Catalog.Feature'), 'type' => 'datetime', 'class' => 'fixed-width-lg'),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'active' => 'status', 'type' => 'bool', 'align' => 'center', 'class' => 'fixed-width-xs', 'orderby' => false),
         );
     }
 
@@ -133,7 +133,7 @@ class AdminCartRulesControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_cart_rule'] = array(
                 'href' => self::$currentIndex.'&addcart_rule&token='.$this->token,
-                'desc' => $this->l('Add new cart rule', null, null, false),
+                'desc' => $this->trans('Add new cart rule', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -596,7 +596,7 @@ class AdminCartRulesControllerCore extends AdminController
         $limit = 40;
         $this->toolbar_btn['save-and-stay'] = array(
             'href' => '#',
-            'desc' => $this->l('Save and Stay')
+            'desc' => $this->trans('Save and stay', array(), 'Admin.Actions')
         );
 
         /** @var CartRule $current_object */
@@ -675,7 +675,7 @@ class AdminCartRulesControllerCore extends AdminController
                 'show_toolbar' => true,
                 'toolbar_btn' => $this->toolbar_btn,
                 'toolbar_scroll' => $this->toolbar_scroll,
-                'title' => array($this->l('Payment: '), $this->l('Cart Rules')),
+                'title' => array($this->trans('Payment: ', array(), 'Admin.Catalog.Feature'), $this->trans('Cart Rules', array(), 'Admin.Catalog.Feature')),
                 'defaultDateFrom' => date('Y-m-d H:00:00'),
                 'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
                 'customerFilter' => $customer_filter,

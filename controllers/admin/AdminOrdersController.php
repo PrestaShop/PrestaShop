@@ -1584,7 +1584,7 @@ class AdminOrdersControllerCore extends AdminController
         $helper->title = $this->trans('Average Order Value', array(), 'Admin.Global');
         $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
         if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false) {
-            $helper->value = sprintf($this->trans('%s tax excl.', array(), 'Admin.OrdersCustomers.Feature'), ConfigurationKPI::get('AVG_ORDER_VALUE'));
+            $helper->value = $this->trans('%amount% tax excl.', array('%amount%' => ConfigurationKPI::get('AVG_ORDER_VALUE')), 'Admin.OrdersCustomers.Feature');
         }
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
         $helper->refresh = (bool)(ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time);
