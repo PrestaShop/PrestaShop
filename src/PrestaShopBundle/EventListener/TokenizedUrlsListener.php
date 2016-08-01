@@ -31,6 +31,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
+use Employee;
+use Tools;
+
 /**
  * Each Symfony url is automatically tokenized to avoid CSRF fails using XSS failures
  *
@@ -41,12 +44,19 @@ class TokenizedUrlsListener
     private $tokenManager;
     private $router;
     private $username;
+    private $employeeId;
 
-    public function __construct(CsrfTokenManager $tokenManager, RouterInterface $router, $username)
+    public function __construct(
+        CsrfTokenManager $tokenManager,
+        RouterInterface $router,
+        $username,
+        Employee $employee
+    )
     {
         $this->tokenManager = $tokenManager;
         $this->router = $router;
         $this->username = $username;
+        $this->employeeId = $employee->id;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -57,14 +67,23 @@ class TokenizedUrlsListener
             return;
         }
 
-        $route = $event->getRequest()->get('_route');
-        $uri = $event->getRequest()->getUri();
+        $route = $request->get('_route');
+        $uri = $request->getUri();
 
         /**
          * every route prefixed by '_' won't be secured
          */
         if (0 === strpos($route, '_')) {
             return;
+        }
+
+        /**
+         * every uri which contains 'token' should use the old validation system
+         */
+        if ($request->query->has('token')) {
+            if (0 == strcasecmp(Tools::getAdminToken($this->employeeId), $request->query->get('token'))) {
+                return;
+            }
         }
 
         $token = urldecode($request->query->get('_token', false));

@@ -89,13 +89,14 @@ services:
             - "@security.csrf.token_manager"
             - "@router"
             - "@=service('prestashop.user_provider').getUsername()"
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     prestashop.router:
         class: PrestaShopBundle\Service\Routing\Router
         parent: 'router.default'
-        public: public
+        public: true
         calls:
           - ['setTokenManager', ['@security.csrf.token_manager']]
           - ['setUserProvider', ["@=service('prestashop.user_provider')"]]

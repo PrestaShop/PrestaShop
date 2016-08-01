@@ -1835,10 +1835,15 @@ class AdminControllerCore extends Controller
                             $admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
                         }
 
-                        $token = Tools::getAdminToken($admin_tab[1].(int)Tab::getIdFromClassName($admin_tab[1]).(int)$this->context->employee->id);
+                        $token = Tools::getAdminToken($admin_tab[1] . (int)Tab::getIdFromClassName($admin_tab[1]) . (int)$this->context->employee->id);
                         $quick_access[$index]['target'] = $admin_tab[1];
-                        $quick_access[$index]['link'] .= '&token='.$token;
+                        $quick_access[$index]['link'] .= '&token=' . $token;
                     }
+                }
+
+                if (false === strpos($quick_access[$index]['link'], 'token')) {
+                    $separator = strpos($quick_access[$index]['link'], '?') ? '&' : '?';
+                    $quick_access[$index]['link'] .= $separator.'token=' . Tools::getAdminToken($this->context->employee->id);
                 }
             }
         }

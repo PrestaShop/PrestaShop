@@ -33,11 +33,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
 /**
  * Symfony entry point: adds Extension, that will add other stuff.
- * @todo: move DynamicRolePass to Compiler namespace
  */
 class PrestaShopBundle extends Bundle
 {

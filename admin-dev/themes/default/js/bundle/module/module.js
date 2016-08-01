@@ -161,7 +161,8 @@ var AdminModuleController = function() {
   };
 
   this.ajaxLoadPage = function() {
-    var urlToCall = this.baseAdminDir+'module/catalog/refresh';
+    var token = window.location.search;
+    var urlToCall = this.baseAdminDir+'module/catalog/refresh' + token;
     var self = this;
 
     $.ajax({
@@ -450,8 +451,8 @@ var AdminModuleController = function() {
 
     // Change the way Dropzone.js lib handle file input trigger
     body.on(
-        'click', '.dropzone:not('+this.moduleImportSelectFileManualSelector+', '+this.moduleImportSuccessConfigureBtnSelector+')',
-        function(event, manual_select) {
+      'click', '.dropzone:not('+this.moduleImportSelectFileManualSelector+', '+this.moduleImportSuccessConfigureBtnSelector+')',
+      function(event, manual_select) {
         // if click comes from .module-import-start-select-manual, stop everything
         if (typeof manual_select == "undefined") {
           event.stopPropagation();
@@ -514,7 +515,6 @@ var AdminModuleController = function() {
           $(self.moduleImportFailureMsgDetailsSelector).html(message);
           $(self.moduleImportFailureSelector).fadeIn();
         });
-<<<<<<< 08f64119b6e882fafac70351eaa8691004fcc260
       },
       complete: function (file) {
         if (file.status !== 'error') {
@@ -530,47 +530,6 @@ var AdminModuleController = function() {
                 $(self.moduleImportSuccessConfigureBtnSelector).show();
               }
               $(self.moduleImportSuccessSelector).fadeIn();
-=======
-    };
-
-    this.ajaxLoadPage = function() {
-        var token = window.location.search;
-        var urlToCall = this.baseAdminDir + 'module/catalog/refresh' + token;
-        var _this = this;
-
-        $.ajax({
-            method: 'GET',
-            url: urlToCall,
-        }).done(function (response) {
-            var _that = _this;
-
-            if (response.status === true) {
-                var stylesheet = document.styleSheets[0];
-                var stylesheetRule = '{display: none}';
-                var moduleGlobalSelector = _this.getModuleGlobalSelector();
-                var requiredSelectorCombination = moduleGlobalSelector + ', .module-sorting-menu ';
-
-                if (stylesheet.insertRule) {
-                    stylesheet.insertRule(
-                        requiredSelectorCombination +
-                        stylesheetRule, stylesheet.cssRules.length
-                    );
-                } else if (stylesheet.addRule) {
-                    stylesheet.addRule(
-                        requiredSelectorCombination,
-                        stylesheetRule,
-                        -1
-                    );
-                }
-
-                $(_this.placeholderGlobalSelector).fadeOut(800, function(){
-                    $.each(response.domElements, function(index, element){
-                        $(element.selector).append(element.content);
-                    });
-                    $(requiredSelectorCombination).fadeIn(800);
-                    $('[data-toggle="popover"]').popover();
-                });
->>>>>>> Introduced CSRF Token in url strategy
             } else {
               $(self.moduleImportFailureMsgDetailsSelector).html(responseObject.msg);
               $(self.moduleImportFailureSelector).fadeIn();
@@ -795,21 +754,21 @@ var AdminModuleController = function() {
         );
       });
 
-    // If there is no shortlist: the wording directly update from the only module container.
+      // If there is no shortlist: the wording directly update from the only module container.
     } else {
       var modulesCount = $('.modules-list').find('.module-item').length;
       updateText(
-          $('.module-search-result-wording'),
-          modulesCount
+        $('.module-search-result-wording'),
+        modulesCount
       );
 
       $('.module-addons-search').toggle(modulesCount === 0);
       if (modulesCount === 0) {
         $('.module-addons-search-link').attr(
-            'href',
-            this.baseAddonsUrl
-              + 'search.php?search_query='
-              + encodeURIComponent(this.currentTagsList.join(' '))
+          'href',
+          this.baseAddonsUrl
+          + 'search.php?search_query='
+          + encodeURIComponent(this.currentTagsList.join(' '))
         );
       }
     }

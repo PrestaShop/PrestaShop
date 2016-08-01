@@ -23,18 +23,17 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Service\Routing\Router as PrestaShopRouter;
 
 /**
- * Admin controller for warehouse on the /product/form page.
+ * Admin controller to manage security pages.
  */
 class SecurityController extends FrameworkBundleAdminController
 {
-    const TOKEN_CONTEXT = 'PRESTASHOP';
-
     public function compromisedAccessAction(Request $request)
     {
         $requestUri = urldecode($request->query->get('uri'));
