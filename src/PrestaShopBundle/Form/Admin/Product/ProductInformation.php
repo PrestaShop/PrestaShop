@@ -118,6 +118,10 @@ class ProductInformation extends CommonAbstractType
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [
                 'constraints' => array(
+                    new Assert\Regex(array(
+                        'pattern' => '/[<>;=#{}]/',
+                        'match'   => false,
+                    )),
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 3, 'max' => 128))
                 ), 'attr' => ['placeholder' => $this->translator->trans('Enter your product name', [], 'Admin.Catalog.Help'), 'class' => 'edit js-edit']
