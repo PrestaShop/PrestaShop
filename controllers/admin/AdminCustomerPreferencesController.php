@@ -40,11 +40,11 @@ class AdminCustomerPreferencesControllerCore extends AdminController
         $registration_process_type = array(
             array(
                 'value' => PS_REGISTRATION_PROCESS_STANDARD,
-                'name' => $this->trans('Only account creation', array(), 'Admin.Parameters.Feature')
+                'name' => $this->trans('Only account creation', array(), 'Admin.ShopParameters.Feature')
             ),
             array(
                 'value' => PS_REGISTRATION_PROCESS_AIO,
-                'name' => $this->trans('Standard (account creation and address creation)', array(), 'Admin.Parameters.Feature')
+                'name' => $this->trans('Standard (account creation and address creation)', array(), 'Admin.ShopParameters.Feature')
             )
         );
 
@@ -54,8 +54,8 @@ class AdminCustomerPreferencesControllerCore extends AdminController
                 'icon' =>    'icon-cogs',
                 'fields' =>    array(
                     'PS_REGISTRATION_PROCESS_TYPE' => array(
-                        'title' => $this->trans('Registration process type', array(), 'Admin.Parameters.Feature'),
-                        'hint' => $this->trans('The "Only account creation" registration option allows the customer to register faster, and create his/her address later.', array(), 'Admin.Parameters.Help'),
+                        'title' => $this->trans('Registration process type', array(), 'Admin.ShopParameters.Feature'),
+                        'hint' => $this->trans('The "Only account creation" registration option allows the customer to register faster, and create his/her address later.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'select',
@@ -63,45 +63,45 @@ class AdminCustomerPreferencesControllerCore extends AdminController
                         'identifier' => 'value'
                     ),
                     'PS_CART_FOLLOWING' => array(
-                        'title' => $this->trans('Re-display cart at login', array(), 'Admin.Parameters.Feature'),
-                        'hint' => $this->trans('After a customer logs in, you can recall and display the content of his/her last shopping cart.', array(), 'Admin.Parameters.Help'),
+                        'title' => $this->trans('Re-display cart at login', array(), 'Admin.ShopParameters.Feature'),
+                        'hint' => $this->trans('After a customer logs in, you can recall and display the content of his/her last shopping cart.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_CREATION_EMAIL' => array(
-                        'title' => $this->trans('Send an email after registration', array(), 'Admin.Parameters.Feature'),
-                        'hint' => $this->trans('Send an email with summary of the account information (email, password) after registration.', array(), 'Admin.Parameters.Help'),
+                        'title' => $this->trans('Send an email after registration', array(), 'Admin.ShopParameters.Feature'),
+                        'hint' => $this->trans('Send an email with summary of the account information (email, password) after registration.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_PASSWD_TIME_FRONT' => array(
-                        'title' => $this->trans('Password reset delay', array(), 'Admin.Parameters.Feature'),
-                        'hint' => $this->trans('Minimum time required between two requests for a password reset.', array(), 'Admin.Parameters.Help'),
+                        'title' => $this->trans('Password reset delay', array(), 'Admin.ShopParameters.Feature'),
+                        'hint' => $this->trans('Minimum time required between two requests for a password reset.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isUnsignedInt',
                         'cast' => 'intval',
                         'size' => 5,
                         'type' => 'text',
-                        'suffix' => $this->trans('minutes', array(), 'Admin.Parameters.Feature')
+                        'suffix' => $this->trans('minutes', array(), 'Admin.ShopParameters.Feature')
                     ),
                     'PS_B2B_ENABLE' => array(
-                        'title' => $this->trans('Enable B2B mode', array(), 'Admin.Parameters.Feature'),
-                        'hint' => $this->trans('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.', array(), 'Admin.Parameters.Help'),
+                        'title' => $this->trans('Enable B2B mode', array(), 'Admin.ShopParameters.Feature'),
+                        'hint' => $this->trans('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_BIRTHDATE' => array(
-                        'title' => $this->trans('Ask for birthdate', array(), 'Admin.Parameters.Feature'),
-                        'hint' => $this->trans('Display or not the birthdate field.', array(), 'Admin.Parameters.Help'),
+                        'title' => $this->trans('Ask for birthdate', array(), 'Admin.ShopParameters.Feature'),
+                        'hint' => $this->trans('Display or not the birthdate field.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_CUSTOMER_OPTIN' => array(
-                        'title' => $this->trans('Enable partner offers', array(), 'Admin.Parameters.Feature'),
-                        'hint' => $this->trans('Display or not the partner offers tick box, to receive offers from the store\'s partners.', array(), 'Admin.Parameters.Help'),
+                        'title' => $this->trans('Enable partner offers', array(), 'Admin.ShopParameters.Feature'),
+                        'hint' => $this->trans('Display or not the partner offers tick box, to receive offers from the store\'s partners.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'

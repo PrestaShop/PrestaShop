@@ -37,7 +37,7 @@ class AdminReturnControllerCore extends AdminController
         $this->colorOnBackground = true;
 
         parent::__construct();
-        
+
         $this->_select = 'ors.color, orsl.`name`, o.`id_shop`';
         $this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
         $this->_join .= 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$this->context->language->id.')';
@@ -45,28 +45,28 @@ class AdminReturnControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_order_return' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'width' => 25),
-            'id_order' => array('title' => $this->l('Order ID'), 'width' => 100, 'align' => 'center', 'filter_key'=>'a!id_order'),
-            'name' => array('title' => $this->l('Status'),'color' => 'color', 'width' => 'auto', 'align' => 'left'),
-            'date_add' => array('title' => $this->l('Date issued'), 'width' => 150, 'type' => 'date', 'align' => 'right', 'filter_key'=>'a!date_add'),
+            'id_order' => array('title' => $this->trans('Order ID', array(), 'Admin.OrdersCustomers.Feature'), 'width' => 100, 'align' => 'center', 'filter_key'=>'a!id_order'),
+            'name' => array('title' => $this->trans('Status', array(), 'Admin.Global'),'color' => 'color', 'width' => 'auto', 'align' => 'left'),
+            'date_add' => array('title' => $this->trans('Date issued', array(), 'Admin.OrdersCustomers.Feature'), 'width' => 150, 'type' => 'date', 'align' => 'right', 'filter_key'=>'a!date_add'),
         );
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->l('Merchandise return (RMA) options'),
+                'title' =>    $this->trans('Merchandise return (RMA) options', array(), 'Admin.OrdersCustomers.Feature'),
                 'fields' =>    array(
                     'PS_ORDER_RETURN' => array(
-                        'title' => $this->l('Enable returns'),
-                        'desc' => $this->l('Would you like to allow merchandise returns in your shop?'),
+                        'title' => $this->trans('Enable returns', array(), 'Admin.OrdersCustomers.Feature'),
+                        'desc' => $this->trans('Would you like to allow merchandise returns in your shop?', array(), 'Admin.OrdersCustomers.Help'),
                         'cast' => 'intval', 'type' => 'bool'),
                     'PS_ORDER_RETURN_NB_DAYS' => array(
-                        'title' => $this->l('Time limit of validity'),
-                        'desc' => $this->l('How many days after the delivery date does the customer have to return a product?'),
+                        'title' => $this->trans('Time limit of validity', array(), 'Admin.OrdersCustomers.Feature'),
+                        'desc' => $this->trans('How many days after the delivery date does the customer have to return a product?', array(), 'Admin.OrdersCustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'text',
                         'size' => '2'),
                     'PS_RETURN_PREFIX' => array(
-                        'title' => $this->l('Returns prefix'),
-                        'desc' => $this->l('Prefix used for return name (e.g. RE00001).'),
+                        'title' => $this->trans('Returns prefix', array(), 'Admin.OrdersCustomers.Feature'),
+                        'desc' => $this->trans('Prefix used for return name (e.g. RE00001).', array(), 'Admin.OrdersCustomers.Help'),
                         'size' => 6,
                         'type' => 'textLang'
                     ),
@@ -83,7 +83,7 @@ class AdminReturnControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Return Merchandise Authorization (RMA)'),
+                'title' => $this->trans('Return Merchandise Authorization (RMA)', array(), 'Admin.OrdersCustomers.Feature'),
                 'icon' => 'icon-clipboard'
             ),
             'input' => array(
@@ -104,21 +104,21 @@ class AdminReturnControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text_order',
-                    'label' => $this->l('Order'),
+                    'label' => $this->trans('Order', array(), 'Admin.Global'),
                     'name' => '',
                     'size' => '',
                     'required' => false,
                 ),
                 array(
                     'type' => 'free',
-                    'label' => $this->l('Customer explanation'),
+                    'label' => $this->trans('Customer explanation', array(), 'Admin.OrdersCustomers.Feature'),
                     'name' => 'question',
                     'size' => '',
                     'required' => false,
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Status'),
+                    'label' => $this->trans('Status', array(), 'Admin.Global'),
                     'name' => 'state',
                     'required' => false,
                     'options' => array(
@@ -126,23 +126,23 @@ class AdminReturnControllerCore extends AdminController
                         'id' => 'id_order_return_state',
                         'name' => 'name'
                     ),
-                    'desc' => $this->l('Merchandise return (RMA) status.')
+                    'desc' => $this->trans('Merchandise return (RMA) status.', array(), 'Admin.OrdersCustomers.Help')
                 ),
                 array(
                     'type' => 'list_products',
-                    'label' => $this->l('Products'),
+                    'label' => $this->trans('Products', array(), 'Admin.Global'),
                     'name' => '',
                     'size' => '',
                     'required' => false,
-                    'desc' => $this->l('List of products in return package.')
+                    'desc' => $this->trans('List of products in return package.', array(), 'Admin.OrdersCustomers.Help')
                 ),
                 array(
                     'type' => 'pdf_order_return',
-                    'label' => $this->l('Return slip'),
+                    'label' => $this->trans('Return slip', array(), 'Admin.OrdersCustomers.Feature'),
                     'name' => '',
                     'size' => '',
                     'required' => false,
-                    'desc' => $this->l('The link is only available after validation and before the parcel gets delivered.')
+                    'desc' => $this->trans('The link is only available after validation and before the parcel gets delivered.', array(), 'Admin.OrdersCustomers.Help')
                 ),
             ),
             'submit' => array(
@@ -168,7 +168,14 @@ class AdminReturnControllerCore extends AdminController
         $this->tpl_form_vars = array(
             'customer' => new Customer($this->object->id_customer),
             'url_customer' => 'index.php?tab=AdminCustomers&id_customer='.(int)$this->object->id_customer.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id),
-            'text_order' => sprintf($this->l('Order #%1$d from %2$s'), $order->id, Tools::displayDate($order->date_upd)),
+            'text_order' => $this->trans(
+                'Order #%id% from %date%',
+                array(
+                    '%id%' => $order->id,
+                    '%date%' => Tools::displayDate($order->date_upd)
+                ),
+                'Admin.OrdersCustomers.Feature'
+            ),
             'url_order' => 'index.php?tab=AdminOrders&id_order='.(int)$order->id.'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)Tab::getIdFromClassName('AdminOrders').(int)$this->context->employee->id),
             'picture_folder' => _THEME_PROD_PIC_DIR_,
             'returnedCustomizations' => $returned_customizations,
@@ -191,7 +198,7 @@ class AdminReturnControllerCore extends AdminController
             $this->toolbar_btn['save-and-stay'] = array(
                 'short' => 'SaveAndStay',
                 'href' => '#',
-                'desc' => $this->l('Save and stay'),
+                'desc' => $this->trans('Save and stay', array(), 'Admin.Actions'),
                 'force_desc' => true,
             );
         }
