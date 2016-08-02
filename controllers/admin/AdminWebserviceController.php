@@ -246,10 +246,10 @@ class AdminWebserviceControllerCore extends AdminController
     public function postProcess()
     {
         if (Tools::getValue('key') && strlen(Tools::getValue('key')) < 32) {
-            $this->errors[] = Tools::displayError('Key length must be 32 character long.');
+            $this->errors[] = $this->trans('Key length must be 32 character long.', array(), 'Admin.Parameters.Notification');
         }
         if (WebserviceKey::keyExists(Tools::getValue('key')) && !Tools::getValue('id_webservice_account')) {
-            $this->errors[] = Tools::displayError('This key already exists.');
+            $this->errors[] = $this->trans('This key already exists.', array(), 'Admin.Parameters.Notification');
         }
         return parent::postProcess();
     }

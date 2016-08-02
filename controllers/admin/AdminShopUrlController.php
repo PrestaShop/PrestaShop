@@ -405,17 +405,17 @@ class AdminShopUrlControllerCore extends AdminController
                 if (Validate::isLoadedObject($object = $this->loadObject())) {
                     /** @var ShopUrl $object */
                     if ($object->main) {
-                        $this->errors[] = Tools::displayError('You cannot disable the Main URL.');
+                        $this->errors[] = $this->trans('You cannot disable the Main URL.', array(), 'Admin.Notifications.Error');
                     } elseif ($object->toggleStatus()) {
                         Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$token);
                     } else {
-                        $this->errors[] = Tools::displayError('An error occurred while updating the status.');
+                        $this->errors[] = $this->trans('An error occurred while updating the status.', array(), 'Admin.Notifications.Error');
                     }
                 } else {
-                    $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+                    $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
                 }
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
         } elseif (Tools::isSubmit('main'.$this->table) && Tools::getValue($this->identifier)) {
             if ($this->access('edit')) {
@@ -425,13 +425,13 @@ class AdminShopUrlControllerCore extends AdminController
                         $result = $object->setMain();
                         Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
                     } else {
-                        $this->errors[] = Tools::displayError('You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.');
+                        $this->errors[] = $this->trans('You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.', array(), 'Admin.Notifications.Error');
                     }
                 } else {
-                    $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+                    $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
                 }
             } else {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
         } else {
             $result = parent::postProcess();
@@ -449,12 +449,18 @@ class AdminShopUrlControllerCore extends AdminController
         /** @var ShopUrl $object */
         $object = $this->loadObject(true);
         if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri'))) {
-            $this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
+            $this->errors[] = $this->trans('A shop URL that uses this domain already exists.', array(), 'Admin.Notifications.Error');
         }
 
         $unallowed = str_replace('/', '', Tools::getValue('virtual_uri'));
         if ($unallowed == 'c' || $unallowed == 'img' || is_numeric($unallowed)) {
-            $this->errors[] = sprintf(Tools::displayError('A shop virtual URL can not be "%s"'), $unallowed);
+            $this->errors[] = $this->trans(
+                'A shop virtual URL can not be "%URL%"',
+                array(
+                    '%URL%' => $unallowed,
+                ),
+                'Admin.Notifications.Error'
+            );
         }
         $return = parent::processSave();
         if (!$this->errors) {
@@ -472,11 +478,11 @@ class AdminShopUrlControllerCore extends AdminController
         $object = $this->loadObject(true);
 
         if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri'))) {
-            $this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
+            $this->errors[] = $this->trans('A shop URL that uses this domain already exists.', array(), 'Admin.Notifications.Error');
         }
 
         if (Tools::getValue('main') && !Tools::getValue('active')) {
-            $this->errors[] = Tools::displayError('You cannot disable the Main URL.');
+            $this->errors[] = $this->trans('You cannot disable the Main URL.', array(), 'Admin.Notifications.Error');
         }
 
         return parent::processAdd();
@@ -494,11 +500,11 @@ class AdminShopUrlControllerCore extends AdminController
         $object = $this->loadObject(true);
 
         if ($object->main && !Tools::getValue('main')) {
-            $this->errors[] = Tools::displayError('You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.');
+            $this->errors[] = $this->trans('You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.', array(), 'Admin.Notifications.Error');
         }
 
         if (($object->main || Tools::getValue('main')) && !Tools::getValue('active')) {
-            $this->errors[] = Tools::displayError('You cannot disable the Main URL.');
+            $this->errors[] = $this->trans('You cannot disable the Main URL.', array(), 'Admin.Notifications.Error');
         }
 
         return parent::processUpdate();

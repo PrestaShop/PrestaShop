@@ -161,7 +161,7 @@ class AdminLocalizationControllerCore extends AdminController
     public function postProcess()
     {
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
             return;
         }
 
@@ -187,15 +187,15 @@ class AdminLocalizationControllerCore extends AdminController
                 }
 
                 if (!$pack && !($pack = @Tools::file_get_contents($path))) {
-                    $this->errors[] = Tools::displayError('Cannot load the localization pack.');
+                    $this->errors[] = $this->trans('Cannot load the localization pack.', array(), 'Admin.International.Notification');
                 }
 
                 if (!$selection = Tools::getValue('selection')) {
-                    $this->errors[] = Tools::displayError('Please select at least one item to import.');
+                    $this->errors[] = $this->trans('Please select at least one item to import.', array(), 'Admin.International.Notification');
                 } else {
                     foreach ($selection as $selected) {
                         if (!Validate::isLocalizationPackSelection($selected)) {
-                            $this->errors[] = Tools::displayError('Invalid selection');
+                            $this->errors[] = $this->trans('Invalid selection', array(), 'Admin.Notifications.Error');
                             return;
                         }
                     }

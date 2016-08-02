@@ -443,7 +443,7 @@ class AdminSuppliersControllerCore extends AdminController
     {
         // checks access
         if (Tools::isSubmit('submitAdd'.$this->table) && !($this->access('add'))) {
-            $this->errors[] = Tools::displayError('You do not have permission to add suppliers.');
+            $this->errors[] = $this->trans('You do not have permission to add suppliers.', array(), 'Admin.Catalog.Notification');
             return parent::postProcess();
         }
 
@@ -479,7 +479,7 @@ class AdminSuppliersControllerCore extends AdminController
                 foreach ($validation as $item) {
                     $this->errors[] = $item;
                 }
-                $this->errors[] = Tools::displayError('The address is not correct. Please make sure all of the required fields are completed.');
+                $this->errors[] = $this->trans('The address is not correct. Please make sure all of the required fields are completed.', array(), 'Admin.Catalog.Notification');
             } else {
                 if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0) {
                     $address->update();

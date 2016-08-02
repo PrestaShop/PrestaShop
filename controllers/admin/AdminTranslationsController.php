@@ -109,7 +109,7 @@ class AdminTranslationsControllerCore extends AdminController
             if (method_exists($this, $method_name)) {
                 $this->content = $this->initForm($method_name);
             } else {
-                $this->errors[] = sprintf(Tools::displayError('"%s" does not exist.'), $this->type_selected);
+                $this->errors[] = sprintf($this->trans('"%s" does not exist.', array(), 'Admin.Notifications.Error'), $this->type_selected);
                 $this->content = $this->initMain();
             }
         } else {
@@ -297,9 +297,9 @@ class AdminTranslationsControllerCore extends AdminController
 
         if ($file_path && !file_exists($file_path)) {
             if (!file_exists(dirname($file_path)) && !mkdir(dirname($file_path), 0777, true)) {
-                throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($file_path)));
+                throw new PrestaShopException(sprintf($this->trans('Directory "%s" cannot be created', array(), 'Admin.Notifications.Error'), dirname($file_path)));
             } elseif (!touch($file_path)) {
-                throw new PrestaShopException(sprintf(Tools::displayError('File "%s" cannot be created'), $file_path));
+                throw new PrestaShopException(sprintf($this->trans('File "%s" cannot be created', array(), 'Admin.Notifications.Error'), $file_path));
             }
         }
 
@@ -352,7 +352,7 @@ class AdminTranslationsControllerCore extends AdminController
                 $this->redirect();
             }
         } else {
-            throw new PrestaShopException(sprintf(Tools::displayError('Cannot write this file: "%s"'), $file_path));
+            throw new PrestaShopException(sprintf($this->trans('Cannot write this file: "%s"', array(), 'Admin.Notifications.Error'), $file_path));
         }
     }
 
@@ -479,7 +479,7 @@ class AdminTranslationsControllerCore extends AdminController
             throw new PrestaShopException('File "'.$path.'" does not exist and cannot be created in '.$dir);
         }
         if (!is_writable($path)) {
-            $this->displayWarning(sprintf(Tools::displayError('This file must be writable: %s'), $path));
+            $this->displayWarning(sprintf($this->trans('This file must be writable: %s', array(), 'Admin.Notifications.Error'), $path));
         }
     }
 
@@ -506,9 +506,9 @@ class AdminTranslationsControllerCore extends AdminController
                 @unlink($file_name);
                 exit;
             }
-            $this->errors[] = Tools::displayError('An error occurred while creating archive.');
+            $this->errors[] = $this->trans('An error occurred while creating archive.', array(), 'Admin.International.Notification');
         }
-        $this->errors[] = Tools::displayError('Please select a language and a theme.');
+        $this->errors[] = $this->trans('Please select a language and a theme.', array(), 'Admin.International.Notification');
     }
 
     public static function checkAndAddMailsFiles($iso_code, $files_list)
@@ -668,7 +668,7 @@ class AdminTranslationsControllerCore extends AdminController
                             }
 
                             if (!Validate::isGenericName($tab->name[(int)$id_lang])) {
-                                $errors[] = sprintf(Tools::displayError('Tab "%s" is not valid'), $tab->name[(int)$id_lang]);
+                                $errors[] = sprintf($this->trans('Tab "%s" is not valid', array(), 'Admin.International.Notification'), $tab->name[(int)$id_lang]);
                             } else {
                                 $tab->update();
                             }
@@ -724,7 +724,7 @@ class AdminTranslationsControllerCore extends AdminController
     public function submitImportLang()
     {
         if (!isset($_FILES['file']['tmp_name']) || !$_FILES['file']['tmp_name']) {
-            $this->errors[] = Tools::displayError('No file has been selected.');
+            $this->errors[] = $this->trans('No file has been selected.', array(), 'Admin.Notifications.Error');
         } else {
             require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
             $gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
@@ -747,10 +747,10 @@ class AdminTranslationsControllerCore extends AdminController
 
                         if (preg_match('@^[0-9a-z-_/\\\\]+\.php$@i', $file2check['filename'])) {
                             if (!@filemtime($sandbox.$file2check['filename']) || !AdminTranslationsController::checkTranslationFile(file_get_contents($sandbox.$file2check['filename']))) {
-                                $this->errors[] = sprintf(Tools::displayError('Validation failed for: %s'), $file2check['filename']);
+                                $this->errors[] = sprintf($this->trans('Validation failed for: %s', array(), 'Admin.International.Notification'), $file2check['filename']);
                             }
                         } elseif (!preg_match('@mails[0-9a-z-_/\\\\]+\.(html|tpl|txt)$@i', $file2check['filename'])) {
-                            $this->errors[] = sprintf(Tools::displayError('Unidentified file found: %s'), $file2check['filename']);
+                            $this->errors[] = sprintf($this->trans('Unidentified file found: %s', array(), 'Admin.International.Notification'), $file2check['filename']);
                         }
                     }
                     Tools::deleteDirectory($sandbox, true);
@@ -761,7 +761,7 @@ class AdminTranslationsControllerCore extends AdminController
                 foreach ($files_paths as $files_path) {
                     $path = dirname($files_path);
                     if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array)) {
-                        $this->errors[] = (!$i++? Tools::displayError('The archive cannot be extracted.').' ' : '').Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check rights for %s'), $path);
+                        $this->errors[] = (!$i++? $this->trans('The archive cannot be extracted.', array(), 'Admin.International.Notification').' ' : '').$this->trans('The server does not have permissions for writing.', array(), 'Admin.Notifications.Error').' '.sprintf($this->trans('Please check rights for %s', array(), 'Admin.Notifications.Error'), $path);
                         $tmp_array[] = $path;
                     }
                 }
@@ -772,7 +772,7 @@ class AdminTranslationsControllerCore extends AdminController
 
                 if ($error = $gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_.'../')) {
                     if (is_object($error) && !empty($error->message)) {
-                        $this->errors[] = Tools::displayError('The archive cannot be extracted.'). ' '.$error->message;
+                        $this->errors[] = $this->trans('The archive cannot be extracted.', array(), 'Admin.International.Notification'). ' '.$error->message;
                     } else {
                         foreach ($files_list as $file2check) {
                             if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent())) {
@@ -810,9 +810,9 @@ class AdminTranslationsControllerCore extends AdminController
                         $this->redirect(false, (isset($conf) ? $conf : '15'));
                     }
                 }
-                $this->errors[] = Tools::displayError('The archive cannot be extracted.');
+                $this->errors[] = $this->trans('The archive cannot be extracted.', array(), 'Admin.International.Notification');
             } else {
-                $this->errors[] = sprintf(Tools::displayError('ISO CODE invalid "%1$s" for the following file: "%2$s"'), $iso_code, $filename);
+                $this->errors[] = sprintf($this->trans('ISO CODE invalid "%1$s" for the following file: "%2$s"', array(), 'Admin.International.Notification'), $iso_code, $filename);
             }
         }
     }
@@ -884,7 +884,7 @@ class AdminTranslationsControllerCore extends AdminController
 
                     if ($error = $gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../')) {
                         if (is_object($error) && !empty($error->message)) {
-                            $this->errors[] = Tools::displayError('The archive cannot be extracted.'). ' '.$error->message;
+                            $this->errors[] = $this->trans('The archive cannot be extracted.', array(), 'Admin.International.Notification'). ' '.$error->message;
                         } else {
                             if (!Language::checkAndAddLanguage($arr_import_lang[0])) {
                                 $conf = 20;
@@ -900,7 +900,7 @@ class AdminTranslationsControllerCore extends AdminController
                                 }
                             }
                             if (!unlink($file)) {
-                                $this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
+                                $this->errors[] = sprintf($this->trans('Cannot delete the archive %s.', array(), 'Admin.International.Notification'), $file);
                             }
 
                             //fetch cldr datas for the new imported locale
@@ -911,7 +911,7 @@ class AdminTranslationsControllerCore extends AdminController
                             $this->redirect(false, (isset($conf) ? $conf : '15'));
                         }
                     } else {
-                        $this->errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), $arr_import_lang[0]);
+                        $this->errors[] = sprintf($this->trans('Cannot decompress the translation file for the following language: %s', array(), 'Admin.International.Notification'), $arr_import_lang[0]);
                         $checks= array();
                         foreach ($files_list as $f) {
                             if (isset($f['filename'])) {
@@ -925,20 +925,20 @@ class AdminTranslationsControllerCore extends AdminController
 
                         $checks = array_unique($checks);
                         foreach ($checks as $check) {
-                            $this->errors[] = sprintf(Tools::displayError('Please check rights for folder and files in %s'), $check);
+                            $this->errors[] = sprintf($this->trans('Please check rights for folder and files in %s', array(), 'Admin.Notifications.Error'), $check);
                         }
                         if (!unlink($file)) {
-                            $this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
+                            $this->errors[] = sprintf($this->trans('Cannot delete the archive %s.', array(), 'Admin.International.Notification'), $file);
                         }
                     }
                 } else {
-                    $this->errors[] = Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check rights for %s'), dirname($file));
+                    $this->errors[] = $this->trans('The server does not have permissions for writing.', array(), 'Admin.Notifications.Error').' '.sprintf($this->trans('Please check rights for %s', array(), 'Admin.Notifications.Error'), dirname($file));
                 }
             } else {
-                $this->errors[] = Tools::displayError('Language not found.');
+                $this->errors[] = $this->trans('Language not found.', array(), 'Admin.International.Notification');
             }
         } else {
-            $this->errors[] = Tools::displayError('Invalid parameter.');
+            $this->errors[] = $this->trans('Invalid parameter.', array(), 'Admin.Notifications.Error');
         }
     }
 
@@ -1398,7 +1398,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (($theme = Tools::getValue('theme')) && !is_array($theme)) {
             $theme_exists = $this->theme_exists($theme);
             if (!$theme_exists) {
-                throw new PrestaShopException(sprintf(Tools::displayError('Invalid theme "%s"'), Tools::safeOutput($theme)));
+                throw new PrestaShopException(sprintf($this->trans('Invalid theme "%s"', array(), 'Admin.International.Notification'), Tools::safeOutput($theme)));
             }
             $this->theme_selected = Tools::safeOutput($theme);
         }
@@ -1420,7 +1420,7 @@ class AdminTranslationsControllerCore extends AdminController
             $iso_code = Tools::getValue('lang') ? Tools::getValue('lang') : Tools::getValue('iso_code');
 
             if (!Validate::isLangIsoCode($iso_code) || !in_array($iso_code, $this->all_iso_lang)) {
-                throw new PrestaShopException(sprintf(Tools::displayError('Invalid iso code "%s"'), Tools::safeOutput($iso_code)));
+                throw new PrestaShopException(sprintf($this->trans('Invalid iso code "%s"', array(), 'Admin.International.Notification'), Tools::safeOutput($iso_code)));
             }
 
             $this->lang_selected = new Language((int)Language::getIdByIso($iso_code));
@@ -1492,7 +1492,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
             return;
         }
         /* PrestaShop demo mode */
@@ -1502,25 +1502,25 @@ class AdminTranslationsControllerCore extends AdminController
                 if ($this->access('add')) {
                     $this->submitCopyLang();
                 } else {
-                    $this->errors[] = Tools::displayError('You do not have permission to add this.');
+                    $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
                 }
             } elseif (Tools::isSubmit('submitExport')) {
                 if ($this->access('add')) {
                     $this->submitExportLang();
                 } else {
-                    $this->errors[] = Tools::displayError('You do not have permission to add this.');
+                    $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
                 }
             } elseif (Tools::isSubmit('submitImport')) {
                 if ($this->access('add')) {
                     $this->submitImportLang();
                 } else {
-                    $this->errors[] = Tools::displayError('You do not have permission to add this.');
+                    $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
                 }
             } elseif (Tools::isSubmit('submitAddLanguage')) {
                 if ($this->access('add')) {
                     $this->submitAddLang();
                 } else {
-                    $this->errors[] = Tools::displayError('You do not have permission to add this.');
+                    $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
                 }
             } elseif (Tools::isSubmit('submitTranslationsPdf')) {
                 if ($this->access('edit')) {
@@ -1531,19 +1531,19 @@ class AdminTranslationsControllerCore extends AdminController
                         $this->writeTranslationFile(true);
                     }
                 } else {
-                    $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                    $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 }
             } elseif (Tools::isSubmit('submitTranslationsBack') || Tools::isSubmit('submitTranslationsErrors') || Tools::isSubmit('submitTranslationsFields') || Tools::isSubmit('submitTranslationsFront')) {
                 if ($this->access('edit')) {
                     $this->writeTranslationFile();
                 } else {
-                    $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                    $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 }
             } elseif (Tools::isSubmit('submitTranslationsMails') || Tools::isSubmit('submitTranslationsMailsAndStay')) {
                 if ($this->access('edit')) {
                     $this->submitTranslationsMails();
                 } else {
-                    $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                    $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 }
             } elseif (Tools::isSubmit('submitTranslationsModules')) {
                 if ($this->access('edit')) {
@@ -1568,7 +1568,7 @@ class AdminTranslationsControllerCore extends AdminController
                         }
                     }
                 } else {
-                    $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                    $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 }
             }
         } catch (PrestaShopException $e) {
@@ -1650,11 +1650,11 @@ class AdminTranslationsControllerCore extends AdminController
                     if ($module_name_pipe_pos) {
                         $module_name = substr($mail_name, 0, $module_name_pipe_pos);
                         if (!Validate::isModuleName($module_name)) {
-                            throw new PrestaShopException(sprintf(Tools::displayError('Invalid module name "%s"'), Tools::safeOutput($module_name)));
+                            throw new PrestaShopException(sprintf($this->trans('Invalid module name "%s"', array(), 'Admin.International.Notification'), Tools::safeOutput($module_name)));
                         }
                         $mail_name = substr($mail_name, $module_name_pipe_pos + 1);
                         if (!Validate::isTplName($mail_name)) {
-                            throw new PrestaShopException(sprintf(Tools::displayError('Invalid mail name "%s"'), Tools::safeOutput($mail_name)));
+                            throw new PrestaShopException(sprintf($this->trans('Invalid mail name "%s"', array(), 'Admin.International.Notification'), Tools::safeOutput($mail_name)));
                         }
                     }
 
@@ -1683,11 +1683,11 @@ class AdminTranslationsControllerCore extends AdminController
                             $path = str_replace('{module}', $module_name, $path);
                         }
                         if (!file_exists($path) && !mkdir($path, 0777, true)) {
-                            throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($path)));
+                            throw new PrestaShopException(sprintf($this->trans('Directory "%s" cannot be created', array(), 'Admin.International.Notification'), dirname($path)));
                         }
                         file_put_contents($path.$mail_name.'.'.$type_content, Tools::purifyHTML($content, array('{', '}'), true));
                     } else {
-                        throw new PrestaShopException(Tools::displayError('Your HTML email templates cannot contain JavaScript code.'));
+                        throw new PrestaShopException($this->trans('Your HTML email templates cannot contain JavaScript code.', array(), 'Admin.International.Notification'));
                     }
                 }
             }
@@ -1738,7 +1738,7 @@ class AdminTranslationsControllerCore extends AdminController
             }
         }
         if (!is_writable($dir.DIRECTORY_SEPARATOR.$file)) {
-            $this->displayWarning(Tools::displayError('This file must be writable:').' '.$dir.'/'.$file);
+            $this->displayWarning($this->trans('This file must be writable:', array(), 'Admin.Notifications.Error').' '.$dir.'/'.$file);
         }
         include($dir.DIRECTORY_SEPARATOR.$file);
         return $$var;
@@ -1797,7 +1797,7 @@ class AdminTranslationsControllerCore extends AdminController
     public function initFormFront()
     {
         if (!$this->theme_exists(Tools::getValue('theme'))) {
-            $this->errors[] = sprintf(Tools::displayError('Invalid theme "%s"'), Tools::getValue('theme'));
+            $this->errors[] = sprintf($this->trans('Invalid theme "%s"', array(), 'Admin.International.Notification'), Tools::getValue('theme'));
             return;
         }
 
@@ -2158,10 +2158,10 @@ class AdminTranslationsControllerCore extends AdminController
     public function getListModules()
     {
         if (!Tools::file_exists_cache($this->translations_informations['modules']['dir'])) {
-            throw new PrestaShopException(Tools::displayError('Fatal error: The module directory does not exist.').'('.$this->translations_informations['modules']['dir'].')');
+            throw new PrestaShopException($this->trans('Fatal error: The module directory does not exist.', array(), 'Admin.Notifications.Error').'('.$this->translations_informations['modules']['dir'].')');
         }
         if (!is_writable($this->translations_informations['modules']['dir'])) {
-            throw new PrestaShopException(Tools::displayError('The module directory must be writable.'));
+            throw new PrestaShopException($this->trans('The module directory must be writable.', array(), 'Admin.International.Notification'));
         }
 
         $modules = array();
@@ -2406,7 +2406,7 @@ class AdminTranslationsControllerCore extends AdminController
                 }
             }
         } else {
-            $this->warnings[] = sprintf(Tools::displayError('A mail directory exists for the "%1$s" language, but not for the default language (%3$s) in %2$s'),
+            $this->warnings[] = sprintf($this->trans('A mail directory exists for the "%1$s" language, but not for the default language (%3$s) in %2$s', array(), 'Admin.International.Notification'),
                 $this->lang_selected->iso_code, str_replace(_PS_ROOT_DIR_, '', dirname($dir)), $default_language);
         }
         return $arr_return;
@@ -2939,7 +2939,7 @@ class AdminTranslationsControllerCore extends AdminController
             fwrite($fd, "\n?>");
             fclose($fd);
         } else {
-            throw new PrestaShopException(sprintf(Tools::displayError('Cannot write language file for email subjects. Path is: %s'), $path));
+            throw new PrestaShopException(sprintf($this->trans('Cannot write language file for email subjects. Path is: %s', array(), 'Admin.International.Notification'), $path));
         }
     }
 
@@ -3133,7 +3133,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         $this->checkDirAndCreate($i18n_file);
         if ((!file_exists($i18n_file) && !is_writable($i18n_dir)) && !is_writable($i18n_file)) {
-            $this->errors[] = sprintf(Tools::displayError('Cannot write into the "%s"'), $i18n_file);
+            $this->errors[] = sprintf($this->trans('Cannot write into the "%s"', array(), 'Admin.International.Notification'), $i18n_file);
         }
 
         @include($i18n_file);

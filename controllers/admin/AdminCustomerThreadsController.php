@@ -395,7 +395,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $cm->add();
                     }
                 } else {
-                    $this->errors[] = '<div class="alert error">'.Tools::displayError('The email address is invalid.').'</div>';
+                    $this->errors[] = '<div class="alert error">'.$this->trans('The email address is invalid.', array(), 'Admin.Notifications.Error').'</div>';
                 }
             }
             if (Tools::isSubmit('submitReply')) {
@@ -411,7 +411,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 if (($error = $cm->validateField('message', $cm->message, null, array(), true)) !== true) {
                     $this->errors[] = $error;
                 } elseif (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0) {
-                    $this->errors[] = Tools::displayError('An error occurred during the file upload process.');
+                    $this->errors[] = $this->trans('An error occurred during the file upload process.', array(), 'Admin.Notifications.Error');
                 } elseif ($cm->add()) {
                     $file_attachment = null;
                     if (!empty($_FILES['joinFile']['name'])) {
@@ -453,7 +453,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         self::$currentIndex.'&id_customer_thread='.(int)$id_customer_thread.'&viewcustomer_thread&token='.Tools::getValue('token')
                     );
                 } else {
-                    $this->errors[] = Tools::displayError('An error occurred. Your message was not sent. Please contact your system administrator.');
+                    $this->errors[] = $this->trans('An error occurred. Your message was not sent. Please contact your system administrator.', array(), 'Admin.OrdersCustomers.Notification');
                 }
             }
         }
@@ -868,7 +868,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function updateOptionPsSavImapOpt($value)
     {
         if ($this->access('edit') != '1') {
-            throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 
         if (!$this->errors && $value) {
@@ -879,7 +879,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function ajaxProcessMarkAsRead()
     {
         if ($this->access('edit') != '1') {
-            throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 
         $id_thread = Tools::getValue('id_thread');
@@ -897,7 +897,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function ajaxProcessSyncImap()
     {
         if ($this->access('edit') != '1') {
-            throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 
         if (Tools::isSubmit('syncImapMail')) {
@@ -1050,7 +1050,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         if (!isset($overview->from)
                             || (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
-                            $message_errors[] = Tools::displayError('An unindentified message has no valid "FROM" information, cannot create it in a new thread.');
+                            $message_errors[] = $this->trans('Cannot create message in a new thread.', array(), 'Admin.OrdersCustomers.Notification');
                             continue;
                         }
 
@@ -1115,7 +1115,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $message = iconv($this->getEncoding($structure), 'utf-8', $message);
                         $message = nl2br($message);
                         if (!$message || strlen($message)==0) {
-                            $message_errors[] = Tools::displayError('The message body is empty, cannot import it.');
+                            $message_errors[] = $this->trans('The message body is empty, cannot import it.', array(), 'Admin.OrdersCustomers.Notification');
                             $fetch_succeed = false;
                             continue;
                         }
@@ -1128,7 +1128,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                                 $cm->message = $message;
                                 $cm->add();
                             } catch (PrestaShopException $pse) {
-                                $message_errors[] = Tools::displayError('The message content is not valid, cannot import it.');
+                                $message_errors[] = $this->trans('The message content is not valid, cannot import it.', array(), 'Admin.OrdersCustomers.Notification');
                                 $fetch_succeed = false;
                                 continue;
                             }

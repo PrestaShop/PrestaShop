@@ -124,7 +124,7 @@ class AdminFeaturesControllerCore extends AdminController
             $this->addRowAction('delete');
 
             if (!Validate::isLoadedObject($obj = new Feature((int)$id))) {
-                $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
                 return;
             }
 

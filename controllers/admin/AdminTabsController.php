@@ -267,7 +267,7 @@ class AdminTabsControllerCore extends AdminController
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
             return;
         }
         /* PrestaShop demo mode*/
@@ -278,13 +278,13 @@ class AdminTabsControllerCore extends AdminController
             }
         } elseif (Tools::getValue('position') && !Tools::isSubmit('submitAdd'.$this->table)) {
             if ($this->access('edit') !== '1') {
-                $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } elseif (!Validate::isLoadedObject($object = new Tab((int)Tools::getValue($this->identifier)))) {
-                $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
-                    ' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').
+                    ' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
             }
             if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position'))) {
-                $this->errors[] = Tools::displayError('Failed to update the position.');
+                $this->errors[] = $this->trans('Failed to update the position.', array(), 'Admin.Notifications.Error');
             } else {
                 Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
             }
@@ -309,7 +309,7 @@ class AdminTabsControllerCore extends AdminController
                         $this->action = 'bulk'.$bulk_action;
                         $this->boxes = Tools::getValue($this->list_id.'Box');
                     } else {
-                        $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                        $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                     }
                     break;
                 } elseif (Tools::isSubmit('submitBulk')) {
@@ -317,7 +317,7 @@ class AdminTabsControllerCore extends AdminController
                         $this->action = 'bulk'.Tools::getValue('select_submitBulk');
                         $this->boxes = Tools::getValue($this->list_id.'Box');
                     } else {
-                        $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                        $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                     }
                     break;
                 }

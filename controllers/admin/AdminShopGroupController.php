@@ -319,9 +319,9 @@ class AdminShopGroupControllerCore extends AdminController
             $object = $this->loadObject();
 
             if (ShopGroup::getTotalShopGroup() == 1) {
-                $this->errors[] = Tools::displayError('You cannot delete or disable the last shop group.');
+                $this->errors[] = $this->trans('You cannot delete or disable the last shop group.', array(), 'Admin.Notifications.Error');
             } elseif ($object->haveShops()) {
-                $this->errors[] = Tools::displayError('You cannot delete or disable a shop group in use.');
+                $this->errors[] = $this->trans('You cannot delete or disable a shop group in use.', array(), 'Admin.Notifications.Error');
             }
 
             if (count($this->errors)) {

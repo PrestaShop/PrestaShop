@@ -209,22 +209,22 @@ class AdminCartRulesControllerCore extends AdminController
 
             // Idiot-proof control
             if (strtotime(Tools::getValue('date_from')) > strtotime(Tools::getValue('date_to'))) {
-                $this->errors[] = Tools::displayError('The voucher cannot end before it begins.');
+                $this->errors[] = $this->trans('The voucher cannot end before it begins.', array(), 'Admin.Catalog.Notification');
             }
             if ((int)Tools::getValue('minimum_amount') < 0) {
-                $this->errors[] = Tools::displayError('The minimum amount cannot be lower than zero.');
+                $this->errors[] = $this->trans('The minimum amount cannot be lower than zero.', array(), 'Admin.Catalog.Notification');
             }
             if ((float)Tools::getValue('reduction_percent') < 0 || (float)Tools::getValue('reduction_percent') > 100) {
-                $this->errors[] = Tools::displayError('Reduction percentage must be between 0% and 100%');
+                $this->errors[] = $this->trans('Reduction percentage must be between 0% and 100%', array(), 'Admin.Catalog.Notification');
             }
             if ((int)Tools::getValue('reduction_amount') < 0) {
-                $this->errors[] = Tools::displayError('Reduction amount cannot be lower than zero.');
+                $this->errors[] = $this->trans('Reduction amount cannot be lower than zero.', array(), 'Admin.Catalog.Notification');
             }
             if (Tools::getValue('code') && ($same_code = (int)CartRule::getIdByCode(Tools::getValue('code'))) && $same_code != Tools::getValue('id_cart_rule')) {
-                $this->errors[] = sprintf(Tools::displayError('This cart rule code is already used (conflict with cart rule %d)'), $same_code);
+                $this->errors[] = $this->trans('This cart rule code is already used (conflict with cart rule %rulename%)', array( '%rulename%' => $same_code), 'Admin.Catalog.Notification');
             }
             if (Tools::getValue('apply_discount') == 'off' && !Tools::getValue('free_shipping') && !Tools::getValue('free_gift')) {
-                $this->errors[] = Tools::displayError('An action is required for this cart rule.');
+                $this->errors[] = $this->trans('An action is required for this cart rule.', array(), 'Admin.Catalog.Notification');
             }
         }
         return parent::postProcess();
@@ -581,7 +581,7 @@ class AdminCartRulesControllerCore extends AdminController
                 'found' => true
             );
         } else {
-            return array('found' => false, 'notfound' => Tools::displayError('No product has been found.'));
+            return array('found' => false, 'notfound' => $this->trans('No product has been found.', array(), 'Admin.Catalog.Notification'));
         }
     }
 

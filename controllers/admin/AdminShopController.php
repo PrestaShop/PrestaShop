@@ -260,7 +260,7 @@ class AdminShopControllerCore extends AdminController
         if (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) {
             $shop_group = new ShopGroup((int)Tools::getValue('id_shop_group'));
             if ($shop_group->shopNameExists(Tools::getValue('name'), (int)Tools::getValue('id_shop'))) {
-                $this->errors[] = Tools::displayError('You cannot have two shops with the same name in the same group.');
+                $this->errors[] = $this->trans('You cannot have two shops with the same name in the same group.', array(), 'Admin.Parameters.Notification');
             }
         }
 
@@ -285,7 +285,7 @@ class AdminShopControllerCore extends AdminController
     public function processDelete()
     {
         if (!Validate::isLoadedObject($object = $this->loadObject())) {
-            $this->errors[] = Tools::displayError('Unable to load this shop.');
+            $this->errors[] = $this->trans('Unable to load this shop.', array(), 'Admin.Parameters.Notification');
         } elseif (!Shop::hasDependency($object->id)) {
             $result = Category::deleteCategoriesFromShop($object->id) && parent::processDelete();
             Tools::generateHtaccess();
@@ -662,7 +662,7 @@ class AdminShopControllerCore extends AdminController
             $this->copyFromPost($object, $this->table);
             $this->beforeAdd($object);
             if (!$object->add()) {
-                $this->errors[] = Tools::displayError('An error occurred while creating an object.').
+                $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error').
                     ' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
             }
             /* voluntary do affectation here */
