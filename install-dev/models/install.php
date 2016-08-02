@@ -683,22 +683,6 @@ class InstallModelInstall extends InstallAbstractModel
             }
         } else {
             $modules = array(
-                'bankwire',
-                // 'blockbestsellers',
-                'blockcart',
-                'ps_categorytree',
-                'blockcurrencies',
-                // 'blockfacebook',
-                'blocklanguages',
-                'blocklayered',
-                // 'blockmanufacturer',
-                'blockmyaccount',
-                'blocknewproducts',
-                'blocksearch',
-                // 'blockspecials',
-                // 'blocksupplier',
-                // 'blockviewed',
-                'cheque',
                 'dashactivity',
                 'dashtrends',
                 'dashgoals',
@@ -706,16 +690,25 @@ class InstallModelInstall extends InstallAbstractModel
                 'graphnvd3',
                 'gridhtml',
                 'ps_banner',
+                'ps_categorytree',
+                'ps_checkpayment',
                 'ps_contactinfo',
+                'ps_currencyselector',
+                'ps_customeraccountlinks',
                 'ps_customersignin',
                 'ps_customtext',
                 'ps_emailsubscription',
+                'ps_facetedsearch',
                 'ps_featuredproducts',
                 'ps_imageslider',
+                'ps_languageselector',
                 'ps_linklist',
                 'ps_mainmenu',
+                'ps_searchbar',
                 'ps_sharebuttons',
+                'ps_shoppingcart',
                 'ps_socialfollow',
+                'ps_wirepayment',
                 'pagesnotfound',
                 'sekeywords',
                 'statsbestcategories',
@@ -750,12 +743,54 @@ class InstallModelInstall extends InstallAbstractModel
         /**
          * TODO: Remove blacklist once 1.7 is out.
          */
-        $blacklist = [
-            'productcomments',
+        $blacklist = array(
+            'bankwire',
+            'blockadvertising',
+            'blockbanner',
+            'blockbestsellers',
+            'blockcart',
+            'blockcategories',
+            'blockcms',
+            'blockcmsinfo',
+            'blockcontact',
+            'blockcontactinfos',
+            'blockcurrencies',
+            'blockcustomerprivacy',
+            'blockfacebook',
+            'blocklanguages',
+            'blocklayered',
+            'blocklink',
+            'blockmanufacturer',
+            'blockmyaccount',
+            'blockmyaccountfooter',
+            'blocknewproducts',
+            'blocknewsletter',
+            'blockpaymentlogo',
+            'blockpermanentlinks',
+            'blockrss',
+            'blocksearch',
+            'blocksharefb',
+            'blocksocial',
+            'blockstore',
+            'blockspecials',
+            'blocksupplier',
+            'blocktags',
+            'blocktopmenu',
+            'blockuserinfo',
+            'blockviewed',
             'blockwishlist',
+            'cheque',
+            'crossselling',
+            'homefeatured',
+            'homeslider',
+            'onboarding',
+            'productscategory',
+            'productcomments',
+            'producttooltip',
             'sendtoafriend',
-            'onboarding'
-        ];
+            'socialsharing',
+        );
+
         $addons_modules = array();
         $content = Tools::addonsRequest('install-modules', $params);
         $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
@@ -819,7 +854,7 @@ class InstallModelInstall extends InstallAbstractModel
             if (!$moduleManager->install($module_name)) {
                 /*$module_errors = $module->getErrors();
                 if (empty($module_errors)) {*/
-                $module_errors = [$this->translator->trans('Cannot install module "%module%"', array('module' => $module_name), 'Install')];
+                $module_errors = [$this->translator->trans('Cannot install module "%module%"', array('%module%' => $module_name), 'Install')];
                 /*}*/
                 $errors[$module_name] = $module_errors;
             }

@@ -38,13 +38,13 @@ global_settings:
       displayNav1:
         - ps_contactinfo
       displayNav2:
-        - blocklanguages
-        - blockcurrencies
+        - ps_languageselector
+        - ps_currencyselector
         - ps_customersignin
-        - blockcart
+        - ps_shoppingcart
       displayTop:
         - ps_mainmenu
-        - blocksearch
+        - ps_searchbar
       displayHome:
         - ps_imageslider
         - ps_featuredproducts
@@ -55,13 +55,13 @@ global_settings:
         - ps_socialfollow
       displayFooter:
         - ps_linklist
-        - blockmyaccount
+        - ps_customeraccountlinks
         - ps_contactinfo
       displayLeftColumn:
         - ps_categorytree
-        - blocklayered
+        - ps_facetedsearch
       displaySearch:
-        - blocksearch
+        - ps_searchbar
       displayProductButtons:
         - ps_sharebuttons
       displayReassurance:
