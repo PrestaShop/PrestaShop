@@ -2627,7 +2627,7 @@ abstract class ModuleCore
      * Install module's controllers using public property $controllers
      * @return bool
      */
-    private function installControllers()
+    protected function installControllers()
     {
         foreach ($this->controllers as $controller) {
             $page = 'module-'.$this->name.'-'.$controller;
