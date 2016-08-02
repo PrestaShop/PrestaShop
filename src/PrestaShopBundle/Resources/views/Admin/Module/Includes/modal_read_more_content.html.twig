@@ -64,10 +64,41 @@
               {% endif %}
             </p>
           </div>
-          <div id="benefits-{{module.attributes.get('name') }}" class="tab-pane fade">
+
+          <div id="installation-{{module.attributes.get('name') }}" class="tab-pane fade in active">
+            <p class="module-readmore-tab-content">
+              {% if module.attributes.get('installation') is defined and module.attributes.get('installation')|length %}
+                {{ module.attributes.get('installation')|raw }}
+              {% else %}
+                {{ 'No installation notes found for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div id="recommandation-{{module.attributes.get('name') }}" class="tab-pane fade in active">
+            <p class="module-readmore-tab-content">
+              {% if module.attributes.get('recommandation') is defined and module.attributes.get('recommandation')|length %}
+                {{ module.attributes.get('recommandation')|raw }}
+              {% else %}
+                {{ 'No recommandation notes found for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div id="additional-{{module.attributes.get('name') }}" class="tab-pane fade">
             <p class="module-readmore-tab-content">
               {% if module.attributes.get('additionalDescription') is defined %}
                 {{ module.attributes.get('additionalDescription')|raw }}
+              {% else %}
+                {{ 'No Additional description provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div id="benefits-{{module.attributes.get('name') }}" class="tab-pane fade">
+            <p class="module-readmore-tab-content">
+              {% if module.attributes.get('customer_benefits') is defined and module.attributes.get('customer_benefits')|length %}
+                {{ module.attributes.get('customer_benefits')|raw }}
               {% else %}
                 {{ 'No benefits description provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
               {% endif %}
