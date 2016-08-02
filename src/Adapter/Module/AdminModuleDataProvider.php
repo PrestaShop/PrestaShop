@@ -41,7 +41,7 @@ use Symfony\Component\Routing\Router;
  */
 class AdminModuleDataProvider implements ModuleInterface
 {
-    const _CACHEFILE_MODULES_ = '_catalog_modules.json';
+    const _CACHEFILE_MODULES_ = '_addons_modules.json';
 
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 

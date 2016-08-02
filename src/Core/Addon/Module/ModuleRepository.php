@@ -106,7 +106,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->moduleUpdater = $modulesUpdater;
         $this->translator = $translator;
         $this->finder = new Finder();
-        $this->cacheFilePath = _PS_CACHE_DIR_.'modules.json';
+        $this->cacheFilePath = _PS_CACHE_DIR_.'local_modules.json';
         $this->cache = $this->readCacheFile();
     }
 
