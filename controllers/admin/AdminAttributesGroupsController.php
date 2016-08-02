@@ -203,7 +203,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                     'lang' => true,
                     'required' => true,
                     'col' => '4',
-                    'hint' => $this->trans('The public name for this attribute, displayed to the customers.', array(), 'Admin.Catalog.Help').'&nbsp;'.$this->trans('Invalid characters:', array(), 'Admin.Notifications.INfo').' <>;=#{}'
+                    'hint' => $this->trans('The public name for this attribute, displayed to the customers.', array(), 'Admin.Catalog.Help').'&nbsp;'.$this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}'
                 ),
                 array(
                     'type' => 'select',

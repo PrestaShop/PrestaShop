@@ -53,10 +53,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
         parent::__construct();
 
         $icon_array = array(
-            'open' => array('class' => 'icon-circle text-success', 'alt' => $this->l('Open')),
-            'closed' => array('class' => 'icon-circle text-danger', 'alt' => $this->l('Closed')),
-            'pending1' => array('class' => 'icon-circle text-warning', 'alt' => $this->l('Pending 1')),
-            'pending2' => array('class' => 'icon-circle text-warning', 'alt' => $this->l('Pending 2')),
+            'open' => array('class' => 'icon-circle text-success', 'alt' => $this->trans('Open', array(), 'Admin.Catalog.Feature')),
+            'closed' => array('class' => 'icon-circle text-danger', 'alt' => $this->trans('Closed', array(), 'Admin.Catalog.Feature')),
+            'pending1' => array('class' => 'icon-circle text-warning', 'alt' => $this->trans('Pending 1', array(), 'Admin.Catalog.Feature')),
+            'pending2' => array('class' => 'icon-circle text-warning', 'alt' => $this->trans('Pending 2', array(), 'Admin.Catalog.Feature')),
         );
 
         $status_array = array();
@@ -80,21 +80,21 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 'filter_key' => 'a!email',
             ),
             'contact' => array(
-                'title' => $this->l('Type'),
+                'title' => $this->trans('Type', array(), 'Admin.Catalog.Feature'),
                 'type' => 'select',
                 'list' => $contact_array,
                 'filter_key' => 'cl!id_contact',
                 'filter_type' => 'int',
             ),
             'language' => array(
-                'title' => $this->l('Language'),
+                'title' => $this->trans('Language', array(), 'Admin.Global'),
                 'type' => 'select',
                 'list' => $language_array,
                 'filter_key' => 'l!id_lang',
                 'filter_type' => 'int',
             ),
             'status' => array(
-                'title' => $this->l('Status'),
+                'title' => $this->trans('Status', array(), 'Admin.Global'),
                 'type' => 'select',
                 'list' => $status_array,
                 'icon' => $icon_array,
@@ -103,18 +103,18 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 'filter_type' => 'string',
             ),
             'employee' => array(
-                'title' => $this->l('Employee'),
+                'title' => $this->trans('Employee', array(), 'Admin.Global'),
                 'filter_key' => 'employee',
                 'tmpTableFilter' => true,
             ),
             'messages' => array(
-                'title' => $this->l('Messages'),
+                'title' => $this->trans('Messages', array(), 'Admin.Catalog.Feature'),
                 'filter_key' => 'messages',
                 'tmpTableFilter' => true,
                 'maxlength' => 40,
             ),
             'private' => array(
-                'title' => $this->l('Private'),
+                'title' => $this->trans('Private', array(), 'Admin.Catalog.Feature'),
                 'type' => 'select',
                 'filter_key' => 'private',
                 'align' => 'center',
@@ -126,7 +126,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 )
             ),
             'date_upd' => array(
-                'title' => $this->l('Last message'),
+                'title' => $this->trans('Last message', array(), 'Admin.Catalog.Feature'),
                 'havingFilter' => true,
                 'type' => 'datetime',
             ),
@@ -134,8 +134,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             ),
         );
@@ -144,16 +144,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         $this->fields_options = array(
             'contact' => array(
-                'title' =>    $this->l('Contact options'),
+                'title' =>    $this->trans('Contact options', array(), 'Admin.Catalog.Feature'),
                 'fields' =>    array(
                     'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array(
-                            'title' => $this->l('Allow file uploading'),
-                            'hint' => $this->l('Allow customers to upload files using the contact page.'),
+                            'title' => $this->trans('Allow file uploading', array(), 'Admin.Catalog.Feature'),
+                            'hint' => $this->trans('Allow customers to upload files using the contact page.', array(), 'Admin.Catalog.Help'),
                             'type' => 'bool'
                         ),
                     'PS_CUSTOMER_SERVICE_SIGNATURE' => array(
-                            'title' => $this->l('Default message'),
-                            'hint' => $this->l('Please fill out the message fields that appear by default when you answer a thread on the customer service page.'),
+                            'title' => $this->trans('Default message', array(), 'Admin.Catalog.Feature'),
+                            'hint' => $this->trans('Please fill out the message fields that appear by default when you answer a thread on the customer service page.', array(), 'Admin.Catalog.Help'),
                             'type' => 'textareaLang',
                             'lang' => true
                         )
@@ -161,73 +161,73 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'general' => array(
-                'title' =>    $this->l('Customer service options'),
+                'title' =>    $this->trans('Customer service options', array(), 'Admin.Catalog.Feature'),
                 'fields' =>    array(
                     'PS_SAV_IMAP_URL' => array(
-                        'title' => $this->l('IMAP URL'),
-                        'hint' => $this->l('URL for your IMAP server (ie.: mail.server.com).'),
+                        'title' => $this->trans('IMAP URL', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('URL for your IMAP server (ie.: mail.server.com).', array(), 'Admin.Catalog.Help'),
                         'type' => 'text'
                     ),
                     'PS_SAV_IMAP_PORT' => array(
-                        'title' => $this->l('IMAP port'),
-                        'hint' => $this->l('Port to use to connect to your IMAP server.'),
+                        'title' => $this->trans('IMAP port', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Port to use to connect to your IMAP server.', array(), 'Admin.Catalog.Help'),
                         'type' => 'text',
                         'defaultValue' => 143,
                     ),
                     'PS_SAV_IMAP_USER' => array(
-                        'title' => $this->l('IMAP user'),
-                        'hint' => $this->l('User to use to connect to your IMAP server.'),
+                        'title' => $this->trans('IMAP user', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('User to use to connect to your IMAP server.', array(), 'Admin.Catalog.Help'),
                         'type' => 'text'
                     ),
                     'PS_SAV_IMAP_PWD' => array(
-                        'title' => $this->l('IMAP password'),
-                        'hint' => $this->l('Password to use to connect your IMAP server.'),
+                        'title' => $this->trans('IMAP password', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Password to use to connect your IMAP server.', array(), 'Admin.Catalog.Help'),
                         'type' => 'text'
                     ),
                     'PS_SAV_IMAP_DELETE_MSG' => array(
-                        'title' => $this->l('Delete messages'),
-                        'hint' => $this->l('Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.'),
+                        'title' => $this->trans('Delete messages', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.', array(), 'Admin.Catalog.Help'),
                         'type' => 'bool',
                     ),
                     'PS_SAV_IMAP_CREATE_THREADS' => array(
-                        'title' => $this->l('Create new threads'),
-                        'hint' => $this->l('Create new threads for unrecognized emails.'),
+                        'title' => $this->trans('Create new threads', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Create new threads for unrecognized emails.', array(), 'Admin.Catalog.Help'),
                         'type' => 'bool',
                     ),
                     'PS_SAV_IMAP_OPT_POP3' => array(
-                        'title' => $this->l('IMAP options').' (/pop3)',
-                        'hint' => $this->l('Use POP3 instead of IMAP.'),
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/pop3)',
+                        'hint' => $this->trans('Use POP3 instead of IMAP.', array(), 'Admin.Catalog.Help'),
                         'type' => 'bool'
                     ),
                     'PS_SAV_IMAP_OPT_NORSH' => array(
-                        'title' => $this->l('IMAP options').' (/norsh)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/norsh)',
                         'type' => 'bool',
-                        'hint' => $this->l('Do not use RSH or SSH to establish a preauthenticated IMAP sessions.'),
+                        'hint' => $this->trans('Do not use RSH or SSH to establish a preauthenticated IMAP sessions.', array(), 'Admin.Catalog.Help'),
                     ),
                     'PS_SAV_IMAP_OPT_SSL' => array(
-                        'title' => $this->l('IMAP options').' (/ssl)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/ssl)',
                         'type' => 'bool',
-                        'hint' => $this->l('Use the Secure Socket Layer (TLS/SSL) to encrypt the session.'),
+                        'hint' => $this->trans('Use the Secure Socket Layer (TLS/SSL) to encrypt the session.', array(), 'Admin.Catalog.Help'),
                     ),
                     'PS_SAV_IMAP_OPT_VALIDATE-CERT' => array(
-                        'title' => $this->l('IMAP options').' (/validate-cert)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/validate-cert)',
                         'type' => 'bool',
-                        'hint' => $this->l('Validate certificates from the TLS/SSL server.'),
+                        'hint' => $this->trans('Validate certificates from the TLS/SSL server.', array(), 'Admin.Catalog.Help'),
                     ),
                     'PS_SAV_IMAP_OPT_NOVALIDATE-CERT' => array(
-                        'title' => $this->l('IMAP options').' (/novalidate-cert)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/novalidate-cert)',
                         'type' => 'bool',
-                        'hint' => $this->l('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates.'),
+                        'hint' => $this->trans('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates.', array(), 'Admin.Catalog.Help'),
                     ),
                     'PS_SAV_IMAP_OPT_TLS' => array(
-                        'title' => $this->l('IMAP options').' (/tls)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/tls)',
                         'type' => 'bool',
-                        'hint' => $this->l('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.'),
+                        'hint' => $this->trans('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.', array(), 'Admin.Catalog.Help'),
                     ),
                     'PS_SAV_IMAP_OPT_NOTLS' => array(
-                        'title' => $this->l('IMAP options').' (/notls)',
+                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature').' (/notls)',
                         'type' => 'bool',
-                        'hint' => $this->l('Do not use start-TLS to encrypt the session, even with servers that support it.'),
+                        'hint' => $this->trans('Do not use start-TLS to encrypt the session, even with servers that support it.', array(), 'Admin.Catalog.Help'),
                     ),
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
@@ -278,12 +278,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $categories = Contact::getCategoriesContacts();
 
         $params = array(
-            $this->l('Total threads') => $all = CustomerThread::getTotalCustomerThreads(),
-            $this->l('Threads pending') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
-            $this->l('Total number of customer messages') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
-            $this->l('Total number of employee messages') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
-            $this->l('Unread threads') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
-            $this->l('Closed threads') => $all - ($unread + $pending)
+            $this->trans('Total threads', array(), 'Admin.Catalog.Feature') => $all = CustomerThread::getTotalCustomerThreads(),
+            $this->trans('Threads pending', array(), 'Admin.Catalog.Feature') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
+            $this->trans('Total number of customer messages', array(), 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
+            $this->trans('Total number of employee messages', array(), 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
+            $this->trans('Unread threads', array(), 'Admin.Catalog.Feature') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
+            $this->trans('Closed threads', array(), 'Admin.Catalog.Feature') => $all - ($unread + $pending)
         );
 
         $this->tpl_list_vars = array(
@@ -372,7 +372,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $current_employee->firstname.' '.$current_employee->lastname,
                         null, null, _PS_MAIL_DIR_, true)) {
                         $cm->private = 1;
-                        $cm->message = $this->l('Message forwarded to').' '.$employee->firstname.' '.$employee->lastname."\n".$this->l('Comment:').' '.$message;
+                        $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature').' '.$employee->firstname.' '.$employee->lastname."\n".$this->trans('Comment:').' '.$message;
                         $cm->add();
                     }
                 } elseif ($email && Validate::isEmail($email)) {
@@ -391,7 +391,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $params, $email, null,
                         $current_employee->email, $current_employee->firstname.' '.$current_employee->lastname,
                         null, null, _PS_MAIL_DIR_, true)) {
-                        $cm->message = $this->l('Message forwarded to').' '.$email."\n".$this->l('Comment:').' '.$message;
+                        $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature').' '.$email."\n".$this->trans('Comment:').' '.$message;
                         $cm->add();
                     }
                 } else {
@@ -520,7 +520,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $helper->icon = 'icon-envelope';
         $helper->color = 'color1';
         $helper->href = $this->context->link->getAdminLink('AdminCustomerThreads');
-        $helper->title = $this->l('Pending Discussion Threads', null, null, false);
+        $helper->title = $this->trans('Pending Discussion Threads', array(), 'Admin.Catalog.Feature');
         if (ConfigurationKPI::get('PENDING_MESSAGES') !== false) {
             $helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
         }
@@ -532,8 +532,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $helper->id = 'box-age';
         $helper->icon = 'icon-time';
         $helper->color = 'color2';
-        $helper->title = $this->l('Average Response Time', null, null, false);
-        $helper->subtitle = $this->l('30 days', null, null, false);
+        $helper->title = $this->trans('Average Response Time', array(), 'Admin.Catalog.Feature');
+        $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
         if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME') !== false) {
             $helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
         }
@@ -545,8 +545,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $helper->id = 'box-messages-per-thread';
         $helper->icon = 'icon-copy';
         $helper->color = 'color3';
-        $helper->title = $this->l('Messages per Thread', null, null, false);
-        $helper->subtitle = $this->l('30 day', null, null, false);
+        $helper->title = $this->trans('Messages per Thread', array(), 'Admin.Catalog.Feature');
+        $helper->subtitle = $this->trans('30 day', array(), 'Admin.Global');
         if (ConfigurationKPI::get('MESSAGES_PER_THREAD') !== false) {
             $helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
         }
@@ -604,21 +604,21 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if ($next_thread) {
             $next_thread = array(
                 'href' => self::$currentIndex.'&id_customer_thread='.(int)$next_thread.'&viewcustomer_thread&token='.$this->token,
-                'name' => $this->l('Reply to the next unanswered message in this thread')
+                'name' => $this->trans('Reply to the next unanswered message in this thread', array(), 'Admin.Catalog.Feature')
             );
         }
 
         if ($thread->status != 'closed') {
             $actions['closed'] = array(
                 'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-                'label' => $this->l('Mark as "handled"'),
+                'label' => $this->trans('Mark as "handled"', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 2
             );
         } else {
             $actions['open'] = array(
                 'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-                'label' => $this->l('Re-open'),
+                'label' => $this->trans('Re-open', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 1
             );
@@ -627,14 +627,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if ($thread->status != 'pending1') {
             $actions['pending1'] = array(
                 'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-                'label' => $this->l('Mark as "pending 1" (will be answered later)'),
+                'label' => $this->trans('Mark as "pending 1" (will be answered later)', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 3
             );
         } else {
             $actions['pending1'] = array(
                 'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-                'label' => $this->l('Disable pending status'),
+                'label' => $this->trans('Disable pending status', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 1
             );
@@ -643,14 +643,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if ($thread->status != 'pending2') {
             $actions['pending2'] = array(
                 'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-                'label' => $this->l('Mark as "pending 2" (will be answered later)'),
+                'label' => $this->trans('Mark as "pending 2" (will be answered later)', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 4
             );
         } else {
             $actions['pending2'] = array(
                 'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-                'label' => $this->l('Disable pending status'),
+                'label' => $this->trans('Disable pending status', array(), 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 1
             );
@@ -729,10 +729,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
             $content = '';
             if (!$message['private']) {
-                $content .= $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>';
+                $content .= $this->trans('Message to: ', array(), 'Admin.Catalog.Feature').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>';
             }
             if (Validate::isLoadedObject($product)) {
-                $content .= '<br/>'.$this->l('Product: ').'<span class="label label-info">'.$product->name.'</span><br/><br/>';
+                $content .= '<br/>'.$this->trans('Product: ', array(), 'Admin.Catalog.Feature').'<span class="label label-info">'.$product->name.'</span><br/><br/>';
             }
             $content .= Tools::safeOutput($message['message']);
 
@@ -751,9 +751,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
             foreach ($order_history as $history) {
                 $link_order = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$order->id;
 
-                $content = '<a class="badge" target="_blank" href="'.Tools::safeOutput($link_order).'">'.$this->l('Order').' #'.(int)$order->id.'</a><br/><br/>';
+                $content = '<a class="badge" target="_blank" href="'.Tools::safeOutput($link_order).'">'.$this->trans('Order', array(), 'Admin.Global').' #'.(int)$order->id.'</a><br/><br/>';
 
-                $content .= '<span>'.$this->l('Status:').' '.$history['ostate_name'].'</span>';
+                $content .= '<span>'.$this->trans('Status:', array(), 'Admin.Catalog.Feature').' '.$history['ostate_name'].'</span>';
 
                 $timeline[$history['date_add']][] = array(
                     'arrow' => 'right',

@@ -254,7 +254,7 @@ class AdminAddressesControllerCore extends AdminController
             } elseif ($addr_field_item == 'address1') {
                 $temp_fields[] = array(
                     'type' => 'text',
-                    'label' => $this->trans('Address', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Address', array(), 'Admin.Global'),
                     'name' => 'address1',
                     'col' => '6',
                     'required' => true,
@@ -262,7 +262,7 @@ class AdminAddressesControllerCore extends AdminController
             } elseif ($addr_field_item == 'address2') {
                 $temp_fields[] = array(
                     'type' => 'text',
-                    'label' => $this->trans('Address', array(), 'Admin.OrdersCustomers.Feature').' (2)',
+                    'label' => $this->trans('Address', array(), 'Admin.Global').' (2)',
                     'name' => 'address2',
                     'col' => '6',
                     'required' => in_array('address2', $required_fields),
@@ -270,7 +270,7 @@ class AdminAddressesControllerCore extends AdminController
             } elseif ($addr_field_item == 'postcode') {
                 $temp_fields[] = array(
                     'type' => 'text',
-                    'label' => $this->trans('Zip/Postal Code', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Zip/Postal Code', array(), 'Admin.Global'),
                     'name' => 'postcode',
                     'col' => '2',
                     'required' => true,
@@ -312,7 +312,7 @@ class AdminAddressesControllerCore extends AdminController
             } elseif ($addr_field_item == 'phone') {
                 $temp_fields[] = array(
                     'type' => 'text',
-                    'label' => $this->trans('Home phone', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Home phone', array(), 'Admin.Global'),
                     'name' => 'phone',
                     'required' => in_array('phone', $required_fields),
                     'col' => '4',
@@ -320,7 +320,7 @@ class AdminAddressesControllerCore extends AdminController
             } elseif ($addr_field_item == 'phone_mobile') {
                 $temp_fields[] = array(
                     'type' => 'text',
-                    'label' => $this->trans('Mobile phone', array(), 'Admin.OrdersCustomers.Feature'),
+                    'label' => $this->trans('Mobile phone', array(), 'Admin.Global'),
                     'name' => 'phone_mobile',
                     'required' =>  in_array('phone_mobile', $required_fields),
                     'col' => '4',
