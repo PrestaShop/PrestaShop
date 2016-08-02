@@ -75,6 +75,7 @@ class ApiClient
         ;
 
         $responseArray = json_decode($response);
+
         return $responseArray->modules;
     }
 
@@ -104,7 +105,7 @@ class ApiClient
 
     public function getModule($moduleId)
     {
-        $response =  $this->setMethod('listing')
+        $response = $this->setMethod('listing')
             ->setAction('module')
             ->setModuleId($moduleId)
             ->getResponse()
