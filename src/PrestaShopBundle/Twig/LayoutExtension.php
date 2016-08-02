@@ -206,7 +206,7 @@ EOF;
         $embedUrl = str_replace('watch?v=', 'embed/', $watchUrl);
 
         return '<iframe width="560" height="315" src="'.$embedUrl.
-            '" frameborder="0" allowfullscreen></iframe>';
+            '" frameborder="0" allowfullscreen class="youtube-iframe m-x-auto"></iframe>';
     }
 
     /**
