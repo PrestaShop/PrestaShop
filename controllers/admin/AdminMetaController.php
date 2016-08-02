@@ -274,6 +274,8 @@ class AdminMetaControllerCore extends AdminController
 
     public function renderForm()
     {
+        $files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
+
         $is_index = false;
         if (is_object($this->object) && is_array($this->object->url_rewrite) && count($this->object->url_rewrite)) {
             foreach ($this->object->url_rewrite as $rewrite) {
@@ -281,6 +283,25 @@ class AdminMetaControllerCore extends AdminController
                     $is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
                 }
             }
+        }
+
+        $pages = array(
+            'common' => array(
+                'name' => $this->trans('Default pages', array(), 'Admin.Parameters.Feature'),
+                'query' => array(),
+            ),
+            'module' => array(
+                'name' => $this->trans('Module pages', array(), 'Admin.Parameters.Feature'),
+                'query' => array(),
+            ),
+        );
+
+        foreach ($files as $name => $file) {
+            $k = (preg_match('#^module-#', $file)) ? 'module' : 'common';
+            $pages[$k]['query'][] = array(
+                'id' => $file,
+                'page' => $name,
+            );
         }
 
         $this->fields_form = array(
@@ -294,10 +315,23 @@ class AdminMetaControllerCore extends AdminController
                     'name' => 'id_meta',
                 ),
                 array(
-                    'type' => 'text',
-                    'label' => $this->l('Page name'),
+                    'type' => 'select',
+                    'label' => $this->trans('Page name', array(), 'Admin.Parameters.Feature'),
                     'name' => 'page',
-                    'disabled' => true,
+
+                    'options' => array(
+                        'optiongroup' => array(
+                            'label' => 'name',
+                            'query' => $pages,
+                        ),
+                        'options' => array(
+                            'id' => 'id',
+                            'name' => 'page',
+                            'query' => 'query',
+                        ),
+                    ),
+                    'hint' => $this->trans('Name of the related page.', array(), 'AdminParameters.Help'),
+                    'required' => true,
                 ),
                 array(
                     'type' => 'text',
