@@ -145,7 +145,7 @@ class AdminModuleDataProvider implements ModuleInterface
                         $urls['upgrade']
                     );
                 }
-            } elseif (!$addon->attributes->has('origin') || in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'))) {
+            } elseif (!$addon->attributes->has('origin') || $addon->disk->get('is_present') == true || in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'))) {
                 $url_active = 'install';
                 unset(
                     $urls['uninstall'],
