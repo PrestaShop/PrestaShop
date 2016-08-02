@@ -2673,7 +2673,7 @@ abstract class ModuleCore
      * Install module's controllers using public property $controllers
      * @return bool
      */
-    private function installControllers()
+    protected function installControllers()
     {
         $themes = Theme::getThemes();
         $theme_meta_value = array();
