@@ -7176,6 +7176,17 @@ li.product-flag {
     border-bottom: #ebebeb 2px solid;
     max-height: 50px;
     margin-bottom: 30px; }
+    #header .header-nav .top-logo {
+      line-height: 50px;
+      vertical-align: middle; }
+      #header .header-nav .top-logo img {
+        max-height: 50px; }
+    #header .header-nav #menu-icon {
+      vertical-align: middle;
+      cursor: pointer;
+      margin-left: 1rem; }
+      #header .header-nav #menu-icon .material-icons {
+        line-height: 50px; }
     #header .header-nav .right-nav {
       display: -webkit-box;
       display: -moz-box;
@@ -7247,8 +7258,9 @@ li.product-flag {
       #header .header-nav .material-icons.expand-more {
         margin-left: -0.375rem; }
   #header .header-top {
-    position: relative;
     padding-bottom: 1.25rem; }
+    #header .header-top > .container {
+      position: relative; }
     #header .header-top .menu {
       padding-left: 15px;
       margin-bottom: 0.375rem; }
@@ -7307,36 +7319,37 @@ li.product-flag {
 #footer {
   padding-top: 2.5rem; }
 
+/*** Responsive part ***/
 @media (max-width: 767px) {
+  #wrapper {
+    box-shadow: none; }
   #checkout-cart-summary {
     float: none;
     width: 100%;
     margin-top: 1rem; }
-  #header .header-nav {
-    max-height: none;
-    min-height: 150px; }
-    #header .header-nav .right-nav {
-      -webkit-box-orient: vertical;
-      -moz-box-orient: vertical;
-      box-orient: vertical;
-      -webkit-box-direction: normal;
-      -moz-box-direction: normal;
-      box-direction: normal;
-      -webkit-flex-direction: column;
-      -moz-flex-direction: column;
-      flex-direction: column;
-      -ms-flex-direction: column; }
-    #header .header-nav .user-info {
-      text-align: left;
-      margin-left: 0;
-      position: absolute;
-      right: 0.625rem;
-      top: -1.875rem; }
-    #header .header-nav .blockcart {
-      margin-left: 0;
-      position: absolute;
-      right: 0.625rem;
-      margin-top: -0.625rem; }
+  #header {
+    background: #ebebeb; }
+    #header .header-nav {
+      background: white;
+      margin-bottom: 10px; }
+      #header .header-nav .right-nav {
+        -webkit-box-orient: vertical;
+        -moz-box-orient: vertical;
+        box-orient: vertical;
+        -webkit-box-direction: normal;
+        -moz-box-direction: normal;
+        box-direction: normal;
+        -webkit-flex-direction: column;
+        -moz-flex-direction: column;
+        flex-direction: column;
+        -ms-flex-direction: column; }
+      #header .header-nav .user-info {
+        text-align: left;
+        margin-left: 0; }
+      #header .header-nav .blockcart {
+        margin-left: 0; }
+  .header-top {
+    background: #ebebeb; }
   section.checkout-step {
     width: 100%; }
   .default-input {

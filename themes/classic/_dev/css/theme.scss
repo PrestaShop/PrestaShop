@@ -40,6 +40,21 @@
     border-bottom: $gray-light 2px solid;
     max-height: 50px;
     margin-bottom: 30px;
+    .top-logo {
+      line-height: 50px;
+      vertical-align: middle;
+      img {
+        max-height: 50px;
+      }
+    }
+    #menu-icon {
+      vertical-align: middle;
+      cursor: pointer;
+      margin-left: rem(16px);
+      .material-icons {
+        line-height: 50px;
+      }
+    }
     .right-nav {
       @include display(flex);
       @include flex-wrap(nowrap);
@@ -113,7 +128,9 @@
     }
   }
   .header-top {
-    position: relative;
+    > .container {
+      position: relative;
+    }
     padding-bottom: rem(20px);
     .menu {
       > ul {
@@ -193,31 +210,36 @@
 #footer {
   padding-top: rem(40px);
 }
+
+/*** Responsive part ***/
 @include media-breakpoint-down(sm) {
+  #wrapper {
+    box-shadow: none;
+  }
   #checkout-cart-summary {
     float: none;
     width: 100%;
     margin-top: 1rem;
   }
-  #header .header-nav {
-    max-height: none;
-    min-height: 150px;
-    .right-nav {
-      @include flex-direction(column);
+  #header {
+    background: $gray-light;
+    .header-nav {
+      background: white;
+      margin-bottom: 10px;
+      .right-nav {
+        @include flex-direction(column);
+      }
+      .user-info {
+        text-align: left;
+        margin-left: 0;
+      }
+      .blockcart {
+        margin-left: 0;
+      }
     }
-    .user-info {
-      text-align: left;
-      margin-left: 0;
-      position: absolute;
-      right: $small-space;
-      top: -$large-space;
-    }
-    .blockcart {
-      margin-left: 0;
-      position: absolute;
-      right: $small-space;
-      margin-top: -$small-space;
-    }
+  }
+  .header-top {
+    background: $gray-light;
   }
   section.checkout-step {
     width: 100%;
