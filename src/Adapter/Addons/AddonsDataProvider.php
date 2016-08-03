@@ -139,8 +139,7 @@ class AddonsDataProvider implements AddonsInterface
                 $post_data .= '&method=listing&action=must-have-themes';
                 break;
             case 'customer':
-                $post_data .= '&method=listing&action=customer&username='.urlencode($params['username_addons'])
-                    .'&password='.urlencode($params['password_addons']);
+                return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
                 break;
             case 'customer_themes':
                 $post_data .= '&method=listing&action=customer-themes&username='.urlencode($params['username_addons'])

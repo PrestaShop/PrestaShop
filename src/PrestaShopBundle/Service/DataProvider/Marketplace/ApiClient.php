@@ -118,6 +118,20 @@ class ApiClient
         }
     }
 
+    public function getCustomerModules($userMail, $password)
+    {
+        $response = $this->setMethod('listing')
+            ->setAction('customer')
+            ->setUserMail($userMail)
+            ->setPassword($password)
+            ->getPostResponse()
+        ;
+
+        $responseArray = json_decode($response);
+
+        return $responseArray->modules;
+    }
+
     public function getResponse()
     {
         return (string) $this->addonsApiClient
@@ -126,6 +140,15 @@ class ApiClient
                 )
             )->getBody()
         ;
+    }
+
+    public function getPostResponse()
+    {
+        return (string) $this->addonsApiClient
+            ->post(null,
+                array('query' => $this->queryParameters,
+                )
+            )->getBody();
     }
 
     public function setMethod($method)
@@ -166,6 +189,20 @@ class ApiClient
     public function setModuleId($moduleId)
     {
         $this->queryParameters['id_module'] = $moduleId;
+
+        return $this;
+    }
+
+    public function setUserMail($userMail)
+    {
+        $this->queryParameters['username'] = $userMail;
+
+        return $this;
+    }
+
+    public function setPassword($password)
+    {
+        $this->queryParameters['password'] = $password;
 
         return $this;
     }
