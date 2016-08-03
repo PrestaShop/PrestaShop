@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2016 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,34 +23,32 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle;
+namespace PrestaShopBundle\DependencyInjection\Compiler;
 
-use PrestaShopBundle\DependencyInjection\Compiler\RemoveXmlCompiledContainerPass;
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
-use PrestaShopBundle\DependencyInjection\DynamicRolePass;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Symfony entry point: adds Extension, that will add other stuff.
+ * Security Compiler pass: removed app{env}{..}.xml files from cache.
  */
-class PrestaShopBundle extends Bundle
+class RemoveXmlCompiledContainerPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getContainerExtension()
+    public function process(ContainerBuilder $container)
     {
-        return new PrestaShopExtension();
-    }
+        if ($container->getParameter('kernel.debug')) {
+            $filename = $container->getParameter('debug.container.dump');
+            $filesystem = new Filesystem();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new DynamicRolePass());
-        $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
+            try {
+                $filesystem->remove($filename);
+            } catch (IOException $e) {
+                // discard chmod failure (some filesystem may not support it)
+            }
+        }
     }
 }
