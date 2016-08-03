@@ -386,7 +386,7 @@ class AdminOrdersControllerCore extends AdminController
     {
         if (Tools::isSubmit('submitUpdateOrderStatus')
             && ($id_order_state = (int)Tools::getValue('id_order_state'))) {
-            if ($this->access('edit') !== '1') {
+            if (true !== $this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             } else {
                 $order_state = new OrderState($id_order_state);
