@@ -99,7 +99,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
         /* we need to fake cache wih fake catalog */
         $this->clearModuleCache();
-        file_put_contents(_PS_CACHE_DIR_.'en_catalog_modules.json', json_encode($fakeModules, true));
+        file_put_contents(_PS_CACHE_DIR_.'en_addons_modules.json', json_encode($fakeModules, true));
 
         $this->adminModuleDataProvider = new AdminModuleDataProvider(
             $this->languageISOCode,
@@ -168,16 +168,6 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $modules2 = $mock->getCatalogModules();
 
         $this->assertEquals($modules2, $modules);
-    }
-
-    public function testProductTypeShouldBeCorrectOk()
-    {
-        $this->clearModuleCache();
-        $modules = $this->adminModuleDataProvider->getCatalogModules();
-        $possible_values = array('module', 'service', 'theme');
-        foreach ($modules as $module) {
-            $this->assertTrue(in_array($module->productType, $possible_values));
-        }
     }
 
     public function teardown()
