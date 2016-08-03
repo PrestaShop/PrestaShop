@@ -560,3 +560,7 @@ form#importDropzone {
 .module-top-menu {
   min-height: 74px;
 }
+
+.youtube-iframe {
+  display: block;
+}

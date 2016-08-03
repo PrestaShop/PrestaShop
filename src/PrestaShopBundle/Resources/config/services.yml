@@ -115,6 +115,7 @@ services:
 
     prestashop.adapter.data_provider.addon:
         class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
+        arguments: ['@prestashop.addons.client_api']
 
     prestashop.adapter.data_provider.combination:
         class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
@@ -130,6 +131,10 @@ services:
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
         arguments: ["@prestashop.adapter.legacy.logger", "@translator", "@doctrine.orm.entity_manager"]
+
+    prestashop.categories_provider:
+        class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
+        arguments: ['@prestashop.addons.client_api']
 
     # Presenters
     prestashop.adapter.presenter.module:
@@ -211,15 +216,13 @@ services:
             - "@prestashop.module.zip.manager"
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
-            
+
     prestashop.module.zip.manager:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
         arguments:
             - "@filesystem"
             - "@finder"
             - "@translator"
-
-
 
     # TRANSLATIONS
     prestashop.translations.database_loader:
@@ -228,3 +231,12 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - {name: translation.loader, alias: db}
+
+# Addons API Client
+    prestashop.addons.client_api:
+        class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
+        arguments:
+            - "@csa_guzzle.client.addons_api"
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.iso_code"
+            - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+

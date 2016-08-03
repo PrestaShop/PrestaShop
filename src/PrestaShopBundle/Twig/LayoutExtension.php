@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,12 +26,11 @@
 namespace PrestaShopBundle\Twig;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\HttpKernel\Kernel;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Exception;
 
 /**
- * This class is used by Twig_Environment and provide layout methods callable from a twig template
+ * This class is used by Twig_Environment and provide layout methods callable from a twig template.
  */
 class LayoutExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
@@ -66,21 +65,21 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
     }
 
     /**
-     * Provides globals for Twig templates
+     * Provides globals for Twig templates.
      *
      * @return array The base globals available in twig templates.
      */
     public function getGlobals()
     {
         return array(
-            "default_currency" => $this->context->getEmployeeCurrency(),
-            "root_url" => $this->context->getRootUrl(),
-            "js_translatable" => [],
+            'default_currency' => $this->context->getEmployeeCurrency(),
+            'root_url' => $this->context->getRootUrl(),
+            'js_translatable' => array(),
         );
     }
 
     /**
-     * Define available filters
+     * Define available filters.
      *
      * @return array Twig_SimpleFilter
      */
@@ -101,11 +100,12 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         return array(
             new \Twig_SimpleFunction('getLegacyLayout', array($this, 'getLegacyLayout')),
             new \Twig_SimpleFunction('getAdminLink', array($this, 'getAdminLink')),
+            new \Twig_SimpleFunction('youtube_link', array($this, 'getYoutubeLink')),
         );
     }
 
     /**
-     * Returns a legacy configuration key
+     * Returns a legacy configuration key.
      *
      * @param string $key
      *
@@ -117,24 +117,24 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
     }
 
     /**
-     * Get admin legacy layout into old controller context
+     * Get admin legacy layout into old controller context.
      *
      * Parameters can be set manually into twig template or sent from controller
      * For details : check Resources/views/Admin/Layout.html.twig
      *
-     * @param string $controllerName The legacy controller name
-     * @param string $title The page title to override default one
-     * @param array $headerToolbarBtn The header toolbar to override
-     * @param string $displayType The legacy display type variable
-     * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value
-     * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
-     * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string $controllerName    The legacy controller name
+     * @param string $title             The page title to override default one
+     * @param array  $headerToolbarBtn  The header toolbar to override
+     * @param string $displayType       The legacy display type variable
+     * @param bool   $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value
+     * @param bool   $enableSidebar     Allow to use right sidebar to display docs for instance
+     * @param string $helpLink          If specified, will be used instead of legacy one
      *
      * @throws Exception if legacy layout has no $content var replacement
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
+    public function getLegacyLayout($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
     {
         if ($this->environment == 'test') {
             return <<<EOF
@@ -185,17 +185,28 @@ EOF;
     }
 
     /**
-     * This is a Twig port of the Smarty {$link->getAdminLink()} function
+     * This is a Twig port of the Smarty {$link->getAdminLink()} function.
      *
-     * @param string $controller the controller name
-     * @param bool $withToken
+     * @param string        $controller  the controller name
+     * @param bool          $withToken
      * @param array[string] $extraParams
      *
      * @return string
      */
-    public function getAdminLink($controllerName, $withToken = true, $extraParams = [])
+    public function getAdminLink($controllerName, $withToken = true, $extraParams = array())
     {
         return $this->context->getAdminLink($controllerName, $withToken, $extraParams);
+    }
+
+    /**
+     * KISS function to get an embeded iframe from Youtube.
+     */
+    public function getYoutubeLink($watchUrl)
+    {
+        $embedUrl = str_replace('watch?v=', 'embed/', $watchUrl);
+
+        return '<iframe width="560" height="315" src="'.$embedUrl.
+            '" frameborder="0" allowfullscreen class="youtube-iframe m-x-auto"></iframe>';
     }
 
     /**

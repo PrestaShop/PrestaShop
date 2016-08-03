@@ -17,7 +17,7 @@
                 {% for subMenu in menu.subMenu|arrayCast %}
                     <li class="module-category-menu" data-category-ref="{{subMenu.refMenu}}" data-category-display-name="{{subMenu.name}}">
                         <a  class="dropdown-item" href="#">
-                            {{subMenu.name}}<span class="pull-right">{{subMenu.modulesRef|length}}</span>
+                            {{subMenu.name}}<span class="pull-right">{{subMenu.modules|length }}</span>
                         </a>
                     </li>
                 {% endfor %}

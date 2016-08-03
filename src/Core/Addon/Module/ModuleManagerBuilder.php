@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,16 +32,20 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
+use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
+use GuzzleHttp\Client;
 
 class ModuleManagerBuilder
 {
     /**
-     * Singleton of ModuleRepository
+     * Singleton of ModuleRepository.
+     *
      * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
      */
     public static $modulesRepository = null;
@@ -51,29 +55,44 @@ class ModuleManagerBuilder
     public static $moduleDataUpdater = null;
     public static $moduleZipManager = null;
     public static $translator = null;
+    public static $addonsDataProvider = null;
+    public static $categoriesProvider = null;
 
     public function __construct()
     {
+        $marketPlaceClient = new ApiClient(
+            new Client(array()),
+            $this->getLanguageIso(),
+            $this->getCountryIso(),
+            _PS_VERSION_)
+        ;
+
+        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient);
+        self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
+
         if (is_null(self::$adminModuleDataProvider)) {
-            $addonsDataProvider = new AddonsDataProvider();
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 $this->getLanguageIso(),
                 $this->getSymfonyRouter(),
-                $addonsDataProvider
+                self::$addonsDataProvider,
+                self::$categoriesProvider
             );
-            self::$translator       = Context::getContext()->getTranslator();
-            self::$moduleDataUpdater       = new ModuleDataUpdater($addonsDataProvider, self::$adminModuleDataProvider);
-            self::$legacyLogger            = new LegacyLogger();
-            self::$moduleDataProvider      = new ModuleDataProvider(self::$legacyLogger, self::$translator);
-            self::$moduleZipManager = new ModuleZipManager(new Filesystem, new Finder, self::$translator);
+
+            self::$translator = Context::getContext()->getTranslator();
+            self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
+            self::$legacyLogger = new LegacyLogger();
+            self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
+            self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
         }
     }
 
     /**
-    * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
-    * @global type $kernel
-    * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
-    */
+     * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager.
+     *
+     * @global type $kernel
+     *
+     * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+     */
     public function build()
     {
         global $kernel;
@@ -93,8 +112,10 @@ class ModuleManagerBuilder
     }
 
     /**
-     * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
+     * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository.
+     *
      * @global type $kernel
+     *
      * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
      */
     public function buildRepository()
@@ -113,11 +134,12 @@ class ModuleManagerBuilder
                 );
             }
         }
+
         return self::$modulesRepository;
     }
 
     /**
-     * Returns an instance of \Symfony\Component\Routing\Router from Symfony scope into Legacy
+     * Returns an instance of \Symfony\Component\Routing\Router from Symfony scope into Legacy.
      *
      * @return \Symfony\Component\Routing\Router
      */
@@ -125,19 +147,28 @@ class ModuleManagerBuilder
     {
         // get the environment to load the good routing file
         $routeFileName = _PS_MODE_DEV_ === true ? 'routing_dev.yml' : 'routing.yml';
-        $routesDirectory = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config';
+        $routesDirectory = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config';
         $locator = new FileLocator(array($routesDirectory));
         $loader = new YamlFileLoader($locator);
+
         return new Router($loader, $routeFileName);
     }
 
     /**
-     * Returns language iso from context
+     * Returns language iso from context.
      */
     private function getLanguageIso()
     {
         $langId = Context::getContext()->employee instanceof \Employee ? Context::getContext()->employee->id_lang : Context::getContext()->language->iso_code;
 
         return \LanguageCore::getIsoById($langId);
+    }
+
+    /**
+     * Returns country iso from context.
+     */
+    private function getCountryIso()
+    {
+        return \CountryCore::getIsoById(\Configuration::get('PS_COUNTRY_DEFAULT'));
     }
 }

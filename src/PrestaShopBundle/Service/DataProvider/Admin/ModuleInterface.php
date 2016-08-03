@@ -25,8 +25,6 @@
  */
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
-
 /**
  * Data provider for new Architecture, about Module object model.
  *

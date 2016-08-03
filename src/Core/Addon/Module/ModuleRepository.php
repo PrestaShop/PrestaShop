@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
@@ -41,50 +40,56 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
-    const NATIVE_AUTHOR = "PrestaShop";
+    const NATIVE_AUTHOR = 'PrestaShop';
 
-    const PARTNER_AUTHOR = "PrestaShop Partners";
+    const PARTNER_AUTHOR = 'PrestaShop Partners';
 
     /**
-     * Admin Module Data Provider
+     * Admin Module Data Provider.
+     *
      * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
      */
     private $adminModuleProvider;
 
     /**
-     * Logger
+     * Logger.
+     *
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
     /**
-     * Module Data Provider
+     * Module Data Provider.
+     *
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
      */
     private $moduleProvider;
 
     /**
-     * Module Data Provider
+     * Module Data Provider.
+     *
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
      */
     private $moduleUpdater;
 
     /**
-     * Translator
+     * Translator.
+     *
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
 
     /**
-     * Module Data Provider
+     * Module Data Provider.
+     *
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
      */
     private $cacheFilePath;
 
     /**
-     * Contains data from cache file about modules on disk
+     * Contains data from cache file about modules on disk.
      *
-     * @var array $cache
+     * @var array
      */
     private $cache;
 
@@ -97,12 +102,12 @@ class ModuleRepository implements ModuleRepositoryInterface
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
         $this->logger = $logger;
-        $this->moduleProvider      = $modulesProvider;
-        $this->moduleUpdater       = $modulesUpdater;
+        $this->moduleProvider = $modulesProvider;
+        $this->moduleUpdater = $modulesUpdater;
         $this->translator = $translator;
-        $this->finder              = new Finder();
-        $this->cacheFilePath       = _PS_CACHE_DIR_.'modules.json';
-        $this->cache               = $this->readCacheFile();
+        $this->finder = new Finder();
+        $this->cacheFilePath = _PS_CACHE_DIR_.'local_modules.json';
+        $this->cache = $this->readCacheFile();
     }
 
     public function __destruct()
@@ -113,14 +118,15 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function clearCache()
     {
         @unlink($this->cacheFilePath);
-        $this->cache = [];
+        $this->cache = array();
     }
 
     /**
-     * Get the **Legacy** Module object from its name
+     * Get the **Legacy** Module object from its name.
      *
-     * @param  string $name The technical module name to instanciate
-     * @return \Module|null         Instance of legacy Module, if valid
+     * @param string $name The technical module name to instanciate
+     *
+     * @return \Module|null Instance of legacy Module, if valid
      */
     public function getInstanceByName($name)
     {
@@ -130,6 +136,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     /**
      * @param AddonListFilter $filter
+     *
      * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
      */
     public function getFilteredList(AddonListFilter $filter)
@@ -142,7 +149,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         foreach ($modules as $key => &$module) {
-
             // Part One : Removing addons not related to the selected product type
             if ($filter->type != AddonListFilterType::ALL) {
                 if ($module->attributes->get('productType') == 'module') {
@@ -151,7 +157,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 if ($module->attributes->get('productType') == 'service') {
                     $productType = AddonListFilterType::SERVICE;
                 }
-                if (!isset($productType) || $productType & ~ $filter->type) {
+                if (!isset($productType) || $productType & ~$filter->type) {
                     unset($modules[$key]);
                     continue;
                 }
@@ -206,6 +212,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 }
             }
         }
+
         return $modules;
     }
 
@@ -249,17 +256,17 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getPartnersModules()
     {
-            $filter = new AddonListFilter();
-            $filter->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE);
+        $filter = new AddonListFilter();
+        $filter->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE);
 
-            $partnersModules = $this->getFilteredList($filter);
+        $partnersModules = $this->getFilteredList($filter);
 
-            foreach ($partnersModules as $key => $module) {
-                $moduleAuthor = $module->attributes->get('author');
-                if (self::PARTNER_AUTHOR !== $moduleAuthor) {
-                    unset($partnersModules[$key]);
-                }
+        foreach ($partnersModules as $key => $module) {
+            $moduleAuthor = $module->attributes->get('author');
+            if (self::PARTNER_AUTHOR !== $moduleAuthor) {
+                unset($partnersModules[$key]);
             }
+        }
 
         return $partnersModules;
     }
@@ -298,7 +305,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     private function getAddonsCatalogModules()
     {
-        $modules = [];
+        $modules = array();
         foreach ($this->adminModuleProvider->getCatalogModulesNames() as $name) {
             try {
                 $module = $this->getModule($name);
@@ -311,7 +318,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         'Parse error on module %module%. %error_details%',
                         array(
                             '%module%' => $name,
-                            '%error_details%' => $e->getMessage()),
+                            '%error_details%' => $e->getMessage(), ),
                         'Admin.Modules.Notification'));
             } catch (Exception $e) {
                 $this->logger->critical(
@@ -319,7 +326,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         'Unexpected exception on module %module%. %error_details%',
                         array(
                             '%module%' => $name,
-                            '%error_details%' => $e->getMessage()),
+                            '%error_details%' => $e->getMessage(), ),
                         'Admin.Modules.Notification'));
             }
         }
@@ -332,6 +339,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      * It contains data from its instance, the disk, the database and from the marketplace if exists.
      *
      * @param string $name The technical name of the module
+     *
      * @return \PrestaShop\PrestaShop\Adapter\Module\Module
      */
     public function getModule($name)
@@ -339,19 +347,19 @@ class ModuleRepository implements ModuleRepositoryInterface
         $php_file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
 
         /* Data which design the module class */
-        $attributes = ['name' => $name,];
-        $disk       = [];
-        $database   = [];
+        $attributes = array('name' => $name);
+        $disk = array();
+        $database = array();
 
         // Get filemtime of module main class (We do this directly with an error suppressor to go faster)
-        $current_filemtime = (int)@filemtime($php_file_path);
+        $current_filemtime = (int) @filemtime($php_file_path);
 
         // We check that we have data from the marketplace
         try {
-            $module_catalog_data = $this->adminModuleProvider->getCatalogModules(['name' => $name]);
+            $module_catalog_data = $this->adminModuleProvider->getCatalogModules(array('name' => $name));
             $attributes = array_merge(
                 $attributes,
-                (array)array_shift($module_catalog_data)
+                (array) array_shift($module_catalog_data)
             );
         } catch (Exception $e) {
             $this->logger->alert(
@@ -367,17 +375,18 @@ class ModuleRepository implements ModuleRepositoryInterface
             // OK, cache can be loaded and used directly
 
             $attributes = array_merge($attributes, $this->cache[$name]['attributes']);
-            $disk       = $this->cache[$name]['disk'];
+            $disk = $this->cache[$name]['disk'];
         } else {
             // NOPE, we have to fulfil the cache with the module data
 
-            $disk = [
+            $disk = array(
                 'filemtime' => $current_filemtime,
-                'is_present' => (int)$this->moduleProvider->isOnDisk($name),
+                'filemtime' => $current_filemtime,
+                'is_present' => (int) $this->moduleProvider->isOnDisk($name),
                 'is_valid' => 0,
                 'version' => null,
-            ];
-            $main_class_attributes = [];
+            );
+            $main_class_attributes = array();
 
             if ($this->moduleProvider->isModuleMainClassValid($name)) {
                 require_once $php_file_path;
@@ -385,14 +394,14 @@ class ModuleRepository implements ModuleRepositoryInterface
                 // We load the main class of the module, and get its properties
                 $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
                 foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_uri',
-                    'limited_countries', 'need_instance') as $data_to_get) {
+                    'limited_countries', 'need_instance', ) as $data_to_get) {
                     if (isset($tmp_module->{$data_to_get})) {
                         $main_class_attributes[$data_to_get] = $tmp_module->{$data_to_get};
                     }
                 }
 
                 $main_class_attributes['parent_class'] = get_parent_class($name);
-                $main_class_attributes['is_configurable'] = (int)method_exists($tmp_module, 'getContent');
+                $main_class_attributes['is_configurable'] = (int) method_exists($tmp_module, 'getContent');
 
                 $disk['is_valid'] = 1;
                 $disk['version'] = $tmp_module->version;
@@ -403,10 +412,10 @@ class ModuleRepository implements ModuleRepositoryInterface
             }
 
             $this->cache[$name]['attributes'] = $main_class_attributes;
-            $this->cache[$name]['disk']       = $disk;
+            $this->cache[$name]['disk'] = $disk;
         }
 
-        foreach (['logo.png', 'logo.gif'] as $logo) {
+        foreach (array('logo.png', 'logo.gif') as $logo) {
             $logo_path = _PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$logo;
             if (file_exists($logo_path)) {
                 $attributes['img'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
@@ -421,17 +430,17 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Instanciate every module present if the modules folder
+     * Instanciate every module present in the modules folder.
      *
      * @return \PrestaShop\PrestaShop\Adapter\Module\Module[]
      */
     private function getModulesOnDisk()
     {
-        $modules         = [];
+        $modules = array();
         $modulesDirsList = $this->finder->directories()
             ->in(_PS_MODULE_DIR_)
             ->depth('== 0')
-            ->exclude(['__MACOSX'])
+            ->exclude(array('__MACOSX'))
             ->ignoreVCS(true);
 
         foreach ($modulesDirsList as $moduleDir) {
@@ -447,7 +456,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         'Parse error detected in module %module%. %error_details%.',
                         array(
                             '%module%' => $moduleName,
-                            '%error_details%' => $e->getMessage()),
+                            '%error_details%' => $e->getMessage(), ),
                         'Admin.Modules.Notification'));
             } catch (Exception $e) {
                 $this->logger->critical(
@@ -455,7 +464,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         'Exception detected while loading module %module%. %error_details%.',
                         array(
                             '%module%' => $moduleName,
-                            '%error_details%' => $e->getMessage()),
+                            '%error_details%' => $e->getMessage(), ),
                         'Admin.Modules.Notification'));
             }
         }
@@ -467,34 +476,36 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
 
     /**
-     * In order to avoid class parsing, we generate a cache file which will keep mandatory data of modules
+     * In order to avoid class parsing, we generate a cache file which will keep mandatory data of modules.
      *
-     * @param  string $name The technical module name to find
-     * @return array         Module data stored in file
+     * @param string $name The technical module name to find
+     *
+     * @return array Module data stored in file
      */
     private function generateCacheFile($data)
     {
         if (!$data) {
             return;
         }
-        $encoded_data          = json_encode($data);
+        $encoded_data = json_encode($data);
         file_put_contents($this->cacheFilePath, $encoded_data);
 
         return $data;
     }
 
     /**
-     * We load the file which contains cached data
+     * We load the file which contains cached data.
      *
-     * @return array         Module data loaded in file
+     * @return array Module data loaded in file
      */
     private function readCacheFile()
     {
         // JSON file not found ? Generate it
         if (!file_exists($this->cacheFilePath)) {
-            return [];
+            return array();
         }
         $data = json_decode(file_get_contents($this->cacheFilePath), true);
-        return ($data == null)?[]:$data;
+
+        return ($data == null) ? array() : $data;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,11 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -38,42 +38,48 @@ use Symfony\Component\Routing\Router;
  *
  * This class will provide data from DB / ORM about Modules for the Admin interface.
  * This is an Adapter that works with the Legacy code and persistence behaviors.
- *
  */
 class AdminModuleDataProvider implements ModuleInterface
 {
-    const _CACHEFILE_MODULES_ = '_catalog_modules.json';
+    const _CACHEFILE_MODULES_ = '_addons_modules.json';
+
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
     private $languageISO;
     private $router;
     private $addonsDataProvider;
+    private $categoriesProvider;
     private $cache_dir = _PS_CACHE_DIR_;
-    protected $catalog_modules = [];
+    protected $catalog_modules = array();
     protected $catalog_modules_names;
 
-    public function __construct($languageISO, Router $router = null, AddonsDataProvider $addonsDataProvider)
-    {
+    public function __construct(
+        $languageISO,
+        Router $router = null,
+        AddonsDataProvider $addonsDataProvider,
+        CategoriesProvider $categoriesProvider
+    ) {
         $this->languageISO = $languageISO;
         $this->router = $router;
         $this->addonsDataProvider = $addonsDataProvider;
+        $this->categoriesProvider = $categoriesProvider;
     }
 
     public function clearCatalogCache()
     {
-        $this->clearCache([$this->languageISO.self::_CACHEFILE_MODULES_]);
-        $this->catalog_modules = [];
+        $this->clearCache(array($this->languageISO.self::_CACHEFILE_MODULES_));
+        $this->catalog_modules = array();
     }
 
     public function getAllModules()
     {
         return \Module::getModulesOnDisk(true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
-            (int)\Context::getContext()->employee->id
+            (int) \Context::getContext()->employee->id
         );
     }
 
-    public function getCatalogModules(array $filters = [])
+    public function getCatalogModules(array $filters = array())
     {
         if (count($this->catalog_modules) === 0) {
             $this->loadCatalogData();
@@ -84,7 +90,7 @@ class AdminModuleDataProvider implements ModuleInterface
         );
     }
 
-    public function getCatalogModulesNames(array $filter = [])
+    public function getCatalogModulesNames(array $filter = array())
     {
         return array_keys($this->getCatalogModules($filter));
     }
@@ -92,16 +98,16 @@ class AdminModuleDataProvider implements ModuleInterface
     public function generateAddonsUrls(array $addons)
     {
         foreach ($addons as &$addon) {
-            $urls = [];
-            foreach (['install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade'] as $action) {
-                $urls[$action] = $this->router->generate('admin_module_manage_action', [
+            $urls = array();
+            foreach (array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade') as $action) {
+                $urls[$action] = $this->router->generate('admin_module_manage_action', array(
                     'action' => $action,
                     'module_name' => $addon->attributes->get('name'),
-                ]);
+                ));
             }
-            $urls['configure'] = $this->router->generate('admin_module_configure_action', [
+            $urls['configure'] = $this->router->generate('admin_module_configure_action', array(
                 'module_name' => $addon->attributes->get('name'),
-            ]);
+            ));
 
             // Which button should be displayed first ?
             $url_active = '';
@@ -139,7 +145,7 @@ class AdminModuleDataProvider implements ModuleInterface
                         $urls['upgrade']
                     );
                 }
-            } elseif (!$addon->attributes->has('origin') || in_array($addon->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'])) {
+            } elseif (!$addon->attributes->has('origin') || in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'))) {
                 $url_active = 'install';
                 unset(
                     $urls['uninstall'],
@@ -158,50 +164,23 @@ class AdminModuleDataProvider implements ModuleInterface
                 $addon->attributes->set('urls', $urls);
             }
             $addon->attributes->set('url_active', $url_active);
+
+            $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
+            $addon->attributes->set('categoryParent', $categoryParent);
         }
 
         return $addons;
     }
 
-    public function getCategoriesFromModules(&$modules)
-    {
-        $categories = [];
-
-        // Only Tab: Categories
-        $categories['categories'] = $this->createMenuObject('categories',
-            'Categories');
-
-        foreach ($modules as &$module) {
-            $refs = [];
-            foreach ($module->attributes->get('refs') as $name) {
-                if (!isset($categories['categories']->subMenu[$name])) {
-                    $categories['categories']->subMenu[$name] = $this->createMenuObject($name,
-                        $name
-                    );
-                }
-
-                $categories['categories']->subMenu[$name]->modulesRef[] = $module->attributes->get('name');
-                $refs[] = $name;
-            }
-            $module->attributes->set('refs', $refs);
-        }
-
-        usort($categories['categories']->subMenu, function ($a, $b) {
-            return strcmp($a->name, $b->name);
-        });
-
-        return $categories;
-    }
-
     protected function applyModuleFilters(array $modules, array $filters)
     {
-        if (! count($filters)) {
+        if (!count($filters)) {
             return $modules;
         }
 
         // We get our module IDs to keep
         foreach ($filters as $filter_name => $value) {
-            $search_result = [];
+            $search_result = array();
 
             switch ($filter_name) {
                 case 'search':
@@ -242,7 +221,7 @@ class AdminModuleDataProvider implements ModuleInterface
     protected function clearCache(array $files)
     {
         foreach ($files as $file) {
-            $path = $this->cache_dir . $file;
+            $path = $this->cache_dir.$file;
             if (file_exists($path)) {
                 unlink($path);
             }
@@ -251,22 +230,22 @@ class AdminModuleDataProvider implements ModuleInterface
 
     protected function loadCatalogData()
     {
-        $this->catalog_modules    = $this->getModuleCache($this->languageISO.self::_CACHEFILE_MODULES_);
+        $this->catalog_modules = $this->getModuleCache($this->languageISO.self::_CACHEFILE_MODULES_);
 
         if (!$this->catalog_modules) {
-            $params = ['format' => 'json'];
-            $requests = [
+            $params = array('format' => 'json');
+            $requests = array(
                 AddonListFilterOrigin::ADDONS_MUST_HAVE => 'must-have',
                 AddonListFilterOrigin::ADDONS_SERVICE => 'service',
                 AddonListFilterOrigin::ADDONS_NATIVE => 'native',
-                AddonListFilterOrigin::ADDONS_NATIVE_ALL => 'native_all'
-            ];
+                AddonListFilterOrigin::ADDONS_NATIVE_ALL => 'native_all',
+            );
             if ($this->addonsDataProvider->isAddonsAuthenticated()) {
                 $requests[AddonListFilterOrigin::ADDONS_CUSTOMER] = 'customer';
             }
 
             try {
-                $jsons = [];
+                $listAddons = array();
                 // We execute each addons request
                 foreach ($requests as $action_filter_value => $action) {
                     if (!$this->addonsDataProvider->isAddonsUp()) {
@@ -274,87 +253,42 @@ class AdminModuleDataProvider implements ModuleInterface
                     }
                     // We add the request name in each product returned by Addons,
                     // so we know whether is bought
-                    $jsons = array_merge_recursive($jsons, array_map(function ($array) use ($action_filter_value, $action) {
-                        foreach ($array as $elem) {
-                            $elem->origin = $action;
-                            $elem->origin_filter_value = $action_filter_value;
-                        }
-                        return $array;
-                    }, (array) $this->addonsDataProvider->request($action, $params)));
+
+                    $addons = $this->addonsDataProvider->request($action, $params);
+                    foreach ($addons as $addon) {
+                        $addon->origin = $action;
+                        $addon->origin_filter_value = $action_filter_value;
+                        $addon->categoryParent = $this->categoriesProvider
+                            ->getParentCategory($addon->categoryName)
+                        ;
+                        $listAddons[$addon->name] = $addon;
+                    }
                 }
 
-                $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
+                $this->catalog_modules = $listAddons;
                 $this->registerModuleCache($this->languageISO.self::_CACHEFILE_MODULES_, $this->catalog_modules);
             } catch (\Exception $e) {
-                if (! $this->fallbackOnCatalogCache()) {
-                    $this->catalog_modules = [];
-                    throw new \Exception("Data from PrestaShop Addons is invalid, and cannot fallback on cache", 0, $e);
+                if (!$this->fallbackOnCatalogCache()) {
+                    $this->catalog_modules = array();
+                    throw new \Exception('Data from PrestaShop Addons is invalid, and cannot fallback on cache', 0, $e);
                 }
             }
         }
-    }
-
-    protected function convertJsonForNewCatalog($original_json)
-    {
-        $remixed_json = [];
-        $duplicates = [];
-
-        foreach ($original_json as $json_key => $products) {
-            foreach ($products as $product) {
-                if (is_array($product)) {
-                    $product = (object)$product;
-                }
-
-                if (in_array($product->name, $duplicates)) {
-                    continue;
-                }
-
-                $duplicates[] = $product->name;
-
-                // Add un-implemented properties
-                $product->refs       = (array)(!empty($product->categoryName)
-                    ?$product->categoryName
-                    :'unknown'
-                );
-                if (! isset($product->product_type)) {
-                    $product->productType = isset($json_key)?rtrim($json_key, 's'):'module';
-                } else {
-                    $product->productType = $product->product_type;
-                }
-
-                $remixed_json[$product->name] = $product;
-            }
-        }
-
-        usort($remixed_json, function ($module1, $module2) {
-            return strnatcasecmp($module1->displayName, $module2->displayName);
-        });
-
-        return $remixed_json;
-    }
-
-    protected function createMenuObject($ref, $name)
-    {
-        return (object)[
-                'name' => $name,
-                'refMenu' => $ref,
-                'subMenu' => [],
-                'modulesRef' => [],
-        ];
     }
 
     protected function fallbackOnCatalogCache()
     {
         // Fallback on data from cache if exists
-        $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_, false);
+        $this->catalog_modules = $this->getModuleCache(self::_CACHEFILE_MODULES_, false);
 
-        return ($this->catalog_modules);
+        return $this->catalog_modules;
     }
 
     private function getModuleCache($file, $checkFreshness = true)
     {
         $cacheFile = $this->cache_dir.$file;
-        if (! file_exists($cacheFile)) {
+
+        if (!file_exists($cacheFile)) {
             return false;
         }
 
@@ -370,14 +304,15 @@ class AdminModuleDataProvider implements ModuleInterface
                 return false;
             }
 
-            $labeledCache = [];
+            $labeledCache = array();
             // We need to loop in the array to replace the current key, which is an integer, with the module name
             foreach (json_decode($cache) as $element) {
                 $labeledCache[$element->name] = $element;
             }
+
             return $labeledCache;
         } catch (\Exception $e) {
-            throw new \Exception('Cannot read from the cache file '. $file);
+            throw new \Exception('Cannot read from the cache file '.$file);
         }
     }
 
@@ -389,7 +324,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
             return $cache->getPath();
         } catch (IOException $e) {
-            throw new \Exception('Cannot write in the cache file '. $file, $e->getCode(), $e);
+            throw new \Exception('Cannot write in the cache file '.$file, $e->getCode(), $e);
         }
     }
 }

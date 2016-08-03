@@ -70,6 +70,7 @@ class Module implements ModuleInterface
     private $attributes_default = array(
         'id' => 0,
         'name' => '',
+        'categoryName' => '',
         'displayName' => '',
         'version' => null,
         'description' => '',
@@ -138,7 +139,6 @@ class Module implements ModuleInterface
         $this->attributes = new ParameterBag($this->attributes_default);
         $this->disk = new ParameterBag($this->disk_default);
         $this->database = new ParameterBag($this->database_default);
-
         // Set all attributes
         $this->attributes->add($attributes);
         $this->disk->add($disk);

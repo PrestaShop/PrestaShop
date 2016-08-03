@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,6 +36,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
     private $languageISOCode;
     private $legacyContext;
     private $addonsDataProviderS;
+    private $categoriesProviderS;
     private $adminModuleDataProvider;
 
     public function setUp()
@@ -55,10 +56,15 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->sfRouter = $this->sfKernel->getContainer()->get('router');
 
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
+            ->disableOriginalConstructor()
             ->getMock();
 
+        $this->categoriesProviderS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider')
+            ->disableOriginalConstructor()
+            ->getmock();
+
         /* The module catalog will contains only 5 modules for theses tests */
-        $fakeModules =  [
+        $fakeModules = array(
             $this->fakeModule(1,
                 'pm_advancedpack',
                 'Advanced Pack 5 - Create ​​bundles of products',
@@ -89,13 +95,18 @@ class AdminModuleDataProviderTest extends UnitTestCase
                 'PHPUnit Fakes',
                 ''
             ),
-        ];
+        );
 
         /* we need to fake cache wih fake catalog */
         $this->clearModuleCache();
-        file_put_contents(_PS_CACHE_DIR_.'en_catalog_modules.json', json_encode($fakeModules, true));
+        file_put_contents(_PS_CACHE_DIR_.'en_addons_modules.json', json_encode($fakeModules, true));
 
-        $this->adminModuleDataProvider = new AdminModuleDataProvider($this->languageISOCode, $this->sfRouter, $this->addonsDataProviderS);
+        $this->adminModuleDataProvider = new AdminModuleDataProvider(
+            $this->languageISOCode,
+            $this->sfRouter,
+            $this->addonsDataProviderS,
+            $this->categoriesProviderS
+        );
     }
 
     public function testGetListOfModulesOk()
@@ -107,7 +118,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchCanResultNoResultsOk()
     {
-        $filters = ['search' => 'doge'];
+        $filters = array('search' => 'doge');
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $this->assertCount(0, $modules, sprintf('%s expected 0 modules, received %s.', self::NOTICE, count($modules)));
@@ -115,7 +126,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchWithUnknownFilterCriteriaReturnAllOk()
     {
-        $filters = ['random_filter' => 'doge'];
+        $filters = array('random_filter' => 'doge');
         $modulesWithFilter = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $modules = $this->adminModuleDataProvider->getCatalogModules();
@@ -125,7 +136,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchForASpecificModuleOk()
     {
-        $filters = ['search' => 'advancedpack'];
+        $filters = array('search' => 'advancedpack');
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $this->assertCount(1, $modules);
@@ -133,7 +144,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchForASpecificModuleHaveMultipleResultsOk()
     {
-        $filters = ['search' => 'payment advanced'];
+        $filters = array('search' => 'payment advanced');
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $this->assertCount(3, $modules);
@@ -142,14 +153,14 @@ class AdminModuleDataProviderTest extends UnitTestCase
     public function testCallToAddonsShouldReturnSameResultOk()
     {
         $mock = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
-            ['convertJsonForNewCatalog'],
-            [
+            array('convertJsonForNewCatalog'),
+            array(
                 'languageISO' => $this->languageISOCode,
                 'router' => $this->sfRouter,
-                'addonsDataProvider' => $this->addonsDataProviderS
-            ]
+                'addonsDataProvider' => $this->addonsDataProviderS,
+                'categoriesProvider' => $this->categoriesProviderS,
+            )
         );
-        $mock->expects($this->once())->method('convertJsonForNewCatalog')->will($this->returnValue($this->adminModuleDataProvider->getCatalogModules()));
 
         $mock->clearCatalogCache();
 
@@ -157,16 +168,6 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $modules2 = $mock->getCatalogModules();
 
         $this->assertEquals($modules2, $modules);
-    }
-
-    public function testProductTypeShouldBeCorrectOk()
-    {
-        $this->clearModuleCache();
-        $modules = $this->adminModuleDataProvider->getCatalogModules();
-        $possible_values = ['module', 'service', 'theme'];
-        foreach ($modules as $module) {
-            $this->assertTrue(in_array($module->productType, $possible_values));
-        }
     }
 
     public function teardown()
@@ -180,7 +181,8 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->clearModuleCache();
     }
 
-    private function fakeModule($id, $name, $displayName, $categoryName, $description) {
+    private function fakeModule($id, $name, $displayName, $categoryName, $description)
+    {
         $fakeModule = new \stdClass();
         $fakeModule->id = $id;
         $fakeModule->name = $name;
@@ -193,7 +195,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     private function clearModuleCache()
     {
-        if(file_exists(_PS_CACHE_DIR_.'en_catalog_modules.json')) {
+        if (file_exists(_PS_CACHE_DIR_.'en_catalog_modules.json')) {
             unlink(_PS_CACHE_DIR_.'en_catalog_modules.json');
         }
     }

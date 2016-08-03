@@ -91,3 +91,15 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# Guzzle configuration
+csa_guzzle:
+    profiler:
+        enabled: "%kernel.debug%"
+    clients:
+        addons_api:
+            config: # you can specify the options as in http://docs.guzzlephp.org/en/latest/quickstart.html#creating-a-client
+                base_url: "https://api-addons.prestashop.com"
+                timeout: "5.0"
+                headers:
+                    Accept: "application/json"

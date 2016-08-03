@@ -3,7 +3,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleZip;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
@@ -13,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 
 class ModuleController extends FrameworkBundleAdminController
 {
@@ -58,15 +58,18 @@ class ModuleController extends FrameworkBundleAdminController
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setStatus(~AddonListFilterStatus::INSTALLED);
+            ->setStatus(~AddonListFilterStatus::INSTALLED)
+        ;
 
         try {
-            $products = $modulesProvider->generateAddonsUrls(
+            $modules = $modulesProvider->generateAddonsUrls(
                 $moduleRepository->getFilteredList($filters)
             );
-            shuffle($products);
-            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($modulesProvider, $products);
-            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse($modulesProvider, $products);
+
+            $categoriesMenu = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
+            shuffle($modules);
+            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categoriesMenu, $modules);
+            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse($modulesProvider, $modules);
             $responseArray['status'] = true;
         } catch (Exception $e) {
             $responseArray['msg'] = $translator->trans(
@@ -81,21 +84,22 @@ class ModuleController extends FrameworkBundleAdminController
         return new JsonResponse($responseArray, 200);
     }
 
-    private function constructJsonCatalogBodyResponse($modulesProvider, $products)
+    private function constructJsonCatalogBodyResponse($modulesProvider, $modules)
     {
-        $products = $modulesProvider->generateAddonsUrls($products);
+        $modules = $modulesProvider->generateAddonsUrls($modules);
         $formattedContent = array();
         $formattedContent['selector'] = '.module-catalog-page';
         $formattedContent['content'] = $this->render(
             'PrestaShopBundle:Admin/Module/Includes:sorting.html.twig',
             array(
-                'totalModules' => count($products),
+                'totalModules' => count($modules),
             )
         )->getContent();
+
         $formattedContent['content'] .= $this->render(
             'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
             array(
-                'modules' => $this->getPresentedProducts($products),
+                'modules' => $this->getPresentedProducts($modules),
                 'requireAddonsSearch' => true,
             )
         )->getContent();
@@ -103,14 +107,14 @@ class ModuleController extends FrameworkBundleAdminController
         return $formattedContent;
     }
 
-    private function constructJsonCatalogCategoriesMenuResponse($modulesProvider, $products)
+    private function constructJsonCatalogCategoriesMenuResponse($categoriesMenu)
     {
         $formattedContent = array();
         $formattedContent['selector'] = '.module-menu-item';
         $formattedContent['content'] = $this->render(
             'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig',
             array(
-                'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($products)),
+                'topMenuData' => $this->getTopMenuData($categoriesMenu),
             )
         )->getContent();
 
@@ -135,34 +139,36 @@ class ModuleController extends FrameworkBundleAdminController
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
-        $installed_products = $moduleRepository->getFilteredList($filters);
+        $installedProducts = $moduleRepository->getFilteredList($filters);
 
-        $products = new \stdClass();
+        $modules = new \stdClass();
         foreach (array('native_modules', 'theme_bundle', 'modules') as $subpart) {
-            $products->{$subpart} = array();
+            $modules->{$subpart} = array();
         }
 
-        foreach ($installed_products as $installed_product) {
-            if (in_array($installed_product->attributes->get('name'), $modulesTheme)) {
+        foreach ($installedProducts as $installedProduct) {
+            if (in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
                 $row = 'theme_bundle';
-            } elseif ($installed_product->attributes->has('origin') && $installed_product->attributes->get('origin') === 'native' && $installed_product->attributes->get('author') === 'PrestaShop') {
+            } elseif ($installedProduct->attributes->has('origin') && $installedProduct->attributes->get('origin') === 'native' && $installedProduct->attributes->get('author') === 'PrestaShop') {
                 $row = 'native_modules';
             } else {
                 $row = 'modules';
             }
-            $products->{$row}[] = (object) $installed_product;
+            $modules->{$row}[] = (object) $installedProduct;
         }
 
-        foreach ($products as $product_label => $products_part) {
-            $products->{$product_label} = $modulesProvider->generateAddonsUrls($products_part);
-            $products->{$product_label} = $this->getPresentedProducts($products_part);
+        foreach ($modules as $moduleLabel => $modulesPart) {
+            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart);
+            $modules->{$moduleLabel} = $this->getPresentedProducts($modulesPart);
         }
+
+        $categoriesMenu = $this->get('prestashop.categories_provider')->getCategoriesMenu($installedProducts);
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Manage my modules', array(), 'Admin.Modules.Feature'),
-                'modules' => $products,
-                'topMenuData' => $this->getTopMenuData($modulesProvider->getCategoriesFromModules($installed_products)),
+                'modules' => $modules,
+                'topMenuData' => $this->getTopMenuData($categoriesMenu),
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => true,
                 'enableSidebar' => true,
@@ -279,37 +285,37 @@ class ModuleController extends FrameworkBundleAdminController
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
             ->setStatus(AddonListFilterStatus::INSTALLED);
-        $installed_products = $moduleRepository->getFilteredList($filters);
+        $installedProducts = $moduleRepository->getFilteredList($filters);
 
-        $products = new \stdClass();
+        $modules = new \stdClass();
         foreach (array('to_configure', 'to_update') as $subpart) {
-            $products->{$subpart} = array();
+            $modules->{$subpart} = array();
         }
 
-        foreach ($installed_products as $installed_product) {
-            $warnings = $installed_product->attributes->get('warning');
+        foreach ($installedProducts as $installedProduct) {
+            $warnings = $installedProduct->attributes->get('warning');
             if (!empty($warnings)) {
                 $row = 'to_configure';
-            } elseif ($installed_product->database->get('installed') == 1 && $installed_product->database->get('version') !== 0 && version_compare($installed_product->database->get('version'), $installed_product->attributes->get('version'), '<')) {
+            } elseif ($installedProduct->database->get('installed') == 1 && $installedProduct->database->get('version') !== 0 && version_compare($installedProduct->database->get('version'), $installedProduct->attributes->get('version'), '<')) {
                 $row = 'to_update';
             } else {
                 $row = false;
             }
 
             if ($row) {
-                $products->{$row}[] = (object) $installed_product;
+                $modules->{$row}[] = (object) $installedProduct;
             }
         }
 
-        foreach ($products as $product_label => $products_part) {
-            $products->{$product_label} = $modulesProvider->generateAddonsUrls($products_part);
-            $products->{$product_label} = $this->getPresentedProducts($products_part);
+        foreach ($modules as $moduleLabel => $modulesPart) {
+            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart);
+            $modules->{$moduleLabel} = $this->getPresentedProducts($modulesPart);
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $translator->trans('Module notifications', array(), 'Admin.Modules.Feature'),
-                'modules' => $products,
+                'modules' => $modules,
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => false,
                 'enableSidebar' => true,
@@ -552,14 +558,15 @@ class ModuleController extends FrameworkBundleAdminController
             'icon' => 'cloud_upload',
             'help' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
         );
+
         return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
     }
 
-    private function getPresentedProducts(array &$products)
+    private function getPresentedProducts(array &$modules)
     {
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
         $presentedProducts = array();
-        foreach ($products as $name => $product) {
+        foreach ($modules as $name => $product) {
             $presentedProducts[$name] = $modulePresenter->present($product);
         }
 
@@ -604,5 +611,19 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         return $addonsConnect;
+    }
+
+    public function getModuleCartAction($moduleId)
+    {
+        $module = (array) $this->get('prestashop.adapter.data_provider.addon')->request('module', array('id_module' => $moduleId));
+
+        $moduleAdapter = new Module($module);
+        $addonsProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+
+        $addonsProvider->generateAddonsUrls(array($moduleAdapter));
+        $moduleToPresent = $modulePresenter->present($moduleAdapter);
+
+        return $this->render('@PrestaShop/Admin/Module/Includes/modal_read_more_content.html.twig', array('module' => $moduleToPresent));
     }
 }
