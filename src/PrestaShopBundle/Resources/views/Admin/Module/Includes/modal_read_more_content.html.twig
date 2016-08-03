@@ -2,11 +2,17 @@
 {% set name, displayName, nbRates,
   starsRate, img, serviceUrl, version, cover, additionalDescription,
   fullDescription, changeLog, customerBenefits, demoVideo, author, notFoundImg, features, badges =
-  ats.get('name'), ats.get('displayName'), ats.get('nbRates'), ats.get('starsRate'), ats.get('img'),
-  ats.get('serviceUrl'), ats.get('version'), ats.get('cover'), ats.get('additionalDescription'),
-  ats.get('fullDescription'), ats.get('changeLog'), ats.get('customer_benefits'), ats.get('demo_video'),
-  ats.get('author'), 'https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png',
-  ats.get('features'), ats.get('badges')
+  ats.name, ats.displayName, ats.nbRates, ats.starsRate, ats.img,
+  ats.serviceUrl is defined and ats.serviceUrl|length > 0 ? ats.serviceUrl : false,
+  ats.version, ats.cover,
+  ats.additionalDescription is defined and ats.additionalDescription|length > 0 ? ats.additionalDescription : false,
+  ats.fullDescription is defined and ats.fullDescription|length > 0 ? ats.fullDescription : false,
+  ats.changeLog is defined and ats.changeLog|length > 0 ? ats.changeLog : false,
+  ats.customer_benefits is defined and ats.customer_benefits|length > 0 ? ats.customer_benefits : false,
+  ats.demo_video is defined and ats.demo_video|length > 0 ? ats.demo_video : false,
+  ats.author, 'https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png',
+  ats.features,
+  ats.badges is defined and ats.badges|length > 0 ? ats.badges : false
 %}
 <div class="modal-dialog module-modal-dialog">
   <!-- Modal content-->
@@ -29,7 +35,7 @@
         <div class="modal-title module-modal-title">
           <h1>{{ displayName }}<br>
             <small class="version">
-              {% if serviceUrl|length > 0 %}
+              {% if serviceUrl is defined and serviceUrl|length > 0 %}
                 {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
               {% else %}
                 {{ 'v%version% by '|trans({ '%version%' : version }, 'Admin.Modules.Feature') }}
@@ -53,27 +59,27 @@
             <li class="nav-item active">
               <a class="nav-link module-readmore-tab" data-toggle="tab" href="#overview-{{ name }}">{{ 'Overview'|trans({}, 'Admin.Modules.Feature') }}</a>
             </li>
-            {% if additionalDescription|length > 0 %}
+            {% if additionalDescription %}
               <li class="nav-item">
                 <a class="nav-link module-readmore-tab" data-toggle="tab" href="#additional-{{ name }}">{{ 'Additional information'|trans({}, 'Admin.Modules.Feature') }}</a>
               </li>
             {% endif %}
-            {% if customerBenefits|length > 0 %}
+            {% if customerBenefits %}
               <li class="nav-item">
                 <a class="nav-link module-readmore-tab" data-toggle="tab" href="#additional-{{ name }}">{{ 'Benefits'|trans({}, 'Admin.Modules.Feature') }}</a>
               </li>
             {% endif %}
-            {% if features|length > 0 %}
+            {% if features %}
               <li class="nav-item">
                 <a class="nav-link module-readmore-tab" data-toggle="tab" href="#features-{{ name }}">{{ 'Features'|trans({}, 'Admin.Modules.Feature') }}</a>
               </li>
             {% endif %}
-            {% if demoVideo|length > 0 %}
+            {% if demoVideo %}
               <li class="nav-item">
                 <a class="nav-link module-readmore-tab" data-toggle="tab" href="#demo_video-{{ name }}">{{ 'Demo video'|trans({}, 'Admin.Modules.Feature') }}</a>
               </li>
             {% endif %}
-            {% if changeLog|length > 0 %}
+            {% if changeLog %}
               <li class="nav-item">
                 <a class="nav-link module-readmore-tab" data-toggle="tab" href="#changelog-{{ name }}">{{ 'Changelog'|trans({}, 'Admin.Modules.Feature') }}</a>
               </li>
@@ -85,7 +91,7 @@
           {# tab content list #}
           <div id="overview-{{ name }}" class="tab-pane fade in active">
             <p class="module-readmore-tab-content">
-              {% if fullDescription|length > 0 %}
+              {% if fullDescription %}
                 {{ fullDescription|raw }}
               {% else %}
                 {{ 'No description found for this module :('|trans({}, 'Admin.Modules.Notification') }}
@@ -95,7 +101,7 @@
 
           <div id="additional-{{ name }}" class="tab-pane fade">
             <p class="module-readmore-tab-content">
-              {% if additionalDescription|length > 0 %}
+              {% if additionalDescription %}
                 {{ additionalDescription|raw }}
               {% else %}
                 {{ 'No Additional description provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
@@ -105,7 +111,7 @@
 
           <div id="features-{{ name }}" class="tab-pane fade">
             <p class="module-readmore-tab-content">
-              {% if features|length > 0 %}
+              {% if features %}
                 {{ features|raw }}
               {% else %}
                 {{ 'No feature list provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
@@ -115,7 +121,7 @@
 
           <div id="customer_benefits-{{ name }}" class="tab-pane fade">
             <p class="module-readmore-tab-content">
-              {% if customerBenefits|length > 0 %}
+              {% if customerBenefits %}
                 {{ customerBenefits|raw }}
               {% else %}
                 {{ 'No customer benefits notes found for this module :('|trans({}, 'Admin.Modules.Notification') }}
@@ -125,7 +131,7 @@
 
           <div id="demo_video-{{ name }}" class="tab-pane fade">
             <p class="module-readmore-tab-content">
-              {% if demoVideo|length %}
+              {% if demoVideo %}
                 {{ youtube_link(demoVideo)|raw }}
               {% else %}
                 {{ 'No demonstration video found for this module :('|trans({}, 'Admin.Modules.Notification') }}
@@ -134,7 +140,7 @@
           </div>
 
           <div id="changelog-{{ name }}" class="tab-pane fade">
-            {% if changeLog|length > 0 %}
+            {% if changeLog %}
               <ul class="module-readmore-tab-content">
                 {% for version, lines in changeLog|arrayCast|reverse %}
                   <li>
@@ -155,7 +161,7 @@
     </div>
 
     <div class="modal-footer module-modal-footer">
-      {% if badges|length > 0 %}
+      {% if badges %}
         <div class="pull-left module-badges-display">
           {% for badge in badges %}
             <img src="{{badge.img}}" alt="{{badge.label}}"/>
@@ -163,7 +169,7 @@
           {% endfor %}
         </div>
       {% endif %}
-      {#{% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}#}
+      {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}
     </div>
   </div>
 </div>

@@ -558,6 +558,7 @@ class ModuleController extends FrameworkBundleAdminController
             'icon' => 'cloud_upload',
             'help' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
         );
+
         return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
     }
 
@@ -616,6 +617,13 @@ class ModuleController extends FrameworkBundleAdminController
     {
         $module = (array) $this->get('prestashop.adapter.data_provider.addon')->request('module', array('id_module' => $moduleId));
 
-        return $this->render('@PrestaShop/Admin/Module/Includes/modal_read_more_content.html.twig', array('module' => new Module($module)));
+        $moduleAdapter = new Module($module);
+        $addonsProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+
+        $addonsProvider->generateAddonsUrls(array($moduleAdapter));
+        $moduleToPresent = $modulePresenter->present($moduleAdapter);
+
+        return $this->render('@PrestaShop/Admin/Module/Includes/modal_read_more_content.html.twig', array('module' => $moduleToPresent));
     }
 }
