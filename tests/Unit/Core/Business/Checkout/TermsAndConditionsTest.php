@@ -16,7 +16,7 @@ class TermsAndConditionsTest extends UnitTestCase
     public function test_SetText_InsertsLinks()
     {
         $this->assertEquals(
-            'hello <a href="http://www.world.com">world</a>',
+            'hello <a href="http://www.world.com" id="cta--0">world</a>',
             $this->terms->setText('hello [world]', "http://www.world.com")->format()
         );
     }
@@ -24,7 +24,7 @@ class TermsAndConditionsTest extends UnitTestCase
     public function test_SetText_InsertsSeveralLinks()
     {
         $this->assertEquals(
-            'hello <a href="http://www.world.com">world</a> <a href="http://yay.com">yay</a>',
+            'hello <a href="http://www.world.com" id="cta--0">world</a> <a href="http://yay.com" id="cta--1">yay</a>',
             $this->terms->setText('hello [world] [yay]', "http://www.world.com", "http://yay.com")->format()
         );
     }
