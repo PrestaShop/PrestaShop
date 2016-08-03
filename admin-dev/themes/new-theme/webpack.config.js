@@ -80,6 +80,20 @@ module.exports = {
     }]
   },
   plugins: [
-    new ExtractTextPlugin('theme.css')
+    new ExtractTextPlugin('theme.css'),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      compress: {
+        sequences: true,
+        conditionals: true,
+        booleans: true,
+        if_return: true,
+        join_vars: true,
+        drop_console: true
+      },
+      output: {
+        comments: false
+      }
+    })
   ]
 };
