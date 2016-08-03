@@ -1,5 +1,3 @@
-# All the Attributes related routes
-
 admin_specific_price_list:
     path:     /list/{idProduct}
     methods:  [GET]
@@ -20,7 +18,7 @@ admin_delete_specific_price:
     path:     /delete/{idSpecificPrice}
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::deleteAction
+        _controller: PrestaShopBundle:Admin/SpecificPrice:delete
         idSpecificPrice: 0
     requirements:
         idSpecificPrice: \d+

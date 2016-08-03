@@ -1,5 +1,3 @@
-# Module Page Tabs
-
 ModuleController:
     module_tab_catalog:
         title: "Selection"
