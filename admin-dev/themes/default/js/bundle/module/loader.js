@@ -15,7 +15,7 @@ $(function() {
         }, 1250 );
     }
 
-    $('body').on('show.bs.modal', '.modal', function (event) {
+    $('body').on('show.bs.modal', '.ps-modal-card', function (event) {
         var urlCallModule = event.relatedTarget.href;
         var modulePoppin = $(event.relatedTarget).data('target');
 
