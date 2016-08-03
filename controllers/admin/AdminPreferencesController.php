@@ -42,51 +42,51 @@ class AdminPreferencesControllerCore extends AdminController
             $round_mode = array(
                 array(
                     'value' => PS_ROUND_HALF_UP,
-                    'name' => $this->l('Round up away from zero, when it is half way there (recommended)')
+                    'name' => $this->trans('Round up away from zero, when it is half way there (recommended)', array(), 'Admin.ShopParameters.Feature')
                 ),
                 array(
                     'value' => PS_ROUND_HALF_DOWN,
-                    'name' => $this->l('Round down towards zero, when it is half way there')
+                    'name' => $this->trans('Round down towards zero, when it is half way there', array(), 'Admin.ShopParameters.Feature')
                 ),
                 array(
                     'value' => PS_ROUND_HALF_EVEN,
-                    'name' => $this->l('Round towards the next even value')
+                    'name' => $this->trans('Round towards the next even value', array(), 'Admin.ShopParameters.Feature')
                 ),
                 array(
                     'value' => PS_ROUND_HALF_ODD,
-                    'name' => $this->l('Round towards the next odd value')
+                    'name' => $this->trans('Round towards the next odd value', array(), 'Admin.ShopParameters.Feature')
                 ),
                 array(
                     'value' => PS_ROUND_UP,
-                    'name' => $this->l('Round up to the nearest value')
+                    'name' => $this->trans('Round up to the nearest value', array(), 'Admin.ShopParameters.Feature')
                 ),
                 array(
                     'value' => PS_ROUND_DOWN,
-                    'name' => $this->l('Round down to the nearest value')
+                    'name' => $this->trans('Round down to the nearest value', array(), 'Admin.ShopParameters.Feature')
                 ),
             );
             $activities1 = array(
-                0 => $this->l('-- Please choose your main activity --'),
-                2 => $this->l('Animals and Pets'),
-                3 => $this->l('Art and Culture'),
-                4 => $this->l('Babies'),
-                5 => $this->l('Beauty and Personal Care'),
-                6 => $this->l('Cars'),
-                7 => $this->l('Computer Hardware and Software'),
-                8 => $this->l('Download'),
-                9 => $this->l('Fashion and accessories'),
-                10 => $this->l('Flowers, Gifts and Crafts'),
-                11 => $this->l('Food and beverage'),
-                12 => $this->l('HiFi, Photo and Video'),
-                13 => $this->l('Home and Garden'),
-                14 => $this->l('Home Appliances'),
-                15 => $this->l('Jewelry'),
-                1 => $this->l('Lingerie and Adult'),
-                16 => $this->l('Mobile and Telecom'),
-                17 => $this->l('Services'),
-                18 => $this->l('Shoes and accessories'),
-                19 => $this->l('Sport and Entertainment'),
-                20 => $this->l('Travel')
+                0 => $this->trans('-- Please choose your main activity --', array(), 'Install'),
+                2 => $this->trans('Animals and Pets', array(), 'Install'),
+                3 => $this->trans('Art and Culture', array(), 'Install'),
+                4 => $this->trans('Babies', array(), 'Install'),
+                5 => $this->trans('Beauty and Personal Care', array(), 'Install'),
+                6 => $this->trans('Cars', array(), 'Install'),
+                7 => $this->trans('Computer Hardware and Software', array(), 'Install'),
+                8 => $this->trans('Download', array(), 'Install'),
+                9 => $this->trans('Fashion and accessories', array(), 'Install'),
+                10 => $this->trans('Flowers, Gifts and Crafts', array(), 'Install'),
+                11 => $this->trans('Food and beverage', array(), 'Install'),
+                12 => $this->trans('HiFi, Photo and Video', array(), 'Install'),
+                13 => $this->trans('Home and Garden', array(), 'Install'),
+                14 => $this->trans('Home Appliances', array(), 'Install'),
+                15 => $this->trans('Jewelry', array(), 'Install'),
+                1 => $this->trans('Lingerie and Adult', array(), 'Install'),
+                16 => $this->trans('Mobile and Telecom', array(), 'Install'),
+                17 => $this->trans('Services', array(), 'Install'),
+                18 => $this->trans('Shoes and accessories', array(), 'Install'),
+                19 => $this->trans('Sport and Entertainment', array(), 'Install'),
+                20 => $this->trans('Travel', array(), 'Install')
             );
             $activities2 = array();
             foreach ($activities1 as $value => $name) {
@@ -95,9 +95,9 @@ class AdminPreferencesControllerCore extends AdminController
 
             $fields = array(
                 'PS_SSL_ENABLED' => array(
-                    'title' => $this->l('Enable SSL'),
-                    'desc' => $this->l('If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.'),
-                    'hint' => $this->l('If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.'),
+                    'title' => $this->trans('Enable SSL', array(), 'Admin.ShopParameters.Feature'),
+                    'desc' => $this->trans('If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.', array(), 'Admin.ShopParameters.Help'),
+                    'hint' => $this->trans('If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.', array(), 'Admin.ShopParameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
@@ -106,8 +106,8 @@ class AdminPreferencesControllerCore extends AdminController
             );
 
             $fields['PS_SSL_ENABLED_EVERYWHERE'] = array(
-                'title' => $this->l('Enable SSL on all pages'),
-                'desc' => $this->l('When enabled, all the pages of your shop will be SSL-secured.'),
+                'title' => $this->trans('Enable SSL on all pages', array(), 'Admin.ShopParameters.Feature'),
+                'desc' => $this->trans('When enabled, all the pages of your shop will be SSL-secured.', array(), 'Admin.ShopParameters.Help'),
                 'validation' => 'isBool',
                 'cast' => 'intval',
                 'type' => 'bool',
@@ -117,8 +117,8 @@ class AdminPreferencesControllerCore extends AdminController
 
             $fields = array_merge($fields, array(
                 'PS_TOKEN_ENABLE' => array(
-                    'title' => $this->l('Increase front office security'),
-                    'desc' => $this->l('Enable or disable token in the Front Office to improve PrestaShop\'s security.'),
+                    'title' => $this->trans('Increase front office security', array(), 'Admin.ShopParameters.Feature'),
+                    'desc' => $this->trans('Enable or disable token in the Front Office to improve PrestaShop\'s security.', array(), 'Admin.ShopParameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
@@ -126,24 +126,24 @@ class AdminPreferencesControllerCore extends AdminController
                     'visibility' => Shop::CONTEXT_ALL
                 ),
                 'PS_ALLOW_HTML_IFRAME' => array(
-                    'title' => $this->l('Allow iframes on HTML fields'),
-                    'desc' => $this->l('Allow iframes on text fields like product description. We recommend that you leave this option disabled.'),
+                    'title' => $this->trans('Allow iframes on HTML fields', array(), 'Admin.ShopParameters.Feature'),
+                    'desc' => $this->trans('Allow iframes on text fields like product description. We recommend that you leave this option disabled.', array(), 'Admin.ShopParameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
                     'default' => '0'
                 ),
                 'PS_USE_HTMLPURIFIER' => array(
-                    'title' => $this->l('Use HTMLPurifier Library'),
-                    'desc' => $this->l('Clean the HTML content on text fields. We recommend that you leave this option enabled.'),
+                    'title' => $this->trans('Use HTMLPurifier Library', array(), 'Admin.ShopParameters.Feature'),
+                    'desc' => $this->trans('Clean the HTML content on text fields. We recommend that you leave this option enabled.', array(), 'Admin.ShopParameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
                     'default' => '0'
                 ),
                 'PS_PRICE_ROUND_MODE' => array(
-                    'title' => $this->l('Round mode'),
-                    'desc' => $this->l('You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.'),
+                    'title' => $this->trans('Round mode', array(), 'Admin.ShopParameters.Feature'),
+                    'desc' => $this->trans('You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.', array(), 'Admin.ShopParameters.Help'),
                     'validation' => 'isInt',
                     'cast' => 'intval',
                     'type' => 'select',
@@ -151,58 +151,58 @@ class AdminPreferencesControllerCore extends AdminController
                     'identifier' => 'value'
                 ),
                 'PS_ROUND_TYPE' => array(
-                    'title' => $this->l('Round type'),
-                    'desc' => $this->l('You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).'),
+                    'title' => $this->trans('Round type', array(), 'Admin.ShopParameters.Feature'),
+                    'desc' => $this->trans('You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).', array(), 'Admin.ShopParameters.Help'),
                     'cast' => 'intval',
                     'type' => 'select',
                     'list' => array(
                         array(
-                            'name' => $this->l('Round on each item'),
+                            'name' => $this->trans('Round on each item', array(), 'Admin.ShopParameters.Feature'),
                             'id' => Order::ROUND_ITEM
                             ),
                         array(
-                            'name' => $this->l('Round on each line'),
+                            'name' => $this->trans('Round on each line', array(), 'Admin.ShopParameters.Feature'),
                             'id' => Order::ROUND_LINE
                             ),
                         array(
-                            'name' => $this->l('Round on the total'),
+                            'name' => $this->trans('Round on the total', array(), 'Admin.ShopParameters.Feature'),
                             'id' => Order::ROUND_TOTAL
                             ),
                         ),
                     'identifier' => 'id'
                 ),
                 'PS_PRICE_DISPLAY_PRECISION' => array(
-                    'title' => $this->l('Number of decimals'),
-                    'desc' => $this->l('Choose how many decimals you want to display'),
+                    'title' => $this->trans('Number of decimals', array(), 'Admin.ShopParameters.Feature'),
+                    'desc' => $this->trans('Choose how many decimals you want to display', array(), 'Admin.ShopParameters.Help'),
                     'validation' => 'isUnsignedInt',
                     'cast' => 'intval',
                     'type' => 'text',
                     'class' => 'fixed-width-xxl'
                 ),
                 'PS_DISPLAY_SUPPLIERS' => array(
-                    'title' => $this->l('Display brands and suppliers'),
-                    'desc' => $this->l('Enable brands and suppliers pages on your front office even when their respective modules are disabled.'),
+                    'title' => $this->trans('Display brands and suppliers', array(), 'Admin.ShopParameters.Feature'),
+                    'desc' => $this->trans('Enable brands and suppliers pages on your front office even when their respective modules are disabled.', array(), 'Admin.ShopParameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool'
                 ),
                 'PS_DISPLAY_BEST_SELLERS' => array(
-                    'title' => $this->l('Display best sellers'),
-                    'desc' => $this->l('Enable best sellers page on your front office even when its respective module is disabled.'),
+                    'title' => $this->trans('Display best sellers', array(), 'Admin.ShopParameters.Feature'),
+                    'desc' => $this->trans('Enable best sellers page on your front office even when its respective module is disabled.', array(), 'Admin.ShopParameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool'
                 ),
                 'PS_MULTISHOP_FEATURE_ACTIVE' => array(
-                    'title' => $this->l('Enable Multistore'),
-                    'desc' => $this->l('The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.'),
+                    'title' => $this->trans('Enable Multistore', array(), 'Admin.ShopParameters.Feature'),
+                    'desc' => $this->trans('The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.', array(), 'Admin.ShopParameters.Help'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
                     'visibility' => Shop::CONTEXT_ALL
                 ),
                 'PS_SHOP_ACTIVITY' => array(
-                    'title' => $this->l('Main Shop Activity'),
+                    'title' => $this->trans('Main Shop Activity', array(), 'Admin.ShopParameters.Feature'),
                     'validation' => 'isInt',
                     'cast' => 'intval',
                     'type' => 'select',
@@ -215,12 +215,12 @@ class AdminPreferencesControllerCore extends AdminController
             if (!Tools::usingSecureMode() && !Configuration::get('PS_SSL_ENABLED')) {
                 $fields['PS_SSL_ENABLED']['type'] = 'disabled';
                 $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://'.Tools::getShopDomainSsl().Tools::safeOutput($_SERVER['REQUEST_URI']).'">'.
-                    $this->l('Please click here to check if your shop supports HTTPS.').'</a>';
+                    $this->trans('Please click here to check if your shop supports HTTPS.', array(), 'Admin.ShopParameters.Feature').'</a>';
             }
 
             $this->fields_options = array(
                 'general' => array(
-                    'title' =>    $this->l('General'),
+                    'title' =>    $this->trans('General', array(), 'Admin.Global'),
                     'icon' =>    'icon-cogs',
                     'fields' =>    $fields,
                     'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),

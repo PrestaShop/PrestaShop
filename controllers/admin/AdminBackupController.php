@@ -43,9 +43,9 @@ class AdminBackupControllerCore extends AdminController
 
         $this->fields_list = array(
             'date' => array('title' => $this->trans('Date', array(), 'Admin.Global'), 'type' => 'datetime', 'class' => 'fixed-width-lg', 'orderby' => false, 'search' => false),
-            'age' => array('title' => $this->trans('Age', array(), 'Admin.Parameters.Feature'), 'orderby' => false, 'search' => false),
+            'age' => array('title' => $this->trans('Age', array(), 'Admin.AdvParameters.Feature'), 'orderby' => false, 'search' => false),
             'filename' => array('title' => $this->trans('Filename', array(), 'Admin.Global'), 'orderby' => false, 'search' => false),
-            'filesize' => array('title' => $this->trans('File size', array(), 'Admin.Parameters.Feature'), 'class' => 'fixed-width-sm', 'orderby' => false, 'search' => false)
+            'filesize' => array('title' => $this->trans('File size', array(), 'Admin.AdvParameters.Feature'), 'class' => 'fixed-width-sm', 'orderby' => false, 'search' => false)
         );
 
         $this->bulk_actions = array('delete' => array(
@@ -55,21 +55,21 @@ class AdminBackupControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Backup options', array(), 'Admin.Parameters.Feature'),
+                'title' =>    $this->trans('Backup options', array(), 'Admin.AdvParameters.Feature'),
                 'fields' =>    array(
                     'PS_BACKUP_ALL' => array(
-                        'title' => $this->trans('Ignore statistics tables', array(), 'Admin.Parameters.Feature'),
-                        'desc' => $this->trans('Drop existing tables during import.', array(), 'Admin.Parameters.Help').'
+                        'title' => $this->trans('Ignore statistics tables', array(), 'Admin.AdvParameters.Feature'),
+                        'desc' => $this->trans('Drop existing tables during import.', array(), 'Admin.AdvParameters.Help').'
 							<br />'._DB_PREFIX_.'connections, '._DB_PREFIX_.'connections_page, '._DB_PREFIX_
                             .'connections_source, '._DB_PREFIX_.'guest, '._DB_PREFIX_.'statssearch',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_BACKUP_DROP_TABLE' => array(
-                        'title' => $this->trans('Drop existing tables during import', array(), 'Admin.Parameters.Feature'),
+                        'title' => $this->trans('Drop existing tables during import', array(), 'Admin.AdvParameters.Feature'),
                         'hint' => array(
-                            $this->trans('If enabled, the backup script will drop your tables prior to restoring data.', array(), 'Admin.Parameters.Help'),
-                            $this->trans('(ie. "DROP TABLE IF EXISTS")', array(), 'Admin.Parameters.Help'),
+                            $this->trans('If enabled, the backup script will drop your tables prior to restoring data.', array(), 'Admin.AdvParameters.Help'),
+                            $this->trans('(ie. "DROP TABLE IF EXISTS")', array(), 'Admin.AdvParameters.Help'),
                         ),
                         'cast' => 'intval',
                         'type' => 'bool'
@@ -155,7 +155,7 @@ class AdminBackupControllerCore extends AdminController
         }
 
         $obj = new $this->className();
-        $obj->error = $this->trans('The backup file does not exist', array(), 'Admin.Parameters.Notification');
+        $obj->error = $this->trans('The backup file does not exist', array(), 'Admin.AdvParameters.Notification');
 
         return $obj;
     }
@@ -171,14 +171,14 @@ class AdminBackupControllerCore extends AdminController
 
         // Test if the backup dir is writable
         if (!is_writable(PrestaShopBackup::getBackupPath())) {
-            $this->warnings[] = $this->trans('The "Backups" directory located in the admin directory must be writable (CHMOD 755 / 777).', array(), 'Admin.Parameters.Notification');
+            $this->warnings[] = $this->trans('The "Backups" directory located in the admin directory must be writable (CHMOD 755 / 777).', array(), 'Admin.AdvParameters.Notification');
         } elseif ($this->display == 'add') {
             if (($object = $this->loadObject())) {
                 if (!$object->add()) {
                     $this->errors[] = $object->error;
                 } else {
                     $this->context->smarty->assign(array(
-                            'conf' => $this->trans('It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.', array(), 'Admin.Parameters.Notification'),
+                            'conf' => $this->trans('It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.', array(), 'Admin.AdvParameters.Notification'),
                             'backup_url' => $object->getBackupURL(),
                             'backup_weight' => number_format((filesize($object->id) * 0.000001), 2, '.', '')
                         ));
@@ -246,7 +246,7 @@ class AdminBackupControllerCore extends AdminController
         $dh = @opendir(PrestaShopBackup::getBackupPath());
 
         if ($dh === false) {
-            $this->errors[] = $this->trans('Unable to open your backup directory', array(), 'Admin.Parameters.Notification');
+            $this->errors[] = $this->trans('Unable to open your backup directory', array(), 'Admin.AdvParameters.Notification');
             return;
         }
         while (($file = readdir($dh)) !== false) {

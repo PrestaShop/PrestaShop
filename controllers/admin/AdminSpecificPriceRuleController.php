@@ -52,8 +52,8 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         }
 
         $this->list_reduction_type = array(
-            'percentage' => $this->l('Percentage'),
-            'amount' => $this->l('Amount')
+            'percentage' => $this->trans('Percentage', array(), 'Admin.Global'),
+            'amount' => $this->trans('Amount', array(), 'Admin.Global')
         );
 
         $this->addRowAction('edit');
@@ -68,8 +68,8 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
@@ -90,7 +90,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'filter_key' => 's!name'
             ),
             'currency_name' => array(
-                'title' => $this->l('Currency'),
+                'title' => $this->trans('Currency', array(), 'Admin.Global'),
                 'align' => 'center',
                 'filter_key' => 'cu!name'
             ),
@@ -105,30 +105,30 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'filter_key' => 'gl!name'
             ),
             'from_quantity' => array(
-                'title' => $this->l('From quantity'),
+                'title' => $this->trans('From quantity', array(), 'Admin.Catalog.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs'
             ),
             'reduction_type' => array(
-                'title' => $this->l('Reduction type'),
+                'title' => $this->trans('Reduction type', array(), 'Admin.Catalog.Feature'),
                 'align' => 'center',
                 'type' => 'select',
                 'filter_key' => 'a!reduction_type',
                 'list' => $this->list_reduction_type,
             ),
             'reduction' => array(
-                'title' => $this->l('Reduction'),
+                'title' => $this->trans('Reduction', array(), 'Admin.Catalog.Feature'),
                 'align' => 'center',
                 'type' => 'decimal',
                 'class' => 'fixed-width-xs'
             ),
             'from' => array(
-                'title' => $this->l('Beginning'),
+                'title' => $this->trans('Beginning', array(), 'Admin.Catalog.Feature'),
                 'align' => 'right',
                 'type' => 'datetime',
             ),
             'to' => array(
-                'title' => $this->l('End'),
+                'title' => $this->trans('End', array(), 'Admin.Catalog.Feature'),
                 'align' => 'right',
                 'type' => 'datetime'
             ),
@@ -140,7 +140,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_specific_price_rule'] = array(
                 'href' => self::$currentIndex.'&addspecific_price_rule&token='.$this->token,
-                'desc' => $this->l('Add new catalog price rule', null, null, false),
+                'desc' => $this->trans('Add new catalog price rule', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
@@ -172,7 +172,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Catalog price rules'),
+                'title' => $this->trans('Catalog price rules', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'icon-dollar'
             ),
             'input' => array(
@@ -182,7 +182,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'name' => 'name',
                     'maxlength' => 255,
                     'required' => true,
-                    'hint' => $this->l('Forbidden characters').' <>;=#{}'
+                    'hint' => $this->trans('Invalid characters', array(), 'Admin.Notifications.Info').' <>;=#{}'
                 ),
                 array(
                     'type' => 'select',
@@ -198,10 +198,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Currency'),
+                    'label' => $this->trans('Currency', array(), 'Admin.Global'),
                     'name' => 'id_currency',
                     'options' => array(
-                        'query' => array_merge(array(0 => array('id_currency' => 0, 'name' => $this->l('All currencies'))), Currency::getCurrencies(false, true, true)),
+                        'query' => array_merge(array(0 => array('id_currency' => 0, 'name' => $this->trans('All currencies', array(), 'Admin.Global'))), Currency::getCurrencies(false, true, true)),
                         'id' => 'id_currency',
                         'name' => 'name'
                     ),
@@ -211,7 +211,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'id_country',
                     'options' => array(
-                        'query' => array_merge(array(0 => array('id_country' => 0, 'name' => $this->l('All countries'))), Country::getCountries((int)$this->context->language->id)),
+                        'query' => array_merge(array(0 => array('id_country' => 0, 'name' => $this->trans('All countries', array(), 'Admin.Global'))), Country::getCountries((int)$this->context->language->id)),
                         'id' => 'id_country',
                         'name' => 'name'
                     ),
@@ -221,21 +221,21 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'label' => $this->trans('Group', array(), 'Admin.Global'),
                     'name' => 'id_group',
                     'options' => array(
-                        'query' => array_merge(array(0 => array('id_group' => 0, 'name' => $this->l('All groups'))), Group::getGroups((int)$this->context->language->id)),
+                        'query' => array_merge(array(0 => array('id_group' => 0, 'name' => $this->trans('All groups', array(), 'Admin.Global'))), Group::getGroups((int)$this->context->language->id)),
                         'id' => 'id_group',
                         'name' => 'name'
                     ),
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('From quantity'),
+                    'label' => $this->trans('From quantity', array(), 'Admin.Catalog.Feature'),
                     'name' => 'from_quantity',
                     'maxlength' => 10,
                     'required' => true,
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Price (tax excl.)'),
+                    'label' => $this->trans('Price (tax excl.)', array(), 'Admin.Catalog.Feature'),
                     'name' => 'price',
                     'disabled' => ($this->object->price == -1 ? 1 : 0),
                     'maxlength' => 10,
@@ -249,7 +249,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                         'query' => array(
                             array(
                                 'id' => 'on',
-                                'name' => $this->l('Leave initial price'),
+                                'name' => $this->trans('Leave initial price', array(), 'Admin.Catalog.Feature'),
                                 'val' => '1',
                                 'checked' => '1'
                             ),
@@ -260,33 +260,33 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'datetime',
-                    'label' => $this->l('From'),
+                    'label' => $this->trans('From', array(), 'Admin.Global'),
                     'name' => 'from'
                 ),
                 array(
                     'type' => 'datetime',
-                    'label' => $this->l('To'),
+                    'label' => $this->trans('To', array(), 'Admin.Global'),
                     'name' => 'to'
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Reduction type'),
+                    'label' => $this->trans('Reduction type', array(), 'Admin.Catalog.Feature'),
                     'name' => 'reduction_type',
                     'options' => array(
-                        'query' => array(array('reduction_type' => 'amount', 'name' => $this->l('Amount')), array('reduction_type' => 'percentage', 'name' => $this->l('Percentage'))),
+                        'query' => array(array('reduction_type' => 'amount', 'name' => $this->trans('Amount', array(), 'Admin.Global')), array('reduction_type' => 'percentage', 'name' => $this->trans('Percentage', array(), 'Admin.Global'))),
                         'id' => 'reduction_type',
                         'name' => 'name'
                     ),
                 ),
                 array(
                     'type' => 'select',
-                    'label' => $this->l('Reduction with or without taxes'),
+                    'label' => $this->trans('Reduction with or without taxes', array(), 'Admin.Catalog.Feature'),
                     'name' => 'reduction_tax',
                     'align' => 'center',
                     'options' => array(
                         'query' => array(
-                                        array('lab' => $this->l('Tax included'), 'val' => 1),
-                                        array('lab' => $this->l('Tax excluded'), 'val' => 0),
+                                        array('lab' => $this->trans('Tax included', array(), 'Admin.Global'), 'val' => 1),
+                                        array('lab' => $this->trans('Tax excluded', array(), 'Admin.Global'), 'val' => 0),
                                     ),
                         'id' => 'val',
                         'name' => 'lab',
@@ -294,7 +294,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Reduction'),
+                    'label' => $this->trans('Reduction', array(), 'Admin.Catalog.Feature'),
                     'name' => 'reduction',
                     'required' => true,
                 ),
