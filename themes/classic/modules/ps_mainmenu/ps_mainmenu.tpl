@@ -2,11 +2,10 @@
     {if $nodes|count}
       <ul
         class="top-menu"
-        id="top-menu"
+        {if $depth == 0}id="top-menu"{/if}
         data-depth="{$depth}"
       >
         {foreach from=$nodes item=node}
-          {if $node.children|count}
             <li
               class="{$node.type}{if $node.current} current {/if}"
               id="{$node.page_identifier}"
@@ -18,29 +17,18 @@
               >
                 {$node.label}
               </a>
+              {if $node.children|count}
               <div {if $depth === 0} class="popover sub-menu js-sub-menu" {/if}>
                 {menu nodes=$node.children depth=$node.depth parent=$node}
               </div>
+              {/if}
             </li>
-          {else}
-            <li>
-              <a
-                class="dropdown-item"
-                href="{$node.url nofilter}"
-                data-depth="{$depth}"
-                {if $node.open_in_new_window}
-                  target="_blank"
-                {/if}
-              >
-                {$node.label}
-              </a>
-            </li>
-          {/if}
         {/foreach}
       </ul>
     {/if}
 {/function}
 
-<div class="menu col-md-9 js-top-menu">
+<div class="menu col-lg-8 col-md-7 js-top-menu position-static">
     {menu nodes=$menu.children}
+    <div class="clearfix"></div>
 </div>

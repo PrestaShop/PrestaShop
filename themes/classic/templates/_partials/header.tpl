@@ -21,8 +21,11 @@
             <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
           </a>
         </div>
-        <div class="col-md-10">
-          {hook h='displayTop'}
+        <div class="col-md-10 position-static">
+          <div class="row">
+            {hook h='displayTop'}
+            <div class="clearfix"></div>
+          </div>
         </div>
       </div>
     </div>

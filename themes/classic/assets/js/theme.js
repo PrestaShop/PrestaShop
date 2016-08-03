@@ -20937,8 +20937,7 @@
 	        }
 	        if (elmId && (0, _jquery2['default'])(e.target).data('depth') === 0) {
 	          (0, _jquery2['default'])('#' + elmId + ' .js-sub-menu').show().css({
-	            top: (0, _jquery2['default'])('#' + elmId).height() + (0, _jquery2['default'])('#' + elmId).position().top,
-	            left: (0, _jquery2['default'])('#' + elmId).position().left
+	            top: (0, _jquery2['default'])('#' + elmId).height() + (0, _jquery2['default'])('#' + elmId).position().top
 	          });
 	        }
 	      });
