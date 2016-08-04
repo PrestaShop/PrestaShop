@@ -60,7 +60,7 @@ class AddonsDataProvider implements AddonsInterface
 
         // Module downloading
         try {
-            $module_data = $this->request('module', $params);
+            $module_data = $this->request('module_download', $params);
         } catch (Exception $e) {
             if (!$this->isAddonsAuthenticated()) {
                 throw new Exception('Error sent by Addons. You may need to be logged.', 0, $e);
@@ -150,6 +150,14 @@ class AddonsDataProvider implements AddonsInterface
                 break;
             case 'check_module':
                 $post_data .= '&method=check&module_name='.urlencode($params['module_name']).'&module_key='.urlencode($params['module_key']);
+                break;
+            case 'module_download':
+                $post_data .= '&method=module&id_module='.urlencode($params['id_module']);
+                if (isset($params['username_addons']) && isset($params['password_addons'])) {
+                    $post_data .= '&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
+                } else {
+                    $protocols[] = 'http';
+                }
                 break;
             case 'module':
                 return $this->marketplaceClient->getModule($params['id_module']);
