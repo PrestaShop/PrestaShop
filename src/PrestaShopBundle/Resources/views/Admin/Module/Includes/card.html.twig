@@ -17,7 +17,9 @@
      data-active="{{isModuleActive}}">
   <div class="module-item-wrapper-{{display_type}}">
     <div class="module-item-heading-{{display_type}}">
-      <img class="module-logo-thumb-{{display_type}}" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
+      <div class="module-logo-thumb-{{display_type}}">
+        <img src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
+      </div>
       <h3 class="text-ellipsis module-name-{{display_type}}"
           data-toggle="tooltip"
           data-placement="top"
@@ -34,7 +36,7 @@
                 {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
                 <b>{{ module.attributes.author }}</b>
             {% else %}
-                {{ 'v%version% by '|trans({ '%version%' : module.attributes.version }, 'Admin.Modules.Feature') }}
+                {{ 'v%version% - by '|trans({ '%version%' : module.attributes.version }, 'Admin.Modules.Feature') }}
                 <b>{{ module.attributes.author }}</b>
             {% endif %}
         {% endblock %}
@@ -44,11 +46,11 @@
       {% block addon_description %}
           <div class="module-quick-description-text">
             {{ module.attributes.description|raw }}
-            {% if module.attributes.description|length < module.attributes.fullDescription|length %}
+            {% if module.attributes.description|length > 0 and module.attributes.description|length < module.attributes.fullDescription|length %}
                 ...
             {% endif %}
           </div>
-          <div class="module-read-more-{{display_type}} small no-padding">
+          <div class="module-read-more-{{display_type}}">
             {% if module.attributes.id != "0" %}
               <a class="module-read-more-{{display_type}}-btn url" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
             {% endif %}
@@ -58,15 +60,13 @@
 
     <div class="module-container module-quick-action-{{display_type}} clearfix">
       {% if module.attributes.nbRates > 0 %}
-          <div class="module-star-ranking-grid-{{ module.attributes.starsRate}}">
-            (
-            {{ module.attributes.nbRates }}
-            )
+          <div class="module-star-ranking-grid-{{ module.attributes.starsRate}} small">
+            ({{ module.attributes.nbRates }})
           </div>
       {% endif %}
       {% if requireBulkActions is defined and requireBulkActions == true %}
-          <div class="pull-right">
-            <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" class="module-checkbox-bulk-{{display_type}}"/>
+          <div class="pull-right module-checkbox-bulk-{{display_type}}">
+            <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
           </div>
       {% endif %}
       {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}
