@@ -278,6 +278,18 @@ class ShopCore extends ObjectModel
         // Remove urls
         $res &= Db::getInstance()->delete('shop_url', 'id_shop = '.(int)$this->id);
 
+        // Remove currency restrictions
+        $res &= Db::getInstance()->delete('module_currency', 'id_shop = '.(int)$this->id);
+
+        // Remove group restrictions
+        $res &= Db::getInstance()->delete('module_group', 'id_shop = '.(int)$this->id);
+
+        // Remove country restrictions
+        $res &= Db::getInstance()->delete('module_country', 'id_shop = '.(int)$this->id);
+
+        // Remove carrier restrictions
+        $res &= Db::getInstance()->delete('module_carrier', 'id_shop = '.(int)$this->id);
+
         Shop::cacheShops(true);
 
         return $res;

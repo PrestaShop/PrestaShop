@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,7 @@ class AdminPaymentPreferencesControllerCore extends AdminController
         $this->bootstrap = true;
         parent::__construct();
 
-        $shop_id = $this->context->shop->id;
+        $id_shop = Context::getContext()->shop->id;
 
         /* Get all modules then select only payment ones */
         $modules = Module::getModulesOnDisk(true);
@@ -49,11 +49,13 @@ class AdminPaymentPreferencesControllerCore extends AdminController
                     if (!get_class($module) == 'SimpleXMLElement') {
                         $module->country = array();
                     }
-                    $countries = DB::getInstance()->executeS('
-						SELECT id_country
-						FROM '._DB_PREFIX_.'module_country
-						WHERE id_module = '.(int)$module->id.' AND `id_shop`='.(int)$shop_id
-                    );
+
+                    $sql = new DbQuery();
+                    $sql->select('`id_country`');
+                    $sql->from('module_country');
+                    $sql->where('`id_module` = '.(int)$module->id);
+                    $sql->where('`id_shop` = '.(int)$id_shop);
+                    $countries = Db::getInstance()->executeS($sql);
                     foreach ($countries as $country) {
                         $module->country[] = $country['id_country'];
                     }
@@ -61,11 +63,13 @@ class AdminPaymentPreferencesControllerCore extends AdminController
                     if (!get_class($module) == 'SimpleXMLElement') {
                         $module->currency = array();
                     }
-                    $currencies = DB::getInstance()->executeS('
-						SELECT id_currency
-						FROM '._DB_PREFIX_.'module_currency
-						WHERE id_module = '.(int)$module->id.' AND `id_shop`='.(int)$shop_id
-                    );
+
+                    $sql = new DbQuery();
+                    $sql->select('`id_currency`');
+                    $sql->from('module_currency');
+                    $sql->where('`id_module` = '.(int)$module->id);
+                    $sql->where('`id_shop` = '.(int)$id_shop);
+                    $currencies = Db::getInstance()->executeS($sql);
                     foreach ($currencies as $currency) {
                         $module->currency[] = $currency['id_currency'];
                     }
@@ -73,13 +77,28 @@ class AdminPaymentPreferencesControllerCore extends AdminController
                     if (!get_class($module) == 'SimpleXMLElement') {
                         $module->group = array();
                     }
-                    $groups = DB::getInstance()->executeS('
-						SELECT id_group
-						FROM '._DB_PREFIX_.'module_group
-						WHERE id_module = '.(int)$module->id.' AND `id_shop`='.(int)$shop_id
-                    );
+
+                    $sql = new DbQuery();
+                    $sql->select('`id_group`');
+                    $sql->from('module_group');
+                    $sql->where('`id_module` = '.(int)$module->id);
+                    $sql->where('`id_shop` = '.(int)$id_shop);
+                    $groups = Db::getInstance()->executeS($sql);
                     foreach ($groups as $group) {
                         $module->group[] = $group['id_group'];
+                    }
+
+                    if (!get_class($module) == 'SimpleXMLElement') {
+                        $module->reference = array();
+                    }
+                    $sql = new DbQuery();
+                    $sql->select('`id_reference`');
+                    $sql->from('module_carrier');
+                    $sql->where('`id_module` = '.(int)$module->id);
+                    $sql->where('`id_shop` = '.(int)$id_shop);
+                    $carriers = Db::getInstance()->executeS($sql);
+                    foreach ($carriers as $carrier) {
+                        $module->reference[] = $carrier['id_reference'];
                     }
                 } else {
                     $module->country = null;
@@ -122,6 +141,8 @@ class AdminPaymentPreferencesControllerCore extends AdminController
                 $this->action = 'currency';
             } elseif (Tools::isSubmit('submitModulegroup')) {
                 $this->action = 'group';
+            } elseif (Tools::isSubmit('submitModulereference')) {
+                $this->action = 'carrier';
             }
         } else {
             $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
@@ -141,25 +162,44 @@ class AdminPaymentPreferencesControllerCore extends AdminController
 
         Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'module_'.bqSQL($type).'`
-			WHERE id_shop = '.Context::getContext()->shop->id.'
+			WHERE `id_shop` = '.Context::getContext()->shop->id.'
 			AND `id_module` IN ('.implode(', ', $modules).')'
         );
 
-        // Fill the new restriction selection for active module.
-        $values = array();
-        foreach ($this->payment_modules as $module) {
-            if ($module->active && isset($_POST[$module->name.'_'.$type.''])) {
-                foreach ($_POST[$module->name.'_'.$type.''] as $selected) {
-                    $values[] = '('.(int)$module->id.', '.(int)Context::getContext()->shop->id.', '.(int)$selected.')';
+        if ($type === 'carrier') {
+            // Fill the new restriction selection for active module.
+            $values = array();
+            foreach ($this->payment_modules as $module) {
+                if ($module->active && isset($_POST[$module->name.'_reference'])) {
+                    foreach ($_POST[$module->name.'_reference'] as $selected) {
+                        $values[] = '('.(int)$module->id.', '.(int)Context::getContext()->shop->id.', '.(int)$selected.')';
+                    }
                 }
             }
-        }
 
-        if (count($values)) {
-            Db::getInstance()->execute('
+            if (count($values)) {
+                Db::getInstance()->execute('
+				INSERT INTO `'._DB_PREFIX_.'module_carrier`
+				(`id_module`, `id_shop`, `id_reference`)
+				VALUES '.implode(',', $values));
+            }
+        } else {
+            // Fill the new restriction selection for active module.
+            $values = array();
+            foreach ($this->payment_modules as $module) {
+                if ($module->active && isset($_POST[$module->name.'_'.$type.''])) {
+                    foreach ($_POST[$module->name.'_'.$type.''] as $selected) {
+                        $values[] = '('.(int)$module->id.', '.(int)Context::getContext()->shop->id.', '.(int)$selected.')';
+                    }
+                }
+            }
+
+            if (count($values)) {
+                Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'module_'.bqSQL($type).'`
 				(`id_module`, `id_shop`, `id_'.bqSQL($type).'`)
 				VALUES '.implode(',', $values));
+            }
         }
 
         Tools::redirectAdmin(self::$currentIndex.'&conf=4'.'&token='.$this->token);
@@ -199,14 +239,14 @@ class AdminPaymentPreferencesControllerCore extends AdminController
         $lists = array(
                     array('items' => Currency::getCurrencies(),
                           'title' => $this->l('Currency restrictions'),
-                          'desc' => $this->l('Please mark each checkbox for the currency, or currencies, in which you want the payment module(s) to be available.'),
+                          'desc' => $this->l('Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.'),
                           'name_id' => 'currency',
                           'identifier' => 'id_currency',
                           'icon' => 'icon-money',
                     ),
                     array('items' => Group::getGroups($this->context->language->id),
                           'title' => $this->l('Group restrictions'),
-                          'desc' => $this->l('Please mark each checkbox for the customer group(s), in which you want the payment module(s) to be available.'),
+                          'desc' => $this->l('Please mark each checkbox for the customer group(s), for which you want the payment module(s) to be available.'),
                           'name_id' => 'group',
                           'identifier' => 'id_group',
                           'icon' => 'icon-group',
@@ -217,6 +257,13 @@ class AdminPaymentPreferencesControllerCore extends AdminController
                           'name_id' => 'country',
                           'identifier' => 'id_country',
                           'icon' => 'icon-globe',
+                    ),
+                    array('items' => Carrier::getCarriers($this->context->language->id),
+                        'title' => $this->l('Carrier restrictions'),
+                        'desc' => $this->l('Please mark each checkbox for the carrier, or carrier, for which you want the payment module(s) to be available.'),
+                        'name_id' => 'reference',
+                        'identifier' => 'id_reference',
+                        'icon' => 'icon-truck',
                     )
                 );
 

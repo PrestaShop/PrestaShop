@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,6 +55,9 @@ abstract class PaymentModuleCore extends Module
         // Insert countries availability
         $return = $this->addCheckboxCountryRestrictionsForModule();
 
+        // Insert carrier availability
+        $return &= $this->addCheckboxCarrierRestrictionsForModule();
+
         if (!Configuration::get('CONF_'.strtoupper($this->name).'_FIXED')) {
             Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED', '0.2');
         }
@@ -75,7 +78,8 @@ abstract class PaymentModuleCore extends Module
     {
         if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE id_module = '.(int)$this->id)
             || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_currency` WHERE id_module = '.(int)$this->id)
-            || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE id_module = '.(int)$this->id)) {
+            || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE id_module = '.(int)$this->id)
+            || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_carrier` WHERE id_module = '.(int)$this->id)) {
             return false;
         }
         return parent::uninstall();
@@ -138,6 +142,36 @@ abstract class PaymentModuleCore extends Module
             $country_ids[] = $country['id_country'];
         }
         return Country::addModuleRestrictions($shops, $countries, array(array('id_module' => (int)$this->id)));
+    }
+
+    /**
+     * Add checkbox carrier restrictions for a new module
+     * @param array $shops
+     *
+     * @return bool
+     */
+    public function addCheckboxCarrierRestrictionsForModule(array $shops = array())
+    {
+        if (!$shops) {
+            $shops = Shop::getShops(true, null, true);
+        }
+
+        $carriers = Carrier::getCarriers((int)Context::getContext()->language->id);
+        $carrier_ids = array();
+        foreach ($carriers as $carrier) {
+            $carrier_ids[] = $carrier['id_reference'];
+        }
+
+        foreach ($shops as $s) {
+            foreach ($carrier_ids as $id_carrier) {
+                if (!Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module_carrier` (`id_module`, `id_shop`, `id_reference`)
+				VALUES ('.(int)$this->id.', "'.(int)$s.'", '.(int)$id_carrier.')')) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -952,8 +986,8 @@ abstract class PaymentModuleCore extends Module
     public static function getInstalledPaymentModules()
     {
         $hook_payment = 'Payment';
-        if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\'')) {
-            $hook_payment = 'displayPayment';
+        if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'paymentOptions\'')) {
+            $hook_payment = 'paymentOptions';
         }
 
         return Db::getInstance()->executeS('

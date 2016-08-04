@@ -1025,6 +1025,12 @@ CREATE TABLE `PREFIX_module_group` (
   PRIMARY KEY (`id_module`,`id_shop`, `id_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
+CREATE TABLE `PREFIX_module_carrier` (
+  `id_module`INT(10) unsigned NOT NULL,
+  `id_shop`INT(11) unsigned NOT NULL DEFAULT '1',
+  `id_reference` INT(11) NOT NULL
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
 CREATE TABLE `PREFIX_module_history` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_employee` int(10) unsigned NOT NULL,
