@@ -130,11 +130,10 @@
     max-width: rem(75px);
     @include pull-left;
     box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15);
-    > .input-group,
-    > .form-control {
+    > .form-control,
+    > .input-group {
       color: $gray-darker;
       background-color: white;
-      border: $input-btn-border-width solid $input-border-color;
       height: $input-height;
       padding: 0.175rem 0.5rem;
       width: rem(48px);

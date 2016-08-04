@@ -71,6 +71,7 @@ function createSpin()
     verticaldownclass: 'material-icons touchspin-down',
     buttondown_class: 'btn btn-touchspin js-touchspin',
     buttonup_class: 'btn btn-touchspin js-touchspin',
+    min: 1,
     max: 1000000
   });
 }

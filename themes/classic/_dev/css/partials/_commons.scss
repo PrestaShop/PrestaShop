@@ -170,6 +170,9 @@ small.label, small.value {
     &:focus {
       outline: none;
     }
+    &.form-control {
+      border: $input-btn-border-width solid $input-border-color;
+    }
   }
   .btn-touchspin {
     @extend .btn-default;

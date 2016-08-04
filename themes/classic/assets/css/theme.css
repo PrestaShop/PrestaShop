@@ -4806,6 +4806,9 @@ small.label, small.value {
 .bootstrap-touchspin input:focus {
   outline: none; }
 
+.bootstrap-touchspin input.form-control {
+  border: 1px solid #ccc; }
+
 .bootstrap-touchspin .btn-touchspin {
   background-color: white;
   border: 1px solid #ccc;
@@ -5359,7 +5362,7 @@ body#checkout {
       padding: 1rem;
       margin-bottom: 2rem;
       background-color: #fff;
-      border: 1px solid #e5e5e5;
+      border: 3px solid #e5e5e5;
       border-radius: 0; }
     body#checkout #order-summary-content .summary-selected-carrier {
       margin-bottom: 0.75rem;
@@ -6148,23 +6151,47 @@ body#checkout {
   font-weight: 600;
   border: 2px solid white; }
 
-.product-actions .add-to-cart {
-  margin-left: 0.9375rem;
-  margin-top: 2.9375rem; }
+.product-actions .control-label {
+  width: 100%;
+  margin-bottom: 0.375rem;
+  display: block;
+  width: 100%; }
 
-.product-quantity {
-  display: inline-block; }
-  .product-quantity .bootstrap-touchspin {
-    margin-top: -0.375rem; }
-  .product-quantity #quantity_wanted {
-    color: #414141;
-    background-color: white;
-    border: 1px solid #ebebeb;
-    height: 2.25rem;
-    padding: 0.175rem 0.5rem;
-    width: 3rem; }
-  .product-quantity .input-group-btn-vertical {
-    float: left; }
+.product-actions .add-to-cart {
+  height: 2.75rem;
+  line-height: inherit;
+  padding-top: 0.625rem; }
+  .product-actions .add-to-cart .material-icons {
+    line-height: inherit; }
+
+.product-quantity .qty {
+  float: left;
+  width: 80px;
+  margin-bottom: 0.5rem; }
+
+.product-quantity .add {
+  float: left;
+  margin-bottom: 0.5rem; }
+
+.product-quantity #quantity_wanted {
+  color: #414141;
+  background-color: white;
+  height: 2.75rem;
+  padding: 0.175rem 0.5rem;
+  width: 3rem; }
+
+.product-quantity .input-group-btn-vertical {
+  float: left; }
+
+.product-quantity .input-group-btn-vertical .btn {
+  padding: 0.6875rem 0.625rem 0.625rem 0.625rem; }
+  .product-quantity .input-group-btn-vertical .btn i {
+    font-size: 1rem;
+    top: 0.125rem;
+    left: 0.1875rem; }
+
+.product-quantity .btn-touchspin {
+  height: 1.4375rem; }
 
 .product-discounts {
   margin: 2.5rem 0; }
@@ -6220,7 +6247,7 @@ body#checkout {
 
 .tabs {
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-  margin-top: 1.25rem;
+  margin-top: 2rem;
   background: white;
   padding: 1.25rem 1.875rem; }
   .tabs .tab-pane {
@@ -6384,12 +6411,9 @@ body#checkout {
 #product-availability {
   display: inline-block;
   font-weight: 700;
-  margin-left: 0.625rem;
-  margin-top: 2.9375rem;
-  position: relative;
-  top: 1.5625rem; }
+  margin-left: 0.625rem; }
   #product-availability .material-icons {
-    margin-right: 0.3125rem; }
+    line-height: inherit; }
   #product-availability .product-available {
     color: #4cbb6c; }
   #product-availability .product-unavailable {
@@ -6455,6 +6479,9 @@ body#checkout {
     width: 3.75rem; }
   .product-variants > .product-variants-item ul li {
     margin-right: 0.625rem; }
+  .product-variants > .product-variants-item .color {
+    margin-left: 0;
+    margin-top: 0; }
 
 .product-flags {
   margin-bottom: 0; }
@@ -6579,18 +6606,21 @@ li.product-flag {
   -o-align-items: center;
   align-items: center;
   -ms-flex-align: center;
-  margin-top: 1.25rem; }
+  margin-top: 1.5rem; }
   .social-sharing ul {
     margin-bottom: 0; }
   .social-sharing li {
     box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.1);
-    height: 2.5em;
-    width: 2.5em;
+    height: 2.5rem;
+    width: 2.5rem;
     border-radius: 50%;
     display: inline-block;
     background-color: white;
+    background-repeat: no-repeat;
+    background-size: 2rem 2rem;
+    background-position: 0.25rem 0.25rem;
     cursor: pointer;
-    margin-left: 1rem; }
+    margin-left: 0.5rem; }
     .social-sharing li a {
       display: block;
       width: 100%;
@@ -6740,11 +6770,10 @@ li.product-flag {
   max-width: 4.6875rem;
   float: left !important;
   box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15); }
-  .product-line-grid-right .bootstrap-touchspin > .input-group,
-  .product-line-grid-right .bootstrap-touchspin > .form-control {
+  .product-line-grid-right .bootstrap-touchspin > .form-control,
+  .product-line-grid-right .bootstrap-touchspin > .input-group {
     color: #414141;
     background-color: white;
-    border: 1px solid #ccc;
     height: 2.25rem;
     padding: 0.175rem 0.5rem;
     width: 3rem; }
@@ -6763,7 +6792,7 @@ li.product-flag {
     opacity: 0.7; }
 
 #block-reassurance {
-  margin-top: 3.75rem; }
+  margin-top: 2rem; }
   #block-reassurance img {
     opacity: .7;
     width: 1.5625rem;
@@ -6795,7 +6824,6 @@ li.product-flag {
   min-height: 23.75rem; }
 
 .quickview .modal-footer {
-  margin-top: 2.5rem;
   border-top: 1px solid rgba(172, 170, 166, 0.3); }
 
 .quickview .layer {
