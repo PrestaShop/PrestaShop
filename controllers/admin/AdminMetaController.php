@@ -429,10 +429,6 @@ class AdminMetaControllerCore extends AdminController
             Tools::clearCache($this->context->smarty);
         }
 
-        if (Tools::isSubmit('deletemeta') && (int)Tools::getValue('id_meta') > 0) {
-            Db::getInstance()->delete('theme_meta', 'id_meta='.(int)Tools::getValue('id_meta'));
-        }
-
         return parent::postProcess();
     }
 
