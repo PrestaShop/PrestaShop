@@ -716,6 +716,10 @@ var form = (function() {
     updateMissingTranslatedNames();
     
     var data = $('input, textarea, select', elem).not(':input[type=button], :input[type=submit], :input[type=reset]').serialize();
+    if (target == '_blank' && redirect) {
+      var openBlank = window.open('about:blank', target, '');
+    }
+
     $.ajax({
       type: 'POST',
       data: data,
@@ -728,7 +732,11 @@ var form = (function() {
       success: function(response) {
         if (redirect) {
           if (target) {
-            window.open(redirect, target);
+            if (target == '_blank') {
+                openBlank.location = redirect;
+            } else {
+                window.open(redirect, target);
+            }
           } else {
             window.location = redirect;
           }
