@@ -124,7 +124,11 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if (! $this->moduleProvider->isOnDisk($name)) {
-            $this->moduleUpdater->setModuleOnDiskFromAddons($name);
+            if (!empty($source)) {
+                $this->moduleZipManager->storeInModulesFolder($source);
+            } else {
+                $this->moduleUpdater->setModuleOnDiskFromAddons($name);
+            }
         }
 
         $module = $this->moduleRepository->getModule($name);
