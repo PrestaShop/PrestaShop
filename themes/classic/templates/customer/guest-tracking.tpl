@@ -36,10 +36,11 @@
         <input type="hidden" name="submitTransformGuestToCustomer" value="1">
         <input type="hidden" name="id_order" value="{$order.details.id}">
         <input type="hidden" name="order_reference" value="{$order.details.reference}">
-        <input type="hidden" name="email" value="{$customer.email}">
+        <input type="hidden" name="email" value="{$guest_email}">
 
         <button class="btn btn-primary" type="submit">{l s='Send' d='Shop.Theme.Actions'}</button>
       </footer>
 
+    </form>
   {/block}
 {/block}

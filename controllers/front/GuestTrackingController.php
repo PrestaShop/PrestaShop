@@ -87,7 +87,30 @@ class GuestTrackingControllerCore extends FrontController
             }
         }
 
-        // TODO: TRANSFORM TO CUSTOMER
+        if (Tools::isSubmit('submitTransformGuestToCustomer') && Tools::getValue('password')) {
+            $customer = new Customer((int) $this->order->id_customer);
+            $password = Tools::getValue('password');
+
+            if (strlen($password) < Validate::PASSWORD_LENGTH) {
+                $this->errors[] = $this->trans(
+                    'Your password must be at least %min% characters long.',
+                    array('%min%' => Validate::PASSWORD_LENGTH),
+                    'Shop.Form.Help'
+                );
+            } elseif ($customer->transformToCustomer($this->context->language->id, $password)) {
+                $this->success[] = $this->trans(
+                    'Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.',
+                    array(),
+                    'Shop.Notifications.Success'
+                );
+            } else {
+                $this->success[] = $this->trans(
+                    'An unexpected error occurred while creating your account.',
+                    array(),
+                    'Shop.Notifications.Error'
+                );
+            }
+        }
     }
 
     /**
@@ -111,6 +134,7 @@ class GuestTrackingControllerCore extends FrontController
 
         $this->context->smarty->assign(array(
             'order' => $presented_order,
+            'guest_email' => Tools::getValue('email'),
             'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', array('order' => $this->order)),
         ));
 
