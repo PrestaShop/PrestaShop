@@ -182,6 +182,7 @@ class CMSCategoryCore extends ObjectModel
 
         $sql = 'SELECT c.`id_cms_category`
 				FROM `'._DB_PREFIX_.'cms_category` c
+				'.Shop::addSqlAssociation('cms_category', 'c').'
 				WHERE c.`id_parent` = '.(int)$current.
                     ($active ? ' AND c.`active` = 1' : '');
         $result = Db::getInstance()->executeS($sql);
