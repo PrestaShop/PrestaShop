@@ -660,7 +660,7 @@ class CategoryCore extends ObjectModel
         $formated_medium = ImageType::getFormatedName('medium');
 
         foreach ($result as &$row) {
-            $row['id_image'] = Tools::file_exists_cache(_PS_CAT_IMG_DIR_.$row['id_category'].'.jpg') ? (int)$row['id_category'] : Language::getIsoById($id_lang).'-default';
+            $row['id_image'] = (Tools::file_exists_cache(_PS_CAT_IMG_DIR_.(int)$row['id_category'].'.jpg') || Tools::file_exists_cache(_PS_CAT_IMG_DIR_.(int)$row['id_category'].'_thumb.jpg')) ? (int)$row['id_category'] : Language::getIsoById($id_lang).'-default';
             $row['legend'] = 'no picture';
         }
         return $result;
