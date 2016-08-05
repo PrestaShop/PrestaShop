@@ -11,7 +11,7 @@
       </section>
       <hr/>
       {block name='display_after_login_form'}
-        {hook h='displayAfterLoginForm'}
+        {hook h='displayCustomerLoginFormAfter'}
       {/block}
       <div class="no-account">
         <a href="{$urls.pages.register}" data-link-action="display-register-form">
