@@ -1,37 +1,55 @@
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  {l s='Guest Tracking' d='Shop.Theme.CustomerAccount'}
+  {l s='Guest Order Tracking' d='Shop.Theme.CustomerAccount'}
 {/block}
 
 {block name='page_content'}
-  {if isset($show_login_link) && $show_login_link}
-    <p><a href="{$urls.pages.my_account}">{l s='Click here to log in to your customer account.' d='Shop.Theme.CustomerAccount'}</a></p>
-  {/if}
-  <form action="{$urls.pages.guest_tracking}" method="post">
+  <form id="guestOrderTrackingForm" action="{$urls.pages.guest_tracking}" method="get">
     <header>
-      <h1 class="h3">{l s='To track your order, please enter the following information:' d='Shop.Theme.CustomerAccount'}</h1>
+      <p>{l s='To track your order, please enter the following information:' d='Shop.Theme.CustomerAccount'}</p>
     </header>
 
     <section class="form-fields">
 
-      <label>
-        <span>{l s='Order Reference:' d='Shop.Theme.CustomerAccount'}</span>
-        <input type="text" name="order_reference" value="{if isset($smarty.request.id_order)}{$smarty.request.id_order}{/if}" size="8">
-        <em>{l s='For example: QIIXJXNUI or QIIXJXNUI#1' d='Shop.Theme.CustomerAccount'}</em>
-      </label>
+      <div class="form-group row">
+        <label class="col-md-3 form-control-label required">
+          {l s='Order Reference:' d='Shop.Theme.Labels'}
+        </label>
+        <div class="col-md-6">
+          <input
+            class="form-control"
+            name="order_reference"
+            type="text"
+            size="8"
+            value="{if isset($smarty.request.order_reference)}{$smarty.request.order_reference}{/if}"
+          >
+          <div class="form-control-comment">
+            {l s='For example: QIIXJXNUI or QIIXJXNUI#1' d='Shop.Theme.CustomerAccount'}
+          </div>
+        </div>
+      </div>
 
-      <label>
-        <span>{l s='Email:' d='Shop.Forms.Labels'}</span>
-        <input type="email" name="email" value="{if isset($smarty.request.email)}{$smarty.request.email}{/if}">
-      </label>
+      <div class="form-group row">
+        <label class="col-md-3 form-control-label required">
+          {l s='Email:' d='Shop.Forms.Labels'}
+        </label>
+        <div class="col-md-6">
+          <input
+            class="form-control"
+            name="email"
+            type="email"
+            value="{if isset($smarty.request.email)}{$smarty.request.email}{/if}"
+          >
+        </div>
+      </div>
 
     </section>
 
-    <footer class="form-footer">
-      <input type="hidden" name="submitGuestTracking" value="1">
-
-      <button type="submit">{l s='Send' d='Shop.Theme.Actions'}</button>
+    <footer class="form-footer text-xs-center clearfix">
+      <button class="btn btn-primary" type="submit">
+        {l s='Send' d='Shop.Theme.Actions'}
+      </button>
     </footer>
   </form>
 {/block}

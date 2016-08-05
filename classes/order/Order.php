@@ -1470,6 +1470,26 @@ class OrderCore extends ObjectModel
         return $orders;
     }
 
+    /**
+     * The combination (reference, email) should be unique, of multiple entries are found, then we take the first one.
+     * @param $reference Order reference
+     * @param $email customer email address
+     *
+     * @return Order The first order found
+     */
+    public static function getByReferenceAndEmail($reference, $email)
+    {
+        $sql = '
+          SELECT id_order
+            FROM `'._DB_PREFIX_.'orders` o
+            LEFT JOIN `'._DB_PREFIX_.'customer` c ON (o.`id_customer` = c.`id_customer`)
+                WHERE o.`reference` = \''.pSQL($reference).'\' AND c.`email` = \''.pSQL($email).'\'
+        ';
+
+        $id = (int) Db::getInstance()->getValue($sql);
+        return new Order($id);
+    }
+
     public function getTotalWeight()
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('

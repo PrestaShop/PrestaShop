@@ -26,7 +26,7 @@
 
 use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
 
-class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
+class OrderDetailControllerCore extends FrontController
 {
     public $php_self = 'order-detail';
     public $auth = true;
@@ -170,8 +170,7 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
 
                 $this->context->smarty->assign([
                     'order' => $this->order_to_display,
-                    'hook_orderdetaildisplayed' => Hook::exec('displayOrderDetail', ['order' => $order]),
-                    'use_tax' => Configuration::get('PS_TAX'),
+                    'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $order]),
                 ]);
             } else {
                 $this->redirect_after = '404';

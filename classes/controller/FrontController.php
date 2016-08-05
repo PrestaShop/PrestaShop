@@ -1414,6 +1414,7 @@ class FrontControllerCore extends Controller
             'order-follow',
             'order-slip',
             'password',
+            'guest-tracking',
         ];
 
         $body_classes = [

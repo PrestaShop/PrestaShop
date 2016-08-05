@@ -12,6 +12,12 @@ module.exports = function initializePrestaShopBrowserCommands(browser) {
   browser.addCommand('urlWithPrestaShopRedirect', function urlWithPrestaShopRedirect(url) {
     return browser
       .url(url)
+      .followRedirect()
+    ;
+  });
+
+  browser.addCommand('followRedirect', function followRedirect() {
+    return browser
       .getText('body')
       .then(function (text) {
         var needle = '[Debug] This page has moved';
