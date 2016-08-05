@@ -302,6 +302,14 @@ function updateAmounts(order)
 		$(this).html(order.weight);
 		$(this).fadeIn('slow');
 	});
+
+	var shippingCarrierPrice = $('#shipping_table .price_carrier_' + order.id_carrier + ' span');
+	$(shippingCarrierPrice).fadeOut('slow', function() {
+		formatCurrencyCldr(parseFloat(order.total_shipping_tax_incl), function(value) {
+			$(shippingCarrierPrice).html(value);
+			$(shippingCarrierPrice).fadeIn('slow');
+		});
+	});
 }
 
 function closeAddProduct()

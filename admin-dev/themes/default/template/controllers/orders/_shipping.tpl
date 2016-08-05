@@ -54,40 +54,76 @@
 				<td>&nbsp;</td>
 				<td>{$line.carrier_name}</td>
 				<td class="weight">{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
-				<td class="center">
+				<td class="price_carrier_{$line.id_carrier|intval}" class="center">
+					<span>
 					{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}
 						{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}
 					{else}
 						{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}
 					{/if}
+					</span>
 				</td>
 				<td>
 					<span class="shipping_number_show">{if $line.url && $line.tracking_number}<a class="_blank" href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
 				</td>
 				<td>
 					{if $line.can_edit}
-						<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}">
-							<span class="shipping_number_edit" style="display:none;">
-								<input type="hidden" name="id_order_carrier" value="{$line.id_order_carrier|htmlentities}" />
-								<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
-								<button type="submit" class="btn btn-default" name="submitShippingNumber">
-									<i class="icon-ok"></i>
-									{l s='Update'}
-								</button>
-							</span>
-							<a href="#" class="edit_shipping_number_link btn btn-default">
-								<i class="icon-pencil"></i>
-								{l s='Edit' d='Admin.Actions'}
-							</a>
-							<a href="#" class="cancel_shipping_number_link btn btn-default" style="display: none;">
-								<i class="icon-remove"></i>
-								{l s='Cancel' d='Admin.Actions'}
-							</a>
-						</form>
+						<a href="#" class="edit_shipping_link btn btn-default"
+						data-id-order-carrier="{$line.id_order_carrier|intval}"
+						data-id-carrier="{$line.id_carrier|intval}"
+						data-tracking-number="{$line.tracking_number|htmlentities}"
+						>
+ 							<i class="icon-pencil"></i>
+ 							{l s='Edit' d='Admin.Actions'}
+ 						</a>
 					{/if}
 				</td>
 			</tr>
 			{/foreach}
 		</tbody>
 	</table>
+
+	<!-- shipping update modal -->
+	<div class="modal fade" id="modal-shipping">
+		<div class="modal-dialog">
+			<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}">
+				<input type="hidden" name="submitShippingNumber" id="submitShippingNumber" value="1" />
+				<input type="hidden" name="id_order_carrier" id="id_order_carrier" />
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Admin.Actions'}"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">{l s='Edit shipping details' d='Admin.OrdersCustomers.Feature'}</h4>
+					</div>
+					<div class="modal-body">
+						<div class="container-fluid">
+							{if !$recalculate_shipping_cost}
+							<div class="alert alert-info">
+							{l s='Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings' d='Admin.OrdersCustomers.Notification'}
+							</div>
+							{/if}
+							<div class="form-group">
+								<div class="col-lg-5">{l s='Tracking number' d='Admin.Shipping.Feature'}</div>
+								<div class="col-lg-7"><input type="text" name="shipping_tracking_number" id="shipping_tracking_number" /></div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-5">{l s='Carrier'}</div>
+								<div class="col-lg-7">
+									<select name="shipping_carrier" id="shipping_carrier">
+										{foreach from=$carrier_list item=carrier}
+											<option value="{$carrier.id_carrier|intval}">{$carrier.name|escape:'html':'UTF-8'} {if isset($carrier.delay)}({$carrier.delay|escape:'html':'UTF-8'}){/if}</option>
+										{/foreach}
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">{l s='Cancel' d='Admin.Actions'}</button>
+						<button type="submit" class="btn btn-primary">{l s='Update' d='Admin.Actions'}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- END shipping update modal -->
 </div>

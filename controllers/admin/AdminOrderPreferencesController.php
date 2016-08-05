@@ -79,6 +79,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
                         'cast' => 'floatval',
                         'type' => 'price'
                     ),
+                    'PS_ORDER_RECALCULATE_SHIPPING' => array(
+                        'title' => $this->trans('Recalculate shipping cost after order edition', array(), 'Admin.ShopParameters.Feature'),
+                        'hint' => $this->trans('Automatically updates the shipping costs when you edit an order.', array(), 'Admin.ShopParameters.Help'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'type' => 'bool'
+                     ),
                     'PS_ALLOW_MULTISHIPPING' => array(
                         'title' => $this->trans('Allow multishipping', array(), 'Admin.ShopParameters.Feature'),
                         'hint' => $this->trans('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.', array(), 'Admin.ShopParameters.Help'),
