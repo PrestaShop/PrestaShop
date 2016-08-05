@@ -917,19 +917,19 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $page = parent::getTemplateVarPage();
 
-        $page['body_classes']['-id-'.$this->product->id] = true;
-        $page['body_classes']['-'.$this->product->name] = true;
-        $page['body_classes']['-id-category-'.$this->product->id_category_default] = true;
-        $page['body_classes']['-id-manufacturer-'.$this->product->id_manufacturer] = true;
-        $page['body_classes']['-id-supplier-'.$this->product->id_supplier] = true;
+        $page['body_classes']['product-id-'.$this->product->id] = true;
+        $page['body_classes']['product-'.$this->product->name] = true;
+        $page['body_classes']['product-id-category-'.$this->product->id_category_default] = true;
+        $page['body_classes']['product-id-manufacturer-'.$this->product->id_manufacturer] = true;
+        $page['body_classes']['product-id-supplier-'.$this->product->id_supplier] = true;
         if ($this->product->on_sale) {
-            $page['body_classes']['-on-sale'] = true;
+            $page['body_classes']['product-on-sale'] = true;
         }
         if ($this->product->available_for_order) {
-            $page['body_classes']['-available-for-order'] = true;
+            $page['body_classes']['product-available-for-order'] = true;
         }
         if ($this->product->customizable) {
-            $page['body_classes']['-customizable'] = true;
+            $page['body_classes']['product-customizable'] = true;
         }
 
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);

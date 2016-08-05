@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryProductSearchProvider;
@@ -50,16 +49,17 @@ class CategoryControllerCore extends ProductListingFrontController
     }
 
     /**
-     * Initializes controller
+     * Initializes controller.
      *
      * @see FrontController::init()
+     *
      * @throws PrestaShopException
      */
     public function init()
     {
         parent::init();
 
-        $id_category = (int)Tools::getValue('id_category');
+        $id_category = (int) Tools::getValue('id_category');
         $this->category = new Category(
             $id_category,
             $this->context->language->id
@@ -74,13 +74,14 @@ class CategoryControllerCore extends ProductListingFrontController
             header('Status: 403 Forbidden');
             $this->errors[] = $this->trans('You do not have access to this category.', array(), 'Shop.Notifications.Error');
             $this->setTemplate('catalog/forbidden-category.tpl');
+
             return;
         }
 
-        $this->context->smarty->assign([
-            'category'      => $this->getTemplateVarCategory(),
-            'subcategories' => $this->getTemplateVarSubCategories()
-        ]);
+        $this->context->smarty->assign(array(
+            'category' => $this->getTemplateVarCategory(),
+            'subcategories' => $this->getTemplateVarSubCategories(),
+        ));
 
         $this->doProductSearch('catalog/category.tpl');
     }
@@ -92,6 +93,7 @@ class CategoryControllerCore extends ProductListingFrontController
             ->setIdCategory($this->category->id)
             ->setSortOrder(new SortOrder('product', 'position', 'asc'))
         ;
+
         return $query;
     }
 
@@ -110,6 +112,7 @@ class CategoryControllerCore extends ProductListingFrontController
             $this->category,
             $this->category->id_image
         );
+
         return $category;
     }
 
@@ -130,6 +133,7 @@ class CategoryControllerCore extends ProductListingFrontController
                 $category['id_category'],
                 $category['link_rewrite']
             );
+
             return $category;
         }, $this->category->getSubCategories($this->context->language->id));
     }
@@ -139,6 +143,7 @@ class CategoryControllerCore extends ProductListingFrontController
         $retriever = new ImageRetriever(
             $this->context->link
         );
+
         return $retriever->getImage($object, $id_image);
     }
 
@@ -166,11 +171,10 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         $page = parent::getTemplateVarPage();
 
-        $page['body_classes']['-id-'.$this->category->id] = true;
-        $page['body_classes']['-'.$this->category->name] = true;
-        $page['body_classes']['-id-parent-'.$this->category->id_parent] = true;
-        $page['body_classes']['-depth-level-'.$this->category->level_depth] = true;
-
+        $page['body_classes']['category-id-'.$this->category->id] = true;
+        $page['body_classes']['category-'.$this->category->name] = true;
+        $page['body_classes']['category-id-parent-'.$this->category->id_parent] = true;
+        $page['body_classes']['category-depth-level-'.$this->category->level_depth] = true;
 
         return $page;
     }

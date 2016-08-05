@@ -97,7 +97,7 @@ class CmsControllerCore extends FrontController
             if ($this->cms->indexation == 0) {
                 $this->context->smarty->assign('nobots', true);
             }
-            
+
             $this->setTemplate('cms/page.tpl');
         } elseif ($this->assignCase == 2) {
             $this->context->smarty->assign($this->getTemplateVarCategoryCms());
@@ -149,9 +149,9 @@ class CmsControllerCore extends FrontController
         $page = parent::getTemplateVarPage();
 
         if ($this->assignCase == 2) {
-            $page['body_classes']['-id-'.$this->cms_category->id] = true;
+            $page['body_classes']['cms-id-'.$this->cms_category->id] = true;
         } else {
-            $page['body_classes']['-id-'.$this->cms->id] = true;
+            $page['body_classes']['cms-id-'.$this->cms->id] = true;
         }
 
         return $page;
