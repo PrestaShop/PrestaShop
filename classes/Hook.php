@@ -412,7 +412,7 @@ class HookCore extends ObjectModel
         $result = Db::getInstance()->execute($sql);
 
         // Clean modules position
-        $module_instance->cleanPositions($hook_id, $shop_list);
+        Module::cleanPositions($hook_id, $shop_list);
 
         Hook::exec('actionModuleUnRegisterHookAfter', array('object' => $module_instance, 'hook_name' => $hook_name));
 

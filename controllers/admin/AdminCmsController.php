@@ -295,7 +295,7 @@ class AdminCmsControllerCore extends AdminController
                 Configuration::updateValue('PS_CONDITIONS_CMS_ID', 0);
             }
             $cms = new CMS((int)Tools::getValue('id_cms'));
-            $cms->cleanPositions($cms->id_cms_category);
+            CMS::cleanPositions($cms->id_cms_category);
             if (!$cms->delete()) {
                 $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error')
                     .' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
@@ -310,7 +310,7 @@ class AdminCmsControllerCore extends AdminController
                     $result = true;
                     $result = $cms->deleteSelection(Tools::getValue($this->table.'Box'));
                     if ($result) {
-                        $cms->cleanPositions((int)Tools::getValue('id_cms_category'));
+                        CMS::cleanPositions((int)Tools::getValue('id_cms_category'));
                         $token = Tools::getAdminTokenLite('AdminCmsContent');
                         Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token.'&id_cms_category='.(int)Tools::getValue('id_cms_category'));
                     }

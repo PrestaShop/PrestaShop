@@ -218,7 +218,7 @@ class CategoryCore extends ObjectModel
 
         $ret = parent::update($null_values);
         if ($changed && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)) {
-            $this->cleanPositions((int)$this->id_parent);
+            Category::cleanPositions((int)$this->id_parent);
             Category::regenerateEntireNtree();
             $this->recalculateLevelDepth($this->id);
         }
