@@ -18,6 +18,7 @@ class ImageRetriever
 
     public function getProductImages(array $product, Language $language)
     {
+        $productAttributeId = $product['id_product_attribute'];
         $productInstance = new Product(
             $product['id_product'],
             false,
@@ -42,7 +43,11 @@ class ImageRetriever
             }
         }
 
-        $images = array_map(function (array $image) use ($productInstance, $imageToCombinations) {
+        $images = array_map(function (array $image) use (
+            $productInstance,
+            $imageToCombinations,
+            $productAttributeId
+        ) {
             $image =  array_merge($this->getImage(
                 $productInstance,
                 $image['id_image']
@@ -54,10 +59,21 @@ class ImageRetriever
                 $image['associatedVariants'] = [];
             }
 
-            return $image;
+            /* If product have combinations, we need to filter */
+            if (
+                in_array($productAttributeId, $image['associatedVariants'])
+                && count($imageToCombinations) > 0
+            ) {
+                return $image;
+            }
+            
+            /* If product have no combinations, return all images */
+            if (0 === count($imageToCombinations)) {
+                return $image;
+            }
         }, $images);
 
-        return $images;
+        return array_filter($images);
     }
 
     public function getImage($object, $id_image)

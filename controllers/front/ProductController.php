@@ -476,6 +476,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                                 $current_cover = $image;
                             }
                         }
+                        if (!isset($current_cover)) {
+                            $current_cover = array_values($this->context->smarty->tpl_vars['product']->value['images'])[0];
+                        }
 
                         if (is_array($combination_images[$row['id_product_attribute']])) {
                             foreach ($combination_images[$row['id_product_attribute']] as $tmp) {
@@ -497,7 +500,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                                     $this->context->smarty->assign('images', $product_images);
                                 }
                             }
+
                             $cover = $current_cover;
+
                             if (isset($cover) && is_array($cover) && isset($product_images) && is_array($product_images)) {
                                 $product_images[$cover['id_image']]['cover'] = 0;
                                 if (isset($product_images[$id_image])) {
