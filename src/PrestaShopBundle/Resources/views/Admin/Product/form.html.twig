@@ -232,6 +232,20 @@
                               </div>
                             </div>
                           </div>
+                          
+                          <div class="form-group">
+                            <h2>
+                              {{ "Reference"|trans({}, 'Admin.Catalog.Feature') }}
+                              <span class="help-box" data-toggle="popover"
+                                data-content="{{ "Your internal reference code for this product. Allowed special characters: .-_#\."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                            </2>
+                            {{ form_errors(form.step6.reference) }}
+                            <div class="row">
+                              <div class="col-md-6" id="product_reference_field">
+                                  {{ form_widget(form.step6.reference) }}
+                              </div>
+                            </div>
+                          </div>
 
                           <div class="form-group" id="product_qty_0_shortcut_div">
                             <h2>
@@ -739,21 +753,21 @@
                     <div class="row">
                       <fieldset class="col-md-4 form-group">
                         <label class="form-control-label">
-                          {{ form.step6.reference.vars.label }}
-                          <span class="help-box" data-toggle="popover"
-                            data-content="{{ "Your internal reference code for this product. Allowed special characters: .-_#\."|trans({}, 'Admin.Catalog.Help') }}" ></span>
-                        </label>
-                        {{ form_errors(form.step6.reference) }}
-                        {{ form_widget(form.step6.reference) }}
-                      </fieldset>
-                      <fieldset class="col-md-4 form-group">
-                        <label class="form-control-label">
                           {{ form.step6.isbn.vars.label }}
                           <span class="help-box" data-toggle="popover"
                             data-content="{{ "ISBN is used internationally to identify books and their various editions."|trans({}, 'Admin.Catalog.Help') }}" ></span>
                         </label>
                         {{ form_errors(form.step6.isbn) }}
                         {{ form_widget(form.step6.isbn) }}
+                      </fieldset>
+                      <fieldset class="col-md-4 form-group">
+                        <label class="form-control-label">
+                          {{ form.step6.ean13.vars.label }}
+                          <span class="help-box" data-toggle="popover"
+                            data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                        </label>
+                        {{ form_errors(form.step6.ean13) }}
+                        {{ form_widget(form.step6.ean13) }}
                       </fieldset>
                     </div>
                     <div class="row">
@@ -765,15 +779,6 @@
                         </label>
                         {{ form_errors(form.step6.upc) }}
                         {{ form_widget(form.step6.upc) }}
-                      </fieldset>
-                      <fieldset class="col-md-4 form-group">
-                        <label class="form-control-label">
-                          {{ form.step6.ean13.vars.label }}
-                          <span class="help-box" data-toggle="popover"
-                            data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'Admin.Catalog.Help') }}" ></span>
-                        </label>
-                        {{ form_errors(form.step6.ean13) }}
-                        {{ form_widget(form.step6.ean13) }}
                       </fieldset>
                     </div>
 
