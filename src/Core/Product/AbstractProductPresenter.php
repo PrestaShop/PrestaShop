@@ -64,8 +64,8 @@ abstract class AbstractProductPresenter
         }
 
         if (!isset($presentedProduct['cover'])) {
-            if (isset($presentedProduct['images'][0])) {
-                $presentedProduct['cover'] = $presentedProduct['images'][0];
+            if (count($presentedProduct['images']) > 0) {
+                $presentedProduct['cover'] = array_values($presentedProduct['images'])[0];
             } else {
                 $presentedProduct['cover'] = null;
             }
