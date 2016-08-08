@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Order\OrderReturnPresenter;
+
 class OrderFollowControllerCore extends FrontController
 {
     public $auth = true;
@@ -107,13 +109,13 @@ class OrderFollowControllerCore extends FrontController
         $orders_returns = [];
         $orders_return = OrderReturn::getOrdersReturn($this->context->customer->id);
 
+        $orderReturnPresenter = new OrderReturnPresenter(
+            Configuration::get('PS_RETURN_PREFIX', $this->context->language->id),
+            $this->context->link
+        );
+
         foreach ($orders_return as $id_order_return => $order_return) {
-            $orders_returns[$id_order_return] = $order_return;
-            $orders_returns[$id_order_return]['return_number'] = sprintf('#%06d', $order_return['id_order_return']);
-            $orders_returns[$id_order_return]['return_date'] = Tools::displayDate($order_return['date_add'], null, false);
-            $orders_returns[$id_order_return]['print_url'] = ($order_return['state'] == 2) ? $this->context->link->getPageLink('pdf-order-return', true, null, 'id_order_return='.$order_return['id_order_return']) : '';
-            $orders_returns[$id_order_return]['details_url'] = $this->context->link->getPageLink('order-detail', true, null, 'id_order='.(int)$order_return['id_order']);
-            $orders_returns[$id_order_return]['return_url'] = $this->context->link->getPageLink('order-return', true, null, 'id_order_return='.(int)$order_return['id_order_return']);
+            $orders_returns[$id_order_return] = $orderReturnPresenter->present($order_return);
         }
 
         return $orders_returns;
