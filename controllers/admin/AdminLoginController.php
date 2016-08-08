@@ -271,7 +271,7 @@ class AdminLoginControllerCore extends AdminController
                 $employee->update();
             }
 
-            $admin_url = Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink('AdminLogin');
+            $admin_url = $this->context->link->getAdminLink('AdminLogin');
             $params = array(
                 '{email}' => $employee->email,
                 '{lastname}' => $employee->lastname,
