@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\Order\OrderReturnPresenter;
 
 class OrderReturnControllerCore extends FrontController
 {
@@ -34,37 +34,32 @@ class OrderReturnControllerCore extends FrontController
     public $ssl = true;
 
     /**
-     * Initialize order return controller
+     * Initialize order return controller.
+     *
      * @see FrontController::init()
      */
     public function init()
     {
         parent::init();
 
-        $id_order_return = (int)Tools::getValue('id_order_return');
+        $id_order_return = (int) Tools::getValue('id_order_return');
 
         if (!isset($id_order_return) || !Validate::isUnsignedId($id_order_return)) {
             $this->redirect_after = '404';
             $this->redirect();
         } else {
-            $order_return = new OrderReturn((int)$id_order_return);
+            $order_return = new OrderReturn((int) $id_order_return);
             if (Validate::isLoadedObject($order_return) && $order_return->id_customer == $this->context->cookie->id_customer) {
-                $order = new Order((int)($order_return->id_order));
+                $order = new Order((int) ($order_return->id_order));
                 if (Validate::isLoadedObject($order)) {
-                    $state = new OrderReturnState((int)$order_return->state);
-
                     if ($order_return->state == 1) {
                         $this->warning[] = $this->trans('You must wait for confirmation before returning any merchandise.', array(), 'Shop.Notifications.Warning');
                     }
 
+                    // StarterTheme: Use presenters!
                     $this->context->smarty->assign(array(
-                        'orderRet' => $this->getTemplateVarOrderReturn($order_return),
-                        'order' => $order,
-                        'state_name' => $state->name[(int)$this->context->language->id],
-                        'return_allowed' => false,
-                        'products' => $this->getTemplateVarProducts((int)$order_return->id, $order),
-                        'returnedCustomizations' => OrderReturn::getReturnedCustomizedProducts((int)$order_return->id_order),
-                        'customizedDatas' => Product::getAllCustomizedDatas((int)$order->id_cart)
+                        'return' => $this->getTemplateVarOrderReturn($order_return),
+                        'products' => $this->getTemplateVarProducts((int) $order_return->id, $order),
                     ));
                 } else {
                     $this->redirect_after = '404';
@@ -78,40 +73,43 @@ class OrderReturnControllerCore extends FrontController
     }
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
     {
         parent::initContent();
 
-        $this->context->smarty->assign(array(
-            'errors' => $this->errors,
-            'nbdaysreturn' => (int)Configuration::get('PS_ORDER_RETURN_NB_DAYS')
-        ));
         $this->setTemplate('customer/order-return.tpl');
     }
 
-    public function getTemplateVarOrderReturn($order_return)
+    public function getTemplateVarOrderReturn($orderReturn)
     {
-        $order_return = $this->objectPresenter->present($order_return);
+        $orderReturns = OrderReturn::getOrdersReturn($orderReturn->id_customer, $orderReturn->id_order);
+        foreach ($orderReturns as $return) {
+            if ($orderReturn->id_order == $return['id_order']) {
+                break;
+            }
+        }
 
-        $order_return['return_number'] = sprintf('%06d', $order_return['id']);
-        $order_return['return_date'] = Tools::displayDate($order_return['date_add'], null, false);
-        $order_return['return_pdf_url'] = $this->context->link->getPageLink('pdf-order-return', true, null, 'id_order_return='.(int)$order_return['id']);
+        $orderReturnPresenter = new OrderReturnPresenter(
+            Configuration::get('PS_RETURN_PREFIX', $this->context->language->id),
+            $this->context->link
+        );
 
-        return $order_return;
+        return $orderReturnPresenter->present($return);
     }
 
     public function getTemplateVarProducts($order_return_id, $order)
     {
-        $products = [];
-        $return_products = OrderReturn::getOrdersReturnProducts((int)$order_return_id, $order);
+        $products = array();
+        $return_products = OrderReturn::getOrdersReturnProducts((int) $order_return_id, $order);
 
         foreach ($return_products as $id_return_product => $return_product) {
             if (!isset($return_product['deleted'])) {
                 $products[$id_return_product] = $return_product;
-                $products[$id_return_product]['customizations'] = ($return_product['customizedDatas']) ? $this->getTemplateVarCustomization($return_product) : [];
+                $products[$id_return_product]['customizations'] = ($return_product['customizedDatas']) ? $this->getTemplateVarCustomization($return_product) : array();
             }
         }
 
@@ -120,19 +118,19 @@ class OrderReturnControllerCore extends FrontController
 
     public function getTemplateVarCustomization(array $product)
     {
-        $product_customizations = [];
+        $product_customizations = array();
         $imageRetriever = new ImageRetriever($this->context->link);
 
         foreach ($product['customizedDatas'] as $byAddress) {
             foreach ($byAddress as $customization) {
-                $presentedCustomization = [
-                    'quantity'              => $customization['quantity'],
-                    'fields'                => [],
-                    'id_customization'      => null
-                ];
+                $presentedCustomization = array(
+                    'quantity' => $customization['quantity'],
+                    'fields' => array(),
+                    'id_customization' => null,
+                );
 
                 foreach ($customization['datas'] as $byType) {
-                    $field = [];
+                    $field = array();
                     foreach ($byType as $data) {
                         switch ($data['type']) {
                             case Product::CUSTOMIZE_FILE:
@@ -149,6 +147,7 @@ class OrderReturnControllerCore extends FrontController
                                 $field['type'] = null;
                         }
                         $field['label'] = $data['name'];
+                        $field['id_module'] = $data['id_module'];
                         $presentedCustomization['id_customization'] = $data['id_customization'];
                     }
                     $presentedCustomization['fields'][] = $field;
@@ -167,11 +166,11 @@ class OrderReturnControllerCore extends FrontController
 
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
-        if (($id_order_return = (int)Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
-            $breadcrumb['links'][] =[
+        if (($id_order_return = (int) Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
+            $breadcrumb['links'][] = array(
                 'title' => $this->trans('Merchandise returns', array(), 'Shop.Theme'),
-                'url' => $this->context->link->getPageLink('order-follow')
-            ];
+                'url' => $this->context->link->getPageLink('order-follow'),
+            );
         }
 
         return $breadcrumb;
