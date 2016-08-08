@@ -482,11 +482,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
                         if (is_array($combination_images[$row['id_product_attribute']])) {
                             foreach ($combination_images[$row['id_product_attribute']] as $tmp) {
-                                if (isset($current_cover)) {
-                                    if ($tmp['id_image'] == $current_cover['id_image']) {
-                                        $combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int) $tmp['id_image'];
-                                        break;
-                                    }
+                                if ($tmp['id_image'] == $current_cover['id_image']) {
+                                    $combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int) $tmp['id_image'];
+                                    break;
                                 }
                             }
                         }
