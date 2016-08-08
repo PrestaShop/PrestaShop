@@ -714,7 +714,7 @@ var form = (function() {
     }
     seo.onSave();
     updateMissingTranslatedNames();
-    
+
     var data = $('input, textarea, select', elem).not(':input[type=button], :input[type=submit], :input[type=reset]').serialize();
     if (target == '_blank' && redirect) {
       var openBlank = window.open('about:blank', target, '');
@@ -782,7 +782,7 @@ var form = (function() {
     $('div.translations.tabbable > div > div.tab-pane:not(.translation-label-' + iso_code + ')').removeClass('active');
     $('div.translations.tabbable > div > div.tab-pane.translation-label-' + iso_code).addClass('active');
   }
-  
+
   function updateMissingTranslatedNames() {
       var namesDiv = $('#form_step1_names');
       var defaultLanguageValue = null;
@@ -1008,6 +1008,22 @@ var virtualProduct = (function() {
               $('#form_step3_virtual_product_nb_days').val(0);
             }
           });
+        }
+      });
+
+      $('#form_step3_virtual_product_file').change(function(e) {
+        if ($(this)[0].files !== undefined) {
+          var files = $(this)[0].files;
+          var name  = '';
+
+          $.each(files, function(index, value) {
+            name += value.name + ', ';
+          });
+          $('#form_step3_virtual_product_name').val(name.slice(0, -2));
+        } else {
+          // Internet Explorer 9 Compatibility
+          var name = $(this).val().split(/[\\/]/);
+          $('#form_step3_virtual_product_name').val(name[name.length - 1]);
         }
       });
 
@@ -1674,7 +1690,7 @@ var seo = (function() {
         var id_lang = elem.attr('name').match(/\d+/g)[1];
         $('#form_step5_link_rewrite_' + id_lang).val(str2url(elem.val(), 'UTF-8'));
     };
-  
+
 
   return {
     'init': function() {
