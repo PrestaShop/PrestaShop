@@ -59,21 +59,18 @@ class ImageRetriever
                 $image['associatedVariants'] = [];
             }
 
-            /* If product have combinations, we need to filter */
-            if (
-                in_array($productAttributeId, $image['associatedVariants'])
-                && count($imageToCombinations) > 0
-            ) {
-                return $image;
-            }
-            
-            /* If product have no combinations, return all images */
-            if (0 === count($imageToCombinations)) {
-                return $image;
-            }
+            return $image;
         }, $images);
 
-        return array_filter($images);
+        $filteredImages = array();
+
+        foreach ($images as $image) {
+            if (in_array($productAttributeId, $image['associatedVariants'])) {
+                $filteredImages[] = $image;
+            }
+        }
+
+        return (0 === count($filteredImages)) ? $images : $filteredImages;
     }
 
     public function getImage($object, $id_image)
