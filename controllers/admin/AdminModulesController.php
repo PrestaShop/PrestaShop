@@ -624,7 +624,7 @@ class AdminModulesControllerCore extends AdminController
                     } else {
                         $module->disable();
                     }
-                    Tools::redirectAdmin($this->getCurrentUrtrans('enable', array(), 'Admin.Actions'));
+                    Tools::redirectAdmin($this->trans('enable', array(), 'Admin.Actions'));
                 }
             } else {
                 $this->errors[] = Tools::displayError('Cannot load the module\'s object.');
@@ -952,7 +952,7 @@ class AdminModulesControllerCore extends AdminController
                                 $this->context->smarty->assign(array(
                                     'module' => $module,
                                     'display_multishop_checkbox' => true,
-                                    'current_url' => $this->getCurrentUrtrans('enable', array(), 'Admin.Actions'),
+                                    'current_url' => $this->trans('enable', array(), 'Admin.Actions'),
                                     'shop_context' => $shop_context,
                                 ));
                             }
