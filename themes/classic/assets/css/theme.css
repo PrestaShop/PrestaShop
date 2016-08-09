@@ -6121,8 +6121,6 @@ body#checkout {
 
 .input-color {
   position: absolute;
-  top: 0.4375rem;
-  left: 0.5rem;
   opacity: 0;
   cursor: pointer; }
 
