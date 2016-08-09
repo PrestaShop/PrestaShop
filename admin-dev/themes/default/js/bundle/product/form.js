@@ -621,11 +621,13 @@ var specificPrices = (function() {
       });
 
       $('#specific_price_form .js-cancel').click(function() {
+        $('#specific-price > a').click();
         $('#specific-price .add').click().show();
       });
 
       $('#specific_price_form .js-save').click(function() {
         add($(this));
+        $('#specific_price_form').reset();
       });
 
       $(document).on('click', '#js-specific-price-list .js-delete', function(e) {
