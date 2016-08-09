@@ -23,10 +23,9 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Product;
 
-class ProductListingPresenter extends AbstractProductPresenter
+class ProductListingPresenter extends ProductPresenter
 {
     public function present(
         ProductPresentationSettings $settings,
