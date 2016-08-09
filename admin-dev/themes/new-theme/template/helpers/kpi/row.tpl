@@ -26,11 +26,6 @@
   <div class="row">
     <div class="col-md-12">
       <div class="kpi-container">
-        {if $refresh}
-          <div class="kpi-refresh" onclick="refresh_kpis(true);">
-            <i class="material-icons">refresh</i>
-          </div>
-        {/if}
         <div class="row">
           {assign var='col' value=(int)(12 / $kpis|count)}
           {foreach from=$kpis item=i name=kpi}

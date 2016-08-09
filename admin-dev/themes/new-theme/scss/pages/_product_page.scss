@@ -97,7 +97,7 @@
     width: 97%;
     font-size: rem(12px);
     font-weight: 600;
-    div.row:first-child .form-control-label{
+    div.row:first-child .form-control-label {
       min-height: rem(45px);
     }
   }
@@ -230,7 +230,7 @@
   #product-images-dropzone {
     height: 340px;
     min-height: 340px;
-    border:none;
+    border: none;
     padding: 5px;
     margin-bottom: 0;
     border-bottom-left-radius: 0;
@@ -239,7 +239,7 @@
     transition: width 0.5s ease-out, margin 0.5s ease-out;
     z-index: 1;
     &.col-md-8 {
-        border-right: solid 1px $gray-light;
+      border-right: solid 1px $gray-light;
     }
     &.dropzone {
       .dz-preview {
@@ -247,8 +247,8 @@
         height: 130px;
         border: 1px solid $gray-light;
         &.active {
-            border: 3px solid $brand-primary;
-            border-radius: 3px;
+          border: 3px solid $brand-primary;
+          border-radius: 3px;
         }
         &.openfilemanager {
           text-align: center;
@@ -286,7 +286,10 @@
             max-width: 130px;
             max-height: 130px;
             position: absolute;
-            top: 0; bottom:0; left: 0; right:0;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
             margin: auto;
           }
         }
@@ -359,7 +362,7 @@
     right: 0;
     cursor: default !important;
     margin: 10px 0 5px 5px;
-    float:left;
+    float: left;
     position: absolute;
     z-index: 0;
     .close {
@@ -411,7 +414,6 @@
       cursor: pointer;
       padding: rem(5px) rem(10px);
       color: $gray-light;
-
       &:hover {
         background-color: $primary-hover;
         color: $white;
@@ -479,38 +481,6 @@
             bottom: rem(4px);
           }
         }
-      }
-    }
-  }
-
-  .category-tree {
-    ul {
-      padding-left: rem(20px);
-    }
-    .more,
-    .less {
-      background: none;
-      position: relative;
-      > .checkbox {
-        cursor: pointer;
-      }
-      &::before {
-        position: absolute;
-        font-family: 'Material Icons';
-        cursor: pointer;
-        font-size: rem(20px);
-        color: $gray-medium;
-        top: rem(-4px);
-      }
-    }
-    .less {
-      &::before {
-        content: "\E313";
-      }
-    }
-    .more {
-      &::before {
-        content: "\E5CC";
       }
     }
   }
@@ -592,11 +562,9 @@
 
   #combinations-bulk-form {
     transition: opacity 1s ease-in-out;
-
     &.inactive {
       cursor: progress;
       opacity: 0.3;
-
       > * {
         pointer-events: none;
       }
@@ -604,8 +572,8 @@
   }
 
   .combinations-list {
-    th,
-    td {
+    td,
+    th {
       color: $gray-medium;
       vertical-align: middle;
     }
@@ -621,7 +589,8 @@
       &.loaded {
         display: none;
       }
-      &.timeline-wrapper, .timeline-item {
+      &.timeline-wrapper,
+      .timeline-item {
         background-color: transparent;
         border-radius: 0;
       }
@@ -687,7 +656,6 @@
   @media screen and (max-width: 1450px) {
     max-width: rem(197px);
   }
-
   max-width: rem(290px);
   position: absolute;
   z-index: 1000;
@@ -703,10 +671,8 @@
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-
   > li {
     padding: 3px 20px;
-
     &:hover {
       background: $primary-hover;
       cursor: pointer;
@@ -715,12 +681,10 @@
         text-decoration: none;
       }
     }
-
     &.ui-state-focus {
       background-color: #DDD;
     }
   }
-
   a {
     color: $gray-medium;
   }
@@ -755,11 +719,9 @@
       padding: em(7px);
       height: rem(162px);
       overflow-x: hidden;
-
       .two-columns {
         columns: 2;
       }
-
       .attribute {
         .js-attribute-checkbox {
           display: none;
@@ -800,9 +762,9 @@
 
 .table {
   &.table-no-bordered {
-    thead,
     tbody,
-    th {
+    th,
+    thead {
       border: 0;
     }
   }
@@ -813,7 +775,6 @@
     vertical-align: middle;
   }
 }
-
 #product_catalog_list {
   .table{
     thead, th, tbody {
@@ -855,7 +816,6 @@
   margin-top: 7px;
 }
 
-/* 13 inches screens */
 @media only screen and (min-width: 320px) and (max-width: 1450px) {
   .product-page {
     .product-header {
@@ -903,9 +863,7 @@
       .right-arrow {
         margin-top: rem(-50px);
       }
-      .left-arrow {
-
-      }
+      .left-arrow {}
     }
     .nav-tabs {
       height: rem(50px);

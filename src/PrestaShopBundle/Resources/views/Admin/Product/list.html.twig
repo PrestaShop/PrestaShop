@@ -19,17 +19,15 @@
               <a href="{{ product.url|default('') }}#tab-step1">{{ product.name|default('N/A'|trans({}, 'Admin.Global')) }}</a>
             </td>
             <td>
-              <a href="{{ product.url|default('') }}#tab-step6">{{ product.reference|default('N/A'|trans({}, 'Admin.Global')) }}</a>
+              {{ product.reference|default('N/A'|trans({}, 'Admin.Global')) }}
             </td>
             <td>
-              <a href="{{ product.url|default('') }}#tab-step1">{{ product.name_category|default('') }}</a>
+              {{ product.name_category|default('') }}
             </td>
             <td>
               <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'Admin.Global')) }}</a>
             </td>
-            <td>
-              <a href="{{ product.url|default('') }}#tab-step2">{{ product.price_final|default('N/A'|trans({}, 'Admin.Global')) }}</a>
-            </td>
+
             <td class="product-sav-quantity" data-product-quantity-value="{{ product.sav_quantity|default('') }}">
               <a href="{{ product.url|default('') }}#tab-step3">
                 {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
@@ -62,7 +60,7 @@
             {% endif %}
             <td>
                 <div class="btn-group-action">
-                    {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
+                    {% include 'PrestaShopBundle:Admin/Product/Include:form_edit_dropdown.html.twig' with {
                       'button_id': "product_list_id_" ~ product.id_product ~ "_menu",
                       'default_item': {
                         "href": product.url|default('#'),
