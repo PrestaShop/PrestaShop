@@ -13,6 +13,7 @@ $(document).ready(function () {
     'click',
     'input.product-refresh',
     function(event) {
+      var that = $(this);
       event.preventDefault();
 
       var query = $(event.target.form).serialize() + '&ajax=1&action=productrefresh';
@@ -21,8 +22,9 @@ $(document).ready(function () {
       $.post(actionURL, query, null, 'json').then(function(resp) {
         prestashop.emit('product updated', {
           reason: {
-            productUrl: resp.productUrl,
-          }
+           productUrl: resp.productUrl,
+          },
+          refreshUrl: that.data('url-update')
         });
       });
     }
