@@ -156,12 +156,10 @@ function productCategoryFilterReset(div) {
 
 function productCategoryFilterExpand(div, btn) {
 	$('div#choice_tree').categorytree('unfold');
-	$(btn).hide();
 }
 
 function productCategoryFilterCollapse(div, btn) {
 	$('div#choice_tree', div).categorytree('fold');
-	$(btn).hide();
 }
 
 function categoryFilterButtons() {
@@ -290,9 +288,9 @@ function bulkProductAction(element, action) {
 			// no break !
 		// this case will post inline edition command
 		case 'edition':
-			var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
-			urlHandler = $(element).closest('[massediturl]');
-			postUrl = urlHandler.attr('massediturl').replace(/sort/, editionAction);
+      var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
+			urlHandler = $('[massediturl]');
+      postUrl = urlHandler.attr('massediturl').replace(/sort/, editionAction);
 			if (redirectUrl === '') {
 				redirectUrl = urlHandler.attr('redirecturl');
 			}
