@@ -1,0 +1,20 @@
+admin_international_translations_list:
+    path: /translations/list
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:list
+        _legacy_controller: AdminTranslations
+    requirements:
+        locale: \w+
+
+admin_international_translations_edit:
+    path: /translations/edit
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:edit
+        _legacy_controller: AdminTranslations
+    requirements:
+        domain: \w+
+        translation_key: \w+
+        translation_value: \w+
+
