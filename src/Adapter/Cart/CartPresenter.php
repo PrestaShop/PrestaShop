@@ -280,15 +280,17 @@ class CartPresenter implements PresenterInterface
 
         if (!$cart->isVirtualCart()) {
             $shippingCost = $cart->getTotalShippingCost(null, $this->includeTaxes());
-            $subtotals['shipping'] = array(
-                'type' => 'shipping',
-                'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
-                'amount' => $shippingCost,
-                'value' => $shippingCost != 0
-                    ? $this->priceFormatter->format($shippingCost)
-                    : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
-            );
+        } else {
+            $shippingCost = 0;
         }
+        $subtotals['shipping'] = array(
+            'type' => 'shipping',
+            'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
+            'amount' => $shippingCost,
+            'value' => $shippingCost != 0
+                ? $this->priceFormatter->format($shippingCost)
+                : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
+        );
 
         $subtotals['tax'] = null;
         if (Configuration::get('PS_TAX_DISPLAY')) {
