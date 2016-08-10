@@ -79,7 +79,7 @@
 			});
 		});
 	</script>
-	<form method="get" action="index.php" id="typeTranslationForm" class="form-horizontal">
+	<form method="post" action="index.php/international/translations/list" id="typeTranslationForm" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-file-text"></i>
