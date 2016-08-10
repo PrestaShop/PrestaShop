@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class AliasCore
+ */
 class AliasCore extends ObjectModel
 {
     public $alias;
@@ -38,11 +41,19 @@ class AliasCore extends ObjectModel
         'primary' => 'id_alias',
         'fields' => array(
             'search' => array('type' => self::TYPE_STRING, 'validate' => 'isValidSearch', 'required' => true, 'size' => 255),
-            'alias' =>    array('type' => self::TYPE_STRING, 'validate' => 'isValidSearch', 'required' => true, 'size' => 255),
+            'alias' => array('type' => self::TYPE_STRING, 'validate' => 'isValidSearch', 'required' => true, 'size' => 255),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
         ),
     );
 
+    /**
+     * AliasCore constructor.
+     *
+     * @param int|null    $id      Alias ID
+     * @param string|null $alias   Alias
+     * @param string|null $search  Search string
+     * @param int|null    $id_lang Language ID
+     */
     public function __construct($id = null, $alias = null, $search = null, $id_lang = null)
     {
         $this->def = Alias::getDefinition($this);
@@ -72,7 +83,9 @@ class AliasCore extends ObjectModel
         }
     }
 
-
+    /**
+     * @see ObjectModel::add();
+     */
     public function add($autodate = true, $nullValues = false)
     {
         $this->alias = Tools::replaceAccentedChars($this->alias);
@@ -86,6 +99,9 @@ class AliasCore extends ObjectModel
         return false;
     }
 
+    /**
+     * @see ObjectModel::delete();
+     */
     public function delete()
     {
         if (parent::delete()) {
@@ -96,6 +112,11 @@ class AliasCore extends ObjectModel
         return false;
     }
 
+    /**
+     * Get all found aliases from DB with search query
+     *
+     * @return string Comma separated aliases
+     */
     public function getAliases()
     {
         if (!Alias::isFeatureActive()) {
@@ -114,6 +135,7 @@ class AliasCore extends ObjectModel
     /**
      * This method is allow to know if a feature is used or active
      * @since 1.5.0.1
+     *
      * @return bool
      */
     public static function isFeatureActive()
@@ -124,6 +146,7 @@ class AliasCore extends ObjectModel
     /**
      * This method is allow to know if a alias exist for AdminImportController
      * @since 1.5.6.0
+     *
      * @return bool
      */
     public static function aliasExists($id_alias)
