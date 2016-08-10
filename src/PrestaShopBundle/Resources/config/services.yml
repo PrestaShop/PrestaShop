@@ -168,6 +168,13 @@ services:
         tags:
             - { name: twig.extension }
 
+    prestashop.twig.extension.translation:
+        class: PrestaShopBundle\Twig\TranslationsExtension
+        properties:
+            translator: @translator
+        tags:
+            - { name: twig.extension }
+
     prestashop.twig.extension.dataFormatter:
         class: PrestaShopBundle\Twig\DataFormatterExtension
         tags:
