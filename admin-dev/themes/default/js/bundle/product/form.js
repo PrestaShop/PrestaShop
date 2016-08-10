@@ -625,6 +625,7 @@ var specificPrices = (function() {
       $('#specific_price_form .js-cancel').click(function () {
         $('#specific-price > a').click();
         $('#specific-price .add').click().show();
+        productPriceField.prop('disabled', true);
       });
 
       $('#specific_price_form .js-save').click(function () {
