@@ -24,7 +24,7 @@ class Translation
     /**
      * @var string
      *
-     * @ORM\Column(name="key", type="string")
+     * @ORM\Column(name="`key`", type="string")
      */
     private $key;
 
