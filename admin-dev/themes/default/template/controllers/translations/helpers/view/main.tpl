@@ -56,19 +56,26 @@
 				addThemeSelect();
 			});
 
-			$('#translations-languages a').click(function(e) {
-				e.preventDefault();
-				$(this).parent().addClass('active').siblings().removeClass('active');
-				$('#language-button').html($(this).html()+' <span class="caret"></span>');
-			});
-
 			$('#modify-translations').click(function(e) {
-				var lang = $('#translations-languages li.active').data('type');
+				var languages = $('#translations-languages option');
+				var i;
+				var selectedLanguage;
 
-				if (lang == null)
-					return !alert('{l s='Please select your language!'}');
+				for (i = 0; i < languages.length; i++) {
+					if (languages[i].selected) {
+						selectedLanguage = languages[i].value;
 
-				chooseTypeTranslation($('#translations-languages li.active').data('type'));
+						break;
+					}
+				}
+
+				if (0 === selectedLanguage.length) {
+					alert('{l s='Please select your language!'}');
+
+					return;
+				}
+
+				chooseTypeTranslation(selectedLanguage);
 			});
 		});
 	</script>
