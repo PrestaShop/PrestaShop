@@ -14,6 +14,9 @@ $(document).ready(() => {
       let productModal = $(`#quickview-modal-${resp.product.id}-${resp.product.id_product_attribute}`);
       productModal.modal('show');
       productConfig(productModal);
+      productModal.on('hidden.bs.modal', function () {
+        productModal.remove();
+      });
     });
   });
   var productConfig = (qv) => {

@@ -7,6 +7,10 @@ $(document).ready(function () {
   });
 
   prestashop.on('product updated', function(event) {
+    if (typeof event.refreshUrl == "undefined") {
+        event.refreshUrl = true;
+    }
+    
     $.post(event.reason.productUrl, {ajax: '1', action: 'refresh'}, null, 'json').then(function(resp) {
       $('.product-prices').replaceWith(resp.product_prices);
       $('.product-customization').replaceWith(resp.product_customization);
@@ -16,7 +20,9 @@ $(document).ready(function () {
       $('#product-details').replaceWith(resp.product_details);
       $('.product-add-to-cart').replaceWith(resp.product_add_to_cart);
 
-      window.history.pushState({id_product_attribute: resp.id_product_attribute}, undefined, resp.product_url);
+      if (true == event.refreshUrl) {
+        window.history.pushState({id_product_attribute: resp.id_product_attribute}, undefined, resp.product_url);
+      }
 
       prestashop.emit('product dom updated');
     });
