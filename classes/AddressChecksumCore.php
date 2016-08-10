@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2016 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -23,23 +23,34 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
+/**
+ * Class AddressChecksumCore
+ */
 class AddressChecksumCore implements ChecksumInterface
 {
-    private $separator = '_';
+    const SEPARATOR = '_';
 
+    /**
+     * Generate a checksum
+     *
+     * @param Address $address
+     *
+     * @return string SHA1 checksum for the Address
+     */
     public function generateChecksum($address)
     {
         if (!$address->id) {
             return sha1('No address set');
         }
 
-        $uniq_id = '';
+        $uniqId = '';
         $fields = $address->getFields();
         foreach ($fields as $name => $value) {
-            $uniq_id .= $value.$this->separator;
+            $uniqId .= $value.self::SEPARATOR;
         }
-        $uniq_id = rtrim($uniq_id, $this->separator);
+        $uniqId = rtrim($uniqId, self::SEPARATOR);
 
-        return sha1($uniq_id);
+        return sha1($uniqId);
     }
 }
