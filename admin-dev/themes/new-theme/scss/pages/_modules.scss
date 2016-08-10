@@ -93,14 +93,14 @@
     +:nth-child(even) {
       background-color: #f5f8f9 !important;
     }
-    
+
     @media (max-width: 47.9em) {
         padding-bottom: 0.5em;
     }
-    
+
     .module-item-wrapper-list {
         @extend .row;
-    
+
         .module-item-heading-list {
             @extend .col-md-4;
             @extend .col-sm-12;
@@ -148,14 +148,14 @@
         }
 
         .module-quick-description-list {
-            @extend .col-md-4;
-            @extend .col-sm-12;
+             @extend .col-md-4;
+             @extend .col-sm-12;
         }
 
         .module-quick-action-list {
-            @extend .col-md-4;
-            @extend .col-sm-12;
-            
+             @extend .col-md-4;
+             @extend .col-sm-12;
+
             > [class^="module-star-ranking-"] {
                 display:none;
             }
@@ -170,6 +170,48 @@
 /**
 * Addons Module Cast (List view)
 **/
+
+@mixin make-row() {
+  margin-left:  (rem(30px) / -2);
+  margin-right: (rem(30px) / -2);
+}
+
+.row {
+  @include make-row();
+}
+
+@media (max-width: 47.9em) {
+  .col-xs-12,.col-md-12,.col-sm-12 {
+    width: 100%;
+  }
+}
+
+.col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+  float: left;
+}
+.col-lg-1 {
+  width: 8.333333%;
+}
+
+.col-lg-offset-3 {
+  margin-left: 25%;
+}
+
+.col-md-2 {
+  width: 16.666667%;
+}
+
+.col-md-3 {
+  width: 25%;
+}
+.col-md-offset-2 {
+  margin-left: 16.666667%;
+}
+
+.col-sm-offset-0, .col-xs-offset-0 {
+  margin-left: 0;
+}
+
 .module-addons-item-list {
     @extend .col-xs-12;
     margin-top: 0.25em;
@@ -181,14 +223,14 @@
   -ms-user-select: none;
   user-select: none;
   cursor: pointer;
-  
+
   > .module-addons-item-wrapper-list {
-      @extend .row;
+    @extend .row;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
     font-size: 20px;
-    
+
     > .module-icon-addons-exit-list {
         @extend .col-lg-1;
         @extend .col-lg-offset-3;
@@ -208,7 +250,7 @@
 
 /**
 * Error message on catalog loading
-**/ 
+**/
 
 .module-placeholders-failure {
     display: none;
