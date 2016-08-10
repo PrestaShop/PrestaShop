@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class AccessCore
+ */
 class AccessCore extends ObjectModel
 {
     /** @var int Profile id which address belongs to */
@@ -39,15 +42,19 @@ class AccessCore extends ObjectModel
         'table' => 'access',
         'primary' => 'id_profile',
         'fields' => array(
-            'id_profile' =>        array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
-            'id_authorization_role' =>    array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
+            'id_profile' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
+            'id_authorization_role' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
         ),
     );
 
     /**
+     * Is access granted to this Role?
      *
-     * @param string $role
-     * @param int $idProfile
+     * @param string $role      Role name ("Superadministrator", "sales", "translator", etc.)
+     * @param int    $idProfile Profile ID
+     *
+     * @return bool Whether access is granted
+     * @throws Exception
      */
     public static function isGranted($role, $idProfile)
     {
@@ -84,9 +91,11 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Get all roles for the Profile ID
      *
-     * @param int $idProfile
-     * @return array
+     * @param int $idProfile Profile ID
+     *
+     * @return array Roles
      */
     public static function getRoles($idProfile)
     {
@@ -109,9 +118,12 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Find Tab ID by slug
      *
-     * @param string $authSlug
-     * @return string
+     * @param string $authSlug Slug
+     *
+     * @return string Tab ID
+     * @todo: Find out if we should return an int instead. (breaking change)
      */
     public static function findIdTabByAuthSlug($authSlug)
     {
@@ -131,9 +143,12 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Find slug by Tab ID
      *
-     * @param string $idTab
-     * @return string
+     *
+     * @param int $idTab Tab ID
+     *
+     * @return string Full module slug
      */
     public static function findSlugByIdTab($idTab)
     {
@@ -146,9 +161,11 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Find slug by Module ID
      *
-     * @param string $idModule
-     * @return string
+     * @param int $idModule Module ID
+     *
+     * @return string Full module slug
      */
     public static function findSlugByIdModule($idModule)
     {
@@ -161,10 +178,12 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Sluggify tab
      *
-     * @param string $tab Tab class name
+     * @param string $tab           Tab class name
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
-     * @return string
+     *
+     * @return string Full slug for tab
      */
     public static function sluggifyTab($tab, $authorization = '')
     {
@@ -172,10 +191,12 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Sluggify module
      *
-     * @param string $module Module name
+     * @param string $module        Module name
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
-     * @return string
+     *
+     * @return string Full slug for module
      */
     public static function sluggifyModule($module, $authorization = '')
     {
@@ -183,9 +204,11 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Get legacy authorization
      *
-     * @param string $legacyAuth
-     * @return string|array
+     * @param string $legacyAuth Legacy authorization
+     *
+     * @return bool|string|array Authorization
      */
     public static function getAuthorizationFromLegacy($legacyAuth)
     {
@@ -204,10 +227,12 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Add access
      *
-     * @param int $idProfile
-     * @param int $idRole
-     * @return string
+     * @param int $idProfile Profile ID
+     * @param int $idRole    Role ID
+     *
+     * @return string Whether access has been successfully granted ("ok", "error")
      */
     public function addAccess($idProfile, $idRole)
     {
@@ -220,10 +245,12 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Remove access
      *
-     * @param int $idProfile
-     * @param int $idRole
-     * @return string 'ok'|'error'
+     * @param int $idProfile Profile ID
+     * @param int $idRole    Role ID
+     *
+     * @return string Whether access has been successfully removed ("ok", "error")
      */
     public function removeAccess($idProfile, $idRole)
     {
@@ -237,10 +264,12 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Add module access
      *
-     * @param int $idProfile
-     * @param int $idRole
-     * @return string
+     * @param int $idProfile Profile ID
+     * @param int $idRole    Role ID
+     *
+     * @return string Whether module access has been successfully granted ("ok", "error")
      */
     public function addModuleAccess($idProfile, $idRole)
     {
@@ -270,11 +299,15 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Update legacy access
      *
-     * @param int $idProfile
-     * @param int $idTab
-     * @param string $lgcAuth
-     * @param int $enabled
+     * @param int    $idProfile Profile ID
+     * @param int    $idTab     Tab ID
+     * @param string $lgcAuth   Legacy authorization
+     * @param int    $enabled   Whether access should be granted
+     *
+     * @return string Whether legacy access has been successfully updated ("ok", "error")
+     * @throws Exception
      */
     public function updateLgcAccess($idProfile, $idTab, $lgcAuth, $enabled)
     {
@@ -312,11 +345,14 @@ class AccessCore extends ObjectModel
     }
 
     /**
+     * Update (legacy) Module access
      *
-     * @param int $idProfile
-     * @param int $idModule
-     * @param string $lgcAuth
-     * @param int $enabled
+     * @param int    $idProfile Profile ID
+     * @param int    $idModule  Module ID
+     * @param string $lgcAuth   Legacy authorization
+     * @param int    $enabled   Whether module access should be granted
+     *
+     * @return string Whether module access has been succesfully changed ("ok", "error")
      */
     public function updateLgcModuleAccess($idProfile, $idModule, $lgcAuth, $enabled)
     {
