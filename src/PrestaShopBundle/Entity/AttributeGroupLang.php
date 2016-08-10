@@ -22,7 +22,7 @@ class AttributeGroupLang
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Lang")
-     * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false)
+     * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE" )
      */
     private $lang;
 
