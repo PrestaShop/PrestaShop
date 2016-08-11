@@ -24,9 +24,9 @@
 *}
 
 {if isset($href) && $href}
-  <a href="{$href|escape:'html':'UTF-8'}" id="{$id|escape:'html':'UTF-8'}" class="kpi-container">
+  <a href="{$href|escape:'html':'UTF-8'}" id="{$id|escape:'html':'UTF-8'}" class="kpi-container box-stats">
 {else}
-  <div id="{$id|escape:'html':'UTF-8'}" class="kpi-container">
+  <div id="{$id|escape:'html':'UTF-8'}" class="kpi-container box-stats">
 {/if}
   <div class="kpi-content -{$color|escape}" data-original-title="{$tooltip|escape}" data-toggle="tooltip">
     {if isset($icon) && $icon}
