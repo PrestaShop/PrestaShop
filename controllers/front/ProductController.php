@@ -313,7 +313,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function displayAjaxRefresh()
     {
         $product_for_template = $this->getTemplateVarProduct();
-
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode(array(

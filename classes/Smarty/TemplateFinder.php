@@ -35,7 +35,8 @@ class TemplateFinderCore
     private $directories;
     private $extension;
     private $productListEntities = array('category', 'manufacturer', 'supplier');
-    private $productListSearch = array('search', 'price-drop', 'best-sale');
+    private $productListSearchEntities = array('search', 'price-drop', 'best-sale');
+    private $productEntities = array('product');
 
     public function __construct(array $directories, $extension)
     {
@@ -70,11 +71,17 @@ class TemplateFinderCore
                 $template,
                 'catalog/listing/product-list',
             );
-        } elseif (in_array($entity, $this->getProductListSearch())) {
+        } elseif (in_array($entity, $this->getProductListSearchEntities())) {
             $templates = array(
                 'catalog/listing/'.$entity,
                 $template,
                 'catalog/listing/product-list',
+            );
+        } elseif (in_array($entity, $this->getProductEntities())) {
+            $templates = array(
+                'catalog/'.$entity.'-'.$id,
+                $template,
+                'catalog/product',
             );
         } else {
             $templates = array($template);
@@ -112,9 +119,9 @@ class TemplateFinderCore
      *
      * @return array
      */
-    public function getProductListSearch()
+    public function getProductListSearchEntities()
     {
-        return $this->productListSearch;
+        return $this->productListSearchEntities;
     }
 
     /**
@@ -124,9 +131,33 @@ class TemplateFinderCore
      *
      * @return TemplateFinderCore
      */
-    public function setProductListSearch($productListSearch)
+    public function setProductListSearchEntities($productListSearchEntities)
     {
-        $this->productListSearch = $productListSearch;
+        $this->productListSearchEntities = $productListSearchEntities;
+
+        return $this;
+    }
+
+    /**
+     * Get productEntities.
+     *
+     * @return array
+     */
+    public function getProductEntities()
+    {
+        return $this->productEntities;
+    }
+
+    /**
+     * Set productEntities.
+     *
+     * @param array $productEntities
+     *
+     * @return TemplateFinderCore
+     */
+    public function setProductEntities($productEntities)
+    {
+        $this->productEntities = $productEntities;
 
         return $this;
     }
