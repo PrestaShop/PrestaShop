@@ -1,5 +1,5 @@
-{if $product.quantity_discounts}
 <section class="product-discounts">
+  {if $product.quantity_discounts}
     <h3 class="h6 product-discounts-title">{l s='Volume discounts' d='Shop.Theme.Catalog'}</h3>
     <table class="table-product-discounts">
       <thead>
@@ -19,5 +19,5 @@
       {/foreach}
       </tbody>
     </table>
+  {/if}
 </section>
-{/if}
