@@ -1156,7 +1156,7 @@ class FrontControllerCore extends Controller
         return $template;
     }
 
-    public function getTemplateFile($template, $params = array())
+    public function getTemplateFile($template, $params = array(), $locale = null)
     {
         if ($params !== false) {
             if (!isset($params['entity'])) {
@@ -1167,12 +1167,17 @@ class FrontControllerCore extends Controller
             }
         }
 
+        if (is_null($locale)) {
+            $locale = $this->context->language->locale;
+        }
+
         if ($overridden_template = Hook::exec(
             'DisplayOverrideTemplate',
             array(
                 'controller' => $this,
                 'template_file' => $template,
                 'id' => $params['id'],
+                'locale' => $locale,
             )
         )) {
             return $overridden_template;
@@ -1181,7 +1186,8 @@ class FrontControllerCore extends Controller
         return $this->getTemplateFinder()->getTemplate(
             $template,
             $params['entity'],
-            $params['id']
+            $params['id'],
+            $locale
         );
     }
 

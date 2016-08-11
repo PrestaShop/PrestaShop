@@ -44,12 +44,17 @@ class TemplateFinderCore
         $this->extension = $extension;
     }
 
-    public function getTemplate($template, $entity, $id)
+    public function getTemplate($template, $entity, $id, $locale)
     {
-        $templates = $this->getTemplateHierarchy($template, $entity, $id);
+        $locale = (Validate::isLocale($locale)) ? $locale : '';
+
+        $templates = $this->getTemplateHierarchy($template, $entity, $id, $locale);
 
         foreach ($this->directories as $dir) {
             foreach ($templates as $tpl) {
+                if (file_exists($dir.$locale.DIRECTORY_SEPARATOR.$tpl.$this->extension)) {
+                    return $locale.DIRECTORY_SEPARATOR.$tpl.$this->extension;
+                }
                 if (file_exists($dir.$tpl.$this->extension)) {
                     return $tpl.$this->extension;
                 }
