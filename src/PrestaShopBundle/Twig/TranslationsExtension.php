@@ -33,6 +33,11 @@ class TranslationsExtension extends \Twig_Extension
     public $translator;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    public $logger;
+
+    /**
      * Returns a list of functions to add to the existing list.
      *
      * @return array An array of functions
@@ -81,33 +86,10 @@ class TranslationsExtension extends \Twig_Extension
             $camelizedDomain = $tree['__camelized_domain'];
             unset($tree['__camelized_domain']);
 
-            $inputTemplateParts = array(
-                '<form method="post" class="hide" action="edit">',
-                '    <div class="alerts">',
-                '        <div class="hide alert alert-info">Translation successfully edited</div>',
-                '        <div class="hide alert alert-danger">Translation unsuccessfully edited</div>',
-                '    </div>',
-                '    <p><strong>Translation key:</strong> <verbatim>{key}</verbatim></p>',
-                '    <div class="form-group row">',
-                '        <div class="col-lg-12">',
-                '            <textarea class="form-control" rows="3" name="translation_value">{edited_translation_value}</textarea>',
-                '        </div>',
-                '        <input type="hidden" name="domain" value="{domain}"/>',
-                '        <input type="hidden" name="locale" value="{locale}"/>',
-                '        <input type="hidden" name="default" value="{default_translation_value}"/>',
-                '        <input type="hidden" name="translation_key" value="{key}"/>',
-                '    </div>',
-                '    <div class="col-md-offset-1">',
-                '        <input class="btn btn-default btn-sm" type="submit" value="{edit}"/>',
-                '        <input class="btn btn-default btn-sm reset-translation-value" type="button" value="{reset}"/>',
-                '    </div>',
-                '    <hr/>',
-                '</form>',
-            );
-            $inputTemplate = implode('', $inputTemplateParts);
-
-            $editAction = $this->translator->trans('Edit', array(), 'AdminActions', 'en-US');
-            $resetAction = $this->translator->trans('Reset', array(), 'AdminActions', 'en-US');
+            $editLabel = $this->translator->trans('Edit', array(), 'AdminActions', 'en-US');
+            $resetLabel = $this->translator->trans('Reset', array(), 'AdminActions', 'en-US');
+            $successMessage = 'Translation successfully edited';
+            $errorMessage = 'Translation unsuccessfully edited';
 
             $formIndex = 0;
             $pageIndex = 1;
@@ -124,26 +106,18 @@ class TranslationsExtension extends \Twig_Extension
                     $translationValue = $translationValue['db'];
                 }
 
-                $output .= str_replace(
+                $output .= $this->render('form-edit-message.html.twig',
                     array(
-                        '{key}',
-                        '{domain}',
-                        '{locale}',
-                        '{default_translation_value}',
-                        '{edited_translation_value}',
-                        '{edit}',
-                        '{reset}'
-                    ),
-                    array(
-                        $translationKey,
-                        $domain,
-                        $locale,
-                        $defaultTranslationValue,
-                        $translationValue,
-                        $editAction,
-                        $resetAction
-                    ),
-                    $inputTemplate
+                        'default_translation_value' => $defaultTranslationValue,
+                        'domain' => $domain,
+                        'edited_translation_value' => $translationValue,
+                        'error_message' => $errorMessage,
+                        'label_edit' => $editLabel,
+                        'label_reset' => $resetLabel,
+                        'locale' => $locale,
+                        'success_message' => $successMessage,
+                        'translation_key' => $translationKey,
+                    )
                 );
 
                 $isLastPage = $formIndex + 1 === count($tree);
@@ -212,10 +186,9 @@ class TranslationsExtension extends \Twig_Extension
         $output = $this->tagSubject($subject, $level, $id);
 
         if ($messagesSubtree) {
-            $output .= implode(array(
-                '<div class="translation-domain">',
-                '    <button class="btn btn-default btn-sm show-translation-messages">Show messages</button>',
-                '    <button class="btn btn-default btn-sm hide hide-translation-messages">Hide messages</button>',
+            $output .= $this->render('button-toggle-messages-visibility.html.twig', array(
+                'label_show_messages' => 'Show messages',
+                'label_hide_messages' => 'Hide messages'
             ));
 
             $output .= $this->getNavigation($this->parseDomain($subtree));
@@ -226,10 +199,10 @@ class TranslationsExtension extends \Twig_Extension
         $output .= '</div>';
 
         if ($messagesSubtree) {
-            $output .= '<a href="#_' . $id . '" class="hide btn btn-sm btn-default go-to-domain-menu">' .
-                'Go to previous navigation menu' .
-                '</a>'
-            ;
+            $output .= $this->render('button-go-to-pagination-bar.html.twig', array(
+                'domain' => $id,
+                'label' => 'Go to previous navigation menu',
+            ));
 
             // Close div with translation-domain class
             $output .= '</div>';
@@ -254,14 +227,29 @@ class TranslationsExtension extends \Twig_Extension
      * @return string
      */
     protected function getNavigation($id) {
-        return implode(array(
-            '<nav class="hide">',
-            '    <ul class="pagination">',
-            '        <li class="page-item active" data-page-index="1"><a class="page-link" href="#_' . $id . '">1</a></li>',
-            '        <li class="page-item tpl hide"><a class="page-link" href="#_' . $id . '">2</a></li>',
-            '    </ul>',
-            '</nav>',
-        ));
+        return $this->render('pagination-bar.html.twig', array('page_id' => $id));
+    }
+
+    /**
+     * @param $view
+     * @param array $parameters
+     * @return mixed|string
+     */
+    protected function render($view, $parameters = array()) {
+        $viewsDirectory = __DIR__ . '/../Resources/views/Admin/Translations/include';
+        $viewPath = $viewsDirectory . '/' . $view;
+        if (!file_exists($viewPath)) {
+            $message = sprintf('A view ("%s") does not exist.', $viewPath);
+            $this->logger->error($message);
+        }
+
+        $view = file_get_contents($viewPath);
+
+        foreach ($parameters as $key => $value) {
+            $view = str_replace('{{ ' . $key . ' }}', $value, $view);
+        }
+
+        return $view;
     }
 
     /**
