@@ -572,7 +572,7 @@ var specificPrices = (function() {
    * @param {object} elem - The clicked link
    */
   function remove(elem) {
-    modalConfirmation.create(translate_javascripts['Are you sure to disable this specific price ? they will all be deleted'], null, {
+    modalConfirmation.create(translate_javascripts['This will delete the specific price. Do you wish to proceed?'], null, {
       onContinue: function() {
         $.ajax({
           type: 'GET',
