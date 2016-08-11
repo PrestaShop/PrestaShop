@@ -39,6 +39,10 @@ _admin_warehouse_routing:
     resource: "admin/routing_warehouse.yml"
     prefix: /warehouse
 
+_admin_international_routing:
+    resource: "admin/routing_international.yml"
+    prefix: /international
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}/{view}

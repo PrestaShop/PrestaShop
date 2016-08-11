@@ -1,0 +1,7 @@
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block content %}
+<div class="translation-page">
+    {{ getTranslationsTree(translationsTree)|raw }}
+</div>
+{% endblock %}

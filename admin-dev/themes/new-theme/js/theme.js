@@ -20,6 +20,8 @@ import '../scss/theme.scss';
 import NavBar from './nav_bar.js';
 
 import './product-page/index';
+import './translation-page/index';
+
 import Header from './header.js';
 import refreshNotifications from './notifications.js';
 

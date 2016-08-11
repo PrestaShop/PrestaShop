@@ -56,23 +56,30 @@
 				addThemeSelect();
 			});
 
-			$('#translations-languages a').click(function(e) {
-				e.preventDefault();
-				$(this).parent().addClass('active').siblings().removeClass('active');
-				$('#language-button').html($(this).html()+' <span class="caret"></span>');
-			});
-
 			$('#modify-translations').click(function(e) {
-				var lang = $('#translations-languages li.active').data('type');
+				var languages = $('#translations-languages option');
+				var i;
+				var selectedLanguage;
 
-				if (lang == null)
-					return !alert('{l s='Please select your language!'}');
+				for (i = 0; i < languages.length; i++) {
+					if (languages[i].selected) {
+						selectedLanguage = languages[i].value;
 
-				chooseTypeTranslation($('#translations-languages li.active').data('type'));
+						break;
+					}
+				}
+
+				if (0 === selectedLanguage.length) {
+					alert('{l s='Please select your language!'}');
+
+					return;
+				}
+
+				chooseTypeTranslation(selectedLanguage);
 			});
 		});
 	</script>
-	<form method="get" action="index.php" id="typeTranslationForm" class="form-horizontal">
+	<form method="post" action="index.php/international/translations/list" id="typeTranslationForm" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-file-text"></i>
@@ -82,42 +89,17 @@
 				{l s='Here you can modify translations for every line of text inside PrestaShop.'}<br />
 				{l s='First, select a type of translation (such as "Back office" or "Installed modules"), and then select the language you want to translate strings in.'}
 			</p>
+            <input type="hidden" name="controller" value="AdminTranslations" />
+            <input type="hidden" name="lang" id="translation_lang" value="0" />
 			<div class="form-group">
-				<input type="hidden" name="controller" value="AdminTranslations" />
-				<input type="hidden" name="lang" id="translation_lang" value="0" />
-				<label class="control-label col-lg-3" for="type">{l s='Type of translation'}</label>
+				<label class="control-label col-lg-3" for="translations-languages">{l s='Select your language'}</label>
 				<div class="col-lg-4">
-					<select name="type" id="type">
-						{foreach $translations_type as $type => $array}
-							<option value="{$type}">{$array.name}</option>
-						{/foreach}
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="control-label col-lg-3" for="theme">{l s='Select your theme'}</label>
-				<div class="col-lg-4">
-					<select name="theme" id="theme">
-						{if !$host_mode}
-						<option value="">{l s='Core (no theme selected)'}</option>
-						{/if}
-						{foreach $themes as $theme}
-							<option value="{$theme->getName()}" {if $current_theme_name ==$theme->getName()}selected=selected{/if}>{$theme->getName()}</option>
-						{/foreach}
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="control-label col-lg-3" for="language-button">{l s='Select your language'}</label>
-				<div class="col-lg-4">
-					<button type="button" id="language-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						{l s='Language'} <span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" id="translations-languages">
+					<select name="locale" id="translations-languages">
+						<option value="">{l s='Language'}</option>
 						{foreach $languages as $language}
-						<li data-type="{$language['iso_code']}"><a href="#">{$language['name']}</a></li>
+						<option value="{$language['iso_code']}">{$language['name']}</option>
 						{/foreach}
-					</ul>
+					</select>
 				</div>
 				<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 			</div>

@@ -1,0 +1,21 @@
+<form method="post" class="hide" action="edit">
+    <div class="alerts">
+        <div class="hide alert alert-info">{{ success_message }}</div>
+        <div class="hide alert alert-danger">{{ error_message }}</div>
+    </div>
+    <p><strong>Translation key:</strong> <verbatim>{{ translation_key }}</verbatim></p>
+    <div class="form-group row">
+        <div class="col-lg-12">
+            <textarea class="form-control" rows="3" name="translation_value">{{ edited_translation_value }}</textarea>
+        </div>
+        <input type="hidden" name="domain" value="{{ domain }}"/>
+        <input type="hidden" name="locale" value="{{ locale }}"/>
+        <input type="hidden" name="default" value="{{ default_translation_value }}"/>
+        <input type="hidden" name="translation_key" value="{{ translation_key }}"/>
+    </div>
+    <div class="col-md-offset-1">
+        <input class="btn btn-default btn-sm" type="submit" value="{{ label_edit }}"/>
+        <input class="btn btn-default btn-sm reset-translation-value" type="button" value="{{ label_reset }}"/>
+    </div>
+    <hr/>
+</form>
