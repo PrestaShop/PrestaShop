@@ -1,6 +1,8 @@
 import $ from 'jquery'
 
 export default function () {
+    let fixedOffset = $('.header-toolbar').height() + $('.main-header').height();
+
     let addPageLinksToNavigationBar = (nav) => {
         let pageTemplate = $(nav).find('.tpl');
         pageTemplate.removeClass('tpl');
@@ -24,6 +26,28 @@ export default function () {
         }
     };
 
+    let pushStateToHistory = (url) => {
+        if (!!(history && history.pushState)) {
+            history.pushState({}, document.title, url);
+        }
+    };
+
+    // Fix internal navigation to anchors
+    // by adding offset of fixed header height
+    // @See also http://stackoverflow.com/a/13067009/282073
+    let scrollToPreviousPaginationBar = (paginationBar, link) => {
+        let paginationBarTop = paginationBar.getBoundingClientRect().top;
+        window.scrollTo(window.pageXOffset, window.pageYOffset + paginationBarTop - fixedOffset);
+        pushStateToHistory(location.pathname + $(link).attr('href'));
+    };
+
+    $('.translation-domain .go-to-pagination-bar').click((event) => {
+        let paginationBar = $(event.target).parents('.translation-domain').find('.pagination')[0];
+        scrollToPreviousPaginationBar(paginationBar, event.target);
+
+        return false;
+    });
+
     $('.translation-domain nav').each((navIndex, nav) => {
         addPageLinksToNavigationBar(nav);
 
@@ -39,6 +63,11 @@ export default function () {
             $(targetPage).attr('data-status', 'active');
         };
 
+        $(nav).find('.page-link').click((event) => {
+            let paginationBar = $(event.target).parents('.pagination')[0];
+            scrollToPreviousPaginationBar(paginationBar, event.target);
+        });
+
         $(nav).find('.page-item').click((event) => {
             let pageLink = $(event.target);
             let domain = pageLink.parents('.translation-domain');
@@ -50,6 +79,8 @@ export default function () {
 
             hideActivePageInDomain(domain);
             showPageInDomain(pageIndex, domain);
+
+            return false;
         });
     });
 }
