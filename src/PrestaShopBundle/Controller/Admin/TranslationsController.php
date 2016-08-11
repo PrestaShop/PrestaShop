@@ -60,6 +60,22 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request)
     {
+        $updatedTranslationSuccessfully = $this->saveTranslationMessage($request);
+        $this->clearCache();
+
+        return new JsonResponse(array(
+            'successful_update' => $updatedTranslationSuccessfully,
+            'translation_value' => $request->request->get('translation_value')
+        ));
+    }
+
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    protected function saveTranslationMessage(Request $request)
+    {
         $requestParams = $request->request->all();
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -93,10 +109,29 @@ class TranslationsController extends FrameworkBundleAdminController
             $this->container->get('logger')->error($exception->getMessage());
         }
 
-        return new JsonResponse(array(
-            'successful_update' => $updatedTranslationSuccessfully,
-            'translation_value' => $requestParams['translation_value']
-        ));
+        return $updatedTranslationSuccessfully;
+    }
+
+    /**
+     * @see \Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand
+     */
+    protected function clearCache()
+    {
+        $realCacheDir = $this->container->getParameter('kernel.cache_dir');
+        $oldCacheDir = substr($realCacheDir, 0, -1).('~' === substr($realCacheDir, -1) ? '+' : '~');
+        $filesystem = $this->container->get('filesystem');
+
+        try {
+            if ($filesystem->exists($oldCacheDir)) {
+                $filesystem->remove($oldCacheDir);
+            }
+
+            $this->container->get('cache_clearer')->clear($realCacheDir);
+            $filesystem->rename($realCacheDir, $oldCacheDir);
+            $filesystem->remove($oldCacheDir);
+        } catch (\Exception $exception) {
+            $this->container->get('logger')->error($exception->getMessage());
+        }
     }
 
     /**
