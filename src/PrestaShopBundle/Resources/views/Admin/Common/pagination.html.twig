@@ -19,7 +19,7 @@
     </ul>
     <ul class="pagination">
         <li style="float: left; margin-left: 2em;">
-            {{ "Viewing $from-$to on $total (page # $current_page / $page_count)"|trans({'$from': from+1, '$to': min(to+1, total), '$total': total, '$current_page': current_page, '$page_count': page_count},
+            {{ "Viewing $from-$to on $total (page $current_page / $page_count)"|trans({'$from': from+1, '$to': min(to+1, total), '$total': total, '$current_page': current_page, '$page_count': page_count},
                 'Admin.Catalog.Feature') }}
             &nbsp;
             |

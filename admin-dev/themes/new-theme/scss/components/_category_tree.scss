@@ -1,22 +1,60 @@
 ul.category-tree {
   padding: 0;
+  .less,
   .more {
-    background-image:url(img/blue_picto_more.png);
+    background: none;
+    position: relative;
+    > .checkbox {
+      cursor: pointer;
+    }
+    &::before {
+      position: absolute;
+      font-family: 'Material Icons';
+      cursor: pointer;
+      font-size: rem(20px);
+      color: $gray-medium;
+      top: rem(-4px);
+    }
   }
   .less {
-    background-image:url(img/blue_picto_less.png);
+    &::before {
+      content: "\E313";
+    }
+  }
+  .more {
+    &::before {
+      content: "\E5CC";
+    }
+  }
+  ul {
+    padding-left: rem(25px);
   }
   li {
     list-style: none;
     background-repeat: no-repeat;
     background-size: 12px 12px;
     background-position: 0 3px;
-    .checkbox, .radio {
+    .checkbox,
+    .radio {
       padding-left: 20px;
       padding-top: 0;
     }
     > ul {
       display: none;
     }
+  }
+}
+#tree-categories {
+  padding: rem(10px);
+  border: $gray-light 1px solid;
+  border-radius: rem(3px);
+  .categories-tree-actions {
+    display: inline-block;
+    margin-left: rem(15px);
+    i.material-icons {
+      font-size: 1.25rem;
+      vertical-align: bottom;
+    }
+    color: $gray-medium;
   }
 }

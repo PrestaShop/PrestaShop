@@ -1,0 +1,44 @@
+{% set buttonType = buttonType|default('primary') %}
+{% set right = right|default(false) %}
+
+<div class="{{ div_style|default("btn-group dropdown") }}">
+
+  {% if default_item is defined %}
+    <a
+      href="{{ default_item.href|default("#") }}"
+      title="{{ default_item.title|default(default_item.label|default("")) }}"
+      class="pull-left product-edit m-r-2"
+      {% if disabled is defined and disabled == true %}disabled="disabled"{% endif %}
+    >
+      {% if default_item.icon %}
+        <i class="material-icons">{{ default_item.icon }}</i>
+      {% endif %}
+      {{ default_item.label|default('') }}
+    </a>
+  {% endif %}
+
+  <a class="product-edit" data-toggle="dropdown">
+    {{ menu_label|default('') }}
+    <i class="material-icons">keyboard_arrow_down</i>
+  </a>
+
+  <div class="dropdown-menu{% if right %} dropdown-menu-right{% endif %}">
+    {% for entry in items %}
+      {% if entry.divider is defined and entry.divider==true %}
+        <div class="dropdown-divider"></div>
+      {% else %}
+        <a
+          class="dropdown-item product-edit" href="{{ entry.href|default("#") }}"
+          {% if entry.onclick is defined %}onclick="{{ entry.onclick }}"{% endif %}
+          {% if entry.target is defined %}target="{{ entry.target }}"{% endif %}
+        >
+          {% if entry.icon %}
+            <i class="material-icons">{{ entry.icon }}</i>
+          {% endif %}
+          {{ entry.label|default('') }}
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+</div>
