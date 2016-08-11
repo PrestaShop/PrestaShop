@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2016 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
+ * @copyright 2007-2016 PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,8 +27,18 @@
 define('PS_UNPACK_NATIVE', 1);
 define('PS_UNPACK_MODIFIED', 2);
 
+/**
+ * Class BlowfishCore
+ */
 class BlowfishCore extends Crypt_Blowfish
 {
+    /**
+     * Encrypt the text
+     *
+     * @param string $plaintext Plain text
+     *
+     * @return bool|string Ecrypted text, false if the plain text was too long
+     */
     public function encrypt($plaintext)
     {
         if (($length = strlen($plaintext)) >= 1048576) {
@@ -40,13 +50,19 @@ class BlowfishCore extends Crypt_Blowfish
         $strlen = strlen($paddedtext);
         for ($x = 0; $x < $strlen; $x += 8) {
             $piece = substr($paddedtext, $x, 8);
-            $cipher_piece = parent::encrypt($piece);
-            $encoded = base64_encode($cipher_piece);
+            $cipherPiece = parent::encrypt($piece);
+            $encoded = base64_encode($cipherPiece);
             $ciphertext = $ciphertext.$encoded;
         }
+
         return $ciphertext.sprintf('%06d', $length);
     }
 
+    /**
+     * @param $ciphertext
+     *
+     * @return string
+     */
     public function decrypt($ciphertext)
     {
         $plainTextLength = intval(substr($ciphertext, -6));
@@ -54,23 +70,30 @@ class BlowfishCore extends Crypt_Blowfish
 
         $plaintext = '';
         $chunks = explode('=', $ciphertext);
-        $ending_value = count($chunks);
-        for ($counter = 0; $counter < ($ending_value - 1); $counter++) {
+        $endingValue = count($chunks);
+        for ($counter = 0; $counter < ($endingValue - 1); $counter++) {
             $chunk = $chunks[$counter].'=';
             $decoded = base64_decode($chunk);
             $piece = parent::decrypt($decoded);
             $plaintext = $plaintext.$piece;
         }
+
         return substr($plaintext, 0, $plainTextLength);
     }
 
+    /**
+     * @param string $plaintext Plain text
+     *
+     * @return string
+     */
     public function maxi_pad($plaintext)
     {
-        $str_len = count($plaintext);
-        $pad_len = $str_len % 8;
-        for ($x = 0; $x < $pad_len; $x++) {
+        $stringLength = count($plaintext);
+        $padLength = $stringLength % 8;
+        for ($x = 0; $x < $padLength; $x++) {
             $plaintext = $plaintext.' ';
         }
+
         return $plaintext;
     }
 }
