@@ -1,6 +1,6 @@
 import $ from 'expose?$!expose?jQuery!jquery';
 import 'expose?Tether!tether';
-import 'bootstrap/dist/js/npm';
+import 'bootstrap/dist/js/bootstrap.min';
 import 'flexibility';
 import 'bootstrap-touchspin';
 
