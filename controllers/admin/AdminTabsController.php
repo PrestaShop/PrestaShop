@@ -315,9 +315,6 @@ class AdminTabsControllerCore extends AdminController
                     break;
                 }
             }
-        } elseif (Tools::isSubmit('submitAdd'.$this->table) && ($class_name = Tools::getValue('class_name')) && !class_exists($class_name.'Controller')) {
-            $this->errors[] = sprintf(Tools::displayError('The class name \'%sController\' cannot be found.'), $class_name);
-            return parent::postProcess();
         } else {
             // Temporary add the position depend of the selection of the parent category
             if (!Tools::isSubmit('id_tab')) { // @todo Review
