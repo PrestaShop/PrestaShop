@@ -1244,7 +1244,7 @@ function openModulesList()
 		header = $('#modules_list_container .modal-header').html();
 
 		$.ajax({
-			type: "POST",
+			type: "GET",
 			url : admin_modules_link,
 			async: true,
 			data : {
