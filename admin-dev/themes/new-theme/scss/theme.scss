@@ -14,15 +14,6 @@
 @import "pages/products_catalog";
 @import "pages/translation_page";
 
-// Other
-
-@import "components/tinymce";
-
-// =============================================================================
-// Bootstrap
-// =============================================================================
-@import "../node_modules/bootstrap/scss/bootstrap";
-
 // Main Layout
 
 @import "pages/modules";
@@ -36,6 +27,7 @@
 body {
   background: $background-grey;
 }
+
 // To put into the PrestaKit
 $color-icons: #6c868e;
 .breadcrumb {
