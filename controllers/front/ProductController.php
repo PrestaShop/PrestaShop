@@ -704,7 +704,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 } else {
                     $cur_price *= 1 - $row['reduction'];
                 }
+                $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
                 $discountPrice = $price - $row['real_value'];
+
                 if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                     if ($row['reduction_tax'] == 0 && !$row['price']) {
                         $row['discount'] = $priceFormatter->convertAndFormat($price - ($price * $row['reduction_with_tax']));
@@ -714,7 +716,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 } else {
                     $row['discount'] = $priceFormatter->convertAndFormat($row['real_value']);
                 }
-                $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
             } else {
                 if ($row['reduction_type'] == 'amount') {
                     if (Product::$_taxCalculationMethod == PS_TAX_INC) {
