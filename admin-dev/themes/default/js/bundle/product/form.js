@@ -642,6 +642,8 @@ var specificPrices = (function() {
           $('#form_step2_specific_price_sp_reduction_tax').show();
         }
       });
+
+      this.refreshCombinationsList();
     },
     'getAll': function() {
       getAll();
