@@ -109,6 +109,11 @@ class TranslationsExtension extends \Twig_Extension
             $editAction = $this->translator->trans('Edit', array(), 'AdminActions', 'en-US');
             $resetAction = $this->translator->trans('Reset', array(), 'AdminActions', 'en-US');
 
+            $formIndex = 0;
+            $pageIndex = 1;
+            $itemsPerPage = 25;
+            $output .= '<div class="page" data-status="active" data-page-index="1">';
+
             foreach ($tree as $translationKey => $translationValue) {
                 list($domain, $locale) = explode('.', $camelizedDomain);
                 $defaultTranslationValue = $this->translator->trans($translationKey, array(), $domain, $locale);
@@ -140,9 +145,26 @@ class TranslationsExtension extends \Twig_Extension
                     ),
                     $inputTemplate
                 );
+
+                $isLastPage = $formIndex + 1 === count($tree);
+
+                if ($isLastPage) {
+                    $output .= '</div>';
+                } elseif ((0 === $formIndex % $itemsPerPage) && ($formIndex > 0)) {
+                    $pageIndex++;
+
+                    // Close div with page class
+                    $output .= '</div>';
+                    $output .= '<div class="page hide" data-status="inactive" data-page-index="' . $pageIndex . '">';
+                }
+
+                $formIndex++;
             }
 
-            $output .= '</div>';
+            // Close div with page class when no message is available
+            if (count($tree) === 0) {
+                $output .= '</div>';
+            }
         } else {
             foreach ($tree as $subdomain => $subtree) {
                 $output .= $this->concatenateSubtreeHeader($subdomain, $subtree, $level);
@@ -179,19 +201,67 @@ class TranslationsExtension extends \Twig_Extension
      */
     protected function concatenateSubtreeHeader($subdomain, $subtree, $level = 2)
     {
-        $output = $this->tagSubject($this->makeSubdomainPrefix($level) . $subdomain, $level);
+        $messagesSubtree = $this->hasCamelizedDomain($subtree);
+        $subject = $this->makeSubdomainPrefix($level) . $subdomain;
 
-        if ($this->hasCamelizedDomain($subtree)) {
-            $output .= '<div class="translation-domain">';
-            $output .= '<button class="btn btn-default btn-sm show-translation-messages">Show messages</button>';
-            $output .= '<button class="btn btn-default btn-sm hide hide-translation-messages">Hide messages</button>';
+        $id = null;
+        if ($messagesSubtree) {
+            $id = $this->parseDomain($subtree);
+        }
+
+        $output = $this->tagSubject($subject, $level, $id);
+
+        if ($messagesSubtree) {
+            $output .= implode(array(
+                '<div class="translation-domain">',
+                '    <button class="btn btn-default btn-sm show-translation-messages">Show messages</button>',
+                '    <button class="btn btn-default btn-sm hide hide-translation-messages">Hide messages</button>',
+            ));
+
+            $output .= $this->getNavigation($this->parseDomain($subtree));
         }
 
         $output .= '<div class="col-offset">';
         $output .= $this->makeSubtree($subtree, $level + 1);
         $output .= '</div>';
 
+        if ($messagesSubtree) {
+            $output .= '<a href="#_' . $id . '" class="hide btn btn-sm btn-default go-to-domain-menu">' .
+                'Go to previous navigation menu' .
+                '</a>'
+            ;
+
+            // Close div with translation-domain class
+            $output .= '</div>';
+        }
+
         return $output;
+    }
+
+    /**
+     * @param $subtree
+     * @return mixed
+     */
+    protected function parseDomain($subtree)
+    {
+        list($domain) = explode('.', $subtree['__camelized_domain']);
+
+        return $domain;
+    }
+
+    /**
+     * @param $id
+     * @return string
+     */
+    protected function getNavigation($id) {
+        return implode(array(
+            '<nav class="hide">',
+            '    <ul class="pagination">',
+            '        <li class="page-item active" data-page-index="1"><a class="page-link" href="#_' . $id . '">1</a></li>',
+            '        <li class="page-item tpl hide"><a class="page-link" href="#_' . $id . '">2</a></li>',
+            '    </ul>',
+            '</nav>',
+        ));
     }
 
     /**
@@ -211,15 +281,22 @@ class TranslationsExtension extends \Twig_Extension
     /**
      * @param $subject
      * @param $level
+     * @param null $id
      * @return string
      */
-    protected function tagSubject($subject, $level)
+    protected function tagSubject($subject, $level, $id = null)
     {
         $openingTag = '';
         $closingTag = ' ';
+
         if (2 === $level) {
             $openingTag = '<h2>';
             $closingTag = '</h2>';
+        }
+
+        if ($id) {
+            $openingTag = '<span id="_' . $id . '">';
+            $closingTag = '</span>';
         }
 
         return $openingTag . $subject . $closingTag;
