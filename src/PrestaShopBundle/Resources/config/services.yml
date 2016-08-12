@@ -12,7 +12,7 @@ services:
         arguments:
             - "@filesystem"
         tags:
-            - { name: kernel.cache_warmer, priority: 0 }
+            - { name: kernel.cache_warmer }
 
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
