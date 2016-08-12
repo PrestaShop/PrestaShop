@@ -250,11 +250,10 @@ function toggleMultiple(tab)
 
 function truncateDecimals(value, decimals)
 {
-  var numPower = Math.pow(10, decimals);
-
-  var value = ~~(value * numPower)/numPower;
-
-  return value.toFixed(decimals);
+    var numPower = Math.pow(10, decimals);
+    var tempNumber = value * numPower;
+    var roundedTempNumber = Math.floor(tempNumber);
+    return roundedTempNumber / numPower;
 }
 
 /**
