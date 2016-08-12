@@ -136,15 +136,11 @@ var combinations = (function() {
         displayFieldsManager.refresh();
 
         if ($(this).val() === '0') {
-          // enable the top header selector
-          // we want to use a "Simple product" without any combinations
-          productTypeSelector.prop('disabled', false);
-
           //if combination(s) exists, alert user for deleting it
           if (combinationsList.length > 0) {
             modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null, {
               onCancel: function() {
-                $('#show_variations_selector input[value="1"]').attr('checked', true);
+                $('#show_variations_selector input[value="1"]').prop('checked', true);
                 displayFieldsManager.refresh();
               },
               onContinue: function() {
@@ -159,6 +155,9 @@ var combinations = (function() {
                     showErrorMessage(jQuery.parseJSON(response.responseText).message);
                   },
                 });
+                // enable the top header selector
+                // we want to use a "Simple product" without any combinations
+                productTypeSelector.prop('disabled', false);
               }
             }).show();
           }
