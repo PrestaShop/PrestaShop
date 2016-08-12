@@ -86,7 +86,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
 
             return sprintf(
                 $this->getTranslator()->trans(
-                    ' (additional cost of %giftcost%%taxlabel%)',
+                    ' (additional cost of %giftcost% %taxlabel%)',
                     array(
                         '%giftcost%' => $priceFormatter->convertAndFormat($this->getGiftCost()),
                         '%taxlabel%' => $taxLabel,
