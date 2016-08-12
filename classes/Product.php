@@ -875,7 +875,7 @@ class ProductCore extends ObjectModel
     public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
     {
         if ($field == 'description_short') {
-            $limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
+            $limit = (int) Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
             if ($limit <= 0) {
                 $limit = 800;
             }
@@ -2295,11 +2295,7 @@ class ProductCore extends ObjectModel
             $order_by = $order_by[1];
         }
 
-        if (0 === (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) {
-            $nb_days_new_product = 0;
-        } else {
-            $nb_days_new_product = Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
-        }
+        $nb_days_new_product = (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
 
         if ($count) {
             $sql = 'SELECT COUNT(p.`id_product`) AS nb
@@ -2380,7 +2376,7 @@ class ProductCore extends ObjectModel
 
         $id_address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
         $ids = Address::getCountryAndState($id_address);
-        $id_country = $ids['id_country'] ? (int)$ids['id_country'] : (int)Configuration::get('PS_COUNTRY_DEFAULT');
+        $id_country = $ids['id_country'] ? (int)$ids['id_country'] : (int) Configuration::get('PS_COUNTRY_DEFAULT');
 
         return SpecificPrice::getProductIdByDate(
             $context->shop->id,
@@ -2848,7 +2844,7 @@ class ProductCore extends ObjectModel
             }
         }
 
-        $id_currency = Validate::isLoadedObject($context->currency) ? (int)$context->currency->id : (int)Configuration::get('PS_CURRENCY_DEFAULT');
+        $id_currency = Validate::isLoadedObject($context->currency) ? (int)$context->currency->id : (int) Configuration::get('PS_CURRENCY_DEFAULT');
 
         // retrieve address informations
         $id_country = (int)$context->country->id;
@@ -3084,7 +3080,7 @@ class ProductCore extends ObjectModel
                 // reinit the tax manager for ecotax handling
                 $tax_manager = TaxManagerFactory::getManager(
                     $address,
-                    (int)Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID')
+                    (int) Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID')
                 );
                 $ecotax_tax_calculator = $tax_manager->getTaxCalculator();
                 $price += $ecotax_tax_calculator->addTaxes($ecotax);
@@ -3175,7 +3171,7 @@ class ProductCore extends ObjectModel
 
         $id_currency = (int)$context->currency->id;
         $ids = Address::getCountryAndState((int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-        $id_country = $ids['id_country'] ? (int)$ids['id_country'] : (int)Configuration::get('PS_COUNTRY_DEFAULT');
+        $id_country = $ids['id_country'] ? (int)$ids['id_country'] : (int) Configuration::get('PS_COUNTRY_DEFAULT');
         return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $context->shop->id, $id_currency, $id_country, $id_group, $quantity, null, 0, 0, $quantity);
     }
 
@@ -4376,7 +4372,7 @@ class ProductCore extends ObjectModel
                     true,
                     $quantity
                 ),
-                (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION')
+                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION')
             );
             $row['price_without_reduction'] = Product::getPriceStatic(
                 (int)$row['id_product'],
