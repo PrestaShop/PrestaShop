@@ -88,6 +88,12 @@ class TemplateFinderCore
                 $template,
                 'catalog/product',
             );
+        } elseif ('cms' === $entity) {
+            $templates = array(
+                'cms/page-'.$id,
+                $template,
+                'cms/page',
+            );
         } else {
             $templates = array($template);
         }
