@@ -52,10 +52,10 @@ class TemplateFinderCore
 
         foreach ($this->directories as $dir) {
             foreach ($templates as $tpl) {
-                if (file_exists($dir.$locale.DIRECTORY_SEPARATOR.$tpl.$this->extension)) {
+                if (is_file($dir.$locale.DIRECTORY_SEPARATOR.$tpl.$this->extension)) {
                     return $locale.DIRECTORY_SEPARATOR.$tpl.$this->extension;
                 }
-                if (file_exists($dir.$tpl.$this->extension)) {
+                if (is_file($dir.$tpl.$this->extension)) {
                     return $tpl.$this->extension;
                 }
             }
