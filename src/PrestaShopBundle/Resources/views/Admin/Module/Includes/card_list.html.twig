@@ -1,0 +1,77 @@
+{% set isModuleActive = module.database.active|default('0') %}
+{% set productType = module.attributes.serviceUrl is defined and module.attributes.serviceUrl|length > 0 ? 'service' : 'module' %}
+
+<div
+  class="module-item module-item-list col-md-12 {% if origin == 'manage' and isModuleActive == '0' %}module-item-list-isNotActive{% endif %}"
+  data-id="{{ module.attributes.id }}"
+  data-name="{{ module.attributes.displayName }}"
+  data-scoring="{{ module.attributes.avgRate }}"
+  data-logo="{{ module.attributes.img }}"
+  data-author="{{ module.attributes.author }}"
+  data-version="{{ module.attributes.version }}"
+  data-description="{{ module.attributes.description }}"
+  data-tech-name="{{ module.attributes.name }}"
+  data-child-categories="{{ module.attributes.categoryName }}"
+  data-categories="{{ module.attributes.categoryParent }}"
+  data-type="{{ productType }}"
+  data-price="{{ module.attributes.price.raw }}"
+  data-active="{{ isModuleActive }}"
+>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12 col-md-2 col-lg-1 text-sm-center" style="min-height: 100%;">
+        <img src="{{ module.attributes.img }}" class="text-md-center" style="max-width: 100%" alt="{{ module.attributes.displayName }}"/>
+      </div>
+      <div class="col-sm-12 col-md-10 col-lg-11">
+        <h3
+          class="text-ellipsis module-name-list"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="{{ module.attributes.displayName|raw }}"
+        >
+          {% if module.attributes.displayName %}
+            {{ module.attributes.displayName|raw }}
+          {% else %}
+            {{ module.attributes.name }}
+          {% endif %}
+        </h3>
+      </div>
+      <div class="col-sm-12 col-md-2">
+        <span class="text-ellipsis xsmall">
+          {% block addon_version %}
+            {% if productType == "service" %}
+              {{ 'Service by '|trans({}, 'Admin.Modules.Feature') }}
+              <b>{{ module.attributes.author }}</b>
+            {% else %}
+              {{ 'v%version% - by '|trans({ '%version%' : module.attributes.version }, 'Admin.Modules.Feature') }}
+              <b>{{ module.attributes.author }}</b>
+            {% endif %}
+          {% endblock %}
+        </span>
+      </div>
+      <div class="col-sm-12 col-md-8 col-lg-6">
+        {% block addon_description %}
+          {{ module.attributes.description|raw }}
+          {% if module.attributes.description|length > 0 and module.attributes.description|length < module.attributes.fullDescription|length %}
+            ...
+          {% endif %}
+          <span>
+            {% if module.attributes.id != "0" %}
+              <a class="module-read-more-list-btn url" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
+            {% endif %}
+          </span>
+        {% endblock %}
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3 text-md-right">
+        {% if requireBulkActions is defined and requireBulkActions == true %}
+          <div class="pull-right module-checkbox-bulk-list">
+            <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
+          </div>
+        {% endif %}
+        {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}
+      </div>
+      {% include 'PrestaShopBundle:Admin/Module/Includes:modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
+      {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm.html.twig' with { 'module': module } %}
+    </div>
+  </div>
+</div>

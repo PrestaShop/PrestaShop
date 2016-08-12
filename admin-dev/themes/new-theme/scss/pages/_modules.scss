@@ -86,33 +86,30 @@
 */
 
 .module-item-list {
-    @extend .col-md-12;
-    background-color: white;
-    min-height:70px;
-    padding-top: 10px;
+    .container-fluid {
+      padding: {
+        top: $grid-gutter-width / 2;
+        bottom: $grid-gutter-width / 2;
+      }
+      background-color: white;
+    }
     +:nth-child(even) {
-      background-color: #f5f8f9 !important;
+      .container-fluid {
+        background-color: #f5f8f9 !important;
+      }
     }
-    
-    @media (max-width: 47.9em) {
-        padding-bottom: 0.5em;
-    }
-    
-    .module-item-wrapper-list {
-        @extend .row;
-    
-        .module-item-heading-list {
-            @extend .col-md-4;
-            @extend .col-sm-12;
 
+    .module-item-wrapper-list {
+
+        .module-item-heading-list {
 
             @media (max-width: 33.9em) {
                 text-align: center;
             }
 
             > .module-logo-thumb-list {
-                @extend .col-md-3;
-                @extend .col-sm-12;
+                //@extend .col-md-3;
+                //@extend .col-sm-12;
                 height:64px;
                 max-width:64px;
                 margin: 0 auto;
@@ -127,7 +124,7 @@
                 }
             }
             > .module-name-list, > .module-version-author-list {
-                @extend .col-md-8
+                //@extend .col-md-8
             }
             > .module-name-list {
                 font-weight: bolder;
@@ -148,20 +145,20 @@
         }
 
         .module-quick-description-list {
-            @extend .col-md-4;
-            @extend .col-sm-12;
+            //@extend .col-md-4;
+            //@extend .col-sm-12;
         }
 
         .module-quick-action-list {
-            @extend .col-md-4;
-            @extend .col-sm-12;
-            
+            //@extend .col-md-4;
+            //@extend .col-sm-12;
+
             > [class^="module-star-ranking-"] {
                 display:none;
             }
 
             .module-checkbox-bulk-list {
-                @extend .col-md-2;
+                //@extend .col-md-2;
             }
         }
     }
@@ -171,7 +168,7 @@
 * Addons Module Cast (List view)
 **/
 .module-addons-item-list {
-    @extend .col-xs-12;
+    //@extend .col-xs-12;
     margin-top: 0.25em;
   display: none;
   -webkit-touch-callout: none;
@@ -181,23 +178,23 @@
   -ms-user-select: none;
   user-select: none;
   cursor: pointer;
-  
+
   > .module-addons-item-wrapper-list {
-      @extend .row;
+      //@extend .row;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
     font-size: 20px;
-    
+
     > .module-icon-addons-exit-list {
-        @extend .col-lg-1;
-        @extend .col-lg-offset-3;
-        @extend .col-md-2;
-        @extend .col-md-offset-2;
-        @extend .col-sm-12;
-        @extend .col-sm-offset-0;
-        @extend .col-xs-12;
-        @extend .col-xs-offset-0;
+        //@extend .col-lg-1;
+        //@extend .col-lg-offset-3;
+        //@extend .col-md-2;
+        //@extend .col-md-offset-2;
+        //@extend .col-sm-12;
+        //@extend .col-sm-offset-0;
+        //@extend .col-xs-12;
+        //@extend .col-xs-offset-0;
         > img {
             height: 3em;
         }
@@ -208,7 +205,7 @@
 
 /**
 * Error message on catalog loading
-**/ 
+**/
 
 .module-placeholders-failure {
     display: none;
