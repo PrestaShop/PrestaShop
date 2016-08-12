@@ -1317,6 +1317,8 @@ class FrontControllerCore extends Controller
             ),
             'voucher_enabled' => (int)CartRule::isFeatureActive(),
             'return_enabled' => (int)Configuration::get('PS_ORDER_RETURN'),
+            'number_of_days_for_return' => (int)Configuration::get('PS_ORDER_RETURN_NB_DAYS')
+
         ];
     }
 

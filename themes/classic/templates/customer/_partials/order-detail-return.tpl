@@ -104,8 +104,8 @@
 
   <footer class="form-footer">
     <input type="hidden" name="id_order" value="{$order.details.id}">
-    <button type="submit" name="submitReturnMerchandise" class="form-control-submit">
-      {l s='Make an RMA slip' d='Shop.Theme.CustomerAccount'}
+    <button class="form-control-submit btn btn-primary" type="submit" name="submitReturnMerchandise">
+      {l s='Request a return' d='Shop.Theme.CustomerAccount'}
     </button>
   </footer>
 </form>
