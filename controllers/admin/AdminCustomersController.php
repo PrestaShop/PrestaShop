@@ -369,7 +369,7 @@ class AdminCustomersControllerCore extends AdminController
                     'name' => 'firstname',
                     'required' => true,
                     'col' => '4',
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Global').' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:'
                 ),
                 array(
                     'type' => 'text',
@@ -377,7 +377,7 @@ class AdminCustomersControllerCore extends AdminController
                     'name' => 'lastname',
                     'required' => true,
                     'col' => '4',
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Global').' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:'
                 ),
                 array(
                     'type' => 'text',
