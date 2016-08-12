@@ -39,11 +39,11 @@ class AdminContactsControllerCore extends AdminController
         $this->addRowAction('delete');
 
         parent::__construct();
-        
+
         $this->bulk_actions = array(
             'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
+                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash'
             )
         );
@@ -51,7 +51,7 @@ class AdminContactsControllerCore extends AdminController
         $this->fields_list = array(
             'id_contact' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'name' => array('title' => $this->trans('Title', array(), 'Admin.Global')),
-            'email' => array('title' => $this->l('Email address')),
+            'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global')),
             'description' => array('title' => $this->trans('Description', array(), 'Admin.Global')),
         );
     }
@@ -60,7 +60,7 @@ class AdminContactsControllerCore extends AdminController
     {
         $this->fields_form = array(
             'legend' => array(
-                'title' => $this->l('Contacts'),
+                'title' => $this->trans('Contacts', array(), 'Admin.ShopParameters.Feature'),
                 'icon' => 'icon-envelope-alt'
             ),
             'input' => array(
@@ -71,24 +71,24 @@ class AdminContactsControllerCore extends AdminController
                     'required' => true,
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->l('Contact name (e.g. Customer Support).'),
+                    'hint' => $this->trans('Contact name (e.g. Customer Support).', array(), 'Admin.ShopParameters.Help'),
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->l('Email address'),
+                    'label' => $this->trans('Email address', array(), 'Admin.Global'),
                     'name' => 'email',
                     'required' => false,
                     'col' => 4,
-                    'hint' => $this->l('Emails will be sent to this address.'),
+                    'hint' => $this->trans('Emails will be sent to this address.', array(), 'Admin.ShopParameters.Help'),
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Save messages?'),
+                    'label' => $this->trans('Save messages?', array(), 'Admin.ShopParameters.Feature'),
                     'name' => 'customer_service',
                     'required' => false,
                     'class' => 't',
                     'is_bool' => true,
-                    'hint' => $this->l('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.'),
+                    'hint' => $this->trans('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.', array(), 'Admin.ShopParameters.Help'),
                     'values' => array(
                         array(
                             'id' => 'customer_service_on',
@@ -109,7 +109,7 @@ class AdminContactsControllerCore extends AdminController
                     'required' => false,
                     'lang' => true,
                     'col' => 6,
-                    'hint' => $this->l('Further information regarding this contact.'),
+                    'hint' => $this->trans('Further information regarding this contact.', array(), 'Admin.ShopParameters.Help'),
                 ),
             ),
             'submit' => array(
@@ -120,7 +120,7 @@ class AdminContactsControllerCore extends AdminController
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->l('Shop association'),
+                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
             );
         }
@@ -134,7 +134,7 @@ class AdminContactsControllerCore extends AdminController
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_contact'] = array(
                 'href' => self::$currentIndex.'&addcontact&token='.$this->token,
-                'desc' => $this->l('Add new contact', null, null, false),
+                'desc' => $this->trans('Add new contact', array(), 'Admin.ShopParameters.Feature'),
                 'icon' => 'process-icon-new'
             );
         }
