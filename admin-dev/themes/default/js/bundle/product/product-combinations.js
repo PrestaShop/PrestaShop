@@ -63,6 +63,13 @@ var combinations = (function() {
   return {
     'init': function() {
       var _this = this;
+      var showVariationsSelector = $('#show_variations_selector input');
+      var productTypeSelector = $('#form_step1_type_product');
+      var combinationsList = $('#accordion_combinations .combination');
+
+      if (combinationsList.length > 0) {
+        productTypeSelector.prop('disabled', true);
+      }
 
       /** delete combination */
       $(document).on('click', '#accordion_combinations .delete', function(e) {
@@ -125,12 +132,16 @@ var combinations = (function() {
       });
 
       /** Combinations fields display management */
-      $('#show_variations_selector input').change(function() {
+      showVariationsSelector.change(function() {
         displayFieldsManager.refresh();
 
         if ($(this).val() === '0') {
+          // enable the top header selector
+          // we want to use a "Simple product" without any combinations
+          productTypeSelector.prop('disabled', false);
+
           //if combination(s) exists, alert user for deleting it
-          if ($('#accordion_combinations .combination').length > 0) {
+          if (combinationsList.length > 0) {
             modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null, {
               onCancel: function() {
                 $('#show_variations_selector input[value="1"]').attr('checked', true);
@@ -141,7 +152,7 @@ var combinations = (function() {
                   type: 'GET',
                   url: $('#accordion_combinations').attr('data-action-delete-all') + '/' + $('#form_id_product').val(),
                   success: function(response) {
-                    $('#accordion_combinations .combination').remove();
+                    combinationsList.remove();
                     displayFieldsManager.refresh();
                   },
                   error: function(response) {
@@ -151,6 +162,10 @@ var combinations = (function() {
               }
             }).show();
           }
+        }else {
+          // this means we have or we want to have combinations
+          // disable the product type selector
+          productTypeSelector.prop('disabled', true);
         }
       });
 
