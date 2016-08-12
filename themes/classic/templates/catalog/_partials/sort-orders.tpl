@@ -5,7 +5,7 @@
     <i class="material-icons pull-xs-right">&#xE5C5;</i>
   </a>
   <div class="dropdown-menu">
-    {foreach from=$sort_orders item=sort_order}
+    {foreach from=$listing.sort_orders item=sort_order}
       <a
         rel="nofollow"
         href="{$sort_order.url}"

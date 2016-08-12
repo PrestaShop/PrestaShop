@@ -69,7 +69,7 @@ class IdentityControllerCore extends FrontController
             $this->redirectWithNotifications($this->getCurrentURL());
         }
 
-        $this->setTemplate('customer/identity.tpl');
+        $this->setTemplate('customer/identity');
     }
 
     public function getBreadcrumbLinks()

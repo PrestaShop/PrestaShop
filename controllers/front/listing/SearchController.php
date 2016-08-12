@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
  use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
  use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
  use PrestaShop\PrestaShop\Adapter\Search\SearchProductSearchProvider;
@@ -38,26 +37,27 @@
      private $search_tag;
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function init()
     {
         parent::init();
 
-        $this->search_string     = Tools::getValue('s');
+        $this->search_string = Tools::getValue('s');
         if (!$this->search_string) {
             $this->search_string = Tools::getValue('search_query');
         }
 
-        $this->search_tag        = Tools::getValue('tag');
+        $this->search_tag = Tools::getValue('tag');
 
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'search_string' => $this->search_string,
-            'search_tag'    => $this->search_tag
-        ]);
+            'search_tag' => $this->search_tag,
+        ));
 
-        $this->doProductSearch('catalog/search.tpl');
+        $this->doProductSearch('catalog/listing/search', array('entity' => 'search'));
     }
 
      protected function getProductSearchQuery()
@@ -68,6 +68,7 @@
            ->setSearchString($this->search_string)
            ->setSearchTag($this->search_tag)
         ;
+
          return $query;
      }
 
@@ -76,5 +77,10 @@
          return new SearchProductSearchProvider(
             $this->getTranslator()
        );
+     }
+
+     public function getListingLabel()
+     {
+         return $this->getTranslator()->trans('Search results', array(), 'Shop.Theme.Catalog');
      }
  }

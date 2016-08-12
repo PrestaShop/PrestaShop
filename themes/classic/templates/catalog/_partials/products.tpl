@@ -1,41 +1,33 @@
 <section id="products">
-  {if $products|count}
-      <div class="row products-selection">
-        <div class="col-md-4">
-          <h1 class="h1 title">{$label}</h1>
-        </div>
-        <div class="col-md-8">
-          <div class="products-select">
-            <div>
-              {if $products|count > 1}
-                <p>{l s='There are %product_count% products.' d='Shop.Theme.Catalog' sprintf=['%product_count%' => $products|count]}</p>
-              {else}
-                <p>{l s='There is %products_count% products.' d='Shop.Theme.Catalog' sprintf=['%products_count%' => $products|count]}</p>
-              {/if}
-            </div>
-            <div>
-              {block name='sort_by'}
-                {include file='catalog/_partials/sort-orders.tpl' sort_orders=$sort_orders}
-              {/block}
-            </div>
-          </div>
-        </div>
-      </div>
+  {if $listing.products|count}
+    <div class="row products-selection">
+      <div class="col-md-12 products-select">
+        {if $listing.products|count > 1}
+          <p>{l s='There are %product_count% products.' d='Shop.Theme.Catalog' sprintf=['%product_count%' => $listing.products|count]}</p>
+        {else}
+          <p>{l s='There is %products_count% products.' d='Shop.Theme.Catalog' sprintf=['%products_count%' => $listing.products|count]}</p>
+        {/if}
 
-      {if isset($rendered_active_filters)}
-        {$rendered_active_filters nofilter}
-      {/if}
-
-      <div class="products row">
-        {foreach from=$products item="product"}
-          {block name='product_miniature'}
-            {include file='catalog/_partials/miniatures/product.tpl' product=$product}
+        <div class="pull-md-right">
+          {block name='sort_by'}
+            {include file='catalog/_partials/sort-orders.tpl' sort_orders=$listing.sort_orders}
           {/block}
-        {/foreach}
+        </div>
       </div>
+    </div>
 
-      {block name='pagination'}
-        {include file='catalog/_partials/pagination.tpl' pagination=$pagination}
-      {/block}
+    {$listing.rendered_active_filters nofilter}
+
+    <div class="products row">
+      {foreach from=$listing.products item="product"}
+        {block name='product_miniature'}
+          {include file='catalog/_partials/miniatures/product.tpl' product=$product}
+        {/block}
+      {/foreach}
+    </div>
+
+    {block name='pagination'}
+      {include file='catalog/_partials/pagination.tpl' pagination=$listing.pagination}
+    {/block}
   {/if}
 </section>

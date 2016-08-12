@@ -67,7 +67,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         parent::init();
 
-        $this->setTemplate('catalog/product.tpl');
+        $this->setTemplate('catalog/product');
 
         if ($id_product = (int) Tools::getValue('id_product')) {
             $this->product = new Product($id_product, true, $this->context->language->id, $this->context->shop->id);
@@ -111,7 +111,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('HTTP/1.1 404 Not Found');
                             header('Status: 404 Not Found');
                             $this->errors[] = $this->trans('This product is no longer available.', array(), 'Shop.Notifications.Error');
-                            $this->setTemplate('errors/404.tpl');
+                            $this->setTemplate('errors/404');
                         break;
                     }
                 }
@@ -305,7 +305,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode(array(
-            'quickview_html' => $this->render('catalog/_partials/quickview.tpl', $product_for_template),
+            'quickview_html' => $this->render('catalog/_partials/quickview', $product_for_template),
             'product' => $product_for_template,
         )));
     }
@@ -313,22 +313,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function displayAjaxRefresh()
     {
         $product_for_template = $this->getTemplateVarProduct();
-
         ob_end_clean();
         header('Content-Type: application/json');
         $this->ajaxDie(Tools::jsonEncode(array(
-            'product_prices' => $this->render('catalog/_partials/product-prices.tpl'),
-            'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails.tpl'),
+            'product_prices' => $this->render('catalog/_partials/product-prices'),
+            'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails'),
             'product_customization' => $this->render(
-                'catalog/_partials/product-customization.tpl',
+                'catalog/_partials/product-customization',
                 array(
                     'customizations' => $product_for_template['customizations'],
                 )
             ),
-            'product_details' => $this->render('catalog/_partials/product-details.tpl'),
-            'product_variants' => $this->render('catalog/_partials/product-variants.tpl'),
-            'product_discounts' => $this->render('catalog/_partials/product-discounts.tpl'),
-            'product_add_to_cart' => $this->render('catalog/_partials/product-add-to-cart.tpl'),
+            'product_details' => $this->render('catalog/_partials/product-details'),
+            'product_variants' => $this->render('catalog/_partials/product-variants'),
+            'product_discounts' => $this->render('catalog/_partials/product-discounts'),
+            'product_add_to_cart' => $this->render('catalog/_partials/product-add-to-cart'),
             'product_url' => $this->context->link->getProductLink(
                 $product_for_template['id_product'],
                 null,

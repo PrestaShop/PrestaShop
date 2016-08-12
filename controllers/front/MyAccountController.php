@@ -39,6 +39,6 @@ class MyAccountControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->setTemplate('customer/my-account.tpl');
+        $this->setTemplate('customer/my-account');
     }
 }

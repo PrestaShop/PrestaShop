@@ -52,7 +52,7 @@ class AuthControllerCore extends FrontController
                 'register_form'  => $register_form->getProxy(),
                 'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop')
             ]);
-            $this->setTemplate('customer/registration.tpl');
+            $this->setTemplate('customer/registration');
         } else {
             $login_form = $this->makeLoginForm()->fillWith(
                 Tools::getAllValues()
@@ -67,7 +67,7 @@ class AuthControllerCore extends FrontController
             $this->context->smarty->assign([
                 'login_form' => $login_form->getProxy()
             ]);
-            $this->setTemplate('customer/authentication.tpl');
+            $this->setTemplate('customer/authentication');
         }
 
         if ($should_redirect && !$this->ajax) {

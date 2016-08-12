@@ -40,7 +40,7 @@ class SitemapControllerCore extends FrontController
             'sitemap' => $this->getTemplateVarSitemap(),
         ));
 
-        $this->setTemplate('cms/sitemap.tpl');
+        $this->setTemplate('cms/sitemap');
     }
 
     public function getTemplateVarSitemap()

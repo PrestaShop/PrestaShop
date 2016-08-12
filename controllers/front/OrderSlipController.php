@@ -48,7 +48,7 @@ class OrderSlipControllerCore extends FrontController
         $this->context->smarty->assign([
             'credit_slips' => $credit_slips,
         ]);
-        $this->setTemplate('customer/order-slip.tpl');
+        $this->setTemplate('customer/order-slip');
     }
 
     public function getTemplateVarCreditSlips()

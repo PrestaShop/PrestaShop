@@ -57,7 +57,7 @@ class AddressesControllerCore extends FrontController
             $this->warning[] = $this->trans('No addresses are available. %s', array($link), 'Shop.Notifications.Success');
         }
 
-        $this->setTemplate('customer/addresses.tpl');
+        $this->setTemplate('customer/addresses');
     }
 
     public function getBreadcrumbLinks()

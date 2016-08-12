@@ -179,6 +179,6 @@ class OrderDetailControllerCore extends FrontController
             unset($order);
         }
 
-        $this->setTemplate('customer/order-detail.tpl');
+        $this->setTemplate('customer/order-detail');
     }
 }

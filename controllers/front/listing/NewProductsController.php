@@ -42,7 +42,7 @@ class NewProductsControllerCore extends ProductListingFrontController
     {
         parent::init();
 
-        $this->doProductSearch('catalog/new-products.tpl');
+        $this->doProductSearch('catalog/listing/new-products');
     }
 
     protected function getProductSearchQuery()

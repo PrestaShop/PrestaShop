@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProductSearchProvider;
@@ -45,12 +44,13 @@ class SupplierControllerCore extends ProductListingFrontController
     }
 
     /**
-     * Initialize supplier controller
+     * Initialize supplier controller.
+     *
      * @see FrontController::init()
      */
     public function init()
     {
-        if ($id_supplier = (int)Tools::getValue('id_supplier')) {
+        if ($id_supplier = (int) Tools::getValue('id_supplier')) {
             $this->supplier = new Supplier($id_supplier, $this->context->language->id);
 
             if (!Validate::isLoadedObject($this->supplier) || !$this->supplier->active) {
@@ -65,7 +65,8 @@ class SupplierControllerCore extends ProductListingFrontController
     }
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
@@ -75,10 +76,10 @@ class SupplierControllerCore extends ProductListingFrontController
 
             if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
                 $this->assignSupplier();
-                $this->doProductSearch('catalog/supplier.tpl');
+                $this->doProductSearch('catalog/listing/supplier');
             } else {
                 $this->assignAll();
-                $this->setTemplate('catalog/suppliers.tpl');
+                $this->setTemplate('catalog/suppliers');
             }
         } else {
             $this->redirect_after = '404';
@@ -105,23 +106,23 @@ class SupplierControllerCore extends ProductListingFrontController
     }
 
     /**
-     * Assign template vars if displaying one supplier
+     * Assign template vars if displaying one supplier.
      */
     protected function assignSupplier()
     {
-        $this->context->smarty->assign([
-            'supplier' => $this->objectSerializer->toArray($this->supplier)
-        ]);
+        $this->context->smarty->assign(array(
+            'supplier' => $this->objectPresenter->present($this->supplier),
+        ));
     }
 
     /**
-     * Assign template vars if displaying the supplier list
+     * Assign template vars if displaying the supplier list.
      */
     protected function assignAll()
     {
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'suppliers' => $this->getTemplateVarSuppliers(),
-        ]);
+        ));
     }
 
     public function getTemplateVarSuppliers()
@@ -134,7 +135,9 @@ class SupplierControllerCore extends ProductListingFrontController
             $suppliers_for_display[$supplier['id_supplier']]['text'] = $supplier['description'];
             $suppliers_for_display[$supplier['id_supplier']]['image'] = _THEME_SUP_DIR_.$supplier['id_supplier'].'-medium_default.jpg';
             $suppliers_for_display[$supplier['id_supplier']]['url'] = $this->context->link->getsupplierLink($supplier['id_supplier']);
-            $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1 ? sprintf($this->trans('%s products', array(), 'Shop.Theme.Catalog'), $supplier['nb_products']) : sprintf($this->trans('% product', array(), 'Shop.Theme.Catalog'), $supplier['nb_products']);
+            $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1
+                ? $this->trans('%N% products', array('%N%' => $supplier['nb_products']), 'Shop.Theme.Catalog')
+                : $this->trans('%N% product', array('%N%' => $supplier['nb_products']), 'Shop.Theme.Catalog');
         }
 
         return $suppliers_for_display;

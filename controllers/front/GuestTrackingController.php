@@ -123,11 +123,13 @@ class GuestTrackingControllerCore extends FrontController
         parent::initContent();
 
         if (!Validate::isLoadedObject($this->order)) {
-            return $this->setTemplate('customer/guest-login.tpl');
+            return $this->setTemplate('customer/guest-login');
         }
 
         if ((int) $this->order->isReturnable()) {
-            $this->info[] = $this->trans('You cannot return merchandise with a guest account.', array(), 'Shop.Notifications.Warning');
+            $this->info[] = $this->trans(
+                'You cannot return merchandise with a guest account.', array(), 'Shop.Notifications.Warning'
+            );
         }
 
         $presented_order = (new OrderPresenter())->present($this->order);
@@ -138,7 +140,7 @@ class GuestTrackingControllerCore extends FrontController
             'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', array('order' => $this->order)),
         ));
 
-        return $this->setTemplate('customer/guest-tracking.tpl');
+        return $this->setTemplate('customer/guest-tracking');
     }
 
     public function getBreadcrumbLinks()

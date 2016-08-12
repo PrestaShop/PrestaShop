@@ -113,7 +113,7 @@ class AddressControllerCore extends FrontController
         }
 
         parent::initContent();
-        $this->setTemplate('customer/address.tpl');
+        $this->setTemplate('customer/address', array('entity' => 'address', 'id' => Tools::getValue('id_address')));
     }
 
     public function getBreadcrumbLinks()

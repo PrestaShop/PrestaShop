@@ -180,9 +180,9 @@ class StoresControllerCore extends FrontController
         ));
 
         if (Configuration::get('PS_STORES_SIMPLIFIED')) {
-            $this->setTemplate('cms/stores-simple.tpl');
+            $this->setTemplate('cms/stores-simple');
         } else {
-            $this->setTemplate('cms/stores.tpl');
+            $this->setTemplate('cms/stores');
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop.
+ * 2007-2015 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -23,45 +23,40 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Adapter\BestSales\BestSalesProductSearchProvider;
+use PrestaShop\PrestaShop\Adapter\PricesDrop\PricesDropProductSearchProvider;
 
-class BestSalesControllerCore extends ProductListingFrontController
+class PricesDropControllerCore extends ProductListingFrontController
 {
-    public $php_self = 'best-sales';
+    public $php_self = 'prices-drop';
 
     /**
-     * Initializes controller.
+     * Initializes controller
      *
      * @see FrontController::init()
-     *
      * @throws PrestaShopException
      */
     public function init()
     {
-        if (Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
-            parent::init();
-            $this->doProductSearch('catalog/best-sales.tpl');
-        } else {
-            Tools::redirect('index.php?controller=404');
-        }
+        parent::init();
+        $this->doProductSearch('catalog/listing/prices-drop');
     }
 
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
         $query
-            ->setQueryType('best-sales')
+            ->setQueryType('prices-drop')
             ->setSortOrder(new SortOrder('product', 'name', 'asc'))
         ;
-
         return $query;
     }
 
     protected function getDefaultProductSearchProvider()
     {
-        return new BestSalesProductSearchProvider(
+        return new PricesDropProductSearchProvider(
             $this->getTranslator()
         );
     }

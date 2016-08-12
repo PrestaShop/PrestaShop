@@ -147,6 +147,11 @@ class FrontControllerCore extends Controller
     public $cart_presenter;
 
     /**
+     * @var object TemplateFinder
+     */
+    private $templateFinder;
+
+    /**
      * Controller constructor
      *
      * @global bool $useSSL SSL connection flag
@@ -173,6 +178,7 @@ class FrontControllerCore extends Controller
 
         $this->objectPresenter = new ObjectPresenter();
         $this->cart_presenter  = new CartPresenter();
+        $this->templateFinder = new TemplateFinder($this->context->smarty->getTemplateDir(), '.tpl');
     }
 
     /**
@@ -1087,10 +1093,10 @@ class FrontControllerCore extends Controller
      *
      * @param string $default_template
      */
-    public function setTemplate($template)
+    public function setTemplate($template, $params = array())
     {
         parent::setTemplate(
-            $this->getTemplateFile($template)
+            $this->getTemplateFile($template, $params)
         );
     }
 
@@ -1150,31 +1156,39 @@ class FrontControllerCore extends Controller
         return $template;
     }
 
-    public function getTemplateFile($template_file, $id = null)
+    public function getTemplateFile($template, $params = array(), $locale = null)
     {
-        if ($overriden_template = Hook::exec('DisplayOverrideTemplate', array('controller' => $this, 'template_file' => $template_file, 'id' => $id))) {
-            return $overriden_template;
-        }
-
-        if ($id === null) {
-            $id = (int)Tools::getValue('id_'.$this->php_self);
-        }
-
-        $template_file_no_extension = substr($template_file, 0, -strlen('.tpl'));
-
-        $specific_template = [
-            $template_file_no_extension.'-'.$id.'.tpl',
-        ];
-
-        foreach ($this->context->smarty->getTemplateDir() as $base_dir) {
-            foreach ($specific_template as $tpl) {
-                if (file_exists($base_dir.$tpl)) {
-                    return $tpl;
-                }
+        if ($params !== false) {
+            if (!isset($params['entity'])) {
+                $params['entity'] = $this->php_self;
+            }
+            if (!isset($params['id'])) {
+                $params['id'] = Tools::getValue('id_'.$this->php_self);
             }
         }
 
-        return $template_file;
+        if (is_null($locale)) {
+            $locale = $this->context->language->locale;
+        }
+
+        if ($overridden_template = Hook::exec(
+            'DisplayOverrideTemplate',
+            array(
+                'controller' => $this,
+                'template_file' => $template,
+                'id' => $params['id'],
+                'locale' => $locale,
+            )
+        )) {
+            return $overridden_template;
+        }
+
+        return $this->getTemplateFinder()->getTemplate(
+            $template,
+            $params['entity'],
+            $params['id'],
+            $locale
+        );
     }
 
     /**
@@ -1569,7 +1583,7 @@ class FrontControllerCore extends Controller
 
         $scope->assign($params);
         $tpl = $this->context->smarty->createTemplate(
-            $template,
+            $this->getTemplateFile($template, false),
             $scope
         );
 
@@ -1695,5 +1709,15 @@ class FrontControllerCore extends Controller
         if (true === _PS_MODE_DEV_) {
             Debug::enable();
         }
+    }
+
+    /**
+     * Get templateFinder
+     *
+     * @return object
+     */
+    public function getTemplateFinder()
+    {
+        return $this->templateFinder;
     }
 }

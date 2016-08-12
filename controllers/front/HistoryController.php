@@ -57,7 +57,7 @@ class HistoryControllerCore extends FrontController
             'orders' => $orders,
         ));
 
-        $this->setTemplate('customer/history.tpl');
+        $this->setTemplate('customer/history');
     }
 
     public function getTemplateVarOrders()

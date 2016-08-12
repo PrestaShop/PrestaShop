@@ -1,3 +1,3 @@
-{if isset($rendered_facets)}
-    {$rendered_facets nofilter}
+{if isset($listing.rendered_facets)}
+    {$listing.rendered_facets nofilter}
 {/if}

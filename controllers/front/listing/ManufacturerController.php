@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerProductSearchProvider;
@@ -44,13 +43,14 @@ class ManufacturerControllerCore extends ProductListingFrontController
     }
 
     /**
-     * Initialize manufaturer controller
+     * Initialize manufaturer controller.
+     *
      * @see FrontController::init()
      */
     public function init()
     {
         if ($id_manufacturer = Tools::getValue('id_manufacturer')) {
-            $this->manufacturer = new Manufacturer((int)$id_manufacturer, $this->context->language->id);
+            $this->manufacturer = new Manufacturer((int) $id_manufacturer, $this->context->language->id);
 
             if (!Validate::isLoadedObject($this->manufacturer) || !$this->manufacturer->active || !$this->manufacturer->isAssociatedToShop()) {
                 $this->redirect_after = '404';
@@ -64,7 +64,8 @@ class ManufacturerControllerCore extends ProductListingFrontController
     }
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
@@ -74,10 +75,10 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
-                $this->doProductSearch('catalog/manufacturer.tpl');
+                $this->doProductSearch('catalog/listing/manufacturer');
             } else {
                 $this->assignAll();
-                $this->setTemplate('catalog/manufacturers.tpl');
+                $this->setTemplate('catalog/manufacturers');
             }
         } else {
             $this->redirect_after = '404';
@@ -92,6 +93,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
             ->setIdManufacturer($this->manufacturer->id)
             ->setSortOrder(new SortOrder('product', 'position', 'asc'))
         ;
+
         return $query;
     }
 
@@ -104,29 +106,29 @@ class ManufacturerControllerCore extends ProductListingFrontController
     }
 
     /**
-     * Assign template vars if displaying one manufacturer
+     * Assign template vars if displaying one manufacturer.
      */
     protected function assignManufacturer()
     {
-        $this->context->smarty->assign([
-            'manufacturer' => $this->objectSerializer->toArray($this->manufacturer),
-        ]);
+        $this->context->smarty->assign(array(
+            'manufacturer' => $this->objectPresenter->present($this->manufacturer),
+        ));
     }
 
     /**
-     * Assign template vars if displaying the manufacturer list
+     * Assign template vars if displaying the manufacturer list.
      */
     protected function assignAll()
     {
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'manufacturers' => $this->getTemplateVarManufacturers(),
-        ]);
+        ));
     }
 
     public function getTemplateVarManufacturers()
     {
         $manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
-        $manufacturers_for_display = [];
+        $manufacturers_for_display = array();
 
         foreach ($manufacturers as $manufacturer) {
             $manufacturers_for_display[$manufacturer['id_manufacturer']] = $manufacturer;

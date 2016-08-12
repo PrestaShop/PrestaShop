@@ -73,7 +73,7 @@ class CategoryControllerCore extends ProductListingFrontController
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
             $this->errors[] = $this->trans('You do not have access to this category.', array(), 'Shop.Notifications.Error');
-            $this->setTemplate('catalog/forbidden-category.tpl');
+            $this->setTemplate('catalog/forbidden-category');
 
             return;
         }
@@ -83,7 +83,7 @@ class CategoryControllerCore extends ProductListingFrontController
             'subcategories' => $this->getTemplateVarSubCategories(),
         ));
 
-        $this->doProductSearch('catalog/category.tpl');
+        $this->doProductSearch('catalog/listing/category', array('entity' => 'category', 'id' => $id_category));
     }
 
     protected function getProductSearchQuery()
@@ -177,5 +177,21 @@ class CategoryControllerCore extends ProductListingFrontController
         $page['body_classes']['category-depth-level-'.$this->category->level_depth] = true;
 
         return $page;
+    }
+
+    public function getListingLabel()
+    {
+        if (!Validate::isLoadedObject($this->category)) {
+            $this->category = new Category(
+                (int) Tools::getValue('id_category'),
+                $this->context->language->id
+            );
+        }
+
+        return $this->trans(
+            'Category: %category_name%',
+            array('%category_name%' => $this->category->name),
+            'Shop.Theme.Catalog'
+        );
     }
 }
