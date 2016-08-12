@@ -26,7 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShopBundle\CacheWarmer\LocalizationCacheWarmer;
+use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Component\Yaml\Yaml;
 
 class InstallModelInstall extends InstallAbstractModel
@@ -92,7 +92,7 @@ class InstallModelInstall extends InstallAbstractModel
         $cookie_key = Tools::passwdGen(8);
         $cookie_iv = Tools::passwdGen(56);
         $database_port = null;
-        
+
         $splits = preg_split('#:#', $database_host);
         $nbSplits = count($splits);
 
@@ -503,8 +503,8 @@ class InstallModelInstall extends InstallAbstractModel
     public function getLocalizationPackContent($version, $country)
     {
         if (InstallModelInstall::$_cache_localization_pack_content === null || array_key_exists($country, InstallModelInstall::$_cache_localization_pack_content)) {
-            $localizationCacheWarmer = new LocalizationCacheWarmer($version, $country);
-            $localization_file_content  = $localizationCacheWarmer->warmUp(_PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR);
+            $localizationWarmer = new LocalizationWarmer($version, $country);
+            $localization_file_content  = $localizationWarmer->warmUp(_PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR);
 
             InstallModelInstall::$_cache_localization_pack_content[$country] = $localization_file_content;
         }

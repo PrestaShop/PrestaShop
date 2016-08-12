@@ -7,6 +7,13 @@ services:
         class: Symfony\Component\Finder\Finder
         public: false
 
+    main.warmer.cache_warmer:
+        class: PrestaShopBundle\Cache\CacheWarmer
+        arguments:
+            - "@filesystem"
+        tags:
+            - { name: kernel.cache_warmer }
+
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
         arguments: ["%database_prefix%"]
