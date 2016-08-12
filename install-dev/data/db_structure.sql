@@ -1028,7 +1028,8 @@ CREATE TABLE `PREFIX_module_group` (
 CREATE TABLE `PREFIX_module_carrier` (
   `id_module`INT(10) unsigned NOT NULL,
   `id_shop`INT(11) unsigned NOT NULL DEFAULT '1',
-  `id_reference` INT(11) NOT NULL
+  `id_reference` INT(11) NOT NULL,
+  PRIMARY KEY (`id_module`,`id_shop`, `id_reference`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_module_history` (
