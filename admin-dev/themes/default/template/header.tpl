@@ -302,7 +302,7 @@
                 <span class="shop-state" id="debug-mode">
                   <i class="material-icons">bug_report</i>
                   <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
-                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All PHP errors and messages are displayed, when you are done <strong>turn off</strong> this mode.'}</p>">{l s='Debug mode'}</span>
+                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' sprintf=['[1]' => '<strong>', '[/1]' => '</strong>']}</p>">{l s='Debug mode'}</span>
                 </span>
               {/if}
               {if isset($maintenance_mode) && $maintenance_mode == true}

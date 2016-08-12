@@ -162,7 +162,7 @@ class AdminTrackingControllerCore extends AdminController
 			)
 			AND IFNULL(stock.quantity, 0) <= 0
 		)';
-        $this->toolbar_title = $this->trans('List of products with attributes but without available quantities for sale:', array(), 'Admin.Catalog.Feature');
+        $this->toolbar_title = $this->trans('List of products with combinations but without available quantities for sale:', array(), 'Admin.Catalog.Feature');
         return $this->renderList();
     }
 
@@ -206,7 +206,7 @@ class AdminTrackingControllerCore extends AdminController
 			AND IFNULL(stock.quantity, 0) <= 0
 		)';
 
-        $this->toolbar_title = $this->trans('List of products without attributes and without available quantities for sale:', array(), 'Admin.Catalog.Feature');
+        $this->toolbar_title = $this->trans('List of products without combinations and without available quantities for sale:', array(), 'Admin.Catalog.Feature');
         return $this->renderList();
     }
 
