@@ -64,7 +64,7 @@
           {% if 'PS_FORCE_FRIENDLY_PRODUCT'|configuration == 1 %}
             <strong>{{ 'The "Force update of friendly URL" option is currently enabled.'|trans({}, 'Admin.Catalog.Notification') }}</strong>
             {# "It" refers to the option "Force update of friendly URL" #}
-            {{ 'To disable it, go to[1]Product Settings[/1]'|trans({}, 'Admin.Catalog.Notification')|replace({'[1]': '<a href="' ~ getAdminLink("AdminPPreferences") ~ '#configuration_fieldset_products">', '[/1]': '</a>'})|raw }}
+            {{ 'To disable it, go to [1]Product Settings[/1]'|trans({}, 'Admin.Catalog.Notification')|replace({'[1]': '<a href="' ~ getAdminLink("AdminPPreferences") ~ '#configuration_fieldset_products">', '[/1]': '</a>'})|raw }}
           {% endif %}
         </p>
       </div>

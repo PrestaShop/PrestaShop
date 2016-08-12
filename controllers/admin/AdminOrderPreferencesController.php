@@ -105,8 +105,8 @@ class AdminOrderPreferencesControllerCore extends AdminController
                         )
                     ),
                     'PS_CONDITIONS_CMS_ID' => array(
-                        'title' => $this->trans('Page for the Conditions of use', array(), 'Admin.ShopParameters.Feature'),
-                        'hint' => $this->trans('Choose the page which contains your store\'s conditions of use.', array(), 'Admin.ShopParameters.Help'),
+                        'title' => $this->trans('Page for the Terms and conditions', array(), 'Admin.ShopParameters.Feature'),
+                        'hint' => $this->trans('Choose the page which contains your store\'s terms and conditions of use.', array(), 'Admin.ShopParameters.Help'),
                         'validation' => 'isInt',
                         'type' => 'select',
                         'list' => $cms_tab,
