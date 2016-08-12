@@ -346,6 +346,10 @@
     <authorization_role id="TAB_ADMINSHOPGROUP_READ" slug="ROLE_MOD_TAB_ADMINSHOPGROUP_READ"/>
     <authorization_role id="TAB_ADMINSHOPGROUP_UPDATE" slug="ROLE_MOD_TAB_ADMINSHOPGROUP_UPDATE"/>
     <authorization_role id="TAB_ADMINSHOPGROUP_DELETE" slug="ROLE_MOD_TAB_ADMINSHOPGROUP_DELETE"/>
+    <authorization_role id="TAB_ADMINSHOPURL_CREATE" slug="ROLE_MOD_TAB_ADMINSHOPURL_CREATE"/>
+    <authorization_role id="TAB_ADMINSHOPURL_READ" slug="ROLE_MOD_TAB_ADMINSHOPURL_READ"/>
+    <authorization_role id="TAB_ADMINSHOPURL_UPDATE" slug="ROLE_MOD_TAB_ADMINSHOPURL_UPDATE"/>
+    <authorization_role id="TAB_ADMINSHOPURL_DELETE" slug="ROLE_MOD_TAB_ADMINSHOPURL_DELETE"/>
     <authorization_role id="TAB_ADMINSLIP_CREATE" slug="ROLE_MOD_TAB_ADMINSLIP_CREATE"/>
     <authorization_role id="TAB_ADMINSLIP_READ" slug="ROLE_MOD_TAB_ADMINSLIP_READ"/>
     <authorization_role id="TAB_ADMINSLIP_UPDATE" slug="ROLE_MOD_TAB_ADMINSLIP_UPDATE"/>
