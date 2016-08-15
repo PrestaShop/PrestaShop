@@ -82,13 +82,21 @@ class HookDispatcher extends EventDispatcher
     {
         $this->propagationStoppedCalled = false;
         foreach ($listeners as $listener) {
-            call_user_func($listener, $event, $eventName, null); // removes $this to parameters. Hooks should not have access to dispatcher
+            // removes $this to parameters. Hooks should not have access to dispatcher
+            ob_start();
+            call_user_func($listener, $event, $eventName, null);
+            $obContent = ob_get_clean();
+
             if ($event instanceof RenderingHookEvent) {
                 $listenerName = $event->popListener() ?: $listener[1];
-                $this->renderingContent[$listenerName] = $event->popContent();
+
+                $eventContent = $event->popContent();
+                $this->renderingContent[$listenerName] = strlen($eventContent) > strlen($obContent)
+                    ? $eventContent
+                    : $obContent;
+
             }
             if ($event->isPropagationStopped()) {
-                //break; // No break here to avoid a module stopping hook access to another module.
                 $this->propagationStoppedCalledBy = $listener;
             }
         }

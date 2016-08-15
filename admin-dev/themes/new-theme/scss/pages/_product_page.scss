@@ -1,9 +1,12 @@
 .product-page {
+
   //@TODO remove this tyniMce hack
   .mce-tinymce iframe {
     max-height: 400px !important;
   }
+
   padding-bottom: 80px;
+
   .table-fixed {
     table-layout: fixed;
     border: 0;
@@ -33,6 +36,7 @@
       }
     }
   }
+
   &::before {
     content: '';
     display: block;
@@ -44,6 +48,7 @@
     z-index: 400;
     height: 1px;
   }
+
   // Resets
   ul.nostyle {
     list-style: none;
@@ -52,6 +57,7 @@
   .tab-content {
     padding: 0;
   }
+
   // Components
   .product-header {
     background: $white;
@@ -74,6 +80,7 @@
       @include align-items(center);
     }
   }
+
   .big-input {
     .form-control {
       font-size: rem(24px);
@@ -82,7 +89,8 @@
   .bulk-action {
     cursor: pointer;
   }
-  #bulk-combinations-container{
+
+  #bulk-combinations-container {
     border: solid 1px $gray-light;
     margin: rem(-17px) rem(15px) rem(15px);
     padding: rem(15px);
@@ -93,9 +101,11 @@
       min-height: rem(45px);
     }
   }
-  #delete-combinations{
+
+  #delete-combinations {
     max-width: rem(210px);
   }
+
   .product-footer {
     box-shadow: $gray-dark 0 0 10px;
     position: fixed;
@@ -134,24 +144,29 @@
       }
     }
   }
+
   .help-box {
     cursor: pointer;
     min-width: rem(16px);
   }
+
   .form-contenttab {
     padding: {
       top: $grid-gutter-width / 2;
       bottom: $grid-gutter-width / 2;
     }
   }
+
   .form-group {
     .title {
       margin-bottom: rem(20px);
     }
   }
+
   .hide {
     display: none;
   }
+
   // Combination generator
   .tokenfield {
     height: auto;
@@ -166,6 +181,7 @@
       max-width: 100%;
     }
   }
+
   // Combination details form
   #accordion_combinations td.img img {
     max-width: 50px;
@@ -182,12 +198,14 @@
     margin: 0 rem(10px) 0 0;
     border-radius: rem(3px);
   }
+
   .product-combination-image.img-highlight {
     border: solid 2px $primary;
   }
   .product-combination-image input {
     display: none;
   }
+
   .combination-form {
     .combination-label {
       color: $gray-medium;
@@ -207,6 +225,7 @@
       margin-bottom: rem(10px);
     }
   }
+
   // Dropzone & Image manager
   #product-images-dropzone {
     height: 340px;
@@ -333,6 +352,7 @@
       }
     }
   }
+
   #product-images-form-container {
     min-height: 200px;
     top: 0;
@@ -352,6 +372,7 @@
       padding-top: 15px;
     }
   }
+
   #product-images-container {
     border: solid 1px $gray-light;
     display: inline-block;
@@ -376,6 +397,7 @@
       }
     }
   }
+
   .twitter-typeahead {
     .tt-menu {
       width: 100%;
@@ -396,6 +418,7 @@
       }
     }
   }
+
   .pack-product {
     position: relative;
     border: rem(1px) solid $gray-light;
@@ -417,12 +440,15 @@
       }
     }
   }
+
   #add-categories {
     margin-top: rem(40px);
   }
+
   #categories-tree {
     clear: both;
   }
+
   .ui-widget {
     > .form-control-label {
       font-size: rem(10px);
@@ -456,6 +482,7 @@
       }
     }
   }
+
   .category-tree {
     ul {
       padding-left: rem(20px);
@@ -487,6 +514,7 @@
       }
     }
   }
+
   .categories-tree {
     padding: rem(10px);
     border: $gray-light 1px solid;
@@ -512,18 +540,22 @@
       }
     }
   }
+
   .subtitle {
     color: $gray-medium;
   }
+
   .external-link {
     font-weight: 600;
     .material-icons {
       vertical-align: middle;
     }
   }
+
   .btn-action {
     text-transform: none;
   }
+
   .seo-table thead th {
     text-transform: uppercase;
   }
@@ -533,17 +565,20 @@
   .seo-table tbody tr td:last-child {
     box-shadow: -3px 0 10px -3px rgba(0,0,0,0.4);
   }
-  .seo-table .delete,
-  .customFieldCollection .delete {
+
+  .customFieldCollection .delete,
+  .seo-table .delete {
     color: $gray-medium;
     .material-icons {
       font-size: rem(20px);
     }
   }
+
   #form_step5_meta_description_1 {
     resize: none;
     height: rem(140px);
   }
+
   #product-attachment-file {
     border: $gray-light 2px solid;
     thead {
@@ -554,6 +589,7 @@
       border-top: $gray-light 2px solid;
     }
   }
+
   #combinations-bulk-form {
     transition: opacity 1s ease-in-out;
 
@@ -566,6 +602,7 @@
       }
     }
   }
+
   .combinations-list {
     th,
     td {
@@ -615,14 +652,37 @@
       }
     }
   }
+
   .form-control-static {
     display: inline-block;
     margin-top: rem(25px);
   }
+
+  /* Last tab modules selection */
+
+  .module-selection {
+    padding: {
+      top: $grid-gutter-width;
+      bottom: $grid-gutter-width;
+    }
+    margin-bottom: $grid-gutter-width;
+    border-bottom: 1px solid $gray-light;
+    background: $gray-soft;
+  }
+
+  .module-render-container {
+    margin-bottom: $grid-gutter-width;
+
+    > .name {
+      margin-bottom: $grid-gutter-width / 2;
+    }
+  }
 }
+
 .popover-title {
   display: none;
 }
+
 .ui-autocomplete {
   @media screen and (max-width: 1450px) {
     max-width: rem(197px);
@@ -665,6 +725,7 @@
     color: $gray-medium;
   }
 }
+
 #attributes-list {
   .attribute-group {
     border: rem(1px) solid $gray-light;
@@ -736,6 +797,7 @@
     }
   }
 }
+
 .table {
   &.table-no-bordered {
     thead,
@@ -743,6 +805,49 @@
     th {
       border: 0;
     }
+  }
+  th{
+    padding: rem(20px) rem(10px);
+  }
+  td {
+    vertical-align: middle;
+  }
+}
+
+#product_catalog_list {
+  .table{
+    thead, th, tbody {
+      border:none;
+      font-weight: lighter;
+       tr:nth-of-type(odd){
+         background: $gray-soft;
+       }
+    }
+    th{
+      text-transform: uppercase;
+      font-size: 0.65rem;
+    }
+    .column-filters{
+      background: $notice;
+    }
+    .sortable tr:hover {
+      border: $brand-primary 1px solid;
+      cursor: move;
+    }
+  }
+  .product-edit {
+    color: $gray-medium;
+    cursor: pointer;
+    .material-icons{
+      font-size: rem(20px);
+    }
+  }
+  .pagination {
+    list-style: none;
+  }
+  .select2-selection{
+      font-size: rem(14px);
+      text-transform: none;
   }
 }
 
