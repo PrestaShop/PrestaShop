@@ -113,6 +113,8 @@ class AdminCmsContentControllerCore extends AdminController
                     $cat_bar_index = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
                 }
             }
+            // Include CMS category index in URL (in order to maintain it when reordering list of CMS pages)
+            self::$currentIndex .= '&id_cms_category='.(int)$id_cms_category;            
             $this->context->smarty->assign(array(
                 'cms_breadcrumb' => getPath($cat_bar_index, $id_cms_category, '', '', 'cms'),
                 'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
