@@ -82,8 +82,8 @@
 }
 
 /**
-* Module list
-*/
+ * Module list
+ */
 
 .module-item-list {
     .container-fluid {
@@ -108,8 +108,6 @@
             }
 
             > .module-logo-thumb-list {
-                //@extend .col-md-3;
-                //@extend .col-sm-12;
                 height:64px;
                 max-width:64px;
                 margin: 0 auto;
@@ -122,9 +120,6 @@
                     max-width: 64px;
                     margin-bottom: 0.5em;
                 }
-            }
-            > .module-name-list, > .module-version-author-list {
-                //@extend .col-md-8
             }
             > .module-name-list {
                 font-weight: bolder;
@@ -144,21 +139,10 @@
             }
         }
 
-        .module-quick-description-list {
-            //@extend .col-md-4;
-            //@extend .col-sm-12;
-        }
-
         .module-quick-action-list {
-            //@extend .col-md-4;
-            //@extend .col-sm-12;
 
             > [class^="module-star-ranking-"] {
                 display:none;
-            }
-
-            .module-checkbox-bulk-list {
-                //@extend .col-md-2;
             }
         }
     }
@@ -168,8 +152,7 @@
 * Addons Module Cast (List view)
 **/
 .module-addons-item-list {
-    //@extend .col-xs-12;
-    margin-top: 0.25em;
+  margin-top: 0.25em;
   display: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -180,26 +163,16 @@
   cursor: pointer;
 
   > .module-addons-item-wrapper-list {
-      //@extend .row;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
     font-size: 20px;
 
     > .module-icon-addons-exit-list {
-        //@extend .col-lg-1;
-        //@extend .col-lg-offset-3;
-        //@extend .col-md-2;
-        //@extend .col-md-offset-2;
-        //@extend .col-sm-12;
-        //@extend .col-sm-offset-0;
-        //@extend .col-xs-12;
-        //@extend .col-xs-offset-0;
-        > img {
-            height: 3em;
-        }
+      > img {
+          height: 3em;
       }
-
+    }
   }
 }
 
@@ -342,11 +315,9 @@
   min-height: 74px;
 }
 
-/*
-*
-* Module Categories Grid
-*
-*/
+/**
+ * Module Categories Grid
+ */
 
 #modules-categories-grid {
   display: none;
