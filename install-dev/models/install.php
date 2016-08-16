@@ -101,13 +101,6 @@ class InstallModelInstall extends InstallAbstractModel
             $database_host = implode(':', $splits);
         }
 
-        if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
-            $config = Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml'));
-            $secret = $config['parameters']['secret'];
-            $cookie_key = $config['parameters']['cookie_key'];
-            $cookie_iv = $config['parameters']['cookie_iv'];
-        }
-
         $parameters  = array_replace_recursive(
             Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml.dist')),
             array(
