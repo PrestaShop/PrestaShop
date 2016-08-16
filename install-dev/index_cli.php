@@ -33,7 +33,7 @@ ini_set('memory_limit', '128M');
 try {
     require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
     InstallControllerConsole::execute($argc, $argv);
-    echo '-- Installation successfull! --'."\n";
+    echo '-- Installation successful! --'."\n";
     exit(0);
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();
