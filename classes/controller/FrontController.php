@@ -1449,9 +1449,11 @@ class FrontControllerCore extends Controller
 
         $page = [
             'canonical' => $this->getCanonicalURL(),
-            'title' => $meta_tags['meta_title'],
-            'description' => $meta_tags['meta_description'],
-            'keywords' => $meta_tags['meta_keywords'],
+            'meta' => array(
+                'title' => $meta_tags['meta_title'],
+                'description' => $meta_tags['meta_description'],
+                'keywords' => $meta_tags['meta_keywords'],
+            ),
             'page_name' => $page_name,
             'body_classes' => $body_classes,
             'admin_notifications' => [],
