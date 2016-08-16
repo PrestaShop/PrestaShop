@@ -24,7 +24,7 @@ admin_module_catalog_refresh:
         _legacy_controller: AdminModules
 
 admin_module_catalog_post:
-    path:     /catalog
+    path:     /catalog/recommended
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Module:getPreferredModules
