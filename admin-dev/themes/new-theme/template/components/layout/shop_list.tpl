@@ -5,8 +5,11 @@
       data-toggle="dropdown"
     >
       <span class="selected-item">
-        <i class="material-icons">visibility</i>
+        {if !isset($current_shop_name) || $current_shop_name == ''}
         {l s='All shops'}
+        {else}
+        {$current_shop_name}
+        {/if}
         <i class="material-icons arrow-down">keyboard_arrow_down</i>
       </span>
     </span>

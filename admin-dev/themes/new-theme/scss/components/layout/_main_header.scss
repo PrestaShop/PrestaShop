@@ -73,6 +73,10 @@
     display: inline-block;
     color: $gray-dark;
     @include single-line-block($size-header-height);
+    .selected-item {
+      font-size: 12px;
+      line-height: 17px;
+    }
   }
   .items-list {
     list-style: none;
@@ -80,7 +84,6 @@
     li:first-child a {
       color: $brand-primary;
       &::before {
-        content: "\E5CA";
         font-family: 'Material Icons';
         margin-right: rem(10px);
       }
@@ -88,9 +91,18 @@
         background: none;
       }
     }
-    li a {
-      padding-top: rem(5px);
-      padding-bottom: rem(5px);
+    li {
+      &.active {
+        background-color: #3ed2f0;
+
+        .dropdown-item {
+          color: #fff;
+        }
+      }
+      a {
+        padding-top: rem(5px);
+        padding-bottom: rem(5px);
+      }
     }
     .group {
       text-indent: rem(50px);

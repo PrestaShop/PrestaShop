@@ -612,12 +612,22 @@ class AdminShopControllerCore extends AdminController
             );
         }
 
+        if (!$obj->theme_name) {
+            $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
+                            ->buildRepository()
+                            ->getList();
+            $theme = array_pop($themes);
+            $theme_name = $theme->getName();
+        } else {
+            $theme_name = $obj->theme_name;
+        }
+
         $this->fields_value = array(
             'id_shop_group' => (Tools::getValue('id_shop_group') ? Tools::getValue('id_shop_group') :
                 (isset($obj->id_shop_group)) ? $obj->id_shop_group : Shop::getContextShopGroupID()),
             'id_category' => (Tools::getValue('id_category') ? Tools::getValue('id_category') :
                 (isset($obj->id_category)) ? $obj->id_category : (int)Configuration::get('PS_HOME_CATEGORY')),
-            'theme_name' => $obj->theme_name,
+            'theme_name' => $theme_name,
         );
 
         $ids_category = array();

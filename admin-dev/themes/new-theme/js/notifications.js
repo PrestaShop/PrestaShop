@@ -43,6 +43,10 @@ let fillTpl = function (results, eltAppendTo, tpl) {
   if (results.length > 0) {
     eltAppendTo.removeClass('empty');
     $.each(results, function (property, value) {
+      if (undefined === tpl) {
+        return;
+      }
+
       eltAppendTo.children('.notification-elements').append(
         tpl.replace(/_id_order_/g, parseInt(value.id_order))
           .replace(/_customer_name_/g, value.customer_name)
