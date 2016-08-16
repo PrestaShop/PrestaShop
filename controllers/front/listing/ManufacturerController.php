@@ -88,7 +88,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
                 $this->label = $this->trans(
                     'List of all manufacturers', array(), 'Shop.Theme.Catalog'
                 );
-                $this->setTemplate('catalog/manufacturers');
+                $this->setTemplate('catalog/manufacturers', array('entity' => 'manufacturers'));
             }
         } else {
             $this->redirect_after = '404';
@@ -131,7 +131,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     protected function assignAll()
     {
         $this->context->smarty->assign(array(
-            'manufacturers' => $this->getTemplateVarManufacturers(),
+            'brands' => $this->getTemplateVarManufacturers(),
         ));
     }
 

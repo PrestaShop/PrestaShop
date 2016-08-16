@@ -89,7 +89,7 @@ class SupplierControllerCore extends ProductListingFrontController
                 $this->label = $this->trans(
                     'List of all suppliers', array(), 'Shop.Theme.Catalog'
                 );
-                $this->setTemplate('catalog/suppliers');
+                $this->setTemplate('catalog/suppliers', array('entity' => 'suppliers'));
             }
         } else {
             $this->redirect_after = '404';
@@ -132,7 +132,7 @@ class SupplierControllerCore extends ProductListingFrontController
     protected function assignAll()
     {
         $this->context->smarty->assign(array(
-            'suppliers' => $this->getTemplateVarSuppliers(),
+            'brands' => $this->getTemplateVarSuppliers(),
         ));
     }
 

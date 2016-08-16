@@ -1,20 +1,5 @@
-{extends file=$layout}
+{extends file='catalog/brands.tpl'}
 
-{block name='content'}
-  <section id="main">
-
-    {block name='manufacturer_header'}
-      <h1>{l s='Brands' d='Shop.Theme.Catalog'}</h1>
-    {/block}
-
-    {block name='manufacturer_miniature'}
-      <ul>
-        {foreach from=$manufacturers item=manufacturer}
-          {include file='catalog/_partials/miniatures/manufacturer.tpl' brand=$manufacturer}
-        {/foreach}
-      </ul>
-    {/block}
-
-  </section>
-
+{block name='brand_header'}
+  <h1>{l s='Brands' d='Shop.Theme.Catalog'}</h1>
 {/block}
