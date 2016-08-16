@@ -101,6 +101,7 @@ class ModuleController extends FrameworkBundleAdminController
             array(
                 'modules' => $this->getPresentedProducts($modules),
                 'requireAddonsSearch' => true,
+                'id' => 'all',
             )
         )->getContent();
 

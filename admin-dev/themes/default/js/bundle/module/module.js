@@ -33,8 +33,6 @@ var AdminModuleController = function() {
   this.categorySelectorLabelSelector = '.module-category-selector-label';
   this.categorySelector = '.module-category-selector';
   this.categoryItemSelector = '.module-category-menu';
-  this.addonsSearchSelector = '.module-addons-search';
-  this.addonsSearchLinkSelector = '.module-addons-search-link';
   this.addonsLoginButtonSelector = '#addons_login_btn';
   this.categoryResetBtnSelector = '.module-category-reset';
   this.moduleInstallBtnSelector = 'input.module-install-btn';
@@ -105,6 +103,7 @@ var AdminModuleController = function() {
     this.initBulkActions();
     this.initPlaceholderMechanism();
     this.initFilterStatusDropdown();
+    this.fetchModulesList();
   };
 
   this.initFilterStatusDropdown = function() {
@@ -216,33 +215,37 @@ var AdminModuleController = function() {
 
   this.fetchModulesList = function() {
     var self = this;
-    $("#modules-list-container").find(".module-item").each(function() {
-      var $this = $(this);
-      self.modulesList.push({
-        domObject: $this,
-        id: $this.attr('data-id'),
-        name: $this.attr('data-name').toLowerCase(),
-        scoring: parseFloat($this.attr('data-scoring')),
-        logo: $this.attr('data-logo'),
-        author: $this.attr('data-author').toLowerCase(),
-        version: $this.attr('data-version'),
-        description: $this.attr('data-description').toLowerCase(),
-        techName: $this.attr('data-tech-name').toLowerCase(),
-        childCategories: $this.attr('data-child-categories'),
-        categories: $this.attr('data-categories').toLowerCase(),
-        type: $this.attr('data-type'),
-        price: parseFloat($this.attr('data-price')),
-        active: parseInt($this.attr('data-active')),
-        display: $this.hasClass('module-item-list') ? 'list' : 'grid'
+    self.modulesList = [];
+    $(".modules-list").each(function() {
+      var container = $(this);
+      container.find(".module-item").each(function() {
+        var $this = $(this);
+        self.modulesList.push({
+          domObject: $this,
+          id: $this.attr('data-id'),
+          name: $this.attr('data-name').toLowerCase(),
+          scoring: parseFloat($this.attr('data-scoring')),
+          logo: $this.attr('data-logo'),
+          author: $this.attr('data-author').toLowerCase(),
+          version: $this.attr('data-version'),
+          description: $this.attr('data-description').toLowerCase(),
+          techName: $this.attr('data-tech-name').toLowerCase(),
+          childCategories: $this.attr('data-child-categories'),
+          categories: $this.attr('data-categories').toLowerCase(),
+          type: $this.attr('data-type'),
+          price: parseFloat($this.attr('data-price')),
+          active: parseInt($this.attr('data-active')),
+          display: $this.hasClass('module-item-list') ? 'list' : 'grid',
+          container: container
+        });
+        $this.remove();
       });
-      $this.remove();
     });
     this.updateModuleVisibility();
   };
 
   this.updateModuleVisibility = function() {
     var self = this;
-    var $modulesListContainer = $('#modules-list-container');
 
     // Modules ordering
     if (self.currentSorting !== null) {
@@ -267,7 +270,7 @@ var AdminModuleController = function() {
       }
     }
 
-    $modulesListContainer.html('');
+    $('.modules-list').html('');
 
     // Modules visibility management
     for (var i = 0; i < this.modulesList.length; i++) {
@@ -294,12 +297,12 @@ var AdminModuleController = function() {
           isVisible &= tagExists;
         }
         if (isVisible) {
-          $modulesListContainer.append(currentModule.domObject);
+          currentModule.container.append(currentModule.domObject);
         }
       }
     }
 
-    this.updateTotalResults($modulesListContainer.find('.module-item').length);
+    this.updateTotalResults();
   };
 
   this.initPageChangeProtection = function() {
@@ -570,12 +573,6 @@ var AdminModuleController = function() {
       : '.modules-list';
   };
 
-  this.getAddonItemSelector = function () {
-    return this.currentDisplay == 'grid'
-      ? this.addonItemGridSelector
-      : this.addonItemListSelector;
-  };
-
   this.getBulkActionSelectedSelector = function () {
     return this.currentDisplay == 'grid'
       ? this.checkedBulkActionGridSelector
@@ -740,45 +737,42 @@ var AdminModuleController = function() {
     });
   };
 
-  this.updateTotalResults = function (totalResultFound, domObject) {
-    if (typeof domObject === 'undefined') domObject = $("#modules-list-container");
+  this.updateTotalResults = function() {
 
-    // Pick the right selector to process search
-    var addonsItemSelector = this.getAddonItemSelector();
-    var resultWordingObject = domObject.prev().find('.module-search-result-wording');
+    // If there are some shortlist: each shortlist count the modules on the next container.
+    var $shortLists = $('.module-short-list');
+    if ($shortLists.length > 0) {
+      $shortLists.each(function() {
+        var $this = $(this);
+        updateText(
+          $this.find('.module-search-result-wording'),
+          $this.next('.modules-list').find('.module-item').length
+        );
+      });
 
-    $(addonsItemSelector).hide();
-    var str = resultWordingObject.text();
-    var explodedStr = str.split(' ');
-    explodedStr[0] = totalResultFound;
-    var gluedStr = explodedStr.join(' ');
-    resultWordingObject.text(gluedStr);
-
-    if (totalResultFound === 0) {
-      // Construct search query
-      var searchQuery = encodeURIComponent(this.currentTagsList.join(' '));
-      var hrefUrl = this.baseAddonsUrl + 'search.php?search_query=' + searchQuery;
-      $(this.addonsSearchLinkSelector).attr('href', hrefUrl);
-      $(this.addonsSearchSelector).show();
-      // Display category grid
-      if (this.isCategoryGridDisplayed === false) {
-        $(this.categoryGridSelector).fadeIn();
-        this.isCategoryGridDisplayed = true;
-      }
-      $(addonsItemSelector).hide();
-
+    // If there is no shortlist: the wording directly update from the only module container.
     } else {
-      if (this.isCategoryGridDisplayed === true) {
-        $(this.categoryGridSelector).fadeOut();
-        this.isCategoryGridDisplayed = false;
-      }
-      var moduleItemSelector = this.getModuleItemSelector();
+      var modulesCount = $('.modules-list').find('.module-item').length;
+      updateText(
+          $('.module-search-result-wording'),
+          modulesCount
+      );
 
-      if (totalResultFound != $(moduleItemSelector).length) {
-        $(addonsItemSelector).css('display', 'table');
-      } else {
-        $(addonsItemSelector).hide();
+      $('.module-addons-search').toggle(modulesCount === 0);
+      if (modulesCount === 0) {
+        $('.module-addons-search-link').attr(
+            'href',
+            this.baseAddonsUrl
+              + 'search.php?search_query='
+              + encodeURIComponent(this.currentTagsList.join(' '))
+        );
       }
+    }
+
+    function updateText(element, value) {
+      var explodedText = element.text().split(' ');
+      explodedText[0] = value;
+      element.text(explodedText.join(' '));
     }
   };
 
@@ -804,7 +798,7 @@ var AdminModuleController = function() {
       tagsWrapperClassAdditional: 'module-tags-labels'
     });
 
-    $('body').on('click', this.addonsSearchLinkSelector, function(event) {
+    $('body').on('click', '.module-addons-search-link', function(event) {
       event.preventDefault();
       event.stopPropagation();
       var href = $(this).attr('href');

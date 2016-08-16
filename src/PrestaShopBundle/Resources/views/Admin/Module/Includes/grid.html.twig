@@ -2,7 +2,7 @@
   {% set display_type = 'grid' %}
 {% endif %}
 
-<div id="modules-list-container" class="row modules-{{ display_type }}">
+<div id="modules-list-container-{{ id }}" class="row modules-list">
   {% if app.request.attributes.get('_route') == 'admin_module_catalog_refresh' %}
     {% for module in modules %}
       {% include 'PrestaShopBundle:Admin/Module/Includes:card_grid.html.twig' with { 'display_type': display_type, 'module': module, 'origin': origin|default('none') } %}
