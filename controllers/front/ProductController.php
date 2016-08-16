@@ -67,9 +67,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         parent::init();
 
-        $this->setTemplate('catalog/product');
+        $id_product = (int) Tools::getValue('id_product');
 
-        if ($id_product = (int) Tools::getValue('id_product')) {
+        $this->setTemplate('catalog/product', array(
+            'entity' => 'product',
+            'id' => $id_product,
+        ));
+
+        if ($id_product) {
             $this->product = new Product($id_product, true, $this->context->language->id, $this->context->shop->id);
         }
 

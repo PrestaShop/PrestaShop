@@ -80,7 +80,10 @@ class SupplierControllerCore extends ProductListingFrontController
                 $this->label = $this->trans(
                     'List of products by supplier %s', array($this->supplier->name), 'Shop.Theme.Catalog'
                 );
-                $this->doProductSearch('catalog/listing/supplier');
+                $this->doProductSearch(
+                    'catalog/listing/supplier',
+                    array('entity' => 'supplier', 'id' => $this->supplier->id)
+                );
             } else {
                 $this->assignAll();
                 $this->label = $this->trans(

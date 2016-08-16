@@ -79,7 +79,10 @@ class ManufacturerControllerCore extends ProductListingFrontController
                 $this->label = $this->trans(
                     'List of products by manufacturer %s', array($this->manufacturer->name), 'Shop.Theme.Catalog'
                 );
-                $this->doProductSearch('catalog/listing/manufacturer');
+                $this->doProductSearch(
+                    'catalog/listing/manufacturer',
+                    array('entity' => 'manufacturer', 'id' => $this->manufacturer->id)
+                );
             } else {
                 $this->assignAll();
                 $this->label = $this->trans(

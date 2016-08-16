@@ -1093,10 +1093,10 @@ class FrontControllerCore extends Controller
      *
      * @param string $default_template
      */
-    public function setTemplate($template, $params = array())
+    public function setTemplate($template, $params = array(), $locale = null)
     {
         parent::setTemplate(
-            $this->getTemplateFile($template, $params)
+            $this->getTemplateFile($template, $params, $locale = null)
         );
     }
 
@@ -1158,13 +1158,11 @@ class FrontControllerCore extends Controller
 
     public function getTemplateFile($template, $params = array(), $locale = null)
     {
-        if ($params !== false) {
-            if (!isset($params['entity'])) {
-                $params['entity'] = $this->php_self;
-            }
-            if (!isset($params['id'])) {
-                $params['id'] = Tools::getValue('id_'.$this->php_self);
-            }
+        if (!isset($params['entity'])) {
+            $params['entity'] = null;
+        }
+        if (!isset($params['id'])) {
+            $params['id'] = null;
         }
 
         if (is_null($locale)) {
@@ -1586,7 +1584,7 @@ class FrontControllerCore extends Controller
 
         $scope->assign($params);
         $tpl = $this->context->smarty->createTemplate(
-            $this->getTemplateFile($template, false),
+            $this->getTemplateFile($template),
             $scope
         );
 
