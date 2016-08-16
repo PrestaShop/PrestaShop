@@ -1,5 +1,6 @@
 imports:
     - { resource: parameters.yml }
+    - { resource: set_parameters.php }
     - { resource: security.yml }
     - { resource: services.yml }
 

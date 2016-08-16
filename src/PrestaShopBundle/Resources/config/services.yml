@@ -178,8 +178,8 @@ services:
     prestashop.twig.extension.translation:
         class: PrestaShopBundle\Twig\TranslationsExtension
         properties:
-            logger: @logger
-            translator: @translator
+            logger: "@logger"
+            translator: "@translator"
         tags:
             - { name: twig.extension }
 

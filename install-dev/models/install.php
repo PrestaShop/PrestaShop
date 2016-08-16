@@ -101,13 +101,6 @@ class InstallModelInstall extends InstallAbstractModel
             $database_host = implode(':', $splits);
         }
 
-        if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml')) {
-            $config = Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml'));
-            $secret = $config['parameters']['secret'];
-            $cookie_key = $config['parameters']['cookie_key'];
-            $cookie_iv = $config['parameters']['cookie_iv'];
-        }
-
         $parameters  = array_replace_recursive(
             Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml.dist')),
             array(
@@ -144,13 +137,47 @@ class InstallModelInstall extends InstallAbstractModel
             return false;
         }
 
-        if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', Yaml::dump($parameters))) {
-            $this->setError($this->translator->trans('Cannot write app/config/parameters.yml file', array(), 'Install'));
+        if (!$this->processParameters($parameters)) {
             return false;
         }
 
-        // Clear the cache
+        return true;
+    }
 
+    /**
+     * Replace "parameters.yml" with "parameters.php" in "app/config"
+     *
+     * @param $parameters
+     * @return bool|int
+     */
+    public function processParameters($parameters)
+    {
+        $parametersContent = sprintf('<?php return %s;', var_export($parameters, true));
+        if (!file_put_contents(_PS_ROOT_DIR_ . '/app/config/parameters.php', $parametersContent)) {
+            $this->setError($this->translator->trans('Cannot write app/config/parameters.php file', array(), 'Install'));
+
+            return false;
+        } else {
+            return $this->emptyYamlParameters();
+        }
+    }
+
+    /**
+     * Prevent availability of YAML parameters
+     */
+    protected function emptyYamlParameters()
+    {
+        if (!file_put_contents(_PS_ROOT_DIR_ . '/app/config/parameters.yml', 'parameters:')) {
+            $this->setError($this->translator->trans('Cannot write app/config/parameters.yml file', array(), 'Install'));
+
+            return false;
+        }
+
+        return $this->clearCache();
+    }
+
+    protected function clearCache()
+    {
         $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh('prod');
         $sf2Refresh->addCacheClear();
         $output = $sf2Refresh->execute();
