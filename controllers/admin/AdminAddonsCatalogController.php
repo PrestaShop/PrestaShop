@@ -29,7 +29,7 @@ class AdminAddonsCatalogControllerCore extends AdminController
     public function __construct()
     {
         $this->bootstrap = true;
-        parent::__construct();
+        parent::__construct('', 'new-theme');
     }
 
     public function initContent()
@@ -52,5 +52,21 @@ class AdminAddonsCatalogControllerCore extends AdminController
         ));
 
         parent::initContent();
+    }
+
+    /**
+     * Prevent the requirement of a not displayed template helper
+     */
+    protected function initTabModuleList()
+    {
+        return true;
+    }
+
+    /**
+     * Prevent the requirement of a not displayed template helper
+     */
+    public function renderModulesList($tracking_source = false)
+    {
+        return true;
     }
 }
