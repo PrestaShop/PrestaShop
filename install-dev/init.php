@@ -56,7 +56,7 @@ if (!defined('_THEME_NAME_')) {
 
 require_once _PS_CORE_DIR_.'/config/defines.inc.php';
 require_once _PS_CORE_DIR_.'/config/autoload.php';
-if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.yml')) {
+if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
 }
 require_once _PS_CORE_DIR_.'/config/defines_uri.inc.php';
