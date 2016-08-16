@@ -27,6 +27,7 @@
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
+use Symfony\Component\Yaml\Yaml;
 
 $container_builder = new ContainerBuilder();
 $container = $container_builder->build();
@@ -40,16 +41,31 @@ if (!file_exists(_PS_CACHE_DIR_)) {
     $warmer->warmUp(_PS_CACHE_DIR_);
 }
 
-$parametersFilepath = __DIR__. '/../app/config/parameters.php';
-$lastParametersModificationTime = (int)@filemtime($parametersFilepath);
+$configDirectory = __DIR__. '/../app/config';
+$phpParametersFilepath = $configDirectory . '/parameters.php';
+$yamlParametersFilepath = $configDirectory . '/parameters.yml';
+
+function exportPhpConfigFile($config, $destination) {
+    return file_put_contents($destination, '<?php return ' . var_export($config, true). ';' . "\n");
+}
+
+// Bootstrap an application with parameters.yml, which has been installed before PHP parameters file support
+if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)) {
+    $parameters = Yaml::parse($yamlParametersFilepath);
+    if (exportPhpConfigFile($parameters, $phpParametersFilepath)) {
+        file_put_contents($yamlParametersFilepath, 'parameters:' . "\n");
+    }
+}
+
+$lastParametersModificationTime = (int)@filemtime($phpParametersFilepath);
 
 if ($lastParametersModificationTime) {
     $lastParametersCacheModificationTime = (int)@filemtime(_PS_CACHE_DIR_. 'appParameters.php');
     if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
-        if (file_exists($parametersFilepath)) {
-            $config = require($parametersFilepath);
-            file_put_contents(_PS_CACHE_DIR_ .'appParameters.php', '<?php return ' . var_export($config, true). ';');
+        if (file_exists($phpParametersFilepath)) {
+            $config = require($phpParametersFilepath);
+            exportPhpConfigFile($config, _PS_CACHE_DIR_ .'appParameters.php');
         }
     }
 
