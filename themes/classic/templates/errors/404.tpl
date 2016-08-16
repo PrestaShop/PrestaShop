@@ -1,11 +1,7 @@
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  {if $title}
-    {$title}
-  {else}
-    {l s='The page you are looking for was not found.' d='Shop.Theme'}
-  {/if}
+  {$page.title}
 {/block}
 
 {block name='page_content_container'}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class PageNotFoundControllerCore extends FrontController
 {
     public $php_self = 'pagenotfound';
@@ -31,7 +30,8 @@ class PageNotFoundControllerCore extends FrontController
     public $ssl = true;
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
@@ -61,7 +61,7 @@ class PageNotFoundControllerCore extends FrontController
                         $ext = '.'.$matches[3];
 
                         if (file_exists($root.$folder.$file.$ext)) {
-                            if (ImageManager::resize($root.$folder.$file.$ext, $root.$folder.$file.'-'.$matches[2].$ext, (int)$image_type['width'], (int)$image_type['height'])) {
+                            if (ImageManager::resize($root.$folder.$file.$ext, $root.$folder.$file.'-'.$matches[2].$ext, (int) $image_type['width'], (int) $image_type['height'])) {
                                 header('HTTP/1.1 200 Found');
                                 header('Status: 200 Found');
                                 header('Content-Type: image/jpg');
@@ -79,7 +79,7 @@ class PageNotFoundControllerCore extends FrontController
                     $ext = '.'.$matches[3];
 
                     if (file_exists($root.$file.$ext)) {
-                        if (ImageManager::resize($root.$file.$ext, $root.$file.'-'.$matches[2].$ext, (int)$image_type['width'], (int)$image_type['height'])) {
+                        if (ImageManager::resize($root.$file.$ext, $root.$file.'-'.$matches[2].$ext, (int) $image_type['width'], (int) $image_type['height'])) {
                             header('HTTP/1.1 200 Found');
                             header('Status: 200 Found');
                             header('Content-Type: image/jpg');
@@ -111,5 +111,13 @@ class PageNotFoundControllerCore extends FrontController
     protected function sslRedirection()
     {
         // 404 - no need to redirect
+    }
+
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+        $page['title'] = $this->trans('The page you are looking for was not found.', array(), 'Shop.Theme');
+
+        return $page;
     }
 }
