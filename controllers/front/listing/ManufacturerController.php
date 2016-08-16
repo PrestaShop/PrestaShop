@@ -32,6 +32,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     public $php_self = 'manufacturer';
 
     protected $manufacturer;
+    private $label;
 
     public function canonicalRedirection($canonicalURL = '')
     {
@@ -75,9 +76,15 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
+                $this->label = $this->trans(
+                    'List of products by manufacturer %s', array($this->manufacturer->name), 'Shop.Theme.Catalog'
+                );
                 $this->doProductSearch('catalog/listing/manufacturer');
             } else {
                 $this->assignAll();
+                $this->label = $this->trans(
+                    'List of all manufacturers', array(), 'Shop.Theme.Catalog'
+                );
                 $this->setTemplate('catalog/manufacturers');
             }
         } else {
@@ -139,5 +146,10 @@ class ManufacturerControllerCore extends ProductListingFrontController
         }
 
         return $manufacturers_for_display;
+    }
+
+    public function getListingLabel()
+    {
+        return $this->label;
     }
 }
