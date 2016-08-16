@@ -15,6 +15,14 @@
     overflow-y: hidden;
     visibility: visible;
   }
+
+  select {
+    -moz-appearance: none;
+    border: 0 none;
+    outline: 0 none;
+    color: $gray-darker;
+    background: white;
+  }
 }
 
 .dropdown-item:focus, .dropdown-item:hover {
@@ -22,3 +30,4 @@
   text-decoration: none;
   color: $brand-primary;
 }
+

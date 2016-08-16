@@ -39,18 +39,12 @@
   }
   .products-section-title {
     text-align: center;
-    margin: 4.2em 0 1.8em;
+    margin-bottom: rem(24px);
   }
   .product-title {
     text-align: center;
     text-transform: capitalize;
     margin-top: rem(16px);
-  }
-  .product-description-short,
-  .product-list-actions,
-  .discount,
-  .product-availability {
-    display: none;
   }
   .product-price-and-shipping {
     color: $gray-darker;
@@ -142,7 +136,18 @@
     clear: both;
     color: $gray-dark;
     font-weight: 700;
-    margin-top: rem(30px);
-    margin-bottom: rem(50px);
+    margin-top: rem(24px);
+    margin-bottom: rem(24px);
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  #products,.featured-products,.product-accessories  {
+    .thumbnail-container {
+      @include box-shadow;
+      .product-description{
+        box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
+      }
+    }
   }
 }

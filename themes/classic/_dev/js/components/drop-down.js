@@ -20,5 +20,11 @@ export default class DropDown {
         $(e.target).find('.dropdown-menu').first().stop(true, true).slideUp();
       }
     });
+
+    this.el.find('select.link').each(function(idx, el) {
+      $(el).on('change', function(event) {
+        window.location = $(this).val();
+      });
+    });
   }
 }

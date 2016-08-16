@@ -10,11 +10,12 @@
                 {hook h='displayNav2'}
             </div>
           </div>
-          <div class="hidden-md-up text-xs-center">
+          <div class="hidden-md-up text-xs-center mobile">
             <div class="pull-xs-left" id="menu-icon">
               <i class="material-icons">&#xE5D2;</i>
             </div>
             <div class="pull-xs-right" id="_mobile_cart"></div>
+            <div class="pull-xs-right" id="_mobile_user_info"></div>
             <div class="top-logo" id="_mobile_logo"></div>
             <div class="clearfix"></div>
           </div>
@@ -39,8 +40,12 @@
           </div>
         </div>
       </div>
-      <div id="mobile_top_menu_wrapper" style="display:none;">
-        <div class="hidden-md-up" id="_mobile_top_menu">
+      <div id="mobile_top_menu_wrapper" class="row hidden-md-up" style="display:none;">
+        <div class="js-top-menu mobile" id="_mobile_top_menu"></div>
+        <div class="js-top-menu-bottom">
+          <div id="_mobile_currency_selector"></div>
+          <div id="_mobile_language_selector"></div>
+          <div id="_mobile_contact_link"></div>
         </div>
       </div>
     </div>

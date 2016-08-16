@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a class="banner" href="{$banner_link}" title="{$banner_desc}">
+<a class="banner hidden-sm-down" href="{$banner_link}" title="{$banner_desc}">
   {if isset($banner_img)}
     <img src="{$banner_img}" alt="{$banner_desc}" title="{$banner_desc}" class="img-fluid">
   {else}

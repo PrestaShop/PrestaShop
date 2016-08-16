@@ -22,16 +22,26 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="language-selector dropdown js-dropdown">
-  <span class="expand-more" data-toggle="dropdown">{$current_language.name_simple}</span>
-  <a data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <i class="material-icons expand-more">&#xE5C5;</i>
-  </a>
-  <ul class="dropdown-menu">
-    {foreach from=$languages item=language}
-      <li {if $language.id_lang == $current_language.id_lang} class="current" {/if}>
-        <a href="{$link->getLanguageLink($language.id_lang)}" class="dropdown-item">{$language.name_simple}</a>
-      </li>
-    {/foreach}
-  </ul>
+<div id="_desktop_language_selector">
+  <div class="language-selector-wrapper">
+    <span class="hidden-md-up">{l s='Language:' d='Shop.Theme'}</span>
+    <div class="language-selector dropdown js-dropdown">
+      <span class="expand-more hidden-sm-down" data-toggle="dropdown">{$current_language.name_simple}</span>
+      <a data-target="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="hidden-sm-down">
+        <i class="material-icons expand-more">&#xE5C5;</i>
+      </a>
+      <ul class="dropdown-menu hidden-sm-down">
+        {foreach from=$languages item=language}
+          <li {if $language.id_lang == $current_language.id_lang} class="current" {/if}>
+            <a href="{$link->getLanguageLink($language.id_lang)}" class="dropdown-item">{$language.name_simple}</a>
+          </li>
+        {/foreach}
+      </ul>
+      <select class="link hidden-md-up">
+        {foreach from=$languages item=language}
+          <option value="{$link->getLanguageLink($language.id_lang)}"{if $language.id_lang == $current_language.id_lang} selected="selected"{/if}>{$language.name_simple}</option>
+        {/foreach}
+      </select>
+    </div>
+  </div>
 </div>

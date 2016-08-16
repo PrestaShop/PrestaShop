@@ -65,5 +65,18 @@
     {block name='display_customer_account'}
       {hook h='displayCustomerAccount'}
     {/block}
+
+    <div class="clearfix"></div>
   </div>
+{/block}
+
+
+{block name='page_footer'}
+  {block name='my_account_links'}
+    <div class="text-xs-center">
+      <a href="{$logout_url}" >
+        {l s='Sign out' d='Shop.Theme.Actions'}
+      </a>
+    </div>
+  {/block}
 {/block}

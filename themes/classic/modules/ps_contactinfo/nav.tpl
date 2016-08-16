@@ -22,19 +22,21 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div id="contact-link">
-  {if $contact_infos.phone}
-    {* [1][/1] is for a HTML tag. *}
-    {l
-      s='Call us: [1]%phone%[/1]'
-      sprintf=[
-        '[1]' => '<span>',
-        '[/1]' => '</span>',
-        '%phone%' => $contact_infos.phone
-      ]
-      d='Shop.Theme'
-    }
-  {else}
-    <a href="{$urls.pages.contact}">{l s='Contact us' d='Shop.Theme'}</a>
-  {/if}
+<div id="_desktop_contact_link">
+  <div id="contact-link">
+    {if $contact_infos.phone}
+      {* [1][/1] is for a HTML tag. *}
+      {l
+        s='Call us: [1]%phone%[/1]'
+        sprintf=[
+          '[1]' => '<span>',
+          '[/1]' => '</span>',
+          '%phone%' => $contact_infos.phone
+        ]
+        d='Shop.Theme'
+      }
+    {else}
+      <a href="{$urls.pages.contact}">{l s='Contact us' d='Shop.Theme'}</a>
+    {/if}
+  </div>
 </div>

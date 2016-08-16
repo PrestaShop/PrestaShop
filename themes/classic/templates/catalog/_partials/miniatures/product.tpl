@@ -15,27 +15,6 @@
         <h1 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name|truncate:30:'...'}</a></h1>
       {/block}
 
-      {block name='product_description_short'}
-        <div class="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
-      {/block}
-
-      {block name='product_list_actions'}
-        <div class="product-list-actions">
-          {if $product.add_to_cart_url}
-              <a
-                class = "add-to-cart btn btn-primary"
-                href  = "{$product.add_to_cart_url}"
-                rel   = "nofollow"
-                data-id-product="{$product.id_product}"
-                data-id-product-attribute="{$product.id_product_attribute}"
-                data-link-action="add-to-cart"
-                title = "{l s='Add to cart' d='Shop.Theme.Actions'}"
-              >{l s='Add to cart' d='Shop.Theme.Actions'}</a>
-          {/if}
-          {hook h='displayProductListFunctionalButtons' product=$product}
-        </div>
-      {/block}
-
       {block name='product_price_and_shipping'}
         <div class="product-price-and-shipping">
           {if $product.has_discount}
@@ -65,15 +44,8 @@
         </ul>
       {/block}
 
-      {block name='product_availability'}
-        {if $product.show_availability}
-          {* availability may take the values "available" or "unavailable" *}
-          <span class='product-availability {$product.availability}'>{$product.availability_message}</span>
-        {/if}
-      {/block}
-
     </div>
-    <div class="highlighted-informations{if !$product.main_variants} no-variants{/if}">
+    <div class="highlighted-informations{if !$product.main_variants} no-variants{/if} hidden-sm-down">
       <a
         href="#"
         class="quick-view"

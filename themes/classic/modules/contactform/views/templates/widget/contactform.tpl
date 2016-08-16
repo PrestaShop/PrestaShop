@@ -11,7 +11,7 @@
 
       <div class="form-group row">
         <label class="col-md-3 form-control-label">{l s='Subject' d='Shop.Forms.Labels'}</label>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <select name="id_contact" class="form-control form-control-select">
             {foreach from=$contact.contacts item=contact_elt}
               <option value="{$contact_elt.id_contact}">{$contact_elt.name}</option>
@@ -22,7 +22,7 @@
 
       <div class="form-group row">
         <label class="col-md-3 form-control-label">{l s='Email address' d='Shop.Forms.Labels'}</label>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <input
             class="form-control"
             name="from"
@@ -36,7 +36,7 @@
       {if $contact.orders}
         <div class="form-group row">
           <label class="col-md-3 form-control-label">{l s='Order reference' d='Shop.Forms.Labels'}</label>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <select name="id_order" class="form-control form-control-select">
               {foreach from=$contact.orders item=order}
                 <option value="{$order.id_order}">{$order.reference}</option>
@@ -51,7 +51,7 @@
         <div class="col-md-6">
           <input type="file" name="fileUpload" class="filestyle">
         </div>
-        <span class="col-md-3 row form-control-comment">
+        <span class="col-md-3 form-control-comment">
           {l s='optional' d='Shop.Forms.Help'}
         </span>
       </div>

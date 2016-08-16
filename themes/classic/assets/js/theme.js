@@ -12575,34 +12575,31 @@
 	_prestashop2['default'].responsive.min_width = 768;
 	_prestashop2['default'].responsive.mobile = _prestashop2['default'].responsive.current_width < _prestashop2['default'].responsive.min_width;
 	
+	function swapChildren(obj1, obj2) {
+		var temp = obj2.children().detach();
+		obj2.empty().append(obj1.children().detach());
+		obj1.append(temp);
+	}
+	
 	function toggleMobileStyles() {
-		(0, _jquery2['default'])('.responsive').each(function (idx, el) {
-			if (_prestashop2['default'].responsive.mobile) {
-				(0, _jquery2['default'])(el).addClass('mobile');
-			} else {
-				(0, _jquery2['default'])(el).removeClass('mobile');
-			}
-		});
 		if (_prestashop2['default'].responsive.mobile) {
 			(0, _jquery2['default'])("*[id^='_desktop_']").each(function (idx, el) {
 				var target = (0, _jquery2['default'])('#' + el.id.replace('_desktop_', '_mobile_'));
 				if (target) {
-					console.info(target);
-					var html = (0, _jquery2['default'])(el).html();
-					(0, _jquery2['default'])(el).html('');
-					target.html(html);
+					swapChildren((0, _jquery2['default'])(el), target);
 				}
 			});
 		} else {
 			(0, _jquery2['default'])("*[id^='_mobile_']").each(function (idx, el) {
 				var target = (0, _jquery2['default'])('#' + el.id.replace('_mobile_', '_desktop_'));
 				if (target) {
-					var html = (0, _jquery2['default'])(el).html();
-					(0, _jquery2['default'])(el).html('');
-					target.html(html);
+					swapChildren((0, _jquery2['default'])(el), target);
 				}
 			});
 		}
+		_prestashop2['default'].emit('responsive update', {
+			mobile: _prestashop2['default'].responsive.mobile
+		});
 	}
 	
 	(0, _jquery2['default'])(window).on('resize', function () {
@@ -12784,6 +12781,21 @@
 	      }
 	    });
 	  };
+	  (0, _jquery2['default'])('body').on('click', '#search_filter_toggler', function () {
+	    (0, _jquery2['default'])('#search_filters_wrapper').removeClass('hidden-sm-down');
+	    (0, _jquery2['default'])('#content-wrapper').addClass('hidden-sm-down');
+	    (0, _jquery2['default'])('#footer').addClass('hidden-sm-down');
+	  });
+	  (0, _jquery2['default'])('#search_filter_controls .clear').on('click', function () {
+	    (0, _jquery2['default'])('#search_filters_wrapper').addClass('hidden-sm-down');
+	    (0, _jquery2['default'])('#content-wrapper').removeClass('hidden-sm-down');
+	    (0, _jquery2['default'])('#footer').removeClass('hidden-sm-down');
+	  });
+	  (0, _jquery2['default'])('#search_filter_controls .ok').on('click', function () {
+	    (0, _jquery2['default'])('#search_filters_wrapper').addClass('hidden-sm-down');
+	    (0, _jquery2['default'])('#content-wrapper').removeClass('hidden-sm-down');
+	    (0, _jquery2['default'])('#footer').removeClass('hidden-sm-down');
+	  });
 	});
 
 /***/ },
@@ -16898,6 +16910,12 @@
 	          (0, _jquery2['default'])(e.target).find('.dropdown-menu').first().stop(true, true).slideUp();
 	        }
 	      });
+	
+	      this.el.find('select.link').each(function (idx, el) {
+	        (0, _jquery2['default'])(el).on('change', function (event) {
+	          window.location = (0, _jquery2['default'])(this).val();
+	        });
+	      });
 	    }
 	  }]);
 	
@@ -17148,8 +17166,14 @@
 	  _createClass(TopMenu, [{
 	    key: 'init',
 	    value: function init() {
+	      var _this = this;
+	
 	      var elmId = undefined;
+	      var self = this;
 	      this.el.find('li').hover(function (e) {
+	        if (_this.el.parent().hasClass('mobile')) {
+	          return;
+	        }
 	        if (elmId !== (0, _jquery2['default'])(e.currentTarget).attr('id')) {
 	          if ((0, _jquery2['default'])(e.target).data('depth') === 0) {
 	            (0, _jquery2['default'])('#' + elmId + ' .js-sub-menu').hide();
@@ -17162,13 +17186,40 @@
 	          });
 	        }
 	      });
+	      (0, _jquery2['default'])('#menu-icon').on('click', function () {
+	        (0, _jquery2['default'])('#mobile_top_menu_wrapper').toggle();
+	        self.toggleMobileMenu();
+	      });
 	      (0, _jquery2['default'])('.js-top-menu').mouseleave(function () {
+	        if (_this.el.parent().hasClass('mobile')) {
+	          return;
+	        }
 	        (0, _jquery2['default'])('#' + elmId + ' .js-sub-menu').hide();
 	      });
 	      this.el.on('click', function (e) {
+	        if (_this.el.parent().hasClass('mobile')) {
+	          return;
+	        }
 	        e.stopPropagation();
 	      });
+	      prestashop.on('responsive update', function (event) {
+	        (0, _jquery2['default'])('.js-sub-menu').removeAttr('style');
+	        self.toggleMobileMenu();
+	      });
 	      _get(Object.getPrototypeOf(TopMenu.prototype), 'init', this).call(this);
+	    }
+	  }, {
+	    key: 'toggleMobileMenu',
+	    value: function toggleMobileMenu() {
+	      if ((0, _jquery2['default'])('#mobile_top_menu_wrapper').is(":visible")) {
+	        (0, _jquery2['default'])('#notifications').hide();
+	        (0, _jquery2['default'])('#wrapper').hide();
+	        (0, _jquery2['default'])('#footer').hide();
+	      } else {
+	        (0, _jquery2['default'])('#notifications').show();
+	        (0, _jquery2['default'])('#wrapper').show();
+	        (0, _jquery2['default'])('#footer').show();
+	      }
 	    }
 	  }]);
 	

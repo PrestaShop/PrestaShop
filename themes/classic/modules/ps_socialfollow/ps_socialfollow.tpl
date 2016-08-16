@@ -25,7 +25,7 @@
 *}
 
 {block name='block_social'}
-  <div class="block-social text-xs-right col-md-5">
+  <div class="block-social col-lg-4 col-md-12 col-sm-12">
     <ul>
       {foreach from=$social_links item='social_link'}
         <li class="{$social_link.class}"><a href="{$social_link.url}" class="text-hide">{$social_link.label}</a></li>
