@@ -1,7 +1,12 @@
+// Tools
 @import "~bourbon/app/assets/stylesheets/bourbon";
 @import "../node_modules/PrestaKit/scss/custom/_variables.scss";
-@import "config/settings"; // Mixins
-@import "mixins/single_line_block"; // Components
+@import "mixins/single_line_block";
+
+// Settings
+@import "config/settings";
+
+// Components
 @import "components/layout/content_div";
 @import "components/layout/header_toolbar";
 @import "components/layout/kpi";
@@ -10,32 +15,24 @@
 @import "components/category_tree";
 @import "components/dropzone";
 @import "components/notifications";
+
+// Pages specifics SCSS files
 @import "pages/product_page";
 @import "pages/products_catalog";
 @import "pages/translation_page";
-
-// Other
-
-@import "components/tinymce";
-
-// =============================================================================
-// Bootstrap
-// =============================================================================
-@import "../node_modules/bootstrap/scss/bootstrap";
 
 // Main Layout
 
 @import "pages/modules";
 
 // Other
-
 @import "components/tinymce";
 
 // Main Layout
-
 body {
   background: $background-grey;
 }
+
 // To put into the PrestaKit
 $color-icons: #6c868e;
 .breadcrumb {

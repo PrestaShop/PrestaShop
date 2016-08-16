@@ -13,8 +13,12 @@ $(() => {
   categoryTree();
   attributes();
   combination();
-  var bulkCombination_ = bulkCombination()
-  bulkCombination_.init();
-  var nestedCategory_ = nestedCategory()
-  nestedCategory_.init();
+  bulkCombination().init();
+  nestedCategory().init();
+
+  // This is the only script for the module page so there is no specific file for it.
+  $('.modules-list-select').on("change", (e) => {
+    $('.module-render-container').hide();
+    $(`.${e.target.value}`).show();
+  });
 });

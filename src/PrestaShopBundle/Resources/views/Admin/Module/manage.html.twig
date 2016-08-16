@@ -43,8 +43,8 @@
                         <div class="module-sorting module-sorting-author pull-right">
                             <select class="c-select c-select-sm">
                               <option value="" disabled>- {{ 'Sort by'|trans({}, 'Admin.Actions') }} -</option>
-                              <option value="sort-by-name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>
-                              <option value="sort-by-access-date" selected>{{ 'Last access'|trans({}, 'Admin.Modules.Feature') }}</option>
+                              <option value="name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>
+                              <option value="access-date" selected>{{ 'Last access'|trans({}, 'Admin.Modules.Feature') }}</option>
                             </select>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                                 data-content="{{ "These are all the modules you’ve added to your shop, either by buying it from PrestaShop Addons, or by uploading it directly."|trans({}, 'Admin.Modules.Help') }}">
                            </span>
                    </div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.modules, 'display_type' : 'list', 'origin' : 'manage'  } %}
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules': modules.modules, 'display_type': 'list', 'origin': 'manage', 'id': 'all' } %}
 
 		<hr class="top-menu-separator">
 
@@ -70,7 +70,7 @@
                                 data-content="{{ "These modules from PrestaShop are preinstalled when you set-up your shop. They cover the basics of e-commerce and comes for free."|trans({}, 'Admin.Modules.Help') }}">
                            </span>
 		</div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.native_modules, 'display_type' : 'list', 'origin' : 'manage'  } %}
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules': modules.native_modules, 'display_type': 'list', 'origin': 'manage', 'id': 'native' } %}
 
 		<hr class="top-menu-separator">
 
@@ -81,7 +81,7 @@
                                 data-content="{{ "Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme."|trans({}, 'Admin.Modules.Help') }}">
                            </span>
 		</div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules' : modules.theme_bundle, 'display_type' : 'list', 'origin' : 'manage'  } %}
+		{% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules': modules.theme_bundle, 'display_type': 'list', 'origin': 'manage', 'id': 'theme' } %}
         </div>
     </div>
 {% endblock %}

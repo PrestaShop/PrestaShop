@@ -9,26 +9,28 @@
 
 <div class="pull-right btn-group">
   {% if url_active == 'buy' %}
-      <a class="btn pull-left btn-primary-reverse btn-primary-outline btn-sm light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
-        {% if priceRaw != '0.00' %}{{ priceDisplay }}
-        {% else %}{{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}{% endif %}
-      </a>
+    <a class="btn pull-left btn-primary-reverse btn-primary-outline light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
+      {% if priceRaw != '0.00' %}{{ priceDisplay }}
+      {% else %}{{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}{% endif %}
+    </a>
   {% else %}
-      <a class="module-quick-action-grid btn btn-primary-reverse btn-primary-outline btn-sm light-button module_action_menu_{{ url_active }}" href="{{ urls[url_active] }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">{{ url_active|capitalize|replace({'_': " "}) }}</a>
-      {% if urls|length > 1 %}
-          <button type="button" class="btn btn-primary-outline  btn-sm dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="caret"></span>
-            <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
-          </button>
-          <div class="dropdown-menu">
-            {% for module_action, module_url in urls %}
-                {% if module_action != url_active %}
-                    <li>
-                      <a class="dropdown-item module_action_menu_{{ module_action }}" href="{{ module_url }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">{{module_action|capitalize|replace({'_': " "})}}</a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-          </div>
-      {% endif %}
+  <div class="module-quick-action-grid">
+    <a class="btn btn-primary-reverse btn-primary-outline light-button module_action_menu_{{ url_active }}" href="{{ urls[url_active] }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">{{ url_active|capitalize|replace({'_': " "}) }}</a>
+  </div>
+    {% if urls|length > 1 %}
+      <button type="button" class="btn btn-primary-outline  dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+      </button>
+      <div class="dropdown-menu">
+        {% for module_action, module_url in urls %}
+          {% if module_action != url_active %}
+            <li>
+              <a class="dropdown-item module_action_menu_{{ module_action }}" href="{{ module_url }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">{{module_action|capitalize|replace({'_': " "})}}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
   {% endif %}
 </div>

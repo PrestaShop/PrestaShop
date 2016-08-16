@@ -883,7 +883,7 @@
 
         {# OTHER STEPS #}
         {% if hookcount('displayAdminProductsExtra') > 0 %}
-          <div role="tabpanel" class="tab-pane panel panel-default" id="hooks">
+          <div role="tabpanel" class="form-contenttab tab-pane" id="hooks">
             <div class="row">
               <div class="col-md-12">
                 <div class="container-fluid">
@@ -891,12 +891,26 @@
 
                     {# LEFT #}
                     <div class="col-md-12">
-                      {% for module in renderhooksarray('displayAdminProductsExtra', {'id_product': id_product}) %}
-                        <div class="card">
-                          <div class="card-header">
-                            {{ module.name }}
-                          </div>
-                          <div class="card-block" id="module_{{ module.id }}">
+                      {% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
+
+                      <div class="row module-selection">
+                        <div class="col-sm-12 col-md-8">
+                          <select class="modules-list-select" data-toggle="select2">
+                            {% for module in hooks %}
+                              <option value="module-{{ loop.index }}">{{ module.name }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+
+                      {% for module in hooks %}
+                        <div
+                          id="module_{{ module.id }}"
+                          class="module-render-container module-{{ loop.index }}"
+                          {% if loop.index != 1 %}style="display: none;"{% endif %}
+                        >
+                          <h2 class="name">{{ module.name }}</h2>
+                          <div>
                             {{ module.content|raw }}
                           </div>
                         </div>

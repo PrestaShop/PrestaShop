@@ -32,7 +32,7 @@
                       data-content="{{ "These modules require your attention: you need to take some action to ensure they are fully operational."|trans({}, 'Admin.Modules.Help') }}">
                 </span>
             </div>
-            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_configure.html.twig' with { 'modules' : modules.to_configure, 'display_type' : 'list'  } %}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_configure.html.twig' with { 'modules': modules.to_configure, 'display_type': 'list', id: 'notification'  } %}
 
             <hr class="top-menu-separator">
             <div class="module-short-list">
@@ -42,7 +42,7 @@
                       data-content="{{ "Update these modules to enjoy their latest versions."|trans({}, 'Admin.Modules.Help') }}">
                 </span>
             </div>
-            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules' : modules.to_update, 'display_type' : 'list' } %}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules': modules.to_update, 'display_type': 'list', id: 'update' } %}
         </div>
     </div>
 {% endblock %}

@@ -100,10 +100,15 @@ class HookExtension extends \Twig_Extension
      */
     public function renderHooksArray($hookName, $hookParameters = array())
     {
-        if ($hookName == '') {
+        if ('' == $hookName) {
             throw new \Exception('Hook name missing');
         }
+
+        // The call to the render of the hooks is encapsulated into a ob management to avoid any call of echo from the
+        // modules.
+        ob_start();
         $hookRenders = $this->hookDispatcher->renderForParameters($hookName, $hookParameters)->getContent();
+        ob_clean();
 
         $render = [];
         foreach ($hookRenders as $module => $hookRender) {
@@ -113,6 +118,7 @@ class HookExtension extends \Twig_Extension
                 'content' => $hookRender,
             ];
         }
+
         return $render;
     }
 

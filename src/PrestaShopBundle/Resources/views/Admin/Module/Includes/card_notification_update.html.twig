@@ -1,27 +1,26 @@
-{% extends "PrestaShopBundle:Admin/Module/Includes:card.html.twig" %}
+{% extends "PrestaShopBundle:Admin/Module/Includes:card_list.html.twig" %}
 
 {# Twig extension for "Addons to update" part in notification page #}
 
 {# Display "Old version -> New version" #}
 {% block addon_version %}
-    v{{module.database.version}} <i class="material-icons" style="font-size: 10px; ">arrow_forward</i> v{{module.attributes.version}}
+  v{{ module.database.version }} <i class="material-icons" style="font-size: 10px; ">arrow_forward</i> v{{ module.attributes.version }}
 {% endblock %}
 
 {# Display changelog instead of the description #}
 {% block addon_description %}
-    {% if module.attributes.changeLog is defined %}
-        <ul>
-            {% for version, lines in module.attributes.changeLog %}
-                <li><b>{{version}}:</b>
-                {% for line in lines %}
-                    {{line}}<br/>
-                {% endfor %}
-                </li>
-            {% endfor %}
-
-        </ul>
-    {% else %}
-        <i>{{ 'No changelog provided'|trans({}, 'Admin.Modules.Notification') }}</i>
-    {% endif %}
+  {% if module.attributes.changeLog is defined %}
+    <ul>
+      {% for version, lines in module.attributes.changeLog %}
+        <li><b>{{ version }}:</b>
+          {% for line in lines %}
+            {{ line }}<br/>
+          {% endfor %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <i>{{ 'No changelog provided'|trans({}, 'Admin.Modules.Notification') }}</i>
+  {% endif %}
 
 {% endblock %}

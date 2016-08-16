@@ -1,42 +1,27 @@
-{# Display type ENUM : 'grid' / 'list' #}
 {% if display_type is not defined %}
-    {% set display_type = 'grid' %}
+  {% set display_type = 'grid' %}
 {% endif %}
 
-{% if display_type == 'list' %}
-    {% set col_lg = '' %}
-{% else %}
-    {% set col_lg = 'col-12 col-xl-4 col-lg-6 col-md-12 col-sm-12' %}
-{% endif %}
-
-<div class="modules-{{display_type}}">
-    <div class="row">
-        {% for module in modules %}
-            {# Module Card #}
-            {% block addon_card %}
-                {% include 'PrestaShopBundle:Admin/Module/Includes:card.html.twig'
-                    with {
-                        'module': module,
-                        'display_type': display_type,
-                        'col_lg': col_lg,
-                        'origin': origin|default('none')
-                    }
-                %}
-            {% endblock %}
-        {% endfor %}
-
-        {% block addon_search_card %}
-            {% if requireAddonsSearch is defined and requireAddonsSearch == true %}
-                <div class="module-addons-item-{{display_type}} {{col_lg}}">
-                    <div class="module-addons-item-wrapper-{{display_type}}">
-                        <span class="module-icon-addons-exit-{{display_type}}">
-                            <img src="{{ asset('themes/default/img/preston.png') }}" alt="{{ 'Exit to PrestaShop Addons Marketplace'|trans({}, 'Admin.Modules.Feature') }}" />
-                        </span>
-                        {{ 'See all results for your search on '|trans({}, 'Admin.Modules.Feature') }}<br/>
-                        <a class="url" href="#">{{ 'PrestaShop Addons Marketplace'|trans({}, 'Admin.Modules.Feature') }}</a>
-                    </div>
-                </div>
-            {% endif %}
-        {% endblock %}
-    </div>
+<div id="modules-list-container-{{ id }}" class="row modules-list">
+  {% if app.request.attributes.get('_route') == 'admin_module_catalog_refresh' %}
+    {% for module in modules %}
+      {% include 'PrestaShopBundle:Admin/Module/Includes:card_grid.html.twig' with { 'display_type': display_type, 'module': module, 'origin': origin|default('none') } %}
+    {% endfor %}
+  {% endif %}
+  {% for module in modules %}
+    {% include 'PrestaShopBundle:Admin/Module/Includes:card_list.html.twig' with { 'display_type': display_type, 'module': module, 'origin': origin|default('none') } %}
+  {% endfor %}
+  {% block addon_search_card %}
+    {% if requireAddonsSearch is defined and requireAddonsSearch == true %}
+      <div class="module-addons-item-{{ display_type }}">
+        <div class="module-addons-item-wrapper-{{ display_type }}">
+          <span class="module-icon-addons-exit-{{ display_type }}">
+            <img src="{{ asset('themes/default/img/preston.png') }}" alt="{{ 'Exit to PrestaShop Addons Marketplace'|trans({}, 'Admin.Modules.Feature') }}" />
+          </span>
+          {{ 'See all results for your search on '|trans({}, 'Admin.Modules.Feature') }}<br/>
+          <a class="url" href="#">{{ 'PrestaShop Addons Marketplace'|trans({}, 'Admin.Modules.Feature') }}</a>
+        </div>
+      </div>
+    {% endif %}
+  {% endblock %}
 </div>

@@ -1,6 +1,5 @@
 <div class="module-sorting-menu">
     <div class="row">
-
         <div class="col-lg-6">
             <div class="module-sorting-search-wording">
                 <span class="module-search-result-wording">{{ '%nbModules% modules and services selected for you'|trans({'%nbModules%' : totalModules}, 'Admin.Modules.Feature') }}</span>
@@ -18,7 +17,6 @@
                 </a>
             </p>
         </div>
-
         <div class="col-lg-6">
             <div class="module-sorting module-sorting-display pull-right">
                 <i id="module-sort-grid" data-switch="grid" class="material-icons module-sort-switch module-sort-active">view_module</i>
@@ -27,10 +25,10 @@
             <div class="module-sorting module-sorting-author pull-right">
                 <select class="c-select c-select-sm">
                   <option value="" disabled selected>- {{ 'Sort by'|trans({}, 'Admin.Actions') }} -</option>
-                  <option value="sort-by-name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>
-                  <option value="sort-by-price-asc">{{ 'Increasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>
-                  <option value="sort-by-price-desc">{{ 'Decreasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>
-                  <option value="sort-by-scoring">{{ 'Popularity'|trans({}, 'Admin.Modules.Feature') }}</option>
+                  <option value="name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>
+                  <option value="price">{{ 'Increasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>
+                  <option value="price-desc">{{ 'Decreasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>
+                  <option value="scoring">{{ 'Popularity'|trans({}, 'Admin.Modules.Feature') }}</option>
                 </select>
             </div>
         </div>

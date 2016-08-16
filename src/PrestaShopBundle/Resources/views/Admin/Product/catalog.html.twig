@@ -1,3 +1,4 @@
+{% form_theme categories _self %}
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block javascripts %}
@@ -8,6 +9,38 @@
   <script src="{{ asset('../js/jquery/ui/jquery.ui.sortable.min.js') }}"></script>
 {% endblock %}
 
+{% block choice_tree_widget -%}
+    <div {{ block('widget_container_attributes') }}>
+        <ul class="category-tree">
+        {%- for child in choices %}
+            {{ block('choice_tree_item_widget') }}
+        {% endfor -%}
+        </ul>
+    </div>
+{%- endblock choice_tree_widget %}
+
+{% block choice_tree_item_widget -%}
+    <li>
+        {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) ? 'checked="checked"' : '' %}
+
+         <div class="radio">
+             <label>{{ child.name }}</label>
+             <div class="radio pull-right">
+                 <label><input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category" /></label>
+             </div>
+         </div>
+
+        {% if child.children is defined %}
+            <ul>
+                {% for item in child.children %}
+                    {% set child = item %}
+                    {{ block('choice_tree_item_widget') }}
+                {% endfor -%}
+            </ul>
+        {% endif %}
+    </li>
+{%- endblock choice_tree_item_widget %}
+
 {% block content %}
 
   <div class="products-catalog">
@@ -15,9 +48,8 @@
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
 
     <div class="content container-fluid">
-
-      <div class="col-md-12">
-        <div class="row">
+      <div class="row">
+        <div class="col-md-12">
           <div class="pull-right">
             <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
               <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ "Export"|trans({}, 'Admin.Actions') }}" data-html="true" data-placement="top">
@@ -40,50 +72,102 @@
               </span>
             </a>
           </div>
-          <h2>
-            {{ "Products"|trans({}, 'Admin.Catalog.Feature') }}
-            {% if has_category_filter == true and activate_drag_and_drop == true %}
-              {{ "(sorting)"|trans({}, 'Admin.Catalog.Feature') }}
-            {% else %}
-              {% if has_filter == true %}
-                {{ "(filtered)"|trans({}, 'Admin.Catalog.Feature') }}
-              {% endif %}
-            {% endif %}
-            {% if has_filter == true %}{{ product_count_filtered }} / {{ product_count }}{% endif %}
-          </h2>
         </div>
       </div>
 
       <div class="row">
-        <div id="product_catalog_category_tree_filter" class="col-md-8">
-          {{ form_widget(categories) }}
+        <div class="col-md-1">
+          <div class="checkbox">
+            <label>
+              <input
+                type="checkbox"
+                id="bulk_action_select_all"
+                onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
+              />
+              {{ "Select All"|trans({}, 'Admin.Actions') }}
+            </label>
+          </div>
         </div>
-        <div class="col-md-4">
-          <div class="text-md-right">
-            <button
+
+        <div
+          class="col-md-2"
+          bulkurl="{{ path('admin_product_bulk_action', {'action': 'activate_all'}) }}"
+          massediturl="{{ path('admin_product_mass_edit_action', {'action': 'sort'}) }}"
+          redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
+          redirecturlnextpage="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset+limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
+        >
+          {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
+            'div_style': "btn-group dropup",
+            'button_id': "product_bulk_menu",
+            'disabled': true,
+            'menu_label': "Bulk actions"|trans({}, 'Admin.Global'),
+            'buttonType': "tertiary-outline",
+            'menu_icon': "icon-caret-up",
+            'items':[{
+              "onclick": "bulkProductAction(this, 'activate_all');",
+              "icon": "radio_button_checked",
+              "label": "Activate selection"|trans({}, 'Admin.Actions')
+            }, {
+              "onclick": "bulkProductAction(this, 'deactivate_all');",
+              "icon": "radio_button_unchecked",
+              "label": "Deactivate selection"|trans({}, 'Admin.Actions')
+            }, {
+              "divider": true
+            }, {
+              "onclick": "bulkProductAction(this, 'duplicate_all');",
+              "icon": "content_copy",
+              "label": "Duplicate selection"|trans({}, 'Admin.Actions')
+            }, {
+              "divider": true
+            }, {
+              "onclick": "bulkProductAction(this, 'delete_all');",
+              "icon": "delete",
+              "label": "Delete selection"|trans({}, 'Admin.Actions')
+            }]
+          }%}
+        </div>
+        <div id="product_catalog_category_tree_filter" class="pull-right col-md-3">
+          <button
+            class="btn btn-tertiary-outline"
+            data-toggle="collapse"
+            data-target="#tree-categories"
+          >
+          {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
+          <i class="material-icons">expand_more</i>
+          </button>
+          <div id="tree-categories" class="collapse p-t-1">
+            <a
+              class="categories-tree-actions"
+              href="#"
               name="product_catalog_category_tree_filter_expand"
               onclick="productCategoryFilterExpand($('div#product_catalog_category_tree_filter'), this);"
-              class="btn btn-primary-outline btn-xs"
               id="product_catalog_category_tree_filter_expand"
             >
+              <i class="material-icons">expand_more</i>
               {{ 'Expand'|trans({}, 'Admin.Actions') }}
-            </button>
-            <button
+            </a>
+            <a
+            class="categories-tree-actions"
+              href="#"
               name="product_catalog_category_tree_filter_collapse"
               onclick="productCategoryFilterCollapse($('div#product_catalog_category_tree_filter'), this);"
-              class="btn btn-primary-outline btn-xs"
               id="product_catalog_category_tree_filter_collapse"
             >
+              <i class="material-icons">expand_less</i>
               {{ 'Collapse'|trans({}, 'Admin.Actions') }}
-            </button>
-            <button
+            </a>
+            <a
+              class="categories-tree-actions"
+              href="#"
               name="product_catalog_category_tree_filter_reset"
               onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'));"
-              class="btn btn-warning"
               id="product_catalog_category_tree_filter_reset"
             >
+              <i class="material-icons">radio_button_unchecked</i>
               {{ 'Unselect'|trans({}, 'Admin.Actions') }}
-            </button>
+            </a>
+            <hr>
+            {{ form_widget(categories) }}
           </div>
         </div>
       </div>
@@ -148,9 +232,6 @@
                       'column': 'price'
                     } %}
                   </th>
-                  <th>
-                    {{ "Final price"|trans({}, 'Admin.Catalog.Feature') }}
-                  </th>
                   <th style="width: 9%">
                     {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
@@ -171,7 +252,7 @@
                       } %}
                     </th>
                   {% endif %}
-                  <th></th>
+                  <th style="width: 6%"></th>
                 </tr>
                 <tr class="column-filters">
                   <th>
@@ -222,7 +303,7 @@
                       'value': filter_column_price,
                     } %}
                   </th>
-                  <th>&nbsp;</th>
+
                   <th>
                     {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
                       'input_name': "filter_column_sav_quantity",
@@ -243,18 +324,22 @@
                   {% if has_category_filter == true %}
                     <th>
                       {% if not(activate_drag_and_drop) %}
-                        <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
-                      {% endif %}
+                        <input type="button" class="btn btn-tertiary-outline" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
+                        {% else %}
+                        <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'Admin.Actions')|raw }}" />
+                    {% endif %}
+
                     </th>
                   {% endif %}
-                  <th>
+                  <th style="width: 12%">
                     <button
                       type="submit"
-                      class="btn btn-action"
+                      class="btn btn-primary"
                       name="products_filter_submit"
                       title="{{ "Filter"|trans({}, 'Admin.Actions') }}"
                     >
                       <i class="material-icons">search</i>
+                      {{ "Apply"|trans({}, 'Admin.Actions') }}
                     </button>
                     <button
                       type="reset"
@@ -264,6 +349,7 @@
                       title="{{ "Reset"|trans({}, 'Admin.Actions') }}"
                     >
                       <i class="material-icons">clear</i>
+                      {{ "Reset"|trans({}, 'Admin.Actions') }}
                     </button>
                   </th>
                 </tr>
@@ -277,65 +363,6 @@
                 'last_sql': last_sql
               })) }}
             </table>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <div class="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  id="bulk_action_select_all"
-                  onclick="$(this).closest('form').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
-                />
-                {{ "Select all"|trans({}, 'Admin.Actions') }}
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div
-            class="col-md-4"
-            bulkurl="{{ path('admin_product_bulk_action', {'action': 'activate_all'}) }}"
-            massediturl="{{ path('admin_product_mass_edit_action', {'action': 'sort'}) }}"
-            redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
-            redirecturlnextpage="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset+limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
-          >
-            {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
-              'div_style': "btn-group dropup",
-              'button_id': "product_bulk_menu",
-              'disabled': true,
-              'menu_label': "Bulk actions"|trans({}, 'Admin.Global'),
-              'menu_icon': "icon-caret-up",
-              'items':[{
-                "onclick": "bulkProductAction(this, 'activate_all');",
-                "icon": "radio_button_checked",
-                "label": "Activate selection"|trans({}, 'Admin.Actions')
-              }, {
-                "onclick": "bulkProductAction(this, 'deactivate_all');",
-                "icon": "radio_button_unchecked",
-                "label": "Deactivate selection"|trans({}, 'Admin.Actions')
-              }, {
-                "divider": true
-              }, {
-                "onclick": "bulkProductAction(this, 'duplicate_all');",
-                "icon": "content_copy",
-                "label": "Duplicate selection"|trans({}, 'Admin.Actions')
-              }, {
-                "divider": true
-              }, {
-                "onclick": "bulkProductAction(this, 'delete_all');",
-                "icon": "delete",
-                "label": "Delete selection"|trans({}, 'Admin.Actions')
-              }]
-            }%}
-          </div>
-          <div class="col-md-8 text-md-right" id="bulk_edition_toolbar" style="display: none;">
-            <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'Admin.Actions')|raw }}" />
-            <input type="submit" id="bulk_edition_save_next" class="btn btn-primary" onclick="return bulkProductAction(this, 'edition_next');" value="{{ "Save & next page"|trans({}, 'Admin.Actions')|raw }}" />
-            <input type="button" class="btn btn-warning" onclick="bulkProductEdition(this, 'cancel');" value="{{ "Cancel"|trans({}, 'Admin.Actions') }}" />
           </div>
         </div>
 
