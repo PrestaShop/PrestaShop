@@ -1862,6 +1862,7 @@ class AdminControllerCore extends Controller
                 'quick_access' => $quick_access,
                 'multi_shop' => Shop::isFeatureActive(),
                 'shop_list' => $helperShop->getRenderedShopList(),
+                'current_shop_name' => $helperShop->getCurrentShopName(),
                 'shop' => $this->context->shop,
                 'shop_group' => new ShopGroup((int)Shop::getContextShopGroupID()),
                 'is_multishop' => $is_multishop,
