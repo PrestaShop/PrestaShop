@@ -5,6 +5,7 @@ import 'flexibility';
 import 'bootstrap-touchspin';
 
 import '../css/theme';
+import './responsive';
 import './checkout';
 import './customer';
 import './listing';

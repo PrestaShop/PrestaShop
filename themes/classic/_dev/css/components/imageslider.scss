@@ -1,8 +1,8 @@
 .carousel {
   box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
+  margin-bottom: rem(24px);
   .direction {
     z-index: auto;
-    margin-top: rem(-40px);
   }
   .carousel-inner {
     height: 340px;
@@ -42,10 +42,10 @@
       }
     }
     .icon-prev {
-      margin-left: rem(-75px);
+      left: rem(16px);
     }
     .icon-next {
-      margin-right: rem(-60px);
+      right: rem(32px);
     }
     &.left,
     &.right {

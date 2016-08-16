@@ -12,3 +12,20 @@
     }
   }
 }
+
+/*** Responsive part ***/
+@include media-breakpoint-down(sm) {
+  .header-top {
+    .search-widget {
+      float: none;
+      padding: 0 rem(15px);
+      form {
+        margin: 0 auto;
+        input[type="text"] {
+          min-width: inherit;
+          background: white;
+        }
+      }
+    }
+  }
+}

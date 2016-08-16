@@ -1,4 +1,4 @@
-<section class="featured-products">
+<section class="featured-products clearfix">
   <h1 class="h1 products-section-title text-uppercase ">
     {l s='Popular Products' d='Shop.Theme.Catalog'}
   </h1>

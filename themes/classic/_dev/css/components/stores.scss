@@ -1,7 +1,16 @@
 #stores {
   .page-stores {
-    width: 70%;
+    .store-item {
+      padding-left: rem(12px);
+      padding-right: rem(12px);
+    }
+    width: 85%;
     margin: 0 auto;
+    .store-picture {
+      img {
+        max-width: 100%;
+      }
+    }
     .store-item-container {
       @include display(flex);
       @include justify-content(space-around);
@@ -13,18 +22,23 @@
       }
       .divide-left {
         border-left: $gray-light 1px solid;
-        tr{
+        tr {
           height: rem(25px);
+        }
+        td {
+          padding-left: rem(6px);
+        }
+        th {
+          text-align: right;
         }
       }
       .store-description{
-        @include flex(0 0 50%);
         font-size: $base-font-size;
       }
     }
     .store-item-footer {
-      margin-top: $extra-large-space;
-      padding-top: $extra-large-space;
+      margin-top: rem(8px);
+      padding-top: rem(8px);
       @include display(flex);
       @include justify-content(space-around);
       &.divide-top {
@@ -40,6 +54,50 @@
       }
       li{
         margin-bottom: $small-space;
+      }
+    }
+  }
+}
+
+/*** Responsive part ***/
+@include media-breakpoint-down(sm) {
+  #stores {
+    .page-stores {
+      width: 100%;
+      .store-item-container {
+        padding: rem(16px) 0;
+      }
+    }
+  }
+}
+@include media-breakpoint-down(xs) {
+  #stores {
+    .page-stores {
+      .store-item-container {
+        display: block;
+        .divide-left {
+          border-left: none;
+        }
+        .store-description {
+          a {
+            margin-bottom: rem(8px);
+          }
+          address {
+            margin-bottom: rem(8px);
+          }
+        }
+      }
+      .store-item-footer {
+        display: block;
+        &.divide-top {
+          border-top: $gray-light 1px solid;
+        }
+        li{
+          margin-bottom: $small-space;
+        }
+        .card-block {
+          padding: rem(12px) rem(12px) 0;
+        }
       }
     }
   }

@@ -40,6 +40,14 @@
     border-bottom: $gray-light 2px solid;
     max-height: 50px;
     margin-bottom: 30px;
+    #menu-icon {
+      vertical-align: middle;
+      cursor: pointer;
+      margin-left: rem(16px);
+      .material-icons {
+        line-height: 50px;
+      }
+    }
     .right-nav {
       @include display(flex);
       @include flex-wrap(nowrap);
@@ -113,7 +121,9 @@
     }
   }
   .header-top {
-    position: relative;
+    > .container {
+      position: relative;
+    }
     padding-bottom: rem(20px);
     .menu {
       > ul {
@@ -141,8 +151,12 @@
   background: $gray-light;
   box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11);
   padding-top: rem(25px);
-  .banner img {
-    box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
+  .banner {
+    margin-bottom: rem(24px);
+    display: block;
+    img {
+      box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
+    }
   }
   .breadcrumb {
     background: transparent;
@@ -152,6 +166,7 @@
     }
     ol {
       padding-left: 0;
+      margin-bottom: 0;
     }
     li {
       display: inline;
@@ -182,7 +197,7 @@
   .page-content {
     margin-bottom: rem(25px);
     h6 {
-      margin-bottom: rem(18)px;
+      margin-bottom: rem(18p);
     }
   }
   .page-footer {
@@ -193,30 +208,64 @@
 #footer {
   padding-top: rem(40px);
 }
+
+/*** Responsive part ***/
 @include media-breakpoint-down(sm) {
+  #wrapper {
+    box-shadow: none;
+  }
   #checkout-cart-summary {
     float: none;
     width: 100%;
     margin-top: 1rem;
   }
-  #header .header-nav {
-    max-height: none;
-    min-height: 150px;
-    .right-nav {
-      @include flex-direction(column);
+  #header {
+    background: $gray-light;
+    .header-nav {
+      background: white;
+      margin-bottom: rem(10px);
+      color: $gray-darker;
+      .top-logo {
+        line-height: 50px;
+        vertical-align: middle;
+        width: 200px;
+        margin: 0 auto;
+        a {
+          img {
+            max-height: 50px;
+            max-width: 100%;
+          }
+        }
+      }
+      .right-nav {
+        @include flex-direction(column);
+      }
+      .user-info {
+        text-align: left;
+        margin-left: 0;
+        .logged {
+          color: $brand-primary;
+        }
+      }
+      .blockcart {
+        margin-left: 0;
+        background: inherit;
+        &.active {
+          margin-left: rem(8px);
+        }
+        &.inactive {
+          .cart-products-count {
+            display: none;
+          }
+        }
+      }
     }
-    .user-info {
-      text-align: left;
-      margin-left: 0;
-      position: absolute;
-      right: $small-space;
-      top: -$large-space;
-    }
-    .blockcart {
-      margin-left: 0;
-      position: absolute;
-      right: $small-space;
-      margin-top: -$small-space;
+    .header-top {
+      background: $gray-light;
+      padding-bottom: 0;
+      a[data-depth="0"] {
+        color: $gray-darker;
+      }
     }
   }
   section.checkout-step {
@@ -240,11 +289,14 @@
   .dropdown-item {
     padding-left: 0;
   }
-  input[name="submitNewsletter"] {
-    margin-top: $small-space;
+  #footer {
+    padding-top: rem(8px);
   }
 }
 @include media-breakpoint-down(md) {
+  .container {
+    max-width: 100%;
+  }
   #header .logo {
     width: auto;
   }
@@ -255,15 +307,6 @@
   .sub-menu {
     left: 0;
     min-width: 100%;
-  }
-  .products-select {
-    @include flex-wrap(wrap);
-    .select-title {
-      margin-top: $medium-space;
-    }
-    .products-sort-order .dropdown-menu {
-      left: 0;
-    }
   }
   #blockcart-modal .product-image {
     width: 100%;
@@ -287,8 +330,5 @@
   }
   .block-category {
     padding-bottom: 0;
-  }
-  .block_newsletter {
-    width: 100%;
   }
 }
