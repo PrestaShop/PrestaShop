@@ -76,6 +76,7 @@ themes/default-bootstrap/modules/*/mails/*
 /app/test/cache/*
 !app/test/cache/.gitkeep
 /app/config/parameters.yml
+/app/config/parameters.php
 /app/logs/*
 !app/logs/.gitkeep
 /app/phpunit.xml
