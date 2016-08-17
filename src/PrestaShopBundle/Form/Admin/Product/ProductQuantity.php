@@ -102,7 +102,7 @@ class ProductQuantity extends CommonAbstractType
             ))
             ->add('minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => true,
-                'label' => $this->translator->trans('Minimum quantity', array(), 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Minimum quantity for sale', array(), 'Admin.Catalog.Feature'),
                 'constraints' => array(
                     new Assert\NotBlank(),
                     new Assert\Type(array('type' => 'numeric')),

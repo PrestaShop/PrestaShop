@@ -342,6 +342,8 @@
                           </div>
                           <div class="col-md-4">
                             <label class="form-control-label">{{ form.step3.minimal_quantity.vars.label }}</label>
+                            <span class="help-box" data-toggle="popover"
+                                  data-content="{{ "The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity."|trans({}, 'Admin.Catalog.Help') }}" ></span>
                             {{ form_errors(form.step3.minimal_quantity) }}
                             {{ form_widget(form.step3.minimal_quantity) }}
                           </div>
