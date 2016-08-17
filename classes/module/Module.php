@@ -364,11 +364,11 @@ abstract class ModuleCore
         // Permissions management
         foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
             $slug = 'ROLE_MOD_MODULE_'.strtoupper($this->name).'_'.$action;
-            
+
             Db::getInstance()->execute(
                 'INSERT INTO `'._DB_PREFIX_.'authorization_role` (`slug`) VALUES ("'.$slug.'")'
             );
-            
+
             Db::getInstance()->execute('
                 INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_authorization_role`) (
                     SELECT id_profile, "'.Db::getInstance()->Insert_ID().'"
@@ -665,7 +665,7 @@ abstract class ModuleCore
 
         // Delete permissions module access
         $roles = Db::getInstance()->executeS('SELECT `id_authorization_role` FROM `'._DB_PREFIX_.'authorization_role` WHERE `slug` LIKE "ROLE_MOD_MODULE_'.strtoupper($this->name).'_%"');
-        
+
         foreach ($roles as $role) {
             Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_authorization_role` = '.$role['id_authorization_role']);
             Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'authorization_role` WHERE `id_authorization_role` = '.$role['id_authorization_role']);
@@ -1846,7 +1846,7 @@ abstract class ModuleCore
         if (self::$_generate_config_xml_mode) {
             return $string;
         }
-        
+
         if (($translation = Context::getContext()->getTranslator()->trans($string)) !== $string) {
             return $translation;
         }
@@ -2381,9 +2381,9 @@ abstract class ModuleCore
         $retro_hook_name = Hook::getRetroHookName($hook_name);
         return (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($retro_hook_name))));
     }
-    
+
     /**
-     * 
+     *
      * @param int $idProfile
      * @return array
      */
@@ -2392,9 +2392,9 @@ abstract class ModuleCore
         if (empty(self::$cache_modules_roles)) {
             self::warmupRolesCache();
         }
-        
+
         $roles = self::$cache_lgc_access;
-        
+
         $profileRoles = Db::getInstance()->executeS('
             SELECT `slug`,
                 `slug` LIKE "%CREATE" as "add",
@@ -2407,22 +2407,22 @@ abstract class ModuleCore
             AND j.id_profile = "'.$idProfile.'"
             ORDER BY a.slug
         ');
-        
+
         foreach ($profileRoles as $role) {
             preg_match(
                 '/ROLE_MOD_MODULE_(?P<moduleName>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
                 $role['slug'],
                 $matches
             );
-                    
+
             if (($key = array_search('1', $role))) {
                 $roles[$matches['moduleName']][$key] = '1';
             }
         }
-        
+
         return $roles;
     }
-    
+
     private static function warmupRolesCache()
     {
         $result = Db::getInstance()->executeS('
@@ -2435,16 +2435,16 @@ abstract class ModuleCore
             WHERE `slug` LIKE "ROLE_MOD_MODULE_%"
             ORDER BY a.slug
         ');
-        
+
         foreach ($result as $row) {
             preg_match(
                 '/ROLE_MOD_MODULE_(?P<moduleName>[A-Z0-9_]+)_(?P<auth>[A-Z]+)/',
                 $row['slug'],
                 $matches
             );
-        
+
             $m = Module::getInstanceByName(strtolower($matches['moduleName']));
-            
+
             // the following condition handles invalid modules
             if ($m && !isset(self::$cache_lgc_access[$matches['moduleName']])) {
                 self::$cache_lgc_access[$matches['moduleName']] = array();
@@ -2492,7 +2492,7 @@ abstract class ModuleCore
 
         $slug = Access::findSlugByIdModule($id_module).Access::getAuthorizationFromLegacy($variable);
 
-        return Access::isGranted($slug , $employee->id_profile);
+        return Access::isGranted($slug, $employee->id_profile);
     }
 
     /**
@@ -3048,6 +3048,11 @@ abstract class ModuleCore
     public function getTranslator()
     {
         return Context::getContext()->getTranslator();
+    }
+
+    protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
+    {
+        return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
     }
 }
 
