@@ -29,7 +29,13 @@ class ProductAssemblerCore
         $sql = "SELECT
                     p.*,
                     pl.*,
-                    (DATE_SUB('$now', INTERVAL $nb_days_new_product DAY) > 0) as new
+                    (DATEDIFF(
+				p.`date_add`,
+				DATE_SUB(
+					'$now',
+					INTERVAL $nb_days_new_product DAY
+				)
+			) > 0) as new
                 FROM {$prefix}product p
                 INNER JOIN {$prefix}product_lang pl
                     ON pl.id_product = p.id_product
@@ -38,7 +44,7 @@ class ProductAssemblerCore
                     AND p.id_product = $id_product";
 
         $rows = Db::getInstance()->executeS($sql);
-        return array_merge($rows[0], $rawProduct);
+        return array_merge($rawProduct, $rows[0]);
     }
 
     public function assembleProduct(array $rawProduct)
