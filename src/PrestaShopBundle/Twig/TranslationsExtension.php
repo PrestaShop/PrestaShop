@@ -108,7 +108,7 @@ class TranslationsExtension extends \Twig_Extension
 
                 $output .= $this->render('form-edit-message.html.twig',
                     array(
-                        'default_translation_value' => $defaultTranslationValue,
+                        'default_translation_value' => htmlspecialchars($defaultTranslationValue, ENT_QUOTES),
                         'domain' => $domain,
                         'edited_translation_value' => $translationValue,
                         'error_message' => $errorMessage,
@@ -116,7 +116,7 @@ class TranslationsExtension extends \Twig_Extension
                         'label_reset' => $resetLabel,
                         'locale' => $locale,
                         'success_message' => $successMessage,
-                        'translation_key' => $translationKey,
+                        'translation_key' => htmlspecialchars($translationKey, ENT_QUOTES),
                     )
                 );
 

@@ -92,7 +92,7 @@ class TranslationsController extends FrameworkBundleAdminController
             $translation = new Translation;
             $translation->setDomain($requestParams['domain']);
             $translation->setLang($lang);
-            $translation->setKey($requestParams['translation_key']);
+            $translation->setKey(htmlspecialchars_decode($requestParams['translation_key'], ENT_QUOTES));
             $translation->setTranslation($requestParams['translation_value']);
         } else {
             $translation->setTranslation($requestParams['translation_value']);
