@@ -88,8 +88,21 @@ if ($lastParametersModificationTime) {
     define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
     define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
     define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
-    define('_COOKIE_KEY_', $config['parameters']['cookie_key']);
-    define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
+
+    if (array_key_exists('cookie_key', $config['parameters'])) {
+        define('_COOKIE_KEY_', $config['parameters']['cookie_key']);
+    } else {
+        // Define cookie key if missing to prevent failure in composer post-install script
+        define('_COOKIE_KEY_', Tools::passwdGen(56));
+    }
+
+    if (array_key_exists('cookie_iv', $config['parameters'])) {
+        define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
+    } else {
+        // Define cookie IV if missing to prevent failure in composer post-install script
+        define('_COOKIE_IV_', Tools::passwdGen(8));
+    }
+
     define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);
 
     if (isset($config['parameters']['_rijndael_key']) && isset($config['parameters']['_rijndael_iv'])) {
