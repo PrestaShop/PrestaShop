@@ -345,5 +345,8 @@
     <hook id="addWebserviceResources">
       <name>addWebserviceResources</name><title>Add extra webservice resource</title><description>This hook is called when webservice resources list in webservice controller</description>
     </hook>
+    <hook id="displayCustomerLoginFormAfter">
+      <name>displayCustomerLoginFormAfter</name><title>Display elements after login form</title><description>This hook displays new elements after the login form</description>
+    </hook>
   </entities>
 </entity_hook>
