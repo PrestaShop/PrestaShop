@@ -458,7 +458,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      *
      * @return no return
      */
-    protected function doProductSearch($template)
+    protected function doProductSearch($template, $params = array(), $locale = null)
     {
         if ($this->ajax) {
             ob_end_clean();
@@ -470,7 +470,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 $this->context->smarty->assign(array(
                     'listing' => $variables,
                 ));
-                $this->setTemplate($template);
+                $this->setTemplate($template, $params, $locale);
             } else {
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');

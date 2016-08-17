@@ -53,7 +53,7 @@ class ModuleFrontControllerCore extends FrontController
      *
      * @throws PrestaShopException
      */
-    public function setTemplate($template, $params = array())
+    public function setTemplate($template, $params = array(), $locale = null)
     {
         if (!$path = $this->getTemplatePath($template)) {
             throw new PrestaShopException("Template '$template' not found");

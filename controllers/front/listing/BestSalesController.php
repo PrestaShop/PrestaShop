@@ -68,6 +68,6 @@ class BestSalesControllerCore extends ProductListingFrontController
 
     public function getListingLabel()
     {
-        return $this->getTranslator()->trans('Best sales', array(), 'Shop.Theme.Catalog');
+        return $this->getTranslator()->trans('Best sellers', array(), 'Shop.Theme.Catalog');
     }
 }

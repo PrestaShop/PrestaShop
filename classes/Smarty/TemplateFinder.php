@@ -37,6 +37,7 @@ class TemplateFinderCore
     private $productListEntities = array('category', 'manufacturer', 'supplier');
     private $productListSearchEntities = array('search', 'price-drop', 'best-sale');
     private $productEntities = array('product');
+    private $brandListEntities = array('manufacturers', 'suppliers');
 
     public function __construct(array $directories, $extension)
     {
@@ -87,6 +88,11 @@ class TemplateFinderCore
                 'catalog/'.$entity.'-'.$id,
                 $template,
                 'catalog/product',
+            );
+        } elseif (in_array($entity, $this->getBrandListEntities())) {
+            $templates = array(
+                $template,
+                'catalog/brands',
             );
         } elseif ('cms' === $entity) {
             $templates = array(
@@ -169,6 +175,30 @@ class TemplateFinderCore
     public function setProductEntities($productEntities)
     {
         $this->productEntities = $productEntities;
+
+        return $this;
+    }
+
+    /**
+     * Get brandListEntities.
+     *
+     * @return array
+     */
+    public function getBrandListEntities()
+    {
+        return $this->brandListEntities;
+    }
+
+    /**
+     * Set brandListEntities.
+     *
+     * @param array $brandListEntities
+     *
+     * @return TemplateFinderCore
+     */
+    public function setBrandListEntities($brandListEntities)
+    {
+        $this->brandListEntities = $brandListEntities;
 
         return $this;
     }

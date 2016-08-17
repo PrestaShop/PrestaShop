@@ -33,6 +33,7 @@ class SupplierControllerCore extends ProductListingFrontController
 
     /** @var Supplier */
     protected $supplier;
+    private $label;
 
     public function canonicalRedirection($canonicalURL = '')
     {
@@ -76,10 +77,19 @@ class SupplierControllerCore extends ProductListingFrontController
 
             if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
                 $this->assignSupplier();
-                $this->doProductSearch('catalog/listing/supplier');
+                $this->label = $this->trans(
+                    'List of products by supplier %s', array($this->supplier->name), 'Shop.Theme.Catalog'
+                );
+                $this->doProductSearch(
+                    'catalog/listing/supplier',
+                    array('entity' => 'supplier', 'id' => $this->supplier->id)
+                );
             } else {
                 $this->assignAll();
-                $this->setTemplate('catalog/suppliers');
+                $this->label = $this->trans(
+                    'List of all suppliers', array(), 'Shop.Theme.Catalog'
+                );
+                $this->setTemplate('catalog/suppliers', array('entity' => 'suppliers'));
             }
         } else {
             $this->redirect_after = '404';
@@ -94,12 +104,13 @@ class SupplierControllerCore extends ProductListingFrontController
             ->setIdSupplier($this->supplier->id)
             ->setSortOrder(new SortOrder('product', 'position', 'asc'))
         ;
+
         return $query;
     }
 
-     protected function getDefaultProductSearchProvider()
-     {
-         return new SupplierProductSearchProvider(
+    protected function getDefaultProductSearchProvider()
+    {
+        return new SupplierProductSearchProvider(
             $this->getTranslator(),
             $this->supplier
         );
@@ -121,14 +132,14 @@ class SupplierControllerCore extends ProductListingFrontController
     protected function assignAll()
     {
         $this->context->smarty->assign(array(
-            'suppliers' => $this->getTemplateVarSuppliers(),
+            'brands' => $this->getTemplateVarSuppliers(),
         ));
     }
 
     public function getTemplateVarSuppliers()
     {
         $suppliers = Supplier::getSuppliers(true, $this->context->language->id, true);
-        $suppliers_for_display = [];
+        $suppliers_for_display = array();
 
         foreach ($suppliers as $supplier) {
             $suppliers_for_display[$supplier['id_supplier']] = $supplier;
@@ -141,5 +152,10 @@ class SupplierControllerCore extends ProductListingFrontController
         }
 
         return $suppliers_for_display;
+    }
+
+    public function getListingLabel()
+    {
+        return $this->label;
     }
 }
