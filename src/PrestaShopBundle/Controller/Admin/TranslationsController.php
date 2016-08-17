@@ -187,11 +187,12 @@ class TranslationsController extends FrameworkBundleAdminController
     protected function makeTranslationsTree(array $catalogue)
     {
         $translationsTree = array();
+        $flippedUnbreakableWords = array_flip($this->getUnbreakableWords());
 
         foreach ($catalogue as $domain => $messages) {
-            $adjustedDomain = $this->adjustDomainWithAcronym($domain);
+            $unbreakableDomain = $this->makeDomainUnbreakable($domain);
 
-            $tableisedDomain = Inflector::tableize($adjustedDomain);
+            $tableisedDomain = Inflector::tableize($unbreakableDomain);
             list($basename) = explode('.', $tableisedDomain);
             $parts = array_reverse(explode('_', $basename));
 
@@ -199,6 +200,9 @@ class TranslationsController extends FrameworkBundleAdminController
 
             while (count($parts) > 0) {
                 $subdomain = ucfirst(array_pop($parts));
+                if (array_key_exists($subdomain, $flippedUnbreakableWords)) {
+                    $subdomain = $flippedUnbreakableWords[$subdomain];
+                }
 
                 if (!array_key_exists($subdomain, $subtree)) {
                     $subtree[$subdomain] = array();
@@ -213,17 +217,53 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
+     * There are domains containing multiple words,
+     * hence these domains should not be split from those words in camelcase.
+     * The latter are replaced from a list of unbreakable words
+     *
      * @param $domain
      * @return string
      */
-    protected function adjustDomainWithAcronym($domain)
+    protected function makeDomainUnbreakable($domain)
     {
         $adjustedDomain = $domain;
-        if (false !== strpos($domain, 'ShopPDF')) {
-            $adjustedDomain = str_replace('ShopPDF', 'ShopPdf', $domain);
+        $unbreakableWords = $this->getUnbreakableWords();
+
+        foreach ($unbreakableWords as $search => $replacement) {
+            if (false !== strpos($domain, $search)) {
+                $adjustedDomain = str_replace($search, $replacement, $domain);
+
+                break;
+            }
         }
 
         return $adjustedDomain;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getUnbreakableWords()
+    {
+        return array(
+            'BankWire' => 'Bankwire',
+            'BlockBestSellers' => 'Blockbestsellers',
+            'BlockCart' => 'Blockcart',
+            'ContactInfo' => 'Contactinfo',
+            'EmailSubscription' => 'Emailsubscription',
+            'FeaturedProducts' => 'Featuredproducts',
+            'ShareButtons' => 'Sharebuttons',
+            'ShoppingCart' => 'Shoppingcart',
+            'SocialFollow' => 'Socialfollow',
+            'WirePayment' => 'Wirepayment',
+            'BlockAdvertising' => 'Blockadvertising',
+            'CategoryTree' => 'Categorytree',
+            'CustomerSignIn' => 'Customersignin',
+            'CustomText' => 'Customtext',
+            'ImageSlider' => 'Imageslider',
+            'LinkList' => 'Linklist',
+            'ShopPDF' => 'ShopPdf',
+        );
     }
 
     /**
