@@ -249,6 +249,11 @@ class ProductInformation extends CommonAbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
 
+            if (!isset($data['type_product'])) {
+                $data['type_product'] = 0;
+                $event->setData($data);
+            }
+
             //if product type is pack, check if inputPackItems is not empty
             if ($data['type_product'] == 1) {
                 if (!isset($data['inputPackItems']) || empty($data['inputPackItems']['data'])) {
