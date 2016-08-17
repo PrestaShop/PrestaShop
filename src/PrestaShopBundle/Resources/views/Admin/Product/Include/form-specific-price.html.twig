@@ -1,5 +1,5 @@
 <div class="card card-block">
-  <h4>{{ 'Specific price conditions'|trans({}, 'Admin.Catalog.Feature') }}</h4>
+  <h4><b>{{ 'Specific price conditions'|trans({}, 'Admin.Catalog.Feature') }}</b></h4>
   {{ form_errors(form) }}
 
   {% if form.sp_id_shop.vars.choices is defined %}
@@ -80,8 +80,9 @@
       </fieldset>
     </div>
   </div>
+  <br>
 
-  <h4>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</h4>
+  <h4><b>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</b></h4>
   <div class="row">
     <div class="col-md-3">
       <fieldset class="form-group">
@@ -101,14 +102,14 @@
   <div class="row">
     <div class="col-md-2">
       <fieldset class="form-group">
-        <label>{{ 'Price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</label>
+        <label>{{ 'Apply a discount of'|trans({}, 'Admin.Catalog.Feature') }}</label>
         {{ form_errors(form.sp_reduction) }}
         {{ form_widget(form.sp_reduction) }}
       </fieldset>
     </div>
     <div class="col-md-2">
       <fieldset class="form-group">
-        <label>{{ 'OR Apply a discount of'|trans({}, 'Admin.Catalog.Feature') }}</label>
+        <label>&nbsp;</label>
         {{ form_errors(form.sp_reduction_type) }}
         {{ form_widget(form.sp_reduction_type) }}
       </fieldset>

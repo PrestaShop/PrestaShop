@@ -154,6 +154,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'label' => $this->translator->trans('Product price (tax excl.)', array(), 'Admin.Catalog.Feature'),
             'attr' => array('class' => 'price'),
             'currency' => $this->currency->iso_code,
+            'disabled' => true,
         ))
         ->add('leave_bprice', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'label' => $this->translator->trans('Leave initial price', array(), 'Admin.Catalog.Feature'),

@@ -500,6 +500,10 @@ var nav = (function() {
 var specificPrices = (function() {
   var id_product = $('#form_id_product').val();
   var elem = $('#js-specific-price-list');
+  var leaveInitialPrice = $('#form_step2_specific_price_leave_bprice');
+  var productPriceField = $('#form_step2_specific_price_sp_price');
+  var discountTypeField = $('#form_step2_specific_price_sp_reduction_type');
+  var discountTaxField = $('#form_step2_specific_price_sp_reduction_tax');
 
   /** Get all specific prices */
   function getAll() {
@@ -568,7 +572,7 @@ var specificPrices = (function() {
    * @param {object} elem - The clicked link
    */
   function remove(elem) {
-    modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+    modalConfirmation.create(translate_javascripts['This will delete the specific price. Do you wish to proceed?'], null, {
       onContinue: function() {
         $.ajax({
           type: 'GET',
@@ -612,30 +616,29 @@ var specificPrices = (function() {
 
   return {
     'init': function() {
-      /** set the default price to for specific price form */
-      $('#form_step2_specific_price_sp_price').val($('#form_step2_price').val());
       this.getAll();
 
-      $('#specific-price .add').click(function() {
+      $('#specific-price .add').click(function () {
         $(this).hide();
       });
 
-      $('#specific_price_form .js-cancel').click(function() {
+      $('#specific_price_form .js-cancel').click(function () {
         $('#specific-price > a').click();
         $('#specific-price .add').click().show();
+        productPriceField.prop('disabled', true);
       });
 
-      $('#specific_price_form .js-save').click(function() {
+      $('#specific_price_form .js-save').click(function () {
         add($(this));
         $('#specific_price_form').reset();
       });
 
-      $(document).on('click', '#js-specific-price-list .js-delete', function(e) {
+      $(document).on('click', '#js-specific-price-list .js-delete', function (e) {
         e.preventDefault();
         remove($(this));
       });
 
-      $('#form_step2_specific_price_sp_reduction_type').change(function() {
+      $('#form_step2_specific_price_sp_reduction_type').change(function () {
         if ($(this).val() === 'percentage') {
           $('#form_step2_specific_price_sp_reduction_tax').hide();
         } else {
@@ -644,6 +647,24 @@ var specificPrices = (function() {
       });
 
       this.refreshCombinationsList();
+
+      /* enable price field only when needed */
+      leaveInitialPrice.on('click', function togglePriceField() {
+        productPriceField.prop('disabled', $(this).is(':checked'))
+          .val('')
+        ;
+      });
+
+      /* enable tax type field only when reduction by amount is selected */
+      discountTypeField.on('change', function toggleDiscountTaxField() {
+        var uglySelect2Selector = $('#select2-form_step2_specific_price_sp_reduction_tax-container').parent().parent();
+        if ($(this).val() === 'amount') {
+          uglySelect2Selector.show();
+        }else {
+          uglySelect2Selector.hide();
+        }
+      });
+
     },
     'getAll': function() {
       getAll();
