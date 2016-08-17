@@ -269,6 +269,7 @@ class InstallModelInstall extends InstallAbstractModel
     public function clearDatabase($truncate = false)
     {
         $instance = Db::getInstance();
+        $instance->execute('SET FOREIGN_KEY_CHECKS=0');
         $sqlRequest = (($truncate) ? 'TRUNCATE' : 'DROP TABLE');
         foreach ($instance->executeS('SHOW TABLES') as $row) {
             $table = current($row);
@@ -277,6 +278,7 @@ class InstallModelInstall extends InstallAbstractModel
             }
         }
         $instance->execute(rtrim($sqlRequest, ','));
+        $instance->execute('SET FOREIGN_KEY_CHECKS=1');
     }
 
     /**
