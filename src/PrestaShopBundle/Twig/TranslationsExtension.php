@@ -285,6 +285,11 @@ class TranslationsExtension extends \Twig_Extension
         if ($id) {
             $openingTag = '<span id="_' . $id . '">';
             $closingTag = '</span>';
+
+            if (2 === $level) {
+                $openingTag = '<h2>' . $openingTag;
+                $closingTag = $closingTag . '</h2>';
+            }
         }
 
         return $openingTag . $subject . $closingTag;
