@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,12 +28,12 @@ namespace PrestaShopBundle\Controller\Admin;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Admin controller for the Feature pages
+ * Admin controller for the Feature pages.
  */
 class FeatureController extends FrameworkBundleAdminController
 {
     /**
-     * Get all values for a given feature
+     * Get all values for a given feature.
      *
      * @param int $id The feature Id
      *
@@ -43,13 +43,18 @@ class FeatureController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
         $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
-        $data = [];
+        $data = array();
 
         if ($id == 0) {
             return $response;
         }
 
         $featuresValues = $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($locales[0]['id_lang'], $id);
+
+        if (count($featuresValues) !== 0) {
+            $data['0'] = $this->get('translator')->trans('Choose a value', array(), 'Admin.Catalog.Feature');
+        }
+
         foreach ($featuresValues as $featureValue) {
             if (isset($featureValue['custom']) && $featureValue['custom'] == 1) {
                 continue;
@@ -58,6 +63,7 @@ class FeatureController extends FrameworkBundleAdminController
         }
 
         $response->setData($data);
+
         return $response;
     }
 }
