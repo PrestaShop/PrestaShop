@@ -63,16 +63,21 @@ if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)
 $lastParametersModificationTime = (int)@filemtime($phpParametersFilepath);
 
 if ($lastParametersModificationTime) {
-    $lastParametersCacheModificationTime = (int)@filemtime(_PS_CACHE_DIR_. 'appParameters.php');
+    $cachedParameters = _PS_CACHE_DIR_. 'appParameters.php';
+
+    $lastParametersCacheModificationTime = (int)@filemtime($cachedParameters);
     if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
         if (file_exists($phpParametersFilepath)) {
             $config = require($phpParametersFilepath);
-            $exportPhpConfigFile($config, _PS_CACHE_DIR_ .'appParameters.php');
+            $exportPhpConfigFile($config, $cachedParameters);
+        } elseif (file_exists($yamlParametersFilepath)) {
+            $config = Yaml::parse($yamlParametersFilepath);
+            $exportPhpConfigFile($config, $cachedParameters);
         }
     }
 
-    $config = require_once _PS_CACHE_DIR_ .'appParameters.php';
+    $config = require_once _PS_CACHE_DIR_ . 'appParameters.php';
 
     $database_host = $config['parameters']['database_host'];
 
