@@ -117,18 +117,10 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     protected function clearCache()
     {
-        $realCacheDir = $this->container->getParameter('kernel.cache_dir');
-        $oldCacheDir = substr($realCacheDir, 0, -1).('~' === substr($realCacheDir, -1) ? '+' : '~');
-        $filesystem = $this->container->get('filesystem');
+        $cacheRefresh = $this->container->get('prestashop.cache.refresh');
 
         try {
-            if ($filesystem->exists($oldCacheDir)) {
-                $filesystem->remove($oldCacheDir);
-            }
-
-            $this->container->get('cache_clearer')->clear($realCacheDir);
-            $filesystem->rename($realCacheDir, $oldCacheDir);
-            $filesystem->remove($oldCacheDir);
+            $cacheRefresh->execute();
         } catch (\Exception $exception) {
             $this->container->get('logger')->error($exception->getMessage());
         }
