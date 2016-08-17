@@ -206,8 +206,7 @@ class TranslationsController extends FrameworkBundleAdminController
                 $subtree = &$subtree[$subdomain];
             }
 
-            $subtree = $messages;
-            $subtree['__camelized_domain'] = $domain;
+            $subtree['__messages'] = array($domain => $messages);
         }
 
         return $translationsTree;

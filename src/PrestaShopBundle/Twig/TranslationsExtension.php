@@ -80,11 +80,10 @@ class TranslationsExtension extends \Twig_Extension
     public function makeSubtree($tree, $level = 3)
     {
         $output = '';
-        $messagesSubtree = $this->hasCamelizedDomain($tree);
+        $messagesSubtree = $this->hasMessages($tree);
 
         if ($messagesSubtree) {
-            $camelizedDomain = $tree['__camelized_domain'];
-            unset($tree['__camelized_domain']);
+            list($camelizedDomain, $messagesTree) = each($tree['__messages']);
 
             $editLabel = $this->translator->trans('Edit', array(), 'AdminActions', 'en-US');
             $resetLabel = $this->translator->trans('Reset', array(), 'AdminActions', 'en-US');
@@ -96,7 +95,7 @@ class TranslationsExtension extends \Twig_Extension
             $itemsPerPage = 25;
             $output .= '<div class="page" data-status="active" data-page-index="1">';
 
-            foreach ($tree as $translationKey => $translationValue) {
+            foreach ($messagesTree as $translationKey => $translationValue) {
                 list($domain, $locale) = explode('.', $camelizedDomain);
                 $defaultTranslationValue = $this->translator->trans($translationKey, array(), $domain, $locale);
 
@@ -120,7 +119,7 @@ class TranslationsExtension extends \Twig_Extension
                     )
                 );
 
-                $isLastPage = $formIndex + 1 === count($tree);
+                $isLastPage = $formIndex + 1 === count($messagesTree);
 
                 if ($isLastPage) {
                     $output .= '</div>';
@@ -136,7 +135,7 @@ class TranslationsExtension extends \Twig_Extension
             }
 
             // Close div with page class when no message is available
-            if (count($tree) === 0) {
+            if (count($messagesTree) === 0) {
                 $output .= '</div>';
             }
         } else {
@@ -152,9 +151,9 @@ class TranslationsExtension extends \Twig_Extension
      * @param $tree
      * @return bool
      */
-    protected function hasCamelizedDomain($tree)
+    protected function hasMessages($tree)
     {
-        return array_key_exists('__camelized_domain', $tree);
+        return array_key_exists('__messages', $tree);
     }
 
     /**
@@ -175,17 +174,17 @@ class TranslationsExtension extends \Twig_Extension
      */
     protected function concatenateSubtreeHeader($subdomain, $subtree, $level = 2)
     {
-        $messagesSubtree = $this->hasCamelizedDomain($subtree);
+        $hasMessagesSubtree = $this->hasMessages($subtree);
         $subject = $this->makeSubdomainPrefix($level) . $subdomain;
 
         $id = null;
-        if ($messagesSubtree) {
+        if ($hasMessagesSubtree) {
             $id = $this->parseDomain($subtree);
         }
 
         $output = $this->tagSubject($subject, $level, $id);
 
-        if ($messagesSubtree) {
+        if ($hasMessagesSubtree) {
             $output .= $this->render('button-toggle-messages-visibility.html.twig', array(
                 'label_show_messages' => 'Show messages',
                 'label_hide_messages' => 'Hide messages'
@@ -198,7 +197,7 @@ class TranslationsExtension extends \Twig_Extension
         $output .= $this->makeSubtree($subtree, $level + 1);
         $output .= '</div>';
 
-        if ($messagesSubtree) {
+        if ($hasMessagesSubtree) {
             $output .= $this->render('button-go-to-pagination-bar.html.twig', array(
                 'domain' => $id,
                 'label' => 'Go to previous navigation menu',
@@ -206,6 +205,12 @@ class TranslationsExtension extends \Twig_Extension
 
             // Close div with translation-domain class
             $output .= '</div>';
+
+            // A subtree with messages contains at least a subdomain
+            if (count($subtree) > 1) {
+                unset($subtree['__messages']);
+                $output .= $this->concatenateSubtreeHeader($subdomain, $subtree, $level);
+            }
         }
 
         return $output;
@@ -217,7 +222,8 @@ class TranslationsExtension extends \Twig_Extension
      */
     protected function parseDomain($subtree)
     {
-        list($domain) = explode('.', $subtree['__camelized_domain']);
+        list($camelizedDomain) = $subtree['__messages'];
+        list($domain) = explode('.', $camelizedDomain);
 
         return $domain;
     }
