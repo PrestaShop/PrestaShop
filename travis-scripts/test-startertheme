@@ -1,0 +1,7 @@
+#!/bin/bash
+
+rm -Rf themes/classic
+git clone https://github.com/PrestaShop/StarterTheme themes/StarterTheme
+cp themes/StarterTheme/config/theme.dist.yml themes/StarterTheme/config/theme.yml
+bash ./travis-scripts/install-prestashop
+bash ./travis-scripts/run-selenium-tests
