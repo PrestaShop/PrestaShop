@@ -87,8 +87,10 @@ class TranslationsExtension extends \Twig_Extension
 
             $editLabel = $this->translator->trans('Edit', array(), 'AdminActions', 'en-US');
             $resetLabel = $this->translator->trans('Reset', array(), 'AdminActions', 'en-US');
-            $successMessage = 'Translation successfully edited';
-            $errorMessage = 'Translation unsuccessfully edited';
+            $successMessage = $this->translator->trans('Translation successfully edited', array(),
+                'AdminNotificationsSuccess', 'en-US');
+            $errorMessage = $this->translator->trans('Translation unsuccessfully edited', array(),
+                'AdminNotificationsError', 'en-US');
 
             $formIndex = 0;
             $pageIndex = 1;
@@ -186,8 +188,8 @@ class TranslationsExtension extends \Twig_Extension
 
         if ($hasMessagesSubtree) {
             $output .= $this->render('button-toggle-messages-visibility.html.twig', array(
-                'label_show_messages' => 'Show messages',
-                'label_hide_messages' => 'Hide messages'
+                'label_show_messages' => $this->translator->trans('Show messages', array(), 'AdminActions', 'en-US'),
+                'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'AdminActions', 'en-US')
             ));
 
             $output .= $this->getNavigation($this->parseDomain($subtree));
@@ -200,7 +202,7 @@ class TranslationsExtension extends \Twig_Extension
         if ($hasMessagesSubtree) {
             $output .= $this->render('button-go-to-pagination-bar.html.twig', array(
                 'domain' => $id,
-                'label' => 'Go to previous navigation menu',
+                'label' => $this->translator->trans('Go to previous navigation menu', array(), 'AdminActions', 'en-US'),
             ));
 
             // Close div with translation-domain class
