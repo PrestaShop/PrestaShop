@@ -187,10 +187,15 @@ class ProductSpecificPrice extends CommonAbstractType
             'label' => $this->translator->trans('Apply', array(), 'Admin.Actions'),
             'attr' => array('class' => 'btn-primary-outline js-save'),
         ))
-        ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\ResetType', array(
+        ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' => $this->translator->trans('Cancel', array(), 'Admin.Actions'),
             'attr' => array('class' => 'btn-default-outline js-cancel'),
         ));
+        //
+        // ResetType can't be used because the product page is wrapped
+        // inside a big form: reset a specific price form the "right" way
+        // will reset the global form.
+        //
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();

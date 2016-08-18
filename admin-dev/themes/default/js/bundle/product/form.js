@@ -613,6 +613,14 @@ var specificPrices = (function() {
       }
     });
   }
+  
+  /**
+   * Because all "forms" are encapsulated in a global form, we just can't use reset button
+   * Reset all subform inputs values
+   */
+  function resetForm() {
+    $('#specific_price_form input').val('');
+  }
 
   return {
     'init': function() {
@@ -622,7 +630,8 @@ var specificPrices = (function() {
         $(this).hide();
       });
 
-      $('#specific_price_form .js-cancel').click(function () {
+      $('#specific_price_form .js-cancel').click(function() {
+        resetForm();
         $('#specific-price > a').click();
         $('#specific-price .add').click().show();
         productPriceField.prop('disabled', true);
@@ -630,7 +639,7 @@ var specificPrices = (function() {
 
       $('#specific_price_form .js-save').click(function () {
         add($(this));
-        $('#specific_price_form').reset();
+        resetForm();
       });
 
       $(document).on('click', '#js-specific-price-list .js-delete', function (e) {
@@ -671,7 +680,7 @@ var specificPrices = (function() {
     },
     'refreshCombinationsList': function() {
       refreshCombinationsList();
-    }
+    },
   };
 })();
 
