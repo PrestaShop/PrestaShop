@@ -69,47 +69,6 @@ class AdminStoresControllerCore extends AdminController
             )
         );
 
-        $this->fields_options = array(
-            'general' => array(
-                'title' => $this->trans('Parameters', array(), 'Admin.ShopParameters.Feature'),
-                'fields' => array(
-                    'PS_STORES_DISPLAY_FOOTER' => array(
-                        'title' => $this->trans('Display in the footer', array(), 'Admin.ShopParameters.Feature'),
-                        'hint' => $this->trans('Display a link to the store locator in the footer.', array(), 'Admin.ShopParameters.Help'),
-                        'cast' => 'intval',
-                        'type' => 'bool'
-                    ),
-                    'PS_STORES_DISPLAY_SITEMAP' => array(
-                        'title' => $this->trans('Display in the sitemap page', array(), 'Admin.ShopParameters.Feature'),
-                        'hint' => $this->trans('Display a link to the store locator in the sitemap page.', array(), 'Admin.ShopParameters.Help'),
-                        'cast' => 'intval',
-                        'type' => 'bool'
-                    ),
-                    'PS_STORES_SIMPLIFIED' => array(
-                        'title' => $this->trans('Show a simplified store locator', array(), 'Admin.ShopParameters.Feature'),
-                        'hint' => $this->trans('No map, no search, only a store directory.', array(), 'Admin.ShopParameters.Help'),
-                        'cast' => 'intval',
-                        'type' => 'bool'
-                    ),
-                    'PS_STORES_CENTER_LAT' => array(
-                        'title' => $this->trans('Default latitude', array(), 'Admin.ShopParameters.Feature'),
-                        'hint' => $this->trans('Used for the initial position of the map.', array(), 'Admin.ShopParameters.Help'),
-                        'cast' => 'floatval',
-                        'type' => 'text',
-                        'size' => '10'
-                    ),
-                    'PS_STORES_CENTER_LONG' => array(
-                        'title' => $this->trans('Default longitude', array(), 'Admin.ShopParameters.Feature'),
-                        'hint' => $this->trans('Used for the initial position of the map.', array(), 'Admin.ShopParameters.Help'),
-                        'cast' => 'floatval',
-                        'type' => 'text',
-                        'size' => '10'
-                    )
-                ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
-            )
-        );
-
         $this->_buildOrderedFieldsShop($this->_getDefaultFieldsContent());
     }
 
@@ -339,8 +298,8 @@ class AdminStoresControllerCore extends AdminController
         }
 
         $this->fields_value = array(
-            'latitude' => $this->getFieldValue($obj, 'latitude') ? $this->getFieldValue($obj, 'latitude') : Configuration::get('PS_STORES_CENTER_LAT'),
-            'longitude' => $this->getFieldValue($obj, 'longitude') ? $this->getFieldValue($obj, 'longitude') : Configuration::get('PS_STORES_CENTER_LONG'),
+            'latitude' => $this->getFieldValue($obj, 'latitude') ? $this->getFieldValue($obj, 'latitude') : '',
+            'longitude' => $this->getFieldValue($obj, 'longitude') ? $this->getFieldValue($obj, 'longitude') : '',
             'days' => $days,
             'hours' => $hours,
         );

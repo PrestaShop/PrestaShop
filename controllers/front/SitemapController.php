@@ -57,13 +57,11 @@ class SitemapControllerCore extends FrontController
             ];
         }
 
-        if (Configuration::get('PS_STORES_DISPLAY_SITEMAP')) {
-            $pages[] = [
-                'id' => 'stores-page',
-                'label' => $this->trans('Our stores', array(), 'Shop.Theme'),
-                'url' => $this->context->link->getPageLink('stores'),
-            ];
-        }
+        $pages[] = [
+            'id' => 'stores-page',
+            'label' => $this->trans('Our stores', array(), 'Shop.Theme'),
+            'url' => $this->context->link->getPageLink('stores'),
+        ];
 
         $pages[] = [
             'id' => 'contact-page',
