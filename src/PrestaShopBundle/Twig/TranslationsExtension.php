@@ -46,7 +46,55 @@ class TranslationsExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('getTranslationsTree', array($this, 'getTranslationsTree')),
+            new \Twig_SimpleFunction('getTranslationsForms', array($this, 'getTranslationsForms')),
         );
+    }
+
+    /**
+     * Returns concatenated edit translation forms
+     *
+     * @param array $translationsTree
+     * @return string
+     */
+    public function getTranslationsForms(array $translationsTree)
+    {
+        $output = '';
+        $viewProperties = $this->getSharedEditFormViewProperties();
+
+        foreach ($translationsTree as $topLevelDomain => $tree) {
+            $output .= $this->concatenateEditTranslationForm($tree, $viewProperties);
+        }
+
+        return $output;
+    }
+
+    public function concatenateEditTranslationForm($subtree, $viewProperties)
+    {
+        $output = '';
+        $hasMessages = $this->hasMessages($subtree);
+
+        if ($hasMessages) {
+            list($camelizedDomain, $messages) = each($subtree['__messages']);
+
+            foreach ($messages as $translationKey => $translation) {
+                $viewProperties['camelized_domain'] = $camelizedDomain;
+                $viewProperties['translation_key'] = $translationKey;
+                $viewProperties['translation'] = $translation;
+
+                $output .= $this->renderEditTranslationForm($viewProperties);
+            }
+        } else {
+            foreach ($subtree as $tree) {
+                $output .= $this->concatenateEditTranslationForm($tree, $viewProperties);
+            }
+        }
+
+        if ($hasMessages && count($subtree) > 1) {
+            unset($subtree['__messages']);
+            $output .= $this->concatenateEditTranslationForm($subtree, $viewProperties);
+        }
+
+        return $output;
     }
 
     /**
@@ -59,7 +107,7 @@ class TranslationsExtension extends \Twig_Extension
     {
         $output = '';
         end($translationsTree);
-        list($lastTranslationDomain) = each($translationTree);
+        list($lastTranslationDomain) = each($translationsTree);
         reset($translationTree);
 
         foreach ($translationsTree as $topLevelDomain => $tree) {
@@ -75,7 +123,8 @@ class TranslationsExtension extends \Twig_Extension
 
     /**
      * @param $tree
-     * @return string|\Symfony\Component\Translation\MessageCatalogue
+     * @param int $level
+     * @return string
      */
     public function makeSubtree($tree, $level = 3)
     {
@@ -85,41 +134,19 @@ class TranslationsExtension extends \Twig_Extension
         if ($messagesSubtree) {
             list($camelizedDomain, $messagesTree) = each($tree['__messages']);
 
-            $editLabel = $this->translator->trans('Edit', array(), 'AdminActions', 'en-US');
-            $resetLabel = $this->translator->trans('Reset', array(), 'AdminActions', 'en-US');
-            $successMessage = $this->translator->trans('Translation successfully edited', array(),
-                'AdminNotificationsSuccess', 'en-US');
-            $errorMessage = $this->translator->trans('Translation unsuccessfully edited', array(),
-                'AdminNotificationsError', 'en-US');
-
             $formIndex = 0;
             $pageIndex = 1;
             $itemsPerPage = 25;
             $output .= '<div class="page" data-status="active" data-page-index="1">';
 
-            foreach ($messagesTree as $translationKey => $translationValue) {
-                list($domain, $locale) = explode('.', $camelizedDomain);
-                $defaultTranslationValue = $this->translator->trans($translationKey, array(), $domain, $locale);
+            $viewProperties = $this->getSharedEditFormViewProperties();
 
-                // Extract default translation value from xliff files for reset
-                if (is_array($translationValue)) {
-                    $defaultTranslationValue = $translationValue['xlf'];
-                    $translationValue = $translationValue['db'];
-                }
+            foreach ($messagesTree as $translationKey => $translation) {
+                $viewProperties['camelized_domain'] = $camelizedDomain;
+                $viewProperties['translation_key'] = $translationKey;
+                $viewProperties['translation'] = $translation;
 
-                $output .= $this->render('form-edit-message.html.twig',
-                    array(
-                        'default_translation_value' => htmlspecialchars($defaultTranslationValue, ENT_QUOTES),
-                        'domain' => $domain,
-                        'edited_translation_value' => $translationValue,
-                        'error_message' => $errorMessage,
-                        'label_edit' => $editLabel,
-                        'label_reset' => $resetLabel,
-                        'locale' => $locale,
-                        'success_message' => $successMessage,
-                        'translation_key' => htmlspecialchars($translationKey, ENT_QUOTES),
-                    )
-                );
+                $output .= $this->renderEditTranslationForm($viewProperties);
 
                 $isLastPage = $formIndex + 1 === count($messagesTree);
 
@@ -147,6 +174,81 @@ class TranslationsExtension extends \Twig_Extension
         }
 
         return $output;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSharedEditFormViewProperties()
+    {
+        return array(
+            'label_edit' => $this->translator->trans('Edit', array(), 'AdminActions', 'en-US'),
+            'label_reset' => $this->translator->trans('Reset', array(), 'AdminActions', 'en-US'),
+            'notification_success' => $this->translator->trans('Translation successfully edited', array(),
+                'AdminNotificationsSuccess', 'en-US'),
+            'notification_error' => $this->translator->trans('Translation unsuccessfully edited', array(),
+                'AdminNotificationsError', 'en-US'),
+        );
+    }
+
+    /**
+     * @param $properties
+     * @return mixed|string
+     */
+    protected function renderEditTranslationForm($properties)
+    {
+        list($domain, $locale) = explode('.', $properties['camelized_domain']);
+        $translationValue = $this->getTranslationValue($properties['translation']);
+        $defaultTranslationValue = $this->getDefaultTranslationValue($properties['translation_key'], $domain, $locale,
+            $translationValue);
+
+        return $this->render('form-edit-message.html.twig', array(
+                'default_translation_value' => htmlspecialchars($defaultTranslationValue, ENT_QUOTES),
+                'domain' => $domain,
+                'edited_translation_value' => $translationValue,
+                'label_edit' => $properties['label_edit'],
+                'label_reset' => $properties['label_reset'],
+                'locale' => $locale,
+                'notification_error' => $properties['notification_error'],
+                'notification_success' => $properties['notification_success'],
+                'translation_key' => htmlspecialchars($properties['translation_key'], ENT_QUOTES),
+            )
+        );
+    }
+
+    /**
+     * @param $translationKey
+     * @param $domain
+     * @param $locale
+     * @param $translationValue
+     * @return array
+     */
+    protected function getDefaultTranslationValue($translationKey, $domain, $locale, $translationValue)
+    {
+        $defaultTranslationValue = $this->translator->trans($translationKey, array(), $domain, $locale);
+
+        // Extract default translation value from xliff files for reset
+        if (is_array($translationValue)) {
+            $defaultTranslationValue = $translationValue['xlf'];
+        }
+
+        return $defaultTranslationValue;
+    }
+
+    /**
+     * @param $translation
+     * @return mixed
+     */
+    protected function getTranslationValue($translation)
+    {
+        // Extract translation value from db if available
+        if (is_array($translation)) {
+            $translationValue = $translation['db'];
+        } else {
+            $translationValue = $translation;
+        }
+
+        return $translationValue;
     }
 
     /**

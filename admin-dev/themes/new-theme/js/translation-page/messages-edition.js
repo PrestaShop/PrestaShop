@@ -37,7 +37,7 @@ export default function () {
         })
     };
 
-    $('.translation-domain form').each((formIndex, form) => {
+    $('.search-translation form, .translation-domain form').each((formIndex, form) => {
         showFlashMessageOnEdit(form);
     });
 }

@@ -1,6 +1,18 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
+<div class="search-translation">
+    <h2>Search</h2>
+    <label>Translation key (3 characters at least):</label>
+    <form>
+        <input pattern=".{3,}" type="search" id="jetsSearch">
+        <input class="btn btn-default btn-sm search-button" type="submit" value="search">
+        <input class="btn btn-default btn-sm" type="reset" value="reset">
+    </form>
+    <div id="jetsContent">
+        {{ getTranslationsForms(translationsTree)|raw }}
+    </div>
+</div>
 <div class="translation-page">
     {{ getTranslationsTree(translationsTree)|raw }}
 </div>
