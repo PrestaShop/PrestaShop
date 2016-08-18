@@ -46,6 +46,10 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function listAction(Request $request)
     {
+        if (!$request->isMethod('POST')) {
+            return $this->redirect('/admin-dev/index.php?controller=AdminTranslations');
+        }
+
         $catalogue = $this->getTranslationsCatalogue($request);
         $translationsTree = $this->makeTranslationsTree($catalogue);
 
