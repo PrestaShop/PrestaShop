@@ -170,20 +170,12 @@ class StoresControllerCore extends FrontController
 
         $this->context->smarty->assign(array(
             'mediumSize' => Image::getSize(ImageType::getFormattedName('medium')),
-            'defaultCoordinate' => [
-                'lat'=> (float)Configuration::get('PS_STORES_CENTER_LAT'),
-                'long' => (float)Configuration::get('PS_STORES_CENTER_LONG'),
-            ],
             'searchUrl' => $this->context->link->getPageLink('stores'),
             'distance_unit' => $distance_unit,
             'stores' => $this->getTemplateVarStores(),
         ));
 
-        if (Configuration::get('PS_STORES_SIMPLIFIED')) {
-            $this->setTemplate('cms/stores-simple');
-        } else {
-            $this->setTemplate('cms/stores');
-        }
+        $this->setTemplate('cms/stores');
     }
 
     public function getTemplateVarStores()
