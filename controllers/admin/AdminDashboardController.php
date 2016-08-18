@@ -297,7 +297,7 @@ class AdminDashboardControllerCore extends AdminController
             'date_to' => $this->context->employee->stats_date_to
         );
 
-        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
 

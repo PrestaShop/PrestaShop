@@ -2614,7 +2614,7 @@ class AdminProductsControllerCore extends AdminController
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=8020_sales_catalog';
         $helper->tooltip = sprintf($this->l('Within your catalog, %s of your products have had sales in the last 30 days', null, null, false), $helper->value);
         $helper->refresh = (bool)(ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time);
-        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
         if ($moduleManager->isInstalled('statsbestproducts')) {

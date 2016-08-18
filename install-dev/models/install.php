@@ -871,7 +871,7 @@ class InstallModelInstall extends InstallAbstractModel
 
         Module::updateTranslationsAfterInstall(false);
 
-        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
         $errors = array();

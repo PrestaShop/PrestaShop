@@ -233,7 +233,7 @@ class AdminReferrersControllerCore extends AdminController
             'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
         ));
 
-        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
         if ($moduleManager->isInstalled('trackingfront')) {

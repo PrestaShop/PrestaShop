@@ -687,7 +687,7 @@ class AdminModulesControllerCore extends AdminController
                     $this->errors[] = Tools::displayError('You do not have the permission to use this module.');
                 } else {
                     // Uninstall the module before deleting the files, but do not block the process if uninstall returns false
-                    $moduleManagerBuilder = new ModuleManagerBuilder();
+                    $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                     $moduleManager = $moduleManagerBuilder->build();
 
                     if ($moduleManager->isInstalled($module->name)) {
@@ -837,7 +837,7 @@ class AdminModulesControllerCore extends AdminController
                         continue;
                     }
 
-                    $moduleManagerBuilder = new ModuleManagerBuilder();
+                    $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                     $moduleManager = $moduleManagerBuilder->build();
 
 
@@ -1030,7 +1030,7 @@ class AdminModulesControllerCore extends AdminController
 
         if ($return) {
             $params = (count($installed_modules)) ? '&installed_modules='.implode('|', $installed_modules) : '';
-            $moduleManagerBuilder = new ModuleManagerBuilder();
+            $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
             $moduleManager = $moduleManagerBuilder->build();
 
 
@@ -1125,7 +1125,7 @@ class AdminModulesControllerCore extends AdminController
             Context::getContext()->smarty->assign('installed_modules', json_encode(explode('|', $list)));
         }
 
-        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
 

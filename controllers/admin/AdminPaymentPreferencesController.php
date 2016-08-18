@@ -39,7 +39,7 @@ class AdminPaymentPreferencesControllerCore extends AdminController
 
         /* Get all modules then select only payment ones */
         $modules = Module::getModulesOnDisk(true);
-        $moduleManagerBuilder = new ModuleManagerBuilder();
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleRepository = $moduleManagerBuilder->buildRepository();
 
         foreach ($modules as $module) {

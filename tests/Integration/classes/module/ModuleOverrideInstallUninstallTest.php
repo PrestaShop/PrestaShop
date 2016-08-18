@@ -53,7 +53,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         parent::setUp();
 
         \ContextCore::getContext()->employee = new \Employee(1);
-        $this->moduleManagerBuilder = new ModuleManagerBuilder();
+        $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $this->moduleManager = $this->moduleManagerBuilder->build();
 
         $this->moduleNames= [

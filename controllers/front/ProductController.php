@@ -149,7 +149,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $id_category = (int) $this->product->id_category_default;
                 }
                 $this->category = new Category((int) $id_category, (int) $this->context->cookie->id_lang);
-                $moduleManagerBuilder = new ModuleManagerBuilder();
+                $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                 $moduleManager = $moduleManagerBuilder->build();
 
                 if (isset($this->context->cookie) && isset($this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
