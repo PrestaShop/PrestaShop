@@ -396,7 +396,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
             case self::TYPE_DATE:
                 if (!$value) {
-                    return '0000-00-00';
+                    $value = '0000-00-00';
                 }
 
                 if ($with_quotes) {
