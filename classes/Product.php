@@ -4299,7 +4299,7 @@ class ProductCore extends ObjectModel
         }
 
         // Tax
-        $usetax = Tax::excludeTaxeOption();
+        $usetax = !Tax::excludeTaxeOption();
 
         $cache_key = $row['id_product'].'-'.$id_product_attribute.'-'.$id_lang.'-'.(int)$usetax;
         if (isset($row['id_product_pack'])) {
