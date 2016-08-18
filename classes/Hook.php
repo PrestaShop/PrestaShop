@@ -292,7 +292,7 @@ class HookCore extends ObjectModel
         return $module_list;
     }
 
-    public function isModuleRegisteredOnHook($module_instance, $hook_name, $id_shop)
+    public static function isModuleRegisteredOnHook($module_instance, $hook_name, $id_shop)
     {
         $prefix = _DB_PREFIX_;
         $id_hook = (int)Hook::getIdByName($hook_name);
