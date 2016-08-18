@@ -71,7 +71,7 @@ class AdminStoresControllerCore extends AdminController
 
         $this->fields_options = array(
             'general' => array(
-                'title' => $this->trans('Parameters', 'Admin.ShopParameters.Feature'),
+                'title' => $this->trans('Parameters', array(), 'Admin.ShopParameters.Feature'),
                 'fields' => array(
                     'PS_STORES_DISPLAY_FOOTER' => array(
                         'title' => $this->trans('Display in the footer', array(), 'Admin.ShopParameters.Feature'),
