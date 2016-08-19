@@ -7,8 +7,8 @@
     <label>Translation key or value (2 characters at least):</label>
     <form>
         <input pattern=".{2,}" type="search" id="jetsSearch">
-        <input class="btn btn-default btn-sm search-button" type="submit" value="search">
-        <input class="btn btn-default btn-sm" type="reset" value="reset">
+        <input class="btn btn-default btn-sm search-button" type="submit" value="{{ 'search'|trans({}, 'AdmninActions') }}">
+        <input class="btn btn-default btn-sm" type="reset" value="{{ 'reset'|trans({}, 'AdminActions') }}">
     </form>
     <div id="jetsContent">
         {{ getTranslationsForms(translationsTree)|raw }}
