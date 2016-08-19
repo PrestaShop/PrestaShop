@@ -28,7 +28,7 @@ define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'prestashop/smarty/');
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new SmartyCustom();
-} elseif (_PS_MODE_DEV_) {
+} elseif (_PS_MODE_DEV_ && !defined('_PS_ADMIN_DIR_')) {
     $smarty = new SmartyDev();
 } else {
     $smarty = new Smarty();
