@@ -68,7 +68,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 }
             } elseif ($granularity == 'month') {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-				SELECT LEFT(LAST_DAY(`date_add`)) as date, COUNT('.($unique ? 'DISTINCT id_guest' : '*').') as visits
+				SELECT LEFT(LAST_DAY(`date_add`), 7) as date, COUNT('.($unique ? 'DISTINCT id_guest' : '*').') as visits
 				FROM `'._DB_PREFIX_.'connections`
 				WHERE `date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 				'.Shop::addSqlRestriction().'
