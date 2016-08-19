@@ -1,6 +1,19 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
+<div class="search-translation">
+    <h2>Search</h2>
+    <div class="hide alert alert-info">{{ '0 results found'|trans({}, 'AdminNotificationsError') }}</div>
+    <label>Translation key or value (2 characters at least):</label>
+    <form>
+        <input pattern=".{2,}" type="search" id="jetsSearch">
+        <input class="btn btn-default btn-sm search-button" type="submit" value="{{ 'search'|trans({}, 'AdmninActions') }}">
+        <input class="btn btn-default btn-sm" type="reset" value="{{ 'reset'|trans({}, 'AdminActions') }}">
+    </form>
+    <div id="jetsContent">
+        {{ getTranslationsForms(translationsTree)|raw }}
+    </div>
+</div>
 <div class="translation-page">
     {{ getTranslationsTree(translationsTree)|raw }}
 </div>

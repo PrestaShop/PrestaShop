@@ -46,6 +46,10 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function listAction(Request $request)
     {
+        if (!$request->isMethod('POST')) {
+            return $this->redirect('/admin-dev/index.php?controller=AdminTranslations');
+        }
+
         $catalogue = $this->getTranslationsCatalogue($request);
         $translationsTree = $this->makeTranslationsTree($catalogue);
 
@@ -92,7 +96,7 @@ class TranslationsController extends FrameworkBundleAdminController
             $translation = new Translation;
             $translation->setDomain($requestParams['domain']);
             $translation->setLang($lang);
-            $translation->setKey($requestParams['translation_key']);
+            $translation->setKey(htmlspecialchars_decode($requestParams['translation_key'], ENT_QUOTES));
             $translation->setTranslation($requestParams['translation_value']);
         } else {
             $translation->setTranslation($requestParams['translation_value']);
@@ -117,18 +121,10 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     protected function clearCache()
     {
-        $realCacheDir = $this->container->getParameter('kernel.cache_dir');
-        $oldCacheDir = substr($realCacheDir, 0, -1).('~' === substr($realCacheDir, -1) ? '+' : '~');
-        $filesystem = $this->container->get('filesystem');
+        $cacheRefresh = $this->container->get('prestashop.cache.refresh');
 
         try {
-            if ($filesystem->exists($oldCacheDir)) {
-                $filesystem->remove($oldCacheDir);
-            }
-
-            $this->container->get('cache_clearer')->clear($realCacheDir);
-            $filesystem->rename($realCacheDir, $oldCacheDir);
-            $filesystem->remove($oldCacheDir);
+            $cacheRefresh->execute();
         } catch (\Exception $exception) {
             $this->container->get('logger')->error($exception->getMessage());
         }
@@ -195,11 +191,12 @@ class TranslationsController extends FrameworkBundleAdminController
     protected function makeTranslationsTree(array $catalogue)
     {
         $translationsTree = array();
+        $flippedUnbreakableWords = array_flip($this->getUnbreakableWords());
 
         foreach ($catalogue as $domain => $messages) {
-            $adjustedDomain = $this->adjustDomainWithAcronym($domain);
+            $unbreakableDomain = $this->makeDomainUnbreakable($domain);
 
-            $tableisedDomain = Inflector::tableize($adjustedDomain);
+            $tableisedDomain = Inflector::tableize($unbreakableDomain);
             list($basename) = explode('.', $tableisedDomain);
             $parts = array_reverse(explode('_', $basename));
 
@@ -207,6 +204,9 @@ class TranslationsController extends FrameworkBundleAdminController
 
             while (count($parts) > 0) {
                 $subdomain = ucfirst(array_pop($parts));
+                if (array_key_exists($subdomain, $flippedUnbreakableWords)) {
+                    $subdomain = $flippedUnbreakableWords[$subdomain];
+                }
 
                 if (!array_key_exists($subdomain, $subtree)) {
                     $subtree[$subdomain] = array();
@@ -214,25 +214,60 @@ class TranslationsController extends FrameworkBundleAdminController
                 $subtree = &$subtree[$subdomain];
             }
 
-            $subtree = $messages;
-            $subtree['__camelized_domain'] = $domain;
+            $subtree['__messages'] = array($domain => $messages);
         }
 
         return $translationsTree;
     }
 
     /**
+     * There are domains containing multiple words,
+     * hence these domains should not be split from those words in camelcase.
+     * The latter are replaced from a list of unbreakable words
+     *
      * @param $domain
      * @return string
      */
-    protected function adjustDomainWithAcronym($domain)
+    protected function makeDomainUnbreakable($domain)
     {
         $adjustedDomain = $domain;
-        if (false !== strpos($domain, 'ShopPDF')) {
-            $adjustedDomain = str_replace('ShopPDF', 'ShopPdf', $domain);
+        $unbreakableWords = $this->getUnbreakableWords();
+
+        foreach ($unbreakableWords as $search => $replacement) {
+            if (false !== strpos($domain, $search)) {
+                $adjustedDomain = str_replace($search, $replacement, $domain);
+
+                break;
+            }
         }
 
         return $adjustedDomain;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getUnbreakableWords()
+    {
+        return array(
+            'BankWire' => 'Bankwire',
+            'BlockBestSellers' => 'Blockbestsellers',
+            'BlockCart' => 'Blockcart',
+            'ContactInfo' => 'Contactinfo',
+            'EmailSubscription' => 'Emailsubscription',
+            'FeaturedProducts' => 'Featuredproducts',
+            'ShareButtons' => 'Sharebuttons',
+            'ShoppingCart' => 'Shoppingcart',
+            'SocialFollow' => 'Socialfollow',
+            'WirePayment' => 'Wirepayment',
+            'BlockAdvertising' => 'Blockadvertising',
+            'CategoryTree' => 'Categorytree',
+            'CustomerSignIn' => 'Customersignin',
+            'CustomText' => 'Customtext',
+            'ImageSlider' => 'Imageslider',
+            'LinkList' => 'Linklist',
+            'ShopPDF' => 'ShopPdf',
+        );
     }
 
     /**
