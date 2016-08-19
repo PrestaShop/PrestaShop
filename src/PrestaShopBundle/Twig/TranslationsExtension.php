@@ -80,23 +80,24 @@ class TranslationsExtension extends \Twig_Extension
     public function makeSubtree($tree, $level = 3)
     {
         $output = '';
-        $messagesSubtree = $this->hasCamelizedDomain($tree);
+        $messagesSubtree = $this->hasMessages($tree);
 
         if ($messagesSubtree) {
-            $camelizedDomain = $tree['__camelized_domain'];
-            unset($tree['__camelized_domain']);
+            list($camelizedDomain, $messagesTree) = each($tree['__messages']);
 
             $editLabel = $this->translator->trans('Edit', array(), 'AdminActions', 'en-US');
             $resetLabel = $this->translator->trans('Reset', array(), 'AdminActions', 'en-US');
-            $successMessage = 'Translation successfully edited';
-            $errorMessage = 'Translation unsuccessfully edited';
+            $successMessage = $this->translator->trans('Translation successfully edited', array(),
+                'AdminNotificationsSuccess', 'en-US');
+            $errorMessage = $this->translator->trans('Translation unsuccessfully edited', array(),
+                'AdminNotificationsError', 'en-US');
 
             $formIndex = 0;
             $pageIndex = 1;
             $itemsPerPage = 25;
             $output .= '<div class="page" data-status="active" data-page-index="1">';
 
-            foreach ($tree as $translationKey => $translationValue) {
+            foreach ($messagesTree as $translationKey => $translationValue) {
                 list($domain, $locale) = explode('.', $camelizedDomain);
                 $defaultTranslationValue = $this->translator->trans($translationKey, array(), $domain, $locale);
 
@@ -108,7 +109,7 @@ class TranslationsExtension extends \Twig_Extension
 
                 $output .= $this->render('form-edit-message.html.twig',
                     array(
-                        'default_translation_value' => $defaultTranslationValue,
+                        'default_translation_value' => htmlspecialchars($defaultTranslationValue, ENT_QUOTES),
                         'domain' => $domain,
                         'edited_translation_value' => $translationValue,
                         'error_message' => $errorMessage,
@@ -116,11 +117,11 @@ class TranslationsExtension extends \Twig_Extension
                         'label_reset' => $resetLabel,
                         'locale' => $locale,
                         'success_message' => $successMessage,
-                        'translation_key' => $translationKey,
+                        'translation_key' => htmlspecialchars($translationKey, ENT_QUOTES),
                     )
                 );
 
-                $isLastPage = $formIndex + 1 === count($tree);
+                $isLastPage = $formIndex + 1 === count($messagesTree);
 
                 if ($isLastPage) {
                     $output .= '</div>';
@@ -136,7 +137,7 @@ class TranslationsExtension extends \Twig_Extension
             }
 
             // Close div with page class when no message is available
-            if (count($tree) === 0) {
+            if (count($messagesTree) === 0) {
                 $output .= '</div>';
             }
         } else {
@@ -152,9 +153,9 @@ class TranslationsExtension extends \Twig_Extension
      * @param $tree
      * @return bool
      */
-    protected function hasCamelizedDomain($tree)
+    protected function hasMessages($tree)
     {
-        return array_key_exists('__camelized_domain', $tree);
+        return array_key_exists('__messages', $tree);
     }
 
     /**
@@ -175,20 +176,20 @@ class TranslationsExtension extends \Twig_Extension
      */
     protected function concatenateSubtreeHeader($subdomain, $subtree, $level = 2)
     {
-        $messagesSubtree = $this->hasCamelizedDomain($subtree);
+        $hasMessagesSubtree = $this->hasMessages($subtree);
         $subject = $this->makeSubdomainPrefix($level) . $subdomain;
 
         $id = null;
-        if ($messagesSubtree) {
+        if ($hasMessagesSubtree) {
             $id = $this->parseDomain($subtree);
         }
 
         $output = $this->tagSubject($subject, $level, $id);
 
-        if ($messagesSubtree) {
+        if ($hasMessagesSubtree) {
             $output .= $this->render('button-toggle-messages-visibility.html.twig', array(
-                'label_show_messages' => 'Show messages',
-                'label_hide_messages' => 'Hide messages'
+                'label_show_messages' => $this->translator->trans('Show messages', array(), 'AdminActions', 'en-US'),
+                'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'AdminActions', 'en-US')
             ));
 
             $output .= $this->getNavigation($this->parseDomain($subtree));
@@ -198,14 +199,20 @@ class TranslationsExtension extends \Twig_Extension
         $output .= $this->makeSubtree($subtree, $level + 1);
         $output .= '</div>';
 
-        if ($messagesSubtree) {
+        if ($hasMessagesSubtree) {
             $output .= $this->render('button-go-to-pagination-bar.html.twig', array(
                 'domain' => $id,
-                'label' => 'Go to previous navigation menu',
+                'label' => $this->translator->trans('Go to previous navigation menu', array(), 'AdminActions', 'en-US'),
             ));
 
             // Close div with translation-domain class
             $output .= '</div>';
+
+            // A subtree with messages contains at least a subdomain
+            if (count($subtree) > 1) {
+                unset($subtree['__messages']);
+                $output .= $this->concatenateSubtreeHeader($subdomain, $subtree, $level);
+            }
         }
 
         return $output;
@@ -217,7 +224,8 @@ class TranslationsExtension extends \Twig_Extension
      */
     protected function parseDomain($subtree)
     {
-        list($domain) = explode('.', $subtree['__camelized_domain']);
+        list($camelizedDomain) = $subtree['__messages'];
+        list($domain) = explode('.', $camelizedDomain);
 
         return $domain;
     }
@@ -285,6 +293,11 @@ class TranslationsExtension extends \Twig_Extension
         if ($id) {
             $openingTag = '<span id="_' . $id . '">';
             $closingTag = '</span>';
+
+            if (2 === $level) {
+                $openingTag = '<h2>' . $openingTag;
+                $closingTag = $closingTag . '</h2>';
+            }
         }
 
         return $openingTag . $subject . $closingTag;

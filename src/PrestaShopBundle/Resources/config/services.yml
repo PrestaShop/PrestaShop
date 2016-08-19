@@ -14,6 +14,13 @@ services:
         tags:
             - { name: kernel.cache_warmer }
 
+    prestashop.cache.refresh:
+        class: PrestaShopBundle\Service\Cache\Refresh
+        arguments:
+            - "%kernel.environment%"
+        calls:
+            - [addCacheClear, []]
+
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
         arguments: ["%database_prefix%"]
