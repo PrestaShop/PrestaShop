@@ -76,6 +76,7 @@ script:
   - cd $TRAVIS_BUILD_DIR # because /var/www/prestashop.unit.test (cwd) is about to be deleted
   - bash ./travis-scripts/restore-backup
   - bash ./travis-scripts/run-selenium-tests
+  - bash ./travis-scripts/test-startertheme
 
 after_script:
   - sudo cat /var/log/apache2/error.log

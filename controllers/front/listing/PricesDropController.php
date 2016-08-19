@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2015 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Adapter\PricesDrop\PricesDropProductSearchProvider;
@@ -33,9 +32,10 @@ class PricesDropControllerCore extends ProductListingFrontController
     public $php_self = 'prices-drop';
 
     /**
-     * Initializes controller
+     * Initializes controller.
      *
      * @see FrontController::init()
+     *
      * @throws PrestaShopException
      */
     public function init()
@@ -51,6 +51,7 @@ class PricesDropControllerCore extends ProductListingFrontController
             ->setQueryType('prices-drop')
             ->setSortOrder(new SortOrder('product', 'name', 'asc'))
         ;
+
         return $query;
     }
 
@@ -58,6 +59,15 @@ class PricesDropControllerCore extends ProductListingFrontController
     {
         return new PricesDropProductSearchProvider(
             $this->getTranslator()
+        );
+    }
+
+    public function getListingLabel()
+    {
+        return $this->trans(
+            'On sale',
+            array(),
+            'Shop.Theme.Catalog'
         );
     }
 }
