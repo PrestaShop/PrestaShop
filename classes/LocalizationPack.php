@@ -414,7 +414,7 @@ class LocalizationPackCore
                     $install = ($attributes['install'] == 1) ? true : false;
                     $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                     $moduleManager = $moduleManagerBuilder->build();
-    
+
 
                     if ($install) {
                         if (!$moduleManager->isInstalled($name)) {

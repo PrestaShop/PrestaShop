@@ -29,7 +29,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 class LanguageCore extends ObjectModel
 {
-    const LANGUAGE_PACK_URL = 'http://www.prestashop.com/download/lang_packs/get_language_pack.php?version=%s&iso_lang=%s';
+    const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
     const LANGUAGE_GZIP_URL = 'http://translations.prestashop.com/download/lang_packs/gzip/%s/%s.gzip';
     const SF_LANGUAGE_PACK_URL = 'http://translate.prestashop.com/TEMP/TEMP/TEMP/TEMP/TEMP/%s.zip';
 
@@ -666,6 +666,19 @@ class LanguageCore extends ObjectModel
         return Cache::retrieve($key);
     }
 
+    public static function getLangDetails($iso)
+    {
+        $allLanguages = file_get_contents(_PS_ROOT_DIR_.self::ALL_LANGUAGES_FILE);
+        $allLanguages = json_decode($allLanguages, true);
+
+        $jsonLastErrorCode = json_last_error();
+        if (JSON_ERROR_NONE !== $jsonLastErrorCode) {
+            throw new \Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
+        }
+
+        return $allLanguages[$iso] ?: false;
+    }
+
     /**
      *
      * @param string $isoCode
@@ -681,23 +694,11 @@ class LanguageCore extends ObjectModel
         $locale = Db::getInstance()->getValue('SELECT `locale` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($isoCode)).'\'');
         if ($locale) {
             return $locale;
-        }
-
-        $xmlPath = _PS_INSTALL_LANGS_PATH_.$isoCode.'/'.'/language.xml';
-        if (!file_exists($xmlPath)) {
+        } elseif ($details = self::getLangDetails($isoCode)) {
+            return $details['locale'];
+        } else {
             return false;
         }
-
-        $xml = @simplexml_load_file($xmlPath);
-        if ($xml) {
-            foreach ($xml->children() as $node) {
-                if ($node->getName() === 'locale') {
-                    return (string)$node;
-                }
-            }
-        }
-
-        return false;
     }
 
     public static function getLanguageCodeByIso($iso_code)
@@ -812,12 +813,12 @@ class LanguageCore extends ObjectModel
 
         // If the language pack has not been provided, retrieve it from prestashop.com
         if (!$lang_pack) {
-            $lang_pack = json_decode(Tools::file_get_contents(sprintf(self::LANGUAGE_PACK_URL, _PS_VERSION_, $iso_code)));
+            $lang_pack = self::getLangDetails($iso_code);
         }
 
         // If a language pack has been found or provided, prefill the language object with the value
         if ($lang_pack) {
-            foreach (get_object_vars($lang_pack) as $key => $value) {
+            foreach ($lang_pack as $key => $value) {
                 if ($key != 'iso_code' && isset(Language::$definition['fields'][$key])) {
                     $lang->$key = $value;
                 }
@@ -930,25 +931,25 @@ class LanguageCore extends ObjectModel
     {
         $file = _PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip';
 
-        $lang_pack = false;
-        $lang_pack_link = Tools::file_get_contents(sprintf(self::LANGUAGE_PACK_URL, $version, Tools::strtolower((string)$iso)));
+        $lang_pack = self::getLangDetails($iso);
+        if (!$lang_pack) {
+            $errors[] = Tools::displayError('Sorry this language is not available');
+        }
 
-        if (!$lang_pack_link) {
-            $errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
-        } elseif (!$lang_pack = json_decode($lang_pack_link)) {
-            $errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
-        } elseif (empty($lang_pack->error) && ($content = Tools::file_get_contents(sprintf(self::LANGUAGE_GZIP_URL, $lang_pack->version, Tools::strtolower($lang_pack->iso_code))))) {
-            if (!@file_put_contents($file, $content)) {
-                if (is_writable(dirname($file))) {
-                    @unlink($file);
-                    @file_put_contents($file, $content);
-                } elseif (!is_writable($file)) {
-                    $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
-                }
+        $content = Tools::file_get_contents(
+            sprintf(self::LANGUAGE_GZIP_URL, $version, Tools::strtolower($lang_pack['iso_code']))
+        );
+
+        if (!@file_put_contents($file, $content)) {
+            if (is_writable(dirname($file))) {
+                @unlink($file);
+                @file_put_contents($file, $content);
+            } elseif (!is_writable($file)) {
+                $errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
             }
         }
 
-        self::downloadSfLanguagePack(self::getLocaleByIso($iso), $errors);
+        self::downloadSfLanguagePack($lang_pack['locale'], $errors);
 
         return ! count($errors);
     }
