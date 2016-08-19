@@ -36,7 +36,8 @@ export default function() {
         contentTag: '#jetsContent',
         callSearchManually: true,
         manualContentHandling: function (tag) {
-            return $(tag).find('verbatim')[0].innerText;
+            // Search for translation keys and translation values
+            return $(tag).find('verbatim')[0].innerText + $(tag).find('textarea')[0].value;
         }
     });
 }
