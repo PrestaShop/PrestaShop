@@ -779,6 +779,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['new'] = (int) $this->product->new;
         $product['quantity_wanted'] = (int) Tools::getValue('quantity_wanted', $this->product->minimal_quantity);
+        $product['minimal_quantity'] = $this->product->minimal_quantity;
         $product['id_product_attribute'] = (int) Tools::getValue('id_product_attribute');
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);

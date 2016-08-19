@@ -4,7 +4,14 @@
     {block name='product_quantity'}
       <div class="product-quantity">
         <div class="qty">
-          <input type="text" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" class="input-group">
+          <input
+            type="text"
+            name="qty"
+            id="quantity_wanted"
+            value="{$product.quantity_wanted}"
+            class="input-group"
+            min="{$product.minimal_quantity}"
+          >
         </div>
         <div class="add">
           <button class="btn btn-primary add-to-cart" data-button-action="add-to-cart" type="submit" {if !$product.add_to_cart_url}disabled{/if}>
