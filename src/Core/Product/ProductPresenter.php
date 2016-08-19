@@ -118,7 +118,7 @@ class ProductPresenter
             $presentedProduct['discount_percentage_absolute'] = round(100 * $product['specific_prices']['reduction']).'%';
             // TODO: Fix issue with tax calculation
             $presentedProduct['discount_amount'] = $this->priceFormatter->format(
-                $product['specific_prices']['reduction']
+                $product['reduction']
             );
             $regular_price = $product['price_without_reduction'];
         }
